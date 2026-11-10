@@ -60,3 +60,53 @@ static func probar(jornadas: int) -> Dictionary:
 		if salidas[0]["azar"] != salidas[1]["azar"]:
 			fallos.append("mundo %s: el generador de azar acabó en otro estado" % mundo[0])
 	return {"fallos": fallos, "cruces": cruces, "rapidos": PartidoRapido.por_ruta_nativa - rapidos0, "t_gd_us": t[0], "t_cpp_us": t[1]}
+
+## Las cuatro medias por línea de `fuerza`: C++ = las 4 llamadas a `_media_linea`, con onces de mundos distintos y con arengas, exes y laterales de los dos pies puestos al azar.
+static func probar_medias(n_cruces: int) -> Dictionary:
+	var m := Mundo.new()
+	var paises: Array[String] = ["ESP", "ARG", "ENG"]
+	m.generar(paises, 61)
+	Partido.ctx_anio = m.anio
+	Partido.ctx_semana = m.semana
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 9
+	var nat := Nativo.obj()
+	var comparados := 0
+	var distintos := 0
+	var t_gd := 0
+	var t_cpp := 0
+	var clubes: Array = m.clubes.values()
+	Partido.ex_de_mi_club = {}
+	for i in n_cruces:
+		var a: Club = clubes[rng.randi() % clubes.size()]
+		var b: Club = clubes[rng.randi() % clubes.size()]
+		if a == b:
+			continue
+		var p := Partido.new(a, b)
+		p.sin_rastro = true
+		p.preparar()
+		p.minuto = rng.randi_range(0, 90)
+		p.impulsos = {}
+		p._factor_arenga = 1.0 + rng.randf() * 0.5 if rng.randf() < 0.5 else 1.0
+		for once: Array[Jugador] in [p.once_local, p.once_visita]:
+			for j: Jugador in once:
+				j.forma = rng.randi_range(20, 99)
+				j.fisico = rng.randi_range(40, 100)
+				j.moral = rng.randi_range(20, 100)
+				if rng.randf() < 0.3:
+					p.impulsos[j.id] = rng.randi_range(0, 120)
+				if rng.randf() < 0.1:
+					Partido.ex_de_mi_club[j.id] = (b if once == p.once_local else a).id
+		for once: Array[Jugador] in [p.once_local, p.once_visita]:
+			var t0 := Time.get_ticks_usec()
+			var g := PartidoMedias.gd(p, once)
+			var t1 := Time.get_ticks_usec()
+			var c := PartidoMedias.nativo(p, once, nat)
+			var t2 := Time.get_ticks_usec()
+			t_gd += t1 - t0
+			t_cpp += t2 - t1
+			comparados += 1
+			if var_to_bytes(g) != var_to_bytes(c):
+				distintos += 1
+	Partido.ex_de_mi_club = {}
+	return {"comparados": comparados, "distintos": distintos, "t_gd_us": t_gd, "t_cpp_us": t_cpp}

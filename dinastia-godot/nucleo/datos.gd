@@ -268,6 +268,17 @@ func mapa_grupos() -> Dictionary:
 		posd()
 	return _grupo_de
 
+## demarcación → es un lateral / su banda ("D"/"I"/""), para la extensión nativa (mismas tablas que `es_lateral()` y `banda()`).
+func mapa_lateral() -> Dictionary:
+	if _lateral_de.is_empty():
+		posd()
+	return _lateral_de
+
+func mapa_banda() -> Dictionary:
+	if _banda_de.is_empty():
+		posd()
+	return _banda_de
+
 ## Si la demarcacion es un lateral -"D.d==='LAT'" del HTML-: solo estas notan
 ## el pie habil del jugador.
 func es_lateral(demarcacion: String) -> bool:

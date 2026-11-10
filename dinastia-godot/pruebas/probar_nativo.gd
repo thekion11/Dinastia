@@ -235,6 +235,9 @@ func _probar() -> void:
 		_comprobar(false, "partido simulado en C++: " + f)
 	_comprobar(np["fallos"].is_empty() and int(np["rapidos"]) > 300, "partido simulado en C++ = GDScript en %d cruces (por la ruta nativa: %d)" % [np["cruces"], np["rapidos"]])
 	print("partido simulado completo (%d cruces, %d por la ruta nativa): GDScript %.0f µs, C++ %.0f µs por cruce" % [np["cruces"], np["rapidos"], np["t_gd_us"] / float(np["cruces"]), np["t_cpp_us"] / float(np["cruces"])])
+	var med := NativoPartido.probar_medias(400)
+	_comprobar(int(med["comparados"]) > 500 and int(med["distintos"]) == 0, "medias por línea de la fuerza: C++ = GDScript en %d onces (distintos: %d)" % [med["comparados"], med["distintos"]])
+	print("medias por línea: GDScript %.0f µs, C++ %.0f µs por once" % [med["t_gd_us"] / float(med["comparados"]), med["t_cpp_us"] / float(med["comparados"])])
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:

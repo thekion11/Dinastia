@@ -49,3 +49,61 @@ int64_t DinastiaNativo::elegir_ponderado(const Array &once, const Dictionary &gr
 	}
 	return idx.back();
 }
+
+// `Partido._media_linea` para las cuatro líneas a la vez (POR, DEF, MED, DEL): la media de rendimiento de los jugadores de cada línea del once, con la ley del ex, la arenga y el pie de los laterales.
+// Devuelve [POR, DEF, MED, DEL]; una línea sin jugadores vale 50,0 (como el GDScript). `ex_id`: id del club de enfrente ("" = ninguno). `arenga_mult`: el multiplicador ya calculado de la arenga.
+PackedFloat64Array DinastiaNativo::medias_linea(const Array &once, const Dictionary &grupo_de, const Dictionary &lateral_de, const Dictionary &banda_de, const Dictionary &impulsos, int64_t minuto,
+		double arenga_mult, double ley_ex, const Dictionary &ex_de_mi_club, const String &ex_id) const {
+	static const StringName k_pos_e("pos_e"), k_id("id"), k_ovr("ovr"), k_forma("forma"), k_fisico("fisico"), k_moral("moral");
+	double suma[4] = { 0.0, 0.0, 0.0, 0.0 };
+	int64_t n[4] = { 0, 0, 0, 0 };
+	for (int64_t i = 0; i < once.size(); i++) {
+		Object *j = once[i];
+		const String pos_e = j->get(k_pos_e);
+		const String g = grupo_de.get(pos_e, String("MED"));
+		int linea = -1;
+		if (g == String("POR")) {
+			linea = 0;
+		} else if (g == String("DEF")) {
+			linea = 1;
+		} else if (g == String("MED")) {
+			linea = 2;
+		} else if (g == String("DEL")) {
+			linea = 3;
+		}
+		if (linea < 0) {
+			continue;
+		}
+		const Variant id = j->get(k_id);
+		double impulso = 1.0;
+		if (!ex_id.is_empty() && String(ex_de_mi_club.get(id, String(""))) == ex_id) {
+			impulso *= ley_ex;
+		}
+		if (int64_t(impulsos.get(id, int64_t(-1))) > minuto) {
+			impulso *= arenga_mult;
+		}
+		if (bool(lateral_de.get(pos_e, false))) {
+			const String banda = banda_de.get(pos_e, String(""));
+			if (banda != String("")) {
+				const String sid = id;
+				int64_t h = 5381;
+				for (int64_t q = 0; q < sid.length(); q++) {
+					h = ((h << 5) + h + int64_t(sid.unicode_at(q))) & 0x7FFFFFFF;
+				}
+				const String pie = (h % 100 < 76) ? String("D") : String("I");
+				if (banda != pie) {
+					impulso *= 0.94;
+				}
+			}
+		}
+		const double ovr = double(int64_t(j->get(k_ovr)));
+		suma[linea] += ovr * (0.7 + 0.003 * double(int64_t(j->get(k_forma)))) * (0.85 + 0.0015 * double(int64_t(j->get(k_fisico)))) * (0.9 + 0.002 * double(int64_t(j->get(k_moral)))) * impulso;
+		n[linea] += 1;
+	}
+	PackedFloat64Array r;
+	r.resize(4);
+	for (int q = 0; q < 4; q++) {
+		r.set(q, n[q] == 0 ? 50.0 : suma[q] / double(n[q]));
+	}
+	return r;
+}

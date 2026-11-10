@@ -10,9 +10,11 @@ extends RefCounted
 
 ## Como `Partido.simular()`, pero por la ruta rápida si se puede. Devuelve {local, visita}.
 static func simular(p: Partido) -> Dictionary:
-	p.preparar()
 	var nat := Nativo.obj()
-	if nat != null and nat.has_method("simular_90") and _puede(p):
+	var rapido := nat != null and nat.has_method("simular_90") and _puede(p)
+	p.sin_rastro = rapido   ## el rastro (`CausasPartido`) solo se lee en el partido del jugador; un cruce de la IA que se tira no lo necesita
+	p.preparar()
+	if rapido:
 		_nativo(p, nat)
 	else:
 		while not p.terminado_ya:
@@ -35,6 +37,13 @@ static func _puede(p: Partido) -> bool:
 	return true
 
 static var _ayuda: PartidoRapido = null
+static var _pcg := -1   ## -1 = sin comprobar; 1 = la extensión reproduce el generador del motor (más rápido); 0 = no (usa el del motor)
+
+## Una sola vez: ¿el PCG32 de la extensión da las mismas tiradas que el `RandomNumberGenerator` de esta versión del motor? Si no, `simular_90` llama al del motor (mismo resultado, más lento).
+static func _azar_propio(nat: Object) -> bool:
+	if _pcg < 0:
+		_pcg = 1 if nat.has_method("pcg_coincide") and nat.pcg_coincide() else 0
+	return _pcg == 1
 static var por_ruta_nativa := 0   ## cuántos cruces fueron por C++ (las pruebas comprueban que la ruta se usó de verdad)
 
 static func _nativo(p: Partido, nat: Object) -> void:
@@ -55,7 +64,7 @@ static func _nativo(p: Partido, nat: Object) -> void:
 		"grupo_de": Datos.mapa_grupos(), "bases_gol": PartidoPonderado.BASES_GOL,
 	}
 	por_ruta_nativa += 1
-	nat.simular_90(p, _ayuda, cfg, Azar._rng)
+	nat.simular_90(p, _ayuda, cfg, Azar._rng, _azar_propio(nat))
 	if p.minuto >= p.minutos_fin:   ## el final de `simular_minuto()` (sin prórroga: `_puede` la descarta)
 		p.terminado_ya = true
 		p._devolver_tactica()
