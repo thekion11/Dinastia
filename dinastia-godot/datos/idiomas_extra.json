@@ -7783,7 +7783,17 @@
   "Palmarés del mundo": "World roll of honour",
   "Todos los países": "All countries",
   "Los campeones de ligas, copas y supercopas de todos los países.": "League, cup and super cup winners of every country.",
-  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "No tournament has finished yet in this game: champions appear when each cup and league ends."
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "No tournament has finished yet in this game: champions appear when each cup and league ends.",
+  "EDITAR POSICIONES": "EDIT POSITIONS",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Drag each marker wherever you want: the position changes on its own depending on the zone. Keyboard or controller: Tab switches marker and the arrows move it.",
+  "Nombre de la formación": "Formation name",
+  "Restablecer": "Reset",
+  "El portero no se mueve.": "The goalkeeper does not move.",
+  "Tienen que quedar al menos 3 defensas.": "There must be at least 3 defenders.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "You already have 6 custom formations: delete one to save another.",
+  "Editar posiciones": "Edit positions",
+  "Borrar esta formación": "Delete this formation",
+  "Nations League": "Nations League"
  },
  "pt": {
   "Historia": "História",
@@ -15569,7 +15579,17 @@
   "Palmarés del mundo": "Palmarés do mundo",
   "Todos los países": "Todos os países",
   "Los campeones de ligas, copas y supercopas de todos los países.": "Os campeões de ligas, copas e supercopas de todos os países.",
-  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Ainda não terminou nenhum torneio nesta partida: os campeões aparecem ao fim de cada copa e liga."
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Ainda não terminou nenhum torneio nesta partida: os campeões aparecem ao fim de cada copa e liga.",
+  "EDITAR POSICIONES": "EDITAR POSIÇÕES",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Arraste cada ficha para onde quiser: a posição muda sozinha conforme a zona. Teclado ou comando: Tab muda de ficha e as setas a movem.",
+  "Nombre de la formación": "Nome da formação",
+  "Restablecer": "Restaurar",
+  "El portero no se mueve.": "O goleiro não se move.",
+  "Tienen que quedar al menos 3 defensas.": "Precisam ficar pelo menos 3 defensores.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Você já tem 6 formações próprias: apague uma para salvar outra.",
+  "Editar posiciones": "Editar posições",
+  "Borrar esta formación": "Apagar esta formação",
+  "Nations League": "Liga das Nações"
  },
  "patrones": [
   [
@@ -29451,7 +29471,17 @@
   "Palmarés del mundo": "Palmarès mondial",
   "Todos los países": "Tous les pays",
   "Los campeones de ligas, copas y supercopas de todos los países.": "Les champions des championnats, coupes et supercoupes de tous les pays.",
-  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Aucun tournoi n'est encore terminé dans cette partie : les champions apparaissent à la fin de chaque coupe et championnat."
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Aucun tournoi n'est encore terminé dans cette partie : les champions apparaissent à la fin de chaque coupe et championnat.",
+  "EDITAR POSICIONES": "MODIFIER LES POSITIONS",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Faites glisser chaque pion où vous voulez : le poste change tout seul selon la zone. Clavier ou manette : Tab change de pion et les flèches le déplacent.",
+  "Nombre de la formación": "Nom de la formation",
+  "Restablecer": "Réinitialiser",
+  "El portero no se mueve.": "Le gardien ne bouge pas.",
+  "Tienen que quedar al menos 3 defensas.": "Il doit rester au moins 3 défenseurs.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Vous avez déjà 6 formations perso : supprimez-en une pour en enregistrer une autre.",
+  "Editar posiciones": "Modifier les positions",
+  "Borrar esta formación": "Supprimer cette formation",
+  "Nations League": "Ligue des nations"
  },
  "it": {
   "Historia": "Storia",
@@ -37237,7 +37267,17 @@
   "Palmarés del mundo": "Albo d'oro mondiale",
   "Todos los países": "Tutti i paesi",
   "Los campeones de ligas, copas y supercopas de todos los países.": "I campioni di campionati, coppe e supercoppe di tutti i paesi.",
-  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Nessun torneo è ancora terminato in questa partita: i campioni compaiono alla fine di ogni coppa e campionato."
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Nessun torneo è ancora terminato in questa partita: i campioni compaiono alla fine di ogni coppa e campionato.",
+  "EDITAR POSICIONES": "MODIFICA POSIZIONI",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Trascina ogni pedina dove vuoi: il ruolo cambia da solo in base alla zona. Tastiera o controller: Tab cambia pedina e le frecce la spostano.",
+  "Nombre de la formación": "Nome del modulo",
+  "Restablecer": "Ripristina",
+  "El portero no se mueve.": "Il portiere non si sposta.",
+  "Tienen que quedar al menos 3 defensas.": "Devono restare almeno 3 difensori.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Hai già 6 moduli personali: cancellane uno per salvarne un altro.",
+  "Editar posiciones": "Modifica posizioni",
+  "Borrar esta formación": "Elimina questo modulo",
+  "Nations League": "Nations League"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45023,7 +45063,17 @@
   "Palmarés del mundo": "Welt-Titelliste",
   "Todos los países": "Alle Länder",
   "Los campeones de ligas, copas y supercopas de todos los países.": "Die Meister und Pokalsieger aller Länder.",
-  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "In diesem Spielstand ist noch kein Wettbewerb beendet: Die Sieger erscheinen am Ende jedes Pokals und jeder Liga."
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "In diesem Spielstand ist noch kein Wettbewerb beendet: Die Sieger erscheinen am Ende jedes Pokals und jeder Liga.",
+  "EDITAR POSICIONES": "POSITIONEN BEARBEITEN",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Zieh jede Figur, wohin du willst: Die Position ändert sich je nach Zone von selbst. Tastatur oder Controller: Tab wechselt die Figur, die Pfeile bewegen sie.",
+  "Nombre de la formación": "Name der Formation",
+  "Restablecer": "Zurücksetzen",
+  "El portero no se mueve.": "Der Torwart wird nicht verschoben.",
+  "Tienen que quedar al menos 3 defensas.": "Es müssen mindestens 3 Verteidiger bleiben.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Du hast schon 6 eigene Formationen: Lösche eine, um eine andere zu speichern.",
+  "Editar posiciones": "Positionen bearbeiten",
+  "Borrar esta formación": "Diese Formation löschen",
+  "Nations League": "Nations League"
  },
  "ca": {
   "Historia": "Història",
@@ -52809,7 +52859,17 @@
   "Palmarés del mundo": "Palmarès del món",
   "Todos los países": "Tots els països",
   "Los campeones de ligas, copas y supercopas de todos los países.": "Els campions de lligues, copes i supercopes de tots els països.",
-  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Encara no s'ha tancat cap torneig en aquesta partida: els campions apareixen en acabar cada copa i cada lliga."
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Encara no s'ha tancat cap torneig en aquesta partida: els campions apareixen en acabar cada copa i cada lliga.",
+  "EDITAR POSICIONES": "EDITAR POSICIONS",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Arrossega cada fitxa on vulguis: la posició canvia sola segons la zona. Teclat o comandament: Tab canvia de fitxa i les fletxes la mouen.",
+  "Nombre de la formación": "Nom de la formació",
+  "Restablecer": "Restablir",
+  "El portero no se mueve.": "El porter no es mou.",
+  "Tienen que quedar al menos 3 defensas.": "Hi han de quedar almenys 3 defenses.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Ja tens 6 formacions pròpies: esborra'n una per desar-ne una altra.",
+  "Editar posiciones": "Editar posicions",
+  "Borrar esta formación": "Esborrar aquesta formació",
+  "Nations League": "Lliga de Nacions"
  },
  "pl": {
   "Club": "Klub",
@@ -60595,7 +60655,17 @@
   "Palmarés del mundo": "Lista triumfatorów świata",
   "Todos los países": "Wszystkie kraje",
   "Los campeones de ligas, copas y supercopas de todos los países.": "Mistrzowie lig, pucharów i superpucharów wszystkich krajów.",
-  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "W tej grze nie zakończył się jeszcze żaden turniej: mistrzowie pojawiają się po zakończeniu każdego pucharu i ligi."
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "W tej grze nie zakończył się jeszcze żaden turniej: mistrzowie pojawiają się po zakończeniu każdego pucharu i ligi.",
+  "EDITAR POSICIONES": "EDYTUJ POZYCJE",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Przeciągnij każdy pionek, gdzie chcesz: pozycja zmienia się sama zależnie od strefy. Klawiatura lub pad: Tab zmienia pionek, a strzałki go przesuwają.",
+  "Nombre de la formación": "Nazwa formacji",
+  "Restablecer": "Przywróć",
+  "El portero no se mueve.": "Bramkarz się nie przesuwa.",
+  "Tienen que quedar al menos 3 defensas.": "Musi zostać co najmniej 3 obrońców.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Masz już 6 własnych formacji: usuń jedną, aby zapisać inną.",
+  "Editar posiciones": "Edytuj pozycje",
+  "Borrar esta formación": "Usuń tę formację",
+  "Nations League": "Liga Narodów"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68381,6 +68451,16 @@
   "Palmarés del mundo": "Dünya şampiyonlar listesi",
   "Todos los países": "Tüm ülkeler",
   "Los campeones de ligas, copas y supercopas de todos los países.": "Tüm ülkelerin lig, kupa ve süper kupa şampiyonları.",
-  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Bu oyunda henüz hiçbir turnuva bitmedi: şampiyonlar her kupa ve lig bitince görünür."
+  "Todavía no se ha cerrado ningún torneo esta partida: los campeones aparecen al terminar cada copa y cada liga.": "Bu oyunda henüz hiçbir turnuva bitmedi: şampiyonlar her kupa ve lig bitince görünür.",
+  "EDITAR POSICIONES": "POZİSYONLARI DÜZENLE",
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Teclado o mando: Tab cambia de ficha y las flechas la mueven.": "Her pulu istediğin yere sürükle: mevki bölgeye göre kendiliğinden değişir. Klavye veya kumanda: Tab pulu değiştirir, oklar onu hareket ettirir.",
+  "Nombre de la formación": "Diziliş adı",
+  "Restablecer": "Sıfırla",
+  "El portero no se mueve.": "Kaleci hareket etmez.",
+  "Tienen que quedar al menos 3 defensas.": "En az 3 defans oyuncusu kalmalı.",
+  "Ya tienes 6 formaciones propias: borra una para guardar otra.": "Zaten 6 özel dizilişin var: başka birini kaydetmek için birini sil.",
+  "Editar posiciones": "Pozisyonları düzenle",
+  "Borrar esta formación": "Bu dizilişi sil",
+  "Nations League": "Uluslar Ligi"
  }
 }

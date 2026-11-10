@@ -24,9 +24,18 @@ static func preparar(m: Mundo, sel: Selecciones, cargo: CargoSeleccion) -> Dicti
 	var sale := {}   ## la lambda no puede reasignar variables de fuera
 	CopasMundo._aislado("fecha%s%d/%d" % [mia, m.anio, m.semana], func() -> void: sale["rival"] = rivales[Azar.ent(0, rivales.size() - 1)])
 	var rival := String(sale.get("rival", rivales[0]))
-	var tipo := "Eliminatoria" if CargoSeleccion.confed_de(rival) == confed else "Amistoso"
+	var tipo := tipo_de(sel, confed, CargoSeleccion.confed_de(rival), m.anio)
 	cargo.fecha_pendiente = {"rival": rival, "tipo": tipo, "anio": m.anio, "semana": m.semana, "local": (m.semana / 3) % 2 == 0}
 	return cargo.fecha_pendiente
+
+## Qué se juega: contra uno de otra confederación, AMISTOSO; de la tuya, ELIMINATORIA del Mundial en los dos años anteriores a uno, y si no,
+## NATIONS LEAGUE en Europa y la Concacaf (las demás confederaciones no la tienen: amistoso).
+static func tipo_de(sel: Selecciones, confed: String, confed_rival: String, anio: int) -> String:
+	if confed != confed_rival:
+		return "Amistoso"
+	if sel.toca_copa_del_mundo(anio + 1) or sel.toca_copa_del_mundo(anio + 2):
+		return "Eliminatoria"
+	return "Nations League" if confed in ["ucl", "conc"] else "Amistoso"
 
 ## Los dos equipos del partido pendiente: [local, visita, mia].
 static func equipos(m: Mundo, sel: Selecciones, cargo: CargoSeleccion) -> Array:
