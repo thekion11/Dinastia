@@ -198,9 +198,9 @@ func _disp_calidad() -> void:
 			[Calidad.ULTRA_ALTA, "Ultra alta", "Todos los efectos, sombras y reflejos"],
 			[Calidad.ALTA, "Alta", "El equilibrio: sombras sí, lo más caro no"],
 			[Calidad.MEDIA_ALTA, "Media alta", "Como Media, con la sombra del sol llegando más lejos"],
-			[Calidad.MEDIA, "Media", "Sin efectos pesados: máxima fluidez"],
-			[Calidad.MEDIA_BAJA, "Media baja", "Sombra del sol sí, con el 3D a una resolución algo menor que en Media"],
-			[Calidad.BAJA, "Baja", "Sin sombra del sol y con el 3D a menor resolución"],
+			[Calidad.MEDIA, "Media", "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez" if Calidad.es_compatibilidad() else "Sin efectos pesados: máxima fluidez"],
+			[Calidad.MEDIA_BAJA, "Media baja", "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media"],
+			[Calidad.BAJA, "Baja", "Sin sombra del sol, sin suavizado y con el 3D a menor resolución"],
 			[Calidad.ULTRA_BAJA, "Ultra baja", "Ultra ligera para móviles y equipos muy modestos: sin sombras ni suavizado y el 3D a menor resolución"],
 		]:
 		var clave: int = nivel[0]

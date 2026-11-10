@@ -2,7 +2,7 @@ class_name AhorroMenu
 extends Node
 ## AHORRO EN LOS MENÚS (3-11-2026, prueba del dueño en su teléfono: el menú a 28 FPS con la GPU al 100 %).
 ## La pantalla central son ~400 llamadas de dibujo y se repintaba ENTERA en cada fotograma aunque nada cambiara: las
-## partículas del fondo («motas», el clima elegido) obligan a redibujar sin parar. En calidad MÍNIMA, mientras no haya
+## partículas del fondo («motas», el clima elegido) obligan a redibujar sin parar. En calidad MÍNIMA (y desde el 10-11 BAJA y MEDIA BAJA), mientras no haya
 ## 3D a la vista (partido, ciudad, estadio): el modo de bajo consumo de Godot (solo repinta cuando algo cambia) y las
 ## partículas del fondo en pausa. Con 3D a la vista o en MEDIA o más, todo como siempre. Mira cada medio segundo.
 
@@ -11,8 +11,10 @@ var principal: Node = null
 var _t := 0.0
 var _ahorrando := false
 
+## (10-11, informe `rendimiento_movil_2026-11-10.md`) Medido con 3 clubes de 3 países: el menú de BAJA se repintaba entero en cada fotograma (46-51 en 3 s, ~400 llamadas cada uno) y solo ULTRA BAJA ahorraba (1 en 3 s);
+## el ahorro vale ahora también en BAJA y MEDIA BAJA (los niveles «ligeros»); MEDIA y superiores siguen como siempre (decisión de diseño de arriba; el dueño decide si MEDIA en móvil también).
 static func toca() -> bool:
-	return Calidad.elegida <= Calidad.MINIMO and DisplayServer.get_name() != "headless"
+	return Calidad.elegida <= Calidad.MEDIA_BAJA and DisplayServer.get_name() != "headless"
 
 ## ¿Los fondos de los menús van quietos? Con el motor ligero y, desde el 3-11, también en MÍNIMA: un shader con `TIME` (los fondos de pantalla completa, las banderas que ondean, el
 ## reflejo del logo) obliga a redibujar la pantalla en cada fotograma aunque `low_processor_usage_mode` esté puesto (medido: 92 fotogramas en 3 s con el menú quieto). Quien monta uno

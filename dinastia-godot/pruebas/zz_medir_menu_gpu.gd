@@ -12,7 +12,8 @@ var _t0 := 0
 var _pantalla := ""
 
 func _ready() -> void:
-	Calidad.elegida = Calidad.MINIMO if OS.get_environment("MEDIO") == "" else Calidad.MEDIO
+	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.MINIMO if OS.get_environment("MEDIO") == "" else Calidad.MEDIO)   ## (10-11) el nivel también por argumento: `-- baja`, `-- medio`…
+	Calidad.sin_msaa = OS.get_environment("SIN_MSAA") != ""
 	_pantalla = OS.get_environment("PANTALLA")
 	match _pantalla.get_slice(":", 0):
 		"inicio":
@@ -37,8 +38,9 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 5 and _p.has_method("_refrescar"):
 		var m := Mundo.new()
-		m.generar(["CHI", "ARG"], 4711)
-		m.tomar_el_mando(m.ligas[0].clubes[0].id)
+		var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"   ## (10-11) PAIS=ESP CLUB=5: otro país y otro club
+		m.generar([pais], 4711)
+		m.tomar_el_mando(m.ligas[0].clubes[int(OS.get_environment("CLUB")) % m.ligas[0].clubes.size()].id)
 		_p.set("mundo", m)
 		_p.call("_refrescar")
 	if _n == 30 and _pantalla.begins_with("lateral:"):

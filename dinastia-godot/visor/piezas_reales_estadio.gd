@@ -120,22 +120,38 @@ static func _costillas(root: Node3D, n: int, col: Color, dx: float, dz: float, f
 	m.roughness = 0.7
 	_mm(root, "CostillasFachada", caja, m, trans)
 
-## La fachada curva: un cilindro abierto, escalado a la elipse del estadio, que tapa los paños rectos de las tribunas.
+## La fachada curva: un anillo de SUPERELIPSE (exponente 4, un rectángulo de esquinas redondeadas) que envuelve también las
+## esquinas y las puntas de las tribunas; con una elipse simple las esquinas la atravesaban y la tapaban. Una malla, dos caras.
+const EXP_CURVA := 4.0
+static func radio_curva(dx: float, dz: float, fondo: float) -> Vector2:
+	return Vector2(dx + fondo, dz + fondo) * 1.2 + Vector2(2.0, 2.0)   ## 2·(1/1,2)^4 < 1: la esquina queda dentro
+
 static func _fachada_curva(root: Node3D, f: Dictionary, dx: float, dz: float, fondo: float, alto: float) -> void:
-	var cil := CylinderMesh.new()
-	cil.top_radius = 1.0
-	cil.bottom_radius = 1.0
-	cil.height = alto * 1.02
-	cil.radial_segments = 40 if Calidad.elegida > Calidad.MINIMO else 24
-	cil.rings = 1
-	cil.cap_top = false
-	cil.cap_bottom = false
+	var r := radio_curva(dx, dz, fondo)
+	var n := 64 if Calidad.elegida > Calidad.MINIMO else 36
+	var h := alto * 1.02
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var pts: Array[Vector3] = []
+	for i in n + 1:
+		var a := TAU * float(i) / n
+		var c := cos(a)
+		var s := sin(a)
+		pts.append(Vector3(signf(c) * pow(absf(c), 2.0 / EXP_CURVA) * r.x, 0, signf(s) * pow(absf(s), 2.0 / EXP_CURVA) * r.y))
+	for i in n:
+		var p0 := pts[i]
+		var p1 := pts[i + 1]
+		var nor := Vector3(p1.z - p0.z, 0, p0.x - p1.x).normalized()
+		if nor.dot(p0 + p1) < 0.0:
+			nor = -nor
+		st.set_normal(nor)
+		for v: Vector3 in [p0, p1, p1 + Vector3.UP * h, p0, p1 + Vector3.UP * h, p0 + Vector3.UP * h]:
+			st.add_vertex(v)
 	var m := StandardMaterial3D.new()
 	m.albedo_color = Color(String(f.get("color", "#c9ccd1")))
 	m.roughness = 0.8
 	m.cull_mode = BaseMaterial3D.CULL_DISABLED
-	var b := Basis().scaled(Vector3(dx + fondo + 3.0, 1.0, dz + fondo + 3.0))
-	_mm(root, "FachadaCurva", cil, m, [Transform3D(b, Vector3(0, alto * 0.51, 0))])
+	_mm(root, "FachadaCurva", st.commit(), m, [Transform3D()])
 
 ## El «colchón»: filas de paneles alrededor del estadio, al tresbolillo, con luz propia del color dado. Un MultiMesh.
 static func _colchon(root: Node3D, f: Dictionary, dx: float, dz: float, fondo: float, alto: float) -> void:
@@ -144,15 +160,17 @@ static func _colchon(root: Node3D, f: Dictionary, dx: float, dz: float, fondo: f
 	var panel := BoxMesh.new()
 	panel.size = Vector3(1.0, 1.0, 0.6)
 	var paso_y := alto * 1.02 / filas
-	var rx := dx + fondo + 3.4
-	var rz := dz + fondo + 3.4
-	var ancho := TAU * sqrt((rx * rx + rz * rz) * 0.5) / por_fila
+	var rc := radio_curva(dx, dz, fondo) + Vector2(0.4, 0.4)   ## el colchón va sobre la misma superelipse
+	var ancho := 3.7 * (rc.x + rc.y) * 1.12 / por_fila   ## perímetro de la superelipse ≈ 3,7·(a+b)
 	var trans: Array = []
 	for fila in filas:
 		for i in por_fila:
 			var a := TAU * (float(i) + (0.5 if fila % 2 == 1 else 0.0)) / por_fila
-			var pos := Vector3(cos(a) * rx, paso_y * (fila + 0.5), sin(a) * rz)
-			var b := Basis(Vector3.UP, -a + PI * 0.5)
+			var c := cos(a)
+			var sn := sin(a)
+			var pos := Vector3(signf(c) * pow(absf(c), 0.5) * rc.x, paso_y * (fila + 0.5), signf(sn) * pow(absf(sn), 0.5) * rc.y)
+			var nrm := Vector3(signf(c) * pow(absf(c), 1.5) / rc.x, 0, signf(sn) * pow(absf(sn), 1.5) / rc.y).normalized()
+			var b := Basis.looking_at(-nrm, Vector3.UP) if nrm.length() > 0.5 else Basis()
 			trans.append(Transform3D(Basis(b.x * ancho * 0.96, b.y * paso_y * 0.94, b.z), pos))
 	var m := StandardMaterial3D.new()
 	var col := Color(String(f.get("color", "#dc052d")))

@@ -39,3 +39,19 @@ func _probar_formacion_propia() -> void:
 	add_child(ed)
 	_comprobar(ed.forma.has("s") and (ed.forma["s"] as Array).size() == 11, "el editor abre con la formación actual")
 	ed.queue_free()
+
+## LOCOMOCIÓN DE LEAGUE-SOCCER (10-11, fase 4c): la elección de arranques, frenadas y giros copia la del original
+## (`HumanoidBase::SelectAnim` + `GetMovementSimilarity`) sobre los datos de `datos/league_movimiento.json`.
+func _probar_league_movimiento() -> void:
+	_titulo("MOTOR LEAGUE: ARRANQUES, FRENADAS Y GIROS DEL ORIGINAL")
+	_comprobar(LeagueMovimiento.clips().size() == 38, "19 clips de movimiento del original con su espejo (%d)" % LeagueMovimiento.clips().size())
+	_comprobar(LeagueMovimiento.rango(1.0) == 0.0 and LeagueMovimiento.rango(3.0) == 3.5 and LeagueMovimiento.rango(5.0) == 5.0 and LeagueMovimiento.rango(7.0) == 8.0, "velocidades escalonadas del original (RangeVelocity)")
+	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0).get("nombre", "")) == "ls_movement__idle__000_accel", "parado y quiere ir de frente: arranque recto")
+	_comprobar(String(LeagueMovimiento.elegir(0.0, -PI / 2.0, 5.0).get("nombre", "")) == "ls_movement__idle__090_accel", "parado y quiere ir a la derecha: arranque girando 90° a la derecha")
+	_comprobar(String(LeagueMovimiento.elegir(0.0, PI / 2.0, 5.0).get("nombre", "")) == "ls_movement__idle__090_accel_espejo", "a la izquierda: el mismo clip espejado")
+	var frena := LeagueMovimiento.elegir(7.5, 0.0, 0.0)
+	_comprobar(float(frena.get("entra", -1)) == 8.0 and float(frena.get("sale", -1)) == 0.0, "a toda carrera y quiere pararse: una frenada desde el sprint (%s)" % frena.get("nombre", ""))
+	var vuelta := LeagueMovimiento.elegir(3.0, PI * 0.95, 3.0)
+	_comprobar(absf(float(vuelta.get("ang", 0.0))) > 2.0, "al trote y quiere volver atrás: un giro de 135-180° (%s)" % vuelta.get("nombre", ""))
+	_comprobar(LeagueMovimiento.estable(LeagueMovimiento.elegir(7.5, 0.0, 8.0)), "a toda carrera y de frente: el paso estable (no hay transición)")
+	_comprobar(absf(LeagueMovimiento.sesgo_giro(Vector2(0, -7.5), Vector2(0, 7.5)) - 0.9) < 0.001 and LeagueMovimiento.sesgo_giro(Vector2(0, -7.5), Vector2(0, -7.5)) < 0.001, "sesgo de giro rápido: máximo al dar la vuelta, nulo de frente")

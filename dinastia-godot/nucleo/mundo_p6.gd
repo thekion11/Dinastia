@@ -205,48 +205,9 @@ func _cerrar_campeonato() -> Dictionary:
 		if cierre_ausp != "":
 			resumen["auspicio"] = cierre_ausp
 
-	## Los dos últimos de Primera bajan y los dos primeros de Segunda suben, por
-	## cada país que tenga las dos divisiones.
-	for primera in ligas:
-		if primera.division() != 1:
-			continue
-		var segunda := _segunda_de(primera.pais)
-		if segunda == null:
-			continue
-		var t1: Array = tablas.get(primera, primera.tabla())
-		var t2: Array = tablas.get(segunda, segunda.tabla())
-		if t1.size() < 3 or t2.size() < 3:
-			continue
-		## Cuántos bajan y suben: lo que diga la Primera (editable, 2 por defecto).
-		var n_cambio := clampi(primera.plazas_descenso, 1, mini(t1.size(), t2.size()) - 2)
-		var bajan: Array[Club] = []
-		var suben: Array[Club] = []
-		for i_c in n_cambio:
-			bajan.append(t1[t1.size() - 1 - i_c]["club"])
-			suben.append(t2[i_c]["club"])
-		## LA PROMOCIÓN (reglamento fino, si la asamblea la aprobó): el
-		## antepenúltimo de Primera contra el tercero de Ascenso, ida y vuelta.
-		if federacion != null and federacion.promocion and t1.size() >= n_cambio + 2 and t2.size() >= n_cambio + 2:
-			var arriba: Club = t1[t1.size() - 1 - n_cambio]["club"]
-			var abajo: Club = t2[n_cambio]["club"]
-			var prom := jugar_promocion(arriba, abajo)
-			resumen["promocion"] = prom
-			if prom["ganador"] == abajo:
-				bajan.append(arriba)
-				suben.append(abajo)
-		## M-219: el intervenido por deudas baja (o no sube) por despacho.
-		if insolvencia != null:
-			var castigo := insolvencia.descenso_administrativo(self, t1, t2, bajan, suben)
-			if not castigo.is_empty():
-				resumen["administrativo"] = (resumen.get("administrativo", []) as Array) + castigo
-		for c in bajan:
-			_mover_de_liga(c, primera, segunda)
-			_clausula_descenso(c, true)
-		for c in suben:
-			_mover_de_liga(c, segunda, primera)
-			_clausula_descenso(c, false)
-		resumen["bajan"].append_array(bajan)
-		resumen["suben"].append_array(suben)
+	## Los que bajan de Primera y los que suben de Segunda, por cada país con las dos divisiones: las reglas de siempre o las REALES del país
+	## (`ReglasAscenso`: tres bajan en ENG/ESP/ITA, dos directos y un playoff de cuatro; promoción en GER y FRA).
+	AscensosPais.cerrar(self, tablas, resumen)
 
 	## Y la cuenta que de verdad importa: si cumpliste lo que te pidieron.
 	##

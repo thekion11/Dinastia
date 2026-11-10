@@ -192,7 +192,7 @@ func _probar_base_ficticia() -> void:
 			pisados.append(pais)
 		if not de_extra:
 			ligas_reales[String(pl_real[pais].get("liga", ""))] = true
-		for fila: Array in pl_real[pais]["clubes"]:
+		for fila: Array in (pl_real[pais]["clubes"] as Array) + (pl_real[pais].get("segunda", {}).get("clubes", []) as Array):   ## (10-11) y su segunda división
 			if not de_extra:
 				reales_clubes[Nombres.limpiar(String(fila[0])).to_lower()] = true
 			filas_reales.append(fila)
@@ -231,6 +231,7 @@ func _probar_base_ficticia() -> void:
 	var pl_fic: Dictionary = Datos.tabla("PAISES_LIGAS")
 	for pais: String in pl_fic:
 		filas_fic.append_array(pl_fic[pais]["clubes"])
+		filas_fic.append_array(pl_fic[pais].get("segunda", {}).get("clubes", []))   ## (10-11) y su segunda división
 	var misma_forma := filas_fic.size() == filas_reales.size()
 	if misma_forma:
 		for i in filas_fic.size():

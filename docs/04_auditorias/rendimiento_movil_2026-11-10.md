@@ -49,6 +49,31 @@ Desglose por grupos en ULTRA BAJA (CHI, llamadas que quitaría cada grupo): hinc
 | ENG | MEDIA | 349 | 534 k | 200 MB | 396 ms | **−67 %** |
 Memoria de vídeo: −7 a −14 MB en BAJA/MEDIA (el búfer multimuestra). Los escalones siguen siendo monótonos en llamadas, triángulos y fotograma (ULTRA BAJA < BAJA < MEDIA en los tres clubes).
 
+## El club a pie (`pruebas/medir_club.tscn`, nuevo; 10-11)
+Abre el estadio propio, entra en el recorrido a pie (`ExploradorEstadio`) y mide en 15 puntos: la salida, el centro de 3 salas por planta (plantas -2, -1, 1 y 2), el vestuario, el túnel y el campo. ULTRA BAJA, Compatibilidad, 1280x720.
+**Hallazgo:** el club a pie pedía ~860-960 llamadas y 0,86-1,26 M de triángulos desde CUALQUIER sala (el partido: 200-260 y 234-378 k), porque no hay oclusión: la cámara dibujaba también las gradas, la hinchada, las torres de focos y el entorno que quedan DETRÁS de las paredes. Ocultar plantas del edificio no ahorraba nada (el coste no era el edificio); ocultar el estadio de fuera sí.
+**Cambio hecho:** `OcultarEstadioDentro` (`visor/ocultar_estadio_dentro.gd`, llamado desde `ExploradorEstadio._rotulos`): en las plantas distintas de la 0 se ocultan los hijos de primer nivel del estadio que no son luces, cámara, el edificio (`TunelVestuario`), la calle (`Exterior`) ni la fachada; se devuelve tal cual al volver a la planta 0 o cerrar el recorrido (lo que ya estaba oculto sigue oculto). Prueba en el banco (`_probar_ocultar_estadio_dentro`). Capturas con la cámara real del recorrido (sala de prensa, oficina del DT): idénticas antes y después. Lo único que deja de verse es el entorno lejano por la ventana trasera (se ve la calle y la fachada).
+| Club | Antes (media de 15 puntos) | Después (media de 15 puntos) | Cambio |
+|---|---|---|---|
+| CHI | 957 llamadas · 1,20 M tri · 269 ms | 455 · 358 k · 142 ms | −52 % llamadas · −70 % tri · −47 % fotograma |
+| ESP | 870 · 858 k · 232 ms | 405 · 277 k · 133 ms | −53 % · −68 % · −43 % |
+| ENG | 963 · 1,26 M · 282 ms | 454 · 361 k · 134 ms | −53 % · −71 % · −52 % |
+Solo en las plantas ≠ 0 (CHI): ~850 → 335-405 llamadas, 1,1 M → 125-150 k triángulos, ~285 → ~105-120 ms (−60 %). Las puntos de la planta 0 (salida, vestuario, túnel, campo) no cambian: 350-960 llamadas.
+**Pendiente (club):** (1) la planta 0 es lo que queda caro: el «Vestuario» (886 llamadas) es una sala cerrada como las demás y se podría tratar igual (hace falta que el dueño/sesión 7 confirme que no se ve el estadio por el túnel con la puerta abierta); (2) `TunelVestuario` (176 piezas) y `Exterior` (152) siguen siendo ~330 llamadas dentro de una sala: agruparlas por sala (oclusión por sala) es un cambio de la escena del club (sesión 7); (3) el club solo se midió en ULTRA BAJA: BAJA/MEDIA añaden MSAA (ya cubierto por el cambio de `Calidad`) y las sombras.
+
+## El menú (`pruebas/zz_medir_menu_gpu.tscn`, ahora con `PAIS`, `CLUB` y nivel por argumento)
+Pantalla central del menú con la partida de un club, Compatibilidad, 1280x720, pantalla quieta durante 3 s:
+| Club | Nivel | Llamadas | Primitivas | Vídeo | Fotogramas dibujados en 3 s |
+|---|---|---|---|---|---|
+| CHI | ULTRA BAJA | 410 | 17,2 k | 36 MB | **1** (bajo consumo) |
+| CHI | BAJA / MEDIA | 389 | 17,0 k | 36 / 54 MB | **51** |
+| ESP | ULTRA BAJA | 407 | 16,9 k | 37 MB | **1** |
+| ESP | BAJA / MEDIA | 408 | 17,0 k | 37 / 55 MB | **48 / 50** |
+| ENG | ULTRA BAJA | 419 | 16,9 k | 38 MB | **1** |
+| ENG | BAJA / MEDIA | 420 | 17,0 k | 38 / 57 MB | **48 / 46** |
+**Hallazgo:** solo ULTRA BAJA activaba el modo de bajo consumo del menú (`AhorroMenu.toca()`): en BAJA, MEDIA BAJA y MEDIA el menú se repintaba entero (~400 llamadas) 46-51 veces cada 3 s con la pantalla quieta, en vez de 1.
+**Cambio hecho:** `AhorroMenu.toca()` vale ahora hasta MEDIA BAJA (bajo consumo, motas y fondos con shader de `TIME` quietos, mientras no haya 3D a la vista). Después: BAJA y MEDIA BAJA, los 3 clubes: **1 fotograma en 3 s** (−98 %). Coste visual, dicho: en BAJA y MEDIA BAJA los fondos animados del menú y las motas van quietos. MEDIA y superiores no se tocan (decisión de diseño original); en móvil MEDIA se repinta igual: el dueño decide si MEDIA en móvil también (es lo que midió con 28 FPS en el menú).
+
 ## Lo que NO se hizo (y por qué) / siguiente
 - **La meta de ULTRA BAJA (< 130 llamadas) NO se cumple**: 198-260. No se ha recortado nada más porque lo que quita llamadas es visual y hay que decidirlo: ojos y cejas de los jugadores lejanos (81 llamadas), pelo (136), hinchas (157 llamadas / 135 k triángulos) y butacas lejanas (230 k triángulos, −12 % de fotograma). Propuesta para el dueño: en ULTRA BAJA, sin ojos/cejas/pestañas a más de 12 m de la cámara; hinchas y butacas lejanas como una sola malla por grada con menos detalle. Se aplica cuando lo apruebe el dueño (regla: no quitar nada sin decirlo).
 - Luces omni, post-proceso y gente fuera del campo no pesan en este banco: no se tocan.

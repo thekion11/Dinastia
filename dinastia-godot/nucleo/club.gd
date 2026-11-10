@@ -282,7 +282,7 @@ func perfil_estadio() -> Dictionary:
 	var r: Dictionary = fila_estadio_real()
 	if not r.is_empty():
 		for k in ["forma", "niveles", "techo", "pista", "focos", "fachada", "rasgo",
-				"arco", "torres_rampa", "torres_col", "costillas", "costillas_col", "fachada_curva", "colchon", "pista_col", "techoCol", "fachadaCol", "asientoP", "asiento3", "pantalla"]:
+				"arco", "torres_rampa", "torres_col", "costillas", "costillas_col", "fachada_curva", "colchon", "pista_col", "techoCol", "fachadaCol", "asientoP", "asiento3", "pantalla", "niveles_lado", "esquinas_abiertas"]:
 			if r.has(k):   ## (10-11) las piezas de los estadios reales (`PiezasRealesEstadio`) y sus colores
 				p[k] = r[k]
 		p["real"] = true

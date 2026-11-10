@@ -417,3 +417,17 @@ func _mover_balon(delta: float) -> void:
 	var v0 := sqrt((exp(2.0 * k * distancia) - 1.0) * cc / k)
 	vel_balon = dir * v0
 	cuenta_toques["toque_largo"] = int(cuenta_toques.get("toque_largo", 0)) + (1 if distancia > 3.0 else 0)
+
+## FASE 4c (10-11): LOCOMOCIÓN VISUAL DEL ORIGINAL (`LeagueLocomocion`): ciclos de conducir y arranques, frenadas y giros.
+func _mover_jugadores(delta: float) -> void:
+	super(delta)
+	if fase3:
+		LeagueLocomocion.paso(self, delta)
+
+## Mientras dura un arranque, frenada o giro del original, los ciclos normales no lo pisan; un gesto de verdad sí.
+func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
+	if float(p.get("ls_trans_hasta", 0.0)) > t:
+		if not gesto:
+			return
+		LeagueLocomocion.cortar(p)
+	super(p, nombre, gesto, dur_max)

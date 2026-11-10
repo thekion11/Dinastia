@@ -7812,7 +7812,10 @@
   "Global %d-%d": "Aggregate %d-%d",
   "Cuadro principal": "Main bracket",
   "Pasa a semifinales": "Through to the semi-finals",
-  "Pasa al cuadro": "Through to the bracket"
+  "Pasa al cuadro": "Through to the bracket",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "No sun shadow, no anti-aliasing and 3D at a lower resolution",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sun shadow on, no anti-aliasing and 3D at a slightly lower resolution than Medium",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "No heavy effects and no anti-aliasing on phones and web: maximum smoothness"
  },
  "pt": {
   "Historia": "História",
@@ -15627,7 +15630,10 @@
   "Global %d-%d": "Global %d-%d",
   "Cuadro principal": "Quadro principal",
   "Pasa a semifinales": "Passa às meias-finais",
-  "Pasa al cuadro": "Passa ao quadro"
+  "Pasa al cuadro": "Passa ao quadro",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sem sombra do sol, sem suavização e com o 3D em menor resolução",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sombra do sol sim, sem suavização e com o 3D em resolução um pouco menor que em Média",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sem efeitos pesados e sem suavização em celular e web: máxima fluidez"
  },
  "patrones": [
   [
@@ -29549,7 +29555,10 @@
   "Global %d-%d": "Cumulé %d-%d",
   "Cuadro principal": "Tableau principal",
   "Pasa a semifinales": "Qualifié pour les demi-finales",
-  "Pasa al cuadro": "Qualifié pour le tableau"
+  "Pasa al cuadro": "Qualifié pour le tableau",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sans ombre du soleil, sans anticrénelage et avec la 3D en plus basse résolution",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombre du soleil oui, sans anticrénelage et avec la 3D à une résolution un peu plus basse qu'en Moyenne",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sans effets lourds et sans anticrénelage sur téléphone et web : fluidité maximale"
  },
  "it": {
   "Historia": "Storia",
@@ -37364,7 +37373,10 @@
   "Global %d-%d": "Complessivo %d-%d",
   "Cuadro principal": "Tabellone principale",
   "Pasa a semifinales": "Passa alle semifinali",
-  "Pasa al cuadro": "Passa al tabellone"
+  "Pasa al cuadro": "Passa al tabellone",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Senza ombra del sole, senza antialiasing e con il 3D a risoluzione più bassa",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombra del sole sì, senza antialiasing e con il 3D a una risoluzione un po' più bassa che in Media",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Senza effetti pesanti e senza antialiasing su telefono e web: massima fluidità"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45179,7 +45191,10 @@
   "Global %d-%d": "Gesamt %d-%d",
   "Cuadro principal": "Hauptrunde",
   "Pasa a semifinales": "Weiter ins Halbfinale",
-  "Pasa al cuadro": "Weiter in die K.-o.-Runde"
+  "Pasa al cuadro": "Weiter in die K.-o.-Runde",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Ohne Sonnenschatten, ohne Kantenglättung und mit 3D in geringerer Auflösung",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Sonnenschatten ja, ohne Kantenglättung und mit 3D in etwas geringerer Auflösung als bei Mittel",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ohne aufwendige Effekte und ohne Kantenglättung auf Handy und Web: maximale Flüssigkeit"
  },
  "ca": {
   "Historia": "Història",
@@ -52994,7 +53009,10 @@
   "Global %d-%d": "Global %d-%d",
   "Cuadro principal": "Quadre principal",
   "Pasa a semifinales": "Passa a semifinals",
-  "Pasa al cuadro": "Passa al quadre"
+  "Pasa al cuadro": "Passa al quadre",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Sense ombra del sol, sense suavitzat i amb el 3D a menys resolució",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Ombra del sol sí, sense suavitzat i amb el 3D a una resolució una mica menor que a Mitjana",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Sense efectes pesats i sense suavitzat en mòbil i web: màxima fluïdesa"
  },
  "pl": {
   "Club": "Klub",
@@ -60809,7 +60827,10 @@
   "Global %d-%d": "Łącznie %d-%d",
   "Cuadro principal": "Drabinka główna",
   "Pasa a semifinales": "Awans do półfinału",
-  "Pasa al cuadro": "Awans do drabinki"
+  "Pasa al cuadro": "Awans do drabinki",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Bez cienia słońca, bez wygładzania i z 3D w niższej rozdzielczości",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Cień słońca tak, bez wygładzania i z 3D w nieco niższej rozdzielczości niż w Średnim",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Bez ciężkich efektów i bez wygładzania na telefonie i w przeglądarce: maksymalna płynność"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68624,6 +68645,9 @@
   "Global %d-%d": "Toplam %d-%d",
   "Cuadro principal": "Ana tablo",
   "Pasa a semifinales": "Yarı finale kalır",
-  "Pasa al cuadro": "Tabloya kalır"
+  "Pasa al cuadro": "Tabloya kalır",
+  "Sin sombra del sol, sin suavizado y con el 3D a menor resolución": "Güneş gölgesi yok, kenar yumuşatma yok ve 3D daha düşük çözünürlükte",
+  "Sombra del sol sí, sin suavizado y con el 3D a una resolución algo menor que en Media": "Güneş gölgesi var, kenar yumuşatma yok ve 3D, Orta'dan biraz daha düşük çözünürlükte",
+  "Sin efectos pesados y sin suavizado en móvil y web: máxima fluidez": "Ağır efekt yok, telefon ve web'de kenar yumuşatma yok: azami akıcılık"
  }
 }

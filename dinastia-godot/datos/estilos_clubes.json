@@ -1827,5 +1827,413 @@
  "Ñu Guasu FC": [
   "5-3-2",
   "contra"
+ ],
+ "Brummie Azul": [
+  "4-3-3",
+  "presion"
+ ],
+ "Ewood Mitades": [
+  "4-4-2",
+  "directo"
+ ],
+ "Avon Petirrojos": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Valley Rojo": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Sky Celeste": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Carnero Pride": [
+  "4-4-2",
+  "directo"
+ ],
+ "Tigre Humber": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Orwell Azules": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Soar Zorros": [
+  "4-3-3",
+  "contra"
+ ],
+ "Tees Rojo": [
+  "3-4-3",
+  "ofensivo"
+ ],
+ "Leones Docks": [
+  "4-4-2",
+  "garra"
+ ],
+ "Canario Wensum": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Oxon Amarillo": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Solent Azul": [
+  "4-4-2",
+  "garra"
+ ],
+ "Deepdale Blanco": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Loftus Aros": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Acero Blades": [
+  "3-5-2",
+  "directo"
+ ],
+ "Hillsboro Buho": [
+  "4-4-2",
+  "garra"
+ ],
+ "Santos Itchen": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Trent Alfareros": [
+  "4-4-2",
+  "directo"
+ ],
+ "Cisnes Tawe": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Colmena Amarilla": [
+  "4-3-3",
+  "contra"
+ ],
+ "Zorzal Azul": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Dragon Gales": [
+  "4-4-2",
+  "presion"
+ ],
+ "Mancha Blanco": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Indalo FC": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Pirineo Andorra": [
+  "4-3-3",
+  "presion"
+ ],
+ "Cid Burgales": [
+  "3-5-2",
+  "directo"
+ ],
+ "Bahia Amarilla": [
+  "4-4-2",
+  "garra"
+ ],
+ "Orellut FC": [
+  "5-3-2",
+  "contra"
+ ],
+ "Africa Norte": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Califa Verde": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Leon Cultural": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Coruna Blanco": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Armero Eibar": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Alhambra Nazari": [
+  "3-5-2",
+  "presion"
+ ],
+ "Canaria Amarilla": [
+  "4-4-2",
+  "directo"
+ ],
+ "Pepino Madrid": [
+  "5-3-2",
+  "garra"
+ ],
+ "Boqueron Azul": [
+  "4-3-3",
+  "contra"
+ ],
+ "Miranda Rojillo": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Cantabria Verde": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Donosti Filial": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Pucela Violeta": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Gijon Rojiblanco": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Ebro Maño": [
+  "4-4-2",
+  "presion"
+ ],
+ "Oscense Azul": [
+  "5-3-2",
+  "directo"
+ ],
+ "Irpinia Lupi": [
+  "4-3-3",
+  "garra"
+ ],
+ "Puglia Galletto": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Marmo Apuano": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Calabria Aquile": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Romagna Cavallo": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Arno Azzurro": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Chiavari FC": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Ciociaria FC": [
+  "5-3-2",
+  "presion"
+ ],
+ "Vesuvio Vespe": [
+  "4-3-3",
+  "directo"
+ ],
+ "Mincio FC": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Gialloblu Emilia": [
+  "4-4-2",
+  "contra"
+ ],
+ "Brianza FC": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Antenore FC": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Rosanero Isola": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Adriatico FC": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Mapei Granata": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Ligure Blucerchi": [
+  "4-3-3",
+  "presion"
+ ],
+ "Aquilotto Ligure": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Alto Adige FC": [
+  "4-4-2",
+  "garra"
+ ],
+ "Laguna Alata": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Teuto Azul": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Leon Brunswick": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Lilien Hesse": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Elba Dinamo": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Rhin Fortuna": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Saarland FC": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Trebol Franconia": [
+  "4-4-2",
+  "directo"
+ ],
+ "Leine Rojo": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Spree Azul": [
+  "4-3-3",
+  "contra"
+ ],
+ "Kiel Marino": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Palatino Rojo": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Wildpark FC": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Elba Magdeburgo": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Franken Club": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Pader Azul": [
+  "4-4-2",
+  "presion"
+ ],
+ "Munster Verde": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Ruhr Minero": [
+  "4-3-3",
+  "garra"
+ ],
+ "Cuenca Azul": [
+  "3-5-2",
+  "contra"
+ ],
+ "Picardia FC": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Alpes Lago": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Corsica Azul": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Cote Opale": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Auvernia Rojo": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Dunas Norte": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Isere FC": [
+  "4-3-3",
+  "directo"
+ ],
+ "Armor Rojo": [
+  "3-5-2",
+  "garra"
+ ],
+ "Mayenne FC": [
+  "4-4-2",
+  "contra"
+ ],
+ "Sarthe Motor": [
+  "5-3-2",
+  "posesion"
+ ],
+ "Mosson Sureno": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Lorena Cardo": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Bearn Pau": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Saint Ouen FC": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Champagne Roja": [
+  "4-3-3",
+  "presion"
+ ],
+ "Aveyron FC": [
+  "3-5-2",
+  "directo"
+ ],
+ "Loire Verde": [
+  "4-4-2",
+  "garra"
+ ],
+ "Aube Azul": [
+  "5-3-2",
+  "contra"
  ]
 }

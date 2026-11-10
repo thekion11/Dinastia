@@ -3,6 +3,7 @@ extends "res://visor/explorador_estadio_p1.gd"
 ## [Capa 2/2 de `explorador_estadio.gd`] _rotulos, _physics_process, _raton_en_primera_persona, _unhandled_input, _exit_tree
 
 func _rotulos() -> void:
+	OcultarEstadioDentro.actualizar(self, planta)   ## (10-11) dentro del edificio no se dibuja el estadio de fuera
 	## La puerta del club se abre sola al acercarse desde dentro.
 	if planta == 0 and _datos.has("puerta"):
 		var pl: Vector3 = _datos["puerta"]
@@ -77,4 +78,5 @@ func _unhandled_input(ev: InputEvent) -> void:
 		usar()
 
 func _exit_tree() -> void:
+	OcultarEstadioDentro.devolver(self)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
