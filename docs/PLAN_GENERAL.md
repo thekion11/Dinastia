@@ -60,7 +60,7 @@ Dinastía ya tiene casi todo el temario de la Master League (cesiones, ojeadores
 1. ★ HECHO (10-11): FLECHA DE FORMA de 5 estados junto a cada jugador en la plantilla (`FlechaForma`, desde `Jugador.forma`). Falta: ponerla también en la pizarra de Táctica y en el once del partido.
 2. ★ HECHO (10-11, solo en pantalla): QUÍMICA entre compañeros de línea (`QuimicaLinea`: clan del vestuario, país, temporadas juntos y moral; `QuimicaCampo` la dibuja en el campo de la plantilla en verde, amarillo o rojo). Falta: mostrar la cifra por línea y, si el dueño quiere, que sume al motor con bandera.
 3. ★ ESTRATEGIAS RÁPIDAS en el partido: 4 botones grandes (ataque total, defensa, presión, contra) con enfriamiento, en mando y móvil (solo interfaz; fuente: PES Mastery). Necesita OK del dueño (orden 23: el partido es suyo).
-4. OBJETIVOS de la directiva con barra de progreso visible (puesto, copa, beneficio).
+4. HECHO (10-11): el OBJETIVO de la directiva en el menú central con tu puesto, la meta y una barra de progreso (`ObjetivoDirectiva`). Falta: metas de copa y beneficio.
 5. RUMORES y «último día» del mercado con ofertas relámpago.
 6. ESCENAS de diálogo a pantalla completa en hitos (fichaje estrella, despido, ascenso) con 3 respuestas (`EventoPantallaCompleta`).
 7. Informe de ojeador con RANGOS de atributos que se afinan con las semanas.

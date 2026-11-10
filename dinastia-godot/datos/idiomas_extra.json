@@ -7670,7 +7670,11 @@
   "Ronda": "Round",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D or gamepad · Shift: run · V: first person · E: use · Esc: back",
   "E: salir de casa": "E: leave the house",
-  "Plantilla detallada": "Detailed squad"
+  "Plantilla detallada": "Detailed squad",
+  "OBJETIVO": "TARGET",
+  "vas": "you're",
+  "meta": "target",
+  "Cerca de cumplir": "Close to meeting it"
  },
  "pt": {
   "Historia": "História",
@@ -15343,7 +15347,11 @@
   "Ronda": "Ronda",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D ou controle · Shift: correr · V: primeira pessoa · E: usar · Esc: voltar",
   "E: salir de casa": "E: sair de casa",
-  "Plantilla detallada": "Elenco detalhado"
+  "Plantilla detallada": "Elenco detalhado",
+  "OBJETIVO": "OBJETIVO",
+  "vas": "está em",
+  "meta": "meta",
+  "Cerca de cumplir": "Perto de cumprir"
  },
  "patrones": [
   [
@@ -28991,7 +28999,11 @@
   "Ronda": "Tour",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D ou manette · Maj : courir · V : première personne · E : utiliser · Échap : retour",
   "E: salir de casa": "E : sortir de la maison",
-  "Plantilla detallada": "Effectif détaillé"
+  "Plantilla detallada": "Effectif détaillé",
+  "OBJETIVO": "OBJECTIF",
+  "vas": "tu es",
+  "meta": "objectif",
+  "Cerca de cumplir": "Proche de l'objectif"
  },
  "it": {
   "Historia": "Storia",
@@ -36664,7 +36676,11 @@
   "Ronda": "Turno",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D o gamepad · Maiusc: correre · V: prima persona · E: usa · Esc: indietro",
   "E: salir de casa": "E: esci di casa",
-  "Plantilla detallada": "Rosa dettagliata"
+  "Plantilla detallada": "Rosa dettagliata",
+  "OBJETIVO": "OBIETTIVO",
+  "vas": "sei",
+  "meta": "obiettivo",
+  "Cerca de cumplir": "Vicino all'obiettivo"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44337,7 +44353,11 @@
   "Ronda": "Runde",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D oder Gamepad · Umschalt: rennen · V: Ego-Perspektive · E: benutzen · Esc: zurück",
   "E: salir de casa": "E: das Haus verlassen",
-  "Plantilla detallada": "Kader im Detail"
+  "Plantilla detallada": "Kader im Detail",
+  "OBJETIVO": "ZIEL",
+  "vas": "du bist",
+  "meta": "Ziel",
+  "Cerca de cumplir": "Nah am Ziel"
  },
  "ca": {
   "Historia": "Història",
@@ -52010,7 +52030,11 @@
   "Ronda": "Ronda",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D o comandament · Majúscules: córrer · V: primera persona · E: usar · Esc: tornar",
   "E: salir de casa": "E: sortir de casa",
-  "Plantilla detallada": "Plantilla detallada"
+  "Plantilla detallada": "Plantilla detallada",
+  "OBJETIVO": "OBJECTIU",
+  "vas": "vas",
+  "meta": "meta",
+  "Cerca de cumplir": "A prop de complir"
  },
  "pl": {
   "Club": "Klub",
@@ -59683,7 +59707,11 @@
   "Ronda": "Runda",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D lub pad · Shift: bieg · V: widok z pierwszej osoby · E: użyj · Esc: wróć",
   "E: salir de casa": "E: wyjdź z domu",
-  "Plantilla detallada": "Szczegółowa kadra"
+  "Plantilla detallada": "Szczegółowa kadra",
+  "OBJETIVO": "CEL",
+  "vas": "jesteś",
+  "meta": "cel",
+  "Cerca de cumplir": "Blisko celu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -67356,6 +67384,10 @@
   "Ronda": "Tur",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D veya kumanda · Shift: koş · V: birinci şahıs · E: kullan · Esc: geri",
   "E: salir de casa": "E: evden çık",
-  "Plantilla detallada": "Ayrıntılı kadro"
+  "Plantilla detallada": "Ayrıntılı kadro",
+  "OBJETIVO": "HEDEF",
+  "vas": "şu an",
+  "meta": "hedef",
+  "Cerca de cumplir": "Hedefe yakınlık"
  }
 }
