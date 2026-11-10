@@ -103,3 +103,29 @@ ALB, BUL, HUN, KGZ, MLT, SVK, UGA, AZE, GRE, ISL, LVA, NIR, TJK, BIH, HKG, KAZ, 
 ## Sin cambios por ambigüedad o temporada distinta
 FIN (fuente 2025; el CSV ya tiene la lista 2026), PLE (fuente 2024, liga abandonada), ZAM (temporada de transición 2026/27 en dos grupos, 20 clubes vs 18), NZL (play-off de campeones regionales, 2025), HAI (fuente solo muestra el grupo A), MDA (2026/27 con Real Sireți en vez de Spartanii), COD (Linafoot 2025/26 por grupos, ambiguo), MAD (conferencias Norte/Sur con un club retirado), NOR (fuente 2025, 16 clubes), CHN (fuente 2025; el CSV ya tiene la lista 2026), ARM (2026/27: Sardarapat y Syunik ascendidos faltan en el CSV de 10), KEN (Murang'a Seal = Muranga SEA), CPV/LBY/CGO (pasada anterior).
 Sin página en RSSSF: ninguno de los países con CSV (todos tenían enlace en curdom).
+
+---
+# AMBIGUOS Y PAÍSES BASE (10-11-2026, tras la pasada RSSSF)
+## ARM y ZAM — temporada 2026/27, PROVISIONAL (por coherencia con UKR, PHI y SUR)
+- **ARM** (12): añadidos Sardarapat y Syunik (ascendidos). **ZAM** (20, dos grupos «Streams» de la temporada de transición): +FC MUZA, Trident, Makeni All Stars, Chirundu United, Roan United; −Maestro United, Mines United, Prison Leopards. Datos de los clubes nuevos estimados.
+## Los ~13 ambiguos cruzados con Wikipedia local
+- **MDA** (8): RSSSF 2026/27 + wiki rumana + wiki inglesa coinciden → corregido (Real Sireți entra, Spartanii sale; PROVISIONAL).
+- **COD** (20): RSSSF y wiki inglesa coinciden en Linafoot 2025/26 con 16+14 clubes; el CSV pasa a 20 (−Renaissance du Congo, +Tanganyika, Lubumbashi Sport, Sanga Balende, Saint-Luc, Étoile du Kivu). Elegidos entre los 30 de la fuente por prestigio/posición: elección NO verificada.
+- **FIN, NOR, CHN**: el CSV ya coincide con la Wikipedia local (fi, no, zh/en) de 2026 → verificado, sin cambios (RSSSF era de 2025).
+- **KEN** (18): RSSSF 2025-26 y wiki inglesa coinciden → verificado. Para 2026-27 bajaron Kariobangi Sharks, Bidco United y Sofapaka (sin lista nueva aún).
+- **MAD** (16): RSSSF y wiki francesa coinciden (2 conferencias de 8; Fanalamanga retirado pero en la lista oficial) → verificado.
+- **PLE**: RSSSF 2024 (abandonada, 12 clubes con otros 5-6) no coincide con wiki inglesa 2022-23 (los 12 del CSV) → SIN CAMBIOS; qué clubes juegan hoy sigue sin confirmar. **NZL**: la National League es un play-off de clasificados que cambian cada año (el CSV mezcla clubes de 2025 y 2026) → sin cambios, plausible. **HAI**: RSSSF da 14 clubes (grupos A 8 + B 6), el CSV tiene 18; solo una fuente clara → sin cambios (sobrarían Arcahaie, Mirebalais, Rivartibonitienne y Triomphe de Liancourt).
+
+## 28 PAÍSES BASE vs RSSSF (SOLO cantidad y nombre; NO se tocó nada)
+Los nombres reales de estos países solo van en `pack_real.json` (lo público sigue ficticio y con dígitos). Cantidad igual a la fuente en todos: ARG 30, BRA 20, URU 16, PAR 12, COL 20, PER 18, ECU 16, ESP 20, ENG 20, ITA 20, GER 18, FRA 18, BOL 16, JPN 20, KOR 12, KSA 18, EGY 21, MAR 16, RSA 16, AUS 12, MEX 18, USA 30, NED 18, POR 18, BEL 16, CRO 10, DEN 12 (CHI: 16+16, igual que la fuente de 16 en primera).
+- **Idénticos en nombres** (salvo ortografía/idioma): ARG, PAR, COL, PER, ESP, ITA, MEX, ENG (Wolves), NED, POR, BEL, DEN, AUS, USA, CRO, GER, FRA, EGY, KSA.
+- **Diferencias reales de lista** (el pack parece ser la lista 2026/27 y RSSSF la 2025/26, o al revés):
+  - **BRA**: RSSSF 2025 tiene Ceará, Fortaleza, Juventude, Sport; el pack tiene Athletico-PR, Coritiba, Chapecoense, Remo (ascendidos para 2026).
+  - **URU**: RSSSF Maldonado, Albion, Central Español; el pack Fénix, Plaza Colonia, Rentistas.
+  - **ECU**: RSSSF Libertad FC, Deportivo Cuenca, Vinotinto, Manta; el pack Guayaquil City, Cumbayá, Imbabura, 9 de Octubre.
+  - **BOL**: RSSSF Nacional Potosí, Totora Real Oruro, ABB, San Antonio, Gualberto Villarroel; el pack Wilstermann, San José, Real Santa Cruz, Palmaflor, Vaca Díez.
+  - **KOR**: RSSSF Suwon FC y Daegu (descendidos en 2025); el pack Incheon y Bucheon.
+  - **JPN**: RSSSF 2025 Shonan, Albirex (descendidos); el pack JEF United, Mito Hollyhock, V-Varen Nagasaki.
+  - **MAR**: RSSSF DH El Jadida, KAC Marrakech, Olympique Dcheira, US Yaacoub El Mansour; el pack MC Oujda, Chabab Mohammédia, Jeunesse Soualem, SCC Mohammédia.
+  - **RSA**: RSSSF 2025/26 Durban City, Siwelele, Orbit College, Marumo Gallants; el pack Cape Town City, SuperSport United, Maritzburg, Cassric Stars (lista 2024/25: la más desactualizada).
+- Interpretación: ECU, BOL, KOR, JPN, BRA y URU son consistentes con el pack = lista 2026 (ascendidos) frente a RSSSF = tabla final 2025; **MAR y RSA** parecen listas anteriores a las de RSSSF y son las candidatas a corregir.

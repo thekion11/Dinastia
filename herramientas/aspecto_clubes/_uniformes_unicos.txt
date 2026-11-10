@@ -3,6 +3,7 @@ AD Tarma|franja_pecho|||#ffffff|#ffffff||||
 APOeL|franja_pecho|||#1b458f|#1b458f||||
 AS Real Bamako|franja_pecho|||#ffffff|#d62828||||
 ASM Sangarédi|franja_pecho|||#ffffff|#1d4fa8||||
+Aigle Royal de la Menoua|franja_pecho|||#ffd100|#1b458f||||
 Al Mokawloon|cuello_v|||#00843d|#ffffff||||
 Al Shahaniya|franja_pecho|||#c8102e|#c8102e||||
 Al-Ahly Benghazi|franja_pecho|||#ffffff|#0b8f3c||||
@@ -44,6 +45,7 @@ Aurora FC|franja_central|||#ffffff|#ffffff||||
 Belgrano|franjas_finas|||#111111|#5ab4e5||||
 Beroe|franja_pecho|||#00843d|#00843d||||
 Botafogo|franjas_finas|||#000000|#000000||||
+CFFEB|franja_pecho|||#111111|#0b8f3c||||
 CRB|franja_pecho|||#ffffff|#d50032||||
 Cartaginés|franja_central|||#ffffff|#ffffff||||
 Cavaly AS|franja_pecho|||#ffffff|#ffffff||||
@@ -76,6 +78,7 @@ Dreams FC|franja_central|||#111111|#c8102e||||
 Dudelange|hombros|||#ffffff|#c8102e||||
 Duhok|hombros|||#ffffff|#c8102e||||
 Dungannon Swifts|franja_pecho|||#111111|#111111||||
+Dynamo Abomey|cuello_v|||#ffffff|#e30613||||
 Dynamo Moscow|franja_pecho|||#1b458f|#1b458f||||
 ES Ben Aknoun|franja_central|||#111111|#0057b8||||
 ES Zarzis|franja_pecho|||#111111|#e31b23||||
@@ -91,6 +94,7 @@ Estudiantes RC|franjas_finas|||#ffffff|#ffffff||||
 FC Argeș|franja_pecho|||#ffffff|#8b1538||||
 FC Copenhague|franja_pecho|||#ffffff|#ffffff||||
 FC Santa Coloma|franja_pecho|||#111111|#e30613||||
+FC Tanganyika|franja_pecho|||#111111|#1d3f9e||||
 Felgueiras|franja_pecho|||#ffffff|#ffffff||||
 Ferroviário de Nampula|franja_pecho|||#111111|#0b8f3c||||
 Frosinone|franja_pecho|||#0057b8|#ffd100||||
@@ -149,6 +153,7 @@ Lamphun Warriors|franja_pecho|||#1d3f8f|#c8102e||||
 Larne|banda_baja|||#ffffff|#c8102e||||
 Las Palmas|franja_pecho|||#ffffff|#ffd100||||
 Leicester|franja_pecho|||#0057b8|#ffffff||||
+Les Aigles du Congo|raglan|||#ffffff|#1d3f9e||||
 Liaoning Tieren|cuello_v|||#ffffff|#c8102e||||
 Liepāja|banda_baja|||#ffffff|#ffffff||||
 Linfield|franjas_anchas|||#ffffff|#1d4fa8||||
@@ -208,7 +213,7 @@ Oțelul Galați|cuello_v|||#1b458f|#1b458f||||
 PEC Zwolle|franjas_finas|||#111111|#0057b8||||
 PSM|canesu|||#111111|#c8102e||||
 PVF-CAND|franja_pecho|||#ffffff|#1e4fa3||||
-PWD Bamenda|franja_pecho|||#ffd100|#1b458f||||
+PWD Bamenda|franjas|||#ffd100|#1b458f||||
 Padova|franja_pecho|||#d50032|#d50032||||
 Pafos|franja_central|||#ffffff|#ffffff||||
 Paide Linnameeskond|hombros|||#ffffff|#0057b8||||
@@ -234,7 +239,6 @@ Portadown|banda_baja|||#111111|#c8102e||||
 Portimonense|franjas_anchas|||#111111|#111111||||
 Portsmouth|cuello_v|||#0057b8|#0057b8||||
 Primeiro de Maio|cuello_v|||#ffffff|#ffffff||||
-Prison Leopards|franjas_finas|||#000000|#f7d117||||
 Progrès Niederkorn|canesu|||#ffffff|#c8102e||||
 Punjab FC|franja_pecho|||#1d3f9e|#c8102e||||
 Pérez Zeledón|franja_pecho|||#111111|#ffd100||||
@@ -272,6 +276,7 @@ Sandefjord|cuello_v|||#1b458f|#ffffff||||
 Sanfrecce H.|franja_pecho|||#5c2d91|#5c2d91||||
 Santa Clara|franja_pecho|||#d50032|#d50032||||
 Santa Fe|hombros|||#ffffff|#d50032||||
+Sardarapat|v_ancha|||#111111|#c8102e||||
 Sarmiento|franjas_finas|||#ffffff|#ffffff||||
 Sarpsborg 08|raglan|||#ffffff|#c8102e||||
 Sarıyer|raglan|||#111111|#0057b8||||
@@ -351,6 +356,7 @@ US Seme Kraké|franjas_finas|||#e30613|#ffffff||||
 USCA Foot|franjas_finas|||#000000|#f58220||||
 UTA Arad|franja_pecho|||#ffffff|#ffffff||||
 Ulinzi Stars|franja_pecho|||#111111|#1f8a3b||||
+Unisport Bafang|bastones|||#ffffff|#c8102e||||
 Unisport FC|raglan|||#ffffff|#1d3f9e||||
 Universitatea Craiova|raglan|||#ffffff|#1b458f||||
 Unión Coclé FC|bastones|||#ffffff|#c8102e||||
@@ -396,6 +402,7 @@ Zira|franja_pecho|||#000000|#000000||||
 Árabe Unido|hombros|||#111111|#c8102e||||
 Çorum|franjas_finas|||#111111|#111111||||
 Étoile Filante|franja_central|||#ffffff|#e30613||||
+Étoile du Congo|franja_central|||#ffffff|#ffffff||||
 Étoile du Sahel|franjas_finas|||#ffffff|#e31b23||||
 ÍBV|franja_pecho|||#000000|#ffffff||||
 Ñublense|v_ancha|||#ffffff|#d50032||||

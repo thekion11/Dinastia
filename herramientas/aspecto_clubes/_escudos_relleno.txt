@@ -60,6 +60,8 @@ Ararat Yerevan||||ARA|||
 Van||||VAN|||
 Gandzasar Kapan||||GAN|||
 BKMA Yerevan||||BKM|||
+Sardarapat||||SAR|||
+Syunik||||SYU|||
 SC Austria Lustenau||||AUS|||
 Araz Naxçıvan||||ARA|||
 Gabala||||GAB|||
@@ -204,7 +206,6 @@ TP Mazembe||||TP|||
 AS Vita Club||||VIT|||
 Saint-Éloi Lupopo||||SAI|||
 Les Aigles du Congo||||LES|||
-Renaissance du Congo||||REN|||
 Céleste FC||||CEL|||
 Motema Pembe||||MOT|||
 Maniema Union||||MAN|||
@@ -216,6 +217,11 @@ AS Simba||||SIM|||
 CS Manika||||CS|||
 Blessing FC||||BLE|||
 New JAK||||NEW|||
+FC Tanganyika||||TAN|||
+FC Lubumbashi Sport||||LUB|||
+SM Sanga Balende||||SM|||
+AS Saint-Luc||||SAI|||
+Étoile du Kivu||||ETO|||
 SC África Show||||AFR|||
 CS Mindelense||||CS|||
 GD Palmeira||||GD|||
@@ -705,7 +711,7 @@ Milsami Orhei||||MIL|||
 Bălți||||BAL|||
 Dacia Buiucani||||DAC|||
 Politehnica UTM||||POL|||
-Spartanii Sportul||||SPA|||
+Real Sireți||||REA|||
 Shkëndija||||SHK|||
 Vardar||||VAR|||
 Struga||||STR|||
@@ -1170,14 +1176,16 @@ Green Eagles||||GRE|||
 Kabwe Warriors||||KAB|||
 Kansanshi Dynamos||||KAN|||
 Konkola Blades||||KON|||
-Maestro United||||MAE|||
-Mines United||||MIN|||
 Mufulira Wanderers||||MUF|||
 Mutondo Stars||||MUT|||
 NAPSA Stars||||NAP|||
 Nchanga Rangers||||NCH|||
 Nkwazi||||NKW|||
-Prison Leopards||||PRI|||
+FC MUZA||||MUZ|||
+Trident||||TRI|||
+Makeni All Stars||||MAK|||
+Chirundu United||||CHI|||
+Roan United||||ROA|||
 Dynamos||||DYN|||
 CAPS United||||CAP|||
 Highlanders||||HIG|||
