@@ -32,6 +32,9 @@ QUITAR = {
     "KOR": ["Suon FC", "Daegu FC", "Seongnam", "Busan IPark", "Ansan G.", "Ch. Citizen"],
     "AUS": ["W. United", "Canberra Utd", "Geelong FC", "Darwin City"],
 }
+QUITAR["PER"].append("Alianza Atiético")  # nombre mal escrito en la 1.ª pasada
+QUITAR["EGY"].append("Al Itiihad Alex.")  # idem
+
 
 # (país, nombre del pack, nombre ficticio, color 1, color 2, media, aforo, formación, estilo)
 NUEVOS = [
@@ -111,7 +114,7 @@ NUEVOS = [
     ("KSA", "Al-Q4dsiah", "Khobar Amarillo", "#ffd100", "#0057b8", 76, 22000, "4-2-3-1", "ofensivo"),
     ("KSA", "Ne0m SC", "Costa Futura", "#0b2a5b", "#00b2a9", 66, 12000, "4-3-3", "equilibrado"),
     # ---- Egipto (21): 15 + 5 (queda Kahraba en RESERVA)
-    ("EGY", "Al It1ihad Alex.", "Faro Alejandria", "#00843d", "#ffffff", 69, 19000, "4-4-2", "bloque"),
+    ("EGY", "Al Ittih4d Alex.", "Faro Alejandria", "#00843d", "#ffffff", 69, 19000, "4-4-2", "bloque"),
     ("EGY", "Petr0jet", "Oro Negro Suez", "#d50032", "#ffffff", 66, 28500, "4-4-2", "contra"),
     ("EGY", "Har4s El Hodoud", "Guardia Frontera", "#00843d", "#ffffff", 65, 22000, "5-3-2", "bloque"),
     ("EGY", "Wadi D3gla", "Valle Palmeras", "#0057b8", "#ffffff", 65, 16000, "4-4-2", "equilibrado"),
@@ -128,7 +131,7 @@ NUEVOS = [
     ("ARG", "Estud1antes RC", "Rio Cuarto FC", "#d50032", "#ffffff", 64, 12000, "4-4-2", "bloque"),
     ("COL", "J4guares", "Cordobes Felino", "#ffd100", "#000000", 62, 12000, "4-4-2", "contra"),
     ("COL", "Llan3ros", "Villavo FC", "#ffd100", "#d50032", 60, 15000, "4-4-2", "bloque"),
-    ("PER", "Alianza At1ético", "Sullana Celeste", "#5ab4e5", "#ffffff", 63, 12000, "4-4-2", "equilibrado"),
+    ("PER", "Al1anza Atl. Sullana", "Sullana Celeste", "#5ab4e5", "#ffffff", 63, 12000, "4-4-2", "equilibrado"),
     ("PER", "FC Caj4marca", "Cumbemayo FC", "#000000", "#d50032", 62, 10500, "4-4-2", "bloque"),
     ("PER", "Dep. M0quegua", "Pisco Valle", "#ffd100", "#0057b8", 60, 21000, "4-4-2", "contra"),
     ("PER", "Juan Pabl0 II", "Chongoyape FC", "#ffffff", "#0057b8", 58, 3000, "5-4-1", "bloque"),
