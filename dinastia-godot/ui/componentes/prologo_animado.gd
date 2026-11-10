@@ -1,33 +1,37 @@
 class_name PrologoAnimado
 extends EventoPantallaCompleta
-## EL PRÓLOGO COMO ANIMACIÓN FIJA (9-11, PDF de la reestructuración «solo club»: «se reemplaza la caminata 3D por una animación predeterminada; el jugador no se mueve; se
-## puede saltar tocando las fases de arriba o con el joystick»). SIN vídeo: seis planos DIBUJADOS POR EL MOTOR (como la intro de marca), cada uno con su escena en
-## los colores de tu club, un lento acercamiento, un título y una frase que se escribe sola. Se ve al empezar una partida nueva (y al continuar si no llegó a verse).
-## Controles: tocar un tramo de la barra de arriba salta a ese plano; Esc, Enter, Espacio, cualquier botón del mando o mover el stick lo salta entero.
+## EL PRÓLOGO DE CINE (9-11 primer corte; 10-11 rehecho: «puedes hacerlo muchísimo mejor», el dueño, que eligió la animación del motor frente al vídeo).
+## SIN vídeo: seis escenas dibujadas por el motor y montadas como cine (`PrologoCine`): cada una en CAPAS (fondo `PrologoArte`, primer plano y lo
+## vivo de `PrologoEscenas`) que una CÁMARA mueve con paralaje; LUCES aditivas (los focos se encienden uno a uno, la luz del campo en el túnel);
+## figuras que caminan y gesticulan; FUNDIDOS cruzados entre escenas; títulos que entran con el espaciado cerrándose; bandas panorámicas, viñeta y
+## grano. Abre con el ESCUDO de tu club revelado por un haz de luz y cierra con el escudo y «DINASTÍA». Lo fijo se pinta una vez (barato).
+## Controles: tocar un tramo de la barra de arriba salta a esa escena; Esc, Enter, Espacio, cualquier botón del mando o mover el stick lo salta entero.
 ## Emite `terminado` al acabar o saltarse (el que lo lanza marca el prólogo como visto).
-const SEG_POR_PLANO := 7.0   ## (10-11) más texto por plano: un segundo de lectura más
+const FUNDIDO := 0.8
+const APERTURA := 2.6   ## segundos del escudo sobre negro al empezar
+const CIERRE := 3.4     ## segundos del cartel final
 const PLANOS := [
-	{"escena": "estadio", "titulo": "Hoy empieza tu dinastía", "texto": "Un club, una ciudad y todo por construir.", "mas": "La grada ya canta tu nombre. Ahora hay que darle motivos.", "sonido": "ovacion"},
-	{"escena": "vestuario", "titulo": "El vestuario", "texto": "Donde se ganan los partidos antes de jugarlos.", "mas": "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.", "sonido": "menu_seccion"},
-	{"escena": "tunel", "titulo": "El túnel", "texto": "Por aquí sale el equipo cada partido. Ya se oye la grada.", "mas": "Al final del pasillo está el césped. Y el marcador.", "sonido": "murmullo"},
-	{"escena": "banquillo", "titulo": "El banquillo", "texto": "Desde aquí dirigirás: cambios, órdenes y la charla del descanso.", "mas": "Noventa minutos que deciden una semana entera.", "sonido": "silbato"},
-	{"escena": "despacho", "titulo": "El despacho del presidente", "texto": "Aquí se firma y aquí se despide. La directiva te mira.", "mas": "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.", "sonido": "menu_seccion"},
-	{"escena": "oficina", "titulo": "Tu oficina", "texto": "Desde tu PC lo gestionas todo. Es hora de empezar.", "mas": "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.", "sonido": "menu_aceptar"},
+	{"escena": "estadio", "dur": 8.4, "cam": [Vector2(0.0, 0.03), Vector2(0.0, -0.02), 1.0, 1.07], "titulo": "Hoy empieza tu dinastía", "texto": "Un club, una ciudad y todo por construir.", "mas": "La grada ya canta tu nombre. Ahora hay que darle motivos.", "sonido": "ovacion"},
+	{"escena": "vestuario", "dur": 6.6, "cam": [Vector2(-0.04, 0.0), Vector2(0.04, 0.0), 1.04, 1.08], "titulo": "El vestuario", "texto": "Donde se ganan los partidos antes de jugarlos.", "mas": "Cada camiseta es un jugador que confía en ti. Cuida el ánimo y la charla.", "sonido": "menu_seccion"},
+	{"escena": "tunel", "dur": 6.8, "cam": [Vector2(0.0, 0.02), Vector2(0.0, 0.0), 1.0, 1.16], "titulo": "El túnel", "texto": "Por aquí sale el equipo cada partido. Ya se oye la grada.", "mas": "Al final del pasillo está el césped. Y el marcador.", "sonido": "murmullo"},
+	{"escena": "banquillo", "dur": 6.6, "cam": [Vector2(0.04, 0.01), Vector2(-0.03, 0.0), 1.06, 1.06], "titulo": "El banquillo", "texto": "Desde aquí dirigirás: cambios, órdenes y la charla del descanso.", "mas": "Noventa minutos que deciden una semana entera.", "sonido": "silbato"},
+	{"escena": "despacho", "dur": 6.8, "cam": [Vector2(0.0, -0.02), Vector2(0.02, 0.03), 1.02, 1.1], "titulo": "El despacho del presidente", "texto": "Aquí se firma y aquí se despide. La directiva te mira.", "mas": "Te fijará un objetivo. Cúmplelo y tendrás tiempo; fállalo y no.", "sonido": "menu_seccion"},
+	{"escena": "oficina", "dur": 9.6, "cam": [Vector2(0.0, 0.03), Vector2(0.0, 0.0), 1.0, 1.12], "titulo": "Tu oficina", "texto": "Desde tu PC lo gestionas todo. Es hora de empezar.", "mas": "Fichajes, plantilla, estadio y finanzas: todo pasa por aquí.", "sonido": "menu_aceptar"},
 ]
 
 var _club: Club
 var _i := -1
 var _t := 0.0
 var _vivo := 0.0
-var _escena: Control
-## (10-11, medido) La ilustración FIJA se pinta en una TEXTURA (`_vp`) una vez por plano (y si cambia el tamaño); lo que se mueve va encima
-## (`PrologoArte.dibujar_vivo`). Dibujarla en cada cuadro costaba ~1.380 llamadas de dibujo (el público son miles de puntos).
-var _vp: SubViewport
-var _lienzo: Control
+var _escena: Control            ## el plano en pantalla (capas + luces + vivo)
+var _capas: Dictionary = {}     ## del plano actual: fondo, luces, vivo, frente
+var _post: Control              ## acabado de cine, apertura y cierre (encima de los planos)
 var _titulo: Label
 var _texto: Label
+var _fuente_titulo: FontVariation
 var _segmentos: Array[Button] = []
 var _acabado := false
+var _escudo: Texture2D
 
 static func mostrar(pr: Principal) -> PrologoAnimado:
 	var v := PrologoAnimado.new()
@@ -36,41 +40,43 @@ static func mostrar(pr: Principal) -> PrologoAnimado:
 	v._armar(pr)
 	return v
 
-func _armar(pr: Principal) -> void:
-	_raiz.get_child(_raiz.get_child_count() - 1).queue_free()   ## el CenterContainer del contenido genérico: aquí no se usa
-	_escena = Control.new()
-	_escena.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_escena.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_escena.draw.connect(_dibujar)
-	_raiz.add_child(_escena)
-	_vp = SubViewport.new()
-	_vp.disable_3d = true
-	_vp.transparent_bg = false
-	_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
-	_escena.add_child(_vp)
-	_lienzo = Control.new()
-	_lienzo.draw.connect(_dibujar_arte)
-	_vp.add_child(_lienzo)
-	var tr := TextureRect.new()
-	tr.texture = _vp.get_texture()
-	tr.set_anchors_preset(Control.PRESET_FULL_RECT)
-	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	tr.show_behind_parent = true
-	_escena.add_child(tr)
-	## La barra de fases de arriba: un tramo por plano; tocarlo salta a ese plano.
+func _c1() -> Color:
+	return Color(_club.color1) if _club != null else Tema.ACENTO
+
+func _c2() -> Color:
+	return Color(_club.color2) if _club != null else Tema.ORO
+
+func _armar(_pr: Principal) -> void:
+	for h in _raiz.get_children():   ## el fondo, los filetes y el contenido genéricos de los eventos: el prólogo pone los suyos
+		_raiz.remove_child(h)
+		h.queue_free()
+	var negro := ColorRect.new()
+	negro.color = Color.BLACK
+	negro.set_anchors_preset(Control.PRESET_FULL_RECT)
+	negro.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_raiz.add_child(negro)
+	if _club != null:
+		_escudo = Escudo.textura(_club, 256)
+	_post = Control.new()
+	_post.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_post.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_post.draw.connect(_dibujar_post)
+	_post.z_index = 2
+	_raiz.add_child(_post)
+	## La barra de fases de arriba (sobre la banda negra): un tramo por escena; tocarlo salta a esa escena.
 	var barra := HBoxContainer.new()
 	barra.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	barra.offset_left = 40
 	barra.offset_right = -40
-	barra.offset_top = 10
-	barra.offset_bottom = 30
+	barra.offset_top = 14
+	barra.offset_bottom = 22
 	barra.add_theme_constant_override("separation", 8)
+	barra.z_index = 3
 	_raiz.add_child(barra)
 	for k in PLANOS.size():
 		var b := Button.new()
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.custom_minimum_size = Vector2(0, 20)
+		b.custom_minimum_size = Vector2(0, 8)
 		b.focus_mode = Control.FOCUS_NONE
 		var idx := k
 		b.pressed.connect(func() -> void: _ir(idx))
@@ -82,57 +88,134 @@ func _armar(pr: Principal) -> void:
 	saltar.offset_top = -100
 	saltar.offset_right = -40
 	saltar.offset_bottom = -44
+	saltar.z_index = 3
+	saltar.modulate.a = 0.75
 	saltar.pressed.connect(_terminar)
 	_raiz.add_child(saltar)
 	var pie := VBoxContainer.new()
 	pie.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	pie.offset_left = 90
-	pie.offset_right = -230
-	pie.offset_top = -190
-	pie.offset_bottom = -50
-	pie.add_theme_constant_override("separation", 6)
+	pie.offset_right = -260
+	pie.offset_top = -170
+	pie.offset_bottom = -40
+	pie.add_theme_constant_override("separation", 4)
+	pie.z_index = 3
 	_raiz.add_child(pie)
-	_titulo = etiqueta("", 40, Tema.ORO, false, false)
+	_titulo = etiqueta("", 36, Color(1, 0.93, 0.7), false, false)
+	_fuente_titulo = FontVariation.new()
+	_fuente_titulo.base_font = _titulo.get_theme_font("font")
+	_titulo.add_theme_font_override("font", _fuente_titulo)
+	_titulo.add_theme_constant_override("outline_size", 8)
 	pie.add_child(_titulo)
-	_texto = etiqueta("", 20, Tema.TEXTO, false)
+	_texto = etiqueta("", 17, Tema.TEXTO, false)
 	pie.add_child(_texto)
 	if DisplayServer.get_name() != "headless":
-		Musica.poner("gloria")   ## (10-11) la música del prólogo; al volver al menú, `AvanceSemana` la vuelve a ambientar
+		Musica.poner("gloria")   ## la música del prólogo; al volver al menú, `AvanceSemana` la vuelve a ambientar
 	_ir(0)
 
+## Salta a la escena `k`: la anterior se funde mientras entra la nueva; el título entra con el espaciado cerrándose.
 func _ir(k: int) -> void:
 	_i = clampi(k, 0, PLANOS.size() - 1)
 	_t = 0.0
 	var p: Dictionary = PLANOS[_i]
+	if _escena != null:
+		var viejo := _escena
+		var tw := create_tween()
+		tw.tween_property(viejo, "modulate:a", 0.0, FUNDIDO)
+		tw.tween_callback(viejo.queue_free)
+	_montar_escena(String(p["escena"]))
+	_escena.modulate.a = 0.0
+	create_tween().tween_property(_escena, "modulate:a", 1.0, FUNDIDO * 0.75)
 	_titulo.text = Idiomas.t(String(p["titulo"]))
 	_texto.text = Idiomas.t(String(p["texto"])) + "\n" + Idiomas.t(String(p["mas"]))
-	if Engine.get_main_loop() is SceneTree and DisplayServer.get_name() != "headless":
-		Sonido.toca(String(p["sonido"]))   ## (10-11) el sonido de cada plano
 	_texto.visible_ratio = 0.0
+	var retraso := APERTURA if _i == 0 else 0.5
+	_titulo.modulate.a = 0.0
+	_fuente_titulo.spacing_glyph = 14
+	var tt := create_tween().set_parallel(true)
+	tt.tween_property(_titulo, "modulate:a", 1.0, 0.9).set_delay(retraso)
+	tt.tween_property(_fuente_titulo, "spacing_glyph", 1, 1.4).set_delay(retraso).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	for n in _segmentos.size():
 		var sb := StyleBoxFlat.new()
 		sb.bg_color = Color(Tema.ORO, 0.95) if n <= _i else Color(1, 1, 1, 0.18)
 		sb.set_corner_radius_all(3)
 		for estado in ["normal", "hover", "pressed", "focus"]:
 			_segmentos[n].add_theme_stylebox_override(estado, sb)
-	_escena.scale = Vector2.ONE
-	_escena.queue_redraw()
-	_repintar_arte()
+	if Engine.get_main_loop() is SceneTree and DisplayServer.get_name() != "headless":
+		Sonido.toca(String(p["sonido"]))
+
+## Monta las capas de una escena: fondo y primer plano fijos (pintados una vez), luces aditivas y lo vivo.
+func _montar_escena(clave: String) -> void:
+	_escena = Control.new()
+	_escena.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_escena.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_raiz.add_child(_escena)
+	_raiz.move_child(_escena, 1)   ## sobre el negro y detrás del acabado, la barra y los textos
+	var tam := get_viewport().get_visible_rect().size
+	var c1 := _c1()
+	var c2 := _c2()
+	var club := _club
+	_capas = {}
+	_capas["fondo"] = PrologoCine.capa(_escena, tam, func(ci: CanvasItem, w: float, h: float) -> void:
+		var oscuro := Color(0.03, 0.06, 0.04)
+		PrologoCine.degradado(ci, Rect2(0, 0, w, h), c1.lerp(oscuro, 0.9), c1.lerp(Tema.ORO, 0.16).lerp(oscuro, 0.72))
+		PrologoArte.dibujar(ci, clave, w, h, c1, c2, 0.0, club), false)
+	for nombre: String in ["luces", "vivo"]:
+		var cap := Control.new()
+		cap.size = tam * (1.0 + 2.0 * PrologoCine.MARGEN)
+		cap.position = -tam * PrologoCine.MARGEN
+		cap.pivot_offset = cap.size * 0.5
+		cap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if nombre == "luces":
+			cap.material = PrologoCine.material_luz()
+			cap.draw.connect(func() -> void: PrologoEscenas.luces(cap, clave, cap.size.x, cap.size.y, _t, c1))
+		else:
+			cap.draw.connect(func() -> void: PrologoEscenas.vivo(cap, clave, cap.size.x, cap.size.y, _t, c1, c2))
+		_escena.add_child(cap)
+		_capas[nombre] = cap
+	_capas["frente"] = PrologoCine.capa(_escena, tam, func(ci: CanvasItem, w: float, h: float) -> void:
+		PrologoEscenas.frente(ci, clave, w, h, c1, c2))
+	_capas["base"] = -tam * PrologoCine.MARGEN
+	_capas["tam"] = tam
+
+## La cámara: paneo y acercamiento del plano; el primer plano se mueve 1,6 veces más (paralaje).
+func _mover_camara() -> void:
+	if _capas.is_empty():
+		return
+	var p: Dictionary = PLANOS[_i]
+	var cam: Array = p["cam"]
+	var u := clampf(_t / float(p["dur"]), 0.0, 1.0)
+	u = u * u * (3.0 - 2.0 * u)   ## suave al empezar y al acabar
+	var tam: Vector2 = _capas["tam"]
+	var pan := (cam[0] as Vector2).lerp(cam[1], u) * tam
+	var zoom := lerpf(float(cam[2]), float(cam[3]), u)
+	var base: Vector2 = _capas["base"]
+	for nombre: String in ["fondo", "luces", "vivo"]:
+		var n := _capas[nombre] as Control
+		n.position = base + pan
+		n.scale = Vector2(zoom, zoom)
+	var f := _capas["frente"] as Control
+	f.position = base + pan * 1.6
+	f.scale = Vector2.ONE * (1.0 + (zoom - 1.0) * 1.8)
+	(_capas["luces"] as Control).queue_redraw()
+	(_capas["vivo"] as Control).queue_redraw()
 
 func _process(delta: float) -> void:
 	if _acabado or _i < 0:
 		return
 	_vivo += delta
 	_t += delta
-	_texto.visible_ratio = clampf(_t / 3.4, 0.0, 1.0)
-	## El lento acercamiento de la escena (desde el centro de la pantalla).
-	_escena.pivot_offset = _escena.size * 0.5
-	_escena.queue_redraw()   ## el haz de luz y el polvo se mueven (pocas llamadas)
-	if _vp != null and _vp.size != Vector2i(maxi(int(_escena.size.x), 64), maxi(int(_escena.size.y), 64)):
-		_repintar_arte()   ## cambió el tamaño de la ventana
-	var z := 1.0 + 0.07 * clampf(_t / SEG_POR_PLANO, 0.0, 1.0)
-	_escena.scale = Vector2(z, z)
-	if _t >= SEG_POR_PLANO:
+	var retraso := APERTURA if _i == 0 else 0.6
+	_texto.visible_ratio = clampf((_t - retraso) / 3.0, 0.0, 1.0)
+	if _i == PLANOS.size() - 1:   ## en el cartel final los textos se retiran
+		var fuera := clampf((_t - (float(PLANOS[_i]["dur"]) - CIERRE)) / 0.6, 0.0, 1.0)
+		_titulo.modulate.a = minf(_titulo.modulate.a, 1.0 - fuera)
+		_texto.modulate.a = 1.0 - fuera
+	else:
+		_texto.modulate.a = 1.0
+	_mover_camara()
+	_post.queue_redraw()
+	if _t >= float(PLANOS[_i]["dur"]):
 		if _i >= PLANOS.size() - 1:
 			_terminar()
 		else:
@@ -154,48 +237,37 @@ func _terminar() -> void:
 	_acabado = true
 	terminado.emit()
 
-# ---------------------------------------------------------------- las escenas
+# ---------------------------------------------------------------- acabado, apertura y cierre
 
-## Repinta la ilustración en la textura (al cambiar de plano y unas pocas veces por segundo).
-func _repintar_arte() -> void:
-	if _vp == null or _escena == null:
-		return
-	var tam := Vector2i(maxi(int(_escena.size.x), 64), maxi(int(_escena.size.y), 64))
-	if _vp.size != tam:
-		_vp.size = tam
-	_lienzo.size = Vector2(tam)
-	_lienzo.queue_redraw()
-	_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+func _dibujar_post() -> void:
+	var w := _post.size.x
+	var h := _post.size.y
+	PrologoCine.acabado(_post, w, h, _vivo, clampf(_vivo / 1.2, 0.0, 1.0))
+	if _i == 0 and _t < APERTURA:   ## APERTURA: el escudo sobre negro, revelado por un haz de luz
+		var negro := clampf((APERTURA - _t) / 0.9, 0.0, 1.0)
+		_post.draw_rect(Rect2(0, 0, w, h), Color(0, 0, 0, negro))
+		_cartel(w, h, clampf(_t / 0.8, 0.0, 1.0) * negro, _t, "%s · %d" % [Idiomas.t("TEMPORADA"), Mundo.actual().anio if Mundo.actual() != null else 2026])
+	var dur := float(PLANOS[_i]["dur"])
+	if _i == PLANOS.size() - 1 and _t > dur - CIERRE:   ## CIERRE: fundido a negro con el escudo y «DINASTÍA»
+		var u := clampf((_t - (dur - CIERRE)) / 0.9, 0.0, 1.0)
+		_post.draw_rect(Rect2(0, 0, w, h), Color(0, 0, 0, 0.92 * u))
+		_cartel(w, h, u, _t - (dur - CIERRE), "DINASTÍA")
 
-func _dibujar_arte() -> void:
-	if _i < 0 or _lienzo == null:
+## El cartel del escudo: escudo en el centro (crece un poco), un haz de luz que lo cruza, el nombre del club y una línea debajo.
+func _cartel(w: float, h: float, alfa: float, t: float, linea: String) -> void:
+	if alfa <= 0.01:
 		return
-	var w := _lienzo.size.x
-	var h := _lienzo.size.y
-	var c1 := Color(_club.color1) if _club != null else Tema.ACENTO
-	var c2 := Color(_club.color2) if _club != null else Tema.ORO
-	var oscuro := Color(0.03, 0.06, 0.04)
-	## El fondo: un degradado vertical (arriba oscuro, abajo con un toque dorado y del color del club), no un color plano.
-	var arriba := c1.lerp(oscuro, 0.9)
-	var abajo := c1.lerp(Tema.ORO, 0.16).lerp(oscuro, 0.72)
-	_lienzo.draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w, 0), Vector2(w, h), Vector2(0, h)]), PackedColorArray([arriba, arriba, abajo, abajo]))
-	PrologoArte.dibujar(_lienzo, String(PLANOS[_i]["escena"]), w, h, c1, c2, _vivo, _club)   ## (10-11) el arte final de cada plano
-
-func _dibujar() -> void:
-	if _i < 0 or _escena == null:
-		return
-	var w := _escena.size.x
-	var h := _escena.size.y
-	PrologoArte.dibujar_vivo(_escena, String(PLANOS[_i]["escena"]), w, h, _vivo)
-	## Un haz de luz que cruza despacio y motas de polvo en el aire: la escena respira aunque sea fija.
-	var bx := fmod(_vivo * 70.0, w * 1.4) - w * 0.2
-	_escena.draw_polygon(PackedVector2Array([Vector2(bx, 0), Vector2(bx + 150, 0), Vector2(bx + 150 - h * 0.3, h * 0.7), Vector2(bx - h * 0.3, h * 0.7)]),
-		PackedColorArray([Color(1, 0.95, 0.75, 0.0), Color(1, 0.95, 0.75, 0.0), Color(1, 0.95, 0.75, 0.07), Color(1, 0.95, 0.75, 0.07)]))
-	for k in 26:
-		var px := fmod(float(k) * 173.0 + _vivo * (8.0 + float(k % 5) * 3.0), w)
-		var py := fmod(float(k) * 97.0 - _vivo * (5.0 + float(k % 4) * 2.0) + h, h * 0.66)
-		_escena.draw_circle(Vector2(px, py), 1.5 + float(k % 3), Color(1, 0.95, 0.8, 0.10 + 0.04 * float(k % 4)))
-	## La banda oscura de abajo (detrás del título y del texto), con un degradado hacia arriba.
-	var y0 := h * 0.74
-	_escena.draw_polygon(PackedVector2Array([Vector2(0, y0), Vector2(w, y0), Vector2(w, h), Vector2(0, h)]),
-		PackedColorArray([Color(0, 0, 0, 0.0), Color(0, 0, 0, 0.0), Color(0, 0, 0, 0.78), Color(0, 0, 0, 0.78)]))
+	var lado := h * 0.26 * (0.94 + 0.06 * clampf(t / 2.0, 0.0, 1.0))
+	var centro := Vector2(w * 0.5, h * 0.42)
+	PrologoCine.brillo(_post, centro, lado * 1.4, Color(_c1().lerp(Color.WHITE, 0.5), 0.35 * alfa))
+	if _escudo != null:
+		_post.draw_texture_rect(_escudo, Rect2(centro - Vector2(lado, lado) * 0.5, Vector2(lado, lado)), false, Color(1, 1, 1, alfa))
+	var barrido := lerpf(-0.6, 1.6, clampf(t / 1.4, 0.0, 1.0))   ## el haz diagonal que cruza el escudo
+	var bx := centro.x - lado * 0.5 + lado * barrido
+	_post.draw_polygon(PackedVector2Array([Vector2(bx - lado * 0.08, centro.y - lado * 0.6), Vector2(bx + lado * 0.04, centro.y - lado * 0.6),
+		Vector2(bx - lado * 0.2, centro.y + lado * 0.6), Vector2(bx - lado * 0.32, centro.y + lado * 0.6)]), PackedColorArray([Color(1, 1, 1, 0.0), Color(1, 1, 1, 0.45 * alfa), Color(1, 1, 1, 0.45 * alfa), Color(1, 1, 1, 0.0)]))
+	var f := ThemeDB.fallback_font
+	var nombre := (_club.nombre if _club != null else "").to_upper()
+	_post.draw_string(f, Vector2(0, centro.y + lado * 0.78), nombre, HORIZONTAL_ALIGNMENT_CENTER, w, int(h * 0.05), Color(1, 1, 1, alfa))
+	_post.draw_line(Vector2(w * 0.42, centro.y + lado * 0.86), Vector2(w * 0.58, centro.y + lado * 0.86), Color(Tema.ORO, alfa), 2.0)
+	_post.draw_string(f, Vector2(0, centro.y + lado * 1.02), linea, HORIZONTAL_ALIGNMENT_CENTER, w, int(h * 0.032), Color(Tema.ORO, alfa))

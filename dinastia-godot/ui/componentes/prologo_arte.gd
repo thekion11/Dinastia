@@ -173,13 +173,14 @@ static func _tunel(ci: CanvasItem, w: float, h: float, c1: Color, c2: Color, t: 
 
 static func _banquillo(ci: CanvasItem, w: float, h: float, c1: Color, c2: Color, t: float) -> void:
 	_cuad(ci, Vector2(0, 0), Vector2(w, 0), Vector2(w, h * 0.32), Vector2(0, h * 0.32), Color(0.12, 0.12, 0.16), Color(0.2, 0.2, 0.25))
-	for k in 260:   ## la grada de enfrente
+	for k in 1400:   ## la grada de enfrente, llena (se pinta una sola vez en la capa del fondo)
 		var r := float(absi(hash(k)) % 100) / 100.0
-		ci.draw_circle(Vector2(fmod(k * 37.0, w), h * (0.05 + 0.25 * fmod(k * 0.618, 1.0))), 2.4, c1 if r < 0.45 else (c2 if r < 0.75 else Color(0.8, 0.76, 0.7)))
+		var fila := float(k / 140)
+		var x := fmod(float(k % 140) * w / 140.0 + fila * 5.0, w)
+		ci.draw_circle(Vector2(x, h * (0.04 + 0.027 * fila)), 1.6 + fila * 0.12, c1 if r < 0.45 else (c2 if r < 0.75 else Color(0.8, 0.76, 0.7)))
 	_cuad(ci, Vector2(0, h * 0.32), Vector2(w, h * 0.32), Vector2(w, h), Vector2(0, h), Color(0.12, 0.36, 0.15), Color(0.18, 0.52, 0.22))
 	ci.draw_line(Vector2(0, h * 0.4), Vector2(w, h * 0.4), Color(1, 1, 1, 0.7), 4.0)
-	## El entrenador de pie en la línea, y el techo del banquillo (plexiglás) enmarcando la vista.
-	_figura(ci, Vector2(w * 0.62, h * 0.62), h * 0.3, Color(0.08, 0.08, 0.1), Color(0.65, 0.5, 0.4))
+	## El techo del banquillo (plexiglás) enmarcando la vista (el DT, animado, lo pone `PrologoEscenas.vivo`).
 	ci.draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w, 0), Vector2(w, h * 0.1), Vector2(0, h * 0.16)]), PackedColorArray([Color(0.7, 0.85, 0.95, 0.25), Color(0.7, 0.85, 0.95, 0.25), Color(0.7, 0.85, 0.95, 0.1), Color(0.7, 0.85, 0.95, 0.1)]))
 	ci.draw_line(Vector2(0, h * 0.16), Vector2(w, h * 0.1), Color(0.75, 0.75, 0.8), 6.0)
 	## La fila de asientos con los suplentes de espaldas.
@@ -228,8 +229,6 @@ static func _despacho(ci: CanvasItem, w: float, h: float, c1: Color, c2: Color, 
 	ci.draw_circle(Vector2(w * 0.5, h * 0.48), h * 0.05, Color(0.12, 0.08, 0.06))
 	_cuad(ci, Vector2(w * 0.18, h * 0.66), Vector2(w * 0.82, h * 0.66), Vector2(w * 0.9, h * 0.78), Vector2(w * 0.1, h * 0.78), Color(0.45, 0.28, 0.16), Color(0.36, 0.22, 0.12))
 	ci.draw_rect(Rect2(w * 0.12, h * 0.78, w * 0.76, h * 0.06), Color(0.28, 0.17, 0.1))
-	ci.draw_rect(Rect2(w * 0.3, h * 0.68, w * 0.12, h * 0.02), Color(0.92, 0.9, 0.85))   ## el contrato sobre la mesa
-	ci.draw_line(Vector2(w * 0.44, h * 0.685), Vector2(w * 0.5, h * 0.675), Color(0.85, 0.7, 0.2), 4.0)
 	_escudo(ci, club, Rect2(w * 0.62, h * 0.665, h * 0.06, h * 0.06))
 
 static func _oficina(ci: CanvasItem, w: float, h: float, c1: Color, c2: Color, t: float, club: Club) -> void:
