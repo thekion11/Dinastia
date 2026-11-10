@@ -7774,7 +7774,11 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "If you pick nobody, the best per position are called up. If a position is short, it is filled with young players from the country.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "This country has no league in the game: the squad comes from generated players.",
   "¡CAMPEONES CON LA SELECCIÓN!": "CHAMPIONS WITH THE NATIONAL TEAM!",
-  "Aumentar la masa social un 8 %": "Grow the member base by 8 %"
+  "Aumentar la masa social un 8 %": "Grow the member base by 8 %",
+  "FECHA FIFA": "INTERNATIONAL BREAK",
+  "Fecha FIFA": "International break",
+  "Amistoso": "Friendly",
+  "Eliminatoria": "Qualifier"
  },
  "pt": {
   "Historia": "História",
@@ -15551,7 +15555,11 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sem marcar ninguém, vão os melhores por posição. Se faltar jogador numa posição, completa-se com jovens do país.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Este país não tem liga no jogo: a lista sai de jogadores gerados.",
   "¡CAMPEONES CON LA SELECCIÓN!": "CAMPEÕES COM A SELEÇÃO!",
-  "Aumentar la masa social un 8 %": "Aumentar a massa associativa em 8 %"
+  "Aumentar la masa social un 8 %": "Aumentar a massa associativa em 8 %",
+  "FECHA FIFA": "DATA FIFA",
+  "Fecha FIFA": "Data FIFA",
+  "Amistoso": "Amistoso",
+  "Eliminatoria": "Eliminatória"
  },
  "patrones": [
   [
@@ -29391,7 +29399,11 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sans cocher personne, les meilleurs par poste sont convoqués. S'il manque des joueurs à un poste, on complète avec des jeunes du pays.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Ce pays n'a pas de championnat dans le jeu : la liste vient de joueurs générés.",
   "¡CAMPEONES CON LA SELECCIÓN!": "CHAMPIONS AVEC LA SÉLECTION !",
-  "Aumentar la masa social un 8 %": "Augmenter le nombre d'abonnés de 8 %"
+  "Aumentar la masa social un 8 %": "Augmenter le nombre d'abonnés de 8 %",
+  "FECHA FIFA": "TRÊVE INTERNATIONALE",
+  "Fecha FIFA": "Trêve internationale",
+  "Amistoso": "Match amical",
+  "Eliminatoria": "Qualification"
  },
  "it": {
   "Historia": "Storia",
@@ -37168,7 +37180,11 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Senza segnare nessuno vanno i migliori per ruolo. Se in un ruolo mancano giocatori, si completa con giovani del paese.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Questo paese non ha un campionato nel gioco: la lista viene da giocatori generati.",
   "¡CAMPEONES CON LA SELECCIÓN!": "CAMPIONI CON LA NAZIONALE!",
-  "Aumentar la masa social un 8 %": "Aumentare la base di soci dell'8 %"
+  "Aumentar la masa social un 8 %": "Aumentare la base di soci dell'8 %",
+  "FECHA FIFA": "SOSTA PER LE NAZIONALI",
+  "Fecha FIFA": "Sosta per le nazionali",
+  "Amistoso": "Amichevole",
+  "Eliminatoria": "Qualificazione"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44945,7 +44961,11 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Ohne Auswahl fahren die Besten je Position. Fehlen auf einer Position Spieler, wird mit jungen Spielern des Landes aufgefüllt.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Dieses Land hat keine Liga im Spiel: Der Kader besteht aus generierten Spielern.",
   "¡CAMPEONES CON LA SELECCIÓN!": "MEISTER MIT DER NATIONALMANNSCHAFT!",
-  "Aumentar la masa social un 8 %": "Die Mitgliederzahl um 8 % steigern"
+  "Aumentar la masa social un 8 %": "Die Mitgliederzahl um 8 % steigern",
+  "FECHA FIFA": "LÄNDERSPIELPAUSE",
+  "Fecha FIFA": "Länderspielpause",
+  "Amistoso": "Freundschaftsspiel",
+  "Eliminatoria": "Qualifikation"
  },
  "ca": {
   "Historia": "Història",
@@ -52722,7 +52742,11 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Sense marcar ningú hi van els millors per posició. Si a una posició hi falten jugadors, es completa amb joves del país.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Aquest país no té lliga al joc: la llista surt de jugadors generats.",
   "¡CAMPEONES CON LA SELECCIÓN!": "CAMPIONS AMB LA SELECCIÓ!",
-  "Aumentar la masa social un 8 %": "Augmentar la massa social un 8 %"
+  "Aumentar la masa social un 8 %": "Augmentar la massa social un 8 %",
+  "FECHA FIFA": "DATA FIFA",
+  "Fecha FIFA": "Data FIFA",
+  "Amistoso": "Amistós",
+  "Eliminatoria": "Eliminatòria"
  },
  "pl": {
   "Club": "Klub",
@@ -60499,7 +60523,11 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Bez zaznaczenia nikogo jadą najlepsi na każdej pozycji. Jeśli na pozycji brakuje graczy, uzupełnia się ją młodymi zawodnikami z kraju.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Ten kraj nie ma ligi w grze: kadra pochodzi z wygenerowanych zawodników.",
   "¡CAMPEONES CON LA SELECCIÓN!": "MISTRZOWIE Z REPREZENTACJĄ!",
-  "Aumentar la masa social un 8 %": "Zwiększyć liczbę członków o 8 %"
+  "Aumentar la masa social un 8 %": "Zwiększyć liczbę członków o 8 %",
+  "FECHA FIFA": "PRZERWA REPREZENTACYJNA",
+  "Fecha FIFA": "Przerwa reprezentacyjna",
+  "Amistoso": "Mecz towarzyski",
+  "Eliminatoria": "Eliminacje"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68276,6 +68304,10 @@
   "Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país.": "Kimseyi seçmezsen her mevkinin en iyileri çağrılır. Bir mevkide eksik varsa ülkenin genç oyuncularıyla tamamlanır.",
   "Este país no tiene liga en el juego: la lista sale de jugadores generados.": "Bu ülkenin oyunda ligi yok: kadro üretilmiş oyunculardan oluşur.",
   "¡CAMPEONES CON LA SELECCIÓN!": "MİLLİ TAKIMLA ŞAMPİYON!",
-  "Aumentar la masa social un 8 %": "Üye sayısını %8 artırmak"
+  "Aumentar la masa social un 8 %": "Üye sayısını %8 artırmak",
+  "FECHA FIFA": "MİLLİ ARA",
+  "Fecha FIFA": "Milli ara",
+  "Amistoso": "Hazırlık maçı",
+  "Eliminatoria": "Eleme maçı"
  }
 }

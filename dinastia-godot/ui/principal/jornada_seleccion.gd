@@ -28,6 +28,33 @@ static func ofrecer_cargo(pr: Principal) -> bool:
 	pr._refrescar()
 	return true
 
+## (10-11) El partido de la fecha FIFA de tu selección, si toca esta semana: jugarlo en directo o simularlo.
+static func ofrecer_fecha(pr: Principal) -> bool:
+	if _abierto or DisplayServer.get_name() == "headless" or pr.mundo == null or pr.mundo.selecciones == null:
+		return false
+	var s := pr.mundo.selecciones
+	var cargo := s.cargo
+	if cargo.fecha_pendiente.is_empty() or cargo.fecha_pendiente.has("vista"):
+		return false
+	cargo.fecha_pendiente["vista"] = true
+	_abierto = true
+	var eq := FechaSeleccion.equipos(pr.mundo, s, cargo)
+	var ev := EventoSeleccion.fecha(pr, String(cargo.fecha_pendiente["tipo"]), eq[0], eq[1], eq[2])
+	ev.tree_exiting.connect(func() -> void: _abierto = false)
+	var op: String = await ev.elegido
+	ev.queue_free()
+	var linea := ""
+	if op == "jugar":
+		var p := Partido.new(eq[0], eq[1], false)
+		await _en_directo(pr, p, eq[2], false)
+		linea = FechaSeleccion.cerrar(pr.mundo, cargo, p)
+	else:
+		linea = FechaSeleccion.simular(pr.mundo, s, cargo)
+	_abierto = false
+	Aviso.mostrar(pr, "vida", "🌍", Idiomas.t("Fecha FIFA"), linea)
+	pr._refrescar()
+	return true
+
 static func jugar_torneos(pr: Principal) -> void:
 	if DisplayServer.get_name() == "headless" or pr.mundo == null or pr.mundo.selecciones == null:
 		return

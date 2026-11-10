@@ -325,3 +325,30 @@ func _probar_fin_temporada_guardado() -> void:
 		_comprobar(not EventosClub.pendiente(c).is_empty() and String(EventosClub.pendiente(c)["id"]) == "directiva", "%s: en la temporada nueva vuelve la reunión con la directiva" % nombre)
 	Partida.borrar("_prueba_fin_temporada")
 
+
+## (10-11) La fecha FIFA de la selección que diriges: un partido de verdad (eliminatoria o amistoso), jugable o simulado; regla 34: 2 casos.
+func _probar_fecha_seleccion() -> void:
+	_titulo("FECHA FIFA DE TU SELECCIÓN: PARTIDO DE VERDAD")
+	for caso: Array in [[["PER", "ESP"], "Perú"], [["MAR", "FRA"], "Marruecos"]]:
+		var m := Mundo.new()
+		var paises: Array[String] = []
+		paises.assign(caso[0])
+		m.generar(paises, 41)
+		m.tomar_el_mando(m.ligas[0].clubes[6].id)
+		var s := m.selecciones
+		var cargo := s.cargo
+		cargo.ofrecer(String(caso[1]), s.fuerza(String(caso[1])), 900)
+		cargo.responder(m, true)
+		var estado: int = Azar._rng.state
+		var pend := FechaSeleccion.preparar(m, s, cargo)
+		_comprobar(Azar._rng.state == estado and not pend.is_empty(), "%s: la fecha FIFA prepara un partido (%s contra %s) sin tocar el azar del juego" % [cargo.seleccion, String(pend.get("tipo", "")), String(pend.get("rival", ""))])
+		_comprobar(absi(s.fuerza(String(pend["rival"])) - s.fuerza(cargo.seleccion)) <= FechaSeleccion.MARGEN_RIVAL, "el rival es de fuerza parecida")
+		var linea := FechaSeleccion.simular(m, s, cargo)
+		_comprobar(linea != "" and cargo.fecha_pendiente.is_empty() and cargo.fechas.size() == 1, "simulado: resultado apuntado (%s)" % linea)
+		FechaSeleccion.preparar(m, s, cargo)
+		m.semana += 1
+		FechaSeleccion.semana(m, s, cargo, false)
+		_comprobar(cargo.fecha_pendiente.is_empty() and cargo.fechas.size() == 2, "si nadie lo juega, se simula solo la semana siguiente")
+		var otro := Selecciones.new(m)
+		otro.desde_dic(JSON.parse_string(JSON.stringify(s.a_dic())))
+		_comprobar(otro.cargo.fechas.size() == 2, "las fechas se guardan")
