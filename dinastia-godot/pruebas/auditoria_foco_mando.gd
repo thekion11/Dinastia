@@ -115,8 +115,8 @@ func _auditar(nombre: String, raiz: Control, modal := false) -> void:
 	await get_tree().create_timer(GuardianFoco.CADA * 1.5).timeout
 	var f := _foco()
 	var total := _enfocables(raiz)
-	var dentro := f != null and f.is_visible_in_tree()
-	_comprobar(dentro, "[%s] al entrar hay foco visible (%s; %d enfocables)" % [nombre, _desc(f), total.size()])
+	var dentro := f != null and f.is_visible_in_tree() and (not modal or raiz.is_ancestor_of(f))   ## en una capa modal, DENTRO de ella
+	_comprobar(dentro, "[%s] al entrar hay foco visible%s (%s; %d enfocables)" % [nombre, " dentro de la capa" if modal else "", _desc(f), total.size()])
 	if f != null:
 		_comprobar(not (f is LineEdit or f is TextEdit), "[%s] el foco no empieza en un campo de texto (abriría el teclado)" % nombre)
 		var st := f.get_theme_stylebox("focus")
@@ -124,15 +124,17 @@ func _auditar(nombre: String, raiz: Control, modal := false) -> void:
 		var se_ve := f.has_meta("foco_visible") if f.get_class() == "Control" else (st != null and not (st is StyleBoxEmpty))
 		_comprobar(se_ve, "[%s] el foco se ve (estilo «focus» de %s)" % [nombre, f.get_class()])
 	var perdido := 0
+	var donde := ""   ## a dónde se fue el foco la primera vez que se perdió
 	var visitados := {}
 	for b: JoyButton in PULSACIONES:
 		await _pulsar(b)
 		var g := _foco()
 		if g == null or not g.is_visible_in_tree() or (modal and not raiz.is_ancestor_of(g)):
 			perdido += 1
+			donde = "%s en %s" % [_desc(g), g.get_parent().get_path() if g != null and g.get_parent() != null else "-"] if donde == "" else donde
 		else:
 			visitados[g] = true
-	_comprobar(perdido == 0, "[%s] 30 pulsaciones de cruceta sin perder el foco (perdido %d veces, %d controles visitados)" % [nombre, perdido, visitados.size()])
+	_comprobar(perdido == 0, "[%s] 30 pulsaciones de cruceta sin perder el foco (perdido %d veces, %d controles visitados%s)" % [nombre, perdido, visitados.size(), (", se fue a " + donde) if donde != "" else ""])
 	var alc: int = (await _alcanzables(FocoMando.primero(raiz), raiz)) if not total.is_empty() else 0
 	var parte := float(alc) / maxf(1.0, float(total.size()))
 	_resumen.append("%-14s enfocables %3d, alcanzables desde el primero %3d (%.0f %%), visitados %d, foco al entrar: %s" % [nombre, total.size(), alc, parte * 100.0, visitados.size(), _desc(f)])

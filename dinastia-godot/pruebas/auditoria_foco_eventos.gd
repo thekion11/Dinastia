@@ -21,6 +21,23 @@ func _ready() -> void:
 	var m: Mundo = _p.mundo
 	var mio: Club = m.mi_club()
 	print("club del jugador: %s (%s)" % [mio.nombre, mio.pais])
+	if OS.get_environment("SOLO_FIN") != "1":
+		await _resto(m, mio)
+	CierreTorneos.cerrar_pendientes(m)
+	var foto := CierreTorneos.foto(m)
+	var resumen := m.nueva_temporada()
+	for i in 10:   ## con pantalla, la temporada nueva abre en diferido sus propios eventos (con «Continuar»), que irían ENCIMA
+		await get_tree().process_frame
+	await _cerrar_eventos()
+	await _capa("fin de temporada", ResumenTemporada.mostrar(_p, foto, resumen))
+	print("RESUMEN")
+	for r: String in _resumen:
+		print("  " + r)
+	print("===== FIN. %d fallos =====" % _fallos)
+	FocoMando.forzar = false
+	get_tree().quit(0 if _fallos == 0 else 1)
+
+func _resto(m: Mundo, mio: Club) -> void:
 	await _seleccion(m)
 	var otro: Club = null
 	for l: Liga in m.ligas:
@@ -34,15 +51,6 @@ func _ready() -> void:
 	await _capa("palmarés del mundo", PalmaresMundoUI.abrir(_p))
 	await _fase_final(m)
 	await _editor(mio)
-	CierreTorneos.cerrar_pendientes(m)
-	var foto := CierreTorneos.foto(m)
-	await _capa("fin de temporada", ResumenTemporada.mostrar(_p, foto, m.nueva_temporada()))
-	print("RESUMEN")
-	for r: String in _resumen:
-		print("  " + r)
-	print("===== FIN. %d fallos =====" % _fallos)
-	FocoMando.forzar = false
-	get_tree().quit(0 if _fallos == 0 else 1)
 
 ## Una capa a pantalla completa (`EventoPantallaCompleta`): se audita su raíz como modal y se cierra.
 func _capa(nombre: String, ev: EventoPantallaCompleta) -> void:
