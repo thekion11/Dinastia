@@ -294,6 +294,9 @@ func _recorrido(vista: Node) -> void:
 		var cam := get_viewport().get_camera_3d()
 		var nombre := String(cam.get_parent().name) + "/" + String(cam.name) if cam != null else "-"
 		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+		if OS.get_environment("PICOS") == "desglose" and ll > _umbral(99999):
+			await _congelar()
+			return
 		if not por_cam.has(nombre):
 			por_cam[nombre] = []
 			orden.append(nombre)
