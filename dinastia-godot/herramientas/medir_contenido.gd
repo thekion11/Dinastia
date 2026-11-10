@@ -109,6 +109,27 @@ func _ready() -> void:
 	r["aforo_total"] = aforo_suma
 	r["aforo_medio"] = int(float(aforo_suma) / maxf(1.0, float(m.clubes.size())))
 	r["aforo_maximo"] = [aforo_max_club, aforo_max]
+	## Estadio EFECTIVO de cada club (`Club.perfil_estadio`: lo generado por club + la fila real encima): cuántas firmas visuales distintas hay y cuántos clubes de la misma liga comparten una.
+	var firmas_efectivas := {}
+	var firmas_nucleo := {}
+	var firmas_liga := {}
+	var repetidos_liga := 0
+	var forma_cuenta := {}
+	for c: Club in m.clubes.values():
+		var pe: Dictionary = c.perfil_estadio()
+		var nucleo := "%s|%s|%s|%s|%s|%s" % [pe.get("forma"), pe.get("niveles"), pe.get("techo"), pe.get("focos"), pe.get("fachada", ""), pe.get("pista", false)]
+		var f := "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % [nucleo, pe.get("cesped"), pe.get("asientoP"), pe.get("asiento1"), pe.get("asiento2"), pe.get("pantalla"), pe.get("banderas", ""), pe.get("corner", ""), pe.get("redTipo", ""), pe.get("cespedTono", "")]
+		firmas_efectivas[f] = true
+		firmas_nucleo[nucleo] = true
+		var fl := "%s%d|%s" % [c.pais, c.division, f]
+		if firmas_liga.has(fl):
+			repetidos_liga += 1
+		firmas_liga[fl] = true
+		forma_cuenta[str(pe.get("forma"))] = int(forma_cuenta.get(str(pe.get("forma")), 0)) + 1
+	r["estadio_efectivo_firmas_distintas"] = firmas_efectivas.size()
+	r["estadio_efectivo_nucleo_distinto"] = firmas_nucleo.size()
+	r["estadio_efectivo_repetidos_en_liga"] = repetidos_liga
+	r["estadio_efectivo_por_forma"] = forma_cuenta
 	## Selecciones y torneos
 	var sel: Array = Datos.tabla("SELECCIONES") as Array
 	r["selecciones"] = sel.size()

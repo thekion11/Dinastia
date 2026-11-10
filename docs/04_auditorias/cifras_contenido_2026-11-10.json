@@ -189,6 +189,21 @@
   "copas_nacionales_nombres": 50,
   "escudos_con_patron_o_letras": 842,
   "escudos_firmas_distintas_en_aspecto": 917,
+  "estadio_efectivo_firmas_distintas": 1067,
+  "estadio_efectivo_nucleo_distinto": 536,
+  "estadio_efectivo_por_forma": {
+    "asimetrico": 59,
+    "caldera": 6,
+    "cuenco": 122,
+    "dos": 24,
+    "estrecho": 76,
+    "herradura": 65,
+    "ingles": 160,
+    "oval": 161,
+    "principal": 66,
+    "rect": 330
+  },
+  "estadio_efectivo_repetidos_en_liga": 0,
   "filas_ASPECTO_CLUB": 1069,
   "filas_ESTADIO_CLUB": 1069,
   "filas_HISTORIA_CLUBES": 1069,
@@ -593,7 +608,7 @@
   ],
   "paises_con_liga": 50,
   "paises_con_reglas_de_ascenso": false,
-  "perfiles_de_estadio_distintos": 99,
+  "perfiles_de_estadio_distintos": 518,
   "plazas_mundial_48": 48,
   "selecciones": 69,
   "selecciones_por_confederacion": {
@@ -622,6 +637,6 @@
     "mundial",
     "interc"
   ],
-  "uniformes_con_kit_propio": 1012,
-  "uniformes_firmas_distintas_en_aspecto": 434
+  "uniformes_con_kit_propio": 1029,
+  "uniformes_firmas_distintas_en_aspecto": 606
 }
