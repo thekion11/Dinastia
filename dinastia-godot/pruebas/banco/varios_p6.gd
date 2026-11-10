@@ -402,6 +402,9 @@ func _probar_moneda() -> void:
 ## LAS PUERTAS DEL ASCENSOR DEL CLUB (10-11): dos hojas por planta que se recogen al abrir y vuelven a cerrar.
 func _probar_puertas_ascensor() -> void:
 	_titulo("PUERTAS DEL ASCENSOR (HOJAS QUE SE ABREN)")
+	## El grupo es de todo el árbol: fuera las hojas que otra sección del banco dejó vivas (con el banco entero contaba 4, no 2).
+	for vieja: Node in get_tree().get_nodes_in_group(PuertasAscensor.GRUPO):
+		vieja.remove_from_group(PuertasAscensor.GRUPO)
 	var asc := Node3D.new()
 	add_child(asc)
 	PuertasAscensor.poner(asc, 0.0, 0.0, 0.0, 1.9)

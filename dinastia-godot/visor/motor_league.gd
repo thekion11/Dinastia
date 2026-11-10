@@ -133,7 +133,7 @@ func _calcular_marcajes(local: bool, lado: float, b0: Vector2) -> Dictionary:
 
 ## L TeamAIController: presión de zona al perder el balón y presión de equipo (un segundo presionador).
 func _presion_zona(i: int, local: bool, e: LeagueEquipo, tiene: bool, b0: Vector2) -> void:
-	var pres := clampf(0.5 + float(_tac(local, "presion") - 1) * 0.5, 0.0, 1.0)
+	var pres := clampf(0.5 + float(_tac(local, "presion") - 1) * 0.35 + float(_tac(local, "tras_perdida") - 1) * 0.25, 0.0, 1.0)   ## L team_pressure
 	if bool(_ls_tenia[i]) and not tiene:
 		var prim := _mas_cercano_al(b0, local, [], 1)
 		var d_prim := (ls(pos(prim[0])) - b0).length() if not prim.is_empty() else 1000.0

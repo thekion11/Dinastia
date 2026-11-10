@@ -199,3 +199,35 @@ entrada, `_InterfereCommand`, que llega con la fase 4). Sin este desvío los def
    desvanece refuerza al que ya ataca. A revisar en la fase 4 o calibrar en la 6 (decisión del dueño pendiente).
 3. Remata más que en la fase 2 (11,7) porque los atacantes se ofrecen y llegan, pero sigue lejos del de siempre (39,7) por la
    prioridad del pase sobre el tiro (§6, hallazgo 2).
+
+### Con la formación y el estilo REAL de cada club (`EstiloClub`, 10-11 tarde)
+Hasta aquí la comparación no pasaba las tácticas al motor (los dos motores jugaban con la pizarra neutra). Ahora
+`comparar_motor_league` pasa `MotorJugable.tactica_desde(club.tactica)` y empareja en cada cruce estilos DISTINTOS. MotorLeague
+traduce además: verticalidad → contraataque (carreras y apoyo adelantado), ritmo → regate ofensivo, amplitud → imán al centro
+al conducir (al revés) y anchura del bloque, presión + «tras la pérdida» → presión de zona. La formación ya la respetaba (las
+casillas de League salen de la posición base de cada club).
+
+| 6 partidos completos | Motor de siempre | MotorLeague (fases 2 + 3) |
+|---|---|---|
+| CPU por paso (µs) | 1.581 | 1.256 (−21 %) |
+| Goles / remates | 6,0 / 49,3 | 2,83 / 11,8 |
+| Pases / acierto | 121 / 74,0 % | 79,7 / 81,2 % |
+| Posesión del local | 52,1 % | 20,8 % |
+
+Cruces: Lautaro (CHI, 4-2-3-1 ofensivo) - Núñez (ARG, 4-2-3-1 presión); Boedo (ARG, 4-4-2 garra) - Laranjeiras (BRA, 4-2-3-1
+posesión); Laranjeiras - Iruña (ESP, 4-4-2 garra); Olívico (ESP, 4-2-3-1 posesión) - Trafford (ENG, 3-4-3 vertical); Selhurst
+(ENG, 3-4-3 vertical) - Tevere (ITA, 4-3-3 equilibrado); Salento (ITA, 4-2-3-1 contra) - Rancagua (CHI, 4-3-3 equilibrado).
+
+**Hallazgo 4 (el estilo pesa demasiado)**: el 20,8 % del local NO es el campo: con local y visita invertidos (`INVERTIR=1`) domina
+el MISMO club (Núñez «presión» 79 % de local; Iruña «garra» 76 %). Los estilos de presión alta y «tras la pérdida» alto se quedan
+el balón: la presión de zona al máximo más el designado que siempre disputa roban casi todo, y la «posesión» de Laranjeiras
+pierde contra la «garra». Que el estilo se note está bien; la magnitud no. Se revisa en la fase 4 (robos por alcance de
+animación, sustituyen al desvío del designado) y se calibra en la 6.
+
+### Fase 4 (en curso): datos de las animaciones
+Cada `.anim` original (`terceros/league_soccer/animaciones/<tipo>/<velocidad>/*.anim`) trae `extension,football,<cuadro>,x,y,z`:
+el CUADRO (10 ms) y la POSICIÓN del toque de balón respecto al jugador, más su desplazamiento (`player,…`). Plan: un catálogo
+(herramienta que lo extrae a JSON) y, en el motor, el filtro del original: una orden de interferir, barrer, controlar, pasar o
+tirar solo se ejecuta si hay una animación cuyo toque alcanza el balón previsto en ese cuadro (radio por tipo, L
+`humanoid.cpp`: interferir ×1,4 + 0,2 m, pase/tiro ×1,3 + 0,15 m, barrida ×0,2). Eso trae los robos por alcance, los errores del
+primer toque y deja pasar los tiros cuando no hay pase posible.
