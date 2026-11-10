@@ -35,6 +35,13 @@ func _ready() -> void:
 		pl.append([pl.size() + 1, Nombres.visible(j.nombre)])
 	EdificioClub.ctx = {"inst": {"park": 5, "med": 7, "video": 6, "museo": 6}, "dentro": {"sala_prensa": "television"},
 		"plantilla": pl, "titulos": 4, "presidente": "Presidente Ficticio"}
+	if OS.get_environment("TITULOS") != "":   ## TITULOS=14: un club con un palmarés grande (hitos ficticios; 0 = recién ascendido)
+		var n_t := int(OS.get_environment("TITULOS"))
+		var hs: Array = []
+		for i in n_t:
+			hs.append({"anio": 2005 + i * 2, "titulo": ["Liga", "Copa nacional", "Supercopa", "Copa continental"][i % 4], "cantidad": 1})
+		EdificioClub.ctx["hitos"] = hs
+		EdificioClub.ctx["titulos"] = n_t
 	var perfil := EstadioPropio.new().perfil(club)
 	perfil["niveles"] = 2
 	_vista = VistaEstadio.new()

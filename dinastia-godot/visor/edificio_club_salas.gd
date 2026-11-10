@@ -167,12 +167,14 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 		var px := (caja.position.x + 0.45) if lado < 0.0 else (caja.end.x - 0.45)
 		vitrina(lote, nodo, m, base, vidrio, Vector3(px, y0, pz))
 		vitrinas.append({"p": Vector3(px, y0, pz), "k": off + k})
+		MuseoPresentacion.vitrina(lote, nodo, m, oro, Vector3(px, y0, pz), lado, hitos[off + k] if off + k < hitos.size() else {})
 		if off + k < titulos:
 			copa(lote, Vector3(px, y0 + 1.0, pz), oro, m["madera"], TrofeosReales.para_titulo(String((hitos[off + k] as Dictionary).get("titulo", "")), pais) if off + k < hitos.size() else {})
 		else:
 			## Aún sin copa: un balón de cuero antiguo en su soporte.
 			lote.malla(m["metal"], _en(Vector3(px, y0 + 1.05, pz)), _cilindro(0.06, 0.08, 0.06))
 			lote.malla(cuero, _en(Vector3(px, y0 + 1.19, pz)), _esfera(0.11))
+	MuseoPresentacion.zocalo(lote, m, caja, y0)
 	## Al fondo, las camisetas históricas enmarcadas con su año.
 	var n_marcos := 3 if caja.size.x > 3.2 else 2
 	var anios := [1931, 1968, 1994]
