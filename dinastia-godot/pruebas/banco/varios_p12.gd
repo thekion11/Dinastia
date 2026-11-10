@@ -325,3 +325,24 @@ func _probar_fin_temporada_guardado() -> void:
 		_comprobar(not EventosClub.pendiente(c).is_empty() and String(EventosClub.pendiente(c)["id"]) == "directiva", "%s: en la temporada nueva vuelve la reunión con la directiva" % nombre)
 	Partida.borrar("_prueba_fin_temporada")
 
+
+## PIEZAS DE ESTADIOS REALES (10-11): opcionales (sin la clave no se añade nada) y una sola malla por pieza.
+func _probar_piezas_estadio_real() -> void:
+	_titulo("ESTADIOS REALES: ARCO, TORRES DE RAMPAS, COSTILLAS Y TECHO POR LADOS")
+	var r0 := Node3D.new()
+	_comprobar(PiezasRealesEstadio.montar(r0, {"forma": "cuenco"}, 60.0, 80.0, 30.0, 25.0) == 0 and r0.get_child_count() == 0, "un perfil sin piezas no añade nada (el estadio de siempre)")
+	var r1 := Node3D.new()
+	var nivel := Calidad.elegida
+	Calidad.elegida = Calidad.MEDIO
+	var n := PiezasRealesEstadio.montar(r1, {"arco": {"alto": 100, "lado": "centro"}, "torres_rampa": 11, "costillas": 40}, 60.0, 80.0, 30.0, 25.0)
+	_comprobar(n == 3 and r1.get_child_count() == 3 and r1.get_children().all(func(x: Node) -> bool: return x is MultiMeshInstance3D), "arco, torres y costillas: 3 piezas, cada una UN MultiMesh")
+	_comprobar((r1.get_node("TorresRampa") as MultiMeshInstance3D).multimesh.instance_count == 11, "11 torres de rampas")
+	Calidad.elegida = Calidad.MINIMO
+	var r2 := Node3D.new()
+	_comprobar(PiezasRealesEstadio.montar(r2, {"costillas": 40}, 60.0, 80.0, 30.0, 25.0) == 0, "en calidad mínima, sin costillas")
+	Calidad.elegida = nivel
+	var c := Club.new()
+	c.nombre = "Club de prueba sin fila real"
+	_comprobar(not c.perfil_estadio().has("bandejas"), "sin fila real no hay techo por lados")
+	for x: Node in [r0, r1, r2]:
+		x.free()
