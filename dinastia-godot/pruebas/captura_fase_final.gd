@@ -45,13 +45,13 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _caso >= CASOS.size():
 		return
-	if _n == 6:
+	if _n == 22:
 		var scroll: ScrollContainer = _ficha.get("_scroll")
 		var lista: VBoxContainer = _ficha.get("_lista")
 		for hijo in lista.get_children():
 			if hijo is Label and (hijo as Label).text == Idiomas.t("FASE FINAL"):
 				scroll.scroll_vertical = int((hijo as Control).position.y) - 10
-	elif _n == 14:
+	elif _n == 40:
 		var nombre := "fase_final_%s" % CASOS[_caso]["pais"]
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % nombre)
 		print("FOTO ", nombre, " jornada ", _liga.jornada_actual, "/", _liga.jornadas())
