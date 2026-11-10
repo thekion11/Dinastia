@@ -22,3 +22,15 @@ static func crear(p: Object) -> void:
 		Calidad.modo_rendimiento = si
 		Calidad.guardar())
 	p._lista_ajustes.add_child(cb)
+
+## (10-11, pregunta 7 del dueño) El interruptor del menú: en MEDIA el menú también repinta solo cuando algo cambia y deja los fondos quietos (como ya hacen BAJA y MEDIA BAJA). Apagado por defecto.
+static func crear_menu(p: Object) -> void:
+	var cb := CheckButton.new()
+	cb.text = Idiomas.t("Ahorro en los menús también en Media")
+	cb.tooltip_text = Idiomas.t("Los menús solo se repintan cuando algo cambia y los fondos animados quedan quietos. Cambia el aspecto del menú; se aplica al volver al menú.")
+	cb.button_pressed = Calidad.ahorro_menu_media
+	cb.add_theme_font_size_override("font_size", 11)
+	cb.toggled.connect(func(si: bool) -> void:
+		Calidad.ahorro_menu_media = si
+		Calidad.guardar())
+	p._lista_ajustes.add_child(cb)

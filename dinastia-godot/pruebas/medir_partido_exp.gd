@@ -151,5 +151,14 @@ static func efecto(vista: Node) -> void:
 				"cielo": en.background_mode = Environment.BG_COLOR
 	for e in lista:
 		match e:
+			"cesped":
+				## EFECTO=cesped: el campo con un material plano sin sombreado (mismo verde): ¿cuánto cuesta el shader de la hierba (franjas, dibujo, ruido)?
+				var campo := vista.find_child("Cesped", true, false) as MeshInstance3D
+				if campo != null:
+					var pl := StandardMaterial3D.new()
+					pl.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+					pl.albedo_color = Color(0.20, 0.55, 0.18)
+					campo.material_override = pl
+					print("EFECTO cesped: material plano en %s" % campo.name)
 			"debanding": vp.use_debanding = false
 			"fxaa": vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED

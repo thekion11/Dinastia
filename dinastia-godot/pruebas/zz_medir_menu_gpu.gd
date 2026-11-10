@@ -13,6 +13,7 @@ var _pantalla := ""
 
 func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.MINIMO if OS.get_environment("MEDIO") == "" else Calidad.MEDIO)   ## (10-11) el nivel también por argumento: `-- baja`, `-- medio`…
+	Calidad.ahorro_menu_media = OS.get_environment("AHORRO_MEDIA") == "1"   ## (10-11) AHORRO_MEDIA=1: el ahorro del menú también en MEDIA
 	Calidad.sin_msaa = OS.get_environment("SIN_MSAA") != ""
 	_pantalla = OS.get_environment("PANTALLA")
 	match _pantalla.get_slice(":", 0):
