@@ -7567,7 +7567,6 @@
   "⚖ Comparar": "⚖ Compare",
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Pick a player from the list · with “Compare” the second click is the one to compare against",
   "Lesionado, semanas:": "Injured, weeks:",
-  "Plantilla (vista PES)": "Squad (PES view)",
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "List by lines, attribute bars and a two-player comparison.",
   "TITULARES": "STARTERS",
   "RESERVAS": "SUBSTITUTES",
@@ -7670,7 +7669,8 @@
   "Ver las próximas semanas": "See the coming weeks",
   "Ronda": "Round",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D or gamepad · Shift: run · V: first person · E: use · Esc: back",
-  "E: salir de casa": "E: leave the house"
+  "E: salir de casa": "E: leave the house",
+  "Plantilla detallada": "Detailed squad"
  },
  "pt": {
   "Historia": "História",
@@ -15240,7 +15240,6 @@
   "⚖ Comparar": "⚖ Comparar",
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Escolhe um jogador da lista · com «Comparar» o segundo clique é o rival da comparação",
   "Lesionado, semanas:": "Lesionado, semanas:",
-  "Plantilla (vista PES)": "Plantel (vista PES)",
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Lista por linhas, atributos em barras e comparação de dois jogadores.",
   "TITULARES": "TITULARES",
   "RESERVAS": "SUPLENTES",
@@ -15343,7 +15342,8 @@
   "Ver las próximas semanas": "Ver as próximas semanas",
   "Ronda": "Ronda",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D ou controle · Shift: correr · V: primeira pessoa · E: usar · Esc: voltar",
-  "E: salir de casa": "E: sair de casa"
+  "E: salir de casa": "E: sair de casa",
+  "Plantilla detallada": "Elenco detalhado"
  },
  "patrones": [
   [
@@ -28888,7 +28888,6 @@
   "⚖ Comparar": "⚖ Comparer",
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Choisis un joueur dans la liste · avec « Comparer », le second clic est celui à comparer",
   "Lesionado, semanas:": "Blessé, semaines :",
-  "Plantilla (vista PES)": "Effectif (vue PES)",
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Liste par lignes, attributs en barres et comparaison de deux joueurs.",
   "TITULARES": "TITULAIRES",
   "RESERVAS": "REMPLAÇANTS",
@@ -28991,7 +28990,8 @@
   "Ver las próximas semanas": "Voir les semaines à venir",
   "Ronda": "Tour",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D ou manette · Maj : courir · V : première personne · E : utiliser · Échap : retour",
-  "E: salir de casa": "E : sortir de la maison"
+  "E: salir de casa": "E : sortir de la maison",
+  "Plantilla detallada": "Effectif détaillé"
  },
  "it": {
   "Historia": "Storia",
@@ -36561,7 +36561,6 @@
   "⚖ Comparar": "⚖ Confronta",
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Scegli un giocatore dalla lista · con «Confronta» il secondo clic è l'avversario del confronto",
   "Lesionado, semanas:": "Infortunato, settimane:",
-  "Plantilla (vista PES)": "Rosa (vista PES)",
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Elenco per reparti, attributi a barre e confronto tra due giocatori.",
   "TITULARES": "TITOLARI",
   "RESERVAS": "RISERVE",
@@ -36664,7 +36663,8 @@
   "Ver las próximas semanas": "Vedi le prossime settimane",
   "Ronda": "Turno",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D o gamepad · Maiusc: correre · V: prima persona · E: usa · Esc: indietro",
-  "E: salir de casa": "E: esci di casa"
+  "E: salir de casa": "E: esci di casa",
+  "Plantilla detallada": "Rosa dettagliata"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44234,7 +44234,6 @@
   "⚖ Comparar": "⚖ Vergleichen",
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Wähle einen Spieler aus der Liste · mit „Vergleichen“ ist der zweite Klick der Vergleichspartner",
   "Lesionado, semanas:": "Verletzt, Wochen:",
-  "Plantilla (vista PES)": "Kader (PES-Ansicht)",
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Liste nach Reihen, Attribute als Balken und Vergleich zweier Spieler.",
   "TITULARES": "STARTELF",
   "RESERVAS": "ERSATZBANK",
@@ -44337,7 +44336,8 @@
   "Ver las próximas semanas": "Kommende Wochen ansehen",
   "Ronda": "Runde",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D oder Gamepad · Umschalt: rennen · V: Ego-Perspektive · E: benutzen · Esc: zurück",
-  "E: salir de casa": "E: das Haus verlassen"
+  "E: salir de casa": "E: das Haus verlassen",
+  "Plantilla detallada": "Kader im Detail"
  },
  "ca": {
   "Historia": "Història",
@@ -51907,7 +51907,6 @@
   "⚖ Comparar": "⚖ Comparar",
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Tria un jugador de la llista · amb «Comparar» el segon clic és el rival de la comparació",
   "Lesionado, semanas:": "Lesionat, setmanes:",
-  "Plantilla (vista PES)": "Plantilla (vista PES)",
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Llista per línies, atributs en barres i comparació de dos jugadors.",
   "TITULARES": "TITULARS",
   "RESERVAS": "RESERVES",
@@ -52010,7 +52009,8 @@
   "Ver las próximas semanas": "Veure les properes setmanes",
   "Ronda": "Ronda",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D o comandament · Majúscules: córrer · V: primera persona · E: usar · Esc: tornar",
-  "E: salir de casa": "E: sortir de casa"
+  "E: salir de casa": "E: sortir de casa",
+  "Plantilla detallada": "Plantilla detallada"
  },
  "pl": {
   "Club": "Klub",
@@ -59580,7 +59580,6 @@
   "⚖ Comparar": "⚖ Porównaj",
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Wybierz zawodnika z listy · przy „Porównaj” drugie kliknięcie to rywal porównania",
   "Lesionado, semanas:": "Kontuzjowany, tygodnie:",
-  "Plantilla (vista PES)": "Kadra (widok PES)",
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Lista według formacji, atrybuty w paskach i porównanie dwóch zawodników.",
   "TITULARES": "PODSTAWOWY SKŁAD",
   "RESERVAS": "REZERWOWI",
@@ -59683,7 +59682,8 @@
   "Ver las próximas semanas": "Zobacz najbliższe tygodnie",
   "Ronda": "Runda",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D lub pad · Shift: bieg · V: widok z pierwszej osoby · E: użyj · Esc: wróć",
-  "E: salir de casa": "E: wyjdź z domu"
+  "E: salir de casa": "E: wyjdź z domu",
+  "Plantilla detallada": "Szczegółowa kadra"
  },
  "tr": {
   "Club": "Kulüp",
@@ -67253,7 +67253,6 @@
   "⚖ Comparar": "⚖ Karşılaştır",
   "Elige un jugador de la lista · con «Comparar» el segundo clic es el rival de la comparación": "Listeden bir oyuncu seç · «Karşılaştır» ile ikinci tıklama karşılaştırılacak oyuncudur",
   "Lesionado, semanas:": "Sakat, hafta:",
-  "Plantilla (vista PES)": "Kadro (PES görünümü)",
   "Lista por líneas, atributos en barras y comparar dos jugadores.": "Hatlara göre liste, çubuk nitelikler ve iki oyuncu karşılaştırması.",
   "TITULARES": "İLK 11",
   "RESERVAS": "YEDEKLER",
@@ -67356,6 +67355,7 @@
   "Ver las próximas semanas": "Önümüzdeki haftaları gör",
   "Ronda": "Tur",
   "W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver": "W/S/A/D veya kumanda · Shift: koş · V: birinci şahıs · E: kullan · Esc: geri",
-  "E: salir de casa": "E: evden çık"
+  "E: salir de casa": "E: evden çık",
+  "Plantilla detallada": "Ayrıntılı kadro"
  }
 }
