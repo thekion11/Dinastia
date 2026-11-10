@@ -30,9 +30,10 @@ func _ready() -> void:
 		await get_tree().process_frame
 	await _cerrar_eventos()   ## la reunión de inicio de temporada se abre sola y taparía las pestañas
 	await _pestanas()
-	await _menus()
-	await _eventos()
-	await _teclado()
+	if OS.get_environment("SOLO_FOTOS") != "1":
+		await _menus()
+		await _eventos()
+		await _teclado()
 	print("RESUMEN")
 	for r: String in _resumen:
 		print("  " + r)
@@ -40,11 +41,17 @@ func _ready() -> void:
 	FocoMando.forzar = false
 	get_tree().quit(0 if _fallos == 0 else 1)
 
+## Los eventos que se abren solos (la reunión de inicio de temporada) se CONTESTAN, como haría el jugador: cerrados sin elegir se
+## vuelven a ofrecer (para no bloquearlos para siempre) y taparían las pestañas.
 func _cerrar_eventos() -> void:
+	var habia := false
 	for h: Node in _p.get_children():
-		if h is EventoPantallaCompleta:
+		if h is EventoDialogo and not h.is_queued_for_deletion():
+			(h as EventoDialogo).selector.elegir(0)
+			habia = true
+		elif h is EventoPantallaCompleta:
 			h.queue_free()
-	for i in 3:
+	for i in (90 if habia else 3):
 		await get_tree().process_frame
 
 func _pulsar(boton: JoyButton) -> void:
@@ -104,6 +111,8 @@ func _alcanzables(ini: Control, raiz: Node) -> int:
 func _auditar(nombre: String, raiz: Control, modal := false) -> void:
 	for i in 10:
 		await get_tree().process_frame
+	## y algo de RELOJ: sin pantalla 10 fotogramas duran mucho menos que una vuelta del guardián (`GuardianFoco.CADA`)
+	await get_tree().create_timer(GuardianFoco.CADA * 1.5).timeout
 	var f := _foco()
 	var total := _enfocables(raiz)
 	var dentro := f != null and f.is_visible_in_tree()
@@ -136,6 +145,8 @@ func _pestanas() -> void:
 	for i in pest.get_tab_count():
 		var t := pest.get_tab_title(i)
 		await _cerrar_eventos()
+		if OS.get_environment("SOLO_FOTOS") == "1" and not (t in ["Mi plantel", "Ajustes", "Clubes"]):
+			continue
 		_p.call("_ir_a_pestana", t)
 		await _auditar(t, pest.get_tab_control(i))
 
