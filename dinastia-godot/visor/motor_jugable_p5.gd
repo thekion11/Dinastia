@@ -324,6 +324,7 @@ func _tomar(p: Dictionary) -> void:
 	if poseedor.is_empty() or bool(poseedor["es_local"]) != bool(p["es_local"]):
 		_jugada = {}
 	penultimo_toque = ultimo_toque if ultimo_toque != p else penultimo_toque
+	if ultimo_toque.is_empty() or bool(ultimo_toque["es_local"]) != bool(p["es_local"]): _eq_tomo_en[0 if bool(p["es_local"]) else 1] = t   ## (10-11) el EQUIPO acaba de recuperar: ventana de la contrapresión (antes por jugador: con tantos cambios de posesión siempre estaba abierta)
 	ultimo_toque = p
 	## El control: con el pecho si viene alto, orientado con el pie si viene
 	## fuerte y él casi parado; el portero blocando.

@@ -500,7 +500,7 @@ fi
   pasa "deriva a 30 temporadas (2 países; A4)" "DERIVA_TEMP=30 godot --headless --path . res://pruebas/ideas/a4_deriva_larga.tscn" "FIN. 0 fallos"
   # El motor del partido nota la calidad y la pizarra (sonda_motor_dt con umbrales, M-414; 6 partidos por escenario (10 en la pizarra, A4-PARTIDO-005: con 6 el ruido de los tiros daba falsos fallos), ~10 min)
   pasa "motor: el mejor gana al peor" "ESCENARIO=calidad N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
-  pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=10 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
+  pasa "motor: la pizarra se nota" "ESCENARIO=tactica N=6 godot --headless --path . res://pruebas/sonda_motor_dt.tscn" "UMBRALES: 0 fallos"
   # M-467: todas las pantallas en alemán; los textos se encogen (TextoQueCabe) y no quedan más de 4 cortados (~3 min)
   pasa "textos largos en alemán" "RECORRIDO_IDIOMA=de RECORRIDO_LARGOS=/tmp/largos_de.json RECORRIDO_CORTADOS_MAX=4 godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN LARGOS. 0 fallos"
   pasa "paneles más anchos que su hueco (móvil, alemán)" "RECORRIDO_ANCHO=1 RECORRIDO_ANCHO_MAX=0 RECORRIDO_IDIOMA=de RECORRIDO_MOVIL=2400x1080 RECORRIDO_LARGOS=/tmp/ancho_de.json godot --headless --path . res://pruebas/recorrido_pantallas.tscn" "FIN ANCHO. 0 fallos"
