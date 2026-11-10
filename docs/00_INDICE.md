@@ -12,6 +12,7 @@ Regla: **un tema = un documento. Lo pendiente vive en UN solo sitio: [`PLAN_GENE
 | `04_auditorias/HIPER_AUDITORIA_2026-11-02.md` | Hiper auditoría del 2-11: errores H-01…H-11, optimización, visual, jugabilidad y físicas (datos: `datos_auditoria_2026-11-02.json`) |
 | `04_auditorias/sesion_6.md`, `investigacion_s4/` | Informe de la sesión 6 (recursos libres, «¿por qué?», logros largos, Novedades) e investigación de la s4 |
 | `04_auditorias/rendimiento_120fps.md` | Orden «120 FPS en equipos modestos» (2-11): método de medición (`herramientas/hw_modesto.sh`), cifras antes/después por tanda, descartes medidos, corrección del suelo de 6,9 ms sin pantalla, benchmark y APK |
+| `04_auditorias/rendimiento_movil_2026-11-10.md` | Rendimiento en móvil (GPU, 10-11): matriz de 3 niveles x 3 clubes de 3 países, qué pesa (MSAA −57…−69 %, luces/post-proceso nada), cambio hecho y recortes de ULTRA BAJA pendientes de aprobación |
 | `04_auditorias/CIERRE_2026-10-28.md` | Cierre del 27-28-10: qué hizo cada sesión, estado de la rama y avisos para retomar el lunes |
 | `05_referencia/` | Licencias, política de privacidad (para las tiendas), autoloads, índice de capas (generado), lista LFS, textos sin traducir, clips del futbolista sin uso (generado), respaldo en Drive |
 
