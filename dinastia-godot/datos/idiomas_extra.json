@@ -7838,7 +7838,21 @@
   "Resolución 3D automática (máx. 720 px de alto)": "Automatic 3D resolution (max. 720 px high)",
   "China": "China",
   "Rusia": "Russia",
-  "Emiratos Árabes Unidos": "United Arab Emirates"
+  "Emiratos Árabes Unidos": "United Arab Emirates",
+  "NUEVO JUEGO · LIGAS": "NEW GAME · LEAGUES",
+  "LIGAS ACTIVAS": "ACTIVE LEAGUES",
+  "Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas.": "Choose which leagues are loaded in the game. With fewer leagues it starts faster and takes less memory (useful on mobile). You can add more when each season ends, but not remove them.",
+  "Todas": "All",
+  "Ninguna": "None",
+  "Mi país y los 5 grandes": "My country and the big 5",
+  "Europa (UEFA)": "Europe (UEFA)",
+  "Sudamérica (CONMEBOL)": "South America (CONMEBOL)",
+  "Norte y Centroamérica (CONCACAF)": "North and Central America (CONCACAF)",
+  "África (CAF)": "Africa (CAF)",
+  "Asia (AFC)": "Asia (AFC)",
+  "Oceanía (OFC)": "Oceania (OFC)",
+  "Elige al menos un país.": "Choose at least one country.",
+  "%d países · %d clubes · unos %d jugadores": "%d countries · %d clubs · about %d players"
  },
  "pt": {
   "Historia": "História",
@@ -15679,7 +15693,21 @@
   "Resolución 3D automática (máx. 720 px de alto)": "Resolução 3D automática (máx. 720 px de altura)",
   "China": "China",
   "Rusia": "Rússia",
-  "Emiratos Árabes Unidos": "Emirados Árabes Unidos"
+  "Emiratos Árabes Unidos": "Emirados Árabes Unidos",
+  "NUEVO JUEGO · LIGAS": "NOVO JOGO · LIGAS",
+  "LIGAS ACTIVAS": "LIGAS ATIVAS",
+  "Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas.": "Escolhe que ligas são carregadas no jogo. Com menos ligas arranca mais depressa e ocupa menos (útil no telemóvel). Poderás juntar mais no fim de cada época, mas não as retirar.",
+  "Todas": "Todas",
+  "Ninguna": "Nenhuma",
+  "Mi país y los 5 grandes": "O meu país e os 5 grandes",
+  "Europa (UEFA)": "Europa (UEFA)",
+  "Sudamérica (CONMEBOL)": "América do Sul (CONMEBOL)",
+  "Norte y Centroamérica (CONCACAF)": "América do Norte e Central (CONCACAF)",
+  "África (CAF)": "África (CAF)",
+  "Asia (AFC)": "Ásia (AFC)",
+  "Oceanía (OFC)": "Oceânia (OFC)",
+  "Elige al menos un país.": "Escolhe pelo menos um país.",
+  "%d países · %d clubes · unos %d jugadores": "%d países · %d clubes · cerca de %d jogadores"
  },
  "patrones": [
   [
@@ -21786,6 +21814,17 @@
    "Grup $1",
    "Grupa $1",
    "$1 Grubu"
+  ],
+  [
+   "^(\\d+) países · (\\d+) clubes · unos (\\d+) jugadores$",
+   "\\1 countries · \\2 clubs · about \\3 players",
+   "\\1 países · \\2 clubes · cerca de \\3 jogadores",
+   "\\1 pays · \\2 clubs · environ \\3 joueurs",
+   "\\1 paesi · \\2 club · circa \\3 giocatori",
+   "\\1 Länder · \\2 Vereine · etwa \\3 Spieler",
+   "\\1 països · \\2 clubs · uns \\3 jugadors",
+   "\\1 krajów · \\2 klubów · około \\3 zawodników",
+   "\\1 ülke · \\2 kulüp · yaklaşık \\3 oyuncu"
   ]
  ],
  "fr": {
@@ -29627,7 +29666,21 @@
   "Resolución 3D automática (máx. 720 px de alto)": "Résolution 3D automatique (720 px de haut max.)",
   "China": "Chine",
   "Rusia": "Russie",
-  "Emiratos Árabes Unidos": "Émirats arabes unis"
+  "Emiratos Árabes Unidos": "Émirats arabes unis",
+  "NUEVO JUEGO · LIGAS": "NOUVELLE PARTIE · CHAMPIONNATS",
+  "LIGAS ACTIVAS": "CHAMPIONNATS ACTIFS",
+  "Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas.": "Choisis les championnats chargés dans la partie. Avec moins de championnats, elle démarre plus vite et pèse moins (utile sur mobile). Tu pourras en ajouter à la fin de chaque saison, mais pas en retirer.",
+  "Todas": "Toutes",
+  "Ninguna": "Aucune",
+  "Mi país y los 5 grandes": "Mon pays et les 5 grands",
+  "Europa (UEFA)": "Europe (UEFA)",
+  "Sudamérica (CONMEBOL)": "Amérique du Sud (CONMEBOL)",
+  "Norte y Centroamérica (CONCACAF)": "Amérique du Nord et centrale (CONCACAF)",
+  "África (CAF)": "Afrique (CAF)",
+  "Asia (AFC)": "Asie (AFC)",
+  "Oceanía (OFC)": "Océanie (OFC)",
+  "Elige al menos un país.": "Choisis au moins un pays.",
+  "%d países · %d clubes · unos %d jugadores": "%d pays · %d clubs · environ %d joueurs"
  },
  "it": {
   "Historia": "Storia",
@@ -37468,7 +37521,21 @@
   "Resolución 3D automática (máx. 720 px de alto)": "Risoluzione 3D automatica (max 720 px di altezza)",
   "China": "Cina",
   "Rusia": "Russia",
-  "Emiratos Árabes Unidos": "Emirati Arabi Uniti"
+  "Emiratos Árabes Unidos": "Emirati Arabi Uniti",
+  "NUEVO JUEGO · LIGAS": "NUOVO GIOCO · CAMPIONATI",
+  "LIGAS ACTIVAS": "CAMPIONATI ATTIVI",
+  "Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas.": "Scegli quali campionati si caricano nella partita. Con meno campionati parte prima e pesa meno (utile su mobile). Potrai aggiungerne alla fine di ogni stagione, ma non toglierli.",
+  "Todas": "Tutte",
+  "Ninguna": "Nessuna",
+  "Mi país y los 5 grandes": "Il mio paese e i 5 grandi",
+  "Europa (UEFA)": "Europa (UEFA)",
+  "Sudamérica (CONMEBOL)": "Sud America (CONMEBOL)",
+  "Norte y Centroamérica (CONCACAF)": "Nord e Centro America (CONCACAF)",
+  "África (CAF)": "Africa (CAF)",
+  "Asia (AFC)": "Asia (AFC)",
+  "Oceanía (OFC)": "Oceania (OFC)",
+  "Elige al menos un país.": "Scegli almeno un paese.",
+  "%d países · %d clubes · unos %d jugadores": "%d paesi · %d club · circa %d giocatori"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45309,7 +45376,21 @@
   "Resolución 3D automática (máx. 720 px de alto)": "Automatische 3D-Auflösung (max. 720 px Höhe)",
   "China": "China",
   "Rusia": "Russland",
-  "Emiratos Árabes Unidos": "Vereinigte Arabische Emirate"
+  "Emiratos Árabes Unidos": "Vereinigte Arabische Emirate",
+  "NUEVO JUEGO · LIGAS": "NEUES SPIEL · LIGEN",
+  "LIGAS ACTIVAS": "AKTIVE LIGEN",
+  "Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas.": "Wähle, welche Ligen im Spiel geladen werden. Mit weniger Ligen startet es schneller und braucht weniger Speicher (praktisch auf dem Handy). Du kannst am Saisonende weitere hinzufügen, aber keine entfernen.",
+  "Todas": "Alle",
+  "Ninguna": "Keine",
+  "Mi país y los 5 grandes": "Mein Land und die 5 großen",
+  "Europa (UEFA)": "Europa (UEFA)",
+  "Sudamérica (CONMEBOL)": "Südamerika (CONMEBOL)",
+  "Norte y Centroamérica (CONCACAF)": "Nord- und Mittelamerika (CONCACAF)",
+  "África (CAF)": "Afrika (CAF)",
+  "Asia (AFC)": "Asien (AFC)",
+  "Oceanía (OFC)": "Ozeanien (OFC)",
+  "Elige al menos un país.": "Wähle mindestens ein Land.",
+  "%d países · %d clubes · unos %d jugadores": "%d Länder · %d Vereine · etwa %d Spieler"
  },
  "ca": {
   "Historia": "Història",
@@ -53150,7 +53231,21 @@
   "Resolución 3D automática (máx. 720 px de alto)": "Resolució 3D automàtica (màx. 720 px d'alçada)",
   "China": "Xina",
   "Rusia": "Rússia",
-  "Emiratos Árabes Unidos": "Emirats Àrabs Units"
+  "Emiratos Árabes Unidos": "Emirats Àrabs Units",
+  "NUEVO JUEGO · LIGAS": "JOC NOU · LLIGUES",
+  "LIGAS ACTIVAS": "LLIGUES ACTIVES",
+  "Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas.": "Tria quines lligues es carreguen a la partida. Amb menys lligues arrenca abans i pesa menys (útil al mòbil). Podràs afegir-ne més en acabar cada temporada, però no treure'n.",
+  "Todas": "Totes",
+  "Ninguna": "Cap",
+  "Mi país y los 5 grandes": "El meu país i els 5 grans",
+  "Europa (UEFA)": "Europa (UEFA)",
+  "Sudamérica (CONMEBOL)": "Sud-amèrica (CONMEBOL)",
+  "Norte y Centroamérica (CONCACAF)": "Amèrica del Nord i Central (CONCACAF)",
+  "África (CAF)": "Àfrica (CAF)",
+  "Asia (AFC)": "Àsia (AFC)",
+  "Oceanía (OFC)": "Oceania (OFC)",
+  "Elige al menos un país.": "Tria almenys un país.",
+  "%d países · %d clubes · unos %d jugadores": "%d països · %d clubs · uns %d jugadors"
  },
  "pl": {
   "Club": "Klub",
@@ -60991,7 +61086,21 @@
   "Resolución 3D automática (máx. 720 px de alto)": "Automatyczna rozdzielczość 3D (maks. 720 px wysokości)",
   "China": "Chiny",
   "Rusia": "Rosja",
-  "Emiratos Árabes Unidos": "Zjednoczone Emiraty Arabskie"
+  "Emiratos Árabes Unidos": "Zjednoczone Emiraty Arabskie",
+  "NUEVO JUEGO · LIGAS": "NOWA GRA · LIGI",
+  "LIGAS ACTIVAS": "AKTYWNE LIGI",
+  "Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas.": "Wybierz, które ligi zostaną wczytane do gry. Z mniejszą liczbą lig start jest szybszy, a gra zajmuje mniej pamięci (przydatne na telefonie). Pod koniec każdego sezonu możesz dodać kolejne, ale nie można ich usuwać.",
+  "Todas": "Wszystkie",
+  "Ninguna": "Żadna",
+  "Mi país y los 5 grandes": "Mój kraj i wielka piątka",
+  "Europa (UEFA)": "Europa (UEFA)",
+  "Sudamérica (CONMEBOL)": "Ameryka Południowa (CONMEBOL)",
+  "Norte y Centroamérica (CONCACAF)": "Ameryka Północna i Środkowa (CONCACAF)",
+  "África (CAF)": "Afryka (CAF)",
+  "Asia (AFC)": "Azja (AFC)",
+  "Oceanía (OFC)": "Oceania (OFC)",
+  "Elige al menos un país.": "Wybierz co najmniej jeden kraj.",
+  "%d países · %d clubes · unos %d jugadores": "%d krajów · %d klubów · około %d zawodników"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68832,6 +68941,20 @@
   "Resolución 3D automática (máx. 720 px de alto)": "Otomatik 3D çözünürlük (en fazla 720 px yükseklik)",
   "China": "Çin",
   "Rusia": "Rusya",
-  "Emiratos Árabes Unidos": "Birleşik Arap Emirlikleri"
+  "Emiratos Árabes Unidos": "Birleşik Arap Emirlikleri",
+  "NUEVO JUEGO · LIGAS": "YENİ OYUN · LİGLER",
+  "LIGAS ACTIVAS": "AKTİF LİGLER",
+  "Elige qué ligas se cargan en la partida. Con menos ligas arranca antes y pesa menos (útil en el móvil). Podrás añadir más al cerrar cada temporada, pero no quitarlas.": "Oyunda hangi liglerin yükleneceğini seç. Daha az ligle oyun daha hızlı açılır ve daha az yer kaplar (mobilde işe yarar). Her sezon sonunda daha fazlasını ekleyebilirsin, ancak kaldıramazsın.",
+  "Todas": "Hepsi",
+  "Ninguna": "Hiçbiri",
+  "Mi país y los 5 grandes": "Ülkem ve büyük 5",
+  "Europa (UEFA)": "Avrupa (UEFA)",
+  "Sudamérica (CONMEBOL)": "Güney Amerika (CONMEBOL)",
+  "Norte y Centroamérica (CONCACAF)": "Kuzey ve Orta Amerika (CONCACAF)",
+  "África (CAF)": "Afrika (CAF)",
+  "Asia (AFC)": "Asya (AFC)",
+  "Oceanía (OFC)": "Okyanusya (OFC)",
+  "Elige al menos un país.": "En az bir ülke seç.",
+  "%d países · %d clubes · unos %d jugadores": "%d ülke · %d kulüp · yaklaşık %d oyuncu"
  }
 }
