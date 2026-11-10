@@ -125,3 +125,6 @@ Corregidas las listas de MOZ, GUI, MAD, TOG, BEN, NCA y PAN y varios aforos (KUW
 
 ## Tercera pasada (10-11)
 MLI a 14 clubes, BFA con Rahimo FC, CPV/LBY/CGO corregidas con RSSSF. Cifras: 135 países, 147 ligas, 2.203 clubes, 55.075 jugadores en clubes. Detalle y fuentes: `datos_dudosos_2026-11-10.md`.
+
+## Pasada RSSSF (10-11)
+104 países comparados con la tabla final de RSSSF (curdom.html): ~40 corregidos, ~60 verificados iguales, ~13 ambiguos. Cifras: 135 países, 147 ligas, 2.198 clubes, 54.950 jugadores en clubes. Detalle: `datos_dudosos_2026-11-10.md` (sección «PASADA RSSSF»).

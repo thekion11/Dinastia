@@ -3,13 +3,13 @@
     "Comtal FC",
     95000
   ],
-  "aforo_medio": 16632,
-  "aforo_total": 36640937,
+  "aforo_medio": 16486,
+  "aforo_total": 36237881,
   "caras_en_biblioteca": 300,
   "caras_reales_pck_presente": false,
-  "clubes": 2203,
+  "clubes": 2198,
   "clubes_por_division": {
-    "1": 1955,
+    "1": 1950,
     "2": 248
   },
   "clubes_por_pais": {
@@ -20,7 +20,7 @@
       "1": 16
     },
     "AND": {
-      "1": 10
+      "1": 9
     },
     "ANG": {
       "1": 16
@@ -48,7 +48,7 @@
       "1": 18
     },
     "BFA": {
-      "1": 15
+      "1": 16
     },
     "BHR": {
       "1": 12
@@ -83,10 +83,10 @@
       "1": 16
     },
     "CIV": {
-      "1": 14
+      "1": 16
     },
     "CMR": {
-      "1": 16
+      "1": 14
     },
     "COD": {
       "1": 16
@@ -98,13 +98,13 @@
       "1": 12
     },
     "CRC": {
-      "1": 12
+      "1": 10
     },
     "CRO": {
       "1": 10
     },
     "CUW": {
-      "1": 11
+      "1": 10
     },
     "CYP": {
       "1": 14
@@ -159,7 +159,7 @@
       "1": 18
     },
     "GIB": {
-      "1": 11
+      "1": 12
     },
     "GRE": {
       "1": 14
@@ -235,10 +235,10 @@
       "1": 18
     },
     "KUW": {
-      "1": 12
+      "1": 10
     },
     "LBN": {
-      "1": 12
+      "1": 11
     },
     "LBY": {
       "1": 20
@@ -306,7 +306,7 @@
       "1": 11
     },
     "OMA": {
-      "1": 12
+      "1": 14
     },
     "PAN": {
       "1": 12
@@ -318,7 +318,7 @@
       "1": 18
     },
     "PHI": {
-      "1": 11
+      "1": 10
     },
     "PLE": {
       "1": 12
@@ -352,7 +352,7 @@
       "1": 8
     },
     "SMR": {
-      "1": 15
+      "1": 16
     },
     "SRB": {
       "1": 16
@@ -361,13 +361,13 @@
       "1": 12
     },
     "SUR": {
-      "1": 12
+      "1": 11
     },
     "SVK": {
       "1": 12
     },
     "SVN": {
-      "1": 10
+      "1": 9
     },
     "SWE": {
       "1": 16
@@ -444,7 +444,7 @@
   "convocables_por_seleccion": {
     "Albania": 255,
     "Alemania": 843,
-    "Andorra": 250,
+    "Andorra": 225,
     "Angola": 407,
     "Arabia": 341,
     "Argelia": 418,
@@ -460,10 +460,10 @@
     "Bosnia": 254,
     "Brasil": 1071,
     "Bulgaria": 402,
-    "Burkina Faso": 379,
+    "Burkina Faso": 404,
     "Bélgica": 428,
     "Cabo Verde": 302,
-    "Camerún": 422,
+    "Camerún": 372,
     "Canadá": 212,
     "Catar": 300,
     "Chile": 774,
@@ -472,10 +472,10 @@
     "Colombia": 535,
     "Congo": 401,
     "Corea": 292,
-    "Costa Rica": 302,
-    "Costa de Marfil": 371,
+    "Costa Rica": 252,
+    "Costa de Marfil": 421,
     "Croacia": 269,
-    "Curazao": 276,
+    "Curazao": 251,
     "Dinamarca": 324,
     "EE.UU.": 620,
     "Ecuador": 395,
@@ -484,17 +484,17 @@
     "Emiratos": 350,
     "Escocia": 308,
     "Eslovaquia": 309,
-    "Eslovenia": 257,
+    "Eslovenia": 232,
     "España": 1024,
     "Estonia": 250,
-    "Filipinas": 275,
+    "Filipinas": 250,
     "Finlandia": 300,
     "Francia": 883,
     "Gabón": 353,
     "Gales": 303,
     "Georgia": 255,
     "Ghana": 465,
-    "Gibraltar": 275,
+    "Gibraltar": 300,
     "Grecia": 358,
     "Guatemala": 300,
     "Guinea": 353,
@@ -521,12 +521,12 @@
     "Kenia": 452,
     "Kirguistán": 350,
     "Kosovo": 252,
-    "Kuwait": 300,
+    "Kuwait": 250,
     "Letonia": 250,
     "Libia": 500,
     "Lituania": 250,
     "Luxemburgo": 401,
-    "Líbano": 300,
+    "Líbano": 275,
     "Macedonia del Norte": 300,
     "Madagascar": 402,
     "Malasia": 325,
@@ -542,7 +542,7 @@
     "Nicaragua": 250,
     "Nigeria": 520,
     "Noruega": 422,
-    "Omán": 300,
+    "Omán": 350,
     "Palestina": 305,
     "Panamá": 304,
     "Paraguay": 313,
@@ -553,7 +553,7 @@
     "Rep. Checa": 409,
     "Rumanía": 405,
     "Rusia": 401,
-    "San Marino": 375,
+    "San Marino": 400,
     "Senegal": 421,
     "Serbia": 414,
     "Singapur": 200,
@@ -561,7 +561,7 @@
     "Sudáfrica": 366,
     "Suecia": 422,
     "Suiza": 315,
-    "Surinam": 301,
+    "Surinam": 276,
     "Tailandia": 400,
     "Tanzania": 400,
     "Tayikistán": 300,
@@ -579,35 +579,35 @@
     "Zimbabue": 456
   },
   "copas_nacionales_nombres": 135,
-  "escudos_con_patron_o_letras": 1984,
-  "escudos_firmas_distintas_en_aspecto": 2064,
-  "estadio_efectivo_firmas_distintas": 2201,
+  "escudos_con_patron_o_letras": 1981,
+  "escudos_firmas_distintas_en_aspecto": 2061,
+  "estadio_efectivo_firmas_distintas": 2196,
   "estadio_efectivo_nucleo_distinto": 782,
   "estadio_efectivo_por_forma": {
-    "asimetrico": 107,
+    "asimetrico": 106,
     "caldera": 8,
-    "cuenco": 163,
-    "dos": 118,
+    "cuenco": 159,
+    "dos": 120,
     "estrecho": 211,
     "herradura": 107,
     "ingles": 418,
-    "oval": 240,
-    "principal": 216,
-    "rect": 615
+    "oval": 239,
+    "principal": 221,
+    "rect": 609
   },
   "estadio_efectivo_repetidos_en_liga": 0,
-  "filas_ASPECTO_CLUB": 2203,
-  "filas_ESTADIO_CLUB": 2203,
-  "filas_HISTORIA_CLUBES": 2203,
-  "filas_con_asientos": 2086,
-  "filas_con_uniforme_visitante": 2141,
+  "filas_ASPECTO_CLUB": 2198,
+  "filas_ESTADIO_CLUB": 2198,
+  "filas_HISTORIA_CLUBES": 2198,
+  "filas_con_asientos": 2081,
+  "filas_con_uniforme_visitante": 2136,
   "idiomas": -1,
-  "jugadores_en_clubes": 55075,
+  "jugadores_en_clubes": 54950,
   "jugadores_por_posicion": {
-    "DEF": 17624,
-    "DEL": 13442,
-    "MED": 17400,
-    "POR": 6609
+    "DEF": 17584,
+    "DEL": 13412,
+    "MED": 17360,
+    "POR": 6594
   },
   "libres_en_mercado": -1,
   "ligas": 147,
@@ -880,17 +880,17 @@
     [
       "CIV",
       1,
-      14
+      16
     ],
     [
       "CMR",
       1,
-      16
+      14
     ],
     [
       "CRC",
       1,
-      12
+      10
     ],
     [
       "GHA",
@@ -965,7 +965,7 @@
     [
       "SVN",
       1,
-      10
+      9
     ],
     [
       "UZB",
@@ -1055,7 +1055,7 @@
     [
       "BFA",
       1,
-      15
+      16
     ],
     [
       "BHR",
@@ -1110,7 +1110,7 @@
     [
       "OMA",
       1,
-      12
+      14
     ],
     [
       "THA",
@@ -1130,7 +1130,7 @@
     [
       "AND",
       1,
-      10
+      9
     ],
     [
       "ANG",
@@ -1155,7 +1155,7 @@
     [
       "CUW",
       1,
-      11
+      10
     ],
     [
       "FRO",
@@ -1170,7 +1170,7 @@
     [
       "GIB",
       1,
-      11
+      12
     ],
     [
       "HAI",
@@ -1195,12 +1195,12 @@
     [
       "KUW",
       1,
-      12
+      10
     ],
     [
       "LBN",
       1,
-      12
+      11
     ],
     [
       "LBY",
@@ -1235,7 +1235,7 @@
     [
       "PHI",
       1,
-      11
+      10
     ],
     [
       "PLE",
@@ -1250,12 +1250,12 @@
     [
       "SMR",
       1,
-      15
+      16
     ],
     [
       "SUR",
       1,
-      12
+      11
     ],
     [
       "SYR",
@@ -1510,7 +1510,7 @@
   ],
   "paises_con_liga": 135,
   "paises_con_reglas_de_ascenso": false,
-  "perfiles_de_estadio_distintos": 747,
+  "perfiles_de_estadio_distintos": 749,
   "plazas_mundial_48": 48,
   "selecciones": 135,
   "selecciones_por_confederacion": {
@@ -1539,6 +1539,6 @@
     "mundial",
     "interc"
   ],
-  "uniformes_con_kit_propio": 2163,
-  "uniformes_firmas_distintas_en_aspecto": 1023
+  "uniformes_con_kit_propio": 2158,
+  "uniformes_firmas_distintas_en_aspecto": 1035
 }

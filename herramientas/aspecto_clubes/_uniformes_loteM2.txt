@@ -12,7 +12,6 @@ Mladost Lučani|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#c8
 Radnik Surdulica|aros|#d4202b|#111111|#111111|#d4202b|#111111|#d4202b|liso|#d4202b|#111111
 Napredak Kruševac|franjas_anchas|#c8102e|#ffffff|#c8102e|#c8102e|#ffffff|#c8102e|liso|#ffffff|#ffffff
 Javor-Matis|cuartos_v|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#2e8b3a|liso|#ffffff|#ffffff
-FAP|raglan|#16348a|#ffd100|#16348a|#16348a|#ffd100|#16348a|liso|#ffd100|#ffd100
 Železničar Pančevo|tercios_h|#6a1b3a|#ffffff|#ffffff|#6a1b3a|#ffffff|#6a1b3a|liso|#ffffff|#ffffff
 IMT Novi Beograd|franja_pecho|#0d6e3a|#ffffff|#ffffff|#0d6e3a|#ffffff|#0d6e3a|liso|#ffffff|#ffffff
 Thun|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#ffffff|#c8102e|liso|#c8102e|#ffffff

@@ -12,7 +12,6 @@ Mladost Lučani|#c8102e|#ffffff
 Radnik Surdulica|#d4202b|#111111
 Napredak Kruševac|#c8102e|#ffffff
 Javor-Matis|#c8102e|#ffffff
-FAP|#16348a|#ffd100
 Železničar Pančevo|#6a1b3a|#ffffff
 IMT Novi Beograd|#0d6e3a|#ffffff
 Thun|#c8102e|#ffffff

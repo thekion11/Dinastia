@@ -94,7 +94,7 @@ Mitre||banda||||||
 Modena||chevron||||||
 Monza||chevron||||||
 Morelia||banda||||||
-Nancy||liso||||||
+Nancy||banda||||||
 Niza||liso||||||
 Nordsjælland||banda||||||
 Novorizontino||franjas||||||
@@ -120,7 +120,7 @@ Racing Santander||aro||||||
 Randers||franjas||||||
 Real Sociedad B||tablero||||||
 Reggiana||banda||||||
-Reims||franjas||||||
+Reims||cuartos||||||
 Roda JC Kerkrade||mitad||||||
 Saint-Étienne||mitad||||||
 Sampdoria||banda_h||||||
@@ -129,7 +129,7 @@ San Martín de San Juan||banda||||||
 Sarpsborg 08||banda||||||
 Sarıyer||chevron||||||
 Schalke||borde||||||
-Sepahan||banda||||||
+Sepahan||liso||||||
 Servette||banda||||||
 Shanghai Port||franjas||||||
 Shanghai Shenhua||banda||||||
@@ -138,14 +138,14 @@ Sheffield Wed||interior||||||
 Silkeborg||mitad||||||
 Sion||tablero||||||
 Sivasspor||banda_h||||||
-Southampton||cuartos||||||
+Southampton||aro||||||
 Spezia||mitad||||||
 Sport||cuartos||||||
 Sporting CP B||franjas||||||
 Sporting Gijón||rombos||||||
 St Mirren||cuartos||||||
 St. Gallen||franjas||||||
-Stoke||aro||||||
+Stoke||chevron||||||
 Swansea||liso||||||
 Südtirol||aro||||||
 TOP Oss||mitad||||||

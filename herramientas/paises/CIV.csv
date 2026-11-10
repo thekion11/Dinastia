@@ -9,16 +9,18 @@
 #apellidos=Koné,Traoré,Coulibaly,Ouattara,Kouamé,Konan,Yao,Bamba,Diabaté,Touré,Soro,Kouassi,Diomandé,N'Guessan
 real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
 ASEC Mimosas;Mimosas Abiyan;#ffd100;#000000;66;35000;1948;los Mimosas;el estadio de Abiyán;El club más laureado del país y gran formador de estrellas.
-Africa Sports;Africa Deportes;#1b8a3a;#c8102e;62;35000;1947;los Rojiverdes;el estadio de la capital económica;El eterno rival de los Mimosas en el derbi de Abiyán.
+Académie Amadou Diallo;Academia Diallo;#f58220;#ffffff;58;5000;2002;los Naranjas;el campo de la pequeña ciudad del centro;Una academia convertida en equipo revelación del campeonato.
 Stella Club d'Adjamé;Stella Adjame;#c8102e;#ffffff;54;5000;1954;los Estrellas;el campo del barrio de Adjamé;Histórico club del barrio de Adjamé.
-SC Gagnoa;Gagnoa Sporting;#1b3a8a;#ffffff;50;5000;1962;los Gagnoanos;el estadio de Gagnoa;El orgullo de la ciudad de Gagnoa.
+Mouna FC;Mona Agbao;#1d3f9e;#ffd100;57;4000;2005;los Mouna;el campo de la localidad del sureste;Un club modesto que ya pelea por la parte alta.
 Stade d'Abidjan;Estadio Abiyan;#c8102e;#ffd100;48;5000;1936;los Veteranos;el campo del puerto de Abiyán;Uno de los clubes más antiguos del país.
 SOA;Sol de Yamusukro;#ff8a1b;#ffffff;52;20000;1983;los Soles;el estadio de la capital política;El club del ejército en Yamusukro.
 San Pedro FC;San Pedro Puerto;#1b3a8a;#ff8a1b;56;6000;1996;los Portuarios;el estadio del puerto de San Pedro;El club del gran puerto del suroeste.
 Bouaké FC;Bouake Central;#ff8a1b;#000000;49;5000;1990;los Naranjas;el estadio de Bouaké;El club de la segunda ciudad del país.
 Racing Club d'Abidjan;Racing Abiyan;#1b3a8a;#c8102e;46;5000;1949;los Racinguistas;el campo de Abiyán;Club popular de la capital económica.
-Williamsville AC;Williams Norte;#1b8a3a;#ffffff;47;5000;1978;los Verdes;el campo del barrio de Williamsville;Un equipo de barrio que sorprende a los grandes.
+US Tchologo;Tchologo Unido;#0b8f3c;#ffffff;55;5000;2010;los Verdes del norte;el estadio de la ciudad del norte;Recién ascendido, representa a la región del norte.
 Zoman FC;Zoman Daloa;#c8102e;#000000;44;3000;1992;los Zomanos;el estadio de Daloa;El club de la región del oeste.
-Sporting Gagnoa;Canarios Gagnoa;#ffd100;#1b8a3a;43;5000;1999;los Canarios;el estadio de Gagnoa;El segundo club de la ciudad cafetera.
-Séwé Sport;Sewe San Pedro;#ffffff;#c8102e;42;3000;1990;los Blancos;el campo de San Pedro;Un modesto del suroeste que lucha por no bajar.
-Lys Sport;Lys Sport Abiyan;#7a1f8a;#ffffff;38;3000;2004;los Lirios;el campo de las afueras;El recién llegado de la capital económica.
+SOL FC;Sol Abobo;#ffd100;#1d3f9e;52;3000;2008;los Solares;el campo del barrio de Abobo;Un club joven del populoso barrio de Abobo.
+CO Korhogo;Korhogo Norte;#c8102e;#000000;50;6000;1962;los Korhogeños;el estadio de la capital del norte;El club de la gran ciudad del norte del país.
+Inova SCA;Inova Abiyan;#7a1fa2;#ffffff;47;2000;2012;los Violetas;el campo de un barrio de Abiyán;Una escuela de fútbol de Abiyán con equipo en primera.
+ES Agboville;Agboville Verde;#0b8f3c;#c8102e;45;4000;1960;los Agbovillois;el estadio de la ciudad del sur;Recién ascendido, un club histórico de la región de Agboville.
+FC Olympic Sport d'Abobo;Olimpico Abobo;#1d3f9e;#ffffff;41;2500;1998;los Olímpicos;el campo de Abobo;Otro club del barrio de Abobo, siempre en la lucha por la permanencia.

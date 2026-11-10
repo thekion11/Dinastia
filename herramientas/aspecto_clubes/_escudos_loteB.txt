@@ -9,7 +9,6 @@ Qatar SC|escudo|liso|||#7b1c3a|#ffffff|
 Al Ahli|circulo|liso|||#00843d|#ffffff|
 Al Shamal|escudo|liso|||#ffd100|#000000|
 Umm Salal|escudo|liso|||#00843d|#ffffff|
-Al Khor|circulo|liso|||#ffd100|#c8102e|
 Al Shahaniya|escudo|liso|||#c8102e|#ffffff|
 Malmö FF|circulo|liso||MFF|#7ec8f2|#ffffff|
 AIK|circulo|liso|aguila||#000000|#ffd100|
@@ -75,7 +74,6 @@ Bohemians 1905|circulo|liso|||#00843d|#ffffff|
 Dukla Praha|escudo|liso|estrella||#c8102e|#ffd100|
 FK Pardubice|circulo|liso|caballo||#c8102e|#ffffff|
 MFK Karviná|circulo|liso|||#c8102e|#ffffff|
-SK Dynamo České Budějovice|circulo|liso||SKD|#1b458f|#ffffff|
 Slovan Liberec|circulo|liso|||#1b458f|#ffffff|
 FCSB|escudo|liso|estrella||#c8102e|#1b458f|
 CFR Cluj|circulo|liso||CFR|#8b1538|#ffffff|

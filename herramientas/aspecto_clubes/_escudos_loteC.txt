@@ -12,22 +12,18 @@ Radnik Surdulica|circulo|liso||R|#c8102e|#ffffff|
 Napredak Kruševac|escudo|liso||N|#c8102e|#ffffff|
 Javor-Matis|circulo|liso||J|#c8102e|#ffffff|
 OFK Beograd|escudo|franjas||OFK|#1b458f|#ffffff|
-FAP|circulo|liso||FAP|#1b458f|#ffd100|
 Železničar Pančevo|escudo|liso||ZP|#c8102e|#ffffff|
 IMT Novi Beograd|circulo|liso||IMT|#1b458f|#ffffff|
 Shakhtar Donetsk|escudo|liso|||#f26522|#111111|
 Dynamo Kyiv|escudo|liso||D|#ffffff|#1b458f|
 Metalist 1925 Kharkiv|circulo|liso||M|#ffd100|#1b458f|
 Zorya Luhansk|escudo|liso|estrella||#111111|#ffffff|
-SC Poltava|circulo|liso||SCP|#c8102e|#ffffff|
-Oleksandriya|escudo|liso||O|#00843d|#ffd100|
 Kryvbas Kryvyi Rih|circulo|liso||K|#c8102e|#ffffff|
 Polissya Zhytomyr|escudo|liso||P|#00843d|#ffffff|
 Obolon Kyiv|escudo|liso||O|#ffd100|#1b458f|
 Veres Rivne|circulo|liso||V|#00843d|#ffffff|
 Kolos Kovalivka|escudo|liso||K|#ffd100|#00843d|
 LNZ Cherkasy|circulo|liso||LNZ|#c8102e|#ffffff|
-Rukh Lviv|escudo|liso|leon||#c8102e|#ffd100|
 Karpaty Lviv|circulo|liso|leon||#00843d|#ffffff|
 Epicentr Kamianets-Podilskyi|escudo|liso||E|#ffd100|#1b458f|
 FC Kudrivka|escudo|liso||K|#1b458f|#ffd100|

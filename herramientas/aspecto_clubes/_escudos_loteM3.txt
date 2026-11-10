@@ -1,13 +1,11 @@
 # Lote M3 (clubes menores): nombre|forma|patrón|emblema|letras[/color]|esc1|esc2|esc3
 Kalba|banda_cinta|rayo|aguila|KAL/#ffd100|#c8102e|#ffd100|
-SC Poltava|estandarte|escalera|cereza|SCP/#ffffff|#c8102e|#ffffff|
 LNZ Cherkasy|doblepunta|sol|lobo|LNZ/#ffffff|#c8102e|#111111|
 Epicentr Kamianets-Podilskyi|cruzesc|estrella8|castillo|EKP/#1b458f|#ffd100|#1b458f|
 FC Kudrivka|trianguloesc|ondas|flecha|FCK/#ffd100|#1b458f|#ffd100|
 Metropolitanos|geometrico|chevron|murcielago|MET/#ffffff|#00843d|#111111|
 Academia Puerto Cabello|ovalo|anillos|ancla|APC/#1b458f|#ffd100|#1b458f|
 Portuguesa|coronadoble|barras|leon|POR/#ffffff|#00843d|#c8102e|
-Trujillanos|redondeado|pila|montana|TRU/#00843d|#ffd100|#00843d|
 Anzoátegui|rombolgo|florlis|estrella|ANZ/#ffffff|#c8102e|#111111|
 Moreirense|clasico|cuartos|trebol|MFC/#ffffff|#00843d|#ffffff|
 Arouca|penta|puntas|abeja|ARO/#0057b8|#ffd100|#0057b8|
