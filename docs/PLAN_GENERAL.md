@@ -55,6 +55,15 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 
 1. **ESTÉTICA Y DISEÑO DE MENÚS Y DISTRIBUCIÓN — FALTA PULIR.** **FALTA PULIR EN TODOS LOS BLOQUES hechos** (cada uno se afina después). Hecho y en main (9-11): márgenes de las columnas del menú central, fila «PRÓXIMOS» en tarjetas, portadas del riel con rejilla dinámica, letra base del Tema y de los botones, diálogo «Capítulos», Ligas y clubes con escudos, aire en Estadio, aviso del partido de despedida (escudo de las Leyendas con 5 diseños y once titular con busto 3D) y foco visible en los botones de evento.
 
+## ENCARGO DEL DUEÑO (10-11 noche) — EN ESTE ORDEN; auditoría completa en `docs/04_auditorias/AUDITORIA_CONTENIDO_2026-11-10.md`
+1. **TORNEOS Y COPAS**: que se jueguen las copas y supercopas de TODOS los países; segundas copas el mismo año; formatos reales de los continentales (fase de liga de 36, Libertadores de 32, Leagues Cup…); supercopas continentales; Mundial de Clubes de 32 jugable; Copa Intercontinental; unificar el calendario del Mundial (hoy 2026/2030 en el calendario y 2028/2032 en el cierre).
+2. **SELECCIONES**: cargo de SELECCIONADOR (ofertas por prestigio; solo selección o doble cargo); convocatoria de 26 jugadores del país en todo el mundo; partidos JUGABLES (amistosos, eliminatorias, Nations League, Mundial de 48, Eurocopa, Copa América, Copa Oro, Copa Africana, Copa de Asia, Oceanía, Finalissima, Juegos Olímpicos). Decisión del dueño: los torneos de selecciones SE JUEGAN.
+3. **CELEBRACIONES** por tipo de título (palco o escenario, medallas, foto de plantilla, mantear al DT, champán en el vestuario, desfile en autobús, pasillo de campeón; ascenso y salvación).
+4. **OBJETIVOS POR CLUB**: según historia, palmarés, finanzas, masa social y cantera; varios a la vez (liga, copa, continental, economía); ajustados al tamaño y a las plazas de cada liga; proyecto a varias temporadas.
+5. **CONTENIDO DEL MUNDO** (ver la auditoría, §7: un formato de datos por país, todo lo demás generado; por niveles): faltan 107 países, ~3.500-6.000 clubes, ~67 clubes en las ligas que ya hay (recortadas a 16), ~117.000 jugadores, caras (el build público no lleva la biblioteca de 72), 150 estadios icónicos, escudos y uniformes.
+6. **MOTOR DEL PARTIDO**: REEMPLAZAR nuestro sistema por el de League-Soccer (C++, `terceros/league_soccer/codigo_y_recursos`), con lo nuestro montado encima como variante, más las animaciones y extras que ya tenemos. Orden expresa del dueño (prevalece sobre las órdenes 23-24).
+7. HECHO (10-11): las caras de la alineación se ven enteras (`Retrato3D.ALTO_CABEZA` 70).
+
 ## RESPUESTAS DEL DUEÑO (10-11)
 - Quitar la palabra «PES» de la interfaz: HECHO («Plantilla detallada»).
 - Estrategias rápidas en el partido: SÍ (hecho, ver abajo).
