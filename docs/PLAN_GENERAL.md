@@ -55,11 +55,18 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 
 1. **ESTÉTICA Y DISEÑO DE MENÚS Y DISTRIBUCIÓN — FALTA PULIR.** **FALTA PULIR EN TODOS LOS BLOQUES hechos** (cada uno se afina después). Hecho y en main (9-11): márgenes de las columnas del menú central, fila «PRÓXIMOS» en tarjetas, portadas del riel con rejilla dinámica, letra base del Tema y de los botones, diálogo «Capítulos», Ligas y clubes con escudos, aire en Estadio, aviso del partido de despedida (escudo de las Leyendas con 5 diseños y once titular con busto 3D) y foco visible en los botones de evento.
 
+## RESPUESTAS DEL DUEÑO (10-11)
+- Quitar la palabra «PES» de la interfaz: HECHO («Plantilla detallada»).
+- Estrategias rápidas en el partido: SÍ (hecho, ver abajo).
+- RUEDA DE PRENSA Y EVENTOS al estilo del PES (su rueda de prensa es «muchísimo mejor en lo visual» y tiene eventos): conservar los nuestros y SUMAR los suyos, adaptando su estética a la nuestra. Encargado a la 3.ª sesión (rama `sesion3-rueda-prensa`), con la selección direccional del PDF (stick, clic o toque, con mini animación).
+- COLORES: el dueño PERMITE variar la paleta («mucho verde con dorado»).
+- Siguen abiertas: pasar la rama a `main`, el prólogo en vídeo o en animación, los torneos de selecciones y los .mp4 de `marca/`.
+
 ## IDEAS DEL PES 2020 PARA ADAPTAR (pedido del dueño, 10-11; investigación con fuentes, sin copiar arte ni marcas)
 Dinastía ya tiene casi todo el temario de la Master League (cesiones, ojeadores, agentes y cláusulas, reconversión de puesto, capitán, vestuario, charlas, junta, informe del rival, valoraciones). Lo que falta es sobre todo MOSTRARLO. Por prioridad (★ = mucho impacto, poco esfuerzo):
 1. ★ HECHO (10-11): FLECHA DE FORMA de 5 estados junto a cada jugador en la plantilla (`FlechaForma`, desde `Jugador.forma`). Falta: ponerla también en la pizarra de Táctica y en el once del partido.
 2. ★ HECHO (10-11, solo en pantalla): QUÍMICA entre compañeros de línea (`QuimicaLinea`: clan del vestuario, país, temporadas juntos y moral; `QuimicaCampo` la dibuja en el campo de la plantilla en verde, amarillo o rojo). Falta: mostrar la cifra por línea y, si el dueño quiere, que sume al motor con bandera.
-3. ★ ESTRATEGIAS RÁPIDAS en el partido: 4 botones grandes (ataque total, defensa, presión, contra) con enfriamiento, en mando y móvil (solo interfaz; fuente: PES Mastery). Necesita OK del dueño (orden 23: el partido es suyo).
+3. ★ HECHO (10-11; el dueño lo APROBÓ el 10-11): ESTRATEGIAS RÁPIDAS en el partido (`EstrategiaRapida` + `BarraEstrategias`): ⚔ Ataque total, 🔥 Presión arriba, ⚡ Contraataque y 🔒 Cerrojo, preajustes de las 4 palancas de la pizarra (el motor no cambia), sin parar el partido; volver a pulsar recupera el plan; 2 minutos de espera entre cambios; Alt+1…4 y L2 + cruceta; banco `_probar_estrategia_rapida`. Pulir: probarlo con mando real y en el móvil (sitio junto a los controles táctiles).
 4. HECHO (10-11): el OBJETIVO de la directiva en el menú central con tu puesto, la meta y una barra de progreso (`ObjetivoDirectiva`). Falta: metas de copa y beneficio.
 5. RUMORES y «último día» del mercado con ofertas relámpago.
 6. ESCENAS de diálogo a pantalla completa en hitos (fichaje estrella, despido, ascenso) con 3 respuestas (`EventoPantallaCompleta`).

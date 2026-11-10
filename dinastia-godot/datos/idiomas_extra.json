@@ -7676,7 +7676,13 @@
   "meta": "target",
   "Cerca de cumplir": "Close to meeting it",
   "Jugador del mes": "Player of the month",
-  "Patrocinador oficial": "Official sponsor"
+  "Patrocinador oficial": "Official sponsor",
+  "Ataque total": "All-out attack",
+  "Presión arriba": "High press",
+  "Contraataque": "Counter-attack",
+  "Cerrojo": "Park the bus",
+  "Espera un poco para otro cambio": "Wait a little before another change",
+  "Plan de siempre": "Usual plan"
  },
  "pt": {
   "Historia": "História",
@@ -15355,7 +15361,13 @@
   "meta": "meta",
   "Cerca de cumplir": "Perto de cumprir",
   "Jugador del mes": "Jogador do mês",
-  "Patrocinador oficial": "Patrocinador oficial"
+  "Patrocinador oficial": "Patrocinador oficial",
+  "Ataque total": "Ataque total",
+  "Presión arriba": "Pressão alta",
+  "Contraataque": "Contra-ataque",
+  "Cerrojo": "Ferrolho",
+  "Espera un poco para otro cambio": "Espere um pouco para outra mudança",
+  "Plan de siempre": "Plano de sempre"
  },
  "patrones": [
   [
@@ -29009,7 +29021,13 @@
   "meta": "objectif",
   "Cerca de cumplir": "Proche de l'objectif",
   "Jugador del mes": "Joueur du mois",
-  "Patrocinador oficial": "Sponsor officiel"
+  "Patrocinador oficial": "Sponsor officiel",
+  "Ataque total": "Attaque totale",
+  "Presión arriba": "Pressing haut",
+  "Contraataque": "Contre-attaque",
+  "Cerrojo": "Verrou",
+  "Espera un poco para otro cambio": "Attends un peu avant un autre changement",
+  "Plan de siempre": "Plan habituel"
  },
  "it": {
   "Historia": "Storia",
@@ -36688,7 +36706,13 @@
   "meta": "obiettivo",
   "Cerca de cumplir": "Vicino all'obiettivo",
   "Jugador del mes": "Giocatore del mese",
-  "Patrocinador oficial": "Sponsor ufficiale"
+  "Patrocinador oficial": "Sponsor ufficiale",
+  "Ataque total": "Attacco totale",
+  "Presión arriba": "Pressing alto",
+  "Contraataque": "Contropiede",
+  "Cerrojo": "Catenaccio",
+  "Espera un poco para otro cambio": "Aspetta un po' per un altro cambio",
+  "Plan de siempre": "Piano di sempre"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44367,7 +44391,13 @@
   "meta": "Ziel",
   "Cerca de cumplir": "Nah am Ziel",
   "Jugador del mes": "Spieler des Monats",
-  "Patrocinador oficial": "Offizieller Sponsor"
+  "Patrocinador oficial": "Offizieller Sponsor",
+  "Ataque total": "Vollangriff",
+  "Presión arriba": "Hohes Pressing",
+  "Contraataque": "Konter",
+  "Cerrojo": "Abwehrriegel",
+  "Espera un poco para otro cambio": "Warte etwas bis zur nächsten Änderung",
+  "Plan de siempre": "Gewohnter Plan"
  },
  "ca": {
   "Historia": "Història",
@@ -52046,7 +52076,13 @@
   "meta": "meta",
   "Cerca de cumplir": "A prop de complir",
   "Jugador del mes": "Jugador del mes",
-  "Patrocinador oficial": "Patrocinador oficial"
+  "Patrocinador oficial": "Patrocinador oficial",
+  "Ataque total": "Atac total",
+  "Presión arriba": "Pressió amunt",
+  "Contraataque": "Contraatac",
+  "Cerrojo": "Forrellat",
+  "Espera un poco para otro cambio": "Espera una mica per a un altre canvi",
+  "Plan de siempre": "Pla de sempre"
  },
  "pl": {
   "Club": "Klub",
@@ -59725,7 +59761,13 @@
   "meta": "cel",
   "Cerca de cumplir": "Blisko celu",
   "Jugador del mes": "Zawodnik miesiąca",
-  "Patrocinador oficial": "Oficjalny sponsor"
+  "Patrocinador oficial": "Oficjalny sponsor",
+  "Ataque total": "Pełny atak",
+  "Presión arriba": "Wysoki pressing",
+  "Contraataque": "Kontratak",
+  "Cerrojo": "Zamurowanie bramki",
+  "Espera un poco para otro cambio": "Poczekaj chwilę na kolejną zmianę",
+  "Plan de siempre": "Zwykły plan"
  },
  "tr": {
   "Club": "Kulüp",
@@ -67404,6 +67446,12 @@
   "meta": "hedef",
   "Cerca de cumplir": "Hedefe yakınlık",
   "Jugador del mes": "Ayın oyuncusu",
-  "Patrocinador oficial": "Resmî sponsor"
+  "Patrocinador oficial": "Resmî sponsor",
+  "Ataque total": "Topyekûn hücum",
+  "Presión arriba": "Önde baskı",
+  "Contraataque": "Kontra atak",
+  "Cerrojo": "Otobüsü çek",
+  "Espera un poco para otro cambio": "Başka bir değişiklik için biraz bekle",
+  "Plan de siempre": "Her zamanki plan"
  }
 }
