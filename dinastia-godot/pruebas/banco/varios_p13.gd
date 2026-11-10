@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -74,3 +74,38 @@ func _probar_finalissima_directo() -> void:
 	_comprobar(not t.en_curso() and int(r["gl"]) == p.goles_local and int(r["gv"]) == p.goles_visita, "el partido jugado aparte cuenta (%s %d-%d %s)" % [(par[0] as Club).nombre, p.goles_local, p.goles_visita, (par[1] as Club).nombre])
 	var f := Finalissima.registrar(s, m, t)
 	_comprobar(not f.is_empty() and s.finalissimas.size() == 1 and Finalissima.jugar(s, m, 2028).is_empty() and Finalissima.preparar(s, m, 2028) == null, "se apunta una vez y el cierre ya no la repite (campeón %s)" % String(f.get("campeon", "")))
+
+## (10-11) VARIEDAD DE ESTADIOS GENERADA POR CLUB (`herramientas/estadios_variedad.py`): los clubes sin arquitectura escrita a mano ya no salen casi todos «rect» o «ingles».
+## Mide la tabla `ESTADIO_CLUB` del mundo (base y pack real: las mismas filas con otro nombre) y comprueba que lo generado cabe en el aforo real del club.
+func _probar_estadios_variedad() -> void:
+	_titulo("ESTADIOS: VARIEDAD DE ARQUITECTURA POR CLUB")
+	var filas: Dictionary = Datos.tabla("ESTADIO_CLUB") as Dictionary
+	var aforo := {}
+	for pais: String in (Datos.tabla("PAISES_LIGAS") as Dictionary):
+		var d: Dictionary = (Datos.tabla("PAISES_LIGAS") as Dictionary)[pais]
+		var todos: Array = (d["clubes"] as Array).duplicate()
+		if d.has("segunda"):
+			todos.append_array((d["segunda"] as Dictionary)["clubes"])
+		for c: Array in todos:
+			aforo[String(c[0])] = int(c[4])
+	var nucleos := {}
+	var formas := {}
+	var mal: Array[String] = []
+	for nombre: String in filas:
+		var f: Dictionary = filas[nombre]
+		nucleos["%s|%s|%s|%s|%s|%s" % [f.get("forma"), f.get("niveles"), f.get("techo"), f.get("focos"), f.get("fachada"), f.get("pista")]] = true
+		formas[String(f.get("forma"))] = int(formas.get(String(f.get("forma")), 0)) + 1
+		var a := int(aforo.get(nombre, 0))
+		if a > 0 and a < 10000 and String(f.get("forma")) in ["oval", "caldera", "cuenco"] and f.get("rasgo", "") == "":
+			mal.append("%s (%d, %s)" % [nombre, a, f.get("forma")])   ## un club chico no tiene un óvalo
+		if String(f.get("forma")) in ["dos", "estrecho", "principal"] and int(f.get("niveles", 1)) > 2:
+			mal.append("%s (%s con %d niveles)" % [nombre, f.get("forma"), int(f.get("niveles", 1))])
+	var peor := 0
+	for k: String in formas:
+		peor = maxi(peor, int(formas[k]))
+	_linea("  %d filas, %d perfiles de arquitectura distintos, %d formas; la más repetida: %d (%.0f %%)" % [filas.size(), nucleos.size(), formas.size(), peor, 100.0 * float(peor) / float(maxi(1, filas.size()))])
+	_comprobar(filas.size() >= 1000, "hay un estadio por club (%d)" % filas.size())
+	_comprobar(nucleos.size() >= 300, "al menos 300 perfiles de arquitectura distintos (hay %d; antes 99)" % nucleos.size())
+	_comprobar(formas.size() >= 8, "al menos 8 formas distintas (hay %d)" % formas.size())
+	_comprobar(float(peor) / float(maxi(1, filas.size())) <= 0.4, "ninguna forma pasa del 40 %% de los estadios (la mayor: %d de %d)" % [peor, filas.size()])
+	_comprobar(mal.is_empty(), "lo generado cabe en el aforo del club (fallan %d: %s)" % [mal.size(), ", ".join(mal.slice(0, 4))])
