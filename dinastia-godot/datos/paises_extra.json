@@ -230,6 +230,287 @@
     "ucl",
     "uel"
    ]
+  },
+  "TUR": {
+   "PAIS_SELECCION": "Turquía",
+   "TIER_PAIS": 0.95,
+   "GLOBO_PAIS": [
+    32.86,
+    39.93
+   ],
+   "POOLS_EU": [
+    [
+     "Mehmet",
+     "Ahmet",
+     "Mustafa",
+     "Emre",
+     "Burak",
+     "Hakan",
+     "Caner",
+     "Kerem",
+     "Yusuf",
+     "Arda",
+     "Cenk",
+     "Ozan",
+     "Baris",
+     "Volkan"
+    ],
+    [
+     "Yilmaz",
+     "Kaya",
+     "Demir",
+     "Sahin",
+     "Celik",
+     "Yildiz",
+     "Aydin",
+     "Ozturk",
+     "Arslan",
+     "Dogan",
+     "Kilic",
+     "Aslan",
+     "Cetin",
+     "Koc"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇹🇷"
+  },
+  "AUT": {
+   "PAIS_SELECCION": "Austria",
+   "TIER_PAIS": 0.75,
+   "GLOBO_PAIS": [
+    16.37,
+    48.21
+   ],
+   "POOLS_EU": [
+    [
+     "Lukas",
+     "Jakob",
+     "Maximilian",
+     "Florian",
+     "Felix",
+     "Stefan",
+     "Michael",
+     "Markus",
+     "Daniel",
+     "Patrick",
+     "Dominik",
+     "Manuel",
+     "Philipp",
+     "Matthias"
+    ],
+    [
+     "Gruber",
+     "Huber",
+     "Bauer",
+     "Wagner",
+     "Müller",
+     "Pichler",
+     "Steiner",
+     "Moser",
+     "Mayer",
+     "Hofer",
+     "Leitner",
+     "Berger",
+     "Fuchs",
+     "Eder"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇦🇹"
+  },
+  "GRE": {
+   "PAIS_SELECCION": "Grecia",
+   "TIER_PAIS": 0.85,
+   "GLOBO_PAIS": [
+    23.73,
+    37.98
+   ],
+   "POOLS_EU": [
+    [
+     "Giorgos",
+     "Nikos",
+     "Dimitris",
+     "Kostas",
+     "Yannis",
+     "Christos",
+     "Panos",
+     "Thanasis",
+     "Vasilis",
+     "Michalis",
+     "Manolis",
+     "Stelios",
+     "Lefteris",
+     "Alexandros"
+    ],
+    [
+     "Papadopoulos",
+     "Georgiou",
+     "Dimitriou",
+     "Nikolaou",
+     "Papadakis",
+     "Vasiliou",
+     "Karagiannis",
+     "Makris",
+     "Pappas",
+     "Antoniou",
+     "Konstantinou",
+     "Ioannou",
+     "Stavrou",
+     "Petrou"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇬🇷"
+  },
+  "QAT": {
+   "PAIS_SELECCION": "Catar",
+   "TIER_PAIS": 0.9,
+   "GLOBO_PAIS": [
+    51.53,
+    25.29
+   ],
+   "POOLS_EU": [
+    [
+     "Mohammed",
+     "Abdullah",
+     "Hamad",
+     "Khalid",
+     "Faisal",
+     "Saad",
+     "Nasser",
+     "Yousef",
+     "Ahmed",
+     "Ali",
+     "Hassan",
+     "Jassim",
+     "Tamim",
+     "Salem"
+    ],
+    [
+     "Al-Thani",
+     "Al-Naimi",
+     "Al-Kuwari",
+     "Al-Mohannadi",
+     "Al-Marri",
+     "Al-Sulaiti",
+     "Al-Hajri",
+     "Al-Dosari",
+     "Al-Muhannadi",
+     "Al-Ali",
+     "Al-Abdulla",
+     "Al-Emadi",
+     "Al-Kaabi",
+     "Al-Sada"
+    ]
+   ],
+   "CONFED": [
+    "asia"
+   ],
+   "BANDERA": "🇶🇦"
+  },
+  "SCO": {
+   "PAIS_SELECCION": "Escocia",
+   "TIER_PAIS": 0.7,
+   "GLOBO_PAIS": [
+    -3.19,
+    55.95
+   ],
+   "POOLS_EU": [
+    [
+     "Angus",
+     "Callum",
+     "Fraser",
+     "Euan",
+     "Lewis",
+     "Ross",
+     "Craig",
+     "Kieran",
+     "Duncan",
+     "Hamish",
+     "Murray",
+     "Gregor",
+     "Ewan",
+     "Niall"
+    ],
+    [
+     "MacDonald",
+     "Campbell",
+     "Stewart",
+     "Robertson",
+     "Murray",
+     "Reid",
+     "Fraser",
+     "Cameron",
+     "Morrison",
+     "Mackenzie",
+     "Grant",
+     "Ross",
+     "Gordon",
+     "Sinclair"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
+  },
+  "SUI": {
+   "PAIS_SELECCION": "Suiza",
+   "TIER_PAIS": 0.8,
+   "GLOBO_PAIS": [
+    7.45,
+    46.95
+   ],
+   "POOLS_EU": [
+    [
+     "Luca",
+     "Noah",
+     "Leon",
+     "Elias",
+     "Nico",
+     "Fabian",
+     "Dario",
+     "Marco",
+     "Reto",
+     "Lukas",
+     "Silvan",
+     "Tobias",
+     "Jonas",
+     "Yannick"
+    ],
+    [
+     "Müller",
+     "Meier",
+     "Schmid",
+     "Keller",
+     "Weber",
+     "Huber",
+     "Schneider",
+     "Meyer",
+     "Steiner",
+     "Fischer",
+     "Gerber",
+     "Brunner",
+     "Baumann",
+     "Frei"
+    ]
+   ],
+   "CONFED": [
+    "ucl",
+    "uel"
+   ],
+   "BANDERA": "🇨🇭"
   }
  },
  "tablas": {

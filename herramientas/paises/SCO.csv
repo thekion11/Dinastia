@@ -1,0 +1,22 @@
+#seleccion=Escocia
+#tier=0.7
+#globo=-3.19,55.95
+#bandera=🏴󠁧󠁢󠁳󠁣󠁴󠁿
+#confed=ucl,uel
+#liga=Premi3rship|Liga Escocesa
+#copa=Copa de Escocia|Copa de Escocia
+#nombres=Angus,Callum,Fraser,Euan,Lewis,Ross,Craig,Kieran,Duncan,Hamish,Murray,Gregor,Ewan,Niall
+#apellidos=MacDonald,Campbell,Stewart,Robertson,Murray,Reid,Fraser,Cameron,Morrison,Mackenzie,Grant,Ross,Gordon,Sinclair
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Celtic;Trébol Verde;#00843d;#ffffff;73;60000;1887;los Verdiblancos;el parque de la hinchada más ruidosa;Campeón de Europa en 1967 con once jugadores nacidos a menos de 50 km del estadio.
+Glasgow Rangers;Azulones Glasgow;#1b458f;#ffffff;72;50000;1872;los Azules;el estadio de la orilla sur del río;El club con más títulos de liga del mundo.
+Heart of Midlothian;Corazón Lothian;#800000;#ffffff;66;20000;1874;los Jambos;el estadio de la colina de Edimburgo;El club granate de la capital, con un corazón en el escudo.
+Aberdeen;Granito Norte;#e21a22;#ffffff;65;20000;1903;los Dons;el estadio del puerto del norte;Campeón de Europa en 1983 con un entrenador que luego ganó medio mundo.
+Hibernian;Colina Esmeralda;#00843d;#ffffff;64;20000;1875;los Hibs;el estadio de la colina de la capital;El club irlandés de Edimburgo, el primero en jugar en Europa.
+Dundee United;Naranja Tay;#f26522;#000000;62;14000;1909;los Arabes;el estadio de la calle de enfrente;El vecino naranja que fue campeón en 1983.
+Motherwell;Acero Lanark;#ffb81c;#8b1538;60;13000;1886;los Pozos;el estadio de la ciudad del acero;El club de la ciudad del acero.
+Kilmarnock;Killie Azul;#1b458f;#ffffff;59;18000;1869;los Killie;el estadio del club más antiguo de la liga;El club profesional más antiguo del país.
+Falkirk;Carros Azules;#1b458f;#ffffff;57;8000;1876;los Bairns;el estadio del condado de los canales;Un club histórico que volvió a primera tras años lejos.
+Livingston;León Nuevo;#ffb81c;#000000;55;10000;1943;los Leones;el estadio de la ciudad nueva;Un club de ciudad nueva que se cuela entre los grandes.
+St Mirren;Santo Molino;#000000;#ffffff;57;8000;1877;los Buddies;el estadio del barrio de los molinos;Un club de Paisley con casi siglo y medio.
+Dundee;Tay Azul;#1b458f;#ffffff;58;11000;1893;los Dees;el estadio de la calle de enfrente;El vecino azul de la ciudad del Tay.

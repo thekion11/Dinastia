@@ -44,6 +44,7 @@ import liga_paises_bajos
 import ligas_completas
 import segundas_divisiones
 import ligas_europa_real
+import importar_pais
 import json
 import os
 import sys
@@ -555,6 +556,12 @@ LIGAS.update(ligas_europa_real.LIGAS_FICTICIAS)
 COPAS.update(ligas_europa_real.COPAS_FICTICIAS)
 estadios_reales.ESTADIOS.update(ligas_europa_real.estadios())
 historia_clubes.H.update(ligas_europa_real.HISTORIA)
+# Países nuevos desde tablas CSV (10-11-2026), `importar_pais.py` + `paises/*.csv`: TUR, SCO, SUI, AUT, GRE y QAT.
+CLUBES.update(importar_pais.CLUBES)
+LIGAS.update(importar_pais.LIGAS_FICTICIAS)
+COPAS.update(importar_pais.COPAS_FICTICIAS)
+estadios_reales.ESTADIOS.update(importar_pais.estadios())
+historia_clubes.H.update(importar_pais.HISTORIA)
 historia_clubes.H.update(liga_paises_bajos.HISTORIA)
 historia_clubes.CLASICOS.extend(liga_paises_bajos.CLASICOS)
 
@@ -605,6 +612,7 @@ def main():
     ligas_completas.asegurar(real)
     segundas_divisiones.asegurar(real)
     ligas_europa_real.asegurar(real)
+    importar_pais.asegurar(real)
 
     errores = []
 

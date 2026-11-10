@@ -2747,5 +2747,333 @@
  "Fyn FC": [
   "4-2-3-1",
   "equilibrado"
+ ],
+ "Bósforo León": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Faro Amarillo": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Águilas Bósforo": [
+  "4-3-3",
+  "presion"
+ ],
+ "Mar Negro SK": [
+  "3-5-2",
+  "directo"
+ ],
+ "Cúpula Nueva": [
+  "4-4-2",
+  "garra"
+ ],
+ "Costa Roja": [
+  "5-3-2",
+  "contra"
+ ],
+ "Izmir Amarillo": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Alanya Verde": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Konya Verde": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Cala Marinera": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Antalya Roja": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Té Dorado": [
+  "3-5-2",
+  "presion"
+ ],
+ "Kayseri Dorado": [
+  "4-4-2",
+  "directo"
+ ],
+ "Pistacho FC": [
+  "5-3-2",
+  "garra"
+ ],
+ "Cuerno de Oro": [
+  "4-3-3",
+  "contra"
+ ],
+ "Kocaeli Verde": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Juventud Capital": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Muralla Vieja": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Toro Salzburgo": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Tormenta Estiria": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Linz Rápido": [
+  "4-3-3",
+  "presion"
+ ],
+ "Rapid Danubio": [
+  "3-5-2",
+  "directo"
+ ],
+ "Violeta Danubio": [
+  "4-4-2",
+  "garra"
+ ],
+ "Lobo Carintia": [
+  "5-3-2",
+  "contra"
+ ],
+ "Colina Verde": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Rin Alto": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Linz Azulblanco": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Grazer Rojo": [
+  "4-2-3-1",
+  "bloque"
+ ],
+ "Tirol Alpino": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "Ried Verde": [
+  "3-5-2",
+  "presion"
+ ],
+ "Puerto Rojo": [
+  "4-4-2",
+  "directo"
+ ],
+ "Trébol Atenas": [
+  "5-3-2",
+  "garra"
+ ],
+ "Águila Doble": [
+  "4-3-3",
+  "contra"
+ ],
+ "Salónica Doble": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Dios Norte": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Isla Creta": [
+  "4-2-3-1",
+  "ofensivo"
+ ],
+ "Atrómetro": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Estrella Arcadia": [
+  "3-5-2",
+  "equilibrado"
+ ],
+ "Volos Azul": [
+  "4-4-2",
+  "presion"
+ ],
+ "Levadia Roja": [
+  "5-3-2",
+  "directo"
+ ],
+ "Serres Rojo": [
+  "4-3-3",
+  "garra"
+ ],
+ "Etolia Verde": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Larisa Roja": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Kifisia Verde": [
+  "4-2-3-1",
+  "vertical"
+ ],
+ "Halcón Doha": [
+  "4-3-3",
+  "ofensivo"
+ ],
+ "Duhail Rojo": [
+  "3-5-2",
+  "bloque"
+ ],
+ "Rayyan Rojo": [
+  "4-4-2",
+  "equilibrado"
+ ],
+ "Gharafa Azul": [
+  "5-3-2",
+  "presion"
+ ],
+ "Árabe Doha": [
+  "4-3-3",
+  "directo"
+ ],
+ "Wakrah Dorado": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Catar Nacional": [
+  "4-4-2",
+  "contra"
+ ],
+ "Ahli Doha": [
+  "4-2-3-1",
+  "posesion"
+ ],
+ "Norte Dorado": [
+  "4-3-3",
+  "vertical"
+ ],
+ "Madre Salal": [
+  "3-5-2",
+  "ofensivo"
+ ],
+ "Khor Dorado": [
+  "4-4-2",
+  "bloque"
+ ],
+ "Shahaniya Roja": [
+  "5-3-2",
+  "equilibrado"
+ ],
+ "Trébol Verde": [
+  "4-3-3",
+  "presion"
+ ],
+ "Azulones Glasgow": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Corazón Lothian": [
+  "4-4-2",
+  "garra"
+ ],
+ "Granito Norte": [
+  "4-2-3-1",
+  "contra"
+ ],
+ "Colina Esmeralda": [
+  "4-3-3",
+  "posesion"
+ ],
+ "Naranja Tay": [
+  "3-5-2",
+  "vertical"
+ ],
+ "Acero Lanark": [
+  "4-4-2",
+  "ofensivo"
+ ],
+ "Killie Azul": [
+  "5-3-2",
+  "bloque"
+ ],
+ "Carros Azules": [
+  "4-3-3",
+  "equilibrado"
+ ],
+ "León Nuevo": [
+  "4-2-3-1",
+  "presion"
+ ],
+ "Santo Molino": [
+  "4-4-2",
+  "directo"
+ ],
+ "Tay Azul": [
+  "4-2-3-1",
+  "garra"
+ ],
+ "Rin Basilea": [
+  "4-3-3",
+  "contra"
+ ],
+ "Chicos Berna": [
+  "3-5-2",
+  "posesion"
+ ],
+ "Lago Sur": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Ginebra Roja": [
+  "5-3-2",
+  "ofensivo"
+ ],
+ "Limmat FC": [
+  "4-3-3",
+  "bloque"
+ ],
+ "Lucerna Lago": [
+  "4-2-3-1",
+  "equilibrado"
+ ],
+ "Olímpico Léman": [
+  "4-4-2",
+  "presion"
+ ],
+ "Galo Oriental": [
+  "4-2-3-1",
+  "directo"
+ ],
+ "Sión Alpino": [
+  "4-3-3",
+  "garra"
+ ],
+ "Saltamontes ZH": [
+  "3-5-2",
+  "contra"
+ ],
+ "Tuna Alpina": [
+  "4-4-2",
+  "posesion"
+ ],
+ "Invierno ZH": [
+  "5-3-2",
+  "vertical"
+ ],
+ "Marte Norte": [
+  "4-4-2",
+  "vertical"
+ ],
+ "Atromeda FC": [
+  "4-3-3",
+  "bloque"
  ]
 }
