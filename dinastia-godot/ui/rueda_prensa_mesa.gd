@@ -214,8 +214,9 @@ static func _atrezo(escena: Node3D, club: Club) -> void:
 ## LUZ DE PLATÓ (10-11): en la referencia la sala está a oscuras y la luz cae sobre la mesa y la pared; los periodistas son SILUETAS.
 ## Los periodistas pasan a la capa visual 2 y las luces de la mesa, de la pared y del DT dejan de tocarlos (máscara 1); los ilumina solo
 ## el ambiente. Un foco cenital más sobre la mesa. Se llama al final de `montar()`, cuando ya están todas las luces.
+static var luz_plato := true   ## bandera (las pruebas la apagan para comparar)
 static func iluminar(escena: Node3D) -> void:
-	if not en(escena):
+	if not en(escena) or not luz_plato:
 		return
 	var sala = escena.get("_sala")
 	if sala is Array:

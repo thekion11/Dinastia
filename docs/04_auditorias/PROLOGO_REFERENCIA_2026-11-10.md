@@ -100,3 +100,5 @@ Total: unas 9-15 sesiones. El orden lo marca la orden 34: primero los pasos 3-5 
 - R9: la columna de respuestas, abajo sobre la franja de la pregunta (deja libre la mesa).
 - Antes/después (cámara real, ARG, USA y CHI): `docs/04_auditorias/rueda_prensa_antes_despues_2026-11-10.jpg`.
 - R8: el DT ENTRA por la izquierda caminando («caminar_formal»), se gira hacia la sala y se sienta; mientras entra, la cámara se queda en el plano frontal. Sentado, solo cambia de cara: las poses «Sitting_Enter» y «Sitting_Talking» de la biblioteca extra lo dejaban hundido bajo la mesa. Una luz propia para el jefe de prensa (quedaba en silueta). Secuencia: `docs/04_auditorias/rueda_prensa_entrada_2026-11-10.jpg`.
+- Plató a oscuras con foco cenital, periodistas en SILUETA (capa visual 2: las luces de la mesa no los tocan), placas con el escudo, botellas y vasos.
+- **Hoja final en Forward+** (cámara real, CHI/ARG/USA; antes con atril, entrada y planos con la mesa): `docs/04_auditorias/rueda_prensa_forward_2026-11-10.jpg`. Llamadas (mediana, Forward+, portadas cerradas): CHI 740 → 756, ARG 529 → 557, USA 510 → 567 (+2 % a +11 %).
