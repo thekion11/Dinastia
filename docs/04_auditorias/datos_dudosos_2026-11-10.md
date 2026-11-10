@@ -75,16 +75,6 @@ Solo se pudo abrir Wikipedia (en, fr, pt, es) y alguna búsqueda; RSSSF, Soccerw
 - Colores, fundaciones, apodos y medias: de memoria en TODOS los países de las tandas 2-5. Pendiente: abrir RSSSF, Soccerway y webs de ligas.
 
 ---
-# TERCERA PASADA (10-11-2026)
-Accesibilidad de fuentes probada UNA vez: **RSSSF abre solo por `https://www.rsssf.org/curdom.html`** (enlaza a las tablas actuales; los índices `/tablesc/` y `/tablesl/` dan 403). **Soccerway** redirige (307) pero no dio listas de clubes. **Transfermarkt** no se probó.
-- **MLI** (wiki fr: «14 participantes»): CSV reducido de 18 a 14. La wiki no dice cuáles; se quitaron los 4 de menor reputación (USFAS Bamako, US Bougouba, CS Duguwolofila, LC Bamako): **esa elección NO está verificada**.
-- **BFA** (wiki fr: campeón 2025 y 2026): añadido Rahimo FC (15 clubes). Sus datos (colores, fundación 2010, aforo 20.000, apodo) son estimados.
-- **CPV** (RSSSF `tablesk/kaapv2026`, Campeonato Nacional 2025/26): lista de 12 VERIFICADA con isla y ciudad (6 clubes quitados, 6 añadidos, estos con valores genéricos: fundación 1990, aforos 1.000-2.000). Aforos, estadios, colores y fundación siguen dudosos.
-- **LBY** (RSSSF `tablesl/lib2026`): la liga se jugó en 4 grupos regionales con 36 clubes. 18 de los 20 del CSV figuran; se quitaron Al-Bashayr y Asaria SC y se añadieron Al-Anwar y Al-Ittihad Military SC. Aforos de Trípoli y Tahaddy: SIN fuente accesible (no se tocaron).
-- **CGO** (RSSSF `tablesk/kong2025`): el torneo 2025 no fue reconocido (sin campeón, 21 clubes en dos zonas). 10 clubes del CSV verificados; se quitaron 4 y se añadieron 4 elegidos de forma arbitraria entre los 11 de la fuente que faltaban. AS Cheminots y AS Ponténégrine no aparecen en esa lista y se mantienen. Estadios y aforos: sin fuente accesible.
-- Colores de las 7 ligas grandes: los hace la sesión 4. Colores, fundaciones y apodos del resto: de memoria.
-
----
 # PASADA RSSSF (10-11-2026): 104 países contra la tabla final de RSSSF
 Fuente: páginas de temporada actual enlazadas desde `https://www.rsssf.org/curdom.html` (2025-26 o 2026; algunas 2026/27 en curso o 2025). Se comparó cantidad y lista de clubes de la primera división con cada CSV; solo se corrigió lo que la fuente dejaba claro. Los clubes nuevos llevan aforo, colores, fundación, estadio y media ESTIMADOS (sigue de memoria). Los 28 países base (sin CSV: CHI, ARG, BRA, URU, PAR, COL, PER, ECU, ESP, ENG, ITA, GER, FRA, BOL, JPN, KOR, KSA, EGY, MAR, RSA, AUS, MEX, USA, NED, POR, BEL, CRO, DEN) NO se tocaron: tienen datos reales propios del pack.
 
@@ -128,3 +118,13 @@ segundo uniforme:
 - Pantalones, medias y segundas camisetas con dibujo: 266 piezas, sin tocar.
 - Los segundos uniformes de la ficha son los de ESTA temporada y cambian cada año: se tomaron solo los lisos.
 
+
+---
+# TERCERA PASADA (10-11-2026)
+Accesibilidad de fuentes probada UNA vez: **RSSSF abre solo por `https://www.rsssf.org/curdom.html`** (enlaza a las tablas actuales; los índices `/tablesc/` y `/tablesl/` dan 403). **Soccerway** redirige (307) pero no dio listas de clubes. **Transfermarkt** no se probó.
+- **MLI** (wiki fr: «14 participantes»): CSV reducido de 18 a 14. La wiki no dice cuáles; se quitaron los 4 de menor reputación (USFAS Bamako, US Bougouba, CS Duguwolofila, LC Bamako): **esa elección NO está verificada**.
+- **BFA** (wiki fr: campeón 2025 y 2026): añadido Rahimo FC (15 clubes). Sus datos (colores, fundación 2010, aforo 20.000, apodo) son estimados.
+- **CPV** (RSSSF `tablesk/kaapv2026`, Campeonato Nacional 2025/26): lista de 12 VERIFICADA con isla y ciudad (6 clubes quitados, 6 añadidos, estos con valores genéricos: fundación 1990, aforos 1.000-2.000). Aforos, estadios, colores y fundación siguen dudosos.
+- **LBY** (RSSSF `tablesl/lib2026`): la liga se jugó en 4 grupos regionales con 36 clubes. 18 de los 20 del CSV figuran; se quitaron Al-Bashayr y Asaria SC y se añadieron Al-Anwar y Al-Ittihad Military SC. Aforos de Trípoli y Tahaddy: SIN fuente accesible (no se tocaron).
+- **CGO** (RSSSF `tablesk/kong2025`): el torneo 2025 no fue reconocido (sin campeón, 21 clubes en dos zonas). 10 clubes del CSV verificados; se quitaron 4 y se añadieron 4 elegidos de forma arbitraria entre los 11 de la fuente que faltaban. AS Cheminots y AS Ponténégrine no aparecen en esa lista y se mantienen. Estadios y aforos: sin fuente accesible.
+- Colores de las 7 ligas grandes: hechos por la sesión 4 (sección COLORES, arriba). Colores, fundaciones y apodos del resto: de memoria.

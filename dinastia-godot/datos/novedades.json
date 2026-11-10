@@ -2,6 +2,35 @@
  "_leeme": "Notas de versión que enseña la pantalla «Novedades» (ui/pantallas/pantalla_novedades.gd). La primera es la más reciente. Cada texto pasa por Idiomas.t: al añadir uno, súmalo con herramientas/sumar_traducciones.py.",
  "versiones": [
   {
+   "version": "0.9.2",
+   "fecha": "10-11-2026",
+   "titulo": "Ligas reales, torneos nuevos y un móvil más fluido",
+   "secciones": [
+    {
+     "titulo": "Ligas y torneos",
+     "puntos": [
+      "Cada liga tiene sus clubes y su número de equipos reales. Al empezar eliges qué países se juegan, y puedes sumar más al cerrar la temporada o desde Ajustes.",
+      "Torneos nuevos de selecciones: la Finalissima, entre el campeón de Europa y el de América, y los Juegos Olímpicos cada cuatro años."
+     ]
+    },
+    {
+     "titulo": "Tu club",
+     "puntos": [
+      "Rueda de prensa nueva: un plató con periodistas, focos y el entrenador sentado a la mesa.",
+      "Vestuario realista: la pizarra con la formación del club, el escudo en la pared y un estilo propio según el país."
+     ]
+    },
+    {
+     "titulo": "Menús y móvil",
+     "puntos": [
+      "Iconos dibujados para el juego en el menú lateral y en las portadas de cada menú.",
+      "En el móvil, el modo rendimiento y el ahorro de menús vienen encendidos y el juego va hasta 90 FPS.",
+      "Todos los textos nuevos llegan traducidos a los nueve idiomas."
+     ]
+    }
+   ]
+  },
+  {
    "version": "0.9.1",
    "fecha": "2-11-2026",
    "titulo": "Más rápido, más fiable y una ciudad con transporte de verdad",
