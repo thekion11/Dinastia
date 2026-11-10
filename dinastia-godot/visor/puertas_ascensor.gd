@@ -18,7 +18,9 @@ static func poner(nodo: Node3D, cx: float, z: float, y0: float, ancho: float) ->
 	cabina.emission = Color(0.95, 0.85, 0.6)
 	cabina.emission_energy_multiplier = 0.6
 	var alto := 2.3
-	PiezasObra._caja(nodo, Vector3(cx, y0 + alto / 2.0, z - 0.03), Vector3(ancho, alto, 0.02), cabina, false)   ## el fondo de la cabina, visible con las puertas abiertas
+	## El fondo de la cabina, visible con las puertas abiertas: 1 cm DELANTE de la pared (la pared llega a z−0,04; antes la cabina estaba dentro
+	## de ella con su cara a z−0,04 en el MISMO plano y, con las puertas abiertas, las dos se peleaban por el z-buffer: parpadeo).
+	PiezasObra._caja(nodo, Vector3(cx, y0 + alto / 2.0, z - 0.045), Vector3(ancho, alto, 0.01), cabina, false)
 	for lado: float in [-1.0, 1.0]:
 		PiezasObra._caja(nodo, Vector3(cx + lado * (ancho / 2.0 + 0.04), y0 + (alto + 0.1) / 2.0, z - 0.09), Vector3(0.08, alto + 0.1, 0.12), marco, false)
 	PiezasObra._caja(nodo, Vector3(cx, y0 + alto + 0.05, z - 0.09), Vector3(ancho + 0.16, 0.1, 0.12), marco, false)
