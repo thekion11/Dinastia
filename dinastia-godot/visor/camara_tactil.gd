@@ -50,3 +50,8 @@ static func adaptar(pj: Node, cam: Camera3D, lienzo: Vector2) -> void:
 	if cam.keep_aspect != ka:
 		cam.keep_aspect = ka
 		cam.fov = FOV_ANCHO_VERTICAL if de_pie else FOV_ALTO_NORMAL
+
+## Cuánto mira la cámara por delante del jugador (10 m de siempre; de pie, 5: menos cielo y el jugador más al centro). Aprovecha para fijar el encuadre.
+static func adelante(pj: Node, cam: Camera3D, lienzo: Vector2) -> float:
+	adaptar(pj, cam, lienzo)
+	return 5.0 if cam.keep_aspect == Camera3D.KEEP_WIDTH else 10.0

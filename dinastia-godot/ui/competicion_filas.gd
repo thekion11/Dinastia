@@ -16,6 +16,13 @@ const ANCHO_BARRA := 4.0
 const ALTO_FILA := 28.0
 const ESCUDO := 20
 
+## (vertical) de pie la fila entera ha de caber en ~500 px: cifras y nombres más estrechos, sin los huecos gemelos.
+static func ancho_cifra() -> float:
+	return 32.0 if MenuLateral.abajo() else ANCHO_CIFRA
+
+static func ancho_nombre() -> float:
+	return 100.0 if MenuLateral.abajo() else 140.0
+
 ## El fondo de la fila de tu club: el verde de la casa, translúcido, con borde.
 ## Antes tu club solo cambiaba el COLOR del texto, y ese verde era casi el mismo
 ## que el de las zonas de arriba: no se distinguía "voy cuarto" de "soy yo".
@@ -73,10 +80,10 @@ static func cabecera(padre: Node, cifras: Array) -> void:
 	h.add_child(etiqueta("#", 11, Tema.SUAVE, true, ANCHO_PUESTO))
 	var club := etiqueta(sigla("CLUB"), 11, Tema.SUAVE)
 	club.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	club.custom_minimum_size = Vector2(float(ESCUDO) + 140.0, 0)
+	club.custom_minimum_size = Vector2(float(ESCUDO) + ancho_nombre(), 0)
 	h.add_child(club)
 	for t: String in cifras:
-		var l := etiqueta(sigla(t), 11, Tema.SUAVE, true, ANCHO_CIFRA)
+		var l := etiqueta(sigla(t), 11, Tema.SUAVE, true, ancho_cifra())
 		## Las siglas no se explican solas en todos los idiomas: el tooltip sí.
 		l.tooltip_text = Idiomas.t(_sigla_larga(t))
 		l.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -132,7 +139,7 @@ static func fila_tabla(padre: Node, puesto: int, c: Club, cifras: Array, propia:
 	var nombre := HBoxContainer.new()
 	nombre.add_theme_constant_override("separation", 8)
 	nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	nombre.custom_minimum_size = Vector2(float(ESCUDO) + 140.0, 0)
+	nombre.custom_minimum_size = Vector2(float(ESCUDO) + ancho_nombre(), 0)
 	h.add_child(nombre)
 	nombre.add_child(escudo(c, ESCUDO))
 	var nom := etiqueta(Nombres.visible(c.nombre), 14, col_texto)
@@ -144,7 +151,7 @@ static func fila_tabla(padre: Node, puesto: int, c: Club, cifras: Array, propia:
 	for i in cifras.size():
 		var ultima := i == cifras.size() - 1
 		var col := Tema.TEXTO if ultima or propia else Color(Tema.TEXTO, 0.82)
-		h.add_child(etiqueta(String(cifras[i]), 15 if ultima else 14, Tema.ORO if ultima and propia else col, true, ANCHO_CIFRA))
+		h.add_child(etiqueta(String(cifras[i]), 15 if ultima else 14, Tema.ORO if ultima and propia else col, true, ancho_cifra()))
 	return caja
 
 ## La leyenda de las zonas que de verdad aparecen en esta tabla (si en Segunda
@@ -194,24 +201,24 @@ static func fila_partido(padre: Node, local: Club, visita: Club, gl: int, gv: in
 	## Hueco gemelo del texto extra de la derecha: sin él, el marcador queda
 	## descentrado respecto al de las filas de encima.
 	var gemelo := Control.new()
-	gemelo.custom_minimum_size = Vector2(150.0, 0)
+	gemelo.custom_minimum_size = Vector2(0.0 if MenuLateral.abajo() else 150.0, 0)
 	h.add_child(gemelo)
-	var nl := etiqueta(Nombres.visible(local.nombre), 13, col_l, true, 240.0)
+	var nl := etiqueta(Nombres.visible(local.nombre), 13, col_l, true, 110.0 if MenuLateral.abajo() else 240.0)
 	nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	nl.clip_text = true
 	h.add_child(nl)
 	h.add_child(escudo(local, 18))
 	var marc := etiqueta(Idiomas.t("vs") if not jugado else "%d - %d" % [gl, gv], 13,
-		Tema.ORO if jugado else Tema.SUAVE, false, 64.0)
+		Tema.ORO if jugado else Tema.SUAVE, false, 56.0 if MenuLateral.abajo() else 64.0)
 	marc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	h.add_child(marc)
 	h.add_child(escudo(visita, 18))
-	var nv := etiqueta(Nombres.visible(visita.nombre), 13, col_v, false, 240.0)
+	var nv := etiqueta(Nombres.visible(visita.nombre), 13, col_v, false, 110.0 if MenuLateral.abajo() else 240.0)
 	nv.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	nv.clip_text = true
 	h.add_child(nv)
 	## Penales, «pasa X»...: al lado, en pequeño, sin mover el marcador.
-	var ex := etiqueta(extra, 11, Tema.SUAVE, false, 150.0)
+	var ex := etiqueta(extra, 11, Tema.SUAVE, false, 0.0 if MenuLateral.abajo() else 150.0)
 	ex.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	ex.clip_text = true
 	h.add_child(ex)

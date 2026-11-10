@@ -283,7 +283,7 @@ func _actualizar_camara(delta: float) -> void:
 	else:
 		foco = motor.balon.position
 	var detras := Vector3(0, 12.5, -15.0 * d) * CamaraTactil.zoom(self, motor)   ## en el móvil, más cerca del jugador (CamaraTactil, 4-11)
-	var mira := foco + Vector3(0, 0.5, (5.0 if _cam.keep_aspect == Camera3D.KEEP_WIDTH else 10.0) * d)   ## (vertical) mira más cerca: menos cielo, el jugador más al centro
+	var mira := foco + Vector3(0, 0.5, CamaraTactil.adelante(self, _cam, _vp.size if _vp != null else Vector2.ZERO) * d)   ## (vertical) encuadre propio
 	## En la tanda, todos tiran al arco de +Z: siempre detrás del punto de penal.
 	if not motor.tanda.is_empty() or motor.estado == "saque" and String(motor.saque.get("tipo", "")) == "penal":
 		detras = Vector3(0, 3.2, -7.0 * d)
@@ -309,7 +309,6 @@ func _actualizar_camara(delta: float) -> void:
 	deseada.x = clampf(deseada.x, -lim.x, lim.x)
 	deseada.z = clampf(deseada.z, -lim.z, lim.z)
 	deseada.y += fuera * 0.6
-	CamaraTactil.adaptar(self, _cam, _vp.size if _vp != null else Vector2.ZERO)   ## (vertical) fija el ancho del encuadre
 	_cam.position = _cam.position.lerp(deseada, clampf(delta * 3.5, 0.0, 1.0)) if _cam.position.length() > 0.1 else deseada
 	_cam.look_at(mira, Vector3.UP)
 
