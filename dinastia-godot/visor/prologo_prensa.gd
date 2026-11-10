@@ -35,6 +35,7 @@ func montar(m: Mundo, club: Club, acento: Color, look_dt: Dictionary) -> void:
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
 	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
+	CalidadRes3D.limitar(vp)   ## (10-11, P1) tope de altura del 3D en móvil
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	vpc.add_child(vp)
 	_escena = RuedaPrensaEscena3D.new()

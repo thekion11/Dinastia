@@ -23,6 +23,7 @@ static func abrir(p: Control, m: Mundo, _bandeja: Array = []) -> Control:
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
 	vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
+	CalidadRes3D.limitar(vp)   ## (10-11, P1) tope de altura del 3D en móvil
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	vp_cont.add_child(vp)
 	var escena := CasaEscena3D.new()
