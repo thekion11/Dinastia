@@ -43,3 +43,18 @@ Encargo del dueño (para la pantalla «Ligas activas», sesión 6). Herramienta:
 - Valor por defecto en móvil: **~5 países** (el club del jugador y su entorno); en PC, 15; «mundo entero» como opción explícita con aviso de coste («más lento al avanzar y al guardar; usa ~2 GB al cargar»).
 - Los países no activos NO se simulan (la tabla de arriba es el ahorro: −65 % de tiempo y −50 % de RAM con 15 de 71 países).
 - Antes de ofrecer «mundo entero» en móvil: bajar el pico de RAM al cargar (liberar el mundo viejo ANTES de parsear el nuevo, y parsear sin duplicar el JSON), que es una mejora independiente y barata.
+
+## Pico de RAM al CARGAR: causa y arreglo (10-11, sesión 5; orden del líder)
+Herramientas: `pruebas/zz_carga_ram.tscn` (pico de `Partida.cargar` con el mundo anterior vivo o soltado, y comprobación de que el mundo cargado es el mismo que el guardado), `zz_fuga_mundo.tscn` (¿se libera un mundo al soltarlo?).
+**Dónde se iba la RAM** (mundo entero, memoria estática): JSON descomprimido +17 MB, como `String` +65 MB, parseado a `Dictionary` +233 MB, mundo construido +184 MB; y **el mundo de antes no se liberaba nunca**, por dos causas:
+1. `LeyesPais.clubes_mundo` (variable estática) guardaba los clubes, y con ellos todos los jugadores, del último mundo generado o cargado; `Partida.cargar` la sobrescribía al FINAL, así que el mundo viejo seguía vivo durante toda la carga.
+2. En `tomar_el_mando` dos lambdas (`medico.gasto.connect(func …)` / `vestuario.gasto.connect(func …)`) capturaban el propio `Mundo`: ciclo Mundo → médico → señal → lambda → Mundo. Una lambda de GDScript guarda su `self` vivo, así que un `Mundo` con partida tomada NO se liberaba aunque nadie lo referenciara: cada partida cargada o nueva dejaba ~225 MB (mundo entero) sin liberar para siempre (cargar 5 veces seguidas acumulaba >1 GB).
+**Arreglo:** (a) `Mundo._gasto_al_libro` (método) en vez de las lambdas: el mundo soltado SÍ se libera; (b) `Partida.cargar(nombre, soltar_antes)`: tras leer el guardado y comprobar que es bueno (huella, versión, claves: `_instantanea_buena`) y ANTES de construir el mundo nuevo, vacía `LeyesPais.clubes_mundo` y llama a `soltar_antes` (la interfaz pasa `p.mundo = null`); si el guardado no sirve no se llama y el mundo actual queda intacto; (c) los bytes del JSON se sueltan en cuanto existe el texto.
+**Medido** (mundo generado + 3 semanas + guardado; carga de la misma partida):
+| | Sin soltar (antes) | Con soltar (ahora) |
+|---|---|---|
+| MUNDO ENTERO, pico estática | 954 MB | **831 MB** |
+| MUNDO ENTERO, VmHWM (pico del proceso) | 1.364 MB | **1.168 MB** |
+| MUNDO ENTERO, estática TRAS cargar | 708 MB | **483 MB** (−225 MB: el viejo ya no queda) |
+| 5 países, pico estática / tras cargar | 336 / 302 MB | 319 / 270 MB |
+Mismo mundo: el guardado del mundo cargado es idéntico al original (sin la hora del guardado) en las dos configuraciones. Banco FIN. 0 fallos. **Queda** un pico de ~830 MB estática (~1,17 GB de proceso) con el mundo entero: diccionario del JSON + texto + mundo viejo, hasta que se suelta el viejo; bajarlo más exigiría soltar el mundo actual ANTES de parsear (si el guardado no se pudiera leer, el jugador perdería su partida actual), por eso no se hace.

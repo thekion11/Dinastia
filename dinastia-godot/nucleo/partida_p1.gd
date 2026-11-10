@@ -79,7 +79,8 @@ static func _leer_todo(ruta: String) -> Dictionary:
 		push_warning("Partida: %s está dañado o no es una partida" % ruta)
 		return {}
 	var j := JSON.new()
-	if j.parse(crudo.get_string_from_utf8()) != OK:
+	var texto := crudo.get_string_from_utf8(); crudo = PackedByteArray()   ## (10-11) el texto sustituye a los bytes: no se tienen los dos a la vez durante el parseo
+	if j.parse(texto) != OK:
 		push_error("Partida: JSON inválido en %s: %s" % [ruta, j.get_error_message()])
 		return {}
 	return j.data if j.data is Dictionary else {}

@@ -306,6 +306,10 @@ func _sortear_continentales() -> void:
 		copa.campeon if copa != null else null)
 	FifaClubes.sumar(self, previos)
 
+## El gasto de un sistema (médico, entrenamiento, vestuario) al libro de movimientos, con el signo cambiado.
+func _gasto_al_libro(concepto: String, monto: int) -> void:
+	_anotar_movimiento(concepto, -monto)
+
 ## Arranca tu carrera en un club: fija el objetivo que te pone la directiva.
 ##
 ## El puesto esperado sale de la reputacion dentro de SU liga, no del ranking
@@ -339,7 +343,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	## Los gastos de médico, entrenamiento y vestuario ya restaban caja pero no llegaban a ningún libro (auditoría 28-10).
 	## Los tres objetos son nuevos en cada `tomar_el_mando`, así que no se duplica la conexión.
 	for fuente_g: Variant in [medico, entrenamiento]:
-		fuente_g.gasto.connect(func(concepto: String, monto: int) -> void: _anotar_movimiento(concepto, -monto))
+		fuente_g.gasto.connect(_gasto_al_libro)   ## (10-11) un método, no una lambda: la lambda guardaba el Mundo vivo (Mundo → médico → señal → lambda → Mundo) y un mundo soltado nunca se liberaba
 	## LA SIEMBRA ÚNICA. El mundo entero se generó en `generar()`, ANTES de que
 	## existiera ningún `Entrenamiento` -no hay club elegido todavía, así que
 	## `crear_jugador()` no tiene a quién pedirle el sorteo-, y por eso ninguno
@@ -360,7 +364,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	prensa = Prensa.new(self)
 	logros = Logros.new(self)
 	vestuario = Vestuario.new(self)
-	vestuario.gasto.connect(func(concepto: String, monto: int) -> void: _anotar_movimiento(concepto, -monto))
+	vestuario.gasto.connect(_gasto_al_libro)
 	hinchada = Hinchada.new(self)
 	gente = Gente.new(self)
 	club_dentro = ClubDentro.new()
