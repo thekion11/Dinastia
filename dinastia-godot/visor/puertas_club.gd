@@ -2,7 +2,7 @@ class_name PuertasClub
 extends RefCounted
 ## LAS PUERTAS DE LAS SALAS DEL CLUB (9-11, vídeo del dueño: «habitaciones sin marcos ni puertas»). El tabique del pasillo tenía solo el
 ## hueco: ahora cada hueco lleva su MARCO (dos jambas y dintel, con el color del club) y una HOJA de madera abierta contra la pared del pasillo,
-## con su manija y su placa. Todo es visual (sin choque), así que el paso queda libre como antes.
+## con su manija y su placa. Todo es visual (sin choque), así que el paso queda libre como antes. (10-11) La hoja se abre al acercarse (`PuertaAnimada`).
 const ALTO := 2.4
 const GRUESO := 0.24
 const ANCHO_JAMBA := 0.1
@@ -20,10 +20,11 @@ static func poner(nodo: Node3D, huecos: Array, y0: float, z_tabique: float, colo
 		PiezasObra._caja(nodo, Vector3(cx, y0 + ALTO + ANCHO_JAMBA / 2.0 - 0.05, z_tabique), Vector3(ancho + ANCHO_JAMBA, ANCHO_JAMBA, GRUESO), marco, false)
 		## La hoja, abierta hasta quedar pegada al tabique del lado del pasillo, con la bisagra en la jamba izquierda.
 		var largo := ancho - 0.2
-		var bisagra := Node3D.new()
+		var bisagra := PuertaAnimada.new()   ## (10-11) se abre al acercarse y se cierra al alejarse (`PuertaAnimada`)
 		bisagra.position = Vector3(h.x + 0.05, y0, z_tabique + GRUESO / 2.0 + 0.04)
 		bisagra.rotation.y = PI
 		nodo.add_child(bisagra)
+		bisagra.centro_local = Vector3(cx, y0 + 1.2, z_tabique)
 		PiezasObra._caja(bisagra, Vector3(largo / 2.0, (ALTO - 0.1) / 2.0, 0.0), Vector3(largo, ALTO - 0.1, 0.05), madera, false)
 		PiezasObra._caja(bisagra, Vector3(largo - 0.12, 1.0, 0.045), Vector3(0.12, 0.04, 0.05), metal, false)
 		PiezasObra._caja(bisagra, Vector3(largo / 2.0, 1.75, 0.03), Vector3(0.3, 0.12, 0.02), metal, false)

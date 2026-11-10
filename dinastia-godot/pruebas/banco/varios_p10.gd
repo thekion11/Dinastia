@@ -382,3 +382,18 @@ func _probar_eventos_fecha() -> void:
 	var tira: Node = vista._centro.get_child(2)
 	_comprobar(tira.get_child_count() == EventosFecha.VISTA, "la vista de varias semanas pinta una columna por semana (%d)" % tira.get_child_count())
 	vista.queue_free()
+
+## LA PUERTA QUE SE ABRE AL ACERCARSE (10-11): la hoja de cada puerta del club gira abierta con el observador cerca (misma planta) y cerrada lejos.
+func _probar_puerta_animada() -> void:
+	_titulo("CLUB: PUERTAS QUE SE ABREN AL ACERCARSE")
+	var p := PuertaAnimada.new()
+	p.centro_local = Vector3(2.0, 1.2, 0.0)
+	_comprobar(is_equal_approx(p.abrir_ahora_segun(Vector3(2.5, 1.7, 1.0)), PuertaAnimada.ABIERTA), "cerca y en la misma planta: abierta")
+	_comprobar(is_zero_approx(p.abrir_ahora_segun(Vector3(9.0, 1.7, 4.0))), "lejos: cerrada")
+	_comprobar(is_zero_approx(p.abrir_ahora_segun(Vector3(2.0, 6.0, 0.5))), "justo encima, en otra planta: cerrada")
+	var sala := Node3D.new()
+	PuertasClub.poner(sala, [Vector2(0.0, 1.6)], 0.0, 0.0, Color.RED)
+	var hay := sala.get_children().filter(func(n: Node) -> bool: return n is PuertaAnimada)
+	_comprobar(hay.size() == 1 and is_equal_approx((hay[0] as PuertaAnimada).rotation.y, PI), "cada hueco lleva su hoja animada, abierta de salida (sin cámara no se mueve)")
+	sala.free()
+	p.free()
