@@ -19,6 +19,10 @@ func _ready() -> void:
 	add_child(p)
 	await _esperar(3.0)
 	CapasTutorial.poner_activas(false)
+	if OS.get_environment("CALIDAD") != "":   ## CALIDAD=0 (mínima, escenas 2D) … 3 (alta); por defecto MEDIA: festejos con modelos 3D
+		Calidad.elegida = int(OS.get_environment("CALIDAD"))
+	else:
+		Calidad.elegida = Calidad.MEDIO
 	var tipos := [["liga", "copa"], ["continental", "ascenso"], ["supercopa", "salvacion"]]
 	for n in 3:
 		var l: Liga = p.mundo.ligas[(n * 3) % p.mundo.ligas.size()]
@@ -38,7 +42,10 @@ func _ready() -> void:
 			_ok(escenas.size() >= 3 and ev._botones.get_child_count() == escenas.size(), "%s · %s: un botón por escena (%d)" % [club.nombre, tipo, escenas.size()])
 			for e: String in escenas:
 				ev.ver(e)
-				await _esperar(1.2)
+				await _esperar(1.6)
+				var llamadas := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
+				print("  %s/%s: %s · %d llamadas de dibujo · %d jugadores 3D" % [tipo, e, "3D" if ev.vista3d != null else "2D", llamadas,
+					(ev.vista3d as FestejoCampo3D).jugadores if ev.vista3d != null else 0])
 				get_viewport().get_texture().get_image().save_jpg("%s/%d_%s_%s_%s.jpg" % [dir, n, club.pais, tipo, e], 0.85)
 			var op := [""]
 			ev.elegido.connect(func(o: String) -> void: op[0] = o)

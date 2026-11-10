@@ -210,7 +210,7 @@ func _columna_respuestas(e: Dictionary) -> PanelContainer:
 	caja.offset_left = -float(ANCHO_COLUMNA + MARGEN); caja.offset_right = -float(MARGEN)
 	caja.offset_top = float(MARGEN)
 	caja.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	caja.add_theme_stylebox_override("panel", _caja(0.6, 10, 14.0))
+	caja.add_theme_stylebox_override("panel", _caja(0.42, 10, 12.0))   ## (10-11) más transparente: deja ver la pared de patrocinadores (los botones de la cruz son opacos)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	## Móvil apaisado (~480 px de alto, A4-INT-023): las respuestas (≈500 px) pisaban la franja de la pregunta y se salían por abajo; la columna acaba en la franja y lo que sobra se desliza.
