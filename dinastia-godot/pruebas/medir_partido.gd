@@ -29,8 +29,10 @@ var _proceso: Array[float] = []
 func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.ALTO)
 	var mundo := Mundo.new()
-	mundo.generar(["CHI"], 4711)
-	mundo.mi_club_id = mundo.ligas[0].clubes[0].id
+	## (10-11) PAIS=ESP CLUB=5: otro país y otro club (regla del dueño: nunca medir con un solo equipo).
+	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"
+	mundo.generar([pais], 4711)
+	mundo.mi_club_id = mundo.ligas[0].clubes[int(OS.get_environment("CLUB")) % mundo.ligas[0].clubes.size()].id
 	var par := mundo.proximo_partido()
 	_vista = VistaEstadio.new()
 	add_child(_vista)
@@ -158,7 +160,9 @@ func _process(_d: float) -> void:
 			Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0])
 		for l in _vista.find_children("*", "Light3D", true, false):
 			var dl := l as DirectionalLight3D
-			print("LUZ %s sombra=%s%s" % [l.name, (l as Light3D).shadow_enabled, "" if dl == null else " cortes=%d dist=%.0f" % [dl.directional_shadow_mode, dl.directional_shadow_max_distance]])
+			var ol := l as OmniLight3D
+			print("LUZ %s sombra=%s%s%s" % [l.name, (l as Light3D).shadow_enabled, "" if dl == null else " cortes=%d dist=%.0f" % [dl.directional_shadow_mode, dl.directional_shadow_max_distance],
+				"" if ol == null else " omni rango=%.1f energia=%.2f visible=%s padre=%s/%s" % [ol.omni_range, ol.light_energy, str(ol.is_visible_in_tree()), l.get_parent().name if l.get_parent() != null else "", l.get_parent().get_parent().name if l.get_parent() != null and l.get_parent().get_parent() != null else ""]])
 		if OS.get_environment("DETALLE") != "":
 			for f: Dictionary in Optimizar.informe(_vista, 25):
 				print("DETALLE tris=%d piezas=%d corte=%.0f  %s" % [f["tris"], f["piezas"], f["corte"], f["clave"]])
