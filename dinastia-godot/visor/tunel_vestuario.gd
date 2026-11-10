@@ -81,6 +81,9 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 	var zocalo := _mat(c1.lerp(Color(0.1, 0.1, 0.12), 0.25), 0.6)
 	var suelo := _mat(Color(0.16, 0.17, 0.19).lerp(c1, 0.18), 0.95)
 	var techo := _mat(Color(0.82, 0.83, 0.84), 0.9)
+	if VestuarioRealista.activo():   ## (10-11, sesión 7) MEDIA y ALTA: resina, yeso y madera con relieve (el azulejo y las sombras, en `_vestuario`)
+		suelo = VestuarioRealista.suelo(c1)
+		pared = VestuarioRealista.pared()
 	var luz := _mat_unico(Color(1, 0.98, 0.92), 0.4)
 	luz.emission_enabled = true
 	luz.emission = Color(1, 0.96, 0.88)
@@ -259,7 +262,9 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 	## Con la plantilla a mano (estadio 2.0) llevan su dorsal y su nombre; si
 	## no, solo el número. Solo en el estadio propio (en la ciudad `mi` es null
 	## y es el tuyo).
-	var madera := _mat(Color(0.55, 0.38, 0.22), 0.7)
+	var madera: StandardMaterial3D = VestuarioRealista.madera() if VestuarioRealista.activo() else _mat(Color(0.55, 0.38, 0.22), 0.7)
+	if VestuarioRealista.activo():
+		VestuarioRealista.azulejos(nodo, x0, z_out, z_fin, c1)
 	var plantilla: Array = EdificioClub.ctx.get("plantilla", []) if (mi == null or mi.id == PersonajeDT.club_usuario) else []
 	var mats := PiezasVestuario.materiales(c1, c2)
 	var lote := PiezasVestuario.Lote.new()
@@ -340,6 +345,7 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 		ol.light_energy = 0.85
 		ol.light_color = Color(1, 0.95, 0.86)
 		nodo.add_child(ol)
+	VestuarioRealista.sombras(nodo, x0, zc)
 	## Fuera, sobre la fachada que da a la calle: el letrero.
 	## (Al otro lado de la entrada del club, para no pisar su pórtico.)
 	_rotulo(nodo, Idiomas.t("VESTUARIOS"), Vector3(x0 - 4.0, alto - 0.6, z_fin + 0.32), 0.0, 44, Color(1, 1, 1))
