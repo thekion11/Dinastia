@@ -20,6 +20,8 @@ func _ready() -> void:
 		SALAS = []
 		for i in OS.get_environment("SOLO").split(","):
 			SALAS.append(TODAS[int(i)])
+	if OS.get_environment("ANIM") == "1":   ## la expansión del museo (planta 3) como la ve el jugador la primera vez: se olvida que ya se vio
+		CargaCiudad.de("AjustesCiudad").guardar("museo_ampliado_visto", 0)
 	var m := Mundo.new()
 	## PAIS=ESP CLUB=5: otro país y otro club (regla 34: nunca revisar con un solo equipo).
 	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"

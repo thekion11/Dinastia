@@ -11,6 +11,8 @@ const NIVEL_PLANTA := 5
 const PLANTA := 3
 const SALA := "Museo ampliado"
 const POR_LADO := 5
+const FILAS := 3        ## filas de vitrinas por lado (la 1.ª pegada a la pared; las demás hacia el centro, a `SEPARACION_FILA` m una de otra): 5 × 2 × 3 = 30 vitrinas
+const SEPARACION_FILA := 1.85
 
 ## Dónde está cada vitrina de la planta 3 ({p, k}: k = su lugar en la lista de hitos, empieza en `SalasClub.MAX_SALA`); `MuseoVitrinas` las busca.
 static var vitrinas: Array[Dictionary] = []
@@ -97,19 +99,26 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 	var hs := hitos(ctx)
 	var copas: Array = []
 	vitrinas.clear()
-	lote.caja(m["placa"], SalasClub._en(Vector3(cx, y0 + 0.035, caja.get_center().y)), Vector3(1.6, 0.01, caja.size.y - 0.3))
-	lote.caja(m["cojin"], SalasClub._en(Vector3(cx, y0 + 0.04, caja.get_center().y)), Vector3(1.4, 0.01, caja.size.y - 0.5))
+	## Las vitrinas, en hasta 3 filas por lado (las más recientes pegadas a la pared); la alfombra del club crece con el número de filas y deja el pasillo central.
+	var n_hitos := maxi(0, hs.size() - SalasClub.MAX_SALA)
+	var max_filas := 1 if OS.get_environment("SIN_FILAS_MUSEO") != "" else FILAS   ## SIN_FILAS_MUSEO=1: el «antes» (una sola fila) para medir
+	var filas := clampi(ceili(float(n_hitos) / float(POR_LADO * 2)), 1, max_filas)
+	var ancho_alf := 1.6 + 1.0 * float(filas - 1)
+	lote.caja(m["placa"], SalasClub._en(Vector3(cx, y0 + 0.035, caja.get_center().y)), Vector3(ancho_alf, 0.01, caja.size.y - 0.3))
+	lote.caja(m["cojin"], SalasClub._en(Vector3(cx, y0 + 0.04, caja.get_center().y)), Vector3(ancho_alf - 0.2, 0.01, caja.size.y - 0.5))
 	## Vitrinas de los dos lados con las copas del séptimo título en adelante.
 	var por_lado := clampi(int((caja.size.y - 2.6) / 1.3), 2, POR_LADO)
 	var z0 := caja.position.y + 1.4
 	var z1 := caja.end.y - 1.2
 	var paso_z := (z1 - z0) / float(por_lado)   ## lo que separa dos vitrinas del mismo lado: ahí tiene que caber el rótulo
-	var n := mini(hs.size() - SalasClub.MAX_SALA, por_lado * 2)
+	var n := mini(hs.size() - SalasClub.MAX_SALA, por_lado * 2 * max_filas)
 	var ini := hs.size() - SalasClub.MAX_SALA - maxi(n, 0)   ## A4: la planta 2 enseña los 6 más recientes; esta, los anteriores (los más cercanos a esos)
 	for k in maxi(n, 0):
-		var lado := -1.0 if k % 2 == 0 else 1.0
-		var pz := z0 + (z1 - z0) * (float(k / 2) + 0.5) / float(por_lado)
-		var px := (caja.position.x + 0.45) if lado < 0.0 else (caja.end.x - 0.45)
+		var fila := k / (por_lado * 2)
+		var i_fila := k % (por_lado * 2)
+		var lado := -1.0 if i_fila % 2 == 0 else 1.0
+		var pz := z0 + (z1 - z0) * (float(i_fila / 2) + 0.5) / float(por_lado)
+		var px := ((caja.position.x + 0.45) if lado < 0.0 else (caja.end.x - 0.45)) - lado * SEPARACION_FILA * float(fila)
 		SalasClub.vitrina(lote, nodo, m, base, vidrio, Vector3(px, y0, pz))
 		vitrinas.append({"p": Vector3(px, y0, pz), "k": ini + k})
 		MuseoPresentacion.vitrina(lote, nodo, m, Vector3(px, y0, pz), lado, {}, false)   ## placa y charco de luz; el rótulo de arriba ya lo tiene
