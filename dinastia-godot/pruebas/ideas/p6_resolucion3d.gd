@@ -34,7 +34,7 @@ func _probar() -> void:
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.ALTO), 1.0) and is_equal_approx(Calidad.escala_3d(Calidad.ULTRA), 1.0), "ALTA y ULTRA no se tocan")
 	OS.set_environment("RES3D_ALTO", "720")
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.MEDIO), 1.0), "ventana de 720 px: sin cambio")
-	_comprobar(is_equal_approx(Calidad.tope_escala(4320.0), Calidad.ESCALA_MIN_POSIBLE), "nunca baja del mínimo posible (35 %)")
+	_comprobar(is_equal_approx(CalidadRes3D.tope_escala(4320.0), Calidad.ESCALA_MIN_POSIBLE), "nunca baja del mínimo posible (35 %)")
 	OS.set_environment("RES3D_ALTO", "1080")
 	var vp2 := SubViewport.new()
 	add_child(vp2)

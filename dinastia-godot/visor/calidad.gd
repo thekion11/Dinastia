@@ -46,24 +46,8 @@ const ESCALA_MEDIA_MIN := 0.5   ## (4-11) la resolución del 3D también se elig
 static var escala_media := 1.0
 static var escala_minimo := (float(OS.get_environment("ESCALA3D")) if OS.get_environment("ESCALA3D") != "" else ESCALA_MINIMO)
 
-## (10-11, informe `rendimiento_movil_2026-11-10.md`, P1) RESOLUCIÓN 3D AUTOMÁTICA: el partido está limitado por píxeles (a ¼ de píxeles el fotograma baja 40-43 %) y un móvil dibuja el 3D a su pantalla entera (2400×1080 = 2,8 veces 720p).
-## Con esto activo, de ULTRA BAJA a MEDIA el 3D no pasa de `ALTURA_3D_MAX` píxeles de alto (escala = min(la del nivel, 720 / alto de la ventana)); la interfaz sigue a resolución nativa y ALTA/ULTRA no se tocan.
-## Encendida por defecto solo en móvil (Android/iOS/Web táctil); en escritorio se enciende en Ajustes («Resolución 3D automática»).
-const ALTURA_3D_MAX := 720.0
-static var res3d_auto: bool = es_movil_tactil()
-
-static func es_movil_tactil() -> bool:
-	return OS.has_feature("mobile") or (OS.has_feature("web") and DisplayServer.is_touchscreen_available())
-
-## Alto de la ventana en píxeles (RES3D_ALTO lo simula en las pruebas y las capturas).
-static func alto_pantalla() -> float:
-	if OS.get_environment("RES3D_ALTO") != "":
-		return float(OS.get_environment("RES3D_ALTO"))
-	return float(DisplayServer.window_get_size().y)
-
-## El tope de escala que impone la altura máxima (1.0 si la ventana ya cabe).
-static func tope_escala(alto_px: float) -> float:
-	return 1.0 if alto_px <= ALTURA_3D_MAX else maxf(ALTURA_3D_MAX / alto_px, ESCALA_MIN_POSIBLE)
+## (10-11, P1; `CalidadRes3D`) Resolución 3D automática: de ULTRA BAJA a MEDIA el 3D no pasa de 720 px de alto. Encendida por defecto solo en móvil; en escritorio se enciende en Ajustes.
+static var res3d_auto: bool = CalidadRes3D.es_movil_tactil()
 
 ## La resolución base del 3D del nivel (1.0 salvo en MÍNIMO). La calidad adaptativa vuelve a esta, no a 1.0.
 static func escala_3d(nivel: int = -99) -> float:
@@ -76,7 +60,7 @@ static func escala_3d(nivel: int = -99) -> float:
 	elif n == MEDIO:
 		base = escala_media
 	if res3d_auto and n <= MEDIO:
-		return minf(base, tope_escala(alto_pantalla()))
+		return minf(base, CalidadRes3D.tope_escala(CalidadRes3D.alto_pantalla()))
 	return base
 
 ## ¿Este nivel proyecta la sombra del sol? ULTRA BAJA y BAJA no (la pasada de sombras es ~1/4 de las llamadas del partido).
