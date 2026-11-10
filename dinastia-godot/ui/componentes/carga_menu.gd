@@ -10,11 +10,13 @@ const CAPA := 120
 static var _en_curso := false
 
 ## Sustituye a `arbol.change_scene_to_file(ruta)` para las escenas pesadas.
-static func cambiar(arbol: SceneTree, ruta: String) -> void:
+## `preparar` (10-11, «Continuar»): lo pesado que hay que hacer ANTES de cambiar (cargar la partida guardada: 0,3 s con 5 países, ~2 s con el mundo entero en PC y varias veces más en un móvil) y que devuelve la ruta de la escena.
+## Se llama con la pantalla de carga ya DIBUJADA: antes la entrada se quedaba congelada en su último fotograma mientras se cargaba. Sin pantalla (banco, `--headless`) se llama justo antes del cambio, como siempre.
+static func cambiar(arbol: SceneTree, ruta: String, preparar := Callable()) -> void:
 	if arbol == null:
 		return
 	if DisplayServer.get_name() == "headless" or _en_curso or not ResourceLoader.exists(ruta):
-		arbol.change_scene_to_file(ruta)
+		arbol.change_scene_to_file(_ruta_tras(preparar, ruta))
 		return
 	_en_curso = true
 	var capa := CanvasLayer.new()
@@ -23,6 +25,7 @@ static func cambiar(arbol: SceneTree, ruta: String) -> void:
 	arbol.root.add_child(capa)
 	var carga := PantallaCarga.mostrar(capa, Idiomas.t("Cargando…"))
 	await PantallaCarga.dejar_pintar(arbol)
+	ruta = _ruta_tras(preparar, ruta)
 	var vieja := arbol.current_scene
 	ResourceLoader.load_threaded_request(ruta)
 	var prog: Array = []
@@ -61,3 +64,9 @@ static func cambiar(arbol: SceneTree, ruta: String) -> void:
 	if is_instance_valid(capa):
 		capa.queue_free()
 	_en_curso = false
+
+static func _ruta_tras(preparar: Callable, ruta: String) -> String:
+	if not preparar.is_valid():
+		return ruta
+	var r: Variant = preparar.call()
+	return String(r) if r is String and String(r) != "" else ruta
