@@ -52,6 +52,7 @@ var _modo_mando := "ambos"             ## botones / gestos / ambos (Ajustes)
 var _sep := 1.0                        ## separación entre botones (Ajustes, 1-1,3)
 var _gesto := {}                       ## índice de dedo → estado del gesto que empezó (sprint/tiro/pase/zona libre)
 var _elev := 0.0                       ## lo que sube el arco para no tapar la ficha del jugador (ver `_calcular_elev`)
+var _bajo_stats := 0.0                 ## dónde acaba por abajo la ficha de estadísticas de arriba a la derecha (el II va debajo)
 static var mando_forzado := ""         ## las pruebas fuerzan el modo de control
 static var contexto_forzado := ""      ## y el contexto de las capturas: «con» (balón), «banda» (balón en la banda cerca del área) o «sin» (defensa); vacío = el del juego
 const MS_TOQUE := 200                  ## un toque en Sprint más corto que esto = regate; más largo = correr
@@ -84,8 +85,10 @@ func _process(_d: float) -> void:
 	if ayuda is CanvasItem and (ayuda as CanvasItem).visible:
 		(ayuda as CanvasItem).visible = false
 	var e := _calcular_elev()
-	if absf(e - _elev) > 0.5:
+	var bs := _calcular_bajo_stats()
+	if absf(e - _elev) > 0.5 or absf(bs - _bajo_stats) > 0.5:
 		_elev = e
+		_bajo_stats = bs
 		queue_redraw()
 	var cb := _tengo_balon() if contexto_forzado == "" else contexto_forzado != "sin"
 	var eb := _estoy_en_banda() if contexto_forzado == "" else contexto_forzado == "banda"
@@ -112,6 +115,17 @@ func _calcular_elev() -> float:
 		if r.position.x < x1 and r.end.x > x0 and r.position.y < size.y:
 			e = maxf(e, size.y - r.position.y + 8.0 * s)
 	return e
+
+## El borde de abajo de los paneles del HUD anclados arriba a la derecha (las estadísticas), para poner el II debajo.
+func _calcular_bajo_stats() -> float:
+	var hud: Variant = get_parent().get("_hud") if get_parent() != null else null
+	if not (hud is Array):
+		return 0.0
+	var b := 0.0
+	for c: Variant in hud:
+		if c is Control and is_instance_valid(c) and (c as Control).is_visible_in_tree() and (c as Control).anchor_left >= 0.99 and (c as Control).anchor_top <= 0.01:
+			b = maxf(b, (c as Control).get_global_rect().end.y)
+	return b
 
 ## ¿Está el jugador que llevas en la banda, cerca de la línea de fondo rival (donde se centra)? Sin motor, no.
 func _estoy_en_banda() -> bool:
@@ -203,7 +217,7 @@ func centro_de(nombre: String) -> Vector2:
 	var s := escala()
 	var m := margenes()
 	if nombre == "Pausa":
-		return Vector2(size.x - m.y - 24.0 * s - radio_de(nombre), 96.0 * s + radio_de(nombre))   ## bajo la ficha de estadísticas de arriba a la derecha
+		return Vector2(size.x - m.y - 24.0 * s - radio_de(nombre), maxf(96.0 * s, _bajo_stats + 12.0 * s) + radio_de(nombre))   ## bajo la ficha de estadísticas de arriba a la derecha
 	var off: Vector2 = (BOTONES[nombre] as Array)[2]
 	var x := (m.x + off.x * s * _sep) if _espejo() else (size.x - m.y - off.x * s * _sep)
 	return Vector2(x, size.y - _elev - off.y * s * _sep)

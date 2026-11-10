@@ -52,3 +52,22 @@ Siguen pasando `tac_controles`, `tac_hud`, `p6_mando_tactil` y `captura_tactil_p
 - La ficha del jugador (abajo a la izquierda) ocupa ~43 % del ancho en horizontal y deja la mitad de abajo vacía. Encogerla daría
   más sitio al stick; es HUD, no controles.
 - En vertical la cámara del partido queda muy cerca y el triángulo amarillo del jugador es enorme: es cámara, no controles.
+
+## 2.ª parte (10-11): la FICHA del jugador y el resto del HUD en el teléfono
+Misma prueba (`captura_tactil_movil`), ampliada con el HUD: letra de cada texto en mm (mínimo `HudTactil.MIN_MM` = 2,5),
+solapes entre paneles y etiquetas sueltas del HUD (también el aviso grande), cuánto tapan los paneles del tercio central (el aviso
+grande no cuenta: va en el centro a propósito y dura ~2 s), y el ancho de la ficha. En el contexto «sin balón» se muestran el aviso
+y la barra de potencia para medirlos. En este modo de partido NO hay radar ni minimapa.
+Antes (código anterior):
+- horizontal: ficha al 37 % del ancho (56 × 12 mm, media caja vacía);
+- vertical: ficha al 52 %, y la letra de la ficha, el reloj y las estadísticas en 1,6-2,4 mm (factor del HUD con tope 2,0).
+Arreglos:
+- **Ficha compacta en el móvil** (`HudTactil.compactar_ficha`, `ancho_aguante`): mide lo que necesita (crece hacia arriba y hacia la
+  derecha desde la esquina) y la barra de aguante pasa de 300 a 170 (por el factor). En PC no cambia. Queda en **21 %** del ancho
+  en horizontal (31 × 7 mm) y en 44 % en vertical, donde el nombre a tamaño legible ya mide ~30 mm de un teléfono de ~68 mm.
+- **Tope del factor del HUD:** 2,0 → 3,2. En horizontal el factor es 1,75 y no cambia; en vertical la letra llega a ≥ 2,5 mm.
+- **En vertical**, las estadísticas bajan a una segunda fila bajo el marcador (`HudTactil.alto_fila2`) y el aviso grande va
+  debajo (`alto_aviso`). El II de pausa se coloca siempre bajo la ficha de estadísticas (`ControlesTactiles._calcular_bajo_stats`).
+- **Aviso grande** con un mínimo de 4 mm de letra en el móvil (`HudTactil.tam_minimo`).
+Resultado: **0 fallos en los 6 casos** (3 partidos × 2 orientaciones). `tac_hud`, `tac_controles`, `p6_mando_tactil`,
+`captura_tactil_partido`, `auditoria_partido_movil_limite` y el banco siguen en «FIN. 0 fallos».
