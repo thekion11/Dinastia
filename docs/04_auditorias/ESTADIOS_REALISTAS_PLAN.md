@@ -50,3 +50,11 @@ Encargo del dueño (vía la sesión líder): recrear estadios reales con el cons
 - `niveles_lado` (altura distinta por lado: el lado vertical de la Bombonera) y esquinas una a una: necesitan tocar `_tribunas`/`_esquinas` del constructor.
 - La forma «oval» se ve rectangular por fuera (fachadas rectas): falta una fachada curva.
 - Fachada «colchón» iluminada (Allianz) y el arco inclinado sobre una tribuna lateral (Wembley) quedan por afinar con fotos de referencia.
+
+## 6. Segunda tanda y piezas nuevas (10-11)
+
+- **Piezas**: `fachada_curva` (anillo elíptico de una malla que hace curvo por fuera al óvalo) y `colchon` (paneles con luz propia del color del club, tipo Allianz, un MultiMesh). El arco de Wembley ya se puede (`arco` con `lado` este/oeste e `inclina`), pero ningún club del juego juega en él.
+- **Tanda 2** (en `herramientas/estadios_reales.py` → `PIEZAS`, base regenerada): NED Aj4x (techo retráctil, curva), PER Univers1tario (curva), JPN Kash1ma (techo y butacas), KSA Al-H1lal (membrana y curva), EGY Al Ahly (techo occidental), MAR R4ja (pista y techo occidental), USA Atl4nta Utd (costillas y curva), AUS M3lbourne V. (colchón azul), ECU Barcel0na SC (curva); además el colchón rojo del B4yern y la curva del B4rcelona. En la base ficticia: Amstel FC, Lima Crema, Isar FC, Port Phillip, Peachtree FC, Al-Qamar, Torero GYE, Comtal FC.
+- **No entran**: Portugal (no está en el juego) y Peñarol, FC Seoul y Zamalek (tienen fila en el generador pero no son clubes del juego).
+- **Llamadas** (cámara del partido, opengl3): NED 398, PER 389, JPN 428, KSA 488, EGY 495, MAR 493, USA 252, AUS 340, ECU 394, GER 349, ESP 490.
+- **Pendiente**: la fachada curva del B4rcelona apenas se distingue desde la vista aérea (la tapan las torres de esquina); niveles por lado y esquinas una a una siguen pendientes.
