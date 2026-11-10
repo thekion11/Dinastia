@@ -153,6 +153,7 @@ func _congelar() -> void:
 	## Congela ESE plano en una cámara quieta y mira qué grupos lo inflan.
 	var cam0 := get_viewport().get_camera_3d()
 	var fija := Camera3D.new()
+	fija.name = cam0.name   ## mismo nombre: `LodCine` la trata como la cámara del plano
 	fija.fov = cam0.fov
 	fija.far = cam0.far
 	add_child(fija)
@@ -165,6 +166,16 @@ func _congelar() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	await get_tree().process_frame
 	await get_tree().process_frame
+	if OS.get_environment("LODCINE") != "":
+		## Antes/después de `LodCine` en ESTE plano: llamadas y foto de cada uno.
+		for act: bool in [false, true]:
+			LodCine.activo = act
+			for _f in 4:
+				await get_tree().process_frame
+			print("   LODCINE %s: %d llamadas" % ["SÍ" if act else "NO", rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)])
+			get_viewport().get_texture().get_image().save_jpg("%s/%s_lodcine_%s.jpg" % [_dir, OS.get_environment("SOLO"), "si" if act else "no"], 0.9)
+		get_tree().quit()
+		await get_tree().create_timer(3600.0).timeout
 	var b0 := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 	for fg: Node in get_tree().root.find_children("FestejoGrada", "", true, false):
 		(fg as Node3D).visible = false
