@@ -42,7 +42,7 @@ func _process(_d: float) -> void:
 			var an := String(p.get("anim_actual", ""))
 			var lado := OS.get_environment("LADO") == "1"
 			var vale: bool = (an.contains("angled") or an.begins_with("ls_ciclo__")) if lado \
-				else (float(p.get("ls_trans_hasta", 0.0)) > motor.t and (an.contains("_090") or an.contains("_135") or an.contains("_180")))
+				else (float(p.get("ls_trans_hasta", 0.0)) > motor.t and (an.contains("_090") or an.contains("_135") or an.contains("_180") or an.contains("__90") or an.contains("__178") or an.contains("__-")))
 			if vale:
 				_sigue = p
 				_desde = _n

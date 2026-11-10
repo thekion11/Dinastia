@@ -92,6 +92,7 @@ def _ficha(ruta):
         "cuerpo_ini": round(_modular(_giro_z(cuerpo[0][1])), 4),
         "reposo": int(variables.get("idlelevel", "1") or 1), "largo": round(pl[-1][0] / 100.0, 3),
         "pasos": int(variables.get("steps", "1") or 1),
+        "v_entra": round(v_in, 3), "v_sale": round(v_out, 3),   ## sin escalonar (las intermedias del original las usan)
     }
 
 

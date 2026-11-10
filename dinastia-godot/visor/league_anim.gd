@@ -51,7 +51,8 @@ static var _tareas: Array = []
 static func tareas_movimiento() -> Array:
 	if _tareas.is_empty():
 		for c: Dictionary in LeagueMovimiento.clips():
-			_tareas.append([String(c["nombre"]), String(c["nombre"])])
+			if not c.has("auto"):   ## (las intermedias se construyen al elegirlas: `LeagueAuto.construir`)
+				_tareas.append([String(c["nombre"]), String(c["nombre"])])
 		for vel: float in [LeagueMovimiento.DRIBBLE, LeagueMovimiento.WALK]:
 			for g: float in [0.25, -0.25, 0.75, -0.75]:
 				var par := LeagueMovimiento.plantilla(vel, g * PI)
