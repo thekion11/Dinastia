@@ -1,0 +1,26 @@
+#seleccion=Togo
+#tier=0.12
+#globo=1.22,6.13
+#bandera=🇹🇬
+#confed=afr
+#liga=Championnat National de Togo|Liga Togolesa
+#copa=Copa de Togo|Copa Togolesa
+#nombres=Kodjo,Komla,Kossi,Yao,Kofi,Mensah,Emmanuel,Serge,Floyd,Alaixys,Jonathan,Ken,Djene,Kwami
+#apellidos=Adebayor,Agbeko,Amewou,Dosseh,Kpodo,Lawson,Mensah,Nyaku,Tchakala,Amouzou,Akakpo,Gbadamassi,Ketou,Assogba
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+ASC Kara;Kara Atletico;#0b8f3c;#f7d117;60;10000;1974;los Verdes del Norte;el estadio de la capital del norte;Campeón reciente, con una larga historia de títulos.
+ASKO Kara;Asco Karano;#e30613;#ffffff;62;10000;1967;los Rojos del Norte;el estadio de la capital del norte, compartido;Dominó el campeonato durante varios años seguidos.
+AS Togo-Port;Puerto Togo;#1d3f9e;#ffffff;54;20000;1960;los Portuarios;el estadio olímpico de la capital;El club del puerto, con varios títulos.
+Dynamic Togolais;Dinamico Togo;#e30613;#f7d117;50;20000;1957;los Dinámicos;el estadio olímpico de la capital, compartido;Un grande histórico de la capital con muchos trofeos.
+AS OTR;Atletico Aduanas;#1d3f9e;#f7d117;48;7000;1998;los Aduaneros;el campo de la capital;El club de la oficina tributaria, de proyecto estable.
+Gomido FC;Gomido Kpalime;#f7d117;#0b8f3c;48;8000;1955;los Gomidos;el estadio de la ciudad de las montañas;Un clásico de las colinas del oeste.
+Anges FC;Angeles Notse;#ffffff;#1d3f9e;42;5000;1990;los Ángeles;el campo de la ciudad del centro;Un club del interior que alterna divisiones.
+AS Gbohloé-Su des Lacs;Lagos Aneho;#1d3f9e;#e30613;42;5000;1980;los Lacustres;el estadio de la ciudad costera histórica;Un club de la costa con afición tradicional.
+Kotoko FC;Kotoko Lavie;#0b8f3c;#ffffff;40;3000;2000;los Kotokos;el campo del pueblo del oeste;Un modesto equipo del suroeste.
+AC Semassi;Semasi Sokode;#e30613;#000000;54;10000;1963;los Rojinegros;el estadio de la segunda ciudad del país;Un histórico de la región central con muchos títulos.
+Unisport FC;Unisport Sokode;#1d3f9e;#ffffff;46;10000;1986;los Universitarios;el estadio de la segunda ciudad, compartido;Un club de Sokodé con cantera propia.
+Binah FC;Bina Pagouda;#f7d117;#000000;42;3000;1995;los Binas;el campo del pueblo del norte;Un equipo de la zona rural del norte.
+Ifodje Atakpamé;Ifodye Atakpame;#0b8f3c;#e30613;46;8000;1970;los Ifodjes;el estadio de la ciudad del centro-oeste;Un club veterano del centro del país.
+Kakadlé FC;Kakadle Norte;#e30613;#f7d117;38;3000;2005;los Kakadlés;el campo de la ciudad del interior norte;Un modesto club del norte.
+Sara Sport FC;Sara Bafilo;#1d3f9e;#f7d117;40;4000;1990;los Sara;el campo de la ciudad del centro norte;Un equipo del interior que lucha por mantenerse.
+US Koroki;Koroki Metete;#ffffff;#0b8f3c;48;5000;1990;los Korokis;el campo de la ciudad del noreste;Campeón hace pocos años, vuelve a pelear arriba.

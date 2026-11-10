@@ -1,0 +1,20 @@
+#seleccion=Islas Feroe
+#tier=0.10
+#globo=-6.77,62.01
+#bandera=🇫🇴
+#confed=ucl,uel
+#liga=Premier League de Islas Feroe|Liga Feroesa
+#copa=Copa de Islas Feroe|Copa Feroesa
+#nombres=Jakup,Hanus,Rogvi,Sonni,Jóannes,Meinhard,Pætur,Gunnar,Brandur,Odmar,Bjarni,Heðin,Sølvi,Teit
+#apellidos=Joensen,Hansen,Jacobsen,Olsen,Poulsen,Petersen,Johannesen,Nielsen,Thomsen,Dam,Mortensen,Samuelsen,Rasmussen,Midjord
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+KI Klaksvik;Klaksvik Norte;#1d3f9e;#ffffff;62;4000;1904;los Azules del Norte;el estadio del puerto de la isla del norte;El club más laureado del archipiélago, habitual en las rondas europeas.
+HB Torshavn;Haven Capital;#000000;#ffffff;58;5000;1904;los Negros;el estadio de la capital, junto al mar;El club más antiguo de la capital, con una gran vitrina.
+B Trettisex Torshavn;Be Capital;#ffffff;#1d3f9e;55;5000;1936;los Blanquiazules;el estadio de la capital, que comparte con su rival;El segundo club de la capital, con varios títulos.
+Vikingur Gota;Vikingo Gota;#e30613;#000000;56;3000;1946;los Vikingos;el campo del pueblo de la bahía oriental;Un pequeño pueblo que sorprendió al ganar la liga.
+NSI Runavik;Runavik Este;#e30613;#ffffff;52;2000;1957;los Rojos del Este;el estadio junto al fiordo del este;Un club de la costa oriental con liga y copa en su historia.
+B Sextioocho Toftir;Be Toftir;#000000;#e30613;48;6000;1968;los Negrirrojos;el estadio más grande del archipiélago, junto al mar;Un histórico de la costa este con gran afición.
+Streymur;Streimur Isla;#0057b8;#ffffff;46;2000;2008;los Azules de Streymoy;el estadio pequeño de la isla principal;Un equipo de la isla principal formado por la unión de dos pueblos.
+Sjey Vestur;Vestur Isleta;#e30613;#f2c200;42;2000;2006;los Occidentales;el campo del pueblo de la isla del oeste;Un club del oeste del archipiélago que lucha por mantenerse.
+FC Suduroy;Suduroy Sur;#f2c200;#1d3f9e;41;3000;2010;los Sureños;el estadio de la isla más meridional;El equipo de la isla del sur, unión de varios clubes locales.
+TB Tvoroyri;Tvoroyri Sur;#000000;#1d3f9e;40;4000;1892;los Marineros del Sur;el campo del puerto de la isla del sur;Uno de los clubes más antiguos del país, con gran arraigo en su isla.

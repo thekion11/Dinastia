@@ -1,0 +1,22 @@
+#seleccion=Malta
+#tier=0.12
+#globo=14.51,35.90
+#bandera=🇲🇹
+#confed=ucl,uel
+#liga=Premier League de Malta|Liga Maltesa
+#copa=Copa FA de Malta|Copa Maltesa
+#nombres=Joseph,Mario,Charles,Paul,Mark,Kevin,Jonathan,Clayton,Andrew,Matthew,Steve,Daniel,Ryan,Kyle
+#apellidos=Borg,Camilleri,Vella,Farrugia,Zammit,Galea,Micallef,Grech,Attard,Spiteri,Azzopardi,Bonnici,Cassar,Debono
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Hamrun Spartans;Espartanos Hamra;#000000;#e30613;62;1962;1907;los Espartanos;el pequeño estadio del pueblo, junto a la ciudad;Dominador de la última década, con ligas y copas seguidas.
+Valletta;Valeta Capital;#ffffff;#000000;60;16997;1904;los Blancos de la Ciudad;el gran estadio nacional de la llanura central;El club más laureado del país, con decenas de títulos.
+Floriana;Florina Verde;#0b8f3c;#ffffff;57;16997;1894;los Verdes;el gran estadio nacional, compartido con otros clubes;El club más antiguo de la isla, con gran historia.
+Hibernians;Hibernios Paola;#ffffff;#e30613;54;2968;1922;los Hibs;el estadio del pueblo del sureste;Campeón en varias ocasiones y habitual en Europa.
+Birkirkara;Birkara Central;#e30613;#f2c200;55;16997;1950;los Rojigualdos;el gran estadio nacional, con grada compartida;Un club de la zona central con varios títulos de liga.
+Sliema Wanderers;Errantes Sliema;#1d3f9e;#ffffff;53;16997;1909;los Azules de la Costa;el estadio nacional, lejos de su barrio costero;Un histórico de la costa que ha ganado muchos títulos.
+Marsaxlokk;Marsaloc Pesca;#1d3f9e;#f2c200;47;2968;1949;los Pescadores;el estadio del pueblo del sureste, de calendario compartido;Un club de pueblo pesquero que ha dado alguna sorpresa.
+Mosta;Mosta Cupula;#ffffff;#1d3f9e;46;3000;1935;los Cupulistas;el campo de entrenamiento del centro de la isla;Club del interior que toma su apodo de la gran iglesia del pueblo.
+Gzira United;Guira Unidos;#e30613;#000000;45;3000;1947;los Unidos;el campo de entrenamiento junto al estadio nacional;Un equipo de la costa norte que ha crecido en los últimos años.
+Naxxar Lions;Leones Nashar;#f2c200;#1d3f9e;42;3000;1960;los Leones;el campo anexo del estadio nacional;Un club del norte de la isla que se consolida en la élite.
+Tarxien Rainbows;Arcoiris Tarsien;#e30613;#f2c200;40;1644;1944;los Arcoíris;el estadio de la isla vecina, usado en jornadas puntuales;Un modesto equipo del sur de la isla grande, de espíritu luchador.
+Zabbar St. Patrick;San Patricio Zab;#0b8f3c;#e30613;41;1962;1962;los Patricios;el pequeño estadio de la ciudad vecina;Club del sureste que busca asentarse entre los grandes.

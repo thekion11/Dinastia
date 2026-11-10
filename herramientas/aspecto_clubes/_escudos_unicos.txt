@@ -9,6 +9,7 @@ Avaí||banda||||||
 Bandırmaspor||franjas||||||
 Baník Ostrava||banda||||||
 Bastia||banda||||||
+Bochum||banda||||||
 Boluspor||mitad||||||
 Botafogo-SP||banda||||||
 Braunschweig||banda||||||
@@ -19,9 +20,11 @@ CSKA Sofia||banda||||||
 Carrarese||franjas||||||
 Castellón||banda||||||
 Ceará||franjas||||||
+Celaya||banda||||||
 Cesena||banda||||||
 Ceuta||franjas||||||
 Chacarita||banda||||||
+Charlton||banda||||||
 Chaves||banda||||||
 Chengdu Rongcheng||banda||||||
 Colón||franjas||||||
@@ -32,13 +35,15 @@ Darmstadt||franjas||||||
 De Graafschap||liso||||||
 Defensores de Belgrano||mitad||||||
 Den Bosch||franjas||||||
-Deportivo||banda||||||
+Deportivo||franjas||||||
 Deportivo Madryn||franjas||||||
+Dorados||banda||||||
 Dundee||franjas||||||
-Dynamo Dresden||banda||||||
-Düsseldorf||banda||||||
+Dynamo Dresden||franjas||||||
+Düsseldorf||franjas||||||
+Eibar||banda||||||
 Eindhoven||mitad||||||
-Elversberg||banda||||||
+Elversberg||liso||||||
 Empoli||mitad||||||
 Erzurumspor||cuartos||||||
 FC Copenhague||banda||||||
@@ -47,7 +52,7 @@ Felgueiras||cuartos||||||
 Ferro||franjas||||||
 Fiorentina||banda||||||
 Frosinone||mitad||||||
-Fürth||banda||||||
+Fürth||franjas||||||
 Gent||banda||||||
 Godoy Cruz||cuartos||||||
 Goiás||mitad||||||
@@ -57,35 +62,38 @@ Grenoble||cuartos||||||
 Haras El Hodoud||banda||||||
 Hibernian||banda||||||
 Holstein Kiel||banda||||||
-Huesca||banda||||||
+Huesca||liso||||||
 Ipswich||aro||||||
+Irapuato||mitad||||||
 Jong AZ||banda||||||
 Jong Ajax||franjas||||||
 Juve Stabia||cuartos||||||
 Juventude||cuartos||||||
-Kaiserslautern||banda||||||
-Karlsruhe||aro||||||
+Kaiserslautern||franjas||||||
+Karlsruhe||cuartos||||||
 Kilmarnock||cuartos||||||
 Konyaspor||banda||||||
-Las Palmas||banda||||||
+Las Palmas||aro||||||
 Lausanne-Sport||mitad||||||
 Leganés||chevron||||||
-Leicester||franjas||||||
+Leicester||mitad||||||
 Leixões||aro||||||
 Lokomotiva||banda||||||
 Ludogorets||banda||||||
 Lugano||banda||||||
 Luzern||cuartos||||||
 Macarthur FC||banda||||||
-Magdeburg||banda||||||
+Magdeburg||cuartos||||||
 Mantova||mitad||||||
 Marítimo||banda||||||
 Melgar||liso||||||
-Middlesbrough||franjas||||||
+Middlesbrough||mitad||||||
+Mineros de Zacatecas||aro||||||
 Mirandés||mitad||||||
 Mitre||banda||||||
-Modena||aro||||||
-Monza||aro||||||
+Modena||chevron||||||
+Monza||chevron||||||
+Morelia||banda||||||
 Nancy||liso||||||
 Niza||liso||||||
 Nordsjælland||banda||||||
@@ -105,7 +113,7 @@ Pendikspor||cruz||||||
 Pescara||mitad||||||
 Ponte Preta||aro||||||
 Portimonense||franjas||||||
-Portsmouth||mitad||||||
+Portsmouth||aro||||||
 Q.P.R.||cruz||||||
 RKC Waalwijk||banda||||||
 Racing Santander||aro||||||
@@ -113,48 +121,51 @@ Randers||franjas||||||
 Real Sociedad B||rombos||||||
 Reggiana||banda||||||
 Reims||franjas||||||
-Roda JC Kerkrade||banda||||||
-Saint-Étienne||franjas||||||
+Roda JC Kerkrade||mitad||||||
+Saint-Étienne||mitad||||||
 Sampdoria||tablero||||||
 Samsunspor||rombos||||||
 San Martín de San Juan||banda||||||
 Sarpsborg 08||banda||||||
 Sarıyer||chevron||||||
-Schalke||cruz||||||
+Schalke||banda_h||||||
 Sepahan||banda||||||
 Servette||banda||||||
 Shanghai Port||franjas||||||
 Shanghai Shenhua||banda||||||
-Sheffield Utd||chevron||||||
-Sheffield Wed||banda_h||||||
+Sheffield Utd||cruz||||||
+Sheffield Wed||borde||||||
 Silkeborg||mitad||||||
 Sion||tablero||||||
 Sivasspor||banda_h||||||
-Southampton||mitad||||||
+Southampton||cuartos||||||
 Spezia||mitad||||||
 Sport||cuartos||||||
 Sporting CP B||franjas||||||
-Sporting Gijón||cruz||||||
+Sporting Gijón||rombos||||||
 St Mirren||cuartos||||||
 St. Gallen||franjas||||||
-Stoke||cuartos||||||
-Swansea||banda||||||
+Stoke||aro||||||
+Swansea||liso||||||
 Südtirol||aro||||||
 TOP Oss||mitad||||||
+Tampico Madero||franjas||||||
+Tapatío||tablero||||||
 Tianjin Jinmen Tiger||cruz||||||
 Torreense||borde||||||
 Tromsø||franjas||||||
-Troyes||franjas||||||
+Troyes||chevron||||||
 Umm Salal||banda||||||
 VVV-Venlo||liso||||||
+Venados||banda_h||||||
 Vila Nova||rombos||||||
-Vitesse||mitad||||||
+Vitesse||cuartos||||||
 Vizela||interior||||||
 Volos||aro||||||
 Volta Redonda||mitad||||||
 Watford||banda||||||
 Wolfsberger AC||banda||||||
-Wrexham||tablero||||||
+Wrexham||borde||||||
 Young Boys||cuartos||||||
 Zaragoza||banda||||||
 Zhejiang FC||franjas||||||

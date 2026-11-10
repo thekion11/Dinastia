@@ -1,0 +1,22 @@
+#seleccion=Surinam
+#tier=0.12
+#globo=-55.17,5.85
+#bandera=🇸🇷
+#confed=conc
+#liga=Hoofdklasse de Surinam|Liga Surinamesa
+#copa=Copa de Surinam|Copa Surinamesa
+#nombres=Ryan,Ricardo,Sigourney,Gleofilo,Nigel,Kelvin,Dion,Giovanni,Roland,Marvin,Stefano,Kevin,Rafael,Dennis
+#apellidos=Bijnaar,Sewdien,Kamperveen,Doelsingh,Brunswijk,Tjon,Wijnhard,Pinas,Ramdin,Lieveld,Jharap,Kasan,Lont,Amoeng
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Robinhood;Robin Paramaribo;#0b8f3c;#ffffff;62;7000;1945;los Verdes;el estadio nacional de la capital;El club más laureado del país, dominador histórico.
+Transvaal;Transval Capital;#f7d117;#0b8f3c;58;7000;1921;los Transvalers;el estadio nacional de la capital, compartido;Uno de los clubes más antiguos y con más títulos del país.
+Inter Moengotapoe;Inter Moengo;#1d3f9e;#ffffff;60;3000;1999;los Moengotapoe;el estadio del pueblo minero del este;Club del este con gran poder económico y varios títulos.
+Leo Victor;Leo Victoria;#e30613;#ffffff;52;3500;1934;los Victorianos;el estadio de la capital del barrio oeste;Un histórico de la capital con buena cantera.
+Voorwaarts;Adelante Capital;#e30613;#f7d117;45;1500;1933;los Adelantes;el campo del barrio céntrico de la capital;Un clásico del fútbol de la capital.
+Inter Wanica;Inter Wanico;#1d3f9e;#e30613;48;2500;1975;los Wanicas;el campo del distrito vecino de la capital;Club del distrito de Wanica con afición creciente.
+Santos Nieuw Nickerie;Santos Nickerie;#000000;#ffffff;42;2000;1930;los Santistas;el campo de la ciudad arrocera del oeste;El club de la ciudad del occidente del país.
+Flora Paramaribo;Floria Capital;#0b8f3c;#f7d117;40;1500;1950;los Floras;el campo del barrio de la capital;Un modesto club de la capital que lucha por mantenerse.
+PVV;Pevevé Capital;#1d3f9e;#f7d117;44;1500;1941;los Pevevé;el campo de un barrio de la capital;Club de larga trayectoria en la capital.
+SNL;Eselele Capital;#ff7a00;#000000;41;1500;1960;los Naranjas;el campo de un barrio de la capital;Un equipo de barrio de la capital.
+Notch;Notch Moengo;#e30613;#000000;43;1500;1970;los Notch;el campo del pueblo minero del este;Un club del este, rival local del gigante de la zona.
+Broki;Broki Abra;#ffffff;#1d3f9e;38;1000;1980;los Brokis;el campo del pueblo del interior;Un humilde club del interior del país.

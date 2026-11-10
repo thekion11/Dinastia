@@ -1,0 +1,25 @@
+#seleccion=San Marino
+#tier=0.10
+#globo=12.45,43.94
+#bandera=🇸🇲
+#confed=ucl,uel
+#liga=Campionato Sammarinese|Liga Titanense
+#copa=Coppa Titano|Copa Titano
+#nombres=Marco,Luca,Matteo,Andrea,Davide,Filippo,Simone,Nicola,Paolo,Alessandro,Mirko,Enrico,Michele,Fabio
+#apellidos=Rossi,Bianchi,Gasperoni,Zafferani,Casadei,Gatti,Bollini,Valentini,Berardi,Guidi,Mularoni,Ceccaroli,Righi,Muccioli
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Virtus;Virtud Acquaviva;#e30613;#ffffff;52;2000;1964;los Virtusini;el campo de la localidad de la colina, compartido;Un club en alza que ha ganado la liga y la copa.
+Tre Fiori;Tres Flores;#1d3f9e;#e30613;58;700;1949;los Fiorentini;el campo de la localidad de los valles, compartido;Campeón reciente del país con tradición continental.
+La Fiorita;Fiorita Montegi;#1d3f9e;#ffffff;62;500;1968;los Gialloblu;el campo de la localidad del sur;El club más laureado del país.
+Folgore;Folgore Falciano;#0b8f3c;#ffffff;60;1200;1948;los Rayos;el campo de la localidad del norte;Un grande histórico, con muchos títulos de liga.
+Tre Penne;Tres Plumas;#e30613;#1d3f9e;55;500;1956;los Plumas;el campo de la zona de la fuente;Un clásico del fútbol del país.
+Cosmos;Cosmos Serraval;#1d3f9e;#ffffff;48;6664;2018;los Cosmos;el estadio nacional de la gran localidad industrial;Un club joven en el estadio más grande.
+Libertas;Libertas Borgo;#e30613;#1d3f9e;50;1000;1944;los Libertadores;el campo de la villa mayor;Un histórico de la villa mayor.
+Murata;Murata Monte;#f7d117;#1d3f9e;46;600;1966;los Murateschi;el campo de la localidad del este;Un equipo estable de mitad de tabla.
+Domagnano;Domagnano Verde;#1d3f9e;#f7d117;45;1000;1966;los Domagnanesi;el campo de la localidad del centro;Un club con raíz local y afición fiel.
+Faetano;Faetano Rojo;#e30613;#000000;43;500;1962;los Faetanesi;el campo de la localidad de la frontera;El club de una pequeña localidad fronteriza.
+Fiorentino;Fiorentino Azul;#1d3f9e;#e30613;47;700;1966;los Fiorentinesi;el campo de la localidad de los valles, compartido con otro;Un club modesto que comparte campo.
+Cailungo;Cailungo Alto;#1d3f9e;#ffffff;41;500;1974;los Caillungesi;el campo de la localidad de la ladera;Un equipo modesto de la zona alta.
+Juvenes/Dogana;Juventud Dogana;#e30613;#ffffff;44;500;1958;los Doganesi;el campo de la localidad de la aduana;Un club formado por la unión de dos escuelas.
+Pennarossa;Roca Roja;#e30613;#000000;40;300;1990;los Rocosos;el campo de la localidad de la roca;Un club pequeño de la zona oeste.
+San Giovanni;San Juanino;#1d3f9e;#ffffff;39;300;1972;los Juaninos;el campo de la localidad del pie de la sierra;Un modesto de la parte baja del país.

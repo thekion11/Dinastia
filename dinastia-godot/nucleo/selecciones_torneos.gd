@@ -8,10 +8,10 @@ const POR_CONFED := {
 	"ucl": ["España", "Inglaterra", "Italia", "Alemania", "Francia", "Portugal", "Holanda", "Bélgica", "Croacia", "Dinamarca",
 		"Suiza", "Austria", "Escocia", "Suecia", "Noruega", "Polonia", "Serbia", "Turquía", "Ucrania", "Gales", "Rep. Checa", "Hungría", "Grecia", "Irlanda",
 		"Rumanía", "Eslovaquia", "Bulgaria", "Israel", "Finlandia", "Eslovenia", "Chipre",
-		"Bosnia", "Montenegro", "Islandia", "Estonia", "Kazajistán", "Azerbaiyán", "Bielorrusia", "Letonia", "Albania", "Macedonia del Norte", "Georgia", "Lituania", "Irlanda del Norte", "Luxemburgo", "Armenia", "Moldavia"],   ## (Rusia no: suspendida por la UEFA y la FIFA, solo juega amistosos; ver `SUSPENDIDAS`)
-	"afr": ["Marruecos", "Senegal", "Nigeria", "Egipto", "Camerún", "Sudáfrica", "Ghana", "Costa de Marfil", "Argelia", "Túnez", "Malí", "RD Congo", "Burkina Faso", "Zambia", "Guinea", "Kenia"],
-	"asia": ["Japón", "Corea", "Irán", "Australia", "Arabia", "Catar", "Uzbekistán", "Jordania", "Irak", "Emiratos", "China", "Tailandia", "Indonesia", "Vietnam", "India", "Malasia", "Baréin", "Omán"],
-	"conc": ["México", "EE.UU.", "Costa Rica", "Canadá", "Panamá", "Jamaica", "Honduras", "El Salvador", "Guatemala"],
+		"Bosnia", "Montenegro", "Islandia", "Estonia", "Kazajistán", "Azerbaiyán", "Bielorrusia", "Letonia", "Albania", "Macedonia del Norte", "Georgia", "Lituania", "Irlanda del Norte", "Luxemburgo", "Armenia", "Moldavia", "Kosovo", "Malta", "Islas Feroe", "Andorra", "Gibraltar", "San Marino"],   ## (Rusia no: suspendida por la UEFA y la FIFA, solo juega amistosos; ver `SUSPENDIDAS`)
+	"afr": ["Marruecos", "Senegal", "Nigeria", "Egipto", "Camerún", "Sudáfrica", "Ghana", "Costa de Marfil", "Argelia", "Túnez", "Malí", "RD Congo", "Burkina Faso", "Zambia", "Guinea", "Kenia", "Cabo Verde", "Gabón", "Angola", "Mozambique", "Uganda", "Tanzania", "Libia", "Benín", "Togo", "Congo", "Zimbabue", "Namibia", "Madagascar"],
+	"asia": ["Japón", "Corea", "Irán", "Australia", "Arabia", "Catar", "Uzbekistán", "Jordania", "Irak", "Emiratos", "China", "Tailandia", "Indonesia", "Vietnam", "India", "Malasia", "Baréin", "Omán", "Siria", "Líbano", "Palestina", "Kirguistán", "Tayikistán", "Filipinas", "Singapur", "Hong Kong", "Kuwait"],
+	"conc": ["México", "EE.UU.", "Costa Rica", "Canadá", "Panamá", "Jamaica", "Honduras", "El Salvador", "Guatemala", "Haití", "Curazao", "Trinidad y Tobago", "Surinam", "Nicaragua"],
 	"oce": ["N. Zelanda", "Australia"],
 }
 ## Selecciones fuera de TODOS los torneos oficiales (Rusia, suspendida): existen en el escalafón, se convocan y juegan amistosos, pero no entran al Mundial ni a la Eurocopa.

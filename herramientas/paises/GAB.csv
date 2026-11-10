@@ -1,0 +1,24 @@
+#seleccion=Gabón
+#tier=0.15
+#globo=9.45,0.39
+#bandera=🇬🇦
+#confed=afr
+#liga=Gabon Championnat National D1|Liga Gabonesa
+#copa=Coupe du Gabon Interclubs|Copa Gabonesa
+#nombres=Didier,Serge,Pierre,Guy,Jean,Aaron,Denis,Bruno,Lloyd,Axel,Merlin,Junior,Patrick,Cyriaque
+#apellidos=Obiang,Ndong,Mboumba,Nzamba,Moussavou,Mouloungui,Boussougou,Ndoutoume,Ondo,Nguema,Mbadinga,Bekale,Oyono,Mintsa
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+AS Mangasport;Manga Moanda;#0b8f3c;#f7d117;62;7000;1965;les Mangas;el estadio de la ciudad minera del sureste;El club más laureado del país, ligado a la ciudad del manganeso.
+AS Stade Mandji;Estadio Mandji;#1d3f9e;#ffffff;58;5000;1962;les Pétroliers;el estadio de la capital petrolera de la costa;Uno de los grandes del país, con base en la ciudad del petróleo.
+Ogooué FC;Ogue Franceville;#e30613;#ffffff;50;6000;1990;les Ogoouéens;el estadio de la ciudad del sureste;Un club de la región de Haut-Ogooué que pelea por entrar en Europa... de África.
+Oyem AC;Oyem Atletico;#0b8f3c;#ffffff;48;4000;1970;les Nordistes;el estadio de la ciudad del norte;Un histórico del norte del país con una afición apasionada.
+AO Centre Mbérie Sportif;Centro Mberie;#f7d117;#1d3f9e;47;5000;2005;les Jaunes;el estadio de los suburbios de la capital;Un club de la capital que ha dado el salto en pocos años.
+FC Cento e Cinco;Ciento Cinco FC;#1d3f9e;#e30613;49;3000;1991;les Libreville Bleus;el estadio de la ciudad portuaria al sur de la capital;Un equipo de academia convertido en referente de la liga.
+Vautour Club;Club Buitre;#000000;#f7d117;46;5000;1981;les Vautours;el estadio de los suburbios de la capital, compartido;Un club de barrio de la capital con ganas de crecer.
+US Oyem;Union Oyem;#e30613;#ffffff;45;4000;1968;les Unionistes;el estadio de la ciudad del norte, compartido;El segundo equipo de la ciudad del norte y rival local.
+Lambaréné AC;Lambarene Atl;#1d3f9e;#ffffff;41;3000;1975;les Pirogues;el estadio de la ciudad del río;Un club de la ciudad a orillas del gran río.
+AS Lozo-Sport;Lozo Deportivo;#0b8f3c;#000000;40;3000;1980;les Lozos;el estadio municipal de la ciudad del interior sur;Un modesto del interior que pelea por mantenerse.
+US Bitam;Union Bitam;#f7d117;#0b8f3c;42;3000;1972;les Frontaliers;el estadio de la ciudad fronteriza del norte;El representante de la ciudad de la frontera norte.
+AO Bouenguidi Sports;Bouenguidi Sport;#e30613;#f7d117;39;2500;2000;les Rouges;el estadio de la ciudad del centro-sur, compartido;Un club de provincia que sube con humildad.
+AS Dikaki;Dikaki Fougamou;#1d3f9e;#f7d117;38;2000;1990;les Dikakis;el pequeño estadio de la localidad del centro;El club más modesto de la liga, orgulloso de su pueblo.
+CF Mounana;Mounana Futbol;#ffffff;#e30613;54;3500;1969;les Mineurs;el estadio de la ciudad minera del uranio;Un club de empresa minera que ya ganó la liga y la copa.

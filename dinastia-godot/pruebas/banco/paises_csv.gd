@@ -143,6 +143,13 @@ func _probar_pais_sin_liga_tanda4() -> void:
 		"OMA": [12, "Omán", "asia"], "COD": [16, "RD Congo", "afr"], "BFA": [14, "Burkina Faso", "afr"], "ZAM": [18, "Zambia", "afr"], "GUI": [14, "Guinea", "afr"], "KEN": [18, "Kenia", "afr"],
 		"ARM": [10, "Armenia", "ucl"], "MDA": [8, "Moldavia", "ucl"], "ESA": [12, "El Salvador", "conc"], "GUA": [12, "Guatemala", "conc"]}, 1106)
 
+## (10-11) TANDA 5: 33 países (UEFA pequeños, África, Asia y CARIBE/CENTROAMÉRICA). Muchas listas NO verificadas: ver docs/04_auditorias/datos_dudosos_2026-11-10.md.
+func _probar_pais_sin_liga_tanda5() -> void:
+	_titulo("PAÍSES SIN LIGA, TANDA 5: LIGA, COPA, CONFEDERACIÓN Y SELECCIÓN")
+	_comprobar_tanda({"KOS": [10, "Kosovo", "ucl"], "MLT": [12, "Malta", "ucl"], "FRO": [10, "Islas Feroe", "ucl"], "AND": [10, "Andorra", "ucl"], "GIB": [11, "Gibraltar", "ucl"], "SMR": [15, "San Marino", "ucl"], "CPV": [12, "Cabo Verde", "afr"], "GAB": [14, "Gabón", "afr"], "ANG": [16, "Angola", "afr"], "MOZ": [14, "Mozambique", "afr"], "UGA": [16, "Uganda", "afr"],
+		"TAN": [16, "Tanzania", "afr"], "LBY": [20, "Libia", "afr"], "BEN": [18, "Benín", "afr"], "TOG": [16, "Togo", "afr"], "CGO": [16, "Congo", "afr"], "ZIM": [18, "Zimbabue", "afr"], "NAM": [16, "Namibia", "afr"], "MAD": [16, "Madagascar", "afr"], "SYR": [16, "Siria", "asia"], "LBN": [12, "Líbano", "asia"], "PLE": [12, "Palestina", "asia"],
+		"KGZ": [14, "Kirguistán", "asia"], "TJK": [12, "Tayikistán", "asia"], "PHI": [11, "Filipinas", "asia"], "SGP": [8, "Singapur", "asia"], "HKG": [10, "Hong Kong", "asia"], "KUW": [12, "Kuwait", "asia"], "HAI": [18, "Haití", "conc"], "CUW": [11, "Curazao", "conc"], "TRI": [12, "Trinidad y Tobago", "conc"], "SUR": [12, "Surinam", "conc"], "NCA": [10, "Nicaragua", "conc"]}, 1107)
+
 ## Cada país del caso [clubes, selección, copa continental]: su liga con la cantidad real de clubes, su copa continental, su copa nacional, su selección y jugadores del mundo para convocar.
 func _comprobar_tanda(casos: Dictionary, semilla: int) -> void:
 	var m := Mundo.new()
