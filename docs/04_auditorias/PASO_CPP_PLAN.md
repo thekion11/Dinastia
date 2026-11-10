@@ -32,6 +32,9 @@ Paso del motor jugable (`zz_perfil_motor`, µs por paso, sin gráfica): `_ia_equ
 Generación del mundo al empezar partida: 610 ms para 466 clubes (una sola vez), ya troceada por fotogramas (`generar_por_trozos`): no es caliente.
 Si el dueño quiere más CPU en el directo, lo rentable no es C++ sino cachear en el motor (p. ej. posiciones de los 22 en un array plano por paso que lean `_presion`, `_rival_mas_cercano` e `_ia_defensa`), que es un cambio de datos de la IA (sesión 4).
 
+## 2.2 Android y Linux ARM (10-11, orden del líder tras la auditoría móvil)
+`bin_nativo/dinastia.gdextension` declaraba `android.{debug,release}.arm64` y `linux.{debug,release}.arm64` sin que existieran los `.so`: un error claro (aviso o fallo al exportar/arrancar). Se QUITARON esas cuatro líneas; quedan Linux x86_64 y Windows x86_64. **PENDIENTE del dueño/CI: compilar el `.so` de Android arm64** (`herramientas/compilar_nativo.sh` con el NDK; hay que volver a añadir las dos líneas `android.*.arm64` al `.gdextension`). Hasta entonces, en Android el juego usa los gemelos GDScript (misma salida, más lento: la semana del mundo ~786 ms en vez de ~395).
+
 ## 3. Resultados (antes/después, misma semilla)
 `zz_medir_simular` (200 partidos de un mundo entero; `DINASTIA_SIN_NATIVO=1` = todo GDScript), **huella idéntica 3660479828** en las dos:
 | | Sin extensión | Con extensión |
