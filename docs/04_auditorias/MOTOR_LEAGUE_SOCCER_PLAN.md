@@ -291,3 +291,33 @@ penetración sale del muñeco (regates con animaciones, toques largos, primer to
 ### Pendiente de la 4b
 La cola con el filtro (`LeagueToques.alcanza` con pass/highpass/shot, cada paso), el primer toque al recibir (L
 `GetDifficultyFactors`) y la locomoción con las animaciones de `league.res`.
+
+## 10. Fase 4c (locomoción fiel; empezada 10-11 noche, tras fusionar `main` f79abf5d)
+
+1. **Pase largo al espacio** (fallo de fidelidad corregido): en el original el pase LARGO va por delante del receptor
+   (`AI_GetPass`: +0,2 × la distancia hacia el arco rival) para el que corre al hueco; `_ejecutar` lo mandaba con nuestro
+   `_pasar_a(largo)` sin ese adelanto. Ahora usa nuestro «al hueco». Efecto medido: ninguno apreciable (son pocos pases largos).
+2. **Primer toque**: el del original (`GetFirstTouchContextPenalty`) YA está en nuestro motor desde el 01-11 (`MotorControl`, U5):
+   no hay nada que sumar ahí.
+3. **Dónde se atasca el ataque** (sonda `pruebas/_sonda/sonda_league_ataque.tscn`, con balón, cada 0,5 s; dos cruces):
+
+| Distancia al arco rival (media) | League | Motor de siempre |
+|---|---|---|
+| Portador | 25,3 · 31,8 m | 56,0 · 55,3 m |
+| Compañero más adelantado | 20,8 · 23,7 m | 37,1 · 35,9 m |
+| Línea rival (penúltimo) | 21,5 · 36,4 m | 36,8 · 33,3 m |
+
+Con League el equipo llega MUCHO más cerca que con el de siempre (portador a 25-32 m frente a 55 m), pero la defensa de League
+espera muy hundida (su línea a 21-36 m del arco), el fuera de juego impide a los delanteros pasarla y la zona de tiro del original
+empieza a ~20 m. El ataque se queda justo fuera. En el original lo que rompe ese bloque es el muñeco (regates por animación,
+toques largos al espacio, giros): portarlo es lo grande que queda (~7.600 líneas de `humanoid*.cpp` + `animcollection.cpp`).
+
+| 6 partidos completos con estilos reales (tras fusionar `main`) | Motor de siempre | MotorLeague |
+|---|---|---|
+| CPU por paso (µs) | 1.441 | 1.196 (−17 %) |
+| Goles / remates | 6,83 / 44,7 | 2,0 / 7,8 |
+| Pases / acierto | 125,8 / 77,0 % | 72,8 / 78,0 % |
+| Cambios de posesión por partido | 70,5 | 28,8 |
+| Posesión del local por partido | 52,6 de media | 12 · 69 · 17 · 12 · 86 · 59 |
+
+Determinismo IGUAL; banco «FIN. 0 fallos».

@@ -191,7 +191,8 @@ func _ejecutar(p: Dictionary, dec: Dictionary, mirada: Vector2, lado: float) -> 
 			cuenta["tiro_detras"] = int(cuenta.get("tiro_detras", 0)) + 1
 	match accion:
 		"pase":
-			_pasar_a(p, dec["i"], int(dec["tipo"]) != LeagueNucleo.CORTO)
+			## L AI_GetPass: el pase LARGO va al espacio (+0,2 × la distancia hacia el arco rival); aquí, nuestro «al hueco».
+			_pasar_a(p, dec["i"], int(dec["tipo"]) != LeagueNucleo.CORTO, int(dec["tipo"]) == LeagueNucleo.LARGO)
 		"tiro":
 			_tirar(p, Vector2(clampf(float(dec["y"]) / (PALO - 0.35), -1.0, 1.0), -0.45 if _rng.randf() < 0.6 else 0.55), clampf(float(dec["potencia"]), 0.0, 1.0))
 		"panico":
