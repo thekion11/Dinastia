@@ -250,6 +250,8 @@ func _probar_convocatoria_seleccion() -> void:
 	_comprobar(otro.cargo.convocados == cargo.convocados, "la convocatoria se guarda")
 	## (10-11) Tifos de final: dos lonas (escudo y franjas del club) sobre la grada.
 	var rt := Node3D.new()
-	var club_t: Club = ms.ligas[0].clubes[2]
+	var mt := Mundo.new()
+	mt.generar(["COL"], 31)
+	var club_t: Club = mt.ligas[0].clubes[2]
 	_comprobar(FestejoExtra3D.tifos(rt, club_t, Color(club_t.color1), Color(club_t.color2)) == 2 and rt.get_child_count() == 2, "los tifos de una final: dos lonas (%s)" % club_t.nombre)
 	rt.free()
