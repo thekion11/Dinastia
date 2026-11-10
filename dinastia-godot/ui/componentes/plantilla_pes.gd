@@ -205,6 +205,7 @@ func _dibujar_campo() -> void:
 		_campo.draw_rect(Rect2(float(k), float(k), w - 2.0 * k, h - 2.0 * k), Color(0, 0, 0, 0.05), false, 2.0)
 	_campo.draw_rect(Rect2(w * 0.22, 6, w * 0.56, h * 0.15), linea, false, 2.0)
 	_campo.draw_rect(Rect2(w * 0.22, h - 6 - h * 0.15, w * 0.56, h * 0.15), linea, false, 2.0)
+	QuimicaCampo.dibujar(_campo, _titulares, _p.mundo)   ## (10-11) química entre vecinos de línea, como la compenetración del PES
 
 ## Solo el campo (los once colocados según su tamaño): es lo que se rehace al cambiar el tamaño del panel.
 func _pintar_campo() -> void:

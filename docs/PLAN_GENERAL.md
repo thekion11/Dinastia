@@ -58,7 +58,7 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 ## IDEAS DEL PES 2020 PARA ADAPTAR (pedido del dueño, 10-11; investigación con fuentes, sin copiar arte ni marcas)
 Dinastía ya tiene casi todo el temario de la Master League (cesiones, ojeadores, agentes y cláusulas, reconversión de puesto, capitán, vestuario, charlas, junta, informe del rival, valoraciones). Lo que falta es sobre todo MOSTRARLO. Por prioridad (★ = mucho impacto, poco esfuerzo):
 1. ★ HECHO (10-11): FLECHA DE FORMA de 5 estados junto a cada jugador en la plantilla (`FlechaForma`, desde `Jugador.forma`). Falta: ponerla también en la pizarra de Táctica y en el once del partido.
-2. ★ QUÍMICA DE LÍNEA visible en la alineación (0-100, desde los grupos del vestuario, años juntos e idioma), con líneas verdes/rojas entre jugadores en la plantilla. Si suma algo al motor, con bandera (el motor es del dueño/sesión del partido).
+2. ★ HECHO (10-11, solo en pantalla): QUÍMICA entre compañeros de línea (`QuimicaLinea`: clan del vestuario, país, temporadas juntos y moral; `QuimicaCampo` la dibuja en el campo de la plantilla en verde, amarillo o rojo). Falta: mostrar la cifra por línea y, si el dueño quiere, que sume al motor con bandera.
 3. ★ ESTRATEGIAS RÁPIDAS en el partido: 4 botones grandes (ataque total, defensa, presión, contra) con enfriamiento, en mando y móvil (solo interfaz; fuente: PES Mastery). Necesita OK del dueño (orden 23: el partido es suyo).
 4. OBJETIVOS de la directiva con barra de progreso visible (puesto, copa, beneficio).
 5. RUMORES y «último día» del mercado con ofertas relámpago.

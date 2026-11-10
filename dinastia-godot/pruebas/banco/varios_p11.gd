@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p10.gd"
-## [Capa 11 de `varios.gd`, 10-11] _probar_final_temporada, _probar_habilidades_y_calor, _probar_puerta_animada, _probar_flecha_forma (secciones del 10-11)
+## [Capa 11 de `varios.gd`, 10-11] _probar_final_temporada, _probar_habilidades_y_calor, _probar_puerta_animada, _probar_flecha_forma, _probar_quimica_linea (secciones del 10-11)
 
 ## EL FINAL DE TEMPORADA COMPLETO (10-11, orden del dueño): copa y continental a medias se juegan hasta el final antes del cierre, y la pantalla única
 ## de resumen tiene campeón, tu puesto, copa, continental, ascensos/descensos, premios y veredicto.
@@ -94,3 +94,26 @@ func _probar_flecha_forma() -> void:
 		j.forma = f
 		vistos.append(FlechaForma.FLECHAS[FlechaForma.nivel(j)])
 	_comprobar(vistos == ["↓", "↘", "→", "↗", "↑"], "de muy baja a en racha: %s" % "".join(vistos))
+
+## LA QUÍMICA ENTRE COMPAÑEROS DE LÍNEA (10-11): solo lectura para la interfaz; mismo país y temporadas juntos suben, y hay una cifra por línea.
+func _probar_quimica_linea() -> void:
+	_titulo("PLANTILLA: QUÍMICA ENTRE COMPAÑEROS DE LÍNEA")
+	var m := Mundo.new()
+	m.generar(["CHI"], 61)
+	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	var club := m.mi_club()
+	var a: Jugador = club.plantilla[1]
+	var b: Jugador = club.plantilla[2]
+	a.historial.clear(); b.historial.clear()
+	a.moral = 60; b.moral = 60
+	b.pais = "ARG" if a.pais != "ARG" else "URU"
+	var base := QuimicaLinea.par(m, a, b)
+	b.pais = a.pais
+	var mismo_pais := QuimicaLinea.par(m, a, b)
+	for k in 3:
+		a.registrar_temporada(2020 + k, club.nombre)
+		b.registrar_temporada(2020 + k, club.nombre)
+	var veteranos := QuimicaLinea.par(m, a, b)
+	_comprobar(mismo_pais > base and veteranos > mismo_pais and veteranos <= 100, "el mismo país y las temporadas juntos suben la química (%d → %d → %d)" % [base, mismo_pais, veteranos])
+	var lin := QuimicaLinea.lineas(m, club.once())
+	_comprobar(lin.has("DEF") and lin.has("MED") and lin.has("DEL") and not lin.has("POR"), "una cifra por línea del once, sin el portero (%s)" % str(lin))
