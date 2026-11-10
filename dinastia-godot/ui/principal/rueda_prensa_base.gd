@@ -70,7 +70,10 @@ func _unhandled_input(ev: InputEvent) -> void:
 		var k := (ev as InputEventKey).keycode
 		if k >= KEY_1 and k <= KEY_9 and _opciones != null and k - KEY_1 < _opciones.get_child_count():
 			get_viewport().set_input_as_handled()
-			responder(k - KEY_1)
+			if _opciones is SelectorDireccional:   ## (10-11, caza de fallos) por la cruz: se bloquea tras elegir y no contesta dos veces
+				(_opciones as SelectorDireccional).elegir(k - KEY_1)
+			else:
+				responder(k - KEY_1)
 	elif ev is InputEventJoypadButton and ev.pressed:
 		var bj := (ev as InputEventJoypadButton).button_index
 		if bj == JOY_BUTTON_LEFT_SHOULDER or bj == JOY_BUTTON_RIGHT_SHOULDER:

@@ -40,7 +40,10 @@ func _ready() -> void:
 			await _esperar(1.5)
 			var escenas := ev.escenas()
 			_ok(escenas.size() >= 3 and ev._botones.get_child_count() == escenas.size(), "%s · %s: un botón por escena (%d)" % [club.nombre, tipo, escenas.size()])
+			var filtro := OS.get_environment("FILTRO")   ## p. ej. FILTRO=escenario,manteo: solo esas escenas (Forward+ por software es lento)
 			for e: String in escenas:
+				if filtro != "" and not e in filtro.split(","):
+					continue
 				ev.ver(e)
 				await _esperar(1.6)
 				var llamadas := RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)

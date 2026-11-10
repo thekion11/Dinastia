@@ -70,7 +70,7 @@ func _montar(club: Club, titulo: String) -> void:
 	if fuera:
 		env.background_color = Color(0.36, 0.42, 0.58) if modo == "desfile" else Color(0.1, 0.1, 0.12)   ## (10-11) cielo de tarde azulado: el anaranjado claro se quemaba con el brillo
 		env.glow_enabled = false
-		env.ambient_light_energy = 0.9
+		env.ambient_light_energy = 0.55 if modo == "desfile" else 0.9   ## (10-11) en Forward+ la calle salía quemada con 0,9 más el sol
 	else:
 		_cesped(raiz)
 		_grada(raiz, c1, c2)
@@ -278,7 +278,7 @@ func _process(d: float) -> void:
 	FestejoExtra3D.tick(self, _t)
 	if _copa != null and _copa.visible and modo != "foto":   ## la copa en alto, sobre el capitán, que sube y baja
 		var base := _capitan.position if _capitan != null else Vector3(0, 0.5, 0)
-		_copa.position = base + Vector3(0, 2.15 + absf(sin(_t * 1.8)) * 0.35, 0.1)
+		_copa.position = base + Vector3(0, 1.95 + absf(sin(_t * 1.8)) * 0.3, 0.35)   ## (10-11) en las manos, un poco por delante de la cabeza
 		_copa.rotation.y = sin(_t * 0.7) * 0.4
 	if _dt != null:   ## el manteo: el DT sube y baja, girando un poco en el aire
 		var fase := fmod(_t * 0.9, 1.0)

@@ -6,7 +6,7 @@ extends RefCounted
 static var _abierto := false
 
 static func ofrecer(pr: Principal) -> void:
-	if _abierto or DisplayServer.get_name() == "headless" or pr.mundo == null or pr._rueda_pop != null:
+	if _abierto or JornadaCelebracion._abierto or DisplayServer.get_name() == "headless" or pr.mundo == null or pr._rueda_pop != null:   ## (10-11) nunca encima de un festejo
 		return
 	if await JornadaSeleccion.ofrecer_cargo(pr):   ## (10-11) primero, si te llama una selección
 		return
@@ -15,6 +15,8 @@ static func ofrecer(pr: Principal) -> void:
 		return
 	_abierto = true
 	var esc := EventoDialogo.mostrar(pr, ev)
+	esc.tree_exiting.connect(func() -> void:   ## (10-11, caza de fallos) liberada sin elegir: no bloquear los eventos para siempre
+		_abierto = false)
 	var op: String = await esc.elegido
 	esc.queue_free()
 	_abierto = false
