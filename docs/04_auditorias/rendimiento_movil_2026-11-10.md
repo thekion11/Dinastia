@@ -177,3 +177,14 @@ Experimento `LODS_RUNTIME=1` (`dinastia-godot/pruebas/medir_partido_exp.gd`, apa
 | MEDIA ENG | 534 k → 473 k (−11 %) | 350 → 341 | 358 → 358 ms |
 
 Conclusión: −6…−12 % de triángulos, −2 % de llamadas, tiempo de fotograma sin cambio medible (llvmpipe no está limitada por vértices). Generarlos en ejecución es caro (picos de 400–975 ms al montar), así que NO se activa. Si se quiere, hay que hornearlos fuera de línea (como `herramientas/hornear_publico*.gd`) y confirmar en el teléfono; queda como pendiente del dueño. No se cambió nada por defecto.
+
+### Resultado: LODs del cuero lejano, ENCENDIDOS en BAJA y MEDIA BAJA (10-11, sesión 5)
+Por grupo (MEDIA, CHI/ENG): cuero −8 % de triángulos del partido; cara real −2 %; `Hair*` ~0 (ya traen LODs); `PeloDrive` ~0…−1,4 %. Hornear lo compartido (pelo del Drive, `Hair*`, cara) no compensa; el cuero depende de cada jugador y no se puede hornear en el repo (miles de formas). Por eso `PeloCapas._con_lods` genera los LODs UNA vez por forma (caché de `_cache_cuero`), con `ImporterMesh.generate_lods(25, 60)`, solo en BAJA/MEDIA BAJA y fuera de `--headless`; interruptor `LODS_CUERO=0`. Sin archivos nuevos (0 MB).
+
+| BAJA | Triángulos | Llamadas | Fotograma | Peor fotograma |
+|---|---|---|---|---|
+| CHI | 613 k → 579 k (−5,6 %) | 316 → 303 | 264 → 265 | 309 → 318 |
+| ESP | 413 k → 400 k (−3,2 %) | 305 → 301 | 215 → 213 | 257 → 262 |
+| ENG | 367 k → 342 k (−6,7 %) | 250 → 241 | 222 → 220 | 283 → 337 |
+
+Capturas con la cámara real (1280×720, `FOTO`) de CHI/ESP/ENG con y sin LODs: sin diferencia visible en los jugadores (las diferencias de píxel son el ruido de la grada y el césped). Banco: FIN. 0 fallos; `prueba_menu_ciudad_pie` y `mem_menu_estadio` en 0 fallos; ningún script > 450 líneas. Pendiente del dueño: confirmar en el teléfono que baja el tiempo de fotograma (en llvmpipe no se ve).
