@@ -280,14 +280,14 @@ func _pintar_partido(c: Club) -> void:
 	for i in maxi(medidor.once_local.size(), medidor.once_visita.size()):
 		if i < medidor.once_local.size():
 			var jl: Jugador = medidor.once_local[i]
-			g.add_child(p._retrato(jl, 22))
+			g.add_child(p._retrato(jl, Principal.RETRATO_FILA))
 			p._celda(g, "%s  %s" % [jl.pos_e, jl.nombre], Principal.COL_TEXTO, false, 11)
 		else:
 			p._celda(g, "", Principal.COL_SUAVE)
 			p._celda(g, "", Principal.COL_SUAVE)
 		if i < medidor.once_visita.size():
 			var jv: Jugador = medidor.once_visita[i]
-			g.add_child(p._retrato(jv, 22))
+			g.add_child(p._retrato(jv, Principal.RETRATO_FILA))
 			p._celda(g, "%s  %s" % [jv.pos_e, jv.nombre], Principal.COL_TEXTO, false, 11)
 		else:
 			p._celda(g, "", Principal.COL_SUAVE)

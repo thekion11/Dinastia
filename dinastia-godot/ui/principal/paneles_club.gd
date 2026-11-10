@@ -189,8 +189,8 @@ func _fila_jugador(g: GridContainer, j: Jugador, columnas: Array, colores: Array
 	var equipo: Club = p.mundo.clubes.get(j.club_id)
 	var retrato := TextureRect.new()
 	retrato.texture = Cara.textura(j, equipo.color1 if equipo else "#2b6b45",
-		equipo.color2 if equipo else "#ffffff", 22)
-	retrato.custom_minimum_size = Vector2(22, 22)
+		equipo.color2 if equipo else "#ffffff", Principal.RETRATO_FILA)
+	retrato.custom_minimum_size = Vector2(Principal.RETRATO_FILA, Principal.RETRATO_FILA)   ## (10-11) 22 → 30 px, como las caras de las listas de PES
 	retrato.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	celda.add_child(retrato)

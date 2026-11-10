@@ -282,7 +282,7 @@ func _pintar_roles_tacticos(c: Club) -> void:
 		var fila := HBoxContainer.new()
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_tactica.add_child(fila)
-		fila.add_child(p._retrato(j, 22))
+		fila.add_child(p._retrato(j, Principal.RETRATO_FILA))
 		var nom := p._texto(12, Principal.COL_TEXTO)
 		nom.text = "%s  %s" % [j.pos_e, j.nombre]
 		nom.custom_minimum_size = Vector2(150, 0)
