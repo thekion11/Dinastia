@@ -222,7 +222,7 @@ static func _colgar(anc: Node3D, t: Transform3D, malla: Mesh, mat: Material, nom
 	if nombre == "Pestanas":
 		## Tiras de 1-2 mm: a más de `DIST_PESTANAS` m no llegan a un píxel y
 		## solo costaban una llamada de dibujo por jugador.
-		mi.visibility_range_end = DIST_PESTANAS
+		mi.visibility_range_end = DIST_PESTANAS * Calidad.lod_cabeza()
 		mi.visibility_range_end_margin = 2.0
 	return mi
 

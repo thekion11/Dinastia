@@ -130,7 +130,7 @@ static func color_cejas(pelo: Color) -> Color:
 const DIST_CEJAS := 30.0
 
 static func sin_lejos(mi: GeometryInstance3D, distancia := DIST_CEJAS) -> void:
-	mi.visibility_range_end = distancia
+	mi.visibility_range_end = distancia * Calidad.lod_cabeza()
 	mi.visibility_range_end_margin = 3.0
 
 ## Pone pelo, barba (si `barba`) y cejas a un jugador de `FutbolistaQ.crear()`.
