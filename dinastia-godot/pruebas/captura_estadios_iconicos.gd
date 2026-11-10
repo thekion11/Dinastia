@@ -124,7 +124,7 @@ func _picos(mediana: int) -> void:
 	for f in n_f:
 		await get_tree().process_frame
 		var ll := rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
-		if ll > mediana * (float(OS.get_environment("PICOS_UMBRAL")) if OS.get_environment("PICOS_UMBRAL") != "" else 3.0) and OS.get_environment("PICOS") == "desglose":
+		if ll > _umbral(mediana) and OS.get_environment("PICOS") == "desglose":
 			## Congela ESE plano en una cámara quieta y mira qué grupos lo inflan.
 			var cam0 := get_viewport().get_camera_3d()
 			var fija := Camera3D.new()
@@ -153,3 +153,8 @@ func _picos(mediana: int) -> void:
 		elif f % 500 == 0:
 			var cam := get_viewport().get_camera_3d()
 			print("   normal f%d: %d llamadas · %d objetos · cam=%s" % [f, ll, rs.get_rendering_info(rs.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME), cam.get_path() if cam else "-"])
+
+## PICOS_UMBRAL: ≤ 10 = veces la mediana; > 10 = llamadas absolutas (cuando la mediana ya está dentro del pico).
+func _umbral(mediana: int) -> float:
+	var u := float(OS.get_environment("PICOS_UMBRAL")) if OS.get_environment("PICOS_UMBRAL") != "" else 3.0
+	return u if u > 10.0 else mediana * u
