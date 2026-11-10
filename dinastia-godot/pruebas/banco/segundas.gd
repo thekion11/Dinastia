@@ -111,3 +111,45 @@ func _probar_segundas_reglas() -> void:
 	AscensosPais._reales(m, t1, t2, ReglasAscenso.de("GER"), bajan, suben, resumen)
 	_comprobar(bajan.size() == suben.size() and bajan.size() >= 2 and bajan.size() <= 3, "bajan y suben los mismos (%d y %d)" % [bajan.size(), suben.size()])
 	_comprobar(resumen.has("promocion") and bajan[0] == t1[t1.size() - 1]["club"] and suben[0] == t2[0]["club"], "baja el último y sube el primero, y hubo promoción")
+
+## Las cinco primeras de Europa tienen su segunda con la cantidad real de clubes y sus reglas de ascenso (paso 3).
+func _probar_segundas_cinco_grandes() -> void:
+	_titulo("SEGUNDAS DIVISIONES: ENG, ESP, ITA, GER Y FRA")
+	var esperado := {"ENG": [20, 24], "ESP": [20, 22], "ITA": [20, 20], "GER": [18, 18], "FRA": [18, 18]}
+	var paises: Array[String] = []
+	for p: String in esperado:
+		paises.append(p)
+	var m := Mundo.new()
+	m.generar(paises, 611)
+	for pais: String in esperado:
+		var l1: Liga = null
+		var l2: Liga = null
+		for l: Liga in m.ligas:
+			if l.pais == pais and l.division() == 1:
+				l1 = l
+			elif l.pais == pais and l.division() == 2:
+				l2 = l
+		_comprobar(l1 != null and l2 != null and l1.clubes.size() == esperado[pais][0] and l2.clubes.size() == esperado[pais][1], "%s: %d clubes en Primera y %d en Segunda (%d y %d)" % [pais, esperado[pais][0], esperado[pais][1], l1.clubes.size() if l1 else 0, l2.clubes.size() if l2 else 0])
+		_comprobar(l1 != null and l1.plazas_descenso == int(ReglasAscenso.de(pais)["bajan"]), "%s: bajan %d de Primera" % [pais, int(ReglasAscenso.de(pais)["bajan"])])
+	var nombres := {}
+	var repes := 0
+	for c: Club in m.clubes.values():
+		if nombres.has(c.nombre):
+			repes += 1
+		nombres[c.nombre] = true
+	_comprobar(repes == 0, "ningún nombre de club repetido en el mundo (%d)" % repes)
+	## Una temporada con los cinco países y su cierre: todos los cambios cuadran.
+	m.tomar_el_mando(_club_de(m, "FRA", 1).id)
+	var guard := 0
+	while m.temporada_en_curso() and guard < 80:
+		m.avanzar_semana()
+		guard += 1
+	var resumen := m.nueva_temporada()
+	for pais: String in esperado:
+		var suben := (resumen["suben"] as Array).filter(func(c: Club) -> bool: return c.pais == pais).size()
+		var bajan := (resumen["bajan"] as Array).filter(func(c: Club) -> bool: return c.pais == pais).size()
+		_comprobar(suben == bajan and suben >= 2 and suben <= 3, "%s: suben %d y bajan %d" % [pais, suben, bajan])
+	for l: Liga in m.ligas:
+		if esperado.has(l.pais):
+			var n: int = esperado[l.pais][0 if l.division() == 1 else 1]
+			_comprobar(l.clubes.size() == n, "%s división %d sigue con %d clubes (%d)" % [l.pais, l.division(), n, l.clubes.size()])

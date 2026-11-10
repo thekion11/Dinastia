@@ -23,3 +23,81 @@ Swansea|penta|banda|SWA|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
 Watford|hex|franjas|WAT|franjas|#ffd100|#d50032|#d50032|#ffd100|#ffd100|#d50032
 W. Brom|cruzado|mitad|WB|liso|#0b2a5b|#ffffff|#ffffff|#0b2a5b|#0b2a5b|#ffffff
 Wrexham|banderin|aro|WRE|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Albacete|escudo|chevron|ALB|franjas|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Almería|clasico|liso|ALM|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Andorra|circulo|banda|AND|liso|#0057b8|#ffd100|#ffd100|#0057b8|#0057b8|#ffd100
+Burgos|ojiva|franjas|BUR|franjas|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Cádiz|penta|mitad|CDI|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Castellón|hex|aro|CAS|liso|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
+Ceuta|cruzado|cruz|CEU|franjas|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Córdoba|banderin|chevron|CRD|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Cultural Leonesa|escudo|banda|CL|liso|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Deportivo|clasico|franjas|DEP|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Eibar|circulo|mitad|EIB|liso|#d50032|#0057b8|#0057b8|#d50032|#d50032|#0057b8
+Granada|ojiva|aro|GRA|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Las Palmas|penta|cruz|LP|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Leganés|hex|chevron|LEG|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Málaga|cruzado|liso|MLA|liso|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Mirandés|banderin|banda|MIR|franjas|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Racing Santander|escudo|mitad|RS|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Real Sociedad B|clasico|aro|RSB|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Valladolid|circulo|cruz|VAL|franjas|#5b2d8e|#ffffff|#ffffff|#5b2d8e|#5b2d8e|#ffffff
+Sporting Gijón|ojiva|chevron|SG|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Zaragoza|penta|liso|ZAR|liso|#ffffff|#0057b8|#0057b8|#ffffff|#ffffff|#0057b8
+Huesca|hex|banda|HUE|franjas|#0057b8|#d50032|#d50032|#0057b8|#0057b8|#d50032
+Avellino|cruzado|franjas|AVE|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Bari|banderin|mitad|BAR|liso|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Carrarese|escudo|cruz|CAR|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Catanzaro|clasico|chevron|CAT|liso|#ffd100|#d50032|#d50032|#ffd100|#ffd100|#d50032
+Cesena|circulo|liso|CES|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Empoli|ojiva|banda|EMP|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Virtus Entella|penta|franjas|VE|liso|#ffffff|#5ab4e5|#5ab4e5|#ffffff|#ffffff|#5ab4e5
+Frosinone|hex|mitad|FRO|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Juve Stabia|cruzado|aro|JS|franjas|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Mantova|banderin|cruz|MAN|liso|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Modena|escudo|liso|MOD|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Monza|clasico|banda|MON|franjas|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Padova|circulo|franjas|PAD|liso|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Palermo|ojiva|mitad|PAL|liso|#f4a7c1|#000000|#000000|#f4a7c1|#f4a7c1|#000000
+Pescara|penta|cruz|PES|franjas|#5ab4e5|#ffffff|#ffffff|#5ab4e5|#5ab4e5|#ffffff
+Reggiana|hex|cruz|REG|liso|#8b1a3a|#ffffff|#ffffff|#8b1a3a|#8b1a3a|#ffffff
+Sampdoria|cruzado|chevron|SAM|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Spezia|banderin|liso|SPE|franjas|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Südtirol|escudo|franjas|SDT|liso|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Venezia|clasico|mitad|VEN|liso|#00843d|#f58220|#f58220|#00843d|#00843d|#f58220
+Arminia Bielefeld|circulo|aro|AB|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Braunschweig|ojiva|cruz|BRA|liso|#ffd100|#0057b8|#0057b8|#ffd100|#ffd100|#0057b8
+Darmstadt|penta|chevron|DAR|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Dynamo Dresden|hex|liso|DD|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
+Düsseldorf|cruzado|banda|DSS|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Elversberg|banderin|franjas|ELV|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Fürth|escudo|aro|FRT|franjas|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Hannover|clasico|cruz|HAN|liso|#d50032|#00843d|#00843d|#d50032|#d50032|#00843d
+Hertha|circulo|chevron|HER|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Holstein Kiel|ojiva|liso|HK|franjas|#0057b8|#d50032|#d50032|#0057b8|#0057b8|#d50032
+Kaiserslautern|penta|banda|KAI|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Karlsruhe|hex|franjas|KAR|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Magdeburg|cruzado|mitad|MAG|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Nürnberg|banderin|aro|NRN|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Paderborn|escudo|chevron|PAD|liso|#0057b8|#000000|#000000|#0057b8|#0057b8|#000000
+Preußen Münster|clasico|liso|PM|franjas|#00843d|#000000|#000000|#00843d|#00843d|#000000
+Schalke|circulo|banda|SCH|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Bochum|ojiva|franjas|BOC|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Amiens|penta|mitad|AMI|franjas|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
+Annecy|hex|aro|ANN|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Bastia|cruzado|cruz|BAS|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Boulogne|banderin|chevron|BOU|franjas|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Clermont|escudo|banda|CLE|liso|#d50032|#0057b8|#0057b8|#d50032|#d50032|#0057b8
+Dunkerque|clasico|franjas|DUN|liso|#0057b8|#d50032|#d50032|#0057b8|#0057b8|#d50032
+Grenoble|circulo|mitad|GRE|franjas|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
+Guingamp|ojiva|aro|GUI|liso|#d50032|#000000|#000000|#d50032|#d50032|#000000
+Laval|penta|cruz|LAV|liso|#f58220|#000000|#000000|#f58220|#f58220|#000000
+Le Mans|hex|chevron|LM|franjas|#ffd100|#d50032|#d50032|#ffd100|#ffd100|#d50032
+Montpellier|cruzado|liso|MON|liso|#0057b8|#f58220|#f58220|#0057b8|#0057b8|#f58220
+Nancy|banderin|banda|NAN|liso|#ffffff|#d50032|#d50032|#ffffff|#ffffff|#d50032
+Pau|escudo|mitad|PAU|franjas|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
+Red Star|clasico|aro|RS|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Reims|circulo|cruz|REI|liso|#d50032|#ffffff|#ffffff|#d50032|#d50032|#ffffff
+Rodez|ojiva|chevron|ROD|franjas|#d50032|#ffd100|#ffd100|#d50032|#d50032|#ffd100
+Saint-Étienne|penta|liso|SAI|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
+Troyes|hex|banda|TRO|liso|#0057b8|#ffffff|#ffffff|#0057b8|#0057b8|#ffffff
