@@ -287,9 +287,15 @@ static func sol(nivel: int, momento: int = TARDE) -> DirectionalLight3D:
 # ------------------------------------------------------------------ viewport
 
 ## ¿Renderizador de compatibilidad (OpenGL: móvil, web, capturas)?
-## (4-11) MSAA de las vistas 3D SECUNDARIAS (retratos, casa, rueda de prensa, sorteo…): en MÍNIMO apagado (decisión del dueño, A4-PARTIDO-R01: igual que el partido).
+## (4-11) MSAA de las vistas 3D SECUNDARIAS (retratos, casa, rueda de prensa, sorteo…): apagado donde lo está el partido (`msaa_activo`; decisión del dueño en MÍNIMO, A4-PARTIDO-R01).
 static func msaa_ui(m: int) -> int:
-	return Viewport.MSAA_DISABLED if elegida <= MINIMO else m
+	return m if msaa_activo(elegida) else Viewport.MSAA_DISABLED
+
+## ¿Este nivel suaviza los bordes con MSAA? (ver `aplicar_viewport`): no en ULTRA BAJA, BAJA y MEDIA BAJA; en MEDIA solo si el renderizador no es el de compatibilidad.
+static func msaa_activo(nivel: int) -> bool:
+	if nivel <= MEDIA_BAJA:
+		return false
+	return nivel > MEDIA or not es_compatibilidad()
 
 static func es_compatibilidad() -> bool:
 	return RenderingServer.get_current_rendering_method() == "gl_compatibility"
@@ -323,7 +329,9 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 		## MÍNIMO SIN MSAA (4-11-2026, A4-PARTIDO-R01, decisión del dueño): lo medido con la cámara de TV en llvmpipe a 1280x720 (limitada por relleno, como una GPU de móvil)
 		## dice que el MSAA x2 es lo más caro del partido con diferencia (el fotograma baja ~77 % al apagarlo); el dueño tiene 5 FPS con la GPU al 100 % en su teléfono.
 		## Coste visual: bordes más dentados (las líneas finas del campo lejanas); MEDIO y superiores siguen igual.
-		vp.msaa_3d = Viewport.MSAA_DISABLED if nivel <= MINIMO else Viewport.MSAA_2X
+		## (10-11, informe `rendimiento_movil_2026-11-10.md`) MEDIDO en BAJA y MEDIA con 3 países (CHI, ESP, ENG): apagar el MSAA x2 baja el fotograma relativo un 57-67 % a igual resolución y mismos triángulos/llamadas.
+		## BAJA y MEDIA BAJA van sin MSAA siempre; MEDIA solo en Compatibilidad (móvil/web, donde está la GPU limitada); MEDIA en escritorio y MEDIA ALTA conservan el x2.
+		vp.msaa_3d = Viewport.MSAA_2X if msaa_activo(nivel) else Viewport.MSAA_DISABLED
 	if sin_msaa:
 		vp.msaa_3d = Viewport.MSAA_DISABLED
 	## Por debajo de 100 % en Forward+/Mobile, FSR (más nítido que el bilineal); en Compatibilidad no existe y queda el bilineal.

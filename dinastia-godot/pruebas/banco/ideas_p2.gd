@@ -244,7 +244,13 @@ func _probar_calidad_minima() -> void:
 	Calidad.aplicar_viewport(vp, Calidad.MINIMO)
 	_comprobar(vp.msaa_3d == Viewport.MSAA_DISABLED and is_equal_approx(vp.scaling_3d_scale, Calidad.ESCALA_MINIMO), "MÍNIMO: sin MSAA (decisión del dueño, A4-PARTIDO-R01) y el 3D a la escala elegida")
 	Calidad.aplicar_viewport(vp, Calidad.MEDIO)
-	_comprobar(vp.msaa_3d == Viewport.MSAA_2X, "MEDIO conserva el MSAA x2")
+	_comprobar(vp.msaa_3d == (Viewport.MSAA_DISABLED if Calidad.es_compatibilidad() else Viewport.MSAA_2X), "MEDIO conserva el MSAA x2 en escritorio y lo pierde en compatibilidad (móvil/web; informe rendimiento_movil_2026-11-10)")
+	for nivel_l: int in [Calidad.BAJA, Calidad.MEDIA_BAJA]:
+		Calidad.aplicar_viewport(vp, nivel_l)
+		_comprobar(vp.msaa_3d == Viewport.MSAA_DISABLED and not Calidad.msaa_activo(nivel_l), "BAJA y MEDIA BAJA: sin MSAA (medido: −57 a −67 % de fotograma relativo)")
+	Calidad.aplicar_viewport(vp, Calidad.ALTO)
+	_comprobar(vp.msaa_3d == Viewport.MSAA_2X, "ALTA conserva el MSAA x2")
+	Calidad.aplicar_viewport(vp, Calidad.MEDIO)
 	var elegida_antes_msaa := Calidad.elegida
 	Calidad.elegida = Calidad.MINIMO
 	_comprobar(Calidad.msaa_ui(Viewport.MSAA_4X) == Viewport.MSAA_DISABLED, "las vistas 3D secundarias también van sin MSAA en MÍNIMO")
