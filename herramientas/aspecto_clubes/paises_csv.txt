@@ -22,8 +22,8 @@ Henan FC|hexalgo|abanico|HFC|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd10
 Wuhan Three Towns|ojiva|puntas|WTT|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
 Qingdao West Coast|banderin|estrella|QWC|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Dalian Yingbo|estandarte|ondas|DY|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Changchun Yatai|doblepunta|rombos|CY|liso|#ffd100|#00843d|#00843d|#ffd100|#ffd100|#00843d
-Meizhou Hakka|rombo|sol|MH|franjas|#c8102e|#000000|#000000|#c8102e|#c8102e|#000000
+Qingdao Hainiu|doblepunta|rombos|QH|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Chongqing Tonglianglong|rombo|sol|CT|franjas|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
 Shenzhen Peng City|octogono|escamas|SPC|liso|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
 Yunnan Yukun|corona|rayo|YY|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
 Liaoning Tieren|laurel|cruz|LT|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
@@ -88,11 +88,11 @@ Sarpsborg 08|octogono|sol|SAR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffff
 Fredrikstad|corona|escamas|FRE|liso|#ffffff|#000000|#000000|#ffffff|#ffffff|#000000
 KFUM Oslo|laurel|rayo|KFU|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Sandefjord|frances|cruz|SAN|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Strømsgodset|curvo|chevron|STR|liso|#1b458f|#000000|#000000|#1b458f|#1b458f|#000000
+Aalesund|curvo|chevron|AAL|liso|#f26522|#1b458f|#1b458f|#f26522|#f26522|#1b458f
 Kristiansund|arco3|abanico|KRI|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
 HamKam|hexalgo|puntas|HK|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
 Vålerenga|ojiva|estrella|VLE|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
-Haugesund|banderin|ondas|HAU|franjas|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Start|banderin|ondas|STA|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
 Lech Poznań|estandarte|rombos|LP|liso|#003876|#ffffff|#ffffff|#003876|#003876|#ffffff
 Legia Warszawa|doblepunta|tablero|LW|liso|#006633|#ffffff|#ffffff|#006633|#006633|#ffffff
 Jagiellonia Białystok|rombo|escamas|JB|franjas|#ffd100|#c8102e|#c8102e|#ffd100|#ffd100|#c8102e
@@ -154,7 +154,7 @@ Farul Constanța|hexalgo|abanico|FC|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f
 Hermannstadt|ojiva|puntas|HER|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 UTA Arad|banderin|ondas|UTA|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Csikszereda|estandarte|ondas|CSI|liso|#8b1538|#ffffff|#ffffff|#8b1538|#8b1538|#ffffff
-Botoșani|doblepunta|rombos|BOT|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
+Botoșani|doblepunta|tablero|BOT|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Unirea Slobozia|rombo|sol|US|franjas|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
 Metaloglobus București|octogono|escamas|MB|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
 Celtic|corona|cruz|CEL|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
@@ -205,7 +205,7 @@ IFK Göteborg|estandarte|abanico|IFK|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458
 IF Elfsborg|doblepunta|puntas|IFE|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
 BK Häcken|rombo|ondas|BKH|franjas|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
 Mjällby AIF|octogono|rombos|MAI|liso|#ffd100|#000000|#000000|#ffd100|#ffd100|#000000
-IFK Norrköping|corona|tablero|IFK|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+Örgryte IS|corona|tablero|IS|liso|#c8102e|#1b458f|#1b458f|#c8102e|#c8102e|#1b458f
 Kalmar FF|laurel|escamas|KFF|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 IK Sirius|frances|escamas|IKS|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
 Degerfors IF|curvo|cruz|DIF|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
@@ -253,9 +253,9 @@ Vanspor|estandarte|rayo|VAN|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Iğdır|doblepunta|cruz|IDR|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Shakhtar Donetsk|rombo|abanico|SD|franjas|#f26522|#000000|#000000|#f26522|#f26522|#000000
 Dynamo Kyiv|octogono|puntas|DK|liso|#ffffff|#1b458f|#1b458f|#ffffff|#ffffff|#1b458f
-Metalist Kharkiv|corona|estrella|MK|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
+Metalist 1925 Kharkiv|corona|estrella|MK|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
 Zorya Luhansk|laurel|ondas|ZL|franjas|#000000|#ffffff|#ffffff|#000000|#000000|#ffffff
-Dnipro-1|frances|rombos|DNI|liso|#1b458f|#ffffff|#ffffff|#1b458f|#1b458f|#ffffff
+SC Poltava|frances|sol|SCP|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Oleksandriya|curvo|tablero|OLE|liso|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
 Kryvbas Kryvyi Rih|arco3|cruz|KKR|franjas|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|#ffffff
 Polissya Zhytomyr|hexalgo|escamas|PZ|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
@@ -266,4 +266,4 @@ LNZ Cherkasy|doblepunta|puntas|LNZ|liso|#c8102e|#ffffff|#ffffff|#c8102e|#c8102e|
 Rukh Lviv|rombo|estrella|RL|franjas|#c8102e|#ffd100|#ffd100|#c8102e|#c8102e|#ffd100
 Karpaty Lviv|octogono|ondas|KL|liso|#00843d|#ffffff|#ffffff|#00843d|#00843d|#ffffff
 Epicentr Kamianets-Podilskyi|corona|rombos|EKP|liso|#ffd100|#1b458f|#1b458f|#ffd100|#ffd100|#1b458f
-Livyi Bereh|laurel|tablero|LB|franjas|#00843d|#ffd100|#ffd100|#00843d|#00843d|#ffd100
+FC Kudrivka|laurel|tablero|FCK|franjas|#1b458f|#ffd100|#ffd100|#1b458f|#1b458f|#ffd100
