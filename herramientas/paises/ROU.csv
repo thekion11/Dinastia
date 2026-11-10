@@ -1,0 +1,26 @@
+#seleccion=Rumanía
+#tier=0.7
+#globo=26.10,44.43
+#bandera=🇷🇴
+#confed=ucl,uel
+#liga=Superl1ga|Liga Rumana
+#copa=Copa de Rumanía|Copa de Rumanía
+#nombres=Andrei,Alexandru,Mihai,Ionuț,Cristian,Marius,Florin,Gabriel,Daniel,Răzvan,Cătălin,Bogdan,Vlad,Sorin
+#apellidos=Popescu,Ionescu,Popa,Stan,Dumitru,Gheorghe,Constantin,Marin,Georgescu,Radu,Stoica,Dinu,Matei,Munteanu
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+FCSB;Estrella Capital;#c8102e;#1b458f;66;55000;1947;los Rojiazules;el estadio nacional de la capital;El único club rumano campeón de Europa, en 1986.
+CFR Cluj;Cluj Ferroviario;#8b1538;#ffffff;62;30000;1907;los Ferroviarios;el estadio de la ciudad del norte;El club ferroviario que ganó cinco ligas.
+Universitatea Craiova;Craiova Univ.;#1b458f;#ffffff;62;30000;1948;los Azulblancos;el estadio de la ciudad del sur;El club de la ciudad del sur que ganó la liga en 2026.
+Rapid București;Rapid Capital;#8b1538;#ffffff;60;14000;1923;los Granates;el estadio de la capital;El club del barrio ferroviario de la capital.
+Dinamo București;Dinamo Capital;#c8102e;#ffffff;58;15000;1948;los Perros;el estadio del bosque de la capital;El club con la hinchada de los perros rojos.
+Universitatea Cluj;Cluj Estudiantil;#ffffff;#000000;58;30000;1919;los Estudiantes;el estadio de la ciudad del norte;El club de los estudiantes de la ciudad del norte.
+FC Argeș;Arges Verde;#8b1538;#ffffff;54;15000;1953;los Lobos;el estadio de la ciudad del sur;El club del valle del río Argeș.
+Petrolul Ploiești;Petrolul Pozos;#ffd100;#1b458f;54;15000;1907;los Petroleros;el estadio de la ciudad del petróleo;El club de la ciudad del petróleo.
+Oțelul Galați;Otelul Acero;#1b458f;#ffffff;54;13000;1964;los del Acero;el estadio de la ciudad del acero;El club de la ciudad del acero, campeón de 2011.
+Farul Constanța;Faro Constanza;#1b458f;#ffffff;56;15000;1920;los Marineros;el estadio de la costa del mar Negro;El club de la costa, campeón de 2023.
+Hermannstadt;Hermann Sibiu;#c8102e;#ffffff;53;14000;2015;los Rojos;el estadio de la ciudad de Transilvania;Un club de Transilvania de reciente creación.
+UTA Arad;Arad Azul;#c8102e;#ffffff;55;12000;1945;los Rojos;el estadio de la ciudad del oeste;El club del oeste, campeón de 1940.
+Csikszereda;Csik Pastor;#8b1538;#ffffff;52;5000;1920;los Pastores;el estadio de la región szeklerlandesa;El club de las montañas de Transilvania.
+Botoșani;Botosani Norte;#c8102e;#ffffff;52;8000;2001;los Rojos;el estadio de la ciudad del norte;El club de la ciudad del norte.
+Unirea Slobozia;Slobozia Llano;#c8102e;#ffd100;51;7000;1993;los Rojiamarillos;el estadio de la llanura;El club de la ciudad de la llanura.
+Metaloglobus București;Metaloglobus;#1b458f;#ffffff;51;5000;1930;los Azules;el estadio del barrio de la capital;Un club modesto de un barrio de la capital.

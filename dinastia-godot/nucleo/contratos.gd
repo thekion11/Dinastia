@@ -65,6 +65,14 @@ const JORNADA := {
 	"AUT": [40, "Arbeitszeitgesetz y convenios", "8 horas diarias y 40 semanales, por convenio colectivo.", true],
 	"GRE": [40, "Convenio colectivo nacional", "40 horas semanales y 8 diarias.", true],
 	"QAT": [48, "Ley del Trabajo n.º 14 de 2004", "48 horas semanales; en Ramadán se reducen 2 horas diarias.", true],
+	"SWE": [40, "Ley de jornada laboral (Arbetstidslagen)", "40 horas semanales como máximo.", true],
+	"NOR": [38, "Ley del entorno de trabajo", "37,5 horas semanales de media por convenio.", true],
+	"POL": [40, "Código del Trabajo", "8 horas diarias y 40 semanales de media.", true],
+	"CZE": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"ROU": [40, "Código del Trabajo", "8 horas diarias y 40 semanales.", true],
+	"SRB": [40, "Ley del Trabajo", "40 horas semanales.", true],
+	"UKR": [40, "Código del Trabajo", "40 horas semanales.", true],
+	"CHN": [40, "Ley del Trabajo", "8 horas diarias y 40 semanales por reglamento del Estado.", true],
 }
 
 ## Cambios de ley con fecha: [pais, anio, mes, dia, horas nuevas, texto].

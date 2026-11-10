@@ -1,0 +1,26 @@
+#seleccion=Ucrania
+#tier=0.6
+#globo=30.52,50.45
+#bandera=🇺🇦
+#confed=ucl,uel
+#liga=Premier-Lih4|Liga Ucraniana
+#copa=Copa de Ucrania|Copa de Ucrania
+#nombres=Oleksandr,Andriy,Serhiy,Dmytro,Mykola,Taras,Volodymyr,Artem,Maksym,Vitaliy,Ihor,Bohdan,Yaroslav,Roman
+#apellidos=Shevchenko,Kovalenko,Bondarenko,Tkachenko,Kovalchuk,Kravchenko,Oliynyk,Shevchuk,Polishchuk,Lysenko,Moroz,Marchenko,Savchenko,Melnyk
+real;ficticio;color1;color2;media;aforo;fundado;apodo;estadio;guiño
+Shakhtar Donetsk;Minero Naranja;#f26522;#000000;66;31000;1936;los Mineros;el estadio de la ciudad desplazada;El club minero que ganó la copa de la UEFA en 2009.
+Dynamo Kyiv;Dinamo Kiev;#ffffff;#1b458f;66;70000;1927;los Blancoazules;el estadio olímpico de la capital;El club de la capital que ganó dos Recopas de Europa.
+Metalist Kharkiv;Metalista Jarkov;#ffd100;#1b458f;56;40000;1925;los Metalistas;el estadio de la ciudad del este;El club del este con una grada enorme.
+Zorya Luhansk;Aurora Lugansk;#000000;#ffffff;57;22000;1923;los Aurora;el estadio de la ciudad desplazada;El club del este que sigue jugando lejos de casa.
+Dnipro-1;Dnipro Primero;#1b458f;#ffffff;56;31000;2019;los Azules;el estadio de la ciudad del río;El club de la ciudad del río Dniéper.
+Oleksandriya;Aleksandria;#00843d;#ffd100;54;7000;1948;los Verdiamarillos;el estadio de la ciudad pequeña;Un club de una ciudad pequeña del centro.
+Kryvbas Kryvyi Rih;Kryvbas Hierro;#c8102e;#ffffff;55;14000;1959;los del Hierro;el estadio de la ciudad del hierro;El club de la ciudad del hierro.
+Polissya Zhytomyr;Polissia Bosque;#00843d;#ffffff;54;6000;2007;los del Bosque;el estadio de la ciudad del bosque;El club de la región del bosque.
+Obolon Kyiv;Obolon Capital;#ffd100;#1b458f;53;5000;1992;los Cerveceros;el estadio del barrio de la capital;El club de un barrio de la capital.
+Veres Rivne;Veres Rovno;#00843d;#ffffff;52;5000;2007;los Verdes;el estadio de la ciudad del oeste;Un club de la ciudad del oeste.
+Kolos Kovalivka;Kolos Trigo;#ffd100;#00843d;53;5000;2012;los del Trigo;el estadio del pueblo cercano a la capital;Un club de pueblo cercano a la capital.
+LNZ Cherkasy;Lnz Cherkasi;#c8102e;#ffffff;52;4000;2015;los Rojos;el estadio de la ciudad del río;Un club joven de la ciudad del río.
+Rukh Lviv;Rukh Leopolis;#c8102e;#ffd100;53;28000;2006;los Rojiamarillos;el estadio de la ciudad del oeste;El club de la ciudad del oeste.
+Karpaty Lviv;Karpatos;#00843d;#ffffff;55;28000;1963;los Leones;el estadio de la ciudad del oeste;El club de los Cárpatos, con una hinchada enorme.
+Epicentr Kamianets-Podilskyi;Epicentro;#ffd100;#1b458f;54;5000;2022;los Amarillos;el estadio de la ciudad fortaleza;El club de la ciudad fortaleza.
+Livyi Bereh;Orilla Izquierda;#00843d;#ffd100;51;3000;2007;los Verdes;el estadio de la orilla izquierda;Un club de la orilla izquierda del río.

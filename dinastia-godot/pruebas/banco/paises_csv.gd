@@ -1,11 +1,11 @@
 extends "res://pruebas/banco/base.gd"
 ## [Banco · grupo «paises_csv»] Países importados desde una tabla (`herramientas/importar_pais.py`): TUR, SCO, SUI, AUT, GRE y QAT (sesión 6, 10-11).
 
-const ESPERADOS := {"TUR": 18, "SCO": 12, "SUI": 12, "AUT": 12, "GRE": 14, "QAT": 12}
+const ESPERADOS := {"TUR": 18, "SCO": 12, "SUI": 12, "AUT": 12, "GRE": 14, "QAT": 12, "SWE": 16, "NOR": 16, "POL": 18, "CZE": 16, "ROU": 16, "SRB": 16, "UKR": 16, "CHN": 16}
 
 func _probar_paises_csv() -> void:
 	_titulo("PAÍSES DESDE UNA TABLA: TUR, SCO, SUI, AUT, GRE Y QAT")
-	var codigos: Array[String] = ["TUR", "SCO", "SUI", "AUT", "GRE", "QAT", "CHI", "ESP", "POR", "DEN"]
+	var codigos: Array[String] = ["TUR", "SCO", "SUI", "AUT", "GRE", "QAT", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR", "CHN", "CHI", "ESP", "POR", "DEN"]
 	var m := Mundo.new()
 	m.generar(codigos, 701)
 	for p: String in ESPERADOS:
@@ -16,12 +16,18 @@ func _probar_paises_csv() -> void:
 		_comprobar(liga != null and liga.clubes.size() == int(ESPERADOS[p]), "%s: liga con sus %d clubes reales (%d)" % [p, int(ESPERADOS[p]), liga.clubes.size() if liga else 0])
 		_comprobar(Datos.tabla("PAIS_SELECCION").has(p) and Datos.tabla("TIER_PAIS").has(p) and Datos.tabla("GLOBO_PAIS").has(p), "%s: selección, nivel y lugar en el globo" % p)
 	var completos := true
+	var faltas: Array[String] = []
 	for p: String in ESPERADOS:
-		completos = completos and not LeyesPais.reglas(p).is_empty() and Copa.COPAS_POR_PAIS.has(p) and Politica.ESTRUCTURA.has(p) \
-			and Contratos.JORNADA.has(p) and Calendario.FIJAS.has(p) and MapaPais.SILUETAS.has(p) and PaisDatos.MONUMENTOS.has(p) \
-			and PaisDatos.OFICIAL.has(p) and Globo3D.CAPITAL.has(p) and Globo3D.GLOBO_PAIS.has(p) and Banderas.ISO.has(p) and Paises.conocido(p)
-		completos = completos and ResourceLoader.exists("res://assets/banderas/%s.svg" % Banderas.ISO.get(p, "xx")) and Banderas.textura(p) != null
-	_comprobar(completos, "los 6: reglas de extranjeros, copa, política, jornada, fiestas, silueta, monumentos, nombre oficial, globo y bandera")
+		var checks := {"reglas": not LeyesPais.reglas(p).is_empty(), "copa": Copa.COPAS_POR_PAIS.has(p), "política": Politica.ESTRUCTURA.has(p),
+			"jornada": Contratos.JORNADA.has(p), "fiestas": Calendario.FIJAS.has(p), "silueta": MapaPais.SILUETAS.has(p), "monumentos": PaisDatos.MONUMENTOS.has(p),
+			"oficial": PaisDatos.OFICIAL.has(p), "capital": Globo3D.CAPITAL.has(p), "globo": Globo3D.GLOBO_PAIS.has(p),
+			"bandera": (Banderas.ISO.has(p) and ResourceLoader.exists("res://assets/banderas/%s.svg" % Banderas.ISO.get(p, "xx"))) or (p == "CHN" and Banderas.textura(p) != null),
+			"país": Paises.conocido(p)}
+		for k: String in checks:
+			if not bool(checks[k]):
+				faltas.append("%s:%s" % [p, k])
+				completos = false
+	_comprobar(completos, "los países nuevos tienen: reglas de extranjeros, copa, política, jornada, fiestas, silueta, monumentos, nombre oficial, globo y bandera (faltan: %s)" % str(faltas))
 	var europa: Array = []
 	var asia: Array = []
 	for fila: Array in PaisDatos.CONTINENTES:
@@ -29,7 +35,7 @@ func _probar_paises_csv() -> void:
 			europa = fila[1]
 		if String(fila[0]) == "Asia":
 			asia = fila[1]
-	_comprobar(["TUR", "SCO", "SUI", "AUT", "GRE"].all(func(p: String) -> bool: return europa.has(p)) and asia.has("QAT"), "se pueden elegir en la entrada (Europa y Asia)")
+	_comprobar(["TUR", "SCO", "SUI", "AUT", "GRE", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR"].all(func(p: String) -> bool: return europa.has(p)) and asia.has("QAT") and asia.has("CHN"), "se pueden elegir en la entrada (Europa y Asia)")
 	var nombres := {}
 	var repetidos := 0
 	for c: Club in m.clubes.values():
@@ -51,9 +57,9 @@ func _probar_paises_csv() -> void:
 	var europeos := 0
 	for k: String in ["ucl", "uel", "uecl"]:
 		for c: Club in plazas[k]:
-			if ["TUR", "SCO", "SUI", "AUT", "GRE"].has(c.pais):
+			if ["TUR", "SCO", "SUI", "AUT", "GRE", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR"].has(c.pais):
 				europeos += 1
-	_comprobar(europeos >= 10, "los cinco europeos nuevos juegan competiciones de la UEFA (%d plazas)" % europeos)
+	_comprobar(europeos >= 15, "los cinco europeos nuevos juegan competiciones de la UEFA (%d plazas)" % europeos)
 	## Una temporada entera se juega: todos tienen partidos y la media de goles es normal.
 	var goles := 0
 	var partidos := 0

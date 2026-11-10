@@ -24,6 +24,7 @@ const NOMBRE := {
 	"MAR": "Marruecos", "RSA": "Sudáfrica", "AUS": "Australia", "MEX": "México", "USA": "Estados Unidos",
 	"POR": "Portugal", "NED": "Holanda", "BEL": "Bélgica", "CRO": "Croacia", "DEN": "Dinamarca",
 	"TUR": "Turquía", "SCO": "Escocia", "SUI": "Suiza", "AUT": "Austria", "GRE": "Grecia", "QAT": "Catar",
+	"SWE": "Suecia", "NOR": "Noruega", "POL": "Polonia", "CZE": "Chequia", "ROU": "Rumanía", "SRB": "Serbia", "UKR": "Ucrania", "CHN": "China",
 }
 
 const OFICIAL := {
@@ -40,14 +41,16 @@ const OFICIAL := {
 	"CRO": "República de Croacia", "DEN": "Reino de Dinamarca",
 	"TUR": "República de Türkiye", "SCO": "Escocia, Reino Unido", "SUI": "Confederación Suiza", "AUT": "República de Austria",
 	"GRE": "República Helénica", "QAT": "Estado de Catar",
+	"SWE": "Reino de Suecia", "NOR": "Reino de Noruega", "POL": "República de Polonia", "CZE": "República Checa", "ROU": "Rumanía",
+	"SRB": "República de Serbia", "UKR": "Ucrania", "CHN": "República Popular China",
 }
 
 ## El orden de la lista: por continente, y dentro de cada uno como los ordena el juego.
 const CONTINENTES := [
 	["Sudamérica", ["CHI", "ARG", "BRA", "URU", "PAR", "BOL", "PER", "ECU", "COL", "VEN"]],
-	["Europa", ["ESP", "ENG", "ITA", "GER", "FRA", "POR", "NED", "BEL", "CRO", "DEN", "TUR", "SCO", "SUI", "AUT", "GRE"]],
+	["Europa", ["ESP", "ENG", "ITA", "GER", "FRA", "POR", "NED", "BEL", "CRO", "DEN", "TUR", "SCO", "SUI", "AUT", "GRE", "SWE", "NOR", "POL", "CZE", "ROU", "SRB", "UKR"]],
 	["Norteamérica", ["MEX", "USA"]],
-	["Asia", ["JPN", "KOR", "KSA", "QAT"]],
+	["Asia", ["JPN", "KOR", "KSA", "QAT", "CHN"]],
 	["África", ["EGY", "MAR", "RSA"]],
 	["Oceanía", ["AUS"]],
 ]
@@ -146,6 +149,22 @@ const MONUMENTOS := {
 		["Torre de los Vientos", "torre_reloj", ""], ["Murallas de Rodas", "muralla", "puerta"]],
 	"QAT": [["Torre Aspire", "torre_reloj", ""], ["Puente de la Corniche", "puente", "atirantado"], ["Faro de la bahía de Doha", "faro", ""],
 		["Fuerte de Zubarah", "muralla", "puerta"], ["Museo de Arte Islámico", "castillo", "holsten"]],
+	"SWE": [["Palacio Real", "castillo", "holsten"], ["Puente de Öresund", "puente", "atirantado"], ["Torre Kaknäs", "torre_tv", "aguja"],
+		["Faro de Landsort", "faro", ""], ["Ayuntamiento de Estocolmo", "torre_reloj", ""]],
+	"NOR": [["Ayuntamiento de Oslo", "torre_reloj", ""], ["Puente de Hardanger", "puente", "colgante"], ["Catarata Vøringsfossen", "catarata", "ancha"],
+		["Fortaleza de Akershus", "castillo", "fortaleza"], ["Faro de Lindesnes", "faro", ""]],
+	"POL": [["Castillo de Wawel", "castillo", "fortaleza"], ["Palacio de Cultura", "rascacielos", "escalonado"], ["Torre del Ayuntamiento de Gdansk", "torre_reloj", ""],
+		["Barbacana de Varsovia", "muralla", "puerta"], ["Puente Siekierkowski", "puente", "atirantado"]],
+	"CZE": [["Castillo de Praga", "castillo", "fortaleza"], ["Puente de Carlos", "puente", "arco"], ["Reloj Astronómico", "torre_reloj", "puerta"],
+		["Torre de Žižkov", "torre_tv", "disco"], ["Castillo de Karlštejn", "castillo", "fortaleza"]],
+	"ROU": [["Palacio del Parlamento", "cupula", "palacio"], ["Castillo de Bran", "castillo", "fortaleza"], ["Puente de Cernavodă", "puente", "arco"],
+		["Torre del Reloj de Sighișoara", "torre_reloj", "puerta"], ["Faro de Constanța", "faro", ""]],
+	"SRB": [["Fortaleza de Belgrado", "castillo", "fortaleza"], ["Templo de San Sava", "cupula", "palacio"], ["Puente de Branko", "puente", "atirantado"],
+		["Puente de Žeželj", "puente", "colgante"], ["Torre de Gardoš", "torre_reloj", ""]],
+	"UKR": [["Catedral de Santa Sofía", "cupula", "palacio"], ["Estatua de la Patria", "estatua", "columna"], ["Puerta Dorada", "muralla", "puerta"],
+		["Castillo de Lviv", "castillo", "fortaleza"], ["Puente Paton", "puente", "arco"]],
+	"CHN": [["Gran Muralla", "muralla", "puerta"], ["Torre del Tambor", "torre_reloj", "puerta"], ["Torre de la Perla Oriental", "torre_tv", "bola"],
+		["Ciudad Prohibida", "castillo", "fortaleza"], ["Puente de Danyang-Kunshan", "puente", "atirantado"]],
 }
 
 ## Todos los países que se pueden ver en el globo, en el orden de la lista.

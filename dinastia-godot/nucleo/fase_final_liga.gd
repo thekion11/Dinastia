@@ -23,6 +23,12 @@ const PAISES := {
 	## Grecia (14 clubes, 26 fechas): play-offs de campeonato (4) y de Europa (4) y play-outs del descenso (6), todos a ida y vuelta y con la mitad de los puntos.
 	"GRE": {"tipo": "grupos", "min": 12, "vueltas": 2, "mitad": true, "g": [[4, 2], [4, 2], [6, 2]],
 		"nombres": ["Play-offs de campeonato", "Play-offs de Europa", "Play-outs del descenso"]},
+	## República Checa (16 clubes, 30 fechas): grupos de campeonato (6), de Europa (4) y de descenso (6), una vuelta y puntos enteros.
+	"CZE": {"tipo": "grupos", "min": 12, "vueltas": 2, "g": [[6, 1], [4, 1], [6, 1]], "nombres": ["Grupo del campeonato", "Play-offs de Europa", "Grupo del descenso"]},
+	## Rumanía (16 clubes, 30 fechas): play-off de campeonato (6) y play-out (10), una vuelta (en la real, 10 fechas el primero) y la mitad de los puntos.
+	"ROU": {"tipo": "grupos", "min": 12, "vueltas": 2, "mitad": true, "g": [[6, 1], [10, 1]], "nombres": ["Play-offs de campeonato", "Play-outs del descenso"]},
+	## Serbia (16 clubes, 30 fechas): grupo del campeonato (8) y del descenso (8), una vuelta (7 fechas) y puntos enteros.
+	"SRB": {"tipo": "grupos", "min": 12, "vueltas": 2, "g": [[8, 1], [8, 1]]},
 	"SCO": {"tipo": "grupos", "min": 10, "vueltas": 3, "na": 6, "va": 1, "vb": 1},
 	"DEN": {"tipo": "grupos", "min": 10, "vueltas": 2, "na": 6, "va": 2, "vb": 2},
 	"SUI": {"tipo": "grupos", "min": 10, "vueltas": 3, "na": 6, "va": 1, "vb": 1},
