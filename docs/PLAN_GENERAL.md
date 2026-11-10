@@ -12,7 +12,6 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 > 2. **EVENTOS A PANTALLA COMPLETA:** homenaje en 3D (el aviso y el homenaje ya están en main, solo al llegar a la fecha).
 > 3. **PRÓLOGO:** arte final de la animación fija (primer corte en main, sin sonido ni arte final). IDEA a medir: prólogo como vídeo ya hecho que el juego proyecta, para ver si suben los FPS (fuera del repo; medir antes y después).
 > 4. **CASA DEL PERSONAJE** sin ciudad.
-> 5. **AVANCE DE FECHA** con eventos y varias semanas (estilo PES).
 > 6. **PLANTILLA:** mapa de calor y habilidades individuales con estrellas.
 > 7. **REESTRUCTURACIÓN «SOLO CLUB»** (paso 2): reparar el club (muebles, colisiones, parpadeo del suelo del despacho). Paso 3: medir sin ciudad con `herramientas/hw_modesto.sh`. Paso 4: decidir C/C++ solo con medidas.
 > 8. Revisar en el edificio real que las camisetas retiradas se ven en las plantas altas.
@@ -66,7 +65,6 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 2. **EVENTOS A PANTALLA COMPLETA solo al llegar a su fecha.** Hecho: aviso del partido de despedida y homenaje (ya en main, `EventoPantallaCompleta`). FALTA: el homenaje en 3D (y que lo nuevo herede del marco base).
 3. **ANIMACIÓN FIJA DEL PRÓLOGO, saltable.** Primer corte en main (`PrologoAnimado`, 6 planos, sin vídeo, barra de fases arriba y salto con Esc/mando/stick). FALTA: arte final, sonido y más texto por plano.
 4. **CASA DEL PERSONAJE SIN CIUDAD.** Hoy la casa caminable vive en el mundo 3D de la ciudad (`CasaEscena3D`, `ui/casa_escena3d.gd`; menú Vida → «Ver tu casa»).
-5. **AVANCE DE FECHA con eventos y varias semanas** (estilo PES 2020). Hecho: botón «Hito» y fila «PRÓXIMOS» con los escudos de los 5 siguientes partidos. FALTA: eventos en esa fila (mercado, copa, continental, fin de temporada) y varias semanas.
 6. **MAPA DE CALOR y HABILIDADES con estrellas de la plantilla** (como la «Información del jugador» del PES). Hecho: estilo de juego con estrellas. FALTA: mapa de calor por jugador y habilidades individuales (regate en profundidad, etc.).
 
 7. **IDEA (por evaluar): el prólogo como VÍDEO ya hecho que el juego proyecta**, en lugar de la animación dibujada por el motor (`PrologoAnimado`), para ver si así mejoran los FPS. Antes de decidir hay que MEDIR los FPS (y llamadas de dibujo, RAM) con la animación actual y con el vídeo (`herramientas/hw_modesto.sh`). Reglas: la regla del proyecto NO permite `.mp4` (ni `.avi`) en el repositorio, así que el vídeo tendría que vivir FUERA del repo (junto al ejecutable o en `user://`, como `caras_reales.pck`; o descargarse aparte) y el juego caer a la animación del motor si no lo encuentra; además Godot reproduce `.ogv` (Theora) de forma nativa, no `.mp4` (el formato se decide con la medición). Hoy ningún código del juego reproduce vídeo y ya hay 3 `.mp4` rastreados en `marca/` (pendiente de decisión del dueño).
@@ -78,6 +76,7 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 
 ## PULIDO (lo ya completo que se pule después; nada se borra, se afina)
 - Plantilla a la PES (`PlantillaPes`, `PlantillaEstilos`, `GestionOnce`) y fila «PRÓXIMOS» (`FilaProximos`): aspecto (la lleva la sesión de estética).
+- Avance de fecha con eventos (`EventosFecha`: liga, copa, continental, mercado, fin de temporada; `TarjetaEvento`, `CalendarioSemanas` de 6 semanas con botón 📅, «Hito» que para en cada evento): pulir aspecto (tarjetas de rondas futuras «probables», más detalle por día, mando) y comparar con el calendario del PES.
 - Camisetas retiradas (Historia del club y museo del estadio, `CamisetasRetiradas`, `CamisetasMuseo`): más variedad de camiseta y foco en el museo.
 - Capítulos de cada temporada (`CapitulosTemporadas`): comparar ritmo y planos con el PES.
 - Ascensor con viaje gradual (`AscensorViaje`) y puertas con marco (`PuertasClub`): animación de apertura de puertas y ascensor, muebles de las salas vacías, colisiones persona-objeto, suelo liso.

@@ -7610,7 +7610,14 @@
   "El despacho del presidente": "The president's office",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Here deals are signed and people are dismissed. The board is watching you.",
   "Tu oficina": "Your office",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "You manage everything from your PC. Time to begin."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "You manage everything from your PC. Time to begin.",
+  "Abre el mercado de fichajes": "Transfer market opens",
+  "Cierra el mercado de fichajes": "Transfer market closes",
+  "Fin de temporada": "End of season",
+  "Próximas semanas": "Coming weeks",
+  "Si sigues en el torneo": "If you are still in the tournament",
+  "Ver las próximas semanas": "See the coming weeks",
+  "Ronda": "Round"
  },
  "pt": {
   "Historia": "História",
@@ -15223,7 +15230,14 @@
   "El despacho del presidente": "O gabinete do presidente",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Aqui assina-se e aqui despede-se. A direção está a olhar para ti.",
   "Tu oficina": "O teu escritório",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Do teu PC geres tudo. É hora de começar."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Do teu PC geres tudo. É hora de começar.",
+  "Abre el mercado de fichajes": "Abre o mercado de transferências",
+  "Cierra el mercado de fichajes": "Fecha o mercado de transferências",
+  "Fin de temporada": "Fim da temporada",
+  "Próximas semanas": "Próximas semanas",
+  "Si sigues en el torneo": "Se continuares no torneio",
+  "Ver las próximas semanas": "Ver as próximas semanas",
+  "Ronda": "Ronda"
  },
  "patrones": [
   [
@@ -28811,7 +28825,14 @@
   "El despacho del presidente": "Le bureau du président",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Ici on signe et ici on licencie. Le conseil t'observe.",
   "Tu oficina": "Ton bureau",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "De ton PC, tu gères tout. Il est temps de commencer."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "De ton PC, tu gères tout. Il est temps de commencer.",
+  "Abre el mercado de fichajes": "Ouverture du marché des transferts",
+  "Cierra el mercado de fichajes": "Fermeture du marché des transferts",
+  "Fin de temporada": "Fin de saison",
+  "Próximas semanas": "Semaines à venir",
+  "Si sigues en el torneo": "Si tu es toujours dans le tournoi",
+  "Ver las próximas semanas": "Voir les semaines à venir",
+  "Ronda": "Tour"
  },
  "it": {
   "Historia": "Storia",
@@ -36424,7 +36445,14 @@
   "El despacho del presidente": "L'ufficio del presidente",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Qui si firma e qui si licenzia. Il consiglio ti guarda.",
   "Tu oficina": "Il tuo ufficio",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Dal tuo PC gestisci tutto. È ora di iniziare."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Dal tuo PC gestisci tutto. È ora di iniziare.",
+  "Abre el mercado de fichajes": "Apre il calciomercato",
+  "Cierra el mercado de fichajes": "Chiude il calciomercato",
+  "Fin de temporada": "Fine stagione",
+  "Próximas semanas": "Prossime settimane",
+  "Si sigues en el torneo": "Se sei ancora nel torneo",
+  "Ver las próximas semanas": "Vedi le prossime settimane",
+  "Ronda": "Turno"
  },
  "de": {
   "Historia": "Geschichte",
@@ -44037,7 +44065,14 @@
   "El despacho del presidente": "Das Büro des Präsidenten",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Hier wird unterschrieben und hier wird entlassen. Der Vorstand beobachtet dich.",
   "Tu oficina": "Dein Büro",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Von deinem PC aus verwaltest du alles. Zeit anzufangen."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Von deinem PC aus verwaltest du alles. Zeit anzufangen.",
+  "Abre el mercado de fichajes": "Der Transfermarkt öffnet",
+  "Cierra el mercado de fichajes": "Der Transfermarkt schließt",
+  "Fin de temporada": "Saisonende",
+  "Próximas semanas": "Kommende Wochen",
+  "Si sigues en el torneo": "Falls du noch im Turnier bist",
+  "Ver las próximas semanas": "Kommende Wochen ansehen",
+  "Ronda": "Runde"
  },
  "ca": {
   "Historia": "Història",
@@ -51650,7 +51685,14 @@
   "El despacho del presidente": "El despatx del president",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Aquí se signa i aquí s'acomiada. La directiva et mira.",
   "Tu oficina": "El teu despatx",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Des del teu PC ho gestiones tot. És hora de començar."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Des del teu PC ho gestiones tot. És hora de començar.",
+  "Abre el mercado de fichajes": "Obre el mercat de fitxatges",
+  "Cierra el mercado de fichajes": "Tanca el mercat de fitxatges",
+  "Fin de temporada": "Final de temporada",
+  "Próximas semanas": "Properes setmanes",
+  "Si sigues en el torneo": "Si continues al torneig",
+  "Ver las próximas semanas": "Veure les properes setmanes",
+  "Ronda": "Ronda"
  },
  "pl": {
   "Club": "Klub",
@@ -59263,7 +59305,14 @@
   "El despacho del presidente": "Gabinet prezesa",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Tu się podpisuje i tu się zwalnia. Zarząd cię obserwuje.",
   "Tu oficina": "Twoje biuro",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Z komputera zarządzasz wszystkim. Czas zaczynać."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Z komputera zarządzasz wszystkim. Czas zaczynać.",
+  "Abre el mercado de fichajes": "Otwarcie okna transferowego",
+  "Cierra el mercado de fichajes": "Zamknięcie okna transferowego",
+  "Fin de temporada": "Koniec sezonu",
+  "Próximas semanas": "Najbliższe tygodnie",
+  "Si sigues en el torneo": "Jeśli nadal grasz w turnieju",
+  "Ver las próximas semanas": "Zobacz najbliższe tygodnie",
+  "Ronda": "Runda"
  },
  "tr": {
   "Club": "Kulüp",
@@ -66876,6 +66925,13 @@
   "El despacho del presidente": "Başkanın ofisi",
   "Aquí se firma y aquí se despide. La directiva te mira.": "Burada imza atılır, burada işten çıkarılır. Yönetim seni izliyor.",
   "Tu oficina": "Ofisin",
-  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Her şeyi bilgisayarından yönetirsin. Başlama zamanı."
+  "Desde tu PC lo gestionas todo. Es hora de empezar.": "Her şeyi bilgisayarından yönetirsin. Başlama zamanı.",
+  "Abre el mercado de fichajes": "Transfer dönemi açılıyor",
+  "Cierra el mercado de fichajes": "Transfer dönemi kapanıyor",
+  "Fin de temporada": "Sezon sonu",
+  "Próximas semanas": "Önümüzdeki haftalar",
+  "Si sigues en el torneo": "Turnuvada kalırsan",
+  "Ver las próximas semanas": "Önümüzdeki haftaları gör",
+  "Ronda": "Tur"
  }
 }
