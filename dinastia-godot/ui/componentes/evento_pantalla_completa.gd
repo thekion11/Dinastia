@@ -8,6 +8,10 @@ signal terminado
 
 var _centro: VBoxContainer
 var _raiz: Control
+## (10-11) PALETA NOCHE (el dueño permite variar el verde con dorado): azul noche y blanco, con `acento` (el color del club) en los filetes.
+## La usan los eventos con diálogo (`EventoDialogo`); la despedida conserva la verde.
+var paleta_noche := false
+var acento := Color("4f8ff7")
 
 func _init() -> void:
 	layer = 58
@@ -21,11 +25,11 @@ func _montar_base(pr: Node) -> void:
 	add_child(_raiz)
 	var fondo := ColorRect.new()
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	fondo.color = Tema.FONDO
+	fondo.color = SelectorDireccional.NOCHE if paleta_noche else Tema.FONDO
 	_raiz.add_child(fondo)
 	var grad := Gradient.new()
-	grad.set_color(0, Color(0.10, 0.20, 0.13, 1.0))
-	grad.set_color(1, Color(0.03, 0.06, 0.04, 1.0))
+	grad.set_color(0, Color(0.11, 0.17, 0.29, 1.0) if paleta_noche else Color(0.10, 0.20, 0.13, 1.0))
+	grad.set_color(1, Color(0.02, 0.035, 0.07, 1.0) if paleta_noche else Color(0.03, 0.06, 0.04, 1.0))
 	var gt := GradientTexture2D.new()
 	gt.gradient = grad
 	gt.fill = GradientTexture2D.FILL_RADIAL
@@ -40,7 +44,7 @@ func _montar_base(pr: Node) -> void:
 	_raiz.add_child(luz)
 	for arriba: bool in [true, false]:   ## los dos filetes dorados
 		var f := ColorRect.new()
-		f.color = Tema.ORO
+		f.color = acento if paleta_noche else Tema.ORO
 		f.set_anchors_preset(Control.PRESET_TOP_WIDE if arriba else Control.PRESET_BOTTOM_WIDE)
 		f.offset_top = 36 if arriba else -40
 		f.offset_bottom = 38 if arriba else -38
