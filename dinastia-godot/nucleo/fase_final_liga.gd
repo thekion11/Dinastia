@@ -17,7 +17,12 @@ extends RefCounted
 ## indicadas: Bélgica juega 10 fechas en los play-offs (aquí 5, para no pasar de 38 semanas) y no se juegan sus play-offs de Europa.
 const PAISES := {
 	"EGY": {"tipo": "grupos", "min": 12, "vueltas": 1, "na": 7, "va": 2, "vb": 1},
-	"BEL": {"tipo": "grupos", "min": 12, "vueltas": 2, "na": 6, "va": 1, "vb": 0, "mitad": true},
+	## Bélgica (16 clubes, 30 fechas): play-offs de campeonato (6, una vuelta en vez de las 10 fechas reales) y de Europa (4, ida y vuelta); el resto no juega más.
+	"BEL": {"tipo": "grupos", "min": 12, "vueltas": 2, "mitad": true, "g": [[6, 1], [4, 2], [6, 0]],
+		"nombres": ["Play-offs de campeonato", "Play-offs de Europa", "Resto de la liga"]},
+	## Grecia (14 clubes, 26 fechas): play-offs de campeonato (4) y de Europa (4) y play-outs del descenso (6), todos a ida y vuelta y con la mitad de los puntos.
+	"GRE": {"tipo": "grupos", "min": 12, "vueltas": 2, "mitad": true, "g": [[4, 2], [4, 2], [6, 2]],
+		"nombres": ["Play-offs de campeonato", "Play-offs de Europa", "Play-outs del descenso"]},
 	"SCO": {"tipo": "grupos", "min": 10, "vueltas": 3, "na": 6, "va": 1, "vb": 1},
 	"DEN": {"tipo": "grupos", "min": 10, "vueltas": 2, "na": 6, "va": 2, "vb": 2},
 	"SUI": {"tipo": "grupos", "min": 10, "vueltas": 3, "na": 6, "va": 1, "vb": 1},
@@ -97,29 +102,50 @@ func armar(l: Liga) -> Array:
 	if tipo == "grupos":
 		var r1 := Liga.rondas(l.clubes)
 		cal = _repetir(r1, int(cfg["vueltas"]))
-		var na := _tam_grupo(l.clubes.size())
-		extra = maxi(int(cfg["va"]) * _rr(na), int(cfg["vb"]) * _rr(l.clubes.size() - na))
+		extra = 0
+		var tams := _tamanos(l.clubes.size())
+		for i in tams.size():
+			extra = maxi(extra, int(_grupos_cfg()[i][1]) * _rr(int(tams[i])))
 	else:
 		var m := _mitades(l)
 		var ra := Liga.rondas(m[0])
 		var rb := Liga.rondas(m[1])
 		cal = _unir(ra, rb)
 		if tipo == "zonas":
-			var inter: Array = []
-			for i in mini((m[0] as Array).size(), (m[1] as Array).size()):
-				inter.append([m[0][i], m[1][i]] if i % 2 == 0 else [m[1][i], m[0][i]])
-			cal.append(inter)
+			cal.append(_interzonal(m))
 			extra = SLOTS_ZONAS.size()
 		else:
 			cal += _unir(_vuelta(ra), _vuelta(rb))
+			cal.append(_interzonal(m))   ## una fecha interconferencia (en la MLS real son 6 por club; más no cabe en 38 semanas)
 			extra = SLOTS_CONF.size()
 	f1 = cal.size()
 	for i in extra:
 		cal.append([])
 	return cal
 
-func _tam_grupo(n: int) -> int:
-	return clampi(int(cfg["na"]), 2, n - 1)
+## Los grupos de la fase final: [[tamaño, vueltas]…]; el último se lleva el resto de los clubes (el tamaño que se escribe en él no cuenta).
+func _interzonal(m: Array) -> Array:
+	var inter: Array = []
+	for i in mini((m[0] as Array).size(), (m[1] as Array).size()):
+		inter.append([m[0][i], m[1][i]] if i % 2 == 0 else [m[1][i], m[0][i]])
+	return inter
+
+func _grupos_cfg() -> Array:
+	return cfg["g"] if cfg.has("g") else [[int(cfg["na"]), int(cfg["va"])], [0, int(cfg["vb"])]]
+
+func _tamanos(n: int) -> Array:
+	var g := _grupos_cfg()
+	var sal: Array = []
+	var resto := n
+	for i in g.size() - 1:
+		var t := clampi(int(g[i][0]), 2, resto - 2)
+		sal.append(t)
+		resto -= t
+	sal.append(resto)
+	return sal
+
+func _nombres_grupos() -> Array:
+	return cfg.get("nombres", ["Grupo del campeonato", "Grupo del descenso"])
 
 ## `veces` vueltas de las mismas rondas, alternando el campo (ida, vuelta, ida…).
 static func _repetir(r: Array, veces: int) -> Array:
@@ -156,11 +182,17 @@ func _iniciar(l: Liga) -> void:
 	var reg := _ids(l)
 	estado["reg"] = reg
 	if tipo == "grupos":
-		var na := _tam_grupo(reg.size())
-		estado["grupos"] = [reg.slice(0, na), reg.slice(na)]
+		var grupos: Array = []
+		var desde := 0
+		for t: int in _tamanos(reg.size()):
+			grupos.append(reg.slice(desde, desde + t))
+			desde += t
+		estado["grupos"] = grupos
 		if cfg.get("mitad", false):
-			for id: String in reg.slice(0, na):
-				l.tabla_puntos[id]["pts"] = (int(l.tabla_puntos[id]["pts"]) + 1) / 2
+			for k in grupos.size():
+				if int(_grupos_cfg()[k][1]) > 0:
+					for id: String in grupos[k]:
+						l.tabla_puntos[id]["pts"] = (int(l.tabla_puntos[id]["pts"]) + 1) / 2
 		_llenar_grupos(l)
 		return
 	estado["rondas"] = []
@@ -181,13 +213,13 @@ func _iniciar(l: Liga) -> void:
 
 func _llenar_grupos(l: Liga) -> void:
 	var g: Array = estado["grupos"]
-	var a: Array[Club] = []
-	var b: Array[Club] = []
-	for id: String in g[0]:
-		a.append(_club(l, id))
-	for id: String in g[1]:
-		b.append(_club(l, id))
-	var fusion := _unir(_repetir(Liga.rondas(a), int(cfg["va"])), _repetir(Liga.rondas(b), int(cfg["vb"])) if b.size() > 1 else [])
+	var fusion: Array = []
+	for k in g.size():
+		var club_g: Array[Club] = []
+		for id: String in g[k]:
+			club_g.append(_club(l, id))
+		var vueltas := int(_grupos_cfg()[k][1])
+		fusion = _unir(fusion, _repetir(Liga.rondas(club_g), vueltas) if vueltas > 0 and club_g.size() > 1 else [])
 	for i in extra:
 		l.calendario[f1 + i] = fusion[i] if i < fusion.size() else []
 
@@ -331,8 +363,8 @@ func secciones(l: Liga) -> Array:
 	if tipo == "grupos":
 		if not estado.has("grupos"):
 			return sal
-		var nombres := ["Grupo del campeonato", "Grupo del descenso"]
-		for i in 2:
+		var nombres := _nombres_grupos()
+		for i in (estado["grupos"] as Array).size():
 			var filas: Array = []
 			for fila: Dictionary in l.tabla():
 				if (estado["grupos"][i] as Array).has((fila["club"] as Club).id):

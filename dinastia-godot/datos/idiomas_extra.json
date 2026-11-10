@@ -7825,7 +7825,11 @@
   "FASE FINAL": "FINAL STAGE",
   "Grupo del campeonato": "Championship group",
   "Grupo del descenso": "Relegation group",
-  "Se define al terminar la fase regular.": "It is decided when the regular phase ends."
+  "Se define al terminar la fase regular.": "It is decided when the regular phase ends.",
+  "Play-offs de campeonato": "Championship play-offs",
+  "Play-offs de Europa": "Europe play-offs",
+  "Play-outs del descenso": "Relegation play-outs",
+  "Resto de la liga": "Rest of the league"
  },
  "pt": {
   "Historia": "História",
@@ -15653,7 +15657,11 @@
   "FASE FINAL": "FASE FINAL",
   "Grupo del campeonato": "Grupo do campeonato",
   "Grupo del descenso": "Grupo do descenso",
-  "Se define al terminar la fase regular.": "Define-se quando a fase regular termina."
+  "Se define al terminar la fase regular.": "Define-se quando a fase regular termina.",
+  "Play-offs de campeonato": "Play-offs do campeonato",
+  "Play-offs de Europa": "Play-offs da Europa",
+  "Play-outs del descenso": "Play-outs do descenso",
+  "Resto de la liga": "Resto da liga"
  },
  "patrones": [
   [
@@ -29588,7 +29596,11 @@
   "FASE FINAL": "PHASE FINALE",
   "Grupo del campeonato": "Groupe du championnat",
   "Grupo del descenso": "Groupe de la relégation",
-  "Se define al terminar la fase regular.": "Elle se décide à la fin de la phase régulière."
+  "Se define al terminar la fase regular.": "Elle se décide à la fin de la phase régulière.",
+  "Play-offs de campeonato": "Play-offs du championnat",
+  "Play-offs de Europa": "Play-offs européens",
+  "Play-outs del descenso": "Play-outs de la relégation",
+  "Resto de la liga": "Reste du championnat"
  },
  "it": {
   "Historia": "Storia",
@@ -37416,7 +37428,11 @@
   "FASE FINAL": "FASE FINALE",
   "Grupo del campeonato": "Gruppo del campionato",
   "Grupo del descenso": "Gruppo della retrocessione",
-  "Se define al terminar la fase regular.": "Si definisce al termine della fase regolare."
+  "Se define al terminar la fase regular.": "Si definisce al termine della fase regolare.",
+  "Play-offs de campeonato": "Play-off per il campionato",
+  "Play-offs de Europa": "Play-off per l'Europa",
+  "Play-outs del descenso": "Play-out per la retrocessione",
+  "Resto de la liga": "Resto della lega"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45244,7 +45260,11 @@
   "FASE FINAL": "FINALPHASE",
   "Grupo del campeonato": "Meistergruppe",
   "Grupo del descenso": "Abstiegsgruppe",
-  "Se define al terminar la fase regular.": "Wird nach der regulären Phase festgelegt."
+  "Se define al terminar la fase regular.": "Wird nach der regulären Phase festgelegt.",
+  "Play-offs de campeonato": "Meister-Play-offs",
+  "Play-offs de Europa": "Europa-Play-offs",
+  "Play-outs del descenso": "Abstiegs-Play-outs",
+  "Resto de la liga": "Rest der Liga"
  },
  "ca": {
   "Historia": "Història",
@@ -53072,7 +53092,11 @@
   "FASE FINAL": "FASE FINAL",
   "Grupo del campeonato": "Grup del campionat",
   "Grupo del descenso": "Grup del descens",
-  "Se define al terminar la fase regular.": "Es defineix quan acaba la fase regular."
+  "Se define al terminar la fase regular.": "Es defineix quan acaba la fase regular.",
+  "Play-offs de campeonato": "Play-offs del campionat",
+  "Play-offs de Europa": "Play-offs d'Europa",
+  "Play-outs del descenso": "Play-outs del descens",
+  "Resto de la liga": "Resta de la lliga"
  },
  "pl": {
   "Club": "Klub",
@@ -60900,7 +60924,11 @@
   "FASE FINAL": "FAZA FINAŁOWA",
   "Grupo del campeonato": "Grupa mistrzowska",
   "Grupo del descenso": "Grupa spadkowa",
-  "Se define al terminar la fase regular.": "Zostanie ustalona po zakończeniu fazy zasadniczej."
+  "Se define al terminar la fase regular.": "Zostanie ustalona po zakończeniu fazy zasadniczej.",
+  "Play-offs de campeonato": "Play-offy o mistrzostwo",
+  "Play-offs de Europa": "Play-offy o Europę",
+  "Play-outs del descenso": "Play-outy o utrzymanie",
+  "Resto de la liga": "Reszta ligi"
  },
  "tr": {
   "Club": "Kulüp",
@@ -68728,6 +68756,10 @@
   "FASE FINAL": "FİNAL AŞAMASI",
   "Grupo del campeonato": "Şampiyonluk grubu",
   "Grupo del descenso": "Küme düşme grubu",
-  "Se define al terminar la fase regular.": "Normal etap bittiğinde belli olur."
+  "Se define al terminar la fase regular.": "Normal etap bittiğinde belli olur.",
+  "Play-offs de campeonato": "Şampiyonluk play-off'ları",
+  "Play-offs de Europa": "Avrupa play-off'ları",
+  "Play-outs del descenso": "Küme düşme play-out'ları",
+  "Resto de la liga": "Ligin geri kalanı"
  }
 }
