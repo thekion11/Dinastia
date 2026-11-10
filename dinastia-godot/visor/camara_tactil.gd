@@ -36,3 +36,17 @@ static func peso_balon(pj: Node, motor: MotorJugable) -> float:
 	if not cercana(pj):
 		return 0.35
 	return lerpf(PESO_CERCA, PESO_LEJOS, lejania(motor))
+
+## VERTICAL (10-11, sesión 8): con el alto fijo (58°) un lienzo de pie ve un abanico de ~28° de ancho y los compañeros de los lados quedan fuera. De pie se fija el ANCHO:
+## `FOV_ANCHO_VERTICAL` grados a lo ancho, y el alto sale solo del formato (la cancha se ve hacia delante y hacia atrás, que es lo que un teléfono de pie tiene de sobra).
+const FOV_ANCHO_VERTICAL := 52.0
+const FOV_ALTO_NORMAL := 58.0
+
+static func adaptar(pj: Node, cam: Camera3D, lienzo: Vector2) -> void:
+	if cam == null or lienzo.x <= 0.0:
+		return
+	var de_pie := lienzo.y > lienzo.x * 1.1 and HudTactil.activo(pj)
+	var ka := Camera3D.KEEP_WIDTH if de_pie else Camera3D.KEEP_HEIGHT
+	if cam.keep_aspect != ka:
+		cam.keep_aspect = ka
+		cam.fov = FOV_ANCHO_VERTICAL if de_pie else FOV_ALTO_NORMAL

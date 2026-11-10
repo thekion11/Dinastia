@@ -25,6 +25,13 @@ const BOTONES := {
 }
 ## Etiqueta de cada botón según tengas o no el balón (4-11-2026; mismas acciones que `Mando.CON_BALON` / `Mando.SIN_BALON`): [con balón, sin balón]. «Al hueco» sin balón no hace nada y se ve apagado.
 const CONTEXTO := {"A": ["Pase", "Presión"], "B": ["Tiro", "Entrada"], "X": ["Centro", "Barrida"], "Y": ["Al hueco", ""]}
+## VERTICAL (10-11, sesión 8): el lienzo de un móvil de pie mide ~540 px de ancho y el arco de arriba (499 px) se comía el stick. De pie, los botones
+## forman un arco más estrecho para el pulgar derecho (misma tabla: nombre → desplazamiento desde la esquina inferior) y el tamaño no pasa de `ESCALA_VERTICAL`:
+## Pase y Tiro siguen midiendo ≥ 10 mm de diámetro y los demás ≥ 7 mm, con ≥ 2 mm entre ellos.
+const BOTONES_V := {"A": Vector2(230, 110), "B": Vector2(80, 180), "X": Vector2(190, 290), "Y": Vector2(55, 340), "Cambiar": Vector2(340, 235),
+	"Sprint": Vector2(385, 110), "Mod": Vector2(55, 465)}
+const ESCALA_VERTICAL := 0.7
+const ANCHO_ARCO_V := 441.0
 const ZONA_STICK_X := 0.45              ## el stick solo nace en este tramo del ancho (el lado del pulgar izquierdo)
 const ZONA_STICK_Y := 0.2               ## y por debajo de este tramo de arriba (no tapa el marcador)
 const ALTO_ARCO := 416.0                ## lo que sube el arco de botones desde la esquina (px del lienzo con escala 1): tope del tamaño
@@ -105,8 +112,9 @@ func _calcular_elev() -> float:
 		return 0.0
 	var s := escala()
 	var m := margenes()
-	var x0 := (m.x) if _espejo() else (size.x - m.y - ANCHO_ARCO * s * _sep)
-	var x1 := (m.x + ANCHO_ARCO * s * _sep) if _espejo() else (size.x - m.y)
+	var ancho_arco := ANCHO_ARCO_V if _vertical() else ANCHO_ARCO
+	var x0 := (m.x) if _espejo() else (size.x - m.y - ancho_arco * s * _sep)
+	var x1 := (m.x + ancho_arco * s * _sep) if _espejo() else (size.x - m.y)
 	var e := 0.0
 	for c: Variant in abajo:
 		if not (c is Control) or not is_instance_valid(c) or not (c as Control).is_visible_in_tree():
@@ -187,8 +195,13 @@ func escala() -> float:
 		if vent.y > 0:
 			var px_por_cm := dpi_v / 2.54 * size.y / float(vent.y)   ## píxeles del lienzo por cm de pantalla
 			base = clampf(0.75 * px_por_cm / 66.0, 0.6, 1.5)        ## radio grande = 0,75 cm
+	if _vertical():
+		base = minf(base, ESCALA_VERTICAL)
 	var cabe := 0.65 * size.y / ALTO_ARCO if size.y > 0.0 else base
 	return maxf(minf(base * esc, maxf(cabe, base)), 0.5)
+
+func _vertical() -> bool:
+	return size.y > size.x
 
 func radio_boton() -> float:
 	return RADIO_BOTON * escala()
@@ -218,7 +231,7 @@ func centro_de(nombre: String) -> Vector2:
 	var m := margenes()
 	if nombre == "Pausa":
 		return Vector2(size.x - m.y - 24.0 * s - radio_de(nombre), maxf(96.0 * s, _bajo_stats + 12.0 * s) + radio_de(nombre))   ## bajo la ficha de estadísticas de arriba a la derecha
-	var off: Vector2 = (BOTONES[nombre] as Array)[2]
+	var off: Vector2 = BOTONES_V[nombre] if _vertical() and BOTONES_V.has(nombre) else (BOTONES[nombre] as Array)[2]
 	var x := (m.x + off.x * s * _sep) if _espejo() else (size.x - m.y - off.x * s * _sep)
 	return Vector2(x, size.y - _elev - off.y * s * _sep)
 

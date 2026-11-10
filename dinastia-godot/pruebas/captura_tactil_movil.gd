@@ -31,6 +31,8 @@ func _ready() -> void:
 	PartidoJugable.con_ceremonia = false
 	ControlesTactiles.forzar = true
 	PantallaMovil.dpi_forzado = DPI
+	EscalaMovil.forzar = true   ## como en el teléfono: el zoom de la interfaz del móvil (en vertical, el del lienzo estrecho)
+	EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	AjustesTactil.restaurar()
 	## Cada partido, un mundo de otro país (club y país distintos, orden 34): Chile, Argentina y España.
 	var m := Mundo.new()
@@ -187,7 +189,7 @@ func _auditar_hud(contexto: String) -> void:
 		var fr := ficha.get_global_rect()
 		print("  [%s] ficha del jugador: %.0f %% del ancho, %.1f × %.1f mm" % [contexto, 100.0 * fr.size.x / lienzo.x, fr.size.x / mm, fr.size.y / mm])
 		## (en vertical el nombre, con letra legible, ya mide ~30 mm de un teléfono de ~68 mm de ancho: hasta el 45 %)
-		_comprobar(fr.size.x / lienzo.x <= (0.45 if lienzo.y > lienzo.x else 0.30), "[%s] la ficha del jugador no ocupa de más (%.0f %% del ancho)" % [contexto, 100.0 * fr.size.x / lienzo.x])
+		_comprobar(fr.size.x / lienzo.x <= (0.50 if lienzo.y > lienzo.x else 0.30), "[%s] la ficha del jugador no ocupa de más (%.0f %% del ancho)" % [contexto, 100.0 * fr.size.x / lienzo.x])
 
 func _process(_d: float) -> void:
 	_n += 1

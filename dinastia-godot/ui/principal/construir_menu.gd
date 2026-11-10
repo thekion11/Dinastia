@@ -156,9 +156,7 @@ func _montar_cabecera() -> VBoxContainer:
 	## la mitad-. Se descuentan exactamente esos 42 pixeles.
 	p._selector.custom_minimum_size = Vector2(208, 34)
 	p._selector.clip_text = true
-	## Y `fit_to_longest_item = false`, que es lo que de verdad lo arregla.
-	##
-	## `clip_text` deja que el TEXTO se recorte, pero un OptionButton sigue
+	## Y `fit_to_longest_item = false`, que es lo que de verdad lo arregla: `clip_text` recorta el TEXTO, pero un OptionButton sigue
 	## PIDIENDO de ancho minimo lo que mide su item mas largo -aqui «Colo-Colo ·
 	## Primera Division» y compañia-: pedia 386 px con un minimo declarado de 208,
 	## la fila entera sumaba 1.286 sobre un viewport logico de 1.280 y todo lo de
@@ -211,12 +209,10 @@ func _montar_cabecera() -> VBoxContainer:
 	## El buscador va en la fila de acciones, no en la cabecera: ahí arriba lo
 	## tapaba el aviso de mercado, que flota en la esquina derecha.
 	p._buscador = LineEdit.new()
-	## "Buscar jugador o club…" no entraba en 150 px y se leía "Buscar jugador
-	## o clu" (lo notó el análisis externo). El texto largo va al tooltip.
+	## El texto largo va al tooltip ("Buscar jugador o club…" no entraba en 150 px).
 	p._buscador.placeholder_text = Idiomas.t("🔎 Buscar…")
 	p._buscador.tooltip_text = Idiomas.t("Buscar un jugador o un club por nombre (Enter para abrir su ficha)")
-	## 150 y no 210: cada píxel de esta fila sale del ancho de las tres columnas
-	## de abajo, y a 210 volvía a cortarse la ficha del jugador por el borde.
+	## 150 px y no más: cada píxel de esta fila sale del ancho de las columnas de abajo.
 	p._buscador.custom_minimum_size = Vector2(150, 32)
 	p._buscador.add_theme_font_size_override("font_size", 12)
 	p._buscador.text_submitted.connect(p._buscar_global)
