@@ -66,7 +66,7 @@ Dinastía ya tiene casi todo el temario de la Master League (cesiones, ojeadores
 7. Informe de ojeador con RANGOS de atributos que se afinan con las semanas.
 8. Pantalla de PLAN DE JUEGO con 2 instrucciones de ataque y 2 de defensa.
 9. HECHO (10-11) en la lista de la plantilla: la «C» amarilla del capitán (`PlantillaHabilidades.brazalete`). Falta: en la pizarra de Táctica.
-10. Premios MENSUALES (jugador del mes).
+10. HECHO (10-11): JUGADOR DEL MES cada 4 semanas en tu liga (`PremioMensual`: últimas notas, queda en su ficha, prensa y +moral si es tuyo). Falta: tarjeta a pantalla completa y once ideal del mes.
 11. Revisar el alcance del editor de la partida.
 12. Logo del patrocinador en la sala de prensa y en el resumen de temporada.
 Fuentes: fourfourtwo.com (reseña PES 2020), gamesatlas.com (Master League remastered), konami.com/pes2020, pesmastery.com/?p=7515, redbull.com (guía PES 2020), manual de Konami PES 2019. Sin confirmar en PES 2020: química, flechas, objetivos y rumores (vienen de la serie en general).
