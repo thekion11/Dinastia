@@ -421,3 +421,31 @@ func _probar_puertas_ascensor() -> void:
 		tw.custom_step(PuertasAscensor.SEG_CERRAR + 0.1)
 	_comprobar(not PuertasAscensor.abiertas(get_tree(), 4.0), "y vuelve a cerrarse")
 	asc.queue_free()
+
+func _probar_cara_edad() -> void:
+	_titulo("LA EDAD SE VE EN LA CARA 2D (canas, entradas, calvicie, arrugas)")
+	var j := Jugador.new()
+	j.id = "edad_prueba_1"
+	j.nombre = "Prueba Edad"
+	j.pais = "ESP"
+	var viejos := 0
+	var jovenes_grises := 0
+	var cortes_viejos := {}
+	for i in 60:
+		j.id = "edad_%d" % i
+		j.edad = 22
+		var joven := Cara.look_de(j)
+		j.edad = 41
+		var viejo := Cara.look_de(j)
+		if float(viejo.get("arrugas", 0.0)) > float(joven.get("arrugas", 0.0)):
+			viejos += 1
+		if Color(String(viejo["peloC"])).get_luminance() > Color(String(joven["peloC"])).get_luminance() + 0.01:
+			jovenes_grises += 1
+		cortes_viejos[String(viejo["pelo"])] = true
+	_comprobar(viejos == 60, "a los 41 años siempre hay más arrugas que a los 22 (%d de 60)" % viejos)
+	_comprobar(jovenes_grises >= 30, "el pelo de los de 41 es más claro (canas) que a los 22 en la mayoría (%d de 60)" % jovenes_grises)
+	_comprobar(cortes_viejos.has("entradas") or cortes_viejos.has("calvo"), "a los 41 aparecen entradas o calvicie (%s)" % str(cortes_viejos.keys()))
+	_comprobar(CaraEdad.arrugas_svg(0.0) == "" and CaraEdad.arrugas_svg(1.0).contains("<path"), "las arrugas solo se dibujan con la edad")
+	j.edad = 41
+	j.id = "edad_svg"
+	_comprobar(Cara.svg_de(j).contains("#3a2418"), "el retrato de 41 años lleva las líneas de expresión")
