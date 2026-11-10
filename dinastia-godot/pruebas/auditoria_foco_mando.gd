@@ -120,7 +120,9 @@ func _auditar(nombre: String, raiz: Control, modal := false) -> void:
 	if f != null:
 		_comprobar(not (f is LineEdit or f is TextEdit), "[%s] el foco no empieza en un campo de texto (abriría el teclado)" % nombre)
 		var st := f.get_theme_stylebox("focus")
-		_comprobar(st != null and not (st is StyleBoxEmpty), "[%s] el foco se ve (estilo «focus» de %s)" % [nombre, f.get_class()])
+		## un `Control` a secas no dibuja el estilo de foco del tema: tiene que dibujar el suyo (y decirlo con la meta «foco_visible»)
+		var se_ve := f.has_meta("foco_visible") if f.get_class() == "Control" else (st != null and not (st is StyleBoxEmpty))
+		_comprobar(se_ve, "[%s] el foco se ve (estilo «focus» de %s)" % [nombre, f.get_class()])
 	var perdido := 0
 	var visitados := {}
 	for b: JoyButton in PULSACIONES:

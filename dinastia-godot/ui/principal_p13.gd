@@ -46,6 +46,7 @@ func _abrir_competicion() -> void:
 	var v: Control = load("res://ui/competicion.gd").new()   ## (A4 memoria) por ruta
 	v.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(v)
+	FocoMando.aislar_mientras(v)   ## con mando, la cruceta no se escapa a lo de detrás (auditoría de foco, 10-11)
 	v.abrir(mundo, _liga_de(mundo.mi_club()))
 	v.cerrado.connect(func() -> void:
 		v.queue_free()

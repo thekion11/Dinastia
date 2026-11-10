@@ -42,6 +42,8 @@ func _input(ev: InputEvent) -> void:
 	var f := _p.get_viewport().gui_get_focus_owner()
 	if f == null or not _p.is_ancestor_of(f) or f is TextEdit:
 		return
+	if f.has_meta("cruceta_propia") and bool((f.get_meta("cruceta_propia") as Callable).call(dir)):
+		return   ## el control usa la cruceta (el campo del editor de formación con una ficha agarrada o por elegir)
 	var sc := _zona(f)
 	if sc == null:
 		return
