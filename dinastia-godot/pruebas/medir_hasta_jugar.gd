@@ -28,7 +28,7 @@ func _ready() -> void:
 		var tope := Time.get_ticks_msec() + 90000
 		while Time.get_ticks_msec() < tope:
 			await get_tree().process_frame
-			var act: Variant = PrecalentarCaras.get("_activa")
+			var act: Variant = PrecalentarCaras._activa
 			var cola_vacia: bool = act == null or not is_instance_valid(act) or (act._cola as Array).is_empty()
 			if cola_vacia and PrecalentarAnim.terminado():
 				break
