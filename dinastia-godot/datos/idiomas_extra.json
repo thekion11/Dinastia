@@ -7844,7 +7844,9 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver.": "Cannot loan out: already on loan: he has to come back first.",
   "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (football animations, ball striking and the match engine core ported to GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 and contributors · Apache License 2.0",
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Cannot loan out: already on loan: he has to come back first..",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Drag each marker wherever you want: the position changes on its own depending on the zone. With a controller or keyboard: the D-pad picks the marker, Accept grabs it, the D-pad moves it and Accept drops it."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Drag each marker wherever you want: the position changes on its own depending on the zone. With a controller or keyboard: the D-pad picks the marker, Accept grabs it, the D-pad moves it and Accept drops it.",
+  "Cabecera compacta en el móvil": "Compact header on mobile",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menus put the title and buttons on a single line, leaving more room for what you are working on."
  },
  "pt": {
   "Historia": "História",
@@ -15691,7 +15693,9 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver.": "Não pode ser cedido: já está cedido: primeiro tem de voltar.",
   "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (animações de futebol, chute na bola e o núcleo do motor da partida portado para GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 e colaboradores · Apache License 2.0",
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Não pode ser cedido: já está cedido: primeiro tem de voltar..",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Arraste cada ficha para onde quiser: a posição muda sozinha conforme a zona. Com comando ou teclado: o direcional escolhe a ficha, Aceitar agarra-a, o direcional move-a e Aceitar solta-a."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Arraste cada ficha para onde quiser: a posição muda sozinha conforme a zona. Com comando ou teclado: o direcional escolhe a ficha, Aceitar agarra-a, o direcional move-a e Aceitar solta-a.",
+  "Cabecera compacta en el móvil": "Cabeçalho compacto no telemóvel",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Os menus põem o título e os botões numa só linha, para deixar mais espaço para o que se trabalha."
  },
  "patrones": [
   [
@@ -29645,7 +29649,9 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver.": "Impossible de le prêter : il est déjà prêté : il doit d'abord revenir.",
   "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (animations de football, frappe du ballon et noyau du moteur de match porté en GDScript) — Copyright 2019 Google LLC & Bastiaan Konings ; League-Soccer : awest813 et contributeurs · Apache License 2.0",
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Impossible de le prêter : il est déjà prêté : il doit d'abord revenir..",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Fais glisser chaque pion où tu veux : le poste change tout seul selon la zone. À la manette ou au clavier : la croix choisit le pion, Valider le saisit, la croix le déplace et Valider le lâche."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Fais glisser chaque pion où tu veux : le poste change tout seul selon la zone. À la manette ou au clavier : la croix choisit le pion, Valider le saisit, la croix le déplace et Valider le lâche.",
+  "Cabecera compacta en el móvil": "En-tête compact sur mobile",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Les menus mettent le titre et les boutons sur une seule ligne, pour laisser plus de place à ce sur quoi tu travailles."
  },
  "it": {
   "Historia": "Storia",
@@ -37492,7 +37498,9 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver.": "Non si può cedere: è già in prestito: prima deve tornare.",
   "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (animazioni di calcio, tiro del pallone e nucleo del motore della partita portato in GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 e collaboratori · Apache License 2.0",
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Non si può cedere: è già in prestito: prima deve tornare..",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Trascina ogni pedina dove vuoi: il ruolo cambia da solo in base alla zona. Con controller o tastiera: la croce sceglie la pedina, Conferma la prende, la croce la sposta e Conferma la rilascia."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Trascina ogni pedina dove vuoi: il ruolo cambia da solo in base alla zona. Con controller o tastiera: la croce sceglie la pedina, Conferma la prende, la croce la sposta e Conferma la rilascia.",
+  "Cabecera compacta en el móvil": "Intestazione compatta su mobile",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "I menu mettono il titolo e i pulsanti su una sola riga, per lasciare più spazio a ciò su cui lavori."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45339,7 +45347,9 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver.": "Verleih nicht möglich: Er ist bereits verliehen: Er muss zuerst zurückkehren.",
   "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (Fußballanimationen, Ballschuss und der nach GDScript portierte Kern der Spiel-Engine) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 und Mitwirkende · Apache License 2.0",
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Verleih nicht möglich: Er ist bereits verliehen: Er muss zuerst zurückkehren..",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Zieh jede Marke, wohin du willst: Die Position ändert sich je nach Zone von selbst. Mit Controller oder Tastatur: Das Steuerkreuz wählt die Marke, Bestätigen greift sie, das Steuerkreuz bewegt sie und Bestätigen lässt sie los."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Zieh jede Marke, wohin du willst: Die Position ändert sich je nach Zone von selbst. Mit Controller oder Tastatur: Das Steuerkreuz wählt die Marke, Bestätigen greift sie, das Steuerkreuz bewegt sie und Bestätigen lässt sie los.",
+  "Cabecera compacta en el móvil": "Kompakte Kopfzeile auf dem Handy",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Die Menüs zeigen Titel und Schaltflächen in einer einzigen Zeile, damit mehr Platz für die Arbeit bleibt."
  },
  "ca": {
   "Historia": "Història",
@@ -53186,7 +53196,9 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver.": "No es pot cedir: ja està cedit: primer ha de tornar.",
   "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (animacions de futbol, cop de baló i el nucli del motor del partit portat a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 i col·laboradors · Apache License 2.0",
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "No es pot cedir: ja està cedit: primer ha de tornar..",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Arrossega cada fitxa on vulguis: la posició canvia sola segons la zona. Amb comandament o teclat: la creueta tria la fitxa, Acceptar l'agafa, la creueta la mou i Acceptar la deixa anar."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Arrossega cada fitxa on vulguis: la posició canvia sola segons la zona. Amb comandament o teclat: la creueta tria la fitxa, Acceptar l'agafa, la creueta la mou i Acceptar la deixa anar.",
+  "Cabecera compacta en el móvil": "Capçalera compacta al mòbil",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Els menús posen el títol i els botons en una sola línia, per deixar més lloc al que es treballa."
  },
  "pl": {
   "Club": "Klub",
@@ -61033,7 +61045,9 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver.": "Nie można wypożyczyć: jest już wypożyczony: najpierw musi wrócić.",
   "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (animacje piłkarskie, uderzenie piłki i rdzeń silnika meczu przeniesiony do GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 i współtwórcy · Apache License 2.0",
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Nie można wypożyczyć: jest już wypożyczony: najpierw musi wrócić..",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Przeciągnij każdy pionek, gdzie chcesz: pozycja zmienia się sama zależnie od strefy. Padem lub klawiaturą: krzyżak wybiera pionek, Akceptuj go chwyta, krzyżak go przesuwa, a Akceptuj puszcza."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Przeciągnij każdy pionek, gdzie chcesz: pozycja zmienia się sama zależnie od strefy. Padem lub klawiaturą: krzyżak wybiera pionek, Akceptuj go chwyta, krzyżak go przesuwa, a Akceptuj puszcza.",
+  "Cabecera compacta en el móvil": "Kompaktowy nagłówek na telefonie",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menu pokazują tytuł i przyciski w jednej linii, by zostawić więcej miejsca na to, nad czym pracujesz."
  },
  "tr": {
   "Club": "Kulüp",
@@ -68880,6 +68894,8 @@
   "No se puede ceder: Ya está cedido: primero tiene que volver.": "Kiralanamaz: zaten kiralık: önce geri dönmesi gerekir.",
   "· League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores · Apache License 2.0": "· League-Soccer / Gameplay Football (futbol animasyonları, topa vuruş ve GDScript'e taşınan maç motorunun çekirdeği) — Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 ve katkıda bulunanlar · Apache License 2.0",
   "No se puede ceder: Ya está cedido: primero tiene que volver..": "Kiralanamaz: zaten kiralık: önce geri dönmesi gerekir..",
-  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Her pulu istediğin yere sürükle: mevki bölgeye göre kendiliğinden değişir. Kumanda veya klavyeyle: yön tuşları pulu seçer, Onayla onu tutar, yön tuşları taşır ve Onayla bırakır."
+  "Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.": "Her pulu istediğin yere sürükle: mevki bölgeye göre kendiliğinden değişir. Kumanda veya klavyeyle: yön tuşları pulu seçer, Onayla onu tutar, yön tuşları taşır ve Onayla bırakır.",
+  "Cabecera compacta en el móvil": "Mobilde kompakt başlık",
+  "Los menús ponen el título y los botones en una sola línea, para dejar más sitio a lo que se trabaja.": "Menüler başlığı ve düğmeleri tek satıra koyar; böylece üzerinde çalıştığın şeye daha çok yer kalır."
  }
 }

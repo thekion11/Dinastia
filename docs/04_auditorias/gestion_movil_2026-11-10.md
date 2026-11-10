@@ -57,10 +57,16 @@ Resultado: **0 fallos en las 9 pantallas**. Letra mínima de 1,9 mm en todas; 0 
 Siguen en verde el banco, `aud4_movil_partido`, `aud4_movil_modales`, `aud4_movil_toque`, `aud4_movil_flujo`, `p6_escala_movil`,
 `uite_movil_*`, `tac_hud`, `j4_pizarra`, `tac_deshacer`, `tut_capas` y `ate_ayuda_en_menu`.
 
-## Pendiente (no tocado: rediseño de la disposición, decisión del dueño)
-- **En horizontal el teléfono solo tiene 480 px lógicos de alto.** En las pantallas de los menús, la cabecera («Zurück», «KADER» en
-  grande) y el botón «Übersicht: alle Bereiche» ocupan ~40 % del alto. Lo que se trabaja (tabla del plantel, pizarra) queda en una franja
-  de ~200 px, y los paneles de la derecha («Spielerprofil», «Was passiert») se ven recortados por arriba y por abajo. Propuesta: en el
-  móvil, una cabecera compacta de una línea (atrás + título + sección) y el «Übersicht» dentro de ella. Pide el visto bueno del dueño:
-  cambia el aspecto de todas las pantallas de menú.
-- La pizarra de un 4-2-3-1 en el móvil pide desplazarse para ver las 11 fichas, por lo mismo: poco alto.
+## 2.ª parte: la cabecera compacta (aprobada por la líder, solo en el móvil)
+En horizontal el teléfono tiene 480 px lógicos de alto. En los menús, la cabecera grande («Zurück», «KADER» en 36 px) y el botón
+«Übersicht: alle Bereiche» se comían ~40 %, y lo que se trabaja quedaba en el 61 % del alto: en el plantel se veía UN jugador de la
+lista. Ahora, en lo táctil (`EscalaMovil.es_tactil`), `PantallaMenu` pone en una sola línea el volver, el icono, el título con la
+sección, «Übersicht» y el nombre del club; sin la banda, con márgenes de 6 px. En el plantel se ven tres jugadores.
+- **Interruptor** en Ajustes → Pantalla: «Cabecera compacta en el móvil», encendido por defecto. Solo aparece en lo táctil, se guarda
+  en las preferencias (`pantalla/cabecera_compacta`) y con NO vuelve la cabecera grande. Textos en los 9 idiomas.
+- **En PC no cambia nada.**
+- **Prueba** (`auditoria_gestion_movil`): en los menús, el contenido tiene al menos el 75 % del alto, y en Ajustes está el interruptor.
+  Con `CABECERA=grande` (el interruptor en NO) mide el antes: **61 %**. Con la compacta: **86 %**, con 0 fallos en el resto de criterios.
+
+## Pendiente
+- La pizarra de un 4-2-3-1 en el móvil sigue pidiendo desplazarse para ver las 11 fichas (campo de 680 px para que no se pisen).
