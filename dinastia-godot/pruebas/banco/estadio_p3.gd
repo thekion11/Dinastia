@@ -166,6 +166,9 @@ func _probar_cajon_perezoso() -> void:
 ## el avatar regalo no va en los builds públicos y el personal del club tiene apariencia propia, única y reservada.
 func _probar_avatares_realistas() -> void:
 	_titulo("AVATARES: SOLO REALISTAS, AVATAR REGALO FUERA DE LO PÚBLICO, PERSONAL DEL CLUB ÚNICO")
+	for solo_personal: String in ["mh_swat", "mm_soldier", "mh_punk", "mm_punk"]:
+		_comprobar(not FutbolistaQ.todos_ajenos().has(solo_personal) and not FutbolistaQ.modelo_valido(solo_personal), "«%s» NO es elegible por el jugador" % solo_personal)
+		_comprobar(FutbolistaQ.ajeno_disponible(solo_personal) and PersonalEstadio.MODELO_PERSONAL.values().any(func(v: Array) -> bool: return solo_personal in v), "«%s» existe y lo usa el personal del club" % solo_personal)
 	for quitado: String in ["campesino", "explorador", "kk_barbaro", "kk_mago", "kk_esq_guerrero", "vrm_arla", "vrm_starter", "mh_farmer", "mh_king", "mm_witch", "mm_scifi"]:
 		_comprobar(not FutbolistaQ.modelo_valido(quitado), "«%s» ya no es un modelo válido" % quitado)
 		_comprobar(String(PersonajeDT.aspecto({"modelo": quitado})["modelo"]) == "", "una partida vieja con «%s» vuelve al atleta" % quitado)
@@ -175,9 +178,7 @@ func _probar_avatares_realistas() -> void:
 		_comprobar(not DirAccess.dir_exists_absolute("res://assets/characters/" + carpeta), "la carpeta de no realistas «%s» ya no está" % carpeta)
 	## El avatar regalo: excluido de los 6 presets (licencia y cara sin confirmar).
 	var cfg := FileAccess.get_file_as_string("res://export_presets.cfg")
-	var presets := cfg.split("[preset.").size() - 1
-	var con_exclusion := cfg.split("assets/characters/avatar_regalo/*").size() - 1
-	_comprobar(presets >= 6 and con_exclusion >= 6, "el avatar regalo está excluido de los presets de exportación (%d)" % con_exclusion)
+	_comprobar(not cfg.contains("avatar_regalo"), "el avatar regalo ya NO está excluido de los presets (licencia confirmada por el dueño, 11-11)")
 	if AvatarRegalo.disponible():
 		var padre := Node3D.new()
 		add_child(padre)

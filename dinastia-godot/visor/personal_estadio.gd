@@ -28,6 +28,8 @@ const PUESTOS := {
 	"cocinera": [2, "Comedor del plantel", "abrigo", "ffffff", "222222"],
 }
 
+## Modelos exclusivos del personal [hombre, mujer] (`FutbolistaQ.PERSONAL`).
+const MODELO_PERSONAL := {"portero": ["mh_swat", "mm_soldier"], "hincha": ["mh_punk", "mm_punk"]}
 const VEL := 1.25
 
 ## Los gestos de cada oficio en su puesto (librería «banda» de `PersonajeDT`).
@@ -111,13 +113,18 @@ func _ready() -> void:
 		asp["corbata"] = clave in ["presidente", "secretaria", "portero"]
 		asp["gorra"] = clave == "portero"
 		asp["gafas"] = "" if clave != "ojeador" else String(asp.get("gafas", ""))
-		var d := PersonajeDT.crear(raiz, asp, c1, c2)
+		## SWAT/soldado en la puerta y punk en la hinchada: modelos SOLO del personal (no elegibles por el jugador).
+		var d: Dictionary = {}
+		if MODELO_PERSONAL.has(clave):
+			d = FutbolistaQ.ajeno(raiz, String((MODELO_PERSONAL[clave] as Array)[1 if bool(mujeres[clave]) else 0]), float(asp["altura"]))
+		if d.is_empty():
+			d = PersonajeDT.crear(raiz, asp, c1, c2)
 		if Calidad.elegida <= Calidad.BAJA:   ## (7-11) ULTRA BAJA y BAJA: la gente del club se dibuja solo a menos de 90 m (desde el mapa aéreo eran 163 piezas invisibles)
 			for g: Node in raiz.find_children("*", "GeometryInstance3D", true, false):
 				(g as GeometryInstance3D).visibility_range_end = 90.0
 		## Los gestos de su oficio (los de la banda del DT: brazos en jarra,
 		## señalar, aplaudir…), para que en su puesto no sean estatuas.
-		if d.has("anim"):
+		if d.get("anim") != null:
 			PersonajeDT.gestos_banda(d)
 		semilla += 7
 		## (10-11, orden del dueño) sin nombres flotantes sobre la gente del club: se quitó el Label3D con nombre y puesto.

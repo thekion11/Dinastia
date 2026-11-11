@@ -5,7 +5,8 @@ Los tres motores: **siempre** (el nuestro, `MotorJugable`), **league** (`MotorLe
 **combinado** (`MotorCombinado`: League con piezas cambiables por las nuestras). Con las piezas por defecto el combinado es IDÉNTICO a league
 (misma semilla, mismos partidos: lo muestran las tablas); con todas las piezas «siempre» reproduce exactamente al nuestro (probado en el banco).
 
-> **Aviso para el selector a ciegas:** mientras no se cambie ninguna pieza de `datos/motor_c_piezas.json`, **el motor B y el C (los que toquen a league y combinado) son IGUALES**: el reparto A/B/C solo se vuelve informativo cuando C lleva al menos una pieza nuestra (candidata: `decide_con_balon = siempre`).
+> **Actualización (11-11, decisión del líder):** C ya NO es igual a League: su valor por defecto es «League + nuestra decisión con balón». Lo de abajo sobre «iguales» vale para la primera tanda (6 partidos), hecha con todas las piezas de League.
+> **Aviso para el selector a ciegas (primera tanda):** mientras no se cambie ninguna pieza de `datos/motor_c_piezas.json`, **el motor B y el C (los que toquen a league y combinado) son IGUALES**: el reparto A/B/C solo se vuelve informativo cuando C lleva al menos una pieza nuestra (candidata: `decide_con_balon = siempre`).
 
 ## Cómo se midió
 - `pruebas/comparar_tres_motores.tscn` (parte de `comparar_motor_league`): 6 partidos COMPLETOS por motor en autopiloto (2 × 240 s de reloj
@@ -122,3 +123,142 @@ Partidos por variante: combinado = 6, league = 6, siempre = 6, combinado[coloca_
 | 4 | Chillán Rojo (CHI, 4-4-2 contra) - Leao da Barra (BRA, 4-4-2 directo) | 1-0 | 1-0 | 2-7 | 1-1 | 4-4 | 0-3 | 0-2 |
 | 5 | Itapuã FC (BRA, 4-2-3-1 posesion) - Neptuno AC (ESP, 4-4-2 contra) | 0-0 | 0-0 | 3-4 | 1-6 | 1-2 | 0-0 | 0-1 |
 | 6 | Vallecas Franja (ESP, 4-2-3-1 presion) - Rancagua Celeste (CHI, 4-3-3 equilibrado) | 0-0 | 0-0 | 1-4 | 2-0 | 2-2 | 2-1 | 3-2 |
+
+---
+
+# Segunda tanda: 12 partidos por motor, 6 países (CHI, ESP, BRA, ENG, ARG, JPN)
+
+Misma prueba, 12 cruces con los 6 países, C ya con su valor por defecto nuevo (`decide_con_balon = siempre`, resto de League; decisión del líder).
+**La tendencia se sostiene**: League sigue siendo muy quieto (5 tiros y 0,8 goles por partido, 93 % del tiempo en juego); nuestro motor es de ida y vuelta (45 tiros, 5,1 goles,
+cadenas de 1,7 pases); **C se queda con lo mejor de cada uno**: 41 tiros y 5,9 goles, acierto de pase 86 %, cadenas de 2,2 pases y 2,75 cadenas de 5+ por partido
+(nuestro 0,7, League 1,25), cadena máxima 7,4, y más variedad de goles de balón parado (1,8). Cuesta lo mismo de CPU (1 435 µs/paso contra 1 465 nuestro y 1 590 League).
+Lo que C pierde frente al nuestro: menos regates (13,7 contra 20) y menos duelos (19,6 contra 40). Pendiente: repetir con la guía de locomoción de la sesión 9 encendida en B y C.
+Reproducir: `PAISES=CHI,ESP,BRA,ENG,ARG,JPN N_PARTIDOS=12 MITAD=240 MOTORES=siempre godot --headless --path . res://pruebas/comparar_tres_motores.tscn` (y league, combinado).
+
+Partidos por variante: league = 12, siempre = 12, combinado[decide_con_balon=siempre] = 12
+
+### 12 partidos: Acción y ocasiones (por partido)
+
+| medida | league | siempre | combinado[decide_con_balon=siempre] |
+|---|---:|---:|---:|
+| goles | 0.83 | 5.08 | 5.92 |
+| tiros | 5.2 | 45.0 | 41.4 |
+| tiros de área | 1.8 | 8.2 | 5.2 |
+| ocasiones claras | 1.25 | 3.5 | 3.17 |
+| paradas del portero | 0.8 | 10.0 | 10.2 |
+| tiros al palo | 0.25 | 1.67 | 1.25 |
+| tiros fuera | 3.4 | 28.2 | 24.2 |
+
+### 12 partidos: Regates y duelos (por partido)
+
+| medida | league | siempre | combinado[decide_con_balon=siempre] |
+|---|---:|---:|---:|
+| regates | 5.6 | 20.0 | 13.7 |
+| regates logrados | 2.1 | 8.4 | 5.3 |
+| duelos (hombro, dividido, agarrón) | 16.3 | 40.3 | 19.6 |
+| robos en duelo (≤ 2,5 m) | 3.0 | 13.3 | 4.0 |
+| pérdidas a distancia | 11.3 | 32.5 | 23.9 |
+
+### 12 partidos: Pases encadenados
+
+| medida | league | siempre | combinado[decide_con_balon=siempre] |
+|---|---:|---:|---:|
+| pases | 70.1 | 116.1 | 107.2 |
+| acierto de pase % | 80.8 | 77.2 | 86.1 |
+| cadenas | 12.8 | 40.1 | 34.5 |
+| pases por cadena (media) | 2.19 | 1.68 | 2.18 |
+| cadena más larga (media de máximos) | 6.9 | 4.7 | 7.4 |
+| cadenas de 5+ pases | 1.25 | 0.67 | 2.75 |
+
+### 12 partidos: Goles: variedad (goles por partido de cada tipo)
+
+| medida | league | siempre | combinado[decide_con_balon=siempre] |
+|---|---:|---:|---:|
+| jugada | 0.17 | 0.58 | 0.58 |
+| contra | 0.08 | 0.33 | 0.25 |
+| parado | 0.33 | 1.33 | 1.83 |
+| cabeza | 0.25 | 0.08 | 0.08 |
+| lejos | 0.0 | 2.42 | 2.75 |
+| penal | 0.0 | 0.33 | 0.42 |
+
+### 12 partidos: Marcador y ritmo
+
+| medida | league | siempre | combinado[decide_con_balon=siempre] |
+|---|---:|---:|---:|
+| cambios de resultado | 0.83 | 2.67 | 2.5 |
+| remontadas | 0.17 | 0.92 | 0.83 |
+| juego seguido medio (s) | 47.3 | 9.7 | 13.2 |
+| juego seguido máximo (s) | 222.5 | 35.1 | 57.6 |
+| % del tiempo en juego | 93.0 | 78.5 | 81.4 |
+| paradas del juego (saques) | 11.0 | 52.3 | 39.7 |
+
+### 12 partidos: Coste de CPU del motor
+
+| medida | league | siempre | combinado[decide_con_balon=siempre] |
+|---|---:|---:|---:|
+| µs por paso (30 Hz) | 1590.1 | 1465.1 | 1435.3 |
+| ms por partido | 25001.0 | 28408.0 | 26901.0 |
+| paso más caro (µs) | 124774.0 | 13047.0 | 117025.0 |
+
+### 12 partidos: Partidos jugados
+
+| # | partido | league | siempre | combinado[decide_con_balon=siempre] |
+|---|---|---|---|---|
+| 1 | Lautaro FC (CHI, 4-2-3-1 ofensivo) - Núñez Athletic (ARG, 4-2-3-1 presion) | 2-1 | 1-4 | 4-3 |
+| 2 | Boedo AC (ARG, 4-4-2 garra) - Laranjeiras FC (BRA, 4-2-3-1 posesion) | 0-0 | 5-3 | 0-3 |
+| 3 | Laranjeiras FC (BRA, 4-2-3-1 posesion) - Iruña CF (ESP, 4-4-2 garra) | 0-0 | 2-2 | 0-3 |
+| 4 | Olívico CF (ESP, 4-2-3-1 posesion) - Bahia Cerezas (ENG, 4-2-3-1 presion) | 0-1 | 2-4 | 6-2 |
+| 5 | Selhurst FC (ENG, 3-4-3 vertical) - Yokohama Bay (JPN, 4-3-3 presion) | 1-0 | 2-2 | 5-4 |
+| 6 | Verde Tokio (JPN, 4-4-2 posesion) - Rancagua Celeste (CHI, 4-3-3 equilibrado) | 1-0 | 0-1 | 4-6 |
+| 7 | Precordillera (CHI, 4-3-3 posesion) - Núñez Athletic (ARG, 4-2-3-1 presion) | 0-0 | 2-4 | 3-4 |
+| 8 | Santiago Ferro (ARG, 4-4-2 bloque) - Leao da Barra (BRA, 4-4-2 directo) | 1-1 | 2-7 | 1-3 |
+| 9 | São Jorge SP (BRA, 4-2-3-1 bloque) - Comtal FC (ESP, 4-2-3-1 posesion) | 0-0 | 0-6 | 1-1 |
+| 10 | Anoeta CF (ESP, 4-3-3 posesion) - Tyneside FC (ENG, 4-3-3 presion) | 0-1 | 1-4 | 6-4 |
+| 11 | Sussex FC (ENG, 4-2-3-1 posesion) - Kamo FC (JPN, 4-3-3 bloque) | 1-0 | 3-1 | 3-1 |
+| 12 | Girasol Chiba (JPN, 4-3-3 posesion) - Acero Talcahuano (CHI, 5-3-2 bloque) | 0-0 | 2-1 | 2-2 |
+
+---
+
+# Tercera tanda (11-11, tras traer `main` con la guía de locomoción de la sesión 9): guía encendida/apagada y por qué C pierde regates y duelos
+
+12 partidos por variante, los 6 países (CHI, ESP, BRA, ENG, ARG, JPN), mismas semillas. «Guía» = `LeagueGuia` (se apaga con `LS_GUIA=0`).
+
+## 1. La guía de locomoción casi no cambia el juego (en esta medida)
+| (por partido) | B league · guía | B league · sin guía | C · guía | C · sin guía |
+|---|---:|---:|---:|---:|
+| goles | 0,83 | 2,0 | 5,92 | 5,25 |
+| tiros | 5,3 | 5,6 | 41,4 | 41,5 |
+| ocasiones claras | 1,25 | 1,5 | 3,17 | 2,83 |
+| regates | 5,6 | 5,8 | 13,7 | 12,7 |
+| duelos | 16,3 | 22,1 | 19,6 | 23,8 |
+| pases · acierto % | 70 · 80,7 | 73 · 79,7 | 107 · 85,9 | 107 · 85,1 |
+| cadenas de 5+ pases | 1,25 | 1,08 | 2,75 | 2,67 |
+| juego seguido medio (s) | 47,3 | 39,8 | 13,2 | 12,8 |
+| µs por paso (CPU) | 1 567 | 1 485 | 1 427 | 1 341 |
+
+Los tiros, pases, cadenas y el ritmo son los mismos con la guía y sin ella; los goles de B (0,8 contra 2,0) y los duelos varían, pero con n = 12 y marcadores tan bajos es ruido
+(en B hay 10 goles contra 24 en total). La guía es VISUAL (cuerpo y animación) y no se nota en cifras de juego; cuesta ~5 % de CPU (+80 µs/paso). Su valor hay que juzgarlo con la vista (vídeo/cámara real) y en el teléfono.
+Nota: el paso más caro de los motores de League subió a ~170 ms desde que `main` trae las animaciones nuevas (era 57 ms): es el primer paso (carga del catálogo), igual con la guía apagada; no es un coste por fotograma, pero conviene que la sesión 9 lo precargue antes del saque inicial para evitar un tirón en el móvil.
+
+## 2. Qué pieza quita los regates y los duelos a C
+C = League + nuestra decisión con balón: 13,7 regates y 19,6 duelos por partido (el nuestro entero: 20,0 y 40,3). Añadiendo UNA pieza nuestra más a C:
+| (por partido) | C (por defecto) | C + colocación nuestra | C + locomoción nuestra | C + física nuestra | nuestro entero |
+|---|---:|---:|---:|---:|---:|
+| regates (logrados) | 13,7 (5,3) | **25,5 (10,4)** | 17,0 (7,0) | 13,4 (5,8) | 20,0 (8,4) |
+| duelos | 19,6 | **46,4** | 27,0 | 19,6 | 40,3 |
+| robos en duelo | 4,0 | 12,8 | 5,6 | 4,3 | 13,3 |
+| tiros · goles | 41 · 5,9 | 45 · 5,9 | 42 · 4,6 | 40 · 4,7 | 45 · 5,1 |
+| cadenas de 5+ pases | 2,75 | 2,0 | **3,0** | 1,7 | 0,7 |
+| juego seguido medio (s) | 13,2 | 9,4 | 14,8 | 10,9 | 9,7 |
+| saques por partido | 39,7 | 56,0 | 34,8 | 47,8 | 52,3 |
+| µs por paso (CPU) | 1 427 | 2 040 | **1 079** | 1 398 | 1 465 |
+
+- **Es la colocación sin balón de League (`coloca_sin_balon`)**: sus jugadores se colocan y presionan de modo que casi no hay cuerpo a cuerpo (menos duelos, robos y regates, y menos saques por faltas y fueras). Con nuestra colocación vuelven los duelos (46) y los regates (25), y aun así las cadenas siguen siendo mejores que las del nuestro entero (2,0 contra 0,7), por la decisión de League… pero con el ritmo de ida y vuelta de siempre (juego seguido 9 s, 56 saques) y +43 % de CPU.
+- **La locomoción nuestra** recupera la mitad (17 regates, 27 duelos), da las cadenas más largas (3,0) y es la variante MÁS BARATA (1 079 µs/paso, −24 % frente a C): suelta el cuerpo a cuerpo sin perder la construcción.
+- **La física del balón** no influye.
+
+## Candidatas para el valor por defecto de C (decide el dueño con el voto a ciegas)
+1. **C actual** (decide nuestra, el resto League): lo más «League» con tiros; poca fricción.
+2. **C + locomoción nuestra** (`locomocion=siempre`): más regates y duelos, mejores cadenas, la más barata de CPU; pierde la locomoción por animaciones de League (la guía de la 9 no se vería, ver nota 1).
+3. **C + colocación nuestra** (`coloca_sin_balon=siempre`): el partido de más fricción y fantasía (25 regates, 46 duelos) con cadenas de League; cuesta +43 % de CPU.
+Ahora mismo se pueden probar a ciegas sin tocar código: `MOTOR_C_PIEZAS="locomocion=siempre"` o cambiando `datos/motor_c_piezas.json`.

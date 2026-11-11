@@ -4,10 +4,8 @@ extends RefCounted
 ## de cuerpo entero hecho por un creador de avatares a partir de una foto (cabeza, cuerpo, ojos, dientes,
 ## camiseta de manga larga, vaqueros y zapatillas; esqueleto Mixamo de 73 huesos, 1,82 m).
 ##
-## LICENCIA Y CARA SIN CONFIRMAR: hasta que el dueño confirme la licencia y si la cara es de una persona real
-## (regla: nada de fotos de personas en lo público), NO va en los builds públicos: `export_presets.cfg` excluye
-## la carpeta en los 6 presets y, sin el archivo, `disponible()` es falso y el avatar no se ofrece ni se carga.
-## Para activarlo en público basta quitar la carpeta del `exclude_filter` (ver el informe de avatares).
+## LICENCIA (11-11): el dueño tiene la licencia y la cara NO es de una persona real: va en los builds y es elegible como
+## avatar del jugador («Modelo base», cuerpo hombre). Si el archivo no está, `disponible()` es falso y no se ofrece.
 ##
 ## Se anima con el MISMO cuerpo y las MISMAS animaciones del juego: se crea el cuerpo Quaternius de siempre (con sus
 ## mallas ocultas, sirve de motor de huesos) y `AvatarRegaloRetarget` copia sus rotaciones al esqueleto del avatar.

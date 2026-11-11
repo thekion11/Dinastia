@@ -10,7 +10,6 @@ const LOTES := [
 	["Campesina F", "res://assets/characters/outfits/Female_Peasant.gltf"],
 	["Explorador M (Ranger)", "res://assets/characters/outfits/Male_Ranger.gltf"],
 	["Exploradora F", "res://assets/characters/outfits/Female_Ranger.gltf"],
-	["Kenney characterMedium", "res://assets/characters/Model/characterMedium.fbx"],
 	["AVATAR REGALO", "res://assets/characters/avatar_regalo/avatar_regalo.fbx"],
 	["persona_realista (escaneo)", "res://assets/personas/persona_realista.glb"]],
 	[["KK Barbarian", "res://assets/characters/kaykit/Barbarian.glb"], ["KK Knight", "res://assets/characters/kaykit/Knight.glb"],
@@ -30,6 +29,9 @@ const LOTES := [
 	["M Punk", "res://assets/characters/modular/women/Punk.glb"], ["M SciFi", "res://assets/characters/modular/women/SciFi.glb"],
 	["M Soldier", "res://assets/characters/modular/women/Soldier.glb"], ["M Suit", "res://assets/characters/modular/women/Suit.glb"],
 	["M Witch", "res://assets/characters/modular/women/Witch.glb"], ["M Worker", "res://assets/characters/modular/women/Worker.glb"]],
+	[["H Swat", "res://assets/characters/modular/men/Swat.glb"], ["M Soldier", "res://assets/characters/modular/women/Soldier.glb"],
+	["H Punk", "res://assets/characters/modular/men/Punk.glb"], ["M Punk", "res://assets/characters/modular/women/Punk.glb"],
+	["AVATAR REGALO", "res://assets/characters/avatar_regalo/avatar_regalo.fbx"]],
 ]
 var _n := 0
 
