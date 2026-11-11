@@ -87,7 +87,7 @@ static var ATAQUE_LEAGUE := OS.get_environment("C_ATAQUE_LEAGUE") == "1"
 static var TERCIO := float(OS.get_environment("C_TERCIO")) if OS.get_environment("C_TERCIO") != "" else 0.0
 ## El estado de League (balón previsto, marcajes, presión) se recalcula cada `CADENCIA_ESTADO` s en el híbrido (SIN MEDIR: 0 por defecto = cada paso, la versión medida; 0,1 es lo que hace League).
 static var CADENCIA_ESTADO := float(OS.get_environment("C_CADENCIA_ESTADO")) if OS.get_environment("C_CADENCIA_ESTADO") != "" else 0.0
-var _t_estado := 0.0
+var _t_estado_liga := 0.0
 
 func _en_ultimo_tercio(p: Dictionary) -> bool:
 	var c: Dictionary = poseedor
@@ -135,9 +135,9 @@ func _estado_sin_balon(delta: float) -> void:
 		if not ATAQUE_LEAGUE:
 			return
 		if CADENCIA_ESTADO > 0.0:
-			if t < _t_estado:
+			if t < _t_estado_liga:
 				return
-			_t_estado = t + CADENCIA_ESTADO
+			_t_estado_liga = t + CADENCIA_ESTADO
 	super(delta)
 
 func _estado_league(delta: float) -> void:
