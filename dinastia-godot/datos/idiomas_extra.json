@@ -7956,7 +7956,9 @@
   "Omitir": "Skip",
   "El nuestro (MotorJugable)": "Ours (MotorJugable)",
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
-  "Combinado (MotorCombinado)": "Combined (MotorCombinado)"
+  "Combinado (MotorCombinado)": "Combined (MotorCombinado)",
+  "los civiles traen su ropa": "the civilians come with their own clothes",
+  "Avatar regalo": "Gift avatar"
  },
  "pt": {
   "Historia": "História",
@@ -15915,7 +15917,9 @@
   "Omitir": "Pular",
   "El nuestro (MotorJugable)": "O nosso (MotorJugable)",
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
-  "Combinado (MotorCombinado)": "Combinado (MotorCombinado)"
+  "Combinado (MotorCombinado)": "Combinado (MotorCombinado)",
+  "los civiles traen su ropa": "os civis vêm com a sua roupa",
+  "Avatar regalo": "Avatar presente"
  },
  "patrones": [
   [
@@ -30014,7 +30018,9 @@
   "Omitir": "Passer",
   "El nuestro (MotorJugable)": "Le nôtre (MotorJugable)",
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
-  "Combinado (MotorCombinado)": "Combiné (MotorCombinado)"
+  "Combinado (MotorCombinado)": "Combiné (MotorCombinado)",
+  "los civiles traen su ropa": "les civils viennent avec leurs vêtements",
+  "Avatar regalo": "Avatar cadeau"
  },
  "it": {
   "Historia": "Storia",
@@ -37973,7 +37979,9 @@
   "Omitir": "Salta",
   "El nuestro (MotorJugable)": "Il nostro (MotorJugable)",
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
-  "Combinado (MotorCombinado)": "Combinato (MotorCombinado)"
+  "Combinado (MotorCombinado)": "Combinato (MotorCombinado)",
+  "los civiles traen su ropa": "i civili hanno già i loro vestiti",
+  "Avatar regalo": "Avatar regalo"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45932,7 +45940,9 @@
   "Omitir": "Überspringen",
   "El nuestro (MotorJugable)": "Unserer (MotorJugable)",
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
-  "Combinado (MotorCombinado)": "Kombiniert (MotorCombinado)"
+  "Combinado (MotorCombinado)": "Kombiniert (MotorCombinado)",
+  "los civiles traen su ropa": "die Zivilisten bringen ihre Kleidung mit",
+  "Avatar regalo": "Geschenk-Avatar"
  },
  "ca": {
   "Historia": "Història",
@@ -53891,7 +53901,9 @@
   "Omitir": "Ometre",
   "El nuestro (MotorJugable)": "El nostre (MotorJugable)",
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
-  "Combinado (MotorCombinado)": "Combinat (MotorCombinado)"
+  "Combinado (MotorCombinado)": "Combinat (MotorCombinado)",
+  "los civiles traen su ropa": "els civils porten la seva roba",
+  "Avatar regalo": "Avatar regal"
  },
  "pl": {
   "Club": "Klub",
@@ -61850,7 +61862,9 @@
   "Omitir": "Pomiń",
   "El nuestro (MotorJugable)": "Nasz (MotorJugable)",
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
-  "Combinado (MotorCombinado)": "Połączony (MotorCombinado)"
+  "Combinado (MotorCombinado)": "Połączony (MotorCombinado)",
+  "los civiles traen su ropa": "cywile mają własne ubrania",
+  "Avatar regalo": "Awatar-prezent"
  },
  "tr": {
   "Club": "Kulüp",
@@ -69809,6 +69823,8 @@
   "Omitir": "Atla",
   "El nuestro (MotorJugable)": "Bizimki (MotorJugable)",
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
-  "Combinado (MotorCombinado)": "Birleşik (MotorCombinado)"
+  "Combinado (MotorCombinado)": "Birleşik (MotorCombinado)",
+  "los civiles traen su ropa": "siviller kendi kıyafetleriyle gelir",
+  "Avatar regalo": "Hediye avatar"
  }
 }

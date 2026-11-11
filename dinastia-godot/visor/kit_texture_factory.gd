@@ -28,12 +28,10 @@ const BOTINES_RECT := Rect2i(640, 130, 182, 390)
 const MANGA_IZQ_RECT := Rect2i(0, 490, 165, 534)
 const MANGA_DER_RECT := Rect2i(478, 490, 157, 534)
 
-const BASE_SKINS := [
-	"res://assets/characters/Skins/skaterMaleA.png",
-	"res://assets/characters/Skins/skaterFemaleA.png",
-	"res://assets/characters/Skins/criminalMaleA.png",
-	"res://assets/characters/Skins/cyborgFemaleA.png",
-]
+## Variantes de piel base. (11-11: las pieles de Kenney «skater», «criminal» y «cyborg», no realistas, se quitaron;
+## ahora la base es un atlas liso del tamaño de siempre y el pintado pone encima camiseta, piel y pelo.)
+const VARIANTES := 4
+const TAM_ATLAS := 1024
 
 const SEG_BY_DIGIT := {
 	0: [1, 1, 1, 1, 1, 1, 0], 1: [0, 1, 1, 0, 0, 0, 0], 2: [1, 1, 0, 1, 1, 0, 1],
@@ -138,15 +136,9 @@ static func _caja_util(img: Image) -> Rect2i:
 func _ensure_base_loaded() -> void:
 	if not _base_images.is_empty():
 		return
-	for p in BASE_SKINS:
-		var img: Image = load(p).get_image()
-		## Las pieles se importan comprimidas (VRAM): sin descomprimir, `convert`
-		## falla y todo el pintado (fill_rect/get_pixel) daba error (f0m, 25-10).
-		if img.is_compressed():
-			img.decompress()
-		## Sin mipmaps: `_retenir` rehace la imagen con el tamaño de UN nivel.
-		img.clear_mipmaps()
-		img.convert(Image.FORMAT_RGBA8)
+	for _v in VARIANTES:
+		var img := Image.create(TAM_ATLAS, TAM_ATLAS, false, Image.FORMAT_RGBA8)
+		img.fill(Color(0.80, 0.62, 0.50))
 		_base_images.append(img)
 
 func _paint_shirt(img: Image, c1: Color, c2: Color, estilo: String) -> void:

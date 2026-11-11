@@ -1,1 +1,0 @@
-Numinia Starter Avatar 01 y Avatar Arla: avatares VRM de PabloFMM, CC0 (PabloFMM/numinia-digital-goods-data, data/avatars/numinia-avatars.json). Renombrados .vrm -> .glb para importarlos como glTF (se pierde el sombreado MToon).

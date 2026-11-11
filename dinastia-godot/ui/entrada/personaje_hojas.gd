@@ -135,19 +135,18 @@ func _hoja_cuerpo() -> Control:
 	var vb := hoja()
 	var cb := cambiar
 	ControlesPersonaje.opciones(vb, asp, "Cuerpo", "cuerpo", [["male", "Hombre"], ["female", "Mujer"]], cb)
-	## Modelo base 3D (los extra solo si están en el juego); traen su ropa de fábrica.
+	## Modelo base 3D: solo realistas (11-11). Los civiles traen su ropa; el avatar regalo solo si está en el proyecto (no va en los builds públicos).
 	var modelos: Array = [["", "Atleta (clásico)"]]
-	for k: String in FutbolistaQ.MODELOS_BASE:
-		if FutbolistaQ.base_extra(k, String(asp.get("cuerpo", "male"))) != null:
-			modelos.append([k, String((FutbolistaQ.MODELOS_BASE[k] as Array)[0])])
 	var ajenos := FutbolistaQ.todos_ajenos()
 	for k: String in ajenos:
 		var fila: Array = ajenos[k]
 		if (String(fila[2]) == "" or String(fila[2]) == String(asp.get("cuerpo", "male"))) and FutbolistaQ.ajeno_disponible(k):
 			modelos.append([k, String(fila[0])])
+	if AvatarRegalo.disponible() and String(asp.get("cuerpo", "male")) == "male":
+		modelos.append([AvatarRegalo.CLAVE, AvatarRegalo.NOMBRE])
 	if modelos.size() > 1:
 		ControlesPersonaje.opciones(vb, asp, "Modelo base", "modelo", modelos, cb, false,
-			"los modelos de fantasía traen su ropa" if String(asp.get("modelo", "")) != "" else "")
+			"los civiles traen su ropa" if String(asp.get("modelo", "")) != "" else "")
 	ControlesPersonaje.deslizador(vb, asp, "Estatura", "altura", 1.55, 2.02, 0.01,
 		func(v: float) -> String: return ("%.2f m" % v).replace(".", ","), cb)
 	for par: Array in [["Complexión", "complexion"], ["Hombros", "hombros"], ["Barriga", "barriga"],

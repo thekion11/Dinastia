@@ -75,33 +75,36 @@ func preparar(datos_: Dictionary, col1: Color, col2: Color) -> void:
 func _ready() -> void:
 	var fichas: Dictionary = (EdificioClub.ctx.get("gente", {}) as Dictionary)
 	var semilla := 11
+	## (11-11) Cada puesto del club con SU apariencia: determinista por club y puesto, sin repetirse entre ellos y reservada
+	## al personal (`AparienciaPersonal`). El cuerpo sigue al nombre (13-10-2026: «Marta Soler» salía hombre).
+	var nombres := {}
+	var mujeres := {}
+	for clave: String in PUESTOS:
+		var ficha0: Dictionary = fichas.get(clave, {})
+		var nom := String(ficha0.get("nombre", ""))
+		if clave == "presidente":
+			nom = String(EdificioClub.ctx.get("presidente", ""))
+		if nom == "":
+			nom = _nombre_de_respaldo(clave)
+		nombres[clave] = nom
+		mujeres[clave] = PersonalEstadio.nombre_de_mujer(nom)
+	var club_ctx: Variant = EdificioClub.ctx.get("club")
+	var id_club := String(club_ctx.id) if club_ctx != null else "club"
+	var aspectos: Dictionary = AparienciaPersonal.generar(id_club, PUESTOS.keys(), mujeres)
 	for clave: String in PUESTOS:
 		var p: Array = PUESTOS[clave]
 		var ruta := _ruta(clave, int(p[0]), String(p[1]))
 		if ruta.is_empty():
 			continue
-		var ficha: Dictionary = fichas.get(clave, {})
-		var nombre := String(ficha.get("nombre", ""))
-		if clave == "presidente":
-			nombre = String(EdificioClub.ctx.get("presidente", ""))
-		if nombre == "":
-			nombre = _nombre_de_respaldo(clave)
+		var nombre := String(nombres[clave])
 		var puesto := _puesto(clave)
 		## El cargo en femenino si es una mujer.
-		if PersonalEstadio.nombre_de_mujer(nombre):
+		if bool(mujeres[clave]):
 			puesto = FEMENINO.get(puesto, puesto)
 		var raiz := Node3D.new()
 		raiz.position = ruta[0]
 		add_child(raiz)
-		var asp := PersonajeDT.aleatorio(_rng(semilla))
-		## El cuerpo sigue al nombre (13-10-2026: «Marta Soler» salía hombre).
-		var mujer := PersonalEstadio.nombre_de_mujer(nombre)
-		if (String(asp["cuerpo"]) == "female") != mujer:
-			asp["cuerpo"] = "female" if mujer else "male"
-			asp["barba"] = asp["barba"] and not mujer
-			asp["altura"] = clampf(float(asp["altura"]), 1.6, 1.74) if mujer else maxf(float(asp["altura"]), 1.68)
-			if mujer and String(asp["pelo"]) in ["calvo", "rapado", "fade", "samurai"]:
-				asp["pelo"] = "melena"
+		var asp: Dictionary = aspectos[clave]
 		asp["ropa"] = String(p[2])
 		asp["c_ropa"] = _hex(String(p[3]))
 		asp["c_ropa2"] = _hex(String(p[4]))
