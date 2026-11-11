@@ -286,3 +286,138 @@ func _probar_motor_ciego() -> void:
 	var c := MotorCombinado.new()
 	_comprobar(c.piezas == {"decide_con_balon": "siempre", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}, "el combinado arranca como League con nuestra decisión con balón (y no es igual a League)")
 	c.free()
+
+## EL MANDO TÁCTIL AL ESTILO FC MOBILE (11-11, pedido del dueño; `docs/04_auditorias/MANDO_TACTIL_FC_2026-11-11.md`): 4 botones fijos que cambian con la posesión,
+## tamaños y separaciones en mm (horizontal 2400×1080 y vertical 1080×2400, también zurdo), que los 4 se puedan pulsar a la vez y que cada gesto pulse SU acción del InputMap.
+func _probar_mando_tactil_fc() -> void:
+	_titulo("PARTIDO: MANDO TÁCTIL AL ESTILO FC MOBILE")
+	Mando.registrar()   ## las acciones jugar_* en el InputMap (sin ellas, `Input.action_press` no hace nada)
+	PantallaMovil.dpi_forzado = 400.0
+	var guarda_zurdo := ControlesTactiles.zurdo
+	for caso: Array in [["horizontal", Vector2i(2400, 1080), Vector2(1600, 720), false], ["vertical", Vector2i(1080, 2400), Vector2(540, 1200), false], ["horizontal zurdo", Vector2i(2400, 1080), Vector2(1600, 720), true]]:
+		PantallaMovil.ventana_forzada = caso[1]
+		ControlesTactiles.zurdo = bool(caso[3])
+		var ct := ControlesTactiles.new()
+		add_child(ct)
+		ct.size = caso[2]
+		var mm := 400.0 / 25.4 * (caso[2] as Vector2).y / float((caso[1] as Vector2i).y)   ## píxeles del lienzo por mm
+		var ids := ["SP", "PA", "AH", "TI"]
+		var minimo := true
+		var dentro := true
+		var hueco_min := INF
+		var contextos_iguales := true
+		var pos0 := {}
+		for id: String in ids:
+			pos0[id] = ct.centro_de(id)
+			minimo = minimo and ct.radio_de(id) * 2.0 / mm >= (10.0 if id != "AH" else 7.0)
+			var c := ct.centro_de(id)
+			var r := ct.radio_de(id)
+			dentro = dentro and c.x - r >= 0.0 and c.x + r <= ct.size.x and c.y - r >= 0.0 and c.y + r <= ct.size.y
+		for i in ids.size():
+			for j in range(i + 1, ids.size()):
+				hueco_min = minf(hueco_min, (ct.centro_de(ids[i]).distance_to(ct.centro_de(ids[j])) - ct.radio_de(ids[i]) - ct.radio_de(ids[j])) / mm)
+		ct._con_balon = false
+		for id: String in ids:
+			contextos_iguales = contextos_iguales and ct.centro_de(id) == pos0[id] and ct.visible_ahora(id)
+		_comprobar(minimo and dentro, "[%s] Pase, Tiro y Sprint miden ≥ 10 mm, Al hueco ≥ 7 mm y todo entra en la pantalla (SP %.1f mm)" % [caso[0], ct.radio_de("SP") * 2.0 / mm])
+		_comprobar(hueco_min >= 2.0, "[%s] entre los 4 botones quedan ≥ 2 mm de borde a borde (mínimo %.1f mm)" % [caso[0], hueco_min])
+		_comprobar(contextos_iguales, "[%s] los 4 botones están siempre en las mismas posiciones, con y sin balón" % caso[0])
+		var sg := -1.0 if bool(caso[3]) else 1.0   ## el zurdo lo espeja todo
+		var cp := ct.centro_de("PA")
+		var csp := ct.centro_de("SP")
+		_comprobar((csp.x - cp.x) * sg > 0.0 and ct.centro_de("TI").y < csp.y and ct.centro_de("AH").y < cp.y and absf(ct.centro_de("AH").x - cp.x) < 1.0 and absf(ct.centro_de("TI").x - csp.x) < 1.0 and csp.y > ct.size.y * 0.5, "[%s] disposición: grande abajo, Pase a su lado hacia el centro, Tiro encima del grande, Al hueco encima del Pase" % caso[0])
+		ct.queue_free()
+	ControlesTactiles.zurdo = guarda_zurdo
+	## La transición de la posesión: etiqueta, color y funciones cambian en ~0,15 s.
+	var ct2 := ControlesTactiles.new()
+	add_child(ct2)
+	ct2.size = Vector2(1600, 720)
+	ControlesTactiles.contexto_forzado = "sin"
+	ct2._process(0.1)
+	ct2._process(0.1)
+	_comprobar(not ct2._con_balon and is_zero_approx(ct2._mezcla) and ct2.etiqueta_de("SP", false) == "Sprint\ny entrada" and ct2.etiqueta_de("TI", false) == "Barrida" and MandoFC.color("SP", false) == Color.WHITE, "al perder el balón (0,2 s) los botones pasan a Sprint y entrada, Cambiar, 2.º defensor y Barrida")
+	ControlesTactiles.contexto_forzado = "con"
+	ct2._process(0.1)
+	_comprobar(ct2._mezcla > 0.0 and ct2._mezcla < 1.0, "a mitad de la transición la mezcla va por el medio (%.2f)" % ct2._mezcla)
+	ct2._process(0.1)
+	_comprobar(ct2._con_balon and is_equal_approx(ct2._mezcla, 1.0) and ct2.etiqueta_de("PA", true) == "Pase" and ct2.etiqueta_de("AH", true) == "Al hueco", "y al recuperarlo vuelven a Sprint y regate, Pase, Al hueco y Tiro")
+	ControlesTactiles.contexto_forzado = ""
+	ct2.queue_free()
+	## Cada gesto pulsa su acción (las del InputMap que ya existen: el mando físico no cambia). Casos: [botón, con balón, en banda, suelto propio, modo, gesto, acciones que deben quedar pulsadas].
+	var casos := [
+		["SP", true, false, false, "ambos", "mantener", ["jugar_sprint"]],
+		["SP", true, false, false, "ambos", "toque", ["jugar_regate"]],   ## (un toque corto: el sprint se suelta y queda el regate)
+		["SP", true, false, false, "ambos", "arriba", ["jugar_sprint", "jugar_fili_arriba"]],
+		["SP", true, false, false, "ambos", "abajo", ["jugar_sprint", "jugar_fili_arriba"]],
+		["SP", true, false, false, "ambos", "derecha", ["jugar_sprint", "jugar_fili_derecha"]],
+		["SP", true, false, false, "ambos", "izquierda", ["jugar_sprint", "jugar_regate"]],
+		["SP", false, false, false, "ambos", "mantener", ["jugar_sprint", "jugar_pase"]],
+		["SP", false, false, false, "ambos", "toque", ["jugar_tiro"]],   ## (sin balón, tocar = entrada)
+		["PA", true, false, false, "ambos", "mantener", []],
+		["PA", true, false, false, "ambos", "toque", ["jugar_pase"]],
+		["PA", true, false, false, "ambos", "arriba", ["jugar_pase_largo"]],
+		["PA", true, false, false, "ambos", "abajo", ["jugar_cambiar", "jugar_pase"]],
+		["PA", true, true, false, "ambos", "arriba", ["jugar_centro"]],
+		["PA", true, true, false, "ambos", "derecha", ["jugar_mod", "jugar_centro"]],
+		["PA", true, true, false, "ambos", "izquierda", ["jugar_cambiar", "jugar_centro"]],
+		["PA", true, false, false, "botones", "mantener", ["jugar_pase"]],
+		["PA", false, false, false, "ambos", "mantener", ["jugar_cambiar"]],
+		["AH", true, false, false, "ambos", "toque", ["jugar_filtrado"]],
+		["AH", true, false, false, "ambos", "arriba", ["jugar_cambiar", "jugar_filtrado"]],
+		["AH", true, false, false, "botones", "mantener", ["jugar_filtrado"]],
+		["AH", false, false, false, "ambos", "mantener", ["jugar_mod"]],
+		["AH", false, false, false, "ambos", "abajo", ["jugar_mod", "jugar_filtrado"]],
+		["TI", true, false, false, "ambos", "mantener", ["jugar_tiro"]],
+		["TI", true, false, false, "ambos", "abajo", ["jugar_tiro", "jugar_mod"]],
+		["TI", true, false, false, "ambos", "arriba", ["jugar_tiro", "jugar_cambiar"]],
+		["TI", true, false, false, "ambos", "izquierda", ["jugar_tiro", "jugar_pase"]],
+		["TI", false, false, false, "ambos", "mantener", ["jugar_centro"]],
+		["TI", false, false, true, "ambos", "mantener", ["jugar_tiro"]],
+	]
+	var todas := ["jugar_sprint", "jugar_pase", "jugar_tiro", "jugar_centro", "jugar_filtrado", "jugar_cambiar", "jugar_mod", "jugar_regate", "jugar_pase_largo", "jugar_fili_arriba", "jugar_fili_derecha", "jugar_pausa"]
+	PantallaMovil.ventana_forzada = Vector2i(2400, 1080)
+	var malos: PackedStringArray = []
+	for caso: Array in casos:
+		var ct3 := ControlesTactiles.new()
+		add_child(ct3)
+		ct3.size = Vector2(1600, 720)
+		ct3._modo_mando = String(caso[4])
+		ct3._con_balon = bool(caso[1])
+		ct3._en_banda = bool(caso[2])
+		ct3._suelto_propio = bool(caso[3])
+		var id := String(caso[0])
+		var c := ct3.centro_de(id)
+		ct3._toca(0, c)
+		var gesto := String(caso[5])
+		if gesto == "toque":
+			ct3._suelta(0)
+		elif gesto != "mantener":
+			ct3._desliza(0, c + (MandoFC.VEC[gesto] as Vector2) * ct3.radio_de(id) * 1.3)
+		var quedan: Array = []
+		for a: String in todas:
+			if Input.is_action_pressed(a):
+				quedan.append(a)
+		var esperadas: Array = (caso[6] as Array).duplicate()
+		quedan.sort()
+		esperadas.sort()
+		if quedan != esperadas:
+			malos.append("%s %s%s %s: pulsadas %s, esperadas %s" % [id, "con" if caso[1] else "sin", " banda" if caso[2] else "", gesto, str(quedan), str(esperadas)])
+		ct3.soltar_todo()
+		for a: String in todas:
+			Input.action_release(a)
+		ct3.queue_free()
+	_comprobar(malos.is_empty(), "cada gesto pulsa su acción (%d casos)%s" % [casos.size(), "" if malos.is_empty() else ": " + "; ".join(malos)])
+	## Los 4 botones a la vez (cuatro dedos, modo Botones): Sprint, Pase, Al hueco y Tiro pulsados juntos y todo se suelta al levantar.
+	var ct4 := ControlesTactiles.new()
+	add_child(ct4)
+	ct4.size = Vector2(1600, 720)
+	ct4._modo_mando = "botones"
+	for k in 4:
+		ct4._toca(k, ct4.centro_de(["SP", "PA", "AH", "TI"][k]))
+	var juntos := Input.is_action_pressed("jugar_sprint") and Input.is_action_pressed("jugar_pase") and Input.is_action_pressed("jugar_filtrado") and Input.is_action_pressed("jugar_tiro")
+	for k in 4:
+		ct4._suelta(k)
+	_comprobar(juntos and not Input.is_action_pressed("jugar_pase") and not Input.is_action_pressed("jugar_tiro") and not Input.is_action_pressed("jugar_sprint"), "los 4 botones se pulsan a la vez con 4 dedos y se sueltan al levantarlos")
+	ct4.queue_free()
+	PantallaMovil.dpi_forzado = 0.0
+	PantallaMovil.ventana_forzada = Vector2i.ZERO

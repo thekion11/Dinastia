@@ -65,31 +65,33 @@ func _process(_d: float) -> void:
 	if _n == 70:
 		_comprobar(not _pj._ayuda.visible, "la línea de ayuda de teclado está oculta con los controles táctiles")
 	if _n == 80:
+		ControlesTactiles.contexto_forzado = "con"
 		_p0 = _pj.motor.pos(_pj.motor.usuario)
 		var c0 := _ct.centro_reposo()
 		_toque(0, c0, true)
 		_arrastre(0, c0 + Vector2(0, -90))
-		_toque(1, _ct.centro_de("Sprint"), true)
+		_toque(1, _ct.centro_de("SP"), true)
 	if _n == 140:
 		var p1: Vector3 = _pj.motor.pos(_pj.motor.usuario)
 		_comprobar(Input.is_action_pressed("jugar_sprint"), "el dedo del sprint corre")
 		_comprobar(Mando.movimiento().length() > 0.5, "el stick empuja con fuerza (%.2f)" % Mando.movimiento().length())
 		_comprobar(p0_distancia(p1) > 1.0, "el jugador se ha movido con el dedo (%.1f m)" % p0_distancia(p1))
 		_foto("tactil_partido_mueve")
-		_toque(2, _ct.centro_de("A"), true)
-		_toque(3, _ct.centro_de("B"), true)
-		_arrastre(3, _ct.centro_de("B") + Vector2(0, -_ct.radio_de("B") * 1.3))   ## deslizar desde Tiro = rosca (Mod), el botón Mod ya no se ve
+		_toque(2, _ct.centro_de("PA"), true)
+		_toque(3, _ct.centro_de("TI"), true)
+		_arrastre(3, _ct.centro_de("TI") + Vector2(0, _ct.radio_de("TI") * 1.3))   ## deslizar hacia abajo desde Tiro = rosca (Mod)
 	if _n == 150:
 		_comprobar(Input.is_action_pressed("jugar_tiro") and Input.is_action_pressed("jugar_mod"), "tiro y modificador (deslizando desde Tiro) pulsados con otros dedos a la vez")
-		_toque(3, _ct.centro_de("B"), false)
-		_comprobar(Input.is_action_pressed("jugar_pase"), "el botón A (pase / presión) está pulsado")
+		_toque(3, _ct.centro_de("TI"), false)
+		_comprobar(Input.is_action_pressed("jugar_sprint"), "el sprint sigue pulsado con el tiro soltado")
 		_foto("tactil_partido_pase")
-		_toque(2, _ct.centro_de("A"), false)
-		_toque(1, _ct.centro_de("Sprint"), false)
+		_toque(2, _ct.centro_de("PA"), false)
+		_toque(1, _ct.centro_de("SP"), false)
 		_toque(0, _ct.centro_reposo(), false)
 	if _n == 160:
 		_comprobar(Mando.movimiento() == Vector2.ZERO and not Input.is_action_pressed("jugar_sprint"), "al levantar los dedos todo se suelta")
 		_toque(5, _ct.centro_de("Pausa"), true)
+		ControlesTactiles.contexto_forzado = ""
 	if _n == 165:
 		_toque(5, _ct.centro_de("Pausa"), false)
 	if _n == 190:
