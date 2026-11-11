@@ -67,8 +67,9 @@ func _evento(motor: MotorJugable) -> String:
 		if nodo.global_position.distance_to(cam.global_position) > 45.0:
 			continue
 		var sp := (p["vel"] as Vector3).length()
-		if p.has("ls_guia"):
-			return String((p["ls_guia"] as Dictionary).get("tipo", ""))
+		var clip := String(p.get("anim_actual", ""))
+		if clip.begins_with("ls_movement__") and not is_same(p, motor.poseedor):   ## el clip del original que se ve (vale con o sin guía)
+			return "arranque" if clip.contains("accel") else ("frenada" if clip.contains("decel") else "giro")
 		if is_same(p, motor.poseedor) and sp > 6.0:
 			return "conduccion"
 		if sp > 7.2 and not is_same(p, motor.poseedor):

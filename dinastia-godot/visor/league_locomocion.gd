@@ -23,6 +23,21 @@ const CONDUCIR := ["conducir", "correr", "trotar", "conducir_ls", "conducir_ls_r
 const CICLO_CUERPO := "ls_ciclo__"
 const RECOLOCAR := 12.0   ## 1/s: la compensación que sobra al acabar un clip se apaga en ~0,25 s
 
+## PRECARGA (11-11, aviso de la sesión 11): el primer paso de un partido gastaba 90-185 ms en cargar las bibliotecas de animación
+## (League y las de UAL) y el catálogo. `MotorLeague.preparar` lo hace ANTES del saque (en la salida de los equipos / la precarga
+## del estadio), así no hay tirón en el primer toque. Idempotente: las siguientes llamadas no cuestan nada.
+static var _precargado := false
+
+static func precargar() -> void:
+	if _precargado:
+		return
+	_precargado = true
+	LeagueMovimiento.clips()
+	LeagueToques.catalogo()
+	LeagueAnim.tareas_movimiento()
+	LeagueMovimiento.nativo()
+	LeagueAnim.ciclo_de("ls_ballcontrol__walk__000", "precarga")   ## abre las bibliotecas de League y de la UAL (el clip se descarta)
+
 static func paso(m: MotorLeague, delta: float) -> void:
 	var t0 := Time.get_ticks_usec()
 	_paso(m, delta)
