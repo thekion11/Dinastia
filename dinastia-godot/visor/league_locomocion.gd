@@ -205,7 +205,7 @@ static func _quizas_empezar(m: MotorLeague, p: Dictionary) -> void:
 	var vuelve := entra > LeagueMovimiento.IDLE and absf(angle_difference(quiere_cuerpo, cuerpo)) > 0.01
 	if not (arranca or frena or gira or vuelve):
 		return
-	if not visto or not preparar(ap, m.t):
+	if not preparar(ap, m.t):
 		return
 	var c := LeagueMovimiento.elegir(sp, rel, sp_des, cuerpo, mirar, pie_que_toca(p, ap))
 	if not c.is_empty() and c.has("auto") and not ap.has_animation(String(c["nombre"])) and not LeagueMovimiento.estable(c):
