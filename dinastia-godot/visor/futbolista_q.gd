@@ -32,8 +32,16 @@ const MODELOS := {
 ## aventura/granja/rey/astronauta/medieval/ciencia ficción/bruja (informe `docs/04_auditorias/avatares_2026-11-11.md`).
 ## Los «Modular Men/Women» de Quaternius (CC0) que quedan son civiles sin animaciones; `IdleProcedural` les da vida.
 ## Clave → [nombre, ruta, cuerpo].
-const MODULARES_H := {"Beach": "Playa", "Casual": "Casual", "Casual2": "Casual 2", "Punk": "Punk", "Suit": "Traje", "Swat": "SWAT", "Worker": "Obrero"}
-const MODULARES_M := {"Casual": "Casual", "Formal": "Formal", "Punk": "Punk", "Soldier": "Soldado", "Suit": "Traje", "Worker": "Obrera"}
+const MODULARES_H := {"Beach": "Playa", "Casual": "Casual", "Casual2": "Casual 2", "Suit": "Traje", "Worker": "Obrero"}
+const MODULARES_M := {"Casual": "Casual", "Formal": "Formal", "Suit": "Traje", "Worker": "Obrera"}
+## SOLO PARA EL PERSONAL DEL CLUB (orden del dueño, 11-11): NO son elegibles como avatar del jugador.
+## Clave → [nombre, ruta, cuerpo]; `PersonalEstadio` los usa (seguridad de la puerta, hincha punk).
+const PERSONAL := {
+	"mh_swat": ["SWAT", "res://assets/characters/modular/men/Swat.glb", "male"],
+	"mm_soldier": ["Soldado", "res://assets/characters/modular/women/Soldier.glb", "female"],
+	"mh_punk": ["Punk", "res://assets/characters/modular/men/Punk.glb", "male"],
+	"mm_punk": ["Punk", "res://assets/characters/modular/women/Punk.glb", "female"],
+}
 static var _modulares: Dictionary = {}
 ## Todos los modelos ajenos elegibles: los modulares y, si está en el proyecto (no va en los builds públicos), el avatar regalo.
 static func todos_ajenos() -> Dictionary:
@@ -53,6 +61,8 @@ static func modelo_valido(clave: String) -> bool:
 ## ¿Está el modelo ajeno en el juego?
 static func ajeno_disponible(clave: String) -> bool:
 	var t := todos_ajenos()
+	if PERSONAL.has(clave):
+		return ResourceLoader.exists(String((PERSONAL[clave] as Array)[1]))
 	return t.has(clave) and ResourceLoader.exists(String((t[clave] as Array)[1]))
 
 ## Arma un modelo ajeno a `altura` m (medida por sus mallas) con su «Idle» en bucle y sin armas.
@@ -60,7 +70,8 @@ static func ajeno_disponible(clave: String) -> bool:
 static func ajeno(padre: Node3D, clave: String, altura: float) -> Dictionary:
 	if not ajeno_disponible(clave):
 		return {}
-	var packed: PackedScene = load(String((todos_ajenos()[clave] as Array)[1]))
+	var fila: Array = PERSONAL[clave] if PERSONAL.has(clave) else todos_ajenos()[clave]
+	var packed: PackedScene = load(String(fila[1]))
 	if packed == null:
 		return {}
 	var modelo: Node3D = packed.instantiate()
