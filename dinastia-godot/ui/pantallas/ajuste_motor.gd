@@ -21,7 +21,7 @@ static func crear(p: Object) -> void:
 		b.add_theme_font_size_override("font_size", 11)
 		b.custom_minimum_size = Vector2(70, 0)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.tooltip_text = Idiomas.t("Elige A, B o C sin saber cuál es cuál y juega: al terminar cada partido te pedimos una nota de diversión. «Por defecto» es el motor de siempre.")
+		b.tooltip_text = Idiomas.t("Elige A, B o C sin saber cuál es cuál y juega: al terminar cada partido te pedimos una nota de diversión. «Por defecto» es el motor del juego (C4).")
 		b.pressed.connect(func() -> void:
 			MotorEleccion.elegir(letra)
 			p._refrescar())

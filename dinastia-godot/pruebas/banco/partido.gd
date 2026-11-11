@@ -206,8 +206,15 @@ func _probar_motor_ciego() -> void:
 	var ruta0 := MotorEleccion.ruta
 	MotorEleccion.ruta = "user://motor_ciego_prueba.json"
 	MotorEleccion.reiniciar(true)
-	_comprobar(MotorEleccion.seleccion() == "" and MotorEleccion.motor_activo() == "siempre" and not MotorEleccion.a_ciegas(), "por defecto no hay letra y el motor es el de siempre")
-	_comprobar(MotorFabrica.crear().get_meta("motor_id") == "siempre" and not MotorFabrica.crear() is MotorLeague, "la fábrica da el de siempre por defecto")
+	_comprobar(MotorEleccion.seleccion() == "" and MotorEleccion.motor_activo() == "combinado_c4" and not MotorEleccion.a_ciegas(), "por defecto no hay letra y el motor es C4 (orden 39 del dueño)")
+	var por_defecto := MotorFabrica.crear()
+	_comprobar(por_defecto.get_meta("motor_id") == "combinado_c4" and por_defecto is MotorCombinado and (por_defecto as MotorCombinado).piezas["locomocion"] == "siempre", "la fábrica da C4 por defecto")
+	por_defecto.free()
+	OS.set_environment("MOTOR_CLASICO", "1")
+	var clasico := MotorFabrica.crear()
+	_comprobar(MotorEleccion.motor_activo() == "siempre" and clasico.get_meta("motor_id") == "siempre" and not clasico is MotorLeague, "MOTOR_CLASICO=1 devuelve el de siempre (respaldo)")
+	clasico.free()
+	OS.unset_environment("MOTOR_CLASICO")
 	MotorEleccion.barajar(7)
 	var o: Array = MotorEleccion.orden().duplicate()
 	var o2: Array = o.duplicate()
