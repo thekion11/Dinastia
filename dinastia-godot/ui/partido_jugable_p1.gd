@@ -378,6 +378,7 @@ func _cerrar() -> void:
 
 func _al_terminar() -> void:
 	motor.set_physics_process(false)
+	load("res://ui/voto_motor.gd").mostrar(self, motor)   ## (11-11) voto de diversión si se prueba a ciegas (A/B/C)
 	if is_instance_valid(_cine):
 		_cine.cortar()
 		_cine = null

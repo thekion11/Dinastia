@@ -1,0 +1,118 @@
+class_name MotorCombinado
+extends MotorLeague
+## EL MOTOR COMBINADO «C» (11-11-2026, sesión 11; encargo del dueño: comparar tres motores a ciegas).
+## Arranca como el de League-Soccer CON nuestros saques, árbitro, cámaras, celebraciones, porteros y ejecución de golpeos (todo eso
+## ya lo hereda `MotorLeague`), pero cada PIEZA del núcleo se puede cambiar por la nuestra («siempre») o dejar la de League («league»),
+## para ir ajustándolo según lo que gane cada pieza (`pruebas/comparar_tres_motores.tscn` mide cada pieza por separado, `PIEZA_C=`):
+##   decide_con_balon  quién decide con balón (pase, tiro, regate, pánico)        league: `_ia_portador` de League
+##   coloca_sin_balon  colocación y movimiento sin balón (formación, marcaje…)    league: `_forma` + estrategias de la fase 3
+##   fisica_balon      el balón suelto (gravedad, arrastre, roce de césped)        league: paso fijo de 10 ms
+##   locomocion        el cuerpo: toque de conducción, ciclos de animación, robos  league: fase 4 (`LeagueLocomocion`, `_interferir`)
+## Cómo se elige «lo nuestro» SIN tocar los archivos de League (los edita la sesión 9): sus ganchos devuelven a `super` cuando
+## `equipos` está vacío o la bandera estática `fase3` está apagada; aquí se apagan SOLO durante esa llamada y se restauran al salir.
+## Las piezas por defecto: `datos/motor_c_piezas.json`; `MOTOR_C_PIEZAS="locomocion=siempre,fisica_balon=siempre"` las cambia al vuelo.
+
+const PIEZAS: Array[String] = ["decide_con_balon", "coloca_sin_balon", "fisica_balon", "locomocion"]
+const RUTA_PIEZAS := "res://datos/motor_c_piezas.json"
+
+var piezas := {"decide_con_balon": "league", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}
+
+## Piezas por defecto: el archivo y, encima, la variable de entorno.
+static func piezas_por_defecto() -> Dictionary:
+	var r := {"decide_con_balon": "league", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}
+	if FileAccess.file_exists(RUTA_PIEZAS):
+		var j: Variant = JSON.parse_string(FileAccess.get_file_as_string(RUTA_PIEZAS))
+		if j is Dictionary:
+			for k: String in PIEZAS:
+				if (j as Dictionary).has(k):
+					r[k] = _valida(String((j as Dictionary)[k]))
+	for par in OS.get_environment("MOTOR_C_PIEZAS").split(",", false):
+		var kv := String(par).split("=")
+		if kv.size() == 2 and PIEZAS.has(kv[0].strip_edges()):
+			r[kv[0].strip_edges()] = _valida(kv[1].strip_edges())
+	return r
+
+static func _valida(v: String) -> String:
+	return v if v == "siempre" or v == "league" else "league"
+
+func _init() -> void:
+	piezas = piezas_por_defecto()
+
+func _nuestra(pieza: String) -> bool:
+	return String(piezas[pieza]) == "siempre"
+
+## Resumen legible: «decide=league, coloca=siempre, …».
+func descripcion_piezas() -> String:
+	var r: PackedStringArray = []
+	for k: String in PIEZAS:
+		r.append("%s=%s" % [k, piezas[k]])
+	return ", ".join(r)
+
+# ------------------------------------------------------------------ las piezas
+
+func _ia_portador(p: Dictionary) -> void:
+	if not _nuestra("decide_con_balon"):
+		super(p)
+		return
+	var guardado := equipos
+	equipos = []
+	super(p)
+	equipos = guardado
+
+func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
+	if not _nuestra("coloca_sin_balon"):
+		return super(p, en_posesion)
+	var guardado := equipos
+	equipos = []
+	var r := super(p, en_posesion)
+	equipos = guardado
+	return r
+
+func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
+	return _sin_flag3(p, true)
+
+func _ia_defensa(p: Dictionary) -> Vector3:
+	return _sin_flag3(p, false)
+
+func _sin_flag3(p: Dictionary, ataque: bool) -> Vector3:
+	var f3 := MotorLeague.fase3
+	if _nuestra("coloca_sin_balon"):
+		MotorLeague.fase3 = false
+	var r := super._ia_ataque_sin_balon(p) if ataque else super._ia_defensa(p)
+	MotorLeague.fase3 = f3
+	return r
+
+## La predicción y los marcajes de League solo hacen falta si juega alguna pieza de League que los usa.
+func _estado_sin_balon(delta: float) -> void:
+	if _nuestra("coloca_sin_balon") and _nuestra("locomocion"):
+		return
+	super(delta)
+
+func _estado_league(delta: float) -> void:
+	var f3 := MotorLeague.fase3
+	if _nuestra("locomocion") and _nuestra("coloca_sin_balon"):
+		MotorLeague.fase3 = false   ## sin robos por alcance ni estrategias
+	super(delta)
+	MotorLeague.fase3 = f3
+
+func _interferir() -> void:
+	if not _nuestra("locomocion"):
+		super()
+
+func _mover_balon(delta: float) -> void:
+	var eq := equipos
+	var f3 := MotorLeague.fase3
+	if _nuestra("fisica_balon"):
+		equipos = []   ## el balón suelto lo mueve la física de siempre (el gancho de League devuelve a `super`)
+	if _nuestra("locomocion"):
+		MotorLeague.fase3 = false   ## sin el toque de conducción de League
+	super(delta)
+	equipos = eq
+	MotorLeague.fase3 = f3
+
+func _mover_jugadores(delta: float) -> void:
+	var f3 := MotorLeague.fase3
+	if _nuestra("locomocion"):
+		MotorLeague.fase3 = false   ## sin los ciclos de animación de League
+	super(delta)
+	MotorLeague.fase3 = f3

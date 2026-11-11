@@ -44,7 +44,9 @@ func _probar_formacion_propia() -> void:
 ## (`HumanoidBase::SelectAnim` + `GetMovementSimilarity`) sobre los datos de `datos/league_movimiento.json`.
 func _probar_league_movimiento() -> void:
 	_titulo("MOTOR LEAGUE: ARRANQUES, FRENADAS Y GIROS DEL ORIGINAL")
-	_comprobar(LeagueMovimiento.clips().filter(func(c): return not c.has("auto")).size() == 98 and LeagueMovimiento.clips().size() - 98 == (874 if LeagueAuto.activas else 0), "49 clips de movimiento del original con su espejo y 437 intermedias legales con el suyo (%d)" % LeagueMovimiento.clips().size())
+	## (11-11) Solo los del original: las extras de `datos/anims_extra` (prefijo «ext_») no cuentan aquí.
+	var orig := LeagueMovimiento.clips().filter(func(c): return not String(c["nombre"]).begins_with("ext_"))
+	_comprobar(orig.filter(func(c): return not c.has("auto")).size() == 98 and orig.size() - 98 == (874 if LeagueAuto.activas else 0), "49 clips de movimiento del original con su espejo y 437 intermedias legales con el suyo (%d)" % orig.size())
 	_comprobar(LeagueMovimiento.rango(1.0) == 0.0 and LeagueMovimiento.rango(3.0) == 3.5 and LeagueMovimiento.rango(5.0) == 5.0 and LeagueMovimiento.rango(7.0) == 8.0, "velocidades escalonadas del original (RangeVelocity)")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0).get("nombre", "")) == "ls_movement__idle__000_accel", "parado y quiere ir de frente: arranque recto")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, -PI / 2.0, 5.0).get("nombre", "")) == "ls_movement__idle__090_accel", "parado y quiere ir a la derecha: arranque girando 90° a la derecha")
@@ -84,6 +86,48 @@ func _probar_league_movimiento() -> void:
 			dos_pasos = c
 	_comprobar(String(dos_pasos.get("pie_sale", "")) == "D", "un clip de 2 pasos que empieza con el derecho deja el derecho para el siguiente")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0, 0.0, NAN, "I").get("nombre", "")) == "ls_movement__idle__000_accel", "parado, el pie no cuenta (como el original)")
+
+## CATÁLOGO ETIQUETADO (11-11, fase 4): otras animaciones se suman con `datos/anims_extra/*.json` sin tocar código y la elección las ve.
+func _probar_league_catalogo() -> void:
+	_titulo("MOTOR LEAGUE: CATÁLOGO ETIQUETADO Y EXTENSIBLE")
+	LeagueCatalogo.reiniciar()
+	LeagueMovimiento.reiniciar()
+	var base := LeagueMovimiento.clips().size()
+	## (11-11) Ya hay extras reales en `datos/anims_extra` (la sesión de animaciones): la prueba mide a partir de lo que haya.
+	var n0 := LeagueCatalogo.extras().size()
+	_comprobar(n0 % 2 == 0 and LeagueCatalogo.extras().all(func(e): return String(e["nombre"]).begins_with("ext_")), "las extras de datos/anims_extra entran en pares (normal y espejo) y con prefijo ext_ (%d; catálogo %d)" % [n0, base])
+	var mal := LeagueCatalogo.agregar([{"nombre": "sin_prefijo", "entra": 0, "sale": 5, "ang": 0, "largo": 0.4},
+		{"nombre": "ext_largo_absurdo", "entra": 0, "sale": 5, "ang": 0, "largo": 9.0}, {"nombre": "ext_sin_largo", "entra": 0, "sale": 5, "ang": 0},
+		{"nombre": "ext_pie_raro", "entra": 0, "sale": 5, "ang": 0, "largo": 0.4, "pie": "X"}, {"nombre": "ext_grados", "entra": 0, "sale": 5, "ang": 90.0 * 5.0, "largo": 0.4}])
+	_comprobar(mal.size() == 5 and LeagueCatalogo.extras().size() == n0, "cinco entradas mal etiquetadas se rechazan con su motivo (%d)" % mal.size())
+	## Un arranque de prueba con las MISMAS etiquetas que uno del original (reusa su clip): con el empate gana el del original.
+	var antes := String(LeagueMovimiento.elegir(0.0, -PI / 2.0, 5.0).get("nombre", ""))
+	var ok := LeagueCatalogo.agregar([{"nombre": "ext_prueba_arranque", "clip": "ls_movement__idle__090_accel", "clip_espejo": "ls_movement__idle__090_accel_espejo",
+		"entra": 0, "sale": 3.5, "ang": -1.5795, "cuerpo": -1.6004, "largo": 0.26, "reposo": 1, "pie": "D"}])
+	_comprobar(ok.is_empty() and LeagueCatalogo.extras().size() == n0 + 2, "una entrada buena trae su versión normal y su espejo")
+	LeagueMovimiento.reiniciar()
+	_comprobar(LeagueMovimiento.clips().size() == base + 2, "el catálogo de movimiento la incluye (%d)" % LeagueMovimiento.clips().size())
+	_comprobar(antes == "ls_movement__idle__090_accel" and String(LeagueMovimiento.elegir(0.0, -PI / 2.0, 5.0).get("nombre", "")) == "ls_movement__idle__090_accel", "con un empate gana el del original")
+	var porpie := LeagueCatalogo.buscar({"tipo": "arranque", "ext": true}, {"ang": -PI / 2.0}).filter(func(e): return String(e["nombre"]).begins_with("ext_prueba"))
+	_comprobar(porpie.size() == 2 and String(porpie[0]["nombre"]) == "ext_prueba_arranque" and String(porpie[0]["tipo"]) == "arranque", "buscar por etiquetas (tipo + ang) la encuentra primero")
+	var lado := LeagueCatalogo.buscar({"tipo": "arranque", "pie": "I"}, {"ang": PI / 2.0})
+	_comprobar(not lado.is_empty() and String(lado[0]["pie"]) == "I" and float(lado[0]["ang"]) > 1.0, "buscar con filtro de pie y giro a la izquierda")
+	var tareas := LeagueAnim.tareas_movimiento().filter(func(t): return String(t[0]).begins_with("ext_prueba"))
+	_comprobar(tareas.size() == 2, "las extras entran en las tareas de la biblioteca del jugador")
+	var lib := AnimationLibrary.new()
+	var correr := Animation.new()
+	correr.add_track(Animation.TYPE_ROTATION_3D)
+	correr.track_set_path(0, NodePath("Armature/Skeleton3D:pelvis"))
+	correr.track_insert_key(0, 0.0, Quaternion.IDENTITY)
+	var ap := AnimationPlayer.new()
+	lib.add_animation("correr", correr)
+	ap.add_animation_library("", lib)
+	LeagueAnim.movimiento(lib, "Armature/Skeleton3D", 0, 100000)
+	_comprobar(lib.has_animation("ext_prueba_arranque") and lib.get_animation("ext_prueba_arranque").loop_mode == Animation.LOOP_NONE, "el clip extra se carga en la biblioteca, sin bucle")
+	ap.free()
+	LeagueCatalogo.reiniciar()
+	LeagueMovimiento.reiniciar()
+	_comprobar(LeagueMovimiento.clips().size() == base, "reiniciar deja el catálogo como de fábrica")
 
 func _probar_visita_generada() -> void:
 	_titulo("SEGUNDO UNIFORME PROPIO GENERADO (sin visita archivada)")

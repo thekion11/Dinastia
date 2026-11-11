@@ -94,7 +94,7 @@ MotorLeague (D motor_league.gd)  ── hereda de ──>  MotorJugable (reglas,
 | 1 | Estudio y plan (este documento) | — | HECHO (10-11) |
 | 2 | **Prototipo** detrás de la bandera: decisión con balón (Eliza), colocación (TeamAI), balón suelto (ballphysics a 10 ms), estado de equipo (posesión que se desvanece, trampa del fuera de juego, tácticas vivas) | `pruebas/comparar_motor_league.tscn` (partidos completos, varios países, los dos motores, CPU y determinismo); banco `_probar_league_nucleo` (fórmulas contra valores del original) | HECHO (10-11), cifras abajo |
 | 3 | IA SIN balón de League: estrategias por puesto (`strategies/offtheball/default_*.cpp`), apoyo por campo de fuerzas, componente defensiva, presión de equipo y de zona (`ApplyTeamPressure`, `ApplyZonePressure`), marcaje al hombre (`CalculateManMarking`), carreras al espacio (`ApplyAttackingRun`), apoyo adelantado, caza del portador | La misma comparación + banco | HECHO (10-11), cifras en §7. Quedan para la 3b: el portero de League (`goalie_default.cpp`; hoy el nuestro), la ventaja del árbitro y las tarjetas pendientes (R1, ya parcial en `MotorVentaja`) |
-| 4 | **Locomoción guiada por animaciones** (L humanoid + animcollection): elegir la animación de `league.res` que encaja con la orden y tocar el balón en su cuadro de contacto; velocidades cuantizadas (parado 0, conducción 3,5, trote 5, sprint 8 m/s) y giros con inercia | Capturas con la CÁMARA REAL (`herramientas/captura.sh`), vídeo del partido, `mem_*` | pendiente (lo más grande: ~7.600 líneas de origen) |
+| 4 | **Locomoción guiada por animaciones** (L humanoid + animcollection): elegir la animación de `league.res` que encaja con la orden y tocar el balón en su cuadro de contacto; velocidades cuantizadas (parado 0, conducción 3,5, trote 5, sprint 8 m/s) y giros con inercia | Capturas con la CÁMARA REAL (`herramientas/captura.sh`), vídeo del partido, `mem_*` | EN CURSO (11-11): 4a-4c HECHAS; 4d catálogo extensible + guía de movimiento (§11) HECHAS; faltan calibrar la fuerza de la guía y capturas con cámara real |
 | 5 | Rendimiento: medir en `hw_modesto.sh` y en el teléfono del dueño; si la CPU de la IA pesa, pasar a C++ (`nativo/src`) las 3 funciones calientes con su gemelo GDScript | `probar_nativo.tscn` «FIN. 0 fallos», `medir_motor_cpu` | pendiente |
 | 6 | Calibrar contra el fútbol real y el motor de hoy (remates 20-26, goles 2,5-2,9, acierto de pase 80-85 %, posesión 50 ± 8) y proponer al dueño el cambio por defecto | `comparar_motor_league` con 16+ partidos | pendiente |
 | 7 | Por defecto (con OK del dueño): `MotorLeague.crear()` en el estadio y el partido jugable; el motor de siempre queda como respaldo detrás de la bandera inversa | banco completo con la bandera encendida | pendiente |
@@ -487,3 +487,27 @@ extensión 170 / 124 / 128, con ella 146 / 120 / 123.
 diccionarios de cada jugador (Variant) y llamadas a AnimationPlayer y Node por fotograma, y eso no se gana con C++ (seguiría
 pasando por Variant). Bajarlo más pediría cambiar la estructura de datos del motor (jugadores como objetos con campos tipados en
 vez de diccionarios), que es una decisión de todo el motor, no de esta capa.
+
+## 11. Fase 4d (sesión 9, 11-11): catálogo etiquetado y locomoción que guía el movimiento
+
+**Catálogo extensible** (`visor/league_catalogo.gd`, `datos/anims_extra/*.json`, formato en `datos/anims_extra/LEEME.md`): cada clip
+lleva etiquetas (tipo, velocidad de entrada y salida, ángulo, cuerpo, pie, duración); otras sesiones suman animaciones gratuitas con un
+JSON y la elección (`LeagueMovimiento.elegir`) las ve igual que a las del original; con un empate gana el original. Búsqueda general
+por etiquetas: `LeagueCatalogo.buscar(filtro, deseo)`. Banco: «MOTOR LEAGUE: CATÁLOGO ETIQUETADO Y EXTENSIBLE». No trae el extractor de
+etiquetas desde la pista de raíz de un clip ajeno (hoy se etiquetan a mano).
+
+**Guía del movimiento** (`visor/league_guia.gd`, `LS_GUIA=0` la apaga, `LS_MARCHAS=0` solo las marchas): la velocidad y el rumbo
+siguen el clip de arranque, frenada o giro (mezcla suave; más pegada en la CPU, menos en el jugador para que responda), el clip se
+corta si lo pedido cambia de golpe (pausa de 0,5 s tras el corte) y a ritmo de crucero la velocidad se asienta en 3,5 / 5 / la propia.
+La decisión usa solo estado físico: no depende de cámara ni de clips cargados (con eso sí dependía y rompía el determinismo).
+Se aplica tras el paso del motor (no se toca `motor_jugable_p5`). El toque en el cuadro de contacto de los golpeos ya existía (`LeagueAnim.GOLPEOS`).
+
+| 3 cruces (CHI-ARG, ARG-BRA, BRA-ESP), 2 × 120 s | sin guía | con guía |
+|---|---|---|
+| aceleración media / p95 (m/s²) | 4,73 / 18 | 4,68 / 17 |
+| giro medio (rad/s) | 1,06 | 1,05 |
+| remates · cambios de posesión | 4,7 · 13,3 | 2,7 · 10,7 |
+Determinismo IGUAL; «FIN. 0 fallos». Una primera versión (guía pegada al clip) daba −15 % de sacudidas pero rompía el determinismo y en un
+partido hubo 3.085 arranques seguidos (bucle de corte y reinicio): corregido con la decisión física y la pausa. **Lectura honesta**:
+con 3 partidos las diferencias de remates y posesión son ruido; el efecto en el movimiento es pequeño. Pendiente: calibrar con 6+
+partidos y capturas con la cámara real, y decidir la fuerza (K_CPU, K_USUARIO) por cómo se siente, no por cifras.

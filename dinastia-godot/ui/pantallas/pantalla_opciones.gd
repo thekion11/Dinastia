@@ -221,6 +221,7 @@ func _disp_calidad() -> void:
 	ModoRendimiento.crear(p)
 	ModoRendimiento.crear_menu(p)   ## (10-11) ahorro del menú también en MEDIA   ## (10-11) sin brillo ni sombra del sol de MEDIA hacia abajo; apagado por defecto
 	PartidoLigero.crear(p)   ## (4-11, orden 32) agregado aparte de la calidad: se ve en todas
+	AjusteMotor.crear(p)   ## (11-11) motor del partido a ciegas A/B/C (`MotorEleccion`)
 	AjusteResolucion3D.crear(p)   ## (3-11 / 4-11, pedido del dueño) resolución del 3D en Mínima (35-100 %) y en Media (50-100 %)
 	var ad := CheckButton.new()
 	ad.text = Idiomas.t("Ajustar sola para mantener 40 FPS en el partido")

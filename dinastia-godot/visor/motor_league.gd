@@ -422,6 +422,7 @@ func _mover_balon(delta: float) -> void:
 func _mover_jugadores(delta: float) -> void:
 	super(delta)
 	if fase3:
+		LeagueGuia.paso(self, delta)   ## (11-11) la locomoción manda sobre el cuerpo: velocidad y rumbo del clip, marchas
 		LeagueLocomocion.paso(self, delta)
 
 ## Mientras dura un clip del original o el cuerpo va girado, los ciclos normales no lo pisan; un gesto de verdad sí.

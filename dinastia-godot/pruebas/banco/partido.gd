@@ -198,3 +198,73 @@ func _probar_traza_corte() -> void:
 	_comprobar(int(motor.diag.get("traza_corte_perp_en_linea", 0)) == 1, "un defensa a 0,5 m de la línea estaba «en_linea»")
 	_comprobar(int(motor.diag.get("traza_corte_t_rapido", 0)) == 1, "un corte a 0,2 s del pase es «rapido» (sin tiempo de reacción)")
 	(r[1] as Node3D).queue_free()
+
+## EL MOTOR A CIEGAS (11-11, sesión 11): el selector A/B/C reparte los tres motores sin decir cuál es cuál, por defecto sigue el de siempre,
+## el voto se guarda con el motor real y el combinado con todas las piezas «siempre» juega EXACTAMENTE como el de siempre.
+func _probar_motor_ciego() -> void:
+	_titulo("PARTIDO: MOTOR A CIEGAS (A/B/C) Y COMBINADO")
+	var ruta0 := MotorEleccion.ruta
+	MotorEleccion.ruta = "user://motor_ciego_prueba.json"
+	MotorEleccion.reiniciar(true)
+	_comprobar(MotorEleccion.seleccion() == "" and MotorEleccion.motor_activo() == "siempre" and not MotorEleccion.a_ciegas(), "por defecto no hay letra y el motor es el de siempre")
+	_comprobar(MotorFabrica.crear().get_meta("motor_id") == "siempre" and not MotorFabrica.crear() is MotorLeague, "la fábrica da el de siempre por defecto")
+	MotorEleccion.barajar(7)
+	var o: Array = MotorEleccion.orden().duplicate()
+	var o2: Array = o.duplicate()
+	o2.sort()
+	var ref: Array = MotorEleccion.MOTORES.duplicate()
+	ref.sort()
+	_comprobar(o2 == ref, "el reparto A/B/C es una permutación de los tres motores (%s)" % str(o))
+	MotorEleccion.barajar(7)
+	_comprobar(MotorEleccion.orden() == o, "con la misma semilla el reparto es el mismo")
+	MotorEleccion.elegir("B")
+	_comprobar(MotorEleccion.motor_activo() == o[1] and MotorEleccion.letra_de(String(o[1])) == "B" and MotorEleccion.a_ciegas(), "elegir B juega el motor que le tocó a B")
+	var motores_ok := true
+	for k in 3:
+		MotorEleccion.elegir(MotorEleccion.LETRAS[k])
+		var mo: MotorJugable = MotorFabrica.crear()
+		motores_ok = motores_ok and String(mo.get_meta("motor_id")) == String(o[k]) and (mo is MotorCombinado) == (o[k] == "combinado") and (mo is MotorLeague) == (o[k] != "siempre")
+		mo.free()
+	_comprobar(motores_ok, "cada letra crea el motor que le toca (siempre, League o combinado)")
+	MotorEleccion.revelar()
+	MotorEleccion.votar(4, "league", {"marcador": "2-1"})
+	MotorEleccion.votar(2, "league")
+	MotorEleccion.votar(5, "siempre")
+	MotorEleccion.reiniciar()
+	var rv := MotorEleccion.resumen_votos()
+	_comprobar(MotorEleccion.revelado() and MotorEleccion.seleccion() == "C" and int(rv["league"]["votos"]) == 2 and is_equal_approx(float(rv["league"]["media"]), 3.0) and int(rv["siempre"]["votos"]) == 1 and int(rv["combinado"]["votos"]) == 0, "la letra, la revelación y los votos (con el motor real) sobreviven al reinicio")
+	MotorEleccion.reiniciar(true)
+	MotorEleccion.ruta = ruta0
+	MotorEleccion.reiniciar()
+	## Combinado = League por defecto; con TODAS las piezas «siempre» juega igual que el de siempre (mismo balón, pases y tiros en 20 s).
+	var mu := Mundo.new()
+	mu.generar(["CHI", "BRA"], 99)
+	var res := []
+	for cual in ["siempre", "combinado"]:
+		var raiz := Node3D.new()
+		add_child(raiz)
+		var sp := PlayerSpawner.new()
+		var lista: Array = []
+		var a: Club = mu.ligas[0].clubes[1]
+		var b: Club = mu.ligas[mu.ligas.size() - 1].clubes[4]
+		var l := Puente3D.once(a.once())
+		var v := Puente3D.once(b.once())
+		lista.append_array(sp.spawn_team(raiz, l["xi"], l["jugadores"], Puente3D.formacion(a.tactica.formacion), true, Puente3D.kit(a), Puente3D.kit_portero(a)))
+		lista.append_array(sp.spawn_team(raiz, v["xi"], v["jugadores"], Puente3D.formacion(b.tactica.formacion), false, Puente3D.kit(b), Puente3D.kit_portero(b)))
+		var mo := MotorFabrica.crear(cual)
+		raiz.add_child(mo)
+		mo.set_physics_process(false)
+		mo.autopiloto = true
+		if mo is MotorCombinado:
+			for k: String in MotorCombinado.PIEZAS:
+				(mo as MotorCombinado).piezas[k] = "siempre"
+		var bola := StadiumBuilder.spawn_ball(raiz, Vector3(0, 0.11, 0))
+		mo.preparar(lista, bola, "", 5)
+		for i in 600:
+			mo.paso(1.0 / 30.0)
+		res.append("%.3f,%.3f|%d|%d|%d" % [bola.position.x, bola.position.z, mo.pases[0] + mo.pases[1], mo.tiros[0] + mo.tiros[1], mo.regates_ia])
+		raiz.queue_free()
+	_comprobar(res[0] == res[1], "el combinado con todas las piezas «siempre» es el de siempre (%s | %s)" % [res[0], res[1]])
+	var c := MotorCombinado.new()
+	_comprobar(c.piezas == {"decide_con_balon": "league", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}, "el combinado arranca con todas las piezas de League")
+	c.free()
