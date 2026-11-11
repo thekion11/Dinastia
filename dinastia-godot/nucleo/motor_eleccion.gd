@@ -109,18 +109,26 @@ static func ocultar() -> void:
 	cargar()["revelado"] = false
 	guardar()
 
-## El motor REAL que toca jugar: la variable de entorno, si no la letra elegida, si no el de siempre.
+## El motor por defecto del partido: C4 (decisión del dueño, orden 39, 11-11). El de siempre queda de respaldo con `MOTOR_CLASICO=1`.
+const POR_DEFECTO := "combinado_c4"
+
+## El motor REAL que toca jugar: la variable de entorno `MOTOR_PARTIDO`, si no la letra elegida en Ajustes; sin letra, el de por defecto (C4),
+## salvo `MOTOR_CLASICO=1` (el de siempre) o la bandera vieja `MOTOR_LEAGUE=1` (League).
 static func motor_activo() -> String:
 	var env := OS.get_environment("MOTOR_PARTIDO")
 	if TODOS.has(env):
 		return env
 	var s := seleccion()
 	if s == "":
-		return "siempre"
+		if OS.get_environment("MOTOR_CLASICO") == "1":
+			return "siempre"
+		if OS.get_environment("MOTOR_LEAGUE") == "1":
+			return "league"
+		return POR_DEFECTO
 	return String(orden()[LETRAS.find(s)])
 
 static func motor_de_letra(letra: String) -> String:
-	return String(orden()[LETRAS.find(letra)]) if LETRAS.has(letra) else "siempre"
+	return String(orden()[LETRAS.find(letra)]) if LETRAS.has(letra) else POR_DEFECTO
 
 static func letra_de(motor: String) -> String:
 	return LETRAS[orden().find(motor)] if MOTORES.has(motor) else ""

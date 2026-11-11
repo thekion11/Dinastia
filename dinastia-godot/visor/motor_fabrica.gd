@@ -1,13 +1,13 @@
 class_name MotorFabrica
 extends RefCounted
 ## LA FÁBRICA DEL MOTOR DEL PARTIDO (11-11-2026, sesión 11). Una sola puerta para crear el motor: según `MotorEleccion` (la letra
-## que el dueño eligió a ciegas en Ajustes; por defecto, el de siempre) o, con la bandera vieja `MOTOR_LEAGUE=1` / `MotorLeague.activo`,
+## que el dueño eligió a ciegas en Ajustes; por defecto, C4: orden 39 del dueño; el de siempre, con `MOTOR_CLASICO=1`) o, con la bandera vieja `MOTOR_LEAGUE=1` / `MotorLeague.activo`,
 ## el de League. `motor_id` queda anotado en el motor (`set_meta`) para el voto y las cifras.
 
 static func crear(forzar := "") -> MotorJugable:
 	var cual := forzar if MotorEleccion.TODOS.has(forzar) else MotorEleccion.motor_activo()
-	if cual == "siempre" and MotorLeague.activo:
-		cual = "league"
+	if MotorLeague.activo and forzar == "" and MotorEleccion.seleccion() == "" and not MotorEleccion.TODOS.has(OS.get_environment("MOTOR_PARTIDO")):
+		cual = "league"   ## la bandera de las sondas (`MotorLeague.activo = true`) sigue mandando sin letra elegida
 	var m: MotorJugable
 	match cual:
 		"league":
