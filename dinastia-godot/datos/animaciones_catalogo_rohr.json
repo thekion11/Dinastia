@@ -1,0 +1,834 @@
+[
+	{
+		"altura_pie_m": 0.081,
+		"bucle": false,
+		"cuadro_toque_balon": 20,
+		"cuadros": 178,
+		"duracion_s": 5.933,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"golpeos": [
+			{
+				"cuadro": 11,
+				"pie": "I"
+			},
+			{
+				"cuadro": 20,
+				"pie": "D"
+			},
+			{
+				"cuadro": 28,
+				"pie": "I"
+			},
+			{
+				"cuadro": 37,
+				"pie": "D"
+			},
+			{
+				"cuadro": 62,
+				"pie": "I"
+			},
+			{
+				"cuadro": 67,
+				"pie": "D"
+			},
+			{
+				"cuadro": 116,
+				"pie": "I"
+			},
+			{
+				"cuadro": 126,
+				"pie": "D"
+			},
+			{
+				"cuadro": 133,
+				"pie": "I"
+			},
+			{
+				"cuadro": 142,
+				"pie": "D"
+			},
+			{
+				"cuadro": 147,
+				"pie": "I"
+			},
+			{
+				"cuadro": 162,
+				"pie": "I"
+			}
+		],
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "01_Dribble_01_ue5",
+		"pie_que_golpea": "D",
+		"tiempo_toque_s": 0.667,
+		"tipo": "regate",
+		"velocidad_pie_ms": 6.5
+	},
+	{
+		"altura_pie_m": 0.017,
+		"bucle": false,
+		"cuadro_toque_balon": 265,
+		"cuadros": 271,
+		"duracion_s": 9.033,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"golpeos": [
+			{
+				"cuadro": 21,
+				"pie": "D"
+			},
+			{
+				"cuadro": 83,
+				"pie": "D"
+			},
+			{
+				"cuadro": 87,
+				"pie": "I"
+			},
+			{
+				"cuadro": 111,
+				"pie": "D"
+			},
+			{
+				"cuadro": 113,
+				"pie": "I"
+			},
+			{
+				"cuadro": 123,
+				"pie": "D"
+			},
+			{
+				"cuadro": 209,
+				"pie": "I"
+			},
+			{
+				"cuadro": 217,
+				"pie": "I"
+			},
+			{
+				"cuadro": 222,
+				"pie": "D"
+			},
+			{
+				"cuadro": 229,
+				"pie": "D"
+			},
+			{
+				"cuadro": 230,
+				"pie": "I"
+			},
+			{
+				"cuadro": 235,
+				"pie": "I"
+			},
+			{
+				"cuadro": 240,
+				"pie": "I"
+			},
+			{
+				"cuadro": 254,
+				"pie": "D"
+			},
+			{
+				"cuadro": 265,
+				"pie": "I"
+			}
+		],
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "02_Dribble_02_ue5",
+		"pie_que_golpea": "I",
+		"tiempo_toque_s": 8.833,
+		"tipo": "regate",
+		"velocidad_pie_ms": 5.8
+	},
+	{
+		"altura_pie_m": 0.128,
+		"bucle": false,
+		"cuadro_toque_balon": 51,
+		"cuadros": 102,
+		"duracion_s": 3.4,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"golpeos": [
+			{
+				"cuadro": 37,
+				"pie": "D"
+			},
+			{
+				"cuadro": 42,
+				"pie": "D"
+			},
+			{
+				"cuadro": 51,
+				"pie": "I"
+			},
+			{
+				"cuadro": 63,
+				"pie": "D"
+			},
+			{
+				"cuadro": 67,
+				"pie": "D"
+			},
+			{
+				"cuadro": 80,
+				"pie": "I"
+			},
+			{
+				"cuadro": 91,
+				"pie": "D"
+			}
+		],
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "03_Dribble_03_ue5",
+		"pie_que_golpea": "I",
+		"tiempo_toque_s": 1.7,
+		"tipo": "regate",
+		"velocidad_pie_ms": 6.4
+	},
+	{
+		"altura_pie_m": 0.189,
+		"bucle": false,
+		"cuadro_toque_balon": 582,
+		"cuadros": 691,
+		"duracion_s": 23.05,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"golpeos": [
+			{
+				"cuadro": 43,
+				"pie": "I"
+			},
+			{
+				"cuadro": 49,
+				"pie": "I"
+			},
+			{
+				"cuadro": 65,
+				"pie": "I"
+			},
+			{
+				"cuadro": 126,
+				"pie": "I"
+			},
+			{
+				"cuadro": 132,
+				"pie": "I"
+			},
+			{
+				"cuadro": 136,
+				"pie": "D"
+			},
+			{
+				"cuadro": 139,
+				"pie": "D"
+			},
+			{
+				"cuadro": 163,
+				"pie": "D"
+			},
+			{
+				"cuadro": 192,
+				"pie": "D"
+			},
+			{
+				"cuadro": 206,
+				"pie": "D"
+			},
+			{
+				"cuadro": 215,
+				"pie": "D"
+			},
+			{
+				"cuadro": 223,
+				"pie": "I"
+			},
+			{
+				"cuadro": 226,
+				"pie": "I"
+			},
+			{
+				"cuadro": 240,
+				"pie": "I"
+			},
+			{
+				"cuadro": 250,
+				"pie": "I"
+			},
+			{
+				"cuadro": 271,
+				"pie": "I"
+			},
+			{
+				"cuadro": 294,
+				"pie": "I"
+			},
+			{
+				"cuadro": 369,
+				"pie": "I"
+			},
+			{
+				"cuadro": 375,
+				"pie": "D"
+			},
+			{
+				"cuadro": 418,
+				"pie": "D"
+			},
+			{
+				"cuadro": 429,
+				"pie": "D"
+			},
+			{
+				"cuadro": 434,
+				"pie": "D"
+			},
+			{
+				"cuadro": 468,
+				"pie": "I"
+			},
+			{
+				"cuadro": 491,
+				"pie": "I"
+			},
+			{
+				"cuadro": 577,
+				"pie": "I"
+			},
+			{
+				"cuadro": 582,
+				"pie": "D"
+			},
+			{
+				"cuadro": 648,
+				"pie": "D"
+			}
+		],
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "04_Juggling_01_ue5",
+		"pie_que_golpea": "D",
+		"tiempo_toque_s": 19.4,
+		"tipo": "malabares",
+		"velocidad_pie_ms": 4.4
+	},
+	{
+		"altura_pie_m": 0.245,
+		"bucle": false,
+		"cuadro_toque_balon": 171,
+		"cuadros": 615,
+		"duracion_s": 20.5,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"golpeos": [
+			{
+				"cuadro": 4,
+				"pie": "I"
+			},
+			{
+				"cuadro": 30,
+				"pie": "I"
+			},
+			{
+				"cuadro": 55,
+				"pie": "I"
+			},
+			{
+				"cuadro": 81,
+				"pie": "I"
+			},
+			{
+				"cuadro": 91,
+				"pie": "I"
+			},
+			{
+				"cuadro": 95,
+				"pie": "I"
+			},
+			{
+				"cuadro": 99,
+				"pie": "D"
+			},
+			{
+				"cuadro": 121,
+				"pie": "D"
+			},
+			{
+				"cuadro": 139,
+				"pie": "D"
+			},
+			{
+				"cuadro": 146,
+				"pie": "D"
+			},
+			{
+				"cuadro": 163,
+				"pie": "D"
+			},
+			{
+				"cuadro": 171,
+				"pie": "I"
+			},
+			{
+				"cuadro": 179,
+				"pie": "I"
+			},
+			{
+				"cuadro": 210,
+				"pie": "I"
+			},
+			{
+				"cuadro": 216,
+				"pie": "I"
+			},
+			{
+				"cuadro": 232,
+				"pie": "D"
+			},
+			{
+				"cuadro": 256,
+				"pie": "D"
+			},
+			{
+				"cuadro": 265,
+				"pie": "D"
+			},
+			{
+				"cuadro": 300,
+				"pie": "D"
+			},
+			{
+				"cuadro": 348,
+				"pie": "D"
+			},
+			{
+				"cuadro": 355,
+				"pie": "I"
+			},
+			{
+				"cuadro": 365,
+				"pie": "I"
+			},
+			{
+				"cuadro": 378,
+				"pie": "I"
+			},
+			{
+				"cuadro": 422,
+				"pie": "I"
+			},
+			{
+				"cuadro": 440,
+				"pie": "D"
+			},
+			{
+				"cuadro": 450,
+				"pie": "D"
+			},
+			{
+				"cuadro": 463,
+				"pie": "D"
+			},
+			{
+				"cuadro": 502,
+				"pie": "D"
+			},
+			{
+				"cuadro": 509,
+				"pie": "D"
+			},
+			{
+				"cuadro": 529,
+				"pie": "I"
+			}
+		],
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "05_Juggling_02_ue5",
+		"pie_que_golpea": "I",
+		"tiempo_toque_s": 5.7,
+		"tipo": "malabares",
+		"velocidad_pie_ms": 4.9
+	},
+	{
+		"altura_pie_m": 0.174,
+		"bucle": false,
+		"cuadro_toque_balon": 359,
+		"cuadros": 620,
+		"duracion_s": 20.667,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"golpeos": [
+			{
+				"cuadro": 76,
+				"pie": "I"
+			},
+			{
+				"cuadro": 83,
+				"pie": "I"
+			},
+			{
+				"cuadro": 99,
+				"pie": "I"
+			},
+			{
+				"cuadro": 106,
+				"pie": "I"
+			},
+			{
+				"cuadro": 123,
+				"pie": "I"
+			},
+			{
+				"cuadro": 131,
+				"pie": "I"
+			},
+			{
+				"cuadro": 139,
+				"pie": "D"
+			},
+			{
+				"cuadro": 208,
+				"pie": "D"
+			},
+			{
+				"cuadro": 279,
+				"pie": "I"
+			},
+			{
+				"cuadro": 286,
+				"pie": "I"
+			},
+			{
+				"cuadro": 301,
+				"pie": "I"
+			},
+			{
+				"cuadro": 307,
+				"pie": "I"
+			},
+			{
+				"cuadro": 323,
+				"pie": "I"
+			},
+			{
+				"cuadro": 343,
+				"pie": "I"
+			},
+			{
+				"cuadro": 351,
+				"pie": "I"
+			},
+			{
+				"cuadro": 359,
+				"pie": "D"
+			},
+			{
+				"cuadro": 399,
+				"pie": "D"
+			},
+			{
+				"cuadro": 407,
+				"pie": "D"
+			},
+			{
+				"cuadro": 481,
+				"pie": "I"
+			},
+			{
+				"cuadro": 489,
+				"pie": "I"
+			},
+			{
+				"cuadro": 501,
+				"pie": "I"
+			},
+			{
+				"cuadro": 509,
+				"pie": "I"
+			},
+			{
+				"cuadro": 525,
+				"pie": "I"
+			},
+			{
+				"cuadro": 531,
+				"pie": "I"
+			},
+			{
+				"cuadro": 541,
+				"pie": "I"
+			},
+			{
+				"cuadro": 549,
+				"pie": "I"
+			},
+			{
+				"cuadro": 557,
+				"pie": "D"
+			},
+			{
+				"cuadro": 604,
+				"pie": "D"
+			}
+		],
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "06_Juggling_03_ue5",
+		"pie_que_golpea": "D",
+		"tiempo_toque_s": 11.967,
+		"tipo": "malabares",
+		"velocidad_pie_ms": 4.8
+	},
+	{
+		"bucle": false,
+		"cuadros": 239,
+		"duracion_s": 7.967,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "07_Throw_In_ue5",
+		"tipo": "saque_de_banda"
+	},
+	{
+		"altura_pie_m": 0.079,
+		"bucle": false,
+		"cuadro_toque_balon": 42,
+		"cuadros": 135,
+		"duracion_s": 4.517,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"golpeos": [
+			{
+				"cuadro": 35,
+				"pie": "I"
+			},
+			{
+				"cuadro": 42,
+				"pie": "D"
+			},
+			{
+				"cuadro": 56,
+				"pie": "D"
+			},
+			{
+				"cuadro": 68,
+				"pie": "I"
+			},
+			{
+				"cuadro": 70,
+				"pie": "I"
+			}
+		],
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "08_Side_Foot_Kick_ue5",
+		"pie_que_golpea": "D",
+		"tiempo_toque_s": 1.4,
+		"tipo": "pase_con_el_interior",
+		"velocidad_pie_ms": 5.2
+	},
+	{
+		"altura_pie_m": 0.118,
+		"bucle": false,
+		"cuadro_toque_balon": 78,
+		"cuadros": 133,
+		"duracion_s": 4.45,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"golpeos": [
+			{
+				"cuadro": 68,
+				"pie": "D"
+			},
+			{
+				"cuadro": 78,
+				"pie": "I"
+			}
+		],
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "09_Power_Kick_ue5",
+		"pie_que_golpea": "I",
+		"tiempo_toque_s": 2.6,
+		"tipo": "tiro_potente",
+		"velocidad_pie_ms": 11.3
+	},
+	{
+		"altura_pie_m": 0.029,
+		"bucle": false,
+		"cuadro_toque_balon": 196,
+		"cuadros": 316,
+		"duracion_s": 10.55,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"golpeos": [
+			{
+				"cuadro": 165,
+				"pie": "I"
+			},
+			{
+				"cuadro": 188,
+				"pie": "I"
+			},
+			{
+				"cuadro": 196,
+				"pie": "D"
+			},
+			{
+				"cuadro": 198,
+				"pie": "D"
+			},
+			{
+				"cuadro": 288,
+				"pie": "I"
+			},
+			{
+				"cuadro": 315,
+				"pie": "I"
+			}
+		],
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "10_Penalty_Kick_01_ue5",
+		"pie_que_golpea": "D",
+		"tiempo_toque_s": 6.533,
+		"tipo": "penal",
+		"velocidad_pie_ms": 10.4
+	},
+	{
+		"altura_pie_m": 0.182,
+		"bucle": false,
+		"cuadro_toque_balon": 148,
+		"cuadros": 262,
+		"duracion_s": 8.75,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"golpeos": [
+			{
+				"cuadro": 97,
+				"pie": "I"
+			},
+			{
+				"cuadro": 140,
+				"pie": "I"
+			},
+			{
+				"cuadro": 146,
+				"pie": "D"
+			},
+			{
+				"cuadro": 148,
+				"pie": "D"
+			},
+			{
+				"cuadro": 210,
+				"pie": "I"
+			},
+			{
+				"cuadro": 239,
+				"pie": "I"
+			}
+		],
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "11_Penalty_Kick_02_ue5",
+		"pie_que_golpea": "D",
+		"tiempo_toque_s": 4.933,
+		"tipo": "penal",
+		"velocidad_pie_ms": 10.5
+	},
+	{
+		"bucle": false,
+		"cuadros": 104,
+		"duracion_s": 3.483,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "12_Goal_Celebration_01_ue5",
+		"tipo": "celebracion_gol"
+	},
+	{
+		"bucle": false,
+		"cuadros": 106,
+		"duracion_s": 3.533,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "13_Goal_Celebration_02_ue5",
+		"tipo": "celebracion_gol"
+	},
+	{
+		"bucle": false,
+		"cuadros": 95,
+		"duracion_s": 3.183,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "14_Goal_Celebration_03_ue5",
+		"tipo": "celebracion_gol"
+	},
+	{
+		"bucle": false,
+		"cuadros": 215,
+		"duracion_s": 7.183,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "15_Goalkeeper_Save_01_ue5",
+		"tipo": "parada_portero"
+	},
+	{
+		"bucle": false,
+		"cuadros": 131,
+		"duracion_s": 4.383,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "16_Goalkeeper_Save_02_ue5",
+		"tipo": "parada_portero"
+	},
+	{
+		"bucle": false,
+		"cuadros": 267,
+		"duracion_s": 8.917,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "17_Goalkeeper_Save_03_ue5",
+		"tipo": "parada_portero"
+	},
+	{
+		"bucle": false,
+		"cuadros": 187,
+		"duracion_s": 6.25,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "18_Defending_01_ue5",
+		"tipo": "defensa"
+	},
+	{
+		"bucle": false,
+		"cuadros": 254,
+		"duracion_s": 8.467,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "19_Defending_02_ue5",
+		"tipo": "defensa"
+	},
+	{
+		"bucle": false,
+		"cuadros": 86,
+		"duracion_s": 2.883,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "20_Yellow_Card_ue5",
+		"tipo": "tarjeta_amarilla"
+	},
+	{
+		"bucle": false,
+		"cuadros": 172,
+		"duracion_s": 5.733,
+		"fps": 30,
+		"fuente": "Free mocap pack 05: Soccer (Anderson Rohr)",
+		"licencia": "uso libre según su autor (sin texto de licencia en el zip: ver LICENCIAS.md)",
+		"nombre": "21_Yellow_And_Red_Card_ue5",
+		"tipo": "tarjeta_roja"
+	}
+]
