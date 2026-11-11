@@ -230,6 +230,7 @@ static func _quizas_empezar(m: MotorLeague, p: Dictionary) -> void:
 	p["ls_fin_yaw"] = r0 + float(c["ang"])
 	p["ls_cuerpo"] = float(c["cuerpo_sale"])
 	p["ls_pie"] = String(c["pie_sale"])
+	LeagueGuia.empezar(p, c, m.t, r0)
 	var clave := "loco_arranque" if arranca else ("loco_frenada" if frena else ("loco_giro" if gira else "loco_cuerpo"))
 	m.cuenta_toques[clave] = int(m.cuenta_toques.get(clave, 0)) + 1
 

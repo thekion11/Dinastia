@@ -104,6 +104,14 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 	var tope := int((mitad * 2.0 * 1.6 + 300.0) / DT)   ## saques, goles, descanso y añadido alargan el partido
 	var cambios := 0
 	var ult := -1
+	var prev := {}   ## id → velocidad del paso anterior (MOVIMIENTO: sacudidas y giros)
+	var hist := PackedInt32Array()
+	hist.resize(40)
+	var suma_a := 0.0
+	var n_a := 0
+	var suma_giro := 0.0
+	var n_giro := 0
+	LeagueGuia.reiniciar_cuenta()
 	while motor.estado != "fin" and pasos < tope:
 		if cam != null:
 			cam.position = Vector3(ball.position.x * 0.8 + 62.0, 24.0, ball.position.z * 0.8)
@@ -116,6 +124,19 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 				cambios += 1
 			ult = eqp
 		var d := Time.get_ticks_usec() - t0
+		if motor.estado == "juego":
+			for q: Dictionary in motor.jugadores:
+				var vq := Vector2((q["vel"] as Vector3).x, (q["vel"] as Vector3).z)
+				if prev.has(q["id"]):
+					var vp: Vector2 = prev[q["id"]]
+					var ac := (vq - vp).length() / DT
+					hist[mini(int(ac), 39)] += 1
+					suma_a += ac
+					n_a += 1
+					if vq.length() > 3.0 and vp.length() > 3.0:
+						suma_giro += absf(vp.angle_to(vq)) / DT
+						n_giro += 1
+				prev[q["id"]] = vq
 		us += d
 		us_max = maxi(us_max, d)
 		pasos += 1
@@ -131,6 +152,16 @@ func _jugar(a: Club, b: Club, semilla: int, league: bool, mitad: float) -> Dicti
 	if league:
 		r["decisiones"] = (motor as MotorLeague).cuenta.duplicate()
 		r["toques"] = (motor as MotorLeague).cuenta_toques.duplicate()
+		var corte95 := int(0.95 * float(n_a))
+		var acum := 0
+		var p95 := 0
+		for k in 40:
+			acum += hist[k]
+			if acum >= corte95:
+				p95 = k
+				break
+		r["mov"] = {"acel_media": snappedf(suma_a / maxf(1.0, float(n_a)), 0.01), "acel_p95": p95, "giro_medio": snappedf(suma_giro / maxf(1.0, float(n_giro)), 0.01),
+			"guiados": LeagueGuia.guiados, "cortes": LeagueGuia.cortes}
 		r["us_loco"] = snappedf(float(LeagueLocomocion.us_total - loco_us0) / maxf(1.0, float(LeagueLocomocion.pasos - loco_p0)), 0.1)
 	r["huella"] = "%s|%d|%d|%d|%.3f,%.3f" % [r["marcador"], r["tiros"], r["pases"], r["pases_ok"], ball.position.x, ball.position.z]
 	raiz.queue_free()

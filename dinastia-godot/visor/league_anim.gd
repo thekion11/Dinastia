@@ -37,7 +37,8 @@ static func movimiento(lib: AnimationLibrary, prefijo: String, desde := 0, cuant
 		var tarea: Array = tareas[k]
 		if lib.has_animation(String(tarea[0])):
 			continue
-		var a: Animation = load("res://visor/anim_quaternius.gd").cargar_real(String(tarea[1]), prefijo) if tarea.size() == 2 \
+		var a: Animation = (LeagueCatalogo.clip(String(tarea[1]), prefijo) if not LeagueCatalogo.fuente(String(tarea[1])).is_empty() \
+			else load("res://visor/anim_quaternius.gd").cargar_real(String(tarea[1]), prefijo)) if tarea.size() == 2 \
 			else ciclo_de(String(tarea[1]), prefijo, String(tarea[2]))
 		if a != null:
 			if tarea.size() == 2:
