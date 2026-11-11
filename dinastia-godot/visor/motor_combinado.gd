@@ -1,7 +1,7 @@
 class_name MotorCombinado
 extends MotorLeague
 ## EL MOTOR COMBINADO «C» (11-11-2026, sesión 11; encargo del dueño: comparar tres motores a ciegas).
-## Arranca como el de League-Soccer CON nuestros saques, árbitro, cámaras, celebraciones, porteros y ejecución de golpeos (todo eso
+## Por decisión del líder (11-11, según `comparar_tres_motores_2026-11-11.md`) arranca como «League + NUESTRA decisión con balón»; el resto es el de League-Soccer CON nuestros saques, árbitro, cámaras, celebraciones, porteros y ejecución de golpeos (todo eso
 ## ya lo hereda `MotorLeague`), pero cada PIEZA del núcleo se puede cambiar por la nuestra («siempre») o dejar la de League («league»),
 ## para ir ajustándolo según lo que gane cada pieza (`pruebas/comparar_tres_motores.tscn` mide cada pieza por separado, `PIEZA_C=`):
 ##   decide_con_balon  quién decide con balón (pase, tiro, regate, pánico)        league: `_ia_portador` de League
@@ -15,11 +15,11 @@ extends MotorLeague
 const PIEZAS: Array[String] = ["decide_con_balon", "coloca_sin_balon", "fisica_balon", "locomocion"]
 const RUTA_PIEZAS := "res://datos/motor_c_piezas.json"
 
-var piezas := {"decide_con_balon": "league", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}
+var piezas := {"decide_con_balon": "siempre", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}
 
 ## Piezas por defecto: el archivo y, encima, la variable de entorno.
 static func piezas_por_defecto() -> Dictionary:
-	var r := {"decide_con_balon": "league", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}
+	var r := {"decide_con_balon": "siempre", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}
 	if FileAccess.file_exists(RUTA_PIEZAS):
 		var j: Variant = JSON.parse_string(FileAccess.get_file_as_string(RUTA_PIEZAS))
 		if j is Dictionary:
