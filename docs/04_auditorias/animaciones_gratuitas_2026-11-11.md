@@ -93,6 +93,14 @@ del cuadro 4), `velocidad_pie_ms`, `altura_pie_m` y `golpeos` (todos los picos >
 del pie coincide con el golpeo, pero sin balón en la escena puede dar el pie de apoyo o un giro; validar a ojo antes de fiarse (p. ej. Power_Kick:
 golpeo en el cuadro 78 con el izquierdo; Side_Foot_Kick y los penales traen carrera previa y varios picos). Los clips son largos (3-23 s).
 
+## Para la sesión 9 (`LeagueCatalogo`, `datos/anims_extra/`)
+
+`datos/anims_extra/estilo100.json` (generado por `herramientas/estilo100_a_anims_extra.py`): 41 ciclos + 41 espejos con las etiquetas de su
+LEEME. Un ciclo entra y sale a la misma velocidad (`ang` 0); `cuerpo` = −ángulo de marcha (atrás ±π, lateral ∓π/2). Solo pasan los de
+`revision: ok` y los que llegan a la clase 3,5 m/s (≥ 1,8 m/s reales: 12 carreras, 8 laterales, 5 atrás, 2 marchas) más 14 reposos. Las marchas lentas
+(< 1,8 m/s) serían «parado» en la clase del motor, así que NO entran (siguen en `animaciones_catalogo_100style.json`). `v_entra`/`v_sale` llevan la
+velocidad real. Los clips de Rohr no son locomoción: no encajan en ese formato (su catálogo es `animaciones_catalogo_rohr.json`).
+
 ## Revisión visual (pose a pose, 14 clips)
 
 `docs/04_auditorias/capturas_animaciones_2026-11-11/<clip>_cerca.jpg` (8 fases del ciclo, Forward+) y `<clip>_camara_real.jpg` (cámara de la
