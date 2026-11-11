@@ -3,8 +3,8 @@ extends SceneTree
 ## Clips elegidos: locomoción (andar, trote, SPRINT, agachado), saltos, caídas/golpes, celebración/reacciones, deslizamiento y lanzamiento.
 ## Mide la velocidad REAL de los ciclos de locomoción (pie en apoyo sobre el esqueleto a 1,8 m) para etiquetarlos.
 ##   UAL1_GLB=…/UAL1_Standard.glb UAL2_GLB=…/UAL2_Standard.glb godot --headless --path . --script res://herramientas/ual_a_res.gd
-const SALIDA := "res://assets/characters/quaternius/anims_ual/ual_extra.res"
-const CATALOGO := "res://datos/animaciones_catalogo_ual.json"
+const SALIDA := "res://terceros/ual/ual_extra.res"
+const CATALOGO := "res://terceros/ual/animaciones_catalogo_ual.json"
 const UMBRAL_APOYO := 0.03
 ## [archivo 1|2, clip, tipo, bucle]
 const ELEGIDOS := [

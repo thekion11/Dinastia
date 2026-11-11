@@ -1,0 +1,11 @@
+{
+ "salida": "res://assets/characters/quaternius/anims_ual/ual_uso.res",
+ "clips": [
+  "ual1_Jog_Fwd_Loop",
+  "ual1_Sprint_Loop"
+ ],
+ "origen": {
+  "ual1_Jog_Fwd_Loop": "res://terceros/ual/ual_extra.res",
+  "ual1_Sprint_Loop": "res://terceros/ual/ual_extra.res"
+ }
+}
