@@ -71,6 +71,21 @@ func _initialize() -> void:
 		var n := maxi(2, int(a.length * fps))
 		var ficha := {"nombre": nombre, "clip": e[1], "fuente": "Quaternius Universal Animation Library %d" % e[0], "licencia": "CC0 1.0", "tipo": e[2],
 			"duracion_s": snappedf(a.length, 0.001), "bucle": bool(e[3]), "fps": 30, "cuadro_toque_balon": null}
+		## Desplazamiento de la cadera entre el primer y el último cuadro (m, marco del jugador: x izquierda, z adelante) y su altura mínima.
+		ap.play("u/" + nombre)
+		ap.seek(0.0, true)
+		ap.advance(0.0)
+		var ini := _pos("pelvis")
+		ap.seek(a.length, true)
+		ap.advance(0.0)
+		var fin := _pos("pelvis")
+		var minh := fin.y
+		for k in 12:
+			ap.seek(a.length * float(k) / 11.0, true)
+			ap.advance(0.0)
+			minh = minf(minh, _pos("pelvis").y)
+		ficha["desplazamiento_m"] = {"izquierda": snappedf(fin.x - ini.x, 0.01), "adelante": snappedf(fin.z - ini.z, 0.01)}
+		ficha["cadera_min_m"] = snappedf(minh, 0.01)
 		if ["marcha", "carrera", "sprint", "marcha_agachado"].has(e[2]):
 			var pts: Array = []
 			var miny := [9.0, 9.0, 9.0, 9.0]
