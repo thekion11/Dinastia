@@ -21,7 +21,7 @@ func _ready() -> void:
 	for p in (OS.get_environment("PAISES") if OS.get_environment("PAISES") != "" else "CHI,ESP,BRA").split(",", false):
 		paises.append(String(p))
 	for mo in motores:
-		if not MotorEleccion.MOTORES.has(mo):
+		if not MotorEleccion.TODOS.has(mo):
 			fallos += 1
 			print("FALLO: motor desconocido ", mo)
 	var m := Mundo.new()

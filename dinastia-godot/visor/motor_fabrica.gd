@@ -5,14 +5,14 @@ extends RefCounted
 ## el de League. `motor_id` queda anotado en el motor (`set_meta`) para el voto y las cifras.
 
 static func crear(forzar := "") -> MotorJugable:
-	var cual := forzar if MotorEleccion.MOTORES.has(forzar) else MotorEleccion.motor_activo()
+	var cual := forzar if MotorEleccion.TODOS.has(forzar) else MotorEleccion.motor_activo()
 	if cual == "siempre" and MotorLeague.activo:
 		cual = "league"
 	var m: MotorJugable
 	match cual:
 		"league":
 			m = MotorLeague.new()
-		"combinado", "combinado_c2", "combinado_c3":
+		"combinado", "combinado_c2", "combinado_c3", "combinado_c4":
 			m = MotorCombinado.new()
 			(m as MotorCombinado).aplicar_variante(cual)
 		_:

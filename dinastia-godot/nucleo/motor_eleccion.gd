@@ -9,12 +9,13 @@ extends RefCounted
 ## POR DEFECTO = el motor de siempre (selección vacía): el juego no cambia mientras el dueño no elija una letra.
 ##   MOTOR_PARTIDO=siempre|league|combinado fuerza el motor (pruebas y sondas; gana a la selección guardada).
 
-## Cinco motores a ciegas (A-E): el nuestro, League y tres combinados (C1 = League + nuestra decisión con balón; C2 = C1 + nuestra locomoción;
-## C3 = C1 + nuestra colocación sin balón; ver `MotorCombinado.VARIANTES`).
-const MOTORES: Array[String] = ["siempre", "league", "combinado", "combinado_c2", "combinado_c3"]
-const LETRAS: Array[String] = ["A", "B", "C", "D", "E"]
+## Cuatro motores a ciegas (A-D, decisión del líder 11-11): el nuestro, League, C1 (League + nuestra decisión con balón) y C4 (C1 + nuestra colocación sin balón
+## y nuestra locomoción, con la caché de 0,1 s). C2 y C3 solo viven en el comparador (`TODOS`, `MotorCombinado.VARIANTES`), no en Ajustes.
+const MOTORES: Array[String] = ["siempre", "league", "combinado", "combinado_c4"]
+const LETRAS: Array[String] = ["A", "B", "C", "D"]
+const TODOS: Array[String] = ["siempre", "league", "combinado", "combinado_c2", "combinado_c3", "combinado_c4"]   ## los que sabe crear la fábrica
 const NOMBRES := {"siempre": "El nuestro (MotorJugable)", "league": "League-Soccer (MotorLeague)", "combinado": "Combinado C1 (MotorCombinado)",
-	"combinado_c2": "Combinado C2 (MotorCombinado)", "combinado_c3": "Combinado C3 (MotorCombinado)"}
+	"combinado_c2": "Combinado C2 (MotorCombinado)", "combinado_c3": "Combinado C3 (MotorCombinado)", "combinado_c4": "Combinado C4 (MotorCombinado)"}
 
 static var ruta := "user://motor_ciego.json"   ## (las pruebas lo cambian para no pisar el guardado del jugador)
 static var _datos: Dictionary = {}
@@ -111,7 +112,7 @@ static func ocultar() -> void:
 ## El motor REAL que toca jugar: la variable de entorno, si no la letra elegida, si no el de siempre.
 static func motor_activo() -> String:
 	var env := OS.get_environment("MOTOR_PARTIDO")
-	if MOTORES.has(env):
+	if TODOS.has(env):
 		return env
 	var s := seleccion()
 	if s == "":
@@ -126,7 +127,7 @@ static func letra_de(motor: String) -> String:
 
 ## ¿Se está probando a ciegas (hay letra elegida y no hay motor forzado por entorno)? Solo entonces se pide el voto.
 static func a_ciegas() -> bool:
-	return seleccion() != "" and not MOTORES.has(OS.get_environment("MOTOR_PARTIDO"))
+	return seleccion() != "" and not TODOS.has(OS.get_environment("MOTOR_PARTIDO"))
 
 # ------------------------------------------------------------------ votos
 
