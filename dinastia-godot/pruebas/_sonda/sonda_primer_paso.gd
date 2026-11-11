@@ -39,4 +39,14 @@ func _ready() -> void:
 		if is_instance_valid(ap) and (ap.has_animation("golpe_pecho") or ap.has_animation("golpe_cabeza")):
 			con += 1
 	print("PASO golpes leves cargados en ", con, " jugadores; duelos de hombro ", motor.duelos.get("hombro", 0))
+	## La celebración con CMU, con cuerpos de verdad: cada jugador celebra 5 veces y se cuentan los clips de CMU que se reproducen.
+	var cmu := 0
+	var total := 0
+	for q: Dictionary in motor.jugadores:
+		for k in 5:
+			motor._anim(q, "celebrar", true, 99.0)
+			total += 1
+			if String(q.get("anim_actual", "")).begins_with("ext_cmu_"):
+				cmu += 1
+	print("PASO celebraciones con CMU ", cmu, " de ", total)
 	get_tree().quit()

@@ -15,6 +15,10 @@ extends RefCounted
 ## el código del motor de siempre.
 
 static var activa := OS.get_environment("LS_GUIA") != "0"
+## `LS_GUIA_C4=1`: en el motor combinado con NUESTRA locomoción (C4) se enciende la guía y los clips de arranque/frenada/giro. APAGADA por
+## defecto (11-11): medida en 6 cruces empeora lo que importa (duelos 28,8 → 22,0, regates 18,3 → 15,8, acierto de pase 68 → 63 %) y
+## cuesta +18 % de CPU (`MOTOR_LEAGUE_SOCCER_PLAN.md` §12).
+static var en_c4 := OS.get_environment("LS_GUIA_C4") == "1"
 static var marchas := OS.get_environment("LS_MARCHAS") != "0"
 ## 1/s: con qué fuerza se pega la velocidad al clip (e^(−k·dt)). Jugador del usuario: más suave, para que responda.
 const K_CPU := 11.0

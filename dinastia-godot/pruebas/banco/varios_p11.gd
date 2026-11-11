@@ -144,6 +144,28 @@ func _probar_league_acciones() -> void:
 	for i in 9:
 		igual = igual and LeagueAcciones.variante(q, "duelo_empujado_izq") == LeagueAcciones.variante(r, "duelo_empujado_izq")
 	_comprobar(igual, "el reparto es determinista")
+	## Celebración con CMU: sin cuerpo cargado conserva «celebrar»; con uno de prueba, 2 de cada 5 veces cambia y el clip queda recortado.
+	var ap := AnimationPlayer.new()
+	var lib := AnimationLibrary.new()
+	var correr := Animation.new()
+	correr.add_track(Animation.TYPE_ROTATION_3D)
+	correr.track_set_path(0, NodePath("Armature/Skeleton3D:pelvis"))
+	correr.track_insert_key(0, 0.0, Quaternion.IDENTITY)
+	lib.add_animation("correr", correr)
+	ap.add_animation_library("", lib)
+	var c := {"id": "goleador", "anim": ap}
+	var cambios := 0
+	var nombres := {}
+	for i in 20:
+		var cel := LeagueAcciones.variante(c, "celebrar")
+		if cel != "celebrar":
+			cambios += 1
+			nombres[cel] = true
+	_comprobar(cambios == 8, "celebra con CMU 2 de cada 5 veces (%d de 20)" % cambios)
+	var primero := String(nombres.keys()[0]) if not nombres.is_empty() else ""
+	_comprobar(primero.begins_with("ext_cmu_") and lib.has_animation(primero) and lib.get_animation(primero).length <= LeagueAcciones.MAX_CELEBRACION + 0.001 \
+		and str(lib.get_animation(primero).track_get_path(0)).begins_with("Armature/Skeleton3D:"), "el clip de CMU se carga recortado y con las pistas reapuntadas (%s)" % primero)
+	ap.free()
 	_comprobar(AnimExtra.UAL2.has("golpe_pecho") and AnimExtra.UAL2.has("golpe_cabeza"), "los dos clips de golpe están en la tabla de la UAL")
 
 func _probar_visita_generada() -> void:
