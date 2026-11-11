@@ -10,7 +10,6 @@ const LOTES := [
 	["Campesina F", "res://assets/characters/outfits/Female_Peasant.gltf"],
 	["Explorador M (Ranger)", "res://assets/characters/outfits/Male_Ranger.gltf"],
 	["Exploradora F", "res://assets/characters/outfits/Female_Ranger.gltf"],
-	["Kenney characterMedium", "res://assets/characters/Model/characterMedium.fbx"],
 	["AVATAR REGALO", "res://assets/characters/avatar_regalo/avatar_regalo.fbx"],
 	["persona_realista (escaneo)", "res://assets/personas/persona_realista.glb"]],
 	[["KK Barbarian", "res://assets/characters/kaykit/Barbarian.glb"], ["KK Knight", "res://assets/characters/kaykit/Knight.glb"],

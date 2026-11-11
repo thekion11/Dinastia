@@ -59,7 +59,6 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 
 | Qué | Dónde | Origen | Estado |
 |---|---|---|---|
-| Muñeco y animaciones (YA SIN USO, fuera de los builds; en LFS) | `assets/characters/Model`, `Animations` | Kenney "Animated Characters Protagonists" | 🟢 CC0 (`assets/characters/License.txt`) |
 | Cuerpo de jugador | `assets/characters/quaternius/*.gltf` | Quaternius "Universal Base Characters" | 🟢 CC0 |
 | Animaciones base | `assets/characters/quaternius/anims/UAL1_Standard.glb` | Quaternius "Universal Animation Library" | 🟢 CC0 (`_extraido_universal_animation_library/.../License.txt`) |
 | Ropa del jugador | `assets/characters/quaternius/ropa/` | Quaternius "Modular Character Outfits - Fantasy" | 🟢 CC0 |
