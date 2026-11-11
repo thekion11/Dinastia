@@ -22,6 +22,7 @@ const K_USUARIO := 5.0
 ## Si lo que se pide se aleja más de esto del rumbo de salida del clip, se corta (rad): el usuario antes que la CPU.
 const CORTE_USUARIO := 1.1
 const CORTE_CPU := 2.0
+const PAUSA_CORTE := 0.5
 const MARCHA_DRIBBLE := 3.5
 const MARCHA_WALK := 5.0
 const TOLERANCIA := 1.08   ## una marcha nunca sube a un jugador por encima de esto de lo que daba el motor
@@ -31,15 +32,15 @@ static var guiados := 0
 
 ## Lo anota `LeagueLocomocion._quizas_empezar` al elegir el clip: de dónde sale la guía.
 static func empezar(p: Dictionary, c: Dictionary, t: float, yaw_cuerpo: float) -> void:
-	if not activa:
-		return
+	if not activa or (p.has("ls_guia") and float((p["ls_guia"] as Dictionary)["hasta"]) > t):
+		return   ## (ya hay una guía en curso: no se reinicia a cada revisión)
 	var v: Vector3 = p["vel"]
 	var sp := Vector2(v.x, v.z).length()
 	var v_ent := float(c.get("v_entra", 0.0))
 	var v_sal := float(c.get("v_sale", 0.0))
 	## El clip decelera o acelera EN PROPORCIÓN (3,4 → 0,9 m/s = ×0,25) cuando se entra en marcha; arrancando, la salida es la suya.
 	var fin := v_sal * (sp / v_ent) if v_ent > 0.5 and sp > 0.5 else v_sal
-	p["ls_guia"] = {"t0": t, "dur": maxf(float(c["largo"]), 0.12), "sp0": sp, "fin": fin,
+	p["ls_guia"] = {"t0": t, "hasta": t + maxf(float(c["largo"]), 0.12), "dur": maxf(float(c["largo"]), 0.12), "sp0": sp, "fin": fin,
 		"h0": atan2(v.x, v.z) if sp > 0.8 else yaw_cuerpo, "ang": float(c["ang"])}
 
 static func _suave(u: float) -> float:
@@ -59,7 +60,7 @@ static func paso(m: MotorJugable, delta: float) -> void:
 			continue
 		var v: Vector3 = p["vel"]
 		var nuevo := v
-		if p.has("ls_guia") and float(p.get("ls_trans_hasta", 0.0)) > m.t:
+		if p.has("ls_guia") and float((p["ls_guia"] as Dictionary)["hasta"]) > m.t:
 			nuevo = _seguir_clip(m, p, v, delta)
 		else:
 			p.erase("ls_guia")
@@ -83,6 +84,7 @@ static func _seguir_clip(m: MotorJugable, p: Dictionary, v: Vector3, delta: floa
 	if u > 0.3 and pide.length() > 0.5 and absf(angle_difference(float(g["h0"]) + float(g["ang"]), atan2(pide.x, pide.z))) > corte:
 		LeagueLocomocion.cortar(p)
 		p.erase("ls_guia")
+		p["ls_espera"] = m.t + PAUSA_CORTE   ## sin pausa, arranca otro clip en el acto y se vuelve a cortar (bucle)
 		cortes += 1
 		return v
 	guiados += 1
