@@ -77,7 +77,14 @@ func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	equipos = guardado
 	return r
 
+## HÍBRIDO (11-11, sesión 9, orden 39): las ablaciones de C4 mostraron que NUESTRA colocación sin balón es lo que baja el acierto de pase (84 → 67 %) y
+## las cadenas de 5+ (2,3 → 0,5), pero también lo que da el roce (duelos 7,7 → 29, regates 9,7 → 18). Con `C_ATAQUE_LEAGUE=1` el equipo que tiene el balón se
+## apoya con el campo de fuerzas de League (triángulos de pase) y el que defiende sigue con la colocación nuestra (marcaje, presión, duelos).
+static var ATAQUE_LEAGUE := OS.get_environment("C_ATAQUE_LEAGUE") == "1"
+
 func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
+	if ATAQUE_LEAGUE and _nuestra("coloca_sin_balon"):
+		return super._ia_ataque_sin_balon(p)
 	return _sin_flag3(p, true)
 
 func _ia_defensa(p: Dictionary) -> Vector3:
@@ -111,13 +118,13 @@ func _sin_flag3(p: Dictionary, ataque: bool) -> Vector3:
 
 ## La predicción y los marcajes de League solo hacen falta si juega alguna pieza de League que los usa.
 func _estado_sin_balon(delta: float) -> void:
-	if _nuestra("coloca_sin_balon") and _nuestra("locomocion"):
+	if _nuestra("coloca_sin_balon") and _nuestra("locomocion") and not ATAQUE_LEAGUE:
 		return
 	super(delta)
 
 func _estado_league(delta: float) -> void:
 	var f3 := MotorLeague.fase3
-	if _nuestra("locomocion") and _nuestra("coloca_sin_balon"):
+	if _nuestra("locomocion") and _nuestra("coloca_sin_balon") and not ATAQUE_LEAGUE:
 		MotorLeague.fase3 = false   ## sin robos por alcance ni estrategias
 	super(delta)
 	MotorLeague.fase3 = f3
