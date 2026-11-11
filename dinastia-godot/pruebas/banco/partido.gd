@@ -214,7 +214,7 @@ func _probar_motor_ciego() -> void:
 	o2.sort()
 	var ref: Array = MotorEleccion.MOTORES.duplicate()
 	ref.sort()
-	_comprobar(o2 == ref, "el reparto A/B/C es una permutación de los cinco motores (%s)" % str(o))
+	_comprobar(o2 == ref, "el reparto A-D es una permutación de los cuatro motores (%s)" % str(o))
 	MotorEleccion.barajar(7)
 	_comprobar(MotorEleccion.orden() == o, "con la misma semilla el reparto es el mismo")
 	MotorEleccion.elegir("B")
@@ -230,6 +230,9 @@ func _probar_motor_ciego() -> void:
 	var c3 := MotorFabrica.crear("combinado_c3") as MotorCombinado
 	_comprobar(c2.piezas["locomocion"] == "siempre" and c2.piezas["decide_con_balon"] == "siempre" and c2.piezas["coloca_sin_balon"] == "league" and c3.piezas["coloca_sin_balon"] == "siempre" and c3.piezas["locomocion"] == "league", "C2 = C1 + locomoción nuestra y C3 = C1 + colocación nuestra")
 	_comprobar(c3.cadencia_coloca == 0.1 and c3._cache_col.is_empty(), "C3 recalcula la colocación cada 0,1 s por jugador (caché vacía al empezar)")
+	var c4 := MotorFabrica.crear("combinado_c4") as MotorCombinado
+	_comprobar(c4.piezas["locomocion"] == "siempre" and c4.piezas["coloca_sin_balon"] == "siempre" and c4.piezas["decide_con_balon"] == "siempre" and c4.piezas["fisica_balon"] == "league" and MotorEleccion.MOTORES.size() == 4 and not MotorEleccion.MOTORES.has("combinado_c2"), "C4 = decide + colocación + locomoción nuestras; el selector de Ajustes solo ofrece 4 letras (sin C2 ni C3)")
+	c4.free()
 	c2.free()
 	c3.free()
 	MotorEleccion.elegir("C")

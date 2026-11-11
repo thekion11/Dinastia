@@ -299,3 +299,25 @@ El destino de cada jugador se guarda 0,1 s (escalonado por jugador) y se recalcu
 - **«C3 + locomoción nuestra» con caché** es la mejor relación: 26 regates, 44 duelos, cadenas de 5+ iguales (2,0) y **1 077 µs/paso, un 27 % MENOS que el motor de siempre**. No es una de las tres letras pedidas; se puede añadir como C4 (`VARIANTES` + `MOTORES`) si el dueño la quiere probar.
 - Las cadenas de 5+ de C3 con caché (1,1 contra 2,0) pueden ser ruido (n = 12) o un efecto de la caché sobre los apoyos: pendiente de repetir con más partidos.
 - Más margen: `C_CADENCIA_COLOCA=0,2` (cada 6 pasos) y no recalcular `_estado_sin_balon` de League cuando solo lo usa `_interferir`; sin medir todavía.
+
+---
+
+# Quinta tanda (11-11): selector con 4 letras y repetición de C3 y C4 (¿ruido en las cadenas?)
+
+**Selector (decisión del líder):** Ajustes ofrece **A-D**: el nuestro, League, **C1** (League + nuestra decisión con balón) y **C4** (C1 + colocación y locomoción nuestras, con la caché de 0,1 s). **C2 y C3 quedan solo en el comparador**
+(`MOTORES=combinado_c2` / `combinado_c3`; `MotorEleccion.TODOS` los crea, `MotorEleccion.MOTORES` es lo que ve Ajustes). Un `motor_ciego.json` de 5 letras se rebaraja solo.
+
+**Repetición:** 12 partidos más por variante, los mismos 6 países con los cruces INVERTIDOS (`INVERTIR=1`: local y visita cambiados). Entre las dos tandas, 24 partidos por variante:
+| (por partido) | C1 (2.ª tanda) | C3 con caché | C3 sin caché | C4 |
+|---|---:|---:|---:|---:|
+| goles · tiros | 4,8 · 36,6 | 6,3 · 44,3 | 5,6 · 46,0 | 5,8 · 45,4 |
+| regates · duelos | 12,9 · 22,8 | 21,3 · 43,8 | 25,3 · 43,3 | 26,1 · 43,9 |
+| cadenas de 5+ pases (1.ª / 2.ª tanda) | 2,75 / 2,5 | 1,08 / 1,17 | 2,0 / 0,92 | 2,0 / 1,67 |
+| cadena media · máxima (2.ª tanda) | 2,3 · 8,5 | 1,65 · 4,9 | 1,64 · 5,4 | 1,85 · 5,75 |
+| juego seguido (s) · saques | 14,0 · 37,6 | 8,9 · 58,8 | 9,3 · 56,7 | 10,9 · 49,5 |
+| **µs por paso** | 1 315 | 1 361 | 1 881 | **1 070** |
+
+- **La bajada de cadenas de C3 con caché era ruido**: sin caché también cae a 0,92 en la 2.ª tanda (la caché no las quita: 1,08 y 1,17 con caché; 2,0 y 0,92 sin ella). Con ~12 partidos las cadenas de 5+ oscilan ±0,5 por tanda.
+- **La caché sigue siendo gratis en juego**: regates y duelos iguales dentro del ruido (21-26 y 43-47) y 28-29 % menos CPU en C3 (1 361 contra 1 881 µs).
+- **C4 es la mejor relación en las dos tandas**: 26 regates, 44 duelos, cadenas de 5+ de 1,7-2,0 (mejores que las de C3, que no lleva la locomoción nuestra) y el menor coste (1 070-1 077 µs/paso, −27 % frente al motor de siempre, que tiene 1 465).
+- **Lo que C1 y C4 son para el dueño**: C1 = el partido de construcción tranquila (poco cuerpo a cuerpo, cadenas largas); C4 = el de más fricción (regates y duelos como el nuestro) con cadenas de League.
