@@ -5,6 +5,8 @@ Los tres motores: **siempre** (el nuestro, `MotorJugable`), **league** (`MotorLe
 **combinado** (`MotorCombinado`: League con piezas cambiables por las nuestras). Con las piezas por defecto el combinado es IDÉNTICO a league
 (misma semilla, mismos partidos: lo muestran las tablas); con todas las piezas «siempre» reproduce exactamente al nuestro (probado en el banco).
 
+> **Aviso para el selector a ciegas:** mientras no se cambie ninguna pieza de `datos/motor_c_piezas.json`, **el motor B y el C (los que toquen a league y combinado) son IGUALES**: el reparto A/B/C solo se vuelve informativo cuando C lleva al menos una pieza nuestra (candidata: `decide_con_balon = siempre`).
+
 ## Cómo se midió
 - `pruebas/comparar_tres_motores.tscn` (parte de `comparar_motor_league`): 6 partidos COMPLETOS por motor en autopiloto (2 × 240 s de reloj
   del motor, 30 Hz), mismos onces y misma semilla para cada motor. Clubes de 3 países (CHI, ESP, BRA), cruces de países distintos y estilos
