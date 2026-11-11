@@ -429,4 +429,4 @@ func _mover_jugadores(delta: float) -> void:
 func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
 	if LeagueLocomocion.bloquea(p, t, nombre, gesto):
 		return
-	super(p, nombre, gesto, dur_max)
+	super(p, LeagueAcciones.variante(p, nombre), gesto, dur_max)

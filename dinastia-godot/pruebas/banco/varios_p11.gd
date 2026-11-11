@@ -112,8 +112,8 @@ func _probar_league_catalogo() -> void:
 	_comprobar(porpie.size() == 2 and String(porpie[0]["nombre"]) == "ext_prueba_arranque" and String(porpie[0]["tipo"]) == "arranque", "buscar por etiquetas (tipo + ang) la encuentra primero")
 	var lado := LeagueCatalogo.buscar({"tipo": "arranque", "pie": "I"}, {"ang": PI / 2.0})
 	_comprobar(not lado.is_empty() and String(lado[0]["pie"]) == "I" and float(lado[0]["ang"]) > 1.0, "buscar con filtro de pie y giro a la izquierda")
-	var tareas := LeagueAnim.tareas_movimiento().filter(func(t): return String(t[0]).begins_with("ext_prueba"))
-	_comprobar(tareas.size() == 2, "las extras entran en las tareas de la biblioteca del jugador")
+	var tareas := LeagueAnim.tareas_movimiento().filter(func(t): return String(t[0]).begins_with("ext_"))
+	_comprobar(tareas.is_empty(), "las extras NO se cargan por tandas en cada jugador (se cargan al elegirlas: 82 de 100STYLE costaban ~450 ms por tanda)")
 	var lib := AnimationLibrary.new()
 	var correr := Animation.new()
 	correr.add_track(Animation.TYPE_ROTATION_3D)
@@ -122,12 +122,29 @@ func _probar_league_catalogo() -> void:
 	var ap := AnimationPlayer.new()
 	lib.add_animation("correr", correr)
 	ap.add_animation_library("", lib)
-	LeagueAnim.movimiento(lib, "Armature/Skeleton3D", 0, 100000)
-	_comprobar(lib.has_animation("ext_prueba_arranque") and lib.get_animation("ext_prueba_arranque").loop_mode == Animation.LOOP_NONE, "el clip extra se carga en la biblioteca, sin bucle")
+	var cargado := LeagueCatalogo.clip("ext_prueba_arranque", "Armature/Skeleton3D")
+	_comprobar(cargado != null and cargado.loop_mode == Animation.LOOP_NONE and str(cargado.track_get_path(0)).begins_with("Armature/Skeleton3D:"), "el clip extra se carga bajo demanda, sin bucle y con las pistas reapuntadas")
 	ap.free()
 	LeagueCatalogo.reiniciar()
 	LeagueMovimiento.reiniciar()
 	_comprobar(LeagueMovimiento.clips().size() == base, "reiniciar deja el catálogo como de fábrica")
+
+## MÁS VIDA (11-11, fase 4d): la falta leve de `LeagueAcciones` solo cambia el nombre del clip y es determinista.
+func _probar_league_acciones() -> void:
+	_titulo("MOTOR LEAGUE: ACCIONES DE LA TABLA (falta leve)")
+	var p := {"id": "jugador_a"}
+	_comprobar(LeagueAcciones.variante(p, "correr") == "correr" and not p.has("ls_golpes"), "otros gestos no se tocan")
+	var visto := {}
+	for i in 12:
+		visto[LeagueAcciones.variante(p, "duelo_empujado_der")] = true
+	_comprobar(int(p["ls_golpes"]) == 12 and visto.has("duelo_empujado_der"), "sin cuerpo cargado el choque conserva su clip (y cuenta los golpes)")
+	var q := {"id": "jugador_a"}
+	var r := {"id": "jugador_a"}
+	var igual := true
+	for i in 9:
+		igual = igual and LeagueAcciones.variante(q, "duelo_empujado_izq") == LeagueAcciones.variante(r, "duelo_empujado_izq")
+	_comprobar(igual, "el reparto es determinista")
+	_comprobar(AnimExtra.UAL2.has("golpe_pecho") and AnimExtra.UAL2.has("golpe_cabeza"), "los dos clips de golpe están en la tabla de la UAL")
 
 func _probar_visita_generada() -> void:
 	_titulo("SEGUNDO UNIFORME PROPIO GENERADO (sin visita archivada)")

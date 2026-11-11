@@ -33,4 +33,10 @@ func _ready() -> void:
 		if d > 15.0:
 			peor.append("%d:%.1f loco=%.1f %s->%s toques=%s" % [i, d, (LeagueLocomocion.us_total - l0) / 1000.0, est0, motor.estado, str(motor.cuenta_toques) if motor.cuenta_toques != tq else "-"])
 	print("PASO lentos(>8ms) ", peor)
+	var con := 0
+	for q: Dictionary in motor.jugadores:
+		var ap: AnimationPlayer = q.get("anim")
+		if is_instance_valid(ap) and (ap.has_animation("golpe_pecho") or ap.has_animation("golpe_cabeza")):
+			con += 1
+	print("PASO golpes leves cargados en ", con, " jugadores; duelos de hombro ", motor.duelos.get("hombro", 0))
 	get_tree().quit()

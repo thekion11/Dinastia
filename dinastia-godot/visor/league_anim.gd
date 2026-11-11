@@ -52,7 +52,9 @@ static var _tareas: Array = []
 static func tareas_movimiento() -> Array:
 	if _tareas.is_empty():
 		for c: Dictionary in LeagueMovimiento.clips():
-			if not c.has("auto"):   ## (las intermedias se construyen al elegirlas: `LeagueAuto.construir`)
+			## (las intermedias se construyen al elegirlas: `LeagueAuto.construir`; las EXTRAS se cargan al elegirlas, y las estables
+			## nunca se eligen en una transición: cargar las 82 de 100STYLE en cada jugador costaba ~450 ms por tanda)
+			if not c.has("auto") and not c.has("ext"):
 				_tareas.append([String(c["nombre"]), String(c["nombre"])])
 		for vel: float in [LeagueMovimiento.DRIBBLE, LeagueMovimiento.WALK]:
 			for g: float in [0.25, -0.25, 0.75, -0.75]:
