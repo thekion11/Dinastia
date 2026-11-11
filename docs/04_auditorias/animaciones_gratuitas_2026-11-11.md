@@ -23,6 +23,16 @@ Library 1 Standard (`anims/UAL1_Standard.glb`, CC0), 17 elegidas de la UAL 2 (`a
 | GameplayFootball / Google Research Football | GPL-3 / Apache 2.0 | GRF no trae animaciones propias; GameplayFootball es el origen de las de League-Soccer | ya cubierto por League-Soccer | ya |
 
 
+## ESTADO AL CIERRE (11-11, sesión 10)
+
+**HECHO** (rama `sesion10-animaciones`): informe de fuentes con licencias citadas; 2.522 animaciones de locomoción de 100STYLE (CC BY 4.0) con catálogos; 33 clips útiles de la UAL 1 y 2
+(CC0: sprint real 7,35 m/s, trote, saltos, caídas, slide, baile); **144 clips de la base CMU** (uso comercial libre: carrera real, patadas, saque, saltos, transiciones, 46 bailes,
+acrobacias, emociones, gestos, caídas); catálogo con cuadro de golpeo de los 21 de Rohr; tablas de qué clip va con cada momento del partido (`anim_acciones_por_momento.md`,
+`datos/anims_accion.json`, `datos/anims_accion_cmu.json`); formato `anims_extra` de la sesión 9; bibliotecas de uso comprimidas (solo viajan los clips que se usan: pack de Windows 386,4 →
+348,6 MB tras mover lo no usado a `terceros/`, y 352,6 MB con CMU y las acciones de la UAL); revisión pose a pose con cámara real (`capturas_animaciones_2026-11-11/`).
+**FALTA**: la licencia de Rohr (la confirma el dueño; no va en builds públicos hasta entonces); clips libres de cabezazo, entrada de pie y portero; las acciones de la UAL que la sesión 9
+pida (listas en `terceros/ual/`); comprobar velocidades y pies dentro del partido real; UAL «Pro» sin comprar (no hace falta).
+
 ## Fuentes, con enlace y licencia citada
 
 1. **100STYLE** — Ian Mason, Sebastian Starke, Taku Komura. https://zenodo.org/records/8127870 · página del autor https://ianxmason.github.io/100style
