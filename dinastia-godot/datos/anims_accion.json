@@ -1,0 +1,341 @@
+{
+ "biblioteca": "res://assets/characters/quaternius/anims_ual/ual_uso.res",
+ "fuente": "Quaternius Universal Animation Library 1 y 2, CC0 1.0",
+ "nota": "Acciones puntuales por momento del partido. Los clips NO desplazan la cadera (desplazamiento_m ~ 0): el motor mueve al jugador. Sin espejo.",
+ "momentos": {
+  "entrada_deslizante": {
+   "nota": "Tackle por abajo: Start (0,83 s) → Loop mientras desliza → Exit (0,5 s) → LayToIdle si queda en el suelo. El motor mueve el cuerpo (los clips no desplazan la cadera)",
+   "secuencia": [
+    "ual2_Slide_Start",
+    "ual2_Slide_Loop",
+    "ual2_Slide_Exit"
+   ],
+   "despues": [
+    "ual2_LayToIdle"
+   ],
+   "clips": {
+    "ual2_Slide_Start": {
+     "duracion_s": 0.833,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.07,
+      "izquierda": 0.0
+     }
+    },
+    "ual2_Slide_Loop": {
+     "duracion_s": 2.0,
+     "bucle": true,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    },
+    "ual2_Slide_Exit": {
+     "duracion_s": 0.5,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": -0.07,
+      "izquierda": 0.0
+     }
+    },
+    "ual2_LayToIdle": {
+     "duracion_s": 1.533,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.16,
+      "izquierda": 0.0
+     }
+    }
+   }
+  },
+  "saque_de_banda": {
+   "nota": "Lanzamiento con las dos manos por encima de la cabeza; soltar el balón hacia la mitad del clip",
+   "secuencia": [
+    "ual2_OverhandThrow"
+   ],
+   "clips": {
+    "ual2_OverhandThrow": {
+     "duracion_s": 1.333,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    }
+   }
+  },
+  "celebracion_gol": {
+   "nota": "Bucle de 1 s: repetir mientras dura la celebración",
+   "secuencia": [
+    "ual1_Dance_Loop"
+   ],
+   "clips": {
+    "ual1_Dance_Loop": {
+     "duracion_s": 1.0,
+     "bucle": true,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    }
+   }
+  },
+  "falta_recibida_leve": {
+   "nota": "Golpe en el pecho o la cabeza, 0,3-0,4 s, sin caída",
+   "secuencia": [
+    "ual1_Hit_Chest"
+   ],
+   "alternativas": [
+    "ual1_Hit_Head"
+   ],
+   "clips": {
+    "ual1_Hit_Chest": {
+     "duracion_s": 0.333,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": -0.03,
+      "izquierda": 0.0
+     }
+    },
+    "ual1_Hit_Head": {
+     "duracion_s": 0.433,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    }
+   }
+  },
+  "falta_recibida_fuerte": {
+   "nota": "Empujón que tira al suelo; después se levanta",
+   "secuencia": [
+    "ual2_Hit_Knockback"
+   ],
+   "despues": [
+    "ual2_LayToIdle"
+   ],
+   "clips": {
+    "ual2_Hit_Knockback": {
+     "duracion_s": 0.833,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": -0.05,
+      "izquierda": 0.0
+     }
+    },
+    "ual2_LayToIdle": {
+     "duracion_s": 1.533,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.16,
+      "izquierda": 0.0
+     }
+    }
+   }
+  },
+  "caida_con_voltereta": {
+   "nota": "Tropiezo/caída con rodada; acaba cerca del suelo",
+   "secuencia": [
+    "ual1_Roll"
+   ],
+   "despues": [
+    "ual2_LayToIdle"
+   ],
+   "clips": {
+    "ual1_Roll": {
+     "duracion_s": 1.467,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.1,
+      "izquierda": 0.02
+     }
+    },
+    "ual2_LayToIdle": {
+     "duracion_s": 1.533,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.16,
+      "izquierda": 0.0
+     }
+    }
+   }
+  },
+  "lesion_o_k_o": {
+   "nota": "Cae y se queda en el suelo (2,4 s); usar para lesión grave",
+   "secuencia": [
+    "ual1_Death01"
+   ],
+   "clips": {
+    "ual1_Death01": {
+     "duracion_s": 2.4,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": -0.49,
+      "izquierda": 0.01
+     }
+    }
+   }
+  },
+  "disputa_aerea": {
+   "nota": "Salto: Start (1,3 s) → Loop (aire) → Land (1,3 s). Elegir Ninja si hay carrera previa",
+   "secuencia": [
+    "ual1_Jump_Start",
+    "ual1_Jump_Loop",
+    "ual1_Jump_Land"
+   ],
+   "alternativas": [
+    "ual2_NinjaJump_Start",
+    "ual2_NinjaJump_Idle_Loop",
+    "ual2_NinjaJump_Land"
+   ],
+   "clips": {
+    "ual1_Jump_Start": {
+     "duracion_s": 1.333,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.08,
+      "izquierda": -0.03
+     }
+    },
+    "ual1_Jump_Loop": {
+     "duracion_s": 2.5,
+     "bucle": true,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    },
+    "ual1_Jump_Land": {
+     "duracion_s": 1.267,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.03
+     }
+    },
+    "ual2_NinjaJump_Start": {
+     "duracion_s": 0.967,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.13,
+      "izquierda": -0.04
+     }
+    },
+    "ual2_NinjaJump_Idle_Loop": {
+     "duracion_s": 2.0,
+     "bucle": true,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    },
+    "ual2_NinjaJump_Land": {
+     "duracion_s": 1.267,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": -0.05,
+      "izquierda": 0.05
+     }
+    }
+   }
+  },
+  "disputa_cuerpo_a_cuerpo": {
+   "nota": "Empuje continuo hombro con hombro (bucle)",
+   "secuencia": [
+    "ual1_Push_Loop"
+   ],
+   "clips": {
+    "ual1_Push_Loop": {
+     "duracion_s": 2.667,
+     "bucle": true,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    }
+   }
+  },
+  "protesta_reaccion": {
+   "nota": "Negar con la cabeza / asentir / señalar",
+   "secuencia": [
+    "ual2_Idle_No_Loop"
+   ],
+   "alternativas": [
+    "ual2_Yes",
+    "ual1_Interact"
+   ],
+   "clips": {
+    "ual2_Idle_No_Loop": {
+     "duracion_s": 2.5,
+     "bucle": true,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    },
+    "ual2_Yes": {
+     "duracion_s": 2.5,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    },
+    "ual1_Interact": {
+     "duracion_s": 2.0,
+     "bucle": false,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    }
+   }
+  },
+  "espera_parado": {
+   "nota": "Reposos de variedad para jugadores parados (bucle)",
+   "secuencia": [
+    "ual1_Idle_Loop"
+   ],
+   "alternativas": [
+    "ual1_Idle_Talking_Loop",
+    "ual2_Idle_FoldArms_Loop",
+    "ual1_Crouch_Idle_Loop"
+   ],
+   "clips": {
+    "ual1_Idle_Loop": {
+     "duracion_s": 2.5,
+     "bucle": true,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    },
+    "ual1_Idle_Talking_Loop": {
+     "duracion_s": 2.933,
+     "bucle": true,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    },
+    "ual2_Idle_FoldArms_Loop": {
+     "duracion_s": 2.5,
+     "bucle": true,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    },
+    "ual1_Crouch_Idle_Loop": {
+     "duracion_s": 2.933,
+     "bucle": true,
+     "desplazamiento_m": {
+      "adelante": 0.0,
+      "izquierda": 0.0
+     }
+    }
+   }
+  }
+ }
+}
