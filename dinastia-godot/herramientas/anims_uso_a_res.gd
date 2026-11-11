@@ -3,7 +3,7 @@ extends SceneTree
 ## `datos/anims_extra/` desde las bibliotecas completas de `terceros/` (que Godot no importa ni exporta) a una biblioteca pequeña que sí viaja.
 ## Entrada: `terceros/estilo100/uso_clips.json` y `terceros/ual/uso_clips.json` (los escriben `estilo100_a_anims_extra.py` y `ual_a_anims_extra.py`).
 ##   godot --headless --path . --script res://herramientas/anims_uso_a_res.gd
-const LISTAS := ["res://terceros/estilo100/uso_clips.json", "res://terceros/ual/uso_clips.json"]
+const LISTAS := ["res://terceros/estilo100/uso_clips.json", "res://terceros/ual/uso_clips.json", "res://terceros/cmu/uso_clips.json"]
 
 func _init() -> void:
 	for l: String in LISTAS:
