@@ -27,6 +27,7 @@ MOV = {"FW": ("marcha", 0.0), "FR": ("carrera", 0.0), "BW": ("marcha_atras", 180
 ESTILOS_DEF = ["Neutral", "Proud", "Angry", "Rushed", "Elated", "Depressed", "Old", "Heavyset", "BigSteps", "HighKnees",
                "March", "Strutting", "Stiff", "Crouched", "Followed", "CrowdAvoidance"]
 CLAVES_POSE = None
+TOBILLO_D, TOBILLO_I = "RightAnkle", "LeftAnkle"   # otros esqueletos (CMU: RightFoot / LeftFoot) los cambian
 
 
 def leer_bvh(ruta):
@@ -142,7 +143,7 @@ def globales(juntas, R, pos, nombres):
 def ventanas(juntas, R, pos, ini, fin, tipo):
     """Mejores ventanas de un ciclo. Devuelve [(coste, a, b, info)]."""
     F = R.shape[0]
-    pts, G, idx = globales(juntas, R, pos, ["RightAnkle", "LeftAnkle"])
+    pts, G, idx = globales(juntas, R, pos, [TOBILLO_D, TOBILLO_I])
     h = G[idx["Hips"]]
     fwd = h[:, :, 2]
     left = h[:, :, 0]
@@ -152,7 +153,7 @@ def ventanas(juntas, R, pos, ini, fin, tipo):
     vel[k:-k] = (hp[2 * k:] - hp[:-2 * k]) / (2 * k / FPS_ORIGEN)   # cm/s
     nombre, ang_esp = MOV[tipo]
     out = []
-    ya, yl = pts["RightAnkle"][:, 1], pts["LeftAnkle"][:, 1]
+    ya, yl = pts[TOBILLO_D][:, 1], pts[TOBILLO_I][:, 1]
     s = yl - ya
     ini, fin = max(ini, 40), min(fin, F - 40)
     if tipo == "ID":
@@ -226,8 +227,8 @@ def empaquetar(juntas, R, pos, a, b, pts, s, tipo, estilo):
         for jj in range(q.shape[1]):
             q[j, jj] = slerp(q[j, jj], q[0, jj], w * 2 if i == k - 1 else w)
         alto[j] = alto[j] * (1 - w) + alto[0] * w
-    ya = pts["RightAnkle"][idx, 1]
-    yl = pts["LeftAnkle"][idx, 1]
+    ya = pts[TOBILLO_D][idx, 1]
+    yl = pts[TOBILLO_I][idx, 1]
     return q, alto, ya, yl
 
 

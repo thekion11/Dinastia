@@ -36,11 +36,14 @@ Library 1 Standard (`anims/UAL1_Standard.glb`, CC0), 17 elegidas de la UAL 2 (`a
    projects. (CC0 License)». La versión gratuita («Standard») trae 43 + 43 clips (descargada hoy de itch.io; ya estaban en el repo las
    dos selecciones). Sin fútbol; lo útil ya está (`Slide_*` como entrada deslizante, `OverhandThrow` como saque de banda, `Hit_Knockback`, `LayToIdle`).
    Las versiones «Pro» (120+/130+) y «Source» son de pago ($9,99 / $14,99): no se compran sin OK del dueño.
-3. **Base de captura de movimiento de la CMU** — http://mocap.cs.cmu.edu (la conversión a BVH de Bruce Hahne, cgspeed). Texto citado por las
-   fuentes secundarias: «free for use in research and commercial projects», se pide citar «The data used in this project was obtained from
-   mocap.cs.cmu.edu». Trae sujetos con patadas y fútbol. **No se pudo traer**: el host de CMU no responde desde el contenedor (sin ruta en la
-   red) y las copias están en GitHub, que la sesión no pudo añadir (`add_repo` denegado). Queda como la mejor candidata para pases, tiros y
-   cabezazos si el dueño abre la ruta o sube él los BVH; el conversor `herramientas/estilo100_*` sirve casi igual (otro esqueleto y 120 fps).
+3. **Base de captura de movimiento de la CMU** — http://mocap.cs.cmu.edu, conversión BVH de Bruce Hahne (cgspeed), copia en https://github.com/sfd158/cmu-mocap
+   (el dueño dio acceso el 11-11; 2.548 BVH, 4,2 GB, fuera del repo). Licencia citada literalmente en su `READMEFIRST.txt`: «CMU places no restrictions on the use of
+   the original dataset, and I (Bruce) place no additional restrictions on the use of this particular BVH conversion» y, de mocap.cs.cmu.edu: «This data is free for use
+   in research and commercial projects worldwide.» Piden el agradecimiento «The data used in this project was obtained from mocap.cs.cmu.edu. The database was created
+   with funding from NSF EIA-0196217.» (en `creditos.gd`). **Sí trae fútbol**: sujetos 10 y 11 (patadas al balón), 33/34 (lanzar y atrapar), 124 (deportes),
+   carreras reales (9, 35, 127, 128), saltos (16, 13, 124), caídas (90), **bailes** (salsa 60/61, charleston y lindy hop 93, danza india 94, chicken dance 18-21,
+   danza moderna 5/49, breakdance 85) y **acrobacias/celebraciones** (volteretas, mortales y ruedas laterales 90/85/49), emociones (79, 80, 142), gestos (saludo,
+   reverencia, encogerse de hombros, choque de manos, 111/113/141). Se convirtieron **144 clips (+ espejos en patadas, saltos y transiciones)**: ver abajo.
 4. **Mixamo (Adobe)** — términos de uso: se pueden usar en juegos comerciales, pero NO redistribuir los archivos sueltos/en paquetes, y exige
    cuenta para descargar. **Descartado** (el repo es público y distribuiría los archivos).
 5. **Bandai Namco Research Motion Dataset** — CC BY-NC-ND (no comercial). **Descartado**. Igual AMASS y LAFAN1 (no comercial).
@@ -94,6 +97,18 @@ Catálogo de Rohr (`animaciones_catalogo_rohr.json`): por clip `tipo`, `duracion
 del cuadro 4), `velocidad_pie_ms`, `altura_pie_m` y `golpeos` (todos los picos > 45 % del máximo). **Es una heurística**: el pico de velocidad
 del pie coincide con el golpeo, pero sin balón en la escena puede dar el pie de apoyo o un giro; validar a ojo antes de fiarse (p. ej. Power_Kick:
 golpeo en el cuadro 78 con el izquierdo; Side_Foot_Kick y los penales traen carrera previa y varios picos). Los clips son largos (3-23 s).
+
+## CMU: 144 clips convertidos (bloque 7, 11-11)
+
+`herramientas/cmu_clips.py` (BVH → ciclos y clips a 30 fps con etiquetas), `cmu_a_res.gd` (retarget; el BVH de CMU usa canales Z-Y-X, 1 unidad = 5,644 cm y su reposo
+NO es una T: la T es el cuadro 0, así que el giro nuestro es `(G·G0⁻¹)·Q·reposo`) y `cmu_a_anims.py` (reparto). Resultado: `terceros/cmu/biblioteca/cmu.res`
+(completa, 14 MB, no viaja) + catálogo `terceros/cmu/catalogos/animaciones_catalogo_cmu.json`; los **155 clips** que referencian los JSON del motor viajan
+en `assets/characters/quaternius/anims_cmu/cmu_uso.res` (**3,7 MB** comprimido; medido con `--export-pack "Windows"`: 348,6 → 352,6 MB, +4,0 MB con la UAL de acciones). Contenido: 12 ciclos de carrera REAL (3,2-4,3 m/s, con espejo), 6 patadas de fútbol
+(con cuadro de golpeo y pie), 5 lanzamientos/atrapes, 4 saltos, 12 transiciones de carrera (arranque, parada, giros, cambios de lado, rodada), **46 bailes**
+(salsa ×15, danza india ×16, charleston/lindy ×3, chicken dance, varios, moderno, breakdance), 12 acrobacias, 7 emociones de alegría, 8 de derrota/protesta,
+5 saludos y 3 caídas. Revisión visual (carrera, patada, salsa, voltereta lateral, alegría, choque de manos, charleston, patada espejo): poses limpias.
+Los 144 clips originales (y sus espejos) están completos en `terceros/` por si se quieren más. Sin desplazamiento de cadera (el motor mueve al jugador): la velocidad de
+entrada y salida, el giro y el desplazamiento medidos van en las fichas. Descartados de la selección (cuerpo, no relevantes): boxeo, arte marcial, natación, animales.
 
 ## Para la sesión 9 (`LeagueCatalogo`, `datos/anims_extra/`)
 

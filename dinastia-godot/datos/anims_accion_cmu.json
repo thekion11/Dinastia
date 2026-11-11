@@ -1,0 +1,2529 @@
+{
+ "biblioteca": "res://assets/characters/quaternius/anims_cmu/cmu_uso.res",
+ "fuente": "CMU Graphics Lab Motion Capture Database (mocap.cs.cmu.edu; BVH de B. Hahne): libre para uso comercial, citar la fuente",
+ "nota": "Los clips NO se desplazan: la velocidad y el giro son los medidos en el original (el motor mueve al jugador). Con espejo («_espejo») los de pie/lado; los bailes no.",
+ "momentos": {
+  "pase_y_tiro": [
+   {
+    "nombre": "cmu_10_01",
+    "tipo": "patada_balon",
+    "duracion_s": 6.7,
+    "nota": "patadas al balón de fútbol",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.75,
+    "giro_cuerpo_grados": 45.0,
+    "desplazamiento_adelante_m": 1.51,
+    "desplazamiento_izquierda_m": -0.69,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": 149.0,
+    "pie_que_golpea": "D",
+    "golpeos": [
+     {
+      "cuadro": 138.0,
+      "pie": "D",
+      "velocidad_pie_ms": 4.7
+     },
+     {
+      "cuadro": 149.0,
+      "pie": "I",
+      "velocidad_pie_ms": 10.3
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_10_01_espejo",
+    "tipo": "patada_balon",
+    "duracion_s": 6.7,
+    "nota": "patadas al balón de fútbol",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.75,
+    "giro_cuerpo_grados": -45.0,
+    "desplazamiento_adelante_m": 1.51,
+    "desplazamiento_izquierda_m": 0.69,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": 149.0,
+    "pie_que_golpea": "I",
+    "golpeos": [
+     {
+      "cuadro": 138.0,
+      "pie": "D",
+      "velocidad_pie_ms": 4.7
+     },
+     {
+      "cuadro": 149.0,
+      "pie": "I",
+      "velocidad_pie_ms": 10.3
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_10_02",
+    "tipo": "patada_balon",
+    "duracion_s": 4.93,
+    "nota": "",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 0.6,
+    "giro_cuerpo_grados": 68.9,
+    "desplazamiento_adelante_m": 1.48,
+    "desplazamiento_izquierda_m": -0.07,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": 88.0,
+    "pie_que_golpea": "D",
+    "golpeos": [
+     {
+      "cuadro": 78.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.7
+     },
+     {
+      "cuadro": 88.0,
+      "pie": "I",
+      "velocidad_pie_ms": 12.1
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_10_02_espejo",
+    "tipo": "patada_balon",
+    "duracion_s": 4.93,
+    "nota": "",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 0.6,
+    "giro_cuerpo_grados": -68.9,
+    "desplazamiento_adelante_m": 1.48,
+    "desplazamiento_izquierda_m": 0.07,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": 88.0,
+    "pie_que_golpea": "I",
+    "golpeos": [
+     {
+      "cuadro": 78.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.7
+     },
+     {
+      "cuadro": 88.0,
+      "pie": "I",
+      "velocidad_pie_ms": 12.1
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_10_03",
+    "tipo": "patada_balon",
+    "duracion_s": 3.03,
+    "nota": "",
+    "vel_entrada_ms": 0.84,
+    "vel_salida_ms": 0.46,
+    "giro_cuerpo_grados": 48.3,
+    "desplazamiento_adelante_m": 2.81,
+    "desplazamiento_izquierda_m": -0.03,
+    "cambio_direccion_rad": -0.291,
+    "cuadro_toque_balon": 34.0,
+    "pie_que_golpea": "D",
+    "golpeos": [
+     {
+      "cuadro": 24.0,
+      "pie": "D",
+      "velocidad_pie_ms": 7.3
+     },
+     {
+      "cuadro": 34.0,
+      "pie": "I",
+      "velocidad_pie_ms": 12.3
+     },
+     {
+      "cuadro": 38.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.7
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_10_03_espejo",
+    "tipo": "patada_balon",
+    "duracion_s": 3.03,
+    "nota": "",
+    "vel_entrada_ms": 0.84,
+    "vel_salida_ms": 0.46,
+    "giro_cuerpo_grados": -48.3,
+    "desplazamiento_adelante_m": 2.81,
+    "desplazamiento_izquierda_m": 0.03,
+    "cambio_direccion_rad": 0.291,
+    "cuadro_toque_balon": 34.0,
+    "pie_que_golpea": "I",
+    "golpeos": [
+     {
+      "cuadro": 24.0,
+      "pie": "D",
+      "velocidad_pie_ms": 7.3
+     },
+     {
+      "cuadro": 34.0,
+      "pie": "I",
+      "velocidad_pie_ms": 12.3
+     },
+     {
+      "cuadro": 38.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.7
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_10_05",
+    "tipo": "patada_balon",
+    "duracion_s": 3.63,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.62,
+    "giro_cuerpo_grados": 45.4,
+    "desplazamiento_adelante_m": 3.11,
+    "desplazamiento_izquierda_m": 0.13,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": 75.0,
+    "pie_que_golpea": "D",
+    "golpeos": [
+     {
+      "cuadro": 66.0,
+      "pie": "D",
+      "velocidad_pie_ms": 7.8
+     },
+     {
+      "cuadro": 75.0,
+      "pie": "I",
+      "velocidad_pie_ms": 11.3
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_10_05_espejo",
+    "tipo": "patada_balon",
+    "duracion_s": 3.63,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.62,
+    "giro_cuerpo_grados": -45.4,
+    "desplazamiento_adelante_m": 3.11,
+    "desplazamiento_izquierda_m": -0.13,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": 75.0,
+    "pie_que_golpea": "I",
+    "golpeos": [
+     {
+      "cuadro": 66.0,
+      "pie": "D",
+      "velocidad_pie_ms": 7.8
+     },
+     {
+      "cuadro": 75.0,
+      "pie": "I",
+      "velocidad_pie_ms": 11.3
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_10_06",
+    "tipo": "patada_balon",
+    "duracion_s": 4.77,
+    "nota": "",
+    "vel_entrada_ms": 0.19,
+    "vel_salida_ms": 0.98,
+    "giro_cuerpo_grados": 12.4,
+    "desplazamiento_adelante_m": 3.84,
+    "desplazamiento_izquierda_m": -0.11,
+    "cambio_direccion_rad": 0.094,
+    "cuadro_toque_balon": 103.0,
+    "pie_que_golpea": "D",
+    "golpeos": [
+     {
+      "cuadro": 91.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.5
+     },
+     {
+      "cuadro": 98.0,
+      "pie": "D",
+      "velocidad_pie_ms": 3.3
+     },
+     {
+      "cuadro": 103.0,
+      "pie": "I",
+      "velocidad_pie_ms": 12.3
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_10_06_espejo",
+    "tipo": "patada_balon",
+    "duracion_s": 4.77,
+    "nota": "",
+    "vel_entrada_ms": 0.19,
+    "vel_salida_ms": 0.98,
+    "giro_cuerpo_grados": -12.4,
+    "desplazamiento_adelante_m": 3.84,
+    "desplazamiento_izquierda_m": 0.11,
+    "cambio_direccion_rad": -0.094,
+    "cuadro_toque_balon": 103.0,
+    "pie_que_golpea": "I",
+    "golpeos": [
+     {
+      "cuadro": 91.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.5
+     },
+     {
+      "cuadro": 98.0,
+      "pie": "D",
+      "velocidad_pie_ms": 3.3
+     },
+     {
+      "cuadro": 103.0,
+      "pie": "I",
+      "velocidad_pie_ms": 12.3
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_11_01",
+    "tipo": "patada_balon",
+    "duracion_s": 5.0,
+    "nota": "",
+    "vel_entrada_ms": 0.24,
+    "vel_salida_ms": 0.43,
+    "giro_cuerpo_grados": 89.9,
+    "desplazamiento_adelante_m": 3.1,
+    "desplazamiento_izquierda_m": -0.31,
+    "cambio_direccion_rad": 1.823,
+    "cuadro_toque_balon": 101.0,
+    "pie_que_golpea": "D",
+    "golpeos": [
+     {
+      "cuadro": 93.0,
+      "pie": "D",
+      "velocidad_pie_ms": 7.4
+     },
+     {
+      "cuadro": 101.0,
+      "pie": "I",
+      "velocidad_pie_ms": 12.8
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_11_01_espejo",
+    "tipo": "patada_balon",
+    "duracion_s": 5.0,
+    "nota": "",
+    "vel_entrada_ms": 0.24,
+    "vel_salida_ms": 0.43,
+    "giro_cuerpo_grados": -89.9,
+    "desplazamiento_adelante_m": 3.1,
+    "desplazamiento_izquierda_m": 0.31,
+    "cambio_direccion_rad": -1.823,
+    "cuadro_toque_balon": 101.0,
+    "pie_que_golpea": "I",
+    "golpeos": [
+     {
+      "cuadro": 93.0,
+      "pie": "D",
+      "velocidad_pie_ms": 7.4
+     },
+     {
+      "cuadro": 101.0,
+      "pie": "I",
+      "velocidad_pie_ms": 12.8
+     }
+    ]
+   }
+  ],
+  "saque_de_banda_y_portero": [
+   {
+    "nombre": "cmu_124_12",
+    "tipo": "lanzar",
+    "duracion_s": 12.4,
+    "nota": "lanzamiento a una mano por abajo",
+    "vel_entrada_ms": 0.05,
+    "vel_salida_ms": 0.67,
+    "giro_cuerpo_grados": 60.7,
+    "desplazamiento_adelante_m": -0.2,
+    "desplazamiento_izquierda_m": 0.23,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 311.0,
+      "pie": "D",
+      "velocidad_pie_ms": 0.9
+     },
+     {
+      "cuadro": 359.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.7
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_124_12_espejo",
+    "tipo": "lanzar",
+    "duracion_s": 12.4,
+    "nota": "lanzamiento a una mano por abajo",
+    "vel_entrada_ms": 0.05,
+    "vel_salida_ms": 0.67,
+    "giro_cuerpo_grados": -60.7,
+    "desplazamiento_adelante_m": -0.2,
+    "desplazamiento_izquierda_m": -0.23,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 311.0,
+      "pie": "D",
+      "velocidad_pie_ms": 0.9
+     },
+     {
+      "cuadro": 359.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.7
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_33_01",
+    "tipo": "lanzar_atrapar",
+    "duracion_s": 15.0,
+    "nota": "lanzar y atrapar un balón (fútbol americano)",
+    "vel_entrada_ms": 0.21,
+    "vel_salida_ms": 0.33,
+    "giro_cuerpo_grados": -10.9,
+    "desplazamiento_adelante_m": 0.01,
+    "desplazamiento_izquierda_m": -0.02,
+    "cambio_direccion_rad": 1.867,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 200.0,
+      "pie": "I",
+      "velocidad_pie_ms": 8.4
+     },
+     {
+      "cuadro": 204.0,
+      "pie": "D",
+      "velocidad_pie_ms": 7.9
+     },
+     {
+      "cuadro": 225.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.4
+     },
+     {
+      "cuadro": 228.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.3
+     },
+     {
+      "cuadro": 237.0,
+      "pie": "D",
+      "velocidad_pie_ms": 4.8
+     },
+     {
+      "cuadro": 243.0,
+      "pie": "I",
+      "velocidad_pie_ms": 4.4
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_33_02",
+    "tipo": "lanzar_atrapar",
+    "duracion_s": 10.73,
+    "nota": "",
+    "vel_entrada_ms": 0.71,
+    "vel_salida_ms": 1.92,
+    "giro_cuerpo_grados": -24.2,
+    "desplazamiento_adelante_m": -2.11,
+    "desplazamiento_izquierda_m": 1.19,
+    "cambio_direccion_rad": -0.392,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 14.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.5
+     },
+     {
+      "cuadro": 19.0,
+      "pie": "I",
+      "velocidad_pie_ms": 6.0
+     },
+     {
+      "cuadro": 21.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.4
+     },
+     {
+      "cuadro": 33.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.9
+     },
+     {
+      "cuadro": 52.0,
+      "pie": "I",
+      "velocidad_pie_ms": 7.5
+     },
+     {
+      "cuadro": 54.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.1
+     },
+     {
+      "cuadro": 67.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.4
+     },
+     {
+      "cuadro": 68.0,
+      "pie": "I",
+      "velocidad_pie_ms": 6.0
+     },
+     {
+      "cuadro": 75.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.9
+     },
+     {
+      "cuadro": 111.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.4
+     },
+     {
+      "cuadro": 145.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.4
+     },
+     {
+      "cuadro": 147.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.4
+     },
+     {
+      "cuadro": 152.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.2
+     },
+     {
+      "cuadro": 154.0,
+      "pie": "D",
+      "velocidad_pie_ms": 4.9
+     },
+     {
+      "cuadro": 160.0,
+      "pie": "I",
+      "velocidad_pie_ms": 7.2
+     },
+     {
+      "cuadro": 162.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.0
+     },
+     {
+      "cuadro": 199.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.0
+     },
+     {
+      "cuadro": 222.0,
+      "pie": "I",
+      "velocidad_pie_ms": 7.1
+     },
+     {
+      "cuadro": 227.0,
+      "pie": "D",
+      "velocidad_pie_ms": 8.0
+     },
+     {
+      "cuadro": 233.0,
+      "pie": "I",
+      "velocidad_pie_ms": 10.1
+     },
+     {
+      "cuadro": 238.0,
+      "pie": "D",
+      "velocidad_pie_ms": 10.7
+     },
+     {
+      "cuadro": 241.0,
+      "pie": "I",
+      "velocidad_pie_ms": 11.4
+     },
+     {
+      "cuadro": 246.0,
+      "pie": "D",
+      "velocidad_pie_ms": 8.9
+     },
+     {
+      "cuadro": 251.0,
+      "pie": "I",
+      "velocidad_pie_ms": 7.4
+     },
+     {
+      "cuadro": 256.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.8
+     },
+     {
+      "cuadro": 267.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.8
+     },
+     {
+      "cuadro": 283.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.6
+     },
+     {
+      "cuadro": 288.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.1
+     },
+     {
+      "cuadro": 304.0,
+      "pie": "I",
+      "velocidad_pie_ms": 7.4
+     },
+     {
+      "cuadro": 309.0,
+      "pie": "D",
+      "velocidad_pie_ms": 7.1
+     },
+     {
+      "cuadro": 314.0,
+      "pie": "I",
+      "velocidad_pie_ms": 7.0
+     },
+     {
+      "cuadro": 320.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.2
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_34_01",
+    "tipo": "lanzar_atrapar",
+    "duracion_s": 15.0,
+    "nota": "",
+    "vel_entrada_ms": 0.23,
+    "vel_salida_ms": 0.06,
+    "giro_cuerpo_grados": -11.0,
+    "desplazamiento_adelante_m": -0.05,
+    "desplazamiento_izquierda_m": 0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 244.0,
+      "pie": "D",
+      "velocidad_pie_ms": 3.4
+     },
+     {
+      "cuadro": 273.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.5
+     },
+     {
+      "cuadro": 331.0,
+      "pie": "I",
+      "velocidad_pie_ms": 7.1
+     },
+     {
+      "cuadro": 342.0,
+      "pie": "I",
+      "velocidad_pie_ms": 6.6
+     },
+     {
+      "cuadro": 408.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.6
+     },
+     {
+      "cuadro": 416.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.7
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_34_02",
+    "tipo": "lanzar_atrapar",
+    "duracion_s": 10.73,
+    "nota": "",
+    "vel_entrada_ms": 0.16,
+    "vel_salida_ms": 1.55,
+    "giro_cuerpo_grados": 56.2,
+    "desplazamiento_adelante_m": -0.27,
+    "desplazamiento_izquierda_m": 0.01,
+    "cambio_direccion_rad": 0.879,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 58.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.6
+     },
+     {
+      "cuadro": 73.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.0
+     },
+     {
+      "cuadro": 179.0,
+      "pie": "I",
+      "velocidad_pie_ms": 7.4
+     },
+     {
+      "cuadro": 182.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.9
+     },
+     {
+      "cuadro": 189.0,
+      "pie": "I",
+      "velocidad_pie_ms": 10.1
+     },
+     {
+      "cuadro": 194.0,
+      "pie": "D",
+      "velocidad_pie_ms": 10.3
+     },
+     {
+      "cuadro": 205.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.7
+     },
+     {
+      "cuadro": 265.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.2
+     },
+     {
+      "cuadro": 275.0,
+      "pie": "I",
+      "velocidad_pie_ms": 7.0
+     },
+     {
+      "cuadro": 280.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.6
+     },
+     {
+      "cuadro": 289.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.9
+     },
+     {
+      "cuadro": 295.0,
+      "pie": "D",
+      "velocidad_pie_ms": 6.2
+     },
+     {
+      "cuadro": 301.0,
+      "pie": "I",
+      "velocidad_pie_ms": 5.7
+     },
+     {
+      "cuadro": 308.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.3
+     },
+     {
+      "cuadro": 314.0,
+      "pie": "I",
+      "velocidad_pie_ms": 6.6
+     }
+    ]
+   }
+  ],
+  "disputa_aerea": [
+   {
+    "nombre": "cmu_16_03",
+    "tipo": "salto",
+    "duracion_s": 3.43,
+    "nota": "salto alto",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.14,
+    "giro_cuerpo_grados": 9.1,
+    "desplazamiento_adelante_m": -0.17,
+    "desplazamiento_izquierda_m": -0.03,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 47.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.7
+     },
+     {
+      "cuadro": 48.0,
+      "pie": "D",
+      "velocidad_pie_ms": 2.9
+     },
+     {
+      "cuadro": 62.0,
+      "pie": "D",
+      "velocidad_pie_ms": 2.8
+     },
+     {
+      "cuadro": 62.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.8
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_16_03_espejo",
+    "tipo": "salto",
+    "duracion_s": 3.43,
+    "nota": "salto alto",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.14,
+    "giro_cuerpo_grados": -9.1,
+    "desplazamiento_adelante_m": -0.17,
+    "desplazamiento_izquierda_m": 0.03,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 47.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.7
+     },
+     {
+      "cuadro": 48.0,
+      "pie": "D",
+      "velocidad_pie_ms": 2.9
+     },
+     {
+      "cuadro": 62.0,
+      "pie": "D",
+      "velocidad_pie_ms": 2.8
+     },
+     {
+      "cuadro": 62.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.8
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_16_04",
+    "tipo": "salto",
+    "duracion_s": 3.17,
+    "nota": "salto alto",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.09,
+    "giro_cuerpo_grados": -0.4,
+    "desplazamiento_adelante_m": 0.17,
+    "desplazamiento_izquierda_m": -0.01,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 42.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.8
+     },
+     {
+      "cuadro": 43.0,
+      "pie": "D",
+      "velocidad_pie_ms": 3.0
+     },
+     {
+      "cuadro": 57.0,
+      "pie": "D",
+      "velocidad_pie_ms": 2.6
+     },
+     {
+      "cuadro": 57.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.6
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_16_04_espejo",
+    "tipo": "salto",
+    "duracion_s": 3.17,
+    "nota": "salto alto",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.09,
+    "giro_cuerpo_grados": 0.4,
+    "desplazamiento_adelante_m": 0.17,
+    "desplazamiento_izquierda_m": 0.01,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 42.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.8
+     },
+     {
+      "cuadro": 43.0,
+      "pie": "D",
+      "velocidad_pie_ms": 3.0
+     },
+     {
+      "cuadro": 57.0,
+      "pie": "D",
+      "velocidad_pie_ms": 2.6
+     },
+     {
+      "cuadro": 57.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.6
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_124_11",
+    "tipo": "salto",
+    "duracion_s": 8.33,
+    "nota": "salto a pies juntos",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 0.01,
+    "giro_cuerpo_grados": 1.5,
+    "desplazamiento_adelante_m": 4.66,
+    "desplazamiento_izquierda_m": -0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 54.0,
+      "pie": "D",
+      "velocidad_pie_ms": 3.6
+     },
+     {
+      "cuadro": 54.0,
+      "pie": "I",
+      "velocidad_pie_ms": 3.8
+     },
+     {
+      "cuadro": 128.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.0
+     },
+     {
+      "cuadro": 128.0,
+      "pie": "I",
+      "velocidad_pie_ms": 4.9
+     },
+     {
+      "cuadro": 199.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.8
+     },
+     {
+      "cuadro": 199.0,
+      "pie": "I",
+      "velocidad_pie_ms": 6.3
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_124_11_espejo",
+    "tipo": "salto",
+    "duracion_s": 8.33,
+    "nota": "salto a pies juntos",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 0.01,
+    "giro_cuerpo_grados": -1.5,
+    "desplazamiento_adelante_m": 4.66,
+    "desplazamiento_izquierda_m": 0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 54.0,
+      "pie": "D",
+      "velocidad_pie_ms": 3.6
+     },
+     {
+      "cuadro": 54.0,
+      "pie": "I",
+      "velocidad_pie_ms": 3.8
+     },
+     {
+      "cuadro": 128.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.0
+     },
+     {
+      "cuadro": 128.0,
+      "pie": "I",
+      "velocidad_pie_ms": 4.9
+     },
+     {
+      "cuadro": 199.0,
+      "pie": "D",
+      "velocidad_pie_ms": 5.8
+     },
+     {
+      "cuadro": 199.0,
+      "pie": "I",
+      "velocidad_pie_ms": 6.3
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_13_10",
+    "tipo": "salto",
+    "duracion_s": 15.0,
+    "nota": "salto para alcanzar",
+    "vel_entrada_ms": 0.15,
+    "vel_salida_ms": 0.15,
+    "giro_cuerpo_grados": -12.8,
+    "desplazamiento_adelante_m": 0.08,
+    "desplazamiento_izquierda_m": -0.53,
+    "cambio_direccion_rad": 1.472,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 98.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.1
+     },
+     {
+      "cuadro": 121.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.4
+     },
+     {
+      "cuadro": 151.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.5
+     },
+     {
+      "cuadro": 184.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.7
+     },
+     {
+      "cuadro": 227.0,
+      "pie": "D",
+      "velocidad_pie_ms": 2.0
+     },
+     {
+      "cuadro": 239.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.9
+     },
+     {
+      "cuadro": 264.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.1
+     },
+     {
+      "cuadro": 332.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.8
+     },
+     {
+      "cuadro": 345.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.8
+     },
+     {
+      "cuadro": 347.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.7
+     },
+     {
+      "cuadro": 356.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.5
+     },
+     {
+      "cuadro": 413.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.3
+     },
+     {
+      "cuadro": 422.0,
+      "pie": "D",
+      "velocidad_pie_ms": 3.8
+     },
+     {
+      "cuadro": 429.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.4
+     }
+    ]
+   },
+   {
+    "nombre": "cmu_13_10_espejo",
+    "tipo": "salto",
+    "duracion_s": 15.0,
+    "nota": "salto para alcanzar",
+    "vel_entrada_ms": 0.15,
+    "vel_salida_ms": 0.15,
+    "giro_cuerpo_grados": 12.8,
+    "desplazamiento_adelante_m": 0.08,
+    "desplazamiento_izquierda_m": 0.53,
+    "cambio_direccion_rad": -1.472,
+    "cuadro_toque_balon": null,
+    "golpeos": [
+     {
+      "cuadro": 98.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.1
+     },
+     {
+      "cuadro": 121.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.4
+     },
+     {
+      "cuadro": 151.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.5
+     },
+     {
+      "cuadro": 184.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.7
+     },
+     {
+      "cuadro": 227.0,
+      "pie": "D",
+      "velocidad_pie_ms": 2.0
+     },
+     {
+      "cuadro": 239.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.9
+     },
+     {
+      "cuadro": 264.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.1
+     },
+     {
+      "cuadro": 332.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.8
+     },
+     {
+      "cuadro": 345.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.8
+     },
+     {
+      "cuadro": 347.0,
+      "pie": "D",
+      "velocidad_pie_ms": 1.7
+     },
+     {
+      "cuadro": 356.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.5
+     },
+     {
+      "cuadro": 413.0,
+      "pie": "I",
+      "velocidad_pie_ms": 2.3
+     },
+     {
+      "cuadro": 422.0,
+      "pie": "D",
+      "velocidad_pie_ms": 3.8
+     },
+     {
+      "cuadro": 429.0,
+      "pie": "I",
+      "velocidad_pie_ms": 1.4
+     }
+    ]
+   }
+  ],
+  "transiciones_de_carrera": [
+   {
+    "nombre": "cmu_127_04",
+    "tipo": "transicion_carrera",
+    "duracion_s": 3.73,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 4.43,
+    "giro_cuerpo_grados": 0.0,
+    "desplazamiento_adelante_m": -4.74,
+    "desplazamiento_izquierda_m": 0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_04_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 3.73,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 4.43,
+    "giro_cuerpo_grados": 0.0,
+    "desplazamiento_adelante_m": -4.74,
+    "desplazamiento_izquierda_m": -0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_05",
+    "tipo": "transicion_carrera",
+    "duracion_s": 3.23,
+    "nota": "",
+    "vel_entrada_ms": 4.54,
+    "vel_salida_ms": 0.17,
+    "giro_cuerpo_grados": 3.4,
+    "desplazamiento_adelante_m": 4.81,
+    "desplazamiento_izquierda_m": -0.19,
+    "cambio_direccion_rad": -1.052,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_05_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 3.23,
+    "nota": "",
+    "vel_entrada_ms": 4.54,
+    "vel_salida_ms": 0.17,
+    "giro_cuerpo_grados": -3.4,
+    "desplazamiento_adelante_m": 4.81,
+    "desplazamiento_izquierda_m": 0.19,
+    "cambio_direccion_rad": 1.052,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_09",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.67,
+    "nota": "",
+    "vel_entrada_ms": 3.63,
+    "vel_salida_ms": 2.48,
+    "giro_cuerpo_grados": -36.9,
+    "desplazamiento_adelante_m": 4.87,
+    "desplazamiento_izquierda_m": -2.03,
+    "cambio_direccion_rad": -0.648,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_09_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.67,
+    "nota": "",
+    "vel_entrada_ms": 3.63,
+    "vel_salida_ms": 2.48,
+    "giro_cuerpo_grados": 36.9,
+    "desplazamiento_adelante_m": 4.87,
+    "desplazamiento_izquierda_m": 2.03,
+    "cambio_direccion_rad": 0.648,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_10",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.4,
+    "nota": "",
+    "vel_entrada_ms": 3.46,
+    "vel_salida_ms": 3.12,
+    "giro_cuerpo_grados": -44.7,
+    "desplazamiento_adelante_m": 4.34,
+    "desplazamiento_izquierda_m": -2.57,
+    "cambio_direccion_rad": -0.474,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_10_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.4,
+    "nota": "",
+    "vel_entrada_ms": 3.46,
+    "vel_salida_ms": 3.12,
+    "giro_cuerpo_grados": 44.7,
+    "desplazamiento_adelante_m": 4.34,
+    "desplazamiento_izquierda_m": 2.57,
+    "cambio_direccion_rad": 0.474,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_13",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.57,
+    "nota": "",
+    "vel_entrada_ms": 3.32,
+    "vel_salida_ms": 3.37,
+    "giro_cuerpo_grados": 10.0,
+    "desplazamiento_adelante_m": 5.02,
+    "desplazamiento_izquierda_m": 0.61,
+    "cambio_direccion_rad": -0.046,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_13_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.57,
+    "nota": "",
+    "vel_entrada_ms": 3.32,
+    "vel_salida_ms": 3.37,
+    "giro_cuerpo_grados": -10.0,
+    "desplazamiento_adelante_m": 5.02,
+    "desplazamiento_izquierda_m": -0.61,
+    "cambio_direccion_rad": 0.046,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_14",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.27,
+    "nota": "",
+    "vel_entrada_ms": 3.63,
+    "vel_salida_ms": 3.62,
+    "giro_cuerpo_grados": -4.6,
+    "desplazamiento_adelante_m": 4.35,
+    "desplazamiento_izquierda_m": -0.95,
+    "cambio_direccion_rad": -0.188,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_14_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.27,
+    "nota": "",
+    "vel_entrada_ms": 3.63,
+    "vel_salida_ms": 3.62,
+    "giro_cuerpo_grados": 4.6,
+    "desplazamiento_adelante_m": 4.35,
+    "desplazamiento_izquierda_m": 0.95,
+    "cambio_direccion_rad": 0.188,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_15",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.37,
+    "nota": "",
+    "vel_entrada_ms": 3.41,
+    "vel_salida_ms": 2.75,
+    "giro_cuerpo_grados": 69.6,
+    "desplazamiento_adelante_m": -3.67,
+    "desplazamiento_izquierda_m": -1.87,
+    "cambio_direccion_rad": 0.96,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_15_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.37,
+    "nota": "",
+    "vel_entrada_ms": 3.41,
+    "vel_salida_ms": 2.75,
+    "giro_cuerpo_grados": -69.6,
+    "desplazamiento_adelante_m": -3.67,
+    "desplazamiento_izquierda_m": 1.87,
+    "cambio_direccion_rad": -0.96,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_16",
+    "tipo": "transicion_carrera",
+    "duracion_s": 2.17,
+    "nota": "",
+    "vel_entrada_ms": 3.61,
+    "vel_salida_ms": 0.69,
+    "giro_cuerpo_grados": -12.1,
+    "desplazamiento_adelante_m": -4.77,
+    "desplazamiento_izquierda_m": 1.93,
+    "cambio_direccion_rad": -0.44,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_16_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 2.17,
+    "nota": "",
+    "vel_entrada_ms": 3.61,
+    "vel_salida_ms": 0.69,
+    "giro_cuerpo_grados": 12.1,
+    "desplazamiento_adelante_m": -4.77,
+    "desplazamiento_izquierda_m": -1.93,
+    "cambio_direccion_rad": 0.44,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_17",
+    "tipo": "transicion_carrera",
+    "duracion_s": 3.2,
+    "nota": "",
+    "vel_entrada_ms": 3.32,
+    "vel_salida_ms": 3.52,
+    "giro_cuerpo_grados": 5.9,
+    "desplazamiento_adelante_m": -4.49,
+    "desplazamiento_izquierda_m": 0.13,
+    "cambio_direccion_rad": -0.028,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_17_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 3.2,
+    "nota": "",
+    "vel_entrada_ms": 3.32,
+    "vel_salida_ms": 3.52,
+    "giro_cuerpo_grados": -5.9,
+    "desplazamiento_adelante_m": -4.49,
+    "desplazamiento_izquierda_m": -0.13,
+    "cambio_direccion_rad": 0.028,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_23",
+    "tipo": "transicion_carrera",
+    "duracion_s": 2.93,
+    "nota": "",
+    "vel_entrada_ms": 2.46,
+    "vel_salida_ms": 1.64,
+    "giro_cuerpo_grados": 11.6,
+    "desplazamiento_adelante_m": -5.3,
+    "desplazamiento_izquierda_m": -0.1,
+    "cambio_direccion_rad": 0.007,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_127_23_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 2.93,
+    "nota": "",
+    "vel_entrada_ms": 2.46,
+    "vel_salida_ms": 1.64,
+    "giro_cuerpo_grados": -11.6,
+    "desplazamiento_adelante_m": -5.3,
+    "desplazamiento_izquierda_m": 0.1,
+    "cambio_direccion_rad": -0.007,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_128_05",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.77,
+    "nota": "",
+    "vel_entrada_ms": 2.51,
+    "vel_salida_ms": 2.91,
+    "giro_cuerpo_grados": -7.0,
+    "desplazamiento_adelante_m": 2.8,
+    "desplazamiento_izquierda_m": -0.01,
+    "cambio_direccion_rad": -0.03,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_128_05_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 1.77,
+    "nota": "",
+    "vel_entrada_ms": 2.51,
+    "vel_salida_ms": 2.91,
+    "giro_cuerpo_grados": 7.0,
+    "desplazamiento_adelante_m": 2.8,
+    "desplazamiento_izquierda_m": 0.01,
+    "cambio_direccion_rad": 0.03,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_16_08",
+    "tipo": "transicion_carrera",
+    "duracion_s": 2.0,
+    "nota": "trote y parada brusca",
+    "vel_entrada_ms": 3.49,
+    "vel_salida_ms": 0.1,
+    "giro_cuerpo_grados": 1.0,
+    "desplazamiento_adelante_m": 3.11,
+    "desplazamiento_izquierda_m": -0.13,
+    "cambio_direccion_rad": -0.585,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_16_08_espejo",
+    "tipo": "transicion_carrera",
+    "duracion_s": 2.0,
+    "nota": "trote y parada brusca",
+    "vel_entrada_ms": 3.49,
+    "vel_salida_ms": 0.1,
+    "giro_cuerpo_grados": -1.0,
+    "desplazamiento_adelante_m": 3.11,
+    "desplazamiento_izquierda_m": 0.13,
+    "cambio_direccion_rad": 0.585,
+    "cuadro_toque_balon": null
+   }
+  ],
+  "celebracion_baile": [
+   {
+    "nombre": "cmu_60_01",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.33,
+    "vel_salida_ms": 1.11,
+    "giro_cuerpo_grados": 48.4,
+    "desplazamiento_adelante_m": 0.08,
+    "desplazamiento_izquierda_m": 0.94,
+    "cambio_direccion_rad": 1.55,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_02",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.14,
+    "vel_salida_ms": 0.74,
+    "giro_cuerpo_grados": -52.7,
+    "desplazamiento_adelante_m": -0.15,
+    "desplazamiento_izquierda_m": 0.96,
+    "cambio_direccion_rad": -1.983,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_03",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.43,
+    "vel_salida_ms": 0.03,
+    "giro_cuerpo_grados": -158.9,
+    "desplazamiento_adelante_m": -0.19,
+    "desplazamiento_izquierda_m": 1.56,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_04",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.05,
+    "vel_salida_ms": 0.5,
+    "giro_cuerpo_grados": 14.7,
+    "desplazamiento_adelante_m": 0.15,
+    "desplazamiento_izquierda_m": 1.28,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_05",
+    "tipo": "baile_salsa",
+    "duracion_s": 14.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.33,
+    "vel_salida_ms": 0.32,
+    "giro_cuerpo_grados": 28.1,
+    "desplazamiento_adelante_m": -0.03,
+    "desplazamiento_izquierda_m": 0.31,
+    "cambio_direccion_rad": 1.825,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_06",
+    "tipo": "baile_salsa",
+    "duracion_s": 14.77,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.22,
+    "vel_salida_ms": 0.36,
+    "giro_cuerpo_grados": 5.7,
+    "desplazamiento_adelante_m": 0.11,
+    "desplazamiento_izquierda_m": 0.86,
+    "cambio_direccion_rad": -2.924,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_07",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.71,
+    "vel_salida_ms": 1.07,
+    "giro_cuerpo_grados": -12.4,
+    "desplazamiento_adelante_m": 0.21,
+    "desplazamiento_izquierda_m": 0.44,
+    "cambio_direccion_rad": 2.567,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_08",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 0.54,
+    "giro_cuerpo_grados": -131.3,
+    "desplazamiento_adelante_m": -0.16,
+    "desplazamiento_izquierda_m": 1.22,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_09",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.58,
+    "vel_salida_ms": 1.16,
+    "giro_cuerpo_grados": -44.8,
+    "desplazamiento_adelante_m": -0.13,
+    "desplazamiento_izquierda_m": 0.42,
+    "cambio_direccion_rad": -1.954,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_10",
+    "tipo": "baile_salsa",
+    "duracion_s": 10.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.08,
+    "vel_salida_ms": 1.18,
+    "giro_cuerpo_grados": -49.1,
+    "desplazamiento_adelante_m": -0.29,
+    "desplazamiento_izquierda_m": 0.84,
+    "cambio_direccion_rad": 0.55,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_11",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.15,
+    "vel_salida_ms": 0.68,
+    "giro_cuerpo_grados": -87.5,
+    "desplazamiento_adelante_m": -0.29,
+    "desplazamiento_izquierda_m": 0.8,
+    "cambio_direccion_rad": 2.08,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_12",
+    "tipo": "baile_salsa",
+    "duracion_s": 14.1,
+    "nota": "salsa",
+    "vel_entrada_ms": 1.19,
+    "vel_salida_ms": 0.17,
+    "giro_cuerpo_grados": 1.1,
+    "desplazamiento_adelante_m": -0.01,
+    "desplazamiento_izquierda_m": -0.4,
+    "cambio_direccion_rad": -0.168,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_13",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 1.17,
+    "giro_cuerpo_grados": -5.2,
+    "desplazamiento_adelante_m": -0.31,
+    "desplazamiento_izquierda_m": 0.41,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_14",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.96,
+    "giro_cuerpo_grados": 101.2,
+    "desplazamiento_adelante_m": 0.54,
+    "desplazamiento_izquierda_m": 1.27,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_60_15",
+    "tipo": "baile_salsa",
+    "duracion_s": 15.0,
+    "nota": "salsa",
+    "vel_entrada_ms": 0.06,
+    "vel_salida_ms": 0.77,
+    "giro_cuerpo_grados": 153.2,
+    "desplazamiento_adelante_m": 0.4,
+    "desplazamiento_izquierda_m": 1.2,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_93_03",
+    "tipo": "baile_charleston",
+    "duracion_s": 3.7,
+    "nota": "",
+    "vel_entrada_ms": 0.06,
+    "vel_salida_ms": 0.07,
+    "giro_cuerpo_grados": -11.5,
+    "desplazamiento_adelante_m": -0.06,
+    "desplazamiento_izquierda_m": -0.13,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_93_08",
+    "tipo": "baile_charleston",
+    "duracion_s": 4.67,
+    "nota": "charleston elaborado",
+    "vel_entrada_ms": 0.31,
+    "vel_salida_ms": 1.81,
+    "giro_cuerpo_grados": -74.1,
+    "desplazamiento_adelante_m": -0.42,
+    "desplazamiento_izquierda_m": -0.09,
+    "cambio_direccion_rad": 1.294,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_93_06",
+    "tipo": "baile_lindy",
+    "duracion_s": 3.37,
+    "nota": "lindy hop",
+    "vel_entrada_ms": 0.48,
+    "vel_salida_ms": 0.73,
+    "giro_cuerpo_grados": 81.7,
+    "desplazamiento_adelante_m": -0.1,
+    "desplazamiento_izquierda_m": 0.45,
+    "cambio_direccion_rad": -2.418,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_01",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.0,
+    "vel_salida_ms": 0.35,
+    "giro_cuerpo_grados": -3.1,
+    "desplazamiento_adelante_m": -0.45,
+    "desplazamiento_izquierda_m": 0.12,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_02",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.04,
+    "vel_salida_ms": 1.37,
+    "giro_cuerpo_grados": 4.9,
+    "desplazamiento_adelante_m": -0.53,
+    "desplazamiento_izquierda_m": 1.19,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_03",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.05,
+    "vel_salida_ms": 0.16,
+    "giro_cuerpo_grados": -4.0,
+    "desplazamiento_adelante_m": -0.79,
+    "desplazamiento_izquierda_m": 0.15,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_04",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 1.51,
+    "giro_cuerpo_grados": -14.5,
+    "desplazamiento_adelante_m": -0.49,
+    "desplazamiento_izquierda_m": 0.71,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_05",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.97,
+    "giro_cuerpo_grados": 15.0,
+    "desplazamiento_adelante_m": -0.56,
+    "desplazamiento_izquierda_m": -0.65,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_06",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.23,
+    "giro_cuerpo_grados": -2.6,
+    "desplazamiento_adelante_m": -1.47,
+    "desplazamiento_izquierda_m": 0.35,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_07",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.17,
+    "vel_salida_ms": 0.13,
+    "giro_cuerpo_grados": 7.5,
+    "desplazamiento_adelante_m": 0.07,
+    "desplazamiento_izquierda_m": 0.9,
+    "cambio_direccion_rad": -1.961,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_08",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.04,
+    "vel_salida_ms": 0.79,
+    "giro_cuerpo_grados": 171.5,
+    "desplazamiento_adelante_m": 0.76,
+    "desplazamiento_izquierda_m": 0.38,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_09",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.22,
+    "giro_cuerpo_grados": 4.0,
+    "desplazamiento_adelante_m": -0.35,
+    "desplazamiento_izquierda_m": 0.18,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_10",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.71,
+    "vel_salida_ms": 0.32,
+    "giro_cuerpo_grados": -4.1,
+    "desplazamiento_adelante_m": -0.72,
+    "desplazamiento_izquierda_m": 0.18,
+    "cambio_direccion_rad": -2.912,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_11",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.0,
+    "vel_salida_ms": 0.25,
+    "giro_cuerpo_grados": 3.6,
+    "desplazamiento_adelante_m": -0.48,
+    "desplazamiento_izquierda_m": -0.06,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_12",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.09,
+    "vel_salida_ms": 0.51,
+    "giro_cuerpo_grados": 24.4,
+    "desplazamiento_adelante_m": -1.26,
+    "desplazamiento_izquierda_m": 0.03,
+    "cambio_direccion_rad": -1.868,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_13",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.13,
+    "vel_salida_ms": 0.06,
+    "giro_cuerpo_grados": 2.2,
+    "desplazamiento_adelante_m": 0.12,
+    "desplazamiento_izquierda_m": -0.61,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_14",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.56,
+    "giro_cuerpo_grados": 17.0,
+    "desplazamiento_adelante_m": 0.88,
+    "desplazamiento_izquierda_m": -0.62,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_15",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 1.12,
+    "giro_cuerpo_grados": 78.2,
+    "desplazamiento_adelante_m": -0.1,
+    "desplazamiento_izquierda_m": -1.11,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_94_16",
+    "tipo": "baile_indio",
+    "duracion_s": 15.0,
+    "nota": "danza india",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.01,
+    "giro_cuerpo_grados": -5.4,
+    "desplazamiento_adelante_m": 0.08,
+    "desplazamiento_izquierda_m": -0.05,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_15_04",
+    "tipo": "baile_varios",
+    "duracion_s": 15.0,
+    "nota": "Egyptian walk, the Dive, the Twist, Cabbage Patch",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.02,
+    "giro_cuerpo_grados": 0.7,
+    "desplazamiento_adelante_m": 0.03,
+    "desplazamiento_izquierda_m": 0.01,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_15_05",
+    "tipo": "baile_varios",
+    "duracion_s": 15.0,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.0,
+    "giro_cuerpo_grados": 3.1,
+    "desplazamiento_adelante_m": -0.03,
+    "desplazamiento_izquierda_m": 0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_18_15",
+    "tipo": "baile_pollo",
+    "duracion_s": 12.8,
+    "nota": "chicken dance",
+    "vel_entrada_ms": 0.21,
+    "vel_salida_ms": 0.08,
+    "giro_cuerpo_grados": -5.2,
+    "desplazamiento_adelante_m": 0.02,
+    "desplazamiento_izquierda_m": 0.07,
+    "cambio_direccion_rad": -2.883,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_20_01",
+    "tipo": "baile_pollo",
+    "duracion_s": 10.73,
+    "nota": "",
+    "vel_entrada_ms": 0.08,
+    "vel_salida_ms": 0.01,
+    "giro_cuerpo_grados": 0.7,
+    "desplazamiento_adelante_m": -0.02,
+    "desplazamiento_izquierda_m": 0.0,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_85_04",
+    "tipo": "baile_breakdance",
+    "duracion_s": 15.0,
+    "nota": "juego de pies",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.3,
+    "giro_cuerpo_grados": 39.3,
+    "desplazamiento_adelante_m": 0.37,
+    "desplazamiento_izquierda_m": -1.15,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_85_08",
+    "tipo": "baile_breakdance",
+    "duracion_s": 8.47,
+    "nota": "helicóptero",
+    "vel_entrada_ms": 0.0,
+    "vel_salida_ms": 0.37,
+    "giro_cuerpo_grados": 35.7,
+    "desplazamiento_adelante_m": 0.11,
+    "desplazamiento_izquierda_m": 0.2,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_85_10",
+    "tipo": "baile_breakdance",
+    "duracion_s": 6.47,
+    "nota": "",
+    "vel_entrada_ms": 0.77,
+    "vel_salida_ms": 0.07,
+    "giro_cuerpo_grados": 149.1,
+    "desplazamiento_adelante_m": 0.3,
+    "desplazamiento_izquierda_m": 0.54,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_49_09",
+    "tipo": "baile_moderno",
+    "duracion_s": 15.0,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.02,
+    "giro_cuerpo_grados": 0.8,
+    "desplazamiento_adelante_m": 0.07,
+    "desplazamiento_izquierda_m": 0.25,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_49_12",
+    "tipo": "baile_moderno",
+    "duracion_s": 9.43,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.0,
+    "giro_cuerpo_grados": 6.9,
+    "desplazamiento_adelante_m": -0.11,
+    "desplazamiento_izquierda_m": 0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_49_22",
+    "tipo": "baile_moderno",
+    "duracion_s": 10.73,
+    "nota": "",
+    "vel_entrada_ms": 0.08,
+    "vel_salida_ms": 0.01,
+    "giro_cuerpo_grados": 45.1,
+    "desplazamiento_adelante_m": -0.42,
+    "desplazamiento_izquierda_m": -0.13,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_05_02",
+    "tipo": "baile_moderno",
+    "duracion_s": 9.37,
+    "nota": "",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.57,
+    "giro_cuerpo_grados": -41.7,
+    "desplazamiento_adelante_m": 1.27,
+    "desplazamiento_izquierda_m": -0.37,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_05_06",
+    "tipo": "baile_moderno",
+    "duracion_s": 7.4,
+    "nota": "",
+    "vel_entrada_ms": 0.11,
+    "vel_salida_ms": 0.01,
+    "giro_cuerpo_grados": 23.2,
+    "desplazamiento_adelante_m": 3.09,
+    "desplazamiento_izquierda_m": 0.03,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   }
+  ],
+  "celebracion_acrobacia": [
+   {
+    "nombre": "cmu_90_01",
+    "tipo": "acrobacia",
+    "duracion_s": 6.6,
+    "nota": "voltereta atrás",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.05,
+    "giro_cuerpo_grados": 3.0,
+    "desplazamiento_adelante_m": -2.23,
+    "desplazamiento_izquierda_m": -0.09,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_90_02",
+    "tipo": "acrobacia",
+    "duracion_s": 6.53,
+    "nota": "voltereta lateral",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 0.07,
+    "giro_cuerpo_grados": 2.1,
+    "desplazamiento_adelante_m": 3.16,
+    "desplazamiento_izquierda_m": -0.41,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_90_03",
+    "tipo": "acrobacia",
+    "duracion_s": 7.37,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.03,
+    "giro_cuerpo_grados": 3.9,
+    "desplazamiento_adelante_m": 3.2,
+    "desplazamiento_izquierda_m": 0.1,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_90_04",
+    "tipo": "acrobacia",
+    "duracion_s": 5.83,
+    "nota": "",
+    "vel_entrada_ms": 0.04,
+    "vel_salida_ms": 0.09,
+    "giro_cuerpo_grados": 3.5,
+    "desplazamiento_adelante_m": 3.35,
+    "desplazamiento_izquierda_m": 0.07,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_90_08",
+    "tipo": "acrobacia",
+    "duracion_s": 2.83,
+    "nota": "mortal lateral",
+    "vel_entrada_ms": 0.13,
+    "vel_salida_ms": 0.26,
+    "giro_cuerpo_grados": -24.9,
+    "desplazamiento_adelante_m": 1.48,
+    "desplazamiento_izquierda_m": -0.13,
+    "cambio_direccion_rad": 0.289,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_90_09",
+    "tipo": "acrobacia",
+    "duracion_s": 2.57,
+    "nota": "",
+    "vel_entrada_ms": 0.06,
+    "vel_salida_ms": 0.18,
+    "giro_cuerpo_grados": 2.9,
+    "desplazamiento_adelante_m": 0.19,
+    "desplazamiento_izquierda_m": -0.18,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_90_11",
+    "tipo": "acrobacia",
+    "duracion_s": 1.5,
+    "nota": "",
+    "vel_entrada_ms": 6.8,
+    "vel_salida_ms": 0.14,
+    "giro_cuerpo_grados": 20.4,
+    "desplazamiento_adelante_m": -4.46,
+    "desplazamiento_izquierda_m": 0.19,
+    "cambio_direccion_rad": -0.343,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_90_14",
+    "tipo": "acrobacia",
+    "duracion_s": 7.0,
+    "nota": "",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 0.08,
+    "giro_cuerpo_grados": -3.3,
+    "desplazamiento_adelante_m": 2.67,
+    "desplazamiento_izquierda_m": 0.06,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_85_01",
+    "tipo": "acrobacia",
+    "duracion_s": 8.33,
+    "nota": "salto con giro",
+    "vel_entrada_ms": 0.23,
+    "vel_salida_ms": 0.14,
+    "giro_cuerpo_grados": 2.4,
+    "desplazamiento_adelante_m": -0.08,
+    "desplazamiento_izquierda_m": -1.32,
+    "cambio_direccion_rad": 0.402,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_85_02",
+    "tipo": "acrobacia",
+    "duracion_s": 6.77,
+    "nota": "",
+    "vel_entrada_ms": 0.26,
+    "vel_salida_ms": 0.13,
+    "giro_cuerpo_grados": 12.2,
+    "desplazamiento_adelante_m": -0.33,
+    "desplazamiento_izquierda_m": -1.33,
+    "cambio_direccion_rad": 3.14,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_90_05",
+    "tipo": "acrobacia",
+    "duracion_s": 4.3,
+    "nota": "patada en salto",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 0.05,
+    "giro_cuerpo_grados": 161.6,
+    "desplazamiento_adelante_m": 2.8,
+    "desplazamiento_izquierda_m": 0.3,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_49_06",
+    "tipo": "acrobacia",
+    "duracion_s": 4.03,
+    "nota": "voltereta lateral",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.41,
+    "giro_cuerpo_grados": 6.9,
+    "desplazamiento_adelante_m": -2.98,
+    "desplazamiento_izquierda_m": -0.37,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   }
+  ],
+  "celebracion_emocion": [
+   {
+    "nombre": "cmu_79_69",
+    "tipo": "emocion_alegria",
+    "duracion_s": 6.83,
+    "nota": "muy contento",
+    "vel_entrada_ms": 0.0,
+    "vel_salida_ms": 0.01,
+    "giro_cuerpo_grados": 1.6,
+    "desplazamiento_adelante_m": 0.01,
+    "desplazamiento_izquierda_m": 0.0,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_79_70",
+    "tipo": "emocion_risa",
+    "duracion_s": 6.37,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.05,
+    "giro_cuerpo_grados": -0.5,
+    "desplazamiento_adelante_m": 0.03,
+    "desplazamiento_izquierda_m": 0.0,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_80_43",
+    "tipo": "emocion_alegria",
+    "duracion_s": 8.17,
+    "nota": "",
+    "vel_entrada_ms": 0.06,
+    "vel_salida_ms": 0.02,
+    "giro_cuerpo_grados": 3.8,
+    "desplazamiento_adelante_m": 0.04,
+    "desplazamiento_izquierda_m": 0.01,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_142_08",
+    "tipo": "andar_alegre",
+    "duracion_s": 15.0,
+    "nota": "",
+    "vel_entrada_ms": 0.0,
+    "vel_salida_ms": 1.59,
+    "giro_cuerpo_grados": -0.9,
+    "desplazamiento_adelante_m": 0.01,
+    "desplazamiento_izquierda_m": -1.71,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_142_09",
+    "tipo": "andar_alegre",
+    "duracion_s": 15.0,
+    "nota": "alegría",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 1.43,
+    "giro_cuerpo_grados": 2.3,
+    "desplazamiento_adelante_m": 0.08,
+    "desplazamiento_izquierda_m": -4.3,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_142_06",
+    "tipo": "andar_alegre",
+    "duracion_s": 15.0,
+    "nota": "eufórico",
+    "vel_entrada_ms": 0.0,
+    "vel_salida_ms": 0.72,
+    "giro_cuerpo_grados": 111.5,
+    "desplazamiento_adelante_m": 0.03,
+    "desplazamiento_izquierda_m": -4.86,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_141_22",
+    "tipo": "choque_de_manos",
+    "duracion_s": 1.67,
+    "nota": "high five",
+    "vel_entrada_ms": 0.54,
+    "vel_salida_ms": 2.04,
+    "giro_cuerpo_grados": -8.4,
+    "desplazamiento_adelante_m": -0.49,
+    "desplazamiento_izquierda_m": 2.99,
+    "cambio_direccion_rad": -0.362,
+    "cuadro_toque_balon": null
+   }
+  ],
+  "derrota_y_protesta": [
+   {
+    "nombre": "cmu_79_71",
+    "tipo": "emocion_tristeza",
+    "duracion_s": 9.0,
+    "nota": "triste",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.0,
+    "giro_cuerpo_grados": 0.5,
+    "desplazamiento_adelante_m": -0.01,
+    "desplazamiento_izquierda_m": 0.0,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_79_72",
+    "tipo": "emocion_llanto",
+    "duracion_s": 7.97,
+    "nota": "",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 0.04,
+    "giro_cuerpo_grados": 1.5,
+    "desplazamiento_adelante_m": -0.01,
+    "desplazamiento_izquierda_m": -0.01,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_79_74",
+    "tipo": "emocion_enfado",
+    "duracion_s": 7.73,
+    "nota": "enfadado",
+    "vel_entrada_ms": 0.02,
+    "vel_salida_ms": 0.05,
+    "giro_cuerpo_grados": -0.1,
+    "desplazamiento_adelante_m": -0.02,
+    "desplazamiento_izquierda_m": -0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_79_73",
+    "tipo": "emocion_miedo",
+    "duracion_s": 7.4,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.01,
+    "giro_cuerpo_grados": -1.4,
+    "desplazamiento_adelante_m": -0.01,
+    "desplazamiento_izquierda_m": 0.0,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_142_05",
+    "tipo": "andar_triste",
+    "duracion_s": 15.0,
+    "nota": "deprimido",
+    "vel_entrada_ms": 0.0,
+    "vel_salida_ms": 0.2,
+    "giro_cuerpo_grados": 158.9,
+    "desplazamiento_adelante_m": 0.19,
+    "desplazamiento_izquierda_m": -4.99,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_111_25",
+    "tipo": "gesto_encogerse",
+    "duracion_s": 2.43,
+    "nota": "encoger los hombros",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.02,
+    "giro_cuerpo_grados": -2.4,
+    "desplazamiento_adelante_m": 0.01,
+    "desplazamiento_izquierda_m": 0.0,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_141_21",
+    "tipo": "gesto_encogerse",
+    "duracion_s": 2.27,
+    "nota": "",
+    "vel_entrada_ms": 0.05,
+    "vel_salida_ms": 0.06,
+    "giro_cuerpo_grados": 4.5,
+    "desplazamiento_adelante_m": -0.01,
+    "desplazamiento_izquierda_m": -0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_56_02",
+    "tipo": "gesto_puños",
+    "duracion_s": 15.0,
+    "nota": "puños arriba",
+    "vel_entrada_ms": 0.22,
+    "vel_salida_ms": 0.02,
+    "giro_cuerpo_grados": 11.0,
+    "desplazamiento_adelante_m": -0.14,
+    "desplazamiento_izquierda_m": -0.1,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   }
+  ],
+  "saludo": [
+   {
+    "nombre": "cmu_111_37",
+    "tipo": "gesto_saludo",
+    "duracion_s": 2.7,
+    "nota": "saludar con la mano",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.02,
+    "giro_cuerpo_grados": 2.1,
+    "desplazamiento_adelante_m": -0.01,
+    "desplazamiento_izquierda_m": 0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_113_27",
+    "tipo": "gesto_saludo",
+    "duracion_s": 3.0,
+    "nota": "",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.0,
+    "giro_cuerpo_grados": 2.4,
+    "desplazamiento_adelante_m": -0.01,
+    "desplazamiento_izquierda_m": 0.0,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_141_16",
+    "tipo": "gesto_saludo",
+    "duracion_s": 2.5,
+    "nota": "",
+    "vel_entrada_ms": 0.46,
+    "vel_salida_ms": 0.02,
+    "giro_cuerpo_grados": -3.4,
+    "desplazamiento_adelante_m": -0.01,
+    "desplazamiento_izquierda_m": 0.02,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_111_02",
+    "tipo": "gesto_reverencia",
+    "duracion_s": 3.53,
+    "nota": "reverencia",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.04,
+    "giro_cuerpo_grados": -0.5,
+    "desplazamiento_adelante_m": 0.0,
+    "desplazamiento_izquierda_m": -0.01,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_113_02",
+    "tipo": "gesto_reverencia",
+    "duracion_s": 4.43,
+    "nota": "",
+    "vel_entrada_ms": 0.06,
+    "vel_salida_ms": 0.05,
+    "giro_cuerpo_grados": -1.2,
+    "desplazamiento_adelante_m": 0.01,
+    "desplazamiento_izquierda_m": 0.03,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   }
+  ],
+  "caidas": [
+   {
+    "nombre": "cmu_90_16",
+    "tipo": "caida",
+    "duracion_s": 6.03,
+    "nota": "caer de cara",
+    "vel_entrada_ms": 0.05,
+    "vel_salida_ms": 0.0,
+    "giro_cuerpo_grados": -62.6,
+    "desplazamiento_adelante_m": 0.11,
+    "desplazamiento_izquierda_m": -0.11,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_90_17",
+    "tipo": "caida",
+    "duracion_s": 5.07,
+    "nota": "resbalón con cáscara de plátano",
+    "vel_entrada_ms": 0.03,
+    "vel_salida_ms": 0.05,
+    "giro_cuerpo_grados": -143.3,
+    "desplazamiento_adelante_m": 1.91,
+    "desplazamiento_izquierda_m": 0.24,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   },
+   {
+    "nombre": "cmu_90_18",
+    "tipo": "caida",
+    "duracion_s": 3.3,
+    "nota": "caída al tirarle de la alfombra",
+    "vel_entrada_ms": 0.01,
+    "vel_salida_ms": 0.0,
+    "giro_cuerpo_grados": 167.5,
+    "desplazamiento_adelante_m": 0.01,
+    "desplazamiento_izquierda_m": 0.01,
+    "cambio_direccion_rad": null,
+    "cuadro_toque_balon": null
+   }
+  ]
+ }
+}
