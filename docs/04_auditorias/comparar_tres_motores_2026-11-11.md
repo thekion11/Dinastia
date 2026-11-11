@@ -216,3 +216,49 @@ Partidos por variante: league = 12, siempre = 12, combinado[decide_con_balon=sie
 | 10 | Anoeta CF (ESP, 4-3-3 posesion) - Tyneside FC (ENG, 4-3-3 presion) | 0-1 | 1-4 | 6-4 |
 | 11 | Sussex FC (ENG, 4-2-3-1 posesion) - Kamo FC (JPN, 4-3-3 bloque) | 1-0 | 3-1 | 3-1 |
 | 12 | Girasol Chiba (JPN, 4-3-3 posesion) - Acero Talcahuano (CHI, 5-3-2 bloque) | 0-0 | 2-1 | 2-2 |
+
+---
+
+# Tercera tanda (11-11, tras traer `main` con la guía de locomoción de la sesión 9): guía encendida/apagada y por qué C pierde regates y duelos
+
+12 partidos por variante, los 6 países (CHI, ESP, BRA, ENG, ARG, JPN), mismas semillas. «Guía» = `LeagueGuia` (se apaga con `LS_GUIA=0`).
+
+## 1. La guía de locomoción casi no cambia el juego (en esta medida)
+| (por partido) | B league · guía | B league · sin guía | C · guía | C · sin guía |
+|---|---:|---:|---:|---:|
+| goles | 0,83 | 2,0 | 5,92 | 5,25 |
+| tiros | 5,3 | 5,6 | 41,4 | 41,5 |
+| ocasiones claras | 1,25 | 1,5 | 3,17 | 2,83 |
+| regates | 5,6 | 5,8 | 13,7 | 12,7 |
+| duelos | 16,3 | 22,1 | 19,6 | 23,8 |
+| pases · acierto % | 70 · 80,7 | 73 · 79,7 | 107 · 85,9 | 107 · 85,1 |
+| cadenas de 5+ pases | 1,25 | 1,08 | 2,75 | 2,67 |
+| juego seguido medio (s) | 47,3 | 39,8 | 13,2 | 12,8 |
+| µs por paso (CPU) | 1 567 | 1 485 | 1 427 | 1 341 |
+
+Los tiros, pases, cadenas y el ritmo son los mismos con la guía y sin ella; los goles de B (0,8 contra 2,0) y los duelos varían, pero con n = 12 y marcadores tan bajos es ruido
+(en B hay 10 goles contra 24 en total). La guía es VISUAL (cuerpo y animación) y no se nota en cifras de juego; cuesta ~5 % de CPU (+80 µs/paso). Su valor hay que juzgarlo con la vista (vídeo/cámara real) y en el teléfono.
+Nota: el paso más caro de los motores de League subió a ~170 ms desde que `main` trae las animaciones nuevas (era 57 ms): es el primer paso (carga del catálogo), igual con la guía apagada; no es un coste por fotograma, pero conviene que la sesión 9 lo precargue antes del saque inicial para evitar un tirón en el móvil.
+
+## 2. Qué pieza quita los regates y los duelos a C
+C = League + nuestra decisión con balón: 13,7 regates y 19,6 duelos por partido (el nuestro entero: 20,0 y 40,3). Añadiendo UNA pieza nuestra más a C:
+| (por partido) | C (por defecto) | C + colocación nuestra | C + locomoción nuestra | C + física nuestra | nuestro entero |
+|---|---:|---:|---:|---:|---:|
+| regates (logrados) | 13,7 (5,3) | **25,5 (10,4)** | 17,0 (7,0) | 13,4 (5,8) | 20,0 (8,4) |
+| duelos | 19,6 | **46,4** | 27,0 | 19,6 | 40,3 |
+| robos en duelo | 4,0 | 12,8 | 5,6 | 4,3 | 13,3 |
+| tiros · goles | 41 · 5,9 | 45 · 5,9 | 42 · 4,6 | 40 · 4,7 | 45 · 5,1 |
+| cadenas de 5+ pases | 2,75 | 2,0 | **3,0** | 1,7 | 0,7 |
+| juego seguido medio (s) | 13,2 | 9,4 | 14,8 | 10,9 | 9,7 |
+| saques por partido | 39,7 | 56,0 | 34,8 | 47,8 | 52,3 |
+| µs por paso (CPU) | 1 427 | 2 040 | **1 079** | 1 398 | 1 465 |
+
+- **Es la colocación sin balón de League (`coloca_sin_balon`)**: sus jugadores se colocan y presionan de modo que casi no hay cuerpo a cuerpo (menos duelos, robos y regates, y menos saques por faltas y fueras). Con nuestra colocación vuelven los duelos (46) y los regates (25), y aun así las cadenas siguen siendo mejores que las del nuestro entero (2,0 contra 0,7), por la decisión de League… pero con el ritmo de ida y vuelta de siempre (juego seguido 9 s, 56 saques) y +43 % de CPU.
+- **La locomoción nuestra** recupera la mitad (17 regates, 27 duelos), da las cadenas más largas (3,0) y es la variante MÁS BARATA (1 079 µs/paso, −24 % frente a C): suelta el cuerpo a cuerpo sin perder la construcción.
+- **La física del balón** no influye.
+
+## Candidatas para el valor por defecto de C (decide el dueño con el voto a ciegas)
+1. **C actual** (decide nuestra, el resto League): lo más «League» con tiros; poca fricción.
+2. **C + locomoción nuestra** (`locomocion=siempre`): más regates y duelos, mejores cadenas, la más barata de CPU; pierde la locomoción por animaciones de League (la guía de la 9 no se vería, ver nota 1).
+3. **C + colocación nuestra** (`coloca_sin_balon=siempre`): el partido de más fricción y fantasía (25 regates, 46 duelos) con cadenas de League; cuesta +43 % de CPU.
+Ahora mismo se pueden probar a ciegas sin tocar código: `MOTOR_C_PIEZAS="locomocion=siempre"` o cambiando `datos/motor_c_piezas.json`.
