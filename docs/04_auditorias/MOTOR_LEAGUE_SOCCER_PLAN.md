@@ -529,3 +529,15 @@ giro 90° 0,49 → 0,47; giro 180° 0,89 → 0,69; parar 0,59 → 0,50. La sonda
 **Animaciones de 100STYLE** (sesión 10, `datos/anims_extra/estilo100.json`, 82 entradas): el catálogo las acepta sin avisos, pero son
 ciclos estables (trote ~1,9 m/s y reposos), así que la elección de arranques, frenadas y giros las descarta por diseño (`estable`).
 Quedan para variedad de reposo y de trote lento: pendiente un consumidor (elegir el reposo de cada jugador por su id).
+
+### Bloque 3 (11-11): precarga, falta leve, celebraciones de CMU
+- **Precarga** (`LeagueLocomocion.precargar`, llamada en `MotorLeague.preparar`): el primer paso de la locomoción gastaba ~185 ms en abrir las
+  bibliotecas de animación; ahora van antes del saque (`pruebas/_sonda/sonda_primer_paso.tscn`: 0 pasos > 8 ms en 6.000). Además las
+  extras de 100STYLE ya NO se cargan por tandas en cada jugador (~450 ms por tanda): se cargan al elegirlas, y las estables nunca.
+- **`LeagueAcciones`** (`LS_ACCIONES=0` la apaga; solo cambia qué clip se ve): falta leve (1 de cada 3 veces el que pierde un choque de hombros
+  recibe `Hit_Chest` / `Hit_Head` de la UAL) y celebración del gol (2 de cada 5 veces un baile o alegría de CMU, recortado a 6 s: salsa en
+  solitario, alegría, risa, charleston). Con jugadores reales: 44 de 110 celebraciones con CMU.
+- **Pendiente**: disputa aérea (`Jump_*`: el motor tendría que levantar al jugador; hoy el cabezazo no despega a nadie); ciclos de carrera de
+  CMU como variedad de trote (necesitan escalar la velocidad del clip para no patinar); recortar las transiciones y patadas de CMU (son
+  grabaciones de 3-15 s, no recortes). Fotos de la guía con cámara real en `capturas_guia_2026-11-11/` (en foto fija no se aprecia: el
+  vídeo queda como NO verificable aquí; lo verá el dueño en su teléfono con el selector a ciegas).
