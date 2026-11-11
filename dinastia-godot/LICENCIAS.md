@@ -125,10 +125,10 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
    nacionalidad. Viaja en los builds públicos. ¿Basta para el derecho de imagen? Lo decide el dueño (M-421).
 
 ## Ultimate Modular Men / Women — `assets/characters/modular/`
-Quaternius, CC0-1.0 (vía `trebeljahr/quaternius-showcase/LICENSES.md`). 13 civiles realistas sin animaciones (de 21; sin texturas), esqueleto de 49-51 huesos; `visor/idle_procedural.gd` les da el reposo. Fuera de LFS (OK del dueño, 2-11-2026).
+Quaternius, CC0-1.0 (vía `trebeljahr/quaternius-showcase/LICENSES.md`). 13 civiles realistas sin animaciones (de 21; sin texturas): 9 elegibles por el jugador y 4 (Swat, Soldier, Punk ×2) solo para el personal del club, esqueleto de 49-51 huesos; `visor/idle_procedural.gd` les da el reposo. Fuera de LFS (OK del dueño, 2-11-2026).
 
 ## Avatar regalo del dueño — `assets/characters/avatar_regalo/` (11-11-2026)
-FBX de cuerpo entero con texturas incrustadas (esqueleto Mixamo, 73 huesos, 1,82 m). 🔴 LICENCIA SIN CONFIRMAR y sin saber si la cara es de una persona real: EXCLUIDO de los 6 presets de exportación (no va en builds públicos). Solo en el editor.
+FBX de cuerpo entero con texturas incrustadas (esqueleto Mixamo, 73 huesos, 1,82 m). 🟢 Licencia confirmada por el dueño (11-11) y su cara NO es de una persona real: va en los builds y es elegible como avatar del jugador. Revisar el logotipo de la camiseta.
 
 ## Quitados el 11-11-2026 por no ser realistas (orden del dueño)
 Outfits «Fantasy» (Campesino, Explorador), KayKit Adventurers/Skeletons, avatares VRM de Numinia, pieles Kenney «skater/criminal/cyborg» y 8 civiles modulares (Adventurer, Farmer, King, Spacesuit, Medieval, SciFi, Witch). Los que estaban en LFS (Kenney `Model`, `Animations`) siguen en el repositorio, sin usarse y fuera de los builds.
