@@ -569,3 +569,14 @@ C4 = `combinado_c4` (League + NUESTRA decisión con balón + NUESTRA colocación
 - Bajar la CPU del híbrido: recalcular el estado de League (balón previsto, marcajes, presión) cada 0,1 s (`C_CADENCIA_ESTADO`, código escrito, SIN MEDIR, 0 por defecto); ver si el apoyo necesita la predicción completa.
 - Disputa aérea (`Jump_*`: el motor debe levantar al jugador; hoy el cabezazo no despega a nadie); recortar las transiciones y patadas de CMU (son grabaciones de 3-15 s); ciclos de carrera de CMU como variedad de trote (hay que escalar la velocidad del clip).
 - Guía en C4: solo si se rediseña (hoy empeora duelos y regates). Foto fija con cámara real no demuestra la guía: el vídeo queda como NO verificable aquí.
+
+## Mejoras de C4 (líder, 11-11; ideas del dueño)
+`visor/mejoras_c4.gd` (`MejorasC4`), solo en C4 (`MotorCombinado.aplicar_variante("combinado_c4")`); el motor de siempre no cambia
+(huellas iguales). Banderas: `C4_DESMARQUES`, `C4_SPRINTS`, `C4_LARGOS` (las tres ENCENDIDAS por defecto).
+- **Desmarques**: dos carreras al espacio a la vez (`MotorCarreras` con «plazas» por metadatos del motor), también de MCO/MD/MI, descanso de 2 s (antes 4) y la segunda carrera al otro lado del hueco.
+- **Sprints sin balón**: quien queda a más de 9 m de su destino (atacando o replegando) corre.
+- **Balones largos**: lejos del arco (> 45 m), pase largo al hueco al que hace la carrera (22-55 m, línea limpia, habilitado).
+Medido con `comparar_tres_motores` (MOTORES=combinado_c4, MITAD=240, CHI/ESP/BRA, 6 partidos normales + 6 con INVERTIR=1), C4 → C4 mejorado:
+cadenas de 5+ 0,92 → 1,50; goles 5,2 → 6,5; duelos 46 → 47,7; ocasiones 3,4 → 3,6; regates 22,9 → 22,5; CPU igual (~950 µs/paso).
+Por separado (6 partidos, ruido alto): desmarques suben duelos y regates; balones largos suben goles de jugada (4 → 8) pero bajan ocasiones claras; sprints casi neutros.
+Pendiente: balón parado (córners, faltas, saques de banda), cabezazos (0 goles de cabeza en casi todas las tandas), disputa aérea.

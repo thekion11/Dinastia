@@ -46,6 +46,12 @@ const VARIANTES := {"combinado": [], "combinado_c2": ["locomocion"], "combinado_
 func aplicar_variante(id: String) -> void:
 	for k: String in VARIANTES.get(id, []):
 		piezas[k] = "siempre"
+	if id == "combinado_c4":
+		_mejoras_c4 = true
+		MejorasC4.preparar(self)
+
+## (11-11, ideas del dueño) desmarques, sprints sin balón y balones largos, SOLO en C4 (`MejorasC4`).
+var _mejoras_c4 := false
 
 func _nuestra(pieza: String) -> bool:
 	return String(piezas[pieza]) == "siempre"
@@ -62,6 +68,8 @@ func descripcion_piezas() -> String:
 func _ia_portador(p: Dictionary) -> void:
 	if not _nuestra("decide_con_balon"):
 		super(p)
+		return
+	if _mejoras_c4 and t >= _decision_en and MejorasC4.balon_largo(self, p, _rng):
 		return
 	var guardado := equipos
 	equipos = []
@@ -98,10 +106,16 @@ func _en_ultimo_tercio(p: Dictionary) -> bool:
 func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 	if ATAQUE_LEAGUE and _nuestra("coloca_sin_balon") and not _en_ultimo_tercio(p):
 		return super._ia_ataque_sin_balon(p)
-	return _sin_flag3(p, true)
+	var r := _sin_flag3(p, true)
+	if _mejoras_c4:
+		MejorasC4.sprint(self, p, r)
+	return r
 
 func _ia_defensa(p: Dictionary) -> Vector3:
-	return _sin_flag3(p, false)
+	var r := _sin_flag3(p, false)
+	if _mejoras_c4:
+		MejorasC4.sprint(self, p, r)
+	return r
 
 ## COLOCACIÓN NUESTRA MÁS BARATA (11-11, perfil en `pruebas/perfil_colocacion.tscn`): nuestra colocación sin balón recalculaba el destino de los 20 jugadores de campo
 ## en CADA paso (~750 µs/paso de los 1 350 del motor). League lo recalcula cada 0,1 s por jugador (`CADENCIA`); aquí igual: el destino de cada jugador se guarda

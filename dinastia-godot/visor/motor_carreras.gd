@@ -14,8 +14,10 @@ const FORMA_ATRAS := 3.5
 const ROLES := ["DC", "ED", "EI", "SD"]
 static var _sin := OS.has_environment("SIN_CARRERAS")
 
-static func _est(m: MotorJugable, local: bool) -> Dictionary:
-	var k := "_carrera_%s" % ("l" if local else "v")
+## Una «plaza» de carrera por equipo; C4 (`MejorasC4`, metadatos del motor) puede abrir más plazas, con otros roles y menos descanso.
+## Sin esos metadatos (el motor de siempre) hay una sola plaza y todo es como antes.
+static func _est(m: MotorJugable, local: bool, plaza := 0) -> Dictionary:
+	var k := "_carrera_%s%s" % ["l" if local else "v", "" if plaza == 0 else str(plaza)]
 	if not m.has_meta(k):
 		m.set_meta(k, {"id": "", "hasta": -99.0, "libre": -99.0, "x": 0.0})
 	return m.get_meta(k)
@@ -42,35 +44,46 @@ static func hueco(m: MotorJugable, local: bool) -> float:
 ## ¿Qué objetivo lleva `p` (delantero atacando)? Devuelve el punto de la carrera, o el de forma si no le toca.
 ## `linea` = última línea rival (z), `dz` = sentido del ataque.
 static func objetivo(m: MotorJugable, p: Dictionary, obj: Vector3, linea: float, dz: float) -> Vector3:
-	if _sin or not (m._rol(p) in ROLES):
+	var roles: Array = m.get_meta("carreras_roles", ROLES)
+	if _sin or not (m._rol(p) in roles):
 		return obj
 	var local := bool(p["es_local"])
-	var e := _est(m, local)
 	var yo := String(p["id"])
-	if m.t > float(e["hasta"]) and String(e["id"]) != "":
-		e["id"] = ""
-		e["libre"] = m.t + DESCANSO + fmod(absf(float(hash(yo))), 2.0)
-	if String(e["id"]) == "" and m.t >= float(e["libre"]) and not m.poseedor.is_empty() and p != m.poseedor:
-		## Elige al delantero (que no lleve el balón) con más campo por delante y más cerca de la línea.
-		var mejor := ""
-		var ms := -999.0
-		for q: Dictionary in m.jugadores:
-			if bool(q["es_local"]) == local and q != m.poseedor and m._rol(q) in ROLES:
-				var falta := (linea - m.pos(q).z) * dz
-				if falta < -2.0 or falta > 28.0:
-					continue
-				var s := -falta * 0.05 - absf(m.pos(q).x - hueco(m, local)) * 0.03 + fmod(absf(float(hash(String(q["id"]) + str(int(m.t / 8.0))))), 1.0) * 0.4
-				if s > ms:
-					ms = s
-					mejor = String(q["id"])
-		if mejor != "":
-			var men := float(m._tac(local, "mentalidad") - 1)
-			e["id"] = mejor
-			e["hasta"] = m.t + lerpf(DUR_MAX, DUR_MIN, clampf((men + 1.0) / 2.0, 0.0, 1.0))
-			e["x"] = hueco(m, local)
-	if String(e["id"]) == yo:
-		p["correr"] = true
-		return Vector3(clampf(float(e["x"]), -m.ANCHO + 3.0, m.ANCHO - 3.0), 0, linea - dz * 0.6)
+	var plazas := int(m.get_meta("carreras_n", 1))
+	var descanso := float(m.get_meta("carreras_descanso", DESCANSO))
+	for plaza in plazas:
+		var e := _est(m, local, plaza)
+		if m.t > float(e["hasta"]) and String(e["id"]) != "":
+			e["id"] = ""
+			e["libre"] = m.t + descanso + fmod(absf(float(hash(yo))), 2.0)
+		if String(e["id"]) == "" and m.t >= float(e["libre"]) and not m.poseedor.is_empty() and p != m.poseedor:
+			## Elige al delantero (que no lleve el balón ni corra ya en otra plaza) con más campo por delante y más cerca de la línea.
+			var ocupados: Array = []
+			for otra in plazas:
+				if otra != plaza:
+					ocupados.append(String(_est(m, local, otra)["id"]))
+			var mejor := ""
+			var mejor_x := 0.0
+			var ms := -999.0
+			for q: Dictionary in m.jugadores:
+				if bool(q["es_local"]) == local and q != m.poseedor and m._rol(q) in roles and not (String(q["id"]) in ocupados):
+					var falta := (linea - m.pos(q).z) * dz
+					if falta < -2.0 or falta > 28.0:
+						continue
+					var s := -falta * 0.05 - absf(m.pos(q).x - hueco(m, local)) * 0.03 + fmod(absf(float(hash(String(q["id"]) + str(int(m.t / 8.0))))), 1.0) * 0.4
+					if s > ms:
+						ms = s
+						mejor = String(q["id"])
+						mejor_x = m.pos(q).x
+			if mejor != "":
+				var men := float(m._tac(local, "mentalidad") - 1)
+				e["id"] = mejor
+				e["hasta"] = m.t + lerpf(DUR_MAX, DUR_MIN, clampf((men + 1.0) / 2.0, 0.0, 1.0))
+				## La segunda plaza ataca el otro lado del hueco (dos carreras al mismo sitio se estorban).
+				e["x"] = hueco(m, local) + (0.0 if plaza == 0 else (8.0 if mejor_x >= hueco(m, local) else -8.0))
+		if String(e["id"]) == yo:
+			p["correr"] = true
+			return Vector3(clampf(float(e["x"]), -m.ANCHO + 3.0, m.ANCHO - 3.0), 0, linea - dz * 0.6)
 	## Los demás delanteros: forma, algo por detrás de la línea.
 	var z := linea - dz * FORMA_ATRAS
 	return Vector3(obj.x, 0, z if (z - obj.z) * dz > 0.0 else obj.z)

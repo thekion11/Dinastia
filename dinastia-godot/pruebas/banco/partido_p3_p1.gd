@@ -420,5 +420,28 @@ func _probar_carreras() -> void:
 	_comprobar(MotorCarreras.hueco(motor, true) >= -motor.ANCHO and MotorCarreras.hueco(motor, true) <= motor.ANCHO, "el hueco cae dentro del campo")
 	(r[1] as Node3D).queue_free()
 
+## (11-11, ideas del dueño) C4 abre dos carreras a la vez (`MejorasC4`); el motor de siempre sigue con una.
+func _probar_mejoras_c4() -> void:
+	_titulo("MEJORAS DE C4: DOS DESMARQUES A LA VEZ")
+	var c4 := MotorFabrica.crear("combinado_c4")
+	_comprobar(int(c4.get_meta("carreras_n", 1)) == (2 if MejorasC4.DESMARQUES else 1) and not MotorJugable.new().has_meta("carreras_n"), "C4 abre dos plazas de carrera; el motor de siempre, una")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	MejorasC4.DESMARQUES = true
+	MejorasC4.preparar(motor)
+	var del: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]) and motor._rol(p) in MejorasC4.ROLES_CARRERA)
+	var otro: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]) and not (motor._rol(p) in MejorasC4.ROLES_CARRERA))
+	var dz := motor.dir_ataque(true)
+	for i in del.size():
+		(del[i]["node"] as Node3D).position = Vector3(-12.0 + i * 6.0, 0, 20.0 * dz - dz * 4.0)
+	motor.poseedor = otro[0]
+	motor.t = 10.0
+	var corren := 0
+	for p: Dictionary in del:
+		if absf(MotorCarreras.objetivo(motor, p, Vector3.ZERO, 20.0 * dz, dz).z - (20.0 * dz - dz * 0.6)) < 0.01:
+			corren += 1
+	_comprobar(corren == 2 and MejorasC4.corredores(motor, true).size() == 2, "con C4 corren dos al espacio (%d)" % corren)
+	(r[1] as Node3D).queue_free()
+
 func pos_x(p: Dictionary) -> float:
 	return (p["node"] as Node3D).position.x
