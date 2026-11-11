@@ -1,6 +1,7 @@
 extends Node3D
 ## El personal del club con su apariencia propia en 3 clubes de países distintos (una fila por club).
 ##   herramientas/captura.sh res://pruebas/captura_personal_club.tscn
+##   CERCA=1 FILA=0..2 MITAD=0|1 → primer plano de las caras de 6 puestos de un club (11-11: caras de la biblioteca).
 const CLUBES := ["CHI-colo", "ESP-sevilla", "ARG-rosario"]
 var _n := 0
 
@@ -12,6 +13,12 @@ func _ready() -> void:
 	cam.position = Vector3(ancho * 0.5, 2.6, 11.5)
 	cam.look_at(Vector3(ancho * 0.5, 2.2, 0.0))
 	cam.fov = 50
+	if OS.get_environment("CERCA") == "1":
+		var fy := (CLUBES.size() - 1 - int(OS.get_environment("FILA"))) * 2.3 + 1.62
+		var x0 := 6.0 * int(OS.get_environment("MITAD")) + 2.5
+		cam.position = Vector3(x0, fy, 2.6)
+		cam.look_at(Vector3(x0, fy - 0.05, 0.0))
+		cam.fov = 34
 	var luz := DirectionalLight3D.new()
 	luz.rotation_degrees = Vector3(-40, 25, 0)
 	add_child(luz)
@@ -47,5 +54,5 @@ func _ready() -> void:
 func _process(_dt: float) -> void:
 	_n += 1
 	if _n == 40:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/personal_club.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/personal_club%s.png" % ("" if OS.get_environment("CERCA") != "1" else "_cerca_f%s_m%s" % [OS.get_environment("FILA"), OS.get_environment("MITAD")]))
 		get_tree().quit()

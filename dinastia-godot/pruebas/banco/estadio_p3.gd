@@ -205,6 +205,17 @@ func _probar_avatares_realistas() -> void:
 			reservados = reservados and AparienciaPersonal.es_reservado(String((g[c] as Dictionary)["color_pelo"]))
 		_comprobar(firmas.size() == g.size(), "ninguna se repite entre las personas del club (%d distintas)" % firmas.size())
 		_comprobar(reservados, "todas llevan color de pelo reservado al personal")
+	## (11-11) Los hombres del personal llevan una cara de la biblioteca, sin repetirse dentro del club.
+	if BibliotecaCaras.hay():
+		var caras := {}
+		var hombres := 0
+		for c: String in a1:
+			var ap: Dictionary = a1[c]
+			if String(ap["cuerpo"]) == "female":
+				continue
+			hombres += 1
+			caras[BibliotecaCaras.cara_de_tono(Color(String(ap["piel"])), int(ap.get("cara", -1)))] = true
+		_comprobar(hombres > 0 and caras.size() == hombres and not caras.has(""), "cada hombre del personal lleva su propia cara de la biblioteca (%d de %d)" % [caras.size(), hombres])
 	_comprobar(String((a1["secretaria"] as Dictionary)["cuerpo"]) == "female" and String((a1["portero"] as Dictionary)["cuerpo"]) == "male", "el cuerpo sigue al nombre")
 	var ninguno_editable := true
 	for c: String in PersonajeDT.COLORES_PELO:

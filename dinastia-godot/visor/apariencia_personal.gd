@@ -45,7 +45,29 @@ static func generar(club_id: String, claves: Array, mujeres: Dictionary) -> Dict
 				break
 		usadas[firma(a)] = clave
 		salida[clave] = a
+	_poner_caras(club_id, claves, salida)
 	return salida
+
+## (11-11) CARA DE LA BIBLIOTECA para los hombres del personal (antes `cara` quedaba en -1 y ninguno la llevaba): un índice
+## por tono de piel, distinto para cada uno del mismo club (`BibliotecaCaras.cara_de_tono` usa índice % tamaño del tono),
+## desplazado por club para que dos clubes no repitan las mismas. Las mujeres siguen con la cara clásica (las mezclas son de hombre).
+static func _poner_caras(club_id: String, claves: Array, salida: Dictionary) -> void:
+	var base := absi(hash("caras|" + club_id)) % 97
+	var usadas := {}
+	for clave: String in claves:
+		var a: Dictionary = salida[clave]
+		if String(a["cuerpo"]) == "female":
+			continue
+		var piel := Color(String(a["piel"]))
+		var n := maxi(1, BibliotecaCaras.del_tono(piel).size()) if BibliotecaCaras.hay() else 1
+		var i := base
+		## La primera cara de su tono que nadie del club lleva (si el tono tiene menos caras que personas, se repite la primera).
+		for paso in n:
+			if not usadas.has(BibliotecaCaras.cara_de_tono(piel, base + paso)):
+				i = base + paso
+				break
+		usadas[BibliotecaCaras.cara_de_tono(piel, i)] = true
+		a["cara"] = i
 
 static func de(club_id: String, claves: Array, clave: String, mujer: bool) -> Dictionary:
 	var mujeres := {}
