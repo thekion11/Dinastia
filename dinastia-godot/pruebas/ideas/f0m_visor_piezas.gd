@@ -142,7 +142,7 @@ func _probar_kit_factory() -> void:
 	var rojo := Color8(204, 26, 26)
 	var m8 := f.get_material(rojo, Color.WHITE, "liso", 8, 0)
 	_comprobar(m8 != null and m8.albedo_texture != null and m8.albedo_texture.get_size() == Vector2(1024, 1024), "un material con el atlas de 1024x1024")
-	var bases_ok := f._base_images.size() == KitTextureFactory.BASE_SKINS.size()
+	var bases_ok := f._base_images.size() == KitTextureFactory.VARIANTES
 	for bi: Image in f._base_images:
 		bases_ok = bases_ok and not bi.is_compressed() and bi.get_format() == Image.FORMAT_RGBA8
 	_comprobar(bases_ok, "las pieles base se pintan en RGBA8 (las importadas vienen comprimidas: hay que descomprimirlas)")

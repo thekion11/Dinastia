@@ -122,17 +122,19 @@ func _simbolo_horneado() -> void:
 	var con := EscudoTexto.textura(c, 64)
 	_comprobar(sin != null and con != null and con.get_image().get_data() != sin.get_image().get_data(), "con símbolo el escudo cambia (queda pintado en la imagen)")
 
-## Los modelos base extra (Campesino, Explorador; hombre y mujer) cargan, comparten el esqueleto y animan.
+## Los modelos base elegibles (solo realistas: civiles modulares y, si está, el avatar regalo) cargan y están vivos.
+## Los quitados (fantasía, anime) ya no se ofrecen y una partida vieja con uno cae al atleta.
 func _modelos_base() -> void:
 	var raiz := Node3D.new()
 	add_child(raiz)
-	for mb: String in FutbolistaQ.MODELOS_BASE:
-		for cuerpo: String in ["male", "female"]:
-			_comprobar(FutbolistaQ.base_extra(mb, cuerpo) != null, "%s (%s): carga" % [mb, cuerpo])
-			var d := PersonajeDT.crear(raiz, {"modelo": mb, "cuerpo": cuerpo})
-			_comprobar(not d.is_empty() and d.has("anim") and (d["anim"] as AnimationPlayer).current_animation != "", "%s (%s): se crea y reproduce una animación" % [mb, cuerpo])
-			if not d.is_empty():
-				(d["nodo"] as Node).queue_free()
+	for quitado: String in ["campesino", "explorador", "kk_barbaro", "kk_mago", "vrm_arla", "mh_farmer", "mm_witch"]:
+		_comprobar(not FutbolistaQ.modelo_valido(quitado), "%s: ya no es un modelo válido" % quitado)
+		_comprobar(String(PersonajeDT.aspecto({"modelo": quitado})["modelo"]) == "", "%s: una partida vieja cae al atleta" % quitado)
+	if AvatarRegalo.disponible():
+		var dr := PersonajeDT.crear(raiz, {"modelo": AvatarRegalo.CLAVE, "altura": 1.8})
+		_comprobar(not dr.is_empty() and dr.has("avatar") and dr.has("anim"), "avatar regalo: se arma con el motor de animación del juego")
+		if not dr.is_empty():
+			(dr["nodo"] as Node).queue_free()
 	for k: String in FutbolistaQ.todos_ajenos():
 		_comprobar(FutbolistaQ.ajeno_disponible(k), "%s: está en el juego" % k)
 		var da := PersonajeDT.crear(raiz, {"modelo": k, "altura": 1.8})
