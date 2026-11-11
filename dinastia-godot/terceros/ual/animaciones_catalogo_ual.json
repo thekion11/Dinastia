@@ -1,0 +1,536 @@
+[
+	{
+		"bucle": true,
+		"cadera_min_m": 0.5,
+		"clip": "Crouch_Fwd_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.0,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Crouch_Fwd_Loop",
+		"tipo": "marcha_agachado",
+		"velocidad_ms": 0.49
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.5,
+		"clip": "Crouch_Idle_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.933,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Crouch_Idle_Loop",
+		"tipo": "reposo"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.89,
+		"clip": "Dance_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 1.0,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Dance_Loop",
+		"tipo": "celebracion"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.06,
+		"clip": "Death01",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": -0.49,
+			"izquierda": 0.01
+		},
+		"duracion_s": 2.4,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Death01",
+		"tipo": "caida_suelo"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.9,
+		"clip": "Hit_Chest",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": -0.03,
+			"izquierda": 0.0
+		},
+		"duracion_s": 0.333,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Hit_Chest",
+		"tipo": "golpe_recibido"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.92,
+		"clip": "Hit_Head",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 0.433,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Hit_Head",
+		"tipo": "golpe_recibido"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.92,
+		"clip": "Idle_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.5,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Idle_Loop",
+		"tipo": "reposo"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.92,
+		"clip": "Idle_Talking_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.933,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Idle_Talking_Loop",
+		"tipo": "reposo"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.92,
+		"clip": "Interact",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.0,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Interact",
+		"tipo": "reaccion"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.75,
+		"clip": "Jog_Fwd_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 0.933,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Jog_Fwd_Loop",
+		"tipo": "carrera",
+		"velocidad_ms": 6.38
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.46,
+		"clip": "Jump_Land",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.03
+		},
+		"duracion_s": 1.267,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Jump_Land",
+		"tipo": "salto_aterrizaje"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.92,
+		"clip": "Jump_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.5,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Jump_Loop",
+		"tipo": "salto_aire"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.55,
+		"clip": "Jump_Start",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.08,
+			"izquierda": -0.03
+		},
+		"duracion_s": 1.333,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Jump_Start",
+		"tipo": "salto_despegue"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.87,
+		"clip": "Punch_Jab",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 0.867,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Punch_Jab",
+		"tipo": "disputa_empujon"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.71,
+		"clip": "Push_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.667,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Push_Loop",
+		"tipo": "disputa_empujon"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.05,
+		"clip": "Roll",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.1,
+			"izquierda": 0.02
+		},
+		"duracion_s": 1.467,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Roll",
+		"tipo": "caida_voltereta"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.84,
+		"clip": "Sprint_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 0.667,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Sprint_Loop",
+		"tipo": "sprint",
+		"velocidad_ms": 7.35
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.92,
+		"clip": "Walk_Formal_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 1.333,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Walk_Formal_Loop",
+		"tipo": "marcha",
+		"velocidad_ms": 1.0
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.91,
+		"clip": "Walk_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 1.333,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 1",
+		"licencia": "CC0 1.0",
+		"nombre": "ual1_Walk_Loop",
+		"tipo": "marcha",
+		"velocidad_ms": 1.0
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.88,
+		"clip": "ClimbUp_1m",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 0.667,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_ClimbUp_1m",
+		"tipo": "trepar"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.04,
+		"clip": "Hit_Knockback",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": -0.05,
+			"izquierda": 0.0
+		},
+		"duracion_s": 0.833,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_Hit_Knockback",
+		"tipo": "caida_empujon"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.92,
+		"clip": "Idle_FoldArms_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.5,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_Idle_FoldArms_Loop",
+		"tipo": "reposo"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.92,
+		"clip": "Idle_No_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.5,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_Idle_No_Loop",
+		"tipo": "reaccion"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.03,
+		"clip": "LayToIdle",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.16,
+			"izquierda": 0.0
+		},
+		"duracion_s": 1.533,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_LayToIdle",
+		"tipo": "levantarse"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.92,
+		"clip": "NinjaJump_Idle_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.0,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_NinjaJump_Idle_Loop",
+		"tipo": "salto_aire"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.46,
+		"clip": "NinjaJump_Land",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": -0.05,
+			"izquierda": 0.05
+		},
+		"duracion_s": 1.267,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_NinjaJump_Land",
+		"tipo": "salto_aterrizaje"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.55,
+		"clip": "NinjaJump_Start",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.13,
+			"izquierda": -0.04
+		},
+		"duracion_s": 0.967,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_NinjaJump_Start",
+		"tipo": "salto_despegue"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.66,
+		"clip": "OverhandThrow",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 1.333,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_OverhandThrow",
+		"tipo": "saque_de_banda"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.05,
+		"clip": "Slide_Exit",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": -0.07,
+			"izquierda": 0.0
+		},
+		"duracion_s": 0.5,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_Slide_Exit",
+		"tipo": "entrada_deslizante"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.05,
+		"clip": "Slide_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.0,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_Slide_Loop",
+		"tipo": "entrada_deslizante"
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.05,
+		"clip": "Slide_Start",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.07,
+			"izquierda": 0.0
+		},
+		"duracion_s": 0.833,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_Slide_Start",
+		"tipo": "entrada_deslizante"
+	},
+	{
+		"bucle": true,
+		"cadera_min_m": 0.82,
+		"clip": "Walk_Carry_Loop",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.0,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_Walk_Carry_Loop",
+		"tipo": "marcha",
+		"velocidad_ms": 0.64
+	},
+	{
+		"bucle": false,
+		"cadera_min_m": 0.92,
+		"clip": "Yes",
+		"cuadro_toque_balon": null,
+		"desplazamiento_m": {
+			"adelante": 0.0,
+			"izquierda": 0.0
+		},
+		"duracion_s": 2.5,
+		"fps": 30,
+		"fuente": "Quaternius Universal Animation Library 2",
+		"licencia": "CC0 1.0",
+		"nombre": "ual2_Yes",
+		"tipo": "reaccion"
+	}
+]

@@ -59,7 +59,6 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 
 | Qué | Dónde | Origen | Estado |
 |---|---|---|---|
-| Personajes, animaciones y skins | `assets/characters/Model`, `Animations`, `Skins` | Kenney "Animated Characters Protagonists" | 🟢 CC0 (`assets/characters/License.txt`) |
 | Cuerpo de jugador | `assets/characters/quaternius/*.gltf` | Quaternius "Universal Base Characters" | 🟢 CC0 |
 | Animaciones base | `assets/characters/quaternius/anims/UAL1_Standard.glb` | Quaternius "Universal Animation Library" | 🟢 CC0 (`_extraido_universal_animation_library/.../License.txt`) |
 | Ropa del jugador | `assets/characters/quaternius/ropa/` | Quaternius "Modular Character Outfits - Fantasy" | 🟢 CC0 |
@@ -125,23 +124,22 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
    retocado letra a letra («Fernando de Paul» → «Fernando de Peol») y la misma edad, media, posición y
    nacionalidad. Viaja en los builds públicos. ¿Basta para el derecho de imagen? Lo decide el dueño (M-421).
 
-## Modular Character Outfits - Fantasy (Standard) — `assets/characters/outfits/`
-Quaternius, CC0 1.0 (ver `License_Standard.txt` en esa carpeta). Campesino y Explorador, hombre y mujer, en glTF con el esqueleto de 65 huesos. Texturas reducidas a 1024 px (originales 4096). Fuera de LFS por orden del dueño (2-11-2026); ~14 MB.
-
-## KayKit Adventurers y Skeletons — `assets/characters/kaykit/`
-Kay Lousberg (kaylousberg.com), CC0 (ver `LICENSE_*.txt`). 5 aventureros y 4 esqueletos, esqueleto propio de 41 huesos con 76 animaciones dentro de cada .glb. Fuera de LFS (OK del dueño, 2-11-2026), ~37 MB.
-
 ## Ultimate Modular Men / Women — `assets/characters/modular/`
-Quaternius, CC0-1.0 (vía `trebeljahr/quaternius-showcase/LICENSES.md`). 21 civiles sin animaciones (~18 MB, sin texturas), esqueleto de 49-51 huesos; `visor/idle_procedural.gd` les da el reposo. Fuera de LFS (OK del dueño, 2-11-2026).
+Quaternius, CC0-1.0 (vía `trebeljahr/quaternius-showcase/LICENSES.md`). 13 civiles realistas sin animaciones (de 21; sin texturas), esqueleto de 49-51 huesos; `visor/idle_procedural.gd` les da el reposo. Fuera de LFS (OK del dueño, 2-11-2026).
 
-## Avatares VRM de Numinia — `assets/characters/vrm/`
-PabloFMM, CC0 (`numinia-digital-goods-data/data/avatars/numinia-avatars.json`): Starter Avatar 01 y Avatar Arla (~3,9 MB c/u), renombrados .vrm → .glb. Se pierde el sombreado MToon. Los demás avatares de ese repo no se usan (autores distintos o sin licencia clara).
+## Avatar regalo del dueño — `assets/characters/avatar_regalo/` (11-11-2026)
+FBX de cuerpo entero con texturas incrustadas (esqueleto Mixamo, 73 huesos, 1,82 m). 🔴 LICENCIA SIN CONFIRMAR y sin saber si la cara es de una persona real: EXCLUIDO de los 6 presets de exportación (no va en builds públicos). Solo en el editor.
+
+## Quitados el 11-11-2026 por no ser realistas (orden del dueño)
+Outfits «Fantasy» (Campesino, Explorador), KayKit Adventurers/Skeletons, avatares VRM de Numinia, pieles Kenney «skater/criminal/cyborg» y 8 civiles modulares (Adventurer, Farmer, King, Spacesuit, Medieval, SciFi, Witch). Los que estaban en LFS (Kenney `Model`, `Animations`) siguen en el repositorio, sin usarse y fuera de los builds.
+
 ## Terceros sumados el 31-10 y el 01-11-2026 (orden del dueño: «agarrar todo» de League-Soccer y soccer5v5)
 
 | Qué | Dónde | Fuente | Estado |
 |---|---|---|---|
 | 17 animaciones de la Universal Animation Library 2 (Quaternius) | `assets/characters/quaternius/anims_ual2/` | quaternius.itch.io (copia en github.com/NafisRayan/Animate-Rigged-Humanoid-No-Blender) | 🟢 CC0 (`LICENCIA_CC0.txt`) |
-| 412 ciclos de locomoción convertidos (206 + espejos): marcha, carrera, lateral, atrás y reposo en 16 estilos (11-11-2026) | `assets/characters/quaternius/anims_100style/100style.res`, catálogo `datos/animaciones_catalogo_100style.json` | «100STYLE», Ian Mason, Sebastian Starke, Taku Komura (zenodo.org/records/8127870) | 🟢 CC BY 4.0 (la ficha de Zenodo dice `cc-by-4.0`): **atribución obligatoria**, ya en `nucleo/creditos.gd`; se pide citar el artículo «Real-Time Style Modelling of Human Locomotion via Feature-Wise Transformations and Local Motion Phases» (2022). Herramientas: `herramientas/estilo100_*` |
+| 2.522 ciclos de locomoción convertidos (1.261 + espejos): marcha, carrera, lateral, atrás y reposo en los 100 estilos (11-11-2026) | `assets/characters/quaternius/anims_100style/100style*.res`, catálogos `datos/animaciones_catalogo_100style.json` | «100STYLE», Ian Mason, Sebastian Starke, Taku Komura (zenodo.org/records/8127870) | 🟢 CC BY 4.0 (la ficha de Zenodo dice `cc-by-4.0`): **atribución obligatoria**, ya en `nucleo/creditos.gd`; se pide citar el artículo «Real-Time Style Modelling of Human Locomotion via Feature-Wise Transformations and Local Motion Phases» (2022). Herramientas: `herramientas/estilo100_*` |
+| 33 clips de la Universal Animation Library 1 y 2 (sprint, trote, saltos, caídas, entrada deslizante, celebración; 11-11-2026) | `terceros/ual/ual_extra.res` (completa) y `assets/characters/quaternius/anims_ual/ual_uso.res` (trote y sprint) | quaternius.itch.io (versión Standard gratuita) | 🟢 CC0 1.0 (`License.txt` de la descarga) |
 | 293 animaciones de fútbol convertidas (+ espejos) | `assets/characters/quaternius/anims_league/league.res` | github.com/awest813/League-Soccer (heredero de GameplayFootball / Google Research Football) | 🟢 Apache 2.0 (`terceros/league_soccer/LICENCIA_Apache-2.0.txt`); citar en los créditos |
 | Golpeo de balón y palo (`pase_corto`, `tiro_potente`, `poste`, `travesano`) | `audio/ui/*.ogg` | League-Soccer, `data/media/sounds/ballsound.wav` y `goalpost.wav` | 🟡 el repositorio es Apache 2.0, pero el WAV no indica su origen (viene de GameplayFootball): confirmar o sustituir antes de vender |
 | Minijuego retro 5 contra 5: código, dibujos y efectos | `minijuegos/retro5v5/` | github.com/Habeeb-Rahman-CA/soccer5v5-game-godot | 🟢 MIT, © 2026 Habeeb Rahman (`minijuegos/retro5v5/LICENCIA_MIT.txt`); citar en los créditos. Clubes con nombre modificado y jugadores inventados (el original traía reales) |

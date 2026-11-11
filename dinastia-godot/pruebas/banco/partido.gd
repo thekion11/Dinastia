@@ -266,5 +266,5 @@ func _probar_motor_ciego() -> void:
 		raiz.queue_free()
 	_comprobar(res[0] == res[1], "el combinado con todas las piezas «siempre» es el de siempre (%s | %s)" % [res[0], res[1]])
 	var c := MotorCombinado.new()
-	_comprobar(c.piezas == {"decide_con_balon": "league", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}, "el combinado arranca con todas las piezas de League")
+	_comprobar(c.piezas == {"decide_con_balon": "siempre", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}, "el combinado arranca como League con nuestra decisión con balón (y no es igual a League)")
 	c.free()

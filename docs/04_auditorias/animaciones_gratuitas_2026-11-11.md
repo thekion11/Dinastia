@@ -11,7 +11,7 @@ Library 1 Standard (`anims/UAL1_Standard.glb`, CC0), 17 elegidas de la UAL 2 (`a
 
 | Fuente | Licencia | Cantidad | ¿Sirve? | ¿Se baja desde el contenedor? |
 |---|---|---|---|---|
-| 100STYLE (Zenodo 8127870) | CC BY 4.0 | 100 estilos × ~10 movimientos, BVH a 60 fps | **SÍ** (locomoción: marcha, carrera, lado, atrás, giros, reposo), con atribución | sí (1,4 GB; se extrae solo lo usado) |
+| 100STYLE (Zenodo 8127870) | CC BY 4.0 | 100 estilos × ~10 movimientos, BVH a 60 fps (**los 100 estilos ya están convertidos**) | **SÍ** (locomoción: marcha, carrera, lado, atrás, giros, reposo), con atribución | sí (1,4 GB; se extrae solo lo usado) |
 | Quaternius UAL 2 Standard | CC0 | 43 (17 ya en el repo) | parcial (barrida/tackle, derribo, levantarse, lanzamiento con las manos) | sí (itch.io, gratis) |
 | Quaternius UAL 1 Standard | CC0 | 43 (ya en el repo) | ya incluida | ya |
 | Quaternius UAL 1 / 2 «Pro» y «Source» | CC0 pero **de pago** ($9,99 / $14,99) | 120+ / 130+ | no se compran sin OK del dueño | — |
@@ -61,12 +61,15 @@ vía libre real es la CMU (pendiente de ruta de red) o grabar/animar propias.
 
 | Qué | Dónde | Cantidad |
 |---|---|---|
-| Ciclos de locomoción retargeteados a nuestro esqueleto (AnimationLibrary, bucle, 30 fps, con espejo «…_espejo») | `dinastia-godot/assets/characters/quaternius/anims_100style/100style.res` (5,4 MB, fuera de LFS) | **206 ciclos + 206 espejos = 412** (16 estilos: Neutral, Proud, Angry, Rushed, Elated, Depressed, Old, Heavyset, BigSteps, HighKnees, March, Strutting, Stiff, Crouched, Followed, CrowdAvoidance) |
-| Catálogo con etiquetas | `dinastia-godot/datos/animaciones_catalogo_100style.json` | 412 fichas |
+| Ciclos de locomoción retargeteados a nuestro esqueleto (AnimationLibrary, bucle, 30 fps, con espejo «…_espejo») | `dinastia-godot/terceros/estilo100/biblioteca/100style.res` (16 estilos «de fútbol») y `100style_g2…g5.res` (los otros 84), 34 MB en total, fuera de LFS y **fuera de los builds** (`terceros/` no se importa ni se exporta) | **1.261 ciclos + 1.261 espejos = 2.522 animaciones** (100 estilos) |
+| Catálogos con etiquetas (uno por biblioteca) | `dinastia-godot/terceros/estilo100/catalogos/animaciones_catalogo_100style*.json` | 2.522 fichas (2.136 con revisión `ok`) |
+| Formato `anims_extra` de la sesión 9 | `dinastia-godot/datos/anims_extra/estilo100.json` + biblioteca de USO `assets/characters/quaternius/anims_100style/100style_uso.res` (1,5 MB, viaja en los builds) | 143 ciclos + 143 espejos |
 | Catálogo de los 21 clips de Rohr con cuadro de golpeo | `dinastia-godot/datos/animaciones_catalogo_rohr.json` | 21 fichas |
 | Herramientas (reproducibles) | `herramientas/estilo100_ciclos.py` (BVH → ciclos), `estilo100_a_res.gd` (retarget), `estilo100_revisar.gd` (patinaje y brazos), `catalogo_rohr.gd` | |
 | Escena de capturas pose a pose | `pruebas/captura_anims_100style.tscn` | |
 | Capturas JPG | `docs/04_auditorias/capturas_animaciones_2026-11-11/` | 14 clips × (cerca + cámara real) |
+
+Los estilos 17-100 se convirtieron en 4 grupos (`ESTILO100_NOMBRE=100style_g2…g5`, variable que usan `estilo100_a_res.gd` y `estilo100_revisar.gd`); 17 ciclos con mal cierre se descartaron. Estilos sueltos como `Kick`, `Lunge`, `Skip`, `Sweep`, `Swat`, `TwoFootJump`, `LeftHop` están ahí (algunos útiles para fintas); otros son humorísticos (`Chicken`, `Dinosaur`…) y se filtran por nombre.
 
 Regenerar: bajar `100STYLE.zip` de Zenodo, descomprimirlo fuera del repo y
 `python3 -I herramientas/estilo100_ciclos.py <100STYLE> ciclos.json` → `ESTILO100_JSON=ciclos.json godot --headless --path . --script res://herramientas/estilo100_a_res.gd`
@@ -83,8 +86,7 @@ el espejo cambia el signo), `apoyos_pie_derecho` / `apoyos_pie_izquierdo` (cuadr
 `patinaje_ms`, `min_dist_mano_torso_m`, `min_dist_codo_torso_m`.
 
 Límites que hay que saber: (1) el actor se movía dentro de un estudio: la carrera «rápida» es un trote de 1,3-1,9 m/s; para 5-8 m/s hay
-que reproducirla acelerada (el catálogo da la velocidad base) o usar las de League-Soccer; (2) **44 de 412 fichas con aviso** de patinaje
-(22 clips y sus espejos; sobre todo `Stiff` y las carreras hacia atrás): filtrar `revision == "ok"`; (3) la medida de patinaje es una
+que reproducirla acelerada (el catálogo da la velocidad base) o usar las de League-Soccer; (2) **386 de 2.522 fichas con aviso** de patinaje o de brazo en el cuerpo (sobre todo estilos raros y las carreras hacia atrás): filtrar `revision == "ok"`; (3) la medida de patinaje es una
 heurística (apoyo = pie a <3 cm de su mínimo), no un solucionador de pies.
 
 Catálogo de Rohr (`animaciones_catalogo_rohr.json`): por clip `tipo`, `duracion_s`, y para regates, malabares, pase, tiro y penal:
@@ -95,11 +97,34 @@ golpeo en el cuadro 78 con el izquierdo; Side_Foot_Kick y los penales traen carr
 
 ## Para la sesión 9 (`LeagueCatalogo`, `datos/anims_extra/`)
 
-`datos/anims_extra/estilo100.json` (generado por `herramientas/estilo100_a_anims_extra.py`): 41 ciclos + 41 espejos con las etiquetas de su
+`datos/anims_extra/estilo100.json` (generado por `herramientas/estilo100_a_anims_extra.py`): 143 ciclos + 143 espejos con las etiquetas de su
 LEEME. Un ciclo entra y sale a la misma velocidad (`ang` 0); `cuerpo` = −ángulo de marcha (atrás ±π, lateral ∓π/2). Solo pasan los de
-`revision: ok` y los que llegan a la clase 3,5 m/s (≥ 1,8 m/s reales: 12 carreras, 8 laterales, 5 atrás, 2 marchas) más 14 reposos. Las marchas lentas
+`revision: ok` y los que llegan a la clase 3,5 m/s (≥ 1,8 m/s reales) más los reposos. Las marchas lentas
 (< 1,8 m/s) serían «parado» en la clase del motor, así que NO entran (siguen en `animaciones_catalogo_100style.json`). `v_entra`/`v_sale` llevan la
 velocidad real. Los clips de Rohr no son locomoción: no encajan en ese formato (su catálogo es `animaciones_catalogo_rohr.json`).
+
+## UAL 1 + UAL 2 de Quaternius: lo útil para el partido (bloque 4)
+
+Licencia verificada: `License.txt` de la descarga de itch.io («CC0 1.0 Universal, Public Domain Dedication») y la página de Quaternius («Free to use in
+personal, educational and commercial projects. (CC0 License)»). La versión gratuita son 43 + 43 clips (las «Pro» y «Source» son de pago).
+`herramientas/ual_a_res.gd` saca 33 clips a `terceros/ual/ual_extra.res` (1,2 MB, fuera de LFS y de los builds) y su catálogo
+`terceros/ual/animaciones_catalogo_ual.json`: marcha (Walk, Walk_Formal, Walk_Carry, Crouch_Fwd), **trote Jog_Fwd (6,4 m/s medidos)** y **SPRINT (7,35 m/s,
+ciclo de 0,67 s)**, reposos y reacciones, **saltos** (Jump y NinjaJump: despegue, aire, aterrizaje), **caídas y golpes** (Roll, Hit_Chest, Hit_Head,
+Hit_Knockback, Death01, LayToIdle), **entrada deslizante** (Slide_Start/Loop/Exit), **celebración** (Dance_Loop), **saque de banda** (OverhandThrow),
+disputa (Punch_Jab, Push_Loop) y ClimbUp. La velocidad de los ciclos es la medida sobre el esqueleto (pie en apoyo). En `anims_extra/quaternius_ual.json` entran
+SOLO el trote y el sprint (los únicos que son locomoción rápida; sin espejo); los demás son acciones, no transiciones de marcha, y meterlos
+con entra = sale = 0 el motor podría elegirlos como «parado». Revisión visual: sprint, trote, deslizamiento, salto, voltereta, baile, lanzamiento y caída
+(`ual*_*.jpg` en la carpeta de capturas): sin brazos atravesando el cuerpo ni pies flotando. Nota: el «1,47 GB» no era la UAL (pesa 18 MB) sino el zip de 100STYLE.
+
+## Peso en los builds (orden del líder, 11-11)
+
+Solo viaja lo que el motor referencia. Las bibliotecas completas (34 MB de 100STYLE + 1,2 MB de UAL) viven en `terceros/` (con `.gdignore`: ni se
+importan ni se exportan; no hace falta tocar los `exclude_filter` de los presets). Los JSON de `anims_extra/` apuntan a dos bibliotecas de USO que
+`herramientas/anims_uso_a_res.gd` arma copiando solo los clips referenciados y comprimiendo sus pistas (`Animation.compress()`): `100style_uso.res`
+(143 ciclos + 143 espejos, **1,5 MB**; sin comprimir eran 5,6) y `ual_uso.res` (trote y sprint, 10 KB). Con la compresión las poses no cambian
+(capturas comparadas). **Medido con `--export-pack "Windows"`: 386,4 MB con las 5 bibliotecas dentro → 348,6 MB ahora (−37,8 MB)**; el pack contiene
+`100style_uso.res` y `ual_uso.res` y no contiene nada de `terceros/`. Para sumar un clip al motor: añadirlo a `anims_extra` con
+`estilo100_a_anims_extra.py` / `ual_a_anims_extra.py` y volver a correr `anims_uso_a_res.gd`.
 
 ## Revisión visual (pose a pose, 14 clips)
 

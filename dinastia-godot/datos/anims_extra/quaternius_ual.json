@@ -1,0 +1,36 @@
+{
+ "biblioteca": "res://assets/characters/quaternius/anims_ual/ual_uso.res",
+ "fuente": "Quaternius Universal Animation Library 1 y 2, CC0 1.0",
+ "clips": [
+  {
+   "nombre": "ext_ual1_Jog_Fwd_Loop",
+   "clip": "ual1_Jog_Fwd_Loop",
+   "entra": 8.0,
+   "sale": 8.0,
+   "ang": 0.0,
+   "cuerpo": 0.0,
+   "cuerpo_ini": 0.0,
+   "largo": 0.933,
+   "pie": "D",
+   "pasos": 2,
+   "reposo": 1,
+   "v_entra": 6.38,
+   "v_sale": 6.38
+  },
+  {
+   "nombre": "ext_ual1_Sprint_Loop",
+   "clip": "ual1_Sprint_Loop",
+   "entra": 8.0,
+   "sale": 8.0,
+   "ang": 0.0,
+   "cuerpo": 0.0,
+   "cuerpo_ini": 0.0,
+   "largo": 0.667,
+   "pie": "D",
+   "pasos": 2,
+   "reposo": 1,
+   "v_entra": 7.35,
+   "v_sale": 7.35
+  }
+ ]
+}

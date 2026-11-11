@@ -161,3 +161,53 @@ func _probar_cajon_perezoso() -> void:
 	d.boton("b", func() -> void: pass)
 	_comprobar(d._lista.get_child_count() == 2, "sin `contenido` se llena desde fuera, como siempre")
 	padre.queue_free()
+
+## AVATARES (11-11, sesión 12): solo modelos realistas elegibles, partidas viejas con un modelo quitado caen al atleta,
+## el avatar regalo no va en los builds públicos y el personal del club tiene apariencia propia, única y reservada.
+func _probar_avatares_realistas() -> void:
+	_titulo("AVATARES: SOLO REALISTAS, AVATAR REGALO FUERA DE LO PÚBLICO, PERSONAL DEL CLUB ÚNICO")
+	for quitado: String in ["campesino", "explorador", "kk_barbaro", "kk_mago", "kk_esq_guerrero", "vrm_arla", "vrm_starter", "mh_farmer", "mh_king", "mm_witch", "mm_scifi"]:
+		_comprobar(not FutbolistaQ.modelo_valido(quitado), "«%s» ya no es un modelo válido" % quitado)
+		_comprobar(String(PersonajeDT.aspecto({"modelo": quitado})["modelo"]) == "", "una partida vieja con «%s» vuelve al atleta" % quitado)
+	for k: String in FutbolistaQ.todos_ajenos():
+		_comprobar(FutbolistaQ.ajeno_disponible(k), "«%s» (realista) está en el proyecto" % k)
+	for carpeta: String in ["kaykit", "vrm", "Skins"]:
+		_comprobar(not DirAccess.dir_exists_absolute("res://assets/characters/" + carpeta), "la carpeta de no realistas «%s» ya no está" % carpeta)
+	## El avatar regalo: excluido de los 6 presets (licencia y cara sin confirmar).
+	var cfg := FileAccess.get_file_as_string("res://export_presets.cfg")
+	var presets := cfg.split("[preset.").size() - 1
+	var con_exclusion := cfg.split("assets/characters/avatar_regalo/*").size() - 1
+	_comprobar(presets >= 6 and con_exclusion >= 6, "el avatar regalo está excluido de los presets de exportación (%d)" % con_exclusion)
+	if AvatarRegalo.disponible():
+		var padre := Node3D.new()
+		add_child(padre)
+		var d := PersonajeDT.crear(padre, {"modelo": AvatarRegalo.CLAVE, "altura": 1.80})
+		_comprobar(not d.is_empty() and d.has("avatar") and d.has("anim"), "el avatar regalo se arma con el cuerpo de animación del juego")
+		if not d.is_empty():
+			var rt := (d["avatar"] as Node).find_child("AvatarRegaloRetarget", true, false) as AvatarRegaloRetarget
+			_comprobar(rt != null and rt.pares() >= 50, "su retarget cubre cadera, columna, brazos, piernas y dedos (%d huesos)" % (rt.pares() if rt != null else 0))
+		padre.queue_free()
+	## Personal del club: determinista, sin repetirse, reservado.
+	var claves: Array = PersonalEstadio.PUESTOS.keys()
+	var mujeres := {"secretaria": true, "cocinera": true, "medico": false}
+	var a1: Dictionary = AparienciaPersonal.generar("CHI-01", claves, mujeres)
+	var a2: Dictionary = AparienciaPersonal.generar("CHI-01", claves, mujeres)
+	var b1: Dictionary = AparienciaPersonal.generar("ESP-07", claves, mujeres)
+	_comprobar(a1.size() == claves.size(), "una apariencia por puesto (%d)" % a1.size())
+	_comprobar(str(a1) == str(a2), "es determinista: el mismo club da las mismas caras")
+	_comprobar(str(a1) != str(b1), "otro club (de otro país) da otras")
+	for g: Dictionary in [a1, b1]:
+		var firmas := {}
+		var reservados := true
+		for c: String in g:
+			firmas[AparienciaPersonal.firma(g[c])] = true
+			reservados = reservados and AparienciaPersonal.es_reservado(String((g[c] as Dictionary)["color_pelo"]))
+		_comprobar(firmas.size() == g.size(), "ninguna se repite entre las personas del club (%d distintas)" % firmas.size())
+		_comprobar(reservados, "todas llevan color de pelo reservado al personal")
+	_comprobar(String((a1["secretaria"] as Dictionary)["cuerpo"]) == "female" and String((a1["portero"] as Dictionary)["cuerpo"]) == "male", "el cuerpo sigue al nombre")
+	var ninguno_editable := true
+	for c: String in PersonajeDT.COLORES_PELO:
+		ninguno_editable = ninguno_editable and not AparienciaPersonal.es_reservado(c)
+	_comprobar(ninguno_editable, "el editor del jugador no ofrece ningún color reservado")
+	var asp_j := PersonajeDT.aspecto({"color_pelo": AparienciaPersonal.COLORES_PELO_PERSONAL[0]})
+	_comprobar(not AparienciaPersonal.es_reservado(String(asp_j["color_pelo"])), "un personaje de jugador con color reservado cae al castaño: no puede elegirlo")

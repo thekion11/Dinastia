@@ -7,8 +7,8 @@ extends SceneTree
 ## Retarget por DIRECCIÓN (como `league_anim_a_res.gd`): el BVH usa los mismos ejes que nuestro esqueleto (Y arriba, mira a +Z, izquierda +X)
 ## y el reposo en T, así que el giro global de cada articulación de origen G se aplica a nuestro hueso con la corrección Q que lleva la
 ## dirección de reposo de nuestro hueso a la del origen:  global_nuestro = G · Q · reposo_global_nuestro.
-const SALIDA := "res://assets/characters/quaternius/anims_100style/100style.res"
-const CATALOGO := "res://datos/animaciones_catalogo_100style.json"
+var SALIDA := "res://terceros/estilo100/biblioteca/100style.res"   ## con ESTILO100_NOMBRE=otro → otro.res y su catálogo
+var CATALOGO := "res://terceros/estilo100/catalogos/animaciones_catalogo_100style.json"
 const FPS := 30.0
 const COSTE_MAX := 1.0
 const ALTURA_CADERA_ORIGEN := 97.9   ## cm: altura de la cadera del origen de pie (patas rectas)
@@ -34,6 +34,10 @@ var corr := {}         ## articulación de origen → Quaternion Q
 
 func _init() -> void:
 	var ruta := OS.get_environment("ESTILO100_JSON")
+	var nom := OS.get_environment("ESTILO100_NOMBRE")
+	if nom != "":
+		SALIDA = "res://terceros/estilo100/biblioteca/%s.res" % nom
+		CATALOGO = "res://terceros/estilo100/catalogos/animaciones_catalogo_%s.json" % nom
 	var doc: Variant = JSON.parse_string(FileAccess.get_file_as_string(ruta))
 	if not doc is Dictionary:
 		print("ERROR: sin ESTILO100_JSON=", ruta)
