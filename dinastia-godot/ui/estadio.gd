@@ -240,6 +240,7 @@ func _paso_motor(delta: float) -> void:
 	_hud_juego()
 	if _motor.estado == "fin" and not _final_motor:
 		_final_motor = true
+		VotoMotor.mostrar(self, _motor)   ## (11-11) voto de diversión si se prueba a ciegas (A/B/C)
 		## Las estadísticas del césped, a un CSV (M-162).
 		if _stats != null:
 			_stats.a_csv(partido, _motor)
