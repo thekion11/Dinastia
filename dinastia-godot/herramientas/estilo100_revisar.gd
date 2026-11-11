@@ -6,8 +6,8 @@ extends SceneTree
 ##  · BRAZOS EN EL CUERPO: distancia mínima de la mano y del codo al eje de la columna (pelvis→cuello) durante el ciclo.
 ##  · SALTO DE CIERRE: diferencia de pose entre el último cuadro y el primero (para el bucle).
 ##   godot --headless --path . --script res://herramientas/estilo100_revisar.gd
-const LIB := "res://assets/characters/quaternius/anims_100style/100style.res"
-const CATALOGO := "res://datos/animaciones_catalogo_100style.json"
+var LIB := "res://assets/characters/quaternius/anims_100style/100style.res"   ## con ESTILO100_NOMBRE=otro → otro.res
+var CATALOGO := "res://datos/animaciones_catalogo_100style.json"
 const MIN_MANO := 0.12
 const MIN_CODO := 0.11
 const MAX_PATINAJE_MIN := 0.60   ## aviso si el pie en apoyo se desliza más que esto y más que la propia velocidad
@@ -26,6 +26,10 @@ func _dist_segmento(p: Vector3, a: Vector3, b: Vector3) -> float:
 	return p.distance_to(a + ab * t)
 
 func _initialize() -> void:
+	var nom := OS.get_environment("ESTILO100_NOMBRE")
+	if nom != "":
+		LIB = "res://assets/characters/quaternius/anims_100style/%s.res" % nom
+		CATALOGO = "res://datos/animaciones_catalogo_%s.json" % nom
 	var d := FutbolistaQ.crear(1.8, "male")
 	root.add_child(d["nodo"])
 	await process_frame

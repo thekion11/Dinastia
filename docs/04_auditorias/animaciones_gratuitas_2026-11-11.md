@@ -11,7 +11,7 @@ Library 1 Standard (`anims/UAL1_Standard.glb`, CC0), 17 elegidas de la UAL 2 (`a
 
 | Fuente | Licencia | Cantidad | ¿Sirve? | ¿Se baja desde el contenedor? |
 |---|---|---|---|---|
-| 100STYLE (Zenodo 8127870) | CC BY 4.0 | 100 estilos × ~10 movimientos, BVH a 60 fps | **SÍ** (locomoción: marcha, carrera, lado, atrás, giros, reposo), con atribución | sí (1,4 GB; se extrae solo lo usado) |
+| 100STYLE (Zenodo 8127870) | CC BY 4.0 | 100 estilos × ~10 movimientos, BVH a 60 fps (**los 100 estilos ya están convertidos**) | **SÍ** (locomoción: marcha, carrera, lado, atrás, giros, reposo), con atribución | sí (1,4 GB; se extrae solo lo usado) |
 | Quaternius UAL 2 Standard | CC0 | 43 (17 ya en el repo) | parcial (barrida/tackle, derribo, levantarse, lanzamiento con las manos) | sí (itch.io, gratis) |
 | Quaternius UAL 1 Standard | CC0 | 43 (ya en el repo) | ya incluida | ya |
 | Quaternius UAL 1 / 2 «Pro» y «Source» | CC0 pero **de pago** ($9,99 / $14,99) | 120+ / 130+ | no se compran sin OK del dueño | — |
@@ -61,12 +61,15 @@ vía libre real es la CMU (pendiente de ruta de red) o grabar/animar propias.
 
 | Qué | Dónde | Cantidad |
 |---|---|---|
-| Ciclos de locomoción retargeteados a nuestro esqueleto (AnimationLibrary, bucle, 30 fps, con espejo «…_espejo») | `dinastia-godot/assets/characters/quaternius/anims_100style/100style.res` (5,4 MB, fuera de LFS) | **206 ciclos + 206 espejos = 412** (16 estilos: Neutral, Proud, Angry, Rushed, Elated, Depressed, Old, Heavyset, BigSteps, HighKnees, March, Strutting, Stiff, Crouched, Followed, CrowdAvoidance) |
-| Catálogo con etiquetas | `dinastia-godot/datos/animaciones_catalogo_100style.json` | 412 fichas |
+| Ciclos de locomoción retargeteados a nuestro esqueleto (AnimationLibrary, bucle, 30 fps, con espejo «…_espejo») | `dinastia-godot/assets/characters/quaternius/anims_100style/100style.res` (16 estilos «de fútbol») y `100style_g2…g5.res` (los otros 84), 34 MB en total, fuera de LFS | **1.261 ciclos + 1.261 espejos = 2.522 animaciones** (100 estilos) |
+| Catálogos con etiquetas (uno por biblioteca) | `dinastia-godot/datos/animaciones_catalogo_100style*.json` | 2.522 fichas (2.136 con revisión `ok`) |
+| Formato `anims_extra` de la sesión 9 | `dinastia-godot/datos/anims_extra/estilo100*.json` (uno por biblioteca) | 143 ciclos + 143 espejos |
 | Catálogo de los 21 clips de Rohr con cuadro de golpeo | `dinastia-godot/datos/animaciones_catalogo_rohr.json` | 21 fichas |
 | Herramientas (reproducibles) | `herramientas/estilo100_ciclos.py` (BVH → ciclos), `estilo100_a_res.gd` (retarget), `estilo100_revisar.gd` (patinaje y brazos), `catalogo_rohr.gd` | |
 | Escena de capturas pose a pose | `pruebas/captura_anims_100style.tscn` | |
 | Capturas JPG | `docs/04_auditorias/capturas_animaciones_2026-11-11/` | 14 clips × (cerca + cámara real) |
+
+Los estilos 17-100 se convirtieron en 4 grupos (`ESTILO100_NOMBRE=100style_g2…g5`, variable que usan `estilo100_a_res.gd` y `estilo100_revisar.gd`); 17 ciclos con mal cierre se descartaron. Estilos sueltos como `Kick`, `Lunge`, `Skip`, `Sweep`, `Swat`, `TwoFootJump`, `LeftHop` están ahí (algunos útiles para fintas); otros son humorísticos (`Chicken`, `Dinosaur`…) y se filtran por nombre.
 
 Regenerar: bajar `100STYLE.zip` de Zenodo, descomprimirlo fuera del repo y
 `python3 -I herramientas/estilo100_ciclos.py <100STYLE> ciclos.json` → `ESTILO100_JSON=ciclos.json godot --headless --path . --script res://herramientas/estilo100_a_res.gd`
@@ -83,8 +86,7 @@ el espejo cambia el signo), `apoyos_pie_derecho` / `apoyos_pie_izquierdo` (cuadr
 `patinaje_ms`, `min_dist_mano_torso_m`, `min_dist_codo_torso_m`.
 
 Límites que hay que saber: (1) el actor se movía dentro de un estudio: la carrera «rápida» es un trote de 1,3-1,9 m/s; para 5-8 m/s hay
-que reproducirla acelerada (el catálogo da la velocidad base) o usar las de League-Soccer; (2) **44 de 412 fichas con aviso** de patinaje
-(22 clips y sus espejos; sobre todo `Stiff` y las carreras hacia atrás): filtrar `revision == "ok"`; (3) la medida de patinaje es una
+que reproducirla acelerada (el catálogo da la velocidad base) o usar las de League-Soccer; (2) **386 de 2.522 fichas con aviso** de patinaje o de brazo en el cuerpo (sobre todo estilos raros y las carreras hacia atrás): filtrar `revision == "ok"`; (3) la medida de patinaje es una
 heurística (apoyo = pie a <3 cm de su mínimo), no un solucionador de pies.
 
 Catálogo de Rohr (`animaciones_catalogo_rohr.json`): por clip `tipo`, `duracion_s`, y para regates, malabares, pase, tiro y penal:
@@ -95,9 +97,9 @@ golpeo en el cuadro 78 con el izquierdo; Side_Foot_Kick y los penales traen carr
 
 ## Para la sesión 9 (`LeagueCatalogo`, `datos/anims_extra/`)
 
-`datos/anims_extra/estilo100.json` (generado por `herramientas/estilo100_a_anims_extra.py`): 41 ciclos + 41 espejos con las etiquetas de su
+`datos/anims_extra/estilo100*.json` (5 archivos, uno por biblioteca; generados por `herramientas/estilo100_a_anims_extra.py`): 143 ciclos + 143 espejos con las etiquetas de su
 LEEME. Un ciclo entra y sale a la misma velocidad (`ang` 0); `cuerpo` = −ángulo de marcha (atrás ±π, lateral ∓π/2). Solo pasan los de
-`revision: ok` y los que llegan a la clase 3,5 m/s (≥ 1,8 m/s reales: 12 carreras, 8 laterales, 5 atrás, 2 marchas) más 14 reposos. Las marchas lentas
+`revision: ok` y los que llegan a la clase 3,5 m/s (≥ 1,8 m/s reales) más los reposos. Las marchas lentas
 (< 1,8 m/s) serían «parado» en la clase del motor, así que NO entran (siguen en `animaciones_catalogo_100style.json`). `v_entra`/`v_sale` llevan la
 velocidad real. Los clips de Rohr no son locomoción: no encajan en ese formato (su catálogo es `animaciones_catalogo_rohr.json`).
 
