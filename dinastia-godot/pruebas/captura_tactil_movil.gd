@@ -81,7 +81,7 @@ func _auditar(contexto: String) -> void:
 	for b: String in vis:
 		var d := _ct.radio_de(b) * 2.0 / mm
 		texto.append("%s %.1f mm" % [b, d])
-		var minimo := MIN_MM_GRANDE if b in ["A", "B"] else MIN_MM_PEQUENO
+		var minimo := MIN_MM_GRANDE if b in ["SP", "PA", "TI"] else MIN_MM_PEQUENO
 		_comprobar(d >= minimo, "[%s] %s mide %.1f mm (mínimo %.0f)" % [contexto, b, d, minimo])
 		var c := _ct.centro_de(b)
 		var r := _ct.radio_de(b)
@@ -220,7 +220,7 @@ func _process(_d: float) -> void:
 		var c0 := _ct.centro_reposo()
 		_toque(0, c0, true)
 		_arrastre(0, c0 + Vector2(_ct.radio_stick() * 0.8, 0))
-		_toque(1, _ct.centro_de("Sprint"), true)
+		_toque(1, _ct.centro_de("SP"), true)
 	if _n == 102:
 		_comprobar(Mando.movimiento().length() > 0.5, "el stick responde al fotograma siguiente (%.2f)" % Mando.movimiento().length())
 	if _n == 160:
@@ -228,23 +228,21 @@ func _process(_d: float) -> void:
 		_comprobar(Input.is_action_pressed("jugar_sprint"), "el dedo del sprint corre")
 		_comprobar(Vector2(p1.x - _p0.x, p1.z - _p0.z).length() > 1.0, "el jugador se ha movido con el dedo (%.1f m)" % Vector2(p1.x - _p0.x, p1.z - _p0.z).length())
 		_foto("mueve")
-		_toque(2, _ct.centro_de("A"), true)
-		_toque(3, _ct.centro_de("B"), true)
+		_toque(3, _ct.centro_de("TI"), true)
 	if _n == 162:
-		_comprobar(Input.is_action_pressed("jugar_pase") and Input.is_action_pressed("jugar_tiro"), "Pase y Tiro pulsados con otros dedos a la vez")
-		_toque(3, _ct.centro_de("B"), false)
-		_toque(2, _ct.centro_de("A"), false)
-		_toque(1, _ct.centro_de("Sprint"), false)
+		_comprobar(Input.is_action_pressed("jugar_sprint") and (Input.is_action_pressed("jugar_tiro") or Input.is_action_pressed("jugar_centro")), "Sprint y Tiro (o Barrida, sin balón) pulsados con otros dedos a la vez")
+		_toque(3, _ct.centro_de("TI"), false)
+		_toque(1, _ct.centro_de("SP"), false)
 		_toque(0, _ct.centro_reposo(), false)
 	if _n == 166:
 		_comprobar(Mando.movimiento() == Vector2.ZERO and not Input.is_action_pressed("jugar_sprint") and not Input.is_action_pressed("jugar_pase"), "al levantar los dedos todo se suelta")
 		## Sin balón: el botón Cambiar existe y manda su acción.
 		ControlesTactiles.contexto_forzado = "sin"
 	if _n == 168:
-		_toque(4, _ct.centro_de("Cambiar"), true)
+		_toque(4, _ct.centro_de("PA"), true)
 	if _n == 170:
 		_comprobar(Input.is_action_pressed("jugar_cambiar"), "sin balón, Cambiar pide el cambio de jugador")
-		_toque(4, _ct.centro_de("Cambiar"), false)
+		_toque(4, _ct.centro_de("PA"), false)
 		ControlesTactiles.contexto_forzado = ""
 	if _n == 172:
 		_toque(5, _ct.centro_de("Pausa"), true)

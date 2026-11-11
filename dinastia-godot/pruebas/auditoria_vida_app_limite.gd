@@ -58,7 +58,7 @@ func _jugable() -> void:
 	## Un dedo en el botón de tiro y el stick, y la app pasa a segundo plano.
 	var ct := _pj.get_node("ControlesTactiles") as ControlesTactiles
 	var t := InputEventScreenTouch.new()
-	t.index = 1; t.position = ct.centro_de("B"); t.pressed = true
+	t.index = 1; t.position = ct.centro_de("TI"); t.pressed = true
 	Input.parse_input_event(t)
 	Input.action_press("jugar_tiro")
 	_comprobar(_pj._pausa == null, "el partido empieza sin pausa")
