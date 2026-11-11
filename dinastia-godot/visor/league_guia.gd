@@ -20,7 +20,7 @@ static var marchas := OS.get_environment("LS_MARCHAS") != "0"
 const K_CPU := 11.0
 const K_USUARIO := 5.0
 ## Si lo que se pide se aleja más de esto del rumbo de salida del clip, se corta (rad): el usuario antes que la CPU.
-const CORTE_USUARIO := 1.1
+const CORTE_USUARIO := 0.5
 const CORTE_CPU := 2.0
 const PAUSA_CORTE := 0.5
 const MARCHA_DRIBBLE := 3.5
@@ -41,7 +41,7 @@ static func empezar(p: Dictionary, c: Dictionary, t: float, yaw_cuerpo: float) -
 	## El clip decelera o acelera EN PROPORCIÓN (3,4 → 0,9 m/s = ×0,25) cuando se entra en marcha; arrancando, la salida es la suya.
 	var fin := v_sal * (sp / v_ent) if v_ent > 0.5 and sp > 0.5 else v_sal
 	p["ls_guia"] = {"t0": t, "hasta": t + maxf(float(c["largo"]), 0.12), "dur": maxf(float(c["largo"]), 0.12), "sp0": sp, "fin": fin,
-		"h0": atan2(v.x, v.z) if sp > 0.8 else yaw_cuerpo, "ang": float(c["ang"])}
+		"h0": atan2(v.x, v.z) if sp > 0.8 else yaw_cuerpo, "ang": float(c["ang"]), "tipo": LeagueCatalogo.tipo_de(c)}
 
 static func _suave(u: float) -> float:
 	u = clampf(u, 0.0, 1.0)
@@ -100,27 +100,42 @@ static func paso(m: MotorJugable, delta: float) -> void:
 			p["vel"] = nuevo
 			n.position += (nuevo - v) * delta
 
+## ¿Lo maneja una persona? (el del usuario, o uno marcado para las pruebas)
+static func humano(m: MotorJugable, p: Dictionary) -> bool:
+	return is_same(p, m.usuario) or bool(p.get("ls_humano", false))
+
 ## Sigue el recorrido del clip: rumbo h0 + ang·suave(u / 0,8) y velocidad sp0 → fin con la curva suave.
+## El JUGADOR HUMANO (11-11, pedido del líder: la orden del mando no se retrasa por esperar al final del clip): solo se le aplica la
+## curva de VELOCIDAD del clip (el rumbo lo manda su stick con la inercia del motor) y el clip se corta en cuanto lo pedido se aparta
+## ~30° de adonde iba (CORTE_USUARIO), o al soltar el stick.
 static func _seguir_clip(m: MotorJugable, p: Dictionary, v: Vector3, delta: float) -> Vector3:
 	var g: Dictionary = p["ls_guia"]
 	var u := (m.t - float(g["t0"])) / float(g["dur"])
-	var rumbo := float(g["h0"]) + float(g["ang"]) * _suave(u / 0.8)
+	var es_humano := humano(m, p)
 	var vel := lerpf(float(g["sp0"]), float(g["fin"]), _suave(u))
+	var rumbo := float(g["h0"]) + float(g["ang"]) * _suave(u / 0.8)
 	var clip := Vector3(sin(rumbo), 0.0, cos(rumbo)) * vel
 	## ¿Lo que pide el motor se aleja mucho de adonde va el clip? Entonces manda lo nuevo y el clip se corta.
 	var pide: Vector3 = p.get("objetivo", Vector3.ZERO) - (p["node"] as Node3D).position
 	pide.y = 0.0
-	var corte := CORTE_USUARIO if p.get("manual", Vector3.ZERO) != Vector3.ZERO else CORTE_CPU
-	if u > 0.3 and pide.length() > 0.5 and absf(angle_difference(float(g["h0"]) + float(g["ang"]), atan2(pide.x, pide.z))) > corte:
+	var corte := CORTE_USUARIO if es_humano else CORTE_CPU
+	var desvio := absf(angle_difference(float(g["h0"]) + float(g["ang"]), atan2(pide.x, pide.z))) if pide.length() > 0.5 else 0.0
+	if (u > 0.3 or es_humano) and desvio > corte:
 		LeagueLocomocion.cortar(p)
 		p.erase("ls_guia")
 		p["ls_espera_g"] = m.t + PAUSA_CORTE   ## sin pausa, arranca otro clip en el acto y se vuelve a cortar (bucle)
 		cortes += 1
 		return v
 	guiados += 1
-	var k := K_USUARIO if p.get("manual", Vector3.ZERO) != Vector3.ZERO else K_CPU
-	var a := 1.0 - exp(-k * delta)
-	return Vector3(v.x, 0.0, v.z).lerp(clip, a) + Vector3(0.0, v.y, 0.0)
+	var a := 1.0 - exp(-(K_USUARIO if es_humano else K_CPU) * delta)
+	var plano := Vector3(v.x, 0.0, v.z)
+	if es_humano:
+		## Solo la rapidez: el rumbo sigue siendo el del motor.
+		var sp := plano.length()
+		if sp < 0.01:
+			return v
+		return plano * (lerpf(sp, vel, a) / sp) + Vector3(0.0, v.y, 0.0)
+	return plano.lerp(clip, a) + Vector3(0.0, v.y, 0.0)
 
 ## Marchas: a ritmo de crucero (no frenando ni acelerando, ni llegando al destino) la velocidad se asienta en 3,5 · 5 · la propia.
 static func _marcha(m: MotorJugable, p: Dictionary, n: Node3D, v: Vector3, delta: float) -> Vector3:
