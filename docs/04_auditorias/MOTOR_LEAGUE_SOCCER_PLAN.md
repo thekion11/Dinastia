@@ -511,3 +511,21 @@ Determinismo IGUAL; «FIN. 0 fallos». Una primera versión (guía pegada al cli
 partido hubo 3.085 arranques seguidos (bucle de corte y reinicio): corregido con la decisión física y la pausa. **Lectura honesta**:
 con 3 partidos las diferencias de remates y posesión son ruido; el efecto en el movimiento es pequeño. Pendiente: calibrar con 6+
 partidos y capturas con la cámara real, y decidir la fuerza (K_CPU, K_USUARIO) por cómo se siente, no por cifras.
+
+### Calibración con 6 cruces y respuesta del humano (11-11, tras el bloque 1)
+6 partidos de 2 × 90 s, clubes de CHI, ARG, ESP, BRA, ENG e ITA (cruces y estilos distintos), `comparar_motor_league`:
+| | guía apagada | guía encendida |
+|---|---|---|
+| aceleración media / p95 (m/s²) | 4,72 / 18 | 4,80 / 17-18 |
+| giro medio (rad/s) | 1,13 | 0,95 (−15 %) |
+| cambios de posesión · acierto de pase | 5,2 · 83,7 % | **9,5 · 71,3 %** (más disputa) |
+| remates · goles por partido | 2,8 · 0,5 | 2,7 · 0,17 (ruido: 6 partidos) |
+| CPU por paso (µs) | 1.528 | 1.615 (+6 %) |
+Determinismo IGUAL con y sin guía. Lectura: la guía no cambia los remates, pero el balón cambia más de dueño y el pase es más
+discutido (el giro comprometido de quien conduce da al defensa tiempo de llegar): va en la dirección de más diversión.
+**Jugador humano** (`pruebas/_sonda/sonda_league_humano.tscn`, corre a tope y recibe órdenes bruscas; 3 cruces): la guía solo le aplica
+la curva de VELOCIDAD del clip (el rumbo lo manda su stick) y el clip se corta si lo pedido se aparta ~30°. Segundos hasta obedecer:
+giro 90° 0,49 → 0,47; giro 180° 0,89 → 0,69; parar 0,59 → 0,50. La sonda falla si la guía retrasa más de 0,15 s.
+**Animaciones de 100STYLE** (sesión 10, `datos/anims_extra/estilo100.json`, 82 entradas): el catálogo las acepta sin avisos, pero son
+ciclos estables (trote ~1,9 m/s y reposos), así que la elección de arranques, frenadas y giros las descarta por diseño (`estable`).
+Quedan para variedad de reposo y de trote lento: pendiente un consumidor (elegir el reposo de cada jugador por su id).
