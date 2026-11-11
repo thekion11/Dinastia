@@ -47,6 +47,34 @@ static func _suave(u: float) -> float:
 	u = clampf(u, 0.0, 1.0)
 	return u * u * (3.0 - 2.0 * u)
 
+## LA DECISIÓN de empezar una guía usa SOLO el estado físico (velocidad, rumbo del nodo, destino): no mira cámara, clips cargados ni
+## el cuerpo girado de la capa visual, así el movimiento es el mismo con o sin gráficos (determinismo). Cada `CADENCIA` s por jugador.
+const CADENCIA := 0.1
+const GIRO_MIN := 0.6
+
+static func decidir(m: MotorJugable, p: Dictionary, n: Node3D) -> void:
+	if float(p.get("lg_revisar", 0.0)) > m.t or is_same(p, m.poseedor):
+		return
+	p["lg_revisar"] = m.t + CADENCIA
+	if p.has("ls_guia") and float((p["ls_guia"] as Dictionary)["hasta"]) > m.t:
+		return
+	var v: Vector3 = p["vel"]
+	var sp := Vector2(v.x, v.z).length()
+	var des := LeagueLocomocion.deseada(m, p, n)
+	var sp_des := des.length()
+	var entra := LeagueMovimiento.rango(sp)
+	var sale := LeagueMovimiento.rango(sp_des)
+	var rel := angle_difference(n.rotation.y, atan2(des.x, des.z)) if sp_des > 0.1 else 0.0
+	var arranca := entra == LeagueMovimiento.IDLE and sale > LeagueMovimiento.IDLE
+	var frena := entra > LeagueMovimiento.IDLE and sale == LeagueMovimiento.IDLE
+	var gira := entra > LeagueMovimiento.IDLE and sale > LeagueMovimiento.IDLE and absf(rel) >= GIRO_MIN
+	if not (arranca or frena or gira):
+		return
+	var c := LeagueMovimiento.elegir(sp, rel, sp_des)
+	if c.is_empty() or LeagueMovimiento.estable(c):
+		return
+	empezar(p, c, m.t, n.rotation.y)
+
 ## Se llama tras `MotorJugable._mover_jugadores`.
 static func paso(m: MotorJugable, delta: float) -> void:
 	if not activa or delta <= 0.0:
@@ -58,6 +86,8 @@ static func paso(m: MotorJugable, delta: float) -> void:
 		if float(p.get("gesto_hasta", 0.0)) > m.t or bool(p["por"]):
 			p.erase("ls_guia")
 			continue
+		if not p.has("ls_guia") and float(p.get("ls_espera_g", 0.0)) <= m.t and float(p.get("mirar_hasta", 0.0)) <= m.t:
+			decidir(m, p, n)
 		var v: Vector3 = p["vel"]
 		var nuevo := v
 		if p.has("ls_guia") and float((p["ls_guia"] as Dictionary)["hasta"]) > m.t:
@@ -84,7 +114,7 @@ static func _seguir_clip(m: MotorJugable, p: Dictionary, v: Vector3, delta: floa
 	if u > 0.3 and pide.length() > 0.5 and absf(angle_difference(float(g["h0"]) + float(g["ang"]), atan2(pide.x, pide.z))) > corte:
 		LeagueLocomocion.cortar(p)
 		p.erase("ls_guia")
-		p["ls_espera"] = m.t + PAUSA_CORTE   ## sin pausa, arranca otro clip en el acto y se vuelve a cortar (bucle)
+		p["ls_espera_g"] = m.t + PAUSA_CORTE   ## sin pausa, arranca otro clip en el acto y se vuelve a cortar (bucle)
 		cortes += 1
 		return v
 	guiados += 1

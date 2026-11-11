@@ -182,9 +182,8 @@ static func _quizas_empezar(m: MotorLeague, p: Dictionary) -> void:
 	if not is_instance_valid(n) or not is_instance_valid(ap):
 		return
 	p["ls_visto"] = a_la_vista(n)
-	## (11-11) La GUÍA del movimiento (`LeagueGuia`) no depende de la cámara ni de si el clip ya está cargado (determinismo): la
-	## decisión se toma siempre; solo lo que se VE (el clip) mira `ls_visto` y `preparar`.
-	var visto := bool(p["ls_visto"])
+	if not bool(p["ls_visto"]):
+		return
 	var v: Vector3 = p["vel"]
 	var sp := Vector2(v.x, v.z).length()
 	var des := deseada(m, p, n)
@@ -206,22 +205,13 @@ static func _quizas_empezar(m: MotorLeague, p: Dictionary) -> void:
 	var vuelve := entra > LeagueMovimiento.IDLE and absf(angle_difference(quiere_cuerpo, cuerpo)) > 0.01
 	if not (arranca or frena or gira or vuelve):
 		return
-	var listo := visto and preparar(ap, m.t)
+	if not visto or not preparar(ap, m.t):
+		return
 	var c := LeagueMovimiento.elegir(sp, rel, sp_des, cuerpo, mirar, pie_que_toca(p, ap))
-	if c.is_empty() or LeagueMovimiento.estable(c):
-		p["ls_espera"] = m.t + ESPERA   ## sin clip que aporte: no se vuelve a buscar en cada fotograma
-		return
-	if not (arranca or frena or gira):
-		if not listo:
-			return
-	else:
-		LeagueGuia.empezar(p, c, m.t, n.rotation.y + float(p.get("ls_off", 0.0)) + cuerpo - float(c["cuerpo_ini"]))
-	if not listo:
-		return
-	if c.has("auto") and not ap.has_animation(String(c["nombre"])):
+	if not c.is_empty() and c.has("auto") and not ap.has_animation(String(c["nombre"])) and not LeagueMovimiento.estable(c):
 		_construir_auto(c, ap, m.t)
-	if not ap.has_animation(String(c["nombre"])):
-		p["ls_espera"] = m.t + ESPERA
+	if c.is_empty() or LeagueMovimiento.estable(c) or not ap.has_animation(String(c["nombre"])):
+		p["ls_espera"] = m.t + ESPERA   ## sin clip que aporte: no se vuelve a buscar en cada fotograma
 		return
 	var modelo := ap.get_node_or_null(ap.root_node) as Node3D
 	if modelo == null or modelo == n:
