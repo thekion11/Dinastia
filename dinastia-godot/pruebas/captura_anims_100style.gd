@@ -54,7 +54,8 @@ func _ready() -> void:
 
 func _correr() -> void:
 	for nombre in _clips:
-		var clave := "x100/e100_" + nombre
+		var pre := OS.get_environment("PREFIJO")   # vacío = e100_ ; «-» = sin prefijo
+		var clave := "x100/" + ("" if pre == "-" else (pre if pre != "" else "e100_")) + nombre
 		for i in FASES:
 			var ap: AnimationPlayer = _jugadores[i]["anim"]
 			if not ap.has_animation(clave):
