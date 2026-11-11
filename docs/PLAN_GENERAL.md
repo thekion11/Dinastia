@@ -92,6 +92,14 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 
 1. **ESTÉTICA Y DISEÑO DE MENÚS Y DISTRIBUCIÓN — FALTA PULIR.** **FALTA PULIR EN TODOS LOS BLOQUES hechos** (cada uno se afina después). Hecho y en main (9-11): márgenes de las columnas del menú central, fila «PRÓXIMOS» en tarjetas, portadas del riel con rejilla dinámica, letra base del Tema y de los botones, diálogo «Capítulos», Ligas y clubes con escudos, aire en Estadio, aviso del partido de despedida (escudo de las Leyendas con 5 diseños y once titular con busto 3D) y foco visible en los botones de evento.
 
+## ANIMACIONES GRATUITAS (sesión 10, 11-11) — PENDIENTE (lo hecho está en `docs/04_auditorias/animaciones_gratuitas_2026-11-11.md`)
+- **Rohr** (`anims_futbol/`, 21 clips de fútbol): licencia sin texto en el zip. El dueño debe confirmarla y guardar la captura de la página de Gumroad; hasta entonces NO va en builds públicos.
+- **Faltan clips libres de**: cabezazo, entrada de pie y portero (CMU no trae paradas). Solo existen en League-Soccer (Apache 2.0) y en Rohr.
+- **Acciones de la UAL** (33 clips: sprint, saltos, caídas, slide, baile…) completas en `terceros/ual/ual_extra.res`; en los builds solo viajan las de `anims_ual/ual_uso.res`. Si la sesión 9 pide otra, se añade a `herramientas/ual_a_anims_extra.py` y se regenera con `anims_uso_a_res.gd`.
+- **Estilos de 100STYLE y bailes/acciones de CMU** completos en `terceros/estilo100/` (2.522) y `terceros/cmu/` (144 + espejos); en los builds solo los 143 ciclos de `anims_extra` y los 155 de `cmu_uso.res`. Más volumen = tocar los scripts de `herramientas/estilo100_*` y `cmu_*` y regenerar.
+- **Sin probar dentro del partido real**: las velocidades de los ciclos (100STYLE ~1,8 m/s, CMU 3,2-4,3 m/s, UAL sprint 7,35 m/s) pueden pedir ajustes con el motor de la sesión 9.
+- **Sin comprar**: UAL «Pro» ($9,99): no hace falta, la parte gratuita ya está aprovechada.
+
 ## IDEA DEL DUEÑO (10-11 tarde): LIGAS ACTIVAS Y DESCARGAS OPCIONALES
 - **Ligas activas** (en curso, sesión 6; cifras de coste: sesión 5 en `docs/04_auditorias/coste_mundo_2026-11-10.md`): al empezar partida se eligen los países que se cargan (PC: todos; móvil: su país + las grandes por defecto); el resto no se carga; continentales y selecciones funcionan con relleno ligero; se pueden añadir ligas al cerrar temporada. `Mundo.generar(paises)` ya lo admite; hoy el juego siempre pasa la lista vacía (= todo).
 - **Descargas opcionales** (DESPLAZADO A LA SEMANA PRÓXIMA por el dueño, 10-11; se hace después de «Ligas activas»): juego base ligero + paquetes `.pck` de recursos (estadios icónicos, caras, sonido; `assets/` = 394 MB) montados con el mismo sistema que `PaqueteReal`/`Parches`. Dudas: dónde alojarlos (Releases de GitHub o Drive; no en el repo), Google Play (solo datos/recursos, sin scripts, o Play Asset Delivery) y versión del paquete frente a la del juego.

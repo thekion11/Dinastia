@@ -10,6 +10,7 @@ const LISTA := [
 	["Universal Base Characters, Universal Animation Library, Modular Character Outfits, muebles", "Quaternius (quaternius.com)", "CC0 1.0"],
 	["Animated Characters, City Kit, Car Kit, City Kit Roads, Furniture Kit, Modular Buildings, Building Kit, Train Kit, Coaster Kit, Mini Market, Food Kit, Mini Arcade, Input Prompts", "Kenney (kenney.nl)", "CC0 1.0"],
 	["Free mocap pack 05: Soccer", "Anderson Rohr", "uso libre según su autor"],
+	["Motion Capture Database (patadas, carreras, saltos, bailes, acrobacias y gestos). «The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.» Conversión BVH: Bruce Hahne", "Carnegie Mellon University Graphics Lab (mocap.cs.cmu.edu)", "Libre para uso comercial"],
 	["100STYLE (ciclos de locomoción: marcha, carrera, lateral, atrás y reposo en los 100 estilos)", "Ian Mason, Sebastian Starke, Taku Komura (zenodo.org/records/8127870)", "CC BY 4.0"],
 	["League-Soccer / Gameplay Football (animaciones de fútbol, golpeo del balón y el núcleo del motor del partido portado a GDScript)", "Copyright 2019 Google LLC & Bastiaan Konings; League-Soccer: awest813 y colaboradores", "Apache License 2.0"],
 	["Face Mesh / Face Landmarker", "Copyright The MediaPipe Authors", "Apache License 2.0"],
