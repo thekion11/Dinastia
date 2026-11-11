@@ -92,3 +92,4 @@ dinastia-godot/minijuegos/**/*.wav -filter -diff -merge binary
 # Texturas PBR CC0 de Poly Haven (sesión 7, 10-11; autorizado por el dueño): JPG de 1K fuera de LFS. Se bajan con herramientas/bajar_cc0.py.
 dinastia-godot/assets/cc0/**/*.jpg -filter -diff -merge binary
 dinastia-godot/assets/cc0_modelos/** -filter -diff -merge binary
+dinastia-godot/assets/characters/avatar_regalo/*.fbx -filter -diff -merge binary
