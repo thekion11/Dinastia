@@ -30,6 +30,9 @@ const LOTES := [
 	["M Punk", "res://assets/characters/modular/women/Punk.glb"], ["M SciFi", "res://assets/characters/modular/women/SciFi.glb"],
 	["M Soldier", "res://assets/characters/modular/women/Soldier.glb"], ["M Suit", "res://assets/characters/modular/women/Suit.glb"],
 	["M Witch", "res://assets/characters/modular/women/Witch.glb"], ["M Worker", "res://assets/characters/modular/women/Worker.glb"]],
+	[["H Swat", "res://assets/characters/modular/men/Swat.glb"], ["M Soldier", "res://assets/characters/modular/women/Soldier.glb"],
+	["H Punk", "res://assets/characters/modular/men/Punk.glb"], ["M Punk", "res://assets/characters/modular/women/Punk.glb"],
+	["AVATAR REGALO", "res://assets/characters/avatar_regalo/avatar_regalo.fbx"]],
 ]
 var _n := 0
 
