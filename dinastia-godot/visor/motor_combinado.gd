@@ -39,8 +39,9 @@ func _init() -> void:
 	piezas = piezas_por_defecto()
 
 ## Las candidatas a C que se prueban a ciegas (informe `comparar_tres_motores_2026-11-11.md`): piezas que se cambian por las nuestras ENCIMA de las de
-## `datos/motor_c_piezas.json`. C1 = lo del archivo (League + nuestra decisión con balón); C2 = C1 + locomoción nuestra; C3 = C1 + colocación sin balón nuestra.
-const VARIANTES := {"combinado": [], "combinado_c2": ["locomocion"], "combinado_c3": ["coloca_sin_balon"]}
+## `datos/motor_c_piezas.json`. C1 = lo del archivo (League + nuestra decisión con balón); C2 = C1 + locomoción nuestra; C3 = C1 + colocación sin balón nuestra; C4 = C3 + locomoción nuestra (la más barata de CPU: −27 % frente al motor de siempre; es el C4 del líder).
+const VARIANTES := {"combinado": [], "combinado_c2": ["locomocion"], "combinado_c3": ["coloca_sin_balon"],
+	"combinado_c4": ["coloca_sin_balon", "locomocion"]}
 
 func aplicar_variante(id: String) -> void:
 	for k: String in VARIANTES.get(id, []):
