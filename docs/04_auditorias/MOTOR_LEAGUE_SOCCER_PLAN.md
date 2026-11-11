@@ -541,3 +541,31 @@ Quedan para variedad de reposo y de trote lento: pendiente un consumidor (elegir
   CMU como variedad de trote (necesitan escalar la velocidad del clip para no patinar); recortar las transiciones y patadas de CMU (son
   grabaciones de 3-15 s, no recortes). Fotos de la guía con cámara real en `capturas_guia_2026-11-11/` (en foto fija no se aprecia: el
   vídeo queda como NO verificable aquí; lo verá el dueño en su teléfono con el selector a ciegas).
+
+## 12. C4 mejorado (sesión 9, 11-11, orden 39 del dueño; CIERRE)
+C4 = `combinado_c4` (League + NUESTRA decisión con balón + NUESTRA colocación con caché de 0,1 s + NUESTRA locomoción).
+**Hecho**
+1. **Celebraciones de CMU** y **faltas leves** (`LeagueAcciones`, `MotorLeague._anim`): funcionan también en C4 (lo hereda). Al motor de siempre no se toca (queda de respaldo, orden del líder).
+2. **Guía de animaciones en C4**: probada y dejada **APAGADA** (`LS_GUIA_C4=1` la enciende; 7 líneas al final de `MotorCombinado._mover_jugadores`).
+   Motivo, 6 cruces `MITAD=120`: duelos 28,8 → 22,0, regates 18,3 → 15,8, acierto de pase 68 → 63 %, CPU +18 % (1.182 → 1.392 µs/paso).
+3. **Qué baja las cadenas de pases** (ablaciones, `MITAD=120`, 6 cruces): NO es la caché de colocación (sin caché: 0,17 cadenas de 5+ frente a 0,5 y CPU +50 %) ni la locomoción;
+   es NUESTRA colocación sin balón. Con la de League y locomoción nuestra: acierto 84 %, cadenas de 5+ 2,3, pero duelos 7,7 y regates 9,7 (el partido quieto).
+   Con la nuestra: duelos 29 y regates 18, pero acierto 67 % y cadenas de 5+ 0,5. Es un intercambio entre roce y construcción.
+4. **HÍBRIDO de ataque** (`C_ATAQUE_LEAGUE=1`, APAGADO por defecto, en `MotorCombinado`): el equipo con balón se apoya con el campo de fuerzas de League
+   (triángulos de pase) y el que defiende sigue con nuestra colocación. Medido con `MOTORES=combinado_c4`, `MITAD=240`, 6 cruces por tanda (la definición de la sesión 11):
+   | por partido | C4 | híbrido | C4 (invertido) | híbrido (invertido) |
+   |---|---|---|---|---|
+   | acierto de pase | 70,7 % | 76,8 % | 74,3 % | 75,6 % |
+   | cadenas de 5+ pases · cadena máxima | 1,0 · 5,0 | **3,7 · 6,7** | 0,83 · 5,7 | **2,3 · 7,3** |
+   | regates (logrados) | 22,0 (10,5) | 26,3 (13,8) | 23,8 (10,5) | 25,3 (11,0) |
+   | duelos · robos | 44,8 · 13,0 | 42,2 · 12,2 | 47,2 · 12,7 | 45,5 · 15,2 |
+   | goles · remates | 4,67 · 45,0 | 4,50 · 34,0 | 5,67 · 45,0 | 6,17 · 40,3 |
+   | ocasiones claras | 3,7 | **1,3** | 3,2 | **1,5** |
+   | CPU (µs/paso) | 1.281 | 1.527 (+19 %) | 1.223 | 1.390 (+14 %) |
+   Lectura: más juego construido y más regates con los mismos goles y duelos; a cambio MENOS remates y ocasiones claras y +14-19 % de CPU. El líder lo pidió SIN poner por defecto.
+**Falta (siguiente tanda, sin empezar)**
+- Recuperar las ocasiones del híbrido: apoyo de League solo hasta el último tercio y nuestra colocación de ataque después (`C_TERCIO`, código escrito, SIN MEDIR, 0 por defecto = la versión medida);
+  más DESMARQUES, BALONES LARGOS (cambios de orientación y a la espalda de la defensa), balón parado y sprints sin balón (ideas del dueño en `PLAN_GENERAL.md`): pueden ser justo lo que devuelva las ocasiones.
+- Bajar la CPU del híbrido: recalcular el estado de League (balón previsto, marcajes, presión) cada 0,1 s (`C_CADENCIA_ESTADO`, código escrito, SIN MEDIR, 0 por defecto); ver si el apoyo necesita la predicción completa.
+- Disputa aérea (`Jump_*`: el motor debe levantar al jugador; hoy el cabezazo no despega a nadie); recortar las transiciones y patadas de CMU (son grabaciones de 3-15 s); ciclos de carrera de CMU como variedad de trote (hay que escalar la velocidad del clip).
+- Guía en C4: solo si se rediseña (hoy empeora duelos y regates). Foto fija con cámara real no demuestra la guía: el vídeo queda como NO verificable aquí.
