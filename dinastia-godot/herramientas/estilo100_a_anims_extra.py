@@ -7,7 +7,13 @@ los que llegan a 1,8 m/s o más. Los demás se quedan en `animaciones_catalogo_1
   python3 -I herramientas/estilo100_a_anims_extra.py"""
 import json, math, os
 raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-cat = json.load(open(os.path.join(raiz, "datos/animaciones_catalogo_100style.json"), encoding="utf-8"))
+import glob
+cat = []
+for ruta in sorted(glob.glob(os.path.join(raiz, "terceros/estilo100/catalogos/animaciones_catalogo_100style*.json"))):
+    base = os.path.basename(ruta)[len("animaciones_catalogo_"):-5]   # 100style, 100style_g2…
+    for c in json.load(open(ruta, encoding="utf-8")):
+        c["_biblioteca"] = "res://terceros/estilo100/biblioteca/%s.res" % base
+        cat.append(c)
 def clase(v):
     return 8.0 if v >= 6.2 else 5.0 if v >= 4.4 else 3.5 if v >= 1.8 else 0.0
 por = {c["nombre"]: c for c in cat}
@@ -28,12 +34,19 @@ for c in cat:
     cuerpo = max(-math.tau, min(math.tau, cuerpo))
     pie = c["pie_en_aire_al_inicio"]   # el pie que se mueve primero
     nombre = "ext_" + n[len("e100_"):]
-    clips.append({"nombre": nombre, "clip": n, "clip_espejo": n + "_espejo", "entra": k, "sale": k, "ang": 0.0, "cuerpo": cuerpo,
+    clips.append({"nombre": nombre, "biblioteca": c["_biblioteca"], "clip": n, "clip_espejo": n + "_espejo", "entra": k, "sale": k, "ang": 0.0, "cuerpo": cuerpo,
                   "cuerpo_ini": cuerpo, "largo": round(c["duracion_s"], 3), "pie": pie, "pasos": 2, "reposo": 1,
                   "v_entra": round(v, 2), "v_sale": round(v, 2), "tipo_100style": c["tipo"], "estilo": c["estilo"]})
-doc = {"biblioteca": "res://assets/characters/quaternius/anims_100style/100style.res",
-       "fuente": "100STYLE (Ian Mason, Sebastian Starke, Taku Komura), CC BY 4.0, zenodo.org/records/8127870", "clips": clips}
-salida = os.path.join(raiz, "datos/anims_extra/estilo100.json")
-os.makedirs(os.path.dirname(salida), exist_ok=True)
-json.dump(doc, open(salida, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+USO = "res://assets/characters/quaternius/anims_100style/100style_uso.res"   # solo los clips que referencia el motor (viaja en los builds)
+carpeta = os.path.join(raiz, "datos/anims_extra")
+for viejo in glob.glob(os.path.join(carpeta, "estilo100*.json")):
+    os.remove(viejo)
+usados = []
+origen = {}
+for c in clips:
+    origen[c["clip"]] = c.pop("biblioteca")
+    usados += [c["clip"], c["clip_espejo"]]
+doc = {"biblioteca": USO, "fuente": "100STYLE (Ian Mason, Sebastian Starke, Taku Komura), CC BY 4.0, zenodo.org/records/8127870", "clips": clips}
+json.dump(doc, open(os.path.join(carpeta, "estilo100.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+json.dump({"salida": USO, "clips": usados, "origen": origen}, open(os.path.join(raiz, "terceros/estilo100/uso_clips.json"), "w", encoding="utf-8"), indent=1)
 print(len(clips), "clips (con espejo", 2 * len(clips), ") omitidos", omitidos)
