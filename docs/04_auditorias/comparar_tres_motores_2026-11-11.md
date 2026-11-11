@@ -321,3 +321,11 @@ El destino de cada jugador se guarda 0,1 s (escalonado por jugador) y se recalcu
 - **La caché sigue siendo gratis en juego**: regates y duelos iguales dentro del ruido (21-26 y 43-47) y 28-29 % menos CPU en C3 (1 361 contra 1 881 µs).
 - **C4 es la mejor relación en las dos tandas**: 26 regates, 44 duelos, cadenas de 5+ de 1,7-2,0 (mejores que las de C3, que no lleva la locomoción nuestra) y el menor coste (1 070-1 077 µs/paso, −27 % frente al motor de siempre, que tiene 1 465).
 - **Lo que C1 y C4 son para el dueño**: C1 = el partido de construcción tranquila (poco cuerpo a cuerpo, cadenas largas); C4 = el de más fricción (regates y duelos como el nuestro) con cadenas de League.
+
+---
+
+# Estado final de la sesión 11 (11-11)
+
+**HECHO:** selector A-D a ciegas con voto (nuestro, League, C1, C4), C4 motor POR DEFECTO (`MotorEleccion.POR_DEFECTO`; respaldo `MOTOR_CLASICO=1`, bandera de sondas `MOTOR_LEAGUE=1`, forzar con `MOTOR_PARTIDO=`), `MotorCombinado` por piezas (`datos/motor_c_piezas.json`, `VARIANTES`), caché de colocación de 0,1 s,
+comparador `comparar_tres_motores.tscn` + `medidor_diversion.gd` + `perfil_colocacion.tscn` + `herramientas/informe_tres_motores.py`, cinco tandas medidas, captura de un partido con C4 (`capturas_c4_2026-11-11/`) y el mando táctil estilo FC Mobile (ver `PLAN_GENERAL.md`).
+**FALTA:** vídeo lado a lado con la cámara real; repetir con la locomoción de la sesión 9 en C4 y con más partidos; votos y FPS del dueño en el teléfono; doble toque del mando táctil (ver `PLAN_GENERAL.md`).
