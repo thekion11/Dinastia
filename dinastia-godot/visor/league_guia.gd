@@ -15,6 +15,8 @@ extends RefCounted
 ## el código del motor de siempre.
 
 static var activa := OS.get_environment("LS_GUIA") != "0"
+## `LS_GUIA_C4=0`: en el motor combinado con NUESTRA locomoción (C4) la guía y los clips de arranque/frenada/giro se apagan.
+static var en_c4 := OS.get_environment("LS_GUIA_C4") != "0"
 static var marchas := OS.get_environment("LS_MARCHAS") != "0"
 ## 1/s: con qué fuerza se pega la velocidad al clip (e^(−k·dt)). Jugador del usuario: más suave, para que responda.
 const K_CPU := 11.0

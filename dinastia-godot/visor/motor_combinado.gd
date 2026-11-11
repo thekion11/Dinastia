@@ -142,3 +142,8 @@ func _mover_jugadores(delta: float) -> void:
 		MotorLeague.fase3 = false   ## sin los ciclos de animación de League
 	super(delta)
 	MotorLeague.fase3 = f3
+	## (11-11, sesión 9, orden 39: mejorar C4) NUESTRA locomoción también con la GUÍA de League: velocidad y rumbo siguen al clip de
+	## arranque, frenada o giro y los clips se ven; el portador conserva su «conducir».
+	if f3 and _nuestra("locomocion") and LeagueGuia.en_c4:
+		LeagueGuia.paso(self, delta)
+		LeagueLocomocion.paso(self, delta, false)

@@ -38,9 +38,11 @@ static func precargar() -> void:
 	LeagueMovimiento.nativo()
 	LeagueAnim.ciclo_de("ls_ballcontrol__walk__000", "precarga")   ## abre las bibliotecas de League y de la UAL (el clip se descarta)
 
-static func paso(m: MotorLeague, delta: float) -> void:
+## `con_portador`: false en el motor combinado con NUESTRA locomoción (C4): el portador sigue con su «conducir» de siempre y aquí solo se
+## aplican los clips de arranque, frenada y giro a los demás.
+static func paso(m: MotorLeague, delta: float, con_portador := true) -> void:
 	var t0 := Time.get_ticks_usec()
-	_paso(m, delta)
+	_paso(m, delta, con_portador)
 	us_total += Time.get_ticks_usec() - t0
 	pasos += 1
 
@@ -61,8 +63,9 @@ static func a_la_vista(n: Node3D) -> bool:
 	var pos := n.global_position + Vector3(0, 1.0, 0)
 	return pos.distance_to(_cam.global_position) <= LEJOS and _cam.is_position_in_frustum(pos)
 
-static func _paso(m: MotorLeague, delta: float) -> void:
-	portador(m)
+static func _paso(m: MotorLeague, delta: float, con_portador := true) -> void:
+	if con_portador:
+		portador(m)
 	if not transiciones_activas:
 		return
 	_cam = m.get_viewport().get_camera_3d() if fuera_camara and m.is_inside_tree() else null
