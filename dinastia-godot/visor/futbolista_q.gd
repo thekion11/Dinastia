@@ -27,50 +27,28 @@ const MODELOS := {
 	"female": MODELO_FEMALE,
 }
 
-## MODELOS BASE EXTRA (2-11-2026, pedido del dueño: «tenemos otros modelos y no están como opciones
-## básicas»): los trajes completos de «Modular Character Outfits - Fantasy» (Quaternius, CC0), que
-## comparten el esqueleto de 65 huesos y por eso llevan todas las animaciones. Vienen vestidos: el
-## vestidor de equipación y el pelo no se les aplican. Clave → [nombre, hombre, mujer].
-const MODELOS_BASE := {
-	"campesino": ["Campesino", "res://assets/characters/outfits/Male_Peasant.gltf", "res://assets/characters/outfits/Female_Peasant.gltf"],
-	"explorador": ["Explorador", "res://assets/characters/outfits/Male_Ranger.gltf", "res://assets/characters/outfits/Female_Ranger.gltf"],
-}
-## MODELOS AJENOS (otro esqueleto, con sus propias animaciones dentro del .glb): KayKit (CC0). No pasan
-## por el vestidor ni las animaciones de Quaternius; `ajeno()` los arma con su «Idle».
-const MODELOS_AJENOS := {
-	"kk_barbaro": ["Bárbaro", "res://assets/characters/kaykit/Barbarian.glb"],
-	"kk_caballero": ["Caballero", "res://assets/characters/kaykit/Knight.glb"],
-	"kk_mago": ["Mago", "res://assets/characters/kaykit/Mage.glb"],
-	"kk_picaro": ["Pícaro", "res://assets/characters/kaykit/Rogue.glb"],
-	"kk_picaro_capucha": ["Pícaro con capucha", "res://assets/characters/kaykit/Rogue_Hooded.glb"],
-	"kk_esq_guerrero": ["Esqueleto guerrero", "res://assets/characters/kaykit/Skeleton_Warrior.glb"],
-	"kk_esq_mago": ["Esqueleto mago", "res://assets/characters/kaykit/Skeleton_Mage.glb"],
-	"kk_esq_picaro": ["Esqueleto pícaro", "res://assets/characters/kaykit/Skeleton_Rogue.glb"],
-	"kk_esq_secuaz": ["Esqueleto secuaz", "res://assets/characters/kaykit/Skeleton_Minion.glb"],
-}
-## Los «Modular Men/Women» de Quaternius (CC0): civiles sin animaciones; `IdleProcedural` les da vida.
+## MODELOS BASE ELEGIBLES (11-11, sesión 12): SOLO REALISTAS. Se quitaron los de fantasía (campesino, explorador,
+## KayKit: bárbaro, caballero, mago, pícaro, esqueletos), los VRM de anime/maniquí y los civiles modulares de
+## aventura/granja/rey/astronauta/medieval/ciencia ficción/bruja (informe `docs/04_auditorias/avatares_2026-11-11.md`).
+## Los «Modular Men/Women» de Quaternius (CC0) que quedan son civiles sin animaciones; `IdleProcedural` les da vida.
 ## Clave → [nombre, ruta, cuerpo].
-const MODULARES_H := {"Adventurer": "Aventurero", "Beach": "Playa", "Casual": "Casual", "Casual2": "Casual 2", "Farmer": "Granjero",
-	"King": "Rey", "Punk": "Punk", "Spacesuit": "Astronauta", "Suit": "Traje", "Swat": "SWAT", "Worker": "Obrero"}
-const MODULARES_M := {"Adventurer": "Aventurera", "Casual": "Casual", "Formal": "Formal", "Medieval": "Medieval", "Punk": "Punk",
-	"SciFi": "Ciencia ficción", "Soldier": "Soldado", "Suit": "Traje", "Witch": "Bruja", "Worker": "Obrera"}
+const MODULARES_H := {"Beach": "Playa", "Casual": "Casual", "Casual2": "Casual 2", "Punk": "Punk", "Suit": "Traje", "Swat": "SWAT", "Worker": "Obrero"}
+const MODULARES_M := {"Casual": "Casual", "Formal": "Formal", "Punk": "Punk", "Soldier": "Soldado", "Suit": "Traje", "Worker": "Obrera"}
 static var _modulares: Dictionary = {}
-## Todos los modelos ajenos: los KayKit y los modulares.
+## Todos los modelos ajenos elegibles: los modulares y, si está en el proyecto (no va en los builds públicos), el avatar regalo.
 static func todos_ajenos() -> Dictionary:
 	if _modulares.is_empty():
 		for k: String in MODULARES_H:
 			_modulares["mh_" + k.to_lower()] = [MODULARES_H[k], "res://assets/characters/modular/men/%s.glb" % k, "male"]
 		for k: String in MODULARES_M:
 			_modulares["mm_" + k.to_lower()] = [MODULARES_M[k], "res://assets/characters/modular/women/%s.glb" % k, "female"]
-		for k: String in MODELOS_AJENOS:
-			var f: Array = MODELOS_AJENOS[k]
-			_modulares[k] = [f[0], f[1], ""]
-		## Avatares VRM CC0 de PabloFMM (importados como glTF).
-		_modulares["vrm_starter"] = ["Avatar Starter", "res://assets/characters/vrm/Starter01.glb", ""]
-		_modulares["vrm_arla"] = ["Avatar Arla", "res://assets/characters/vrm/Arla.glb", ""]
 	return _modulares
 
 const ARMAS := ["shield", "sword", "axe", "staff", "knife", "spellbook", "wand", "crossbow", "bow", "arrow", "blade", "mug", "hammer", "dagger", "quiver", "cross"]
+
+## ¿Es una clave de modelo base que el juego todavía acepta? (las partidas viejas pueden traer una quitada: caen al atleta)
+static func modelo_valido(clave: String) -> bool:
+	return clave == "" or todos_ajenos().has(clave) or AvatarRegalo.es_clave(clave)
 
 ## ¿Está el modelo ajeno en el juego?
 static func ajeno_disponible(clave: String) -> bool:
@@ -128,17 +106,6 @@ static func ajeno(padre: Node3D, clave: String, altura: float) -> Dictionary:
 				break
 	return {"nodo": raiz, "modelo": modelo, "anim": ap, "altura": altura, "cuerpo": "male", "ajeno": true}
 
-static var _extra: Dictionary = {}
-
-## ¿Existe (y carga) ese modelo base extra para ese cuerpo?
-static func base_extra(modelo: String, cuerpo: String) -> PackedScene:
-	if not MODELOS_BASE.has(modelo):
-		return null
-	var ruta := String((MODELOS_BASE[modelo] as Array)[2 if cuerpo == "female" else 1])
-	if not _extra.has(ruta):
-		_extra[ruta] = load(ruta) if ResourceLoader.exists(ruta) else null
-	return _extra[ruta]
-
 static var _packed_male: PackedScene
 static var _packed_female: PackedScene
 
@@ -186,10 +153,8 @@ static func _altura_natural(esq: Skeleton3D) -> float:
 ## altura pedida (en metros). `cuerpo` es "male" o "female" -cualquier otro
 ## valor cae en "male"-. Devuelve {"nodo":Node3D, "esqueleto":Skeleton3D}
 ## -sin "anim" todavia, ver cabecera-.
-static func crear(altura: float = ALTURA_BASE, cuerpo: String = "male", modelo_base: String = "") -> Dictionary:
-	var packed := base_extra(modelo_base, cuerpo) if modelo_base != "" else null
-	if packed == null:
-		packed = _cargar(cuerpo)
+static func crear(altura: float = ALTURA_BASE, cuerpo: String = "male") -> Dictionary:
+	var packed := _cargar(cuerpo)
 	if packed == null:
 		push_error("FutbolistaQ: no se pudo cargar el modelo '%s'" % cuerpo)
 		return {}

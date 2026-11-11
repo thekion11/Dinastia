@@ -1,24 +1,15 @@
 extends RefCounted
-## [Capa 1/2 de `player_spawner.gd`] altura_de, _find_anim_player, _build_shared_lib, slot_to_position, poner_energia, energia … (+12)
+## [Capa 1/2 de `player_spawner.gd`] altura_de, slot_to_position, poner_energia, energia … (+12)
 
 ## Pone los 22 titulares sobre el cesped, cada uno en su sitio de la formacion,
 ## con la equipacion real de su club, su cara y su estatura.
 ##
 ## Usa el cuerpo Quaternius (CC0, `FutbolistaQ`) con la equipación pintada
-## encima (`VestidorQ.vestir_equipacion`). El muñeco low-poly de Kenney sigue
-## en el proyecto como respaldo: si el modelo no carga, se cae a él en vez de
-## dejar la cancha vacía.
+## encima (`VestidorQ.vestir_equipacion`). (11-11: el muñeco low-poly de Kenney, que
+## servía de respaldo, se quitó por no ser realista: si el modelo no carga, es un error.)
 
-const MODELO_RESPALDO := "res://assets/characters/Model/characterMedium.fbx"
-const ANIM_RESPALDO := {"idle": "res://assets/characters/Animations/idle.fbx",
-	"run": "res://assets/characters/Animations/run.fbx", "jump": "res://assets/characters/Animations/jump.fbx"}
-
-var kit_factory: KitTextureFactory = KitTextureFactory.new()
 ## La equipación completa (`DisenosKit`) del equipo que se está creando.
 var _kit_x: Dictionary = {}
-var _shared_lib: AnimationLibrary
-var _packed_respaldo: PackedScene
-var usando_respaldo := false
 
 ## La estatura la manda el juego: es `j.altura` (en cm), la misma que se lee en
 ## la ficha del jugador, sorteada por demarcacion con alturaPuesto(). NO se
@@ -70,35 +61,6 @@ static func altura_de(jug: Dictionary, jid: String, puesto: String) -> float:
 	var r: Array = ALTURA_POR_PUESTO.get(puesto, [1.72, 1.86])
 	var h: int = abs(int(("alt" + jid).hash())) % 1000
 	return float(r[0]) + (float(r[1]) - float(r[0])) * (h / 999.0)
-
-func _find_anim_player(node: Node) -> AnimationPlayer:
-	if node is AnimationPlayer:
-		return node
-	for child in node.get_children():
-		var r := _find_anim_player(child)
-		if r:
-			return r
-	return null
-
-func _build_shared_lib() -> AnimationLibrary:
-	if _shared_lib:
-		return _shared_lib
-	var lib := AnimationLibrary.new()
-	for anim_name in ANIM_RESPALDO:
-		var anim_scene = load(ANIM_RESPALDO[anim_name])
-		if anim_scene == null:
-			continue
-		var inst = anim_scene.instantiate()
-		var src_player := _find_anim_player(inst)
-		if src_player:
-			for a in src_player.get_animation_list():
-				var anim_res: Animation = src_player.get_animation(a)
-				if anim_name in ["idle", "run"]:
-					anim_res.loop_mode = Animation.LOOP_LINEAR
-				lib.add_animation(anim_name, anim_res)
-		inst.queue_free()
-	_shared_lib = lib
-	return lib
 
 ## Mapea un slot de formacion [posCode,x%,y%] a una posicion en la cancha 3D.
 ## es_local: el equipo local defiende z=+52.5, el visitante z=-52.5 (ver
@@ -270,19 +232,11 @@ static func poner_brazalete(nodo: Node, color: Color) -> void:
 			if _es_equipacion(g.get_surface_override_material(k)):
 				g.set_surface_override_material(k, _con_brazalete(g.get_surface_override_material(k), color))
 
-func _apply_material(node: Node, mat: Material) -> void:
-	if node is MeshInstance3D:
-		var mi := node as MeshInstance3D
-		for i in range(mi.get_surface_override_material_count()):
-			mi.set_surface_override_material(i, mat)
-	for child in node.get_children():
-		_apply_material(child, mat)
-
-## Un jugador, con el modelo realista si se puede y con el de respaldo si no.
+## Un jugador con el modelo realista (cuerpo Quaternius vestido con su equipación).
 func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 		c1: Color, c2: Color, estilo: String, dorsal: int, piel: Color, pelo: Color,
 		barba: int, color_liso: Color = Color(0, 0, 0, 0), jug: Dictionary = {}) -> Dictionary:
-	if not usando_respaldo and USAR_MODELO_Q:
+	if USAR_MODELO_Q:
 		var dq: Dictionary = FutbolistaQ.crear(altura_de(jug, jid, puesto), "male")
 		if not dq.is_empty():
 			root.add_child(dq["nodo"])
@@ -334,29 +288,8 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 			## Cambios de paso en fase y la respiración de cada uno a su ritmo.
 			AnimTransiciones.poner(apq, jid)
 			return {"nodo": dq["nodo"], "anim": apq, "realista": true}
-		usando_respaldo = true
-		push_warning("PlayerSpawner: no cargo el modelo Quaternius, se usa el de respaldo")
-
-	if _packed_respaldo == null:
-		_packed_respaldo = load(MODELO_RESPALDO)
-	if _packed_respaldo == null:
-		push_error("PlayerSpawner: tampoco se pudo cargar " + MODELO_RESPALDO)
-		return {}
-	var node: Node3D = _packed_respaldo.instantiate()
-	root.add_child(node)
-	var variant: int = abs(int(jid.hash())) % 4
-	var mat := kit_factory.get_material(c1, c2, estilo, dorsal, variant, img_kit, piel, pelo, barba)
-	_apply_material(node, mat)
-	var ap2 := _find_anim_player(node)
-	if ap2 == null:
-		ap2 = AnimationPlayer.new()
-		node.add_child(ap2)
-	if ap2.has_animation_library(""):
-		ap2.remove_animation_library("")
-	ap2.add_animation_library("", _build_shared_lib())
-	if ap2.has_animation("idle"):
-		ap2.play("idle")
-	return {"nodo": node, "anim": ap2, "realista": false}
+		push_error("PlayerSpawner: no cargo el modelo Quaternius (el muñeco de Kenney, no realista, se quitó el 11-11)")
+	return {}
 
 func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dictionary,
 		es_local: bool, kit: Dictionary, kit_portero: Dictionary = {}) -> Array:
