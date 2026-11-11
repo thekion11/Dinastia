@@ -103,6 +103,19 @@ LEEME. Un ciclo entra y sale a la misma velocidad (`ang` 0); `cuerpo` = −ángu
 (< 1,8 m/s) serían «parado» en la clase del motor, así que NO entran (siguen en `animaciones_catalogo_100style.json`). `v_entra`/`v_sale` llevan la
 velocidad real. Los clips de Rohr no son locomoción: no encajan en ese formato (su catálogo es `animaciones_catalogo_rohr.json`).
 
+## UAL 1 + UAL 2 de Quaternius: lo útil para el partido (bloque 4)
+
+Licencia verificada: `License.txt` de la descarga de itch.io («CC0 1.0 Universal, Public Domain Dedication») y la página de Quaternius («Free to use in
+personal, educational and commercial projects. (CC0 License)»). La versión gratuita son 43 + 43 clips (las «Pro» y «Source» son de pago).
+`herramientas/ual_a_res.gd` saca 33 clips a `assets/characters/quaternius/anims_ual/ual_extra.res` (1,2 MB, fuera de LFS) y su catálogo
+`datos/animaciones_catalogo_ual.json`: marcha (Walk, Walk_Formal, Walk_Carry, Crouch_Fwd), **trote Jog_Fwd (6,4 m/s medidos)** y **SPRINT (7,35 m/s,
+ciclo de 0,67 s)**, reposos y reacciones, **saltos** (Jump y NinjaJump: despegue, aire, aterrizaje), **caídas y golpes** (Roll, Hit_Chest, Hit_Head,
+Hit_Knockback, Death01, LayToIdle), **entrada deslizante** (Slide_Start/Loop/Exit), **celebración** (Dance_Loop), **saque de banda** (OverhandThrow),
+disputa (Punch_Jab, Push_Loop) y ClimbUp. La velocidad de los ciclos es la medida sobre el esqueleto (pie en apoyo). En `anims_extra/quaternius_ual.json` entran
+SOLO el trote y el sprint (los únicos que son locomoción rápida; sin espejo); los demás son acciones, no transiciones de marcha, y meterlos
+con entra = sale = 0 el motor podría elegirlos como «parado». Revisión visual: sprint, trote, deslizamiento, salto, voltereta, baile, lanzamiento y caída
+(`ual*_*.jpg` en la carpeta de capturas): sin brazos atravesando el cuerpo ni pies flotando. Nota: el «1,47 GB» no era la UAL (pesa 18 MB) sino el zip de 100STYLE.
+
 ## Revisión visual (pose a pose, 14 clips)
 
 `docs/04_auditorias/capturas_animaciones_2026-11-11/<clip>_cerca.jpg` (8 fases del ciclo, Forward+) y `<clip>_camara_real.jpg` (cámara de la
