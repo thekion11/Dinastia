@@ -7958,7 +7958,10 @@
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
   "Combinado (MotorCombinado)": "Combined (MotorCombinado)",
   "los civiles traen su ropa": "the civilians come with their own clothes",
-  "Avatar regalo": "Gift avatar"
+  "Avatar regalo": "Gift avatar",
+  "Combinado C1 (MotorCombinado)": "Combined C1 (MotorCombinado)",
+  "Combinado C2 (MotorCombinado)": "Combined C2 (MotorCombinado)",
+  "Combinado C3 (MotorCombinado)": "Combined C3 (MotorCombinado)"
  },
  "pt": {
   "Historia": "História",
@@ -15919,7 +15922,10 @@
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
   "Combinado (MotorCombinado)": "Combinado (MotorCombinado)",
   "los civiles traen su ropa": "os civis vêm com a sua roupa",
-  "Avatar regalo": "Avatar presente"
+  "Avatar regalo": "Avatar presente",
+  "Combinado C1 (MotorCombinado)": "Combinado C1 (MotorCombinado)",
+  "Combinado C2 (MotorCombinado)": "Combinado C2 (MotorCombinado)",
+  "Combinado C3 (MotorCombinado)": "Combinado C3 (MotorCombinado)"
  },
  "patrones": [
   [
@@ -30020,7 +30026,10 @@
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
   "Combinado (MotorCombinado)": "Combiné (MotorCombinado)",
   "los civiles traen su ropa": "les civils viennent avec leurs vêtements",
-  "Avatar regalo": "Avatar cadeau"
+  "Avatar regalo": "Avatar cadeau",
+  "Combinado C1 (MotorCombinado)": "Combiné C1 (MotorCombinado)",
+  "Combinado C2 (MotorCombinado)": "Combiné C2 (MotorCombinado)",
+  "Combinado C3 (MotorCombinado)": "Combiné C3 (MotorCombinado)"
  },
  "it": {
   "Historia": "Storia",
@@ -37981,7 +37990,10 @@
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
   "Combinado (MotorCombinado)": "Combinato (MotorCombinado)",
   "los civiles traen su ropa": "i civili hanno già i loro vestiti",
-  "Avatar regalo": "Avatar regalo"
+  "Avatar regalo": "Avatar regalo",
+  "Combinado C1 (MotorCombinado)": "Combinato C1 (MotorCombinado)",
+  "Combinado C2 (MotorCombinado)": "Combinato C2 (MotorCombinado)",
+  "Combinado C3 (MotorCombinado)": "Combinato C3 (MotorCombinado)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45942,7 +45954,10 @@
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
   "Combinado (MotorCombinado)": "Kombiniert (MotorCombinado)",
   "los civiles traen su ropa": "die Zivilisten bringen ihre Kleidung mit",
-  "Avatar regalo": "Geschenk-Avatar"
+  "Avatar regalo": "Geschenk-Avatar",
+  "Combinado C1 (MotorCombinado)": "Kombiniert C1 (MotorCombinado)",
+  "Combinado C2 (MotorCombinado)": "Kombiniert C2 (MotorCombinado)",
+  "Combinado C3 (MotorCombinado)": "Kombiniert C3 (MotorCombinado)"
  },
  "ca": {
   "Historia": "Història",
@@ -53903,7 +53918,10 @@
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
   "Combinado (MotorCombinado)": "Combinat (MotorCombinado)",
   "los civiles traen su ropa": "els civils porten la seva roba",
-  "Avatar regalo": "Avatar regal"
+  "Avatar regalo": "Avatar regal",
+  "Combinado C1 (MotorCombinado)": "Combinat C1 (MotorCombinado)",
+  "Combinado C2 (MotorCombinado)": "Combinat C2 (MotorCombinado)",
+  "Combinado C3 (MotorCombinado)": "Combinat C3 (MotorCombinado)"
  },
  "pl": {
   "Club": "Klub",
@@ -61864,7 +61882,10 @@
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
   "Combinado (MotorCombinado)": "Połączony (MotorCombinado)",
   "los civiles traen su ropa": "cywile mają własne ubrania",
-  "Avatar regalo": "Awatar-prezent"
+  "Avatar regalo": "Awatar-prezent",
+  "Combinado C1 (MotorCombinado)": "Połączony C1 (MotorCombinado)",
+  "Combinado C2 (MotorCombinado)": "Połączony C2 (MotorCombinado)",
+  "Combinado C3 (MotorCombinado)": "Połączony C3 (MotorCombinado)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -69825,6 +69846,9 @@
   "League-Soccer (MotorLeague)": "League-Soccer (MotorLeague)",
   "Combinado (MotorCombinado)": "Birleşik (MotorCombinado)",
   "los civiles traen su ropa": "siviller kendi kıyafetleriyle gelir",
-  "Avatar regalo": "Hediye avatar"
+  "Avatar regalo": "Hediye avatar",
+  "Combinado C1 (MotorCombinado)": "Birleşik C1 (MotorCombinado)",
+  "Combinado C2 (MotorCombinado)": "Birleşik C2 (MotorCombinado)",
+  "Combinado C3 (MotorCombinado)": "Birleşik C3 (MotorCombinado)"
  }
 }

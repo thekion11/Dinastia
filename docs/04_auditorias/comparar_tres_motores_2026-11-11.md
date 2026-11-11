@@ -262,3 +262,40 @@ C = League + nuestra decisión con balón: 13,7 regates y 19,6 duelos por partid
 2. **C + locomoción nuestra** (`locomocion=siempre`): más regates y duelos, mejores cadenas, la más barata de CPU; pierde la locomoción por animaciones de League (la guía de la 9 no se vería, ver nota 1).
 3. **C + colocación nuestra** (`coloca_sin_balon=siempre`): el partido de más fricción y fantasía (25 regates, 46 duelos) con cadenas de League; cuesta +43 % de CPU.
 Ahora mismo se pueden probar a ciegas sin tocar código: `MOTOR_C_PIEZAS="locomocion=siempre"` o cambiando `datos/motor_c_piezas.json`.
+
+---
+
+# Cuarta tanda (11-11): C1, C2 y C3 a ciegas y una colocación nuestra más barata
+
+## Selector: cinco letras
+`MotorEleccion` reparte ahora **A-E** entre cinco motores: el nuestro, League y las tres candidatas **C1** (League + nuestra decisión con balón, el valor por defecto de `datos/motor_c_piezas.json`),
+**C2** (C1 + locomoción nuestra) y **C3** (C1 + colocación sin balón nuestra). Ids: `siempre`, `league`, `combinado`, `combinado_c2`, `combinado_c3` (`MotorCombinado.VARIANTES`).
+Un archivo `motor_ciego.json` guardado con 3 letras se rebaraja solo (reparto de cinco). Medir una variante: `MOTORES=combinado_c3` en `comparar_tres_motores.tscn`.
+
+## Dónde se va el CPU (`pruebas/perfil_colocacion.tscn`, µs por paso a 30 Hz, tiempos inclusivos, 2 partidos de 2 × 120 s)
+| método | nuestro entero | C1 | C3 (C1 + colocación nuestra) |
+|---|---:|---:|---:|
+| total del motor | 1 349 | 1 653 | 2 378 |
+| `_ia_defensa` (7 llamadas/paso) | 514 | 74 | 560 |
+| `_ia_ataque_sin_balon` (7 llamadas/paso) | 241 | 89 | 267 |
+| `_forma` (anidada en las dos anteriores) | 268 | 38 | 303 |
+| `_estado_sin_balon` + `_interferir` (League) | — | 158 | 167 |
+| `_mover_jugadores` (cuerpo, locomoción) | 252 | 883 | 941 |
+- Nuestra colocación sin balón cuesta ~750-830 µs/paso: **se recalcula para los 20 jugadores en CADA paso** (cada llamada 35-70 µs: formación dinámica por rol, balón con retardo, pesos, marcaje). League la recalcula cada 0,1 s.
+- La **locomoción de League** (guía incluida) cuesta ~900 µs/paso frente a 250 de la nuestra: es lo que hace a C2 y a la variante siguiente más baratas.
+
+## Aligerar la colocación nuestra: caché de 0,1 s por jugador (en `MotorCombinado`, no se toca el motor de siempre)
+El destino de cada jugador se guarda 0,1 s (escalonado por jugador) y se recalcula antes si cambia de «ataca» a «defiende». 12 partidos, 6 países, mismas semillas:
+| (por partido) | C3 sin caché | **C3 con caché** | C3 + locomoción nuestra, con caché | nuestro entero (3.ª tanda) |
+|---|---:|---:|---:|---:|
+| regates (logrados) | 25,5 (10,4) | 23,7 (10,6) | 26,1 (10,8) | 20,0 (8,4) |
+| duelos | 46,4 | 46,9 | 44,3 | 40,3 |
+| robos en duelo | 12,8 | 11,8 | 15,1 | 13,3 |
+| tiros · goles | 45 · 5,9 | 44 · 5,8 | 42 · 5,2 | 45 · 5,1 |
+| cadenas de 5+ pases | 2,0 | 1,1 | 2,0 | 0,7 |
+| saques · juego seguido (s) | 56 · 9,4 | 56 · 9,3 | 50 · 10,4 | 52 · 9,7 |
+| **µs por paso** | 1 894 | **1 398 (−26 %)** | **1 077 (−43 %)** | 1 465 |
+- **Se conservan los regates y los duelos** (23,7 y 46,9, como sin caché) y el ritmo; el coste baja un 26 %: C3 pasa de +30 % a −5 % frente al nuestro entero.
+- **«C3 + locomoción nuestra» con caché** es la mejor relación: 26 regates, 44 duelos, cadenas de 5+ iguales (2,0) y **1 077 µs/paso, un 27 % MENOS que el motor de siempre**. No es una de las tres letras pedidas; se puede añadir como C4 (`VARIANTES` + `MOTORES`) si el dueño la quiere probar.
+- Las cadenas de 5+ de C3 con caché (1,1 contra 2,0) pueden ser ruido (n = 12) o un efecto de la caché sobre los apoyos: pendiente de repetir con más partidos.
+- Más margen: `C_CADENCIA_COLOCA=0,2` (cada 6 pasos) y no recalcular `_estado_sin_balon` de League cuando solo lo usa `_interferir`; sin medir todavía.
