@@ -63,7 +63,25 @@ static func clips() -> Array:
 			if LeagueAuto.activas:   ## las intermedias del original (`GenerateAutoAnims`), con los datos de las plantillas
 				for c: Dictionary in LeagueAuto.generar(_plantillas):
 					_indexar(c)
+		## Las animaciones EXTRA (`datos/anims_extra/*.json`, `LeagueCatalogo`): detrás de las del original, que ganan los empates.
+		for e: Dictionary in LeagueCatalogo.extras():
+			_indexar(_derivados(e.duplicate()))
 	return _clips
+
+## Los campos que el original calcula de cada clip (`GetOutgoingBodyAngle`, `GetOutgoingFoot`) para una entrada extra.
+static func _derivados(c: Dictionary) -> Dictionary:
+	c["pie_sale"] = c["pie"] if int(c["pasos"]) % 2 == 0 else ("D" if String(c["pie"]) == "I" else "I")
+	c["cuerpo_sale"] = wrapf(float(c["cuerpo"]) - float(c["ang"]), -PI, PI) if float(c["sale"]) >= IDLE_DRIBBLE else 0.0
+	return c
+
+## Vuelve a construir el catálogo (tras sumar animaciones en caliente o en las pruebas).
+static func reiniciar() -> void:
+	_clips = []
+	_plantillas = {}
+	_por_entrada = {}
+	_cuadrantes = {}
+	_cache_plantilla = {}
+	LeagueAnim._tareas = []
 
 static func _indexar(c: Dictionary) -> void:
 	if not c.has("pref"):
