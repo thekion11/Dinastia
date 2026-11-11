@@ -214,18 +214,25 @@ func _probar_motor_ciego() -> void:
 	o2.sort()
 	var ref: Array = MotorEleccion.MOTORES.duplicate()
 	ref.sort()
-	_comprobar(o2 == ref, "el reparto A/B/C es una permutación de los tres motores (%s)" % str(o))
+	_comprobar(o2 == ref, "el reparto A/B/C es una permutación de los cinco motores (%s)" % str(o))
 	MotorEleccion.barajar(7)
 	_comprobar(MotorEleccion.orden() == o, "con la misma semilla el reparto es el mismo")
 	MotorEleccion.elegir("B")
 	_comprobar(MotorEleccion.motor_activo() == o[1] and MotorEleccion.letra_de(String(o[1])) == "B" and MotorEleccion.a_ciegas(), "elegir B juega el motor que le tocó a B")
 	var motores_ok := true
-	for k in 3:
+	for k in MotorEleccion.LETRAS.size():
 		MotorEleccion.elegir(MotorEleccion.LETRAS[k])
 		var mo: MotorJugable = MotorFabrica.crear()
-		motores_ok = motores_ok and String(mo.get_meta("motor_id")) == String(o[k]) and (mo is MotorCombinado) == (o[k] == "combinado") and (mo is MotorLeague) == (o[k] != "siempre")
+		motores_ok = motores_ok and String(mo.get_meta("motor_id")) == String(o[k]) and (mo is MotorCombinado) == String(o[k]).begins_with("combinado") and (mo is MotorLeague) == (o[k] != "siempre")
 		mo.free()
-	_comprobar(motores_ok, "cada letra crea el motor que le toca (siempre, League o combinado)")
+	_comprobar(motores_ok, "cada letra crea el motor que le toca (siempre, League o un combinado)")
+	var c2 := MotorFabrica.crear("combinado_c2") as MotorCombinado
+	var c3 := MotorFabrica.crear("combinado_c3") as MotorCombinado
+	_comprobar(c2.piezas["locomocion"] == "siempre" and c2.piezas["decide_con_balon"] == "siempre" and c2.piezas["coloca_sin_balon"] == "league" and c3.piezas["coloca_sin_balon"] == "siempre" and c3.piezas["locomocion"] == "league", "C2 = C1 + locomoción nuestra y C3 = C1 + colocación nuestra")
+	_comprobar(c3.cadencia_coloca == 0.1 and c3._cache_col.is_empty(), "C3 recalcula la colocación cada 0,1 s por jugador (caché vacía al empezar)")
+	c2.free()
+	c3.free()
+	MotorEleccion.elegir("C")
 	MotorEleccion.revelar()
 	MotorEleccion.votar(4, "league", {"marcador": "2-1"})
 	MotorEleccion.votar(2, "league")
@@ -258,13 +265,14 @@ func _probar_motor_ciego() -> void:
 		if mo is MotorCombinado:
 			for k: String in MotorCombinado.PIEZAS:
 				(mo as MotorCombinado).piezas[k] = "siempre"
+			(mo as MotorCombinado).cadencia_coloca = 0.0   ## la caché de 0,1 s cambia el detalle: sin ella, igual que el de siempre
 		var bola := StadiumBuilder.spawn_ball(raiz, Vector3(0, 0.11, 0))
 		mo.preparar(lista, bola, "", 5)
 		for i in 600:
 			mo.paso(1.0 / 30.0)
 		res.append("%.3f,%.3f|%d|%d|%d" % [bola.position.x, bola.position.z, mo.pases[0] + mo.pases[1], mo.tiros[0] + mo.tiros[1], mo.regates_ia])
 		raiz.queue_free()
-	_comprobar(res[0] == res[1], "el combinado con todas las piezas «siempre» es el de siempre (%s | %s)" % [res[0], res[1]])
+	_comprobar(res[0] == res[1], "el combinado con todas las piezas «siempre» (sin caché de colocación) es el de siempre (%s | %s)" % [res[0], res[1]])
 	var c := MotorCombinado.new()
 	_comprobar(c.piezas == {"decide_con_balon": "siempre", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}, "el combinado arranca como League con nuestra decisión con balón (y no es igual a League)")
 	c.free()

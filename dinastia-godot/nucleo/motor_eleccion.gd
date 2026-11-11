@@ -9,9 +9,12 @@ extends RefCounted
 ## POR DEFECTO = el motor de siempre (selección vacía): el juego no cambia mientras el dueño no elija una letra.
 ##   MOTOR_PARTIDO=siempre|league|combinado fuerza el motor (pruebas y sondas; gana a la selección guardada).
 
-const MOTORES: Array[String] = ["siempre", "league", "combinado"]
-const LETRAS: Array[String] = ["A", "B", "C"]
-const NOMBRES := {"siempre": "El nuestro (MotorJugable)", "league": "League-Soccer (MotorLeague)", "combinado": "Combinado (MotorCombinado)"}
+## Cinco motores a ciegas (A-E): el nuestro, League y tres combinados (C1 = League + nuestra decisión con balón; C2 = C1 + nuestra locomoción;
+## C3 = C1 + nuestra colocación sin balón; ver `MotorCombinado.VARIANTES`).
+const MOTORES: Array[String] = ["siempre", "league", "combinado", "combinado_c2", "combinado_c3"]
+const LETRAS: Array[String] = ["A", "B", "C", "D", "E"]
+const NOMBRES := {"siempre": "El nuestro (MotorJugable)", "league": "League-Soccer (MotorLeague)", "combinado": "Combinado C1 (MotorCombinado)",
+	"combinado_c2": "Combinado C2 (MotorCombinado)", "combinado_c3": "Combinado C3 (MotorCombinado)"}
 
 static var ruta := "user://motor_ciego.json"   ## (las pruebas lo cambian para no pisar el guardado del jugador)
 static var _datos: Dictionary = {}

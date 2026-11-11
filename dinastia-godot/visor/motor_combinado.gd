@@ -38,6 +38,14 @@ static func _valida(v: String) -> String:
 func _init() -> void:
 	piezas = piezas_por_defecto()
 
+## Las candidatas a C que se prueban a ciegas (informe `comparar_tres_motores_2026-11-11.md`): piezas que se cambian por las nuestras ENCIMA de las de
+## `datos/motor_c_piezas.json`. C1 = lo del archivo (League + nuestra decisión con balón); C2 = C1 + locomoción nuestra; C3 = C1 + colocación sin balón nuestra.
+const VARIANTES := {"combinado": [], "combinado_c2": ["locomocion"], "combinado_c3": ["coloca_sin_balon"]}
+
+func aplicar_variante(id: String) -> void:
+	for k: String in VARIANTES.get(id, []):
+		piezas[k] = "siempre"
+
 func _nuestra(pieza: String) -> bool:
 	return String(piezas[pieza]) == "siempre"
 
@@ -74,12 +82,30 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 func _ia_defensa(p: Dictionary) -> Vector3:
 	return _sin_flag3(p, false)
 
+## COLOCACIÓN NUESTRA MÁS BARATA (11-11, perfil en `pruebas/perfil_colocacion.tscn`): nuestra colocación sin balón recalculaba el destino de los 20 jugadores de campo
+## en CADA paso (~750 µs/paso de los 1 350 del motor). League lo recalcula cada 0,1 s por jugador (`CADENCIA`); aquí igual: el destino de cada jugador se guarda
+## `cadencia_coloca` s (escalonado por jugador, para no concentrar el coste en un solo paso) y se recalcula antes si cambia de «ataca/defiende».
+## `C_CADENCIA_COLOCA=0` lo apaga (el cálculo de siempre en cada paso). Solo vale para el combinado: el motor de siempre no se toca.
+static var CADENCIA_COLOCA := float(OS.get_environment("C_CADENCIA_COLOCA")) if OS.get_environment("C_CADENCIA_COLOCA") != "" else 0.1
+var cadencia_coloca := CADENCIA_COLOCA
+var _cache_col: Dictionary = {}   ## id del jugador → {t: caduca, ataque, obj, correr}
+
 func _sin_flag3(p: Dictionary, ataque: bool) -> Vector3:
 	var f3 := MotorLeague.fase3
-	if _nuestra("coloca_sin_balon"):
+	var nuestra := _nuestra("coloca_sin_balon")
+	var id := String(p["id"])
+	if nuestra and cadencia_coloca > 0.0:
+		var c: Dictionary = _cache_col.get(id, {})
+		if not c.is_empty() and bool(c["ataque"]) == ataque and float(c["t"]) > t and float(c["t"]) - t <= cadencia_coloca + 0.001:
+			p["correr"] = c["correr"]
+			return c["obj"]
+	if nuestra:
 		MotorLeague.fase3 = false
 	var r := super._ia_ataque_sin_balon(p) if ataque else super._ia_defensa(p)
 	MotorLeague.fase3 = f3
+	if nuestra and cadencia_coloca > 0.0:
+		var fase := cadencia_coloca if _cache_col.has(id) else cadencia_coloca * (1.0 - float(hash(id) % 3) / 3.0)
+		_cache_col[id] = {"t": t + fase, "ataque": ataque, "obj": r, "correr": bool(p["correr"])}
 	return r
 
 ## La predicción y los marcajes de League solo hacen falta si juega alguna pieza de League que los usa.

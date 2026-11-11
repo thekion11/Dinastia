@@ -12,8 +12,9 @@ static func crear(forzar := "") -> MotorJugable:
 	match cual:
 		"league":
 			m = MotorLeague.new()
-		"combinado":
+		"combinado", "combinado_c2", "combinado_c3":
 			m = MotorCombinado.new()
+			(m as MotorCombinado).aplicar_variante(cual)
 		_:
 			m = MotorJugable.new()
 	m.set_meta("motor_id", cual)
