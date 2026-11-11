@@ -69,7 +69,7 @@ func _ia_portador(p: Dictionary) -> void:
 	if not _nuestra("decide_con_balon"):
 		super(p)
 		return
-	if _mejoras_c4 and t >= _decision_en and MejorasC4.balon_largo(self, p, _rng):
+	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
 		return
 	var guardado := equipos
 	equipos = []

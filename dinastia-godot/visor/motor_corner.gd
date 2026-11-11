@@ -7,7 +7,8 @@ static var P := float(OS.get_environment("CORNER_DESVIO")) if OS.get_environment
 
 ## ¿Este remate que sale por el fondo fue desviado (córner)? Llamar ANTES de `_cerrar_tiro("fallo")` (que borra el tiro en vuelo).
 static func desvio(m: MotorJugable) -> bool:
-	return P > 0.0 and not m._tiro_vivo.is_empty() and m._rng.randf() < P
+	var pd := float(m.get_meta("corner_desvio", P))   ## C4 lo pide por metadato (`MejorasC4`); el motor de siempre, solo con la bandera
+	return pd > 0.0 and not m._tiro_vivo.is_empty() and m._rng.randf() < pd
 
 ## CABEZAZO CON MARCA (ciclo 26): al desviar córneres el cabezazo seguía siendo casi a puerta vacía (7 goles de 32 córneres = 22 %; real ≈3 %). Con `CABEZA_FALLO=f` (0 = como antes) el remate de cabeza
 ## falla con probabilidad `f` (y `f` + 0,25 si hay un rival a < 1,8 m, tope 0,95): se va fuera por un palo o por encima del larguero. Solo sortea con la bandera encendida.

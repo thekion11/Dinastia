@@ -105,6 +105,7 @@ func _jugar(a: Club, b: Club, semilla: int, motor_id: String, mitad: float) -> D
 	r["marcador"] = "%d-%d" % [motor.goles[0], motor.goles[1]]
 	r["goles"] = int(motor.goles[0]) + int(motor.goles[1])
 	r["tiros"] = int(motor.tiros[0]) + int(motor.tiros[1])
+	r["diag"] = motor.diag.duplicate()   ## (11-11) contadores del motor (cabezazos, centros, córners…) para afinar el balón parado
 	r["pases"] = int(motor.pases[0]) + int(motor.pases[1])
 	r["pases_ok"] = int(motor.pases_ok[0]) + int(motor.pases_ok[1])
 	r["pasos"] = pasos

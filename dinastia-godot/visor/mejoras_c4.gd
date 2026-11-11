@@ -7,11 +7,18 @@ extends RefCounted
 ##   C4_DESMARQUES=0/1  dos carreras al espacio a la vez (también mediapuntas y extremos) y menos descanso entre carreras
 ##   C4_SPRINTS=0/1     el que está lejos de su sitio (atacando o replegando) corre de verdad
 ##   C4_LARGOS=0/1      balón largo al que hace la carrera, también desde lejos (antes el pase al hueco solo salía a < 48 m del arco)
+##   C4_BALON_PARADO=0/1 centros desde la banda con gente en el área (antes ≈0,3 por partido: casi nunca se llegaba a esa decisión)
+##                      y córneres por desvío (los remates bloqueados que salen por el fondo son córner: 4,5 → ~9 por partido)
 ## Los valores por defecto son los que ganaron en la medición (ver `docs/04_auditorias/MOTOR_LEAGUE_SOCCER_PLAN.md`, «Mejoras de C4»).
 
 static var DESMARQUES := _bandera("C4_DESMARQUES", true)
 static var SPRINTS := _bandera("C4_SPRINTS", true)
 static var LARGOS := _bandera("C4_LARGOS", true)
+static var BALON_PARADO := _bandera("C4_BALON_PARADO", true)
+static var CENTROS := _bandera("C4_CENTROS", true)   ## solo la parte de los centros (para medirla aparte de los córneres)
+const CORNER_DESVIO := 0.2          ## probabilidad de que un remate fallado que sale por el fondo sea córner (MotorCorner)
+const CENTRO_BANDA := 13.0          ## a más de esto del eje...
+const CENTRO_FONDO := 30.0          ## ...y a menos de esto de la línea de fondo, se puede centrar
 
 const SPRINT_LEJOS := 9.0          ## a más de esto de su sitio, corre
 const CARRERAS_A_LA_VEZ := 2
@@ -26,6 +33,8 @@ static func _bandera(nombre: String, defecto: bool) -> bool:
 
 ## Pone en el motor lo que lee `MotorCarreras` (por metadatos: el motor de siempre no los tiene).
 static func preparar(m: Object) -> void:
+	if BALON_PARADO:
+		m.set_meta("corner_desvio", CORNER_DESVIO)
 	if DESMARQUES:
 		m.set_meta("carreras_n", CARRERAS_A_LA_VEZ)
 		m.set_meta("carreras_descanso", DESCANSO_CARRERA)
@@ -77,3 +86,29 @@ static func balon_largo(m: Object, p: Dictionary, rng: RandomNumberGenerator) ->
 			m._pasar_a(p, q, true, true)
 			return true
 	return false
+
+## Centro desde la banda (de jugadores de banda o delanteros abiertos) cuando hay al menos 2 compañeros en el área: al punto de penal o
+## al segundo palo, alto, con el error del pase. El remate de cabeza lo resuelve el motor como siempre. Devuelve true si centró.
+static func centro(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
+	if not (BALON_PARADO and CENTROS):
+		return false
+	var yo: Vector3 = m.pos(p)
+	var arco: Vector3 = m._arco_rival(p)
+	if absf(yo.x) < CENTRO_BANDA or absf(arco.z - yo.z) > CENTRO_FONDO:
+		return false
+	var en_area := 0
+	for q: Dictionary in m.jugadores:
+		if q != p and bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and m.pos(q).distance_to(arco) < 17.0:
+			en_area += 1
+	if en_area < 2 or rng.randf() > 0.55:
+		return false
+	var d: float = m.dir_ataque(bool(p["es_local"]))
+	var err := (1.0 - float(p["attr"]["pas"])) * 6.0
+	var lejos := rng.randf() < 0.45   ## al segundo palo
+	var x := (-signf(yo.x) * rng.randf_range(2.0, 5.0)) if lejos else rng.randf_range(-3.0, 3.0)
+	var destino := Vector3(x + rng.randf_range(-err, err), 1.7, arco.z - d * rng.randf_range(5.0, 11.0))
+	m._ctx_golpeo = "centro"
+	MotorTraza.centro(m as MotorJugable, p)
+	m._patear(p, destino, 17.0, 0.0, -signf(yo.x) * 6.0 * -d, "pase")
+	m.pase_a = m._companero_cerca(p, destino)
+	return true
