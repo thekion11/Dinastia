@@ -77,7 +77,27 @@ func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	equipos = guardado
 	return r
 
+## HÍBRIDO (11-11, sesión 9, orden 39): las ablaciones de C4 mostraron que NUESTRA colocación sin balón es lo que baja el acierto de pase (84 → 67 %) y
+## las cadenas de 5+ (2,3 → 0,5), pero también lo que da el roce (duelos 7,7 → 29, regates 9,7 → 18). Con `C_ATAQUE_LEAGUE=1` el equipo que tiene el balón se
+## apoya con el campo de fuerzas de League (triángulos de pase) y el que defiende sigue con la colocación nuestra (marcaje, presión, duelos).
+static var ATAQUE_LEAGUE := OS.get_environment("C_ATAQUE_LEAGUE") == "1"
+
+## El apoyo de League se usa hasta el ÚLTIMO TERCIO (fracción del campo, `C_TERCIO`; SIN MEDIR: 0 por defecto = la versión medida): allí vuelve nuestra colocación de ataque (desmarques al área, más
+## remates y ocasiones claras). `C_TERCIO=0` = apoyo de League en todo el campo (la primera versión del híbrido).
+static var TERCIO := float(OS.get_environment("C_TERCIO")) if OS.get_environment("C_TERCIO") != "" else 0.0
+## El estado de League (balón previsto, marcajes, presión) se recalcula cada `CADENCIA_ESTADO` s en el híbrido (SIN MEDIR: 0 por defecto = cada paso, la versión medida; 0,1 es lo que hace League).
+static var CADENCIA_ESTADO := float(OS.get_environment("C_CADENCIA_ESTADO")) if OS.get_environment("C_CADENCIA_ESTADO") != "" else 0.0
+var _t_estado_liga := 0.0
+
+func _en_ultimo_tercio(p: Dictionary) -> bool:
+	var c: Dictionary = poseedor
+	if TERCIO <= 0.0 or c.is_empty() or bool(c["es_local"]) != bool(p["es_local"]):
+		return false
+	return dir_ataque(bool(p["es_local"])) * pos(c).z > LARGO * (1.0 - 2.0 * TERCIO)
+
 func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
+	if ATAQUE_LEAGUE and _nuestra("coloca_sin_balon") and not _en_ultimo_tercio(p):
+		return super._ia_ataque_sin_balon(p)
 	return _sin_flag3(p, true)
 
 func _ia_defensa(p: Dictionary) -> Vector3:
@@ -112,12 +132,17 @@ func _sin_flag3(p: Dictionary, ataque: bool) -> Vector3:
 ## La predicción y los marcajes de League solo hacen falta si juega alguna pieza de League que los usa.
 func _estado_sin_balon(delta: float) -> void:
 	if _nuestra("coloca_sin_balon") and _nuestra("locomocion"):
-		return
+		if not ATAQUE_LEAGUE:
+			return
+		if CADENCIA_ESTADO > 0.0:
+			if t < _t_estado_liga:
+				return
+			_t_estado_liga = t + CADENCIA_ESTADO
 	super(delta)
 
 func _estado_league(delta: float) -> void:
 	var f3 := MotorLeague.fase3
-	if _nuestra("locomocion") and _nuestra("coloca_sin_balon"):
+	if _nuestra("locomocion") and _nuestra("coloca_sin_balon") and not ATAQUE_LEAGUE:
 		MotorLeague.fase3 = false   ## sin robos por alcance ni estrategias
 	super(delta)
 	MotorLeague.fase3 = f3
