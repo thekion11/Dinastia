@@ -23,6 +23,21 @@ const CONDUCIR := ["conducir", "correr", "trotar", "conducir_ls", "conducir_ls_r
 const CICLO_CUERPO := "ls_ciclo__"
 const RECOLOCAR := 12.0   ## 1/s: la compensación que sobra al acabar un clip se apaga en ~0,25 s
 
+## PRECARGA (11-11, aviso de la sesión 11): el primer paso de un partido gastaba 90-185 ms en cargar las bibliotecas de animación
+## (League y las de UAL) y el catálogo. `MotorLeague.preparar` lo hace ANTES del saque (en la salida de los equipos / la precarga
+## del estadio), así no hay tirón en el primer toque. Idempotente: las siguientes llamadas no cuestan nada.
+static var _precargado := false
+
+static func precargar() -> void:
+	if _precargado:
+		return
+	_precargado = true
+	LeagueMovimiento.clips()
+	LeagueToques.catalogo()
+	LeagueAnim.tareas_movimiento()
+	LeagueMovimiento.nativo()
+	LeagueAnim.ciclo_de("ls_ballcontrol__walk__000", "precarga")   ## abre las bibliotecas de League y de la UAL (el clip se descarta)
+
 static func paso(m: MotorLeague, delta: float) -> void:
 	var t0 := Time.get_ticks_usec()
 	_paso(m, delta)
@@ -210,6 +225,8 @@ static func _quizas_empezar(m: MotorLeague, p: Dictionary) -> void:
 	var c := LeagueMovimiento.elegir(sp, rel, sp_des, cuerpo, mirar, pie_que_toca(p, ap))
 	if not c.is_empty() and c.has("auto") and not ap.has_animation(String(c["nombre"])) and not LeagueMovimiento.estable(c):
 		_construir_auto(c, ap, m.t)
+	elif not c.is_empty() and c.has("ext") and not ap.has_animation(String(c["nombre"])) and not LeagueMovimiento.estable(c):
+		_cargar_extra(c, ap, m.t)
 	if c.is_empty() or LeagueMovimiento.estable(c) or not ap.has_animation(String(c["nombre"])):
 		p["ls_espera"] = m.t + ESPERA   ## sin clip que aporte: no se vuelve a buscar en cada fotograma
 		return
@@ -248,6 +265,15 @@ static func pie_que_toca(p: Dictionary, ap: AnimationPlayer) -> String:
 	if actual.begins_with(CICLO_CUERPO) or actual == "correr":
 		return "D" if fase < 0.5 else "I"
 	return ""
+
+## Una animación EXTRA (`LeagueCatalogo`) se carga la primera vez que se elige (como mucho una por paso del motor).
+static func _cargar_extra(c: Dictionary, ap: AnimationPlayer, t: float) -> void:
+	if t == _auto_t or not ap.has_animation("correr") or ap.get_animation("correr").get_track_count() == 0:
+		return
+	_auto_t = t
+	var a := LeagueCatalogo.clip(String(c["nombre"]), String(ap.get_animation("correr").track_get_path(0)).get_slice(":", 0))
+	if a != null:
+		ap.get_animation_library("").add_animation(String(c["nombre"]), a)
 
 static var _auto_t := -1.0
 

@@ -97,6 +97,7 @@ static func celebracion(ap: AnimationPlayer, rasgo: String, id_jugador: String, 
 const UAL2 := {
 	"brazos_cruzados": "Idle_FoldArms_Loop", "telefono": "Idle_TalkingPhone_Loop", "negar": "Idle_No_Loop", "asentir": "Yes",
 	"cargar_caja": "Walk_Carry_Loop", "beber": "Consume", "apoyado_baranda": "Idle_Rail_Loop", "baranda_llama": "Idle_Rail_Call",
+	"golpe_pecho": "Hit_Chest", "golpe_cabeza": "Hit_Head",   ## (11-11) falta leve: el contacto sin caída (tabla de `anim_acciones_por_momento.md`)
 	"barrida_inicio": "Slide_Start", "barrida_desliza": "Slide_Loop", "barrida_fin": "Slide_Exit", "saque_mano": "OverhandThrow",
 	"choque": "Hit_Knockback", "levantarse_suelo": "LayToIdle", "trepar": "ClimbUp_1m", "abrir_caja": "Chest_Open", "regar": "Farm_Watering",
 }

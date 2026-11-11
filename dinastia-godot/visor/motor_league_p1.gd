@@ -25,6 +25,7 @@ static func lado_de(local: bool) -> float:
 
 func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: int = 1) -> void:
 	super(lista, ball, jugador_usuario_id, semilla)
+	LeagueLocomocion.precargar()   ## (11-11) las bibliotecas y el catálogo, antes del saque: sin tirón en el primer toque
 	equipos = [LeagueEquipo.new(lado_de(true)), LeagueEquipo.new(lado_de(false))]
 	_formas()
 
