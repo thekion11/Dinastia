@@ -203,7 +203,11 @@ static func _rejilla(lista: VBoxContainer, columnas: int, paleta: Dictionary) ->
 	g.add_theme_constant_override("h_separation", 10)
 	g.add_theme_constant_override("v_separation", 3)
 	CebraRejilla.poner(g)
-	lista.add_child(g)
+	## (12-11) 14 px a la derecha: la barra de desplazamiento pisaba la columna de puntos.
+	var margen := MarginContainer.new()
+	margen.add_theme_constant_override("margin_right", 14)
+	margen.add_child(g)
+	lista.add_child(margen)
 	return g
 
 static func _celda(g: GridContainer, texto: String, color: Color, derecha: bool,
