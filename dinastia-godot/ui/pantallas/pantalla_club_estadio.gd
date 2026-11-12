@@ -216,9 +216,18 @@ func _estadio_hinchada(c: Club, con_raya := true) -> void:
 	if p.mundo.prensa != null:
 		var animo := p.mundo.prensa.animo
 		var col_animo := p.COL_VERDE if animo >= 70 else (p.COL_ROJO if animo <= 35 else p.COL_ORO)
-		p._dato("Ánimo de la hinchada", "%d / 100" % animo, col_animo, p._lista_estadio)
 		var funa := p.mundo.prensa.funa
-		if funa > 0:
+		if not con_raya:   ## (12-11) en su propia pantalla, las tres cifras de la grada van arriba en fichas grandes
+			var fichas: Array = [[Idiomas.t("Ánimo de la hinchada"), "%d / 100" % animo, p._color_accesible(col_animo)],
+				[Idiomas.t("Socios"), p._miles(c.socios), p._color_de_paleta(p.COL_TEXTO)],
+				[Idiomas.t("Presión en redes (funa)"), "%d / 100" % funa, p._color_accesible(p.COL_ROJO if funa > 55 else p.COL_VERDE)]]
+			if p.mundo.hinchada != null:   ## cuatro fichas: de pie quedan dos y dos
+				var fp := p.mundo.hinchada.fair_play(funa, animo)
+				fichas.append([Idiomas.t("Fair play de la hinchada"), "%d / 100" % fp, p._color_accesible(p.COL_VERDE if fp >= 70 else (p.COL_ROJO if fp < 35 else p.COL_ORO))])
+			p._lista_estadio.add_child(CifrasClave.banda(fichas, p._color_de_paleta(p.COL_SUAVE)))
+		else:
+			p._dato("Ánimo de la hinchada", "%d / 100" % animo, col_animo, p._lista_estadio)
+		if funa > 0 and con_raya:
 			p._dato("Presión en redes (funa)", "%d / 100" % funa,
 				p.COL_ROJO if funa > 55 else p.COL_SUAVE, p._lista_estadio)
 		var lectura := p._texto(11, p.COL_SUAVE)
@@ -230,5 +239,6 @@ func _estadio_hinchada(c: Club, con_raya := true) -> void:
 			lectura.text = Idiomas.t("La gente responde a los resultados. Ganar en casa y no subir la entrada es lo que más lo mueve.")
 		lectura.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_estadio.add_child(lectura)
-	p._dato("Socios", p._miles(c.socios), p.COL_TEXTO, p._lista_estadio)
+	if con_raya or p.mundo.prensa == null:
+		p._dato("Socios", p._miles(c.socios), p.COL_TEXTO, p._lista_estadio)
 	p._ui_club_vida._pintar_hinchada(c)
