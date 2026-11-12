@@ -177,7 +177,7 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 			return pared
 		var sigue := MejorasC4.seguir_tiro(self, p)
 		if sigue != Vector3.INF:
-			p["correr"] = true
+			p["correr"] = MejorasC4.SEGUIR_SPRINT or pos(p).distance_to(sigue) > 6.0   ## v2: sin esprintar si ya está cerca
 			return sigue
 		MejorasC4.sprint(self, p, r)
 	return r

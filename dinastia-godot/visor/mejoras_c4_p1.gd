@@ -85,6 +85,7 @@ const CONTENER_D := 32.0
 static var SEGUIR := _bandera("C4_SEGUIR", false)   ## APAGADO el 12-11 mientras se arregla: en `prueba_partido_motor` (CHI, 4711) disparaba las tarjetas (5 rojas, partido suspendido)
 const SEGUIR_N := 2
 const SEGUIR_T := 2.0
+static var SEGUIR_Z := _num("C4_SEGUIR_Z", 7.0)   ## distancia de la zona del rechace a la línea de gol
 
 ## NO ENTRAR POR DETRÁS (12-11-2026, sesión 13). Con los sprints sin balón de C4, el defensor que repliega llega lanzado por la espalda
 ## y entra de pie: en C4 las tarjetas eran casi todas «de pie + por detrás + a gran velocidad» (5-7 por partido frente a 3,5 del motor
@@ -388,7 +389,7 @@ static func seguir_tiro(m: Object, p: Dictionary) -> Vector3:
 		return Vector3.INF
 	var arco: Vector3 = m._arco_rival(tirador)
 	var d: float = m.dir_ataque(bool(p["es_local"]))
-	var zona := Vector3(clampf(m.pos(tirador).x * 0.3, -4.0, 4.0), 0.0, arco.z - d * 7.0)
+	var zona := Vector3(clampf(m.pos(tirador).x * 0.3, -4.0, 4.0), 0.0, arco.z - d * SEGUIR_Z)   ## v2: más atrás, sin meterse en la disputa
 	var clave := "%s@%.2f" % [String(tirador["id"]), float(tv["t"])]
 	if String(m.get_meta("_c4_sigue_clave", "")) != clave:
 		var cand: Array = []

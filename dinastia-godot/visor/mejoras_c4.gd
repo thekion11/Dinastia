@@ -29,3 +29,5 @@ static func contener_colocacion(m: Object, p: Dictionary) -> Vector3:
 	hacia = (hacia + Vector3(-signf(pc.x) * 0.35, 0.0, 0.0)).normalized()   ## del lado de dentro: lo empuja a la banda
 	p["correr"] = mi_d > CONT2_DIST + 2.0
 	return Vector3(pc.x, 0.0, pc.z) + hacia * CONT2_DIST
+
+static var SEGUIR_SPRINT := OS.get_environment("C4_SEGUIR_SPRINT") != "0"   ## seguir el tiro esprintando siempre (v1); `=0`: solo si está lejos

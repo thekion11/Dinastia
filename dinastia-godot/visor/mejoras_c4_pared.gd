@@ -38,7 +38,7 @@ static func ida(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
 			continue
 		var qp: Vector3 = m.pos(q)
 		var dq := yo.distance_to(qp)
-		if dq < IDA_MIN or dq > IDA_MAX or _rival_cerca(m, qp, local, 2.5) or m._linea_tapada(yo, qp, local):
+		if dq < IDA_MIN or dq > IDA_MAX or (qp.z - yo.z) * d < -1.5 or _rival_cerca(m, qp, local, 2.5) or m._linea_tapada(yo, qp, local):   ## v2: no hacia atrás
 			continue
 		if dq < mejor_d:
 			mejor = q
@@ -73,7 +73,7 @@ static func vuelta(m: Object, p: Dictionary) -> bool:
 	for q: Dictionary in m.jugadores:
 		if String(q["id"]) == String(e["a"]):
 			a = q
-	if a.is_empty() or m._adelantado(a, p):
+	if a.is_empty() or m._adelantado(a, p) or m._linea_tapada(m.pos(p), e["hueco"], bool(p["es_local"])):   ## v2: sin línea limpia al hueco, no hay vuelta
 		m.remove_meta("_c4_pared")
 		return false
 	m._pasar_a(p, a, false, true)
