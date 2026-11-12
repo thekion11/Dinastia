@@ -17,7 +17,10 @@ const MENUS := [
 		{"tab": "Táctica", "secc": "ordenes", "label": "Órdenes de juego", "icono": "🎯", "desc": "Mentalidad, presión, ritmo, línea, roles y lo que se lleva en esta era."},
 		{"tab": "Táctica", "secc": "balon", "label": "Balón parado y normas", "icono": "⚖️", "desc": "Quién patea cada cosa y el reglamento interno del plantel."},
 		{"tab": "Táctica", "secc": "once", "label": "El once", "icono": "👥", "desc": "Quién sale el domingo, uno por uno o que lo arme el ayudante."},
-		{"tab": "Entrenar", "label": "Entrenamiento", "icono": "🏋️", "desc": "Sesiones, cargas y habilidades."},
+		## (12-11) Entrenamiento: tres pantallas.
+		{"tab": "Entrenar", "secc": "semana", "label": "Entrenamiento", "icono": "🏋️", "desc": "El plan de la semana, día por día, la rotación y el videoanálisis."},
+		{"tab": "Entrenar", "secc": "pretemporada", "label": "Pretemporada y horarios", "icono": "📅", "desc": "La pretemporada, los amistosos, el clima y a qué hora se juega en casa."},
+		{"tab": "Entrenar", "secc": "desarrollo", "label": "Desarrollo individual", "icono": "📈", "desc": "Mentorías, trabajo por jugador y habilidades nuevas."},
 		{"tab": "Enfermería", "label": "Enfermería", "icono": "🩺", "desc": "Lesionados, plazos y riesgo."},
 		{"tab": "Cantera", "label": "Cantera", "icono": "🌱", "desc": "Academia, camada del año y los que suben."},
 		{"tab": "Contratos", "label": "Contratos", "icono": "📝", "desc": "Renovaciones, cláusulas y salidas."}]},

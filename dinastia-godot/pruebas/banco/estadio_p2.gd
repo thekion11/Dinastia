@@ -154,7 +154,7 @@ func _probar_rotulos_cercanos() -> void:
 ## (7-11) `Optimizar.a_buffer` da el mismo `buffer` que `inv * t` instancia a instancia: se reconstruye la transformación desde las filas de 12 floats.
 func _probar_a_buffer() -> void:
 	_titulo("AGRUPAR: BUFFER DE TRANSFORMACIONES")
-	var ts: Array = [Transform3D(Basis(Vector3(0.3, 1.1, -0.4), 0.9).scaled(Vector3(1.5, 0.8, 2.0)), Vector3(10.0, -2.0, 33.5)), Transform3D(Basis.IDENTITY, Vector3(-4.0, 0.5, 7.0))]
+	var ts: Array = [Transform3D(Basis(Vector3(0.3, 1.1, -0.4).normalized(), 0.9).scaled(Vector3(1.5, 0.8, 2.0)), Vector3(10.0, -2.0, 33.5)), Transform3D(Basis.IDENTITY, Vector3(-4.0, 0.5, 7.0))]
 	var inv := Transform3D(Basis(Vector3.UP, 0.5), Vector3(100.0, 3.0, -50.0)).affine_inverse()
 	var b := Optimizar.a_buffer(ts, inv)
 	var bien := b.size() == 24

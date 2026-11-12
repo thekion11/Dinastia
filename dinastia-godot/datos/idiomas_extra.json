@@ -8004,7 +8004,14 @@
   "Quién sale en este partido.": "Who starts this match.",
   "%d de 11": "%d of 11",
   "automático": "automatic",
-  "Mentalidad": "Mentality"
+  "Mentalidad": "Mentality",
+  "Pretemporada y horarios": "Pre-season and kick-off times",
+  "Desarrollo individual": "Individual development",
+  "El plan de la semana, día por día, la rotación y el videoanálisis.": "The weekly plan, day by day, rotation and video analysis.",
+  "La pretemporada, los amistosos, el clima y a qué hora se juega en casa.": "Pre-season, friendlies, the weather and your home kick-off time.",
+  "Mentorías, trabajo por jugador y habilidades nuevas.": "Mentoring, individual work and new skills.",
+  "Progreso": "Progress",
+  "Riesgo de lesión": "Injury risk"
  },
  "pt": {
   "Historia": "História",
@@ -16011,7 +16018,14 @@
   "Quién sale en este partido.": "Quem joga neste jogo.",
   "%d de 11": "%d de 11",
   "automático": "automático",
-  "Mentalidad": "Mentalidade"
+  "Mentalidad": "Mentalidade",
+  "Pretemporada y horarios": "Pré-época e horários",
+  "Desarrollo individual": "Desenvolvimento individual",
+  "El plan de la semana, día por día, la rotación y el videoanálisis.": "O plano da semana, dia a dia, a rotação e a videoanálise.",
+  "La pretemporada, los amistosos, el clima y a qué hora se juega en casa.": "A pré-época, os amigáveis, o clima e a que horas se joga em casa.",
+  "Mentorías, trabajo por jugador y habilidades nuevas.": "Mentorias, trabalho por jogador e novas habilidades.",
+  "Progreso": "Progresso",
+  "Riesgo de lesión": "Risco de lesão"
  },
  "patrones": [
   [
@@ -30158,7 +30172,14 @@
   "Quién sale en este partido.": "Qui débute ce match.",
   "%d de 11": "%d sur 11",
   "automático": "automatique",
-  "Mentalidad": "Mentalité"
+  "Mentalidad": "Mentalité",
+  "Pretemporada y horarios": "Pré-saison et horaires",
+  "Desarrollo individual": "Développement individuel",
+  "El plan de la semana, día por día, la rotación y el videoanálisis.": "Le plan de la semaine, jour par jour, la rotation et l'analyse vidéo.",
+  "La pretemporada, los amistosos, el clima y a qué hora se juega en casa.": "La pré-saison, les amicaux, la météo et l'heure des matchs à domicile.",
+  "Mentorías, trabajo por jugador y habilidades nuevas.": "Mentorat, travail individuel et nouvelles compétences.",
+  "Progreso": "Progression",
+  "Riesgo de lesión": "Risque de blessure"
  },
  "it": {
   "Historia": "Storia",
@@ -38165,7 +38186,14 @@
   "Quién sale en este partido.": "Chi gioca questa partita.",
   "%d de 11": "%d di 11",
   "automático": "automatico",
-  "Mentalidad": "Mentalità"
+  "Mentalidad": "Mentalità",
+  "Pretemporada y horarios": "Precampionato e orari",
+  "Desarrollo individual": "Sviluppo individuale",
+  "El plan de la semana, día por día, la rotación y el videoanálisis.": "Il piano della settimana, giorno per giorno, la rotazione e la videoanalisi.",
+  "La pretemporada, los amistosos, el clima y a qué hora se juega en casa.": "Il precampionato, le amichevoli, il meteo e a che ora si gioca in casa.",
+  "Mentorías, trabajo por jugador y habilidades nuevas.": "Mentoring, lavoro individuale e nuove abilità.",
+  "Progreso": "Progresso",
+  "Riesgo de lesión": "Rischio infortuni"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46172,7 +46200,14 @@
   "Quién sale en este partido.": "Wer in diesem Spiel beginnt.",
   "%d de 11": "%d von 11",
   "automático": "automatisch",
-  "Mentalidad": "Mentalität"
+  "Mentalidad": "Mentalität",
+  "Pretemporada y horarios": "Vorbereitung und Anstoßzeiten",
+  "Desarrollo individual": "Individuelle Entwicklung",
+  "El plan de la semana, día por día, la rotación y el videoanálisis.": "Der Wochenplan, Tag für Tag, die Rotation und die Videoanalyse.",
+  "La pretemporada, los amistosos, el clima y a qué hora se juega en casa.": "Vorbereitung, Testspiele, Wetter und die Anstoßzeit zu Hause.",
+  "Mentorías, trabajo por jugador y habilidades nuevas.": "Mentoring, Einzelarbeit und neue Fähigkeiten.",
+  "Progreso": "Fortschritt",
+  "Riesgo de lesión": "Verletzungsrisiko"
  },
  "ca": {
   "Historia": "Història",
@@ -54179,7 +54214,14 @@
   "Quién sale en este partido.": "Qui surt en aquest partit.",
   "%d de 11": "%d d'11",
   "automático": "automàtic",
-  "Mentalidad": "Mentalitat"
+  "Mentalidad": "Mentalitat",
+  "Pretemporada y horarios": "Pretemporada i horaris",
+  "Desarrollo individual": "Desenvolupament individual",
+  "El plan de la semana, día por día, la rotación y el videoanálisis.": "El pla de la setmana, dia a dia, la rotació i la videoanàlisi.",
+  "La pretemporada, los amistosos, el clima y a qué hora se juega en casa.": "La pretemporada, els amistosos, el clima i a quina hora es juga a casa.",
+  "Mentorías, trabajo por jugador y habilidades nuevas.": "Mentories, treball per jugador i habilitats noves.",
+  "Progreso": "Progrés",
+  "Riesgo de lesión": "Risc de lesió"
  },
  "pl": {
   "Club": "Klub",
@@ -62186,7 +62228,14 @@
   "Quién sale en este partido.": "Kto zaczyna ten mecz.",
   "%d de 11": "%d z 11",
   "automático": "automatycznie",
-  "Mentalidad": "Nastawienie"
+  "Mentalidad": "Nastawienie",
+  "Pretemporada y horarios": "Okres przygotowawczy i godziny",
+  "Desarrollo individual": "Rozwój indywidualny",
+  "El plan de la semana, día por día, la rotación y el videoanálisis.": "Plan tygodnia, dzień po dniu, rotacja i analiza wideo.",
+  "La pretemporada, los amistosos, el clima y a qué hora se juega en casa.": "Okres przygotowawczy, sparingi, pogoda i godzina meczów u siebie.",
+  "Mentorías, trabajo por jugador y habilidades nuevas.": "Mentoring, praca indywidualna i nowe umiejętności.",
+  "Progreso": "Postęp",
+  "Riesgo de lesión": "Ryzyko kontuzji"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70193,6 +70242,13 @@
   "Quién sale en este partido.": "Bu maçta kim başlıyor.",
   "%d de 11": "11'den %d",
   "automático": "otomatik",
-  "Mentalidad": "Zihniyet"
+  "Mentalidad": "Zihniyet",
+  "Pretemporada y horarios": "Sezon öncesi ve saatler",
+  "Desarrollo individual": "Bireysel gelişim",
+  "El plan de la semana, día por día, la rotación y el videoanálisis.": "Haftalık plan, gün gün, rotasyon ve video analizi.",
+  "La pretemporada, los amistosos, el clima y a qué hora se juega en casa.": "Sezon öncesi, hazırlık maçları, hava ve iç saha maç saati.",
+  "Mentorías, trabajo por jugador y habilidades nuevas.": "Mentorluk, bireysel çalışma ve yeni yetenekler.",
+  "Progreso": "Gelişim",
+  "Riesgo de lesión": "Sakatlık riski"
  }
 }

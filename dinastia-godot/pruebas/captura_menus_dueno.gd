@@ -73,7 +73,8 @@ func _ready() -> void:
 		_p._menu_lateral.abrir_menu(solo, -1)
 		await _foto("%s_portada" % solo)
 		for i in (ms["subs"] as Array).size():
-			if (ms["subs"][i] as Dictionary).has("tab"):
+			## SOLO_TAB=Entrenar: de ese menú, solo los submenús de esa pestaña.
+			if (ms["subs"][i] as Dictionary).has("tab") and OS.get_environment("SOLO_TAB") in ["", String(ms["subs"][i]["tab"])]:
 				_p._menu_lateral.abrir_menu(solo, i)
 				await _foto("%s_%s" % [solo, String(ms["subs"][i].get("secc", ms["subs"][i].get("tab", "")))])
 		CapasTutorial.poner_activas(ayudas_antes)

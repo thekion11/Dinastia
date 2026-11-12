@@ -183,3 +183,10 @@ func _probar_finanzas_por_pantallas() -> void:
 		if String(s.get("tab", "")) == "Táctica" and not TacticaSecciones.SECCIONES.has(String(s.get("secc", ""))):
 			en_partido = false
 	_comprobar(en_partido, "y los accesos a Táctica desde el menú Partido apuntan a una sección que existe")
+	## «Entrenamiento» en tres pantallas (misma pantalla, `SECC_ENTRENAR`).
+	var de_entrenar: Array = []
+	for s: Dictionary in MenusLaterales.menu_por_id("plantel")["subs"]:
+		if String(s.get("tab", "")) == "Entrenar":
+			de_entrenar.append(String(s.get("secc", "")))
+	var capa: GDScript = load("res://ui/pantallas/pantalla_club_vida_p3.gd")
+	_comprobar(de_entrenar == capa.get_script_constant_map().get("SECC_ENTRENAR", []), "los 3 submenús de Entrenamiento son sus 3 secciones (%s)" % [de_entrenar])

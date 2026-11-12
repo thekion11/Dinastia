@@ -1,17 +1,43 @@
 extends "res://ui/pantallas/pantalla_club_vida_p2.gd"
 ## [Capa 3/4 de `pantalla_club_vida.gd`] _pintar_entrenamiento, _pintar_historial_federacion, _apelar_caso, _pintar_licencia_y_tribunal, _bono_staff, _renovar … (+2)
 
+## (12-11, nota del dueño: menús subdivididos a pantalla completa) Entrenamiento era una página con nueve bloques; ahora tres pantallas,
+## una por submenú de «Plantel» (`p._secc_extra["Entrenar"]`): semana (plan, días, rotación y videoanálisis), pretemporada (clima, horario,
+## pretemporada y amistosos) y desarrollo (mentorías, trabajo individual y habilidades). Otra sección = la página entera, en su orden.
+const SECC_ENTRENAR := ["semana", "pretemporada", "desarrollo"]
 func _pintar_entrenamiento(c: Club) -> void:
 	p._limpiar(p._lista_entren)
 	var e := p.mundo.entrenamiento
 	if e == null:
 		return
-	_pintar_ambiente_y_horario()
-	_pintar_pretemporada(c, e)
-	_pintar_mentorias(c, e)
-	_pintar_entrenamiento_individual(c, e)
-	_pintar_amistosos(c)
+	var secc := String(p._secc_extra.get("Entrenar", "semana"))
+	var todo := not SECC_ENTRENAR.has(secc)
+	var carga: Dictionary = e.carga()
+	if not todo:
+		var riesgo := float(carga["riesgo"])
+		p._lista_entren.add_child(CifrasClave.banda([
+			[Idiomas.t("Físico"), "%+.1f" % float(carga["fis"]), Principal.COL_VERDE if float(carga["fis"]) >= 0.0 else Principal.COL_ROJO],
+			[Idiomas.t("Progreso"), "%+.1f" % float(carga["ovr"]), Principal.COL_TEXTO],
+			[Idiomas.t("Riesgo de lesión"), "%.1f" % riesgo, Principal.COL_ROJO if riesgo > 9.0 else (Principal.COL_ORO if riesgo > 7.0 else Principal.COL_VERDE)],
+			[Idiomas.t("Moral"), "%+.1f" % float(carga["moral"]), Principal.COL_TEXTO]], Principal.COL_SUAVE))
+	if todo or secc == "pretemporada":
+		_pintar_ambiente_y_horario()
+		_pintar_pretemporada(c, e)
+	if todo or secc == "desarrollo":
+		_pintar_mentorias(c, e)
+		_pintar_entrenamiento_individual(c, e)
+	if todo or secc == "pretemporada":
+		_pintar_amistosos(c)
+	if todo or secc == "semana":
+		if not todo:
+			_ent_plan(e, carga)
+		_ent_rotacion()
+		if todo:
+			_ent_plan(e, carga)
+	if todo or secc == "desarrollo":
+		_ent_habilidades(e)
 
+func _ent_rotacion() -> void:
 	## LA ROTACIÓN Y EL VIDEOANÁLISIS. Los dos son preparación: se deciden antes
 	## de saber cómo va el partido, que es lo que los diferencia de todo lo demás
 	## de esta pantalla.
@@ -55,9 +81,10 @@ func _pintar_entrenamiento(c: Club) -> void:
 		p._dato("Lección hecha", "+%d%% para el próximo partido" % int(round((p.mundo.bono_analisis - 1.0) * 100.0)),
 			Principal.COL_VERDE, p._lista_entren)
 
+
+func _ent_plan(e: Entrenamiento, carga: Dictionary) -> void:
 	## Lo primero, el resumen de lo que le estás haciendo al plantel esta semana.
 	## Es el único número honesto del menú: todo lo demás son etiquetas bonitas.
-	var carga: Dictionary = e.carga()
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("PLAN DE LA SEMANA")
 	p._lista_entren.add_child(t)
@@ -102,6 +129,8 @@ func _pintar_entrenamiento(c: Club) -> void:
 			p._refrescar())
 		fila.add_child(b)
 
+
+func _ent_habilidades(e: Entrenamiento) -> void:
 	## Y el árbol de habilidades del jugador seleccionado. Va aquí y no en la
 	## ficha porque es una decisión de entrenamiento, no un dato del jugador.
 	p._lista_entren.add_child(HSeparator.new())
