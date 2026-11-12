@@ -85,6 +85,9 @@ func _colocar(planta: int, sala: String) -> void:
 			if sala == "Ascensor":   ## (10-11) de frente a las puertas; con PUERTAS=1 la 2.ª foto de la lista (SOLO=11,11) las lleva abiertas
 				_ex.rumbo = 0.0
 				PuertasAscensor.mover(get_tree(), float(planta) * EdificioClub.ALTO_PLANTA, OS.get_environment("PUERTAS") == "1" and (_paso >= 1 or SALAS.size() == 1), 0.0)
+			if OS.get_environment("RUMBO") != "":   ## (12-11) RUMBO=grados DX=m DZ=m: apuntar la cámara a una pieza concreta
+				_ex.rumbo = deg_to_rad(float(OS.get_environment("RUMBO")))
+				_ex.cuerpo.position += Vector3(float(OS.get_environment("DX")), 0.0, float(OS.get_environment("DZ")))
 			_ex.paso(Vector2.ZERO, false, 0.0)
 			_ex._colocar_camara(1.0)
 			if OS.get_environment("SIN_AVATAR") == "1":
