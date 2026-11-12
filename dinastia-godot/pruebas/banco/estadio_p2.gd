@@ -302,6 +302,19 @@ func _probar_fundir_ciudad() -> void:
 	_comprobar(n == 7 and fund.size() == 2 and raiz.get_child_count() == 5, "7 piezas → 2 mallas (5 cajas rojas, 2 cilindros azules); quedan la lejana, la estirada y la «Banco» (%d fundidas, %d mallas, %d hijos)" % [n, fund.size(), raiz.get_child_count()])
 	_comprobar(union.encloses(aabb_antes.grow(-0.01)) or absf(union.size.x - aabb_antes.size.x) < 0.5, "la geometría fundida ocupa el mismo sitio que las cajas originales")
 	raiz.queue_free()
+	## (12-11, fallo n.º 3) Las piezas con propiedades que la malla fundida no copia se quedan como están.
+	var normal := MeshInstance3D.new()
+	_comprobar(FundirPiezas.conserva_propiedades(normal), "una pieza sin propiedades propias se puede fundir")
+	var props := 0
+	for f: Callable in [func(x: MeshInstance3D) -> void: x.visibility_range_begin = 50.0, func(x: MeshInstance3D) -> void: x.transparency = 0.6,
+			func(x: MeshInstance3D) -> void: x.extra_cull_margin = 40.0, func(x: MeshInstance3D) -> void: x.custom_aabb = AABB(Vector3.ZERO, Vector3.ONE),
+			func(x: MeshInstance3D) -> void: x.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF]:
+		var pieza := MeshInstance3D.new()
+		f.call(pieza)
+		props += 0 if FundirPiezas.conserva_propiedades(pieza) else 1
+		pieza.free()
+	normal.free()
+	_comprobar(props == 5, "alcance inicial, transparencia, margen de recorte, caja propia y fundido de alcance no se funden (%d de 5)" % props)
 
 ## (7-11) `SubsistemasQuietos`: bajo un subsistema registrado todo es quieto salvo lo que cuelga de sus nodos móviles; si no está registrado, nada lo es.
 func _probar_subsistemas_quietos() -> void:

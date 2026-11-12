@@ -139,7 +139,7 @@ func _renderizador() -> String:
 func _cabecera_sesion() -> String:
 	return "===== sesión %s · %s %s · Godot %s · %s" % [Time.get_datetime_string_from_system(),
 		OS.get_name(), OS.get_version(), Engine.get_version_info().get("string", "?"),
-		String(ProjectSettings.get_setting("rendering/renderer/rendering_method", "?"))]
+		_renderizador()]   ## (12-11, fallo n.º 7) el método REAL, no el pedido en los ajustes del proyecto
 
 func _preparar_limpiezas() -> void:
 	## De la ruta más larga a la más corta: la carpeta de usuario cuelga de HOME.

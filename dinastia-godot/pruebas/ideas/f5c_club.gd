@@ -87,14 +87,17 @@ func _probar() -> void:
 	var hitos: Array = []
 	for k in 9:
 		hitos.append({"anio": 1990 + k * 3, "titulo": "Liga"})
+	var seis: Array = hitos.slice(0, SalasClub.MAX_SALA)   ## (12-11) con 7+ títulos la planta 3 se abre sola (`MuseoAmpliado.por_titulos`): la obra se prueba con 6
+	EdificioClub.ctx = {"inst": {"museo": 3}, "titulos": 6, "hitos": seis}
+	_comprobar(not EdificioClub.plantas().has(3), "con el museo a nivel 3 y 6 títulos el ascensor no llega a la planta 3")
 	EdificioClub.ctx = {"inst": {"museo": 3}, "titulos": 9, "hitos": hitos}
-	_comprobar(not EdificioClub.plantas().has(3), "con el museo a nivel 3 el ascensor no llega a la planta 3")
+	_comprobar(EdificioClub.plantas().has(3), "con el museo a nivel 3 y 9 títulos la planta 3 ya existe (por títulos)")
 	var sala := Node3D.new()
 	SalasClub.museo(sala, Rect2(0.0, 0.0, 3.6, 6.0), 0.0, Color("#c01020"), Color("#f2f2f2"), 9, 3)
 	var cuerpos := sala.find_children("*", "StaticBody3D", false, false).size()
 	_comprobar(cuerpos == SalasClub.MAX_SALA, "con 9 títulos la sala de la planta 2 llena sus %d vitrinas y no más (%d)" % [SalasClub.MAX_SALA, cuerpos])
 	sala.free()
-	EdificioClub.ctx = {"inst": {"museo": 4}, "obras": {"museo": 2}, "titulos": 9, "hitos": hitos}
+	EdificioClub.ctx = {"inst": {"museo": 4}, "obras": {"museo": 2}, "titulos": 6, "hitos": seis}
 	_comprobar(MuseoAmpliado.en_obra(EdificioClub.ctx) and EdificioClub.plantas().has(3), "la obra que lleva el museo a nivel 5 ya deja la planta 3 (en obra)")
 	var dt := TunelVestuario.datos({"forma": "cuenco"}, 2)
 	var asc3 := false

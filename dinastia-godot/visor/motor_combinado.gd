@@ -102,6 +102,7 @@ func _saque_ensayado(p: Dictionary, tipo: String, lugar: Vector3) -> bool:
 func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	super(p, cruce, estirada)
 	if _mejoras_c4 and String(poseedor.get("id", "")) != String(p["id"]):
+		MejorasC4Avance.rechace(self, p)   ## (sesión 15) C4_RECHACE
 		set_meta("_t_rechace", t)
 		_contar("c4_rechace")
 
@@ -126,14 +127,20 @@ func _gol(en_arco_visita: bool) -> void:
 
 ## (12-11, sesión 13) pase tenso cuando la línea está limpia, solo en C4 (`MejorasC4Pared.tenso`).
 func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, tenso := false) -> void:
+	if _mejoras_c4 and not largo and MejorasC4Adelanto.OTRO and p != usuario:
+		q = MejorasC4Adelanto.otro_receptor(self, p, q, al_hueco)   ## (12-11, sesión 15) C4_ADELANTO=4
 	if _mejoras_c4 and not tenso and not largo and MejorasC4Pared.tenso(self, p, q):
 		tenso = true
 	super(p, q, largo, al_hueco, tenso)
 
 ## (12-11, líder) el adelanto del pase: el de siempre salvo que un rival llegue antes al punto (`MejorasC4Adelanto`, `C4_ADELANTO=1`).
 func _guia_pase(q: Dictionary, dist: float, al_hueco: bool) -> Vector3:
-	var base := super(q, dist, al_hueco)
+	var base := _guia_pase_base(q, dist, al_hueco)
 	return MejorasC4Adelanto.guia(self, q, base, al_hueco) if _mejoras_c4 else base
+
+## La fórmula de siempre del adelanto (sin la corrección de C4).
+func _guia_pase_base(q: Dictionary, dist: float, al_hueco: bool) -> Vector3:
+	return super._guia_pase(q, dist, al_hueco)
 
 func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 	var r := super(p, victima, base)
@@ -148,7 +155,16 @@ func _radio_cabezazo(p: Dictionary) -> float:
 
 ## (12-11, sesión 13) paciencia ante el tiro lejano, solo en C4.
 func _ganas_tiro_extra(p: Dictionary, dist_arco: float, ganas: float, presion: float) -> float:
-	return MejorasC4.ganas_tiro(self, p, dist_arco, ganas, presion, _rng) if _mejoras_c4 else ganas
+	if not _mejoras_c4:
+		return ganas
+	return MejorasC4Regate.ganas(self, p, dist_arco, ganas, MejorasC4.ganas_tiro(self, p, dist_arco, ganas, presion, _rng))   ## + regate y remate (sesión 15)
+
+## (12-11, sesión 15) apunta el regate ganado cerca del arco (`MejorasC4Regate`, `C4_REGATE_TIRO=1`).
+func _finta_ia(p: Dictionary, rival: Dictionary, fwd: Vector3, lado: float, sp: float) -> void:
+	var antes := regates_ia_ok
+	super(p, rival, fwd, lado, sp)
+	if _mejoras_c4:
+		MejorasC4Regate.marcar(self, p, regates_ia_ok > antes)
 
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	if not _nuestra("coloca_sin_balon"):
@@ -182,6 +198,10 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		return super._ia_ataque_sin_balon(p)
 	var r := _sin_flag3(p, true)
 	if _mejoras_c4:
+		var rup := MejorasC4Avance.ruptura(self, p)   ## (sesión 15) C4_RUPTURA
+		if rup != Vector3.INF:
+			p["correr"] = true
+			return rup
 		var pared := MejorasC4Pared.desmarque(self, p)
 		if pared != Vector3.INF:
 			p["correr"] = true
@@ -277,3 +297,25 @@ func _mover_jugadores(delta: float) -> void:
 	if f3 and _nuestra("locomocion") and LeagueGuia.en_c4:
 		LeagueGuia.paso(self, delta)
 		LeagueLocomocion.paso(self, delta, false)
+
+## (12-11, sesión 15) más pases al hueco, solo en C4 (`MejorasC4Hueco`, `C4_HUECO=1`).
+func _companero_al_hueco(p: Dictionary) -> Dictionary:
+	var r := super(p)
+	return MejorasC4Hueco.buscar(self, p) if r.is_empty() and _mejoras_c4 else r
+
+## (12-11, sesión 15) cerca del área y sin presión, no se toca hacia atrás (`MejorasC4Avance`, `C4_NO_ATRAS=1`).
+func _mejor_pase(p: Dictionary) -> Dictionary:
+	var q := super(p)
+	return MejorasC4Avance.filtrar(self, p, q) if _mejoras_c4 else q
+
+## (12-11, sesión 15) más 1 contra 1 en la frontal (`MejorasC4Avance.REGATE_AREA`): sube las ganas de encarar solo dentro de este intento.
+var _k_regate := 1.0
+func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> bool:
+	if _mejoras_c4 and MejorasC4Avance.REGATE_AREA > 0.0 and dist_arco < 32.0:
+		_k_regate = MejorasC4Avance.REGATE_AREA
+	var r := super(p, rival, dist_arco)
+	_k_regate = 1.0
+	return r
+
+func _escala_ritmo() -> float:
+	return super() * _k_regate

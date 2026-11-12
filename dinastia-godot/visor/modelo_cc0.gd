@@ -6,7 +6,8 @@ extends RefCounted
 ## y lleva su caja de choque (la del AABB real), igual que `SillonOficina`.
 static var _escenas := {}
 
-static func poner(nodo: Node3D, ident: String, pos: Vector3, giro: float, alto: float, solido := true) -> Node3D:
+## `sombra = false` (12-11): la pieza no proyecta sombra (las pequeñas: con las luces omni de las salas, cada sombra repite sus triángulos 6 veces).
+static func poner(nodo: Node3D, ident: String, pos: Vector3, giro: float, alto: float, solido := true, sombra := true) -> Node3D:
 	if not VestuarioRealista.activo() or OS.get_environment("SIN_MUEBLES_CC0") != "":
 		return null
 	var esc: PackedScene = _escenas.get(ident)
@@ -27,6 +28,8 @@ static func poner(nodo: Node3D, ident: String, pos: Vector3, giro: float, alto: 
 		var a := m.global_transform * m.get_aabb() if m.is_inside_tree() else m.transform * m.get_aabb()
 		caja = a if primero else caja.merge(a)
 		primero = false
+		if not sombra:
+			m.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	if primero or caja.size.y < 0.01:
 		n.free()
 		return null

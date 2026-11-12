@@ -9,6 +9,10 @@ var sala := Rect2()
 var y0 := 0.0
 var nivel := 0
 var titulos := 0
+var c1 := Color(0.8, 0.1, 0.1)
+var c2 := Color(1, 1, 1)
+## (12-11) El mini evento a pantalla completa que abre la animación (`EventoMuseo`); null cuando no hay o ya terminó.
+var evento: EventoMuseo = null
 var _hecho := false
 
 func _ready() -> void:
@@ -26,7 +30,16 @@ func _process(_d: float) -> void:
 	if absf(p.y - y0 - 1.6) < 1.8 and sala.grow(0.1).has_point(Vector2(p.x, p.z)):
 		_hecho = true
 		CargaCiudad.de("AjustesCiudad").guardar("museo_ampliado_visto", nivel)
-		_animar()
+		if OS.get_environment("SIN_EVENTO_MUSEO") != "":
+			_animar()
+			return
+		evento = EventoMuseo.new()
+		evento.titulos = titulos
+		evento.copas_nuevas = copas.size()
+		evento.c1 = c1
+		evento.c2 = c2
+		evento.terminado.connect(_animar)
+		add_child(evento)
 
 func _encender(hasta: int) -> void:
 	for i in mini(hasta, copas.size()):

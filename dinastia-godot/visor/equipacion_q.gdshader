@@ -1059,7 +1059,10 @@ void fragment() {
 	rugo = mix(rugo, 0.76, desnudo);
 	ROUGHNESS = rugo + punto * 0.05 * tela;
 	SPECULAR = mix(civil ? mix(0.3, 0.5, m.a) : mix(0.45, 0.42, clamp(es_camiseta + m.g, 0.0, 1.0)) + 0.1 * m.a, 0.14, desnudo);
+	// La subsuperficie solo existe en Forward+: en Compatibility (móvil, Web) y Mobile daba un aviso por material y no hacía nada (12-11).
+#if CURRENT_RENDERER == RENDERER_FORWARD_PLUS
 	SSS_STRENGTH = 0.22 * desnudo;
+#endif
 	if (!civil) {
 		// Brillo de tela deportiva: un satinado leve a contraluz, solo en la tela.
 		float roce = 1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0);

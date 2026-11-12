@@ -82,6 +82,7 @@ func _construir_selector_portada(raiz: VBoxContainer) -> void:
 	_fila_picker.add_theme_constant_override("separation", 6)
 	var scroll_picker := ScrollContainer.new()
 	scroll_picker.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll_picker.follow_focus = true   ## (12-11) con mando, la fila se desplaza hasta la portada elegida (a 1280×720 las últimas quedan fuera del borde)
 	scroll_picker.add_child(_fila_picker)
 	v.add_child(scroll_picker)
 	for k: String in rotacion():

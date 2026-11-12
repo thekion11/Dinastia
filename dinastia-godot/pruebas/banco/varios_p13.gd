@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos, _probar_mundo_abandonado, _probar_fila_portadas_sigue_foco, _probar_museo_por_titulos
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -215,3 +215,90 @@ func _probar_piel_paises_nuevos() -> void:
 	_comprobar(float(medias["FIN"][0]) < 2.0 and int(medias["FIN"][1]) > 40, "Finlandia, clara y con rubios (%.1f; %d de 300)" % [medias["FIN"][0], medias["FIN"][1]])
 	_comprobar(float(medias["IND"][0]) > 3.0 and float(medias["IND"][0]) < 5.0, "India, tono medio (%.1f)" % medias["IND"][0])
 	_comprobar(PielPaises.sesgo("SEN", 1.5) < 0.3 and is_equal_approx(PielPaises.sesgo("XXX", 1.5), 1.5), "la grada de Senegal también sale oscura; un país desconocido mantiene el defecto")
+
+## (12-11, orden 36) EL MUSEO CRECE POR TÍTULOS: la planta 3 se abre con el séptimo título (sin esperar a la obra de nivel 5) y la
+## primera visita la abre un mini evento a pantalla completa, saltable. Dos clubes de países distintos (regla 34).
+func _probar_museo_por_titulos() -> void:
+	_titulo("MUSEO: PLANTA EXTRA POR TÍTULOS CON MINI EVENTO")
+	var seis: Array = []
+	for i in 6:
+		seis.append({"anio": 1990 + i, "titulo": "Liga"})
+	var siete: Array = seis.duplicate()
+	siete.append({"anio": 2001, "titulo": "Copa"})
+	_comprobar(not MuseoAmpliado.existe({"inst": {"museo": 1}, "hitos": seis}), "con 6 títulos (caben en la planta 2) y museo nivel 1 no hay planta 3")
+	_comprobar(MuseoAmpliado.existe({"inst": {"museo": 1}, "hitos": siete}) and MuseoAmpliado.terminada({"inst": {"museo": 1}, "hitos": siete}), "el séptimo título abre la planta 3 sin la obra")
+	_comprobar(not MuseoAmpliado.en_obra({"inst": {"museo": 4}, "obras": {"museo": 3}, "hitos": siete}), "abierta por títulos no sale en obra aunque haya obra del museo")
+	_comprobar(MuseoAmpliado.en_obra({"inst": {"museo": 4}, "obras": {"museo": 3}, "hitos": seis}), "sin títulos de más, la obra del nivel 5 sigue mostrando la planta en obra")
+	_comprobar(MuseoAmpliado.existe({"inst": {"museo": 5}, "hitos": []}), "la obra de nivel 5 sigue abriendo la planta 3")
+	## Dos clubes de países distintos (ENG y ARG): su palmarés (una vitrina por competición) más los títulos que ganas en tu carrera;
+	## la planta 3 aparece justo con el séptimo.
+	var m := Mundo.new()
+	m.generar(["ENG", "ARG"], 1612)
+	var vistos := {}
+	var bien := true
+	for c: Club in m.clubes.values():
+		if vistos.has(c.pais) or not ["ENG", "ARG"].has(c.pais):
+			continue
+		var base := HistoriaClub.hitos_palmares(c).size()
+		if base >= MuseoAmpliado.UMBRAL_TITULOS - 1:
+			continue
+		vistos[c.pais] = base
+		m.roles.trofeos.clear()
+		for i in MuseoAmpliado.UMBRAL_TITULOS - 1 - base:
+			m.roles.trofeos.append({"anio": 2027 + i, "titulo": "Liga"})
+		var antes := MuseoAmpliado.existe(EdificioClub.contexto_de(m, c))
+		m.roles.trofeos.append({"anio": 2040, "titulo": "Copa"})
+		var ctx := EdificioClub.contexto_de(m, c)
+		bien = bien and not antes and MuseoAmpliado.existe(ctx) and not MuseoAmpliado.en_obra(ctx)
+	m.roles.trofeos.clear()
+	_comprobar(vistos.size() == 2 and bien, "un club inglés y uno argentino: con 6 títulos no hay planta 3 y el séptimo ganado la abre (palmarés de partida %s)" % str(vistos))
+	## La sala abierta por títulos monta sus vitrinas y su animación, que guarda lo visto como nivel 5.
+	var nueve: Array = siete.duplicate()
+	nueve.append_array([{"anio": 2005, "titulo": "Liga"}, {"anio": 2010, "titulo": "Supercopa"}])
+	var sala := Node3D.new()
+	add_child(sala)
+	MuseoAmpliado.montar(sala, Rect2(-8.0, 3.5, 16.0, 4.5), 9.0, Color(0.1, 0.3, 0.7), Color(1, 1, 1), {"inst": {"museo": 1}, "hitos": nueve, "titulos": 9, "pais": "ARG"})
+	var anim := sala.get_node_or_null("AnimMuseoAmpliado") as MuseoAmpliadoAnim
+	_comprobar(anim != null and MuseoAmpliado.vitrinas.size() == 3 and anim.copas.size() == 3, "9 títulos: 3 vitrinas en la planta 3 (%d)" % MuseoAmpliado.vitrinas.size())
+	_comprobar(anim != null and anim.nivel == MuseoAmpliado.NIVEL_PLANTA, "abierta por títulos, lo visto cuenta como nivel 5")
+	sala.queue_free()
+	## El mini evento: dura lo que dura, se salta y avisa al terminar (una sola vez).
+	var ev := EventoMuseo.new()
+	ev.titulos = 9
+	ev.copas_nuevas = 3
+	var avisos := [0]
+	ev.terminado.connect(func() -> void: avisos[0] += 1)
+	add_child(ev)
+	ev._process(1.0)
+	_comprobar(avisos[0] == 0 and is_instance_valid(ev), "a mitad del evento sigue en pantalla")
+	ev.saltar()
+	ev.saltar()
+	_comprobar(avisos[0] == 1, "saltarlo lo termina y avisa una sola vez")
+	var ev2 := EventoMuseo.new()
+	var avisos2 := [0]
+	ev2.terminado.connect(func() -> void: avisos2[0] += 1)
+	add_child(ev2)
+	ev2._process(EventoMuseo.DURACION + 0.1)
+	_comprobar(avisos2[0] == 1, "sin tocar nada termina solo a los %.1f s" % EventoMuseo.DURACION)
+
+## (12-11, fallo n.º 1 del plan) La generación del mundo por trozos se ABANDONA si la pantalla que la pidió se fue (`Mundo.abandonada`).
+func _probar_mundo_abandonado() -> void:
+	_titulo("GENERACIÓN DEL MUNDO ABANDONADA")
+	_comprobar(not Mundo.abandonada(Callable()), "sin vigía (la generación de siempre) nunca se abandona")
+	_comprobar(not Mundo.abandonada(func() -> bool: return true), "con la pantalla viva sigue")
+	_comprobar(Mundo.abandonada(func() -> bool: return false), "con la pantalla fuera del árbol se abandona")
+	var n := Node.new()
+	var vigia := Callable(n, "is_inside_tree")
+	n.free()
+	_comprobar(Mundo.abandonada(vigia), "con la pantalla ya liberada también se abandona")
+
+## (12-11) Fuera de Principal no hay guardián del foco: la fila de portadas del título (18 botones, 1966 px en 837 a 1280×720) debe seguir
+## al foco con mando o teclado; antes la última quedaba fuera del borde y el desplazamiento seguía en 0.
+func _probar_fila_portadas_sigue_foco() -> void:
+	_titulo("LA FILA DE PORTADAS DEL TÍTULO SIGUE AL FOCO")
+	var ini := Inicio.new()
+	add_child(ini)
+	var fila: HBoxContainer = ini.get("_fila_picker")
+	var sc := fila.get_parent() as ScrollContainer if fila != null else null
+	_comprobar(sc != null and sc.follow_focus, "el desplazamiento de las portadas sigue al foco")
+	ini.free()

@@ -16,7 +16,7 @@ const SONIDO_LLEGADA := "notificacion"   ## el timbre al abrirse
 ## `acento`: color del club (franja del suelo de la cabina). `planta`: lo que marca el indicador de encima («2», «-1»); vacío = sin indicador.
 static func poner(nodo: Node3D, cx: float, z: float, y0: float, ancho: float, acento := Color(0.1, 0.3, 0.7), planta := "") -> void:
 	var marco := PiezasObra._mat(Color(0.16, 0.17, 0.19), 0.4)
-	var acero: StandardMaterial3D = Texturas.metal(Color(0.72, 0.74, 0.76), 0.35)
+	var acero := acero_satinado()   ## (sesión 16) liso: el metal con ruido se veía como papel de aluminio de cerca
 	var alto := 2.3
 	## La CABINA, visible con las puertas abiertas (12-11): un plano 1 cm DELANTE de la pared (la pared llega a z−0,04 y en el mismo plano
 	## parpadeaba) que DIBUJA una cabina con fondo: espejo, pasamanos, plafón y suelo con la franja del club. Cuelga de un nodo con script
@@ -81,6 +81,18 @@ static func _indicador(nodo: Node3D, cx: float, z: float, y: float, planta: Stri
 	l.double_sided = false
 	l.name = "IndicadorPlanta"
 	nodo.add_child(l)
+
+## (12-11, sesión 16, primera persona) Acero satinado LISO para las hojas: el `Texturas.metal` (ruido de rugosidad y de normales) estirado
+## sobre una hoja de 1 × 2,3 m se veía de cerca, a la altura de los ojos, como papel de aluminio arrugado. Una sola instancia (mismas llamadas).
+static var _acero: StandardMaterial3D = null
+static func acero_satinado() -> StandardMaterial3D:
+	if _acero == null:
+		_acero = StandardMaterial3D.new()
+		_acero.albedo_color = Color(0.70, 0.72, 0.74)
+		_acero.metallic = 0.7
+		_acero.metallic_specular = 0.55
+		_acero.roughness = 0.38
+	return _acero
 
 ## Abre o cierra las hojas de la planta cuyo suelo está en `y0`. `dur` a mano para las pruebas; devuelve los Tween creados.
 static func mover(arbol: SceneTree, y0: float, abrir: bool, dur := -1.0) -> Array[Tween]:
