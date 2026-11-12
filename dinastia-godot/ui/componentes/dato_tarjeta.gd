@@ -34,11 +34,11 @@ static func de(p: Principal, etiqueta: String) -> String:
 			return Idiomas.t("%d de %d puestos cubiertos") % [con, m.staff.niveles.size()]
 		"mi plantel":
 			return Idiomas.t("%d jugadores · media %d") % [c.plantilla.size(), roundi(c.media())]
-		"táctica":
+		"táctica", "pizarra y dibujo":
 			return c.tactica.formacion
-		"finanzas":
+		"finanzas", "cuentas del club":
 			return p._dinero(c.saldo)
-		"mercado":
+		"mercado", "mercado de fichajes":
 			var tr := 0
 			for j: Jugador in c.plantilla:
 				if j.transferible:
@@ -64,4 +64,27 @@ static func de(p: Principal, etiqueta: String) -> String:
 			return Idiomas.t("%d rivales enfrentados") % lg.h2h.size() if lg != null else ""
 		"premios":
 			return Idiomas.t("%d galas") % lg.premios.size() if lg != null else ""
+		## (12-11) Más tarjetas con dato: al partir los menús en pantallas, varias quedaron sin su línea de color.
+		"la gente del club":
+			return Idiomas.t("Confianza media: %d") % m.gente.confianza_media() if m.gente != null else ""
+		"enfermería":
+			var fuera := c.plantilla.filter(func(j: Jugador) -> bool: return j.lesion > 0).size()
+			return Idiomas.t("%d lesionados") % fuera if fuera > 0 else Idiomas.t("Nadie en la camilla")
+		"jugadores libres":
+			return Idiomas.t("%d sin club") % m.libres.size() if not m.libres.is_empty() else ""
+		"ligas y clubes":
+			var liga := m.liga_de(c)
+			return Idiomas.t("%d.º de %d") % [EventosClub.puesto_de(liga, c), liga.clubes.size()] if liga != null else ""
+		"próximo partido":
+			var cruce := m.proximo_partido()
+			if cruce.size() < 2:
+				return Idiomas.t("Sin partido esta semana")
+			var rival: Club = cruce[1] if cruce[0] == c else cruce[0]
+			return (Idiomas.t("En casa: %s") if cruce[0] == c else Idiomas.t("Fuera: %s")) % rival.nombre
+		"goleadores":
+			var mejor: Jugador = null
+			for j: Jugador in c.plantilla:
+				if j.goles > 0 and (mejor == null or j.goles > mejor.goles):
+					mejor = j
+			return Idiomas.t("%s · %d goles") % [mejor.nombre, mejor.goles] if mejor != null else ""
 	return ""

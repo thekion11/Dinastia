@@ -8042,7 +8042,16 @@
   "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Nothing to show here yet: it fills up as you play.",
   "%d de %d puestos cubiertos": "%d of %d posts filled",
   "Prestigio DT": "Manager prestige",
-  "Seguidores": "Followers"
+  "Seguidores": "Followers",
+  "Confianza media: %d": "Average trust: %d",
+  "%d lesionados": "%d injured",
+  "Nadie en la camilla": "Nobody on the treatment table",
+  "%d sin club": "%d without a club",
+  "%d.º de %d": "%d of %d",
+  "Sin partido esta semana": "No match this week",
+  "En casa: %s": "Home: %s",
+  "Fuera: %s": "Away: %s",
+  "%s · %d goles": "%s · %d goals"
  },
  "pt": {
   "Historia": "História",
@@ -16087,7 +16096,16 @@
   "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Ainda não há nada para mostrar aqui: enche-se ao jogar.",
   "%d de %d puestos cubiertos": "%d de %d cargos preenchidos",
   "Prestigio DT": "Prestígio do treinador",
-  "Seguidores": "Seguidores"
+  "Seguidores": "Seguidores",
+  "Confianza media: %d": "Confiança média: %d",
+  "%d lesionados": "%d lesionados",
+  "Nadie en la camilla": "Ninguém na marquesa",
+  "%d sin club": "%d sem clube",
+  "%d.º de %d": "%d.º de %d",
+  "Sin partido esta semana": "Sem jogo esta semana",
+  "En casa: %s": "Em casa: %s",
+  "Fuera: %s": "Fora: %s",
+  "%s · %d goles": "%s · %d golos"
  },
  "patrones": [
   [
@@ -30272,7 +30290,16 @@
   "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Rien à afficher ici pour l'instant : cela se remplit en jouant.",
   "%d de %d puestos cubiertos": "%d postes pourvus sur %d",
   "Prestigio DT": "Prestige de l'entraîneur",
-  "Seguidores": "Abonnés"
+  "Seguidores": "Abonnés",
+  "Confianza media: %d": "Confiance moyenne : %d",
+  "%d lesionados": "%d blessés",
+  "Nadie en la camilla": "Personne à l'infirmerie",
+  "%d sin club": "%d sans club",
+  "%d.º de %d": "%d sur %d",
+  "Sin partido esta semana": "Pas de match cette semaine",
+  "En casa: %s": "À domicile : %s",
+  "Fuera: %s": "À l'extérieur : %s",
+  "%s · %d goles": "%s · %d buts"
  },
  "it": {
   "Historia": "Storia",
@@ -38317,7 +38344,16 @@
   "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Ancora niente da mostrare qui: si riempie giocando.",
   "%d de %d puestos cubiertos": "%d ruoli coperti su %d",
   "Prestigio DT": "Prestigio allenatore",
-  "Seguidores": "Follower"
+  "Seguidores": "Follower",
+  "Confianza media: %d": "Fiducia media: %d",
+  "%d lesionados": "%d infortunati",
+  "Nadie en la camilla": "Nessuno in infermeria",
+  "%d sin club": "%d senza squadra",
+  "%d.º de %d": "%d° su %d",
+  "Sin partido esta semana": "Nessuna partita questa settimana",
+  "En casa: %s": "In casa: %s",
+  "Fuera: %s": "In trasferta: %s",
+  "%s · %d goles": "%s · %d gol"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46362,7 +46398,16 @@
   "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Hier gibt es noch nichts zu sehen: Es füllt sich beim Spielen.",
   "%d de %d puestos cubiertos": "%d von %d Stellen besetzt",
   "Prestigio DT": "Trainer-Prestige",
-  "Seguidores": "Follower"
+  "Seguidores": "Follower",
+  "Confianza media: %d": "Vertrauen im Schnitt: %d",
+  "%d lesionados": "%d verletzt",
+  "Nadie en la camilla": "Niemand auf der Liege",
+  "%d sin club": "%d ohne Verein",
+  "%d.º de %d": "Platz %d von %d",
+  "Sin partido esta semana": "Kein Spiel diese Woche",
+  "En casa: %s": "Heim: %s",
+  "Fuera: %s": "Auswärts: %s",
+  "%s · %d goles": "%s · %d Tore"
  },
  "ca": {
   "Historia": "Història",
@@ -54407,7 +54452,16 @@
   "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Encara no hi ha res a mostrar aquí: s'omple jugant.",
   "%d de %d puestos cubiertos": "%d de %d llocs coberts",
   "Prestigio DT": "Prestigi de l'entrenador",
-  "Seguidores": "Seguidors"
+  "Seguidores": "Seguidors",
+  "Confianza media: %d": "Confiança mitjana: %d",
+  "%d lesionados": "%d lesionats",
+  "Nadie en la camilla": "Ningú a la llitera",
+  "%d sin club": "%d sense club",
+  "%d.º de %d": "%d de %d",
+  "Sin partido esta semana": "Sense partit aquesta setmana",
+  "En casa: %s": "A casa: %s",
+  "Fuera: %s": "A fora: %s",
+  "%s · %d goles": "%s · %d gols"
  },
  "pl": {
   "Club": "Klub",
@@ -62452,7 +62506,16 @@
   "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Nie ma tu jeszcze nic do pokazania: zapełni się w trakcie gry.",
   "%d de %d puestos cubiertos": "Obsadzono %d z %d stanowisk",
   "Prestigio DT": "Prestiż trenera",
-  "Seguidores": "Obserwujący"
+  "Seguidores": "Obserwujący",
+  "Confianza media: %d": "Średnie zaufanie: %d",
+  "%d lesionados": "%d kontuzjowanych",
+  "Nadie en la camilla": "Nikt nie jest kontuzjowany",
+  "%d sin club": "%d bez klubu",
+  "%d.º de %d": "%d. z %d",
+  "Sin partido esta semana": "Brak meczu w tym tygodniu",
+  "En casa: %s": "U siebie: %s",
+  "Fuera: %s": "Wyjazd: %s",
+  "%s · %d goles": "%s · %d goli"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70497,6 +70560,15 @@
   "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Burada henüz gösterilecek bir şey yok: oynadıkça dolar.",
   "%d de %d puestos cubiertos": "%d / %d görev dolu",
   "Prestigio DT": "Teknik direktör prestiji",
-  "Seguidores": "Takipçi"
+  "Seguidores": "Takipçi",
+  "Confianza media: %d": "Ortalama güven: %d",
+  "%d lesionados": "%d sakat",
+  "Nadie en la camilla": "Sakat yok",
+  "%d sin club": "%d kulüpsüz",
+  "%d.º de %d": "%d / %d",
+  "Sin partido esta semana": "Bu hafta maç yok",
+  "En casa: %s": "İç saha: %s",
+  "Fuera: %s": "Deplasman: %s",
+  "%s · %d goles": "%s · %d gol"
  }
 }

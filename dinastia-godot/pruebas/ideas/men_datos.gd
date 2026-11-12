@@ -19,6 +19,14 @@ func _ready() -> void:
 		if DatoTarjeta.de(pr, et) != "":
 			con += 1
 	_comprobar(con == 14, "las 14 tarjetas de gestión llevan dato (%d)" % con)
+	## (12-11) Con los nombres REALES de las tarjetas del menú (al renombrarlas, «Cuentas del club» y «Mercado de fichajes» perdieron su dato).
+	var reales: Array[String] = []
+	for men: Dictionary in MenusLaterales.MENUS:
+		for sub: Dictionary in men["subs"]:
+			reales.append(String(sub["label"]))
+	for et: String in ["Cuentas del club", "Mercado de fichajes", "Personal del club", "La gente del club", "Enfermería", "Pizarra y dibujo", "Ligas y clubes", "Próximo partido"]:
+		_comprobar(reales.has(et) and DatoTarjeta.de(pr, et) != "", "«%s» existe en el menú y lleva dato (%s)" % [et, DatoTarjeta.de(pr, et)])
+	_comprobar(DatoTarjeta.de(pr, "Personal del club").contains("puestos"), "el personal cuenta puestos, no jugadores")
 	_comprobar(DatoTarjeta.de(pr, "Glosario") == "", "las que no tienen cifra, no")
 	Idiomas.idioma = "en"
 	_comprobar(DatoTarjeta.de(pr, "Correo") == "1 unread", "traducido (%s)" % DatoTarjeta.de(pr, "Correo"))
