@@ -32,11 +32,11 @@ func _objetivos() -> void:
 			var orden := l.clubes.duplicate()
 			orden.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep)
 			for k in n:
-				var dd := Directiva.new(orden[k] as Club, k + 1)
+				var dd := Directiva.new(orden[k] as Club, k + 1, n)   ## (12-11) como la crea el juego (`Mundo`), con el tamaño de su liga
 				if dd.meta_puesto < 1 or dd.meta_puesto > n:
 					mal.append("%s (%d clubes, puesto %d): meta %d «%s»" % [l.nombre, n, k + 1, dd.meta_puesto, dd.objetivo])
-				if dd.objetivo == "Evitar el descenso" and n < 14:
-					mal.append("%s (%d clubes): «Evitar el descenso» con meta 14 no se puede incumplir" % [l.nombre, n])
+				if dd.objetivo == "Evitar el descenso" and dd.meta_puesto >= n:
+					mal.append("%s (%d clubes): «Evitar el descenso» con meta %d no se puede incumplir" % [l.nombre, n, dd.meta_puesto])
 		await get_tree().process_frame
 	print("  (info) %d ligas revisadas, %d con menos de 16 clubes" % [ligas, chicas])
 	_comprobar(mal.is_empty(), "el objetivo de la directiva cabe en la liga y exige algo (%d fallos%s)" % [mal.size(), "" if mal.is_empty() else ": " + str(mal.slice(0, 4))])
