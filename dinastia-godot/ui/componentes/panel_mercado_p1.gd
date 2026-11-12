@@ -310,15 +310,22 @@ func _pintar_lista(mio: Club) -> void:
 		return
 	var g := GridContainer.new()
 	CebraRejilla.poner(g)
-	g.columns = 6
+	## (12-11) La demarcación de cada objetivo (antes había que abrir la ficha para saber si era un lateral o un delantero); de pie no cabe.
+	var con_pos := not EscalaMovil.es_vertical()
+	g.columns = 7 if con_pos else 6
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 8)
 	g.add_theme_constant_override("v_separation", 2)
-	_caja_lista.add_child(g)
+	var margen := MarginContainer.new()   ## la barra de desplazamiento pisaba la columna «GANAS»
+	margen.add_theme_constant_override("margin_right", 14)
+	margen.add_child(g)
+	_caja_lista.add_child(margen)
 
 	## [rótulo, ancho mínimo, a la derecha]
 	var columnas := [[Idiomas.t("NOMBRE"), 0, false], [Idiomas.t("CLUB"), 0, false], [Idiomas.t("EDAD"), 34, true],
 		[Idiomas.t("MED"), 44, true], [Idiomas.t("PIDEN"), 74, true], [Idiomas.t("GANAS"), 48, true]]
+	if con_pos:
+		columnas.push_front([Idiomas.t("POS"), 38, false])
 	for col: Array in columnas:
 		var h := _lbl(11, COL_SUAVE)
 		h.text = String(col[0])
@@ -334,6 +341,10 @@ func _pintar_lista(mio: Club) -> void:
 		var col_g       := COL_VERDE if ganas > 0.6 else (COL_ORO if ganas > 0.35 else COL_ROJO)
 		var med         := _mundo.ojeadores.ovr_texto(j) if _mundo.ojeadores != null else str(j.ovr)
 
+		if con_pos:
+			var pos_l := _lbl(12, COL_SUAVE)
+			pos_l.text = j.pos_e
+			g.add_child(pos_l)
 		var nom_b := Button.new()
 		nom_b.text = j.nombre
 		nom_b.flat = true
