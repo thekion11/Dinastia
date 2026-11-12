@@ -14,7 +14,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   móvil: aro del portador con color de equipo y flecha de ataque, el triángulo de tu jugador ya no tapa media pantalla; fuera el fondo
   negro redundante detrás del 3D.
 - FALTA: (proporciones y relleno de la cara HECHOS el 12-11, bloque 6) apariencia por país: los ficticios de Senegal salen con piel clara y pelo
-  pelirrojo; la cámara de TV en MÍNIMA pasó de 151 a 195 llamadas (ENG 2) con lo que entró en `main` el 12-11 (sin buscar aún la causa); reacción del infractor
+  pelirrojo; reacción del infractor
   a una falta sin tarjeta; vídeo con la cámara real de los saltos y reacciones (la foto fija no muestra el tiempo); medir en el teléfono
   el coste de la interfaz del partido (107 llamadas 2D) y reducirla.
 

@@ -131,6 +131,7 @@ texturas) y alternan; agruparlos por tamaño bajaría unas 8 más.
 - Cara de la biblioteca: el relleno «de cámara» (emisión) quemaba las pieles claras (mejilla ~235/255 frente a cuello ~195) y la dejaba
   plana; ahora es la mitad en las claras y entero en las oscuras (que sin él quedaban negras). Mejilla 238 → 231 y 232 → 224. Hoja
   `cara_relleno_piel_clara_antes_despues.jpg`; comprobado también con BRA, SEN y FRA.
-- MÍNIMA, cámara de TV (ENG 2): 195 llamadas con y sin el cambio (y 195 en `main`). OJO: esta mañana eran 151; la subida vino con lo
-  que entró en `main` entre medias, no con esto.
+- MÍNIMA, cámara de TV (ENG 2): 195 llamadas con y sin el cambio (y 195 en `main`). Esta mañana eran 151, pero NO es una regresión:
+  con el motor clásico (`MOTOR_CLASICO=1`, que nadie tocó) da 200 hoy y 200 en el `main` de la mañana (9679a6df); en C4 la cifra cambia
+  porque la sesión 13 cambió cómo se juega y la medida cae en otro instante del partido (147 → 195).
 - HALLAZGO (datos, sin tocar): los futbolistas ficticios de Senegal salen con piel muy clara y pelo pelirrojo: la apariencia por país.
