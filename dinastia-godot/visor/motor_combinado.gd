@@ -297,3 +297,8 @@ func _mover_jugadores(delta: float) -> void:
 func _companero_al_hueco(p: Dictionary) -> Dictionary:
 	var r := super(p)
 	return MejorasC4Hueco.buscar(self, p) if r.is_empty() and _mejoras_c4 else r
+
+## (12-11, sesión 15) cerca del área y sin presión, no se toca hacia atrás (`MejorasC4Avance`, `C4_NO_ATRAS=1`).
+func _mejor_pase(p: Dictionary) -> Dictionary:
+	var q := super(p)
+	return MejorasC4Avance.filtrar(self, p, q) if _mejoras_c4 else q
