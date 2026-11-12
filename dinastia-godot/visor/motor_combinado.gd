@@ -103,6 +103,17 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 		set_meta("_t_rechace", t)
 		_contar("c4_rechace")
 
+func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "", tipo := "de_pie") -> bool:
+	var antes := int(tarjetas_motor[0][0] + tarjetas_motor[0][1] + tarjetas_motor[1][0] + tarjetas_motor[1][1])
+	var r := super(infractor, victima, prob_tarjeta, motivo, tipo)
+	if _mejoras_c4 and r:
+		var quien := MejorasC4.seguidor_en(self, infractor, victima)
+		if quien != "":
+			_contar("c4_falta_" + quien)
+			if int(tarjetas_motor[0][0] + tarjetas_motor[0][1] + tarjetas_motor[1][0] + tarjetas_motor[1][1]) > antes:
+				_contar("c4_tarjeta_" + quien)
+	return r
+
 func _gol(en_arco_visita: bool) -> void:
 	if _mejoras_c4 and t - float(get_meta("_t_rechace", -99.0)) < 3.0:
 		_contar("c4_gol_rechace")

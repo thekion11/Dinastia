@@ -390,3 +390,13 @@ static func seguir_tiro(m: Object, p: Dictionary) -> Vector3:
 		return Vector3.INF
 	var i := (m.get_meta("_c4_sigue_ids", []) as Array).find(String(p["id"]))
 	return zona + Vector3((-3.0 if i == 0 else 3.0), 0.0, 0.0)
+
+## Diagnóstico de `seguir_tiro`: «seguidor» si el infractor sigue el tiro, «a_seguidor» si la víctima lo sigue (en los 4 s tras el tiro), "" si no.
+static func seguidor_en(m: Object, infractor: Dictionary, victima: Dictionary) -> String:
+	var ids: Array = m.get_meta("_c4_sigue_ids", [])
+	var clave := String(m.get_meta("_c4_sigue_clave", "@-99"))
+	if ids.is_empty() or float(m.t) - float(clave.get_slice("@", 1)) > 4.0:
+		return ""
+	if String(infractor["id"]) in ids:
+		return "seguidor"
+	return "a_seguidor" if String(victima["id"]) in ids else ""
