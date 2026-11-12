@@ -44,6 +44,8 @@ func _ready() -> void:
 			hs.append({"anio": 2005 + i * 2, "titulo": ["Liga", "Copa nacional", "Supercopa", "Copa continental"][i % 4], "cantidad": 1})
 		EdificioClub.ctx["hitos"] = hs
 		EdificioClub.ctx["titulos"] = n_t
+	if OS.get_environment("MUSEO") != "":   ## (12-11) MUSEO=1 TITULOS=9: la planta 3 abierta por títulos, sin la obra de nivel 5
+		(EdificioClub.ctx["inst"] as Dictionary)["museo"] = int(OS.get_environment("MUSEO"))
 	var perfil := EstadioPropio.new().perfil(m.ligas[0].clubes[int(OS.get_environment("PERFIL_DE"))] if OS.get_environment("PERFIL_DE") != "" else club)   ## PERFIL_DE=0: el estadio de OTRO club (para aislar qué cuelga)
 	perfil["niveles"] = 2
 	for kv in OS.get_environment("PERFIL_SET").split(",", false):   ## PERFIL_SET=aforo=85800,asiento2=#febe10: cambia campos del estadio (bisecar)
@@ -93,6 +95,10 @@ func _colocar(planta: int, sala: String) -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
+	if OS.get_environment("EVENTO_T") != "":   ## (12-11) ANIM=1 EVENTO_T=2.6: el mini evento del museo congelado en ese segundo
+		for ev in get_tree().root.find_children("*", "CanvasLayer", true, false):
+			if ev is EventoMuseo:
+				(ev as EventoMuseo)._t = float(OS.get_environment("EVENTO_T"))
 	if OS.get_environment("TRAZA") != "":
 		print("FRAME ", _n, " t=", Time.get_ticks_msec() / 1000)
 	if _n == 8:
