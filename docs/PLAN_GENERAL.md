@@ -46,7 +46,13 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   (7) PERSONAS FLOTANDO 3,7 cm (hallazgo `optA_persona`): el «parado» del pack sube el hueso root 4 cm para compensar las rodillas dobladas de
   la guardia; `PersonajeVida.piernas_de_persona` enderezaba las piernas pero dejaba esa subida (pies a 0,124 m en vez de 0,086). Ahora el root
   va a su reposo (DT, personal y gestos de banda); la prueba exige la cadera en el reposo (±1 cm).
-- FALTA: revisión en primera persona (orden 45) de club, estadio y casa; vídeo con la cámara real de las reacciones; medir el HUD en el teléfono real.
+  (8) PRIMERA PERSONA (orden 45), revisión a la altura de los ojos (MEDIA, Compatibility/llvmpipe; hojas en
+  `docs/04_auditorias/capturas_primera_persona_2026-11-12/`): club (13 salas, BRA, JPN y GER), casa (9 vistas) y túnel/campo (ENG, MEX, KOR).
+  ARREGLADO: las hojas del ascensor (el metal con ruido estirado parecía papel de aluminio arrugado; ahora acero satinado liso, mismas
+  llamadas). `prueba_casa_a_pie`: el evento de inicio de temporada tapaba sus 9 capturas. Descartado: el personal del pasillo «en la cara»
+  es la cámara de captura teletransportada (en el juego `ColisionClub` ya frena contra la gente).
+- FALTA: en la salida del túnel, dos bloques NEGROS a los lados de la portería tapan la vista a 1,6 m (ENG, MEX y KOR; identificar la pieza:
+  ¿trasera de las vallas o de los banquillos?); taquillas del vestuario visitante y butacas de la sala de vídeo muy planas de cerca; vídeo con la cámara real de las reacciones; medir el HUD en el teléfono real.
 - IDEA ANOTADA: lanzar el mini evento también en el momento de ganar el título que abre la planta (hoy sale en la primera visita).
 ## SESIÓN 15 (12-11): JUGABILIDAD DE C4 — rama `sesion15-jugabilidad` (detalle y cifras en `MOTOR_LEAGUE_SOCCER_PLAN.md`, tabla de banderas)
 - MEDIDO Y DESCARTADO (apagado, cada uno con su bandera): adelanto del pase por zona (`C4_ADELANTO=3`) y eligiendo otro compañero (`=4`):
