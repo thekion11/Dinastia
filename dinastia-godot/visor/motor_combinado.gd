@@ -302,3 +302,15 @@ func _companero_al_hueco(p: Dictionary) -> Dictionary:
 func _mejor_pase(p: Dictionary) -> Dictionary:
 	var q := super(p)
 	return MejorasC4Avance.filtrar(self, p, q) if _mejoras_c4 else q
+
+## (12-11, sesión 15) más 1 contra 1 en la frontal (`MejorasC4Avance.REGATE_AREA`): sube las ganas de encarar solo dentro de este intento.
+var _k_regate := 1.0
+func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> bool:
+	if _mejoras_c4 and MejorasC4Avance.REGATE_AREA > 0.0 and dist_arco < 32.0:
+		_k_regate = MejorasC4Avance.REGATE_AREA
+	var r := super(p, rival, dist_arco)
+	_k_regate = 1.0
+	return r
+
+func _escala_ritmo() -> float:
+	return super() * _k_regate
