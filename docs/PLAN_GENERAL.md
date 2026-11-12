@@ -18,10 +18,12 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - MEDIDO Y DESCARTADO (apagado, cada uno con su bandera): adelanto del pase por zona (`C4_ADELANTO=3`) y eligiendo otro compañero (`=4`):
   el pase arriesgado es el que crea el peligro; cabezazo al palo contrario (`C4_CABEZA`), solo y con `C4_AEREO`: el cabezazo ya convierte
   ~28 % (el medidor cuenta como «parado» el de córner; mirar `diag.gol_cabeza`), el problema es que sustituye al tiro con el pie;
-  regate y remate (`C4_REGATE_TIRO`): neutro.
+  regate y remate (`C4_REGATE_TIRO`): neutro; no tocar atrás cerca del área (`C4_NO_ATRAS`): neutro; más 1 contra 1 en la frontal
+  (`C4_REGATE_AREA`): bajan las cadenas sin crear ocasiones.
 - ENCENDIDO Y EN `main`: más pases al hueco (`C4_HUECO`, también al lateral que se incorpora): tiros en el área 7,7 → 8,2 y goles de
   jugada 0,59 → 0,67 (4 tandas de 12 con 6 países). Método: con 12 partidos el ruido es de ±0,7 goles; decidir con 2 muestras de países.
-- SIGUIENTE: llegada al área con el balón controlado (goles de jugada siguen ~0,7 de ~4,4); portero y rechaces; balón parado.
+- SIGUIENTE: los goles de jugada siguen en ~0,7 de ~4,4: ni no tocar atrás ni encarar más los suben. Ideas sin probar: desmarque de
+  ruptura del 9 sincronizado con el pase al hueco (que el hueco salga más veces que ~2 por partido), portero y rechaces, balón parado.
 
 ## SESIÓN 14 (12-11): LO QUE SE VE Y SE SIENTE EN EL PARTIDO — rama `sesion14-partido-visual` (informe `docs/04_auditorias/partido_visual_2026-11-12.md`)
 - HECHO: botas con horma (sin dedos), costura cara-cuello (borde pegado a la piel en 3D, también peatones y personal), nuca a la altura del
