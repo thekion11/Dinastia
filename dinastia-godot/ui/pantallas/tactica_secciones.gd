@@ -14,7 +14,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	if not todo:
 		var nivel := [Idiomas.t("Defensiva"), Idiomas.t("Equilibrada"), Idiomas.t("Ofensiva")]
 		p._lista_tactica.add_child(CifrasClave.banda([
-			[Idiomas.t("Formación"), c.tactica.formacion, p.COL_ACENTO],
+			[Idiomas.t("Formación"), c.tactica.formacion, SelectorDireccional.acento_legible(p.COL_ACENTO)],
 			[Idiomas.t("Mentalidad"), String(nivel[clampi(c.tactica.mentalidad, 0, 2)]), Principal.COL_TEXTO],
 			[Idiomas.t("El once"), Idiomas.t("%d de 11") % c.once_elegido.size() if c.once_elegido.size() > 0 else Idiomas.t("automático"), Principal.COL_ORO]],
 			Principal.COL_SUAVE))

@@ -22,6 +22,8 @@ static func banda(fichas: Array, suave: Color) -> Container:
 	return h
 
 static func _ficha(rotulo: String, cifra: String, color: Color, suave: Color) -> PanelContainer:
+	if color.get_luminance() < 0.3:   ## un color de club oscuro (granate, azul marino) no se lee sobre el fondo del menú: se aclara
+		color = color.lightened(0.45)
 	var caja := PanelContainer.new()
 	caja.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var sb := StyleBoxFlat.new()

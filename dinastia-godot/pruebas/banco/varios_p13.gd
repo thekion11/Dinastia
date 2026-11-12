@@ -231,6 +231,10 @@ func _probar_finanzas_por_pantallas() -> void:
 		"teléfono de pie: 4 fichas en 2 columnas; tumbado: en fila")
 	de_pie.free()
 	tumbado.free()
+	var oscura := CifrasClave.banda([["Formación", "4-4-2", Color("5a0f1e")]], Color.GRAY)
+	var cifra_oscura := oscura.find_children("*", "Label", true, false)[1] as Label
+	_comprobar(cifra_oscura.get_theme_color("font_color").get_luminance() >= 0.3, "una cifra en un color de club oscuro se aclara para leerse (luminancia %.2f)" % cifra_oscura.get_theme_color("font_color").get_luminance())
+	oscura.free()
 	## «Próximo partido» en tres pantallas (`PreviaPartido`).
 	var del_partido: Array = []
 	for s: Dictionary in MenusLaterales.menu_por_id("partido")["subs"]:

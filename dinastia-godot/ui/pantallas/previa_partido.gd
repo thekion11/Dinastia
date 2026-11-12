@@ -73,7 +73,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	if not todo:
 		p._lista_partido.get_child(p._lista_partido.get_child_count() - 1).queue_free()   ## el separador del cartel: la banda ya separa
 		p._lista_partido.add_child(CifrasClave.banda([
-			[Idiomas.t("Ganas tú"), "%.2f" % float(cuo["cuota_gano"]), p.COL_ACENTO],
+			[Idiomas.t("Ganas tú"), "%.2f" % float(cuo["cuota_gano"]), SelectorDireccional.acento_legible(p.COL_ACENTO)],
 			[Idiomas.t("Empate"), "%.2f" % float(cuo["cuota_empate"]), Principal.COL_SUAVE],
 			[Idiomas.t("Gana %s") % rival.nombre, "%.2f" % float(cuo["cuota_pierdo"]), Principal.COL_TEXTO],
 			[Idiomas.t("Tu ataque vs su defensa"), "%d / %d" % [int(round(f_mia["ata"])), int(round(f_suya["def"]))], Principal.COL_ORO]], Principal.COL_SUAVE))

@@ -292,6 +292,8 @@ func _pintar_roles_tacticos(c: Club) -> void:
 		var op := OptionButton.new()
 		op.add_theme_font_size_override("font_size", 11)
 		op.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		op.fit_to_longest_item = false   ## (12-11) en el teléfono de pie el rol más largo ensanchaba la página y cortaba los SÍ/NO de arriba
+		op.clip_text = true
 		var claves: Array = v.roles_de_grupo(Datos.grupo(j.pos_e))
 		claves.sort()
 		var elegido := 0

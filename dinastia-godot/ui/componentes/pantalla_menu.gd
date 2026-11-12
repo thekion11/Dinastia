@@ -321,6 +321,7 @@ func _montar_detalle() -> void:
 	if MenuLateral.abajo():   ## (vertical) el contenido y la ficha, uno debajo del otro, con desplazamiento vertical
 		h = VBoxContainer.new()
 		h.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.size_flags_vertical = Control.SIZE_EXPAND_FILL   ## (12-11) llena el alto: el panel acababa ~100 px antes de la barra de abajo
 		h.add_theme_constant_override("separation", 14)
 		var desliza := ScrollContainer.new()
 		desliza.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -343,6 +344,7 @@ func _montar_detalle() -> void:
 	_hueco_contenido.add_theme_stylebox_override("panel", caja)
 	h.add_child(_hueco_contenido)
 	if MenuLateral.abajo():
+		_hueco_contenido.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		_hueco_contenido.custom_minimum_size.y = get_viewport_rect().size.y - 160.0 - MenuLateral.reserva().y
 	_hueco_ficha = null
 	## Sin ficha del jugador en estos menús (pedido del usuario): el contenido ocupa todo el ancho.
