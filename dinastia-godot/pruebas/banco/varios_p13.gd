@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos, _probar_mundo_abandonado
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos, _probar_mundo_abandonado, _probar_fila_portadas_sigue_foco
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -226,3 +226,14 @@ func _probar_mundo_abandonado() -> void:
 	var vigia := Callable(n, "is_inside_tree")
 	n.free()
 	_comprobar(Mundo.abandonada(vigia), "con la pantalla ya liberada también se abandona")
+
+## (12-11) Fuera de Principal no hay guardián del foco: la fila de portadas del título (18 botones, 1966 px en 837 a 1280×720) debe seguir
+## al foco con mando o teclado; antes la última quedaba fuera del borde y el desplazamiento seguía en 0.
+func _probar_fila_portadas_sigue_foco() -> void:
+	_titulo("LA FILA DE PORTADAS DEL TÍTULO SIGUE AL FOCO")
+	var ini := Inicio.new()
+	add_child(ini)
+	var fila: HBoxContainer = ini.get("_fila_picker")
+	var sc := fila.get_parent() as ScrollContainer if fila != null else null
+	_comprobar(sc != null and sc.follow_focus, "el desplazamiento de las portadas sigue al foco")
+	ini.free()

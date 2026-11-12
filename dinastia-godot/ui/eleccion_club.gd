@@ -91,6 +91,7 @@ func _construir() -> void:
 	## el mundo, que es el mismo orden que PAISES_LIGAS.
 	var scroll_paises := ScrollContainer.new()
 	scroll_paises.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll_paises.follow_focus = true   ## (12-11) fuera de Principal no hay guardián del foco: con mando o teclado la fila sigue al país elegido
 	scroll_paises.custom_minimum_size = Vector2(0, 40)
 	raiz.add_child(scroll_paises)
 	_fila_paises = HBoxContainer.new()
