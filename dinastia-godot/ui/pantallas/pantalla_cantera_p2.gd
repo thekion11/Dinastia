@@ -281,8 +281,8 @@ func _pintar_contratos(c: Club) -> void:
 	## no juega -ya no es formación, es venta a plazo con opción u obligación.
 	var candidatos_prestamo := c.plantilla.filter(func(j: Jugador) -> bool:
 		return not ce.esta_cedido(j.id) and j.edad <= Cesiones.EDAD_CANTERANO)
-	var candidatos_venta := c.plantilla.filter(func(j: Jugador) -> bool:
-		return not ce.esta_cedido(j.id) and j.edad > Cesiones.EDAD_CANTERANO and j.partidos == 0)
+	var rodaje := c.plantilla.any(func(j: Jugador) -> bool: return j.partidos >= 4)   ## (12-11) sin partidos jugados, «0 partidos» era todo el plantel
+	var candidatos_venta := c.plantilla.filter(func(j: Jugador) -> bool: return rodaje and not ce.esta_cedido(j.id) and j.edad > Cesiones.EDAD_CANTERANO and j.partidos == 0)
 	if not puede_ceder:
 		var np := p._texto(12, Principal.COL_SUAVE)
 		np.text = String(p.mundo.roles.motivo_bloqueo("fichar"))

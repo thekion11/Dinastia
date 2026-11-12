@@ -18,31 +18,22 @@ extends PantallaBase
 func _pintar_balance_medico(c: Club) -> void:
 	var med := p.mundo.medico
 	var r: Dictionary = med.ranking_liga(c, p._liga_de(c))
-	var g := GridContainer.new()
-	g.columns = 4
-	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_theme_constant_override("h_separation", 12)
-	p._lista_medico.add_child(g)
-	var enfermeria := 0
-	for j in c.plantilla:
-		if j.lesion > 0:
-			enfermeria += 1
-	for par in [["En la enfermería", str(enfermeria)], ["Días perdidos", str(med.dias_perdidos)],
-			["En la liga", "%d.º de %d" % [int(r["puesto"]), int(r["total"])]],
-			["Media de la liga", "%d sem" % int(r["media"])]]:
-		var col := VBoxContainer.new()
-		g.add_child(col)
-		var et := p._texto(10, Principal.COL_SUAVE)
-		et.text = String(par[0])
-		col.add_child(et)
-		var va := p._texto(16, Principal.COL_TEXTO)
-		va.text = String(par[1])
-		col.add_child(va)
+	var enfermeria := c.plantilla.filter(func(j: Jugador) -> bool: return j.lesion > 0).size()
+	## (12-11) Las cuatro cifras del parte, en fichas grandes (`CifrasClave`): la enfermería en rojo si hay alguien, el puesto en verde si se está arriba.
+	var txt: Color = p._color_de_paleta(Principal.COL_TEXTO)
+	var arriba := int(r["puesto"]) * 2 <= int(r["total"])
+	p._lista_medico.add_child(CifrasClave.banda([
+		[Idiomas.t("En la enfermería"), str(enfermeria), p._color_accesible(Principal.COL_ROJO) if enfermeria > 0 else txt],
+		[Idiomas.t("Días perdidos"), str(med.dias_perdidos), txt],
+		[Idiomas.t("En la liga"), Idiomas.t("%d.º de %d") % [int(r["puesto"]), int(r["total"])], p._color_accesible(Principal.COL_VERDE) if arriba else txt],
+		[Idiomas.t("Media de la liga"), Idiomas.t("%d sem") % int(r["media"]), txt]], p._color_de_paleta(Principal.COL_SUAVE)))
 	## El veredicto en una frase. Un puesto en una tabla no dice qué hacer; esto
 	## sí, y es lo que convierte la pantalla en una decisión.
 	var mejor := int(r["mias"]) < int(r["media"])
 	var v := p._texto(11, Principal.COL_VERDE if mejor else Principal.COL_ORO)
-	v.text = (Idiomas.t("Tu cuerpo médico pierde menos semanas que la media de la liga. Se nota la inversión.")
+	## (12-11) «Se nota la inversión» salía también sin jefe médico contratado y sin un solo partido jugado.
+	v.text = ((Idiomas.t("Tu cuerpo médico pierde menos semanas que la media de la liga. Se nota la inversión.") if p.mundo.staff.nivel("medico") > 0
+		else Idiomas.t("Tu plantel pierde menos semanas por lesión que la media de la liga."))
 		if mejor else
 		Idiomas.t("Pierdes más semanas por lesión que la media. Mira el jefe médico, el centro médico y la carga de entrenamiento."))
 	v.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
