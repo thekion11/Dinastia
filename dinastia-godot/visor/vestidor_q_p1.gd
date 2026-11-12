@@ -391,6 +391,7 @@ static func _con_reposo(mi: MeshInstance3D, superficie: int) -> void:
 				col[i] = Color(clampf((p.z + 0.25) / 0.5, 0.0, 1.0), 0.0, 0.0, 1.0)
 			arr[Mesh.ARRAY_TEX_UV2] = uv2
 			arr[Mesh.ARRAY_COLOR] = col
+			BotasQ.aplicar(arr)   ## (12-11) la puntera del pie desnudo pasa a ser horma de bota
 			var liso := _alisado(pos, arr[Mesh.ARRAY_NORMAL], arr[Mesh.ARRAY_INDEX])
 			arr[Mesh.ARRAY_CUSTOM0] = liso[0]
 			arr[Mesh.ARRAY_CUSTOM1] = liso[1]
