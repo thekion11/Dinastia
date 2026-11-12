@@ -255,5 +255,6 @@ static func centro(m: MotorJugable, p: Dictionary) -> void:
 		if q != p and bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and m.pos(q).distance_to(arco) < 18.0:
 			n += 1
 	m._contar("traza_centro")
+	m.set_meta("_t_centro", m.t)   ## (12-11) C4 lo lee: tras un centro, el rematador va a donde baja el balón (`MejorasC4.punto_aereo`)
 	m._contar("traza_centro_n_" + (str(n) if n < 3 else "3mas"))
 

@@ -209,13 +209,16 @@ static func encarar_banda(m: Object, p: Dictionary) -> void:
 ## balón a 1,5-2,4 m): casi no había remates de cabeza. Con el balón en el aire se predice (tiro parabólico, sin arrastre) dónde baja a la
 ## altura de la cabeza (`AEREO_ALTO`) si cae cerca de un área, o al pecho si no. Devuelve Vector3.INF si el balón no va por el aire.
 static var AEREO := _bandera("C4_AEREO", true)
-static var SOLO_AREA := _bandera("C4_AEREO_AREA", true)   ## solo balones que caen cerca de un área
+static var SOLO_AREA := _bandera("C4_AEREO_AREA", true)
+static var SOLO_CENTRO := _bandera("C4_AEREO_CENTRO", true)   ## solo en los 3 s tras un centro   ## solo balones que caen cerca de un área
 static var RADIO_CABEZA := _num("C4_RADIO_CABEZA", 0.8)   ## alcance del cabezazo en C4 (0,8 = el de siempre)
 const AEREO_ALTO := 1.9
 const AEREO_PECHO := 0.6
 static func punto_aereo(m: Object) -> Vector3:
 	if not AEREO:
 		return Vector3.INF
+	if SOLO_CENTRO and not _tras_centro(m):
+		return Vector3.INF   ## solo tras un centro o un córner (medido: con todos los balones altos bajaban los goles de pie)
 	var b: Vector3 = (m.balon as Node3D).position
 	var v: Vector3 = m.vel_balon
 	if b.y < 1.0 and v.y < 2.0:
@@ -237,3 +240,10 @@ static func _t_altura(y: float, vy: float, g: float, h: float) -> float:
 		return -1.0
 	var r := (vy + sqrt(disc)) / g
 	return r if r > 0.0 else -1.0
+
+## ¿Hace menos de 3 s de un centro en juego o de un córner?
+static func _tras_centro(m: Object) -> bool:
+	var t: float = m.t
+	if t - float(m.get_meta("_t_centro", -99.0)) < 3.0:
+		return true
+	return String(m.get_meta("_traza_saque_tipo", "")) == "corner" and t - float(m.get_meta("_traza_saque_t", -99.0)) < 3.0
