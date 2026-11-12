@@ -79,3 +79,20 @@ celebraciones de CMU (`varios_p11`) pasa a 3 de cada 5. Escena para ver clips co
 
 Pendiente de este bloque: reacción del infractor a una falta sin tarjeta (hoy solo protesta el amonestado), saltos de disputa en los
 córners con más de dos jugadores, y verlo en vídeo con la cámara real (la foto fija no muestra el tiempo).
+
+## Bloque 3: legibilidad del partido en el móvil (`visor/marcador_jugador.gd`)
+
+Visto en el teléfono simulado (Compatibility, 2400×1080 y 1080×2400, zoom de móvil, partido del modo carrera; hoja
+`legibilidad_movil_aro_portador.jpg`, CHI / ARG / ESP):
+1. **Un triángulo amarillo enorme abajo en el centro** tapaba el juego: era el marcador de tu jugador. Medía su tamaño con la cámara del
+   viewport PRINCIPAL (nula: el partido va en un SubViewport) y a los PIES del jugador (21 m), con mínimo de 1,1 m; en el modo carrera
+   la cámara va detrás y arriba, a dos pasos del triángulo. Arreglado: cámara del SubViewport, distancia a la propia marca y sin mínimo
+   grande: mide lo mismo en pantalla a cualquier distancia.
+2. **No se leía quién lleva el balón ni hacia dónde se ataca.** Nuevo: un aro en el césped bajo el portador, celeste si es de tu equipo
+   y naranja si es rival, con una flecha hacia la portería que ataca su equipo; crece con la distancia (con la cámara baja, un aro fino
+   quedaba en 1 píxel) y se dibuja encima del pasto. Se esconde en repeticiones, goles, descanso, tanda y fin. `SIN_ARO_BALON=1` lo quita.
+Coste en MÍNIMA (`hw_modesto.sh res://pruebas/medir_partido_jugable.tscn`, opengl3 1280×720): 1 nodo y 1 malla; llamadas 691 → 679
+(la diferencia es del instante), vídeo 197 → 197 MB. Mando táctil: `captura_tactil_movil` «FIN. 0 fallos» en horizontal (2 partidos)
+y en vertical. Escena nueva: `pruebas/captura_legible_movil.tscn` (fotos cuando alguien lleva el balón).
+
+Nota para el bloque 4: el partido jugable pide ~680 llamadas de dibujo en MÍNIMA (1 478 objetos): es la palanca para pasar de 30 a 60 FPS.
