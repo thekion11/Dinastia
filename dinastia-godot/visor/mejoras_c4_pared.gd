@@ -96,6 +96,8 @@ static func _rival_cerca(m: Object, punto: Vector3, local: bool, r: float) -> bo
 static var APOYO := OS.get_environment("C4_APOYO") != "0"   ## ENCENDIDO (12-11, medido 12+12): pases por posesión, acierto y regates ganados suben y las pérdidas por entrada bajan en las dos tandas
 const APOYO_PRESION := 3.0
 const APOYO_D := 7.0
+static var APOYO2 := OS.get_environment("C4_APOYO2") == "1"   ## el tercer hombre (12-11, en medición)
+const APOYO2_D := 12.0
 static func apoyo(m: Object, p: Dictionary) -> Vector3:
 	if not APOYO or bool(p["por"]):
 		return Vector3.INF
@@ -106,19 +108,28 @@ static func apoyo(m: Object, p: Dictionary) -> Vector3:
 	var pc: Vector3 = m.pos(c)
 	if rival.is_empty() or m.pos(rival).distance_to(pc) > APOYO_PRESION:
 		return Vector3.INF
-	## ¿Es `p` el compañero de campo más cercano al portador (a < 15 m)?
+	## ¿Es `p` el compañero de campo más cercano al portador (a < 15 m)? ¿O el segundo (a < 20 m, el «tercer hombre», `C4_APOYO2`)?
 	var mi_d := pc.distance_to(m.pos(p))
-	if mi_d > 15.0:
+	if mi_d > 20.0:
 		return Vector3.INF
+	var antes := 0
 	for q: Dictionary in m.jugadores:
 		if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and String(q["id"]) != String(p["id"]) and String(q["id"]) != String(c["id"]):
 			if pc.distance_to(m.pos(q)) < mi_d:
-				return Vector3.INF
+				antes += 1
+	if antes > (1 if APOYO2 else 0) or (antes == 0 and mi_d > 15.0):
+		return Vector3.INF
 	var local := bool(p["es_local"])
 	var d: float = m.dir_ataque(local)
 	var lejos_rival: Vector3 = pc - m.pos(rival)
 	lejos_rival.y = 0.0
 	var base := (lejos_rival.normalized() + Vector3(0.0, 0.0, -d * 0.6)).normalized()   ## lejos del rival y algo por detrás: de cara
+	if antes == 1:
+		## El tercer hombre: por delante en diagonal, del otro lado, a `APOYO2_D` m; el que recibe el apoyo de cara tiene salida adelante.
+		var lado := -signf(lejos_rival.x) if absf(lejos_rival.x) > 0.1 else (1.0 if pc.x < 0.0 else -1.0)
+		var punto := pc + Vector3(lado * 0.6, 0.0, d).normalized() * APOYO2_D
+		punto.x = clampf(punto.x, -float(m.ANCHO) + 1.0, float(m.ANCHO) - 1.0)
+		return Vector3.INF if m._adelantado(p, c) else punto
 	for ang: float in [0.0, 0.6, -0.6]:
 		var punto := pc + base.rotated(Vector3.UP, ang) * APOYO_D
 		punto.x = clampf(punto.x, -float(m.ANCHO) + 1.0, float(m.ANCHO) - 1.0)

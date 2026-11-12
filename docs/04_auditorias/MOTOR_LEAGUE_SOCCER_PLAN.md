@@ -616,3 +616,18 @@ Pendiente: balón parado (córners, faltas, saques de banda), cabezazos (0 goles
 | `C4_SEGUIR` (v2: `C4_SEGUIR_Z`=9, sin esprintar de cerca) | 2 compañeros van a la zona del rechace sin disputarla | ENCENDIDA | v2: goles de jugada 1,3/1,2 → 1,5/1,3, goles 3,9/3,8 → 4,8/3,8, tarjetas normales; regates ganados −0,8 (la v1, esprintando a 7 m, destapó las tarjetas de más) |
 | `C4_PARED` | pared cerca del área (ida, desmarque, vuelta de primera; `MejorasC4Pared`) | apagada | v1 y v2: goles 3,9/3,8 → 3,3-3,6, tiros desde dentro bajan; solo 0,2-0,7 paredes completadas por partido (la vuelta se corta) |
 | `C4_APOYO` | el compañero más cercano se ofrece de cara (7 m, línea limpia) al portador apretado (rival a < 3 m) | ENCENDIDA | 12+12: pases completados por posesión 1,45/1,59 → 1,58/1,66, acierto de pase +1 punto, pérdidas por entrada 12,3/11,1 → 11,2/9,6, regates ganados 9,7/10,3 → 10,6/11,5 (en las dos tandas); cadenas de 5+ 2,8/3,6 → 4,0/3,5 y goles 4,8/3,8 → 4,5/4,1 (mixtos) |
+
+### RESUMEN PARA EL DUEÑO — sesión 13, jugabilidad de C4 (12-11)
+**Qué se nota al jugar (motor C4, el de por defecto):**
+- **Ya no se tira desde cualquier sitio.** Antes C4 tiraba ~45 veces por partido, unas 30 desde lejos, en cuanto pisaba los 40 m. Ahora el que tiene el balón lejos del área casi siempre sigue la jugada: tiros lejanos 31 → 8 por partido. Los tiros de lejos siguen existiendo, sobre todo en los jugadores con buen tiro.
+- **Más juego por banda.** El extremo con carril libre encara hacia el fondo y centra: los centros en juego se triplican.
+- **Faltas laterales ensayadas.** Una falta desde un costado ya no es un tiro imposible: se centra al primer palo, al penal o al segundo palo (goles de falta 0,7 → 1,2 por partido).
+- **Un árbitro justo.** C4 sacaba 5-7 tarjetas por partido y, con expulsiones de verdad, a veces echaba a 3 jugadores (un partido se llegaba a suspender). La causa: los defensas que repliegan llegaban lanzados por la espalda y entraban. Ahora no se entra por detrás a toda velocidad: 2-3 tarjetas y como mucho 1 expulsado por partido.
+- **Los compañeros van al rechace.** Tras un remate, dos compañeros esperan el rechace del portero frente al área chica (sin chocar): más goles de jugada.
+- **El que está apretado tiene a quién darla.** Cuando te presionan, el compañero más cercano se ofrece de cara con la línea limpia: más pases por posesión, menos balones perdidos por entrada y más regates ganados.
+
+**Cifras clave (por partido, MITAD=240, 12+12 partidos con clubes de 3 países):** tiros lejanos 31 → 8; tarjetas 5-7 → 2-3 (expulsados máx. 1); regates ganados se mantienen (~10-11); goles ~6 → ~4-4,5 (los que se fueron eran rebotes de tiros lejanos y penales de un arbitraje roto; los goles de JUGADA suben de ~1,2 a ~1,5).
+
+**Lo que se probó y NO se quedó (apagado, cada uno con su bandera, para probarlo cuando quieras):** pase directo al mejor colocado, ir de cabeza a todos los centros (más cabezazos pero menos goles), decidir más rápido cerca del área, saque de banda ensayado, defensa que contiene en vez de entrar (dos formas), la pared (se cortaba la vuelta). Detalle y tabla de banderas arriba.
+
+**Lo que falta:** que las jugadas de 5 o más pases sean frecuentes (hoy 3-4 por partido) y probarlo todo en tu teléfono (el selector A-D de Ajustes deja comparar C4 con el motor de siempre).
