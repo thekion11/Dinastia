@@ -316,9 +316,7 @@ func _pintar_mapa_del_talento() -> void:
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_cantera.add_child(d)
 
-func _pintar_linaje(c: Club) -> void:
-	_pintar_fondos(c)
-	_pintar_mapa_del_talento()
+func _pintar_linaje(c: Club) -> void:   ## (12-11) los fondos y el mapa del talento van con los juveniles (`_pintar_cantera`)
 	if p.mundo.cantera == null:
 		return
 	var fams := p.mundo.cantera.familias()
@@ -333,6 +331,11 @@ func _pintar_linaje(c: Club) -> void:
 		if not aqui.is_empty():
 			mias[clave] = aqui
 	if mias.is_empty():
+		if p._lista_cantera.get_child_count() == 0:   ## la pantalla «Leyendas y linaje» sin nada todavía: se dice por qué
+			var vacio := p._texto(12, Principal.COL_SUAVE)
+			vacio.text = Idiomas.t("Todavía no hay leyendas retiradas ni familias en el plantel. Cuando una figura del club se retire quedará aquí, y años después puede llegar su hijo a la cantera.")
+			vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			p._lista_cantera.add_child(vacio)
 		return
 	p._lista_cantera.add_child(HSeparator.new())
 	var t := p._texto(11, Principal.COL_SUAVE)

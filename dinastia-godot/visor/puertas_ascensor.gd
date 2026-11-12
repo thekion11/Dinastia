@@ -48,6 +48,10 @@ static func poner(nodo: Node3D, cx: float, z: float, y0: float, ancho: float, ac
 		PiezasObra._caja(pivote, Vector3(-lado * ancho / 4.0, alto / 2.0, 0.0), Vector3(ancho / 2.0, alto, 0.06), acero, false)
 		PiezasObra._caja(pivote, Vector3(-lado * (ancho / 2.0 - 0.03), alto / 2.0, -0.04), Vector3(0.02, alto - 0.1, 0.02), marco, false)   ## junta central
 
+## El color de la franja de la cabina: el del club (`EdificioClub.ctx["club"]`) o un azul neutro.
+static func acento_de(club: Variant) -> Color:
+	return Color((club as Club).color1) if club is Club else Color(0.1, 0.3, 0.7)
+
 ## El material de la cabina: uno por tamaño de hueco y color (todas las plantas de un club lo comparten).
 static var _cabinas := {}
 static func _mat_cabina(tam: Vector2, acento: Color) -> ShaderMaterial:

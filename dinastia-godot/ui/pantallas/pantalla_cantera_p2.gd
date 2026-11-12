@@ -22,6 +22,8 @@ func _pintar_cantera(c: Club) -> void:
 		_cantera_leyendas(c, ct)
 	if todo or secc == "juveniles":
 		_cantera_juveniles(c, ct)
+		_pintar_fondos(c)
+		_pintar_mapa_del_talento()
 	if todo or secc == "linaje":
 		_pintar_linaje(c)   ## las dinastías, al final
 

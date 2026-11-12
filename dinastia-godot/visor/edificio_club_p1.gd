@@ -184,10 +184,8 @@ static func zonas(x0: float, z_out: float, z_fin: float) -> Array:
 ## El ascensor: puertas de acero con su botonera, en la fachada de atrás.
 static func _ascensor(nodo: Node3D, x0: float, z_fin: float, y0: float) -> void:
 	var cx := x0 + (ASC_X0 + ASC_X1) / 2.0
-	var club_ctx: Variant = ctx.get("club")
-	var acento := Color((club_ctx as Club).color1) if club_ctx is Club else Color(0.1, 0.3, 0.7)
-	## (10-11) marco y dos hojas que se abren; (12-11) cabina con fondo y el indicador de planta
-	PuertasAscensor.poner(nodo, cx, z_fin, y0, ASC_X1 - ASC_X0 - 0.3, acento, str(roundi(y0 / ALTO_PLANTA)))
+	## (10-11) marco y dos hojas que se abren; (12-11) cabina con fondo (franja del color del club) y el indicador de planta
+	PuertasAscensor.poner(nodo, cx, z_fin, y0, ASC_X1 - ASC_X0 - 0.3, PuertasAscensor.acento_de(ctx.get("club")), str(roundi(y0 / ALTO_PLANTA)))
 	var boton := PiezasObra._mat_unico(Color(1, 0.8, 0.3), 0.3)
 	boton.emission_enabled = true
 	boton.emission = Color(1, 0.75, 0.25)
