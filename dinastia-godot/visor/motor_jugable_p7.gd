@@ -53,6 +53,7 @@ func _ia_portador(p: Dictionary) -> void:
 	var linea_limpia: Array = MotorTiroLimpio.mejor(self as Object as MotorJugable, p) if dist_arco < MotorTiroLimpio.alcance(34.0) else [0.0, -1.0]
 	if float(linea_limpia[1]) >= 0.0:
 		ganas_tiro *= MotorTiroLimpio.factor_ganas(float(linea_limpia[1])) if ganas_tiro > 0.0 else 1.0
+	ganas_tiro = _ganas_tiro_extra(p, dist_arco, ganas_tiro, presion)   ## gancho (12-11): C4 lo usa para la paciencia; aquí no cambia nada
 	## MÁS CHISPA (20-10-2026): el sorteo era muy conservador y el partido se quedaba en ~0,8 tiros por minuto
 	## y equipo (FC ronda 1,5). Ahora se anima más desde la frontal; la calidad del tiro no cambia.
 	if dist_arco < MotorTiroLimpio.alcance(34.0 if lejano else 30.0) and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO / pow(prisa(), 1.3):
@@ -105,3 +106,8 @@ func _ia_portador(p: Dictionary) -> void:
 		var conduce := dist_arco < 34.0 and presion > 3.0
 		if hay_prisa or float(mejor.get("_nota", 0.0)) > 1.5 or (not conduce and _rng.randf() < 0.15):
 			_pasar_a(p, mejor)
+
+## GANCHO DE LAS GANAS DE TIRAR (12-11-2026, sesión 13): el motor de siempre las deja igual (no gasta azar: la huella no cambia);
+## `MotorCombinado` (C4) lo cambia por la paciencia de `MejorasC4.ganas_tiro`.
+func _ganas_tiro_extra(_p: Dictionary, _dist_arco: float, ganas: float, _presion: float) -> float:
+	return ganas

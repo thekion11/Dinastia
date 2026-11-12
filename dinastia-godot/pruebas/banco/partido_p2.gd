@@ -386,3 +386,55 @@ func _probar_faltas_puntos() -> void:
 	(def_mas[1]["node"] as Node3D).position = Vector3(5, 0, 33.0)
 	_comprobar(is_equal_approx(motor.linea_fuera_de_juego(1.0), 33.0), "M-107: la línea del fuera de juego es la del penúltimo (%.1f)" % motor.linea_fuera_de_juego(1.0))
 	raiz.queue_free()
+
+## (12-11, sesión 13) PACIENCIA ANTE EL TIRO LEJANO de C4 (`MejorasC4.ganas_tiro`): cerca del arco no cambia nada; de lejos casi no se
+## tira; con un compañero mejor colocado se le encuentra (y se le pasa). El motor de siempre no la ve (`_ganas_tiro_extra` = las ganas).
+func _probar_paciencia_c4() -> void:
+	_titulo("C4: PACIENCIA ANTE EL TIRO LEJANO")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var yo: Dictionary = {}
+	var comp: Dictionary = {}
+	for p: Dictionary in motor.jugadores:
+		if bool(p["por"]):
+			continue
+		if bool(p["es_local"]) and yo.is_empty():
+			yo = p
+		elif bool(p["es_local"]) and comp.is_empty():
+			comp = p
+	var arco := motor._arco_rival(yo)
+	var d := motor.dir_ataque(true)
+	## Todos lejos, en su campo; el portador a 38 m del arco.
+	for p: Dictionary in motor.jugadores:
+		if not bool(p["por"]):
+			(p["node"] as Node3D).position = Vector3(-20.0 + float(motor.jugadores.find(p) % 10) * 4.0, 0, -d * 30.0)
+	(yo["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 38.0)
+	for p: Dictionary in motor.jugadores:
+		if not bool(p["es_local"]) and not bool(p["por"]):
+			(p["node"] as Node3D).position = Vector3(-18.0, 0, arco.z - d * 6.0)   ## un defensa atrás: el de delante queda habilitado
+			break
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 13
+	_comprobar(is_equal_approx(motor._ganas_tiro_extra(yo, 38.0, 0.4, 3.0), 0.4), "el motor de siempre no cambia las ganas de tirar")
+	_comprobar(is_equal_approx(MejorasC4.ganas_tiro(motor, yo, 14.0, 0.4, 3.0, rng), 0.4), "dentro del área C4 tampoco cambia nada")
+	var tiros_lejos := 0
+	for i in 200:
+		if MejorasC4.ganas_tiro(motor, yo, 38.0, 0.4, 3.0, rng) > 0.0:
+			tiros_lejos += 1
+	_comprobar(tiros_lejos < 20, "a 38 m casi nunca se tira (%d de 200)" % tiros_lejos)
+	_comprobar(MejorasC4._companero_mejor(motor, yo, 38.0).is_empty(), "sin nadie por delante no hay compañero mejor colocado")
+	(comp["node"] as Node3D).position = Vector3(4.0, 0, arco.z - d * 14.0)
+	var q := MejorasC4._companero_mejor(motor, yo, 38.0)
+	_comprobar(not q.is_empty() and String(q["id"]) == String(comp["id"]), "el compañero libre a 14 m del arco está mejor colocado")
+	var a_26 := 0
+	var a_26_solo := 0
+	(comp["node"] as Node3D).position = Vector3(4.0, 0, arco.z - d * 12.0)
+	for i in 300:
+		if MejorasC4.ganas_tiro(motor, yo, 26.0, 0.4, 3.0, rng) > 0.0:
+			a_26 += 1
+	(comp["node"] as Node3D).position = Vector3(-20.0, 0, -d * 30.0)
+	for i in 300:
+		if MejorasC4.ganas_tiro(motor, yo, 26.0, 0.4, 3.0, rng) > 0.0:
+			a_26_solo += 1
+	_comprobar(a_26 < a_26_solo, "con un compañero mejor colocado se tira menos (%d frente a %d de 300)" % [a_26, a_26_solo])
+	(r[1] as Node3D).queue_free()
