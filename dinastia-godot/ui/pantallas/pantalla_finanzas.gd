@@ -275,6 +275,8 @@ func _vender_club() -> void:
 	p._refrescar()
 
 ## La pestaña CAMARÍN: cámaras, clima, clanes, salud mental y jerarquía (desde `Principal`, 27-10).
+const SECC_CAMARIN := ["clima", "grupos", "salud"]
+
 func _pintar_camarin(c: Club) -> void:
 	p._limpiar(p._lista_camarin)
 	var v := p.mundo.vestuario
@@ -288,6 +290,20 @@ func _pintar_camarin(c: Club) -> void:
 		cam.text = Idiomas.t("🎥 Hay cámaras en el vestuario %d semana(s) más. A los más sensibles del plantel les incomoda.") % p.mundo.prensa.semanas_documental
 		cam.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_camarin.add_child(cam)
+	## (12-11, menús a pantalla completa) Tres pantallas (`p._secc_extra["Camarín"]`): el CLIMA (cifras y por qué sube o baja la moral), los
+	## GRUPOS (clanes, camarillas y jerarquía) y la SALUD mental. Otra sección = todo seguido.
+	var secc := String(p._secc_extra.get("Camarín", "clima"))
+	var todo := not SECC_CAMARIN.has(secc)
+	if todo or secc == "clima":
+		_cam_clima(c, v)
+	if todo or secc == "grupos":
+		_cam_grupos(c, v)
+	if todo or secc == "salud":
+		_cam_salud(c.plantilla, v)
+	if todo or secc == "grupos":
+		_cam_jerarquia(c.plantilla)
+
+func _cam_clima(c: Club, v: Vestuario) -> void:
 	var pl := c.plantilla
 	var moral := 60
 	var ansi := 0
@@ -308,24 +324,14 @@ func _pintar_camarin(c: Club) -> void:
 	var t := p._texto(11, p.COL_SUAVE)
 	t.text = Idiomas.t("CLIMA DEL VESTUARIO")
 	p._lista_camarin.add_child(t)
-	var gr := GridContainer.new()
-	CebraRejilla.poner(gr)
-	gr.columns = 4
-	gr.add_theme_constant_override("h_separation", 14)
-	p._lista_camarin.add_child(gr)
-	for par in [["Moral media", str(moral)], ["Ansiedad media", str(ansi)],
-			["Capitán", p._ui_cantera._apellido(cap.nombre) if cap else "—"], ["Grupos", str(v.camarillas.size())]]:
-		var col := VBoxContainer.new()
-		gr.add_child(col)
-		var et := p._texto(10, p.COL_SUAVE)
-		et.text = String(par[0])
-		col.add_child(et)
-		var va := p._texto(15, p.COL_ROJO if (String(par[0]) == "Ansiedad media" and ansi > 50) else p.COL_TEXTO)
-		va.text = String(par[1])
-		col.add_child(va)
+	var txt: Color = p._color_de_paleta(p.COL_TEXTO)   ## (12-11) en fichas grandes
+	p._lista_camarin.add_child(CifrasClave.banda([[Idiomas.t("Moral media"), str(moral), p._color_accesible(p.COL_VERDE if moral >= 65 else (p.COL_ROJO if moral < 45 else p.COL_ORO))],
+		[Idiomas.t("Ansiedad media"), str(ansi), p._color_accesible(p.COL_ROJO) if ansi > 50 else txt],
+		[Idiomas.t("Capitán"), p._ui_cantera._apellido(cap.nombre) if cap else "—", txt], [Idiomas.t("Grupos"), str(v.camarillas.size()), txt]], p._color_de_paleta(p.COL_SUAVE)))
 	p._lista_camarin.add_child(HSeparator.new())
 	p._pintar_porque_moral(c)
 
+func _cam_grupos(c: Club, v: Vestuario) -> void:
 	var tc := p._texto(11, p.COL_SUAVE)
 	tc.text = Idiomas.t("CLANES Y CAMARILLAS")
 	p._lista_camarin.add_child(tc)
@@ -368,6 +374,7 @@ func _pintar_camarin(c: Club) -> void:
 			p._boton("🕊️ Mediar con el grupo", func() -> void: _mediar_clan(cid), fila)
 		p._lista_camarin.add_child(HSeparator.new())
 
+func _cam_salud(pl: Array[Jugador], v: Vestuario) -> void:
 	var en_riesgo: Array[Jugador] = []
 	for j in pl:
 		if v.ansiedad(j) >= 48:
@@ -377,9 +384,8 @@ func _pintar_camarin(c: Club) -> void:
 	tm.text = Idiomas.t("🧠 SALUD MENTAL")
 	p._lista_camarin.add_child(tm)
 	if en_riesgo.is_empty():
-		var vm := p._texto(12, p.COL_SUAVE)
-		vm.text = Idiomas.t("Nadie está pasándolo mal ahora mismo.")
-		p._lista_camarin.add_child(vm)
+		p._lista_camarin.add_child(EstadoVacio.crear("🩺", Idiomas.t("Nadie está pasándolo mal ahora mismo."), Idiomas.t("Aquí aparecen los jugadores con la ansiedad alta, para darles terapia o un descanso."),
+			p._color_de_paleta(p.COL_TEXTO), p._color_de_paleta(p.COL_SUAVE), 220.0))
 	for j: Jugador in en_riesgo:
 		var est: Dictionary = v.estado_mental(j)
 		var filaj := HBoxContainer.new()
@@ -396,6 +402,7 @@ func _pintar_camarin(c: Club) -> void:
 		p._boton("Descanso mental", func() -> void: _pedir_descanso_mental(j), filaj)
 	p._lista_camarin.add_child(HSeparator.new())
 
+func _cam_jerarquia(pl: Array[Jugador]) -> void:
 	var th := p._texto(11, p.COL_SUAVE)
 	th.text = Idiomas.t("JERARQUÍA INTERNA")
 	p._lista_camarin.add_child(th)

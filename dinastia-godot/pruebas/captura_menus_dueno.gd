@@ -18,6 +18,9 @@ func _foto(nombre: String) -> void:
 	var ruta := "%s/%02d_%s.jpg" % [_dir, _n, nombre]
 	img.save_jpg(ruta, 0.9)
 	print("foto %s (%dx%d)" % [ruta, img.get_width(), img.get_height()])
+	## (12-11) El diseñador de equipación es una capa a pantalla completa: si se queda abierto, tapa todas las fotos que vienen después.
+	for d in get_tree().root.find_children("*", "DisenadorKit", true, false):
+		d.call("_cerrar")
 
 func _cerrar() -> void:
 	var pm = _p._menu_lateral.pantalla_abierta

@@ -86,7 +86,9 @@ const MENUS := [
 		{"tab": "Gente", "secc": "identidad", "label": "Identidad visual", "icono": "🎨", "desc": "Colores, escudo, apodo y tipografía."},
 		{"tab": "Gente", "secc": "kits", "label": "Equipación", "icono": "👕", "desc": "El diseñador de camisetas, a pantalla completa."},
 		{"tab": "Gente", "secc": "interno", "label": "El club por dentro", "icono": "🏢", "desc": "Palco, prensa, vestuario, la app y la web del club."},
-		{"tab": "Camarín", "label": "Camarín", "icono": "🚪", "desc": "Clima del vestuario, camarillas y capitanes."}]},
+		{"tab": "Camarín", "secc": "clima", "label": "Camarín", "icono": "🚪", "desc": "El clima del vestuario y por qué sube o baja la moral."},
+		{"tab": "Camarín", "secc": "grupos", "label": "Clanes y jerarquía", "icono": "👥", "desc": "Las camarillas, sus líderes y quién pesa en el vestuario."},
+		{"tab": "Camarín", "secc": "salud", "label": "Salud mental", "icono": "🩺", "desc": "Quién lo está pasando mal: terapia y descanso."}]},
 	{"id": "carrera", "icono": "🎓", "nombre": "Mi Carrera", "estilo": 2,
 		"lema": "Tu camino como entrenador: rol, habilidades y reputación.",
 		"colores": ["#0f0d06", "#211b0b", "#f2c84b"], "subs": [

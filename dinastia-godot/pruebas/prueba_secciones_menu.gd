@@ -20,6 +20,9 @@ const CASOS := [
 	["Federación", "_lista_fed", "reglamento", "REGLAMENTO VIGENTE", "LICENCIA DE CLUB"],
 	["Federación", "_lista_fed", "licencia", "LICENCIA DE CLUB", "REGLAMENTO VIGENTE"],
 	["Federación", "_lista_fed", "asamblea", "RELACIÓN CON EL ARBITRAJE", "LICENCIA DE CLUB"],
+	["Camarín", "_lista_camarin", "clima", "CLIMA DEL VESTUARIO", "JERARQUÍA INTERNA"],
+	["Camarín", "_lista_camarin", "grupos", "JERARQUÍA INTERNA", "SALUD MENTAL"],
+	["Camarín", "_lista_camarin", "salud", "SALUD MENTAL", "CLANES Y CAMARILLAS"],
 ]
 var _p: Principal
 var _fallos := 0

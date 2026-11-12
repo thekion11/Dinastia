@@ -9,7 +9,7 @@ extends RefCounted
 const POR_SITIO := {"Finanzas.cuentas": "finanzas", "Finanzas.taquilla": "taquilla", "Finanzas.banco": "banco", "Mercado": "mercado",
 	"Táctica.pizarra": "táctica", "Partido.previa": "próximo partido", "Clubes.tablas": "ligas y clubes", "Clubes.goleadores": "goleadores",
 	"Club.staff": "personal del club", "Gente.personas": "la gente del club", "Redes.redes": "feed de redes", "Enfermería": "enfermería",
-	"Libres": "jugadores libres", "Contratos": "contratos", "Calendario": "calendario", "Club.infra": "infra", "Vida.bienestar": "bienestar", "Vida.familia": "familia", "Camarín": "camarín", "Correo": "correo"}
+	"Libres": "jugadores libres", "Contratos": "contratos", "Calendario": "calendario", "Club.infra": "infra", "Vida.bienestar": "bienestar", "Vida.familia": "familia", "Camarín.clima": "camarín", "Correo": "correo"}
 
 static func de_sub(p: Principal, sub: Dictionary) -> String:
 	var sitio := String(sub.get("tab", ""))

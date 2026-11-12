@@ -51,7 +51,7 @@ func informe_de_gestion() -> Array[Dictionary]:
 			descontentos += 1
 	if descontentos > 0:
 		salida.append({"grave": descontentos >= 5, "txt": "%d jugador%s con la moral por los suelos o pidiendo salir." % [
-			descontentos, "es" if descontentos > 1 else ""], "tab": "Camarín"})
+			descontentos, "es" if descontentos > 1 else ""], "tab": "Camarín", "secc": "clima"})
 
 	## 5. La calle y el despacho.
 	if prensa != null and prensa.funa >= 55:
