@@ -37,5 +37,17 @@ func _ready() -> void:
 	_comprobar(ha == hb, "mismo mundo que `generar` con la misma semilla: %s" % ha)
 	if ha != hb:
 		print("  sincrona: ", ha, "\n  por trozos: ", hb)
+	## (12-11, fallo n.º 1 del plan) Si la pantalla que la pidió se va a mitad, se abandona sin tocar lo global.
+	var marca := {"marca": true}
+	LeyesPais.clubes_mundo = marca
+	Meta.heredar_proximo = true
+	var viva := [true]
+	var c := Mundo.new()
+	get_tree().create_timer(0.05).timeout.connect(func() -> void: viva[0] = false)
+	await c.generar_por_trozos(["CHI", "ARG"], 4711, 8.0, func() -> bool: return viva[0])
+	_comprobar(LeyesPais.clubes_mundo == marca, "abandonada: no pisa `LeyesPais.clubes_mundo` (%d clubes creados de %d)" % [c.clubes.size(), b.clubes.size()])
+	_comprobar(Meta.heredar_proximo, "abandonada: no gasta la herencia pedida (`Meta.heredar_proximo` sigue)")
+	Meta.heredar_proximo = false
+	LeyesPais.clubes_mundo = b.clubes
 	print(("===== FIN. %d FALLOS =====" if _fallos > 0 else "===== FIN. 0 fallos =====") % _fallos)
 	get_tree().quit()

@@ -296,7 +296,7 @@ func _ir_a(i: int, avanza: bool) -> void:
 			_aviso_velo.text = Idiomas.t("Generando el mundo…")
 			await get_tree().process_frame
 			await get_tree().process_frame
-			estado["mundo"] = await CargaCiudad.de("OrquestadorMundo").generar_mundo_por_trozos()   ## (7-11) por trozos: la pantalla sigue viva
+			estado["mundo"] = await CargaCiudad.de("OrquestadorMundo").generar_mundo_por_trozos(is_inside_tree)   ## (7-11) por trozos: la pantalla sigue viva
 			if not is_inside_tree():
 				return   ## se salió mientras se generaba
 		_montar(i)

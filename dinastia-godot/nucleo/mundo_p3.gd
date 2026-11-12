@@ -35,3 +35,32 @@ func _chequear_desafios_tras_partido(gf: int, gc: int, rival: Club) -> void:
 			var objetivo := int(round(float(directiva.confianza) * 0.5))
 			directiva.mover_confianza(objetivo - directiva.confianza,
 				"perdiste el clásico -desafío activo, cuesta el doble-")
+
+## La MISMA generación, repartida entre fotogramas (7-11, meta «< 200 ms por carga»): cada club se crea igual y en el mismo orden (mismo mundo para la misma semilla), pero
+## tras cada trozo de `ms_trozo` ms se cede un fotograma para que la pantalla siga viva. Devuelve cuando termina (`await`).
+## `sigue` (12-11, fallo n.º 1 del plan): si se da y deja de ser válida o devuelve false (la pantalla que la pidió se fue), la generación
+## se ABANDONA en el siguiente trozo sin tocar lo global (`LeyesPais.clubes_mundo`, `Meta.heredar_proximo`, `LigasActivas`).
+func generar_por_trozos(paises: Array[String] = [], semilla_partida: int = 0, ms_trozo := 25.0, sigue := Callable()) -> void:
+	_generar_inicio(semilla_partida)
+	var arbol := Engine.get_main_loop() as SceneTree
+	var t0 := Time.get_ticks_usec()
+	for f: Dictionary in _fuentes_de_liga(paises):
+		var liga := Liga.new(f["nombre"], f["pais"], int(f.get("division", 1)))
+		if liga.division() == 1 and ReglasAscenso.tiene(liga.pais):
+			liga.plazas_descenso = int(ReglasAscenso.de(liga.pais)["bajan"])   ## (10-11) los descensos reales del país
+		for fila: Array in f["clubes"]:
+			_generar_club(liga, f, fila)
+			if arbol != null and float(Time.get_ticks_usec() - t0) / 1000.0 >= ms_trozo:
+				await arbol.process_frame
+				if abandonada(sigue):
+					return
+				t0 = Time.get_ticks_usec()
+		liga.preparar()
+		ligas.append(liga)
+	await Reales.aplicar_por_trozos(self, ms_trozo)
+	if abandonada(sigue):
+		return
+	_generar_cierre()
+
+static func abandonada(sigue: Callable) -> bool:
+	return not sigue.is_null() and (not sigue.is_valid() or not bool(sigue.call()))

@@ -226,26 +226,6 @@ func _crear_liga_completa(f: Dictionary) -> Liga:
 	ligas.append(liga)
 	return liga
 
-## La MISMA generación, repartida entre fotogramas (7-11, meta «< 200 ms por carga»): cada club se crea igual y en el mismo orden (mismo mundo para la misma semilla), pero
-## tras cada trozo de `ms_trozo` ms se cede un fotograma para que la pantalla siga viva. Devuelve cuando termina (`await`).
-func generar_por_trozos(paises: Array[String] = [], semilla_partida: int = 0, ms_trozo := 25.0) -> void:
-	_generar_inicio(semilla_partida)
-	var arbol := Engine.get_main_loop() as SceneTree
-	var t0 := Time.get_ticks_usec()
-	for f: Dictionary in _fuentes_de_liga(paises):
-		var liga := Liga.new(f["nombre"], f["pais"], int(f.get("division", 1)))
-		if liga.division() == 1 and ReglasAscenso.tiene(liga.pais):
-			liga.plazas_descenso = int(ReglasAscenso.de(liga.pais)["bajan"])   ## (10-11) los descensos reales del país
-		for fila: Array in f["clubes"]:
-			_generar_club(liga, f, fila)
-			if arbol != null and float(Time.get_ticks_usec() - t0) / 1000.0 >= ms_trozo:
-				await arbol.process_frame
-				t0 = Time.get_ticks_usec()
-		liga.preparar()
-		ligas.append(liga)
-	await Reales.aplicar_por_trozos(self, ms_trozo)
-	_generar_cierre()
-
 func _generar_inicio(semilla_partida: int) -> void:
 	Partido.ex_de_mi_club.clear()   ## 28-10: un mundo nuevo no hereda los rencores del anterior (los ids j%d se repiten)
 	semilla = Azar.sembrar(semilla_partida)
