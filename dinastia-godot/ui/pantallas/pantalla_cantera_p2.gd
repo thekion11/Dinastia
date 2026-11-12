@@ -151,7 +151,7 @@ func _pintar_roles_prometidos(c: Club) -> void:
 		fila.add_child(nom)
 		var op := OptionButton.new()
 		op.add_theme_font_size_override("font_size", 11)
-		op.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		op.size_flags_horizontal = Control.SIZE_EXPAND_FILL; op.fit_to_longest_item = false   ## (12-11) de pie, el rol más largo sacaba la fila de la pantalla
 		var elegido := 0
 		for n in tabla.size():
 			var f: Array = tabla[n]
@@ -204,7 +204,7 @@ func _pintar_agencias(c: Club) -> void:
 		## En rojo los que tienen fuerza para exigir y además desconfían (`Cantera.agente_aprieta`); en dorado los que ya confían en ti.
 		var l := p._texto(12, Principal.COL_ROJO if Cantera.agente_aprieta(jugadores.size(), conf) else (Principal.COL_ORO if conf > 0 else Principal.COL_TEXTO))
 		l.text = Idiomas.t("%s  ·  %s  ·  %d jugador(es)  ·  confianza %d") % [
-			String(ag.get("nombre", "un representante")), String(ag.get("perfil", "")),
+			String(ag.get("nombre", "un representante")), MesaAgente.nombre_perfil(String(ag.get("perfil", ""))),
 			jugadores.size(), conf]
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_contratos.add_child(l)
@@ -219,11 +219,44 @@ func _pintar_agencias(c: Club) -> void:
 
 func _pintar_contratos(c: Club) -> void:
 	p._limpiar(p._lista_contratos)
-	_pintar_agencias(c)
-	_pintar_roles_prometidos(c)
 	var ce := p.mundo.cesiones
 	if ce == null:
+		_pintar_roles_prometidos(c); _pintar_agencias(c)
 		return
+
+	## Ceder es una decisión de mercado como fichar o vender: el mismo permiso. (12-11) Primero lo que URGE, las renovaciones; las agencias, que enterraban todo, van antes de las cláusulas.
+	var puede_ceder := p.mundo.roles == null or p.mundo.roles.puede_fichar()
+	## RENOVACIONES. `Cantera.pide_para_renovar()` llevaba tiempo sabiendo
+	## calcular lo que pide cada uno -sueldo actual, recargo por moral baja y por
+	## rendir por encima del club, y el multiplicador de su agente- y no había
+	## forma de decirle que sí. Un contrato que se acaba y no se puede renovar es
+	## un jugador que se pierde solo.
+	##
+	## Se listan los que entran en su último año, que son los que urgen.
+	if ce != null and p.mundo.cantera != null and puede_ceder:
+		var por_renovar := c.plantilla.filter(func(j: Jugador) -> bool: return j.anios_contrato <= 1)
+		var tr := p._texto(11, Principal.COL_SUAVE)
+		tr.text = Idiomas.t("RENOVACIONES  ·  último año de contrato")
+		p._lista_contratos.add_child(tr)
+		if por_renovar.is_empty():
+			var sin := p._texto(12, Principal.COL_SUAVE)
+			sin.text = Idiomas.t("Nadie termina contrato esta temporada.")
+			p._lista_contratos.add_child(sin)
+		for j: Jugador in por_renovar:
+			var pide := p.mundo.cantera.pide_para_renovar(j)
+			var fila_r: Container = HFlowContainer.new() if EscalaMovil.es_vertical() else HBoxContainer.new()   ## de pie, los botones bajan de renglón
+			fila_r.add_theme_constant_override("separation", 6)
+			p._lista_contratos.add_child(fila_r)
+			var nr := p._texto(12, Principal.COL_TEXTO)
+			nr.text = Idiomas.t("%s  ·  %d años  ·  media %d  ·  cobra %s → pide %s") % [
+				j.nombre, j.edad, j.ovr, p._dinero(j.sueldo), p._dinero(pide)]
+			nr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			fila_r.add_child(nr)
+			p._boton("Renovar", func() -> void: p._ui_club_vida._renovar(j, false), fila_r)
+			## Con cláusula cobra un 10% menos: le pones precio de salida y a
+			## cambio te ahorras ficha. Es la decisión, no un adorno.
+			p._boton("Con cláusula (−10%)", func() -> void: p._ui_club_vida._renovar(j, true), fila_r)
+		p._lista_contratos.add_child(HSeparator.new())
 
 	var fuera := ce.cedidos_de(c.id)
 	if not fuera.is_empty():
@@ -250,8 +283,6 @@ func _pintar_contratos(c: Club) -> void:
 		return not ce.esta_cedido(j.id) and j.edad <= Cesiones.EDAD_CANTERANO)
 	var candidatos_venta := c.plantilla.filter(func(j: Jugador) -> bool:
 		return not ce.esta_cedido(j.id) and j.edad > Cesiones.EDAD_CANTERANO and j.partidos == 0)
-	## Ceder es una decisión de mercado como fichar o vender: el mismo permiso.
-	var puede_ceder := p.mundo.roles == null or p.mundo.roles.puede_fichar()
 	if not puede_ceder:
 		var np := p._texto(12, Principal.COL_SUAVE)
 		np.text = String(p.mundo.roles.motivo_bloqueo("fichar"))
@@ -263,7 +294,7 @@ func _pintar_contratos(c: Club) -> void:
 		tc.text = Idiomas.t("A QUIÉN CEDER")
 		p._lista_contratos.add_child(tc)
 		for j: Jugador in candidatos_prestamo:
-			var fila2 := HBoxContainer.new()
+			var fila2: Container = HFlowContainer.new() if EscalaMovil.es_vertical() else HBoxContainer.new()   ## de pie, los botones bajan de renglón
 			fila2.add_theme_constant_override("separation", 8)
 			p._lista_contratos.add_child(fila2)
 			var nom := p._texto(12, Principal.COL_TEXTO)
@@ -272,7 +303,7 @@ func _pintar_contratos(c: Club) -> void:
 			fila2.add_child(nom)
 			p._boton("Ceder a préstamo", func() -> void: p._ui_finanzas._ceder_canterano(j), fila2)
 		for j: Jugador in candidatos_venta:
-			var fila3 := HBoxContainer.new()
+			var fila3: Container = HFlowContainer.new() if EscalaMovil.es_vertical() else HBoxContainer.new()   ## de pie, los botones bajan de renglón
 			fila3.add_theme_constant_override("separation", 6)
 			p._lista_contratos.add_child(fila3)
 			var nom2 := p._texto(12, Principal.COL_SUAVE)
@@ -283,38 +314,7 @@ func _pintar_contratos(c: Club) -> void:
 			p._boton("Con obligación", func() -> void: p._ui_finanzas._ceder_con_opcion(j, Cesiones.CESION_OBLIGA), fila3)
 		p._lista_contratos.add_child(HSeparator.new())
 
-	## RENOVACIONES. `Cantera.pide_para_renovar()` llevaba tiempo sabiendo
-	## calcular lo que pide cada uno -sueldo actual, recargo por moral baja y por
-	## rendir por encima del club, y el multiplicador de su agente- y no había
-	## forma de decirle que sí. Un contrato que se acaba y no se puede renovar es
-	## un jugador que se pierde solo.
-	##
-	## Se listan los que entran en su último año, que son los que urgen.
-	if ce != null and p.mundo.cantera != null and puede_ceder:
-		var por_renovar := c.plantilla.filter(func(j: Jugador) -> bool: return j.anios_contrato <= 1)
-		var tr := p._texto(11, Principal.COL_SUAVE)
-		tr.text = Idiomas.t("RENOVACIONES  ·  último año de contrato")
-		p._lista_contratos.add_child(tr)
-		if por_renovar.is_empty():
-			var sin := p._texto(12, Principal.COL_SUAVE)
-			sin.text = Idiomas.t("Nadie termina contrato esta temporada.")
-			p._lista_contratos.add_child(sin)
-		for j: Jugador in por_renovar:
-			var pide := p.mundo.cantera.pide_para_renovar(j)
-			var fila_r := HBoxContainer.new()
-			fila_r.add_theme_constant_override("separation", 6)
-			p._lista_contratos.add_child(fila_r)
-			var nr := p._texto(12, Principal.COL_TEXTO)
-			nr.text = Idiomas.t("%s  ·  %d años  ·  media %d  ·  cobra %s → pide %s") % [
-				j.nombre, j.edad, j.ovr, p._dinero(j.sueldo), p._dinero(pide)]
-			nr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			fila_r.add_child(nr)
-			p._boton("Renovar", func() -> void: p._ui_club_vida._renovar(j, false), fila_r)
-			## Con cláusula cobra un 10% menos: le pones precio de salida y a
-			## cambio te ahorras ficha. Es la decisión, no un adorno.
-			p._boton("Con cláusula (−10%)", func() -> void: p._ui_club_vida._renovar(j, true), fila_r)
-		p._lista_contratos.add_child(HSeparator.new())
-
+	_pintar_roles_prometidos(c); _pintar_agencias(c)
 	## Las cláusulas de tu plantel: la protección va al revés que un fichaje, se
 	## paga para que NADIE pueda llevarse a tu figura por la puerta de atrás.
 	var tcl := p._texto(11, Principal.COL_SUAVE)

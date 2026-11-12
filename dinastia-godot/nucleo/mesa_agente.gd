@@ -34,6 +34,10 @@ const PERFIL := {
 	"discreto": {"minimo": 55, "paciencia": 4, "farol": 0.48, "emoji": "🕶️"},
 	"formador": {"minimo": 44, "paciencia": 5, "farol": 0.52, "emoji": "🎓"},
 }
+
+## El perfil tal como se LEE (12-11: en Contratos salían las claves en crudo, «tiburon» y «mediatico», sin tilde y sin traducir).
+static func nombre_perfil(clave: String) -> String:
+	return Idiomas.t(String({"tiburon": "tiburón", "mediatico": "mediático"}.get(clave, clave)))
 ## Lo que se le puede soltar de farol, según lo que exige.
 const FAROLES := {
 	"canterano": "Decirle que ya hablaste con otra agencia",
