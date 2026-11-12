@@ -68,6 +68,21 @@ func _montar_base(pr: Node) -> void:
 	_raiz.modulate.a = 0.0   ## fundido de entrada
 	create_tween().tween_property(_raiz, "modulate:a", 1.0, 0.45)
 
+## ENTRADA EN CASCADA (12-11): las piezas de la pantalla (cabecera, tarjetas, veredicto, botón) aparecen una detrás de otra, de arriba abajo,
+## con `Animar.aparecer` (fundido y un 3 % de crecimiento). Con «Animaciones reducidas» no hace nada: todo está a la vista desde el principio.
+## Espera un fotograma para que el contenedor ya les haya dado su tamaño (el crecimiento parte del centro de cada pieza).
+var piezas_cascada: Array = []
+func entrada_en_cascada(piezas: Array, primer_retraso := 0.15, paso := 0.09) -> void:
+	piezas_cascada = piezas
+	if Animar.reducidas() or not is_inside_tree():
+		return
+	for n: Control in piezas:
+		n.modulate.a = 0.0
+	await get_tree().process_frame
+	for i in piezas.size():
+		if is_instance_valid(piezas[i]):
+			Animar.aparecer(piezas[i] as Control, primer_retraso + paso * i, 0.3)
+
 static func etiqueta(texto: String, tam: int, color: Color, centrada := true, ajustar := true) -> Label:
 	var l := Label.new()
 	l.text = texto

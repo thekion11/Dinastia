@@ -42,8 +42,17 @@ func _process(_d: float) -> void:
 		print("al pulsar «Temporada siguiente» sale la pantalla única de resumen: ", sale)
 		var ok := sale
 		if sale:
-			await get_tree().create_timer(1.0).timeout
 			var dir := OS.get_environment("CAPTURAR")
+			## (12-11) La entrada en cascada: pasado su tiempo, las piezas (tu club, 4 tarjetas, veredicto y botón) están todas a la vista y a su
+			## tamaño. (No se mira «a medio camino»: depende de la velocidad de la máquina.)
+			var piezas: Array = (rs as ResumenTemporada).piezas_cascada
+			await get_tree().create_timer(2.0).timeout
+			var a_la_vista := true
+			for n: Control in piezas:
+				if n.modulate.a < 0.99 or not n.scale.is_equal_approx(Vector2.ONE):
+					a_la_vista = false
+			print("entrada en cascada: ", piezas.size(), " piezas, todas a la vista al final: ", a_la_vista)
+			ok = ok and piezas.size() >= 6 and a_la_vista
 			if dir != "":
 				get_viewport().get_texture().get_image().save_jpg(dir.path_join("resumen_temporada.jpg"), 0.9)
 			var tam: Vector2 = (rs as ResumenTemporada)._raiz.size

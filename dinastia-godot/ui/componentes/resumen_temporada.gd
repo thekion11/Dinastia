@@ -59,7 +59,8 @@ func _rellenar(foto: Dictionary, resumen: Dictionary) -> void:
 		arriba.add_child(_patrocinador(String(pat["marca"]), String(pat.get("color", "#ffffff"))))
 	_centro.add_child(arriba)
 	_centro.add_child(etiqueta("🏆 " + Idiomas.t("Resumen de la temporada"), 30, Tema.ORO, true, false))
-	_centro.add_child(_cabecera(d))
+	var cabecera := _cabecera(d)
+	_centro.add_child(cabecera)
 	var rejilla := GridContainer.new()
 	rejilla.columns = 2
 	rejilla.add_theme_constant_override("h_separation", 24)
@@ -69,10 +70,13 @@ func _rellenar(foto: Dictionary, resumen: Dictionary) -> void:
 	rejilla.add_child(_tarjeta_torneo("🌎 " + (String(d["conti"]) if d["conti"] != "" else Idiomas.t("Continental")), d["conti_campeon"], d["club"]))
 	rejilla.add_child(_tarjeta_movimientos(d))
 	rejilla.add_child(_tarjeta_premios(d))
-	_centro.add_child(_veredicto(d["directiva"]))
+	var veredicto := _veredicto(d["directiva"])
+	_centro.add_child(veredicto)
 	var seguir := boton("▶ " + Idiomas.t("Empezar la temporada %d") % (int(d["anio"]) + 1), true)
 	seguir.pressed.connect(_cerrar)
 	_centro.add_child(seguir)
+	## (12-11) Entrada por tarjetas: tu club, las cuatro tarjetas, el veredicto de la directiva y, al final, el botón.
+	entrada_en_cascada([cabecera] + rejilla.get_children() + [veredicto, seguir])
 
 func _cerrar() -> void:
 	var t := create_tween()
