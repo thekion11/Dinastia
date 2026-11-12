@@ -42,6 +42,10 @@ static func fila_de(j: Jugador) -> Dictionary:
 	var f: Variant = t.get(j.pais, {})
 	if f is Dictionary and int((f as Dictionary).get("n", 0)) >= MIN_JUGADORES:
 		return f
+	## (12-11) Con pocas caras medidas, la media MUNDIAL (clara) no sirve para un país con tono propio conocido (Nigeria, Ghana, Costa de
+	## Marfil… salían claros): mejor el modelo del país (`Cara.TONO_MEDIO` / `PielPaises`), que lo trata quien llama al devolver vacío.
+	if Cara.TONO_MEDIO.has(j.pais) or PielPaises.TONO.has(j.pais):
+		return {}
 	return t.get("*", {})
 
 ## Piel, color de pelo, barba, corte y calvicie de `j` (sobre `base`). Devuelve false si no hay tabla (queda el modelo anterior).

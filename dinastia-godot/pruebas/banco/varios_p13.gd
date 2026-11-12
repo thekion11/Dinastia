@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_finanzas_por_pantallas, _probar_agentes_confianza, _probar_cantera_por_pantallas, _probar_informe_abre_su_pantalla, _probar_paginador_submenu
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos, _probar_finanzas_por_pantallas, _probar_agentes_confianza, _probar_cantera_por_pantallas, _probar_informe_abre_su_pantalla, _probar_paginador_submenu
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -189,6 +189,32 @@ func _probar_solo_primera_persona() -> void:
 	dr.position = Vector2(200, 300)
 	_comprobar(VistaJuego.mirada_por_evento(dr, 1000.0) == Vector2.ZERO, "por la izquierda (la cruceta) no se mira")
 	_comprobar(is_equal_approx(VistaJuego.cabeceo(0.0, 10.0), VistaJuego.CABECEO_MIN) and is_equal_approx(VistaJuego.cabeceo(0.0, -10.0), VistaJuego.CABECEO_MAX), "el cabeceo tiene tope arriba y abajo")
+
+## (12-11, hallazgo de la sesión 14) Los 88 países añadidos después tienen su tono de piel: antes caían en el defecto (claro y a veces rubio).
+func _probar_piel_paises_nuevos() -> void:
+	_titulo("PIEL Y PELO DE LOS PAÍSES AÑADIDOS DESPUÉS")
+	var codigos: Array = (JSON.parse_string(FileAccess.get_file_as_string("res://datos/paises.json"))["paises"] as Dictionary).keys()
+	var sin := codigos.filter(func(c: String) -> bool: return not Cara.TONO_MEDIO.has(c) and not PielPaises.TONO.has(c))
+	_comprobar(sin.is_empty(), "todos los países tienen tono de piel (%d sin él: %s)" % [sin.size(), str(sin.slice(0, 6))])
+	var medias := {}
+	for pais: String in ["SEN", "NGA", "FIN", "IND"]:
+		var suma := 0.0
+		var rub := 0
+		for k in 300:
+			var j := Jugador.new()
+			j.id = "pn_%s_%d" % [pais, k]
+			j.pais = pais
+			j.edad = 24
+			var l := Cara.look_de(j)
+			suma += float(Cara.PIELES.find(String(l["piel"])))
+			if String(l["peloC"]) in ["#c8a05a", "#8a6a3a"]:
+				rub += 1
+		medias[pais] = [suma / 300.0, rub]
+	_comprobar(float(medias["SEN"][0]) > 5.0 and float(medias["NGA"][0]) > 5.0, "Senegal y Nigeria salen de piel oscura (%.1f y %.1f de 7)" % [medias["SEN"][0], medias["NGA"][0]])
+	_comprobar(int(medias["SEN"][1]) == 0 and int(medias["NGA"][1]) == 0, "y sin rubios (%d y %d de 300)" % [medias["SEN"][1], medias["NGA"][1]])
+	_comprobar(float(medias["FIN"][0]) < 2.0 and int(medias["FIN"][1]) > 40, "Finlandia, clara y con rubios (%.1f; %d de 300)" % [medias["FIN"][0], medias["FIN"][1]])
+	_comprobar(float(medias["IND"][0]) > 3.0 and float(medias["IND"][0]) < 5.0, "India, tono medio (%.1f)" % medias["IND"][0])
+	_comprobar(PielPaises.sesgo("SEN", 1.5) < 0.3 and is_equal_approx(PielPaises.sesgo("XXX", 1.5), 1.5), "la grada de Senegal también sale oscura; un país desconocido mantiene el defecto")
 
 ## (12-11, nota del dueño: menús subdivididos a pantalla completa) Finanzas ya no es una página: cinco submenús de «Dinero», uno por sección
 ## de `PantallaFinanzas.SECCIONES`, con su tarjeta, su icono dibujado y su banda de cifras clave.

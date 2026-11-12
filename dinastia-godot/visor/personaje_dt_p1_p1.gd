@@ -223,6 +223,7 @@ static func _objetivos(a: Dictionary, cuerpo: String = "male") -> Dictionary:
 	if a.has("ropa"):
 		for nombre: String in PROPORCION_PERSONA:
 			o[nombre] = (o.get(nombre, Vector3.ONE) as Vector3) * (PROPORCION_PERSONA[nombre] as Vector3)
+	for n: String in a.get("proporcion", {}): o[n] = (o.get(n, Vector3.ONE) as Vector3) * (a["proporcion"][n] as Vector3)   ## (12-11) `PersonajeDT.PROPORCION_FUTBOLISTA`
 	return o
 
 static func _cuerpo(d: Dictionary, a: Dictionary, con_guardian := true) -> void:

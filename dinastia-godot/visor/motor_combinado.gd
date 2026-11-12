@@ -124,6 +124,12 @@ func _gol(en_arco_visita: bool) -> void:
 		_contar("c4_gol_rechace")
 	super(en_arco_visita)
 
+## (12-11, sesión 13) pase tenso cuando la línea está limpia, solo en C4 (`MejorasC4Pared.tenso`).
+func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, tenso := false) -> void:
+	if _mejoras_c4 and not tenso and not largo and MejorasC4Pared.tenso(self, p, q):
+		tenso = true
+	super(p, q, largo, al_hueco, tenso)
+
 func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 	var r := super(p, victima, base)
 	if not _mejoras_c4:

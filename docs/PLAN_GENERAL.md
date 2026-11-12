@@ -4,6 +4,13 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## ESTADO AL 12-11 MEDIODÍA (sesiones Opus 13 y 14 cerradas y ARCHIVADAS; todo en `main`)
+- CI de `main` en VERDE ENTERO por primera vez (f9147058): banco, 6 especiales, Windows, Windows ligero, Linux, Android, Android armv7, Web, Web móvil, C++ Android y C++ ARM. Solo se salta el AAB de Play (falta la keystore, la lleva el dueño). Arreglos del día: CI que se cancelaba en `main`, directiva con ligas de 13 clubes, tarjetas de C4, entrada arm64 del .gdextension en el trabajo ARM y acción de exportar idempotente (Web + Web móvil).
+- Sesión 13 (jugabilidad de C4, 10 bloques): resumen para el dueño en `MOTOR_LEAGUE_SOCCER_PLAN.md` («RESUMEN PARA EL DUEÑO — sesión 13»). Encendido: paciencia ante el tiro lejano, encarar por la banda, falta lateral ensayada, no entrar por detrás a toda velocidad, seguir el tiro v2 y apoyo de cara. SIGUIENTE idea medida: el ADELANTO del pase (el rival llega antes al punto; el pasador debería compararlo y darla al pie o a otro).
+- Sesión 14 (lo visual del partido, 6 bloques): botas, costura cara-cuello, nuca, disputa aérea a tiempo, reacciones, aro del portador en el móvil, HUD 95 → 40 llamadas, proporciones del cuerpo y relleno de luz en pieles claras. Informe: `docs/04_auditorias/partido_visual_2026-11-12.md`. Las +44 llamadas en la cámara de TV con C4 NO son regresión (motor clásico: 200 = 200).
+- Líder: menú central (pie de ayudas del mando, socios en la cabecera), ligas programadas para la próxima temporada, solo primera persona (orden 45) con mirada por dedo/ratón/stick, plantas sin bolas verdes, piel de los 88 países añadidos después.
+- PENDIENTE DEL DUEÑO: prueba en el teléfono (`GUIA_PRUEBA_TELEFONO_2026-11-11.md`; ahora con primera persona y el HUD aligerado), keystore para el AAB, y decidir si se abren sesiones nuevas (aviso de uso semanal cerca del límite).
+
 ## PREGUNTAS PARA EL DUEÑO (sesiones Opus) — se acumulan aquí y se envían juntas por Calendar al llegar a 5 (orden 44); se borran al responderse
 - (12-11, sesión de pulido) ECONOMÍA DE LAS LIGAS CHICAS: en Uruguay, Paraguay, Bolivia, Ecuador, Perú, Colombia y Chile casi todos los clubes empiezan la partida perdiendo plata cada año y con sueldos del 45-100 % de sus ingresos (cifras en «BALANCE MEDIDO», más abajo). ¿Es a propósito (clubes que viven de vender jugadores) o hay que bajar sueldos / subir ingresos (tele, patrocinio) en esas ligas para que se puedan sostener?
 
@@ -13,7 +20,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   al fallo, entradas de pie variadas, acrobacias y lamentos de CMU, todo NEUTRO para la simulación de C4 (6 cruces idénticos a `main`);
   móvil: aro del portador con color de equipo y flecha de ataque, el triángulo de tu jugador ya no tapa media pantalla; fuera el fondo
   negro redundante detrás del 3D.
-- FALTA: proporciones del cuerpo «superhéroe» de cerca; cara de la biblioteca algo plana y clara frente al cuello; reacción del infractor
+- FALTA: (proporciones y relleno de la cara HECHOS el 12-11, bloque 6) apariencia por país: los ficticios de Senegal salen con piel clara y pelo
+  pelirrojo; reacción del infractor
   a una falta sin tarjeta; vídeo con la cámara real de los saltos y reacciones (la foto fija no muestra el tiempo); medir en el teléfono
   el coste de la interfaz del partido (107 llamadas 2D) y reducirla.
 

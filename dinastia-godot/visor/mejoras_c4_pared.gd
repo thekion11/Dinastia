@@ -179,3 +179,16 @@ static func ancho(m: Object, p: Dictionary, r: Vector3) -> Vector3:
 			if ANCHO_MODO >= 2:
 				r.x = lado * maxf(absf(r.x), float(m.ANCHO) * 0.4)
 	return r
+
+## EL PASE TENSO (12-11-2026, sesión 13, decisión del líder: «no es la colocación sino el pase»). Diagnóstico con los contadores: de ~29
+## pases perdidos por partido, 19 salían con la línea LIMPIA y 18 los cortó un rival que estaba a más de 3 m de la línea y llegó en más
+## de 1 s: el pase raso iba lento (llegaba a 4 + 1,5·d m/s) y daba tiempo a correr a cortarlo. En C4 (`C4_PASE_TENSO`), el pase raso a
+## 10-`TENSO_MAX` m con la línea limpia sale tenso (llega a 9 + 1,5·d m/s, ×1,15; el que ya existía). `=2`: hasta 40 m.
+static var PASE_TENSO := int(OS.get_environment("C4_PASE_TENSO")) if OS.get_environment("C4_PASE_TENSO") != "" else 0
+static func tenso(m: Object, p: Dictionary, q: Dictionary) -> bool:
+	if PASE_TENSO <= 0:
+		return false
+	var dist: float = m.pos(p).distance_to(m.pos(q))
+	if dist < 10.0 or dist > (40.0 if PASE_TENSO >= 2 else 32.0):
+		return false
+	return not m._linea_tapada(m.pos(p), m.pos(q), bool(p["es_local"]))
