@@ -111,7 +111,3 @@ func _ia_portador(p: Dictionary) -> void:
 ## `MotorCombinado` (C4) lo cambia por la paciencia de `MejorasC4.ganas_tiro`.
 func _ganas_tiro_extra(_p: Dictionary, _dist_arco: float, ganas: float, _presion: float) -> float:
 	return ganas
-
-## GANCHO DEL RADIO DEL CABEZAZO (12-11-2026, sesión 13): 0,8 m en el motor de siempre; C4 lo puede cambiar (`MejorasC4.RADIO_CABEZA`).
-func _radio_cabezazo(_p: Dictionary) -> float:
-	return 0.8
