@@ -102,6 +102,7 @@ func _saque_ensayado(p: Dictionary, tipo: String, lugar: Vector3) -> bool:
 func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	super(p, cruce, estirada)
 	if _mejoras_c4 and String(poseedor.get("id", "")) != String(p["id"]):
+		MejorasC4Avance.rechace(self, p)   ## (sesión 15) C4_RECHACE
 		set_meta("_t_rechace", t)
 		_contar("c4_rechace")
 

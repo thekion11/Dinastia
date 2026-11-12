@@ -61,3 +61,21 @@ static func ruptura(m: Object, p: Dictionary) -> Vector3:
 		if m.get("diag") is Dictionary:
 			(m.diag as Dictionary)["c4_ruptura"] = int((m.diag as Dictionary).get("c4_ruptura", 0)) + 1
 	return Vector3(x, 0, linea - d * 1.0)
+
+## RECHACE VIVO (sesión 15): el portero que no blocca rechaza la mitad de las veces hacia la línea de fondo (córner). Con
+## `C4_RECHACE=p` (0 = apagada), ese rechace hacia el fondo, con probabilidad `p`, sale hacia delante (al área): hay segunda jugada
+## para los que siguen el tiro (`C4_SEGUIR`). Solo sortea con la bandera encendida. Contador `c4_rechace_vivo`.
+static var RECHACE := float(OS.get_environment("C4_RECHACE")) if OS.get_environment("C4_RECHACE") != "" else 0.0
+
+static func rechace(m: Object, gk: Dictionary) -> void:
+	if RECHACE <= 0.0 or not (m.poseedor as Dictionary).is_empty():
+		return
+	var propio: Vector3 = m._arco_propio(gk)
+	var v: Vector3 = m.vel_balon
+	if v.z * signf(propio.z) <= 0.0:
+		return   ## ya sale hacia delante
+	if (m._rng as RandomNumberGenerator).randf() >= RECHACE:
+		return
+	m.vel_balon = Vector3(v.x * 0.7, v.y, -v.z * 2.0 - signf(propio.z) * 2.0)
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_rechace_vivo"] = int((m.diag as Dictionary).get("c4_rechace_vivo", 0)) + 1
