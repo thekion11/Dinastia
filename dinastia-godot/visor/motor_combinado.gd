@@ -292,3 +292,8 @@ func _mover_jugadores(delta: float) -> void:
 	if f3 and _nuestra("locomocion") and LeagueGuia.en_c4:
 		LeagueGuia.paso(self, delta)
 		LeagueLocomocion.paso(self, delta, false)
+
+## (12-11, sesión 15) más pases al hueco, solo en C4 (`MejorasC4Hueco`, `C4_HUECO=1`).
+func _companero_al_hueco(p: Dictionary) -> Dictionary:
+	var r := super(p)
+	return MejorasC4Hueco.buscar(self, p) if r.is_empty() and _mejoras_c4 else r
