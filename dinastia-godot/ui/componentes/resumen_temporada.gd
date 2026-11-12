@@ -74,7 +74,7 @@ func _rellenar(foto: Dictionary, resumen: Dictionary) -> void:
 	_centro.add_child(veredicto)
 	var seguir := boton("▶ " + Idiomas.t("Empezar la temporada %d") % (int(d["anio"]) + 1), true)
 	seguir.pressed.connect(_cerrar)
-	_centro.add_child(seguir)
+	fijar_abajo(seguir)   ## (12-11) siempre a la vista: con los objetivos secundarios quedaba bajo el pliegue
 	## (12-11) Entrada por tarjetas: tu club, las cuatro tarjetas, el veredicto de la directiva y, al final, el botón.
 	entrada_en_cascada([cabecera] + rejilla.get_children() + [veredicto, seguir])
 

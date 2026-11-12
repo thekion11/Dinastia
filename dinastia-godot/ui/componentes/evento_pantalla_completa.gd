@@ -8,6 +8,7 @@ signal terminado
 
 var _centro: VBoxContainer
 var _raiz: Control
+var _desliza: ScrollContainer
 ## (10-11) PALETA NOCHE (el dueño permite variar el verde con dorado): azul noche y blanco, con `acento` (el color del club) en los filetes.
 ## La usan los eventos con diálogo (`EventoDialogo`); la despedida conserva la verde.
 var paleta_noche := false
@@ -57,6 +58,7 @@ func _montar_base(pr: Node) -> void:
 	desliza.offset_bottom = -50
 	desliza.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_raiz.add_child(desliza)
+	_desliza = desliza
 	var centro := CenterContainer.new()
 	centro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	centro.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -67,6 +69,19 @@ func _montar_base(pr: Node) -> void:
 	centro.add_child(_centro)
 	_raiz.modulate.a = 0.0   ## fundido de entrada
 	create_tween().tween_property(_raiz, "modulate:a", 1.0, 0.45)
+
+## EL BOTÓN DE SEGUIR, FIJO ABAJO (12-11): fuera del desplazamiento, centrado sobre el filete de abajo, para que esté SIEMPRE a la vista aunque
+## el contenido no quepa (el resumen de temporada con muchos objetivos lo dejaba bajo el pliegue a 1080 px). El contenido cede ese alto.
+func fijar_abajo(b: Control, alto := 58.0) -> void:
+	var pie := CenterContainer.new()
+	pie.name = "PieFijo"
+	pie.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	pie.offset_top = -50.0 - alto
+	pie.offset_bottom = -50.0
+	pie.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_raiz.add_child(pie)
+	pie.add_child(b)
+	_desliza.offset_bottom = -50.0 - alto - 4.0
 
 ## ENTRADA EN CASCADA (12-11): las piezas de la pantalla (cabecera, tarjetas, veredicto, botón) aparecen una detrás de otra, de arriba abajo,
 ## con `Animar.aparecer` (fundido y un 3 % de crecimiento). Con «Animaciones reducidas» no hace nada: todo está a la vista desde el principio.
