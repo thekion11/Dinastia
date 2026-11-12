@@ -80,6 +80,7 @@ func _jugar(a: Club, b: Club, semilla: int, motor_id: String, mitad: float) -> D
 	motor.autopiloto = true
 	motor.duracion_mitad = mitad
 	motor.tacticas = [MotorJugable.tactica_desde(a.tactica), MotorJugable.tactica_desde(b.tactica)]
+	motor.tarjetas_reales = OS.get_environment("TARJETAS_REALES") == "1"   ## (12-11) expulsiones de verdad, como en el partido jugado
 	motor.preparar(lista, ball, "", semilla)
 	var med := MedidorDiversion.new(motor)
 	var saltos0 := [LeagueAcciones.saltos, LeagueAcciones.remates_en_salto, LeagueAcciones.reacciones]   ## (12-11) disputa aérea y reacciones (solo se ve)
@@ -112,6 +113,8 @@ func _jugar(a: Club, b: Club, semilla: int, motor_id: String, mitad: float) -> D
 	r["diag"] = motor.diag.duplicate()   ## (11-11) contadores del motor (cabezazos, centros, córners…) para afinar el balón parado
 	r["pases"] = int(motor.pases[0]) + int(motor.pases[1])
 	r["faltas"] = int(motor.faltas[0]) + int(motor.faltas[1])   ## (12-11, sesión 13) para vigilar el juego sucio
+	r["expulsados"] = motor.expulsados.size()
+	r["rojas"] = int(motor.tarjetas_motor[0][1]) + int(motor.tarjetas_motor[1][1])
 	r["tarjetas"] = int(motor.tarjetas_motor[0][0]) + int(motor.tarjetas_motor[0][1]) + int(motor.tarjetas_motor[1][0]) + int(motor.tarjetas_motor[1][1])
 	r["pases_ok"] = int(motor.pases_ok[0]) + int(motor.pases_ok[1])
 	r["pasos"] = pasos
