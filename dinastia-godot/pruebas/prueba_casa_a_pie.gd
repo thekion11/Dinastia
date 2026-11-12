@@ -26,14 +26,24 @@ func _foto(nombre: String) -> void:
 	var dir := OS.get_environment("CASA_CAPTURAS")
 	if dir == "" or DisplayServer.get_name() == "headless":
 		return
+	_apartar_eventos()
+	await get_tree().process_frame
 	DirAccess.make_dir_recursive_absolute(dir)
 	var img := get_viewport().get_texture().get_image()
 	img.save_jpg("%s/%s.jpg" % [dir, nombre], 0.9)
+
+func _apartar_eventos() -> void:
+	for ev: Node in get_tree().root.find_children("*", "CanvasLayer", true, false):
+		if ev is EventoPantallaCompleta:
+			ev.set("visible", false)
 
 func _correr() -> void:
 	for _i in 6:
 		await get_tree().process_frame
 	_ok(not InterruptorCiudad.activa, "la ciudad debería estar apagada")
+	## (12-11) El evento de inicio de temporada (`EventoDialogo`, a pantalla completa) tapaba las 9 capturas de la casa: se aparta antes
+	## (en el juego es modal y se responde antes de poder abrir la casa desde el menú).
+	_apartar_eventos()
 	MenuLateral.ejecutar(_p, "casa")
 	for _i in 8:
 		await get_tree().process_frame
@@ -70,7 +80,7 @@ func _correr() -> void:
 		c._rotulos()
 		for _i in 6:
 			await get_tree().process_frame
-		_foto(String(v[0]))
+		await _foto(String(v[0]))
 	c.primera_persona = true
 	c.pos2 = Vector2(8.6, 4.2)
 	c.rumbo = PI
@@ -78,7 +88,7 @@ func _correr() -> void:
 	c._colocar_camara(1.0)
 	for _i in 6:
 		await get_tree().process_frame
-	_foto("09_cocina_primera_persona")
+	await _foto("09_cocina_primera_persona")
 	c.primera_persona = false
 	## E junto a la puerta de la calle cierra; lejos no.
 	c.pos2 = Vector2(5.0, 2.0)

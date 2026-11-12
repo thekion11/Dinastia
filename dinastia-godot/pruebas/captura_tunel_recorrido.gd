@@ -15,8 +15,9 @@ var _ex: ExploradorEstadio
 
 func _ready() -> void:
 	var m := Mundo.new()
-	m.generar(["CHI"], 77)
-	var club: Club = m.ligas[0].clubes[0]
+	## (12-11) PAIS=ENG CLUB=4 SALIDA=/ruta.png: otro país y club (regla 34: nunca revisar con un solo equipo).
+	m.generar([OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"], 77)
+	var club: Club = m.ligas[0].clubes[int(OS.get_environment("CLUB")) % m.ligas[0].clubes.size()]
 	var ep := EstadioPropio.new()
 	var perfil := ep.perfil(club)
 	perfil["forma"] = OS.get_environment("FORMA") if OS.get_environment("FORMA") != "" else "cuenco"
@@ -78,6 +79,6 @@ func _process(_d: float) -> void:
 		var hoja := Image.create(480 * 3, 270 * 2, false, Image.FORMAT_RGB8)
 		for k in _imgs.size():
 			hoja.blit_rect(_imgs[k], Rect2i(0, 0, 480, 270), Vector2i((k % 3) * 480, (k / 3) * 270))
-		hoja.save_png("res://pruebas/capturas/tunel_recorrido.png")
+		hoja.save_png(OS.get_environment("SALIDA") if OS.get_environment("SALIDA") != "" else "res://pruebas/capturas/tunel_recorrido.png")
 		print("HOJA OK")
 		get_tree().quit()
