@@ -437,3 +437,10 @@ func _saque_ensayado(_p: Dictionary, _tipo: String, _lugar: Vector3) -> bool:
 ## GANCHO DEL RADIO DE LA ENTRADA DE LA IA (12-11-2026, sesión 13): el de siempre usa `MotorEntrada.radio`; C4 lo cambia (`MejorasC4.radio_entrada`: contener en el último tercio).
 func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 	return MotorEntrada.radio(self as Object as MotorJugable, p, victima, base)
+
+## GANCHO DEL ADELANTO DEL PASE (12-11-2026, líder): a dónde se adelanta el pase, la fórmula de siempre; C4 lo cambia (`MejorasC4Adelanto`).
+func _guia_pase(q: Dictionary, dist: float, al_hueco: bool) -> Vector3:
+	var guia := (q["vel"] as Vector3) * clampf(dist / 18.0, 0.2, 1.0)
+	if al_hueco:
+		guia += Vector3(0, 0, (1.0 if bool(q["es_local"]) else -1.0) * 7.0)   ## = dir_ataque (capa 2)
+	return guia

@@ -383,7 +383,9 @@ func _probar_notas() -> void:
 			con_nota += 1
 			if j.notas[0] < 3.0 or j.notas[0] > 10.0:
 				fuera_de_rango += 1
-	_comprobar(con_nota == 22, "los 22 salen con nota (%d)" % con_nota)
+	## (12-11) Un expulsado o un lesionado sale del once (`Partido._amonestar`, `PartidoLesiones`): cuentan los que quedan, no 22 fijos.
+	var en_once := (p.once_local + p.once_visita).size()
+	_comprobar(con_nota == en_once and en_once >= 18, "todos los del once salen con nota (%d de %d)" % [con_nota, en_once])
 	_comprobar(fuera_de_rango == 0, "todas las notas caen entre 3 y 10 (%d fuera)" % fuera_de_rango)
 
 	## El que marca tiene que puntuar mejor que la media de su equipo: si no, la

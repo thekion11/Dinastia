@@ -406,10 +406,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 	var destino := pos(q)
 	var dist := destino.distance_to(pos(p))
 	## Se le pasa adelantado, a donde va a estar.
-	var guia := (q["vel"] as Vector3) * clampf(dist / 18.0, 0.2, 1.0)
-	if al_hueco:
-		guia += Vector3(0, 0, dir_ataque(bool(q["es_local"])) * 7.0)
-	destino += guia
+	destino += _guia_pase(q, dist, al_hueco)   ## (12-11) la fórmula de siempre, en un gancho de la capa 1 que C4 cambia
 	## Nadie pasa perfecto: el error crece con la distancia, con la presión y
 	## cuanto peor es el pase del que la toca.
 	var hab := GestoTecnico.pase(p, largo, al_hueco, tenso)   ## cada pase pesa sus atributos; pie malo y clima (27-10)
