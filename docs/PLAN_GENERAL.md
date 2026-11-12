@@ -6,7 +6,6 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 ## PREGUNTAS PARA EL DUEÑO (sesiones Opus) — se acumulan aquí y se envían juntas por Calendar al llegar a 5 (orden 44); se borran al responderse
 - (12-11, sesión de pulido) ECONOMÍA DE LAS LIGAS CHICAS: en Uruguay, Paraguay, Bolivia, Ecuador, Perú, Colombia y Chile casi todos los clubes empiezan la partida perdiendo plata cada año y con sueldos del 45-100 % de sus ingresos (cifras en «BALANCE MEDIDO», más abajo). ¿Es a propósito (clubes que viven de vender jugadores) o hay que bajar sueldos / subir ingresos (tele, patrocinio) en esas ligas para que se puedan sostener?
-- (ninguna todavía)
 
 ## SESIÓN 14 (12-11): LO QUE SE VE Y SE SIENTE EN EL PARTIDO — rama `sesion14-partido-visual` (informe `docs/04_auditorias/partido_visual_2026-11-12.md`)
 - HECHO: botas con horma (sin dedos), costura cara-cuello (borde pegado a la piel en 3D, también peatones y personal), nuca a la altura del
