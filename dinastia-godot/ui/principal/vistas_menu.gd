@@ -120,10 +120,9 @@ func _pintar_clubes() -> void:
 		p._ui_plantel._pintar_rivalidades()
 	if secc == "rivales":
 		if p._lista_clubes.get_child_count() == 0:   ## partida nueva: aún no hay rivalidades; se dice por qué
-			var vacio := p._texto(12, p.COL_SUAVE)
-			vacio.text = Idiomas.t("Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.")
-			vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			p._lista_clubes.add_child(vacio)
+			p._lista_clubes.add_child(EstadoVacio.crear("⚔️", Idiomas.t("Todavía no tienes rivales"),
+				Idiomas.t("La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota."),
+				p._color_de_paleta(p.COL_TEXTO), p._color_de_paleta(p.COL_SUAVE), 360.0))
 		return
 
 	var paises: Array[String] = []

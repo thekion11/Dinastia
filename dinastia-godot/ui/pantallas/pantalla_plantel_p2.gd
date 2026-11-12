@@ -207,21 +207,32 @@ func _pintar_goleadores(pais: String) -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("GOLEADORES  ·  %s") % pais
 	p._lista_clubes.add_child(t)
-	if todos.is_empty():
-		var nada := p._texto(12, Principal.COL_SUAVE)
-		nada.text = Idiomas.t("Todavía no hay goles en esta liga.")
-		p._lista_clubes.add_child(nada)
-		return
-	todos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.goles > b.goles)
+	## (12-11) Liga sin goles (partida nueva): en vez de una línea suelta, se dice qué falta y se listan los ASPIRANTES (los delanteros de más nivel).
+	var sin_goles := todos.is_empty()
+	if sin_goles:
+		p._lista_clubes.add_child(EstadoVacio.crear("🥇", Idiomas.t("Todavía no hay goles en esta liga."),
+			Idiomas.t("La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes."),
+			p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 150.0))
+		for l in p.mundo.ligas:
+			if l.pais == pais:
+				for club: Club in l.clubes:
+					todos.append_array(club.plantilla.filter(func(j: Jugador) -> bool: return j.pos == "DEL"))
+		todos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr if a.ovr != b.ovr else a.id < b.id)
+	else:
+		todos.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.goles > b.goles)
 	var g := GridContainer.new()
 	CebraRejilla.poner(g)
 	g.columns = 5
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 10)
-	p._lista_clubes.add_child(g)
-	for enc in ["#", "", "JUGADOR", "CLUB", "GOLES"]:
-		p._celda(g, enc, Principal.COL_SUAVE, enc == "GOLES", 11)
-	for i in mini(15, todos.size()):
+	var mg := MarginContainer.new()   ## la barra de desplazamiento no pisa la última columna
+	mg.add_theme_constant_override("margin_right", 16)
+	mg.add_child(g)
+	p._lista_clubes.add_child(mg)
+	for enc in ["#", "", "JUGADOR", "CLUB", "MEDIA" if sin_goles else "GOLES"]:
+		p._celda(g, Idiomas.t(enc) if enc.length() > 1 else enc, Principal.COL_SUAVE, enc in ["GOLES", "MEDIA"], 11)
+	var mio: Club = p.mundo.mi_club()
+	for i in mini(8 if sin_goles else 15, todos.size()):
 		var j: Jugador = todos[i]
 		var suyo: Club = p.mundo.clubes.get(j.club_id)
 		p._celda(g, str(i + 1), Principal.COL_SUAVE, false, 11)
@@ -230,11 +241,14 @@ func _pintar_goleadores(pais: String) -> void:
 		b.text = j.nombre
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.add_theme_font_size_override("font_size", 12)
+		if suyo != null and suyo == mio:   ## los tuyos, con el acento del club
+			b.add_theme_color_override("font_color", p._con_contraste(p.COL_ACENTO))
 		b.pressed.connect(func() -> void: p._ver_ficha(j))
 		g.add_child(b)
-		p._celda(g, suyo.nombre if suyo else "—", Principal.COL_SUAVE, false, 11)
-		p._celda(g, str(j.goles), Principal.COL_VERDE, true, 12)
+		p._celda(g, suyo.nombre if suyo else "—", p._con_contraste(p.COL_ACENTO) if suyo != null and suyo == mio else Principal.COL_SUAVE, false, 11)
+		p._celda(g, str(j.ovr if sin_goles else j.goles), Principal.COL_TEXTO if sin_goles else Principal.COL_VERDE, true, 12)
 
 ## M-300: «↶ Deshacer» el último cambio de la pizarra (dibujo, perillas, interruptores u once). Apagado si no hay nada.
 func _boton_deshacer(c: Club) -> void:

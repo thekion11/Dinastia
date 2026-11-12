@@ -8026,7 +8026,11 @@
   "La tabla de cualquier liga del mundo; pulsa un club para ver su plantel.": "The table of any league in the world; press a club to see its squad.",
   "Los artilleros de cada liga.": "Each league's leading scorers.",
   "Tus clásicos, el historial y las cuentas pendientes.": "Your derbies, the head-to-head record and the scores to settle.",
-  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "You have no rivals yet. Rivalry is not declared: it is built with every meeting and, above all, with every defeat."
+  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "You have no rivals yet. Rivalry is not declared: it is built with every meeting and, above all, with every defeat.",
+  "Todavía no tienes rivales": "You have no rivals yet",
+  "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "A rivalry is not declared: it is built with every meeting and, above all, with every defeat.",
+  "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "The table fills up after the first matchday. Meanwhile, these are the contenders.",
+  "JUGADOR": "PLAYER"
  },
  "pt": {
   "Historia": "História",
@@ -16055,7 +16059,11 @@
   "La tabla de cualquier liga del mundo; pulsa un club para ver su plantel.": "A tabela de qualquer liga do mundo; carrega num clube para ver o plantel.",
   "Los artilleros de cada liga.": "Os artilheiros de cada liga.",
   "Tus clásicos, el historial y las cuentas pendientes.": "Os teus clássicos, o histórico e as contas por ajustar.",
-  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Ainda não tens rivais. A rivalidade não se declara: constrói-se a cada confronto e, sobretudo, a cada derrota."
+  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Ainda não tens rivais. A rivalidade não se declara: constrói-se a cada confronto e, sobretudo, a cada derrota.",
+  "Todavía no tienes rivales": "Ainda não tens rivais",
+  "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "A rivalidade não se declara: constrói-se a cada confronto e, sobretudo, a cada derrota.",
+  "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "A tabela enche-se com a primeira jornada. Entretanto, estes são os candidatos.",
+  "JUGADOR": "JOGADOR"
  },
  "patrones": [
   [
@@ -30224,7 +30232,11 @@
   "La tabla de cualquier liga del mundo; pulsa un club para ver su plantel.": "Le classement de n'importe quelle ligue ; appuie sur un club pour voir son effectif.",
   "Los artilleros de cada liga.": "Les meilleurs buteurs de chaque ligue.",
   "Tus clásicos, el historial y las cuentas pendientes.": "Tes derbys, l'historique et les comptes à régler.",
-  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Tu n'as pas encore de rivaux. La rivalité ne se déclare pas : elle se construit à chaque confrontation et surtout à chaque défaite."
+  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Tu n'as pas encore de rivaux. La rivalité ne se déclare pas : elle se construit à chaque confrontation et surtout à chaque défaite.",
+  "Todavía no tienes rivales": "Tu n'as pas encore de rivaux",
+  "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Une rivalité ne se décrète pas : elle se construit à chaque confrontation et, surtout, à chaque défaite.",
+  "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "Le classement se remplit dès la première journée. En attendant, voici les prétendants.",
+  "JUGADOR": "JOUEUR"
  },
  "it": {
   "Historia": "Storia",
@@ -38253,7 +38265,11 @@
   "La tabla de cualquier liga del mundo; pulsa un club para ver su plantel.": "La classifica di qualsiasi campionato; premi un club per vederne la rosa.",
   "Los artilleros de cada liga.": "I capocannonieri di ogni campionato.",
   "Tus clásicos, el historial y las cuentas pendientes.": "I tuoi derby, i precedenti e i conti in sospeso.",
-  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Non hai ancora rivali. La rivalità non si dichiara: si costruisce a ogni incrocio e, soprattutto, a ogni sconfitta."
+  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Non hai ancora rivali. La rivalità non si dichiara: si costruisce a ogni incrocio e, soprattutto, a ogni sconfitta.",
+  "Todavía no tienes rivales": "Non hai ancora rivali",
+  "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "La rivalità non si dichiara: si costruisce a ogni incrocio e, soprattutto, a ogni sconfitta.",
+  "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "La classifica si riempie con la prima giornata. Nel frattempo, questi sono i candidati.",
+  "JUGADOR": "GIOCATORE"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46282,7 +46298,11 @@
   "La tabla de cualquier liga del mundo; pulsa un club para ver su plantel.": "Die Tabelle jeder Liga der Welt; tippe auf einen Klub, um seinen Kader zu sehen.",
   "Los artilleros de cada liga.": "Die besten Torschützen jeder Liga.",
   "Tus clásicos, el historial y las cuentas pendientes.": "Deine Derbys, die Bilanz und die offenen Rechnungen.",
-  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Du hast noch keine Rivalen. Rivalität wird nicht erklärt: Sie entsteht mit jedem Duell und vor allem mit jeder Niederlage."
+  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Du hast noch keine Rivalen. Rivalität wird nicht erklärt: Sie entsteht mit jedem Duell und vor allem mit jeder Niederlage.",
+  "Todavía no tienes rivales": "Du hast noch keine Rivalen",
+  "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Rivalität wird nicht erklärt: Sie entsteht mit jedem Duell und vor allem mit jeder Niederlage.",
+  "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "Die Liste füllt sich mit dem ersten Spieltag. Bis dahin sind dies die Anwärter.",
+  "JUGADOR": "SPIELER"
  },
  "ca": {
   "Historia": "Història",
@@ -54311,7 +54331,11 @@
   "La tabla de cualquier liga del mundo; pulsa un club para ver su plantel.": "La taula de qualsevol lliga del món; prem un club per veure'n la plantilla.",
   "Los artilleros de cada liga.": "Els golejadors de cada lliga.",
   "Tus clásicos, el historial y las cuentas pendientes.": "Els teus clàssics, l'historial i els comptes pendents.",
-  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Encara no tens rivals. La rivalitat no es declara: es construeix amb cada encreuament i, sobretot, amb cada derrota."
+  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Encara no tens rivals. La rivalitat no es declara: es construeix amb cada encreuament i, sobretot, amb cada derrota.",
+  "Todavía no tienes rivales": "Encara no tens rivals",
+  "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "La rivalitat no es declara: es construeix amb cada encreuament i, sobretot, amb cada derrota.",
+  "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "La taula s'omple amb la primera jornada. Mentrestant, aquests són els aspirants.",
+  "JUGADOR": "JUGADOR"
  },
  "pl": {
   "Club": "Klub",
@@ -62340,7 +62364,11 @@
   "La tabla de cualquier liga del mundo; pulsa un club para ver su plantel.": "Tabela dowolnej ligi świata; naciśnij klub, by zobaczyć jego kadrę.",
   "Los artilleros de cada liga.": "Najlepsi strzelcy każdej ligi.",
   "Tus clásicos, el historial y las cuentas pendientes.": "Twoje derby, bilans i rachunki do wyrównania.",
-  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Nie masz jeszcze rywali. Rywalizacji się nie ogłasza: buduje się ją z każdym meczem, a zwłaszcza z każdą porażką."
+  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Nie masz jeszcze rywali. Rywalizacji się nie ogłasza: buduje się ją z każdym meczem, a zwłaszcza z każdą porażką.",
+  "Todavía no tienes rivales": "Nie masz jeszcze rywali",
+  "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Rywalizacji się nie ogłasza: buduje ją każde starcie, a przede wszystkim każda porażka.",
+  "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "Tabela zapełni się po pierwszej kolejce. Tymczasem oto kandydaci.",
+  "JUGADOR": "ZAWODNIK"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70369,6 +70397,10 @@
   "La tabla de cualquier liga del mundo; pulsa un club para ver su plantel.": "Dünyadaki her ligin puan durumu; kadrosunu görmek için bir kulübe bas.",
   "Los artilleros de cada liga.": "Her ligin gol kralları.",
   "Tus clásicos, el historial y las cuentas pendientes.": "Derbilerin, geçmiş karşılaşmalar ve görülecek hesaplar.",
-  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Henüz rakibin yok. Rekabet ilan edilmez: her karşılaşmayla ve özellikle her yenilgiyle inşa edilir."
+  "Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Henüz rakibin yok. Rekabet ilan edilmez: her karşılaşmayla ve özellikle her yenilgiyle inşa edilir.",
+  "Todavía no tienes rivales": "Henüz rakibin yok",
+  "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Rekabet ilan edilmez: her karşılaşmayla ve özellikle her yenilgiyle kurulur.",
+  "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "Tablo ilk haftayla dolar. O zamana kadar adaylar bunlar.",
+  "JUGADOR": "OYUNCU"
  }
 }

@@ -199,3 +199,15 @@ func _probar_atajos_tras_partir() -> void:
 		if AtajosCentrales.accion_de_clave(String(AtajosCentrales.MIGRACION[vieja])) == "":
 			faltan.append(vieja)
 	_comprobar(faltan.is_empty(), "todas las teclas viejas de la migración tienen destino %s" % [faltan])
+
+## (12-11) Las pantallas sin datos (rivales o goleadores en una partida nueva) dicen qué pasa: icono, título y pista, centrados.
+func _probar_estado_vacio() -> void:
+	_titulo("ESTADO VACÍO DE UNA PANTALLA")
+	var v := EstadoVacio.crear("⚔️", "Sin rivales", "Se construye con cada cruce.", Color.WHITE, Color.GRAY, 300.0)
+	_comprobar(v.get_child_count() == 3 and v.custom_minimum_size.y >= 300.0, "icono, título y pista, con su alto")
+	var titulo := v.get_child(1) as Label
+	var pista := v.get_child(2) as Label
+	_comprobar(titulo != null and titulo.text == "Sin rivales" and titulo.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER, "el título, centrado")
+	_comprobar(pista != null and pista.autowrap_mode != TextServer.AUTOWRAP_OFF, "la pista parte renglón (no saca la pantalla del móvil)")
+	_comprobar(titulo.get_theme_color("font_color").get_luminance() > pista.get_theme_color("font_color").get_luminance(), "el título pesa más que la pista")
+	v.free()
