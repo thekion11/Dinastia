@@ -71,6 +71,21 @@ func _ready() -> void:
 	await _espera(1.0)
 	await _foto("central_lunes")
 	var menus: Array = MenusLaterales.MENUS
+	## ABRIR=calendario,palmares: foto de esas pantallas completas (calendario de semanas, palmarés del mundo) y fin.
+	if OS.get_environment("ABRIR") != "":
+		for que: String in OS.get_environment("ABRIR").split(","):
+			if que == "calendario":
+				CalendarioSemanas.mostrar(_p, _p.mundo)
+			else:
+				MenuLateral.ejecutar(_p, "palmares_mundo")
+			await _foto(que)
+			for h in _p.get_children():
+				if h is EventoPantallaCompleta:
+					h.queue_free()
+			await _espera(0.5)
+		CapasTutorial.poner_activas(ayudas_antes)
+		get_tree().quit()
+		return
 	## SOLO_MENU=dinero: solo ese menú, con TODOS sus submenús de pestaña (y sin el resto del recorrido).
 	var solo := OS.get_environment("SOLO_MENU")
 	if solo != "":

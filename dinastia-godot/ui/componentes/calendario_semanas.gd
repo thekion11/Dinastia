@@ -12,11 +12,13 @@ static func mostrar(pr: Node, m: Mundo, dia_hoy := 0) -> CalendarioSemanas:
 	return c
 
 func _rellenar(m: Mundo, dia_hoy: int) -> void:
-	var ancho := minf(1500.0, float(get_viewport().get_visible_rect().size.x) - 80.0)
+	## (12-11) Teléfono de pie: las semanas una debajo de otra, a lo ancho (seis columnas de 150 px no caben en un lienzo de 540).
+	var de_pie := EscalaMovil.es_vertical()
+	var ancho := ANCHO_DE_PIE if de_pie else minf(1500.0, float(get_viewport().get_visible_rect().size.x) - 80.0)
 	_centro.custom_minimum_size = Vector2(ancho, 0)
 	_centro.add_child(etiqueta("%s · %d" % [Idiomas.t("Calendario").to_upper(), m.anio], 15, Tema.SUAVE))
-	_centro.add_child(etiqueta("📅 " + Idiomas.t("Próximas semanas"), 40, Tema.ORO, true, false))
-	var tira := HBoxContainer.new()
+	_centro.add_child(etiqueta("📅 " + Idiomas.t("Próximas semanas"), 28 if de_pie else 40, Tema.ORO, true, false))
+	var tira: BoxContainer = VBoxContainer.new() if de_pie else HBoxContainer.new()
 	tira.add_theme_constant_override("separation", 10)
 	_centro.add_child(tira)
 	var semanas := EventosFecha.semanas(m)
@@ -24,7 +26,7 @@ func _rellenar(m: Mundo, dia_hoy: int) -> void:
 		_centro.add_child(etiqueta(Idiomas.t("Temporada terminada"), 20, Tema.TEXTO))
 	var primera_vez := true
 	for s: Dictionary in semanas:
-		tira.add_child(_columna(s, dia_hoy, primera_vez, int(ancho / maxf(1.0, float(semanas.size()))) - 10))
+		tira.add_child(_columna(s, dia_hoy, primera_vez, int(ancho) - 10 if de_pie else int(ancho / maxf(1.0, float(semanas.size()))) - 10))
 		primera_vez = false
 	var cerrar := boton(Idiomas.t("Cerrar"), true)
 	cerrar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
