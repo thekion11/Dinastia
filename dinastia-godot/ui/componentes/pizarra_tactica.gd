@@ -35,15 +35,33 @@ static func pintar(raiz: Control, c: Club, ficha: Callable) -> void:
 		var f := _ficha_jugador(j, String(s[0]), natural, c, ficha)
 		f.anchor_left = float(s[1]) / 100.0
 		f.anchor_right = f.anchor_left
-		## La tabla va de ~20 (área rival) a 94 (tu portería): se comprime para
-		## que la ficha del portero no se salga por abajo.
-		f.anchor_top = 0.11 + clampf(float(s[2]) / 100.0, 0.0, 1.0) * 0.76
+		f.anchor_top = _alto_de(slots, s)
 		f.anchor_bottom = f.anchor_top
 		f.offset_left = -38
 		f.offset_right = 38
 		f.offset_top = -38
 		f.offset_bottom = 40
 		campo.add_child(f)
+
+## Dónde cae una ficha a lo alto del campo (0 arriba, 1 abajo). (12-11) La tabla va de ~18 (tu delantero más adelantado) a 94 (tu portero):
+## antes se pintaba tal cual y el cuarto de arriba del campo quedaba VACÍO; además el central de un 3-4-3 quedaba pegado al portero y eso
+## obligaba a un campo de 680 px que no cabe en pantalla (había que deslizar para ver al portero). Ahora los diez de campo se reparten de
+## 0,10 a 0,71 (el más adelantado arriba) y el portero va aparte, en 0,885: siempre con sitio entre él y su defensa.
+const Y_CAMPO_0 := 0.10
+const Y_CAMPO_1 := 0.71
+const Y_PORTERO := 0.885
+static func _alto_de(slots: Array, s: Array) -> float:
+	if String(s[0]) == "POR":
+		return Y_PORTERO
+	var y_min := INF
+	var y_max := -INF
+	for k: Array in slots:
+		if String(k[0]) != "POR":
+			y_min = minf(y_min, float(k[2]))
+			y_max = maxf(y_max, float(k[2]))
+	if y_max - y_min < 1.0:
+		return (Y_CAMPO_0 + Y_CAMPO_1) * 0.5
+	return Y_CAMPO_0 + (float(s[2]) - y_min) / (y_max - y_min) * (Y_CAMPO_1 - Y_CAMPO_0)
 
 ## (10-11, auditoría de gestión en el móvil) El alto del campo: `ALTO`, o más si dos fichas casi en la misma columna quedarían a menos de
 ## `ALTO_FICHA` en vertical (en un 4-2-3-1 el DC y el MCO estaban a ~52 px y la ficha mide 78: el nombre de uno quedaba bajo la cara
@@ -55,7 +73,7 @@ static func alto_para(slots: Array) -> int:
 	for i in slots.size():
 		for k in range(i + 1, slots.size()):
 			if absf(float(slots[i][1]) - float(slots[k][1])) < 14.0:
-				hueco = minf(hueco, absf(clampf(float(slots[i][2]) / 100.0, 0.0, 1.0) - clampf(float(slots[k][2]) / 100.0, 0.0, 1.0)) * 0.76)
+				hueco = minf(hueco, absf(_alto_de(slots, slots[i]) - _alto_de(slots, slots[k])))
 	if hueco == INF or hueco <= 0.0:
 		return ALTO
 	return clampi(ceili(ALTO_FICHA / hueco), ALTO, ALTO_MAX)
