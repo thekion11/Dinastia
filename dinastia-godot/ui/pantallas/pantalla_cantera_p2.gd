@@ -1,18 +1,31 @@
 extends "res://ui/pantallas/pantalla_cantera_p1.gd"
 ## [Capa 2/3 de `pantalla_cantera.gd`] _pintar_cantera, _cambiar_rol_prometido, _pintar_roles_prometidos, _pintar_agencias, _pintar_contratos, _apellido … (+3)
 
+## (12-11, menús a pantalla completa) Tres pantallas (`p._secc_extra["Cantera"]`): academia (10-16 años), juveniles (camada, listos para
+## debutar y categorías) y linaje (leyendas y dinastías). Otra sección = la página entera, en su orden.
+const SECC_CANTERA := ["academia", "juveniles", "linaje"]
 func _pintar_cantera(c: Club) -> void:
 	p._limpiar(p._lista_cantera)
 	var ct := p.mundo.cantera
 	if ct == null:
 		return
-	## LA ACADEMIA (10-16 años) va primero: es la cantera ANTES de la cantera,
-	## y la que decide cómo llegan los que aparecen más abajo.
-	PanelAcademia.pintar(p._lista_cantera, p.mundo, p._ui_ficha._paleta_ficha(), func(error: String) -> void:
-		if error != "":
-			p._escribir("[color=#e05555]%s.[/color]" % error.capitalize())
-		p._refrescar())
+	var secc := String(p._secc_extra.get("Cantera", "academia"))
+	var todo := not SECC_CANTERA.has(secc)
+	if todo or secc == "academia":
+		## LA ACADEMIA (10-16 años) va primero: es la cantera ANTES de la cantera,
+		## y la que decide cómo llegan los que aparecen más abajo.
+		PanelAcademia.pintar(p._lista_cantera, p.mundo, p._ui_ficha._paleta_ficha(), func(error: String) -> void:
+			if error != "":
+				p._escribir("[color=#e05555]%s.[/color]" % error.capitalize())
+			p._refrescar())
+	if todo or secc == "linaje":
+		_cantera_leyendas(c, ct)
+	if todo or secc == "juveniles":
+		_cantera_juveniles(c, ct)
+	if todo or secc == "linaje":
+		_pintar_linaje(c)   ## las dinastías, al final
 
+func _cantera_leyendas(c: Club, ct: Cantera) -> void:
 	## "LEYENDAS DEL CLUB" -su propia tarjeta en `vHistoria()` de vistas.js-:
 	## `Cantera.leyendas` alimenta de verdad la camada anual (`registrar_retiro()`
 	## mete a cada figura retirada, `camada_anual()` puede darle un hijo con su
@@ -37,6 +50,7 @@ func _pintar_cantera(c: Club) -> void:
 			p._lista_cantera.add_child(lf)
 		p._lista_cantera.add_child(HSeparator.new())
 
+func _cantera_juveniles(c: Club, ct: Cantera) -> void:
 	var camada := ct.camada_actual()
 	if not camada.is_empty():
 		var tc := p._texto(11, Principal.COL_ORO)
@@ -45,7 +59,6 @@ func _pintar_cantera(c: Club) -> void:
 		for j: Jugador in camada:
 			p._lista_cantera.add_child(_fila_canterano(j, ct, c))
 		p._lista_cantera.add_child(HSeparator.new())
-
 	var listos := ct.candidatos_a_debutar()
 	if not listos.is_empty():
 		var tl := p._texto(11, Principal.COL_VERDE)
@@ -65,7 +78,6 @@ func _pintar_cantera(c: Club) -> void:
 			bl.pressed.connect(p._ver_ficha.bind(j))
 			flujo.add_child(bl)
 		p._lista_cantera.add_child(HSeparator.new())
-
 	var cats := ct.por_categoria(c)
 	var hay_alguien := not camada.is_empty() or not listos.is_empty()
 	for clave: String in cats:
@@ -86,9 +98,6 @@ func _pintar_cantera(c: Club) -> void:
 		vacio.text = Idiomas.t("Todavía no hay canteranos en el plantel. Cada pretemporada llega una camada nueva, y los chicos de la academia suben al cumplir 16.")
 		vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_cantera.add_child(vacio)
-	## Las dinastías van al final: se leen después de la camada, que es lo que
-	## se viene a mirar aquí todas las semanas.
-	_pintar_linaje(c)
 
 func _cambiar_rol_prometido(j: Jugador, rol: String) -> void:
 	var r: Dictionary = p.mundo.vestuario.cambiar_rol(j, rol)

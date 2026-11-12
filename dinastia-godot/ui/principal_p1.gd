@@ -228,7 +228,7 @@ const GRUPOS := [
 		{"tab": "Récords", "secc": "memoria", "label": "Memoria"},
 		{"tab": "Récords", "secc": "rivales", "label": "Rivales"},
 		{"tab": "Récords", "secc": "vitrina", "label": "Vitrina"},
-		{"tab": "Cantera", "label": "Linaje"},
+		{"tab": "Cantera", "secc": "linaje", "label": "Linaje"},
 		{"tab": "Logros", "label": "Logros"},
 		{"tab": "Desafíos", "label": "Desafíos"},
 		{"tab": "Premios", "label": "Premios"},

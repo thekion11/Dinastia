@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio, _probar_finanzas_por_pantallas, _probar_agentes_confianza
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio, _probar_finanzas_por_pantallas, _probar_agentes_confianza, _probar_cantera_por_pantallas
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -211,3 +211,19 @@ func _probar_agentes_confianza() -> void:
 			m.cantera._mover_confianza(ag, -2)
 		_comprobar(m.cantera.confianza_de(ag) == -10, "%s: perder confianza se queda en −10 (%d)" % [pais, m.cantera.confianza_de(ag)])
 
+
+## (12-11) «Cantera» en tres pantallas; «Linaje» (menú Historia) abre directamente la suya.
+func _probar_cantera_por_pantallas() -> void:
+	_titulo("CANTERA EN TRES PANTALLAS")
+	var de_cantera: Array = []
+	for s: Dictionary in MenusLaterales.menu_por_id("plantel")["subs"]:
+		if String(s.get("tab", "")) == "Cantera":
+			de_cantera.append(String(s.get("secc", "")))
+	var capa: GDScript = load("res://ui/pantallas/pantalla_cantera_p2.gd")
+	_comprobar(de_cantera == capa.get_script_constant_map().get("SECC_CANTERA", []), "los 3 submenús de Cantera son sus 3 secciones (%s)" % [de_cantera])
+	var sueltos := 0
+	for m: Dictionary in MenusLaterales.MENUS:
+		for s: Dictionary in m["subs"]:
+			if String(s.get("tab", "")) in ["Cantera", "Finanzas", "Partido", "Táctica", "Entrenar"] and String(s.get("secc", "")) == "":
+				sueltos += 1
+	_comprobar(sueltos == 0, "ningún menú abre una pestaña partida sin decir qué pantalla (%d)" % sueltos)

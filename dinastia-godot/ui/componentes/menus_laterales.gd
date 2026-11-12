@@ -22,7 +22,10 @@ const MENUS := [
 		{"tab": "Entrenar", "secc": "pretemporada", "label": "Pretemporada y horarios", "icono": "📅", "desc": "La pretemporada, los amistosos, el clima y a qué hora se juega en casa."},
 		{"tab": "Entrenar", "secc": "desarrollo", "label": "Desarrollo individual", "icono": "📈", "desc": "Mentorías, trabajo por jugador y habilidades nuevas."},
 		{"tab": "Enfermería", "label": "Enfermería", "icono": "🩺", "desc": "Lesionados, plazos y riesgo."},
-		{"tab": "Cantera", "label": "Cantera", "icono": "🌱", "desc": "Academia, camada del año y los que suben."},
+		## (12-11) Cantera: tres pantallas.
+		{"tab": "Cantera", "secc": "academia", "label": "Academia", "icono": "🌱", "desc": "Los chicos de 10 a 16 años: cómo entrenan, comen y estudian."},
+		{"tab": "Cantera", "secc": "juveniles", "label": "Juveniles", "icono": "🎖️", "desc": "La camada del año, los listos para debutar y cada categoría."},
+		{"tab": "Cantera", "secc": "linaje", "label": "Leyendas y linaje", "icono": "🏛️", "desc": "Las figuras retiradas del club y las dinastías de padres e hijos."},
 		{"tab": "Contratos", "label": "Contratos", "icono": "📝", "desc": "Renovaciones, cláusulas y salidas."}]},
 	## 3-11 (rediseño del menú central, pedido del dueño): el ⚽ de la barra de arriba pasa a su propio menú.
 	{"id": "partido", "icono": "⚽", "nombre": "Partido", "estilo": 8,
@@ -65,7 +68,7 @@ const MENUS := [
 		{"tab": "Récords", "secc": "memoria", "label": "Memoria", "icono": "🕯️", "desc": "El salón de la fama y los que ya no están."},
 		{"tab": "Récords", "secc": "rivales", "label": "Rivales", "icono": "⚔️", "desc": "Clásicos, cara a cara y cuentas pendientes."},
 		{"tab": "Récords", "secc": "vitrina", "label": "Vitrina", "icono": "🏆", "desc": "Cada trofeo, con su año y su historia."},
-		{"tab": "Cantera", "label": "Linaje", "icono": "🌱", "desc": "Las generaciones que salieron de casa."},
+		{"tab": "Cantera", "secc": "linaje", "label": "Linaje", "icono": "🌱", "desc": "Las generaciones que salieron de casa."},
 		{"tab": "Logros", "label": "Logros", "icono": "🎖️", "desc": "Lo que conseguiste como gestor."},
 		{"tab": "Desafíos", "label": "Desafíos", "icono": "🎯", "desc": "Retos de temporada con premio."},
 		{"tab": "Premios", "label": "Premios", "icono": "🥇", "desc": "Balones de oro, mejores DT y equipos ideales."},
