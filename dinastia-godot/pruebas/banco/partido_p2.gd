@@ -409,6 +409,10 @@ func _probar_paciencia_c4() -> void:
 		if not bool(p["por"]):
 			(p["node"] as Node3D).position = Vector3(-20.0 + float(motor.jugadores.find(p) % 10) * 4.0, 0, -d * 30.0)
 	(yo["node"] as Node3D).position = Vector3(0, 0, arco.z - d * 38.0)
+	for p: Dictionary in motor.jugadores:
+		if not bool(p["es_local"]) and not bool(p["por"]):
+			(p["node"] as Node3D).position = Vector3(-18.0, 0, arco.z - d * 6.0)   ## un defensa atrás: el de delante queda habilitado
+			break
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 13
 	_comprobar(is_equal_approx(motor._ganas_tiro_extra(yo, 38.0, 0.4, 3.0), 0.4), "el motor de siempre no cambia las ganas de tirar")
