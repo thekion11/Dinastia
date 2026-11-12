@@ -358,7 +358,7 @@ static func _de_espaldas(m: Object, p: Dictionary, victima: Dictionary) -> bool:
 ## SEGUIR EL TIRO (12-11-2026, sesión 13; objetivo 6, portero y rechaces). Tras un remate, los `SEGUIR_N` compañeros más cerca de la zona
 ## del rechace (delante del área chica) corren a ella durante `SEGUIR_T` s: el rechace del portero tiene quien lo empuje.
 ## Devuelve el destino o Vector3.INF si `p` no sigue el tiro.
-static var SEGUIR := _bandera("C4_SEGUIR", true)
+static var SEGUIR := _bandera("C4_SEGUIR", false)   ## APAGADO el 12-11 mientras se arregla: en `prueba_partido_motor` (CHI, 4711) disparaba las tarjetas (5 rojas, partido suspendido)
 const SEGUIR_N := 2
 const SEGUIR_T := 2.0
 static func seguir_tiro(m: Object, p: Dictionary) -> Vector3:
