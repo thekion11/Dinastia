@@ -186,11 +186,12 @@ static func generar_mundo() -> Mundo:
 	return m
 
 ## Lo mismo, repartido entre fotogramas (7-11, meta «< 200 ms por carga»): la pantalla sigue viva mientras se crean los ~10.000 jugadores. Se usa con `await`.
-static func generar_mundo_por_trozos() -> Mundo:
+## `sigue`: ver `Mundo.generar_por_trozos` (si la pantalla se va a mitad, se abandona sin tocar lo global).
+static func generar_mundo_por_trozos(sigue := Callable()) -> Mundo:
 	Escudo.limpiar_cache()
 	Cara.limpiar_cache()
 	var m := Mundo.new()
-	await m.generar_por_trozos(LigasActivas.para_generar(), 0)
+	await m.generar_por_trozos(LigasActivas.para_generar(), 0, 25.0, sigue)
 	return m
 
 ## Aplica todo lo elegido y deja Principal listo. Devuelve {"escena", "mundo"}.

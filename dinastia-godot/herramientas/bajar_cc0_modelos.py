@@ -13,11 +13,19 @@ RAIZ = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", 
 ## (contenido externo) y no deben poder apuntar a otro sitio. Y los archivos solo se escriben dentro de la carpeta del modelo.
 HOSTS = {"api.polyhaven.com", "dl.polyhaven.org"}
 
+## (12-11, SonarCloud S7044) La RUTA tampoco se usa tal cual: solo letras, números, «_», «-», «.» y «/», sin segmentos «..» ni «.»
+## (que subirían a otra parte de la API), sin consulta ni fragmento; la dirección se rehace con la ruta ya validada.
+RUTA_VALIDA = re.compile(r"/[A-Za-z0-9_./-]+")
+
 def abrir(url):
     u = urllib.parse.urlparse(url)
     if u.scheme != "https" or u.hostname not in HOSTS:
         raise ValueError("dirección no permitida: %r" % url)
-    return urllib.request.urlopen(urllib.request.Request(urllib.parse.urlunparse(u), headers={"User-Agent": "Mozilla/5.0"}))
+    ruta = u.path
+    if not RUTA_VALIDA.fullmatch(ruta) or any(seg in ("..", ".") for seg in ruta.split("/")) or u.query or u.fragment or u.params:
+        raise ValueError("ruta no permitida: %r" % url)
+    segura = "https://%s%s" % (u.hostname, urllib.parse.quote(ruta, safe="/"))
+    return urllib.request.urlopen(urllib.request.Request(segura, headers={"User-Agent": "Mozilla/5.0"}))
 
 def dentro(base, ruta):
     destino = os.path.realpath(os.path.join(base, ruta))

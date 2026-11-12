@@ -70,8 +70,10 @@ static func aplicar_a(_mundo: Mundo, clubes: Array) -> int:
 ## `aplicar` repartido entre fotogramas (7-11, meta «< 200 ms por carga»): mismo resultado, cede un fotograma tras cada trozo de `ms_trozo` ms. Se usa con `await`.
 static func aplicar_por_trozos(mundo: Mundo, ms_trozo := 25.0) -> int:
 	var idx := _indice_de()
+	if idx.is_empty():
+		return 0   ## (12-11, fallo n.º 4) mismo orden que `aplicar_a`: sin índice no se pide la tabla
 	var posd: Variant = Datos.tabla("POSD")
-	if idx.is_empty() or not (posd is Dictionary):
+	if not (posd is Dictionary):
 		return 0
 	var arbol := Engine.get_main_loop() as SceneTree
 	var t0 := Time.get_ticks_usec()

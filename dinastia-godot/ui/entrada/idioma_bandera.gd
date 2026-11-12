@@ -64,7 +64,9 @@ func _ready() -> void:
 	_vista.size = resolucion
 	_vista.transparent_bg = true
 	_vista.disable_3d = true
-	_vista.msaa_2d = Viewport.MSAA_4X
+	## El MSAA 2D no existe en Compatibility (móvil, Web): allí daba un aviso por bandera (12-11, fallo n.º 8).
+	if RenderingServer.get_current_rendering_method() != "gl_compatibility":
+		_vista.msaa_2d = Viewport.MSAA_4X
 	## Una bandera no cambia: se pinta una vez y la textura queda.
 	_vista.render_target_update_mode = SubViewport.UPDATE_ONCE
 	add_child(_vista)
