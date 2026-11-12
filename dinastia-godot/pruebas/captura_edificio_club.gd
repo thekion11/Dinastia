@@ -66,6 +66,8 @@ func _ready() -> void:
 
 func _foto() -> void:
 	print("LLAMADAS ", _imgs.size(), " ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME), " tris ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME), " tex_MB ", snappedf(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TEXTURE_MEM_USED) / 1048576.0, 0.1), " vram_MB ", snappedf(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_VIDEO_MEM_USED) / 1048576.0, 0.1))   ## medida de dibujo por sala
+	if OS.get_environment("TEXTURAS") != "":   ## (12-11) TEXTURAS=N: las N texturas de los materiales de la vista que más pesan (sin comprimir: lado², sin mipmaps)
+		_texturas(int(OS.get_environment("TEXTURAS")))
 	var img := get_viewport().get_texture().get_image()
 	img.convert(Image.FORMAT_RGBA8)
 	if OS.get_environment("COMPLETA") == "1":   ## cada sala a tamaño completo (para ver el parpadeo del suelo, texturas…)
@@ -135,3 +137,29 @@ func _process(_d: float) -> void:
 			return
 		_colocar(int(SALAS[_paso][0]), String(SALAS[_paso][1]))
 		_paso += 1
+
+func _texturas(n: int) -> void:
+	var vistas := {}
+	for mi: Node in get_tree().root.find_children("*", "GeometryInstance3D", true, false):
+		var mats: Array = []
+		if mi is GeometryInstance3D and (mi as GeometryInstance3D).material_override != null:
+			mats.append((mi as GeometryInstance3D).material_override)
+		if mi is MeshInstance3D and (mi as MeshInstance3D).mesh != null:
+			for k in (mi as MeshInstance3D).mesh.get_surface_count():
+				mats.append((mi as MeshInstance3D).get_active_material(k))
+		for m in mats:
+			if m is BaseMaterial3D:
+				for prop: String in ["albedo_texture", "normal_texture", "roughness_texture", "metallic_texture", "ao_texture", "detail_albedo", "detail_normal", "emission_texture", "orm_texture"]:
+					var t = (m as BaseMaterial3D).get(prop)
+					if t is Texture2D and not vistas.has(t):
+						vistas[t] = "%s %s" % [prop, t.resource_path if t.resource_path != "" else t.get_class()]
+	var filas: Array = []
+	for t: Texture2D in vistas:
+		filas.append([t.get_width() * t.get_height() * 4 / 1048576.0, t.get_width(), vistas[t], t.get_class()])
+	filas.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])
+	var tot := 0.0
+	for f: Array in filas:
+		tot += float(f[0])
+	print("TEXTURAS distintas %d, %.1f MB a 4 B/px" % [filas.size(), tot])
+	for f: Array in filas.slice(0, n):
+		print("TEX %6.2f MB %d %s" % [f[0], f[1], f[2]])
