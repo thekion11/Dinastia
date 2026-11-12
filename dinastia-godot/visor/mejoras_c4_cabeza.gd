@@ -26,7 +26,7 @@ static func destino(m: Object, p: Dictionary, d: Vector3) -> Vector3:
 	var r := d
 	if not gk.is_empty():
 		var gx: float = m.pos(gk).x
-		if signf(r.x) == signf(gx) and (m._rng as RandomNumberGenerator).randf() < P_CONTRARIO:
+		if (r.x > 0.0) == (gx > 0.0) and (m._rng as RandomNumberGenerator).randf() < P_CONTRARIO:
 			r.x = -r.x
 	r.y = clampf(r.y * 0.5, 0.15, 1.2)
 	_contar(m, "c4_cabeza_ajustada")

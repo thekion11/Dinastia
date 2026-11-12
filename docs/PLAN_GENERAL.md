@@ -19,7 +19,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   el pase arriesgado es el que crea el peligro; cabezazo al palo contrario (`C4_CABEZA`), solo y con `C4_AEREO`: el cabezazo ya convierte
   ~28 % (el medidor cuenta como «parado» el de córner; mirar `diag.gol_cabeza`), el problema es que sustituye al tiro con el pie;
   regate y remate (`C4_REGATE_TIRO`): neutro.
-- EN MEDIDA: más pases al hueco (`C4_HUECO`), con 2 muestras de países (CHI/ESP/BRA y ARG/ITA/FRA) por el ruido de ±0,7 goles.
+- ENCENDIDO Y EN `main`: más pases al hueco (`C4_HUECO`, también al lateral que se incorpora): tiros en el área 7,7 → 8,2 y goles de
+  jugada 0,59 → 0,67 (4 tandas de 12 con 6 países). Método: con 12 partidos el ruido es de ±0,7 goles; decidir con 2 muestras de países.
+- SIGUIENTE: llegada al área con el balón controlado (goles de jugada siguen ~0,7 de ~4,4); portero y rechaces; balón parado.
 
 ## SESIÓN 14 (12-11): LO QUE SE VE Y SE SIENTE EN EL PARTIDO — rama `sesion14-partido-visual` (informe `docs/04_auditorias/partido_visual_2026-11-12.md`)
 - HECHO: botas con horma (sin dedos), costura cara-cuello (borde pegado a la piel en 3D, también peatones y personal), nuca a la altura del
