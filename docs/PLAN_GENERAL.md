@@ -33,7 +33,12 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   en VRAM) y el peso eran las 12 texturas CC0 de 1024 px. Normal y rugosidad de `assets/cc0/*` se importan ahora a 512 px (el color sigue a
   1024): 163,6 → 157,6 MB (−6 MB, −35 % del extra), sin diferencia visible (hoja `vestuario_ARG_alta_antes_despues_512.jpg`). Medir con
   `TEXTURAS=N` en `captura_edificio_club` (lista las texturas de los materiales de la vista).
-- FALTA: coste de la interfaz del partido (107 llamadas 2D); vídeo con la cámara real de las reacciones.
+  (5) INTERFAZ DEL PARTIDO (MÍNIMA): la medida pieza a pieza dentro del partido (`POR_HUD=1`) es una RESTA contra el 3D y oscila ±6 llamadas
+  entre corridas idénticas (el mando salió 12, 14 y 18 con el mismo código). Aislado en `pruebas/medir_mando.tscn` (solo el mando, 2400×1080,
+  con y sin balón), el mando entero son 2 llamadas: ya va en un solo lote (atlas y glifos). Se probó igualar el tamaño de letra de los botones
+  (5 tamaños con contorno): sin ganancia aislado, así que se DESHIZO (cambiaba el aspecto). Conclusión: el HUD ya no es la palanca (marcador,
+  estadísticas y ficha ~1-13 cada uno según la corrida); queda medirlo en el teléfono real con el perfilador.
+- FALTA: vídeo con la cámara real de las reacciones; medir el HUD en el teléfono real.
 - IDEA ANOTADA: lanzar el mini evento también en el momento de ganar el título que abre la planta (hoy sale en la primera visita).
 ## SESIÓN 15 (12-11): JUGABILIDAD DE C4 — rama `sesion15-jugabilidad` (detalle y cifras en `MOTOR_LEAGUE_SOCCER_PLAN.md`, tabla de banderas)
 - MEDIDO Y DESCARTADO (apagado, cada uno con su bandera): adelanto del pase por zona (`C4_ADELANTO=3`) y eligiendo otro compañero (`=4`):
