@@ -130,6 +130,11 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 		tenso = true
 	super(p, q, largo, al_hueco, tenso)
 
+## (12-11, líder) el adelanto del pase: el de siempre salvo que un rival llegue antes al punto (`MejorasC4Adelanto`, `C4_ADELANTO=1`).
+func _guia_pase(q: Dictionary, dist: float, al_hueco: bool) -> Vector3:
+	var base := super(q, dist, al_hueco)
+	return MejorasC4Adelanto.guia(self, q, base, al_hueco) if _mejoras_c4 else base
+
 func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 	var r := super(p, victima, base)
 	if not _mejoras_c4:

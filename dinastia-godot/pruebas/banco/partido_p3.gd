@@ -427,3 +427,24 @@ func _probar_descarga() -> void:
 	_comprobar(MotorDescarga.holgura(0.5) == MotorDescarga.HOLGURA and MotorDescarga.holgura(1.0) == 1.0, "la espera con presión baja a %.2f y sin presión no cambia" % MotorDescarga.HOLGURA)
 	MotorDescarga._on = antes
 	(r[1] as Node3D).queue_free()
+
+## (12-11) EL ADELANTO DEL PASE EN C4 (`MejorasC4Adelanto`): si un rival llega antes al punto adelantado, la mitad o al pie.
+func _probar_adelanto_c4() -> void:
+	_titulo("C4: EL ADELANTO DEL PASE")
+	var r := _motor_de_prueba()
+	var motor: MotorJugable = r[0]
+	var q: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))[0]
+	for p: Dictionary in motor.jugadores:
+		(p["node"] as Node3D).position = Vector3(40.0, 0, 0) if bool(p["es_local"]) != bool(q["es_local"]) else Vector3(-30.0, 0, 0)
+	(q["node"] as Node3D).position = Vector3(0, 0, 10.0)
+	motor.balon.position = Vector3(0, 0, -5.0); var base := Vector3(0, 0, 6.0)
+	var antes := MejorasC4Adelanto.ACTIVO; MejorasC4Adelanto.ACTIVO = false
+	_comprobar(MejorasC4Adelanto.guia(motor, q, base) == base, "con la bandera apagada no cambia nada")
+	MejorasC4Adelanto.ACTIVO = true; _comprobar(MejorasC4Adelanto.guia(motor, q, base) == base, "sin rival cerca del punto se adelanta entero")
+	var rival: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) != bool(q["es_local"]))[0]
+	(rival["node"] as Node3D).position = Vector3(0, 0, 23.0)   ## llega antes a 16 m, no a 13 m
+	_comprobar(MejorasC4Adelanto.guia(motor, q, base) == base * 0.5, "con un rival en el punto, la mitad del adelanto")
+	(rival["node"] as Node3D).position = Vector3(0.5, 0, 12.5)
+	_comprobar(MejorasC4Adelanto.guia(motor, q, base) == Vector3.ZERO, "con el rival también a mitad de camino, al pie")
+	MejorasC4Adelanto.ACTIVO = antes
+	(r[1] as Node3D).queue_free()
