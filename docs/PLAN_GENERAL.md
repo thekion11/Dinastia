@@ -14,6 +14,13 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 ## PREGUNTAS PARA EL DUEÑO (sesiones Opus) — se acumulan aquí y se envían juntas por Calendar al llegar a 5 (orden 44); se borran al responderse
 - (ninguna todavía)
 
+## SESIÓN 15 (12-11): JUGABILIDAD DE C4 — rama `sesion15-jugabilidad` (detalle y cifras en `MOTOR_LEAGUE_SOCCER_PLAN.md`, tabla de banderas)
+- MEDIDO Y DESCARTADO (apagado, cada uno con su bandera): adelanto del pase por zona (`C4_ADELANTO=3`) y eligiendo otro compañero (`=4`):
+  el pase arriesgado es el que crea el peligro; cabezazo al palo contrario (`C4_CABEZA`), solo y con `C4_AEREO`: el cabezazo ya convierte
+  ~28 % (el medidor cuenta como «parado» el de córner; mirar `diag.gol_cabeza`), el problema es que sustituye al tiro con el pie;
+  regate y remate (`C4_REGATE_TIRO`): neutro.
+- EN MEDIDA: más pases al hueco (`C4_HUECO`), con 2 muestras de países (CHI/ESP/BRA y ARG/ITA/FRA) por el ruido de ±0,7 goles.
+
 ## SESIÓN 14 (12-11): LO QUE SE VE Y SE SIENTE EN EL PARTIDO — rama `sesion14-partido-visual` (informe `docs/04_auditorias/partido_visual_2026-11-12.md`)
 - HECHO: botas con horma (sin dedos), costura cara-cuello (borde pegado a la piel en 3D, también peatones y personal), nuca a la altura del
   lóbulo y corte 3D de la familia del retrato; disputa aérea a tiempo (los dos que disputan saltan 0,3 s antes del contacto), reacción
