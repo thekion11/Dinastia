@@ -4,6 +4,16 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## SESIÓN 14 (12-11): LO QUE SE VE Y SE SIENTE EN EL PARTIDO — rama `sesion14-partido-visual` (informe `docs/04_auditorias/partido_visual_2026-11-12.md`)
+- HECHO: botas con horma (sin dedos), costura cara-cuello (borde pegado a la piel en 3D, también peatones y personal), nuca a la altura del
+  lóbulo y corte 3D de la familia del retrato; disputa aérea a tiempo (los dos que disputan saltan 0,3 s antes del contacto), reacción
+  al fallo, entradas de pie variadas, acrobacias y lamentos de CMU, todo NEUTRO para la simulación de C4 (6 cruces idénticos a `main`);
+  móvil: aro del portador con color de equipo y flecha de ataque, el triángulo de tu jugador ya no tapa media pantalla; fuera el fondo
+  negro redundante detrás del 3D.
+- FALTA: proporciones del cuerpo «superhéroe» de cerca; cara de la biblioteca algo plana y clara frente al cuello; reacción del infractor
+  a una falta sin tarjeta; vídeo con la cámara real de los saltos y reacciones (la foto fija no muestra el tiempo); medir en el teléfono
+  el coste de la interfaz del partido (107 llamadas 2D) y reducirla.
+
 ## PREGUNTAS PARA EL DUEÑO (sesiones Opus) — se acumulan aquí y se envían juntas por Calendar al llegar a 5 (orden 44); se borran al responderse
 - (ninguna todavía)
 

@@ -259,3 +259,11 @@ Inventario: ≈ 2.100 geometrías visibles en MEDIO (1.000 en MÍNIMO), 853 mate
 **Lectura**: lo que más pesa en relleno de píxeles NO son los triángulos sino el **MSAA x2** (en una GPU de móvil sin Tile-resolve en Compatibilidad es ancho de banda de memoria ×2 más una resolución), seguido de la resolución del 3D, el entorno exterior (solo en MEDIO) y las sombras. Ajuste de color, focos, rótulos y niebla pesan 6-18 % cada uno en MÍNIMO (en conjunto casi lo mismo que la mitad del fotograma).
 **Aplicado (decisión del dueño, R01)**: **MSAA apagado en MÍNIMO** (`Calidad.aplicar_viewport` y `Calidad.msaa_ui` para las vistas 3D secundarias: retratos, sorteo, casa…). MEDIO, ALTO y ULTRA igual que antes. Coste visual: bordes más dentados (líneas finas del campo lejanas, retratos 3D). La prueba `ideas_p2` (calidad mínima) lo refleja: MÍNIMO sin MSAA, MEDIO conserva x2, `msaa_ui` apagado en MÍNIMO.
 **Queda (no hecho, para decidir)**: (1) tapar el entorno exterior también en MEDIO con la cámara dentro del recinto (`EntornoOclusion`, hoy solo MÍNIMO; −33 % en MEDIO, sin cambio visible porque las tribunas lo tapan); (2) en MÍNIMO, ajuste de color y rótulos 3D y focos como escalón extra (−12-18 % cada uno, se vería un cambio de color/rótulos); (3) medir en el teléfono del dueño: nada de esto sustituye al aparato real (los porcentajes son de llvmpipe).
+
+## Sesión 14 (12-11): partido jugable en MÍNIMA (`hw_modesto.sh res://pruebas/medir_partido_jugable.tscn`, opengl3 1280×720)
+- Antes/después de lo visual de la sesión 14 (botas, cara, pelo, acciones, aro del portador): 0 llamadas nuevas salvo 1 malla del aro;
+  vídeo 197 → 197 MB; llamadas 691 → 679 (instantes distintos: el conteo del partido en marcha baila entre ~430 y ~690).
+- Qué pesa (escena congelada, reloj de pared comparativo, ruido ±10 ms): base ~153 ms; interfaz 2D −18 ms (−107 llamadas: 31 controles
+  táctiles + 77 HUD); jugadores −12 ms (−91 llamadas); el mundo 3D, el resto (~85 ms), repartido en piezas de 1-18 llamadas (`POR_HIJO=1`).
+- Quitado: el fondo negro a pantalla completa detrás del visor 3D (tapado; 1 pasada de pantalla completa por fotograma). Detalle en
+  `partido_visual_2026-11-12.md` (bloque 4). Siguiente palanca: el HUD 2D del partido, a medir en el teléfono.

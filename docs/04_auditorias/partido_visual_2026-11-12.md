@@ -96,3 +96,22 @@ Coste en MÍNIMA (`hw_modesto.sh res://pruebas/medir_partido_jugable.tscn`, open
 y en vertical. Escena nueva: `pruebas/captura_legible_movil.tscn` (fotos cuando alguien lleva el balón).
 
 Nota para el bloque 4: el partido jugable pide ~680 llamadas de dibujo en MÍNIMA (1 478 objetos): es la palanca para pasar de 30 a 60 FPS.
+
+## Bloque 4: rendimiento en MÍNIMA (que lo anterior no baje y qué pesa)
+
+Medido con `hw_modesto.sh res://pruebas/medir_partido_jugable.tscn` (opengl3 1280×720, 2 núcleos, MÍNIMA, partido del modo carrera
+con controles táctiles). Reloj de pared con la escena CONGELADA (llvmpipe, limitado por relleno como un teléfono): solo comparativo;
+ruido ±10 ms entre corridas. Nunca `--headless`.
+- Lo de esta sesión: 0 llamadas en los bloques 1-2; +1 malla en el 3 (el aro).
+- Qué pesa (`QUITAR`, acumulado): base ~153 ms; sin la interfaz 2D −18 ms (−107 llamadas: 31 de los controles táctiles, 77 del resto
+  del HUD); sin jugadores −12 ms más (−91 llamadas); sin el mundo 3D el resto (~85 ms). En el teléfono la interfaz va a resolución
+  NATIVA y el 3D a la mitad: la interfaz pesa allí más que aquí.
+- Desglose del 3D por hijo de la escena (`POR_HIJO=1`, nuevo en `medir_partido_jugable`): el estadio está repartido en piezas de
+  1-18 llamadas (ya fundido); no hay una palanca grande. Césped por capas: solo en ALTO/ULTRA.
+- Arreglado: el `ColorRect` negro a pantalla completa DETRÁS del visor 3D de `PartidoJugable` se dibujaba en cada fotograma tapado del
+  todo (una pantalla entera de relleno a resolución nativa): ahora solo se ve cuando el 3D no está. En llvmpipe la diferencia queda
+  dentro del ruido; en un teléfono es 1 pasada de pantalla completa menos por fotograma.
+- Ojos y cejas ya tenían rango de visibilidad (≈12 y 10 m en MÍNIMA): ocultarlos del todo bajaría 11-12 llamadas cada uno solo con
+  jugadores a menos de esa distancia (modo carrera); no se toca.
+- Siguiente palanca medible para 30 → 60 FPS en el teléfono: la interfaz del partido (77 llamadas del HUD: paneles con estilo,
+  etiquetas con contorno e iconos de otras fuentes rompen el lote 2D) y las 31 de los controles. Pide una medida en el teléfono real.
