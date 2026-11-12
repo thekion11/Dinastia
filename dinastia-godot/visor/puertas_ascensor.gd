@@ -12,7 +12,7 @@ const RECOGIDA := 0.12       ## escala en x de una hoja recogida
 ## Pone el hueco del ascensor de una planta: `cx` centro, `z` plano de la pared del fondo, `y0` suelo de la planta, `ancho` del hueco.
 static func poner(nodo: Node3D, cx: float, z: float, y0: float, ancho: float) -> void:
 	var marco := PiezasObra._mat(Color(0.16, 0.17, 0.19), 0.4)
-	var acero: StandardMaterial3D = Texturas.metal(Color(0.72, 0.74, 0.76), 0.35)
+	var acero := acero_satinado()
 	var cabina := PiezasObra._mat_unico(Color(0.9, 0.86, 0.74), 0.7)
 	cabina.emission_enabled = true
 	cabina.emission = Color(0.95, 0.85, 0.6)
@@ -33,6 +33,18 @@ static func poner(nodo: Node3D, cx: float, z: float, y0: float, ancho: float) ->
 		nodo.add_child(pivote)
 		PiezasObra._caja(pivote, Vector3(-lado * ancho / 4.0, alto / 2.0, 0.0), Vector3(ancho / 2.0, alto, 0.06), acero, false)
 		PiezasObra._caja(pivote, Vector3(-lado * (ancho / 2.0 - 0.03), alto / 2.0, -0.04), Vector3(0.02, alto - 0.1, 0.02), marco, false)   ## junta central
+
+## (12-11, sesión 16, primera persona) Acero satinado LISO para las hojas: el `Texturas.metal` (ruido de rugosidad y de normales) estirado
+## sobre una hoja de 1 × 2,3 m se veía de cerca, a la altura de los ojos, como papel de aluminio arrugado. Una sola instancia (mismas llamadas).
+static var _acero: StandardMaterial3D = null
+static func acero_satinado() -> StandardMaterial3D:
+	if _acero == null:
+		_acero = StandardMaterial3D.new()
+		_acero.albedo_color = Color(0.70, 0.72, 0.74)
+		_acero.metallic = 0.7
+		_acero.metallic_specular = 0.55
+		_acero.roughness = 0.38
+	return _acero
 
 ## Abre o cierra las hojas de la planta cuyo suelo está en `y0`. `dur` a mano para las pruebas; devuelve los Tween creados.
 static func mover(arbol: SceneTree, y0: float, abrir: bool, dur := -1.0) -> Array[Tween]:
