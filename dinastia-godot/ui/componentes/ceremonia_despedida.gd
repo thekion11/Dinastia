@@ -12,9 +12,11 @@ static func mostrar(pr: Principal, homenajeados: Array, leyendas: Club) -> Cerem
 	return c
 
 func _rellenar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
-	_centro.custom_minimum_size = Vector2(1000, 0)
+	## (12-11) Teléfono de pie: a 500 px, con el campo 3D a ese ancho y las tarjetas en rejilla de 2 (a 1000 px se salía todo por la derecha).
+	var de_pie := EscalaMovil.es_vertical()
+	_centro.custom_minimum_size = Vector2(ancho_base(1000.0), 0)
 	_centro.add_child(etiqueta(Idiomas.t("PARTIDO DE DESPEDIDA"), 15, Tema.SUAVE))
-	_centro.add_child(etiqueta("🎖️ " + Idiomas.t("Homenaje"), 40, Tema.ORO, true, false))
+	_centro.add_child(etiqueta("🎖️ " + Idiomas.t("Homenaje"), 28 if de_pie else 40, Tema.ORO, true, false))
 	var filas: Array = []
 	for h: Dictionary in homenajeados:
 		filas.append({"j": h["jugador"], "dorsal": int(h["dorsal"]), "propio": true})
@@ -30,10 +32,20 @@ func _rellenar(pr: Principal, homenajeados: Array, leyendas: Club) -> void:
 	var campo: Control = load("res://visor/homenaje_campo3d.gd").montar(filas, Color(mio.color1) if mio else Tema.ACENTO, Color(mio.color2) if mio else Color.WHITE)
 	if campo != null:
 		campo.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		if de_pie:
+			campo.custom_minimum_size = Vector2(ANCHO_DE_PIE - 8.0, 300)
 		_centro.add_child(campo)
-	var tarjetas := HBoxContainer.new()
-	tarjetas.alignment = BoxContainer.ALIGNMENT_CENTER
-	tarjetas.add_theme_constant_override("separation", 28)
+	var tarjetas: Container
+	if de_pie:
+		tarjetas = GridContainer.new()
+		(tarjetas as GridContainer).columns = 2
+		tarjetas.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		tarjetas.add_theme_constant_override("h_separation", 12)
+		tarjetas.add_theme_constant_override("v_separation", 12)
+	else:
+		tarjetas = HBoxContainer.new()
+		(tarjetas as HBoxContainer).alignment = BoxContainer.ALIGNMENT_CENTER
+		tarjetas.add_theme_constant_override("separation", 28)
 	_centro.add_child(tarjetas)
 	for f: Dictionary in filas.slice(0, 4):
 		tarjetas.add_child(_tarjeta(pr, f))
@@ -57,14 +69,14 @@ func _tarjeta(pr: Principal, f: Dictionary) -> Control:
 	pc.add_theme_stylebox_override("panel", sb)
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 8)
-	col.custom_minimum_size = Vector2(220, 0)
+	col.custom_minimum_size = Vector2(200 if EscalaMovil.es_vertical() else 220, 0)
 	pc.add_child(col)
 	var r := pr._retrato(j, 84)
 	r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	r.custom_minimum_size = Vector2(84, 84)
 	r.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	col.add_child(r)
-	col.add_child(etiqueta(j.nombre, 22, Tema.ORO))
+	col.add_child(etiqueta(j.nombre, 17 if EscalaMovil.es_vertical() else 22, Tema.ORO))
 	col.add_child(etiqueta("%d %s · %s %d · %s" % [j.edad, Idiomas.t("años"), Idiomas.t("Nota"), j.ovr, Idiomas.t(String(j.pos_e))], 14, Tema.SUAVE))
 	if bool(f["propio"]) and int(f["dorsal"]) > 1:
 		col.add_child(etiqueta("👕 #%d" % int(f["dorsal"]), 34, Tema.TEXTO))

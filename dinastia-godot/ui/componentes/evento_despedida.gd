@@ -9,19 +9,20 @@ static func mostrar(pr: Principal, leyendas: Club) -> EventoDespedida:
 	return e
 
 func _rellenar(pr: Principal, leyendas: Club) -> void:
+	var de_pie := EscalaMovil.es_vertical()   ## (12-11) de pie: escudo arriba, cancha debajo y los tres botones apilados
 	_centro.add_child(etiqueta("%s · %d" % [Idiomas.t("FIN DE TEMPORADA"), pr.mundo.anio], 15, Tema.SUAVE))
-	_centro.add_child(etiqueta("🎖️ " + Idiomas.t("Partido de despedida"), 46, Tema.ORO, true, false))
+	_centro.add_child(etiqueta("🎖️ " + Idiomas.t("Partido de despedida"), 28 if de_pie else 46, Tema.ORO, true, false))
 	_centro.add_child(etiqueta("%s %d %s" % [Idiomas.t("Tu equipo se enfrenta a las Leyendas: los"), leyendas.plantilla.size(),
 		Idiomas.t("mejores jugadores que se retiran esta temporada. Es un partido de gala: no cuenta para la liga y no deja lesiones.")], 17, Tema.TEXTO))
 	## (9-11, orden del dueño) Solo el ESCUDO de las Leyendas (5 diseños que rotan por temporada) y, a su lado, el ONCE TITULAR de los retirados con su busto 3D.
-	var cuerpo := HBoxContainer.new()
+	var cuerpo: BoxContainer = VBoxContainer.new() if de_pie else HBoxContainer.new()
 	cuerpo.alignment = BoxContainer.ALIGNMENT_CENTER
-	cuerpo.add_theme_constant_override("separation", 48)
+	cuerpo.add_theme_constant_override("separation", 12 if de_pie else 48)
 	_centro.add_child(cuerpo)
-	cuerpo.add_child(_escudo(leyendas, 170))
+	cuerpo.add_child(_escudo(leyendas, 96 if de_pie else 170))
 	cuerpo.add_child(_cancha(pr, leyendas))
-	var botones := HBoxContainer.new()
-	botones.add_theme_constant_override("separation", 14)
+	var botones: BoxContainer = VBoxContainer.new() if de_pie else HBoxContainer.new()
+	botones.add_theme_constant_override("separation", 10 if de_pie else 14)
 	_centro.add_child(botones)
 	for par: Array in [["jugar", "▶ " + Idiomas.t("Jugarlo"), true], ["simular", "⏭ " + Idiomas.t("Simularlo"), false], ["no", Idiomas.t("Ahora no"), false]]:
 		var b := boton(String(par[1]), bool(par[2]))
@@ -62,7 +63,7 @@ func _cancha(pr: Principal, c: Club) -> Control:
 	for grupo: String in ["DEL", "MED", "DEF", "POR"]:
 		var fila := HBoxContainer.new()
 		fila.alignment = BoxContainer.ALIGNMENT_CENTER
-		fila.add_theme_constant_override("separation", 22)
+		fila.add_theme_constant_override("separation", 4 if EscalaMovil.es_vertical() else 22)
 		for j: Jugador in once:
 			if j.pos == grupo:
 				fila.add_child(_figura(pr, j))
@@ -78,7 +79,7 @@ func _figura(pr: Principal, j: Jugador) -> Control:
 	r.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	col.add_child(r)
 	var nj := etiqueta(j.nombre, 11, Tema.TEXTO, true, false)
-	nj.custom_minimum_size = Vector2(112, 0)
+	nj.custom_minimum_size = Vector2(88 if EscalaMovil.es_vertical() else 112, 0)
 	nj.clip_text = true
 	col.add_child(nj)
 	col.add_child(etiqueta("%s · %d" % [j.pos_e, j.ovr], 11, Tema.ORO))
