@@ -391,3 +391,31 @@ func _probar_tanda_c_1() -> Array:
 	yo.ovr = ovr_antes2
 	var cj3 := CarreraJugador.desde_dic(cj.a_dic())
 	return [m, c, o, mf, cj, yo, cj3]
+
+## (12-11, sesión 15) EL REMATE DE CABEZA EN C4 (`MejorasC4Cabeza`): al palo contrario al portero, abajo y más fuerte; fuera de C4, nada.
+func _probar_cabeza_c4() -> void:
+	_titulo("C4: EL REMATE DE CABEZA")
+	var r := _motor_de_prueba(11)
+	var motor: MotorJugable = r[0]
+	var yo: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))[0]
+	var gk: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and bool(p["por"]))[0]
+	var arco := motor._arco_rival(yo)
+	(gk["node"] as Node3D).position = Vector3(2.0, 0, arco.z)
+	var d := Vector3(2.5, 1.8, arco.z)
+	var antes := [MejorasC4Cabeza.ACTIVO, MejorasC4Cabeza.solo_c4]
+	MejorasC4Cabeza.ACTIVO = true
+	_comprobar(MejorasC4Cabeza.destino(motor, yo, d) == d and is_equal_approx(MejorasC4Cabeza.velocidad(motor, 15.0), 15.0), "fuera de C4 no cambia nada")
+	MejorasC4Cabeza.solo_c4 = false
+	var otro := 0
+	var abajo := true
+	for i in 40:
+		var n := MejorasC4Cabeza.destino(motor, yo, d)
+		otro += 1 if n.x < 0.0 else 0
+		abajo = abajo and n.y <= 1.2 and is_equal_approx(absf(n.x), d.x)
+	_comprobar(abajo, "el cabezazo va abajo y al mismo ancho")
+	_comprobar(otro > 15 and otro < 40, "con el portero cargado a un palo, casi siempre al otro (%d de 40)" % otro)
+	var fuera := Vector3(5.0, 1.0, arco.z)
+	_comprobar(MejorasC4Cabeza.destino(motor, yo, fuera) == fuera, "el cabezazo que ya va fuera no se toca")
+	_comprobar(MejorasC4Cabeza.velocidad(motor, 15.0) > 15.0, "sale más fuerte")
+	MejorasC4Cabeza.ACTIVO = antes[0]; MejorasC4Cabeza.solo_c4 = antes[1]
+	(r[1] as Node3D).queue_free()

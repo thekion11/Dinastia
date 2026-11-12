@@ -89,8 +89,8 @@ func _cabezazo(p: Dictionary) -> void:
 			var err := (0.5 + (1.0 - GestoTecnico.tiro(p, "cabeza")) * 1.4) * (0.4 + absf(pos(p).z - arco.z) / 11.0) * GestoTecnico.factor(self, p, true)
 			destino = Vector3((1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.8, PALO - 0.3) + _rng.randf_range(-err, err),
 				clampf(_rng.randf_range(0.3, 1.4) + _rng.randf_range(-err, err) * 0.6, 0.15, 3.5), arco.z)
-		destino = MotorCorner.cabeza(self as Object as MotorJugable, p, destino)   ## ciclo 26: el cabezazo con marca falla más
-		_patear(p, destino, 14.0 + float(p["attr"]["tir"]) * 6.0, 0.0, 0.0, "cabezazo")
+		destino = MejorasC4Cabeza.destino(self, p, MotorCorner.cabeza(self as Object as MotorJugable, p, destino))   ## ciclo 26 + C4_CABEZA (12-11)
+		_patear(p, destino, MejorasC4Cabeza.velocidad(self, 14.0 + float(p["attr"]["tir"]) * 6.0), 0.0, 0.0, "cabezazo")
 		tiros[0 if bool(p["es_local"]) else 1] += 1
 		_cerrar_tiro("fallo")   ## (01-11) el remate anterior aún abierto se cierra (ver `_tirar`)
 		_tiro_vivo = {"p": p, "t": t, "clase": "cabeza"}
