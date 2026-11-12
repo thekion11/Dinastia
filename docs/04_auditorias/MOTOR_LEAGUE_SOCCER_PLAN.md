@@ -613,5 +613,5 @@ Pendiente: balón parado (córners, faltas, saques de banda), cabezazos (0 goles
 | `C4_BANDA_SAQUE` | saque de banda hacia delante al libre | apagada | sale 0,4 veces por partido, sin efecto |
 | `C4_CONTENER` | radio de entrada reducido en el último tercio | apagada | sin efecto |
 | `C4_CONTENER2` | contener por colocación (toca colocación, orden 23) | apagada | neutro; regates ganados −0,5 |
-| `C4_SEGUIR` | 2 compañeros siguen el tiro al rechace | apagada | con el arbitraje arreglado ya no suma goles de jugada |
-| `C4_PARED` | pared cerca del área (ida, desmarque, vuelta de primera) | en medición | — |
+| `C4_SEGUIR` (v2: `C4_SEGUIR_Z`=9, sin esprintar de cerca) | 2 compañeros van a la zona del rechace sin disputarla | ENCENDIDA | v2: goles de jugada 1,3/1,2 → 1,5/1,3, goles 3,9/3,8 → 4,8/3,8, tarjetas normales; regates ganados −0,8 (la v1, esprintando a 7 m, destapó las tarjetas de más) |
+| `C4_PARED` | pared cerca del área (ida, desmarque, vuelta de primera; `MejorasC4Pared`) | apagada | v1 y v2: goles 3,9/3,8 → 3,3-3,6, tiros desde dentro bajan; solo 0,2-0,7 paredes completadas por partido (la vuelta se corta) |

@@ -82,10 +82,10 @@ const CONTENER_D := 32.0
 ## SEGUIR EL TIRO (12-11-2026, sesión 13; objetivo 6, portero y rechaces). Tras un remate, los `SEGUIR_N` compañeros más cerca de la zona
 ## del rechace (delante del área chica) corren a ella durante `SEGUIR_T` s: el rechace del portero tiene quien lo empuje.
 ## Devuelve el destino o Vector3.INF si `p` no sigue el tiro.
-static var SEGUIR := _bandera("C4_SEGUIR", false)   ## APAGADO el 12-11 mientras se arregla: en `prueba_partido_motor` (CHI, 4711) disparaba las tarjetas (5 rojas, partido suspendido)
+static var SEGUIR := _bandera("C4_SEGUIR", true)   ## v2 (12-11): zona a 9 m y sin esprintar de cerca; la v1 destapó las tarjetas de más de C4 (arregladas con C4_NO_DETRAS)
 const SEGUIR_N := 2
 const SEGUIR_T := 2.0
-static var SEGUIR_Z := _num("C4_SEGUIR_Z", 7.0)   ## distancia de la zona del rechace a la línea de gol
+static var SEGUIR_Z := _num("C4_SEGUIR_Z", 9.0)   ## distancia de la zona del rechace a la línea de gol
 
 ## NO ENTRAR POR DETRÁS (12-11-2026, sesión 13). Con los sprints sin balón de C4, el defensor que repliega llega lanzado por la espalda
 ## y entra de pie: en C4 las tarjetas eran casi todas «de pie + por detrás + a gran velocidad» (5-7 por partido frente a 3,5 del motor
