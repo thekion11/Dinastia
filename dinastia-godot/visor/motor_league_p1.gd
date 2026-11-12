@@ -26,8 +26,13 @@ static func lado_de(local: bool) -> float:
 func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: int = 1) -> void:
 	super(lista, ball, jugador_usuario_id, semilla)
 	LeagueLocomocion.precargar()   ## (11-11) las bibliotecas y el catálogo, antes del saque: sin tirón en el primer toque
+	if not remate.is_connected(_tras_remate_visual):
+		remate.connect(_tras_remate_visual)   ## (12-11) la reacción del que falla (`LeagueAcciones`, solo se ve)
 	equipos = [LeagueEquipo.new(lado_de(true)), LeagueEquipo.new(lado_de(false))]
 	_formas()
+
+func _tras_remate_visual(_local: bool, autor_id: String, tipo: String) -> void:
+	LeagueAcciones.tras_remate(self as Object as MotorLeague, autor_id, tipo)
 
 ## La formación en el marco de League (x −1 atrás .. 1 delante, y −1..1 a lo ancho), sacada de la posición base de cada uno.
 func _formas() -> void:
