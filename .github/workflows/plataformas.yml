@@ -10,6 +10,7 @@ name: Plataformas (Windows y Web)
 on:
   workflow_dispatch:
   push:
+    branches: [ "main" ]   ## (12-11) solo main, como compilar.yml (las ramas de trabajo duplicaban cada ejecución)
     paths:
       - "dinastia-godot/**"
       - ".github/workflows/plataformas.yml"

@@ -17,7 +17,10 @@ run-name: ${{ github.event_name == 'workflow_dispatch' && format('▶ {0} · {1}
 
 on:
   push:
-    branches: [ "**" ]
+    ## (12-11) Solo `main`: cada unión sube el MISMO commit a `main` y a la rama de trabajo, y las dos ejecuciones se quitaban los
+    ## runners; la de `main` quedaba en espera y la siguiente subida la sustituía (ninguna terminaba). Las ramas se prueban a mano
+    ## con «Run workflow» (workflow_dispatch) y, antes de unir, con `herramientas/banco.sh` en local.
+    branches: [ "main" ]
   workflow_dispatch:
     inputs:
       objetivo:
