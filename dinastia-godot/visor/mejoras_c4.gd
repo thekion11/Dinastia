@@ -323,3 +323,24 @@ static func banda_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: Random
 	m._anim(p, AnimExtra.variante(p["anim"], "saque_banda", String(p.get("id", "")), rng), true)
 	m._contar("c4_banda_ensayada")
 	return true
+
+## CONTENER EN EL ÚLTIMO TERCIO (12-11-2026, sesión 13, decisión del líder). La IA entra en cuanto el portador queda a ~1,25 m: en el
+## último tercio eso mataba la jugada antes del regate o la pared (~3,5 pérdidas por entrada por partido ahí). En C4, a menos de
+## `CONTENER_D` m de su arco, el defensor solo entra con el radio de siempre si es buen momento (`MotorEntrada`: de espaldas, control
+## largo, pegado a la banda) o si es el ÚLTIMO hombre; si no, contiene y temporiza (radio × `CONTENER_K`).
+static var CONTENER := _bandera("C4_CONTENER", true)
+static var CONTENER_K := _num("C4_CONTENER_K", 0.6)
+const CONTENER_D := 32.0
+static func radio_entrada(m: Object, p: Dictionary, victima: Dictionary, base: float, r: float) -> float:
+	if not CONTENER or r > base + 0.01:
+		return r   ## buen momento: entra como siempre
+	var arco: Vector3 = m._arco_rival(victima)   ## el arco que defiende `p`
+	var pv: Vector3 = m.pos(victima)
+	if Vector2(pv.x - arco.x, pv.z - arco.z).length() > CONTENER_D:
+		return r
+	var yo_d := Vector2(m.pos(p).x - arco.x, m.pos(p).z - arco.z).length()
+	for q: Dictionary in m.jugadores:
+		if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and String(q["id"]) != String(p["id"]):
+			if Vector2(m.pos(q).x - arco.x, m.pos(q).z - arco.z).length() < yo_d - 1.0:
+				return r * CONTENER_K   ## hay cobertura detrás: contener
+	return r   ## último hombre: entra

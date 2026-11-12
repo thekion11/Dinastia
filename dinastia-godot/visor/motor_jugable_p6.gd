@@ -245,7 +245,7 @@ func _disputas(delta: float) -> void:
 			continue
 		if float(p["enfriar"]) > 0.0 or bool(p["por"]):
 			continue
-		if pos(p).distance_to(pos(poseedor)) < MotorEntrada.radio(self as Object as MotorJugable, p, poseedor, 1.25 + 0.12 * float(_tac(bool(p["es_local"]), "presion") - 1)):   ## ciclo 12: entrar en el momento bueno
+		if pos(p).distance_to(pos(poseedor)) < _radio_entrada(p, poseedor, 1.25 + 0.12 * float(_tac(bool(p["es_local"]), "presion") - 1)):   ## ciclo 12: entrar en el momento bueno
 			_entrada(p, false)
 			break
 

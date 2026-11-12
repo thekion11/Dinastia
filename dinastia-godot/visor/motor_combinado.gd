@@ -96,6 +96,10 @@ func _saque_ensayado(p: Dictionary, tipo: String, lugar: Vector3) -> bool:
 		return MejorasC4.falta_ensayada(self, p, lugar, _rng)
 	return tipo == "banda" and MejorasC4.banda_ensayada(self, p, lugar, _rng)
 
+func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
+	var r := super(p, victima, base)
+	return MejorasC4.radio_entrada(self, p, victima, base, r) if _mejoras_c4 else r
+
 func _radio_cabezazo(p: Dictionary) -> float:
 	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)
 
