@@ -252,7 +252,7 @@ func _pintar_licencia_y_tribunal(c: Club, f: Federacion) -> void:
 		var ok := bool(r["ok"])
 		if ok:
 			cumple += 1
-		p._dato("%s  %s" % ["✅" if ok else "❌", String(r["t"])], String(r["det"]),
+		p._dato("%s  %s" % ["✅" if ok else "❌", String(r["t"])], _detalle_requisito(r, c),
 			Principal.COL_VERDE if ok else Principal.COL_ROJO, p._lista_fed)
 	var resumen := p._texto(11, Principal.COL_SUAVE)
 	resumen.text = Idiomas.t("Cumples %d de %d requisitos. Uno o dos incumplimientos son un aviso y te dejan sin cupo internacional; tres o más, multa y licencia denegada.") % [cumple, reqs.size()]
@@ -365,3 +365,16 @@ func _responder_encuesta(indice: int) -> void:
 	else:
 		p._escribir("[color=#e05555][b]📊 Fuiste por otro lado.[/b][/color] El ánimo baja %d: la gente había votado otra cosa." % absi(d_animo))
 	p._refrescar()
+
+## (12-11) El detalle de cada requisito de la licencia, con formato y traducido: el núcleo lo daba en crudo («caja de 604938», «8000
+## butacas» sin decir cuántas se piden) y en castellano siempre.
+func _detalle_requisito(r: Dictionary, c: Club) -> String:
+	var obras: Instalaciones = p.mundo.obras
+	match String(r.get("k", "")):
+		"aforo": return Idiomas.t("%s de %s butacas") % [p._miles(c.estadio_aforo), p._miles(int(r.get("min", 0)))]
+		"med": return Idiomas.t("nivel %d") % obras.nivel("med")
+		"acad": return Idiomas.t("nivel %d") % obras.nivel("acad")
+		"caja": return Idiomas.t("%d semanas en rojo") % p.mundo.federacion.semanas_en_rojo
+		"patrim": return Idiomas.t("caja de %s") % p._dinero(c.saldo)
+		"seg": return Idiomas.t("calidad de estadio nivel %d") % obras.nivel("cal")
+	return String(r.get("det", ""))

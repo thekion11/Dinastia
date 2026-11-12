@@ -339,7 +339,7 @@ func requisitos_licencia(mi: Club, obras: Instalaciones) -> Array:
 	return [
 		{"k": "aforo", "t": "Aforo mínimo de la categoría",
 			"ok": mi.estadio_aforo >= minimo,
-			"det": "%d butacas" % mi.estadio_aforo},
+			"det": "%d butacas" % mi.estadio_aforo, "min": minimo},
 		{"k": "med", "t": "Centro médico nivel 1 o superior",
 			"ok": obras.nivel("med") >= 1, "det": "nivel %d" % obras.nivel("med")},
 		{"k": "acad", "t": "Academia juvenil operativa",

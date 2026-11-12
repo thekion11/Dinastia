@@ -8059,7 +8059,14 @@
   "Estrés: %d de 100": "Stress: %d of 100",
   "Familia: %d de 100": "Family: %d of 100",
   "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Your squad loses fewer weeks to injury than the league average.",
-  "La comparación con la liga empieza a contar con los primeros partidos.": "The comparison with the league starts counting with the first matches."
+  "La comparación con la liga empieza a contar con los primeros partidos.": "The comparison with the league starts counting with the first matches.",
+  "%s de %s butacas": "%s of %s seats",
+  "nivel %d": "level %d",
+  "%d semanas en rojo": "%d weeks in the red",
+  "caja de %s": "cash: %s",
+  "calidad de estadio nivel %d": "stadium quality level %d",
+  "%d obras hechas": "%d upgrades built",
+  "Sin obras todavía": "No upgrades yet"
  },
  "pt": {
   "Historia": "História",
@@ -16121,7 +16128,14 @@
   "Estrés: %d de 100": "Stress: %d de 100",
   "Familia: %d de 100": "Família: %d de 100",
   "Tu plantel pierde menos semanas por lesión que la media de la liga.": "O teu plantel perde menos semanas por lesão do que a média da liga.",
-  "La comparación con la liga empieza a contar con los primeros partidos.": "A comparação com a liga começa a contar com os primeiros jogos."
+  "La comparación con la liga empieza a contar con los primeros partidos.": "A comparação com a liga começa a contar com os primeiros jogos.",
+  "%s de %s butacas": "%s de %s lugares",
+  "nivel %d": "nível %d",
+  "%d semanas en rojo": "%d semanas no vermelho",
+  "caja de %s": "caixa de %s",
+  "calidad de estadio nivel %d": "qualidade do estádio nível %d",
+  "%d obras hechas": "%d obras feitas",
+  "Sin obras todavía": "Ainda sem obras"
  },
  "patrones": [
   [
@@ -30323,7 +30337,14 @@
   "Estrés: %d de 100": "Stress : %d sur 100",
   "Familia: %d de 100": "Famille : %d sur 100",
   "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Ton effectif perd moins de semaines sur blessure que la moyenne du championnat.",
-  "La comparación con la liga empieza a contar con los primeros partidos.": "La comparaison avec le championnat commence avec les premiers matchs."
+  "La comparación con la liga empieza a contar con los primeros partidos.": "La comparaison avec le championnat commence avec les premiers matchs.",
+  "%s de %s butacas": "%s places sur %s",
+  "nivel %d": "niveau %d",
+  "%d semanas en rojo": "%d semaines dans le rouge",
+  "caja de %s": "caisse de %s",
+  "calidad de estadio nivel %d": "qualité du stade niveau %d",
+  "%d obras hechas": "%d travaux réalisés",
+  "Sin obras todavía": "Pas encore de travaux"
  },
  "it": {
   "Historia": "Storia",
@@ -38385,7 +38406,14 @@
   "Estrés: %d de 100": "Stress: %d su 100",
   "Familia: %d de 100": "Famiglia: %d su 100",
   "Tu plantel pierde menos semanas por lesión que la media de la liga.": "La tua rosa perde meno settimane per infortunio della media del campionato.",
-  "La comparación con la liga empieza a contar con los primeros partidos.": "Il confronto con il campionato inizia a contare dalle prime partite."
+  "La comparación con la liga empieza a contar con los primeros partidos.": "Il confronto con il campionato inizia a contare dalle prime partite.",
+  "%s de %s butacas": "%s posti su %s",
+  "nivel %d": "livello %d",
+  "%d semanas en rojo": "%d settimane in rosso",
+  "caja de %s": "cassa di %s",
+  "calidad de estadio nivel %d": "qualità dello stadio livello %d",
+  "%d obras hechas": "%d lavori completati",
+  "Sin obras todavía": "Ancora nessun lavoro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46447,7 +46475,14 @@
   "Estrés: %d de 100": "Stress: %d von 100",
   "Familia: %d de 100": "Familie: %d von 100",
   "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Dein Kader verliert weniger Wochen durch Verletzungen als der Ligaschnitt.",
-  "La comparación con la liga empieza a contar con los primeros partidos.": "Der Vergleich mit der Liga beginnt mit den ersten Spielen."
+  "La comparación con la liga empieza a contar con los primeros partidos.": "Der Vergleich mit der Liga beginnt mit den ersten Spielen.",
+  "%s de %s butacas": "%s von %s Plätzen",
+  "nivel %d": "Stufe %d",
+  "%d semanas en rojo": "%d Wochen im Minus",
+  "caja de %s": "Kasse: %s",
+  "calidad de estadio nivel %d": "Stadionqualität Stufe %d",
+  "%d obras hechas": "%d Ausbauten fertig",
+  "Sin obras todavía": "Noch keine Ausbauten"
  },
  "ca": {
   "Historia": "Història",
@@ -54509,7 +54544,14 @@
   "Estrés: %d de 100": "Estrès: %d de 100",
   "Familia: %d de 100": "Família: %d de 100",
   "Tu plantel pierde menos semanas por lesión que la media de la liga.": "La teva plantilla perd menys setmanes per lesió que la mitjana de la lliga.",
-  "La comparación con la liga empieza a contar con los primeros partidos.": "La comparació amb la lliga comença a comptar amb els primers partits."
+  "La comparación con la liga empieza a contar con los primeros partidos.": "La comparació amb la lliga comença a comptar amb els primers partits.",
+  "%s de %s butacas": "%s de %s seients",
+  "nivel %d": "nivell %d",
+  "%d semanas en rojo": "%d setmanes en vermell",
+  "caja de %s": "caixa de %s",
+  "calidad de estadio nivel %d": "qualitat de l'estadi nivell %d",
+  "%d obras hechas": "%d obres fetes",
+  "Sin obras todavía": "Encara sense obres"
  },
  "pl": {
   "Club": "Klub",
@@ -62571,7 +62613,14 @@
   "Estrés: %d de 100": "Stres: %d na 100",
   "Familia: %d de 100": "Rodzina: %d na 100",
   "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Twoja kadra traci mniej tygodni przez kontuzje niż średnia ligi.",
-  "La comparación con la liga empieza a contar con los primeros partidos.": "Porównanie z ligą zaczyna się liczyć od pierwszych meczów."
+  "La comparación con la liga empieza a contar con los primeros partidos.": "Porównanie z ligą zaczyna się liczyć od pierwszych meczów.",
+  "%s de %s butacas": "%s z %s miejsc",
+  "nivel %d": "poziom %d",
+  "%d semanas en rojo": "%d tyg. na minusie",
+  "caja de %s": "kasa: %s",
+  "calidad de estadio nivel %d": "jakość stadionu poziom %d",
+  "%d obras hechas": "%d ukończonych rozbudów",
+  "Sin obras todavía": "Jeszcze bez rozbudów"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70633,6 +70682,13 @@
   "Estrés: %d de 100": "Stres: %d / 100",
   "Familia: %d de 100": "Aile: %d / 100",
   "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Kadron sakatlıklar yüzünden lig ortalamasından daha az hafta kaybediyor.",
-  "La comparación con la liga empieza a contar con los primeros partidos.": "Lig ile karşılaştırma ilk maçlarla birlikte başlar."
+  "La comparación con la liga empieza a contar con los primeros partidos.": "Lig ile karşılaştırma ilk maçlarla birlikte başlar.",
+  "%s de %s butacas": "%s / %s koltuk",
+  "nivel %d": "seviye %d",
+  "%d semanas en rojo": "%d hafta ekside",
+  "caja de %s": "kasa: %s",
+  "calidad de estadio nivel %d": "stadyum kalitesi seviye %d",
+  "%d obras hechas": "%d inşaat tamamlandı",
+  "Sin obras todavía": "Henüz inşaat yok"
  }
 }

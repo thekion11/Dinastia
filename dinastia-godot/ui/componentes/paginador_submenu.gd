@@ -59,6 +59,7 @@ func actualizar() -> void:
 		return
 	var p := puesto(subs, activo)
 	_pos.text = "%d / %d" % [p.x, p.y]
+	_ant.visible = p.y > 2   ## con dos pantallas, «anterior» y «siguiente» son la misma: sobra uno
 	_ant.text = "◂" if _corto else "◂  %s" % Idiomas.t(String(subs[a]["label"]))
 	_sig.text = "▸" if _corto else "%s  ▸" % Idiomas.t(String(subs[s]["label"]))
 	_ant.tooltip_text = Idiomas.t(String(subs[a]["label"]))
