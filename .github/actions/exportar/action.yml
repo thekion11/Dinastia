@@ -21,9 +21,13 @@ runs:
       shell: bash
       run: |
         mkdir -v -p ~/.local/share/godot/export_templates ~/.config
-        if [ "$HOME" != "/root" ]; then
+        ## (12-11) Idempotente: en el trabajo Web la acción corre dos veces (Web y Web móvil) y la segunda ya no encontraba
+        ## las plantillas que la primera había movido («mv: cannot stat …/*»).
+        if [ "$HOME" != "/root" ] && [ -n "$(ls -A /root/.local/share/godot/export_templates 2>/dev/null)" ]; then
           mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates
-          [ -d /root/.config/godot ] && mv /root/.config/godot ~/.config/godot || true
+        fi
+        if [ "$HOME" != "/root" ] && [ -d /root/.config/godot ] && [ ! -d ~/.config/godot ]; then
+          mv /root/.config/godot ~/.config/godot
         fi
 
     - name: Iconos de la versión (color propio)
