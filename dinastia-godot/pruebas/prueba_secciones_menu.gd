@@ -14,6 +14,9 @@ const CASOS := [
 	["Clubes", "_lista_clubes", "goleadores", "GOLEADORES", "PTS"],
 	["Estadio", "_lista_estadio", "hinchada", "RAMAS DEL CLUB", "LA ESTRUCTURA"],
 	["Estadio", "_lista_estadio", "diseno", "LA ESTRUCTURA", "RAMAS DEL CLUB"],
+	["Legado", "_lista_legado", "club", "HISTORIA DEL CLUB", "FIN DE CARRERA"],
+	["Legado", "_lista_legado", "carrera", "CARRERA PROFESIONAL", "HISTORIA DEL CLUB"],
+	["Legado", "_lista_legado", "retiro", "FIN DE CARRERA", "PALMARÉS POR COMPETICIÓN"],
 ]
 var _p: Principal
 var _fallos := 0

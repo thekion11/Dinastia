@@ -8066,7 +8066,13 @@
   "caja de %s": "cash: %s",
   "calidad de estadio nivel %d": "stadium quality level %d",
   "%d obras hechas": "%d upgrades built",
-  "Sin obras todavía": "No upgrades yet"
+  "Sin obras todavía": "No upgrades yet",
+  "Tu carrera de entrenador": "Your managerial career",
+  "Cargo, licencia, ofertas, desgaste, patrimonio y filiales.": "Role, licence, offers, burnout, wealth and affiliates.",
+  "Retiro y sucesión": "Retirement and succession",
+  "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Tributes, who inherits the bench and the end of your career.",
+  "Prestigio": "Prestige",
+  "Puntaje": "Score"
  },
  "pt": {
   "Historia": "História",
@@ -16135,7 +16141,13 @@
   "caja de %s": "caixa de %s",
   "calidad de estadio nivel %d": "qualidade do estádio nível %d",
   "%d obras hechas": "%d obras feitas",
-  "Sin obras todavía": "Ainda sem obras"
+  "Sin obras todavía": "Ainda sem obras",
+  "Tu carrera de entrenador": "A tua carreira de treinador",
+  "Cargo, licencia, ofertas, desgaste, patrimonio y filiales.": "Cargo, licença, ofertas, desgaste, património e filiais.",
+  "Retiro y sucesión": "Reforma e sucessão",
+  "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Homenagens, a quem deixas o banco e o fim da tua carreira.",
+  "Prestigio": "Prestígio",
+  "Puntaje": "Pontuação"
  },
  "patrones": [
   [
@@ -30344,7 +30356,13 @@
   "caja de %s": "caisse de %s",
   "calidad de estadio nivel %d": "qualité du stade niveau %d",
   "%d obras hechas": "%d travaux réalisés",
-  "Sin obras todavía": "Pas encore de travaux"
+  "Sin obras todavía": "Pas encore de travaux",
+  "Tu carrera de entrenador": "Ta carrière d'entraîneur",
+  "Cargo, licencia, ofertas, desgaste, patrimonio y filiales.": "Poste, licence, offres, usure, patrimoine et filiales.",
+  "Retiro y sucesión": "Retraite et succession",
+  "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Hommages, à qui tu laisses le banc et la fin de ta carrière.",
+  "Prestigio": "Prestige",
+  "Puntaje": "Score"
  },
  "it": {
   "Historia": "Storia",
@@ -38413,7 +38431,13 @@
   "caja de %s": "cassa di %s",
   "calidad de estadio nivel %d": "qualità dello stadio livello %d",
   "%d obras hechas": "%d lavori completati",
-  "Sin obras todavía": "Ancora nessun lavoro"
+  "Sin obras todavía": "Ancora nessun lavoro",
+  "Tu carrera de entrenador": "La tua carriera da allenatore",
+  "Cargo, licencia, ofertas, desgaste, patrimonio y filiales.": "Ruolo, licenza, offerte, logoramento, patrimonio e società satellite.",
+  "Retiro y sucesión": "Ritiro e successione",
+  "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Omaggi, a chi lasci la panchina e la fine della tua carriera.",
+  "Prestigio": "Prestigio",
+  "Puntaje": "Punteggio"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46482,7 +46506,13 @@
   "caja de %s": "Kasse: %s",
   "calidad de estadio nivel %d": "Stadionqualität Stufe %d",
   "%d obras hechas": "%d Ausbauten fertig",
-  "Sin obras todavía": "Noch keine Ausbauten"
+  "Sin obras todavía": "Noch keine Ausbauten",
+  "Tu carrera de entrenador": "Deine Trainerkarriere",
+  "Cargo, licencia, ofertas, desgaste, patrimonio y filiales.": "Amt, Lizenz, Angebote, Verschleiß, Vermögen und Partnervereine.",
+  "Retiro y sucesión": "Rücktritt und Nachfolge",
+  "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Ehrungen, wer die Bank übernimmt und das Ende deiner Karriere.",
+  "Prestigio": "Prestige",
+  "Puntaje": "Punktzahl"
  },
  "ca": {
   "Historia": "Història",
@@ -54551,7 +54581,13 @@
   "caja de %s": "caixa de %s",
   "calidad de estadio nivel %d": "qualitat de l'estadi nivell %d",
   "%d obras hechas": "%d obres fetes",
-  "Sin obras todavía": "Encara sense obres"
+  "Sin obras todavía": "Encara sense obres",
+  "Tu carrera de entrenador": "La teva carrera d'entrenador",
+  "Cargo, licencia, ofertas, desgaste, patrimonio y filiales.": "Càrrec, llicència, ofertes, desgast, patrimoni i filials.",
+  "Retiro y sucesión": "Retirada i successió",
+  "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Homenatges, a qui deixes la banqueta i el final de la teva carrera.",
+  "Prestigio": "Prestigi",
+  "Puntaje": "Puntuació"
  },
  "pl": {
   "Club": "Klub",
@@ -62620,7 +62656,13 @@
   "caja de %s": "kasa: %s",
   "calidad de estadio nivel %d": "jakość stadionu poziom %d",
   "%d obras hechas": "%d ukończonych rozbudów",
-  "Sin obras todavía": "Jeszcze bez rozbudów"
+  "Sin obras todavía": "Jeszcze bez rozbudów",
+  "Tu carrera de entrenador": "Twoja kariera trenerska",
+  "Cargo, licencia, ofertas, desgaste, patrimonio y filiales.": "Stanowisko, licencja, oferty, wypalenie, majątek i kluby filialne.",
+  "Retiro y sucesión": "Emerytura i sukcesja",
+  "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Hołdy, komu zostawiasz ławkę i koniec twojej kariery.",
+  "Prestigio": "Prestiż",
+  "Puntaje": "Wynik"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70689,6 +70731,12 @@
   "caja de %s": "kasa: %s",
   "calidad de estadio nivel %d": "stadyum kalitesi seviye %d",
   "%d obras hechas": "%d inşaat tamamlandı",
-  "Sin obras todavía": "Henüz inşaat yok"
+  "Sin obras todavía": "Henüz inşaat yok",
+  "Tu carrera de entrenador": "Teknik direktörlük kariyerin",
+  "Cargo, licencia, ofertas, desgaste, patrimonio y filiales.": "Görev, lisans, teklifler, yıpranma, servet ve pilot takımlar.",
+  "Retiro y sucesión": "Emeklilik ve halef",
+  "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Anmalar, kulübeyi kime bıraktığın ve kariyerinin sonu.",
+  "Prestigio": "Prestij",
+  "Puntaje": "Puan"
  }
 }

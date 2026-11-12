@@ -56,7 +56,7 @@ const _SECC_DE_PESTANA := {"Club": "_secc_club", "Gente": "_secc_gente", "Ajuste
 ## (12-11, nota del dueño: «subdividir menús en más pantallas completas», como el PES 2020) Secciones de las pestañas que antes eran una sola
 ## página larga: pestaña -> sección elegida. Cada sección es un submenú con su tarjeta en la portada (`MenusLaterales`, campo `secc`).
 ## «todo» pinta la página entera como antes (capturas y herramientas viejas).
-var _secc_extra := {"Finanzas": "cuentas", "Partido": "previa", "Táctica": "pizarra", "Entrenar": "semana", "Cantera": "academia", "Clubes": "tablas", "Estadio": "diseno"}
+var _secc_extra := {"Finanzas": "cuentas", "Partido": "previa", "Táctica": "pizarra", "Entrenar": "semana", "Cantera": "academia", "Clubes": "tablas", "Estadio": "diseno", "Legado": "club"}
 func secc_de(titulo: String) -> String:
 	if _SECC_DE_PESTANA.has(titulo):
 		return String(get(_SECC_DE_PESTANA[titulo]))

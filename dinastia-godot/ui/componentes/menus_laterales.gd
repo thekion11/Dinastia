@@ -64,7 +64,9 @@ const MENUS := [
 	{"id": "historia", "icono": "📜", "nombre": "Historia", "estilo": 0,
 		"lema": "Lo que el club fue y lo que tú estás escribiendo.",
 		"colores": ["#140d07", "#2a1d10", "#e0a95a"], "subs": [
-		{"tab": "Legado", "label": "Historia del club", "icono": "🏛️", "desc": "Fundación, épocas doradas, clásicos y tu legado."},
+		{"tab": "Legado", "secc": "club", "label": "Historia del club", "icono": "🏛️", "desc": "Fundación, épocas doradas, clásicos y tu legado."},
+		{"tab": "Legado", "secc": "carrera", "label": "Tu carrera de entrenador", "icono": "📈", "desc": "Cargo, licencia, ofertas, desgaste, patrimonio y filiales."},
+		{"tab": "Legado", "secc": "retiro", "label": "Retiro y sucesión", "icono": "🚪", "desc": "Homenajes, a quién dejas el banquillo y el final de tu carrera."},
 		{"accion": "documental", "label": "Documental de la temporada", "icono": "🎬", "desc": "Tu año contado como una película."},
 		{"accion": "capitulos", "label": "Capítulos de cada temporada", "icono": "📚", "desc": "Los documentales de todos tus años, guardados."},
 		{"tab": "Récords", "secc": "records", "label": "Récords", "icono": "📈", "desc": "Goleadores, rachas y marcas de todos los tiempos."},

@@ -63,7 +63,7 @@ func informe_de_gestion() -> Array[Dictionary]:
 	if mercado_abierto() and semanas_de_mercado() <= 2:
 		salida.append({"grave": false, "txt": "El mercado cierra en %d semana(s)." % semanas_de_mercado(), "tab": "Mercado"})
 	if entrenamiento != null and entrenamiento.dt_puntos > 0:
-		salida.append({"grave": false, "txt": "Tienes %d punto(s) de entrenador sin gastar." % entrenamiento.dt_puntos, "tab": "Legado"})
+		salida.append({"grave": false, "txt": "Tienes %d punto(s) de entrenador sin gastar." % entrenamiento.dt_puntos, "tab": "Legado", "secc": "carrera"})
 	if not amistoso_hecho and semana <= 3:
 		salida.append({"grave": false, "txt": "Todavía no has jugado la pretemporada: el plantel llega frío.", "tab": "Entrenar", "secc": "pretemporada"})
 	if auspicio != null and auspicio.contrato.is_empty() and not auspicio.ofertas.is_empty():

@@ -47,7 +47,7 @@ static func _norm(s: String) -> String:
 ## Lo que identifica a un submenú dentro de su menú: la acción, o la pestaña y su sección («Redes.prensa»).
 ## (12-11) Las pestañas que se partieron en pantallas (Finanzas, Partido, Táctica…) conservan su nombre de siempre en su PRIMERA pantalla
 ## (`PRIMERA`): así la tecla de fábrica (T = Táctica), la migración de teclas viejas y las teclas que alguien ya había cambiado siguen valiendo.
-const PRIMERA := {"Finanzas": "cuentas", "Partido": "previa", "Táctica": "pizarra", "Entrenar": "semana", "Cantera": "academia", "Clubes": "tablas", "Estadio": "diseno"}
+const PRIMERA := {"Finanzas": "cuentas", "Partido": "previa", "Táctica": "pizarra", "Entrenar": "semana", "Cantera": "academia", "Clubes": "tablas", "Estadio": "diseno", "Legado": "club"}
 static func _clave_sub(sub: Dictionary) -> String:
 	if sub.has("accion"):
 		return String(sub["accion"])

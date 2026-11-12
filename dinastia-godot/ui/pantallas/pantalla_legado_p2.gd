@@ -132,11 +132,28 @@ func _pintar_epilogo(r: Roles) -> void:
 		if v3 != null:
 			p._lista_legado.add_child(v3)
 
+## (12-11, menús a pantalla completa) Tres pantallas (`p._secc_extra["Legado"]`): el CLUB (su historia, tu legado y el palmarés), tu CARRERA
+## (cargo, licencia, ofertas, desgaste, patrimonio, filiales) y el RETIRO (homenajes, sucesión, fin de carrera). Otra sección = todo seguido.
+const SECC_LEGADO := ["club", "carrera", "retiro"]
+
 func _pintar_legado() -> void:
 	p._limpiar(p._lista_legado)
 	var r := p.mundo.roles
 	if r == null:
 		return
+	var secc := String(p._secc_extra.get("Legado", "club"))
+	var todo := not SECC_LEGADO.has(secc)
+	if todo or secc == "club":
+		_legado_club(r)
+	if todo or secc == "carrera":
+		_legado_carrera(r)
+	if todo or secc == "retiro":
+		_pintar_homenajes(r)
+		_pintar_sucesion(r)
+		_pintar_fin_de_carrera(r)
+		_pintar_epilogo(r)
+
+func _legado_club(r: Roles) -> void:
 	var p_local: Dictionary = p.mundo.puntaje_carrera()
 
 	## C4: LA HISTORIA DEL CLUB, antes que la tuya.
@@ -156,21 +173,12 @@ func _pintar_legado() -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("TU LEGADO")
 	p._lista_legado.add_child(t)
-	var g := GridContainer.new()
-	g.columns = 4
-	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_theme_constant_override("h_separation", 14)
-	p._lista_legado.add_child(g)
-	for par in [["Temporadas", str(p.mundo.anio - 2026 + 1)], ["Títulos", str(r.trofeos.size())],
-			["Prestigio", str(r.prestigio)], ["Puntaje", p._miles(int(p_local["total"]))]]:
-		var col := VBoxContainer.new()
-		g.add_child(col)
-		var et := p._texto(10, Principal.COL_SUAVE)
-		et.text = Idiomas.t(String(par[0]))
-		col.add_child(et)
-		var va := p._texto(16, Principal.COL_ORO)
-		va.text = String(par[1])
-		col.add_child(va)
+	## (12-11) En fichas grandes; las temporadas cuentan desde el año en que EMPEZÓ la partida (antes, desde un 2026 escrito a mano).
+	var inicio: int = p.mundo.logros.anio_inicio if p.mundo.logros != null else 2026
+	var oro: Color = p._color_accesible(Principal.COL_ORO)
+	var txt: Color = p._color_de_paleta(Principal.COL_TEXTO)
+	p._lista_legado.add_child(CifrasClave.banda([[Idiomas.t("Temporadas"), str(maxi(1, p.mundo.anio - inicio + 1)), txt], [Idiomas.t("Títulos"), str(r.trofeos.size()), oro],
+		[Idiomas.t("Prestigio"), str(r.prestigio), txt], [Idiomas.t("Puntaje"), p._miles(int(p_local["total"])), oro]], p._color_de_paleta(Principal.COL_SUAVE)))
 	## Tu vitrina en 3D (26-10): los últimos títulos con su trofeo.
 	var vit3: Control = load("res://ui/competiciones/vitrina_trofeos.gd").crear(r.trofeos)
 	if vit3 != null:
@@ -203,6 +211,7 @@ func _pintar_legado() -> void:
 			p._dato("🏆 %s" % Idiomas.t(String(f["titulo"])), "×%d" % int(f["veces"]), Principal.COL_ORO, p._lista_legado)
 	p._lista_legado.add_child(HSeparator.new())
 
+func _legado_carrera(r: Roles) -> void:
 	var tc := p._texto(11, Principal.COL_SUAVE)
 	tc.text = Idiomas.t("📈 CARRERA PROFESIONAL")
 	p._lista_legado.add_child(tc)
@@ -283,10 +292,6 @@ func _pintar_legado() -> void:
 	_pintar_patrimonio_dt(r)
 	_pintar_filiales(r)
 	_pintar_acceso_arbol()
-	_pintar_homenajes(r)
-	_pintar_sucesion(r)
-	_pintar_fin_de_carrera(r)
-	_pintar_epilogo(r)
 
 ## El ÁRBOL DE CARRERA DEL ENTRENADOR de `vCarrera()`: cinco ramas, un punto
 ## cada diez semanas, y nodos encadenados por requisito. Otro sistema entero
