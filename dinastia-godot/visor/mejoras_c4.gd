@@ -203,3 +203,123 @@ static func encarar_banda(m: Object, p: Dictionary) -> void:
 	var x := signf(yo.x) * clampf(absf(yo.x), 15.0, float(m.ANCHO) - 3.0)
 	p["objetivo"] = Vector3(x, 0.0, yo.z + d * 6.0)
 	p["correr"] = true
+
+## IR AL BALÓN AÉREO (12-11-2026, sesión 13). El receptor de un pase corre a `_punto_de_recepcion`: dónde rueda el balón en ~0,6 s,
+## proyectado en el SUELO. Con un centro el balón aún va por el aire y el rematador llega tarde al radio del cabezazo (0,8 m con el
+## balón a 1,5-2,4 m): casi no había remates de cabeza. Con el balón en el aire se predice (tiro parabólico, sin arrastre) dónde baja a la
+## altura de la cabeza (`AEREO_ALTO`) si cae cerca de un área, o al pecho si no. Devuelve Vector3.INF si el balón no va por el aire.
+static var AEREO := _bandera("C4_AEREO", false)   ## medido el 12-11 (12+12 partidos): más cabezazos pero −1 gol de pie por partido; DESCARTADO, apagado
+static var SOLO_AREA := _bandera("C4_AEREO_AREA", true)
+static var SOLO_CENTRO := _bandera("C4_AEREO_CENTRO", true)   ## solo en los 3 s tras un centro   ## solo balones que caen cerca de un área
+static var RADIO_CABEZA := _num("C4_RADIO_CABEZA", 0.8)   ## alcance del cabezazo en C4 (0,8 = el de siempre)
+const AEREO_ALTO := 1.9
+const AEREO_PECHO := 0.6
+static func punto_aereo(m: Object) -> Vector3:
+	if not AEREO:
+		return Vector3.INF
+	if SOLO_CENTRO and not _tras_centro(m):
+		return Vector3.INF   ## solo tras un centro o un córner (medido: con todos los balones altos bajaban los goles de pie)
+	var b: Vector3 = (m.balon as Node3D).position
+	var v: Vector3 = m.vel_balon
+	if b.y < 1.0 and v.y < 2.0:
+		return Vector3.INF
+	var g: float = m.G
+	var cae_t := _t_altura(b.y, v.y, g, AEREO_PECHO)
+	if cae_t < 0.0:
+		return Vector3.INF
+	var cae := Vector3(b.x + v.x * cae_t, 0.0, b.z + v.z * cae_t)
+	if absf(absf(cae.z) - float(m.LARGO)) > 20.0:
+		return Vector3.INF if SOLO_AREA else cae   ## lejos del área, el de siempre (medido: en todo el campo bajaban los goles de pie)
+	var alto_t := _t_altura(b.y, v.y, g, AEREO_ALTO)
+	return Vector3(b.x + v.x * alto_t, 0.0, b.z + v.z * alto_t) if alto_t > 0.0 else cae
+
+## Tiempo (s) en que el balón, bajando, pasa por la altura `h` (−1 si no llega a ella).
+static func _t_altura(y: float, vy: float, g: float, h: float) -> float:
+	var disc := vy * vy + 2.0 * g * (y - h)
+	if disc < 0.0:
+		return -1.0
+	var r := (vy + sqrt(disc)) / g
+	return r if r > 0.0 else -1.0
+
+## ¿Hace menos de 3 s de un centro en juego o de un córner?
+static func _tras_centro(m: Object) -> bool:
+	var t: float = m.t
+	if t - float(m.get_meta("_t_centro", -99.0)) < 3.0:
+		return true
+	return String(m.get_meta("_traza_saque_tipo", "")) == "corner" and t - float(m.get_meta("_traza_saque_t", -99.0)) < 3.0
+
+## FALTA LATERAL ENSAYADA (12-11-2026, sesión 13). La IA tiraba directo toda falta a menos de 30 m (también desde la banda, sin ángulo)
+## y desde más lejos daba un pase corto, aunque los rematadores ya estaban colocados en el área como en un córner. En C4, desde un
+## costado (|x| > FALTA_X) a menos de 40 m, o centrada a 30-40 m, se centra al área: al primer palo, al penal o al segundo palo, con el
+## error del pase del lanzador. Las faltas centradas y cercanas se siguen tirando a puerta.
+static var FALTA := _bandera("C4_FALTA", true)
+const FALTA_X := 14.0
+static func falta_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: RandomNumberGenerator) -> bool:
+	if not FALTA:
+		return false
+	var arco: Vector3 = m._arco_rival(p)
+	var dist := Vector2(lugar.x - arco.x, lugar.z - arco.z).length()
+	var lateral := absf(lugar.x) > FALTA_X
+	if dist > 40.0 or (not lateral and dist < 30.0):
+		return false
+	var sa := signf(arco.z)
+	var err := (1.0 - float(p["attr"]["pas"])) * 5.0
+	var zona := rng.randi() % 3   ## 0 primer palo, 1 penal, 2 segundo palo
+	var x := [signf(lugar.x) * 2.5, 0.0, -signf(lugar.x) * 3.5][zona] as float if lateral else rng.randf_range(-3.0, 3.0)
+	var destino := Vector3(x + rng.randf_range(-err, err), 1.7, arco.z - sa * [5.5, 10.0, 7.0][zona])
+	m._ctx_golpeo = "centro"
+	m._patear(p, destino, 18.0, 0.0, -signf(lugar.x) * 7.0 * -sa, "pase")
+	m.pase_a = m._companero_cerca(p, destino)
+	m._contar("c4_falta_ensayada")
+	return true
+
+## RITMO EN EL ÚLTIMO TERCIO (12-11-2026, sesión 13). Con espacio, el portador decide cada 1,5-2,5 s; con la paciencia ya no tira de
+## lejos y conduce todo ese tiempo contra el bloque rival (las pérdidas por entrada en el último tercio subieron). En C4, a menos de
+## `RITMO_D` m del arco la espera hasta la próxima decisión se multiplica por `RITMO_K`: pase, regate o tiro llegan antes.
+static var RITMO := _bandera("C4_RITMO", false)
+static var RITMO_K := _num("C4_RITMO_K", 0.55)
+const RITMO_D := 35.0
+static func ritmo_ultimo_tercio(m: Object, p: Dictionary, decision_en: float) -> float:
+	if not RITMO:
+		return decision_en
+	var yo: Vector3 = m.pos(p)
+	var arco: Vector3 = m._arco_rival(p)
+	if Vector2(yo.x - arco.x, yo.z - arco.z).length() > RITMO_D:
+		return decision_en
+	var t: float = m.t
+	return t + (decision_en - t) * RITMO_K
+
+## SAQUE DE BANDA ENSAYADO (12-11-2026, sesión 13). La IA buscaba el receptor más seguro (`MotorSaque.receptor`), casi siempre de
+## espaldas o hacia atrás. En C4, en campo rival, se busca primero al compañero que está por DELANTE del saque (6-20 m), libre (sin rival
+## a < 2,5 m) y habilitado, y se le lanza al pie, adelantado a su carrera.
+static var BANDA_SAQUE := _bandera("C4_BANDA_SAQUE", false)
+static func banda_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: RandomNumberGenerator) -> bool:
+	if not BANDA_SAQUE:
+		return false
+	var local := bool(p["es_local"])
+	var d: float = m.dir_ataque(local)
+	if lugar.z * d < 0.0:
+		return false   ## solo en campo rival
+	var mejor: Dictionary = {}
+	var mejor_z := -INF
+	for q: Dictionary in m.jugadores:
+		if String(q["id"]) == String(p["id"]) or bool(q["es_local"]) != local or bool(q["por"]):
+			continue
+		var qp: Vector3 = m.pos(q)
+		var delante := (qp.z - lugar.z) * d
+		if delante < 3.0 or qp.distance_to(lugar) < 6.0 or qp.distance_to(lugar) > 20.0 or m._adelantado(q, p):
+			continue
+		var libre := true
+		for r: Dictionary in m.jugadores:
+			if bool(r["es_local"]) != local and m.pos(r).distance_to(qp) < 2.5:
+				libre = false
+				break
+		if libre and delante > mejor_z:
+			mejor = q
+			mejor_z = delante
+	if mejor.is_empty() or rng.randf() > 0.7:
+		return false
+	m._pasar_a(p, mejor, false, true)
+	m._anim(p, AnimExtra.variante(p["anim"], "saque_banda", String(p.get("id", "")), rng), true)
+	m._contar("c4_banda_ensayada")
+	return true

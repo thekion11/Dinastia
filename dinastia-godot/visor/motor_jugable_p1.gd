@@ -425,3 +425,11 @@ func _rasgos_duelo(p: Dictionary, jd: Dictionary) -> void:
 	p["agresividad"] = clampf(agr, 0.05, 1.0)
 	p["duelos_g"] = 0
 	p["duelos_p"] = 0
+
+## GANCHO DEL RADIO DEL CABEZAZO (12-11-2026, sesión 13): 0,8 m en el motor de siempre; C4 lo puede cambiar (`MejorasC4.RADIO_CABEZA`).
+func _radio_cabezazo(_p: Dictionary) -> float:
+	return 0.8
+
+## GANCHO DEL BALÓN PARADO ENSAYADO (12-11-2026, sesión 13): el motor de siempre saca como siempre (false); C4 lo cambia (`MejorasC4.falta_ensayada`).
+func _saque_ensayado(_p: Dictionary, _tipo: String, _lugar: Vector3) -> bool:
+	return false
