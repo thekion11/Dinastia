@@ -96,7 +96,7 @@ const MENUS := [
 	{"id": "operaciones", "icono": "📊", "nombre": "Operaciones", "estilo": 3,
 		"lema": "La hinchada, los medios y los números del día a día.",
 		"colores": ["#061218", "#0b2230", "#3fd0ff"], "subs": [
-		{"tab": "Estadio", "label": "Hinchada y socios", "icono": "📣", "desc": "Ánimo, socios, peñas y días del hincha."},
+		{"tab": "Estadio", "secc": "hinchada", "label": "Hinchada y socios", "icono": "📣", "desc": "Ánimo, socios, peñas y días del hincha."},
 		{"tab": "Redes", "secc": "redes", "label": "Feed de redes", "icono": "📱", "desc": "Lo que se dice del club en Tribuna."},
 		{"tab": "Redes", "secc": "prensa", "label": "Sala de prensa", "icono": "🎙️", "desc": "Periodistas, medios propios y derechos de TV."},
 		{"tab": "Redes", "secc": "debate", "label": "El ruido de fuera", "icono": "📺", "desc": "Mesas de debate y portadas."},
@@ -117,7 +117,7 @@ const MENUS := [
 		{"accion": "mi_personaje", "label": "Mi personaje", "icono": "🧍", "desc": "Cara, pelo, ropa y tu forma de caminar."},
 		{"tab": "Gente", "secc": "identidad", "label": "Identidad visual", "icono": "🎨", "desc": "Colores, escudo, apodo y tipografía."},
 		{"tab": "Gente", "secc": "kits", "label": "Equipación", "icono": "👕", "desc": "Camiseta, pantalón, medias y botines del club."},
-		{"tab": "Estadio", "label": "Diseño del estadio", "icono": "📐", "desc": "Estilos completos y colores por sección."},
+		{"tab": "Estadio", "secc": "diseno", "label": "Diseño del estadio", "icono": "📐", "desc": "Estilos completos y colores por sección."},
 		{"accion": "casa", "label": "Decorar mi casa", "icono": "🛋️", "desc": "Muebles y rincones de tu hogar en 3D."}]},
 	## 3-11 (rediseño): el glosario y las normas dejan el central y tienen menú propio.
 	{"id": "reglas", "icono": "📖", "nombre": "Reglas", "estilo": 6, "ficha": false,
@@ -142,7 +142,7 @@ const MENUS := [
 	{"id": "estadio", "icono": "🏟️", "nombre": "Estadio 3D", "estilo": 8, "ficha": false,
 		"lema": "Tu casa: cada tribuna, cada foco, cada butaca.",
 		"colores": ["#060d09", "#1f6b38", "#e8f4ff"], "subs": [
-		{"tab": "Estadio", "label": "Diseño del estadio", "icono": "📐", "desc": "Estilos completos y colores por sección."},
+		{"tab": "Estadio", "secc": "diseno", "label": "Diseño del estadio", "icono": "📐", "desc": "Estilos completos y colores por sección."},
 		{"tab": "Club", "secc": "infra", "label": "Infraestructura", "icono": "🏗️", "desc": "Obras, ciudad deportiva y academia."},
 		{"accion": "ver_estadio", "label": "Verlo en 3D", "icono": "👁️", "desc": "Tu estadio tal y como se juega."}]},
 ]

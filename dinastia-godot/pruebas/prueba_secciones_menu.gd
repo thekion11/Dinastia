@@ -12,6 +12,8 @@ const CASOS := [
 	["Entrenar", "_lista_entren", "semana", "PLAN DE LA SEMANA", "PRETEMPORADA"],
 	["Entrenar", "_lista_entren", "pretemporada", "PRETEMPORADA", "PLAN DE LA SEMANA"],
 	["Clubes", "_lista_clubes", "goleadores", "GOLEADORES", "PTS"],
+	["Estadio", "_lista_estadio", "hinchada", "RAMAS DEL CLUB", "LA ESTRUCTURA"],
+	["Estadio", "_lista_estadio", "diseno", "LA ESTRUCTURA", "RAMAS DEL CLUB"],
 ]
 var _p: Principal
 var _fallos := 0

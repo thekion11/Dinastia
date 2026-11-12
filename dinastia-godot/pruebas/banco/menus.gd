@@ -181,7 +181,8 @@ func _probar_atajos_tras_partir() -> void:
 	AtajosCentrales._catalogo.clear()
 	for par: Array in [["sub:plantel:Táctica", "dinastia_sub_plantel_tactica"], ["sub:dinero:Finanzas", "dinastia_sub_dinero_finanzas"],
 			["sub:plantel:Entrenar", "dinastia_sub_plantel_entrenar"], ["sub:partido:Partido", "dinastia_sub_partido_partido"],
-			["sub:plantel:Cantera", "dinastia_sub_plantel_cantera"], ["sub:competiciones:Clubes", "dinastia_sub_competiciones_clubes"]]:
+			["sub:plantel:Cantera", "dinastia_sub_plantel_cantera"], ["sub:competiciones:Clubes", "dinastia_sub_competiciones_clubes"],
+			["sub:estadio:Estadio", "dinastia_sub_estadio_estadio"]]:
 		_comprobar(AtajosCentrales.accion_de_clave(String(par[0])) == String(par[1]), "%s sigue siendo %s" % [par[0], par[1]])
 	var vistas := {}
 	var repetidas: Array = []

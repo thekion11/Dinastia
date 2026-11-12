@@ -4,8 +4,17 @@ extends "res://ui/pantallas/pantalla_club_estadio_p1.gd"
 ## CLUB → ESTADIO: la pestaña entera (nombre, visor 3D, hinchada, los 17 campos del
 ## diseño, tribunas, tercios y recinto) llegó aquí desde `Principal` el 27-10 (fase 6, paso 6).
 
+const SECC_ESTADIO := ["diseno", "hinchada"]
+
 func _pintar_estadio(c: Club) -> void:
 	p._limpiar(p._lista_estadio)
+	## (12-11, menús a pantalla completa) Dos pantallas (`p._secc_extra["Estadio"]`): el DISEÑO del estadio y la HINCHADA (ánimo, socios, peñas,
+	## ramas). Antes las dos tarjetas abrían la misma página entera. Otra sección = la página entera de siempre.
+	var secc := String(p._secc_extra.get("Estadio", "diseno"))
+	var todo := not SECC_ESTADIO.has(secc)
+	if secc == "hinchada":
+		_estadio_hinchada(c, false)
+		return
 	var e := p.mundo.estadio
 	var perf := p.mundo.perfil_estadio_de(c)
 	var t := p._texto(13, p.COL_ORO)
@@ -53,31 +62,8 @@ func _pintar_estadio(c: Club) -> void:
 	ver3d.pressed.connect(p._ver_estadio_con_carga)
 	fila_n.add_child(ver3d)
 	_pintar_estilos_estadio(c)
-	## LA HINCHADA. `Prensa.animo` y `Prensa.funa` se mueven solos desde hace
-	## tiempo -banderazos si el ánimo pasa de 82, lienzos si baja de 22- y no se
-	## veían en ninguna pantalla: el jugador notaba los efectos sin saber nunca
-	## el número. Van aquí, que es donde vive la gente que llena esto.
-	p._lista_estadio.add_child(_aire())
-	p._lista_estadio.add_child(HSeparator.new())
-	if p.mundo.prensa != null:
-		var animo := p.mundo.prensa.animo
-		var col_animo := p.COL_VERDE if animo >= 70 else (p.COL_ROJO if animo <= 35 else p.COL_ORO)
-		p._dato("Ánimo de la hinchada", "%d / 100" % animo, col_animo, p._lista_estadio)
-		var funa := p.mundo.prensa.funa
-		if funa > 0:
-			p._dato("Presión en redes (funa)", "%d / 100" % funa,
-				p.COL_ROJO if funa > 55 else p.COL_SUAVE, p._lista_estadio)
-		var lectura := p._texto(11, p.COL_SUAVE)
-		if animo >= 82:
-			lectura.text = Idiomas.t("El estadio empuja: a este nivel salen banderazos antes de los partidos.")
-		elif animo <= 22:
-			lectura.text = Idiomas.t("Ambiente enrarecido: a este nivel aparecen lienzos en contra.")
-		else:
-			lectura.text = Idiomas.t("La gente responde a los resultados. Ganar en casa y no subir la entrada es lo que más lo mueve.")
-		lectura.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		p._lista_estadio.add_child(lectura)
-	p._dato("Socios", p._miles(c.socios), p.COL_TEXTO, p._lista_estadio)
-	p._ui_club_vida._pintar_hinchada(c)
+	if todo:
+		_estadio_hinchada(c)
 	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
 	var sub := p._texto(12, p.COL_SUAVE)
@@ -217,3 +203,32 @@ func _aire() -> Control:
 	var c := Control.new()
 	c.custom_minimum_size = Vector2(0, 8)
 	return c
+
+## La hinchada: ánimo, presión en redes, socios, día del hincha, peñas y ramas del club. `con_raya`: va en medio de la página entera.
+func _estadio_hinchada(c: Club, con_raya := true) -> void:
+	## LA HINCHADA. `Prensa.animo` y `Prensa.funa` se mueven solos desde hace
+	## tiempo -banderazos si el ánimo pasa de 82, lienzos si baja de 22- y no se
+	## veían en ninguna pantalla: el jugador notaba los efectos sin saber nunca
+	## el número. Van aquí, que es donde vive la gente que llena esto.
+	if con_raya:
+		p._lista_estadio.add_child(_aire())
+		p._lista_estadio.add_child(HSeparator.new())
+	if p.mundo.prensa != null:
+		var animo := p.mundo.prensa.animo
+		var col_animo := p.COL_VERDE if animo >= 70 else (p.COL_ROJO if animo <= 35 else p.COL_ORO)
+		p._dato("Ánimo de la hinchada", "%d / 100" % animo, col_animo, p._lista_estadio)
+		var funa := p.mundo.prensa.funa
+		if funa > 0:
+			p._dato("Presión en redes (funa)", "%d / 100" % funa,
+				p.COL_ROJO if funa > 55 else p.COL_SUAVE, p._lista_estadio)
+		var lectura := p._texto(11, p.COL_SUAVE)
+		if animo >= 82:
+			lectura.text = Idiomas.t("El estadio empuja: a este nivel salen banderazos antes de los partidos.")
+		elif animo <= 22:
+			lectura.text = Idiomas.t("Ambiente enrarecido: a este nivel aparecen lienzos en contra.")
+		else:
+			lectura.text = Idiomas.t("La gente responde a los resultados. Ganar en casa y no subir la entrada es lo que más lo mueve.")
+		lectura.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		p._lista_estadio.add_child(lectura)
+	p._dato("Socios", p._miles(c.socios), p.COL_TEXTO, p._lista_estadio)
+	p._ui_club_vida._pintar_hinchada(c)
