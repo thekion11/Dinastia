@@ -319,3 +319,7 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 
 func _escala_ritmo() -> float:
 	return super() * _k_regate
+
+## (12-11, sesión 15) definir dentro del área, solo en C4 (`MejorasC4Avance.definir`, `C4_DEFINIR=1`).
+func _apunte_ia(p: Dictionary, dist_arco: float, apunte: Vector2) -> Vector2:
+	return MejorasC4Avance.definir(self, p, dist_arco, apunte) if _mejoras_c4 else apunte

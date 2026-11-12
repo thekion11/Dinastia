@@ -79,3 +79,23 @@ static func rechace(m: Object, gk: Dictionary) -> void:
 	m.vel_balon = Vector3(v.x * 0.7, v.y, -v.z * 2.0 - signf(propio.z) * 2.0)
 	if m.get("diag") is Dictionary:
 		(m.diag as Dictionary)["c4_rechace_vivo"] = int((m.diag as Dictionary).get("c4_rechace_vivo", 0)) + 1
+
+## DEFINIR DENTRO DEL ÁREA (sesión 15): con `C4_DEFINIR=1`, a menos de `DEFINIR_D` m del arco, el remate de la IA va al palo contrario al
+## portero (si está corrido > 0,3 m) y raso; el error del tiro no cambia. Contador `c4_definir`.
+static var DEFINIR := OS.get_environment("C4_DEFINIR") == "1"
+static var DEFINIR_D := float(OS.get_environment("C4_DEFINIR_D")) if OS.get_environment("C4_DEFINIR_D") != "" else 17.0
+
+static func definir(m: Object, p: Dictionary, dist: float, apunte: Vector2) -> Vector2:
+	if not DEFINIR or dist >= DEFINIR_D:
+		return apunte
+	var gx := 0.0
+	for q: Dictionary in m.jugadores:
+		if bool(q["por"]) and bool(q["es_local"]) != bool(p["es_local"]):
+			gx = (m.pos(q) as Vector3).x
+	var r := apunte
+	if absf(gx) > 0.3:
+		r.x = -signf(gx) * maxf(absf(apunte.x), 0.7)
+	r.y = minf(apunte.y, -0.45)
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_definir"] = int((m.diag as Dictionary).get("c4_definir", 0)) + 1
+	return r

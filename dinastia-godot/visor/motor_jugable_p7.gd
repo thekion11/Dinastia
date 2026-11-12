@@ -64,7 +64,7 @@ func _ia_portador(p: Dictionary) -> void:
 		if float(linea_limpia[1]) >= 0.0:
 			palo = clampf(float(linea_limpia[0]) + _rng.randf_range(-0.08, 0.08), -1.0, 1.0)   ## al punto más limpio (F6)
 		var alto := -0.45 if _rng.randf() < 0.6 else 0.55
-		_tirar(p, Vector2(palo, alto), clampf(0.55 + _rng.randf() * 0.4, 0.0, 1.0))
+		_tirar(p, _apunte_ia(p, dist_arco, Vector2(palo, alto)), clampf(0.55 + _rng.randf() * 0.4, 0.0, 1.0))   ## gancho (sesión 15)
 		return
 	## Centro desde la banda, cerca del fondo.
 	if MotorCorner.centrar(self as Object as MotorJugable, p, yo, arco):
@@ -111,3 +111,8 @@ func _ia_portador(p: Dictionary) -> void:
 ## `MotorCombinado` (C4) lo cambia por la paciencia de `MejorasC4.ganas_tiro`.
 func _ganas_tiro_extra(_p: Dictionary, _dist_arco: float, ganas: float, _presion: float) -> float:
 	return ganas
+
+## GANCHO DEL APUNTE DEL REMATE DE LA IA (12-11-2026, sesión 15): el de siempre no lo cambia (ni gasta azar: la huella no cambia);
+## `MotorCombinado` (C4) lo usa para definir dentro del área (`MejorasC4Avance.definir`, `C4_DEFINIR`).
+func _apunte_ia(_p: Dictionary, _dist_arco: float, apunte: Vector2) -> Vector2:
+	return apunte
