@@ -7972,7 +7972,10 @@
   "Programadas: %s": "Scheduled: %s",
   "Sección": "Section",
   "Submenú": "Submenu",
-  "Menú": "Menu"
+  "Menú": "Menu",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D or controller · mouse: look · Shift: run · E: use · Esc: back",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Tip: while walking, look around with the mouse, the right stick or by dragging your finger.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "This is how you walk around here. You look around with the mouse, the right stick or by dragging your finger."
  },
  "pt": {
   "Historia": "História",
@@ -15947,7 +15950,10 @@
   "Programadas: %s": "Programadas: %s",
   "Sección": "Seção",
   "Submenú": "Submenu",
-  "Menú": "Menu"
+  "Menú": "Menu",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D ou comando · rato: olhar · Shift: correr · E: usar · Esc: voltar",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Dica: ao passear, olhe em volta com o rato, o analógico direito ou arrastando o dedo.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "É assim que se anda por aqui. Olhas em volta com o rato, o analógico direito ou arrastando o dedo."
  },
  "patrones": [
   [
@@ -30062,7 +30068,10 @@
   "Programadas: %s": "Programmés : %s",
   "Sección": "Section",
   "Submenú": "Sous-menu",
-  "Menú": "Menu"
+  "Menú": "Menu",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "Z/Q/S/D ou manette · souris : regarder · Maj : courir · E : utiliser · Échap : retour",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Astuce : en marchant, regardez autour de vous avec la souris, le stick droit ou en faisant glisser le doigt.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Voilà comment on se déplace ici. Tu regardes autour de toi avec la souris, le stick droit ou en faisant glisser le doigt."
  },
  "it": {
   "Historia": "Storia",
@@ -38037,7 +38046,10 @@
   "Programadas: %s": "Programmati: %s",
   "Sección": "Sezione",
   "Submenú": "Sottomenu",
-  "Menú": "Menu"
+  "Menú": "Menu",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D o controller · mouse: guardare · Maiusc: correre · E: usare · Esc: indietro",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Consiglio: mentre cammini, guardati intorno con il mouse, la levetta destra o trascinando il dito.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Ecco come si cammina qui. Ti guardi intorno con il mouse, la levetta destra o trascinando il dito."
  },
  "de": {
   "Historia": "Geschichte",
@@ -46012,7 +46024,10 @@
   "Programadas: %s": "Geplant: %s",
   "Sección": "Bereich",
   "Submenú": "Untermenü",
-  "Menú": "Menü"
+  "Menú": "Menü",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D oder Controller · Maus: umsehen · Umschalt: laufen · E: benutzen · Esc: zurück",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Tipp: Beim Gehen schaust du dich mit der Maus, dem rechten Stick oder durch Wischen mit dem Finger um.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "So läuft man hier herum. Du schaust dich mit der Maus, dem rechten Stick oder durch Wischen mit dem Finger um."
  },
  "ca": {
   "Historia": "Història",
@@ -53987,7 +54002,10 @@
   "Programadas: %s": "Programades: %s",
   "Sección": "Secció",
   "Submenú": "Submenú",
-  "Menú": "Menú"
+  "Menú": "Menú",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D o comandament · ratolí: mirar · Maj: córrer · E: fer servir · Esc: tornar",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Consell: mentre passeges, mira al voltant amb el ratolí, l'estic dret o arrossegant el dit.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Així es camina per aquí. Mires al voltant amb el ratolí, l'estic dret o arrossegant el dit."
  },
  "pl": {
   "Club": "Klub",
@@ -61962,7 +61980,10 @@
   "Programadas: %s": "Zaplanowane: %s",
   "Sección": "Sekcja",
   "Submenú": "Podmenu",
-  "Menú": "Menu"
+  "Menú": "Menu",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D lub pad · mysz: rozglądanie · Shift: bieg · E: użyj · Esc: wróć",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Wskazówka: podczas spaceru rozglądaj się myszą, prawym drążkiem lub przesuwając palcem.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Tak się tu chodzi. Rozglądasz się myszą, prawym drążkiem albo przesuwając palcem."
  },
  "tr": {
   "Club": "Kulüp",
@@ -69937,6 +69958,9 @@
   "Programadas: %s": "Planlananlar: %s",
   "Sección": "Bölüm",
   "Submenú": "Alt menü",
-  "Menú": "Menü"
+  "Menú": "Menü",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D veya kumanda · fare: bak · Shift: koş · E: kullan · Esc: geri",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "İpucu: yürürken fareyle, sağ çubukla veya parmağını kaydırarak etrafına bak.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Burada böyle yürünür. Fareyle, sağ çubukla veya parmağını kaydırarak etrafına bakarsın."
  }
 }

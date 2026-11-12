@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -161,3 +161,15 @@ func _probar_pie_mando() -> void:
 	FocoMando.liberar(menu)
 	_comprobar(GuardianFoco._tapa(evento), "al cerrar el menú, el evento vuelve a contar")
 	base.free()
+
+## (12-11, decisión del dueño) En el juego, al mover al personaje solo hay primera persona; las demás vistas, solo para capturas y herramientas.
+func _probar_solo_primera_persona() -> void:
+	_titulo("SOLO PRIMERA PERSONA EN EL JUEGO")
+	var fuera := OS.get_environment("DINASTIA_CAMARAS") == "1"
+	_comprobar(fuera or (VistaJuego.solo_primera_persona() and VistaJuego.inicial() and not VistaJuego.puede_cambiar()), "sin DINASTIA_CAMARAS se empieza en primera persona y V no cambia de vista")
+	for ruta: String in ["res://visor/explorador_estadio_p1.gd", "res://ui/casa_recorrido.gd"]:
+		var src := FileAccess.get_file_as_string(ruta)
+		_comprobar(src.contains("var primera_persona := VistaJuego.inicial()"), "%s empieza con la vista de VistaJuego" % ruta.get_file())
+	for ruta: String in ["res://visor/explorador_estadio.gd", "res://ui/casa_recorrido.gd"]:
+		var src := FileAccess.get_file_as_string(ruta)
+		_comprobar(src.contains("KEY_V") and src.contains("VistaJuego.puede_cambiar()"), "%s: la tecla V solo cambia de vista fuera del juego" % ruta.get_file())

@@ -40,6 +40,7 @@ func _rotulos() -> void:
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:
 		return
+	_raton_en_primera_persona()
 	if en_viaje:   ## (9-11) el ascensor sube o baja: solo se mueve la cámara con el cuerpo
 		_colocar_camara(delta)
 		return
@@ -58,9 +59,13 @@ func _physics_process(delta: float) -> void:
 	paso(_entrada(), corre, delta)
 	_colocar_camara(delta)
 	_rotulos()
-## Captura el cursor en primera persona (para mirar con el ratón) y lo suelta fuera.
+## Captura el cursor en primera persona (para mirar con el ratón) y lo suelta fuera. (12-11) Con un diálogo, el ascensor o el panel de
+## decorar abiertos, el cursor queda libre para pulsarlos; en el móvil no hay cursor que capturar.
 func _raton_en_primera_persona() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if primera_persona and DisplayServer.get_name() != "headless" else Input.MOUSE_MODE_VISIBLE
+	var quiero := Input.MOUSE_MODE_CAPTURED if primera_persona and not is_instance_valid(_menu) and DisplayServer.get_name() != "headless" \
+		and not EscalaMovil.es_movil() else Input.MOUSE_MODE_VISIBLE
+	if Input.mouse_mode != quiero:
+		Input.mouse_mode = quiero
 
 func _unhandled_input(ev: InputEvent) -> void:
 	if ev is InputEventMouseMotion and primera_persona and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -69,7 +74,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 	if ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
 		salir.emit()
-	elif ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_V:
+	elif ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_V and VistaJuego.puede_cambiar():   ## (12-11) en el juego, solo primera persona
 		primera_persona = not primera_persona
 		_raton_en_primera_persona()
 	elif (ev is InputEventKey and ev.pressed and not ev.echo and ev.keycode == KEY_E) \

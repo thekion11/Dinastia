@@ -14,7 +14,7 @@ const VEL_CORRER := 3.6
 var pos2 := CasaPlano.INICIO
 var rumbo := CasaPlano.RUMBO_INICIO
 var vel := 0.0
-var primera_persona := false
+var primera_persona := VistaJuego.inicial()   ## (12-11, dueño) en el juego, solo primera persona (`VistaJuego`)
 var cuerpo: Node3D
 var camara: Camera3D
 var zona_actual := ""
@@ -127,7 +127,8 @@ func _montar_interfaz() -> void:
 	_aviso.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_aviso)
 	_ayuda = Label.new()
-	_ayuda.text = Idiomas.t("W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver")
+	_ayuda.text = Idiomas.t("W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver") if VistaJuego.puede_cambiar() \
+		else Idiomas.t("W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver")
 	_ayuda.position = Vector2(18, 14)
 	_ayuda.add_theme_font_size_override("font_size", 16)
 	_ayuda.add_theme_color_override("font_outline_color", Color.BLACK)
@@ -280,7 +281,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 		if k == KEY_ESCAPE:
 			get_viewport().set_input_as_handled()
 			salir()
-		elif k == KEY_V:
+		elif k == KEY_V and VistaJuego.puede_cambiar():
 			primera_persona = not primera_persona
 		elif k == KEY_E:
 			get_viewport().set_input_as_handled()
