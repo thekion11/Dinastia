@@ -197,6 +197,10 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		return super._ia_ataque_sin_balon(p)
 	var r := _sin_flag3(p, true)
 	if _mejoras_c4:
+		var rup := MejorasC4Avance.ruptura(self, p)   ## (sesión 15) C4_RUPTURA
+		if rup != Vector3.INF:
+			p["correr"] = true
+			return rup
 		var pared := MejorasC4Pared.desmarque(self, p)
 		if pared != Vector3.INF:
 			p["correr"] = true
