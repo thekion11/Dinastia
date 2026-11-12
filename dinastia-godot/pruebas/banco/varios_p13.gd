@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio, _probar_finanzas_por_pantallas
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio, _probar_finanzas_por_pantallas, _probar_agentes_confianza
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -190,3 +190,24 @@ func _probar_finanzas_por_pantallas() -> void:
 			de_entrenar.append(String(s.get("secc", "")))
 	var capa: GDScript = load("res://ui/pantallas/pantalla_club_vida_p3.gd")
 	_comprobar(de_entrenar == capa.get_script_constant_map().get("SECC_ENTRENAR", []), "los 3 submenús de Entrenamiento son sus 3 secciones (%s)" % [de_entrenar])
+
+## (12-11) La confianza de un representante va de −10 a +10 y arranca en 0: en Contratos solo va en rojo el que tiene dos clientes o más Y
+## desconfía (antes iban todos en rojo desde el primer día), y perderla tiene tope.
+func _probar_agentes_confianza() -> void:
+	_titulo("AGENTES: QUIÉN APRIETA Y EL TOPE DE LA CONFIANZA")
+	_comprobar(not Cantera.agente_aprieta(3, 0) and not Cantera.agente_aprieta(1, -5) and Cantera.agente_aprieta(2, -1) and not Cantera.agente_aprieta(4, 6),
+		"aprieta el que tiene 2 clientes o más y confianza negativa; neutral (0) no va en rojo")
+	for pais: String in ["ARG", "GER"]:
+		var m := Mundo.new()
+		m.generar([pais], 1211)
+		m.tomar_el_mando(m.ligas[0].clubes[5].id)
+		var en_rojo := 0
+		for f: Dictionary in m.cantera.agencias_del_plantel():
+			if Cantera.agente_aprieta((f["jugadores"] as Array).size(), int(f["confianza"])):
+				en_rojo += 1
+		_comprobar(not m.cantera.agencias_del_plantel().is_empty() and en_rojo == 0, "%s: partida nueva, hay agencias y ninguna en rojo (%d)" % [pais, en_rojo])
+		var ag := String((m.cantera.agencias_del_plantel()[0]["agente"] as Dictionary).get("nombre", ""))
+		for k in 9:
+			m.cantera._mover_confianza(ag, -2)
+		_comprobar(m.cantera.confianza_de(ag) == -10, "%s: perder confianza se queda en −10 (%d)" % [pais, m.cantera.confianza_de(ag)])
+

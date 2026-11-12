@@ -63,7 +63,7 @@ func _rescindir(j: Jugador, total: int) -> void:
 	if p.mundo.cantera != null:
 		var nombre_agente := String(p.mundo.cantera.agente_de(j).get("nombre", ""))
 		if nombre_agente != "":
-			p.mundo.cantera.confianza_agentes[nombre_agente] = p.mundo.cantera.confianza_de(nombre_agente) - 2
+			p.mundo.cantera._mover_confianza(nombre_agente, -2)   ## (12-11) con su tope de −10: antes restaba sin límite
 	if p.mundo.prensa != null:
 		p.mundo.prensa.animo = clampi(p.mundo.prensa.animo - (Azar.ent(8, 16) if pesado else Azar.ent(1, 4)), 0, 100)
 		if pesado:

@@ -189,11 +189,9 @@ func _pintar_agencias(c: Club) -> void:
 	for f: Dictionary in lista:
 		var jugadores: Array = f["jugadores"]
 		var ag: Dictionary = f["agente"]
-		var conf := int(f.get("confianza", 50))
-		## En rojo los que tienen fuerza para exigir: dos clientes o más es
-		## exactamente el umbral que usa el sorteo semanal.
-		var peligro := jugadores.size() >= 2
-		var l := p._texto(12, Principal.COL_ROJO if peligro and conf < 45 else Principal.COL_TEXTO)
+		var conf := int(f.get("confianza", 0))
+		## En rojo los que tienen fuerza para exigir y además desconfían (`Cantera.agente_aprieta`); en dorado los que ya confían en ti.
+		var l := p._texto(12, Principal.COL_ROJO if Cantera.agente_aprieta(jugadores.size(), conf) else (Principal.COL_ORO if conf > 0 else Principal.COL_TEXTO))
 		l.text = Idiomas.t("%s  ·  %s  ·  %d jugador(es)  ·  confianza %d") % [
 			String(ag.get("nombre", "un representante")), String(ag.get("perfil", "")),
 			jugadores.size(), conf]

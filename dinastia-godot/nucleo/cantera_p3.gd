@@ -362,6 +362,12 @@ func sortear_guerra_agentes() -> Dictionary:
 	agente_presiona.emit(exigencia)
 	return exigencia
 
+## Un representante «aprieta» (va en rojo en Contratos) si tiene con qué —dos clientes tuyos o más, el umbral del sorteo semanal— y además
+## desconfía de ti. La confianza va de −10 a +10 y arranca en 0 (neutral). (12-11: la pantalla comparaba con 45, como si fuera de 0 a 100, y
+## pintaba en rojo a TODOS los que tenían dos clientes desde el primer día.)
+static func agente_aprieta(clientes: int, confianza: int) -> bool:
+	return clientes >= 2 and confianza < 0
+
 func hay_exigencia() -> bool:
 	return not exigencia.is_empty()
 
