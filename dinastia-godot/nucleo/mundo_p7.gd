@@ -22,9 +22,9 @@ func informe_de_gestion() -> Array[Dictionary]:
 	## 1. La caja, que es lo único que puede acabar la partida sin jugar.
 	var caja_ref := Eco.ref_caja(float(mio.rep))
 	if mio.saldo < 0:
-		salida.append({"grave": true, "txt": "La caja está en rojo (%s). Cada semana así cuesta intereses." % Cesiones.dinero(mio.saldo), "tab": "Finanzas"})
+		salida.append({"grave": true, "txt": "La caja está en rojo (%s). Cada semana así cuesta intereses." % Cesiones.dinero(mio.saldo), "tab": "Finanzas", "secc": "cuentas"})
 	elif float(mio.saldo) < caja_ref * 0.25:
-		salida.append({"grave": false, "txt": "La caja está justa: %s. Cuidado con el próximo fichaje." % Cesiones.dinero(mio.saldo), "tab": "Finanzas"})
+		salida.append({"grave": false, "txt": "La caja está justa: %s. Cuidado con el próximo fichaje." % Cesiones.dinero(mio.saldo), "tab": "Finanzas", "secc": "cuentas"})
 
 	## 2. Quién no puede jugar el domingo.
 	var fuera := 0
@@ -65,9 +65,9 @@ func informe_de_gestion() -> Array[Dictionary]:
 	if entrenamiento != null and entrenamiento.dt_puntos > 0:
 		salida.append({"grave": false, "txt": "Tienes %d punto(s) de entrenador sin gastar." % entrenamiento.dt_puntos, "tab": "Legado"})
 	if not amistoso_hecho and semana <= 3:
-		salida.append({"grave": false, "txt": "Todavía no has jugado la pretemporada: el plantel llega frío.", "tab": "Entrenar"})
+		salida.append({"grave": false, "txt": "Todavía no has jugado la pretemporada: el plantel llega frío.", "tab": "Entrenar", "secc": "pretemporada"})
 	if auspicio != null and auspicio.contrato.is_empty() and not auspicio.ofertas.is_empty():
-		salida.append({"grave": false, "txt": "Hay %d marcas esperando respuesta por la camiseta." % auspicio.ofertas.size(), "tab": "Finanzas"})
+		salida.append({"grave": false, "txt": "Hay %d marcas esperando respuesta por la camiseta." % auspicio.ofertas.size(), "tab": "Finanzas", "secc": "patrocinio"})
 
 	if salida.is_empty():
 		salida.append({"grave": false, "txt": "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.", "tab": ""})

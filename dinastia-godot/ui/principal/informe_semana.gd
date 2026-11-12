@@ -34,6 +34,12 @@ static func pintar(p: Principal) -> void:
 		b.add_theme_font_size_override("font_size", 10)
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(92, 24)
-		b.pressed.connect(func() -> void: p._ir_a_pestana(tab))
+		## (12-11) Si el aviso dice a qué pantalla de la pestaña va (`secc`), se abre esa y no la última que se miró.
+		var secc := String(f.get("secc", ""))
+		b.pressed.connect(func() -> void:
+			if secc != "":
+				p._ir_a_chip({"tab": tab, "secc": secc})
+			else:
+				p._ir_a_pestana(tab))
 		fila.add_child(b)
 	p._lista_inicio.add_child(HSeparator.new())

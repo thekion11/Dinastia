@@ -158,3 +158,12 @@ static func menu_por_id(id: String) -> Dictionary:
 		if String(m["id"]) == id:
 			return m
 	return {}
+
+## Las pantallas (`secc`) en que está partida una pestaña, según los menús; vacío si la pestaña es una sola página.
+static func secciones_de(tab: String) -> Array:
+	var salida: Array = []
+	for m: Dictionary in MENUS:
+		for s: Dictionary in m["subs"]:
+			if String(s.get("tab", "")) == tab and String(s.get("secc", "")) != "" and not salida.has(String(s["secc"])):
+				salida.append(String(s["secc"]))
+	return salida

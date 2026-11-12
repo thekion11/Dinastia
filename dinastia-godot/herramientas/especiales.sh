@@ -79,6 +79,7 @@ pasa "repetición del gol" "godot --headless --path . res://pruebas/prueba_repet
 # 5. Modos de juego y menú de la ciudad a pie
 pasa "modos de juego" "godot --headless --path . res://pruebas/prueba_modos.tscn" "0 fallos"
 pasa "menú ciudad a pie" "godot --headless --path . res://pruebas/prueba_menu_ciudad_pie.tscn" "0 fallos"
+pasa "menús partidos en pantallas, de punta a punta (2 clubes)" "PAIS=ARG CLUB=9 godot --headless --path . res://pruebas/prueba_secciones_menu.tscn && PAIS=ENG CLUB=2 godot --headless --path . res://pruebas/prueba_secciones_menu.tscn && echo LOS_DOS_CLUBES_OK" "LOS_DOS_CLUBES_OK"
 pasa "menú entrar al estadio a pie" "godot --headless --path . res://pruebas/prueba_menu_estadio_a_pie.tscn" "0 fallos"
 pasa "casa del personaje a pie" "godot --headless --path . res://pruebas/prueba_casa_a_pie.tscn" "0 fallos"
 pasa "plantilla a la PES" "godot --headless --path . res://pruebas/prueba_plantilla_pes.tscn" "0 fallos"

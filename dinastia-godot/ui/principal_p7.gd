@@ -70,6 +70,10 @@ func _abrir_en_lateral(titulo: String) -> bool:
 	var abierta: PantallaMenu = _menu_lateral.pantalla_abierta if is_instance_valid(_menu_lateral.pantalla_abierta) else null
 	if abierta != null and not abierta.cerrando():
 		var propio := _sub_de(abierta.menu(), titulo, secc)
+		## (12-11) Si el menú abierto tiene la pestaña pero NO esa pantalla (Táctica → balón parado pedida con «Partido» abierto, que solo
+		## lleva la pizarra y el once), no vale: elegiría otra pantalla. Se abre el menú que sí la tiene.
+		if propio >= 0 and secc != "" and String((abierta.menu()["subs"][propio] as Dictionary).get("secc", "")) != secc and MenusLaterales.secciones_de(titulo).has(secc):
+			propio = -1
 		if propio >= 0:
 			_redirigiendo = true
 			abierta.elegir(propio)

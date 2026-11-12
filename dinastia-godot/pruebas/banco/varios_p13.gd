@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio, _probar_finanzas_por_pantallas, _probar_agentes_confianza, _probar_cantera_por_pantallas
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio, _probar_finanzas_por_pantallas, _probar_agentes_confianza, _probar_cantera_por_pantallas, _probar_informe_abre_su_pantalla
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -233,3 +233,24 @@ func _probar_cantera_por_pantallas() -> void:
 			de_clubes.append(String(s.get("secc", "")))
 	var vistas: GDScript = load("res://ui/principal/vistas_menu.gd")
 	_comprobar(de_clubes == vistas.get_script_constant_map().get("SECC_CLUBES", []), "los 3 submenús de Ligas y clubes son sus 3 secciones (%s)" % [de_clubes])
+
+## (12-11) Los avisos del informe semanal que llevan a una pestaña partida en pantallas dicen a cuál (antes abrían la última que se miró).
+func _probar_informe_abre_su_pantalla() -> void:
+	_titulo("INFORME DE LA SEMANA: CADA AVISO ABRE SU PANTALLA")
+	_comprobar(MenusLaterales.secciones_de("Finanzas").size() == 5 and MenusLaterales.secciones_de("Mercado").is_empty(), "se sabe qué pestañas están partidas (Finanzas en 5, Mercado en ninguna)")
+	for caso: Array in [["CHI", 3], ["ITA", 11]]:
+		var m := Mundo.new()
+		m.generar([caso[0]], 1212)
+		m.tomar_el_mando(m.ligas[0].clubes[int(caso[1])].id)
+		m.mi_club().saldo = -5000   ## fuerza el aviso de la caja en rojo
+		var mal: Array = []
+		var con_secc := 0
+		for f: Dictionary in m.informe_de_gestion():
+			var partes := MenusLaterales.secciones_de(String(f.get("tab", "")))
+			if partes.is_empty():
+				continue
+			con_secc += 1
+			if not partes.has(String(f.get("secc", ""))):
+				mal.append(String(f["txt"]).left(30))
+		_comprobar(con_secc >= 1 and mal.is_empty(), "%s: los %d avisos que van a una pestaña partida nombran una pantalla que existe %s" % [caso[0], con_secc, mal])
+
