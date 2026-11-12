@@ -124,7 +124,11 @@ func _gol(en_arco_visita: bool) -> void:
 
 func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 	var r := super(p, victima, base)
-	return MejorasC4.radio_entrada(self, p, victima, base, r) if _mejoras_c4 else r
+	if not _mejoras_c4:
+		return r
+	if MejorasC4.por_detras(self, p, victima):
+		return 0.0   ## (12-11) no se entra de pie por detrás (C4_NO_DETRAS)
+	return MejorasC4.radio_entrada(self, p, victima, base, r)
 
 func _radio_cabezazo(p: Dictionary) -> float:
 	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)
