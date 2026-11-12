@@ -106,6 +106,9 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "", tipo := "de_pie") -> bool:
 	var antes := int(tarjetas_motor[0][0] + tarjetas_motor[0][1] + tarjetas_motor[1][0] + tarjetas_motor[1][1])
 	var r := super(infractor, victima, prob_tarjeta, motivo, tipo)
+	if _mejoras_c4 and r and String(ultima_falta.get("sancion", "falta")) != "falta":
+		for fa: String in ultima_falta.get("factores", []):
+			_contar("c4_tarjeta_factor_" + fa)
 	if _mejoras_c4 and r:
 		var quien := MejorasC4.seguidor_en(self, infractor, victima)
 		if quien != "":
