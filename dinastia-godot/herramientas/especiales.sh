@@ -553,10 +553,20 @@ fi
     echo "SALTADA pruebas visuales (sin Vulkan: apt-get install -y mesa-vulkan-drivers)"
   fi
   # pruebas por sistema que necesitan pantalla (5-11): partido con la cámara real en Compatibilidad y Forward+, pantallas del menú, presupuesto con hw_modesto
-  pasa "so: vis_partido_forward" "python3 herramientas/pruebas_so.py vis_partido_forward" "^OK +vis_partido_forward "
-  pasa "so: vis_partido_compat" "python3 herramientas/pruebas_so.py vis_partido_compat" "^OK +vis_partido_compat "
-  pasa "so: vis_menu_pantallas" "python3 herramientas/pruebas_so.py vis_menu_pantallas" "^OK +vis_menu_pantallas "
-  pasa "so: ren_partido_presupuesto" "python3 herramientas/pruebas_so.py ren_partido_presupuesto" "^OK +ren_partido_presupuesto "
+  # (12-11) Como las de arriba: Forward+ y el presupuesto piden Vulkan; Compatibilidad y las pantallas del menú, xvfb-run. Sin ellos se
+  # SALTAN (el nocturno «todo» del CI no trae ninguno y fallaban en 0-16 s con «requiere Vulkan» o «sin marcador»).
+  if ls /usr/share/vulkan/icd.d/*.json > /dev/null 2>&1; then
+    pasa "so: vis_partido_forward" "python3 herramientas/pruebas_so.py vis_partido_forward" "^OK +vis_partido_forward "
+    pasa "so: ren_partido_presupuesto" "python3 herramientas/pruebas_so.py ren_partido_presupuesto" "^OK +ren_partido_presupuesto "
+  else
+    echo "SALTADA so: vis_partido_forward y ren_partido_presupuesto (sin Vulkan)"
+  fi
+  if command -v xvfb-run >/dev/null; then
+    pasa "so: vis_partido_compat" "python3 herramientas/pruebas_so.py vis_partido_compat" "^OK +vis_partido_compat "
+    pasa "so: vis_menu_pantallas" "python3 herramientas/pruebas_so.py vis_menu_pantallas" "^OK +vis_menu_pantallas "
+  else
+    echo "SALTADA so: vis_partido_compat y vis_menu_pantallas (sin xvfb-run)"
+  fi
 fi
 if [[ "${#COLA[@]}" -gt 0 ]]; then
   SEMILLA_ORDEN=${ESPECIALES_SEMILLA:-$RANDOM$RANDOM}
