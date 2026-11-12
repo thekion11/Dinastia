@@ -15,11 +15,9 @@ func _ready() -> void:
 	_comprobar(int(c.get("gf", 0)) + int(c.get("gc", 0)) > 0, "y cuenta goles")
 	pr._ui_legado._pintar_records()
 	var vals: Array[String] = []
-	for h in pr._lista_records.get_children():
-		if h is GridContainer:
-			for col in h.get_children():
-				vals.append((col.get_child(1) as Label).text)
-			break
+	var banda := pr._lista_records.find_child("CifrasClave", false, false)   ## (12-11) la carrera va en fichas grandes
+	for ficha in (banda.get_children() if banda != null else []):
+		vals.append((ficha.get_child(0).get_child(1) as Label).text)
 	_comprobar(vals.size() == 6 and vals[1] == str(c["pj"]), "la fila de Legado enseña esos partidos (%s)" % str(vals))
 	pr.queue_free()
 	await get_tree().process_frame

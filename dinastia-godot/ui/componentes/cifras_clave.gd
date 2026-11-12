@@ -4,12 +4,14 @@ extends RefCounted
 ## detalle (la caja, el resultado del año, la deuda…). Cada ficha: rótulo pequeño, cifra grande en su color y un filo del mismo color.
 ## Solo lee lo que le pasan: `fichas` = [[rótulo, cifra, color], …].
 
-static func banda(fichas: Array, suave: Color) -> Container:
+## `columnas` > 0: si hay más fichas que eso, van en rejilla de ese ancho (seis cifras en un teléfono tumbado = dos filas de tres).
+static func banda(fichas: Array, suave: Color, columnas := 0) -> Container:
 	## (12-11) En un teléfono de pie cuatro fichas en fila no caben (se cortaban el rótulo y la cifra): de a dos por fila.
 	var h: Container
-	if EscalaMovil.es_vertical() and fichas.size() > 2:
+	var cols := 2 if EscalaMovil.es_vertical() else columnas
+	if cols > 0 and fichas.size() > cols:
 		var g := GridContainer.new()
-		g.columns = 2
+		g.columns = cols
 		g.add_theme_constant_override("h_separation", 10)
 		g.add_theme_constant_override("v_separation", 10)
 		h = g

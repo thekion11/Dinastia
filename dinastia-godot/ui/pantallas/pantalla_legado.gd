@@ -9,26 +9,16 @@ func _pintar_records() -> void:
 		return
 	_resumen_carrera(lg)
 
+	## (12-11) Las rachas, en fichas grandes como la carrera (antes cuatro cifras pequeñas en una esquina).
 	var tr := p._texto(11, Principal.COL_SUAVE)
 	tr.text = Idiomas.t("RACHAS")
 	p._lista_records.add_child(tr)
-	var gr := GridContainer.new()
-	CebraRejilla.poner(gr)
-	gr.columns = 4
-	gr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	gr.add_theme_constant_override("h_separation", 14)
-	p._lista_records.add_child(gr)
 	var r: Dictionary = lg.rachas
-	for par in [["Invicto máximo", "invicto_max"], ["Más victorias seguidas", "ganando_max"],
-			["Peor sequía", "sin_ganar_max"], ["Racha actual", "invicto"]]:
-		var col := VBoxContainer.new()
-		gr.add_child(col)
-		var et := p._texto(10, Principal.COL_SUAVE)
-		et.text = Idiomas.t(String(par[0]))
-		col.add_child(et)
-		var va := p._texto(16, Principal.COL_TEXTO)
-		va.text = str(int(r.get(par[1], 0)))
-		col.add_child(va)
+	var fr: Array = []
+	for par: Array in [["Invicto máximo", "invicto_max", Principal.COL_VERDE], ["Más victorias seguidas", "ganando_max", Principal.COL_VERDE],
+			["Peor sequía", "sin_ganar_max", Principal.COL_ROJO], ["Racha actual", "invicto", Principal.COL_TEXTO]]:
+		fr.append([Idiomas.t(String(par[0])), str(int(r.get(par[1], 0))), p._color_accesible(par[2])])
+	p._lista_records.add_child(CifrasClave.banda(fr, p._color_de_paleta(Principal.COL_SUAVE)))
 	p._lista_records.add_child(HSeparator.new())
 
 	var rec: Dictionary = lg.rec
@@ -196,24 +186,13 @@ func _resumen_carrera(lg: Logros) -> void:
 	var t := p._texto(11, Principal.COL_SUAVE)
 	t.text = Idiomas.t("TU CARRERA")
 	p._lista_records.add_child(t)
-	var g := GridContainer.new()
-	CebraRejilla.poner(g)
-	g.columns = 6
-	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_theme_constant_override("h_separation", 14)
-	p._lista_records.add_child(g)
+	## (12-11) Seis fichas grandes (`CifrasClave`) en vez de una fila de cifras pequeñas: es lo primero que se mira al entrar en Historia.
 	var pct := 100.0 * float(tot["pg"]) / float(maxi(1, int(tot["pj"])))
-	for par: Array in [["Temporadas", str(maxi(1, p.mundo.anio - lg.anio_inicio + 1))], ["Partidos", str(tot["pj"])],
-			["G-E-P", "%d-%d-%d" % [tot["pg"], tot["pe"], tot["pp"]]], ["% victorias", "%.0f %%" % pct],
-			["Goles", "%d:%d" % [tot["gf"], tot["gc"]]], ["Títulos", str(lg.muro.size())]]:
-		var col := VBoxContainer.new()
-		g.add_child(col)
-		var et := p._texto(10, Principal.COL_SUAVE)
-		et.text = Idiomas.t(String(par[0]))
-		col.add_child(et)
-		var va := p._texto(16, Principal.COL_TEXTO)
-		va.text = String(par[1])
-		col.add_child(va)
+	var txt: Color = p._color_de_paleta(Principal.COL_TEXTO)
+	var fichas: Array = [[Idiomas.t("Temporadas"), str(maxi(1, p.mundo.anio - lg.anio_inicio + 1)), txt], [Idiomas.t("Partidos"), str(tot["pj"]), txt],
+		[Idiomas.t("G-E-P"), "%d-%d-%d" % [tot["pg"], tot["pe"], tot["pp"]], txt], [Idiomas.t("% victorias"), "%.0f %%" % pct, p._color_accesible(Principal.COL_VERDE)],
+		[Idiomas.t("Goles"), "%d:%d" % [tot["gf"], tot["gc"]], txt], [Idiomas.t("Títulos"), str(lg.muro.size()), p._color_accesible(Principal.COL_ORO)]]
+	p._lista_records.add_child(CifrasClave.banda(fichas, p._color_de_paleta(Principal.COL_SUAVE), 3 if EscalaMovil.es_movil() else 0))
 	p._lista_records.add_child(HSeparator.new())
 
 ## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
