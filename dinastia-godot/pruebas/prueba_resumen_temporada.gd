@@ -8,6 +8,17 @@ var _fase := 0
 
 func _ready() -> void:
 	AvanceSemana.partido_obliga = false
+	## (12-11) PAIS=ESP CLUB=7: otro país y otro club (regla 34); MOVIL=1 con una ventana más alta que ancha: como en un teléfono de pie.
+	if OS.get_environment("PAIS") != "":
+		var m := Mundo.new()
+		var ps: Array[String] = []
+		ps.assign([OS.get_environment("PAIS")])
+		m.generar(ps, 121134)
+		m.tomar_el_mando(m.ligas[0].clubes[int(OS.get_environment("CLUB")) % m.ligas[0].clubes.size()].id)
+		PedidoPartida.mundo_pregenerado = m
+	if OS.get_environment("MOVIL") == "1":
+		EscalaMovil.forzar = true
+		EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 

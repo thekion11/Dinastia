@@ -6,6 +6,7 @@ extends EventoPantallaCompleta
 ## la copa, el continental, ascensos y descensos de tu país, los premios de la gala y el veredicto de la directiva.
 ## `foto` = `CierreTorneos.foto(mundo)` tomada ANTES del cierre; `resumen` = lo que devuelve `Mundo.nueva_temporada()`.
 const ANCHO_TARJETA := 360
+const ANCHO_DE_PIE := 500   ## teléfono de pie: una sola columna en el lienzo de 540 px
 
 static func mostrar(pr: Node, foto: Dictionary, resumen: Dictionary) -> ResumenTemporada:
 	var e := ResumenTemporada.new()
@@ -48,21 +49,23 @@ static func datos(foto: Dictionary, resumen: Dictionary) -> Dictionary:
 
 func _rellenar(foto: Dictionary, resumen: Dictionary) -> void:
 	var d := datos(foto, resumen)
-	_centro.custom_minimum_size = Vector2(ANCHO_TARJETA * 2 + 24, 0)
+	## (12-11) En el teléfono de pie (lienzo de 540 px de ancho) todo va en UNA columna: a dos columnas la mitad derecha quedaba fuera.
+	var de_pie := EscalaMovil.es_vertical()
+	_centro.custom_minimum_size = Vector2(ANCHO_DE_PIE if de_pie else ANCHO_TARJETA * 2 + 24, 0)
 	_centro.add_theme_constant_override("separation", 8)   ## compacto: que el botón quepa a 1080 px con la franja del patrocinador
-	var arriba := HBoxContainer.new()
+	var arriba: BoxContainer = VBoxContainer.new() if de_pie else HBoxContainer.new()
 	arriba.alignment = BoxContainer.ALIGNMENT_CENTER
-	arriba.add_theme_constant_override("separation", 18)
+	arriba.add_theme_constant_override("separation", 4 if de_pie else 18)
 	arriba.add_child(etiqueta("%s · %d" % [Idiomas.t("FIN DE TEMPORADA"), int(d["anio"])], 15, Tema.SUAVE, false, false))
 	var pat: Dictionary = foto.get("patrocinador", {})
 	if String(pat.get("marca", "")) != "":   ## (10-11, idea del PES) el patrocinador oficial, como en sus pantallas de temporada
 		arriba.add_child(_patrocinador(String(pat["marca"]), String(pat.get("color", "#ffffff"))))
 	_centro.add_child(arriba)
-	_centro.add_child(etiqueta("🏆 " + Idiomas.t("Resumen de la temporada"), 30, Tema.ORO, true, false))
+	_centro.add_child(etiqueta("🏆 " + Idiomas.t("Resumen de la temporada"), 24 if de_pie else 30, Tema.ORO, true, false))
 	var cabecera := _cabecera(d)
 	_centro.add_child(cabecera)
 	var rejilla := GridContainer.new()
-	rejilla.columns = 2
+	rejilla.columns = 1 if de_pie else 2
 	rejilla.add_theme_constant_override("h_separation", 24)
 	rejilla.add_theme_constant_override("v_separation", 12)
 	_centro.add_child(rejilla)
@@ -90,9 +93,10 @@ func _unhandled_input(ev: InputEvent) -> void:
 
 ## Tu club y tu puesto, y a su lado el campeón de tu liga.
 func _cabecera(d: Dictionary) -> Control:
-	var fila := HBoxContainer.new()
+	var de_pie := EscalaMovil.es_vertical()
+	var fila: BoxContainer = VBoxContainer.new() if de_pie else HBoxContainer.new()
 	fila.alignment = BoxContainer.ALIGNMENT_CENTER
-	fila.add_theme_constant_override("separation", 40)
+	fila.add_theme_constant_override("separation", 10 if de_pie else 40)
 	var mio: Club = d["club"]
 	var campeon: Club = d["campeon"]
 	var puesto := int(d["puesto"])
@@ -101,7 +105,7 @@ func _cabecera(d: Dictionary) -> Control:
 	if campeon != null and campeon != mio:
 		fila.add_child(_bloque_club(campeon, String(d["liga"]), "👑 " + Idiomas.t("Campeón de liga"), Tema.ORO))
 	elif campeon == mio and mio != null:
-		fila.add_child(etiqueta("👑 " + Idiomas.t("¡CAMPEÓN DE LIGA!"), 30, Tema.ORO, true, false))
+		fila.add_child(etiqueta("👑 " + Idiomas.t("¡CAMPEÓN DE LIGA!"), 24 if de_pie else 30, Tema.ORO, true, false))
 	return fila
 
 func _bloque_club(c: Club, rotulo: String, linea: String, color: Color, alto := 84) -> Control:
@@ -127,7 +131,7 @@ func _tarjeta(titulo: String) -> Array:
 	var est := Tema.caja(Color(Tema.TARJETA, 0.92), Tema.RADIO_GRANDE, Color(Tema.ORO, 0.35))
 	est.set_content_margin_all(10)
 	panel.add_theme_stylebox_override("panel", est)
-	panel.custom_minimum_size = Vector2(ANCHO_TARJETA, 110)
+	panel.custom_minimum_size = Vector2(ANCHO_DE_PIE if EscalaMovil.es_vertical() else ANCHO_TARJETA, 110)
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 6)
 	panel.add_child(col)
