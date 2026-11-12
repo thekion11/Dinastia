@@ -11,9 +11,9 @@ func _montar_hud() -> void:
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 14)
 	caja.add_child(h)
-	_marcador = _etiqueta(HudTactil.tam(24, self), Color.WHITE)
+	_marcador = _etiqueta(HudTactil.tam(24, self), Color.WHITE, false)
 	h.add_child(_marcador)
-	_reloj = _etiqueta(HudTactil.tam(22, self), LIMA)
+	_reloj = _etiqueta(HudTactil.tam(22, self), LIMA, false)
 	h.add_child(_reloj)
 	var caja2 := PanelContainer.new()
 	caja2.add_theme_stylebox_override("panel", _panel(FUCSIA))
@@ -23,7 +23,7 @@ func _montar_hud() -> void:
 	caja2.offset_top = HudTactil.alto_fila2(self)   ## (en vertical, bajo el marcador)
 	add_child(caja2)
 	_hud.append(caja2)
-	_mis_stats = _etiqueta(HudTactil.tam(15, self), Color.WHITE)
+	_mis_stats = _etiqueta(HudTactil.tam(15, self), Color.WHITE, false)
 	caja2.add_child(_mis_stats)
 	## Tu jugador y su aguante, abajo a la izquierda.
 	var caja3 := PanelContainer.new()
@@ -39,7 +39,7 @@ func _montar_hud() -> void:
 	var v := VBoxContainer.new()
 	caja3.add_child(v)
 	var yo := carrera.jugador(mundo) if carrera != null else null
-	var nom := _etiqueta(HudTactil.tam(16 if HudTactil.activo(self) else 18, self), LIMA)   ## (móvil: ficha compacta, ≥ 2,5 mm)
+	var nom := _etiqueta(HudTactil.tam(16 if HudTactil.activo(self) else 18, self), LIMA, false)   ## (móvil: ficha compacta, ≥ 2,5 mm)
 	nom.text = ("%d  %s" % [yo.dorsal, yo.nombre.to_upper()]) if yo != null else "—"
 	v.add_child(nom)
 	_aguante = ProgressBar.new()

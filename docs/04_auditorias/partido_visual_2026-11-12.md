@@ -115,3 +115,11 @@ ruido ±10 ms entre corridas. Nunca `--headless`.
   jugadores a menos de esa distancia (modo carrera); no se toca.
 - Siguiente palanca medible para 30 → 60 FPS en el teléfono: la interfaz del partido (77 llamadas del HUD: paneles con estilo,
   etiquetas con contorno e iconos de otras fuentes rompen el lote 2D) y las 31 de los controles. Pide una medida en el teléfono real.
+
+## Bloque 5: HUD del partido en MÍNIMA (95 → 40 llamadas 2D)
+Medido pieza a pieza (`POR_HUD=1`). Causas: la SOMBRA del texto partía el lote (−19 llamadas solo en la fila de estadísticas; los emojis
+no influyen) y, en Compatibility, cada círculo, arco y polígono del mando era su propia llamada. Hecho: sin sombra en las etiquetas que van
+sobre panel oscuro (marcador, reloj, estadísticas, ficha); el mando dibuja fondos, aros y triangulitos como rectángulos de un atlas
+generado en código (`DibujoBotonFC.atlas`, sin archivos) y por fases. Resultado: mando 31 → 16, estadísticas 32 → 12, ficha 20 → 8,
+marcador 12 → 4. Se ve igual (el aro del botón grande, un pelo más fino). Queda: los textos del mando usan dos tamaños de letra (dos
+texturas) y alternan; agruparlos por tamaño bajaría unas 8 más.

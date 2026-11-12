@@ -69,7 +69,9 @@ func _ia_portador(p: Dictionary) -> void:
 	if not _nuestra("decide_con_balon"):
 		super(p)
 		return
-	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
+	if _mejoras_c4 and MejorasC4Pared.vuelta(self, p):
+		return   ## (12-11) la vuelta de la pared, de primera
+	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4Pared.ida(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
 		return
 	var guardado := equipos
 	var antes := _decision_en
@@ -103,6 +105,20 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 		set_meta("_t_rechace", t)
 		_contar("c4_rechace")
 
+func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "", tipo := "de_pie") -> bool:
+	var antes := int(tarjetas_motor[0][0] + tarjetas_motor[0][1] + tarjetas_motor[1][0] + tarjetas_motor[1][1])
+	var r := super(infractor, victima, prob_tarjeta, motivo, tipo)
+	if _mejoras_c4 and r and String(ultima_falta.get("sancion", "falta")) != "falta":
+		for fa: String in ultima_falta.get("factores", []):
+			_contar("c4_tarjeta_factor_" + fa)
+	if _mejoras_c4 and r:
+		var quien := MejorasC4.seguidor_en(self, infractor, victima)
+		if quien != "":
+			_contar("c4_falta_" + quien)
+			if int(tarjetas_motor[0][0] + tarjetas_motor[0][1] + tarjetas_motor[1][0] + tarjetas_motor[1][1]) > antes:
+				_contar("c4_tarjeta_" + quien)
+	return r
+
 func _gol(en_arco_visita: bool) -> void:
 	if _mejoras_c4 and t - float(get_meta("_t_rechace", -99.0)) < 3.0:
 		_contar("c4_gol_rechace")
@@ -110,7 +126,11 @@ func _gol(en_arco_visita: bool) -> void:
 
 func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 	var r := super(p, victima, base)
-	return MejorasC4.radio_entrada(self, p, victima, base, r) if _mejoras_c4 else r
+	if not _mejoras_c4:
+		return r
+	if MejorasC4.por_detras(self, p, victima):
+		return 0.0   ## (12-11) no se entra de pie por detrás (C4_NO_DETRAS)
+	return MejorasC4.radio_entrada(self, p, victima, base, r)
 
 func _radio_cabezazo(p: Dictionary) -> float:
 	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)
@@ -151,9 +171,13 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		return super._ia_ataque_sin_balon(p)
 	var r := _sin_flag3(p, true)
 	if _mejoras_c4:
+		var pared := MejorasC4Pared.desmarque(self, p)
+		if pared != Vector3.INF:
+			p["correr"] = true
+			return pared
 		var sigue := MejorasC4.seguir_tiro(self, p)
 		if sigue != Vector3.INF:
-			p["correr"] = true
+			p["correr"] = MejorasC4.SEGUIR_SPRINT or pos(p).distance_to(sigue) > 6.0   ## v2: sin esprintar si ya está cerca
 			return sigue
 		MejorasC4.sprint(self, p, r)
 	return r
@@ -161,6 +185,9 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 func _ia_defensa(p: Dictionary) -> Vector3:
 	var r := _sin_flag3(p, false)
 	if _mejoras_c4:
+		var cont := MejorasC4.contener_colocacion(self, p)
+		if cont != Vector3.INF:
+			return cont
 		MejorasC4.sprint(self, p, r)
 	return r
 
