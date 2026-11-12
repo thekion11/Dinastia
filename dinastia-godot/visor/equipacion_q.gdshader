@@ -1084,6 +1084,10 @@ void fragment() {
 	if (civil && usa_reposo && usa_normal) {
 		nm.xy -= nm_cuerpo * tela;
 	}
+	// La bota no deja ver el relieve de los dedos del pie desnudo (12-11, con la horma de `BotasQ`).
+	if (usa_reposo && usa_normal) {
+		nm.xy -= nm_cuerpo * m.a * (1.0 - tela);
+	}
 	NORMAL_MAP = nm;
 	// RELIEVE DEL ESCUDO (17-10-2026, M-051): un bordado de ~0,7 mm sin textura
 	// nueva. Normal falsa a partir de las derivadas en pantalla de la altura

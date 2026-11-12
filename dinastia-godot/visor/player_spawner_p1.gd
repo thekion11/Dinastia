@@ -280,7 +280,7 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 				## Sin foto (ficticios, reales sin foto): una cara y un corte de
 				## la biblioteca modular, siempre los mismos para el mismo id.
 				if String(datos_cara["foto"]) == "" and BibliotecaCaras.hay() and puesto != "ARB":
-					datos_cara["biblio"] = BibliotecaCaras.para(jid, piel, pelo)
+					datos_cara["biblio"] = BibliotecaCaras.para(jid, piel, pelo, corte)
 				VestidorQ.poner_cara(dq, datos_cara, piel)
 			var apq: AnimationPlayer = dq["anim"]
 			if apq.has_animation("parado"):

@@ -216,13 +216,91 @@ static func color_iris(nombre: String) -> Color:
 	var c := String(entrada(nombre).get("iris", ""))
 	return Color(c) if c != "" else Color(0, 0, 0, 0)
 
-## EL BORDE PEGADO AL CRÁNEO (última pasada, 5-10): el contorno de la cara
-## (los vértices que se funden, alfa < 1) se lleva a la superficie de la cabeza
-## del cuerpo; de perfil la cara parecía una máscara despegada, con una línea
-## en la frente. El anillo va entero a la piel; el borde visible, a medias.
+## EL BORDE PEGADO AL CRÁNEO (última pasada, 5-10; en 3D desde el 12-11): el contorno de la cara (los
+## vértices que se funden, alfa < 1) se lleva a la superficie de la cabeza del cuerpo; de perfil la cara
+## parecía una máscara despegada, con una línea en la frente. Antes solo se movía en z (hacia delante),
+## y en las sienes y junto a las orejas (donde la piel mira de lado) no encontraba la piel: el borde
+## quedaba a 4-16 mm en el aire (de espaldas se veía un arco junto a cada oreja y de perfil, un escalón
+## en la mejilla). Ahora cada vértice va al plano tangente de la piel más cercana (+1,5 mm hacia fuera),
+## del cráneo y la cara (no de la oreja, que está detrás: z < 0). El anillo va entero; el borde, casi.
+## `CARA_BORDE_Z=1` vuelve al método de antes (para comparar).
 static func _pegar_borde(pos: PackedVector3Array, cuerpo: Dictionary) -> PackedVector3Array:
+	_lejos.resize(0)
 	if cuerpo.is_empty():
 		return pos
+	if OS.get_environment("CARA_BORDE_Z") != "":
+		return _pegar_borde_z(pos, cuerpo)
+	var rejilla := _rejilla_piel(cuerpo)
+	if rejilla.is_empty():
+		return pos
+	var salida := pos.duplicate()
+	_lejos.resize(salida.size())
+	_lejos.fill(0.0)
+	for i in mini(salida.size(), _alfa.size()):
+		if _alfa[i] >= 1.0:
+			continue
+		var q := salida[i]
+		var c := Vector3i((q / CELDA).floor())
+		var mejor := Vector3.INF
+		var n_mejor := Vector3.ZERO
+		var d_mejor := 0.022 * 0.022
+		## ±2 celdas (24 mm): con ±1 un borde a 12-22 mm de la piel podía no ver la piel más cercana.
+		for gx in range(c.x - 2, c.x + 3):
+			for gy in range(c.y - 2, c.y + 3):
+				for gz in range(c.z - 2, c.z + 3):
+					var celda: Variant = rejilla.get(Vector3i(gx, gy, gz))
+					if celda == null:
+						continue
+					var pv: PackedVector3Array = celda[0]
+					var nv: PackedVector3Array = celda[1]
+					for k in pv.size():
+						var dd := pv[k].distance_squared_to(q)
+						if dd < d_mejor:
+							d_mejor = dd
+							mejor = pv[k]
+							n_mejor = nv[k]
+		_lejos[i] = sqrt(d_mejor) if mejor != Vector3.INF else 1.0
+		if mejor == Vector3.INF:
+			continue
+		var sobre := q - n_mejor * (n_mejor.dot(q - mejor) - 0.0015)
+		var peso := 1.0 if _alfa[i] <= 0.0 else (0.85 if _alfa[i] < 0.9 else 0.5)
+		salida[i] = q.lerp(sobre, peso)
+	return salida
+
+const CELDA := 0.012
+## Distancia (m) de cada vértice del borde a la piel antes de pegarlo (lo escribe `_pegar_borde`): el
+## borde que estaba lejos de la piel (bajo la mandíbula, el mentón de una cara más ancha que la cabeza)
+## no tiene dónde apoyarse y se funde del todo (`_armar`); de espaldas se veía como un arco en el aire.
+static var _lejos := PackedFloat32Array()
+static var _rejillas3 := {}
+
+## La piel de la cabeza (por delante de las orejas) en celdas de 12 mm: [posiciones, normales].
+static func _rejilla_piel(cuerpo: Dictionary) -> Dictionary:
+	var cv: PackedVector3Array = cuerpo["v"]
+	var clave := "%s|%d" % [String(cuerpo.get("id", "")), cv.size()]
+	if _rejillas3.has(clave):
+		return _rejillas3[clave]
+	var cn: Variant = cuerpo.get("n")
+	var r := {}
+	if cn is PackedVector3Array and (cn as PackedVector3Array).size() == cv.size():
+		var nn: PackedVector3Array = cn
+		for i in cv.size():
+			var p := cv[i]
+			if p.y > 1.52 and p.z > -0.002 and absf(p.x) < 0.11 and nn[i].length_squared() > 0.5:
+				var k := Vector3i((p / CELDA).floor())
+				if not r.has(k):
+					r[k] = [PackedVector3Array(), PackedVector3Array()]
+				## (Los Packed*Array se copian al sacarlos: se vuelven a guardar.)
+				var pv: PackedVector3Array = r[k][0]
+				var nv: PackedVector3Array = r[k][1]
+				pv.append(p)
+				nv.append(nn[i].normalized())
+				r[k] = [pv, nv]
+	_rejillas3[clave] = r
+	return r
+
+## El método de antes (solo en z), de respaldo para comparar.
+static func _pegar_borde_z(pos: PackedVector3Array, cuerpo: Dictionary) -> PackedVector3Array:
 	## Los puntos de la cabeza en una rejilla de 14 mm (30-10-2026, rendimiento): solo se miran
 	## las 9 celdas de alrededor, que contienen todos los que cumplen la condición (r ≤ 14 mm).
 	var rejilla := _rejilla_cabeza(cuerpo)
@@ -315,7 +393,10 @@ static func _armar(nombre: String, datos: Array, cuerpo: Dictionary) -> ArrayMes
 	for i in _n:
 		st.set_normal(normales[i].normalized() if normales[i].length_squared() > 0.0 else Vector3.BACK)
 		st.set_uv(uv[i])
-		st.set_color(Color(1, tapado[i], 1, _alfa[i] if i < _alfa.size() else 1.0))
+		var alfa := _alfa[i] if i < _alfa.size() else 1.0
+		if alfa < 1.0 and i < _lejos.size():
+			alfa *= 1.0 - smoothstep(0.006, 0.014, _lejos[i])
+		st.set_color(Color(1, tapado[i], 1, alfa))
 		st.add_vertex(pegada[i])
 	## Godot toma como cara de delante la de vértices en sentido horario vista
 	## desde fuera; la malla de MediaPipe viene al revés.

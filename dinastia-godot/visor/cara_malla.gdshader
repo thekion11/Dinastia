@@ -87,7 +87,10 @@ void fragment() {
 	// Relleno de cámara (como el reflector de las transmisiones): más en lo
 	// que mira a la cámara. Sin él, una piel oscura en sombra quedaba negra.
 	EMISSION = c * relleno * (0.35 + 0.65 * clamp(dot(NORMAL, VIEW), 0.0, 1.0));
-	ALPHA = COLOR.a;
+	// El borde que se funde, de canto o de espaldas a la cámara, desaparece (12-11): de espaldas se veía
+	// el anillo de la mejilla como un arco fino junto a cada oreja, fuera de la silueta de la cabeza.
+	float frente = smoothstep(0.0, 0.35, dot(NORMAL, VIEW));
+	ALPHA = COLOR.a * mix(1.0, frente, 1.0 - COLOR.a);
 	// La misma luz que la piel del cuerpo (`equipacion_q.gdshader`): sin esto
 	// la cara y el cuello no empataban aunque tuvieran el mismo color.
 	// Mate: con menos, el cielo se reflejaba azul en la nariz y la frente.

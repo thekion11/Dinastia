@@ -380,7 +380,9 @@ static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictiona
 		var yl := _linea_en(puntos, p.x)
 		var frente := smoothstep(-0.02, 0.04, p.z)
 		var lateral := smoothstep(0.05, 0.08, absf(p.x))
-		var y_atras := lerpf(1.575, 1.67, lateral)
+		## La nuca nace a la altura del lóbulo de la oreja (12-11): con 1,575 (la altura del mentón) el
+		## pelo bajaba hasta el cuello de la camiseta y de espaldas o de perfil parecía un «mullet».
+		var y_atras := lerpf(1.575 if corte == "melena_rizada" else 1.612, 1.67, lateral)
 		var y_lim := lerpf(y_atras, yl, frente)
 		## Nacimiento difuso: el pelo se aclara en ~1,6 cm, no corta en seco.
 		dens[i] = smoothstep(y_lim - 0.006, y_lim + 0.016, p.y)
