@@ -320,7 +320,15 @@ static func aspecto_futbolista(jug: Dictionary, jid: String) -> Dictionary:
 	var ruido2 := float(absi(hash(jid + "hombros")) % 1000) / 1000.0 - 0.5
 	return {"complexion": clampf((fis - 68.0) / 38.0 + ruido * 0.3, -0.45, 0.6),
 		"hombros": clampf((fis - 68.0) / 50.0 + ruido2 * 0.2, -0.3, 0.45),
-		"barriga": 0.0, "piernas": 0.0, "cabeza": 0.0}
+		"barriga": 0.0, "piernas": 0.0, "cabeza": 0.0, "proporcion": {} if OS.get_environment("SIN_PROPORCION_FUTBOLISTA") != "" else PROPORCION_FUTBOLISTA}
+
+## PROPORCIONES DE FUTBOLISTA (12-11, sesión 14): de cerca seguían leyéndose como «superhéroe» (cabeza pequeña, cuello corto y grueso,
+## pecho en V). Un atleta, no un héroe: cabeza un 4 % mayor, cuello un 5 % más largo y algo más fino, pecho un 4 % más estrecho.
+## `SIN_PROPORCION_FUTBOLISTA=1` mide el antes.
+const PROPORCION_FUTBOLISTA := {
+	"Head": Vector3(1.04, 1.04, 1.04), "neck_01": Vector3(0.96, 1.05, 0.96), "spine_03": Vector3(0.96, 1.0, 0.97),
+	"clavicle_l": Vector3(0.96, 0.97, 0.97), "clavicle_r": Vector3(0.96, 0.97, 0.97),
+}
 
 static func cuerpo_futbolista(d: Dictionary, jug: Dictionary, jid: String) -> void:
 	if not d.has("esqueleto") or not d.has("modelo"):

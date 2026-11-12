@@ -123,3 +123,14 @@ sobre panel oscuro (marcador, reloj, estadísticas, ficha); el mando dibuja fond
 generado en código (`DibujoBotonFC.atlas`, sin archivos) y por fases. Resultado: mando 31 → 16, estadísticas 32 → 12, ficha 20 → 8,
 marcador 12 → 4. Se ve igual (el aro del botón grande, un pelo más fino). Queda: los textos del mando usan dos tamaños de letra (dos
 texturas) y alternan; agruparlos por tamaño bajaría unas 8 más.
+
+## Bloque 6: proporciones y cara de cerca
+- `PersonajeDT.PROPORCION_FUTBOLISTA`: cabeza +4 %, cuello +5 % de largo y algo más fino, pecho −4 % (antes, de cerca, «superhéroe»: cabeza
+  pequeña, cuello corto y grueso, pecho en V). Solo escalas de huesos ya existentes. `SIN_PROPORCION_FUTBOLISTA=1` mide el antes.
+  Hoja `proporciones_futbolista_antes_despues.jpg` (ENG, ARG, JPN).
+- Cara de la biblioteca: el relleno «de cámara» (emisión) quemaba las pieles claras (mejilla ~235/255 frente a cuello ~195) y la dejaba
+  plana; ahora es la mitad en las claras y entero en las oscuras (que sin él quedaban negras). Mejilla 238 → 231 y 232 → 224. Hoja
+  `cara_relleno_piel_clara_antes_despues.jpg`; comprobado también con BRA, SEN y FRA.
+- MÍNIMA, cámara de TV (ENG 2): 195 llamadas con y sin el cambio (y 195 en `main`). OJO: esta mañana eran 151; la subida vino con lo
+  que entró en `main` entre medias, no con esto.
+- HALLAZGO (datos, sin tocar): los futbolistas ficticios de Senegal salen con piel muy clara y pelo pelirrojo: la apariencia por país.

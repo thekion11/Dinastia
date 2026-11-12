@@ -86,7 +86,10 @@ void fragment() {
 	// `equipacion_q.gdshader`, para que no se note la unión).
 	// Relleno de cámara (como el reflector de las transmisiones): más en lo
 	// que mira a la cámara. Sin él, una piel oscura en sombra quedaba negra.
-	EMISSION = c * relleno * (0.35 + 0.65 * clamp(dot(NORMAL, VIEW), 0.0, 1.0));
+	// (12-11) En piel clara el relleno quemaba la cara (mejilla ~235 de 255, cuello ~195: la cara se veía plana y más clara que el
+	// cuello); se reduce a la mitad en las claras y se mantiene entero en las oscuras, que es para lo que está.
+	float relleno_piel = relleno * mix(0.5, 1.0, clamp((0.32 - lum_media) / 0.22, 0.0, 1.0));
+	EMISSION = c * relleno_piel * (0.35 + 0.65 * clamp(dot(NORMAL, VIEW), 0.0, 1.0));
 	// El borde que se funde, de canto o de espaldas a la cámara, desaparece (12-11): de espaldas se veía
 	// el anillo de la mejilla como un arco fino junto a cada oreja, fuera de la silueta de la cabeza.
 	float frente = smoothstep(0.0, 0.35, dot(NORMAL, VIEW));
