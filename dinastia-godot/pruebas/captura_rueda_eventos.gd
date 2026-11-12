@@ -17,6 +17,9 @@ func _foto(dir: String, nombre: String) -> void:
 	print("foto: ", nombre)
 
 func _ready() -> void:
+	if OS.get_environment("MOVIL") == "1":   ## (12-11) como en un teléfono; con una ventana más alta que ancha, el diseño vertical
+		EscalaMovil.forzar = true
+		EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	var dir := OS.get_environment("OUT") if OS.get_environment("OUT") != "" else "/tmp/fotos_rueda"
 	DirAccess.make_dir_recursive_absolute(dir)
 	var p: Principal = load("res://escenas/principal.tscn").instantiate()

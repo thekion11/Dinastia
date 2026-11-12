@@ -46,6 +46,8 @@ static func crear(textos: Array, color_acento: Color, centro_idx := -2) -> Selec
 			s._centro = b
 			b.tooltip_text = b.text
 			b.text = "🙋\n" + Idiomas.t("Ayudante")
+			b.autowrap_mode = TextServer.AUTOWRAP_OFF
+			b.clip_text = true
 		else:
 			s._brazos.append(b)
 	return s
@@ -86,7 +88,7 @@ func _estilo(b: Button, es_centro: bool) -> void:
 		sb.border_color = Color(BLANCO, 0.22)
 		sb.set_border_width_all(1)
 		sb.set_corner_radius_all(40 if es_centro else 10)
-		sb.set_content_margin_all(10)
+		sb.set_content_margin_all(4 if es_centro else 10)   ## (12-11) el redondel del centro mide 78 px: con 10 de margen «Ayudante» se partía en dos
 		if estado in ["hover", "focus", "pressed"]:
 			sb.bg_color = Color(acento.darkened(0.45), 0.95)
 			sb.border_color = acento.lightened(0.25)

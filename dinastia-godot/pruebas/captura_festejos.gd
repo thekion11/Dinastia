@@ -13,6 +13,9 @@ func _ok(c: bool, que: String) -> void:
 		_fallos += 1
 
 func _ready() -> void:
+	if OS.get_environment("MOVIL") == "1":   ## (12-11) como en un teléfono; con una ventana más alta que ancha, el diseño vertical
+		EscalaMovil.forzar = true
+		EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	var dir := OS.get_environment("OUT") if OS.get_environment("OUT") != "" else "/tmp/fotos_festejos"
 	DirAccess.make_dir_recursive_absolute(dir)
 	var p: Principal = load("res://escenas/principal.tscn").instantiate()
