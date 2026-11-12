@@ -178,7 +178,8 @@ static func abrir_convocatoria(p: Principal) -> void:
 	ev.paleta_noche = true
 	ev._montar_base(p)
 	var c := ev._centro
-	c.add_child(EventoPantallaCompleta.etiqueta("📋 %s · %s" % [Idiomas.t("Convocatoria"), cargo.seleccion], 34, Color.WHITE, true, false))
+	var de_pie := EscalaMovil.es_vertical()   ## (12-11) teléfono de pie: una sola columna de candidatos, a lo ancho
+	c.add_child(EventoPantallaCompleta.etiqueta("📋 %s · %s" % [Idiomas.t("Convocatoria"), cargo.seleccion], 24 if de_pie else 34, Color.WHITE, true, de_pie))
 	var cuenta := EventoPantallaCompleta.etiqueta("", 18, Tema.ORO)
 	c.add_child(cuenta)
 	c.add_child(EventoPantallaCompleta.etiqueta(Idiomas.t("Sin marcar a nadie van los mejores por puesto. Si a un puesto le faltan jugadores, se completa con jóvenes del país."), 14, Tema.SUAVE))
@@ -192,7 +193,7 @@ static func abrir_convocatoria(p: Principal) -> void:
 	c.add_child(listo)
 	listo.call_deferred("grab_focus")
 	var rej := GridContainer.new()
-	rej.columns = 2
+	rej.columns = 1 if de_pie else 2
 	rej.add_theme_constant_override("h_separation", 10)
 	c.add_child(rej)
 	var cands := SeleccionEquipo.candidatos(p.mundo, cargo.seleccion, 60)
@@ -203,7 +204,7 @@ static func abrir_convocatoria(p: Principal) -> void:
 		var club: Club = p.mundo.clubes.get(j.club_id)
 		cb.text = "%s · %s · %s · %d" % [j.pos, j.nombre, club.nombre if club != null else Idiomas.t("libre"), j.ovr]
 		cb.add_theme_font_size_override("font_size", Tema.letra(14))
-		cb.custom_minimum_size = Vector2(370, 0)
+		cb.custom_minimum_size = Vector2(480 if de_pie else 370, 0)
 		cb.clip_text = true
 		cb.button_pressed = cargo.convocados.has(j.id)
 		var id := j.id

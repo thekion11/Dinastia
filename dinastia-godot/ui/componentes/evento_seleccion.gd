@@ -10,7 +10,7 @@ static func oferta(pr: Principal, sel: Club, fuerza: int, sueldo: int) -> Evento
 	e.acento = Color(sel.color1) if sel.color1 != "#ffffff" else Color(sel.color2)
 	e._montar_base(pr)
 	e._centro.add_child(etiqueta("☎️ " + Idiomas.t("TE LLAMA UNA FEDERACIÓN"), 15, Tema.SUAVE))
-	e._centro.add_child(etiqueta("%s %s" % [Idiomas.t("Seleccionador de"), sel.nombre], 42, Color.WHITE, true, false))
+	e._centro.add_child(etiqueta("%s %s" % [Idiomas.t("Seleccionador de"), sel.nombre], 26 if EscalaMovil.es_vertical() else 42, Color.WHITE, true, EscalaMovil.es_vertical()))
 	e._centro.add_child(_escudo(sel, 150))
 	e._centro.add_child(etiqueta("%s %d · %s %s" % [Idiomas.t("Fuerza de la selección:"), fuerza, Idiomas.t("sueldo:"),
 		Idiomas.t("%s / semana") % pr._dinero(sueldo)], 18, Tema.TEXTO))
@@ -26,10 +26,10 @@ static func partido(pr: Principal, t: TorneoSelecciones, mia: Club, rival: Club)
 	e._centro.add_child(etiqueta("%s %d · %s" % [t.nombre.to_upper(), t.anio, Idiomas.t(t.nombre_fase())], 16, Tema.SUAVE))
 	var duelo := HBoxContainer.new()
 	duelo.alignment = BoxContainer.ALIGNMENT_CENTER
-	duelo.add_theme_constant_override("separation", 40)
+	duelo.add_theme_constant_override("separation", 6 if EscalaMovil.es_vertical() else 40)
 	e._centro.add_child(duelo)
 	duelo.add_child(_escudo(mia, 130))
-	duelo.add_child(etiqueta("VS", 40, Color.WHITE, true, false))
+	duelo.add_child(etiqueta("VS", 24 if EscalaMovil.es_vertical() else 40, Color.WHITE, true, false))
 	duelo.add_child(_escudo(rival, 130))
 	if t.en_grupos:
 		for g: Array in t.grupos:
@@ -50,17 +50,18 @@ static func fecha(pr: Principal, tipo: String, local: Club, visita: Club, mia: C
 	e._centro.add_child(etiqueta("%s · %s" % [Idiomas.t("FECHA FIFA"), Idiomas.t(tipo).to_upper()], 16, Tema.SUAVE))
 	var duelo := HBoxContainer.new()
 	duelo.alignment = BoxContainer.ALIGNMENT_CENTER
-	duelo.add_theme_constant_override("separation", 40)
+	duelo.add_theme_constant_override("separation", 6 if EscalaMovil.es_vertical() else 40)
 	e._centro.add_child(duelo)
 	duelo.add_child(_escudo(local, 130))
-	duelo.add_child(etiqueta("VS", 40, Color.WHITE, true, false))
+	duelo.add_child(etiqueta("VS", 24 if EscalaMovil.es_vertical() else 40, Color.WHITE, true, false))
 	duelo.add_child(_escudo(visita, 130))
 	e._botones([["jugar", "▶ " + Idiomas.t("Jugarlo"), true], ["simular", "⏭ " + Idiomas.t("Simularlo"), false]])
 	return e
 
 func _botones(lista: Array) -> void:
-	var fila := HBoxContainer.new()
-	fila.add_theme_constant_override("separation", 14)
+	## (12-11) Teléfono de pie: los botones apilados (tres en fila no caben en 500 px).
+	var fila: BoxContainer = VBoxContainer.new() if EscalaMovil.es_vertical() else HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 10 if EscalaMovil.es_vertical() else 14)
 	_centro.add_child(fila)
 	for par: Array in lista:
 		var b := boton(String(par[1]), bool(par[2]))
@@ -75,6 +76,8 @@ static func _escudo(c: Club, alto: int) -> Control:
 	var col := VBoxContainer.new()
 	col.alignment = BoxContainer.ALIGNMENT_CENTER
 	col.add_theme_constant_override("separation", 8)
+	if EscalaMovil.es_vertical():   ## de pie: escudos más chicos para que quepan los dos con el «VS»
+		alto = mini(alto, 96)
 	var tr := TextureRect.new()
 	tr.texture = Escudo.textura(c, alto)
 	tr.custom_minimum_size = Vector2(alto, alto)
@@ -82,8 +85,8 @@ static func _escudo(c: Club, alto: int) -> Control:
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	tr.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	col.add_child(tr)
-	var n := etiqueta(c.nombre, 22, Color.WHITE)
-	n.custom_minimum_size = Vector2(220, 0)
+	var n := etiqueta(c.nombre, 17 if EscalaMovil.es_vertical() else 22, Color.WHITE)
+	n.custom_minimum_size = Vector2(170 if EscalaMovil.es_vertical() else 220, 0)
 	col.add_child(n)
 	return col
 
@@ -91,7 +94,7 @@ static func _escudo(c: Club, alto: int) -> Control:
 static func _tabla(t: TorneoSelecciones, g: Array, mia: Club) -> Control:
 	var rej := GridContainer.new()
 	rej.columns = 5
-	rej.add_theme_constant_override("h_separation", 22)
+	rej.add_theme_constant_override("h_separation", 12 if EscalaMovil.es_vertical() else 22)
 	rej.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	for cab: String in ["", "PJ", "GF", "GC", "PTS"]:
 		rej.add_child(etiqueta(Idiomas.t(cab), 13, Tema.SUAVE, true, false))
