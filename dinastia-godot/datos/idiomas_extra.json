@@ -7966,7 +7966,9 @@
   "Sprint\ny regate": "Sprint\nand dribble",
   "Sprint\ny entrada": "Sprint\nand tackle",
   "2.º\ndefensor": "2nd\ndefender",
-  "Despeje": "Clearance"
+  "Despeje": "Clearance",
+  "TABLA": "TABLE",
+  "socios": "members"
  },
  "pt": {
   "Historia": "História",
@@ -15935,7 +15937,9 @@
   "Sprint\ny regate": "Sprint\ne drible",
   "Sprint\ny entrada": "Sprint\ne desarme",
   "2.º\ndefensor": "2.º\ndefensor",
-  "Despeje": "Corte"
+  "Despeje": "Corte",
+  "TABLA": "TABELA",
+  "socios": "sócios"
  },
  "patrones": [
   [
@@ -30044,7 +30048,9 @@
   "Sprint\ny regate": "Sprint\net dribble",
   "Sprint\ny entrada": "Sprint\net tacle",
   "2.º\ndefensor": "2e\ndéfenseur",
-  "Despeje": "Dégagement"
+  "Despeje": "Dégagement",
+  "TABLA": "CLASSEMENT",
+  "socios": "socios"
  },
  "it": {
   "Historia": "Storia",
@@ -38013,7 +38019,9 @@
   "Sprint\ny regate": "Sprint\ne dribbling",
   "Sprint\ny entrada": "Sprint\ne contrasto",
   "2.º\ndefensor": "2º\ndifensore",
-  "Despeje": "Rinvio"
+  "Despeje": "Rinvio",
+  "TABLA": "CLASSIFICA",
+  "socios": "soci"
  },
  "de": {
   "Historia": "Geschichte",
@@ -45982,7 +45990,9 @@
   "Sprint\ny regate": "Sprint\nund Dribbling",
   "Sprint\ny entrada": "Sprint\nund Tackling",
   "2.º\ndefensor": "2.\nVerteidiger",
-  "Despeje": "Klärung"
+  "Despeje": "Klärung",
+  "TABLA": "TABELLE",
+  "socios": "Mitglieder"
  },
  "ca": {
   "Historia": "Història",
@@ -53951,7 +53961,9 @@
   "Sprint\ny regate": "Sprint\ni regat",
   "Sprint\ny entrada": "Sprint\ni entrada",
   "2.º\ndefensor": "2n\ndefensor",
-  "Despeje": "Rebuig"
+  "Despeje": "Rebuig",
+  "TABLA": "CLASSIFICACIÓ",
+  "socios": "socis"
  },
  "pl": {
   "Club": "Klub",
@@ -61920,7 +61932,9 @@
   "Sprint\ny regate": "Sprint\ni drybling",
   "Sprint\ny entrada": "Sprint\ni wślizg",
   "2.º\ndefensor": "2.\nobrońca",
-  "Despeje": "Wybicie"
+  "Despeje": "Wybicie",
+  "TABLA": "TABELA",
+  "socios": "członków"
  },
  "tr": {
   "Club": "Kulüp",
@@ -69889,6 +69903,8 @@
   "Sprint\ny regate": "Sprint\nve çalım",
   "Sprint\ny entrada": "Sprint\nve müdahale",
   "2.º\ndefensor": "2.\nsavunmacı",
-  "Despeje": "Uzaklaştırma"
+  "Despeje": "Uzaklaştırma",
+  "TABLA": "PUAN DURUMU",
+  "socios": "üye"
  }
 }

@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -109,3 +109,32 @@ func _probar_estadios_variedad() -> void:
 	_comprobar(formas.size() >= 8, "al menos 8 formas distintas (hay %d)" % formas.size())
 	_comprobar(float(peor) / float(maxi(1, filas.size())) <= 0.4, "ninguna forma pasa del 40 %% de los estadios (la mayor: %d de %d)" % [peor, filas.size()])
 	_comprobar(mal.is_empty(), "lo generado cabe en el aforo del club (fallan %d: %s)" % [mal.size(), ", ".join(mal.slice(0, 4))])
+
+## (12-11, menú central frente al del PES 2020) La tabla corta del inicio: los 5 primeros y tu club en su puesto si va más abajo.
+func _probar_tabla_corta_inicio() -> void:
+	_titulo("TABLA CORTA DEL MENÚ CENTRAL")
+	for caso: Array in [["ESP", 4242], ["ARG", 91]]:
+		var m := Mundo.new()
+		var paises: Array[String] = []
+		paises.assign([caso[0]])
+		m.generar(paises, int(caso[1]))
+		var liga: Liga = m.ligas[0]
+		for k in 5:
+			liga.jugar_jornada()
+		var tabla := liga.tabla()
+		var ultimo: Club = tabla[tabla.size() - 1]["club"]
+		var lider: Club = tabla[0]["club"]
+		var f := ResumenInicio.filas_tabla(ultimo, liga, ResumenInicio.N_TABLA)
+		_comprobar(f.size() == ResumenInicio.N_TABLA + 1 and f[-1]["club"] == ultimo and int(f[-1]["pos"]) == tabla.size(),
+			"%s: el colista sale al final en su puesto (%d.º) tras los 5 primeros" % [caso[0], tabla.size()])
+		var g := ResumenInicio.filas_tabla(lider, liga, ResumenInicio.N_TABLA)
+		_comprobar(g.size() == ResumenInicio.N_TABLA and g[0]["club"] == lider and int(g[0]["pos"]) == 1, "%s: el líder no se repite" % caso[0])
+		var puntos_ok := true
+		for i in range(1, g.size()):
+			puntos_ok = puntos_ok and int(g[i - 1]["pts"]) >= int(g[i]["pts"])
+		_comprobar(puntos_ok, "%s: los puntos van de mayor a menor" % caso[0])
+		var ui := ResumenInicio.tabla_corta(ultimo, liga, func(_t: String) -> void: pass)
+		_comprobar(ui != null, "%s: la tarjeta se pinta" % caso[0])
+		if ui != null:
+			ui.free()
+	_comprobar(ResumenInicio.tabla_corta(null, null, func(_t: String) -> void: pass) == null, "sin liga no hay tarjeta")
