@@ -327,20 +327,30 @@ static func banda_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: Random
 ## CONTENER EN EL ÚLTIMO TERCIO (12-11-2026, sesión 13, decisión del líder). La IA entra en cuanto el portador queda a ~1,25 m: en el
 ## último tercio eso mataba la jugada antes del regate o la pared (~3,5 pérdidas por entrada por partido ahí). En C4, a menos de
 ## `CONTENER_D` m de su arco, el defensor solo entra con el radio de siempre si es buen momento (`MotorEntrada`: de espaldas, control
-## largo, pegado a la banda) o si es el ÚLTIMO hombre; si no, contiene y temporiza (radio × `CONTENER_K`).
+## largo, pegado a la banda) o si es el ÚLTIMO hombre; si no, contiene y temporiza (radio × `CONTENER_K`). v2: solo cuenta «de espaldas»
+## (el control largo se daba casi siempre al conducir y la primera versión no cambiaba nada: medido el 12-11).
 static var CONTENER := _bandera("C4_CONTENER", true)
 static var CONTENER_K := _num("C4_CONTENER_K", 0.6)
 const CONTENER_D := 32.0
 static func radio_entrada(m: Object, p: Dictionary, victima: Dictionary, base: float, r: float) -> float:
-	if not CONTENER or r > base + 0.01:
-		return r   ## buen momento: entra como siempre
+	if not CONTENER:
+		return r
 	var arco: Vector3 = m._arco_rival(victima)   ## el arco que defiende `p`
 	var pv: Vector3 = m.pos(victima)
-	if Vector2(pv.x - arco.x, pv.z - arco.z).length() > CONTENER_D:
-		return r
+	if Vector2(pv.x - arco.x, pv.z - arco.z).length() > CONTENER_D or _de_espaldas(m, p, victima):
+		return r   ## lejos de su arco, o el portador de espaldas (buen momento): entra como siempre
 	var yo_d := Vector2(m.pos(p).x - arco.x, m.pos(p).z - arco.z).length()
 	for q: Dictionary in m.jugadores:
 		if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and String(q["id"]) != String(p["id"]):
 			if Vector2(m.pos(q).x - arco.x, m.pos(q).z - arco.z).length() < yo_d - 1.0:
 				return r * CONTENER_K   ## hay cobertura detrás: contener
 	return r   ## último hombre: entra
+
+## ¿El portador está de espaldas al defensor? (como `MotorEntrada`; el control largo no cuenta aquí: al conducir casi siempre se cumplía)
+static func _de_espaldas(m: Object, p: Dictionary, victima: Dictionary) -> bool:
+	var n: Node3D = victima["node"]
+	var hacia: Vector3 = m.pos(p) - m.pos(victima)
+	hacia.y = 0.0
+	if hacia.length() < 0.05:
+		return false
+	return Vector3(sin(n.rotation.y), 0.0, cos(n.rotation.y)).dot(hacia.normalized()) < -0.2
