@@ -166,7 +166,11 @@ func _pintar_clubes() -> void:
 		g.columns = 7
 		g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		g.add_theme_constant_override("h_separation", 10)
-		p._lista_clubes.add_child(g)
+		## (12-11) Margen a la derecha: la barra de desplazamiento pisaba los puntos de las primeras filas.
+		var mg := MarginContainer.new()
+		mg.add_theme_constant_override("margin_right", 16)
+		mg.add_child(g)
+		p._lista_clubes.add_child(mg)
 		for enc in ["#", "CLUB", "PJ", "G", "E", "P", "PTS"]:
 			var ce := p._celda(g, CompeticionFilas.sigla(enc), p.COL_SUAVE, enc != "CLUB" and enc != "#", 11)   ## la sigla de la tabla, no el código en crudo: «G E P» no se traducen solos (3-11)
 			## (9-11, estética) Columnas numéricas de ancho fijo; el club se lleva el resto (antes todas se repartían por igual).
@@ -192,7 +196,10 @@ func _pintar_clubes() -> void:
 			b.icon = Escudo.textura(club, 20)
 			b.add_theme_constant_override("icon_max_width", 22)
 			b.add_theme_font_size_override("font_size", 12)
-			b.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ACENTO if club == p.mundo.mi_club() else p.COL_TEXTO))
+			## (12-11) El club propio, con el acento ACLARADO hasta leerse sobre el panel (un verde o un azul oscuro de club casi no se veía), y toda su fila con él.
+			var mio := club == p.mundo.mi_club()
+			var col_mio: Color = p._con_contraste(p.COL_ACENTO)
+			b.add_theme_color_override("font_color", col_mio if mio else p._color_de_paleta(p.COL_TEXTO))
 			b.pressed.connect(func() -> void:
 				p._clubes_ficha = null if p._clubes_ficha == club else club
 				_pintar_clubes())
@@ -202,7 +209,7 @@ func _pintar_clubes() -> void:
 				## Los puntos quitados por sanción, a la vista (−3 en rojo).
 				if clave == "pts" and int(fila.get("sancion", 0)) > 0:
 					txt += " (−%d)" % int(fila["sancion"])
-				var cn := p._celda(g, txt, p.COL_TEXTO if clave == "pts" else p.COL_SUAVE, true, 11)
+				var cn := p._celda(g, txt, col_mio if mio else (p.COL_TEXTO if clave == "pts" else p.COL_SUAVE), true, 11)
 				cn.size_flags_horizontal = Control.SIZE_FILL
 				cn.custom_minimum_size.x = ancho_col
 			puesto += 1
