@@ -368,6 +368,8 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		LigasActivas.fijar(m, datos["paises_activos"] as Array)
 	else:
 		LigasActivas.registrar(m)
+	if datos.get("paises_pendientes") is Array:   ## (12-11) ligas elegidas en Ajustes con la temporada en marcha
+		LigasActivas.programar(m, datos["paises_pendientes"] as Array)
 	m.copa = _dic_a_copa(datos.get("copa", {}), m)
 	CopasMundo.desde_dic(m, datos.get("copas_mundo", {}))
 	m.mercado.desde_dic(datos.get("mercado", {}))

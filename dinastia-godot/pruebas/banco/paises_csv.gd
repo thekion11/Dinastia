@@ -296,3 +296,37 @@ func _probar_ligas_activas_agregar_pantalla() -> void:
 	p.free()
 	var r := LigasActivas.agregar(m, ["ESP", "ENG"])
 	_comprobar((r["paises"] as Array).size() == 2 and LigasActivas.de(m).has("ESP") and not LigasActivas.faltan(m).has("ENG"), "lo añadido deja de faltar")
+
+## (12-11, como Football Manager) Con la temporada en marcha, las ligas elegidas en Ajustes quedan PROGRAMADAS: se guardan con la partida, no tocan
+## los torneos en curso y entran al cerrar la temporada.
+func _probar_ligas_programadas() -> void:
+	_titulo("LIGAS ACTIVAS: PROGRAMAR PARA LA PRÓXIMA TEMPORADA")
+	var m := Mundo.new()
+	m.generar(["PER", "URU"] as Array[String], 5150)
+	m.tomar_el_mando(m.ligas[0].clubes[2].id)
+	m.ligas[0].jugar_jornada()
+	_comprobar(not AjustesLigas.sin_empezar(m), "la temporada ya está en marcha")
+	var n_ligas := m.ligas.size()
+	LigasActivas.programar(m, ["COL", "PER", "ZZZ", "COL"])
+	_comprobar(LigasActivas.pendientes(m) == (["COL"] as Array[String]), "solo se programan países que existen y faltan, sin repetir (%s)" % str(LigasActivas.pendientes(m)))
+	_comprobar(m.ligas.size() == n_ligas and not LigasActivas.de(m).has("COL"), "programar no añade nada todavía")
+	var m2 := Partida.desde_instantanea(JSON.parse_string(JSON.stringify(Partida.instantanea(m))))
+	_comprobar(LigasActivas.pendientes(m2) == (["COL"] as Array[String]), "lo programado se guarda y se carga con la partida")
+	var r := LigasActivas.aplicar_pendientes(m2)
+	_comprobar((r["paises"] as Array) == ["COL"] and LigasActivas.de(m2).has("COL") and LigasActivas.pendientes(m2).is_empty(), "al aplicarlas entran y la lista se vacía")
+	_comprobar(int(r["clubes"]) > 0, "con sus clubes (%d)" % int(r["clubes"]))
+	LigasActivas.programar(m, [])
+	_comprobar(LigasActivas.pendientes(m).is_empty() and not m.has_meta(LigasActivas.META_PENDIENTES), "una lista vacía borra lo programado")
+	var p := LigasActivasPantalla.new()
+	p.mundo_agregar = m
+	add_child(p)
+	p.marcar("COL", true)
+	_comprobar(p.marcados() == (["COL"] as Array[String]), "la pantalla enseña marcado lo ya programado")
+	var recibido: Array = []
+	p.terminado.connect(func(d: Dictionary) -> void: recibido.append(d))
+	var esc := InputEventAction.new()
+	esc.action = "ui_cancel"
+	esc.pressed = true
+	p._unhandled_input(esc)
+	_comprobar(recibido.size() == 1 and bool((recibido[0] as Dictionary).get("cancelado", false)), "«Ahora no» avisa que se canceló (lo programado no se borra)")
+	p.free()

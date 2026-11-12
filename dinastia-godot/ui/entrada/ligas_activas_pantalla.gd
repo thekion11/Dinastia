@@ -108,7 +108,7 @@ func _ready() -> void:
 	var bv := Button.new()
 	bv.text = Idiomas.t("Ahora no") if agregando else Idiomas.t("Volver")
 	bv.custom_minimum_size = Vector2(130, 44)
-	bv.pressed.connect(func() -> void: terminado.emit({"ligas": {"paises": []}}) if mundo_agregar != null else volver.emit())
+	bv.pressed.connect(func() -> void: terminado.emit({"ligas": {"paises": []}, "cancelado": true}) if mundo_agregar != null else volver.emit())
 	fila.add_child(bv)
 	_continuar = Button.new()
 	_continuar.text = Idiomas.t("Añadir") if agregando else Idiomas.t("Continuar ▶")
@@ -143,6 +143,13 @@ func _atajo(que: String) -> void:
 		_rotular(_casillas[p] as Button)
 	_actualizar()
 
+## (12-11) Marca o desmarca un país (Ajustes lo usa para enseñar lo ya programado).
+func marcar(cod: String, si: bool) -> void:
+	if _casillas.has(cod):
+		(_casillas[cod] as BaseButton).set_pressed_no_signal(si)
+		_rotular(_casillas[cod] as Button)
+		_actualizar()
+
 func _rotular(b: Button) -> void:
 	b.text = "%s %s" % ["☑" if b.button_pressed else "☐", String(b.get_meta("etiqueta", ""))]
 
@@ -173,6 +180,6 @@ func _unhandled_input(ev: InputEvent) -> void:
 	if ev.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		if mundo_agregar != null:
-			terminado.emit({"ligas": {"paises": []}})   ## «ahora no»
+			terminado.emit({"ligas": {"paises": []}, "cancelado": true})   ## «ahora no»
 		else:
 			volver.emit()
