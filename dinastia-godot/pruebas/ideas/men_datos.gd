@@ -26,6 +26,19 @@ func _ready() -> void:
 			reales.append(String(sub["label"]))
 	for et: String in ["Cuentas del club", "Mercado de fichajes", "Personal del club", "La gente del club", "Enfermería", "Pizarra y dibujo", "Ligas y clubes", "Próximo partido"]:
 		_comprobar(reales.has(et) and DatoTarjeta.de(pr, et) != "", "«%s» existe en el menú y lleva dato (%s)" % [et, DatoTarjeta.de(pr, et)])
+	## Por SITIO: aunque a la tarjeta le cambien el rótulo, la que abre esa pantalla conserva su dato.
+	for sitio: String in DatoTarjeta.POR_SITIO:
+		var trozos := sitio.split(".")
+		var sub := {"tab": trozos[0], "label": "Un rótulo cualquiera"}
+		if trozos.size() > 1:
+			sub["secc"] = trozos[1]
+		var hay := false
+		for men: Dictionary in MenusLaterales.MENUS:
+			for s2: Dictionary in men["subs"]:
+				hay = hay or (String(s2.get("tab", "")) == trozos[0] and String(s2.get("secc", "")) == (trozos[1] if trozos.size() > 1 else ""))
+		_comprobar(hay, "el sitio «%s» existe en el menú" % sitio)
+		if not sitio in ["Clubes.goleadores", "Libres"]:   ## estos dos pueden ir vacíos en una partida nueva
+			_comprobar(DatoTarjeta.de_sub(pr, sub) != "", "«%s» lleva dato con cualquier rótulo (%s)" % [sitio, DatoTarjeta.de_sub(pr, sub)])
 	_comprobar(DatoTarjeta.de(pr, "Personal del club").contains("puestos"), "el personal cuenta puestos, no jugadores")
 	_comprobar(DatoTarjeta.de(pr, "Glosario") == "", "las que no tienen cifra, no")
 	Idiomas.idioma = "en"

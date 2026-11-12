@@ -28,7 +28,7 @@ const MENUS := MenusLaterales.MENUS
 
 ## Un dato vivo para la tarjeta de cada submenú en la portada del menú.
 static func dato(p: Principal, sub: Dictionary) -> String:
-	return DatoTarjeta.de(p, String(sub.get("label", "")))   ## M-290
+	return DatoTarjeta.de_sub(p, sub)   ## M-290; (12-11) por sitio, no por rótulo
 
 ## Los grupos de la barra de arriba que ahora viven aquí (la barra se queda
 ## con CENTRAL y CLUB).

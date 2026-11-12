@@ -8051,7 +8051,9 @@
   "Sin partido esta semana": "No match this week",
   "En casa: %s": "Home: %s",
   "Fuera: %s": "Away: %s",
-  "%s · %d goles": "%s · %d goals"
+  "%s · %d goles": "%s · %d goals",
+  "Entrada: %s": "Ticket: %s",
+  "Deuda: %s": "Debt: %s"
  },
  "pt": {
   "Historia": "História",
@@ -16105,7 +16107,9 @@
   "Sin partido esta semana": "Sem jogo esta semana",
   "En casa: %s": "Em casa: %s",
   "Fuera: %s": "Fora: %s",
-  "%s · %d goles": "%s · %d golos"
+  "%s · %d goles": "%s · %d golos",
+  "Entrada: %s": "Bilhete: %s",
+  "Deuda: %s": "Dívida: %s"
  },
  "patrones": [
   [
@@ -30299,7 +30303,9 @@
   "Sin partido esta semana": "Pas de match cette semaine",
   "En casa: %s": "À domicile : %s",
   "Fuera: %s": "À l'extérieur : %s",
-  "%s · %d goles": "%s · %d buts"
+  "%s · %d goles": "%s · %d buts",
+  "Entrada: %s": "Billet : %s",
+  "Deuda: %s": "Dette : %s"
  },
  "it": {
   "Historia": "Storia",
@@ -38353,7 +38359,9 @@
   "Sin partido esta semana": "Nessuna partita questa settimana",
   "En casa: %s": "In casa: %s",
   "Fuera: %s": "In trasferta: %s",
-  "%s · %d goles": "%s · %d gol"
+  "%s · %d goles": "%s · %d gol",
+  "Entrada: %s": "Biglietto: %s",
+  "Deuda: %s": "Debito: %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46407,7 +46415,9 @@
   "Sin partido esta semana": "Kein Spiel diese Woche",
   "En casa: %s": "Heim: %s",
   "Fuera: %s": "Auswärts: %s",
-  "%s · %d goles": "%s · %d Tore"
+  "%s · %d goles": "%s · %d Tore",
+  "Entrada: %s": "Eintritt: %s",
+  "Deuda: %s": "Schulden: %s"
  },
  "ca": {
   "Historia": "Història",
@@ -54461,7 +54471,9 @@
   "Sin partido esta semana": "Sense partit aquesta setmana",
   "En casa: %s": "A casa: %s",
   "Fuera: %s": "A fora: %s",
-  "%s · %d goles": "%s · %d gols"
+  "%s · %d goles": "%s · %d gols",
+  "Entrada: %s": "Entrada: %s",
+  "Deuda: %s": "Deute: %s"
  },
  "pl": {
   "Club": "Klub",
@@ -62515,7 +62527,9 @@
   "Sin partido esta semana": "Brak meczu w tym tygodniu",
   "En casa: %s": "U siebie: %s",
   "Fuera: %s": "Wyjazd: %s",
-  "%s · %d goles": "%s · %d goli"
+  "%s · %d goles": "%s · %d goli",
+  "Entrada: %s": "Bilet: %s",
+  "Deuda: %s": "Dług: %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70569,6 +70583,8 @@
   "Sin partido esta semana": "Bu hafta maç yok",
   "En casa: %s": "İç saha: %s",
   "Fuera: %s": "Deplasman: %s",
-  "%s · %d goles": "%s · %d gol"
+  "%s · %d goles": "%s · %d gol",
+  "Entrada: %s": "Bilet: %s",
+  "Deuda: %s": "Borç: %s"
  }
 }

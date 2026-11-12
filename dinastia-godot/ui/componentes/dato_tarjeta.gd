@@ -4,6 +4,19 @@ extends RefCounted
 ## ocho tarjetas, en castellano siempre, y el «Correo» contaba todo como sin leer (miraba «leido» y la bandeja guarda
 ## «leida»). Ahora lo tienen las de gestión que tienen una cifra que decir, y sale traducido. "" = la tarjeta no lleva dato.
 
+## (12-11) POR SITIO, no por nombre: la tarjeta que abre una pantalla concreta (`tab.secc`) toma su dato de aquí aunque le cambien el rótulo
+## (al renombrar «Finanzas» y «Mercado» sus tarjetas se quedaron sin dato y nadie lo vio). Las demás siguen por su rótulo.
+const POR_SITIO := {"Finanzas.cuentas": "finanzas", "Finanzas.taquilla": "taquilla", "Finanzas.banco": "banco", "Mercado": "mercado",
+	"Táctica.pizarra": "táctica", "Partido.previa": "próximo partido", "Clubes.tablas": "ligas y clubes", "Clubes.goleadores": "goleadores",
+	"Club.staff": "personal del club", "Gente.personas": "la gente del club", "Redes.redes": "feed de redes", "Enfermería": "enfermería",
+	"Libres": "jugadores libres", "Contratos": "contratos", "Calendario": "calendario", "Camarín": "camarín", "Correo": "correo"}
+
+static func de_sub(p: Principal, sub: Dictionary) -> String:
+	var sitio := String(sub.get("tab", ""))
+	if sub.has("secc"):
+		sitio += "." + String(sub["secc"])
+	return de(p, String(POR_SITIO.get(sitio, sub.get("label", ""))))
+
 static func de(p: Principal, etiqueta: String) -> String:
 	var m := p.mundo
 	if m == null or m.mi_club() == null:
@@ -65,6 +78,13 @@ static func de(p: Principal, etiqueta: String) -> String:
 		"premios":
 			return Idiomas.t("%d galas") % lg.premios.size() if lg != null else ""
 		## (12-11) Más tarjetas con dato: al partir los menús en pantallas, varias quedaron sin su línea de color.
+		"taquilla":
+			return Idiomas.t("Entrada: %s") % Eco.dinero_euros(c.precio_entrada)
+		"banco":
+			var deuda := 0
+			for pr: Dictionary in (m.banco.prestamos if m.banco != null else []):
+				deuda += int(pr.get("deuda", 0))
+			return Idiomas.t("Deuda: %s") % p._dinero(deuda) if deuda > 0 else Idiomas.t("sin deuda")
 		"la gente del club":
 			return Idiomas.t("Confianza media: %d") % m.gente.confianza_media() if m.gente != null else ""
 		"enfermería":
