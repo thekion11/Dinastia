@@ -7,21 +7,11 @@ func _pintar_redes() -> void:
 	var p_local := p.mundo.prensa
 	if p_local == null:
 		return
-	var g := GridContainer.new()
-	g.columns = 4
-	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_theme_constant_override("h_separation", 12)
-	p._lista_redes.add_child(g)
-	for par in [["Seguidores", p._miles(p_local.seguidores)], ["Funa", str(p_local.funa)],
-			["Ánimo", str(p_local.animo)], ["Prestigio DT", str(p_local.rep_entrenador)]]:
-		var col := VBoxContainer.new()
-		g.add_child(col)
-		var et := p._texto(10, Principal.COL_SUAVE)
-		et.text = String(par[0])
-		col.add_child(et)
-		var va := p._texto(16, Principal.COL_TEXTO)
-		va.text = String(par[1])
-		col.add_child(va)
+	## (12-11) Las cuatro cifras de las redes, en fichas grandes (`CifrasClave`); la funa cambia de color con el riesgo.
+	var col_funa: Color = Principal.COL_ROJO if p_local.funa > 60 else (Principal.COL_ORO if p_local.funa > 35 else Principal.COL_VERDE)
+	var txt: Color = p._color_de_paleta(Principal.COL_TEXTO)
+	p._lista_redes.add_child(CifrasClave.banda([[Idiomas.t("Seguidores"), p._miles(p_local.seguidores), txt], [Idiomas.t("Funa"), str(p_local.funa), p._color_accesible(col_funa)],
+		[Idiomas.t("Ánimo"), str(p_local.animo), txt], [Idiomas.t("Prestigio DT"), str(p_local.rep_entrenador), p._color_accesible(Principal.COL_ORO)]], p._color_de_paleta(Principal.COL_SUAVE)))
 	var estado := p._texto(11, Principal.COL_ROJO if p_local.funa > 60 else (Principal.COL_ORO if p_local.funa > 35 else Principal.COL_VERDE))
 	estado.text = (Idiomas.t("⚠️ Campaña activa en tu contra: el directorio lo está mirando.")
 		if p_local.funa > 60 else (Idiomas.t("Hay ruido en redes, pero se aguanta.")

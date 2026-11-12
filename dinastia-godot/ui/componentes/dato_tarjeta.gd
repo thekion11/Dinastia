@@ -23,8 +23,15 @@ static func de(p: Principal, etiqueta: String) -> String:
 			return Idiomas.t("%s socios") % p._miles(c.socios if c.socios > 0 else c.estadio_aforo)
 		"diseño del estadio", "estadio", "infraestructura":
 			return Idiomas.t("%s butacas") % p._miles(c.estadio_aforo)
-		"camarín", "personal del club":
+		"camarín":
 			return Idiomas.t("%d jugadores") % c.plantilla.size()
+		"personal del club":   ## (12-11) decía «25 jugadores»: el personal son los puestos del cuerpo técnico, no el plantel
+			if m.staff == null:
+				return ""
+			var con := 0
+			for k: String in m.staff.niveles:
+				con += 1 if int(m.staff.niveles[k]) > 0 else 0
+			return Idiomas.t("%d de %d puestos cubiertos") % [con, m.staff.niveles.size()]
 		"mi plantel":
 			return Idiomas.t("%d jugadores · media %d") % [c.plantilla.size(), roundi(c.media())]
 		"táctica":

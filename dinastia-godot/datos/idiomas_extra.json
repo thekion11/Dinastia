@@ -8039,7 +8039,10 @@
   "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ The head-to-head with each rival appears as soon as you face them.",
   "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 The top scorers of your era and the players with most appearances show up as the season goes on.",
   "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 The club's streaks and records are tracked from the first match.",
-  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Nothing to show here yet: it fills up as you play."
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Nothing to show here yet: it fills up as you play.",
+  "%d de %d puestos cubiertos": "%d of %d posts filled",
+  "Prestigio DT": "Manager prestige",
+  "Seguidores": "Followers"
  },
  "pt": {
   "Historia": "História",
@@ -16081,7 +16084,10 @@
   "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ O confronto direto com cada rival aparece assim que o defrontares.",
   "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Os marcadores da tua era e os que mais jogam aparecem com o avançar da época.",
   "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 As séries e as marcas do clube registam-se desde o primeiro jogo.",
-  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Ainda não há nada para mostrar aqui: enche-se ao jogar."
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Ainda não há nada para mostrar aqui: enche-se ao jogar.",
+  "%d de %d puestos cubiertos": "%d de %d cargos preenchidos",
+  "Prestigio DT": "Prestígio do treinador",
+  "Seguidores": "Seguidores"
  },
  "patrones": [
   [
@@ -30263,7 +30269,10 @@
   "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ Le face-à-face avec chaque rival apparaît dès que tu l'affrontes.",
   "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Les buteurs de ton ère et les joueurs les plus utilisés apparaissent au fil de la saison.",
   "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Les séries et les records du club sont enregistrés dès le premier match.",
-  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Rien à afficher ici pour l'instant : cela se remplit en jouant."
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Rien à afficher ici pour l'instant : cela se remplit en jouant.",
+  "%d de %d puestos cubiertos": "%d postes pourvus sur %d",
+  "Prestigio DT": "Prestige de l'entraîneur",
+  "Seguidores": "Abonnés"
  },
  "it": {
   "Historia": "Storia",
@@ -38305,7 +38314,10 @@
   "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ Il testa a testa con ogni rivale appare appena lo affronti.",
   "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 I marcatori della tua era e i più presenti appaiono con l'avanzare della stagione.",
   "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Le strisce e i primati del club si registrano dalla prima partita.",
-  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Ancora niente da mostrare qui: si riempie giocando."
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Ancora niente da mostrare qui: si riempie giocando.",
+  "%d de %d puestos cubiertos": "%d ruoli coperti su %d",
+  "Prestigio DT": "Prestigio allenatore",
+  "Seguidores": "Follower"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46347,7 +46359,10 @@
   "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ Der direkte Vergleich mit jedem Rivalen erscheint, sobald du gegen ihn spielst.",
   "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Die Torjäger deiner Ära und die Spieler mit den meisten Einsätzen erscheinen im Lauf der Saison.",
   "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Serien und Rekorde des Vereins werden ab dem ersten Spiel festgehalten.",
-  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Hier gibt es noch nichts zu sehen: Es füllt sich beim Spielen."
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Hier gibt es noch nichts zu sehen: Es füllt sich beim Spielen.",
+  "%d de %d puestos cubiertos": "%d von %d Stellen besetzt",
+  "Prestigio DT": "Trainer-Prestige",
+  "Seguidores": "Follower"
  },
  "ca": {
   "Historia": "Història",
@@ -54389,7 +54404,10 @@
   "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ El cara a cara amb cada rival apareix tan bon punt t'hi enfrontis.",
   "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Els golejadors de la teva era i els que més partits juguen apareixen en avançar la temporada.",
   "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Les ratxes i les marques del club es registren des del primer partit.",
-  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Encara no hi ha res a mostrar aquí: s'omple jugant."
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Encara no hi ha res a mostrar aquí: s'omple jugant.",
+  "%d de %d puestos cubiertos": "%d de %d llocs coberts",
+  "Prestigio DT": "Prestigi de l'entrenador",
+  "Seguidores": "Seguidors"
  },
  "pl": {
   "Club": "Klub",
@@ -62431,7 +62449,10 @@
   "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ Bilans z każdym rywalem pojawi się, gdy tylko z nim zagrasz.",
   "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Strzelcy twojej ery i zawodnicy z największą liczbą meczów pojawią się w trakcie sezonu.",
   "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Serie i rekordy klubu są zapisywane od pierwszego meczu.",
-  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Nie ma tu jeszcze nic do pokazania: zapełni się w trakcie gry."
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Nie ma tu jeszcze nic do pokazania: zapełni się w trakcie gry.",
+  "%d de %d puestos cubiertos": "Obsadzono %d z %d stanowisk",
+  "Prestigio DT": "Prestiż trenera",
+  "Seguidores": "Obserwujący"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70473,6 +70494,9 @@
   "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ Her rakiple aranızdaki karşılaşmalar, onunla oynar oynamaz görünür.",
   "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Senin dönemindeki golcüler ve en çok oynayanlar sezon ilerledikçe görünür.",
   "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Kulübün serileri ve rekorları ilk maçtan itibaren kaydedilir.",
-  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Burada henüz gösterilecek bir şey yok: oynadıkça dolar."
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Burada henüz gösterilecek bir şey yok: oynadıkça dolar.",
+  "%d de %d puestos cubiertos": "%d / %d görev dolu",
+  "Prestigio DT": "Teknik direktör prestiji",
+  "Seguidores": "Takipçi"
  }
 }
