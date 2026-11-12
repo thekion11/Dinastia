@@ -89,13 +89,30 @@ static func cara_de_tono(piel: Color, i: int) -> String:
 
 ## Cara y corte para un personaje, siempre los mismos para la misma semilla. La
 ## cara, del tono de piel más parecido a `piel`.
-static func para(semilla: String, piel: Color, color_pelo: Color) -> Dictionary:
+## Con `corte` (el del retrato 2D, `CaraDT.CORTES`), el corte 3D sale de los de la misma familia
+## (12-11): antes se elegía entre los 44 al azar y un «rapado» del retrato podía salir con melena en el
+## campo, o un «corto» con una nuca larga hasta el cuello.
+const FAMILIA_CORTE := {
+	"corto": ["normal", "degradado", "tupe"], "rapado": ["rapado", "degradado"], "calvo": ["calvo"],
+	"entradas": ["rapado", "normal"], "fade": ["degradado", "rapado"], "undercut": ["degradado", "tupe"],
+	"tupe": ["tupe"], "pincho": ["tupe"], "crestas": ["tupe"], "mohicano": ["tupe", "degradado"],
+	"flequillo": ["normal"], "ondulado": ["normal", "tupe"], "tazon": ["normal"],
+	"rizado": ["melena_rizada", "afro"], "afro": ["afro", "melena_rizada"],
+	"largo": ["melena"], "melena": ["melena"], "coleta": ["melena"], "cortina": ["melena", "normal"],
+	"moño": ["melena"], "trenzas": ["melena_rizada"], "rastas": ["melena_rizada"], "mullet": ["melena", "normal"]}
+
+static func para(semilla: String, piel: Color, color_pelo: Color, corte := "") -> Dictionary:
 	_cargar()
 	if _caras.is_empty():
 		return {}
 	var del := del_tono(piel)
 	var h := absi(hash(semilla))
 	var p := pelos()
+	if FAMILIA_CORTE.has(corte):
+		var fam: Array = FAMILIA_CORTE[corte]
+		var del_corte := p.filter(func(k: String) -> bool: return String((_pelos[k] as Dictionary).get("corte", "")) in fam)
+		if not del_corte.is_empty():
+			p = del_corte
 	return {"cara": String(del[h % del.size()]),
 		"pelo": String(p[(h / 7) % p.size()]) if not p.is_empty() else "",
 		"color_pelo": "#" + color_pelo.to_html(false)}

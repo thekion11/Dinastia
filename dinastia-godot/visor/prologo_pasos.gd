@@ -21,7 +21,7 @@ const PASOS := [
 		"controles": ["mover", "correr"]},
 	{"clave": "puerta", "planta": 0, "zona": "", "fuera": true,
 		"frases": [
-			"Así se camina por aquí. La cámara la giras con el ratón o el stick derecho; con V ves en primera persona.",
+			"Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.",   ## (12-11) en el juego, solo primera persona
 			"El portero abre a quien conoce. Habla con él y entramos.",
 		],
 		"controles": ["usar"]},

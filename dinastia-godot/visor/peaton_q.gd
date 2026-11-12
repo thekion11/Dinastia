@@ -101,7 +101,7 @@ static func terminar(d: Dictionary) -> void:
 	## varias caras, nunca la de nadie; sin ella todos tenían la mandíbula del
 	## modelo de superhéroe. (Las mezclas salen de hombres: en mujer no van.)
 	if not mujer and BibliotecaCaras.hay() and OS.get_environment("SIN_CARAS_PEATON") == "":
-		var bib := BibliotecaCaras.para(str(d["semilla"]), piel, pelo_col)
+		var bib := BibliotecaCaras.para(str(d["semilla"]), piel, pelo_col, corte)
 		if not bib.is_empty():
 			bib["pelo"] = ""
 			VestidorQ.poner_cara(d, {"look": {}, "foto": "", "biblio": bib}, piel)

@@ -113,6 +113,11 @@ func _quitar(que: String) -> void:
 		"jugadores": for n in _pj.motor.jugadores: ((n as Dictionary)["node"] as Node3D).visible = false
 		"mundo3d": _pj._vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
+func _llamadas() -> int:
+	for i in 3:
+		await get_tree().process_frame
+	return int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
+
 func _medir() -> void:
 	if OS.get_environment("CPU") == "":
 		## Escena CONGELADA (cámara, jugadores y balón quietos): los conteos entre dos ocultaciones se comparan sin deriva (en marcha, las llamadas bailan entre 400 y 700 según el momento).
@@ -152,6 +157,45 @@ func _medir() -> void:
 		claves.sort_custom(func(a, b) -> bool: return por_padre[a] > por_padre[b])
 		for k in claves.slice(0, 25):
 			print("LISTA %4d  %s" % [por_padre[k], k])
+		get_tree().quit()
+		return
+	if OS.get_environment("POR_HUD") != "":
+		## POR_HUD=1 (12-11): cuántas llamadas pesa cada pieza 2D del partido (hijos Control de PartidoJugable y de los controles táctiles).
+		var base_h: int = await _llamadas()
+		print("HUD base %d llamadas" % base_h)
+		var piezas: Array = []
+		for h in _pj.get_children():
+			if h is Control and not (h is SubViewportContainer) and (h as Control).visible:
+				piezas.append(h)
+		var ct := _pj.get_node_or_null("ControlesTactiles")
+		if ct != null:
+			for h in ct.get_children():
+				if h is CanvasItem and (h as CanvasItem).visible:
+					piezas.append(h)
+		for h: CanvasItem in piezas:
+			h.visible = false
+			var ll: int = await _llamadas()
+			h.visible = true
+			var texto := ""
+			for l in h.find_children("*", "Label", true, false):
+				texto += (l as Label).text.substr(0, 18) + "|"
+			print("HUD -%3d  %s (%s) %s" % [base_h - ll, h.name, h.get_class(), texto])
+		get_tree().quit()
+		return
+	if OS.get_environment("POR_HIJO") != "":
+		## POR_HIJO=1 (12-11): cuántas llamadas pesa cada hijo de la escena 3D (se oculta uno, se cuenta y se vuelve a mostrar).
+		var base_ll: int = await _llamadas()
+		var filas: Array = []
+		for h in _pj._raiz.get_children():
+			if not (h is Node3D) or not (h as Node3D).visible:
+				continue
+			(h as Node3D).visible = false
+			var ll: int = await _llamadas()
+			(h as Node3D).visible = true
+			filas.append([base_ll - ll, "%s (%s, %d hijos)" % [h.name, h.get_class(), h.get_child_count()]])
+		filas.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])
+		for f: Array in filas.slice(0, 25):
+			print("HIJO -%4d  %s" % [f[0], f[1]])
 		get_tree().quit()
 		return
 	if OS.get_environment("CONTEO") != "":

@@ -117,7 +117,8 @@ const PLANTAS := [
 ## libros en la estantería). Los muy del club (trofeo, bandera, bufanda, pizarra,
 ## maqueta, guitarra, balón) siguen hechos a mano con sus colores.
 const DECO_MODULAR := {
-	"planta": [["pottedPlant", -1, 2.2]],
+	## (12-11) "planta" ya no usa `pottedPlant` (una caja con una bola verde, muy de juguete en primera persona): va hecha a mano
+	## con `PlantaDecor` (maceta y hojas en una sola malla).
 	"sofa": [["loungeSofa", -1, null]],
 	"tele": [["cabinetTelevision", -1, null], ["televisionModern", 0, null]],
 	"alfombra": [["rugRound", -1, null]],
@@ -190,8 +191,7 @@ static func _ascensor(nodo: Node3D, x0: float, z_fin: float, y0: float) -> void:
 	boton.emission_enabled = true
 	boton.emission = Color(1, 0.75, 0.25)
 	PiezasObra._caja(nodo, Vector3(x0 + ASC_X1 + 0.1, y0 + 1.2, z_fin - 0.1), Vector3(0.12, 0.25, 0.04), boton, false)
-	if absf(y0) < 0.01:   ## las demás plantas ya llevan encima su rótulo «PLANTA n · …»
-		PiezasObra._rotulo(nodo, Idiomas.t("ASCENSOR"), Vector3(cx, y0 + 2.95, z_fin - 0.14), PI, 28, Color(0.2, 0.22, 0.26))
+	if absf(y0) < 0.01:   PiezasObra._rotulo(nodo, Idiomas.t("ASCENSOR"), Vector3(cx, y0 + 2.95, z_fin - 0.14), PI, 28, Color(0.2, 0.22, 0.26))   ## solo la planta 0: las demás llevan «PLANTA n · …»
 
 ## La pared del fondo del sótano (−2), con la puerta de la galería que lleva
 ## al complejo (`GaleriaClub`). En el estadio suelto no hay complejo: persiana.

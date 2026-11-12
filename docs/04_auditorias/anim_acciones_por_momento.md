@@ -52,5 +52,5 @@ Ahora SÍ hay animaciones libres de **pase/tiro (patadas), saque de banda, carre
 
 1. Entrada deslizante: el motor arranca `Slide_Start` a la velocidad de carrera, mantiene `Slide_Loop` mientras el jugador se desliza (frenándolo) y cierra con `Slide_Exit`; si la entrada falla, `LayToIdle` (1,5 s) levanta al jugador.
 2. Faltas: elegir `Hit_Chest`/`Hit_Head` (0,3-0,4 s, sin caída) para contacto leve; `Hit_Knockback` + `LayToIdle` para falta fuerte; `Death01` solo para lesión.
-3. Disputa aérea: `Jump_Start` al llegar el balón, `Jump_Loop` en el aire, `Jump_Land` al caer; el cabezazo no existe como clip libre (se puede superponer el giro de cuello/torso por código).
+3. Disputa aérea: `Jump_Start` al llegar el balón, `Jump_Loop` en el aire, `Jump_Land` al caer; el cabezazo no existe como clip libre (se puede superponer el giro de cuello/torso por código). **HECHO de otra forma (12-11, sesión 14)**: los clips propios de cabezazo ya saltan; `LeagueAcciones` los arranca 0,3 s ANTES del contacto para los dos que disputan (ver `partido_visual_2026-11-12.md`).
 4. Celebración: `Dance_Loop` de 1 s en bucle; variar con las 3 de Rohr cuando haya licencia.

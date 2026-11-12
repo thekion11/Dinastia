@@ -24,16 +24,9 @@ static func _objeto(nodo: Node3D, clave: String, p: Vector3, giro: float, c1: Co
 	nodo.add_child(raiz)
 	var oro: StandardMaterial3D = Texturas.metal(Color(0.95, 0.78, 0.3), 0.25)
 	match clave:
-		"planta":
-			PiezasObra._caja(raiz, Vector3(0, 0.25, 0), Vector3(0.45, 0.5, 0.45), _m(Color(0.55, 0.35, 0.25)), true)
-			var copa := MeshInstance3D.new()
-			var sm := SphereMesh.new()
-			sm.radius = 0.45
-			sm.height = 0.9
-			copa.mesh = sm
-			copa.position = Vector3(0, 0.95, 0)
-			copa.material_override = _m(Color(0.22, 0.5, 0.22), 0.9)
-			raiz.add_child(copa)
+		"planta":   ## (12-11) maceta con hojas en una sola malla (`PlantaDecor`); antes, caja + esfera verde
+			raiz.add_child(PlantaDecor.nodo())
+			raiz.add_child(PlantaDecor.choque())   ## se sigue sin poder atravesar, como la maceta de antes
 		"sofa":
 			PiezasObra._caja(raiz, Vector3(0, 0.25, 0), Vector3(1.8, 0.5, 0.8), _m(c1.lerp(Color(0.2, 0.2, 0.22), 0.3), 0.9), true)
 			PiezasObra._caja(raiz, Vector3(0, 0.6, -0.33), Vector3(1.8, 0.7, 0.15), _m(c1.lerp(Color(0.2, 0.2, 0.22), 0.3), 0.9), false)

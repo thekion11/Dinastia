@@ -156,6 +156,7 @@ func _montar() -> void:
 	_cuerpo = Control.new()
 	_cuerpo.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_raiz.add_child(_cuerpo)
+	_raiz.add_child(PieMando.crear(func() -> bool: return true))   ## (12-11, PES) ayudas del mando: aquí LB/RB = submenú, LT/RT = menú
 	## Estos menús no se repintan con la principal: se traducen aquí (el volver,
 	## el título y las pestañas; el contenido de cada submenú lo traduce la
 	## principal al repintar).

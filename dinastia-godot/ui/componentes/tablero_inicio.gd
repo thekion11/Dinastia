@@ -30,9 +30,6 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, liga: Liga, ir: C
 	else:
 		raiz.add_child(_linea_partido(c, mundo, dias_al_partido, ir))
 	raiz.add_child(_racha(c, liga))
-	var tabla := ResumenInicio.tabla_corta(c, liga, ir)   ## (12-11, menú del PES) los 5 primeros, tu puesto y tus socios
-	if tabla != null:
-		raiz.add_child(tabla)
 	var obj := ObjetivoDirectiva.fila(mundo, c, liga)   ## (10-11, idea del PES) el objetivo de la directiva con su barra de progreso
 	if obj != null:
 		raiz.add_child(obj)

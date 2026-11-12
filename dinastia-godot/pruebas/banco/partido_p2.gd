@@ -437,4 +437,13 @@ func _probar_paciencia_c4() -> void:
 		if MejorasC4.ganas_tiro(motor, yo, 26.0, 0.4, 3.0, rng) > 0.0:
 			a_26_solo += 1
 	_comprobar(a_26 < a_26_solo, "con un compañero mejor colocado se tira menos (%d frente a %d de 300)" % [a_26, a_26_solo])
+	## Falta lateral ensayada: desde el costado se centra; centrada y cerca, no (se tira como siempre); el de siempre no ensaya.
+	_comprobar(not motor._saque_ensayado(yo, "falta", Vector3(20.0, 0, arco.z - d * 22.0)), "el motor de siempre no ensaya faltas")
+	_comprobar(not MejorasC4.falta_ensayada(motor, yo, Vector3(0.0, 0, arco.z - d * 20.0), rng), "la falta centrada a 20 m se tira a puerta")
+	_comprobar(MejorasC4.falta_ensayada(motor, yo, Vector3(22.0, 0, arco.z - d * 18.0), rng) and int(motor.diag.get("c4_falta_ensayada", 0)) == 1, "la falta lateral se centra al área")
+	motor._tiro_vivo = {}
+	_comprobar(MejorasC4.seguir_tiro(motor, comp) == Vector3.INF, "sin un tiro en curso nadie sigue el rechace")
+	(comp["node"] as Node3D).position = Vector3(2.0, 0, arco.z - d * 10.0)
+	motor._tiro_vivo = {"p": yo, "t": motor.t, "clase": "pie"}
+	_comprobar(MejorasC4.seguir_tiro(motor, comp) != Vector3.INF or not MejorasC4.SEGUIR, "tras el tiro, un compañero cercano corre al rechace")
 	(r[1] as Node3D).queue_free()

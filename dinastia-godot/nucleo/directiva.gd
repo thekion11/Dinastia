@@ -67,9 +67,10 @@ const MAX_CONSEJEROS := 2
 
 var consejeros: Dictionary = {}   ## clave de CONSEJEROS -> {nombre, edad, perfil}
 
-func _init(c: Club, puesto_esperado: int) -> void:
+## `n_liga`: los clubes de su liga (12-11: antes los cortes eran fijos para 16 y en una liga de 13 —Malasia— «Evitar el descenso» pedía el 14.º).
+func _init(c: Club, puesto_esperado: int, n_liga: int = 16) -> void:
 	club = c
-	_fijar_objetivo(puesto_esperado)
+	_fijar_objetivo(puesto_esperado, n_liga)
 
 func tiene_consejero(k: String) -> bool:
 	return consejeros.has(k)
@@ -170,22 +171,25 @@ func desde_dic(datos: Dictionary) -> void:
 ## El objetivo sale del puesto que le corresponde al club por su reputación, no
 ## de su posición actual: si no, un grande que empieza mal se libraría de que le
 ## exijan.
-func _fijar_objetivo(rank: int) -> void:
+## Los cortes, a escala de una liga de 16 (con 16 dan lo de siempre: 2, 6/4, 12/8 y 14).
+func _fijar_objetivo(rank: int, n: int = 16) -> void:
+	n = maxi(n, 4)
+	var k := func(x: int) -> int: return clampi(int(round(float(x) * float(n) / 16.0)), 1, n)
 	if club.division == 2:
-		objetivo = "Ascender a Primera" if rank <= 3 else "Pelear el ascenso (top 6)"
-		meta_puesto = 2 if rank <= 3 else 6
-	elif rank <= 2:
+		objetivo = "Ascender a Primera" if rank <= k.call(3) else "Pelear el ascenso (top 6)"
+		meta_puesto = k.call(2) if rank <= k.call(3) else k.call(6)
+	elif rank <= k.call(2):
 		objetivo = "Salir campeón"
 		meta_puesto = 1
-	elif rank <= 6:
+	elif rank <= k.call(6):
 		objetivo = "Clasificar a copa internacional (top 4)"
-		meta_puesto = 4
-	elif rank <= 12:
+		meta_puesto = k.call(4)
+	elif rank <= k.call(12):
 		objetivo = "Terminar en la mitad superior (top 8)"
-		meta_puesto = 8
+		meta_puesto = k.call(8)
 	else:
 		objetivo = "Evitar el descenso"
-		meta_puesto = 14
+		meta_puesto = clampi(n - 2, 1, n)
 
 ## Fija el paquete de objetivos propio de este club (liga, secundarios y proyecto). Con `mantener_proyecto`, un proyecto a medias sigue en marcha.
 ## No pisa el objetivo de liga si otro sistema lo cambió a mano (el interino, el incendio…).

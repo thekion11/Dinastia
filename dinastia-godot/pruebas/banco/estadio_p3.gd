@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/estadio_p2.gd"
-## [Capa extra de `estadio.gd`, 10-11] _probar_ocultar_estadio_dentro, _probar_precarga_menu
+## [Capa extra de `estadio.gd`, 10-11] _probar_ocultar_estadio_dentro, _probar_precarga_menu, _probar_futbolista_visual y _probar_acciones_visuales (12-11)
 
 ## (10-11, rendimiento en móvil) Dentro del edificio del club (plantas distintas de la 0) no se dibuja el estadio de fuera; al volver a la 0 queda como estaba (lo que ya estaba oculto, oculto).
 func _probar_ocultar_estadio_dentro() -> void:
@@ -223,3 +223,134 @@ func _probar_avatares_realistas() -> void:
 	_comprobar(ninguno_editable, "el editor del jugador no ofrece ningún color reservado")
 	var asp_j := PersonajeDT.aspecto({"color_pelo": AparienciaPersonal.COLORES_PELO_PERSONAL[0]})
 	_comprobar(not AparienciaPersonal.es_reservado(String(asp_j["color_pelo"])), "un personaje de jugador con color reservado cae al castaño: no puede elegirlo")
+
+## (12-11, sesión 14) Futbolistas de cerca: la horma de la bota tapa los dedos, el borde de la cara de la
+## biblioteca se apoya en la piel y el corte 3D sale de la familia del corte del retrato.
+func _probar_futbolista_visual() -> void:
+	_titulo("FUTBOLISTAS DE CERCA: HORMA DE LA BOTA, BORDE DE LA CARA, CORTE DEL RETRATO")
+	## Un pie de juguete: planta, empeine y cinco «dedos» con huecos entre ellos (los dos pies, ±x).
+	var pie := PackedVector3Array()
+	for lado: float in [-1.0, 1.0]:
+		for z in range(-12, 3):
+			for t in 12:
+				var a := TAU * t / 12.0
+				pie.append(Vector3(lado * (0.13 + 0.045 * cos(a)), 0.03 + 0.03 * sin(a), z * 0.01))
+		for dedo in 5:
+			var cx := 0.095 + dedo * 0.019
+			for z in range(4, 12):
+				for t in 8:
+					var a := TAU * t / 8.0
+					pie.append(Vector3(lado * (cx + 0.007 * cos(a)), 0.012 + 0.01 * sin(a), z * 0.01 - dedo * 0.006))
+	var r := BotasQ.horma(pie)
+	var nuevo: PackedVector3Array = r[0]
+	_comprobar(nuevo.size() == pie.size() and (r[1] as Dictionary).size() > 0, "la horma mueve la puntera y da sus normales exactas (%d)" % (r[1] as Dictionary).size())
+	## La puntera es UNA superficie: cada vértice de los dedos queda en el borde de la sección analítica
+	## (r = 1); antes, los dedos sueltos caían dentro y fuera (r de 0,2 a 1,5).
+	var cap := BotasQ._medir_puntera(pie)
+	var r_min := 9.0
+	var r_max := 0.0
+	var r_min0 := 9.0
+	var r_max0 := 0.0
+	for i in pie.size():
+		if pie[i].z < BotasQ.ZC or pie[i].y > BotasQ.Y_MAX or cap.is_empty():
+			continue
+		for par: Array in [[nuevo[i], true], [pie[i], false]]:
+			var q: Vector3 = par[0]
+			var sec := BotasQ._seccion_puntera(cap, q.z)
+			var rr := pow(pow(absf((absf(q.x) - float(sec[0])) / float(sec[2])), BotasQ.P) + pow(absf((q.y - float(sec[1])) / float(sec[3])), BotasQ.P), 1.0 / BotasQ.P)
+			if par[1]:
+				r_min = minf(r_min, rr)
+				r_max = maxf(r_max, rr)
+			else:
+				r_min0 = minf(r_min0, rr)
+				r_max0 = maxf(r_max0, rr)
+	_comprobar(r_max - r_min < 0.02 and r_max0 - r_min0 > 0.3, "los dedos quedan en una sola puntera lisa (r %.2f-%.2f; antes %.2f-%.2f)" % [r_min, r_max, r_min0, r_max0])
+	var talon_igual := true
+	for i in pie.size():
+		if pie[i].z < BotasQ.Z0 - 0.001 or pie[i].y > BotasQ.Y_MAX:
+			talon_igual = talon_igual and pie[i] == nuevo[i]
+	_comprobar(talon_igual, "el talón y la pierna no se tocan")
+	var simetria := true
+	var n_lado := pie.size() / 2
+	for i in n_lado:
+		simetria = simetria and is_equal_approx(nuevo[i].x, -nuevo[i + n_lado].x) and is_equal_approx(nuevo[i].y, nuevo[i + n_lado].y)
+	_comprobar(simetria, "los dos pies quedan iguales (espejo)")
+	## Corte del retrato → corte 3D de su familia, siempre el mismo para el mismo id.
+	if BibliotecaCaras.hay():
+		var piel := Color(0.8, 0.62, 0.5)
+		for corte: String in ["corto", "rapado", "rizado", "melena", "tupe"]:
+			var ok := true
+			for i in 12:
+				var b := BibliotecaCaras.para("j%d" % i, piel, Color.BLACK, corte)
+				var nombre := BibliotecaCaras.nombre_pelo(String(b["pelo"]))
+				ok = ok and nombre in BibliotecaCaras.FAMILIA_CORTE[corte] and b == BibliotecaCaras.para("j%d" % i, piel, Color.BLACK, corte)
+			_comprobar(ok, "un «%s» del retrato lleva en el campo un corte de su familia %s" % [corte, str(BibliotecaCaras.FAMILIA_CORTE[corte])])
+		_comprobar(BibliotecaCaras.para("j1", piel, Color.BLACK) == BibliotecaCaras.para("j1", piel, Color.BLACK, "no_existe"), "sin corte conocido, la elección de siempre")
+	## El borde pegado: con una cabeza de juguete (esfera de 9 cm) el anillo queda sobre la piel.
+	var cab := PackedVector3Array()
+	var nor := PackedVector3Array()
+	var centro := Vector3(0, 1.68, -0.01)
+	for i in 40:
+		for j in 80:
+			var th := PI * (i + 0.5) / 40.0
+			var ph := TAU * j / 80.0
+			var n := Vector3(sin(th) * cos(ph), cos(th), sin(th) * sin(ph))
+			cab.append(centro + n * 0.09)
+			nor.append(n)
+	CaraMalla._cargar()
+	var cara: PackedVector3Array = PackedVector3Array()
+	cara.resize(CaraMalla._alfa.size())
+	if CaraMalla._alfa.size() > CaraMalla.N:
+		for i in cara.size():
+			var ph := -PI * 0.5 + (float(i % 30) / 30.0 - 0.5) * 2.2
+			var n := Vector3(cos(ph) * 0.9, (float(i / 30) / 17.0 - 0.5) * 0.8, -sin(ph)).normalized()
+			cara[i] = centro + n * 0.102   ## 12 mm en el aire
+		var peg := CaraMalla._pegar_borde(cara, {"v": cab, "n": nor, "id": "esfera_banco"})
+		var lejos := 0
+		var n_borde := 0
+		var peor := 0.0
+		for i in peg.size():
+			if CaraMalla._alfa[i] <= 0.0:
+				n_borde += 1
+				peor = maxf(peor, absf(peg[i].distance_to(centro) - 0.0915))
+				if absf(peg[i].distance_to(centro) - 0.0915) > 0.002:
+					lejos += 1
+		_comprobar(n_borde > 0 and lejos == 0, "el anillo de la cara (%d vértices, 12 mm en el aire) queda a 1,5 mm de la piel (error máx. %.1f mm)" % [n_borde, peor * 1000.0])
+
+## (12-11, sesión 14) Acciones que solo se ven: el salto a disputar llega a tiempo, las variantes nuevas no cambian cuánto dura el
+## gesto para el motor y un clip propio no lo pisa un ciclo. (Que el partido de C4 salga IDÉNTICO con y sin esta capa se midió con
+## `comparar_tres_motores`, 6 cruces: informe `partido_visual_2026-11-12.md`.)
+func _probar_acciones_visuales() -> void:
+	_titulo("ACCIONES DEL PARTIDO: DISPUTA AÉREA A TIEMPO Y VARIANTES NEUTRAS")
+	var g := Balance.GRAVEDAD
+	var tc := LeagueAcciones.tiempo_a_altura(3.0, -1.0, 2.05, g)
+	_comprobar(absf(3.0 - 1.0 * tc - 0.5 * g * tc * tc - 2.05) < 0.001 and tc > 0.0, "el tiempo hasta la altura del cabezazo es el de la caída (%.2f s)" % tc)
+	_comprobar(LeagueAcciones.tiempo_a_altura(1.0, 0.0, 2.05, g) < 0.0, "un balón que no llega a 2,05 m no hace saltar a nadie")
+	## Un jugador con AnimationPlayer de juguete: el clip de salto, un ciclo y un gesto con otra duración.
+	var ap := AnimationPlayer.new()
+	add_child(ap)
+	var lib := AnimationLibrary.new()
+	for par: Array in [["cabezazo_potente", 1.0], ["cabezazo", 1.0], ["cabezazo_picado", 1.0], ["correr", 0.8], ["parado", 2.0],
+			["entrada_de_pie", 0.8], ["entrada_lateral_pie", 0.8], ["anticipacion", 0.9]]:
+		var a := Animation.new()
+		a.length = float(par[1])
+		lib.add_animation(String(par[0]), a)
+	ap.add_animation_library("", lib)
+	var p := {"id": "j_banco", "anim": ap, "vel": Vector3.ZERO, "es_local": true, "por": false, "anim_actual": "correr"}
+	LeagueAcciones.despegar(10.0, p)
+	_comprobar(p.has("ls_propio_hasta") and String(p["ls_propio_clip"]).begins_with("cabezazo") and ap.current_animation == String(p["ls_propio_clip"]),
+		"el que va a disputar arranca su clip de cabezazo antes del contacto")
+	_comprobar(LeagueAcciones.ocupado(p, 10.1, "correr", false, 1.4), "en el aire, un ciclo (correr) no pisa el salto")
+	_comprobar(LeagueAcciones.ocupado(p, 10.3, "cabezazo", true, 1.4) and not p.has("ls_propio_hasta") and is_equal_approx(float(p["gesto_hasta"]), 11.3),
+		"el cabezazo de verdad sigue con el salto que ya va y el motor queda como si lo hubiera puesto él (gesto hasta %.2f)" % float(p.get("gesto_hasta", 0.0)))
+	## Variante nueva (entrada de pie): el motor ve la duración del clip que pidió, aunque se vea otro.
+	var distintas := {}
+	for i in 8:
+		var q := {"id": "j%d" % i, "anim": ap}
+		var visible := LeagueAcciones.variante(q, "entrada_de_pie")
+		distintas[visible] = true
+		q["gesto_hasta"] = 50.0 + (ap.get_animation(visible).length if ap.has_animation(visible) else 0.0)
+		LeagueAcciones.igualar(q, 50.0, true, 1.4)
+		_comprobar(is_equal_approx(float(q["gesto_hasta"]), 50.8), "la entrada «%s» dura para el motor lo de la estocada (0,8 s)" % visible)
+	_comprobar(distintas.size() >= 2, "la entrada de pie no es siempre la misma (%s)" % str(distintas.keys()))
+	ap.queue_free()

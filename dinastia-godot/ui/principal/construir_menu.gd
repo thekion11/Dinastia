@@ -322,6 +322,7 @@ func _montar_columnas(raiz: VBoxContainer) -> void:
 	p._pestanas.tabs_visible = false
 	p._pestanas.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	p._marco_paginas.add_child(p._pestanas)
+	caja_v.add_child(PieMando.crear(func() -> bool: return p._menu_lateral != null and p._menu_lateral.ocupado()))   ## (12-11, PES) ayudas del mando abajo
 	p._lista_plantel = p._hoja(p._pestanas, "Mi plantel")
 	## ── PESTAÑA MERCADO ─────────────────────────────────────────────────────
 	## El componente se instancia aquí y se engancha por señales. Principal no

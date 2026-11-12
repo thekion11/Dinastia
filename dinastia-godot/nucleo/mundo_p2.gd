@@ -327,7 +327,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	var l := liga_de(c)
 	var orden := l.clubes.duplicate()
 	orden.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep)
-	directiva = Directiva.new(c, orden.find(c) + 1)
+	directiva = Directiva.new(c, orden.find(c) + 1, orden.size())
 	directiva.generar_objetivos(self)   ## (10-11) objetivos propios de este club (liga, secundarios y proyecto a 3 temporadas)
 	## Al dueño, al ayudante y al interino no los juzga el directorio -"lo_echan"
 	## de `Roles.PERMISOS`-: la confianza les sigue midiendo el apoyo del

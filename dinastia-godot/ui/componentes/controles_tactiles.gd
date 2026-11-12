@@ -385,17 +385,18 @@ func _draw() -> void:
 	var rs := radio_stick()
 	var c0 := _centro_stick if _dedo_stick >= 0 else centro_reposo()
 	var en_uso := _dedo_stick >= 0
-	draw_circle(c0, rs, Color(1, 1, 1, (0.13 if en_uso else 0.07) * opac))
-	draw_arc(c0, rs, 0.0, TAU, 48, Color(1, 1, 1, (0.55 if en_uso else 0.30) * opac), 3.0)
-	draw_circle(c0 + _vec * rs, rs * 0.38, Color(1, 1, 1, (0.50 if en_uso else 0.25) * opac))
+	DibujoBotonFC.disco(self, c0, rs, Color(1, 1, 1, (0.13 if en_uso else 0.07) * opac))   ## (12-11) rectángulos del atlas: un solo lote
+	DibujoBotonFC.aro(self, c0, rs, 3.0, Color(1, 1, 1, (0.55 if en_uso else 0.30) * opac))
+	DibujoBotonFC.disco(self, c0 + _vec * rs, rs * 0.38, Color(1, 1, 1, (0.50 if en_uso else 0.25) * opac))
 	var alfa := 0.3 + 0.7 * absf(2.0 * _mezcla - 1.0)   ## el texto se apaga un instante al cambiar la posesión
-	for n: String in BOTONES:
-		if not visible_ahora(n):
-			continue
-		var pausa := n == "Pausa"
-		var col := Color(0.8, 0.8, 0.85) if pausa else MandoFC.color(n, true).lerp(MandoFC.color(n, false), 1.0 - _mezcla)
-		var activo := _dedos.values().has(n)
-		var etiqueta := etiqueta_de(n, _con_balon if (pausa or _mezcla == 0.0 or _mezcla == 1.0) else _mezcla >= 0.5)
-		var tri: Array = [] if pausa or not _gestos() else MandoFC.triangulos(n, _con_balon, _en_banda)
-		DibujoBotonFC.boton(self, centro_de(n), radio_de(n), col, Idiomas.t(etiqueta).split("\n") if not pausa else PackedStringArray([etiqueta]), opac, activo, false, s, tri, 1.0 if pausa else alfa,
-				0.6 if pausa else 0.42, 0.55 if pausa else 0.30)
+	for fase in 5:   ## (12-11) fondos, aros, triángulos, contornos y textos de todos, por fases: el lote 2D no se parte por botón
+		for n: String in BOTONES:
+			if not visible_ahora(n):
+				continue
+			var pausa := n == "Pausa"
+			var col := Color(0.8, 0.8, 0.85) if pausa else MandoFC.color(n, true).lerp(MandoFC.color(n, false), 1.0 - _mezcla)
+			var activo := _dedos.values().has(n)
+			var etiqueta := etiqueta_de(n, _con_balon if (pausa or _mezcla == 0.0 or _mezcla == 1.0) else _mezcla >= 0.5)
+			var tri: Array = [] if pausa or not _gestos() else MandoFC.triangulos(n, _con_balon, _en_banda)
+			DibujoBotonFC.boton(self, centro_de(n), radio_de(n), col, Idiomas.t(etiqueta).split("\n") if not pausa else PackedStringArray([etiqueta]), opac, activo, false, s, tri, 1.0 if pausa else alfa,
+					0.6 if pausa else 0.42, 0.55 if pausa else 0.30, fase)

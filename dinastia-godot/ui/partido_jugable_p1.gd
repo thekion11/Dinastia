@@ -245,12 +245,15 @@ func _panel(color_borde: Color) -> StyleBoxFlat:
 	st.content_margin_top = 6; st.content_margin_bottom = 6
 	return st
 
-func _etiqueta(tam: int, col: Color) -> Label:
+## `sombra = false` (12-11, móvil) para el texto que va sobre un panel oscuro: la sombra parte el lote de dibujo 2D (medido: −19 llamadas
+## solo en la fila de estadísticas) y sobre el panel no aporta lectura. El texto que flota sobre el césped la conserva.
+func _etiqueta(tam: int, col: Color, sombra := true) -> Label:
 	var l := Label.new()
 	l.add_theme_font_size_override("font_size", tam)
 	l.add_theme_color_override("font_color", col)
-	l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
-	l.add_theme_constant_override("shadow_offset_y", 2)
+	if sombra:
+		l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
+		l.add_theme_constant_override("shadow_offset_y", 2)
 	return l
 
 func _fin_cine() -> void:

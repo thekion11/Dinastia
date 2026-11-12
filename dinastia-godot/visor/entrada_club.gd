@@ -118,18 +118,15 @@ static func montar(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color,
 	PiezasObra._caja(e, Vector3(px, 0.15, zf + 0.75), Vector3(HOJA * 2.0 - 0.2, 0.02, 1.1), PiezasObra._mat(c1.darkened(0.25), 0.95), false)
 	## Placa y maceteros.
 	PiezasObra._rotulo(e, Idiomas.t("ENTRADA DEL CLUB · SOLO PERSONAL"), Vector3(px - HOJA - 0.35, 2.2, zf + 0.32), 0.0, 22, Color(1, 1, 1))
-	var hoja_v := PiezasObra._mat_unico(Color(0.2, 0.42, 0.2), 0.9)
 	var maceta := PiezasObra._mat(Color(0.18, 0.18, 0.2), 0.6)
 	for lado4 in [-1.0, 1.0]:
 		var mx: float = px + lado4 * (HOJA + 1.15)
 		PiezasObra._caja(e, Vector3(mx, 0.45, zf + 0.6), Vector3(0.7, 0.9, 0.7), maceta, false)
-		var arbusto := MeshInstance3D.new()
-		var esf := SphereMesh.new()
-		esf.radius = 0.5
-		esf.height = 1.1
-		arbusto.mesh = esf
-		arbusto.material_override = hoja_v
-		arbusto.position = Vector3(mx, 1.3, zf + 0.6)
+		## (12-11) Antes una esfera verde de 1 m (en primera persona parecía un globo): la planta de hojas, más grande y metida en el macetero.
+		var arbusto := PlantaDecor.nodo()
+		arbusto.scale = Vector3.ONE * 1.8
+		arbusto.position = Vector3(mx, 0.9 - PlantaDecor.ALTO_MACETA * 1.8 * 0.85, zf + 0.6)
+		arbusto.rotation.y = lado4 * 0.7
 		e.add_child(arbusto)
 	## Dos mástiles con las banderas del club.
 	for k in 2:
