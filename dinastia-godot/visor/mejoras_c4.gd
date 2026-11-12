@@ -406,7 +406,7 @@ static func seguidor_en(m: Object, infractor: Dictionary, victima: Dictionary) -
 ## de siempre; con expulsiones reales, hasta 3 en un partido y el partido suspendido de `prueba_partido_motor`). En C4 el que viene por
 ## detrás de un portador que se aleja (la misma regla que `puntos_falta`) no entra de pie: acompaña (las cargas y duelos siguen).
 static var NO_DETRAS := _bandera("C4_NO_DETRAS", true)
-static var NO_DETRAS_V := _num("C4_NO_DETRAS_V", 0.0)   ## solo si el defensor llega a más de esto (m/s); 0 = siempre
+static var NO_DETRAS_V := _num("C4_NO_DETRAS_V", 5.0)   ## solo si el defensor llega a más de esto (m/s; 0 = siempre: tarjetas 0,5 por partido, demasiado pocas)
 static func por_detras(m: Object, p: Dictionary, victima: Dictionary) -> bool:
 	if not NO_DETRAS:
 		return false
