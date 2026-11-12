@@ -113,6 +113,20 @@ func _probar_partido_despedida() -> void:
 		todos_retiran = todos_retiran and bool(m.prensa.retiros_previstos.get(j.id, false))
 		hay_portero = hay_portero or j.pos == "POR"
 	_comprobar(todos_retiran and hay_portero, "todos los de las Leyendas son de los que se retiran, y hay portero")
+	## (12-11) Y el equipo puede jugar: con retirados de sobra por línea, las Leyendas llevan al menos 4 defensas, 3 medios y 2 delanteros.
+	var lineas := PartidoDespedida.por_linea(leyendas.plantilla)
+	_comprobar(lineas["DEF"] >= 3 and lineas["MED"] >= 3 and lineas["DEL"] >= 2, "las Leyendas tienen gente en todas las líneas %s" % [lineas])
+	var sueltos: Array[Jugador] = []
+	for k in 30:
+		var jx := Jugador.new()
+		jx.id = "ley_%d" % k
+		jx.pos = ["DEL", "DEL", "DEL", "MED", "DEF", "POR"][k % 6]
+		jx.ovr = 90 - k if jx.pos == "DEL" else 60 - k   ## los delanteros, con mucha más nota: antes copaban el equipo
+		sueltos.append(jx)
+	var eq := PartidoDespedida.equipo_de(m, sueltos)
+	var lin2 := PartidoDespedida.por_linea(eq.plantilla)
+	_comprobar(eq.plantilla.size() == PartidoDespedida.MAXIMO_JUGADORES and lin2["DEF"] == 4 and lin2["MED"] >= 3 and lin2["POR"] >= 1,
+		"aunque los delanteros tengan mucha más nota, entran 4 defensas y 3 medios %s" % [lin2])
 	## El partido de gala (simulado): no cambia lo que pasa a tus jugadores y deja taquilla.
 	var foto := PartidoDespedida.foto(mio)
 	var saldo0 := mio.saldo

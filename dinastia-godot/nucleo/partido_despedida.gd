@@ -84,6 +84,7 @@ static func escudo_del_anio(anio: int) -> Dictionary:
 ## El dorsal que llevaban antes de ponerles el de las Leyendas (para la camiseta retirada).
 static var dorsales_originales: Dictionary = {}
 
+const NUCLEO := [["DEF", 4], ["MED", 3], ["DEL", 2]]   ## lo mínimo por línea que se asegura a las Leyendas, si hay retirados de ese puesto
 static func equipo_de(m: Mundo, retirados: Array[Jugador]) -> Club:
 	var porteros := retirados.filter(func(j: Jugador) -> bool: return j.pos == "POR")
 	if retirados.size() < MINIMO_JUGADORES or porteros.is_empty():
@@ -93,6 +94,14 @@ static func equipo_de(m: Mundo, retirados: Array[Jugador]) -> Club:
 	var elegidos: Array[Jugador] = []
 	porteros.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
 	elegidos.append(porteros[0])
+	## (12-11) Primero un once que pueda jugar: los mejores 4 defensas, 3 medios y 2 delanteros que haya (antes entraban los 17 mejores por
+	## nota sin mirar el puesto y las Leyendas salían con 5 delanteros y UN defensa). Después, el resto por nota hasta completar.
+	for cupo: Array in NUCLEO:
+		var de_linea := 0
+		for j: Jugador in orden:
+			if de_linea < int(cupo[1]) and j.pos == String(cupo[0]) and not elegidos.has(j):
+				elegidos.append(j)
+				de_linea += 1
 	for j: Jugador in orden:
 		if elegidos.size() >= MAXIMO_JUGADORES:
 			break
@@ -121,6 +130,13 @@ static func equipo_de(m: Mundo, retirados: Array[Jugador]) -> Club:
 		n += 1
 		club.plantilla.append(j)
 	return club
+
+## Cuántos hay por línea en una lista de jugadores: {POR, DEF, MED, DEL}.
+static func por_linea(lista: Array) -> Dictionary:
+	var n := {"POR": 0, "DEF": 0, "MED": 0, "DEL": 0}
+	for j: Jugador in lista:
+		n[j.pos] = int(n.get(j.pos, 0)) + 1
+	return n
 
 ## La foto del estado de tus jugadores antes del partido de gala, para devolverlo tal cual después.
 static func foto(club: Club) -> Dictionary:

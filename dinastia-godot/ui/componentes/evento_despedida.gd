@@ -19,17 +19,23 @@ func _rellenar(pr: Principal, leyendas: Club) -> void:
 	cuerpo.alignment = BoxContainer.ALIGNMENT_CENTER
 	cuerpo.add_theme_constant_override("separation", 12 if de_pie else 48)
 	_centro.add_child(cuerpo)
-	cuerpo.add_child(_escudo(leyendas, 96 if de_pie else 170))
+	cuerpo.add_child(_escudo(leyendas, 72 if de_pie else 170))
 	cuerpo.add_child(_cancha(pr, leyendas))
+	## De pie: «Jugarlo» a lo ancho y debajo «Simularlo» y «Ahora no» lado a lado (apilados los tres, el último quedaba bajo el pliegue).
 	var botones: BoxContainer = VBoxContainer.new() if de_pie else HBoxContainer.new()
 	botones.add_theme_constant_override("separation", 10 if de_pie else 14)
 	_centro.add_child(botones)
+	var segunda: BoxContainer = botones
 	for par: Array in [["jugar", "▶ " + Idiomas.t("Jugarlo"), true], ["simular", "⏭ " + Idiomas.t("Simularlo"), false], ["no", Idiomas.t("Ahora no"), false]]:
 		var b := boton(String(par[1]), bool(par[2]))
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var op := String(par[0])
 		b.pressed.connect(func() -> void: elegido.emit(op))
-		botones.add_child(b)
+		if de_pie and not bool(par[2]) and segunda == botones:
+			segunda = HBoxContainer.new()
+			segunda.add_theme_constant_override("separation", 10)
+			botones.add_child(segunda)
+		(segunda if not bool(par[2]) else botones).add_child(b)
 
 ## El escudo de las Leyendas de la temporada y su nombre.
 func _escudo(c: Club, alto: int) -> Control:
