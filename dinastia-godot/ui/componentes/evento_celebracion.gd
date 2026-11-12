@@ -6,7 +6,7 @@ extends EventoPantallaCompleta
 ## olímpica» (la 3D de siempre). Emite `elegido("vuelta")` o `elegido("seguir")`.
 var tipo := "copa"
 var escena: EscenaFestejo
-var _botones: HBoxContainer
+var _botones: Container
 var vista3d: Control = null   ## (10-11) el festejo con modelos reales (`FestejoCampo3D`), si la escena lo tiene y la calidad lo permite
 var _marco: PanelContainer
 var _club: Club
@@ -33,7 +33,10 @@ func _rellenar(pr: Principal, titulo: String, rival: Club, equipo: Club = null) 
 	_club = club
 	_titulo = titulo
 	_rival = rival
-	_centro.custom_minimum_size = Vector2(800, 0)
+	## (12-11) En el teléfono de pie (lienzo de 540 px): todo a 500 px de ancho y los botones en varias filas; a 800 px el título, la escena
+	## y sobre todo «Continuar» quedaban fuera de la pantalla por la derecha.
+	var de_pie := EscalaMovil.es_vertical()
+	_centro.custom_minimum_size = Vector2(ancho_base(800.0), 0)
 	var cab := HBoxContainer.new()
 	cab.alignment = BoxContainer.ALIGNMENT_CENTER
 	cab.add_theme_constant_override("separation", 18)
@@ -48,7 +51,7 @@ func _rellenar(pr: Principal, titulo: String, rival: Club, equipo: Club = null) 
 	tx.add_theme_constant_override("separation", 0)
 	cab.add_child(tx)
 	tx.add_child(etiqueta("%s · %d" % [titulo.to_upper(), pr.mundo.anio], 14, Color(SelectorDireccional.BLANCO, 0.7), false))
-	tx.add_child(etiqueta(Idiomas.t(TipoTitulo.rotulo(tipo)), 40, Tema.ORO if tipo not in ["ascenso", "salvacion"] else acento.lightened(0.3), false, false))
+	tx.add_child(etiqueta(Idiomas.t(TipoTitulo.rotulo(tipo)), 28 if de_pie else 40, Tema.ORO if tipo not in ["ascenso", "salvacion"] else acento.lightened(0.3), false, false))
 	tx.add_child(etiqueta(club.nombre, 18, SelectorDireccional.BLANCO, false, false))
 	var marco := PanelContainer.new()
 	var sb := Tema.caja(SelectorDireccional.NOCHE, Tema.RADIO_GRANDE, Color(acento, 0.8))
@@ -59,12 +62,20 @@ func _rellenar(pr: Principal, titulo: String, rival: Club, equipo: Club = null) 
 	_centro.add_child(marco)
 	escena = EscenaFestejo.new()
 	escena.colores(club, rival)
+	if de_pie:
+		escena.custom_minimum_size = Vector2(ANCHO_DE_PIE - 8.0, 330)
 	marco.add_child(escena)
 	_marco = marco
 	ver.call_deferred(escenas()[0])
-	_botones = HBoxContainer.new()
-	_botones.alignment = BoxContainer.ALIGNMENT_CENTER
-	_botones.add_theme_constant_override("separation", 8)
+	if de_pie:
+		_botones = HFlowContainer.new()
+		(_botones as HFlowContainer).alignment = FlowContainer.ALIGNMENT_CENTER
+		_botones.add_theme_constant_override("h_separation", 8)
+		_botones.add_theme_constant_override("v_separation", 8)
+	else:
+		_botones = HBoxContainer.new()
+		(_botones as HBoxContainer).alignment = BoxContainer.ALIGNMENT_CENTER
+		_botones.add_theme_constant_override("separation", 8)
 	_centro.add_child(_botones)
 	for e: String in escenas():
 		var b := boton(Idiomas.t(TipoTitulo.nombre_escena(e)))
@@ -72,7 +83,7 @@ func _rellenar(pr: Principal, titulo: String, rival: Club, equipo: Club = null) 
 		b.custom_minimum_size = Vector2(0, 44)
 		b.pressed.connect(ver.bind(e))
 		_botones.add_child(b)
-	var fin := HBoxContainer.new()
+	var fin: BoxContainer = VBoxContainer.new() if de_pie else HBoxContainer.new()
 	fin.alignment = BoxContainer.ALIGNMENT_CENTER
 	fin.add_theme_constant_override("separation", 14)
 	_centro.add_child(fin)
@@ -96,6 +107,8 @@ func ver(e: String) -> void:
 	if e in FestejoCampo3D.MODOS and FestejoCampo3D.con_3d():
 		vista3d = FestejoCampo3D.crear(e, _club, _titulo, tipo in ["ascenso", "salvacion"], _rival, tipo in ["copa", "continental", "supercopa", "seleccion"])   ## tifos en las finales
 	if vista3d != null:
+		if EscalaMovil.es_vertical():   ## (12-11) la vista 3D pide 900 px: de pie, lo que cabe
+			vista3d.custom_minimum_size = Vector2(ANCHO_DE_PIE - 8.0, 360)
 		escena.visible = false
 		escena.set_process(false)
 		_marco.add_child(vista3d)
