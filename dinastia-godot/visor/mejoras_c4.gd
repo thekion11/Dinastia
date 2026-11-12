@@ -354,3 +354,39 @@ static func _de_espaldas(m: Object, p: Dictionary, victima: Dictionary) -> bool:
 	if hacia.length() < 0.05:
 		return false
 	return Vector3(sin(n.rotation.y), 0.0, cos(n.rotation.y)).dot(hacia.normalized()) < -0.2
+
+## SEGUIR EL TIRO (12-11-2026, sesión 13; objetivo 6, portero y rechaces). Tras un remate, los `SEGUIR_N` compañeros más cerca de la zona
+## del rechace (delante del área chica) corren a ella durante `SEGUIR_T` s: el rechace del portero tiene quien lo empuje.
+## Devuelve el destino o Vector3.INF si `p` no sigue el tiro.
+static var SEGUIR := _bandera("C4_SEGUIR", true)
+const SEGUIR_N := 2
+const SEGUIR_T := 2.0
+static func seguir_tiro(m: Object, p: Dictionary) -> Vector3:
+	if not SEGUIR:
+		return Vector3.INF
+	var tv: Dictionary = m._tiro_vivo
+	if tv.is_empty() or float(m.t) - float(tv["t"]) > SEGUIR_T:
+		return Vector3.INF
+	var tirador: Dictionary = tv["p"]
+	if bool(tirador["es_local"]) != bool(p["es_local"]) or String(tirador["id"]) == String(p["id"]):
+		return Vector3.INF
+	var arco: Vector3 = m._arco_rival(tirador)
+	var d: float = m.dir_ataque(bool(p["es_local"]))
+	var zona := Vector3(clampf(m.pos(tirador).x * 0.3, -4.0, 4.0), 0.0, arco.z - d * 7.0)
+	var clave := "%s@%.2f" % [String(tirador["id"]), float(tv["t"])]
+	if String(m.get_meta("_c4_sigue_clave", "")) != clave:
+		var cand: Array = []
+		for q: Dictionary in m.jugadores:
+			if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and String(q["id"]) != String(tirador["id"]):
+				cand.append([m.pos(q).distance_to(zona), String(q["id"])])
+		cand.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+		var ids: Array = []
+		for i in mini(SEGUIR_N, cand.size()):
+			if float(cand[i][0]) < 25.0:
+				ids.append(cand[i][1])
+		m.set_meta("_c4_sigue_clave", clave)
+		m.set_meta("_c4_sigue_ids", ids)
+	if not (String(p["id"]) in (m.get_meta("_c4_sigue_ids", []) as Array)):
+		return Vector3.INF
+	var i := (m.get_meta("_c4_sigue_ids", []) as Array).find(String(p["id"]))
+	return zona + Vector3((-3.0 if i == 0 else 3.0), 0.0, 0.0)

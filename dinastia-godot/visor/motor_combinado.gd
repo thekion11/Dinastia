@@ -96,6 +96,18 @@ func _saque_ensayado(p: Dictionary, tipo: String, lugar: Vector3) -> bool:
 		return MejorasC4.falta_ensayada(self, p, lugar, _rng)
 	return tipo == "banda" and MejorasC4.banda_ensayada(self, p, lugar, _rng)
 
+## (12-11, sesión 13) rechaces del portero y goles tras rechace (contadores), solo en C4.
+func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
+	super(p, cruce, estirada)
+	if _mejoras_c4 and String(poseedor.get("id", "")) != String(p["id"]):
+		set_meta("_t_rechace", t)
+		_contar("c4_rechace")
+
+func _gol(en_arco_visita: bool) -> void:
+	if _mejoras_c4 and t - float(get_meta("_t_rechace", -99.0)) < 3.0:
+		_contar("c4_gol_rechace")
+	super(en_arco_visita)
+
 func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 	var r := super(p, victima, base)
 	return MejorasC4.radio_entrada(self, p, victima, base, r) if _mejoras_c4 else r
@@ -139,6 +151,10 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		return super._ia_ataque_sin_balon(p)
 	var r := _sin_flag3(p, true)
 	if _mejoras_c4:
+		var sigue := MejorasC4.seguir_tiro(self, p)
+		if sigue != Vector3.INF:
+			p["correr"] = true
+			return sigue
 		MejorasC4.sprint(self, p, r)
 	return r
 
