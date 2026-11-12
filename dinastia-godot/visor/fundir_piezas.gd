@@ -264,6 +264,12 @@ static func _firma_material(m: Material) -> String:
 ## Devuelve cuántas piezas fundió.
 const MAX_TRIS_CIUDAD := 6000
 
+## ¿Puede la pieza fundirse sin perder nada? La malla fundida solo copia material, sombra, alcance final y su margen, y GI: con
+## alcance inicial, transparencia de instancia, margen de recorte, fundido de alcance o caja propia, la pieza se queda como está.
+static func conserva_propiedades(mi: GeometryInstance3D) -> bool:
+	return mi.visibility_range_begin <= 0.0 and mi.transparency <= 0.0 and is_zero_approx(mi.extra_cull_margin) \
+		and mi.visibility_range_fade_mode == GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED and not mi.custom_aabb.has_surface()
+
 static func fundir_ciudad(raiz: Node3D, celda := 160.0, nombre := "FundidoCiudad", ceder: Object = null) -> int:   ## (6-11) `ceder`: el CityBuilder que construye por partes; cede un fotograma cada ~40 ms
 	var inv := raiz.global_transform.affine_inverse()
 	var cubos := {}   ## clave → {"st": SurfaceTool, "n": cuántas superficies}
@@ -281,6 +287,8 @@ static func fundir_ciudad(raiz: Node3D, celda := 160.0, nombre := "FundidoCiudad
 			continue
 		if mi.layers != 1 or not mi.get_meta_list().is_empty() or mi.material_overlay != null or mi.mesh.get_surface_count() == 0:
 			continue
+		if not conserva_propiedades(mi):
+			continue   ## (12-11, fallo n.º 3) la malla fundida no las lleva: se perderían sin aviso
 		if not Optimizar._sin_dinamica(mi, raiz):
 			continue
 		var b := mi.global_transform.basis

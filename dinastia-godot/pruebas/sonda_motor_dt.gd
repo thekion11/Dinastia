@@ -94,7 +94,7 @@ func _jugar(a: Club, b: Club, semilla: int, tac: Array = [{}, {}], cansancio := 
 	lista.append_array(sp.spawn_team(raiz, l["xi"], l["jugadores"], Puente3D.formacion(a.tactica.formacion), true, Puente3D.kit(a), Puente3D.kit_portero(a)))
 	lista.append_array(sp.spawn_team(raiz, v["xi"], v["jugadores"], Puente3D.formacion(b.tactica.formacion), false, Puente3D.kit(b), Puente3D.kit_portero(b)))
 	var ball := StadiumBuilder.spawn_ball(raiz, Vector3(0, 0.11, 0))
-	var motor := MotorJugable.new()
+	var motor := MotorFabrica.crear()   ## (12-11) el motor que se juega (C4 por defecto, orden 39); el de siempre con MOTOR_CLASICO=1
 	raiz.add_child(motor)
 	motor.set_physics_process(false)
 	motor.autopiloto = true
@@ -187,7 +187,7 @@ func _diag() -> void:
 	lista.append_array(sp.spawn_team(raiz, l["xi"], l["jugadores"], Puente3D.formacion(a.tactica.formacion), true, Puente3D.kit(a), Puente3D.kit_portero(a)))
 	lista.append_array(sp.spawn_team(raiz, v["xi"], v["jugadores"], Puente3D.formacion(b.tactica.formacion), false, Puente3D.kit(b), Puente3D.kit_portero(b)))
 	var ball := StadiumBuilder.spawn_ball(raiz, Vector3(0, 0.11, 0))
-	var motor := MotorJugable.new()
+	var motor := MotorFabrica.crear()   ## (12-11) el motor que se juega (C4 por defecto, orden 39); el de siempre con MOTOR_CLASICO=1
 	raiz.add_child(motor)
 	motor.set_physics_process(false)
 	motor.autopiloto = true

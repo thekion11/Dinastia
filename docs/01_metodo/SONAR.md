@@ -16,6 +16,7 @@ Origen: orden del dueño tras el ciclo del 5-11 (de 492 a 0 issues abiertos en `
 | Aviso | Qué se hace |
 |---|---|
 | Ruta o argumento de línea de comandos (`pythonsecurity` S8707, S8705, S2083, S6549) | `herramientas/ruta_segura.py` en el punto donde se abre el archivo (`open(ruta_segura(x))`). Toda herramienta nueva con rutas por argumento nace con ella. Fuera del repo, directorio actual y temporal hace falta `DINASTIA_RUTAS_PERMITIDAS`. **No** `NOSONAR`: no surte efecto en reglas de flujo de datos. |
+| Descarga con direcciones sacadas de una respuesta externa (`pythonsecurity` S5144, S7044) | Solo HTTPS y solo los servidores esperados; la RUTA validada (caracteres permitidos, sin `..` ni `.`, sin consulta) y la dirección REHECHA con la ruta ya validada antes de abrirla (`herramientas/bajar_cc0_modelos.py`, `abrir`). |
 | Regex lenta (S8786, S5852) | Reescribir sin ambigüedad y comprobar contra muestras reales (p. ej. todo el GDScript del repo): 0 diferencias. |
 | Workflows | Entradas por `env:`, nunca dentro de `run:`; acciones fijadas por SHA; `curl --proto "=https"` con `-f` y reintentos. |
 | Azar no criptográfico (S2245) en juego o herramientas | Es un falso positivo. Lo marca el dueño en la web (*Issues → Bulk Change → Change status → Accepted / False positive*, con comentario). Las sesiones no escriben en SonarCloud. |

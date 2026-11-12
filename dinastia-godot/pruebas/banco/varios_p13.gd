@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos, _probar_mundo_abandonado
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -215,3 +215,14 @@ func _probar_piel_paises_nuevos() -> void:
 	_comprobar(float(medias["FIN"][0]) < 2.0 and int(medias["FIN"][1]) > 40, "Finlandia, clara y con rubios (%.1f; %d de 300)" % [medias["FIN"][0], medias["FIN"][1]])
 	_comprobar(float(medias["IND"][0]) > 3.0 and float(medias["IND"][0]) < 5.0, "India, tono medio (%.1f)" % medias["IND"][0])
 	_comprobar(PielPaises.sesgo("SEN", 1.5) < 0.3 and is_equal_approx(PielPaises.sesgo("XXX", 1.5), 1.5), "la grada de Senegal también sale oscura; un país desconocido mantiene el defecto")
+
+## (12-11, fallo n.º 1 del plan) La generación del mundo por trozos se ABANDONA si la pantalla que la pidió se fue (`Mundo.abandonada`).
+func _probar_mundo_abandonado() -> void:
+	_titulo("GENERACIÓN DEL MUNDO ABANDONADA")
+	_comprobar(not Mundo.abandonada(Callable()), "sin vigía (la generación de siempre) nunca se abandona")
+	_comprobar(not Mundo.abandonada(func() -> bool: return true), "con la pantalla viva sigue")
+	_comprobar(Mundo.abandonada(func() -> bool: return false), "con la pantalla fuera del árbol se abandona")
+	var n := Node.new()
+	var vigia := Callable(n, "is_inside_tree")
+	n.free()
+	_comprobar(Mundo.abandonada(vigia), "con la pantalla ya liberada también se abandona")
