@@ -21,7 +21,10 @@ const MENUS := [
 	{"id": "partido", "icono": "⚽", "nombre": "Partido", "estilo": 8,
 		"lema": "El próximo partido, el rival y el calendario.",
 		"colores": ["#07130c", "#0f3320", "#b6f0c4"], "subs": [
-		{"tab": "Partido", "label": "Próximo partido", "icono": "⚽", "desc": "El rival, cómo llega y la previa."},
+		## (12-11) La previa era una página larga: ahora tres pantallas (`PreviaPartido`).
+		{"tab": "Partido", "secc": "previa", "label": "Próximo partido", "icono": "⚽", "desc": "El rival, el árbitro, los juegos mentales y a jugar."},
+		{"tab": "Partido", "secc": "informe", "label": "Informe y apuestas", "icono": "👁️", "desc": "Tu fuerza contra la suya, las cuotas y el plan del rival."},
+		{"tab": "Partido", "secc": "onces", "label": "Los onces", "icono": "👕", "desc": "Los dos equipos tal como van a salir."},
 		{"tab": "Calendario", "label": "Calendario", "icono": "📅", "desc": "Todos los partidos de la temporada."},
 		{"tab": "Táctica", "label": "Táctica", "icono": "📋", "desc": "El once, el dibujo y las órdenes."}]},
 	{"id": "dinero", "icono": "💰", "nombre": "Dinero", "estilo": 2,

@@ -7984,7 +7984,13 @@
   "Créditos abiertos": "Open loans",
   "Movimientos": "Movements",
   "Tienda al mes": "Shop per month",
-  "Precio de la entrada": "Ticket price"
+  "Precio de la entrada": "Ticket price",
+  "Informe y apuestas": "Report and odds",
+  "Los onces": "The line-ups",
+  "El rival, el árbitro, los juegos mentales y a jugar.": "The opponent, the referee, the mind games and kick-off.",
+  "Tu fuerza contra la suya, las cuotas y el plan del rival.": "Your strength against theirs, the odds and the opponent's plan.",
+  "Los dos equipos tal como van a salir.": "Both teams as they will line up.",
+  "Gana %s": "%s wins"
  },
  "pt": {
   "Historia": "História",
@@ -15971,7 +15977,13 @@
   "Créditos abiertos": "Créditos abertos",
   "Movimientos": "Movimentos",
   "Tienda al mes": "Loja por mês",
-  "Precio de la entrada": "Preço do bilhete"
+  "Precio de la entrada": "Preço do bilhete",
+  "Informe y apuestas": "Relatório e apostas",
+  "Los onces": "Os onzes",
+  "El rival, el árbitro, los juegos mentales y a jugar.": "O adversário, o árbitro, os jogos mentais e a jogar.",
+  "Tu fuerza contra la suya, las cuotas y el plan del rival.": "A tua força contra a deles, as odds e o plano do adversário.",
+  "Los dos equipos tal como van a salir.": "As duas equipas tal como vão entrar.",
+  "Gana %s": "Ganha %s"
  },
  "patrones": [
   [
@@ -30098,7 +30110,13 @@
   "Créditos abiertos": "Crédits en cours",
   "Movimientos": "Mouvements",
   "Tienda al mes": "Boutique par mois",
-  "Precio de la entrada": "Prix du billet"
+  "Precio de la entrada": "Prix du billet",
+  "Informe y apuestas": "Rapport et cotes",
+  "Los onces": "Les onze",
+  "El rival, el árbitro, los juegos mentales y a jugar.": "L'adversaire, l'arbitre, la guerre psychologique et place au jeu.",
+  "Tu fuerza contra la suya, las cuotas y el plan del rival.": "Ta force contre la leur, les cotes et le plan de l'adversaire.",
+  "Los dos equipos tal como van a salir.": "Les deux équipes telles qu'elles vont débuter.",
+  "Gana %s": "%s gagne"
  },
  "it": {
   "Historia": "Storia",
@@ -38085,7 +38103,13 @@
   "Créditos abiertos": "Prestiti aperti",
   "Movimientos": "Movimenti",
   "Tienda al mes": "Negozio al mese",
-  "Precio de la entrada": "Prezzo del biglietto"
+  "Precio de la entrada": "Prezzo del biglietto",
+  "Informe y apuestas": "Rapporto e quote",
+  "Los onces": "Gli undici",
+  "El rival, el árbitro, los juegos mentales y a jugar.": "L'avversario, l'arbitro, i giochi mentali e si gioca.",
+  "Tu fuerza contra la suya, las cuotas y el plan del rival.": "La tua forza contro la loro, le quote e il piano dell'avversario.",
+  "Los dos equipos tal como van a salir.": "Le due squadre così come scenderanno in campo.",
+  "Gana %s": "Vince %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46072,7 +46096,13 @@
   "Créditos abiertos": "Offene Kredite",
   "Movimientos": "Buchungen",
   "Tienda al mes": "Shop pro Monat",
-  "Precio de la entrada": "Ticketpreis"
+  "Precio de la entrada": "Ticketpreis",
+  "Informe y apuestas": "Bericht und Quoten",
+  "Los onces": "Die Aufstellungen",
+  "El rival, el árbitro, los juegos mentales y a jugar.": "Der Gegner, der Schiedsrichter, die Psychospielchen und los geht's.",
+  "Tu fuerza contra la suya, las cuotas y el plan del rival.": "Deine Stärke gegen ihre, die Quoten und der Plan des Gegners.",
+  "Los dos equipos tal como van a salir.": "Beide Teams, wie sie auflaufen werden.",
+  "Gana %s": "%s gewinnt"
  },
  "ca": {
   "Historia": "Història",
@@ -54059,7 +54089,13 @@
   "Créditos abiertos": "Crèdits oberts",
   "Movimientos": "Moviments",
   "Tienda al mes": "Botiga al mes",
-  "Precio de la entrada": "Preu de l'entrada"
+  "Precio de la entrada": "Preu de l'entrada",
+  "Informe y apuestas": "Informe i apostes",
+  "Los onces": "Els onzes",
+  "El rival, el árbitro, los juegos mentales y a jugar.": "El rival, l'àrbitre, els jocs mentals i a jugar.",
+  "Tu fuerza contra la suya, las cuotas y el plan del rival.": "La teva força contra la seva, les quotes i el pla del rival.",
+  "Los dos equipos tal como van a salir.": "Els dos equips tal com sortiran.",
+  "Gana %s": "Guanya %s"
  },
  "pl": {
   "Club": "Klub",
@@ -62046,7 +62082,13 @@
   "Créditos abiertos": "Otwarte kredyty",
   "Movimientos": "Operacje",
   "Tienda al mes": "Sklep miesięcznie",
-  "Precio de la entrada": "Cena biletu"
+  "Precio de la entrada": "Cena biletu",
+  "Informe y apuestas": "Raport i kursy",
+  "Los onces": "Składy",
+  "El rival, el árbitro, los juegos mentales y a jugar.": "Rywal, sędzia, gierki psychologiczne i gramy.",
+  "Tu fuerza contra la suya, las cuotas y el plan del rival.": "Twoja siła przeciw ich sile, kursy i plan rywala.",
+  "Los dos equipos tal como van a salir.": "Obie drużyny w wyjściowych składach.",
+  "Gana %s": "Wygrywa %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70033,6 +70075,12 @@
   "Créditos abiertos": "Açık krediler",
   "Movimientos": "Hareketler",
   "Tienda al mes": "Aylık mağaza",
-  "Precio de la entrada": "Bilet fiyatı"
+  "Precio de la entrada": "Bilet fiyatı",
+  "Informe y apuestas": "Rapor ve oranlar",
+  "Los onces": "İlk on birler",
+  "El rival, el árbitro, los juegos mentales y a jugar.": "Rakip, hakem, psikolojik oyunlar ve maça.",
+  "Tu fuerza contra la suya, las cuotas y el plan del rival.": "Senin gücün onlarınkine karşı, oranlar ve rakibin planı.",
+  "Los dos equipos tal como van a salir.": "İki takım sahaya çıkacakları haliyle.",
+  "Gana %s": "%s kazanır"
  }
 }

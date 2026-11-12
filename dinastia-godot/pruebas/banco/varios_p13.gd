@@ -166,3 +166,9 @@ func _probar_finanzas_por_pantallas() -> void:
 	_comprobar(banda.get_child_count() == 3 and rotulos.size() == 6 and (rotulos[0] as Label).text == "CAJA" and (rotulos[1] as Label).text == "1.0M EUR",
 		"la banda de cifras clave pinta una ficha por cifra: rótulo en mayúsculas y la cifra grande")
 	banda.free()
+	## «Próximo partido» en tres pantallas (`PreviaPartido`).
+	var del_partido: Array = []
+	for s: Dictionary in MenusLaterales.menu_por_id("partido")["subs"]:
+		if String(s.get("tab", "")) == "Partido":
+			del_partido.append(String(s.get("secc", "")))
+	_comprobar(del_partido == PreviaPartido.SECCIONES, "los 3 submenús de Partido son las 3 secciones de la previa (%s)" % [del_partido])
