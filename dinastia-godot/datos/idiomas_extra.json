@@ -8058,7 +8058,8 @@
   "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Notices from the club, agents and the federation arrive here on their own.",
   "Estrés: %d de 100": "Stress: %d of 100",
   "Familia: %d de 100": "Family: %d of 100",
-  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Your squad loses fewer weeks to injury than the league average."
+  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Your squad loses fewer weeks to injury than the league average.",
+  "La comparación con la liga empieza a contar con los primeros partidos.": "The comparison with the league starts counting with the first matches."
  },
  "pt": {
   "Historia": "História",
@@ -16119,7 +16120,8 @@
   "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Os avisos do clube, dos agentes e da federação vão chegando aqui sozinhos.",
   "Estrés: %d de 100": "Stress: %d de 100",
   "Familia: %d de 100": "Família: %d de 100",
-  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "O teu plantel perde menos semanas por lesão do que a média da liga."
+  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "O teu plantel perde menos semanas por lesão do que a média da liga.",
+  "La comparación con la liga empieza a contar con los primeros partidos.": "A comparação com a liga começa a contar com os primeiros jogos."
  },
  "patrones": [
   [
@@ -30320,7 +30322,8 @@
   "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Les avis du club, des agents et de la fédération arrivent ici d'eux-mêmes.",
   "Estrés: %d de 100": "Stress : %d sur 100",
   "Familia: %d de 100": "Famille : %d sur 100",
-  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Ton effectif perd moins de semaines sur blessure que la moyenne du championnat."
+  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Ton effectif perd moins de semaines sur blessure que la moyenne du championnat.",
+  "La comparación con la liga empieza a contar con los primeros partidos.": "La comparaison avec le championnat commence avec les premiers matchs."
  },
  "it": {
   "Historia": "Storia",
@@ -38381,7 +38384,8 @@
   "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Gli avvisi del club, degli agenti e della federazione arrivano qui da soli.",
   "Estrés: %d de 100": "Stress: %d su 100",
   "Familia: %d de 100": "Famiglia: %d su 100",
-  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "La tua rosa perde meno settimane per infortunio della media del campionato."
+  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "La tua rosa perde meno settimane per infortunio della media del campionato.",
+  "La comparación con la liga empieza a contar con los primeros partidos.": "Il confronto con il campionato inizia a contare dalle prime partite."
  },
  "de": {
   "Historia": "Geschichte",
@@ -46442,7 +46446,8 @@
   "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Mitteilungen von Verein, Beratern und Verband treffen hier von selbst ein.",
   "Estrés: %d de 100": "Stress: %d von 100",
   "Familia: %d de 100": "Familie: %d von 100",
-  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Dein Kader verliert weniger Wochen durch Verletzungen als der Ligaschnitt."
+  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Dein Kader verliert weniger Wochen durch Verletzungen als der Ligaschnitt.",
+  "La comparación con la liga empieza a contar con los primeros partidos.": "Der Vergleich mit der Liga beginnt mit den ersten Spielen."
  },
  "ca": {
   "Historia": "Història",
@@ -54503,7 +54508,8 @@
   "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Els avisos del club, dels agents i de la federació van arribant aquí sols.",
   "Estrés: %d de 100": "Estrès: %d de 100",
   "Familia: %d de 100": "Família: %d de 100",
-  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "La teva plantilla perd menys setmanes per lesió que la mitjana de la lliga."
+  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "La teva plantilla perd menys setmanes per lesió que la mitjana de la lliga.",
+  "La comparación con la liga empieza a contar con los primeros partidos.": "La comparació amb la lliga comença a comptar amb els primers partits."
  },
  "pl": {
   "Club": "Klub",
@@ -62564,7 +62570,8 @@
   "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Wiadomości od klubu, agentów i federacji trafiają tu same.",
   "Estrés: %d de 100": "Stres: %d na 100",
   "Familia: %d de 100": "Rodzina: %d na 100",
-  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Twoja kadra traci mniej tygodni przez kontuzje niż średnia ligi."
+  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Twoja kadra traci mniej tygodni przez kontuzje niż średnia ligi.",
+  "La comparación con la liga empieza a contar con los primeros partidos.": "Porównanie z ligą zaczyna się liczyć od pierwszych meczów."
  },
  "tr": {
   "Club": "Kulüp",
@@ -70625,6 +70632,7 @@
   "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Kulüpten, menajerlerden ve federasyondan gelen bildirimler buraya kendiliğinden düşer.",
   "Estrés: %d de 100": "Stres: %d / 100",
   "Familia: %d de 100": "Aile: %d / 100",
-  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Kadron sakatlıklar yüzünden lig ortalamasından daha az hafta kaybediyor."
+  "Tu plantel pierde menos semanas por lesión que la media de la liga.": "Kadron sakatlıklar yüzünden lig ortalamasından daha az hafta kaybediyor.",
+  "La comparación con la liga empieza a contar con los primeros partidos.": "Lig ile karşılaştırma ilk maçlarla birlikte başlar."
  }
 }

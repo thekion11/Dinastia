@@ -63,20 +63,22 @@ func _estimar_semanas(c: Club) -> int:
 ## nada-, así que su cifra se ESTIMA a partir de lo que se sabe de ellos: los
 ## que tienen mejor reputación tienen mejor cuerpo médico y pierden menos. No es
 ## una simulación, es una referencia, y como tal se presenta.
-func ranking_liga(mio: Club, liga: Liga) -> Dictionary:
+##
+## `temporadas` (12-11): cuántas temporadas lleva la partida (con decimales). Tus días perdidos se ACUMULAN toda la carrera y la cifra de los
+## rivales era la de UNA temporada entera: en la semana 1 la media ya marcaba ~21 semanas, y al tercer año salías siempre el último.
+func ranking_liga(mio: Club, liga: Liga, temporadas := 1.0) -> Dictionary:
 	if liga == null or mio == null:
 		return {"puesto": 1, "total": 1, "mias": dias_perdidos / 7, "media": dias_perdidos / 7}
 	var cifras: Array = []
 	var suma := 0
 	for c: Club in liga.clubes:
-		var n := (dias_perdidos / 7) if c == mio else _estimar_semanas(c)
+		var n := (dias_perdidos / 7) if c == mio else int(round(float(_estimar_semanas(c)) * maxf(0.0, temporadas)))
 		cifras.append({"club": c, "n": n})
 		suma += n
-	cifras.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["n"]) < int(b["n"]))
-	var puesto := 1
-	for i in cifras.size():
-		if (cifras[i] as Dictionary)["club"] == mio:
-			puesto = i + 1
+	var puesto := 1   ## los que pierden MENOS que tú van delante; los empates no te bajan
+	for f: Dictionary in cifras:
+		if f["club"] != mio and int(f["n"]) < dias_perdidos / 7:
+			puesto += 1
 	return {
 		"puesto": puesto, "total": cifras.size(),
 		"mias": dias_perdidos / 7,

@@ -133,6 +133,13 @@ func _ideas_a_lesiones() -> void:
 	md.dias_perdidos = 7 * 400
 	var peor := int(md.ranking_liga(c, m.ligas[0])["puesto"])
 	_comprobar(mejor == 1 and peor == int(rk["total"]), "sin semanas perdidas eres el primero y con 400 semanas el último (puesto %d y %d) (542)" % [mejor, peor])
+	## (12-11) Se compara el MISMO periodo: sin nada jugado, la media de la liga es 0 (antes ~21 semanas en la semana 1) y a los tres años es el triple.
+	md.dias_perdidos = 0
+	var inicio: Dictionary = md.ranking_liga(c, m.ligas[0], 0.0)
+	var tres: Dictionary = md.ranking_liga(c, m.ligas[0], 3.0)
+	_comprobar(int(inicio["media"]) == 0 and int(inicio["puesto"]) == 1, "antes del primer partido nadie ha perdido semanas (media %d)" % int(inicio["media"]))
+	var una: Dictionary = md.ranking_liga(c, m.ligas[0], 1.0)
+	_comprobar(int(tres["media"]) >= int(una["media"]) * 2, "a los tres años la referencia de los rivales ha crecido con el tiempo (%d contra %d)" % [int(tres["media"]), int(una["media"])])
 
 func _ideas_a_emergencia_y_rehab() -> void:
 	var m := _mundo_ideas(2622)

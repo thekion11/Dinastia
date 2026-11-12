@@ -17,7 +17,11 @@ extends PantallaBase
 ## contesta con el ACUMULADO de la temporada y comparándolo con la liga.
 func _pintar_balance_medico(c: Club) -> void:
 	var med := p.mundo.medico
-	var r: Dictionary = med.ranking_liga(c, p._liga_de(c))
+	var liga := p._liga_de(c)
+	var jugado := float(p.mundo.anio - (p.mundo.logros.anio_inicio if p.mundo.logros != null else p.mundo.anio))
+	if liga != null:
+		jugado += float(liga.jornada_actual) / float(maxi(1, liga.jornadas()))
+	var r: Dictionary = med.ranking_liga(c, liga, jugado)
 	var enfermeria := c.plantilla.filter(func(j: Jugador) -> bool: return j.lesion > 0).size()
 	## (12-11) Las cuatro cifras del parte, en fichas grandes (`CifrasClave`): la enfermería en rojo si hay alguien, el puesto en verde si se está arriba.
 	var txt: Color = p._color_de_paleta(Principal.COL_TEXTO)
@@ -29,13 +33,15 @@ func _pintar_balance_medico(c: Club) -> void:
 		[Idiomas.t("Media de la liga"), Idiomas.t("%d sem") % int(r["media"]), txt]], p._color_de_paleta(Principal.COL_SUAVE)))
 	## El veredicto en una frase. Un puesto en una tabla no dice qué hacer; esto
 	## sí, y es lo que convierte la pantalla en una decisión.
-	var mejor := int(r["mias"]) < int(r["media"])
+	var mejor := int(r["mias"]) <= int(r["media"])
 	var v := p._texto(11, Principal.COL_VERDE if mejor else Principal.COL_ORO)
 	## (12-11) «Se nota la inversión» salía también sin jefe médico contratado y sin un solo partido jugado.
 	v.text = ((Idiomas.t("Tu cuerpo médico pierde menos semanas que la media de la liga. Se nota la inversión.") if p.mundo.staff.nivel("medico") > 0
 		else Idiomas.t("Tu plantel pierde menos semanas por lesión que la media de la liga."))
 		if mejor else
 		Idiomas.t("Pierdes más semanas por lesión que la media. Mira el jefe médico, el centro médico y la carga de entrenamiento."))
+	if int(r["media"]) == 0 and int(r["mias"]) == 0:   ## nada jugado todavía: no hay con qué comparar
+		v.text = Idiomas.t("La comparación con la liga empieza a contar con los primeros partidos.")
 	v.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_medico.add_child(v)
 	if not med.brote.is_empty():
