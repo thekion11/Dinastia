@@ -69,7 +69,9 @@ func _ia_portador(p: Dictionary) -> void:
 	if not _nuestra("decide_con_balon"):
 		super(p)
 		return
-	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
+	if _mejoras_c4 and MejorasC4Pared.vuelta(self, p):
+		return   ## (12-11) la vuelta de la pared, de primera
+	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4Pared.ida(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
 		return
 	var guardado := equipos
 	var antes := _decision_en
@@ -169,6 +171,10 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		return super._ia_ataque_sin_balon(p)
 	var r := _sin_flag3(p, true)
 	if _mejoras_c4:
+		var pared := MejorasC4Pared.desmarque(self, p)
+		if pared != Vector3.INF:
+			p["correr"] = true
+			return pared
 		var sigue := MejorasC4.seguir_tiro(self, p)
 		if sigue != Vector3.INF:
 			p["correr"] = true
