@@ -186,7 +186,9 @@ func _probar_camisetas_retiradas_vista() -> void:
 	add_child(sala)
 	var antes := sala.get_child_count()
 	CamisetasMuseo.poner(sala, Rect2(-2.0, -3.0, 4.0, 6.0), 0.0, Color(0.2, 0.5, 0.3), m.prensa.dorsales_retirados)
-	_comprobar(sala.get_child_count() - antes == 2 * 6, "el museo cuelga 6 piezas por camiseta (marco, fondo, cuerpo, mangas y 2 rótulos) = %d" % (sala.get_child_count() - antes))
+	var cuadro := sala.get_child(antes) if sala.get_child_count() > antes else null
+	_comprobar(sala.get_child_count() - antes == 2 and cuadro != null and cuadro.find_children("*", "Label3D", true, false).size() == 2 and cuadro.get_child_count() >= 12,
+		"el museo cuelga un cuadro por camiseta (marco, paño, camiseta con mangas y cuello, placa, lámpara y 2 rótulos) = %d" % (sala.get_child_count() - antes))
 	sala.queue_free()
 
 ## EL ESTILO DE JUEGO EN LA PLANTILLA (9-11): las estrellas salen de la aptitud y cambiar de rol lo deja en Táctica y en la pizarra del partido.

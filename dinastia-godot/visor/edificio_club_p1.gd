@@ -184,12 +184,16 @@ static func zonas(x0: float, z_out: float, z_fin: float) -> Array:
 ## El ascensor: puertas de acero con su botonera, en la fachada de atrás.
 static func _ascensor(nodo: Node3D, x0: float, z_fin: float, y0: float) -> void:
 	var cx := x0 + (ASC_X0 + ASC_X1) / 2.0
-	PuertasAscensor.poner(nodo, cx, z_fin, y0, ASC_X1 - ASC_X0 - 0.3)   ## (10-11) marco, fondo de cabina y dos hojas que se abren
+	var club_ctx: Variant = ctx.get("club")
+	var acento := Color((club_ctx as Club).color1) if club_ctx is Club else Color(0.1, 0.3, 0.7)
+	## (10-11) marco y dos hojas que se abren; (12-11) cabina con fondo y el indicador de planta
+	PuertasAscensor.poner(nodo, cx, z_fin, y0, ASC_X1 - ASC_X0 - 0.3, acento, str(roundi(y0 / ALTO_PLANTA)))
 	var boton := PiezasObra._mat_unico(Color(1, 0.8, 0.3), 0.3)
 	boton.emission_enabled = true
 	boton.emission = Color(1, 0.75, 0.25)
 	PiezasObra._caja(nodo, Vector3(x0 + ASC_X1 + 0.1, y0 + 1.2, z_fin - 0.1), Vector3(0.12, 0.25, 0.04), boton, false)
-	PiezasObra._rotulo(nodo, "▲▼ " + Idiomas.t("ASCENSOR"), Vector3(cx, y0 + 2.5, z_fin - 0.14), PI, 28, Color(0.2, 0.22, 0.26))
+	if absf(y0) < 0.01:   ## las demás plantas ya llevan encima su rótulo «PLANTA n · …»
+		PiezasObra._rotulo(nodo, Idiomas.t("ASCENSOR"), Vector3(cx, y0 + 2.95, z_fin - 0.14), PI, 28, Color(0.2, 0.22, 0.26))
 
 ## La pared del fondo del sótano (−2), con la puerta de la galería que lleva
 ## al complejo (`GaleriaClub`). En el estadio suelto no hay complejo: persiana.
@@ -427,7 +431,7 @@ static func _amueblar(nodo: Node3D, sala: String, caja: Rect2, y0: float, c1: Co
 			## Vitrinas con una copa por título (hasta 12), camisetas históricas
 			## enmarcadas y la alfombra del recorrido (`SalasClub`).
 			SalasClub.museo(nodo, caja, y0, c1, c2, int(ctx.get("titulos", 0)), nivel("museo"), MuseoAmpliado.hitos(ctx), String(ctx.get("pais", "")))
-			CamisetasMuseo.poner(nodo, caja, y0, c1)   ## (9-11) las camisetas retiradas del partido de despedida
+			CamisetasMuseo.poner(nodo, caja, y0, c1, [], c2)   ## (9-11) las camisetas retiradas del partido de despedida
 
 ## Los datos de un objeto de decoración para `Modulos.de_datos`.
 static func datos_deco(clave: String) -> Array:
