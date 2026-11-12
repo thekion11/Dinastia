@@ -51,8 +51,11 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   ARREGLADO: las hojas del ascensor (el metal con ruido estirado parecía papel de aluminio arrugado; ahora acero satinado liso, mismas
   llamadas). `prueba_casa_a_pie`: el evento de inicio de temporada tapaba sus 9 capturas. Descartado: el personal del pasillo «en la cara»
   es la cámara de captura teletransportada (en el juego `ColisionClub` ya frena contra la gente).
-- FALTA: en la salida del túnel, dos bloques NEGROS a los lados de la portería tapan la vista a 1,6 m (ENG, MEX y KOR; identificar la pieza:
-  ¿trasera de las vallas o de los banquillos?); taquillas del vestuario visitante y butacas de la sala de vídeo muy planas de cerca; vídeo con la cámara real de las reacciones; medir el HUD en el teléfono real.
+  ARREGLADO (bloques negros a la salida del túnel): con un rayo contra los triángulos de la escena, eran la VALLA PERIMETRAL del fondo
+  (caja de 1,2 m a los lados del paso del túnel, `StadiumBuilder._vallas`), de metal casi negro (0,12, metálico 0,75): vista por detrás y sin
+  luz directa, de noche salía negra. Ahora chapa pintada gris (metálico 0,2) con un rebote de luz; misma caja y llamadas. Hoja
+  `valla_fondo_salida_tunel_ENG_antes_despues.jpg`.
+- FALTA: taquillas del vestuario visitante y butacas de la sala de vídeo muy planas de cerca; vídeo con la cámara real de las reacciones; medir el HUD en el teléfono real.
 - IDEA ANOTADA: lanzar el mini evento también en el momento de ganar el título que abre la planta (hoy sale en la primera visita).
 ## SESIÓN 15 (12-11): JUGABILIDAD DE C4 — rama `sesion15-jugabilidad` (detalle y cifras en `MOTOR_LEAGUE_SOCCER_PLAN.md`, tabla de banderas)
 - MEDIDO Y DESCARTADO (apagado, cada uno con su bandera): adelanto del pase por zona (`C4_ADELANTO=3`) y eligiendo otro compañero (`=4`):

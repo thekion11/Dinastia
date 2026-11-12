@@ -180,7 +180,14 @@ static func _vallas(obra: EstadioObra) -> void:
 	var root := obra.root
 	## Metal de verdad (17-9-2026, ronda 5): es literalmente una malla/reja
 	## perimetral, el material menos "plastico" posible para esto.
-	var valla := Texturas.metal(Color(0.12, 0.13, 0.15), 0.5)
+	## (12-11, sesión 16, primera persona) Chapa PINTADA gris oscura, no metal casi negro: saliendo del túnel, a 1,6 m, la valla del fondo se
+	## ve por detrás y en sombra; un metal (0,75) sin reflejos del entorno de noche sale negro sea cual sea su color, y se leían dos bloques
+	## negros a los lados de la portería. Misma caja, mismo número de llamadas.
+	var valla := (Texturas.metal(Color(0.26, 0.28, 0.31), 0.5).duplicate() as StandardMaterial3D)
+	valla.metallic = 0.2
+	valla.emission_enabled = true   ## el rebote de los focos: la cara que da al túnel no recibe luz directa y de noche salía negra
+	valla.emission = Color(0.26, 0.28, 0.31)
+	valla.emission_energy_multiplier = 0.35
 	## Con el paso del túnel abierto: la valla del fondo +Z se parte.
 	for tr: Vector2 in _tramos_sin_hueco(0.0, 78.0, tunel_x(est) - 2.6, tunel_x(est) + 2.6):
 		_box(root, Vector3(tr.x, 0.6, 56.5), Vector3(tr.y, 1.2, 0.3), valla)
