@@ -23,7 +23,9 @@ static func pintar(raiz: Control, c: Club, ficha: Callable) -> void:
 	var slots: Array = (forms[c.tactica.formacion] as Dictionary)["s"]
 	var once := c.once()
 	var campo := CampoDibujado.new()
-	campo.custom_minimum_size = Vector2(0, alto_para(slots))
+	## El ancho que tendrá el campo, para saber qué fichas pueden pisarse: el de la lista si ya lo tiene, o una parte de la ventana.
+	var ancho_px := raiz.size.x if raiz.size.x > 200.0 else raiz.get_viewport_rect().size.x * 0.8
+	campo.custom_minimum_size = Vector2(0, alto_para(slots, ancho_px))
 	campo.clip_contents = true
 	raiz.add_child(campo)
 	for i in slots.size():
@@ -68,11 +70,15 @@ static func _alto_de(slots: Array, s: Array) -> float:
 ## del otro y se tocaba el que no era). Con tope `ALTO_MAX`.
 const ALTO_FICHA := 82.0
 const ALTO_MAX := 680
-static func alto_para(slots: Array) -> int:
+## (12-11) `ancho_px`: el ancho del campo. Dos fichas (76 px) solo se pisan si están a menos de ~80 px de lado: en un teléfono de pie
+## (540 px) eso es el 14 % de siempre; en una pantalla ancha es menos, y el portero y un central a 12 puntos de lado ya no cuentan
+## (contaban, y el 4-4-2 pedía 456 px: con el teléfono tumbado no cabía).
+static func alto_para(slots: Array, ancho_px := 540.0) -> int:
 	var hueco := INF
+	var umbral := clampf(80.0 / maxf(ancho_px, 1.0) * 100.0, 6.0, 14.0)
 	for i in slots.size():
 		for k in range(i + 1, slots.size()):
-			if absf(float(slots[i][1]) - float(slots[k][1])) < 14.0:
+			if absf(float(slots[i][1]) - float(slots[k][1])) < umbral:
 				hueco = minf(hueco, absf(_alto_de(slots, slots[i]) - _alto_de(slots, slots[k])))
 	if hueco == INF or hueco <= 0.0:
 		return ALTO
