@@ -224,10 +224,28 @@ static func _once(p: Principal, c: Club) -> void:
 		g.add_child(b)
 		g.add_child(p._retrato(j, Principal.RETRATO_FILA))
 		var col := p.COL_ACENTO if dentro else (Principal.COL_ROJO if not j.disponible() else Principal.COL_TEXTO)
-		p._celda(g, j.nombre, col, false, 12)
+		## (12-11, idea del PES ya hecha en la plantilla) El nombre con la «C» del capitán, y más abajo la forma con su flecha.
+		var celda_n := HBoxContainer.new()
+		celda_n.add_theme_constant_override("separation", 6)
+		celda_n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var nom := p._texto(12, col)
+		nom.text = j.nombre
+		nom.clip_text = true
+		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		celda_n.add_child(nom)
+		if j.capitan:
+			celda_n.add_child(PlantillaHabilidades.brazalete())
+		g.add_child(celda_n)
 		p._celda(g, j.pos_e, Principal.COL_SUAVE, false, 11)
 		p._celda(g, str(j.ovr), col, true, 12)
-		p._celda(g, str(j.forma), Principal.COL_SUAVE, true, 11)
+		var celda_f := HBoxContainer.new()
+		celda_f.add_theme_constant_override("separation", 4)
+		celda_f.alignment = BoxContainer.ALIGNMENT_END
+		var forma := p._texto(11, Principal.COL_SUAVE)
+		forma.text = str(j.forma)
+		celda_f.add_child(forma)
+		celda_f.add_child(FlechaForma.etiqueta(j, 13))
+		g.add_child(celda_f)
 		var estado := "listo"
 		if j.lesion > 0:
 			estado = "lesionado %d sem" % j.lesion
