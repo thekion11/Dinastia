@@ -53,7 +53,8 @@ func _ready() -> void:
 	## PAIS=ARG CLUB=7: otro país y otro club (regla 34: nunca revisar con un solo equipo).
 	m.generar([OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"], 20261103)
 	m.tomar_el_mando(m.ligas[0].clubes[int(OS.get_environment("CLUB")) % m.ligas[0].clubes.size()].id)
-	_despachar_eventos(m)
+	if OS.get_environment("EVENTOS") != "1":   ## EVENTOS=1: se dejan (la primera foto es la reunión con la directiva a pantalla completa)
+		_despachar_eventos(m)
 	PedidoPartida.mundo_pregenerado = m
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)

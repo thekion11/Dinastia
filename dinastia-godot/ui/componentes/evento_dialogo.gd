@@ -16,12 +16,13 @@ static func mostrar(pr: Principal, ev: Dictionary) -> EventoDialogo:
 	return e
 
 func _rellenar(pr: Principal, ev: Dictionary) -> void:
-	_centro.custom_minimum_size = Vector2(900, 0)
+	var de_pie := EscalaMovil.es_vertical()   ## (12-11) de pie: el retrato arriba y el diálogo debajo, a lo ancho
+	_centro.custom_minimum_size = Vector2(ancho_base(900.0), 0)
 	_centro.add_theme_constant_override("separation", 18)
 	var lugar := etiqueta("▍ " + String(ev.get("lugar", "")).to_upper(), 15, acento.lightened(0.3), false)
 	_centro.add_child(lugar)
-	var cuerpo := HBoxContainer.new()
-	cuerpo.add_theme_constant_override("separation", 26)
+	var cuerpo: BoxContainer = VBoxContainer.new() if de_pie else HBoxContainer.new()
+	cuerpo.add_theme_constant_override("separation", 14 if de_pie else 26)
 	_centro.add_child(cuerpo)
 	cuerpo.add_child(_retrato(pr, ev))
 	var der := VBoxContainer.new()
@@ -36,7 +37,8 @@ func _rellenar(pr: Principal, ev: Dictionary) -> void:
 	selector.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	selector.elegido.connect(func(i: int) -> void: elegido.emit(str(i)))
 	der.add_child(selector)
-	der.add_child(etiqueta(Idiomas.t("Analógico o flechas para apuntar · R2/A/Enter confirma · clic o toque directo"), 11, Color(SelectorDireccional.BLANCO, 0.55)))
+	if not de_pie:   ## en el teléfono se toca la respuesta: la ayuda del mando sobra y no cabe
+		der.add_child(etiqueta(Idiomas.t("Analógico o flechas para apuntar · R2/A/Enter confirma · clic o toque directo"), 11, Color(SelectorDireccional.BLANCO, 0.55)))
 	if selector.get_child_count() > 0:
 		(selector.get_child(0) as Control).call_deferred("grab_focus")
 
@@ -62,7 +64,8 @@ func _retrato(pr: Principal, ev: Dictionary) -> Control:
 		tr.texture = CaraDT.textura(CaraDT.look_de_nombre(String(ev.get("quien", ""))), 200)
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tr.custom_minimum_size = Vector2(200, 220)
+	tr.custom_minimum_size = Vector2(130, 140) if EscalaMovil.es_vertical() else Vector2(200, 220)
+	marco.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	marco.add_child(tr)
 	col.add_child(etiqueta(String(ev.get("cargo", "")).to_upper(), 12, Color(SelectorDireccional.BLANCO, 0.6)))
 	return col
@@ -89,7 +92,7 @@ func _caja_dialogo(ev: Dictionary) -> Control:
 	sc.set_content_margin_all(18)
 	caja.add_theme_stylebox_override("panel", sc)
 	_texto = etiqueta(String(ev.get("texto", "")), 19, SelectorDireccional.BLANCO, false)
-	_texto.custom_minimum_size = Vector2(560, 92)
+	_texto.custom_minimum_size = Vector2(ancho_base(560.0) - (60.0 if EscalaMovil.es_vertical() else 0.0), 92)
 	caja.add_child(_texto)
 	v.add_child(caja)
 	if not Animar.reducidas():

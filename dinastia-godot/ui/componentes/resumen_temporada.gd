@@ -6,7 +6,6 @@ extends EventoPantallaCompleta
 ## la copa, el continental, ascensos y descensos de tu país, los premios de la gala y el veredicto de la directiva.
 ## `foto` = `CierreTorneos.foto(mundo)` tomada ANTES del cierre; `resumen` = lo que devuelve `Mundo.nueva_temporada()`.
 const ANCHO_TARJETA := 360
-const ANCHO_DE_PIE := 500   ## teléfono de pie: una sola columna en el lienzo de 540 px
 
 static func mostrar(pr: Node, foto: Dictionary, resumen: Dictionary) -> ResumenTemporada:
 	var e := ResumenTemporada.new()

@@ -65,10 +65,16 @@ func _montar_base(pr: Node) -> void:
 	desliza.add_child(centro)
 	_centro = VBoxContainer.new()
 	_centro.add_theme_constant_override("separation", 12)
-	_centro.custom_minimum_size = Vector2(760, 0)
+	_centro.custom_minimum_size = Vector2(ancho_base(760.0), 0)
 	centro.add_child(_centro)
 	_raiz.modulate.a = 0.0   ## fundido de entrada
 	create_tween().tween_property(_raiz, "modulate:a", 1.0, 0.45)
+
+## El ancho del contenido de un evento: el que pide en PC o, en el teléfono de pie (lienzo de 540 px), `ANCHO_DE_PIE`. (12-11: los eventos
+## pedían 760-900 px y de pie la mitad derecha —texto y respuestas— quedaba fuera de la pantalla.)
+const ANCHO_DE_PIE := 500.0
+static func ancho_base(en_pc: float) -> float:
+	return ANCHO_DE_PIE if EscalaMovil.es_vertical() else en_pc
 
 ## EL BOTÓN DE SEGUIR, FIJO ABAJO (12-11): fuera del desplazamiento, centrado sobre el filete de abajo, para que esté SIEMPRE a la vista aunque
 ## el contenido no quepa (el resumen de temporada con muchos objetivos lo dejaba bajo el pliegue a 1080 px). El contenido cede ese alto.
