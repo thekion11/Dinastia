@@ -320,5 +320,6 @@ static func banda_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: Random
 	if mejor.is_empty() or rng.randf() > 0.7:
 		return false
 	m._pasar_a(p, mejor, false, true)
+	m._anim(p, AnimExtra.variante(p["anim"], "saque_banda", String(p.get("id", "")), rng), true)
 	m._contar("c4_banda_ensayada")
 	return true
