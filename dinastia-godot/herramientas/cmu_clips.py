@@ -17,6 +17,9 @@ import os
 import sys
 
 import numpy as np
+_sys_rs = __import__("sys"); _os_rs = __import__("os")
+_sys_rs.path.insert(0, _os_rs.path.join(_os_rs.path.dirname(_os_rs.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura  # noqa: E402  (rutas por argumento: SonarCloud S8707)
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 spec = importlib.util.spec_from_file_location("e100", os.path.join(AQUI, "estilo100_ciclos.py"))
@@ -225,7 +228,7 @@ def main():
     if res["juntas"] is None:
         j0, _, _ = cargar(base, CARRERA[0])
         res["juntas"] = [{"nombre": d["nombre"], "padre": d["padre"]} for d in filtrar(j0)[0]]
-    with open(salida, "w") as f:
+    with open(ruta_segura(salida), "w") as f:
         json.dump(res, f, separators=(",", ":"))
     print("clips:", len(res["clips"]))
 

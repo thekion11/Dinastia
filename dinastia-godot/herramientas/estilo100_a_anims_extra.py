@@ -27,7 +27,7 @@ for c in cat:
         continue
     v = abs(float(c["velocidad_ms"])) if c["tipo"] != "reposo" else 0.0
     k = clase(v)
-    if c["tipo"] != "reposo" and k == 0.0:
+    if c["tipo"] != "reposo" and abs(k) < 1e-9:   # clase 0 = parado (S1244: sin == entre flotantes)
         omitidos += 1
         continue
     cuerpo = round(math.radians(-float(c["angulo_mov_grados"])), 3)

@@ -1,0 +1,1022 @@
+{
+ "fecha": "2026-11-12",
+ "rama": "main",
+ "issues": [
+  {
+   "key": "AaHIkxhfoLmZGk9rtr0g",
+   "rule": "pythonsecurity:S8707",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:dinastia-godot/herramientas/cmu_clips.py",
+   "project": "thekion11_Dinastia",
+   "line": 228,
+   "hash": "6749f046e4a174e1151eddbd49d77408",
+   "textRange": {
+    "startLine": 228,
+    "endLine": 228,
+    "startOffset": 9,
+    "endOffset": 26
+   },
+   "flows": [
+    {
+     "locations": [
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/cmu_clips.py",
+       "textRange": {
+        "startLine": 228,
+        "endLine": 228,
+        "startOffset": 9,
+        "endOffset": 26
+       },
+       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/cmu_clips.py",
+       "textRange": {
+        "startLine": 204,
+        "endLine": 204,
+        "startOffset": 4,
+        "endOffset": 43
+       },
+       "msg": "A malicious value can be assigned to variable ‘salida’"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/cmu_clips.py",
+       "textRange": {
+        "startLine": 204,
+        "endLine": 204,
+        "startOffset": 32,
+        "endOffset": 43
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/cmu_clips.py",
+       "textRange": {
+        "startLine": 204,
+        "endLine": 204,
+        "startOffset": 32,
+        "endOffset": 40
+       },
+       "msg": "Source: a user can craft an HTTP request with malicious content"
+      }
+     ]
+    }
+   ],
+   "status": "OPEN",
+   "message": "Path Traversal via command-line argument in cmu_clips.main()",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cwe"
+   ],
+   "creationDate": "2026-11-11T02:55:15+0000",
+   "updateDate": "2026-11-11T03:05:17+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "COMPLETE",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [
+    "taint"
+   ],
+   "lastChangeAnalysisUuid": "2a4de766-b6f3-40ec-bacc-a24d018f1abb",
+   "lastChangeSource": "ANALYSIS"
+  },
+  {
+   "key": "AaHIYMvyVSX3kAyfwhvJ",
+   "rule": "python:S1244",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_a_anims_extra.py",
+   "project": "thekion11_Dinastia",
+   "line": 30,
+   "hash": "ba92c047f273ec4860f4fe47132882ab",
+   "textRange": {
+    "startLine": 30,
+    "endLine": 30,
+    "startOffset": 33,
+    "endOffset": 41
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "Do not perform equality checks with floating point values.",
+   "effort": "5min",
+   "debt": "5min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "data-science",
+    "numpy",
+    "pytorch",
+    "suspicious"
+   ],
+   "creationDate": "2026-11-11T02:00:52+0000",
+   "updateDate": "2026-11-11T02:11:20+0000",
+   "type": "BUG",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "LOGICAL",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "RELIABILITY",
+     "severity": "MEDIUM"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "ef92dfc3-af9c-44ef-b8cb-a56a557f75d8",
+   "lastChangeSource": "ANALYSIS"
+  },
+  {
+   "key": "AaHIYMxzVSX3kAyfwhvM",
+   "rule": "pythonsecurity:S8707",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+   "project": "thekion11_Dinastia",
+   "line": 34,
+   "hash": "3f7983ce61cfd204cc16aa3517897e2e",
+   "textRange": {
+    "startLine": 34,
+    "endLine": 34,
+    "startOffset": 9,
+    "endOffset": 42
+   },
+   "flows": [
+    {
+     "locations": [
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 34,
+        "endLine": 34,
+        "startOffset": 9,
+        "endOffset": 42
+       },
+       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 33,
+        "endLine": 33,
+        "startOffset": 13,
+        "endOffset": 17
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 33,
+        "endLine": 33,
+        "startOffset": 4,
+        "endOffset": 12
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 276,
+        "endLine": 276,
+        "startOffset": 28,
+        "endOffset": 42
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 272,
+        "endLine": 272,
+        "startOffset": 12,
+        "endOffset": 70
+       },
+       "msg": "A malicious value can be assigned to variable ‘ruta’"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 272,
+        "endLine": 272,
+        "startOffset": 19,
+        "endOffset": 70
+       },
+       "msg": "This invocation can propagate malicious content to its return value"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 263,
+        "endLine": 263,
+        "startOffset": 4,
+        "endOffset": 46
+       },
+       "msg": "A malicious value can be assigned to variable ‘carpeta’"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 263,
+        "endLine": 263,
+        "startOffset": 22,
+        "endOffset": 33
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 263,
+        "endLine": 263,
+        "startOffset": 22,
+        "endOffset": 30
+       },
+       "msg": "Source: a user can craft an HTTP request with malicious content"
+      }
+     ]
+    }
+   ],
+   "status": "OPEN",
+   "message": "Path Traversal via command-line argument in estilo100_ciclos.leer_bvh()",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cwe"
+   ],
+   "creationDate": "2026-11-11T01:55:53+0000",
+   "updateDate": "2026-11-11T02:11:20+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "COMPLETE",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [
+    "taint"
+   ],
+   "lastChangeAnalysisUuid": "2a4de766-b6f3-40ec-bacc-a24d018f1abb",
+   "lastChangeSource": "ANALYSIS"
+  },
+  {
+   "key": "AaHIYMxzVSX3kAyfwhvK",
+   "rule": "python:S1244",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+   "project": "thekion11_Dinastia",
+   "line": 190,
+   "hash": "4f8c74b365071ed7220bb32d87a2f2fe",
+   "textRange": {
+    "startLine": 190,
+    "endLine": 190,
+    "startOffset": 19,
+    "endOffset": 35
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "Do not perform equality checks with floating point values.",
+   "effort": "5min",
+   "debt": "5min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "data-science",
+    "numpy",
+    "pytorch",
+    "suspicious"
+   ],
+   "creationDate": "2026-11-11T01:55:53+0000",
+   "updateDate": "2026-11-11T02:11:20+0000",
+   "type": "BUG",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "LOGICAL",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "RELIABILITY",
+     "severity": "MEDIUM"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "2a4de766-b6f3-40ec-bacc-a24d018f1abb",
+   "lastChangeSource": "ANALYSIS"
+  },
+  {
+   "key": "AaHIYMxzVSX3kAyfwhvN",
+   "rule": "pythonsecurity:S8707",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+   "project": "thekion11_Dinastia",
+   "line": 266,
+   "hash": "78de970166374425845ed2b2fd6a67a0",
+   "textRange": {
+    "startLine": 266,
+    "endLine": 266,
+    "startOffset": 9,
+    "endOffset": 66
+   },
+   "flows": [
+    {
+     "locations": [
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 266,
+        "endLine": 266,
+        "startOffset": 9,
+        "endOffset": 66
+       },
+       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 266,
+        "endLine": 266,
+        "startOffset": 14,
+        "endOffset": 53
+       },
+       "msg": "This invocation can propagate malicious content to its return value"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 263,
+        "endLine": 263,
+        "startOffset": 4,
+        "endOffset": 46
+       },
+       "msg": "A malicious value can be assigned to variable ‘carpeta’"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 263,
+        "endLine": 263,
+        "startOffset": 22,
+        "endOffset": 33
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 263,
+        "endLine": 263,
+        "startOffset": 22,
+        "endOffset": 30
+       },
+       "msg": "Source: a user can craft an HTTP request with malicious content"
+      }
+     ]
+    }
+   ],
+   "status": "OPEN",
+   "message": "Path Traversal via command-line argument in estilo100_ciclos.main()",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cwe"
+   ],
+   "creationDate": "2026-11-11T01:55:53+0000",
+   "updateDate": "2026-11-11T02:11:20+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "COMPLETE",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [
+    "taint"
+   ],
+   "lastChangeAnalysisUuid": "2a4de766-b6f3-40ec-bacc-a24d018f1abb",
+   "lastChangeSource": "ANALYSIS"
+  },
+  {
+   "key": "AaHIYMxzVSX3kAyfwhvL",
+   "rule": "pythonsecurity:S8707",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+   "project": "thekion11_Dinastia",
+   "line": 301,
+   "hash": "6749f046e4a174e1151eddbd49d77408",
+   "textRange": {
+    "startLine": 301,
+    "endLine": 301,
+    "startOffset": 9,
+    "endOffset": 26
+   },
+   "flows": [
+    {
+     "locations": [
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 301,
+        "endLine": 301,
+        "startOffset": 9,
+        "endOffset": 26
+       },
+       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 263,
+        "endLine": 263,
+        "startOffset": 4,
+        "endOffset": 46
+       },
+       "msg": "A malicious value can be assigned to variable ‘salida’"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 263,
+        "endLine": 263,
+        "startOffset": 35,
+        "endOffset": 46
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/estilo100_ciclos.py",
+       "textRange": {
+        "startLine": 263,
+        "endLine": 263,
+        "startOffset": 35,
+        "endOffset": 43
+       },
+       "msg": "Source: a user can craft an HTTP request with malicious content"
+      }
+     ]
+    }
+   ],
+   "status": "OPEN",
+   "message": "Path Traversal via command-line argument in estilo100_ciclos.main()",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cwe"
+   ],
+   "creationDate": "2026-11-11T01:55:53+0000",
+   "updateDate": "2026-11-11T02:11:20+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "COMPLETE",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [
+    "taint"
+   ],
+   "lastChangeAnalysisUuid": "2a4de766-b6f3-40ec-bacc-a24d018f1abb",
+   "lastChangeSource": "ANALYSIS"
+  },
+  {
+   "key": "AaHHbYrUt-uh63tnzlsO",
+   "rule": "pythonsecurity:S5144",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+   "project": "thekion11_Dinastia",
+   "line": 9,
+   "hash": "971d5e3c54609ed1c7b15c4863c760c0",
+   "textRange": {
+    "startLine": 9,
+    "endLine": 9,
+    "startOffset": 34,
+    "endOffset": 100
+   },
+   "flows": [
+    {
+     "locations": [
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 9,
+        "endLine": 9,
+        "startOffset": 34,
+        "endOffset": 100
+       },
+       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 8,
+        "endLine": 8,
+        "startOffset": 10,
+        "endOffset": 13
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 8,
+        "endLine": 8,
+        "startOffset": 4,
+        "endOffset": 9
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 13,
+        "endLine": 13,
+        "startOffset": 9,
+        "endOffset": 19
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 11,
+        "endLine": 11,
+        "startOffset": 10,
+        "endOffset": 13
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 11,
+        "endLine": 11,
+        "startOffset": 4,
+        "endOffset": 9
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 20,
+        "endLine": 20,
+        "startOffset": 4,
+        "endOffset": 70
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 20,
+        "endLine": 20,
+        "startOffset": 10,
+        "endOffset": 18
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 8,
+        "endOffset": 46
+       },
+       "msg": "A malicious value can be assigned to variable ‘g’"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 12,
+        "endOffset": 46
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 12,
+        "endOffset": 38
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 12,
+        "endOffset": 32
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:dinastia-godot/herramientas/bajar_cc0_modelos.py",
+       "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 12,
+        "endOffset": 24
+       },
+       "msg": "Source: a user can craft an HTTP request with malicious content"
+      }
+     ]
+    }
+   ],
+   "status": "OPEN",
+   "message": "Server-Side Request Forgery via file content in bajar_cc0_modelos.abrir()",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cwe"
+   ],
+   "creationDate": "2026-11-10T21:37:19+0000",
+   "updateDate": "2026-11-10T21:44:46+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "COMPLETE",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "MEDIUM"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [
+    "taint"
+   ],
+   "lastChangeAnalysisUuid": "a571b6f8-74e1-4d68-86ca-9fecc5bccab5",
+   "lastChangeSource": "ANALYSIS"
+  },
+  {
+   "key": "AaHGZyPBVKmW94tSFEp9",
+   "rule": "pythonsecurity:S8707",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:herramientas/aspecto_unicos_kit.py",
+   "project": "thekion11_Dinastia",
+   "line": 37,
+   "hash": "b8a20846459ebfd498b0543c11bf0535",
+   "textRange": {
+    "startLine": 37,
+    "endLine": 37,
+    "startOffset": 46,
+    "endOffset": 74
+   },
+   "flows": [
+    {
+     "locations": [
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos_kit.py",
+       "textRange": {
+        "startLine": 37,
+        "endLine": 37,
+        "startOffset": 46,
+        "endOffset": 74
+       },
+       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos_kit.py",
+       "textRange": {
+        "startLine": 36,
+        "endLine": 36,
+        "startOffset": 9,
+        "endOffset": 13
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos_kit.py",
+       "textRange": {
+        "startLine": 36,
+        "endLine": 36,
+        "startOffset": 4,
+        "endOffset": 8
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos_kit.py",
+       "textRange": {
+        "startLine": 41,
+        "endLine": 41,
+        "startOffset": 108,
+        "endOffset": 125
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos_kit.py",
+       "textRange": {
+        "startLine": 41,
+        "endLine": 41,
+        "startOffset": 113,
+        "endOffset": 124
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos_kit.py",
+       "textRange": {
+        "startLine": 41,
+        "endLine": 41,
+        "startOffset": 113,
+        "endOffset": 121
+       },
+       "msg": "Source: a user can craft an HTTP request with malicious content"
+      }
+     ]
+    }
+   ],
+   "status": "OPEN",
+   "message": "Path Traversal via command-line argument in aspecto_unicos_kit.leer()",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cwe"
+   ],
+   "creationDate": "2026-11-10T15:48:21+0000",
+   "updateDate": "2026-11-10T16:58:09+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "COMPLETE",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [
+    "taint"
+   ],
+   "lastChangeAnalysisUuid": "418d3d52-53e1-45ad-b339-878fcda1636a",
+   "lastChangeSource": "ANALYSIS"
+  },
+  {
+   "key": "AaHGBulKnzBKkJ2PdnfF",
+   "rule": "pythonsecurity:S8707",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+   "project": "thekion11_Dinastia",
+   "line": 30,
+   "hash": "faa9911f0bfd2807c91d86e062ed029f",
+   "textRange": {
+    "startLine": 30,
+    "endLine": 30,
+    "startOffset": 42,
+    "endOffset": 70
+   },
+   "flows": [
+    {
+     "locations": [
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 30,
+        "endLine": 30,
+        "startOffset": 42,
+        "endOffset": 70
+       },
+       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 29,
+        "endLine": 29,
+        "startOffset": 9,
+        "endOffset": 13
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 29,
+        "endLine": 29,
+        "startOffset": 4,
+        "endOffset": 8
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 34,
+        "endLine": 34,
+        "startOffset": 36,
+        "endOffset": 53
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 34,
+        "endLine": 34,
+        "startOffset": 41,
+        "endOffset": 52
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 34,
+        "endLine": 34,
+        "startOffset": 41,
+        "endOffset": 49
+       },
+       "msg": "Source: a user can craft an HTTP request with malicious content"
+      }
+     ]
+    },
+    {
+     "locations": [
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 30,
+        "endLine": 30,
+        "startOffset": 42,
+        "endOffset": 70
+       },
+       "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 29,
+        "endLine": 29,
+        "startOffset": 9,
+        "endOffset": 13
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 29,
+        "endLine": 29,
+        "startOffset": 4,
+        "endOffset": 8
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 34,
+        "endLine": 34,
+        "startOffset": 17,
+        "endOffset": 34
+       },
+       "msg": "This instruction can propagate malicious content"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 34,
+        "endLine": 34,
+        "startOffset": 22,
+        "endOffset": 33
+       },
+       "msg": "A malicious value was previously assigned to this data structure"
+      },
+      {
+       "component": "thekion11_Dinastia:herramientas/aspecto_unicos.py",
+       "textRange": {
+        "startLine": 34,
+        "endLine": 34,
+        "startOffset": 22,
+        "endOffset": 30
+       },
+       "msg": "Source: a user can craft an HTTP request with malicious content"
+      }
+     ]
+    }
+   ],
+   "status": "OPEN",
+   "message": "Path Traversal via command-line argument in aspecto_unicos.leer()",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cwe"
+   ],
+   "creationDate": "2026-11-10T14:53:17+0000",
+   "updateDate": "2026-11-10T15:13:53+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "COMPLETE",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [
+    "taint"
+   ],
+   "lastChangeAnalysisUuid": "ec4b9d87-c3e8-4849-ade4-021a1d4fc009",
+   "lastChangeSource": "ANALYSIS"
+  }
+ ],
+ "hotspots": [],
+ "duplicaciones": [
+  {
+   "path": "recursos/modelos3d/cc0_web/kenney_city-kit-commercial/Overview.html",
+   "lineas": 150,
+   "pct": "64.1"
+  },
+  {
+   "path": "recursos/modelos3d/cc0_web/kenney_car-kit/Overview.html",
+   "lineas": 150,
+   "pct": "61.7"
+  },
+  {
+   "path": "herramientas/ligas_completas.py",
+   "lineas": 49,
+   "pct": "21.9"
+  },
+  {
+   "path": "herramientas/segundas_divisiones.py",
+   "lineas": 49,
+   "pct": "13.4"
+  },
+  {
+   "path": "herramientas/caras_reales_rescate.ps1",
+   "lineas": 31,
+   "pct": "18.3"
+  },
+  {
+   "path": "herramientas/empaquetar.ps1",
+   "lineas": 28,
+   "pct": "10.3"
+  },
+  {
+   "path": "herramientas/caras_reales_buscar.ps1",
+   "lineas": 27,
+   "pct": "15.1"
+  },
+  {
+   "path": "herramientas/generar_2d_ia.ps1",
+   "lineas": 14,
+   "pct": "16.7"
+  },
+  {
+   "path": "herramientas/generar_3d_ia.ps1",
+   "lineas": 14,
+   "pct": "13.9"
+  },
+  {
+   "path": "herramientas/compilacion_menu/aplicar.py",
+   "lineas": 10,
+   "pct": "19.2"
+  },
+  {
+   "path": "herramientas/compilacion_menu/exper.py",
+   "lineas": 10,
+   "pct": "11.8"
+  }
+ ]
+}

@@ -8,6 +8,7 @@ Uso: python3 herramientas/aspecto_unicos_kit.py <firmas_kit.txt>"""
 import glob
 import os
 import sys
+from ruta_segura import ruta_segura  # rutas por argumento: SonarCloud S8707
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 DATOS = os.path.join(AQUI, "aspecto_clubes")
@@ -34,7 +35,7 @@ def fijos() -> set:
 
 
 def leer(ruta):
-    return [l.strip().split("|")[1:] for l in open(ruta, encoding="utf-8") if l.startswith("KIT|")]
+    return [l.strip().split("|")[1:] for l in open(ruta_segura(ruta), encoding="utf-8") if l.startswith("KIT|")]
 
 
 def main() -> int:

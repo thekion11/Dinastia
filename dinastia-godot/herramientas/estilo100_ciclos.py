@@ -19,6 +19,9 @@ import os
 import sys
 
 import numpy as np
+_sys_rs = __import__("sys"); _os_rs = __import__("os")
+_sys_rs.path.insert(0, _os_rs.path.join(_os_rs.path.dirname(_os_rs.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura  # noqa: E402  (rutas por argumento: SonarCloud S8707)
 
 FPS_ORIGEN = 60
 FPS_SALIDA = 30
@@ -31,7 +34,7 @@ TOBILLO_D, TOBILLO_I = "RightAnkle", "LeftAnkle"   # otros esqueletos (CMU: Righ
 
 
 def leer_bvh(ruta):
-    with open(ruta, "r", encoding="ascii") as f:
+    with open(ruta_segura(ruta), "r", encoding="ascii") as f:
         lin = f.read().split("\n")
     juntas, pila, i = [], [], 0
     while not lin[i].strip().startswith("MOTION"):
@@ -186,8 +189,9 @@ def ventanas(juntas, R, pos, ini, fin, tipo):
                 vf = np.einsum("fa,fa->f", v, fwd[a:b][:, [0, 2]])
                 vl = np.einsum("fa,fa->f", v, left[a:b][:, [0, 2]])
                 ang = np.degrees(np.arctan2(vl.mean(), vf.mean()))
-                dif = abs(abs(ang) - ang_esp) if ang_esp in (0.0, 180.0) else abs(abs(ang) - 90.0)
-                if ang_esp == 180.0:
+                atras = math.isclose(ang_esp, 180.0)   # S1244: los ángulos esperados son 0, 90 o 180 exactos, pero se comparan con tolerancia
+                dif = abs(abs(ang) - ang_esp) if (math.isclose(ang_esp, 0.0) or atras) else abs(abs(ang) - 90.0)
+                if atras:
                     dif = 180.0 - abs(ang)
                 if dif > 25:
                     continue
@@ -263,7 +267,7 @@ def main():
     carpeta, salida = sys.argv[1], sys.argv[2]
     estilos = sys.argv[3].split(",") if len(sys.argv) > 3 else ESTILOS_DEF
     cortes = {}
-    with open(os.path.join(carpeta, "Frame_Cuts.csv"), newline="") as f:
+    with open(ruta_segura(os.path.join(carpeta, "Frame_Cuts.csv")), newline="") as f:
         for fila in csv.DictReader(f):
             cortes[fila["STYLE_NAME"]] = fila
     res = {"juntas": None, "clips": []}
@@ -298,7 +302,7 @@ def main():
                         "q": [round(float(v), 5) for v in q.reshape(-1)]}
                 res["clips"].append(clip)
                 print(nombre, "vel %.2f m/s ang %+.0f dur %.2f coste %.3f" % (info["vel"] / 100, info["ang"], dur, coste), flush=True)
-    with open(salida, "w") as f:
+    with open(ruta_segura(salida), "w") as f:
         json.dump(res, f, separators=(",", ":"))
     print("clips:", len(res["clips"]))
 
