@@ -39,6 +39,11 @@ static func piernas_de_persona(a: Animation, esq: Skeleton3D) -> void:
 		if hueso == "pelvis" and tipo == Animation.TYPE_POSITION_3D:
 			for k in a.track_get_key_count(t):
 				a.track_set_key_value(t, k, rest_pelvis.origin)
+		elif hueso == "root" and tipo == Animation.TYPE_POSITION_3D and esq.find_bone("root") >= 0:
+			## (12-11, sesión 16) La guardia del pack sube el root 4 cm para compensar sus rodillas dobladas; con las piernas ya rectas
+			## esa subida dejaba a la persona FLOTANDO 3,7 cm (pies a 0,124 m en vez de 0,086 del reposo). El root, a su reposo.
+			for k in a.track_get_key_count(t):
+				a.track_set_key_value(t, k, esq.get_bone_rest(esq.find_bone("root")).origin)
 		elif hueso == "pelvis" and tipo == Animation.TYPE_ROTATION_3D:
 			t_pelvis = t
 		elif hueso == "spine_01" and tipo == Animation.TYPE_ROTATION_3D:
