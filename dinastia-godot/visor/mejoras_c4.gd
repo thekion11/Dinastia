@@ -390,3 +390,32 @@ static func seguir_tiro(m: Object, p: Dictionary) -> Vector3:
 		return Vector3.INF
 	var i := (m.get_meta("_c4_sigue_ids", []) as Array).find(String(p["id"]))
 	return zona + Vector3((-3.0 if i == 0 else 3.0), 0.0, 0.0)
+
+## Diagnóstico de `seguir_tiro`: «seguidor» si el infractor sigue el tiro, «a_seguidor» si la víctima lo sigue (en los 4 s tras el tiro), "" si no.
+static func seguidor_en(m: Object, infractor: Dictionary, victima: Dictionary) -> String:
+	var ids: Array = m.get_meta("_c4_sigue_ids", [])
+	var clave := String(m.get_meta("_c4_sigue_clave", "@-99"))
+	if ids.is_empty() or float(m.t) - float(clave.get_slice("@", 1)) > 4.0:
+		return ""
+	if String(infractor["id"]) in ids:
+		return "seguidor"
+	return "a_seguidor" if String(victima["id"]) in ids else ""
+
+## NO ENTRAR POR DETRÁS (12-11-2026, sesión 13). Con los sprints sin balón de C4, el defensor que repliega llega lanzado por la espalda
+## y entra de pie: en C4 las tarjetas eran casi todas «de pie + por detrás + a gran velocidad» (5-7 por partido frente a 3,5 del motor
+## de siempre; con expulsiones reales, hasta 3 en un partido y el partido suspendido de `prueba_partido_motor`). En C4 el que viene por
+## detrás de un portador que se aleja (la misma regla que `puntos_falta`) no entra de pie: acompaña (las cargas y duelos siguen).
+static var NO_DETRAS := _bandera("C4_NO_DETRAS", true)
+static var NO_DETRAS_V := _num("C4_NO_DETRAS_V", 5.0)   ## solo si el defensor llega a más de esto (m/s; 0 = siempre: tarjetas 0,5 por partido, demasiado pocas)
+static func por_detras(m: Object, p: Dictionary, victima: Dictionary) -> bool:
+	if not NO_DETRAS:
+		return false
+	var vi: Vector3 = victima.get("vel", Vector3.ZERO)
+	vi.y = 0.0
+	var desde: Vector3 = m.pos(victima) - m.pos(p)
+	desde.y = 0.0
+	var vp: Vector3 = p.get("vel", Vector3.ZERO)
+	vp.y = 0.0
+	if vp.length() < NO_DETRAS_V:
+		return false   ## por detrás pero sin llegar lanzado: puede entrar
+	return vi.length() > 1.5 and desde.length() > 0.05 and vi.normalized().dot(desde.normalized()) > 0.6

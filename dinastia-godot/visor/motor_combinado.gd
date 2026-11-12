@@ -103,6 +103,20 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 		set_meta("_t_rechace", t)
 		_contar("c4_rechace")
 
+func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "", tipo := "de_pie") -> bool:
+	var antes := int(tarjetas_motor[0][0] + tarjetas_motor[0][1] + tarjetas_motor[1][0] + tarjetas_motor[1][1])
+	var r := super(infractor, victima, prob_tarjeta, motivo, tipo)
+	if _mejoras_c4 and r and String(ultima_falta.get("sancion", "falta")) != "falta":
+		for fa: String in ultima_falta.get("factores", []):
+			_contar("c4_tarjeta_factor_" + fa)
+	if _mejoras_c4 and r:
+		var quien := MejorasC4.seguidor_en(self, infractor, victima)
+		if quien != "":
+			_contar("c4_falta_" + quien)
+			if int(tarjetas_motor[0][0] + tarjetas_motor[0][1] + tarjetas_motor[1][0] + tarjetas_motor[1][1]) > antes:
+				_contar("c4_tarjeta_" + quien)
+	return r
+
 func _gol(en_arco_visita: bool) -> void:
 	if _mejoras_c4 and t - float(get_meta("_t_rechace", -99.0)) < 3.0:
 		_contar("c4_gol_rechace")
@@ -110,7 +124,11 @@ func _gol(en_arco_visita: bool) -> void:
 
 func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 	var r := super(p, victima, base)
-	return MejorasC4.radio_entrada(self, p, victima, base, r) if _mejoras_c4 else r
+	if not _mejoras_c4:
+		return r
+	if MejorasC4.por_detras(self, p, victima):
+		return 0.0   ## (12-11) no se entra de pie por detrás (C4_NO_DETRAS)
+	return MejorasC4.radio_entrada(self, p, victima, base, r)
 
 func _radio_cabezazo(p: Dictionary) -> float:
 	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)
