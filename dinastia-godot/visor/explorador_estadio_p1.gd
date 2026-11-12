@@ -46,6 +46,7 @@ var sentado := false
 
 ## Visión en primera persona. (12-11, dueño) En el juego es la ÚNICA (`VistaJuego`); V cambia de vista solo con `DINASTIA_CAMARAS=1`.
 var primera_persona := VistaJuego.inicial()
+var mirada_v := -0.03   ## (12-11) cabeceo de la mirada en primera persona (rad; > 0 arriba)
 var _de_pie := Vector3.ZERO
 var _mirada := 0.0
 var _est_perfil: Dictionary = {}
@@ -178,7 +179,7 @@ func _colocar_camara(delta: float) -> void:
 	if primera_persona and true:
 		var dir_fp := Vector3(sin(rumbo), 0, cos(rumbo))
 		camara.position = cuerpo.position + Vector3(0, 1.62, 0) + dir_fp * 0.18
-		camara.look_at(camara.position + dir_fp * 5.0 + Vector3(0, -0.15, 0), Vector3.UP)
+		camara.look_at(camara.position + dir_fp * 5.0 + Vector3(0, tan(mirada_v) * 5.0, 0), Vector3.UP)
 		cuerpo.visible = false
 		return
 	if not cuerpo.visible and not sentado:

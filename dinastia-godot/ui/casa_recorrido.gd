@@ -15,6 +15,7 @@ var pos2 := CasaPlano.INICIO
 var rumbo := CasaPlano.RUMBO_INICIO
 var vel := 0.0
 var primera_persona := VistaJuego.inicial()   ## (12-11, dueño) en el juego, solo primera persona (`VistaJuego`)
+var mirada_v := -0.03   ## (12-11) cabeceo de la mirada (rad; > 0 arriba)
 var cuerpo: Node3D
 var camara: Camera3D
 var zona_actual := ""
@@ -227,7 +228,7 @@ func _colocar_camara(delta: float) -> void:
 	var adelante := Vector2(sin(rumbo), cos(rumbo))
 	if primera_persona:
 		camara.position = Vector3(pos2.x + adelante.x * 0.18, 1.62, pos2.y + adelante.y * 0.18)
-		camara.look_at(camara.position + Vector3(adelante.x, -0.03, adelante.y) * 5.0, Vector3.UP)
+		camara.look_at(camara.position + Vector3(adelante.x * 5.0, tan(mirada_v) * 5.0, adelante.y * 5.0), Vector3.UP)
 		cuerpo.visible = false
 		return
 	cuerpo.visible = true
@@ -267,15 +268,31 @@ func salir() -> void:
 	cerrado.emit()
 	queue_free()
 
+func _exit_tree() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE   ## (12-11) el cursor vuelve al salir de la casa
+
 func _physics_process(delta: float) -> void:
 	if cuerpo == null:
 		return
 	var corre := Input.is_physical_key_pressed(KEY_SHIFT) or Input.is_joy_button_pressed(0, JOY_BUTTON_A)
 	paso(_entrada(), corre, minf(delta, 0.05))
+	## (12-11) Mirar en primera persona: ratón capturado (PC), stick derecho y arrastre del dedo (en `_unhandled_input`).
+	var raton := Input.MOUSE_MODE_CAPTURED if primera_persona and is_visible_in_tree() and DisplayServer.get_name() != "headless" and not EscalaMovil.es_movil() \
+		else Input.MOUSE_MODE_VISIBLE
+	if Input.mouse_mode != raton:
+		Input.mouse_mode = raton
+	var st := VistaJuego.mirada_stick(delta) if primera_persona else Vector2.ZERO
+	rumbo -= st.x
+	mirada_v = VistaJuego.cabeceo(mirada_v, st.y)
 	_colocar_camara(delta)
 	_rotulos()
 
 func _unhandled_input(ev: InputEvent) -> void:
+	var mira := VistaJuego.mirada_por_evento(ev, get_viewport_rect().size.x) if primera_persona else Vector2.ZERO
+	if mira != Vector2.ZERO:
+		rumbo -= mira.x
+		mirada_v = VistaJuego.cabeceo(mirada_v, mira.y)
+		return
 	if ev is InputEventKey and ev.pressed and not ev.echo:
 		var k := (ev as InputEventKey).keycode
 		if k == KEY_ESCAPE:

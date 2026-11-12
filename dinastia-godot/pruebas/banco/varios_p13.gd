@@ -180,3 +180,12 @@ func _probar_solo_primera_persona() -> void:
 	_comprobar(pl.get_aabb().size.y > 0.8 and pl.get_aabb().size.y < 1.3, "y mide lo de una planta de interior (%.2f m)" % pl.get_aabb().size.y)
 	pl.free()
 	pl2.free()
+	## (12-11) Mirar en primera persona: el dedo por la DERECHA de la pantalla gira y cabecea; por la izquierda (la cruceta) no; con límites.
+	var dr := InputEventScreenDrag.new()
+	dr.position = Vector2(900, 300)
+	dr.relative = Vector2(40, -20)
+	var m1 := VistaJuego.mirada_por_evento(dr, 1000.0)
+	_comprobar(m1.x > 0.0 and m1.y < 0.0, "arrastrar a la derecha y arriba gira y levanta la mirada")
+	dr.position = Vector2(200, 300)
+	_comprobar(VistaJuego.mirada_por_evento(dr, 1000.0) == Vector2.ZERO, "por la izquierda (la cruceta) no se mira")
+	_comprobar(is_equal_approx(VistaJuego.cabeceo(0.0, 10.0), VistaJuego.CABECEO_MIN) and is_equal_approx(VistaJuego.cabeceo(0.0, -10.0), VistaJuego.CABECEO_MAX), "el cabeceo tiene tope arriba y abajo")
