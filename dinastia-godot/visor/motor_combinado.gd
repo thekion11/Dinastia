@@ -72,11 +72,14 @@ func _ia_portador(p: Dictionary) -> void:
 	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
 		return
 	var guardado := equipos
+	var antes := _decision_en
 	equipos = []
 	super(p)
 	equipos = guardado
 	if _mejoras_c4:
 		MejorasC4.encarar_banda(self, p)
+		if not is_equal_approx(_decision_en, antes):
+			_decision_en = MejorasC4.ritmo_ultimo_tercio(self, p, _decision_en)
 
 ## (12-11, sesión 13) con el balón en el aire, el receptor va a donde baja (a la cabeza cerca del área), solo en C4.
 func _punto_de_recepcion() -> Vector3:
@@ -85,6 +88,9 @@ func _punto_de_recepcion() -> Vector3:
 		if r != Vector3.INF:
 			return r
 	return super()
+
+func _saque_ensayado(p: Dictionary, tipo: String, lugar: Vector3) -> bool:
+	return _mejoras_c4 and tipo == "falta" and MejorasC4.falta_ensayada(self, p, lugar, _rng)
 
 func _radio_cabezazo(p: Dictionary) -> float:
 	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)

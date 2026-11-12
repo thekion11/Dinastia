@@ -247,3 +247,44 @@ static func _tras_centro(m: Object) -> bool:
 	if t - float(m.get_meta("_t_centro", -99.0)) < 3.0:
 		return true
 	return String(m.get_meta("_traza_saque_tipo", "")) == "corner" and t - float(m.get_meta("_traza_saque_t", -99.0)) < 3.0
+
+## FALTA LATERAL ENSAYADA (12-11-2026, sesión 13). La IA tiraba directo toda falta a menos de 30 m (también desde la banda, sin ángulo)
+## y desde más lejos daba un pase corto, aunque los rematadores ya estaban colocados en el área como en un córner. En C4, desde un
+## costado (|x| > FALTA_X) a menos de 40 m, o centrada a 30-40 m, se centra al área: al primer palo, al penal o al segundo palo, con el
+## error del pase del lanzador. Las faltas centradas y cercanas se siguen tirando a puerta.
+static var FALTA := _bandera("C4_FALTA", true)
+const FALTA_X := 14.0
+static func falta_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: RandomNumberGenerator) -> bool:
+	if not FALTA:
+		return false
+	var arco: Vector3 = m._arco_rival(p)
+	var dist := Vector2(lugar.x - arco.x, lugar.z - arco.z).length()
+	var lateral := absf(lugar.x) > FALTA_X
+	if dist > 40.0 or (not lateral and dist < 30.0):
+		return false
+	var sa := signf(arco.z)
+	var err := (1.0 - float(p["attr"]["pas"])) * 5.0
+	var zona := rng.randi() % 3   ## 0 primer palo, 1 penal, 2 segundo palo
+	var x := [signf(lugar.x) * 2.5, 0.0, -signf(lugar.x) * 3.5][zona] as float if lateral else rng.randf_range(-3.0, 3.0)
+	var destino := Vector3(x + rng.randf_range(-err, err), 1.7, arco.z - sa * [5.5, 10.0, 7.0][zona])
+	m._ctx_golpeo = "centro"
+	m._patear(p, destino, 18.0, 0.0, -signf(lugar.x) * 7.0 * -sa, "pase")
+	m.pase_a = m._companero_cerca(p, destino)
+	m._contar("c4_falta_ensayada")
+	return true
+
+## RITMO EN EL ÚLTIMO TERCIO (12-11-2026, sesión 13). Con espacio, el portador decide cada 1,5-2,5 s; con la paciencia ya no tira de
+## lejos y conduce todo ese tiempo contra el bloque rival (las pérdidas por entrada en el último tercio subieron). En C4, a menos de
+## `RITMO_D` m del arco la espera hasta la próxima decisión se multiplica por `RITMO_K`: pase, regate o tiro llegan antes.
+static var RITMO := _bandera("C4_RITMO", false)
+static var RITMO_K := _num("C4_RITMO_K", 0.55)
+const RITMO_D := 35.0
+static func ritmo_ultimo_tercio(m: Object, p: Dictionary, decision_en: float) -> float:
+	if not RITMO:
+		return decision_en
+	var yo: Vector3 = m.pos(p)
+	var arco: Vector3 = m._arco_rival(p)
+	if Vector2(yo.x - arco.x, yo.z - arco.z).length() > RITMO_D:
+		return decision_en
+	var t: float = m.t
+	return t + (decision_en - t) * RITMO_K
