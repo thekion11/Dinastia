@@ -8088,7 +8088,12 @@
   "Aquí aparecen los jugadores con la ansiedad alta, para darles terapia o un descanso.": "Players with high anxiety show up here, so you can give them therapy or a rest.",
   "Explotación comercial": "Commercial operations",
   "El proveedor de la camiseta, las zonas del estadio, su nombre y los abonos premium.": "The kit supplier, the stadium zones, its naming rights and premium season tickets.",
-  "%s por semana": "%s per week"
+  "%s por semana": "%s per week",
+  "El vestuario, la sala de prensa y el palco presidencial.": "The dressing room, the press room and the presidential box.",
+  "App y web del club": "Club app and website",
+  "Lo digital: crece solo cada semana y deja dinero en la caja.": "The digital side: it grows by itself every week and brings money in.",
+  "Uniforme y frase del vestuario": "Staff outfit and dressing-room motto",
+  "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "How the coaching staff dresses and what is read in the tunnel."
  },
  "pt": {
   "Historia": "História",
@@ -16179,7 +16184,12 @@
   "Aquí aparecen los jugadores con la ansiedad alta, para darles terapia o un descanso.": "Aqui aparecem os jogadores com a ansiedade alta, para lhes dares terapia ou descanso.",
   "Explotación comercial": "Exploração comercial",
   "El proveedor de la camiseta, las zonas del estadio, su nombre y los abonos premium.": "O fornecedor da camisola, as zonas do estádio, o seu nome e os lugares premium.",
-  "%s por semana": "%s por semana"
+  "%s por semana": "%s por semana",
+  "El vestuario, la sala de prensa y el palco presidencial.": "O balneário, a sala de imprensa e o camarote presidencial.",
+  "App y web del club": "App e site do clube",
+  "Lo digital: crece solo cada semana y deja dinero en la caja.": "O digital: cresce sozinho todas as semanas e deixa dinheiro em caixa.",
+  "Uniforme y frase del vestuario": "Uniforme e frase do balneário",
+  "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Como veste a equipa técnica e o que se lê no túnel."
  },
  "patrones": [
   [
@@ -30410,7 +30420,12 @@
   "Aquí aparecen los jugadores con la ansiedad alta, para darles terapia o un descanso.": "Les joueurs très anxieux apparaissent ici, pour leur offrir une thérapie ou du repos.",
   "Explotación comercial": "Exploitation commerciale",
   "El proveedor de la camiseta, las zonas del estadio, su nombre y los abonos premium.": "L'équipementier, les zones du stade, son nom et les abonnements premium.",
-  "%s por semana": "%s par semaine"
+  "%s por semana": "%s par semaine",
+  "El vestuario, la sala de prensa y el palco presidencial.": "Le vestiaire, la salle de presse et la loge présidentielle.",
+  "App y web del club": "Appli et site du club",
+  "Lo digital: crece solo cada semana y deja dinero en la caja.": "Le numérique : il grandit seul chaque semaine et rapporte de l'argent.",
+  "Uniforme y frase del vestuario": "Tenue du staff et devise du vestiaire",
+  "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "La tenue du staff et ce qu'on lit dans le tunnel."
  },
  "it": {
   "Historia": "Storia",
@@ -38501,7 +38516,12 @@
   "Aquí aparecen los jugadores con la ansiedad alta, para darles terapia o un descanso.": "Qui compaiono i giocatori con l'ansia alta, per dar loro terapia o riposo.",
   "Explotación comercial": "Sfruttamento commerciale",
   "El proveedor de la camiseta, las zonas del estadio, su nombre y los abonos premium.": "Lo sponsor tecnico, le zone dello stadio, il suo nome e gli abbonamenti premium.",
-  "%s por semana": "%s a settimana"
+  "%s por semana": "%s a settimana",
+  "El vestuario, la sala de prensa y el palco presidencial.": "Lo spogliatoio, la sala stampa e la tribuna d'onore.",
+  "App y web del club": "App e sito del club",
+  "Lo digital: crece solo cada semana y deja dinero en la caja.": "Il digitale: cresce da solo ogni settimana e porta soldi in cassa.",
+  "Uniforme y frase del vestuario": "Divisa dello staff e frase dello spogliatoio",
+  "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Come veste lo staff tecnico e cosa si legge nel tunnel."
  },
  "de": {
   "Historia": "Geschichte",
@@ -46592,7 +46612,12 @@
   "Aquí aparecen los jugadores con la ansiedad alta, para darles terapia o un descanso.": "Hier erscheinen Spieler mit hoher Anspannung, damit du ihnen Therapie oder eine Pause geben kannst.",
   "Explotación comercial": "Vermarktung",
   "El proveedor de la camiseta, las zonas del estadio, su nombre y los abonos premium.": "Der Ausrüster, die Stadionbereiche, der Stadionname und Premium-Dauerkarten.",
-  "%s por semana": "%s pro Woche"
+  "%s por semana": "%s pro Woche",
+  "El vestuario, la sala de prensa y el palco presidencial.": "Die Kabine, der Presseraum und die Präsidentenloge.",
+  "App y web del club": "App und Website des Vereins",
+  "Lo digital: crece solo cada semana y deja dinero en la caja.": "Das Digitale: Es wächst jede Woche von selbst und bringt Geld in die Kasse.",
+  "Uniforme y frase del vestuario": "Trainer-Outfit und Kabinenspruch",
+  "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Wie das Trainerteam gekleidet ist und was im Tunnel zu lesen steht."
  },
  "ca": {
   "Historia": "Història",
@@ -54683,7 +54708,12 @@
   "Aquí aparecen los jugadores con la ansiedad alta, para darles terapia o un descanso.": "Aquí apareixen els jugadors amb l'ansietat alta, per donar-los teràpia o un descans.",
   "Explotación comercial": "Explotació comercial",
   "El proveedor de la camiseta, las zonas del estadio, su nombre y los abonos premium.": "El proveïdor de la samarreta, les zones de l'estadi, el seu nom i els abonaments prèmium.",
-  "%s por semana": "%s per setmana"
+  "%s por semana": "%s per setmana",
+  "El vestuario, la sala de prensa y el palco presidencial.": "El vestidor, la sala de premsa i la llotja presidencial.",
+  "App y web del club": "App i web del club",
+  "Lo digital: crece solo cada semana y deja dinero en la caja.": "El digital: creix sol cada setmana i deixa diners a la caixa.",
+  "Uniforme y frase del vestuario": "Uniforme i frase del vestidor",
+  "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Com vesteix el cos tècnic i el que es llegeix al túnel."
  },
  "pl": {
   "Club": "Klub",
@@ -62774,7 +62804,12 @@
   "Aquí aparecen los jugadores con la ansiedad alta, para darles terapia o un descanso.": "Tu pojawiają się zawodnicy z wysokim niepokojem, by dać im terapię lub odpoczynek.",
   "Explotación comercial": "Działalność komercyjna",
   "El proveedor de la camiseta, las zonas del estadio, su nombre y los abonos premium.": "Dostawca strojów, strefy stadionu, jego nazwa i karnety premium.",
-  "%s por semana": "%s tygodniowo"
+  "%s por semana": "%s tygodniowo",
+  "El vestuario, la sala de prensa y el palco presidencial.": "Szatnia, sala prasowa i loża prezydencka.",
+  "App y web del club": "Aplikacja i strona klubu",
+  "Lo digital: crece solo cada semana y deja dinero en la caja.": "Cyfrowa strona klubu: co tydzień rośnie sama i przynosi pieniądze.",
+  "Uniforme y frase del vestuario": "Strój sztabu i hasło w szatni",
+  "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Jak ubiera się sztab i co widnieje w tunelu."
  },
  "tr": {
   "Club": "Kulüp",
@@ -70865,6 +70900,11 @@
   "Aquí aparecen los jugadores con la ansiedad alta, para darles terapia o un descanso.": "Kaygısı yüksek oyuncular burada görünür; onlara terapi ya da dinlenme verebilirsin.",
   "Explotación comercial": "Ticari faaliyetler",
   "El proveedor de la camiseta, las zonas del estadio, su nombre y los abonos premium.": "Forma tedarikçisi, stadyum bölümleri, isim hakkı ve premium kombineler.",
-  "%s por semana": "haftada %s"
+  "%s por semana": "haftada %s",
+  "El vestuario, la sala de prensa y el palco presidencial.": "Soyunma odası, basın odası ve başkanlık locası.",
+  "App y web del club": "Kulüp uygulaması ve sitesi",
+  "Lo digital: crece solo cada semana y deja dinero en la caja.": "Dijital taraf: her hafta kendiliğinden büyür ve kasaya para bırakır.",
+  "Uniforme y frase del vestuario": "Teknik ekip kıyafeti ve soyunma odası sözü",
+  "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Teknik ekibin nasıl giyindiği ve tünelde ne yazdığı."
  }
 }

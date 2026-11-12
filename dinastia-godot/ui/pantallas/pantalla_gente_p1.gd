@@ -107,8 +107,8 @@ func _pintar_gente() -> void:
 			p._pintar_identidad(c)
 		"comercial":
 			p._ui_identidad._pintar_comercial(c)
-		"interno":
-			PanelClubDentro.pintar(p._lista_gente, c, p.mundo, p._texto, p._ui_ficha._paleta_club_dentro(), p._miles, p._escribir, p._refrescar)
+		"interno", "digital", "detalles":   ## (12-11) «El club por dentro», en tres pantallas
+			PanelClubDentro.pintar(p._lista_gente, c, p.mundo, p._texto, p._ui_ficha._paleta_club_dentro(), p._miles, p._escribir, p._refrescar, p._secc_gente)
 
 func _filtrar_redes() -> void:
 	var titulos: Array = []

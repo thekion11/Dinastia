@@ -23,6 +23,9 @@ const CASOS := [
 	["Camarín", "_lista_camarin", "clima", "CLIMA DEL VESTUARIO", "JERARQUÍA INTERNA"],
 	["Camarín", "_lista_camarin", "grupos", "JERARQUÍA INTERNA", "SALUD MENTAL"],
 	["Camarín", "_lista_camarin", "salud", "SALUD MENTAL", "CLANES Y CAMARILLAS"],
+	["Gente", "_lista_gente", "interno", "PALCO PRESIDENCIAL", "LO DIGITAL"],
+	["Gente", "_lista_gente", "digital", "LO DIGITAL", "PALCO PRESIDENCIAL"],
+	["Gente", "_lista_gente", "detalles", "UNIFORME DEL CUERPO TÉCNICO", "LO DIGITAL"],
 ]
 var _p: Principal
 var _fallos := 0

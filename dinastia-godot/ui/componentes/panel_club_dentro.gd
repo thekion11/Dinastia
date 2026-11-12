@@ -9,12 +9,21 @@ extends RefCounted
 ## (`_elegir_espacio`, `_lanzar_app`, `_lanzar_web`) solo se usaban aquí y se
 ## vinieron con la pantalla.
 
+## (12-11, menús a pantalla completa) `parte`: "interno" = los ESPACIOS (vestuario, sala de prensa, palco), "digital" = la app y la web,
+## "detalles" = el uniforme del cuerpo técnico y la frase de la pared. "" = todo seguido, como antes.
 static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, colores: Dictionary,
-		miles: Callable, escribir: Callable, al_cambiar: Callable) -> void:
+		miles: Callable, escribir: Callable, al_cambiar: Callable, parte := "") -> void:
 	var cd := mundo.club_dentro
 	if cd == null:
 		return
-	raiz.add_child(HSeparator.new())
+	if parte in ["", "interno"]:
+		_espacios(raiz, c, mundo, cd, texto, colores, escribir, al_cambiar)
+	if parte in ["", "digital"]:
+		_digital(raiz, c, mundo, cd, texto, colores, miles, escribir, al_cambiar)
+	if parte in ["", "detalles"]:
+		_detalles(raiz, c, cd, texto, colores, al_cambiar)
+
+static func _espacios(raiz: VBoxContainer, c: Club, mundo: Mundo, cd: ClubDentro, texto: Callable, colores: Dictionary, escribir: Callable, al_cambiar: Callable) -> void:
 	var t: Label = texto.call(11, colores["suave"])
 	t.text = Idiomas.t("🚪 EL CLUB POR DENTRO")
 	raiz.add_child(t)
@@ -65,6 +74,7 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 			b.pressed.connect(func() -> void: _elegir_espacio(mundo, que, clave, c, escribir, al_cambiar))
 			fila.add_child(b)
 
+static func _digital(raiz: VBoxContainer, c: Club, mundo: Mundo, cd: ClubDentro, texto: Callable, colores: Dictionary, miles: Callable, escribir: Callable, al_cambiar: Callable) -> void:
 	var td: Label = texto.call(11, colores["acento"])
 	td.text = Idiomas.t("📱 LO DIGITAL")
 	raiz.add_child(td)
@@ -137,9 +147,9 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 		b_w.pressed.connect(func() -> void: _lanzar_web(mundo, campo_w.text, c, escribir, al_cambiar))
 		fila_w.add_child(b_w)
 
-	## EL UNIFORME DEL CUERPO TÉCNICO. No mueve un número y sale en el banquillo
-	## todos los domingos: es de esas cosas que hacen que el club sea tuyo.
-	raiz.add_child(HSeparator.new())
+## EL UNIFORME DEL CUERPO TÉCNICO. No mueve un número y sale en el banquillo
+## todos los domingos: es de esas cosas que hacen que el club sea tuyo.
+static func _detalles(raiz: VBoxContainer, c: Club, cd: ClubDentro, texto: Callable, colores: Dictionary, al_cambiar: Callable) -> void:
 	var tct: Label = texto.call(11, colores["acento"])
 	tct.text = Idiomas.t("👔 UNIFORME DEL CUERPO TÉCNICO")
 	raiz.add_child(tct)
