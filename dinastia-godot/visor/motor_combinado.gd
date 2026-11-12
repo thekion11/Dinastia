@@ -179,6 +179,9 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 func _ia_defensa(p: Dictionary) -> Vector3:
 	var r := _sin_flag3(p, false)
 	if _mejoras_c4:
+		var cont := MejorasC4.contener_colocacion(self, p)
+		if cont != Vector3.INF:
+			return cont
 		MejorasC4.sprint(self, p, r)
 	return r
 

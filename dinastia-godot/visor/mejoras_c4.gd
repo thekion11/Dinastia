@@ -419,3 +419,38 @@ static func por_detras(m: Object, p: Dictionary, victima: Dictionary) -> bool:
 	if vp.length() < NO_DETRAS_V:
 		return false   ## por detrás pero sin llegar lanzado: puede entrar
 	return vi.length() > 1.5 and desde.length() > 0.05 and vi.normalized().dot(desde.normalized()) > 0.6
+
+## CONTENER POR COLOCACIÓN (12-11-2026, sesión 13, decisión del líder; toca COLOCACIÓN, orden 23: SOLO en C4 y con bandera). El defensor
+## más cercano al portador rival, cuando este está a < `CONTENER_D` m del arco que defiende y hay un compañero de cobertura más atrás, no
+## va a por el balón: se planta a `CONT2_DIST` m del portador, en la línea portador → arco, corrido hacia el centro (le cierra el camino al
+## arco y lo empuja a la banda), y temporiza. Queda fuera del radio de entrada: entra si el portador se le echa encima o se le escapa.
+## Devuelve el destino o Vector3.INF si no le toca contener.
+static var CONTENER2 := _bandera("C4_CONTENER2", false)
+static var CONT2_DIST := _num("C4_CONT2_DIST", 1.8)
+static func contener_colocacion(m: Object, p: Dictionary) -> Vector3:
+	if not CONTENER2 or bool(p["por"]):
+		return Vector3.INF
+	var c: Dictionary = m.poseedor
+	if c.is_empty() or bool(c["es_local"]) == bool(p["es_local"]):
+		return Vector3.INF
+	var arco: Vector3 = m._arco_rival(c)
+	var pc: Vector3 = m.pos(c)
+	if Vector2(pc.x - arco.x, pc.z - arco.z).length() > CONTENER_D:
+		return Vector3.INF
+	## ¿Es `p` el defensor más cercano y hay cobertura detrás?
+	var mi_d := pc.distance_to(m.pos(p))
+	var mi_arco := Vector2(m.pos(p).x - arco.x, m.pos(p).z - arco.z).length()
+	var cobertura := false
+	for q: Dictionary in m.jugadores:
+		if bool(q["es_local"]) != bool(p["es_local"]) or bool(q["por"]) or String(q["id"]) == String(p["id"]):
+			continue
+		if pc.distance_to(m.pos(q)) < mi_d:
+			return Vector3.INF
+		if Vector2(m.pos(q).x - arco.x, m.pos(q).z - arco.z).length() < mi_arco - 1.0:
+			cobertura = true
+	if not cobertura or mi_d > 8.0:
+		return Vector3.INF
+	var hacia := Vector3(arco.x - pc.x, 0.0, arco.z - pc.z).normalized()
+	hacia = (hacia + Vector3(-signf(pc.x) * 0.35, 0.0, 0.0)).normalized()   ## del lado de dentro: lo empuja a la banda
+	p["correr"] = mi_d > CONT2_DIST + 2.0
+	return Vector3(pc.x, 0.0, pc.z) + hacia * CONT2_DIST
