@@ -172,13 +172,13 @@ static func _look_base(semilla: String) -> Dictionary:
 		"cicatriz": (_hash(semilla + "cica") % 29) == 0,
 	}
 static func _piel_y_pelo_del_pais(base: Dictionary, j: Jugador) -> void:
-	var sesgo := float(OlaGrada.PIEL_SESGO.get(j.pais, 1.5))
+	var sesgo := float(OlaGrada.PIEL_SESGO.get(j.pais, PielPaises.sesgo(j.pais, 1.5)))
 	## `String.hash()` y no `_hash` (djb2): con la misma cola de texto, djb2 da
 	## números correlacionados entre sí y los rubios salían a un cuarto.
 	## Tono medio del país (índice en PIELES: Argentina ≈1,3, Chile ≈2, Brasil
 	## ≈4,2, Sudáfrica ≈5) y, alrededor, una campana de ±1,2 tonos: predomina el
 	## tono medio y sigue habiendo de todo.
-	var medio := float(TONO_MEDIO.get(j.pais, 7.0 * pow(0.5, sesgo)))
+	var medio := float(TONO_MEDIO.get(j.pais, PielPaises.tono(j.pais, 7.0 * pow(0.5, sesgo))))   ## (12-11) los 88 países añadidos después, en `PielPaises`
 	var campana := 0.0
 	for k in 3:
 		campana += float(absi((j.id + "piel_pais%d" % k).hash()) % 10000) / 10000.0
@@ -186,7 +186,7 @@ static func _piel_y_pelo_del_pais(base: Dictionary, j: Jugador) -> void:
 	base["piel"] = PIELES[ip]
 	var claro := ip <= 2
 	var r := float(absi((j.id + "pelo_pais").hash()) % 10000) / 10000.0
-	var rubio := float(RUBIOS.get(j.pais, 0.06))
+	var rubio := float(RUBIOS.get(j.pais, PielPaises.rubios(j.pais, 0.06)))
 	if claro and r < rubio:
 		base["peloC"] = "#c8a05a" if r < rubio * 0.55 else "#8a6a3a"
 	else:
@@ -219,8 +219,8 @@ static func look_de(j: Jugador) -> Dictionary:
 					r["peloC"] = String(e["h"].get("c", "#2e2118"))
 					if bool(e["h"].get("calvo", false)):
 						r["pelo"] = "calvo"
-		if not (r is Dictionary):
-			CaraPrior.aplicar(base, j)   ## (10-11) sin foto ni malla: la cara típica de su país, no un azar de ocho tonos
+		if not (r is Dictionary) and not CaraPrior.aplicar(base, j):   ## (10-11) sin foto ni malla: la cara típica de su país, no un azar de ocho tonos
+			_piel_y_pelo_del_pais(base, j)   ## (12-11) y si su país tiene pocas caras medidas, el modelo del país (antes quedaba el azar: rubios en Japón)
 		if r is Dictionary:
 			medido = true
 			for k: String in (r as Dictionary):

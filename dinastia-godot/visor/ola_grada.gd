@@ -130,6 +130,6 @@ static func colores_club(raiz: Node, c1: Color, c2: Color) -> void:
 static func piel_de_pais(raiz: Node, pais: String) -> void:
 	if raiz == null:
 		return
-	var s := float(PIEL_SESGO.get(pais, 1.5))
+	var s := float(PIEL_SESGO.get(pais, PielPaises.sesgo(pais, 1.5)))   ## (12-11) y los países añadidos después
 	for m: ShaderMaterial in materiales(raiz):
 		m.set_shader_parameter("piel_sesgo", s)
