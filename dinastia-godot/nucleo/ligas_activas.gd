@@ -18,6 +18,7 @@ const ISO_A_JUEGO := {"CL": "CHI", "AR": "ARG", "BR": "BRA", "UY": "URU", "PY": 
 	"JO": "JOR", "CY": "CYP", "IQ": "IRQ", "UZ": "UZB", "FI": "FIN", "SI": "SVN", "JM": "JAM", "HN": "HON", "PA": "PAN", "NZ": "NZL", "ML": "MLI", "BA": "BIH", "ME": "MNE", "IS": "ISL", "EE": "EST",
 	"KZ": "KAZ", "AZ": "AZE", "BY": "BLR", "LV": "LVA", "AL": "ALB", "MK": "MKD", "GE": "GEO", "LT": "LTU", "LU": "LUX"}
 const META := "paises_activos"
+const META_PENDIENTES := "paises_pendientes"   ## (12-11) elegidos con la temporada en marcha: entran al cerrarla
 const RUTA_ELECCION := "user://ligas_activas.cfg"
 ## Lo que eligió el jugador en la pantalla «Ligas activas» (vacío = no eligió: PC todas, móvil la selección por defecto).
 static var elegidas: Array[String] = []
@@ -179,3 +180,30 @@ static func agregar(m: Mundo, paises: Array) -> Dictionary:
 		if viejos.has(k):
 			m.continentales[k] = viejos[k]
 	return {"paises": nuevos, "clubes": m.clubes.size() - antes}
+
+## (12-11, como Football Manager) Con la temporada en marcha no se puede añadir (se volverían a sortear las copas y los continentales en curso): los
+## países elegidos quedan PROGRAMADOS, se guardan con la partida y `aplicar_pendientes` los añade al cerrar la temporada.
+static func pendientes(m: Mundo) -> Array[String]:
+	var l: Array[String] = []
+	if m.has_meta(META_PENDIENTES):
+		l.assign(m.get_meta(META_PENDIENTES) as Array)
+	return l
+
+## Programa países para la próxima temporada (solo los que existen y faltan; sin repetir). Una lista vacía los borra.
+static func programar(m: Mundo, paises: Array) -> void:
+	var activos := de(m)
+	var l: Array[String] = []
+	for p: Variant in paises:
+		if todos().has(String(p)) and not activos.has(String(p)) and not l.has(String(p)):
+			l.append(String(p))
+	if l.is_empty():
+		if m.has_meta(META_PENDIENTES):
+			m.remove_meta(META_PENDIENTES)
+	else:
+		m.set_meta(META_PENDIENTES, l)
+
+## Añade los programados (al cerrar la temporada) y vacía la lista. Devuelve lo mismo que `agregar`.
+static func aplicar_pendientes(m: Mundo) -> Dictionary:
+	var l := pendientes(m)
+	programar(m, [])
+	return agregar(m, l)
