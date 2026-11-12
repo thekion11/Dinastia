@@ -288,3 +288,37 @@ static func ritmo_ultimo_tercio(m: Object, p: Dictionary, decision_en: float) ->
 		return decision_en
 	var t: float = m.t
 	return t + (decision_en - t) * RITMO_K
+
+## SAQUE DE BANDA ENSAYADO (12-11-2026, sesión 13). La IA buscaba el receptor más seguro (`MotorSaque.receptor`), casi siempre de
+## espaldas o hacia atrás. En C4, en campo rival, se busca primero al compañero que está por DELANTE del saque (6-20 m), libre (sin rival
+## a < 2,5 m) y habilitado, y se le lanza al pie, adelantado a su carrera.
+static var BANDA_SAQUE := _bandera("C4_BANDA_SAQUE", false)
+static func banda_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: RandomNumberGenerator) -> bool:
+	if not BANDA_SAQUE:
+		return false
+	var local := bool(p["es_local"])
+	var d: float = m.dir_ataque(local)
+	if lugar.z * d < 0.0:
+		return false   ## solo en campo rival
+	var mejor: Dictionary = {}
+	var mejor_z := -INF
+	for q: Dictionary in m.jugadores:
+		if String(q["id"]) == String(p["id"]) or bool(q["es_local"]) != local or bool(q["por"]):
+			continue
+		var qp: Vector3 = m.pos(q)
+		var delante := (qp.z - lugar.z) * d
+		if delante < 3.0 or qp.distance_to(lugar) < 6.0 or qp.distance_to(lugar) > 20.0 or m._adelantado(q, p):
+			continue
+		var libre := true
+		for r: Dictionary in m.jugadores:
+			if bool(r["es_local"]) != local and m.pos(r).distance_to(qp) < 2.5:
+				libre = false
+				break
+		if libre and delante > mejor_z:
+			mejor = q
+			mejor_z = delante
+	if mejor.is_empty() or rng.randf() > 0.7:
+		return false
+	m._pasar_a(p, mejor, false, true)
+	m._contar("c4_banda_ensayada")
+	return true

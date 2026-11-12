@@ -90,7 +90,11 @@ func _punto_de_recepcion() -> Vector3:
 	return super()
 
 func _saque_ensayado(p: Dictionary, tipo: String, lugar: Vector3) -> bool:
-	return _mejoras_c4 and tipo == "falta" and MejorasC4.falta_ensayada(self, p, lugar, _rng)
+	if not _mejoras_c4:
+		return false
+	if tipo == "falta":
+		return MejorasC4.falta_ensayada(self, p, lugar, _rng)
+	return tipo == "banda" and MejorasC4.banda_ensayada(self, p, lugar, _rng)
 
 func _radio_cabezazo(p: Dictionary) -> float:
 	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)
