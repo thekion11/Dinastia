@@ -236,10 +236,8 @@ func _fin_libro(c: Club) -> void:
 	tm.text = Idiomas.t("LIBRO DE MOVIMIENTOS  ·  últimos %d") % libro.size()
 	p._lista_finanzas.add_child(tm)
 	if libro.is_empty():
-		var vacio := p._texto(12, p.COL_SUAVE)
-		vacio.text = Idiomas.t("Todavía no hay movimientos aparte de la taquilla y los sueldos. Ficha, cede, contrata staff o levanta un título: todo lo que mueve la caja por fuera de la semana normal queda anotado aquí.")
-		vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		p._lista_finanzas.add_child(vacio)
+		p._lista_finanzas.add_child(EstadoVacio.crear("💰", Idiomas.t("El libro está en blanco"), Idiomas.t("Todavía no hay movimientos aparte de la taquilla y los sueldos. Ficha, cede, contrata staff o levanta un título: todo lo que mueve la caja por fuera de la semana normal queda anotado aquí."),
+			p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 300.0))
 		return
 	for i in range(libro.size() - 1, -1, -1):
 		var mov: Dictionary = libro[i]

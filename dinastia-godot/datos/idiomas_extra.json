@@ -8030,7 +8030,16 @@
   "Todavía no tienes rivales": "You have no rivals yet",
   "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "A rivalry is not declared: it is built with every meeting and, above all, with every defeat.",
   "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "The table fills up after the first matchday. Meanwhile, these are the contenders.",
-  "JUGADOR": "PLAYER"
+  "JUGADOR": "PLAYER",
+  "Aún sin leyendas ni linaje": "No legends or lineage yet",
+  "Aún no se ha celebrado ninguna gala": "No awards gala has been held yet",
+  "Aún no hay nada escrito aquí": "Nothing has been written here yet",
+  "El libro está en blanco": "The ledger is blank",
+  "📜 Aquí quedará la memoria del club: el salón de la fama, lo que pasó un día como hoy y el plantel de cada temporada. Se llena a medida que juegas.": "📜 The club's memory will live here: the hall of fame, what happened on a day like today and each season's squad. It fills up as you play.",
+  "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ The head-to-head with each rival appears as soon as you face them.",
+  "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 The top scorers of your era and the players with most appearances show up as the season goes on.",
+  "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 The club's streaks and records are tracked from the first match.",
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Nothing to show here yet: it fills up as you play."
  },
  "pt": {
   "Historia": "História",
@@ -16063,7 +16072,16 @@
   "Todavía no tienes rivales": "Ainda não tens rivais",
   "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "A rivalidade não se declara: constrói-se a cada confronto e, sobretudo, a cada derrota.",
   "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "A tabela enche-se com a primeira jornada. Entretanto, estes são os candidatos.",
-  "JUGADOR": "JOGADOR"
+  "JUGADOR": "JOGADOR",
+  "Aún sin leyendas ni linaje": "Ainda sem lendas nem linhagem",
+  "Aún no se ha celebrado ninguna gala": "Ainda não se realizou nenhuma gala",
+  "Aún no hay nada escrito aquí": "Ainda não há nada escrito aqui",
+  "El libro está en blanco": "O livro está em branco",
+  "📜 Aquí quedará la memoria del club: el salón de la fama, lo que pasó un día como hoy y el plantel de cada temporada. Se llena a medida que juegas.": "📜 Aqui ficará a memória do clube: o salão da fama, o que aconteceu num dia como hoje e o plantel de cada época. Enche-se à medida que jogas.",
+  "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ O confronto direto com cada rival aparece assim que o defrontares.",
+  "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Os marcadores da tua era e os que mais jogam aparecem com o avançar da época.",
+  "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 As séries e as marcas do clube registam-se desde o primeiro jogo.",
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Ainda não há nada para mostrar aqui: enche-se ao jogar."
  },
  "patrones": [
   [
@@ -30236,7 +30254,16 @@
   "Todavía no tienes rivales": "Tu n'as pas encore de rivaux",
   "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Une rivalité ne se décrète pas : elle se construit à chaque confrontation et, surtout, à chaque défaite.",
   "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "Le classement se remplit dès la première journée. En attendant, voici les prétendants.",
-  "JUGADOR": "JOUEUR"
+  "JUGADOR": "JOUEUR",
+  "Aún sin leyendas ni linaje": "Pas encore de légendes ni de lignée",
+  "Aún no se ha celebrado ninguna gala": "Aucun gala n'a encore eu lieu",
+  "Aún no hay nada escrito aquí": "Rien n'est encore écrit ici",
+  "El libro está en blanco": "Le registre est vierge",
+  "📜 Aquí quedará la memoria del club: el salón de la fama, lo que pasó un día como hoy y el plantel de cada temporada. Se llena a medida que juegas.": "📜 Ici restera la mémoire du club : le temple de la renommée, ce qui s'est passé un jour comme aujourd'hui et l'effectif de chaque saison. Elle se remplit au fil du jeu.",
+  "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ Le face-à-face avec chaque rival apparaît dès que tu l'affrontes.",
+  "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Les buteurs de ton ère et les joueurs les plus utilisés apparaissent au fil de la saison.",
+  "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Les séries et les records du club sont enregistrés dès le premier match.",
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Rien à afficher ici pour l'instant : cela se remplit en jouant."
  },
  "it": {
   "Historia": "Storia",
@@ -38269,7 +38296,16 @@
   "Todavía no tienes rivales": "Non hai ancora rivali",
   "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "La rivalità non si dichiara: si costruisce a ogni incrocio e, soprattutto, a ogni sconfitta.",
   "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "La classifica si riempie con la prima giornata. Nel frattempo, questi sono i candidati.",
-  "JUGADOR": "GIOCATORE"
+  "JUGADOR": "GIOCATORE",
+  "Aún sin leyendas ni linaje": "Ancora nessuna leggenda né stirpe",
+  "Aún no se ha celebrado ninguna gala": "Non si è ancora tenuto nessun galà",
+  "Aún no hay nada escrito aquí": "Qui non c'è ancora scritto nulla",
+  "El libro está en blanco": "Il registro è in bianco",
+  "📜 Aquí quedará la memoria del club: el salón de la fama, lo que pasó un día como hoy y el plantel de cada temporada. Se llena a medida que juegas.": "📜 Qui resterà la memoria del club: la hall of fame, cosa accadde in un giorno come oggi e la rosa di ogni stagione. Si riempie giocando.",
+  "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ Il testa a testa con ogni rivale appare appena lo affronti.",
+  "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 I marcatori della tua era e i più presenti appaiono con l'avanzare della stagione.",
+  "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Le strisce e i primati del club si registrano dalla prima partita.",
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Ancora niente da mostrare qui: si riempie giocando."
  },
  "de": {
   "Historia": "Geschichte",
@@ -46302,7 +46338,16 @@
   "Todavía no tienes rivales": "Du hast noch keine Rivalen",
   "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Rivalität wird nicht erklärt: Sie entsteht mit jedem Duell und vor allem mit jeder Niederlage.",
   "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "Die Liste füllt sich mit dem ersten Spieltag. Bis dahin sind dies die Anwärter.",
-  "JUGADOR": "SPIELER"
+  "JUGADOR": "SPIELER",
+  "Aún sin leyendas ni linaje": "Noch keine Legenden und keine Dynastie",
+  "Aún no se ha celebrado ninguna gala": "Es hat noch keine Gala stattgefunden",
+  "Aún no hay nada escrito aquí": "Hier steht noch nichts geschrieben",
+  "El libro está en blanco": "Das Buch ist noch leer",
+  "📜 Aquí quedará la memoria del club: el salón de la fama, lo que pasó un día como hoy y el plantel de cada temporada. Se llena a medida que juegas.": "📜 Hier bleibt das Gedächtnis des Vereins: die Ruhmeshalle, was an einem Tag wie heute geschah und der Kader jeder Saison. Es füllt sich beim Spielen.",
+  "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ Der direkte Vergleich mit jedem Rivalen erscheint, sobald du gegen ihn spielst.",
+  "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Die Torjäger deiner Ära und die Spieler mit den meisten Einsätzen erscheinen im Lauf der Saison.",
+  "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Serien und Rekorde des Vereins werden ab dem ersten Spiel festgehalten.",
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Hier gibt es noch nichts zu sehen: Es füllt sich beim Spielen."
  },
  "ca": {
   "Historia": "Història",
@@ -54335,7 +54380,16 @@
   "Todavía no tienes rivales": "Encara no tens rivals",
   "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "La rivalitat no es declara: es construeix amb cada encreuament i, sobretot, amb cada derrota.",
   "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "La taula s'omple amb la primera jornada. Mentrestant, aquests són els aspirants.",
-  "JUGADOR": "JUGADOR"
+  "JUGADOR": "JUGADOR",
+  "Aún sin leyendas ni linaje": "Encara sense llegendes ni llinatge",
+  "Aún no se ha celebrado ninguna gala": "Encara no s'ha celebrat cap gala",
+  "Aún no hay nada escrito aquí": "Encara no hi ha res escrit aquí",
+  "El libro está en blanco": "El llibre està en blanc",
+  "📜 Aquí quedará la memoria del club: el salón de la fama, lo que pasó un día como hoy y el plantel de cada temporada. Se llena a medida que juegas.": "📜 Aquí quedarà la memòria del club: el saló de la fama, què va passar un dia com avui i la plantilla de cada temporada. S'omple a mesura que jugues.",
+  "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ El cara a cara amb cada rival apareix tan bon punt t'hi enfrontis.",
+  "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Els golejadors de la teva era i els que més partits juguen apareixen en avançar la temporada.",
+  "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Les ratxes i les marques del club es registren des del primer partit.",
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Encara no hi ha res a mostrar aquí: s'omple jugant."
  },
  "pl": {
   "Club": "Klub",
@@ -62368,7 +62422,16 @@
   "Todavía no tienes rivales": "Nie masz jeszcze rywali",
   "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Rywalizacji się nie ogłasza: buduje ją każde starcie, a przede wszystkim każda porażka.",
   "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "Tabela zapełni się po pierwszej kolejce. Tymczasem oto kandydaci.",
-  "JUGADOR": "ZAWODNIK"
+  "JUGADOR": "ZAWODNIK",
+  "Aún sin leyendas ni linaje": "Jeszcze bez legend i rodu",
+  "Aún no se ha celebrado ninguna gala": "Nie odbyła się jeszcze żadna gala",
+  "Aún no hay nada escrito aquí": "Nic tu jeszcze nie zapisano",
+  "El libro está en blanco": "Księga jest pusta",
+  "📜 Aquí quedará la memoria del club: el salón de la fama, lo que pasó un día como hoy y el plantel de cada temporada. Se llena a medida que juegas.": "📜 Tu zostanie pamięć klubu: galeria sław, co wydarzyło się w dniu takim jak dziś i kadra z każdego sezonu. Zapełnia się w miarę gry.",
+  "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ Bilans z każdym rywalem pojawi się, gdy tylko z nim zagrasz.",
+  "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Strzelcy twojej ery i zawodnicy z największą liczbą meczów pojawią się w trakcie sezonu.",
+  "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Serie i rekordy klubu są zapisywane od pierwszego meczu.",
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Nie ma tu jeszcze nic do pokazania: zapełni się w trakcie gry."
  },
  "tr": {
   "Club": "Kulüp",
@@ -70401,6 +70464,15 @@
   "Todavía no tienes rivales": "Henüz rakibin yok",
   "La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.": "Rekabet ilan edilmez: her karşılaşmayla ve özellikle her yenilgiyle kurulur.",
   "La tabla se llena con la primera jornada. Mientras tanto, estos son los aspirantes.": "Tablo ilk haftayla dolar. O zamana kadar adaylar bunlar.",
-  "JUGADOR": "OYUNCU"
+  "JUGADOR": "OYUNCU",
+  "Aún sin leyendas ni linaje": "Henüz efsane ya da soy yok",
+  "Aún no se ha celebrado ninguna gala": "Henüz hiçbir gala yapılmadı",
+  "Aún no hay nada escrito aquí": "Burada henüz bir şey yazılmadı",
+  "El libro está en blanco": "Defter boş",
+  "📜 Aquí quedará la memoria del club: el salón de la fama, lo que pasó un día como hoy y el plantel de cada temporada. Se llena a medida que juegas.": "📜 Kulübün hafızası burada kalacak: şöhretler salonu, bugün gibi bir günde olanlar ve her sezonun kadrosu. Oynadıkça dolar.",
+  "⚔️ El cara a cara con cada rival aparece en cuanto te enfrentes a él.": "⚔️ Her rakiple aranızdaki karşılaşmalar, onunla oynar oynamaz görünür.",
+  "🏆 Los goleadores de tu era y los que más partidos juegan aparecen al avanzar la temporada.": "🏆 Senin dönemindeki golcüler ve en çok oynayanlar sezon ilerledikçe görünür.",
+  "📈 Las rachas y las marcas del club se registran desde el primer partido.": "📈 Kulübün serileri ve rekorları ilk maçtan itibaren kaydedilir.",
+  "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.": "🏆 Burada henüz gösterilecek bir şey yok: oynadıkça dolar."
  }
 }

@@ -48,5 +48,14 @@ func _ready() -> void:
 		if not ok:
 			_fallos += 1
 		print("  %s %s → %s: está «%s» %s, no está «%s» %s" % ["ok   " if ok else "FALLO", c[0], c[2], c[3], t.contains(String(c[3])), c[4], not t.contains(String(c[4]))])
+	## (12-11) Partida nueva: las pantallas sin datos dicen qué las llenará (`EstadoVacio`), no se quedan con la cabecera y el panel en negro.
+	for v: Array in [["Récords", "_lista_records", "rivales"], ["Récords", "_lista_records", "memoria"], ["Clubes", "_lista_clubes", "rivales"], ["Finanzas", "_lista_finanzas", "libro"]]:
+		_p._ir_a_chip({"tab": v[0], "secc": v[2]})
+		for i in 20:
+			await get_tree().process_frame
+		var hay := (_p.get(String(v[1])) as Node).find_child("EstadoVacio", true, false) != null
+		if not hay:
+			_fallos += 1
+		print("  %s %s → %s: sin datos, lleva su aviso de pantalla vacía" % ["ok   " if hay else "FALLO", v[0], v[2]])
 	print("FIN. %d fallos" % _fallos)
 	get_tree().quit(1 if _fallos > 0 else 0)   ## código de salida: `especiales.sh` encadena dos clubes con &&

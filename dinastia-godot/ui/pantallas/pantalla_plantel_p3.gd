@@ -11,10 +11,8 @@ func _pintar_premios() -> void:
 	p._limpiar(p._lista_premios)
 	var lg := p.mundo.logros
 	if lg == null or lg.premios.is_empty():
-		var vacio := p._texto(12, Principal.COL_SUAVE)
-		vacio.text = Idiomas.t("Las galas se celebran al cerrar cada temporada. Todavía no hay ninguna.")
-		vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		p._lista_premios.add_child(vacio)
+		p._lista_premios.add_child(EstadoVacio.crear("🥇", Idiomas.t("Aún no se ha celebrado ninguna gala"), Idiomas.t("Las galas se celebran al cerrar cada temporada. Todavía no hay ninguna."),
+			p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 340.0))
 		return
 	for acta: Dictionary in lg.premios:
 		var t := p._texto(13, Principal.COL_ORO)

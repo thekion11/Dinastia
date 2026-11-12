@@ -402,23 +402,22 @@ func _filtrar_records() -> void:
 	var visibles: Array = Principal.SECC_RECORDS.get(p._secc_records, [])
 	## Antes del primer título no hay sección: eso se ve siempre -es la
 	## cabecera de la pantalla-.
+	## `alguno`: hay algo de ESTA sección a la vista. (12-11) Antes contaba también la cabecera «TU CARRERA», que se ve siempre, así que el
+	## aviso de «aún no hay nada» no salía nunca y Memoria, Rivales y Vitrina eran una franja arriba y el panel en negro.
 	var mostrando := true
+	var en_seccion := false
+	var alguno := false
 	for n in p._lista_records.get_children():
 		var l := n as Label
 		if l != null and titulos.has(l.text):
 			mostrando = visibles.has(l.text)
+			en_seccion = true
 		if n is CanvasItem:
 			(n as CanvasItem).visible = mostrando
-	## FALLA VISUAL (recorrido D4): al empezar una partida Memoria, Rivales y
-	## Vitrina salían en blanco -sus secciones solo se pintan cuando hay datos-.
-	## Una página en blanco parece un error; esto dice qué va a aparecer ahí.
-	var alguno := false
-	for n in p._lista_records.get_children():
-		if n is CanvasItem and (n as CanvasItem).visible and not n.is_queued_for_deletion():
-			alguno = true
-			break
+			alguno = alguno or (en_seccion and mostrando and not n.is_queued_for_deletion())
 	if not alguno:
-		var vacio := p._texto(13, Principal.COL_SUAVE)
-		vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		vacio.text = String(Principal.VACIO_RECORDS.get(p._secc_records, "Todavía no hay nada que mostrar aquí: se llena al jugar."))
-		p._lista_records.add_child(vacio)
+		## El texto de cada sección trae su icono delante («⚔️ El cara a cara…»): el icono va grande y la frase debajo.
+		var frase := Idiomas.t(String(Principal.VACIO_RECORDS.get(p._secc_records, "🏆 Todavía no hay nada que mostrar aquí: se llena al jugar.")))
+		var corte := frase.find(" ")
+		p._lista_records.add_child(EstadoVacio.crear(frase.substr(0, corte), Idiomas.t("Aún no hay nada escrito aquí"), frase.substr(corte + 1),
+			p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 300.0))
