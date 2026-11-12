@@ -7967,11 +7967,12 @@
   "Sprint\ny entrada": "Sprint\nand tackle",
   "2.º\ndefensor": "2nd\ndefender",
   "Despeje": "Clearance",
-  "TABLA": "TABLE",
-  "socios": "members",
   "Añadir la próxima temporada": "Add next season",
   "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "With the season under way, the leagues you choose join when it ends (cups and continental tournaments in progress are not touched).",
-  "Programadas: %s": "Scheduled: %s"
+  "Programadas: %s": "Scheduled: %s",
+  "Sección": "Section",
+  "Submenú": "Submenu",
+  "Menú": "Menu"
  },
  "pt": {
   "Historia": "História",
@@ -15941,11 +15942,12 @@
   "Sprint\ny entrada": "Sprint\ne desarme",
   "2.º\ndefensor": "2.º\ndefensor",
   "Despeje": "Corte",
-  "TABLA": "TABELA",
-  "socios": "sócios",
   "Añadir la próxima temporada": "Adicionar na próxima temporada",
   "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "Com a temporada em andamento, as ligas escolhidas entram quando ela terminar (as copas e os torneios continentais em curso não mudam).",
-  "Programadas: %s": "Programadas: %s"
+  "Programadas: %s": "Programadas: %s",
+  "Sección": "Seção",
+  "Submenú": "Submenu",
+  "Menú": "Menu"
  },
  "patrones": [
   [
@@ -30055,11 +30057,12 @@
   "Sprint\ny entrada": "Sprint\net tacle",
   "2.º\ndefensor": "2e\ndéfenseur",
   "Despeje": "Dégagement",
-  "TABLA": "CLASSEMENT",
-  "socios": "socios",
   "Añadir la próxima temporada": "Ajouter la saison prochaine",
   "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "Saison en cours : les championnats choisis arrivent à sa clôture (les coupes et les tournois continentaux en cours ne changent pas).",
-  "Programadas: %s": "Programmés : %s"
+  "Programadas: %s": "Programmés : %s",
+  "Sección": "Section",
+  "Submenú": "Sous-menu",
+  "Menú": "Menu"
  },
  "it": {
   "Historia": "Storia",
@@ -38029,11 +38032,12 @@
   "Sprint\ny entrada": "Sprint\ne contrasto",
   "2.º\ndefensor": "2º\ndifensore",
   "Despeje": "Rinvio",
-  "TABLA": "CLASSIFICA",
-  "socios": "soci",
   "Añadir la próxima temporada": "Aggiungi la prossima stagione",
   "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "A stagione in corso, i campionati scelti entrano alla sua chiusura (coppe e tornei continentali in corso non cambiano).",
-  "Programadas: %s": "Programmati: %s"
+  "Programadas: %s": "Programmati: %s",
+  "Sección": "Sezione",
+  "Submenú": "Sottomenu",
+  "Menú": "Menu"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46003,11 +46007,12 @@
   "Sprint\ny entrada": "Sprint\nund Tackling",
   "2.º\ndefensor": "2.\nVerteidiger",
   "Despeje": "Klärung",
-  "TABLA": "TABELLE",
-  "socios": "Mitglieder",
   "Añadir la próxima temporada": "Nächste Saison hinzufügen",
   "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "Während der Saison kommen die gewählten Ligen zum Saisonende dazu (laufende Pokale und Kontinentalturniere bleiben unverändert).",
-  "Programadas: %s": "Geplant: %s"
+  "Programadas: %s": "Geplant: %s",
+  "Sección": "Bereich",
+  "Submenú": "Untermenü",
+  "Menú": "Menü"
  },
  "ca": {
   "Historia": "Història",
@@ -53977,11 +53982,12 @@
   "Sprint\ny entrada": "Sprint\ni entrada",
   "2.º\ndefensor": "2n\ndefensor",
   "Despeje": "Rebuig",
-  "TABLA": "CLASSIFICACIÓ",
-  "socios": "socis",
   "Añadir la próxima temporada": "Afegir la temporada vinent",
   "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "Amb la temporada en marxa, les lligues triades entren quan es tanqui (les copes i els tornejos continentals en curs no es toquen).",
-  "Programadas: %s": "Programades: %s"
+  "Programadas: %s": "Programades: %s",
+  "Sección": "Secció",
+  "Submenú": "Submenú",
+  "Menú": "Menú"
  },
  "pl": {
   "Club": "Klub",
@@ -61951,11 +61957,12 @@
   "Sprint\ny entrada": "Sprint\ni wślizg",
   "2.º\ndefensor": "2.\nobrońca",
   "Despeje": "Wybicie",
-  "TABLA": "TABELA",
-  "socios": "członków",
   "Añadir la próxima temporada": "Dodaj w następnym sezonie",
   "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "W trakcie sezonu wybrane ligi dołączą po jego zakończeniu (trwające puchary i turnieje kontynentalne się nie zmieniają).",
-  "Programadas: %s": "Zaplanowane: %s"
+  "Programadas: %s": "Zaplanowane: %s",
+  "Sección": "Sekcja",
+  "Submenú": "Podmenu",
+  "Menú": "Menu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -69925,10 +69932,11 @@
   "Sprint\ny entrada": "Sprint\nve müdahale",
   "2.º\ndefensor": "2.\nsavunmacı",
   "Despeje": "Uzaklaştırma",
-  "TABLA": "PUAN DURUMU",
-  "socios": "üye",
   "Añadir la próxima temporada": "Gelecek sezon ekle",
   "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "Sezon sürerken seçtiğin ligler sezon bitince eklenir (devam eden kupalar ve kıta turnuvaları değişmez).",
-  "Programadas: %s": "Planlananlar: %s"
+  "Programadas: %s": "Planlananlar: %s",
+  "Sección": "Bölüm",
+  "Submenú": "Alt menü",
+  "Menú": "Menü"
  }
 }

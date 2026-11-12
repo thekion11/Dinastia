@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -110,31 +110,54 @@ func _probar_estadios_variedad() -> void:
 	_comprobar(float(peor) / float(maxi(1, filas.size())) <= 0.4, "ninguna forma pasa del 40 %% de los estadios (la mayor: %d de %d)" % [peor, filas.size()])
 	_comprobar(mal.is_empty(), "lo generado cabe en el aforo del club (fallan %d: %s)" % [mal.size(), ", ".join(mal.slice(0, 4))])
 
-## (12-11, menú central frente al del PES 2020) La tabla corta del inicio: los 5 primeros y tu club en su puesto si va más abajo.
-func _probar_tabla_corta_inicio() -> void:
-	_titulo("TABLA CORTA DEL MENÚ CENTRAL")
+## (12-11, menú central frente al del PES 2020) Los socios del club en la cabecera, con puntos de miles.
+func _probar_socios_cabecera() -> void:
+	_titulo("SOCIOS DEL CLUB EN LA CABECERA")
+	_comprobar(ResumenInicio.miles(20187) == "20.187" and ResumenInicio.miles(1500000) == "1.500.000" and ResumenInicio.miles(999) == "999", "puntos de miles (20.187, 1.500.000, 999)")
 	for caso: Array in [["ESP", 4242], ["ARG", 91]]:
 		var m := Mundo.new()
 		var paises: Array[String] = []
 		paises.assign([caso[0]])
 		m.generar(paises, int(caso[1]))
-		var liga: Liga = m.ligas[0]
-		for k in 5:
-			liga.jugar_jornada()
-		var tabla := liga.tabla()
-		var ultimo: Club = tabla[tabla.size() - 1]["club"]
-		var lider: Club = tabla[0]["club"]
-		var f := ResumenInicio.filas_tabla(ultimo, liga, ResumenInicio.N_TABLA)
-		_comprobar(f.size() == ResumenInicio.N_TABLA + 1 and f[-1]["club"] == ultimo and int(f[-1]["pos"]) == tabla.size(),
-			"%s: el colista sale al final en su puesto (%d.º) tras los 5 primeros" % [caso[0], tabla.size()])
-		var g := ResumenInicio.filas_tabla(lider, liga, ResumenInicio.N_TABLA)
-		_comprobar(g.size() == ResumenInicio.N_TABLA and g[0]["club"] == lider and int(g[0]["pos"]) == 1, "%s: el líder no se repite" % caso[0])
-		var puntos_ok := true
-		for i in range(1, g.size()):
-			puntos_ok = puntos_ok and int(g[i - 1]["pts"]) >= int(g[i]["pts"])
-		_comprobar(puntos_ok, "%s: los puntos van de mayor a menor" % caso[0])
-		var ui := ResumenInicio.tabla_corta(ultimo, liga, func(_t: String) -> void: pass)
-		_comprobar(ui != null, "%s: la tarjeta se pinta" % caso[0])
-		if ui != null:
-			ui.free()
-	_comprobar(ResumenInicio.tabla_corta(null, null, func(_t: String) -> void: pass) == null, "sin liga no hay tarjeta")
+		var c: Club = m.ligas[0].clubes[1]
+		_comprobar(c.socios > 0 and ResumenInicio.socios_txt(c).contains(ResumenInicio.miles(c.socios)), "%s: %s sale con sus socios (%s)" % [caso[0], c.nombre, ResumenInicio.socios_txt(c)])
+	var vacio := Club.new()
+	_comprobar(ResumenInicio.socios_txt(vacio) == "" and ResumenInicio.socios_txt(null) == "", "sin socios no se escribe nada")
+
+## (12-11, PES) El pie con las ayudas del mando: solo con mando, y con lo que hacen los botones según el panel lateral esté abierto o no.
+func _probar_pie_mando() -> void:
+	_titulo("PIE DE PANTALLA CON LAS AYUDAS DEL MANDO")
+	var central := PieMando.ayudas(false)
+	var lateral := PieMando.ayudas(true)
+	_comprobar(central.size() == 4 and lateral.size() == 4, "cuatro ayudas en cada contexto")
+	_comprobar(String(central[0][0]) == String(Mando.NOMBRE_BOTON[JOY_BUTTON_A]) and String(central[1][1]) == "Volver", "A elige y B vuelve, con los nombres de la pantalla de controles")
+	_comprobar(String(central[2][1]) == "Sección" and String(lateral[2][1]) == "Submenú" and String(lateral[3][1]) == "Menú", "LB/RB y LT/RT cambian de significado con el panel lateral abierto")
+	for a: Array in central + lateral:
+		_comprobar(Idiomas.t(String(a[1])) != "", "«%s» tiene texto" % String(a[1]))
+	var antes := FocoMando.forzar
+	var abierto := [false]
+	var pie := PieMando.crear(func() -> bool: return bool(abierto[0]))
+	add_child(pie)
+	FocoMando.forzar = true
+	pie._actualizar()
+	_comprobar(pie.visible and pie._fila.get_child_count() == 4, "con mando se ve, con 4 botones")
+	FocoMando.forzar = false
+	pie._actualizar()
+	_comprobar(not pie.visible or not Input.get_connected_joypads().is_empty(), "sin mando no se ve")
+	FocoMando.forzar = antes
+	pie.free()
+	## (12-11) El guardián del foco no toma como capa de arriba una que otra capa aisló (menú abierto encima de un evento).
+	var base := Control.new()
+	add_child(base)
+	var evento := Control.new()
+	var menu := Control.new()
+	for c: Control in [evento, menu]:
+		c.set_anchors_preset(Control.PRESET_FULL_RECT)
+		c.mouse_filter = Control.MOUSE_FILTER_STOP
+		base.add_child(c)
+	_comprobar(GuardianFoco._tapa(evento), "un evento a pantalla completa tapa")
+	FocoMando.aislar(menu)
+	_comprobar(not GuardianFoco._tapa(evento) and GuardianFoco.capa_arriba(base) == menu, "con un menú aislando encima, la capa de arriba es el menú")
+	FocoMando.liberar(menu)
+	_comprobar(GuardianFoco._tapa(evento), "al cerrar el menú, el evento vuelve a contar")
+	base.free()
