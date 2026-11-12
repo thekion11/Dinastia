@@ -7966,7 +7966,16 @@
   "Sprint\ny regate": "Sprint\nand dribble",
   "Sprint\ny entrada": "Sprint\nand tackle",
   "2.º\ndefensor": "2nd\ndefender",
-  "Despeje": "Clearance"
+  "Despeje": "Clearance",
+  "Añadir la próxima temporada": "Add next season",
+  "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "With the season under way, the leagues you choose join when it ends (cups and continental tournaments in progress are not touched).",
+  "Programadas: %s": "Scheduled: %s",
+  "Sección": "Section",
+  "Submenú": "Submenu",
+  "Menú": "Menu",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D or controller · mouse: look · Shift: run · E: use · Esc: back",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Tip: while walking, look around with the mouse, the right stick or by dragging your finger.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "This is how you walk around here. You look around with the mouse, the right stick or by dragging your finger."
  },
  "pt": {
   "Historia": "História",
@@ -15935,7 +15944,16 @@
   "Sprint\ny regate": "Sprint\ne drible",
   "Sprint\ny entrada": "Sprint\ne desarme",
   "2.º\ndefensor": "2.º\ndefensor",
-  "Despeje": "Corte"
+  "Despeje": "Corte",
+  "Añadir la próxima temporada": "Adicionar na próxima temporada",
+  "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "Com a temporada em andamento, as ligas escolhidas entram quando ela terminar (as copas e os torneios continentais em curso não mudam).",
+  "Programadas: %s": "Programadas: %s",
+  "Sección": "Seção",
+  "Submenú": "Submenu",
+  "Menú": "Menu",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D ou comando · rato: olhar · Shift: correr · E: usar · Esc: voltar",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Dica: ao passear, olhe em volta com o rato, o analógico direito ou arrastando o dedo.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "É assim que se anda por aqui. Olhas em volta com o rato, o analógico direito ou arrastando o dedo."
  },
  "patrones": [
   [
@@ -30044,7 +30062,16 @@
   "Sprint\ny regate": "Sprint\net dribble",
   "Sprint\ny entrada": "Sprint\net tacle",
   "2.º\ndefensor": "2e\ndéfenseur",
-  "Despeje": "Dégagement"
+  "Despeje": "Dégagement",
+  "Añadir la próxima temporada": "Ajouter la saison prochaine",
+  "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "Saison en cours : les championnats choisis arrivent à sa clôture (les coupes et les tournois continentaux en cours ne changent pas).",
+  "Programadas: %s": "Programmés : %s",
+  "Sección": "Section",
+  "Submenú": "Sous-menu",
+  "Menú": "Menu",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "Z/Q/S/D ou manette · souris : regarder · Maj : courir · E : utiliser · Échap : retour",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Astuce : en marchant, regardez autour de vous avec la souris, le stick droit ou en faisant glisser le doigt.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Voilà comment on se déplace ici. Tu regardes autour de toi avec la souris, le stick droit ou en faisant glisser le doigt."
  },
  "it": {
   "Historia": "Storia",
@@ -38013,7 +38040,16 @@
   "Sprint\ny regate": "Sprint\ne dribbling",
   "Sprint\ny entrada": "Sprint\ne contrasto",
   "2.º\ndefensor": "2º\ndifensore",
-  "Despeje": "Rinvio"
+  "Despeje": "Rinvio",
+  "Añadir la próxima temporada": "Aggiungi la prossima stagione",
+  "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "A stagione in corso, i campionati scelti entrano alla sua chiusura (coppe e tornei continentali in corso non cambiano).",
+  "Programadas: %s": "Programmati: %s",
+  "Sección": "Sezione",
+  "Submenú": "Sottomenu",
+  "Menú": "Menu",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D o controller · mouse: guardare · Maiusc: correre · E: usare · Esc: indietro",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Consiglio: mentre cammini, guardati intorno con il mouse, la levetta destra o trascinando il dito.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Ecco come si cammina qui. Ti guardi intorno con il mouse, la levetta destra o trascinando il dito."
  },
  "de": {
   "Historia": "Geschichte",
@@ -45982,7 +46018,16 @@
   "Sprint\ny regate": "Sprint\nund Dribbling",
   "Sprint\ny entrada": "Sprint\nund Tackling",
   "2.º\ndefensor": "2.\nVerteidiger",
-  "Despeje": "Klärung"
+  "Despeje": "Klärung",
+  "Añadir la próxima temporada": "Nächste Saison hinzufügen",
+  "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "Während der Saison kommen die gewählten Ligen zum Saisonende dazu (laufende Pokale und Kontinentalturniere bleiben unverändert).",
+  "Programadas: %s": "Geplant: %s",
+  "Sección": "Bereich",
+  "Submenú": "Untermenü",
+  "Menú": "Menü",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D oder Controller · Maus: umsehen · Umschalt: laufen · E: benutzen · Esc: zurück",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Tipp: Beim Gehen schaust du dich mit der Maus, dem rechten Stick oder durch Wischen mit dem Finger um.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "So läuft man hier herum. Du schaust dich mit der Maus, dem rechten Stick oder durch Wischen mit dem Finger um."
  },
  "ca": {
   "Historia": "Història",
@@ -53951,7 +53996,16 @@
   "Sprint\ny regate": "Sprint\ni regat",
   "Sprint\ny entrada": "Sprint\ni entrada",
   "2.º\ndefensor": "2n\ndefensor",
-  "Despeje": "Rebuig"
+  "Despeje": "Rebuig",
+  "Añadir la próxima temporada": "Afegir la temporada vinent",
+  "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "Amb la temporada en marxa, les lligues triades entren quan es tanqui (les copes i els tornejos continentals en curs no es toquen).",
+  "Programadas: %s": "Programades: %s",
+  "Sección": "Secció",
+  "Submenú": "Submenú",
+  "Menú": "Menú",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D o comandament · ratolí: mirar · Maj: córrer · E: fer servir · Esc: tornar",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Consell: mentre passeges, mira al voltant amb el ratolí, l'estic dret o arrossegant el dit.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Així es camina per aquí. Mires al voltant amb el ratolí, l'estic dret o arrossegant el dit."
  },
  "pl": {
   "Club": "Klub",
@@ -61920,7 +61974,16 @@
   "Sprint\ny regate": "Sprint\ni drybling",
   "Sprint\ny entrada": "Sprint\ni wślizg",
   "2.º\ndefensor": "2.\nobrońca",
-  "Despeje": "Wybicie"
+  "Despeje": "Wybicie",
+  "Añadir la próxima temporada": "Dodaj w następnym sezonie",
+  "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "W trakcie sezonu wybrane ligi dołączą po jego zakończeniu (trwające puchary i turnieje kontynentalne się nie zmieniają).",
+  "Programadas: %s": "Zaplanowane: %s",
+  "Sección": "Sekcja",
+  "Submenú": "Podmenu",
+  "Menú": "Menu",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D lub pad · mysz: rozglądanie · Shift: bieg · E: użyj · Esc: wróć",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Wskazówka: podczas spaceru rozglądaj się myszą, prawym drążkiem lub przesuwając palcem.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Tak się tu chodzi. Rozglądasz się myszą, prawym drążkiem albo przesuwając palcem."
  },
  "tr": {
   "Club": "Kulüp",
@@ -69889,6 +69952,15 @@
   "Sprint\ny regate": "Sprint\nve çalım",
   "Sprint\ny entrada": "Sprint\nve müdahale",
   "2.º\ndefensor": "2.\nsavunmacı",
-  "Despeje": "Uzaklaştırma"
+  "Despeje": "Uzaklaştırma",
+  "Añadir la próxima temporada": "Gelecek sezon ekle",
+  "Con la temporada en marcha, las ligas elegidas entran al cerrarla (las copas y los torneos continentales en curso no se tocan).": "Sezon sürerken seçtiğin ligler sezon bitince eklenir (devam eden kupalar ve kıta turnuvaları değişmez).",
+  "Programadas: %s": "Planlananlar: %s",
+  "Sección": "Bölüm",
+  "Submenú": "Alt menü",
+  "Menú": "Menü",
+  "W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver": "W/S/A/D veya kumanda · fare: bak · Shift: koş · E: kullan · Esc: geri",
+  "Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo.": "İpucu: yürürken fareyle, sağ çubukla veya parmağını kaydırarak etrafına bak.",
+  "Así se camina por aquí. Miras alrededor con el ratón, el stick derecho o arrastrando el dedo.": "Burada böyle yürünür. Fareyle, sağ çubukla veya parmağını kaydırarak etrafına bakarsın."
  }
 }

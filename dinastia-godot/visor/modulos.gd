@@ -75,6 +75,9 @@ static func _nueva(nombre: String, forzada: Variant, tonos: Dictionary) -> Node3
 	cuerpo.name = "Cuerpo"
 	cuerpo.scale = escala(nombre, forzada)
 	raiz.add_child(cuerpo)
+	if nombre == "pottedPlant":   ## (12-11) la de Kenney es una caja con una bola verde: en primera persona, de juguete (`PlantaDecor`)
+		raiz.add_child(PlantaDecor.nodo())
+		return raiz
 	for e: Array in datos(nombre)["mallas"]:
 		var mi := MeshInstance3D.new()
 		mi.mesh = CargaCiudad.de("InteriorInstalacion")._malla_tenida(e[0], tonos)

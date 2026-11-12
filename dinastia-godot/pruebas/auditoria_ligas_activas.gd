@@ -221,11 +221,12 @@ func _ajustes() -> void:
 		for i in 10:
 			await get_tree().process_frame
 		_comprobar(LigasActivas.de(m).has(uno) and LigasActivas.de(m).size() == antes + 1, "y lo elegido se carga en la partida (%s; %d → %d países)" % [uno, antes, LigasActivas.de(m).size()])
-	(m.ligas[0] as Liga).jornada_actual = 1   ## con una jornada jugada, desactivado y con su explicación
+	(m.ligas[0] as Liga).jornada_actual = 1   ## (12-11) con una jornada jugada: el botón PROGRAMA para la próxima temporada, con su explicación
 	aj.call("_pintar_ajustes")
 	await get_tree().process_frame
 	bs = p.find_children("AnadirLigas", "Button", true, false)
-	_comprobar(not bs.is_empty() and (bs[0] as Button).disabled, "con la temporada en marcha el botón está desactivado (se volverían a sortear las copas)")
+	_comprobar(not bs.is_empty() and not (bs[0] as Button).disabled and (bs[0] as Button).text.contains(Idiomas.t("Añadir la próxima temporada")),
+		"con la temporada en marcha el botón programa para la próxima temporada (no se vuelven a sortear las copas en curso)")
 	p.queue_free()
 	for i in 4:
 		await get_tree().process_frame

@@ -264,7 +264,7 @@ static func lista_consejos() -> Array:
 	return [
 		Idiomas.t("Consejo: los días de partido el estadio se llena más si el equipo viene ganando."),
 		Idiomas.t("Consejo: el Centro médico acelera la recuperación entre partidos."),
-		Idiomas.t("Consejo: pulsa V al pasear para cambiar a primera persona."),
+		Idiomas.t("Consejo: pulsa V al pasear para cambiar a primera persona.") if VistaJuego.puede_cambiar() else Idiomas.t("Consejo: al pasear, mira alrededor con el ratón, el stick derecho o arrastrando el dedo."),
 		Idiomas.t("Consejo: entra en las casas y los bares; la gente de la ciudad tiene cosas que contarte."),
 		Idiomas.t("Consejo: la Academia juvenil mejora el potencial de los canteranos."),
 		Idiomas.t("Consejo: de noche las ventanas se encienden y las farolas alumbran la calle."),

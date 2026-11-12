@@ -346,6 +346,9 @@ func _colocados() -> bool:
 
 func _ejecutar_saque_ia(p: Dictionary, tipo: String, lugar: Vector3) -> void:
 	MotorTraza.saque(self as Object as MotorJugable, tipo)   ## traza (ciclo 11): solo cuenta
+	if _saque_ensayado(p, tipo, lugar):   ## gancho (12-11): C4 ensaya faltas laterales; el de siempre no hace nada
+		_reanudar()
+		return
 	var arco := _arco_rival(p)
 	match tipo:
 		"corner":

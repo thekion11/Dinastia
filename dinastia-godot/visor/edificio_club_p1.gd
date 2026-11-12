@@ -117,7 +117,8 @@ const PLANTAS := [
 ## libros en la estantería). Los muy del club (trofeo, bandera, bufanda, pizarra,
 ## maqueta, guitarra, balón) siguen hechos a mano con sus colores.
 const DECO_MODULAR := {
-	"planta": [["pottedPlant", -1, 2.2]],
+	## (12-11) "planta" ya no usa `pottedPlant` (una caja con una bola verde, muy de juguete en primera persona): va hecha a mano
+	## con `PlantaDecor` (maceta y hojas en una sola malla).
 	"sofa": [["loungeSofa", -1, null]],
 	"tele": [["cabinetTelevision", -1, null], ["televisionModern", 0, null]],
 	"alfombra": [["rugRound", -1, null]],

@@ -41,6 +41,9 @@ func _nueva_temporada() -> void:
 	var foto := CierreTorneos.foto(p.mundo)
 	var resumen := p.mundo.nueva_temporada()
 	PartidoDespedida.limpiar(p.mundo)
+	if not LigasActivas.pendientes(p.mundo).is_empty():   ## (12-11) las ligas programadas en Ajustes entran ahora, con la temporada nueva ya abierta
+		var rp := LigasActivas.aplicar_pendientes(p.mundo)
+		p._escribir("[color=#4caf6d]%s[/color]" % (Idiomas.t("Ligas añadidas: %d países, %d clubes nuevos.") % [(rp["paises"] as Array).size(), int(rp["clubes"])]))
 	## (10-11) LA PANTALLA ÚNICA DEL FINAL DE TEMPORADA (orden del dueño) y, al cerrarla, el documental de la temporada.
 	var con_pantalla := DisplayServer.get_name() != "headless"
 	if con_pantalla:

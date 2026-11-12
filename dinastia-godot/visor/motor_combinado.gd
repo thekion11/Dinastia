@@ -69,12 +69,55 @@ func _ia_portador(p: Dictionary) -> void:
 	if not _nuestra("decide_con_balon"):
 		super(p)
 		return
-	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
+	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
 		return
 	var guardado := equipos
+	var antes := _decision_en
 	equipos = []
 	super(p)
 	equipos = guardado
+	if _mejoras_c4:
+		MejorasC4.encarar_banda(self, p)
+		if not is_equal_approx(_decision_en, antes):
+			_decision_en = MejorasC4.ritmo_ultimo_tercio(self, p, _decision_en)
+
+## (12-11, sesión 13) con el balón en el aire, el receptor va a donde baja (a la cabeza cerca del área), solo en C4.
+func _punto_de_recepcion() -> Vector3:
+	if _mejoras_c4:
+		var r := MejorasC4.punto_aereo(self)
+		if r != Vector3.INF:
+			return r
+	return super()
+
+func _saque_ensayado(p: Dictionary, tipo: String, lugar: Vector3) -> bool:
+	if not _mejoras_c4:
+		return false
+	if tipo == "falta":
+		return MejorasC4.falta_ensayada(self, p, lugar, _rng)
+	return tipo == "banda" and MejorasC4.banda_ensayada(self, p, lugar, _rng)
+
+## (12-11, sesión 13) rechaces del portero y goles tras rechace (contadores), solo en C4.
+func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
+	super(p, cruce, estirada)
+	if _mejoras_c4 and String(poseedor.get("id", "")) != String(p["id"]):
+		set_meta("_t_rechace", t)
+		_contar("c4_rechace")
+
+func _gol(en_arco_visita: bool) -> void:
+	if _mejoras_c4 and t - float(get_meta("_t_rechace", -99.0)) < 3.0:
+		_contar("c4_gol_rechace")
+	super(en_arco_visita)
+
+func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
+	var r := super(p, victima, base)
+	return MejorasC4.radio_entrada(self, p, victima, base, r) if _mejoras_c4 else r
+
+func _radio_cabezazo(p: Dictionary) -> float:
+	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)
+
+## (12-11, sesión 13) paciencia ante el tiro lejano, solo en C4.
+func _ganas_tiro_extra(p: Dictionary, dist_arco: float, ganas: float, presion: float) -> float:
+	return MejorasC4.ganas_tiro(self, p, dist_arco, ganas, presion, _rng) if _mejoras_c4 else ganas
 
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	if not _nuestra("coloca_sin_balon"):
@@ -108,6 +151,10 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		return super._ia_ataque_sin_balon(p)
 	var r := _sin_flag3(p, true)
 	if _mejoras_c4:
+		var sigue := MejorasC4.seguir_tiro(self, p)
+		if sigue != Vector3.INF:
+			p["correr"] = true
+			return sigue
 		MejorasC4.sprint(self, p, r)
 	return r
 

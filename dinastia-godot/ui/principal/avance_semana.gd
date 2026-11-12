@@ -101,7 +101,7 @@ func _refrescar() -> void:
 	p._lbl_fecha.text = Idiomas.t("%s  ·  semana %d") % [p.fecha_larga(), p.mundo.semana]
 	p._sub.text = Idiomas.t("%s  ·  Jornada %d de %d  ·  Sueldos %s/sem  ·  Media %.1f%s") % [
 		liga.nombre, liga.jornada_actual, liga.jornadas(),
-		p._dinero(c.masa_salarial()), c.media(), dir_txt]
+		p._dinero(c.masa_salarial()), c.media(), dir_txt + ResumenInicio.socios_txt(c)]   ## (12-11, PES) y los socios del club
 	## M-305: qué es cada cifra de esta línea, al pasar el ratón.
 	p._sub.tooltip_text = Idiomas.t("Jornada: la de la liga. Sueldos: lo que pagas por semana a la plantilla. Media: la del once. Objetivo y confianza: lo que la directiva espera y cuánto confía en ti (en 12 o menos, te pueden despedir).")
 	p._sub.mouse_filter = Control.MOUSE_FILTER_PASS

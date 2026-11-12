@@ -44,8 +44,9 @@ var _es_dt := false
 ## Sentado en la grada: dónde y hacia dónde se mira.
 var sentado := false
 
-## Visión en primera persona (tecla V).
-var primera_persona := false
+## Visión en primera persona. (12-11, dueño) En el juego es la ÚNICA (`VistaJuego`); V cambia de vista solo con `DINASTIA_CAMARAS=1`.
+var primera_persona := VistaJuego.inicial()
+var mirada_v := -0.03   ## (12-11) cabeceo de la mirada en primera persona (rad; > 0 arriba)
 var _de_pie := Vector3.ZERO
 var _mirada := 0.0
 var _est_perfil: Dictionary = {}
@@ -157,6 +158,12 @@ func zona_en(p: Vector3, _radio: float = 0.0) -> Dictionary:
 ## paredes ni pasa del techo: si no, se vería el exterior de la caja.
 func _colocar_camara(delta: float) -> void:
 	## PLANO DE CONVERSACIÓN (13-10-2026): tras tu hombro, encuadrando su cara.
+	if is_instance_valid(_menu) and _hablando != null and is_instance_valid(_hablando) and primera_persona:   ## (12-11) primera persona: se mira a su cara
+		var ojo := cuerpo.position + Vector3(0, 1.62, 0)
+		camara.position = camara.position.lerp(ojo, 1.0 if delta >= 1.0 else minf(1.0, delta * 6.0))
+		camara.look_at(_hablando.global_position + Vector3(0, 1.55, 0), Vector3.UP)
+		cuerpo.visible = false
+		return
 	if is_instance_valid(_menu) and _hablando != null and is_instance_valid(_hablando) and not primera_persona:
 		var yo := cuerpo.global_position
 		var el := _hablando.global_position
@@ -172,7 +179,7 @@ func _colocar_camara(delta: float) -> void:
 	if primera_persona and true:
 		var dir_fp := Vector3(sin(rumbo), 0, cos(rumbo))
 		camara.position = cuerpo.position + Vector3(0, 1.62, 0) + dir_fp * 0.18
-		camara.look_at(camara.position + dir_fp * 5.0 + Vector3(0, -0.15, 0), Vector3.UP)
+		camara.look_at(camara.position + dir_fp * 5.0 + Vector3(0, tan(mirada_v) * 5.0, 0), Vector3.UP)
 		cuerpo.visible = false
 		return
 	if not cuerpo.visible and not sentado:

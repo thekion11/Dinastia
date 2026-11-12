@@ -218,7 +218,7 @@ func _disputas(delta: float) -> void:
 			for p: Dictionary in jugadores:
 				if float(p["enfriar"]) > 0.0 or bool(p["por"]):
 					continue
-				if Vector2(pos(p).x - b.x, pos(p).z - b.z).length() < 0.8:
+				if Vector2(pos(p).x - b.x, pos(p).z - b.z).length() < _radio_cabezazo(p):
 					_cabezazo(p)
 					break
 		return
@@ -245,7 +245,7 @@ func _disputas(delta: float) -> void:
 			continue
 		if float(p["enfriar"]) > 0.0 or bool(p["por"]):
 			continue
-		if pos(p).distance_to(pos(poseedor)) < MotorEntrada.radio(self as Object as MotorJugable, p, poseedor, 1.25 + 0.12 * float(_tac(bool(p["es_local"]), "presion") - 1)):   ## ciclo 12: entrar en el momento bueno
+		if pos(p).distance_to(pos(poseedor)) < _radio_entrada(p, poseedor, 1.25 + 0.12 * float(_tac(bool(p["es_local"]), "presion") - 1)):   ## ciclo 12: entrar en el momento bueno
 			_entrada(p, false)
 			break
 
