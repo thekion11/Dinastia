@@ -154,7 +154,16 @@ func _radio_cabezazo(p: Dictionary) -> float:
 
 ## (12-11, sesión 13) paciencia ante el tiro lejano, solo en C4.
 func _ganas_tiro_extra(p: Dictionary, dist_arco: float, ganas: float, presion: float) -> float:
-	return MejorasC4.ganas_tiro(self, p, dist_arco, ganas, presion, _rng) if _mejoras_c4 else ganas
+	if not _mejoras_c4:
+		return ganas
+	return MejorasC4Regate.ganas(self, p, dist_arco, ganas, MejorasC4.ganas_tiro(self, p, dist_arco, ganas, presion, _rng))   ## + regate y remate (sesión 15)
+
+## (12-11, sesión 15) apunta el regate ganado cerca del arco (`MejorasC4Regate`, `C4_REGATE_TIRO=1`).
+func _finta_ia(p: Dictionary, rival: Dictionary, fwd: Vector3, lado: float, sp: float) -> void:
+	var antes := regates_ia_ok
+	super(p, rival, fwd, lado, sp)
+	if _mejoras_c4:
+		MejorasC4Regate.marcar(self, p, regates_ia_ok > antes)
 
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	if not _nuestra("coloca_sin_balon"):
