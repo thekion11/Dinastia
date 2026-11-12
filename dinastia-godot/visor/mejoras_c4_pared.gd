@@ -93,7 +93,7 @@ static func _rival_cerca(m: Object, punto: Vector3, local: bool, r: float) -> bo
 ## (rival a < `APOYO_PRESION` m) no tenía a quién darla. El compañero de campo más cercano (a < 15 m) se ofrece de cara: a `APOYO_D` m del
 ## portador, del lado contrario al rival que aprieta y algo por detrás, probando tres ángulos hasta tener la línea de pase limpia.
 ## Destino o Vector3.INF. Contador: `c4_apoyo` (pasos en que alguien se ofrece, por cada 10).
-static var APOYO := OS.get_environment("C4_APOYO") == "1"
+static var APOYO := OS.get_environment("C4_APOYO") != "0"   ## ENCENDIDO (12-11, medido 12+12): pases por posesión, acierto y regates ganados suben y las pérdidas por entrada bajan en las dos tandas
 const APOYO_PRESION := 3.0
 const APOYO_D := 7.0
 static func apoyo(m: Object, p: Dictionary) -> Vector3:
