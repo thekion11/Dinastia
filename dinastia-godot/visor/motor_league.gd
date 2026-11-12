@@ -434,3 +434,10 @@ func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
 		return
 	super(p, LeagueAcciones.variante(p, nombre), gesto, dur_max)
 	LeagueAcciones.igualar(p, t, gesto, dur_max)   ## (12-11) las variantes nuevas duran para el motor lo que el clip que pidió
+
+## (12-11, sesión 16) Falta pitada SIN tarjeta: el infractor reacciona (`LeagueAcciones.tras_falta`; solo se ve, la IA no lo lee).
+func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "", tipo := "de_pie") -> bool:
+	var pitada := super(infractor, victima, prob_tarjeta, motivo, tipo)
+	if pitada and String(ultima_falta.get("sancion", "")) == "falta":
+		LeagueAcciones.tras_falta(self as Object as MotorLeague, infractor)
+	return pitada

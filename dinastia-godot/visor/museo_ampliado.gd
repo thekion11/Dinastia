@@ -6,6 +6,9 @@ extends RefCounted
 ## con las copas del séptimo título en adelante, panel de hitos con año y título, camisetas por década y el balón de la primera copa.
 ## Mientras dura la obra que lleva el museo al nivel `NIVEL_PLANTA`, la planta 3 ya existe pero en obra (andamios y lona).
 ## Al entrar por primera vez tras terminar, las copas se iluminan una a una (`MuseoAmpliadoAnim`).
+## (12-11, orden 36 del dueño) La planta 3 se abre TAMBIÉN POR TÍTULOS: con `UMBRAL_TITULOS` o más (el primero que ya no cabe en la
+## planta 2, que guarda `SalasClub.MAX_SALA`), aunque la obra no haya llegado al nivel 5; la primera visita la abre un mini evento a
+## pantalla completa y saltable (`EventoMuseo`) antes de encender las copas.
 ## Todo sale de `ctx` (`EdificioClub.contexto_de`): niveles, obras en marcha y los hitos [{anio, titulo}] del club.
 const NIVEL_PLANTA := 5
 const PLANTA := 3
@@ -13,6 +16,7 @@ const SALA := "Museo ampliado"
 const POR_LADO := 5
 const FILAS := 3        ## filas de vitrinas por lado (la 1.ª pegada a la pared; las demás hacia el centro, a `SEPARACION_FILA` m una de otra): 5 × 2 × 3 = 30 vitrinas
 const SEPARACION_FILA := 1.85
+const UMBRAL_TITULOS := 7   ## = SalasClub.MAX_SALA + 1: el séptimo título ya no cabe en la planta 2 y abre la 3
 
 ## Dónde está cada vitrina de la planta 3 ({p, k}: k = su lugar en la lista de hitos, empieza en `SalasClub.MAX_SALA`); `MuseoVitrinas` las busca.
 static var vitrinas: Array[Dictionary] = []
@@ -20,12 +24,18 @@ static var vitrinas: Array[Dictionary] = []
 static func lista() -> Array:
 	return [PLANTA, SALA, [[SALA, -8.0, 8.0]]]
 
+## ¿Hay títulos de más para la planta 2? Entonces la planta 3 existe sin esperar a la obra.
+static func por_titulos(ctx: Dictionary) -> bool:
+	return (ctx.get("hitos", []) as Array).size() >= UMBRAL_TITULOS
+
 static func en_obra(ctx: Dictionary) -> bool:
+	if por_titulos(ctx):
+		return false
 	var niveles: Dictionary = ctx.get("inst", {})
 	return int(niveles.get("museo", 0)) == NIVEL_PLANTA - 1 and (ctx.get("obras", {}) as Dictionary).has("museo")
 
 static func terminada(ctx: Dictionary) -> bool:
-	return int((ctx.get("inst", {}) as Dictionary).get("museo", 0)) >= NIVEL_PLANTA
+	return por_titulos(ctx) or int((ctx.get("inst", {}) as Dictionary).get("museo", 0)) >= NIVEL_PLANTA
 
 ## ¿Existe la planta 3 (terminada o en obra)?
 static func existe(ctx: Dictionary) -> bool:
@@ -167,7 +177,11 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 	anim.sala = caja
 	anim.y0 = y0
 	anim.nivel = int((ctx.get("inst", {}) as Dictionary).get("museo", 0))
+	if por_titulos(ctx):
+		anim.nivel = maxi(anim.nivel, NIVEL_PLANTA)   ## lo visto se guarda por nivel: abierta por títulos cuenta como el nivel 5
 	anim.titulos = int(ctx.get("titulos", 0))
+	anim.c1 = c1
+	anim.c2 = c2
 	nodo.add_child(anim)
 
 ## La planta en obra: andamios, lona y un cartel con las semanas que faltan.

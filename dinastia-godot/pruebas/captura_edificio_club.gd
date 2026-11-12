@@ -44,6 +44,8 @@ func _ready() -> void:
 			hs.append({"anio": 2005 + i * 2, "titulo": ["Liga", "Copa nacional", "Supercopa", "Copa continental"][i % 4], "cantidad": 1})
 		EdificioClub.ctx["hitos"] = hs
 		EdificioClub.ctx["titulos"] = n_t
+	if OS.get_environment("MUSEO") != "":   ## (12-11) MUSEO=1 TITULOS=9: la planta 3 abierta por títulos, sin la obra de nivel 5
+		(EdificioClub.ctx["inst"] as Dictionary)["museo"] = int(OS.get_environment("MUSEO"))
 	var perfil := EstadioPropio.new().perfil(m.ligas[0].clubes[int(OS.get_environment("PERFIL_DE"))] if OS.get_environment("PERFIL_DE") != "" else club)   ## PERFIL_DE=0: el estadio de OTRO club (para aislar qué cuelga)
 	perfil["niveles"] = 2
 	for kv in OS.get_environment("PERFIL_SET").split(",", false):   ## PERFIL_SET=aforo=85800,asiento2=#febe10: cambia campos del estadio (bisecar)
@@ -64,6 +66,8 @@ func _ready() -> void:
 
 func _foto() -> void:
 	print("LLAMADAS ", _imgs.size(), " ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME), " tris ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME), " tex_MB ", snappedf(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TEXTURE_MEM_USED) / 1048576.0, 0.1), " vram_MB ", snappedf(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_VIDEO_MEM_USED) / 1048576.0, 0.1))   ## medida de dibujo por sala
+	if OS.get_environment("TEXTURAS") != "":   ## (12-11) TEXTURAS=N: las N texturas de los materiales de la vista que más pesan (sin comprimir: lado², sin mipmaps)
+		_texturas(int(OS.get_environment("TEXTURAS")))
 	var img := get_viewport().get_texture().get_image()
 	img.convert(Image.FORMAT_RGBA8)
 	if OS.get_environment("COMPLETA") == "1":   ## cada sala a tamaño completo (para ver el parpadeo del suelo, texturas…)
@@ -83,6 +87,9 @@ func _colocar(planta: int, sala: String) -> void:
 			if sala == "Ascensor":   ## (10-11) de frente a las puertas; con PUERTAS=1 la 2.ª foto de la lista (SOLO=11,11) las lleva abiertas
 				_ex.rumbo = 0.0
 				PuertasAscensor.mover(get_tree(), float(planta) * EdificioClub.ALTO_PLANTA, OS.get_environment("PUERTAS") == "1" and (_paso >= 1 or SALAS.size() == 1), 0.0)
+			if OS.get_environment("RUMBO") != "":   ## (12-11) RUMBO=grados DX=m DZ=m: apuntar la cámara a una pieza concreta
+				_ex.rumbo = deg_to_rad(float(OS.get_environment("RUMBO")))
+				_ex.cuerpo.position += Vector3(float(OS.get_environment("DX")), 0.0, float(OS.get_environment("DZ")))
 			_ex.paso(Vector2.ZERO, false, 0.0)
 			_ex._colocar_camara(1.0)
 			if OS.get_environment("SIN_AVATAR") == "1":
@@ -93,6 +100,10 @@ func _colocar(planta: int, sala: String) -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
+	if OS.get_environment("EVENTO_T") != "":   ## (12-11) ANIM=1 EVENTO_T=2.6: el mini evento del museo congelado en ese segundo
+		for ev in get_tree().root.find_children("*", "CanvasLayer", true, false):
+			if ev is EventoMuseo:
+				(ev as EventoMuseo)._t = float(OS.get_environment("EVENTO_T"))
 	if OS.get_environment("TRAZA") != "":
 		print("FRAME ", _n, " t=", Time.get_ticks_msec() / 1000)
 	if _n == 8:
@@ -126,3 +137,29 @@ func _process(_d: float) -> void:
 			return
 		_colocar(int(SALAS[_paso][0]), String(SALAS[_paso][1]))
 		_paso += 1
+
+func _texturas(n: int) -> void:
+	var vistas := {}
+	for mi: Node in get_tree().root.find_children("*", "GeometryInstance3D", true, false):
+		var mats: Array = []
+		if mi is GeometryInstance3D and (mi as GeometryInstance3D).material_override != null:
+			mats.append((mi as GeometryInstance3D).material_override)
+		if mi is MeshInstance3D and (mi as MeshInstance3D).mesh != null:
+			for k in (mi as MeshInstance3D).mesh.get_surface_count():
+				mats.append((mi as MeshInstance3D).get_active_material(k))
+		for m in mats:
+			if m is BaseMaterial3D:
+				for prop: String in ["albedo_texture", "normal_texture", "roughness_texture", "metallic_texture", "ao_texture", "detail_albedo", "detail_normal", "emission_texture", "orm_texture"]:
+					var t = (m as BaseMaterial3D).get(prop)
+					if t is Texture2D and not vistas.has(t):
+						vistas[t] = "%s %s" % [prop, t.resource_path if t.resource_path != "" else t.get_class()]
+	var filas: Array = []
+	for t: Texture2D in vistas:
+		filas.append([t.get_width() * t.get_height() * 4 / 1048576.0, t.get_width(), vistas[t], t.get_class()])
+	filas.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])
+	var tot := 0.0
+	for f: Array in filas:
+		tot += float(f[0])
+	print("TEXTURAS distintas %d, %.1f MB a 4 B/px" % [filas.size(), tot])
+	for f: Array in filas.slice(0, n):
+		print("TEX %6.2f MB %d %s" % [f[0], f[1], f[2]])

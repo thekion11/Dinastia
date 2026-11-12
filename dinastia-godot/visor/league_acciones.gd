@@ -107,6 +107,8 @@ static var reaccion := OS.get_environment("LS_REACCION") != "0"
 const CLIPS_CABEZA := ["cabezazo", "cabezazo_potente", "cabezazo_picado", "pase_cabeza"]
 const CLIPS_SALTO := ["cabezazo_potente", "cabezazo", "cabezazo_picado"]
 const REACCIONES_FALLO := ["manos_cabeza", "cmu_111_25", "manos_cabeza", "lamento"]
+## (12-11, sesión 16) Falta pitada SIN tarjeta: el infractor pide perdón, se pone en jarras o protesta (con tarjeta ya protesta el motor).
+const REACCIONES_FALTA := ["pedir_perdon", "brazos_jarra", "protestar", "pedir_perdon"]
 ## Segundos del clip en que la cabeza está arriba, altura (m) del balón a la que se cabecea en salto y radio de llegada.
 const PICO := 0.3
 const ALTURA_SALTO := 2.05
@@ -121,6 +123,7 @@ const REAC_VEL := 2.6
 static var saltos := 0
 static var remates_en_salto := 0
 static var reacciones := 0
+static var reacciones_falta := 0
 
 ## Después de mover a los jugadores (cada paso del motor).
 static func paso(m: MotorLeague) -> void:
@@ -229,15 +232,33 @@ static func tras_remate(m: MotorLeague, autor_id: String, tipo: String) -> void:
 			p["ls_reac_en"] = m.t + REAC_RETRASO
 			return
 
+## Falta pitada sin tarjeta (`MotorLeague._falta`): el infractor reaccionará en `REAC_RETRASO` s, con las mismas reglas que el fallo
+## (no si lleva el balón, si el motor le puso un gesto o si corre; si arranca, se corta). No escribe nada que lea la IA.
+static func tras_falta(m: MotorLeague, infractor: Dictionary) -> void:
+	if not (activa and reaccion) or infractor.is_empty():
+		return
+	infractor["ls_reac_en"] = m.t + REAC_RETRASO
+	infractor["ls_reac_falta"] = true
+
 static func _quizas_reaccionar(m: MotorLeague, p: Dictionary) -> void:
 	if m.t > float(p["ls_reac_en"]) + REAC_ESPERA:
 		p.erase("ls_reac_en")
+		p.erase("ls_reac_falta")
 		return
 	if is_same(p, m.poseedor) or float(p.get("gesto_hasta", 0.0)) > m.t or (p["vel"] as Vector3).length() > REAC_VEL:
 		return
 	p.erase("ls_reac_en")
 	var n := int(p.get("ls_reacciones", 0))
 	p["ls_reacciones"] = n + 1
+	if p.get("ls_reac_falta", false):
+		p.erase("ls_reac_falta")
+		reacciones_falta += 1
+		var clip_f := String(REACCIONES_FALTA[(absi(String(p.get("id", "")).hash()) + n) % REACCIONES_FALTA.size()])
+		var ap_f: AnimationPlayer = p.get("anim")
+		if is_instance_valid(ap_f) and not ap_f.has_animation(clip_f):
+			clip_f = "protestar"
+		_poner_propio(m.t, p, clip_f, "reaccion")
+		return
 	var clip := String(REACCIONES_FALLO[(absi(String(p.get("id", "")).hash()) + n) % REACCIONES_FALLO.size()])
 	var ap: AnimationPlayer = p.get("anim")
 	if clip.begins_with("cmu_"):

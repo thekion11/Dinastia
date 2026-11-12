@@ -354,3 +354,34 @@ func _probar_acciones_visuales() -> void:
 		_comprobar(is_equal_approx(float(q["gesto_hasta"]), 50.8), "la entrada «%s» dura para el motor lo de la estocada (0,8 s)" % visible)
 	_comprobar(distintas.size() >= 2, "la entrada de pie no es siempre la misma (%s)" % str(distintas.keys()))
 	ap.queue_free()
+	## (12-11, sesión 16) Falta SIN tarjeta: el infractor reacciona con un clip propio (pedir perdón, en jarras o protestar), solo si no
+	## corre y sin escribir lo que lee la IA (`gesto_hasta`, posición).
+	var mf := MotorLeague.new()
+	var apf := AnimationPlayer.new()
+	add_child(apf)
+	var libf := AnimationLibrary.new()
+	for nom: String in ["pedir_perdon", "brazos_jarra", "protestar", "parado", "correr"]:
+		var a2 := Animation.new()
+		a2.length = 1.2
+		libf.add_animation(nom, a2)
+	apf.add_animation_library("", libf)
+	var inf := {"id": "j_infractor", "anim": apf, "vel": Vector3.ZERO, "es_local": false, "por": false, "anim_actual": "parado", "gesto_hasta": 3.0}
+	mf.jugadores = [inf]
+	mf.t = 5.0
+	var antes_f := LeagueAcciones.reacciones_falta
+	LeagueAcciones.tras_falta(mf, inf)
+	mf.t = 5.0 + LeagueAcciones.REAC_RETRASO + 0.05
+	LeagueAcciones.paso(mf)
+	_comprobar(inf.has("ls_propio_hasta") and String(inf["ls_propio_clip"]) in LeagueAcciones.REACCIONES_FALTA and LeagueAcciones.reacciones_falta == antes_f + 1,
+		"tras una falta sin tarjeta el infractor reacciona («%s»)" % String(inf.get("ls_propio_clip", "")))
+	_comprobar(is_equal_approx(float(inf["gesto_hasta"]), 3.0), "la reacción no toca lo que lee la IA (gesto_hasta)")
+	inf["vel"] = Vector3(4.0, 0, 0)
+	LeagueAcciones.paso(mf)
+	_comprobar(not inf.has("ls_propio_hasta"), "si arranca a correr, la reacción se corta")
+	var corre := {"id": "j_corre", "anim": apf, "vel": Vector3(5.0, 0, 0), "es_local": true, "por": false, "anim_actual": "correr"}
+	mf.jugadores = [corre]
+	LeagueAcciones.tras_falta(mf, corre)
+	mf.t += LeagueAcciones.REAC_ESPERA + 1.0
+	LeagueAcciones.paso(mf)
+	_comprobar(not corre.has("ls_propio_hasta") and not corre.has("ls_reac_en") and not corre.has("ls_reac_falta"), "el que sigue corriendo no reacciona y la espera caduca")
+	mf.free()
