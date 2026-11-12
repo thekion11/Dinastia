@@ -94,7 +94,7 @@ const MENUS := [
 		{"tab": "Club", "secc": "directorio", "label": "Directorio y consejeros", "icono": "🎩", "desc": "La directiva, su confianza en ti y hasta dos consejeros que te ayudan."},
 		{"tab": "Habilidades", "label": "Árbol de habilidades", "icono": "🌳", "desc": "Aprende técnicas y sube de nivel."},
 		{"tab": "Correo", "label": "Correo", "icono": "✉️", "desc": "Mensajes del club, agentes y la federación."},
-		{"tab": "Federación", "label": "Normas y federación", "icono": "⚖️", "desc": "Reglamento, licencias, votaciones y árbitros."}]},
+		{"tab": "Federación", "secc": "reglamento", "label": "Normas y federación", "icono": "⚖️", "desc": "Reglamento, licencias, votaciones y árbitros."}]},
 	{"id": "operaciones", "icono": "📊", "nombre": "Operaciones", "estilo": 3,
 		"lema": "La hinchada, los medios y los números del día a día.",
 		"colores": ["#061218", "#0b2230", "#3fd0ff"], "subs": [
@@ -126,7 +126,9 @@ const MENUS := [
 		"lema": "Qué significa cada cosa y qué dice el reglamento.",
 		"colores": ["#0c0e12", "#1a1f2a", "#c8d4e8"], "subs": [
 		{"tab": "Glosario", "label": "Glosario", "icono": "📖", "desc": "Cada término del juego, explicado."},
-		{"tab": "Federación", "label": "Normas y federación", "icono": "⚖️", "desc": "Reglamento, licencias, votaciones y árbitros."}]},
+		{"tab": "Federación", "secc": "reglamento", "label": "Reglamento de la liga", "icono": "⚖️", "desc": "Las normas vigentes y si las cumples o pagas las multas."},
+		{"tab": "Federación", "secc": "licencia", "label": "Licencia y tribunal", "icono": "🎖️", "desc": "Los requisitos de la licencia, la disciplina y el antidopaje."},
+		{"tab": "Federación", "secc": "asamblea", "label": "Asamblea y gobierno", "icono": "🏛️", "desc": "Quién manda, el arbitraje y las votaciones de la federación."}]},
 	{"id": "ajustes", "icono": "⚙️", "nombre": "Ajustes", "estilo": 6, "ficha": false,
 		"lema": "Cómo se ve, cómo suena y cómo se juega.",
 		"colores": ["#0c0e12", "#171b22", "#a8b4c8"], "subs": [

@@ -26,9 +26,27 @@ func _votar(opcion: String) -> void:
 # Cuatro sistemas enteros estaban en el motor, probados y guardados, y no se
 # podían tocar jugando. Un sistema sin pantalla no existe para quien juega, por
 # muy bien que funcione por dentro.
+## (12-11, menús a pantalla completa) Tres pantallas (`p._secc_extra["Federación"]`): el REGLAMENTO de la liga y tu política con él, la
+## LICENCIA del club con el tribunal y el antidopaje, y la ASAMBLEA (presidente, gobierno, arbitraje, votaciones). Otra sección = todo seguido.
+const SECC_FED := ["reglamento", "licencia", "asamblea"]
+
 func _pintar_federacion(c: Club) -> void:
 	p._limpiar(p._lista_fed)
 	var f := p.mundo.federacion
+	var secc := String(p._secc_extra.get("Federación", "reglamento"))
+	var todo := not SECC_FED.has(secc)
+	if todo or secc == "asamblea":
+		_fed_presidente(c, f)
+	if todo or secc == "licencia":
+		p._ui_club_vida._pintar_licencia_y_tribunal(c, f)
+	if todo or secc == "asamblea":
+		p._ui_club_vida._pintar_historial_federacion(f)
+	if todo or secc == "reglamento":
+		_fed_reglamento(c, f)
+	if todo or secc == "asamblea":
+		_fed_votacion(f)
+
+func _fed_presidente(c: Club, f: Federacion) -> void:
 	## EL PRESIDENTE (C5): quién manda y qué empuja.
 	if not f.presidente.is_empty():
 		var ag: Array = Federacion.AGENDAS[String(f.presidente["agenda"])]
@@ -41,8 +59,8 @@ func _pintar_federacion(c: Club) -> void:
 		lema.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_fed.add_child(lema)
 	p._ui_club_vida._pintar_gobierno(c)
-	p._ui_club_vida._pintar_licencia_y_tribunal(c, f)
-	p._ui_club_vida._pintar_historial_federacion(f)
+
+func _fed_reglamento(c: Club, f: Federacion) -> void:
 	var t := p._texto(11, p.COL_SUAVE)
 	t.text = Idiomas.t("REGLAMENTO VIGENTE")
 	p._lista_fed.add_child(t)
@@ -75,6 +93,7 @@ func _pintar_federacion(c: Club) -> void:
 			fila.add_child(bt)
 		p._lista_fed.add_child(fila)
 
+func _fed_votacion(f: Federacion) -> void:
 	if f.voto_pendiente.is_empty():
 		p._lista_fed.add_child(HSeparator.new())
 		var nada := p._texto(12, p.COL_SUAVE)

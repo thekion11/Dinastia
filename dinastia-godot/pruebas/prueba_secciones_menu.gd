@@ -17,6 +17,9 @@ const CASOS := [
 	["Legado", "_lista_legado", "club", "HISTORIA DEL CLUB", "FIN DE CARRERA"],
 	["Legado", "_lista_legado", "carrera", "CARRERA PROFESIONAL", "HISTORIA DEL CLUB"],
 	["Legado", "_lista_legado", "retiro", "FIN DE CARRERA", "PALMARÉS POR COMPETICIÓN"],
+	["Federación", "_lista_fed", "reglamento", "REGLAMENTO VIGENTE", "LICENCIA DE CLUB"],
+	["Federación", "_lista_fed", "licencia", "LICENCIA DE CLUB", "REGLAMENTO VIGENTE"],
+	["Federación", "_lista_fed", "asamblea", "RELACIÓN CON EL ARBITRAJE", "LICENCIA DE CLUB"],
 ]
 var _p: Principal
 var _fallos := 0
