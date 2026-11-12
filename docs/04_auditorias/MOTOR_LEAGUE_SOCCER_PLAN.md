@@ -616,6 +616,7 @@ Pendiente: balón parado (córners, faltas, saques de banda), cabezazos (0 goles
 | `C4_SEGUIR` (v2: `C4_SEGUIR_Z`=9, sin esprintar de cerca) | 2 compañeros van a la zona del rechace sin disputarla | ENCENDIDA | v2: goles de jugada 1,3/1,2 → 1,5/1,3, goles 3,9/3,8 → 4,8/3,8, tarjetas normales; regates ganados −0,8 (la v1, esprintando a 7 m, destapó las tarjetas de más) |
 | `C4_PARED` | pared cerca del área (ida, desmarque, vuelta de primera; `MejorasC4Pared`) | apagada | v1 y v2: goles 3,9/3,8 → 3,3-3,6, tiros desde dentro bajan; solo 0,2-0,7 paredes completadas por partido (la vuelta se corta) |
 | `C4_APOYO` | el compañero más cercano se ofrece de cara (7 m, línea limpia) al portador apretado (rival a < 3 m) | ENCENDIDA | 12+12: pases completados por posesión 1,45/1,59 → 1,58/1,66, acierto de pase +1 punto, pérdidas por entrada 12,3/11,1 → 11,2/9,6, regates ganados 9,7/10,3 → 10,6/11,5 (en las dos tandas); cadenas de 5+ 2,8/3,6 → 4,0/3,5 y goles 4,8/3,8 → 4,5/4,1 (mixtos) |
+| `C4_APOYO2` | el «tercer hombre»: el 2.º más cercano se ofrece por delante en diagonal a 12 m | apagada | 12+12 frente al apoyo solo: cadenas de 5+ 4,0/3,5 → 3,8/3,4 (no se mueven); goles 4,5/4,1 → 3,7/4,0; goles de jugada 1,6/1,2 → 1,1/1,0; tiros desde dentro 6,5/6,1 → 5,0/5,3 |
 
 ### RESUMEN PARA EL DUEÑO — sesión 13, jugabilidad de C4 (12-11)
 **Qué se nota al jugar (motor C4, el de por defecto):**
@@ -630,4 +631,4 @@ Pendiente: balón parado (córners, faltas, saques de banda), cabezazos (0 goles
 
 **Lo que se probó y NO se quedó (apagado, cada uno con su bandera, para probarlo cuando quieras):** pase directo al mejor colocado, ir de cabeza a todos los centros (más cabezazos pero menos goles), decidir más rápido cerca del área, saque de banda ensayado, defensa que contiene en vez de entrar (dos formas), la pared (se cortaba la vuelta). Detalle y tabla de banderas arriba.
 
-**Lo que falta:** que las jugadas de 5 o más pases sean frecuentes (hoy 3-4 por partido) y probarlo todo en tu teléfono (el selector A-D de Ajustes deja comparar C4 con el motor de siempre).
+**Lo que falta:** que las jugadas de 5 o más pases sean frecuentes (hoy 3-4 por partido; ni la pared ni el «tercer hombre» las subieron: hará falta tocar la colocación de ataque de los que no están cerca del balón) y probarlo todo en tu teléfono (el selector A-D de Ajustes deja comparar C4 con el motor de siempre).
