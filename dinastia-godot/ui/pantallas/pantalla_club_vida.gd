@@ -7,14 +7,14 @@ extends "res://ui/pantallas/pantalla_club_vida_p3.gd"
 ## la encuesta abierta. La idea que lo sostiene es que **no se puede contentar a
 ## todos a la vez**: el abono popular llena el estadio y gana al barrio pero
 ## recauda poco; el premium da dinero y enfada a las familias.
-func _pintar_hinchada(c: Club) -> void:
+func _pintar_hinchada(c: Club, con_fair_play := true) -> void:   ## (12-11) en su pantalla el fair play ya va arriba, en ficha
 	var h := p.mundo.hinchada
 	if h == null:
 		return
 	p._lista_estadio.add_child(HSeparator.new())
 	if h.abonados > 0:
 		p._dato("Abonados", "%s  ·  %s" % [p._miles(h.abonados), h.nombre_abono()], Principal.COL_TEXTO, p._lista_estadio)
-	if p.mundo.prensa != null:
+	if p.mundo.prensa != null and con_fair_play:
 		var fp := h.fair_play(p.mundo.prensa.funa, p.mundo.prensa.animo)
 		p._dato("Fair play de la hinchada", "%d / 100" % fp,
 			Principal.COL_VERDE if fp >= 70 else (Principal.COL_ROJO if fp < 35 else Principal.COL_ORO), p._lista_estadio)

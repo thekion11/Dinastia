@@ -241,4 +241,4 @@ func _estadio_hinchada(c: Club, con_raya := true) -> void:
 		p._lista_estadio.add_child(lectura)
 	if con_raya or p.mundo.prensa == null:
 		p._dato("Socios", p._miles(c.socios), p.COL_TEXTO, p._lista_estadio)
-	p._ui_club_vida._pintar_hinchada(c)
+	p._ui_club_vida._pintar_hinchada(c, con_raya)
