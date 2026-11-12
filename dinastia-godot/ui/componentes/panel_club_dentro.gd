@@ -126,7 +126,7 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 		fila_w.add_theme_constant_override("separation", 6)
 		raiz.add_child(fila_w)
 		var campo_w := LineEdit.new()
-		campo_w.placeholder_text = "%s.cl" % c.nombre.to_lower().replace(" ", "")
+		campo_w.placeholder_text = ClubDentro.dominio_de(c)
 		campo_w.max_length = 30
 		campo_w.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila_w.add_child(campo_w)

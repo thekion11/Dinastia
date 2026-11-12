@@ -45,6 +45,7 @@ const MENUS := [
 		{"tab": "Finanzas", "secc": "cuentas", "label": "Cuentas del club", "icono": "💵", "desc": "El ejercicio del año, el estado de resultados, el balance y la caja."},
 		{"tab": "Finanzas", "secc": "taquilla", "label": "Taquilla y tienda", "icono": "🏟️", "desc": "El precio de la entrada y lo que vende la tienda del club."},
 		{"tab": "Finanzas", "secc": "patrocinio", "label": "Patrocinadores", "icono": "🤝", "desc": "La marca de la camiseta, las campañas y los auspicios."},
+		{"tab": "Gente", "secc": "comercial", "label": "Explotación comercial", "icono": "💰", "desc": "El proveedor de la camiseta, las zonas del estadio, su nombre y los abonos premium."},
 		{"tab": "Finanzas", "secc": "banco", "label": "Banco y deuda", "icono": "🏛️", "desc": "Créditos, bonos, renegociar y pagar antes de tiempo."},
 		{"tab": "Finanzas", "secc": "libro", "label": "Libro de movimientos", "icono": "📒", "desc": "Cada entrada y salida de la caja, y las plusvalías por cobrar."},
 		{"tab": "Mercado", "label": "Mercado de fichajes", "icono": "🔁", "desc": "Comprar, vender y ceder."},

@@ -9,7 +9,7 @@ extends RefCounted
 const POR_SITIO := {"Finanzas.cuentas": "finanzas", "Finanzas.taquilla": "taquilla", "Finanzas.banco": "banco", "Mercado": "mercado",
 	"Táctica.pizarra": "táctica", "Partido.previa": "próximo partido", "Clubes.tablas": "ligas y clubes", "Clubes.goleadores": "goleadores",
 	"Club.staff": "personal del club", "Gente.personas": "la gente del club", "Redes.redes": "feed de redes", "Enfermería": "enfermería",
-	"Libres": "jugadores libres", "Contratos": "contratos", "Calendario": "calendario", "Club.infra": "infra", "Vida.bienestar": "bienestar", "Vida.familia": "familia", "Camarín.clima": "camarín", "Correo": "correo"}
+	"Libres": "jugadores libres", "Contratos": "contratos", "Calendario": "calendario", "Club.infra": "infra", "Gente.comercial": "comercial", "Vida.bienestar": "bienestar", "Vida.familia": "familia", "Camarín.clima": "camarín", "Correo": "correo"}
 
 static func de_sub(p: Principal, sub: Dictionary) -> String:
 	var sitio := String(sub.get("tab", ""))
@@ -92,6 +92,8 @@ static func de(p: Principal, etiqueta: String) -> String:
 		"infra":
 			var hechas := m.obras.construido() if m.obras != null else 0
 			return Idiomas.t("%d obras hechas") % hechas if hechas > 0 else Idiomas.t("Sin obras todavía")
+		"comercial":
+			return Idiomas.t("%s por semana") % p._dinero(m.comercial.renta_semanal(c)) if m.comercial != null else ""
 		"la gente del club":
 			return Idiomas.t("Confianza media: %d") % m.gente.confianza_media() if m.gente != null else ""
 		"enfermería":

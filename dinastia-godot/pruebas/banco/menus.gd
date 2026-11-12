@@ -212,3 +212,19 @@ func _probar_estado_vacio() -> void:
 	_comprobar(pista != null and pista.autowrap_mode != TextServer.AUTOWRAP_OFF, "la pista parte renglón (no saca la pantalla del móvil)")
 	_comprobar(titulo.get_theme_color("font_color").get_luminance() > pista.get_theme_color("font_color").get_luminance(), "el título pesa más que la pista")
 	v.free()
+
+## (12-11) La web del club se propone con el dominio de SU país y sin tildes ni espacios (antes «.cl» para todos).
+func _probar_dominio_del_club() -> void:
+	_titulo("DOMINIO DE LA WEB DEL CLUB")
+	var c := Club.new()
+	c.nombre = "Pleiße FC"
+	c.pais = "GER"
+	_comprobar(ClubDentro.dominio_de(c) == "pleissefc.de", "un club alemán: %s" % ClubDentro.dominio_de(c))
+	c.nombre = "Viña Marina"
+	c.pais = "CHI"
+	_comprobar(ClubDentro.dominio_de(c) == "vinamarina.cl", "uno chileno: %s" % ClubDentro.dominio_de(c))
+	c.nombre = "Kashiwa Sol"
+	c.pais = "JPN"
+	_comprobar(ClubDentro.dominio_de(c) == "kashiwasol.jp", "uno japonés: %s" % ClubDentro.dominio_de(c))
+	c.pais = "ZZZ"
+	_comprobar(ClubDentro.dominio_de(c).ends_with(".com"), "un país sin dominio conocido va a .com")

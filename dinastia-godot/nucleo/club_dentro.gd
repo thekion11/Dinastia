@@ -117,6 +117,21 @@ func lanzar_app(c: Club, nombre: String, anio: int) -> String:
 	app = {"nombre": nom.substr(0, 28), "subs": int(round(float(c.socios) * 0.08)), "desde": anio}
 	return ""
 
+## (12-11) El dominio que se propone para la web: con el del PAÍS del club (antes «.cl» para todos: un club alemán salía «rheinhessen.cl»).
+const DOMINIOS := {"CHI": "cl", "ARG": "ar", "BRA": "br", "URU": "uy", "PAR": "py", "BOL": "bo", "PER": "pe", "ECU": "ec", "COL": "co", "VEN": "ve",
+	"MEX": "mx", "USA": "us", "ESP": "es", "ENG": "uk", "ITA": "it", "GER": "de", "FRA": "fr", "POR": "pt", "NED": "nl", "BEL": "be", "TUR": "tr",
+	"JPN": "jp", "KOR": "kr", "AUS": "au", "KSA": "sa", "EGY": "eg", "MAR": "ma", "RSA": "za", "SCO": "uk", "GRE": "gr", "RUS": "ru", "CHN": "cn"}
+
+static func dominio_de(c: Club) -> String:
+	var limpio := ""
+	var sin_tilde := {"á": "a", "à": "a", "â": "a", "ã": "a", "ä": "a", "é": "e", "è": "e", "ê": "e", "í": "i", "ó": "o", "ô": "o", "õ": "o", "ö": "o",
+		"ú": "u", "ü": "u", "ñ": "n", "ç": "c", "ß": "ss"}
+	for cruda in c.nombre.to_lower():
+		var letra := String(sin_tilde.get(cruda, cruda))
+		if (letra >= "a" and letra <= "z") or (letra >= "0" and letra <= "9"):
+			limpio += letra
+	return "%s.%s" % [limpio, String(DOMINIOS.get(c.pais, "com"))]
+
 func lanzar_web(c: Club, dominio: String, anio: int) -> String:
 	if not web.is_empty():
 		return "ya lo tienes"
@@ -126,7 +141,7 @@ func lanzar_web(c: Club, dominio: String, anio: int) -> String:
 	c.mover_saldo(-coste)
 	var dom := dominio.strip_edges().to_lower()
 	if dom == "":
-		dom = c.nombre.to_lower().replace(" ", "") + ".cl"
+		dom = dominio_de(c)
 	web = {"dominio": dom.substr(0, 30), "visitas": int(round(float(c.socios) * 1.4)), "desde": anio}
 	return ""
 

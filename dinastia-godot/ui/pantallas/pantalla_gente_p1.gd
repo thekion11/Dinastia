@@ -91,7 +91,12 @@ func _pintar_gente() -> void:
 			p._secc_gente = clave
 			p._refrescar())
 		chips.add_child(b)
-	p._lista_gente.add_child(HSeparator.new())
+	## (12-11) Cada sección tiene ya su tarjeta y el paginador del menú (también «Comercial», que solo se alcanzaba desde estos chips): la
+	## fila de chips repetía la navegación y robaba un renglón. Se OCULTA, no se borra (`DINASTIA_CHIPS=1` la devuelve).
+	chips.visible = OS.get_environment("DINASTIA_CHIPS") != ""
+	var raya := HSeparator.new()
+	raya.visible = chips.visible
+	p._lista_gente.add_child(raya)
 	var c := p.mundo.mi_club()
 	match p._secc_gente:
 		"personas":
