@@ -70,6 +70,8 @@ static func _paso(m: MotorLeague, delta: float, con_portador := true) -> void:
 		return
 	_cam = m.get_viewport().get_camera_3d() if fuera_camara and m.is_inside_tree() else null
 	for p: Dictionary in m.jugadores:
+		if p.has("ls_propio_hasta"):
+			continue   ## (12-11) con un clip propio de `LeagueAcciones` (salto a disputar, reacción): ningún clip de marcha lo pisa
 		var en_curso := float(p.get("ls_trans_hasta", 0.0)) > m.t
 		var off := float(p.get("ls_off", 0.0))
 		var cuerpo := float(p.get("ls_cuerpo", 0.0))

@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/estadio_p2.gd"
-## [Capa extra de `estadio.gd`, 10-11] _probar_ocultar_estadio_dentro, _probar_precarga_menu, _probar_futbolista_visual (12-11)
+## [Capa extra de `estadio.gd`, 10-11] _probar_ocultar_estadio_dentro, _probar_precarga_menu, _probar_futbolista_visual y _probar_acciones_visuales (12-11)
 
 ## (10-11, rendimiento en móvil) Dentro del edificio del club (plantas distintas de la 0) no se dibuja el estadio de fuera; al volver a la 0 queda como estaba (lo que ya estaba oculto, oculto).
 func _probar_ocultar_estadio_dentro() -> void:
@@ -316,3 +316,41 @@ func _probar_futbolista_visual() -> void:
 				if absf(peg[i].distance_to(centro) - 0.0915) > 0.002:
 					lejos += 1
 		_comprobar(n_borde > 0 and lejos == 0, "el anillo de la cara (%d vértices, 12 mm en el aire) queda a 1,5 mm de la piel (error máx. %.1f mm)" % [n_borde, peor * 1000.0])
+
+## (12-11, sesión 14) Acciones que solo se ven: el salto a disputar llega a tiempo, las variantes nuevas no cambian cuánto dura el
+## gesto para el motor y un clip propio no lo pisa un ciclo. (Que el partido de C4 salga IDÉNTICO con y sin esta capa se midió con
+## `comparar_tres_motores`, 6 cruces: informe `partido_visual_2026-11-12.md`.)
+func _probar_acciones_visuales() -> void:
+	_titulo("ACCIONES DEL PARTIDO: DISPUTA AÉREA A TIEMPO Y VARIANTES NEUTRAS")
+	var g := Balance.GRAVEDAD
+	var tc := LeagueAcciones.tiempo_a_altura(3.0, -1.0, 2.05, g)
+	_comprobar(absf(3.0 - 1.0 * tc - 0.5 * g * tc * tc - 2.05) < 0.001 and tc > 0.0, "el tiempo hasta la altura del cabezazo es el de la caída (%.2f s)" % tc)
+	_comprobar(LeagueAcciones.tiempo_a_altura(1.0, 0.0, 2.05, g) < 0.0, "un balón que no llega a 2,05 m no hace saltar a nadie")
+	## Un jugador con AnimationPlayer de juguete: el clip de salto, un ciclo y un gesto con otra duración.
+	var ap := AnimationPlayer.new()
+	add_child(ap)
+	var lib := AnimationLibrary.new()
+	for par: Array in [["cabezazo_potente", 1.0], ["cabezazo", 1.0], ["cabezazo_picado", 1.0], ["correr", 0.8], ["parado", 2.0],
+			["entrada_de_pie", 0.8], ["entrada_lateral_pie", 0.8], ["anticipacion", 0.9]]:
+		var a := Animation.new()
+		a.length = float(par[1])
+		lib.add_animation(String(par[0]), a)
+	ap.add_animation_library("", lib)
+	var p := {"id": "j_banco", "anim": ap, "vel": Vector3.ZERO, "es_local": true, "por": false, "anim_actual": "correr"}
+	LeagueAcciones.despegar(10.0, p)
+	_comprobar(p.has("ls_propio_hasta") and String(p["ls_propio_clip"]).begins_with("cabezazo") and ap.current_animation == String(p["ls_propio_clip"]),
+		"el que va a disputar arranca su clip de cabezazo antes del contacto")
+	_comprobar(LeagueAcciones.ocupado(p, 10.1, "correr", false, 1.4), "en el aire, un ciclo (correr) no pisa el salto")
+	_comprobar(LeagueAcciones.ocupado(p, 10.3, "cabezazo", true, 1.4) and not p.has("ls_propio_hasta") and is_equal_approx(float(p["gesto_hasta"]), 11.3),
+		"el cabezazo de verdad sigue con el salto que ya va y el motor queda como si lo hubiera puesto él (gesto hasta %.2f)" % float(p.get("gesto_hasta", 0.0)))
+	## Variante nueva (entrada de pie): el motor ve la duración del clip que pidió, aunque se vea otro.
+	var distintas := {}
+	for i in 8:
+		var q := {"id": "j%d" % i, "anim": ap}
+		var visible := LeagueAcciones.variante(q, "entrada_de_pie")
+		distintas[visible] = true
+		q["gesto_hasta"] = 50.0 + (ap.get_animation(visible).length if ap.has_animation(visible) else 0.0)
+		LeagueAcciones.igualar(q, 50.0, true, 1.4)
+		_comprobar(is_equal_approx(float(q["gesto_hasta"]), 50.8), "la entrada «%s» dura para el motor lo de la estocada (0,8 s)" % visible)
+	_comprobar(distintas.size() >= 2, "la entrada de pie no es siempre la misma (%s)" % str(distintas.keys()))
+	ap.queue_free()

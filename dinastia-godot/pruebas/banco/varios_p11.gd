@@ -161,7 +161,8 @@ func _probar_league_acciones() -> void:
 		if cel != "celebrar":
 			cambios += 1
 			nombres[cel] = true
-	_comprobar(cambios == 8, "celebra con CMU 2 de cada 5 veces (%d de 20)" % cambios)
+	## (12-11) 2 de cada 5 un baile o una alegría y 1 de cada 5 una acrobacia (esta, con la duración del «celebrar» para el motor).
+	_comprobar(cambios == 12, "celebra con CMU 3 de cada 5 veces: 2 bailes o alegrías y 1 acrobacia (%d de 20)" % cambios)
 	var primero := String(nombres.keys()[0]) if not nombres.is_empty() else ""
 	_comprobar(primero.begins_with("ext_cmu_") and lib.has_animation(primero) and lib.get_animation(primero).length <= LeagueAcciones.MAX_CELEBRACION + 0.001 \
 		and str(lib.get_animation(primero).track_get_path(0)).begins_with("Armature/Skeleton3D:"), "el clip de CMU se carga recortado y con las pistas reapuntadas (%s)" % primero)

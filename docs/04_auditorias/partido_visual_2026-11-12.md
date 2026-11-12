@@ -42,3 +42,40 @@ materiales y 0 llamadas nuevas; las diferencias de llamadas y triángulos son de
 
 Pendiente de este bloque: proporciones del cuerpo «superhéroe» (hombros anchos y brazos largos: se ve de cerca), la cara de la
 biblioteca algo plana y clara frente al cuello en luz de estadio, el «rapado» que de perfil parece calvo arriba.
+
+## Bloque 2: animaciones de acción (capa `LeagueAcciones`, en C4 y en League; el motor de siempre no se toca)
+
+Hallazgo: los clips de cabezazo SÍ saltan (la cadera sube 0,3-0,4 m hacia los 0,3 s), pero el motor los arranca en el CONTACTO:
+la cabeza llegaba arriba 0,3 s después de que el balón se fuera. Hoja `disputa_aerea_contacto_antes_despues.jpg` (de cerca y a la
+distancia de la cámara de TV, en el instante del contacto).
+
+Hecho (`visor/league_acciones.gd`, enganchado en `MotorLeague._anim` y al final de `MotorLeague._mover_jugadores`):
+- **Disputa aérea**: cuando un balón alto baja hacia 2,05 m y llegará en ~0,3 s, el jugador de cada equipo más cercano al punto de
+  caída (1,4 m, sin porteros) arranca ya su clip de cabezazo: los dos saltan y el que remata lo hace con la cabeza arriba. Cuando el
+  motor pide el cabezazo de verdad, sigue el salto que ya va. `LS_AEREO=0` lo apaga.
+- **Reacción al fallo**: tras un remate fuera o al palo (señal `remate`), el que tiró se lleva las manos a la cabeza, se lamenta o se
+  encoge de hombros (CMU 111_25, solo si la biblioteca de CMU ya está cargada: sin tirones), si no está corriendo; si arranca, se corta.
+  `LS_REACCION=0` la apaga.
+- **Entrada de pie**: la estocada de siempre, la lateral y la anticipación, por jugador.
+- **Celebraciones**: además de bailes y alegrías (2 de cada 5), 1 de cada 5 una acrobacia de CMU: rueda lateral (90_04), voltereta
+  (90_01) o mortal (85_01). **Lamento** del que encaja: 1 de cada 3, llanto (79_72) o tristeza (79_71) de CMU.
+  Hoja `celebraciones_reacciones_entradas_nuevas.jpg`.
+- Mecanismo común de «clip propio» (salto, reacción): un ciclo del motor no lo pisa, la locomoción de League tampoco
+  (`LeagueLocomocion._paso` lo salta) y al acabar vuelve el ciclo que el motor tenía.
+
+**Que no cambie el partido** (regla: esta sesión no toca las decisiones). Primer intento: con la variedad de entradas el partido de
+C4 CAMBIABA (3-5 → 2-4): el motor lee cuánto dura el gesto (`gesto_hasta`: quién puede moverse, entrar o levantarse), y otro clip de
+otra duración cambiaba la simulación. Arreglado por causa: las variantes nuevas dejan anotado el clip que pidió el motor y
+`LeagueAcciones.igualar` escribe la duración de ese; el salto no escribe nada que lea la IA (en el cabezazo, lo mismo que habría escrito
+el motor). Comprobado con `comparar_tres_motores` (C4, 2 × 240 s): 6 cruces (ENG/ARG/JPN y ESP/BRA/GER) con marcador y todas las
+cifras IDÉNTICOS a `main`. Por partido: 12-20 saltos a disputar, 1-6 cabezazos con el saltador ya en el aire, 7-16 reacciones a un fallo.
+Las variantes que ya existían (celebración de CMU y golpe en el duelo, 11-11) siguen como estaban.
+
+Rendimiento: 0 mallas, 0 materiales, 0 llamadas de dibujo; por paso, un recorrido de los 22 jugadores (sin búsqueda de bolas si el
+balón no baja hacia 2 m). Los clips de CMU solo se cargan donde ya se cargaban (la primera celebración).
+Banco: «ACCIONES DEL PARTIDO: DISPUTA AÉREA A TIEMPO Y VARIANTES NEUTRAS» (`_probar_acciones_visuales`); la prueba de las
+celebraciones de CMU (`varios_p11`) pasa a 3 de cada 5. Escena para ver clips congelados: `pruebas/captura_acciones.tscn`
+(`CLIPS=… TIEMPOS=… DESFASE=… BALON=… LEJOS=1 GIRO=`).
+
+Pendiente de este bloque: reacción del infractor a una falta sin tarjeta (hoy solo protesta el amonestado), saltos de disputa en los
+córners con más de dos jugadores, y verlo en vídeo con la cámara real (la foto fija no muestra el tiempo).
