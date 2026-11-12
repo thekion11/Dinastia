@@ -329,7 +329,7 @@ static func banda_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: Random
 ## `CONTENER_D` m de su arco, el defensor solo entra con el radio de siempre si es buen momento (`MotorEntrada`: de espaldas, control
 ## largo, pegado a la banda) o si es el ÚLTIMO hombre; si no, contiene y temporiza (radio × `CONTENER_K`). v2: solo cuenta «de espaldas»
 ## (el control largo se daba casi siempre al conducir y la primera versión no cambiaba nada: medido el 12-11).
-static var CONTENER := _bandera("C4_CONTENER", true)
+static var CONTENER := _bandera("C4_CONTENER", false)   ## medido el 12-11 (12+12, v1 y v2, K 0,6 y 0,4): sin efecto en intentos ni goles; DESCARTADO, apagado
 static var CONTENER_K := _num("C4_CONTENER_K", 0.6)
 const CONTENER_D := 32.0
 static func radio_entrada(m: Object, p: Dictionary, victima: Dictionary, base: float, r: float) -> float:
