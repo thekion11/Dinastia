@@ -209,6 +209,7 @@ static func encarar_banda(m: Object, p: Dictionary) -> void:
 ## balón a 1,5-2,4 m): casi no había remates de cabeza. Con el balón en el aire se predice (tiro parabólico, sin arrastre) dónde baja a la
 ## altura de la cabeza (`AEREO_ALTO`) si cae cerca de un área, o al pecho si no. Devuelve Vector3.INF si el balón no va por el aire.
 static var AEREO := _bandera("C4_AEREO", true)
+static var SOLO_AREA := _bandera("C4_AEREO_AREA", true)   ## solo balones que caen cerca de un área
 static var RADIO_CABEZA := _num("C4_RADIO_CABEZA", 0.8)   ## alcance del cabezazo en C4 (0,8 = el de siempre)
 const AEREO_ALTO := 1.9
 const AEREO_PECHO := 0.6
@@ -224,11 +225,10 @@ static func punto_aereo(m: Object) -> Vector3:
 	if cae_t < 0.0:
 		return Vector3.INF
 	var cae := Vector3(b.x + v.x * cae_t, 0.0, b.z + v.z * cae_t)
-	if absf(absf(cae.z) - float(m.LARGO)) < 20.0:
-		var alto_t := _t_altura(b.y, v.y, g, AEREO_ALTO)
-		if alto_t > 0.0:
-			return Vector3(b.x + v.x * alto_t, 0.0, b.z + v.z * alto_t)
-	return cae
+	if absf(absf(cae.z) - float(m.LARGO)) > 20.0:
+		return Vector3.INF if SOLO_AREA else cae   ## lejos del área, el de siempre (medido: en todo el campo bajaban los goles de pie)
+	var alto_t := _t_altura(b.y, v.y, g, AEREO_ALTO)
+	return Vector3(b.x + v.x * alto_t, 0.0, b.z + v.z * alto_t) if alto_t > 0.0 else cae
 
 ## Tiempo (s) en que el balón, bajando, pasa por la altura `h` (−1 si no llega a ella).
 static func _t_altura(y: float, vy: float, g: float, h: float) -> float:
