@@ -32,13 +32,24 @@ func _sub_de(menu: Dictionary, secc: String) -> int:
 			return i
 	return 0
 
+## (12-11) Los eventos con diálogo a pantalla completa (reunión con la directiva de la semana 1, `EventosClub`) tapaban TODAS las fotos del
+## recorrido: se dan por contestados antes de abrir el menú.
+func _despachar_eventos(m: Mundo) -> void:
+	for k in 4:
+		var ev := EventosClub.pendiente(m)
+		if ev.is_empty():
+			return
+		EventosClub.aplicar(m, ev, 0)
+
 func _ready() -> void:
 	if OS.get_environment("OUT") != "":
 		_dir = OS.get_environment("OUT")
 	DirAccess.make_dir_recursive_absolute(_dir)
 	var m := Mundo.new()
-	m.generar(["CHI"], 20261103)
-	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	## PAIS=ARG CLUB=7: otro país y otro club (regla 34: nunca revisar con un solo equipo).
+	m.generar([OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"], 20261103)
+	m.tomar_el_mando(m.ligas[0].clubes[int(OS.get_environment("CLUB")) % m.ligas[0].clubes.size()].id)
+	_despachar_eventos(m)
 	PedidoPartida.mundo_pregenerado = m
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
@@ -55,6 +66,19 @@ func _ready() -> void:
 	await _espera(1.0)
 	await _foto("central_lunes")
 	var menus: Array = MenusLaterales.MENUS
+	## SOLO_MENU=dinero: solo ese menú, con TODOS sus submenús de pestaña (y sin el resto del recorrido).
+	var solo := OS.get_environment("SOLO_MENU")
+	if solo != "":
+		var ms := MenusLaterales.menu_por_id(solo)
+		_p._menu_lateral.abrir_menu(solo, -1)
+		await _foto("%s_portada" % solo)
+		for i in (ms["subs"] as Array).size():
+			if (ms["subs"][i] as Dictionary).has("tab"):
+				_p._menu_lateral.abrir_menu(solo, i)
+				await _foto("%s_%s" % [solo, String(ms["subs"][i].get("secc", ms["subs"][i].get("tab", "")))])
+		CapasTutorial.poner_activas(ayudas_antes)
+		get_tree().quit()
+		return
 	for mn: Dictionary in menus:
 		var id := String(mn["id"])
 		_p._menu_lateral.abrir_menu(id, -1)
@@ -93,6 +117,8 @@ func _ready() -> void:
 	for k in 3:
 		_p._avanzar_dia()
 		await _espera(1.5)
+		for ev in _p.find_children("*", "EventoDialogo", true, false):
+			ev.queue_free()
 	await _foto("central_jueves")
 	CapasTutorial.poner_activas(ayudas_antes)
 	get_tree().quit()

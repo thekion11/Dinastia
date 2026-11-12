@@ -23,6 +23,7 @@ func _process(_d: float) -> void:
 		mundo.auspicio.generar_ofertas(mio)
 		var err := mundo.auspicio.firmar(0)
 		print("firmar(0) -> '%s'   contrato: %s" % [err, mundo.auspicio.contrato])
+		_pantalla.get("_secc_extra")["Finanzas"] = "todo"   ## (12-11) la página entera
 		var tabs: TabContainer = _pantalla.get("_pestanas")
 		for i in tabs.get_tab_count():
 			if tabs.get_tab_title(i) == "Finanzas":

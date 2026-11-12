@@ -53,10 +53,19 @@ func _pedir_informe_medico(j: Jugador) -> void: _acciones_fichaje._pedir_informe
 var _redirigiendo := false
 const _SECC_DE_PESTANA := {"Club": "_secc_club", "Gente": "_secc_gente", "Ajustes": "_secc_ajustes",
 	"Récords": "_secc_records", "Redes": "_secc_redes", "Vida": "_secc_vida"}
+## (12-11, nota del dueño: «subdividir menús en más pantallas completas», como el PES 2020) Secciones de las pestañas que antes eran una sola
+## página larga: pestaña -> sección elegida. Cada sección es un submenú con su tarjeta en la portada (`MenusLaterales`, campo `secc`).
+## «todo» pinta la página entera como antes (capturas y herramientas viejas).
+var _secc_extra := {"Finanzas": "cuentas"}
+func secc_de(titulo: String) -> String:
+	if _SECC_DE_PESTANA.has(titulo):
+		return String(get(_SECC_DE_PESTANA[titulo]))
+	return String(_secc_extra.get(titulo, ""))
+
 func _abrir_en_lateral(titulo: String) -> bool:
 	if _redirigiendo or titulo == "Inicio" or _menu_lateral == null or not _menu_lateral.is_inside_tree():
 		return false
-	var secc := String(get(_SECC_DE_PESTANA[titulo])) if _SECC_DE_PESTANA.has(titulo) else ""
+	var secc := secc_de(titulo)
 	## Con un menú ya abierto: si la sección es suya, la elige él (cambia también el título); si no, se abre el suyo.
 	var abierta: PantallaMenu = _menu_lateral.pantalla_abierta if is_instance_valid(_menu_lateral.pantalla_abierta) else null
 	if abierta != null and not abierta.cerrando():

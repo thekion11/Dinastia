@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio, _probar_finanzas_por_pantallas
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -138,3 +138,31 @@ func _probar_tabla_corta_inicio() -> void:
 		if ui != null:
 			ui.free()
 	_comprobar(ResumenInicio.tabla_corta(null, null, func(_t: String) -> void: pass) == null, "sin liga no hay tarjeta")
+
+## (12-11, nota del dueño: menús subdivididos a pantalla completa) Finanzas ya no es una página: cinco submenús de «Dinero», uno por sección
+## de `PantallaFinanzas.SECCIONES`, con su tarjeta, su icono dibujado y su banda de cifras clave.
+func _probar_finanzas_por_pantallas() -> void:
+	_titulo("FINANZAS EN CINCO PANTALLAS (MENÚ DINERO)")
+	var seccs: Array = []
+	var con_dibujo := true
+	for s: Dictionary in MenusLaterales.menu_por_id("dinero")["subs"]:
+		if String(s.get("tab", "")) == "Finanzas":
+			seccs.append(String(s.get("secc", "")))
+			con_dibujo = con_dibujo and String(s.get("desc", "")) != "" and String(s.get("label", "")) != ""
+	var guion: GDScript = load("res://ui/pantallas/pantalla_finanzas_p1.gd")   ## la capa donde vive la constante
+	var secciones: Array = guion.get_script_constant_map().get("SECCIONES", [])
+	_comprobar(seccs.size() == 5 and seccs == secciones, "los 5 submenús de Finanzas son las 5 secciones de la pantalla, en orden (%s)" % [seccs])
+	_comprobar(con_dibujo, "cada uno con su nombre y su descripción para la tarjeta de la portada")
+	var traducidos := true
+	var antes := Idiomas.idioma
+	Idiomas.idioma = "en"
+	for s: Dictionary in MenusLaterales.menu_por_id("dinero")["subs"]:
+		if String(s.get("tab", "")) == "Finanzas" and Idiomas.t(String(s["label"])) == String(s["label"]):
+			traducidos = false
+	Idiomas.idioma = antes
+	_comprobar(traducidos, "y traducidos (inglés)")
+	var banda := CifrasClave.banda([["Caja", "1.0M EUR", Color.GREEN], ["Deuda", "sin deuda", Color.GRAY], ["Créditos abiertos", "0", Color.WHITE]], Color.GRAY)
+	var rotulos := banda.find_children("*", "Label", true, false)
+	_comprobar(banda.get_child_count() == 3 and rotulos.size() == 6 and (rotulos[0] as Label).text == "CAJA" and (rotulos[1] as Label).text == "1.0M EUR",
+		"la banda de cifras clave pinta una ficha por cifra: rótulo en mayúsculas y la cifra grande")
+	banda.free()

@@ -27,7 +27,12 @@ const MENUS := [
 	{"id": "dinero", "icono": "💰", "nombre": "Dinero", "estilo": 2,
 		"lema": "La caja del club: lo que entra, lo que sale y lo que se mueve en el mercado.",
 		"colores": ["#05110d", "#0b231c", "#5fe0b8"], "subs": [
-		{"tab": "Finanzas", "label": "Finanzas", "icono": "💵", "desc": "Presupuesto, banco, fondo de inversión y tu puesto."},
+		## (12-11) Finanzas era UNA página larguísima: ahora cinco pantallas, cada una con su tarjeta.
+		{"tab": "Finanzas", "secc": "cuentas", "label": "Cuentas del club", "icono": "💵", "desc": "El ejercicio del año, el estado de resultados, el balance y la caja."},
+		{"tab": "Finanzas", "secc": "taquilla", "label": "Taquilla y tienda", "icono": "🏟️", "desc": "El precio de la entrada y lo que vende la tienda del club."},
+		{"tab": "Finanzas", "secc": "patrocinio", "label": "Patrocinadores", "icono": "🤝", "desc": "La marca de la camiseta, las campañas y los auspicios."},
+		{"tab": "Finanzas", "secc": "banco", "label": "Banco y deuda", "icono": "🏛️", "desc": "Créditos, bonos, renegociar y pagar antes de tiempo."},
+		{"tab": "Finanzas", "secc": "libro", "label": "Libro de movimientos", "icono": "📒", "desc": "Cada entrada y salida de la caja, y las plusvalías por cobrar."},
 		{"tab": "Mercado", "label": "Mercado de fichajes", "icono": "🔁", "desc": "Comprar, vender y ceder."},
 		{"tab": "Libres", "label": "Jugadores libres", "icono": "🆓", "desc": "Sin club y sin traspaso."}]},
 	{"id": "competiciones", "icono": "🏆", "nombre": "Competiciones", "estilo": 0,

@@ -116,6 +116,7 @@ func seccion_activa(chip: Dictionary) -> bool:
 		"Récords": return p._secc_records == secc
 		"Redes": return p._secc_redes == secc
 		"Vida": return p._secc_vida == secc
+		_: return not p._secc_extra.has(String(chip["tab"])) or String(p._secc_extra[String(chip["tab"])]) == secc
 	return true
 
 ## Abre un chip: primero fija la sección dentro de la pestaña -si el chip
@@ -136,6 +137,7 @@ func ir_a_chip(chip: Dictionary) -> void:
 			"Récords": p._secc_records = secc
 			"Redes": p._secc_redes = secc
 			"Vida": p._secc_vida = secc
+			_: p._secc_extra[String(chip["tab"])] = secc
 	p._ir_a_pestana(String(chip["tab"]))
 	## OJO: `elegir_grupo("central")` corre dentro de `_construir()`, cuando
 	## `p.mundo` todavía es null -la escena se arma antes de que le pasen la

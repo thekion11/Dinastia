@@ -59,6 +59,7 @@ func _process(_d: float) -> void:
 
 func _recorrer() -> void:
 	var mundo: Mundo = _pantalla.get("mundo")
+	_pantalla.get("_secc_extra")["Finanzas"] = "todo"   ## (12-11) la página entera, como antes de partirla en 5 pantallas
 	_pantalla.call("_ir_a_pestana", "Finanzas")
 	_pantalla.call("_refrescar")
 	await _esperar(0.6)

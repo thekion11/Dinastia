@@ -50,6 +50,7 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == ESPERA:
 		_mundo = _pantalla.get("mundo")
+		_pantalla.get("_secc_extra")["Finanzas"] = "todo"   ## (12-11) la página entera, como antes de partirla en 5 pantallas
 		_pantalla.call("_ir_a_pestana", "Finanzas")
 
 	if _n == ESPERA + 3:
@@ -78,6 +79,7 @@ func _process(_d: float) -> void:
 		print("captura: pantalla_finanzas.png")
 
 	if _n == ESPERA + 5:
+		_pantalla.get("_secc_extra")["Finanzas"] = "todo"   ## (12-11) la página entera, como antes de partirla en 5 pantallas
 		_pantalla.call("_ir_a_pestana", "Finanzas")
 
 	if _n == ESPERA + 7:

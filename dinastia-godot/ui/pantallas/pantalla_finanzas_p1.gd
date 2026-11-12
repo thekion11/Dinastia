@@ -12,10 +12,72 @@ extends PantallaBase
 ## El mismo doble toque, para "Vender el club" -`vista.confVender` del HTML-.
 var _confirmar_venta_club: bool = false
 
-## La pestaña FINANZAS: precio de la entrada, tienda, proyección anual, balance y caja,
-## auspicios, patrocinio, banco, resumen, plusvalías y libro de movimientos.
+## La pestaña FINANZAS. (12-11, nota del dueño: menús subdivididos a pantalla completa) Era UNA página con once bloques; ahora son cinco
+## pantallas, una por submenú de «Dinero» (`p._secc_extra["Finanzas"]`): cuentas, taquilla, patrocinio, banco y libro; cada una abre con su
+## banda de cifras clave (`CifrasClave`). «todo» pinta la página entera de antes, en su orden (capturas y herramientas viejas).
+const SECCIONES := ["cuentas", "taquilla", "patrocinio", "banco", "libro"]
 func _pintar_finanzas(c: Club) -> void:
 	p._limpiar(p._lista_finanzas)
+	var secc := String(p._secc_extra.get("Finanzas", "cuentas"))
+	var todo := not SECCIONES.has(secc)
+	## `Finanzas` no vive en el p.mundo: se construye por club y por semana. Aquí se pide EL MISMO que cobra
+	## (`Mundo._finanzas_de_la_semana`), solo para PREGUNTARLE: proyectar no mueve la caja.
+	var f_sim: Finanzas = p.mundo._finanzas_de_la_semana(c)
+	var taq := p.mundo.estimar_taquilla(c)
+	var proy := f_sim.proyeccion_anual(int(p._liga_de(c).jornadas() / 2), p.mundo.ingreso_tienda(c))
+	var pal: Dictionary = p._ui_ficha._paleta_ficha()
+	if not todo:
+		p._lista_finanzas.add_child(CifrasClave.banda(_cifras(secc, c, taq, proy), p.COL_SUAVE))
+		var aire := Control.new()
+		aire.custom_minimum_size = Vector2(0, 6)
+		p._lista_finanzas.add_child(aire)
+	if todo or secc == "taquilla":
+		_fin_taquilla(c, taq)
+	if todo or secc == "cuentas":
+		_fin_cuentas(c, proy, pal)
+	if todo or secc == "patrocinio":
+		_fin_patrocinio(c, pal)
+	if todo or secc == "banco":
+		_fin_banco(c, pal)
+	if todo or secc == "cuentas":
+		_fin_resumen(c)
+	if todo or secc == "libro":
+		_fin_libro(c)
+
+## Las fichas de arriba de cada pantalla: [rótulo, cifra, color].
+func _cifras(secc: String, c: Club, taq: Dictionary, proy: Dictionary) -> Array:
+	var caja := [Idiomas.t("Caja"), p._dinero(c.saldo), p.COL_VERDE if c.saldo >= 0 else p.COL_ROJO]
+	var deuda := 0
+	var lineas := 0
+	if p.mundo.banco != null:
+		lineas = p.mundo.banco.prestamos.size()
+		for pr: Dictionary in p.mundo.banco.prestamos:
+			deuda += int(pr.get("deuda", 0))
+	match secc:
+		"taquilla":
+			return [[Idiomas.t("Precio de la entrada"), Eco.dinero_euros(c.precio_entrada), p.COL_TEXTO],
+				[Idiomas.t("Asistencia estimada"), "%d%%" % int(round(float(int(taq["gente"])) * 100.0 / float(maxi(c.estadio_aforo, 1)))), p.COL_ORO],
+				[Idiomas.t("Taquilla por partido"), p._dinero(int(taq["monto"])), p.COL_VERDE],
+				[Idiomas.t("Tienda al mes"), p._dinero(p.mundo.ingreso_tienda(c)), p.COL_VERDE]]
+		"patrocinio":
+			var ing: Dictionary = proy["ingresos"]
+			var fichas := [caja]
+			for k: String in ing:
+				if k.begins_with("Patrocinio") or k.begins_with("Derechos"):
+					fichas.append([Idiomas.t(k), p._dinero(int(ing[k])), p.COL_ORO])
+			return fichas
+		"banco":
+			return [caja, [Idiomas.t("Deuda"), p._dinero(deuda) if deuda > 0 else Idiomas.t("sin deuda"), p.COL_ROJO if deuda > 0 else p.COL_SUAVE],
+				[Idiomas.t("Créditos abiertos"), str(lineas), p.COL_TEXTO]]
+		"libro":
+			return [caja, [Idiomas.t("Movimientos"), str(p.mundo.libro_financiero.size()), p.COL_TEXTO]]
+	var res := int(proy["resultado"])
+	var pct := int(proy["pct_salarial"])
+	return [caja, [Idiomas.t("Resultado del ejercicio"), p._dinero(res), p.COL_VERDE if res >= 0 else p.COL_ROJO],
+		[Idiomas.t("Masa salarial sobre ingresos"), "%d%%" % pct, p.COL_ROJO if pct > 70 else (p.COL_ORO if pct > 55 else p.COL_VERDE)]]
+
+## El precio de la entrada y la tienda del club.
+func _fin_taquilla(c: Club, taq: Dictionary) -> void:
 	## EL PRECIO DE LA ENTRADA. `Club.precio_entrada` existía y `Finanzas` lo
 	## usaba de verdad -mueve la ocupación un 5% por euro y multiplica lo que
 	## deja cada espectador-, pero no había ningún control para tocarlo: una
@@ -44,9 +106,7 @@ func _pintar_finanzas(c: Club) -> void:
 	## (`Mundo._finanzas_de_la_semana`: tele de la asamblea y de prensa, marketing, honorarios, jornada
 	## legal, operación), solo para PREGUNTARLE: proyectar no mueve la caja. Antes se montaba uno a mano sin
 	## esas palancas y la proyección no cuadraba con lo que luego se cobraba.
-	var f_sim: Finanzas = p.mundo._finanzas_de_la_semana(c)
 	## La taquilla con las palancas de la jornada (horario, techo, sanción, fiestas, precios dinámicos).
-	var taq := p.mundo.estimar_taquilla(c)
 	var gente := int(taq["gente"])
 	p._dato("Asistencia estimada", "%s de %s  (%d%%)" % [
 		p._miles(gente), p._miles(c.estadio_aforo),
@@ -81,12 +141,13 @@ func _pintar_finanzas(c: Club) -> void:
 		fila_t.add_child(bt)
 	p._lista_finanzas.add_child(HSeparator.new())
 
+
+## El ejercicio del año, el estado de resultados, el balance y el flujo de caja.
+func _fin_cuentas(c: Club, proy: Dictionary, pal: Dictionary) -> void:
 	## `vContabilidad()` del HTML: el ejercicio entero de un vistazo. Sin esto,
 	## la única forma de saber si el club gana o pierde dinero al AÑO era ir
 	## sumando cierres de mes a ojo. No inventa cifras: multiplica las mismas
 	## partidas que ya cobra y paga `Finanzas.mes()`.
-	var partidos_casa := int(p._liga_de(c).jornadas() / 2)
-	var proy := f_sim.proyeccion_anual(partidos_casa, p.mundo.ingreso_tienda(c))
 	var tc2 := p._texto(11, p.COL_SUAVE)
 	tc2.text = Idiomas.t("EJERCICIO %d  ·  PROYECCIÓN ANUAL") % p.mundo.anio
 	p._lista_finanzas.add_child(tc2)
@@ -121,13 +182,16 @@ func _pintar_finanzas(c: Club) -> void:
 	nota.text = Idiomas.t("La proyección solo cuenta lo fijo de la temporada: no incluye premios, copas, ventas de jugadores ni abonos.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_finanzas.add_child(nota)
-	var pal: Dictionary = p._ui_ficha._paleta_ficha()
 	PanelFinanzas.pintar_balance_y_caja(p._lista_finanzas, c, p.mundo, proy, pal)
+
+func _fin_patrocinio(c: Club, pal: Dictionary) -> void:
 	PanelFinanzas.pintar_auspicio(p._lista_finanzas, c, p.mundo, pal,
 		func(idx: int) -> void: p._ui_gente._firmar_auspicio(idx))
 	PanelFinanzas.pintar_patrocinio(p._lista_finanzas, c, p.mundo, pal,
 		func(clave: String) -> void: p._ui_gente._lanzar_campana(clave),
 		func() -> void: p._ui_gente._pujar_marca())
+
+func _fin_banco(c: Club, pal: Dictionary) -> void:
 	PanelFinanzas.pintar_banco(p._lista_finanzas, c, p.mundo, pal,
 		func(i: int) -> void: p._ui_gente._pedir_credito(i, c),
 		func(i: int) -> void: p._ui_gente._prepagar(i, c),
@@ -135,6 +199,8 @@ func _pintar_finanzas(c: Club) -> void:
 		func() -> void: p._ui_gente._emitir_bono(c))
 	p._lista_finanzas.add_child(HSeparator.new())
 
+
+func _fin_resumen(c: Club) -> void:
 	var t := p._texto(11, p.COL_SUAVE)
 	t.text = Idiomas.t("RESUMEN")
 	p._lista_finanzas.add_child(t)
@@ -144,6 +210,9 @@ func _pintar_finanzas(c: Club) -> void:
 		p._dato("Cuerpo técnico", p._dinero(p.mundo.staff.sueldo_semanal(c.rep)) + "/semana", p.COL_TEXTO, p._lista_finanzas)
 	p._lista_finanzas.add_child(HSeparator.new())
 
+
+## Las plusvalías por cobrar y el libro de movimientos.
+func _fin_libro(c: Club) -> void:
 	## Otra pieza que ya funcionaba y no se veía: `cobrar_plusvalias()` corre
 	## sola cada temporada -Mundo.nueva_temporada()-, pero el porcentaje que te
 	## guardaste al vender no aparecía en ningún sitio hasta que se cobraba solo.
