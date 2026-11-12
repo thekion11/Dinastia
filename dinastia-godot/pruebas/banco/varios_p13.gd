@@ -173,3 +173,10 @@ func _probar_solo_primera_persona() -> void:
 	for ruta: String in ["res://visor/explorador_estadio.gd", "res://ui/casa_recorrido.gd"]:
 		var src := FileAccess.get_file_as_string(ruta)
 		_comprobar(src.contains("KEY_V") and src.contains("VistaJuego.puede_cambiar()"), "%s: la tecla V solo cambia de vista fuera del juego" % ruta.get_file())
+	## (12-11) La planta de decoración: una sola malla con hojas (antes, caja + esfera verde), la misma para todas, y la de Kenney sustituida.
+	var pl := PlantaDecor.nodo()
+	var pl2 := PlantaDecor.nodo()
+	_comprobar(pl.mesh != null and pl.mesh.get_surface_count() == 1 and pl.mesh == pl2.mesh, "la planta es UNA malla compartida (una llamada de dibujo)")
+	_comprobar(pl.get_aabb().size.y > 0.8 and pl.get_aabb().size.y < 1.3, "y mide lo de una planta de interior (%.2f m)" % pl.get_aabb().size.y)
+	pl.free()
+	pl2.free()
