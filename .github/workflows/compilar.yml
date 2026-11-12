@@ -45,7 +45,9 @@ on:
 ## Un push nuevo a la misma rama cancela la ejecución anterior.
 concurrency:
   group: compilar-${{ github.ref }}
-  cancel-in-progress: true
+  ## (12-11) En main no se cancela la ejecución en marcha (con subidas cada ~15 min ninguna llegaba al final y la exportación
+  ## nunca se comprobaba): la nueva espera y GitHub solo guarda la última en espera. En las demás ramas, se cancela como siempre.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   banco:
