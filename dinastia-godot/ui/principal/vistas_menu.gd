@@ -107,11 +107,24 @@ func _ver_ciudad_con_carga() -> void:
 ##
 ## No hace falta ni un dato nuevo: todo sale de `mundo.ligas` y de las
 ## plantillas que ya existen.
+const SECC_CLUBES := ["tablas", "goleadores", "rivales"]
 func _pintar_clubes() -> void:
 	p._limpiar(p._lista_clubes)
 	if _clubes_pais == "":
 		_clubes_pais = p.mundo.mi_club().pais
-	p._ui_plantel._pintar_rivalidades()
+	## (12-11, menús a pantalla completa) Tres pantallas (`p._secc_extra["Clubes"]`): tablas (con la ficha del club que se pulse), goleadores y
+	## rivales (los clásicos). Otra sección = la página entera de antes.
+	var secc := String(p._secc_extra.get("Clubes", "tablas"))
+	var todo := not SECC_CLUBES.has(secc)
+	if todo or secc == "rivales":
+		p._ui_plantel._pintar_rivalidades()
+	if secc == "rivales":
+		if p._lista_clubes.get_child_count() == 0:   ## partida nueva: aún no hay rivalidades; se dice por qué
+			var vacio := p._texto(12, p.COL_SUAVE)
+			vacio.text = Idiomas.t("Todavía no tienes rivales. La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota.")
+			vacio.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			p._lista_clubes.add_child(vacio)
+		return
 
 	var paises: Array[String] = []
 	for l in p.mundo.ligas:
@@ -141,7 +154,7 @@ func _pintar_clubes() -> void:
 		fila_pais.add_child(bp)
 	p._lista_clubes.add_child(HSeparator.new())
 
-	for l in p.mundo.ligas:
+	for l in (p.mundo.ligas if todo or secc == "tablas" else []):
 		if l.pais != _clubes_pais:
 			continue
 		var tl := p._texto(12, p.COL_ORO)
@@ -194,9 +207,10 @@ func _pintar_clubes() -> void:
 			puesto += 1
 		p._lista_clubes.add_child(HSeparator.new())
 
-	if p._clubes_ficha != null:
+	if p._clubes_ficha != null and (todo or secc == "tablas"):
 		p._ui_plantel._pintar_ficha_club(p._clubes_ficha)
-	p._ui_plantel._pintar_goleadores(_clubes_pais)
+	if todo or secc == "goleadores":
+		p._ui_plantel._pintar_goleadores(_clubes_pais)
 ## La barra de cinco -un botón por grupo, con el mismo icono que `#tabs` del
 ## HTML-. Se toca una sola vez; el submenú de abajo cambia solo.
 ## CUÁNTO HAY SIN RESOLVER EN CADA BLOQUE. Todo sale de datos que el motor ya

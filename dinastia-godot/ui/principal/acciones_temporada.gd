@@ -164,6 +164,7 @@ func _buscar_global(texto: String) -> void:
 	for c2: Club in p.mundo.clubes.values():
 		if Nombres.limpiar(c2.nombre).to_lower().contains(q):
 			p._clubes_ficha = c2
+			p._secc_extra["Clubes"] = "tablas"   ## (12-11) la ficha del club vive en la pantalla de tablas
 			p._ir_a_pestana("Clubes")
 			p._refrescar()
 			p._buscador.text = ""

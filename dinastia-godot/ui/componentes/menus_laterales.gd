@@ -52,7 +52,10 @@ const MENUS := [
 	{"id": "competiciones", "icono": "🏆", "nombre": "Competiciones", "estilo": 0,
 		"lema": "Las tablas, las copas y el resto del mundo.",
 		"colores": ["#140d07", "#2a1d10", "#e0a95a"], "subs": [
-		{"tab": "Clubes", "label": "Ligas y clubes", "icono": "📊", "desc": "Tablas, rivales y el resto de ligas."},
+		## (12-11) Ligas y clubes: tres pantallas.
+		{"tab": "Clubes", "secc": "tablas", "label": "Ligas y clubes", "icono": "📊", "desc": "La tabla de cualquier liga del mundo; pulsa un club para ver su plantel."},
+		{"tab": "Clubes", "secc": "goleadores", "label": "Goleadores", "icono": "🥇", "desc": "Los artilleros de cada liga."},
+		{"tab": "Clubes", "secc": "rivales", "label": "Clásicos y rivales", "icono": "⚔️", "desc": "Tus clásicos, el historial y las cuentas pendientes."},
 		{"tab": "Copa", "label": "Copa", "icono": "🏆", "desc": "El cuadro de la copa nacional."},
 		{"tab": "Continental", "label": "Continental", "icono": "🌎", "desc": "El torneo de clubes del continente."},
 		{"tab": "Selección", "label": "Selección", "icono": "🎌", "desc": "Convocatorias y torneos de selecciones."},

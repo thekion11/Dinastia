@@ -224,6 +224,12 @@ func _probar_cantera_por_pantallas() -> void:
 	var sueltos := 0
 	for m: Dictionary in MenusLaterales.MENUS:
 		for s: Dictionary in m["subs"]:
-			if String(s.get("tab", "")) in ["Cantera", "Finanzas", "Partido", "Táctica", "Entrenar"] and String(s.get("secc", "")) == "":
+			if String(s.get("tab", "")) in ["Cantera", "Finanzas", "Partido", "Táctica", "Entrenar", "Clubes"] and String(s.get("secc", "")) == "":
 				sueltos += 1
 	_comprobar(sueltos == 0, "ningún menú abre una pestaña partida sin decir qué pantalla (%d)" % sueltos)
+	var de_clubes: Array = []
+	for s: Dictionary in MenusLaterales.menu_por_id("competiciones")["subs"]:
+		if String(s.get("tab", "")) == "Clubes":
+			de_clubes.append(String(s.get("secc", "")))
+	var vistas: GDScript = load("res://ui/principal/vistas_menu.gd")
+	_comprobar(de_clubes == vistas.get_script_constant_map().get("SECC_CLUBES", []), "los 3 submenús de Ligas y clubes son sus 3 secciones (%s)" % [de_clubes])
