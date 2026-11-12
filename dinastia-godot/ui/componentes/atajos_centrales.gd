@@ -27,6 +27,7 @@ const GENERALES := [
 const MIGRACION := {
 	"dinastia_ir_plantel": "menu:plantel", "dinastia_ir_tactica": "sub:plantel:Táctica", "dinastia_ir_entrenar": "sub:plantel:Entrenar",
 	"dinastia_ir_mercado": "sub:dinero:Mercado", "dinastia_ir_finanzas": "sub:dinero:Finanzas", "dinastia_ir_calendario": "sub:partido:Calendario",
+	"dinastia_sub_historia_cantera": "sub:historia:Cantera.linaje",   ## (12-11) «Linaje» abre ahora su pantalla de Cantera: la tecla que tuviera, con ella
 	"dinastia_ir_correo": "sub:carrera:Correo", "dinastia_ir_contratos": "sub:plantel:Contratos", "dinastia_ir_prensa": "sub:operaciones:Redes.prensa",
 }
 
@@ -43,10 +44,15 @@ static func _norm(s: String) -> String:
 	return fuera
 
 ## Lo que identifica a un submenú dentro de su menú: la acción, o la pestaña y su sección («Redes.prensa»).
+## (12-11) Las pestañas que se partieron en pantallas (Finanzas, Partido, Táctica…) conservan su nombre de siempre en su PRIMERA pantalla
+## (`PRIMERA`): así la tecla de fábrica (T = Táctica), la migración de teclas viejas y las teclas que alguien ya había cambiado siguen valiendo.
+const PRIMERA := {"Finanzas": "cuentas", "Partido": "previa", "Táctica": "pizarra", "Entrenar": "semana", "Cantera": "academia", "Clubes": "tablas"}
 static func _clave_sub(sub: Dictionary) -> String:
 	if sub.has("accion"):
 		return String(sub["accion"])
-	return String(sub.get("tab", "")) + ("." + String(sub["secc"]) if String(sub.get("secc", "")) != "" else "")
+	var tab := String(sub.get("tab", ""))
+	var secc := String(sub.get("secc", ""))
+	return tab + ("." + secc if secc != "" and String(PRIMERA.get(tab, "")) != secc else "")
 
 static func catalogo() -> Array:
 	if not _catalogo.is_empty():

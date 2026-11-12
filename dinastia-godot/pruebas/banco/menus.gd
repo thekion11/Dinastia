@@ -173,3 +173,29 @@ func _probar_casilla_clara() -> void:
 	_comprobar(otra.get_theme_icon("checked") == con, "los iconos se dibujan una vez y se comparten")
 	cb.free()
 	otra.free()
+
+## (12-11) Partir una pestaña en pantallas no cambia el nombre de su atajo de teclado: la primera pantalla conserva el de la pestaña (tecla
+## de fábrica, migración y teclas reasignadas siguen valiendo) y ninguna acción se repite.
+func _probar_atajos_tras_partir() -> void:
+	_titulo("ATAJOS DE TECLADO: LOS NOMBRES NO CAMBIAN AL PARTIR UN MENÚ")
+	AtajosCentrales._catalogo.clear()
+	for par: Array in [["sub:plantel:Táctica", "dinastia_sub_plantel_tactica"], ["sub:dinero:Finanzas", "dinastia_sub_dinero_finanzas"],
+			["sub:plantel:Entrenar", "dinastia_sub_plantel_entrenar"], ["sub:partido:Partido", "dinastia_sub_partido_partido"],
+			["sub:plantel:Cantera", "dinastia_sub_plantel_cantera"], ["sub:competiciones:Clubes", "dinastia_sub_competiciones_clubes"]]:
+		_comprobar(AtajosCentrales.accion_de_clave(String(par[0])) == String(par[1]), "%s sigue siendo %s" % [par[0], par[1]])
+	var vistas := {}
+	var repetidas: Array = []
+	var con_tecla_t := ""
+	for e: Dictionary in AtajosCentrales.catalogo():
+		if vistas.has(e["accion"]):
+			repetidas.append(e["accion"])
+		vistas[e["accion"]] = true
+		if int(e["tecla"]) == KEY_T:
+			con_tecla_t = String(e["accion"])
+	_comprobar(repetidas.is_empty(), "ninguna acción de atajo se repite %s" % [repetidas])
+	_comprobar(con_tecla_t == "dinastia_sub_plantel_tactica", "la T sigue abriendo Táctica (%s)" % con_tecla_t)
+	var faltan: Array = []
+	for vieja: String in AtajosCentrales.MIGRACION:
+		if AtajosCentrales.accion_de_clave(String(AtajosCentrales.MIGRACION[vieja])) == "":
+			faltan.append(vieja)
+	_comprobar(faltan.is_empty(), "todas las teclas viejas de la migración tienen destino %s" % [faltan])
