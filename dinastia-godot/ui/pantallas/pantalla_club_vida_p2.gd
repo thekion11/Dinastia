@@ -298,7 +298,9 @@ func _pintar_ambiente_y_horario() -> void:
 	for h: Array in Mundo.HORARIOS:
 		var clave := String(h[0])
 		var elegido := p.mundo.horario == clave
-		var fila := HBoxContainer.new()
+		## (12-11) En el teléfono de pie la explicación baja a su propia línea: al lado quedaba en una columna de cinco líneas.
+		var de_pie := EscalaMovil.es_vertical()
+		var fila: Container = HFlowContainer.new() if de_pie else HBoxContainer.new()
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_entren.add_child(fila)
 		var b := Button.new()
@@ -333,6 +335,7 @@ func _pintar_ambiente_y_horario() -> void:
 		## siente recortada")-. El tooltip es la frase entera, como ya manda
 		## la regla de "clip_text siempre con su texto de repuesto".
 		d.tooltip_text = String(h[5])
+		d.custom_minimum_size.x = 440.0 if de_pie else 0.0
 		fila.add_child(d)
 	p._lista_entren.add_child(HSeparator.new())
 

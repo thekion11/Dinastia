@@ -277,7 +277,7 @@ func _pintar_fondos(c: Club) -> void:
 			b.add_theme_font_size_override("font_size", 10)
 			b.clip_text = true
 			b.tooltip_text = Idiomas.t("%s  ·  vende el 25%% del próximo traspaso de %s") % [String(f[3]), j2.nombre]
-			b.custom_minimum_size = Vector2(120, 0)
+			b.custom_minimum_size = Vector2(140 if de_pie else 120, 0)   ## de pie cabe el importe entero («390k EUR»)
 			DobleToque.conectar(b, Idiomas.t("¿Vender el 25 %? Toca otra vez"), func() -> void:   ## idea 1027: no se recompra
 				var p_local := ce.vender_participacion(j2, clave, 25, p.mundo.mi_club())
 				if p_local != "":
