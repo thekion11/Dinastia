@@ -88,3 +88,42 @@ static func _rival_cerca(m: Object, punto: Vector3, local: bool, r: float) -> bo
 		if bool(q["es_local"]) != local and m.pos(q).distance_to(punto) < r:
 			return true
 	return false
+
+## EL APOYO DE CARA (12-11-2026, sesión 13, decisión del líder; `C4_APOYO`). Ninguna palanca movía las cadenas de 5+: el portador apretado
+## (rival a < `APOYO_PRESION` m) no tenía a quién darla. El compañero de campo más cercano (a < 15 m) se ofrece de cara: a `APOYO_D` m del
+## portador, del lado contrario al rival que aprieta y algo por detrás, probando tres ángulos hasta tener la línea de pase limpia.
+## Destino o Vector3.INF. Contador: `c4_apoyo` (pasos en que alguien se ofrece, por cada 10).
+static var APOYO := OS.get_environment("C4_APOYO") == "1"
+const APOYO_PRESION := 3.0
+const APOYO_D := 7.0
+static func apoyo(m: Object, p: Dictionary) -> Vector3:
+	if not APOYO or bool(p["por"]):
+		return Vector3.INF
+	var c: Dictionary = m.poseedor
+	if c.is_empty() or bool(c["es_local"]) != bool(p["es_local"]) or bool(c["por"]):
+		return Vector3.INF
+	var rival: Dictionary = m._rival_mas_cercano(c)
+	var pc: Vector3 = m.pos(c)
+	if rival.is_empty() or m.pos(rival).distance_to(pc) > APOYO_PRESION:
+		return Vector3.INF
+	## ¿Es `p` el compañero de campo más cercano al portador (a < 15 m)?
+	var mi_d := pc.distance_to(m.pos(p))
+	if mi_d > 15.0:
+		return Vector3.INF
+	for q: Dictionary in m.jugadores:
+		if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and String(q["id"]) != String(p["id"]) and String(q["id"]) != String(c["id"]):
+			if pc.distance_to(m.pos(q)) < mi_d:
+				return Vector3.INF
+	var local := bool(p["es_local"])
+	var d: float = m.dir_ataque(local)
+	var lejos_rival: Vector3 = pc - m.pos(rival)
+	lejos_rival.y = 0.0
+	var base := (lejos_rival.normalized() + Vector3(0.0, 0.0, -d * 0.6)).normalized()   ## lejos del rival y algo por detrás: de cara
+	for ang: float in [0.0, 0.6, -0.6]:
+		var punto := pc + base.rotated(Vector3.UP, ang) * APOYO_D
+		punto.x = clampf(punto.x, -float(m.ANCHO) + 1.0, float(m.ANCHO) - 1.0)
+		if not m._linea_tapada(pc, punto, local):
+			if int(m.t * 10.0) % 10 == 0:
+				m._contar("c4_apoyo")
+			return punto
+	return Vector3.INF
