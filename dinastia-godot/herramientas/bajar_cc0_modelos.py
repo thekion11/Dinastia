@@ -9,11 +9,20 @@ RAIZ = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", 
 ## (contenido externo) y no deben poder apuntar a otro sitio. Y los archivos solo se escriben dentro de la carpeta del modelo.
 HOSTS = {"api.polyhaven.com", "dl.polyhaven.org"}
 
-def abrir(url):
+def direccion_limpia(url):
+    """La dirección rehecha con NUESTRO servidor (de la lista) y la ruta comprobada: sin «..», sin barras invertidas y sin puntos
+    escritos en clave (%2e). (12-11, SonarCloud S7044: la ruta viene de la respuesta de la API y no debe poder salirse de ahí.)"""
     u = urllib.parse.urlparse(url)
-    if u.scheme != "https" or u.hostname not in HOSTS:
+    servidor = next((h for h in sorted(HOSTS) if h == u.hostname), None)
+    if u.scheme != "https" or servidor is None or u.username or u.port not in (None, 443):
         raise ValueError("dirección no permitida: %r" % url)
-    return urllib.request.urlopen(urllib.request.Request(urllib.parse.urlunparse(u), headers={"User-Agent": "Mozilla/5.0"}))
+    ruta = urllib.parse.unquote(u.path)
+    if ".." in ruta.split("/") or "\\" in ruta or "%2e" in u.path.lower() or not ruta.startswith("/"):
+        raise ValueError("ruta no permitida en la dirección: %r" % url)
+    return "https://" + servidor + urllib.parse.quote(ruta)
+
+def abrir(url):
+    return urllib.request.urlopen(urllib.request.Request(direccion_limpia(url), headers={"User-Agent": "Mozilla/5.0"}))
 
 def dentro(base, ruta):
     destino = os.path.realpath(os.path.join(base, ruta))
@@ -26,7 +35,7 @@ def bajar(url, destino):
     with abrir(url) as r, open(destino, "wb") as f:
         f.write(r.read())
 
-for ident in (sys.argv[1:] or LISTA):
+for ident in ((sys.argv[1:] or LISTA) if __name__ == "__main__" else []):
     if not re.fullmatch(r"[a-z0-9_]+", ident):
         raise ValueError("identificador de Poly Haven no válido: %r" % ident)
     with abrir("https://api.polyhaven.com/files/" + ident) as r:
