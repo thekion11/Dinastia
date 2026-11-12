@@ -20,6 +20,7 @@ var _cuerpo: Control
 var _pestanas_sub: HBoxContainer
 var _titulo_sub: Label
 var _btn_portada: Button
+var _paginador: PaginadorSubmenu
 var _hueco_contenido: PanelContainer
 var _hueco_ficha: Control
 var _devolver: Array = []   ## [nodo, padre, índice, flags h, ratio]
@@ -137,6 +138,8 @@ func _montar() -> void:
 	_btn_portada.custom_minimum_size = Vector2(0, 0 if cmp else 36)
 	_btn_portada.pressed.connect(portada)
 	fila.add_child(_btn_portada)
+	_paginador = PaginadorSubmenu.crear(self, cmp or MenuLateral.abajo())   ## (12-11) ◂ anterior · n / N · siguiente ▸
+	fila.add_child(_paginador)
 	## Sin carril de pestañas hacia la derecha (pedido del usuario al ver la
 	## portada: "que sean así, grandes y hacia abajo"). Se vuelve a las
 	## tarjetas con Portada; L1/R1 siguen pasando de submenú.
@@ -302,6 +305,7 @@ func elegir(i: int) -> void:
 		create_tween().tween_property(_hueco_contenido, "modulate:a", 1.0, 0.18)
 
 func _marcar_pestana() -> void:
+	_paginador.actualizar()
 	for k in _pestanas_sub.get_child_count():
 		(_pestanas_sub.get_child(k) as Button).set_pressed_no_signal(k == _activo)
 

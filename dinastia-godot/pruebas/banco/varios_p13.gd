@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio, _probar_finanzas_por_pantallas, _probar_agentes_confianza, _probar_cantera_por_pantallas, _probar_informe_abre_su_pantalla
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_tabla_corta_inicio, _probar_finanzas_por_pantallas, _probar_agentes_confianza, _probar_cantera_por_pantallas, _probar_informe_abre_su_pantalla, _probar_paginador_submenu
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -254,3 +254,22 @@ func _probar_informe_abre_su_pantalla() -> void:
 				mal.append(String(f["txt"]).left(30))
 		_comprobar(con_secc >= 1 and mal.is_empty(), "%s: los %d avisos que van a una pestaña partida nombran una pantalla que existe %s" % [caso[0], con_secc, mal])
 
+
+## (12-11) El paginador en pantalla de un menú: anterior y siguiente saltan las acciones y dan la vuelta; «n / N» cuenta solo pantallas.
+func _probar_paginador_submenu() -> void:
+	_titulo("PAGINADOR DE MENÚ: ANTERIOR · n / N · SIGUIENTE")
+	var subs := [{"tab": "A", "label": "a"}, {"accion": "x", "label": "acción"}, {"tab": "B", "label": "b"}, {"tab": "C", "label": "c"}]
+	_comprobar(PaginadorSubmenu.vecino(subs, 0, 1) == 2 and PaginadorSubmenu.vecino(subs, 2, -1) == 0, "anterior y siguiente saltan la acción del medio")
+	_comprobar(PaginadorSubmenu.vecino(subs, 3, 1) == 0 and PaginadorSubmenu.vecino(subs, 0, -1) == 3, "y dan la vuelta por los extremos")
+	_comprobar(PaginadorSubmenu.puesto(subs, 2) == Vector2i(2, 3), "«2 / 3»: la acción no cuenta como pantalla (%s)" % PaginadorSubmenu.puesto(subs, 2))
+	_comprobar(PaginadorSubmenu.vecino([{"tab": "A", "label": "a"}, {"accion": "x", "label": "y"}], 0, 1) == -1, "con una sola pantalla no hay vecina (el paginador se esconde)")
+	for id: String in ["dinero", "plantel", "competiciones"]:
+		var ss: Array = MenusLaterales.menu_por_id(id)["subs"]
+		var vistos := {}
+		var i := 0
+		while (ss[i] as Dictionary).has("accion"):
+			i += 1
+		for k in ss.size():
+			vistos[i] = true
+			i = PaginadorSubmenu.vecino(ss, i, 1)
+		_comprobar(vistos.size() == PaginadorSubmenu.puesto(ss, 0).y, "%s: pasando «siguiente» se recorren todas sus pantallas (%d)" % [id, vistos.size()])
