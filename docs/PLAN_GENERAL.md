@@ -4,6 +4,9 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## PREGUNTAS PARA EL DUEÑO (sesiones Opus) — se acumulan aquí y se envían juntas por Calendar al llegar a 5 (orden 44); se borran al responderse
+- (ninguna todavía)
+
 ## ESTADO AL CIERRE DEL 11-11 MAÑANA (orden 42 del dueño: «guarda y registra todo») — para retomar
 - Trabajo del líder SOLO (sin sesiones abiertas), todo en `main` con banco «FIN. 0 fallos», huellas `igualdad_motor` 2244399493 e `igualdad_mundo` 2180788566 sin cambios, `mem_menu_estadio` 0 y `cifras_partido` 0.
 - HECHO: (1) mando táctil: el fallo de la captura NO se reproduce en `main` (Compatibility y Forward+, horizontal y vertical); (2) C4 MEJORADO con las ideas del dueño (`visor/mejoras_c4.gd`, solo en C4): dos desmarques a la vez, sprints sin balón, balones largos y balón parado (córners por desvío 20 %, centros desde la banda) → cadenas de 5+ ~0,9 → ~1,5 antes del balón parado, goles 5,2 → ~6,2, córners 4,5 → 7,8, CPU igual; detalle en `MOTOR_LEAGUE_SOCCER_PLAN.md` «Mejoras de C4»; (3) referencias del dueño (menú de PES 2020, mandos de FC Mobile) en su Drive, carpeta `Dinastia_respaldo_2026-10-24/referencias_del_dueño` (orden 41); (4) contadores del motor (`diag`) en `comparar_tres_motores`.
