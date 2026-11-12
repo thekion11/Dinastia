@@ -110,7 +110,7 @@ func _responder(c: Dictionary) -> void:
 		"/releases":
 			match _modo_lista:
 				"ok":
-					var lista := [_release("parche-0.9.2-escritorio", "parche_0.9.2.pck", _cuerpo_pck.size(), base + "/parche.pck"),
+					var lista := [_release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/parche.pck"),
 						_release("parche-0.9.0-escritorio", "parche_0.9.0.pck", 10, base + "/parche.pck")]
 					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify(lista).to_utf8_buffer())
 				"json_roto":
@@ -128,17 +128,17 @@ func _responder(c: Dictionary) -> void:
 				"sin_nuevas":
 					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.0-escritorio", "parche_0.9.0.pck", 10, base + "/parche.pck")]).to_utf8_buffer())
 				"mal_tam":
-					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.2-escritorio", "parche_0.9.2.pck", _cuerpo_pck.size() + 5, base + "/parche.pck")]).to_utf8_buffer())
+					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size() + 5, base + "/parche.pck")]).to_utf8_buffer())
 				"mal_sha":
-					var r := _release("parche-0.9.2-escritorio", "parche_0.9.2.pck", _cuerpo_pck.size(), base + "/parche.pck")
+					var r := _release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/parche.pck")
 					r["assets"][0]["digest"] = "sha256:" + "0".repeat(64)
 					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([r]).to_utf8_buffer())
 				"con_sha":
-					var r2 := _release("parche-0.9.2-escritorio", "parche_0.9.2.pck", _cuerpo_pck.size(), base + "/redirige")
+					var r2 := _release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/redirige")
 					r2["assets"][0]["digest"] = "sha256:" + _sha(_cuerpo_pck)
 					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([r2]).to_utf8_buffer())
 				"parada":
-					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.2-escritorio", "parche_0.9.2.pck", _cuerpo_pck.size(), base + "/parada")]).to_utf8_buffer())
+					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/parada")]).to_utf8_buffer())
 		"/parche.pck":
 			_enviar(c, "200 OK", "Content-Type: application/octet-stream\r\n", _cuerpo_pck)
 		"/redirige":
@@ -207,34 +207,34 @@ func _red(base: String) -> void:
 		for f: String in DirAccess.get_files_at(Actualizador.CARPETA):
 			DirAccess.remove_absolute(Actualizador.CARPETA.path_join(f))
 	limpiar.call()
-	## Consulta normal: hay 0.9.2 (y la 0.9.0 de abajo no cuenta).
+	## Consulta normal (12-11: el proyecto ya es 0.9.2, el servidor simulado ofrece la 0.9.3): hay 0.9.3 (y la 0.9.0 de abajo no cuenta).
 	_modo_lista = "ok"
 	var r := await _consultar(a)
-	_comprobar(bool(r["visto"]) and bool(r["hay"]) and String(r["info"]["version"]) == "0.9.2", "consulta: encuentra la 0.9.2 (%s)" % str(r.get("mensaje", "")))
+	_comprobar(bool(r["visto"]) and bool(r["hay"]) and String(r["info"]["version"]) == "0.9.3", "consulta: encuentra la 0.9.3 (%s)" % str(r.get("mensaje", "")))
 	_comprobar(_pidieron.has("/releases"), "…preguntando a la ruta /releases")
 	var info: Dictionary = r["info"]
 	## Descarga con progreso, tamaño verificado y nombre definitivo.
 	var d := await _bajar(a, info)
-	_comprobar(String(d.get("fallo", "x")) == "" and String(d.get("ruta", "")) == "user://parches/parche_0.9.2.pck", "descarga: llega a user://parches/parche_0.9.2.pck (%s)" % str(d.get("fallo", "")))
-	var f := FileAccess.open("user://parches/parche_0.9.2.pck", FileAccess.READ)
+	_comprobar(String(d.get("fallo", "x")) == "" and String(d.get("ruta", "")) == "user://parches/parche_0.9.3.pck", "descarga: llega a user://parches/parche_0.9.3.pck (%s)" % str(d.get("fallo", "")))
+	var f := FileAccess.open("user://parches/parche_0.9.3.pck", FileAccess.READ)
 	_comprobar(f != null and f.get_length() == _cuerpo_pck.size() and f.get_buffer(f.get_length()) == _cuerpo_pck, "descarga: el archivo es idéntico (%d bytes)" % _cuerpo_pck.size())
 	if f != null:
 		f.close()   ## (6-11) en Windows un archivo abierto NO se puede borrar ni renombrar: sin esto `limpiar` y la descarga siguiente fallaban solo allí
-	_comprobar(not FileAccess.file_exists("user://parches/parche_0.9.2.pck.descarga"), "descarga: no queda el temporal")
+	_comprobar(not FileAccess.file_exists("user://parches/parche_0.9.3.pck.descarga"), "descarga: no queda el temporal")
 	_comprobar(int(d["progresos"]) >= 1 and int(d["max"]) == _cuerpo_pck.size(), "descarga: hubo %d avisos de progreso hasta los %d bytes" % [d["progresos"], d["max"]])
-	_comprobar(Parches.buscar().has(ProjectSettings.globalize_path("user://parches").path_join("parche_0.9.2.pck")) or Parches.buscar().has("user://parches/parche_0.9.2.pck"), "el autoload Parches encontrará el archivo en el próximo arranque")
+	_comprobar(Parches.buscar().has(ProjectSettings.globalize_path("user://parches").path_join("parche_0.9.3.pck")) or Parches.buscar().has("user://parches/parche_0.9.3.pck"), "el autoload Parches encontrará el archivo en el próximo arranque")
 	limpiar.call()
 	## Redirección (GitHub sirve los archivos desde otro servidor) + SHA-256 correcto.
 	_modo_lista = "con_sha"
 	r = await _consultar(a)
 	d = await _bajar(a, r["info"])
-	_comprobar(String(d.get("fallo", "x")) == "" and FileAccess.file_exists("user://parches/parche_0.9.2.pck"), "descarga: sigue la redirección y verifica el SHA-256 (%s)" % str(d.get("fallo", "")))
+	_comprobar(String(d.get("fallo", "x")) == "" and FileAccess.file_exists("user://parches/parche_0.9.3.pck"), "descarga: sigue la redirección y verifica el SHA-256 (%s)" % str(d.get("fallo", "")))
 	limpiar.call()
 	## Fallos de la descarga: tamaño anunciado distinto, SHA-256 distinto, descarga parada.
 	_modo_lista = "mal_tam"
 	r = await _consultar(a)
 	d = await _bajar(a, r["info"])
-	_comprobar(String(d.get("fallo", "")).contains("tamaño") and not FileAccess.file_exists("user://parches/parche_0.9.2.pck") and DirAccess.get_files_at(Actualizador.CARPETA).is_empty(), "descarga: un tamaño que no coincide se rechaza y no deja nada (%s)" % str(d.get("fallo", "")))
+	_comprobar(String(d.get("fallo", "")).contains("tamaño") and not FileAccess.file_exists("user://parches/parche_0.9.3.pck") and DirAccess.get_files_at(Actualizador.CARPETA).is_empty(), "descarga: un tamaño que no coincide se rechaza y no deja nada (%s)" % str(d.get("fallo", "")))
 	_modo_lista = "mal_sha"
 	r = await _consultar(a)
 	d = await _bajar(a, r["info"])

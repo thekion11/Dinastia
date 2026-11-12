@@ -36,8 +36,10 @@ static func efectivo(zoom_ajustes: float) -> float:
 
 ## Pone el factor en la raíz y, si el teléfono se gira, lo vuelve a poner.
 static func poner(arbol: SceneTree, zoom_ajustes: float) -> void:
-	arbol.root.content_scale_factor = efectivo(zoom_ajustes)
+	## (12-11) PRIMERO el zoom pedido y DESPUÉS la escala: cambiar la escala emite `size_changed` en el acto y el vigilante de abajo
+	## volvía a poner el zoom VIEJO (el «Deshacer» del tamaño de la interfaz se quedaba un paso por detrás; lo cazó `uiaj_ajustes`).
 	arbol.root.set_meta("zoom_ajustes", zoom_ajustes)
+	arbol.root.content_scale_factor = efectivo(zoom_ajustes)
 	if not arbol.root.has_meta("giro_vigilado"):
 		arbol.root.set_meta("giro_vigilado", true)
 		arbol.root.size_changed.connect(func() -> void:

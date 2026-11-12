@@ -11,3 +11,7 @@ tiene la licencia), reducidas a 192x128. visor/banderas.gd prueba primero el .sv
 
 6-11-2026: 17 SVG más (sl, az, lu, km, rw, cg, bw, na, ke, ug, mw, vu, lr, id, md, is; 'ps' y 'cw' ya estaban) de lipis/flag-icons v7.2.1 (flags/4x3, MIT), para las nacionalidades de la base real
 que no tenían bandera (SLE, AZE, LUX, COM, PLE, RWA, CGO, BOT, NAM, KEN, UGA, MWI, VAN, LBR, IDN, MDA, ISL, CUW).
+
+12-11-2026: 29 SVG más de lipis/flag-icons v7.2.1 (flags/4x3, MIT) para los países nuevos con liga: cy, iq, by, ee, kz, lt, lv, gb-nir, bh, sv, gt, in,
+my, om, th, vn, ad, fo, gi, hk, kg, kw, lb, ly, ni, sg, sm, tz, tj (CYP, IRQ, BLR, EST, KAZ, LTU, LVA, NIR, BHR, ESA, GUA, IND, MAS, OMA, THA, VIE, AND,
+FRO, GIB, HKG, KGZ, KUW, LBN, LBY, NCA, SGP, SMR, TAN, TJK).

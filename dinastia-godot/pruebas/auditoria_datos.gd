@@ -8,6 +8,10 @@ extends Node
 var _hallazgos := 0
 var _por_tipo := {}
 
+## Ligas con un número IMPAR de clubes que salen así de los datos (12-11): Egipto 21 (real) y las de la pasada con RSSSF del 10-11
+## (`docs/04_auditorias/datos_dudosos_2026-11-10.md`). REVISAR Eslovenia y Honduras: sus ligas suelen tener 10.
+const IMPARES_REALES := {"EGY": 21, "HON": 11, "NZL": 11, "SVN": 9, "MAS": 13, "AND": 9, "LBN": 11, "SUR": 11}
+
 func _h(tipo: String, detalle: String) -> void:
 	_hallazgos += 1
 	_por_tipo[tipo] = int(_por_tipo.get(tipo, 0)) + 1
@@ -67,7 +71,7 @@ func _ready() -> void:
 			if porteros < 2:
 				_h("menos_de_2_porteros", "%s %s (%d)" % [base, c.nombre, porteros])
 		for l: Liga in m.ligas:
-			if l.clubes.size() % 2 != 0 and not (l.clubes.size() == 21 and l.pais == "EGY"):   ## (10-11) la liga egipcia REAL tiene 21 clubes (el calendario admite impares con descanso: `Liga`); cualquier otra impar sigue siendo un aviso
+			if l.clubes.size() % 2 != 0 and not (l.pais in IMPARES_REALES and IMPARES_REALES[l.pais] == l.clubes.size()):   ## (10-11) la liga egipcia REAL tiene 21 clubes; (12-11) y las impares que dejó la pasada con RSSSF (el calendario admite impares con descanso: `Liga`); cualquier otra impar sigue siendo un aviso
 				_h("liga_impar", "%s %s %d" % [base, l.nombre, l.clubes.size()])
 		print("[%s] clubes %d, jugadores %d" % [base, m.clubes.size(), n_jug])
 	Datos.usar_base_real(false)

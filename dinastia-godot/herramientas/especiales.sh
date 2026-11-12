@@ -82,6 +82,9 @@ pasa "menú ciudad a pie" "godot --headless --path . res://pruebas/prueba_menu_c
 pasa "menú entrar al estadio a pie" "godot --headless --path . res://pruebas/prueba_menu_estadio_a_pie.tscn" "0 fallos"
 pasa "casa del personaje a pie" "godot --headless --path . res://pruebas/prueba_casa_a_pie.tscn" "0 fallos"
 pasa "plantilla a la PES" "godot --headless --path . res://pruebas/prueba_plantilla_pes.tscn" "0 fallos"
+# (12-11) Las pruebas «con pantalla» necesitan xvfb-run; el contenedor del CI no lo trae (como el bloque de a4_limite_mundo): sin él se SALTAN
+# (antes fallaban en 0 s y bloqueaban la exportación). En local, con xvfb, corren como siempre.
+if command -v xvfb-run >/dev/null; then
 pasa "partido de despedida (UI, con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_despedida_ui.tscn" "0 fallos"
 pasa "rueda de prensa en cruz y eventos con diálogo (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_rueda_eventos.tscn" "FIN. 0 fallos"
 pasa "festejos por tipo de título, 3 clubes (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_festejos.tscn" "FIN. 0 fallos"
@@ -96,6 +99,7 @@ pasa "gestión en un teléfono horizontal en alemán (letra en mm, toques ≥ 7 
 pasa "estética de los menús en PC (3 tamaños de letra, rejilla, foco y pulsado, caras de 30 px; 2 clubes; con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/auditoria_estetica_menus.tscn" "FIN. 0 fallos"
 pasa "Ligas activas en el teléfono (horizontal, alemán) y con mando, y «Añadir ligas» desde Ajustes (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/auditoria_ligas_activas.tscn" "FIN. 0 fallos"
 pasa "Ligas activas en vertical con mando (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1080x2400 res://pruebas/auditoria_ligas_activas.tscn" "FIN. 0 fallos"
+fi
 pasa "nombres de países y selecciones en alemán (inicio, selección, continental, competiciones, correo, redes, palmarés, elegir club, ligas activas)" "godot --headless --path . res://pruebas/auditoria_paises_idioma.tscn" "FIN. 0 fallos"
 pasa "nombres de países y selecciones en francés" "IDIOMA=fr godot --headless --path . res://pruebas/auditoria_paises_idioma.tscn" "FIN. 0 fallos"
 # 5b. Las texturas de ruido en segundo plano son las de NoiseTexture2D, byte a byte (30-10)

@@ -133,6 +133,9 @@ func _traducciones() -> void:
 		textos.append((n as Label).text)
 	_comprobar(textos.has("ACHIEVEMENT UNLOCKED"), "la etiqueta del tipo sale en inglés (%s)" % ", ".join(textos))
 	_comprobar(textos.has(Idiomas.t("Mi vida")) and Idiomas.t("Mi vida") != "Mi vida", "el título se traduce en el aviso")
+	## (12-11) Con los iconos DIBUJADOS (por defecto desde la orden 36) el botón no lleva el emoji 📜: esta parte prueba la traducción del texto con los emojis.
+	var dibujados0 := IconosUI.dibujados
+	IconosUI.dibujados = false
 	var ml := MenuLateral.crear(null)
 	c.add_child(ml)
 	var cab := ""
@@ -153,6 +156,7 @@ func _traducciones() -> void:
 		if b.has_meta("_es") and String((b as Button).text).contains("📜"):
 			cab_es = (b as Button).text
 	_comprobar(cab_es == "📜  HISTORIA", "al volver al castellano, igual que siempre («%s»)" % cab_es)
+	IconosUI.dibujados = dibujados0
 	a.queue_free()
 	c.queue_free()
 

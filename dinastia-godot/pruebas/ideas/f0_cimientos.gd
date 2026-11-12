@@ -29,7 +29,7 @@ func _probar_async() -> void:
 	var aj: PantallaAjustes = _p._ui_ajustes
 	_comprobar(aj != null, "Principal tiene su PantallaAjustes")
 	_comprobar(PantallaAjustes.TIPOGRAFIAS.size() == 7 and PantallaAjustes.TIPOGRAFIAS.has("juego"), "las 7 tipografías viven en PantallaAjustes")
-	_comprobar(PantallaAjustes.FPS_OPCIONES == [30, 60, 120, 0] and PantallaAjustes.RANURAS.size() == 3, "FPS y ranuras viven en PantallaAjustes")
+	_comprobar(PantallaAjustes.FPS_OPCIONES == [30, 60, 90, 120, 0] and PantallaAjustes.RANURAS.size() == 3, "FPS y ranuras viven en PantallaAjustes")
 	_comprobar(PantallaAjustes.SECCIONES_AJUSTES.size() == 6, "las 6 secciones de Ajustes viven en PantallaAjustes")
 	_p._tipografia = "estrecha"
 	_comprobar(aj.tipografia == "estrecha", "escribir p._tipografia llega a la dueña")
