@@ -165,7 +165,7 @@ func _montar(duracion_mitad: float) -> void:
 	var cont := SubViewportContainer.new()
 	cont.stretch = true
 	cont.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(cont)
+	add_child(cont); cont.visibility_changed.connect(func() -> void: fondo.visible = not cont.visible); fondo.visible = false   ## (12-11, móvil) el fondo negro solo sin 3D: tapado, era una pantalla entera de relleno por fotograma
 	_vp = SubViewport.new()
 	_vp.own_world_3d = true
 	cont.add_child(_vp)
