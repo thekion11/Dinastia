@@ -91,6 +91,15 @@ static func _ficha_jugador(j: Jugador, puesto: String, natural: bool, c: Club, f
 	var nota := Anillo.crear(j.ovr, 99.0, Color("3fa06a") if j.ovr >= 75 else (Color("c9a227") if j.ovr >= 62 else Color("d0463c")), 26.0)
 	nota.position = Vector2(50, -4)
 	cara_caja.add_child(nota)
+	## (12-11, ideas del PES) La flecha de forma arriba a la izquierda y, si es el capitán, su «C» abajo a la izquierda.
+	var forma := FlechaForma.etiqueta(j, 13)
+	forma.position = Vector2(0, -3)
+	forma.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cara_caja.add_child(forma)
+	if j.capitan:
+		var cap := PlantillaHabilidades.brazalete()
+		cap.position = Vector2(2, 27)
+		cara_caja.add_child(cap)
 	## La pastilla del puesto, en el color de su línea.
 	var pastilla := PanelContainer.new()
 	var ep := StyleBoxFlat.new()

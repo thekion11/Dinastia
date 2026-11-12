@@ -11,7 +11,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	p._limpiar(p._lista_tactica)
 	var secc := String(p._secc_extra.get("Táctica", "pizarra"))
 	var todo := not SECCIONES.has(secc)
-	if not todo:
+	if not todo and secc != "pizarra":   ## en «Pizarra y dibujo» manda el campo: con la banda encima el pizarrón no cabía entero
 		var nivel := [Idiomas.t("Defensiva"), Idiomas.t("Equilibrada"), Idiomas.t("Ofensiva")]
 		p._lista_tactica.add_child(CifrasClave.banda([
 			[Idiomas.t("Formación"), c.tactica.formacion, SelectorDireccional.acento_legible(p.COL_ACENTO)],
