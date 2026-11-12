@@ -593,6 +593,11 @@ jobs:
         run: |
           sudo apt-get update -q && sudo apt-get install -y -q scons
           ARCH=arm64 bash herramientas/compilar_nativo.sh linux
+          ## (12-11) El .gdextension del repo no lista linux.arm64 a propósito (4ffa0d68: la librería no está en el repo y una
+          ## entrada a un archivo inexistente daba error). Aquí sí se acaba de compilar: se añade solo en este trabajo.
+          printf '%s\n' 'linux.debug.arm64 = "res://bin_nativo/libdinastia.linux.template_debug.arm64.so"' \
+            'linux.release.arm64 = "res://bin_nativo/libdinastia.linux.template_release.arm64.so"' >> bin_nativo/dinastia.gdextension
+          tail -n 3 bin_nativo/dinastia.gdextension
 
       - name: Godot 4.7.2 para arm64
         run: |
