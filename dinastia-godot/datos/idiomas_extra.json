@@ -8072,7 +8072,8 @@
   "Retiro y sucesión": "Retirement and succession",
   "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Tributes, who inherits the bench and the end of your career.",
   "Prestigio": "Prestige",
-  "Puntaje": "Score"
+  "Puntaje": "Score",
+  "Su mejor época es la que está viviendo.": "Its best era is the one it is living now."
  },
  "pt": {
   "Historia": "História",
@@ -16147,7 +16148,8 @@
   "Retiro y sucesión": "Reforma e sucessão",
   "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Homenagens, a quem deixas o banco e o fim da tua carreira.",
   "Prestigio": "Prestígio",
-  "Puntaje": "Pontuação"
+  "Puntaje": "Pontuação",
+  "Su mejor época es la que está viviendo.": "A sua melhor época é a que está a viver."
  },
  "patrones": [
   [
@@ -30362,7 +30364,8 @@
   "Retiro y sucesión": "Retraite et succession",
   "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Hommages, à qui tu laisses le banc et la fin de ta carrière.",
   "Prestigio": "Prestige",
-  "Puntaje": "Score"
+  "Puntaje": "Score",
+  "Su mejor época es la que está viviendo.": "Sa meilleure époque est celle qu'il vit en ce moment."
  },
  "it": {
   "Historia": "Storia",
@@ -38437,7 +38440,8 @@
   "Retiro y sucesión": "Ritiro e successione",
   "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Omaggi, a chi lasci la panchina e la fine della tua carriera.",
   "Prestigio": "Prestigio",
-  "Puntaje": "Punteggio"
+  "Puntaje": "Punteggio",
+  "Su mejor época es la que está viviendo.": "La sua epoca migliore è quella che sta vivendo."
  },
  "de": {
   "Historia": "Geschichte",
@@ -46512,7 +46516,8 @@
   "Retiro y sucesión": "Rücktritt und Nachfolge",
   "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Ehrungen, wer die Bank übernimmt und das Ende deiner Karriere.",
   "Prestigio": "Prestige",
-  "Puntaje": "Punktzahl"
+  "Puntaje": "Punktzahl",
+  "Su mejor época es la que está viviendo.": "Seine beste Zeit ist die, die er gerade erlebt."
  },
  "ca": {
   "Historia": "Història",
@@ -54587,7 +54592,8 @@
   "Retiro y sucesión": "Retirada i successió",
   "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Homenatges, a qui deixes la banqueta i el final de la teva carrera.",
   "Prestigio": "Prestigi",
-  "Puntaje": "Puntuació"
+  "Puntaje": "Puntuació",
+  "Su mejor época es la que está viviendo.": "La seva millor època és la que està vivint."
  },
  "pl": {
   "Club": "Klub",
@@ -62662,7 +62668,8 @@
   "Retiro y sucesión": "Emerytura i sukcesja",
   "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Hołdy, komu zostawiasz ławkę i koniec twojej kariery.",
   "Prestigio": "Prestiż",
-  "Puntaje": "Wynik"
+  "Puntaje": "Wynik",
+  "Su mejor época es la que está viviendo.": "Jego najlepsza epoka trwa właśnie teraz."
  },
  "tr": {
   "Club": "Kulüp",
@@ -70737,6 +70744,7 @@
   "Retiro y sucesión": "Emeklilik ve halef",
   "Homenajes, a quién dejas el banquillo y el final de tu carrera.": "Anmalar, kulübeyi kime bıraktığın ve kariyerinin sonu.",
   "Prestigio": "Prestij",
-  "Puntaje": "Puan"
+  "Puntaje": "Puan",
+  "Su mejor época es la que está viviendo.": "En iyi dönemi şu an yaşadığı dönem."
  }
 }

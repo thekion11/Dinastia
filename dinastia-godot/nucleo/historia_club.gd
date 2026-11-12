@@ -118,6 +118,21 @@ static func de(c: Club, rivales: Array) -> Dictionary:
 			if g.has(k):
 				r[k] = g[k]
 		r["con_guino"] = true
+	## (12-11) COHERENCIA: el guiño cambia el año de fundación DESPUÉS de haberse sorteado los títulos y la época dorada, y salían clubes
+	## «fundados en 2009» con 20 ligas y su época dorada «en los años 80». Los títulos no pasan de uno cada tres años de vida y la época
+	## dorada cae en una década en la que el club ya existía.
+	var fundado_final := int(r["fundado"])
+	var tope := maxi(0, (2025 - fundado_final) / 3)
+	r["titulos"] = mini(int(r["titulos"]), tope)
+	r["copas"] = mini(int(r["copas"]), tope)
+	if int(r["titulos"]) > 2:
+		var decadas: Array = []
+		for i in EPOCA.size():
+			if 1950 + i * 10 >= fundado_final + 5:
+				decadas.append(EPOCA[i])
+		r["epoca"] = ("Su época dorada fue en %s." % decadas[(h / 23) % decadas.size()]) if not decadas.is_empty() else "Su mejor época es la que está viviendo."
+	else:
+		r["epoca"] = "Todavía espera su gran época."
 	## El PALMARÉS real (orden 15 f): títulos por competición y año, si el club lo trae.
 	var pal: Variant = g.get("palmares", {})
 	if pal is Dictionary and not (pal as Dictionary).is_empty():

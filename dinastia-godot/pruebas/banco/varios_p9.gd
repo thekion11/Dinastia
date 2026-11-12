@@ -94,6 +94,18 @@ func _probar_historia_c4() -> void:
 	var chico: Club = clubes[clubes.size() - 1]
 	_comprobar(int(HistoriaClub.de(grande, clubes)["titulos"]) > int(HistoriaClub.de(chico, clubes)["titulos"]), "el grande tiene más títulos que el chico")
 	_comprobar(HistoriaClub.de(grande, clubes) == HistoriaClub.de(grande, clubes), "el mismo club tiene siempre la misma historia")
+	## (12-11) Coherencia con el año de fundación en TODOS los clubes: ni más títulos que años de vida dan, ni época dorada anterior al club.
+	var raros: Array = []
+	for c9: Club in m2.clubes.values():
+		var h9 := HistoriaClub.de(c9, [])
+		var anio9 := int(h9["fundado"])
+		var ep9 := String(h9["epoca"])
+		var antes := false
+		for i9 in HistoriaClub.EPOCA.size():
+			antes = antes or (ep9.contains(String(HistoriaClub.EPOCA[i9])) and 1950 + i9 * 10 < anio9 + 5)
+		if int(h9["titulos"]) > maxi(0, (2025 - anio9) / 3) or antes:
+			raros.append(c9.nombre)
+	_comprobar(raros.is_empty(), "ningún club tiene una historia imposible para su año de fundación (%d: %s)" % [raros.size(), str(raros.slice(0, 5))])
 	_comprobar(HistoriaClub.color_de("#ffffff") == "blanco" and HistoriaClub.color_de("#d50032") == "rojo" and HistoriaClub.color_de("#003da5") == "azul", "el apodo generado sale del color")
 	m.tomar_el_mando(clubes[0].id)
 	var t := m.prensa.titular_prensa(true, false, true, "x", "Superclásico")
