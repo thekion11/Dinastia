@@ -8053,7 +8053,11 @@
   "Fuera: %s": "Away: %s",
   "%s · %d goles": "%s · %d goals",
   "Entrada: %s": "Ticket: %s",
-  "Deuda: %s": "Debt: %s"
+  "Deuda: %s": "Debt: %s",
+  "Bandeja vacía": "Empty inbox",
+  "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Notices from the club, agents and the federation arrive here on their own.",
+  "Estrés: %d de 100": "Stress: %d of 100",
+  "Familia: %d de 100": "Family: %d of 100"
  },
  "pt": {
   "Historia": "História",
@@ -16109,7 +16113,11 @@
   "Fuera: %s": "Fora: %s",
   "%s · %d goles": "%s · %d golos",
   "Entrada: %s": "Bilhete: %s",
-  "Deuda: %s": "Dívida: %s"
+  "Deuda: %s": "Dívida: %s",
+  "Bandeja vacía": "Caixa vazia",
+  "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Os avisos do clube, dos agentes e da federação vão chegando aqui sozinhos.",
+  "Estrés: %d de 100": "Stress: %d de 100",
+  "Familia: %d de 100": "Família: %d de 100"
  },
  "patrones": [
   [
@@ -30305,7 +30313,11 @@
   "Fuera: %s": "À l'extérieur : %s",
   "%s · %d goles": "%s · %d buts",
   "Entrada: %s": "Billet : %s",
-  "Deuda: %s": "Dette : %s"
+  "Deuda: %s": "Dette : %s",
+  "Bandeja vacía": "Boîte vide",
+  "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Les avis du club, des agents et de la fédération arrivent ici d'eux-mêmes.",
+  "Estrés: %d de 100": "Stress : %d sur 100",
+  "Familia: %d de 100": "Famille : %d sur 100"
  },
  "it": {
   "Historia": "Storia",
@@ -38361,7 +38373,11 @@
   "Fuera: %s": "In trasferta: %s",
   "%s · %d goles": "%s · %d gol",
   "Entrada: %s": "Biglietto: %s",
-  "Deuda: %s": "Debito: %s"
+  "Deuda: %s": "Debito: %s",
+  "Bandeja vacía": "Casella vuota",
+  "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Gli avvisi del club, degli agenti e della federazione arrivano qui da soli.",
+  "Estrés: %d de 100": "Stress: %d su 100",
+  "Familia: %d de 100": "Famiglia: %d su 100"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46417,7 +46433,11 @@
   "Fuera: %s": "Auswärts: %s",
   "%s · %d goles": "%s · %d Tore",
   "Entrada: %s": "Eintritt: %s",
-  "Deuda: %s": "Schulden: %s"
+  "Deuda: %s": "Schulden: %s",
+  "Bandeja vacía": "Postfach leer",
+  "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Mitteilungen von Verein, Beratern und Verband treffen hier von selbst ein.",
+  "Estrés: %d de 100": "Stress: %d von 100",
+  "Familia: %d de 100": "Familie: %d von 100"
  },
  "ca": {
   "Historia": "Història",
@@ -54473,7 +54493,11 @@
   "Fuera: %s": "A fora: %s",
   "%s · %d goles": "%s · %d gols",
   "Entrada: %s": "Entrada: %s",
-  "Deuda: %s": "Deute: %s"
+  "Deuda: %s": "Deute: %s",
+  "Bandeja vacía": "Safata buida",
+  "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Els avisos del club, dels agents i de la federació van arribant aquí sols.",
+  "Estrés: %d de 100": "Estrès: %d de 100",
+  "Familia: %d de 100": "Família: %d de 100"
  },
  "pl": {
   "Club": "Klub",
@@ -62529,7 +62553,11 @@
   "Fuera: %s": "Wyjazd: %s",
   "%s · %d goles": "%s · %d goli",
   "Entrada: %s": "Bilet: %s",
-  "Deuda: %s": "Dług: %s"
+  "Deuda: %s": "Dług: %s",
+  "Bandeja vacía": "Pusta skrzynka",
+  "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Wiadomości od klubu, agentów i federacji trafiają tu same.",
+  "Estrés: %d de 100": "Stres: %d na 100",
+  "Familia: %d de 100": "Rodzina: %d na 100"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70585,6 +70613,10 @@
   "Fuera: %s": "Deplasman: %s",
   "%s · %d goles": "%s · %d gol",
   "Entrada: %s": "Bilet: %s",
-  "Deuda: %s": "Borç: %s"
+  "Deuda: %s": "Borç: %s",
+  "Bandeja vacía": "Gelen kutusu boş",
+  "Los avisos del club, de los agentes y de la federación van llegando aquí solos.": "Kulüpten, menajerlerden ve federasyondan gelen bildirimler buraya kendiliğinden düşer.",
+  "Estrés: %d de 100": "Stres: %d / 100",
+  "Familia: %d de 100": "Aile: %d / 100"
  }
 }

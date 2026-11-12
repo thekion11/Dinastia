@@ -129,7 +129,7 @@ func _refrescar() -> void:
 		TablaCompeticion.pintar(p._lista_tabla, p.mundo, liga, c, {
 			"suave":  p._pal_suave(),
 			"texto":  p._pal_texto(),
-			"acento": p.COL_ACENTO,
+			"acento": p._con_contraste(p.COL_ACENTO),   ## (12-11) un club de color oscuro no se leía en su propia fila
 			"verde":  p._color_accesible(p.COL_VERDE),
 			"rojo":   p._color_accesible(p.COL_ROJO),
 			"oro":    p._color_accesible(p.COL_ORO),
@@ -151,7 +151,7 @@ func _refrescar() -> void:
 	if p._panel_mercado != null:
 		p._perezoso(p._panel_mercado, func() -> void:
 			p._panel_mercado.inicializar(p.mundo, {
-				"acento": p.COL_ACENTO,
+				"acento": p._con_contraste(p.COL_ACENTO),   ## (12-11) un club de color oscuro no se leía en su propia fila
 				"texto":  p._pal_texto(),
 				"suave":  p._pal_suave(),
 				"verde":  p._color_accesible(p.COL_VERDE),

@@ -9,7 +9,7 @@ extends RefCounted
 const POR_SITIO := {"Finanzas.cuentas": "finanzas", "Finanzas.taquilla": "taquilla", "Finanzas.banco": "banco", "Mercado": "mercado",
 	"Táctica.pizarra": "táctica", "Partido.previa": "próximo partido", "Clubes.tablas": "ligas y clubes", "Clubes.goleadores": "goleadores",
 	"Club.staff": "personal del club", "Gente.personas": "la gente del club", "Redes.redes": "feed de redes", "Enfermería": "enfermería",
-	"Libres": "jugadores libres", "Contratos": "contratos", "Calendario": "calendario", "Camarín": "camarín", "Correo": "correo"}
+	"Libres": "jugadores libres", "Contratos": "contratos", "Calendario": "calendario", "Vida.bienestar": "bienestar", "Vida.familia": "familia", "Camarín": "camarín", "Correo": "correo"}
 
 static func de_sub(p: Principal, sub: Dictionary) -> String:
 	var sitio := String(sub.get("tab", ""))
@@ -85,6 +85,10 @@ static func de(p: Principal, etiqueta: String) -> String:
 			for pr: Dictionary in (m.banco.prestamos if m.banco != null else []):
 				deuda += int(pr.get("deuda", 0))
 			return Idiomas.t("Deuda: %s") % p._dinero(deuda) if deuda > 0 else Idiomas.t("sin deuda")
+		"bienestar":
+			return Idiomas.t("Estrés: %d de 100") % m.vida.estres if m.vida != null else ""
+		"familia":
+			return Idiomas.t("Familia: %d de 100") % m.vida.familia if m.vida != null else ""
 		"la gente del club":
 			return Idiomas.t("Confianza media: %d") % m.gente.confianza_media() if m.gente != null else ""
 		"enfermería":

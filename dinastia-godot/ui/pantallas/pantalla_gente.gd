@@ -123,9 +123,8 @@ func _pintar_correo() -> void:
 	p._lista_correo.add_child(HSeparator.new())
 
 	if p._bandeja.is_empty():
-		var vacio := p._texto(12, Principal.COL_SUAVE)
-		vacio.text = Idiomas.t("Bandeja vacía. Los avisos del club van llegando aquí solos.")
-		p._lista_correo.add_child(vacio)
+		p._lista_correo.add_child(EstadoVacio.crear("✉️", Idiomas.t("Bandeja vacía"), Idiomas.t("Los avisos del club, de los agentes y de la federación van llegando aquí solos."),
+			p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 300.0))
 		return
 	## Título en un botón plano -mismo truco que ya usa `_fila_jugador()` para
 	## que la fila entera responda al clic sin inventar un control nuevo-, y el
