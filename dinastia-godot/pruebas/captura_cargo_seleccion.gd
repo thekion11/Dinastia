@@ -36,6 +36,11 @@ func _process(_d: float) -> void:
 	await get_tree().create_timer(1.2).timeout
 	get_viewport().get_texture().get_image().save_jpg((OS.get_environment("OUT") if OS.get_environment("OUT") != "" else "/tmp") + "/sel_partido.jpg", 0.9)
 	ev2.queue_free()
+	var k_marca := 0
+	for j: Jugador in SeleccionEquipo.candidatos(m, sel_n, 6):   ## (12-11) unos marcados y otros no: que se vean las dos casillas
+		if k_marca % 2 == 0:
+			m.selecciones.cargo.alternar(j.id)
+		k_marca += 1
 	JornadaSeleccion.abrir_convocatoria(_p)
 	await get_tree().create_timer(1.0).timeout
 	get_viewport().get_texture().get_image().save_jpg((OS.get_environment("OUT") if OS.get_environment("OUT") != "" else "/tmp") + "/sel_convocatoria.jpg", 0.9)

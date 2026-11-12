@@ -155,3 +155,21 @@ func _probar_paginador_submenu() -> void:
 			vistos[i] = true
 			i = PaginadorSubmenu.vecino(ss, i, 1)
 		_comprobar(vistos.size() == PaginadorSubmenu.puesto(ss, 0).y, "%s: pasando «siguiente» se recorren todas sus pantallas (%d)" % [id, vistos.size()])
+
+## (12-11) Las casillas de la convocatoria se ven sobre el azul noche: marco claro sin marcar, cuadro dorado con palomita marcada.
+func _probar_casilla_clara() -> void:
+	_titulo("CASILLAS VISIBLES SOBRE FONDO OSCURO")
+	var cb := CheckBox.new()
+	CasillaClara.estilar(cb)
+	var sin: Texture2D = cb.get_theme_icon("unchecked")
+	var con: Texture2D = cb.get_theme_icon("checked")
+	_comprobar(sin != null and con != null and sin != con and sin.get_width() == CasillaClara.LADO, "la casilla lleva sus dos iconos propios, de %d px" % CasillaClara.LADO)
+	var borde := sin.get_image().get_pixel(0, CasillaClara.LADO / 2)
+	var centro := con.get_image().get_pixel(3, 3)
+	_comprobar(borde.a > 0.6 and borde.get_luminance() > 0.8, "sin marcar: un marco claro que se ve sobre fondo oscuro (%.2f)" % borde.get_luminance())
+	_comprobar(centro.a > 0.9 and centro.get_luminance() > 0.4, "marcada: un cuadro lleno y claro (%.2f)" % centro.get_luminance())
+	var otra := CheckBox.new()
+	CasillaClara.estilar(otra)
+	_comprobar(otra.get_theme_icon("checked") == con, "los iconos se dibujan una vez y se comparten")
+	cb.free()
+	otra.free()

@@ -30,7 +30,7 @@ extends "res://pruebas/banco/nucleo.gd"
 
 
 const SECCIONES := [
-	"_probar_carga_de_ui", "_probar_finanzas_por_pantallas", "_probar_agentes_confianza", "_probar_cantera_por_pantallas", "_probar_informe_abre_su_pantalla", "_probar_paginador_submenu",   ## grupo «menus» (pruebas/banco/menus.gd)
+	"_probar_carga_de_ui", "_probar_finanzas_por_pantallas", "_probar_agentes_confianza", "_probar_cantera_por_pantallas", "_probar_informe_abre_su_pantalla", "_probar_paginador_submenu", "_probar_casilla_clara",   ## grupo «menus» (pruebas/banco/menus.gd)
 	"_probar_datos", "_probar_repetibilidad", "_probar_mundo",
 	"_probar_reales", "_probar_base_ficticia", "_probar_cubierta_nombres",
 	"_probar_calendario", "_probar_segundas_divisiones", "_probar_segundas_reglas", "_probar_segundas_cinco_grandes", "_probar_segundas_latinoamerica", "_probar_segundas_pbt", "_probar_paises_csv", "_probar_selecciones_nuevas", "_probar_pais_sin_liga_tanda1", "_probar_pais_sin_liga_tanda2", "_probar_pais_sin_liga_tanda3", "_probar_pais_sin_liga_tanda4", "_probar_pais_sin_liga_tanda5", "_probar_ligas_activas", "_probar_ligas_activas_todos", "_probar_ligas_activas_pantalla", "_probar_ligas_activas_agregar_pantalla", "_probar_ligas_programadas", "_probar_fases_finales_egipto", "_probar_fases_finales_argentina", "_probar_fases_finales_mls", "_probar_fases_finales_europa", "_probar_fases_finales_grecia",
@@ -264,7 +264,7 @@ const GRUPOS := {
 	"fases_finales": ["_probar_fases_finales_egipto", "_probar_fases_finales_argentina", "_probar_fases_finales_mls", "_probar_fases_finales_europa", "_probar_fases_finales_grecia"],
 	"continentales": ["_probar_continental", "_probar_continentales_tabla_de_formatos", "_probar_continentales_fase_de_liga", "_probar_continentales_champions", "_probar_continentales_libertadores", "_probar_continentales_otras_confederaciones", "_probar_continentales_semanas_y_guardado", "_probar_continentales_temporada_europea", "_probar_continentales_supercopas", "_probar_continentales_mundial_de_clubes", "_probar_continentales_intercontinental", "_probar_continentales_fifa_en_la_temporada"],
 	"textos": ["_probar_paridad_idiomas", "_probar_narracion_traducida", "_probar_tema_y_ortografia", "_probar_carga_de_ui", "_probar_palabras_prohibidas", "_probar_glifos_idiomas", "_probar_logo", "_probar_insignia_version"],
-	"menus": ["_probar_finanzas_por_pantallas", "_probar_agentes_confianza", "_probar_cantera_por_pantallas", "_probar_informe_abre_su_pantalla", "_probar_paginador_submenu"], "lanzamiento": ["_probar_lanzamiento_tactica", "_probar_lanzamiento_accesibilidad"],
+	"menus": ["_probar_finanzas_por_pantallas", "_probar_agentes_confianza", "_probar_cantera_por_pantallas", "_probar_informe_abre_su_pantalla", "_probar_paginador_submenu", "_probar_casilla_clara"], "lanzamiento": ["_probar_lanzamiento_tactica", "_probar_lanzamiento_accesibilidad"],
 }
 
 const COSTES := {

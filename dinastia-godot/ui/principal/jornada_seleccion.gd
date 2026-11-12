@@ -206,6 +206,7 @@ static func abrir_convocatoria(p: Principal) -> void:
 		cb.add_theme_font_size_override("font_size", Tema.letra(14))
 		cb.custom_minimum_size = Vector2(480 if de_pie else 370, 0)
 		cb.clip_text = true
+		CasillaClara.estilar(cb)   ## (12-11) la casilla del tema no se veía sobre el azul noche
 		cb.button_pressed = cargo.convocados.has(j.id)
 		var id := j.id
 		cb.toggled.connect(func(_on: bool) -> void:
