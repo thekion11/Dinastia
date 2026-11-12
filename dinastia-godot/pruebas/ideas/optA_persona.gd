@@ -23,8 +23,8 @@ func _probar() -> void:
 		_comprobar(absf(pie_l.x - pie_r.x) < 0.24 and absf(pie_l.x - pie_r.x) > 0.1, "%s: pies a la anchura de la cadera (%.2f m)" % [cuerpo, absf(pie_l.x - pie_r.x)])
 		_comprobar(absf(pie_l.z - pie_r.z) < 0.03, "%s: ningún pie adelantado (%.3f m)" % [cuerpo, absf(pie_l.z - pie_r.z)])
 		_comprobar(absf(rod_l.x - rod_r.x) < 0.3, "%s: rodillas juntas (%.2f m)" % [cuerpo, absf(rod_l.x - rod_r.x)])
-		## (6-11) Rodillas rectas = la cadera NO baja del reposo (agachada, el fallo que vigila). Hoy sube 4 cm sobre el reposo (el clip apoya los pies en el suelo; causa exacta sin investigar): no es una rodilla doblada.
-		_comprobar(pelvis.y - rest_pelvis.y > -0.01 and pelvis.y - rest_pelvis.y < 0.06, "%s: rodillas rectas (cadera no más baja que en reposo; diferencia %.3f m)" % [cuerpo, pelvis.y - rest_pelvis.y])
+		## (6-11) Rodillas rectas = la cadera NO baja del reposo (agachada, el fallo que vigila). (12-11) Subía 4 cm: el root del clip iba 4 cm arriba y la persona flotaba; ahora el root va a su reposo y la cadera queda en el suyo (±1 cm).
+		_comprobar(pelvis.y - rest_pelvis.y > -0.01 and pelvis.y - rest_pelvis.y < 0.01, "%s: rodillas rectas (cadera no más baja que en reposo; diferencia %.3f m)" % [cuerpo, pelvis.y - rest_pelvis.y])
 		_comprobar(cab.y > pelvis.y + 0.6 and absf(cab.z - pelvis.z) < 0.15, "%s: la cabeza sobre la cadera, sin inclinarse" % cuerpo)
 		_comprobar((d["nodo"] as Node).get_node_or_null("Vida") != null, "%s: respira y se balancea (nodo Vida)" % cuerpo)
 		## Canas: el pelo pasa al shader de canas con la cantidad de su edad.
