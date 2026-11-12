@@ -78,6 +78,17 @@ func _ia_portador(p: Dictionary) -> void:
 	if _mejoras_c4:
 		MejorasC4.encarar_banda(self, p)
 
+## (12-11, sesión 13) con el balón en el aire, el receptor va a donde baja (a la cabeza cerca del área), solo en C4.
+func _punto_de_recepcion() -> Vector3:
+	if _mejoras_c4:
+		var r := MejorasC4.punto_aereo(self)
+		if r != Vector3.INF:
+			return r
+	return super()
+
+func _radio_cabezazo(p: Dictionary) -> float:
+	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)
+
 ## (12-11, sesión 13) paciencia ante el tiro lejano, solo en C4.
 func _ganas_tiro_extra(p: Dictionary, dist_arco: float, ganas: float, presion: float) -> float:
 	return MejorasC4.ganas_tiro(self, p, dist_arco, ganas, presion, _rng) if _mejoras_c4 else ganas

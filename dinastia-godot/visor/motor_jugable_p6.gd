@@ -218,7 +218,7 @@ func _disputas(delta: float) -> void:
 			for p: Dictionary in jugadores:
 				if float(p["enfriar"]) > 0.0 or bool(p["por"]):
 					continue
-				if Vector2(pos(p).x - b.x, pos(p).z - b.z).length() < 0.8:
+				if Vector2(pos(p).x - b.x, pos(p).z - b.z).length() < _radio_cabezazo(p):
 					_cabezazo(p)
 					break
 		return

@@ -203,3 +203,37 @@ static func encarar_banda(m: Object, p: Dictionary) -> void:
 	var x := signf(yo.x) * clampf(absf(yo.x), 15.0, float(m.ANCHO) - 3.0)
 	p["objetivo"] = Vector3(x, 0.0, yo.z + d * 6.0)
 	p["correr"] = true
+
+## IR AL BALÓN AÉREO (12-11-2026, sesión 13). El receptor de un pase corre a `_punto_de_recepcion`: dónde rueda el balón en ~0,6 s,
+## proyectado en el SUELO. Con un centro el balón aún va por el aire y el rematador llega tarde al radio del cabezazo (0,8 m con el
+## balón a 1,5-2,4 m): casi no había remates de cabeza. Con el balón en el aire se predice (tiro parabólico, sin arrastre) dónde baja a la
+## altura de la cabeza (`AEREO_ALTO`) si cae cerca de un área, o al pecho si no. Devuelve Vector3.INF si el balón no va por el aire.
+static var AEREO := _bandera("C4_AEREO", true)
+static var RADIO_CABEZA := _num("C4_RADIO_CABEZA", 0.8)   ## alcance del cabezazo en C4 (0,8 = el de siempre)
+const AEREO_ALTO := 1.9
+const AEREO_PECHO := 0.6
+static func punto_aereo(m: Object) -> Vector3:
+	if not AEREO:
+		return Vector3.INF
+	var b: Vector3 = (m.balon as Node3D).position
+	var v: Vector3 = m.vel_balon
+	if b.y < 1.0 and v.y < 2.0:
+		return Vector3.INF
+	var g: float = m.G
+	var cae_t := _t_altura(b.y, v.y, g, AEREO_PECHO)
+	if cae_t < 0.0:
+		return Vector3.INF
+	var cae := Vector3(b.x + v.x * cae_t, 0.0, b.z + v.z * cae_t)
+	if absf(absf(cae.z) - float(m.LARGO)) < 20.0:
+		var alto_t := _t_altura(b.y, v.y, g, AEREO_ALTO)
+		if alto_t > 0.0:
+			return Vector3(b.x + v.x * alto_t, 0.0, b.z + v.z * alto_t)
+	return cae
+
+## Tiempo (s) en que el balón, bajando, pasa por la altura `h` (−1 si no llega a ella).
+static func _t_altura(y: float, vy: float, g: float, h: float) -> float:
+	var disc := vy * vy + 2.0 * g * (y - h)
+	if disc < 0.0:
+		return -1.0
+	var r := (vy + sqrt(disc)) / g
+	return r if r > 0.0 else -1.0
