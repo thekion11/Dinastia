@@ -25,7 +25,12 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   mojado) y pasillos (reloj sobre el banco, extintor): solo MEDIA/ALTA, sin sombra y solo con la textura de color a 256 px (la herramienta quita
   normal/ARM en las piezas pequeñas). MÍNIMA igual; MEDIA +18 llamadas (+1 %), ALTA +30 (+1 %), +4,9 MB. Capturas ITA, JPN y MEX en
   `docs/04_auditorias/capturas_club_cc0_2026-11-12/`.
-- FALTA: memoria del vestuario realista en ALTA; reacción del infractor a una falta sin tarjeta; coste de la interfaz del partido (107 llamadas 2D).
+  (3) PARTIDO: tras una falta pitada SIN tarjeta el infractor reacciona (pide perdón, en jarras o protesta; `LeagueAcciones.tras_falta`
+  desde `MotorLeague._falta`), clip propio que se corta si arranca y no escribe lo que lee la IA. NEUTRO: `comparar_tres_motores`
+  (C4, 3 × 2 × 240 s, ENG/ARG/JPN) con `LS_REACCION=1` y `=0` da marcador y cifras idénticos; huellas sin cambios. Prueba en
+  `_probar_acciones_visuales`.
+- FALTA: memoria del vestuario realista en ALTA (las texturas CC0 ya van comprimidas en VRAM; el peso está en los ruidos de `Texturas`);
+  coste de la interfaz del partido (107 llamadas 2D); vídeo con la cámara real de las reacciones.
 - IDEA ANOTADA: lanzar el mini evento también en el momento de ganar el título que abre la planta (hoy sale en la primera visita).
 
 ## SESIÓN 14 (12-11): LO QUE SE VE Y SE SIENTE EN EL PARTIDO — rama `sesion14-partido-visual` (informe `docs/04_auditorias/partido_visual_2026-11-12.md`)
@@ -35,8 +40,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   móvil: aro del portador con color de equipo y flecha de ataque, el triángulo de tu jugador ya no tapa media pantalla; fuera el fondo
   negro redundante detrás del 3D.
 - FALTA: (proporciones y relleno de la cara HECHOS el 12-11, bloque 6) apariencia por país: los ficticios de Senegal salen con piel clara y pelo
-  pelirrojo; reacción del infractor
-  a una falta sin tarjeta; vídeo con la cámara real de los saltos y reacciones (la foto fija no muestra el tiempo); medir en el teléfono
+  pelirrojo; (reacción del infractor: HECHA por la sesión 16) vídeo con la cámara real de los saltos y reacciones (la foto fija no muestra el tiempo); medir en el teléfono
   el coste de la interfaz del partido (107 llamadas 2D) y reducirla.
 
 ## ESTADO AL CIERRE DEL 11-11 MAÑANA (orden 42 del dueño: «guarda y registra todo») — para retomar
