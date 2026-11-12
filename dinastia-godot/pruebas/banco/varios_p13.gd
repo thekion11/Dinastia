@@ -217,6 +217,20 @@ func _probar_finanzas_por_pantallas() -> void:
 	_comprobar(banda.get_child_count() == 3 and rotulos.size() == 6 and (rotulos[0] as Label).text == "CAJA" and (rotulos[1] as Label).text == "1.0M EUR",
 		"la banda de cifras clave pinta una ficha por cifra: rótulo en mayúsculas y la cifra grande")
 	banda.free()
+	## En un teléfono de pie, cuatro fichas van de a dos por fila (en fila se cortaban); tres o en horizontal, en fila.
+	var forzar_antes := EscalaMovil.forzar
+	EscalaMovil.forzar = true
+	PantallaMovil.ventana_forzada = Vector2i(1080, 2400)
+	var cuatro := [["A", "1", Color.WHITE], ["B", "2", Color.WHITE], ["C", "3", Color.WHITE], ["D", "4", Color.WHITE]]
+	var de_pie := CifrasClave.banda(cuatro, Color.GRAY)
+	PantallaMovil.ventana_forzada = Vector2i(2400, 1080)
+	var tumbado := CifrasClave.banda(cuatro, Color.GRAY)
+	PantallaMovil.ventana_forzada = Vector2i.ZERO
+	EscalaMovil.forzar = forzar_antes
+	_comprobar(de_pie is GridContainer and (de_pie as GridContainer).columns == 2 and de_pie.get_child_count() == 4 and tumbado is HBoxContainer,
+		"teléfono de pie: 4 fichas en 2 columnas; tumbado: en fila")
+	de_pie.free()
+	tumbado.free()
 	## «Próximo partido» en tres pantallas (`PreviaPartido`).
 	var del_partido: Array = []
 	for s: Dictionary in MenusLaterales.menu_por_id("partido")["subs"]:

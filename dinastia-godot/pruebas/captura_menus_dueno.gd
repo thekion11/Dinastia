@@ -45,6 +45,10 @@ func _ready() -> void:
 	if OS.get_environment("OUT") != "":
 		_dir = OS.get_environment("OUT")
 	DirAccess.make_dir_recursive_absolute(_dir)
+	## MOVIL=1: como en un teléfono (zoom de interfaz del móvil; con una ventana más alta que ancha, RESOLUCION=608x1080, el diseño vertical).
+	if OS.get_environment("MOVIL") == "1":
+		EscalaMovil.forzar = true
+		EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	var m := Mundo.new()
 	## PAIS=ARG CLUB=7: otro país y otro club (regla 34: nunca revisar con un solo equipo).
 	m.generar([OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"], 20261103)
