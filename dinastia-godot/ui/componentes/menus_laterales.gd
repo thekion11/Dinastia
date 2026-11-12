@@ -12,7 +12,11 @@ const MENUS := [
 		"colores": ["#07130c", "#113a22", "#9be7b4"], "subs": [
 		{"tab": "Mi plantel", "label": "Mi plantel", "icono": "👥", "desc": "Fichas, forma, moral y el once."},
 		{"accion": "plantilla_pes", "label": "Plantilla detallada", "icono": "📊", "desc": "Lista por líneas, atributos en barras y comparar dos jugadores."},
-		{"tab": "Táctica", "label": "Táctica", "icono": "📋", "desc": "Dibujo, pizarra, roles y balón parado."},
+		## (12-11) Táctica era una página larga: ahora cuatro pantallas (`TacticaSecciones`).
+		{"tab": "Táctica", "secc": "pizarra", "label": "Pizarra y dibujo", "icono": "📋", "desc": "El pizarrón, tus presets y la formación."},
+		{"tab": "Táctica", "secc": "ordenes", "label": "Órdenes de juego", "icono": "🎯", "desc": "Mentalidad, presión, ritmo, línea, roles y lo que se lleva en esta era."},
+		{"tab": "Táctica", "secc": "balon", "label": "Balón parado y normas", "icono": "⚖️", "desc": "Quién patea cada cosa y el reglamento interno del plantel."},
+		{"tab": "Táctica", "secc": "once", "label": "El once", "icono": "👥", "desc": "Quién sale el domingo, uno por uno o que lo arme el ayudante."},
 		{"tab": "Entrenar", "label": "Entrenamiento", "icono": "🏋️", "desc": "Sesiones, cargas y habilidades."},
 		{"tab": "Enfermería", "label": "Enfermería", "icono": "🩺", "desc": "Lesionados, plazos y riesgo."},
 		{"tab": "Cantera", "label": "Cantera", "icono": "🌱", "desc": "Academia, camada del año y los que suben."},
@@ -26,7 +30,8 @@ const MENUS := [
 		{"tab": "Partido", "secc": "informe", "label": "Informe y apuestas", "icono": "👁️", "desc": "Tu fuerza contra la suya, las cuotas y el plan del rival."},
 		{"tab": "Partido", "secc": "onces", "label": "Los onces", "icono": "👕", "desc": "Los dos equipos tal como van a salir."},
 		{"tab": "Calendario", "label": "Calendario", "icono": "📅", "desc": "Todos los partidos de la temporada."},
-		{"tab": "Táctica", "label": "Táctica", "icono": "📋", "desc": "El once, el dibujo y las órdenes."}]},
+		{"tab": "Táctica", "secc": "pizarra", "label": "Táctica", "icono": "📋", "desc": "El dibujo, la pizarra y las órdenes (el resto, en Plantel)."},
+		{"tab": "Táctica", "secc": "once", "label": "Elegir el once", "icono": "👥", "desc": "Quién sale en este partido."}]},
 	{"id": "dinero", "icono": "💰", "nombre": "Dinero", "estilo": 2,
 		"lema": "La caja del club: lo que entra, lo que sale y lo que se mueve en el mercado.",
 		"colores": ["#05110d", "#0b231c", "#5fe0b8"], "subs": [

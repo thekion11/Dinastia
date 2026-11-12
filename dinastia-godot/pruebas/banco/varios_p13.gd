@@ -172,3 +172,14 @@ func _probar_finanzas_por_pantallas() -> void:
 		if String(s.get("tab", "")) == "Partido":
 			del_partido.append(String(s.get("secc", "")))
 	_comprobar(del_partido == PreviaPartido.SECCIONES, "los 3 submenús de Partido son las 3 secciones de la previa (%s)" % [del_partido])
+	## «Táctica» en cuatro pantallas (`TacticaSecciones`), en Plantel; desde Partido se llega a la pizarra y al once.
+	var de_tactica: Array = []
+	for s: Dictionary in MenusLaterales.menu_por_id("plantel")["subs"]:
+		if String(s.get("tab", "")) == "Táctica":
+			de_tactica.append(String(s.get("secc", "")))
+	_comprobar(de_tactica == TacticaSecciones.SECCIONES, "los 4 submenús de Táctica son las 4 secciones de la pizarra (%s)" % [de_tactica])
+	var en_partido := true
+	for s: Dictionary in MenusLaterales.menu_por_id("partido")["subs"]:
+		if String(s.get("tab", "")) == "Táctica" and not TacticaSecciones.SECCIONES.has(String(s.get("secc", ""))):
+			en_partido = false
+	_comprobar(en_partido, "y los accesos a Táctica desde el menú Partido apuntan a una sección que existe")
