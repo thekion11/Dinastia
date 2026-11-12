@@ -323,3 +323,70 @@ static func banda_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: Random
 	m._anim(p, AnimExtra.variante(p["anim"], "saque_banda", String(p.get("id", "")), rng), true)
 	m._contar("c4_banda_ensayada")
 	return true
+
+## CONTENER EN EL ÚLTIMO TERCIO (12-11-2026, sesión 13, decisión del líder). La IA entra en cuanto el portador queda a ~1,25 m: en el
+## último tercio eso mataba la jugada antes del regate o la pared (~3,5 pérdidas por entrada por partido ahí). En C4, a menos de
+## `CONTENER_D` m de su arco, el defensor solo entra con el radio de siempre si es buen momento (`MotorEntrada`: de espaldas, control
+## largo, pegado a la banda) o si es el ÚLTIMO hombre; si no, contiene y temporiza (radio × `CONTENER_K`). v2: solo cuenta «de espaldas»
+## (el control largo se daba casi siempre al conducir y la primera versión no cambiaba nada: medido el 12-11).
+static var CONTENER := _bandera("C4_CONTENER", false)   ## medido el 12-11 (12+12, v1 y v2, K 0,6 y 0,4): sin efecto en intentos ni goles; DESCARTADO, apagado
+static var CONTENER_K := _num("C4_CONTENER_K", 0.6)
+const CONTENER_D := 32.0
+static func radio_entrada(m: Object, p: Dictionary, victima: Dictionary, base: float, r: float) -> float:
+	if not CONTENER:
+		return r
+	var arco: Vector3 = m._arco_rival(victima)   ## el arco que defiende `p`
+	var pv: Vector3 = m.pos(victima)
+	if Vector2(pv.x - arco.x, pv.z - arco.z).length() > CONTENER_D or _de_espaldas(m, p, victima):
+		return r   ## lejos de su arco, o el portador de espaldas (buen momento): entra como siempre
+	var yo_d := Vector2(m.pos(p).x - arco.x, m.pos(p).z - arco.z).length()
+	for q: Dictionary in m.jugadores:
+		if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and String(q["id"]) != String(p["id"]):
+			if Vector2(m.pos(q).x - arco.x, m.pos(q).z - arco.z).length() < yo_d - 1.0:
+				return r * CONTENER_K   ## hay cobertura detrás: contener
+	return r   ## último hombre: entra
+
+## ¿El portador está de espaldas al defensor? (como `MotorEntrada`; el control largo no cuenta aquí: al conducir casi siempre se cumplía)
+static func _de_espaldas(m: Object, p: Dictionary, victima: Dictionary) -> bool:
+	var n: Node3D = victima["node"]
+	var hacia: Vector3 = m.pos(p) - m.pos(victima)
+	hacia.y = 0.0
+	if hacia.length() < 0.05:
+		return false
+	return Vector3(sin(n.rotation.y), 0.0, cos(n.rotation.y)).dot(hacia.normalized()) < -0.2
+
+## SEGUIR EL TIRO (12-11-2026, sesión 13; objetivo 6, portero y rechaces). Tras un remate, los `SEGUIR_N` compañeros más cerca de la zona
+## del rechace (delante del área chica) corren a ella durante `SEGUIR_T` s: el rechace del portero tiene quien lo empuje.
+## Devuelve el destino o Vector3.INF si `p` no sigue el tiro.
+static var SEGUIR := _bandera("C4_SEGUIR", true)
+const SEGUIR_N := 2
+const SEGUIR_T := 2.0
+static func seguir_tiro(m: Object, p: Dictionary) -> Vector3:
+	if not SEGUIR:
+		return Vector3.INF
+	var tv: Dictionary = m._tiro_vivo
+	if tv.is_empty() or float(m.t) - float(tv["t"]) > SEGUIR_T:
+		return Vector3.INF
+	var tirador: Dictionary = tv["p"]
+	if bool(tirador["es_local"]) != bool(p["es_local"]) or String(tirador["id"]) == String(p["id"]):
+		return Vector3.INF
+	var arco: Vector3 = m._arco_rival(tirador)
+	var d: float = m.dir_ataque(bool(p["es_local"]))
+	var zona := Vector3(clampf(m.pos(tirador).x * 0.3, -4.0, 4.0), 0.0, arco.z - d * 7.0)
+	var clave := "%s@%.2f" % [String(tirador["id"]), float(tv["t"])]
+	if String(m.get_meta("_c4_sigue_clave", "")) != clave:
+		var cand: Array = []
+		for q: Dictionary in m.jugadores:
+			if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and String(q["id"]) != String(tirador["id"]):
+				cand.append([m.pos(q).distance_to(zona), String(q["id"])])
+		cand.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+		var ids: Array = []
+		for i in mini(SEGUIR_N, cand.size()):
+			if float(cand[i][0]) < 25.0:
+				ids.append(cand[i][1])
+		m.set_meta("_c4_sigue_clave", clave)
+		m.set_meta("_c4_sigue_ids", ids)
+	if not (String(p["id"]) in (m.get_meta("_c4_sigue_ids", []) as Array)):
+		return Vector3.INF
+	var i := (m.get_meta("_c4_sigue_ids", []) as Array).find(String(p["id"]))
+	return zona + Vector3((-3.0 if i == 0 else 3.0), 0.0, 0.0)
