@@ -138,3 +138,44 @@ static func apoyo(m: Object, p: Dictionary) -> Vector3:
 				m._contar("c4_apoyo")
 			return punto
 	return Vector3.INF
+
+## LA COLOCACIÓN DE ATAQUE LEJOS DEL BALÓN (12-11-2026, sesión 13, decisión del líder; toca COLOCACIÓN, orden 23 del 3-11: SOLO en C4
+## y con bandera `C4_ANCHO`). Las palancas cerca del balón (pared, tercer hombre) no movían las cadenas de 5+: el equipo atacaba
+## estrecho. Con el equipo atacando, a los que están a más de `ANCHO_LEJOS` m del balón:
+##   · AMPLITUD: los extremos y volantes de banda se pegan a su línea (a 3 m de la banda);
+##   · el LATERAL del lado contrario al balón se incorpora `ANCHO_LATERAL` m;
+##   · PROFUNDIDAD: el 9 se planta a la altura del último defensa rival (fija a los centrales, habilitado).
+## Variante 2 (`C4_ANCHO=2`): además, los mediocentros lejos del balón se reparten los carriles interiores (±40 % del ancho).
+static var ANCHO_MODO := int(OS.get_environment("C4_ANCHO")) if OS.get_environment("C4_ANCHO") != "" else 0
+const ANCHO_LEJOS := 15.0
+const ANCHO_LATERAL := 8.0
+static func ancho(m: Object, p: Dictionary, r: Vector3) -> Vector3:
+	if ANCHO_MODO <= 0 or r == Vector3.INF:
+		return r
+	var b: Vector3 = (m.balon as Node3D).position
+	var yo: Vector3 = m.pos(p)
+	if Vector2(yo.x - b.x, yo.z - b.z).length() < ANCHO_LEJOS:
+		return r
+	var local := bool(p["es_local"])
+	var d: float = m.dir_ataque(local)
+	var rol: String = m._rol(p)
+	var lado := signf(r.x) if absf(r.x) > 0.5 else signf(yo.x + 0.01)
+	var borde := float(m.ANCHO) - 3.0
+	match rol:
+		"ED", "EI":
+			r.x = lado * borde
+		"LD", "LI":
+			if signf(b.x) != lado:
+				r.z += d * ANCHO_LATERAL
+				r.x = lado * maxf(absf(r.x), borde - 4.0)
+		"DC":
+			var ultimo := -INF
+			for q: Dictionary in m.jugadores:
+				if bool(q["es_local"]) != local and not bool(q["por"]):
+					ultimo = maxf(ultimo, m.pos(q).z * d)
+			if ultimo > -INF and ultimo * d * d > r.z * d:
+				r.z = d * (ultimo - 0.6)
+		"MC":
+			if ANCHO_MODO >= 2:
+				r.x = lado * maxf(absf(r.x), float(m.ANCHO) * 0.4)
+	return r
