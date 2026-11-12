@@ -69,12 +69,18 @@ func _ia_portador(p: Dictionary) -> void:
 	if not _nuestra("decide_con_balon"):
 		super(p)
 		return
-	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
+	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
 		return
 	var guardado := equipos
 	equipos = []
 	super(p)
 	equipos = guardado
+	if _mejoras_c4:
+		MejorasC4.encarar_banda(self, p)
+
+## (12-11, sesión 13) paciencia ante el tiro lejano, solo en C4.
+func _ganas_tiro_extra(p: Dictionary, dist_arco: float, ganas: float, presion: float) -> float:
+	return MejorasC4.ganas_tiro(self, p, dist_arco, ganas, presion, _rng) if _mejoras_c4 else ganas
 
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	if not _nuestra("coloca_sin_balon"):

@@ -16,6 +16,14 @@ static var SPRINTS := _bandera("C4_SPRINTS", true)
 static var LARGOS := _bandera("C4_LARGOS", true)
 static var BALON_PARADO := _bandera("C4_BALON_PARADO", true)
 static var CENTROS := _bandera("C4_CENTROS", true)   ## solo la parte de los centros (para medirla aparte de los córneres)
+static var PACIENCIA := _bandera("C4_PACIENCIA", true)   ## (12-11, sesión 13) menos tiros lejanos: se pasa o se conduce
+static var BANDA := _bandera("C4_BANDA", false)   ## (12-11, sesión 13) el de banda con espacio encara hacia el fondo para centrar
+## Paciencia ante el tiro (perillas para barrer; valores por defecto = los que ganaron la medición).
+static var PAC_D := _num("C4_PAC_D", 22.0)           ## desde aquí (m al arco) se pide paciencia
+static var PAC_BASE := _num("C4_PAC_BASE", 0.55)     ## probabilidad de tirar a PAC_D m...
+static var PAC_CAIDA := _num("C4_PAC_CAIDA", 0.035)  ## ...que baja esto por metro (a 30 m ≈ 0,27; a 38 m ≈ 0,02)
+static var PAC_MEJOR := _num("C4_PAC_MEJOR", 0.35)   ## por esto si un compañero está mejor colocado
+static var PAC_ESPACIO := _num("C4_PAC_ESPACIO", 0.6) ## por esto si tiene espacio para seguir conduciendo
 const CORNER_DESVIO := 0.2          ## probabilidad de que un remate fallado que sale por el fondo sea córner (MotorCorner)
 const CENTRO_BANDA := 13.0          ## a más de esto del eje...
 const CENTRO_FONDO := 30.0          ## ...y a menos de esto de la línea de fondo, se puede centrar
@@ -26,6 +34,10 @@ const DESCANSO_CARRERA := 2.0      ## el de siempre: 4 s
 const ROLES_CARRERA := ["DC", "ED", "EI", "SD", "MCO", "MD", "MI"]
 const LARGO_MIN := 22.0            ## distancia del pase largo
 const LARGO_MAX := 55.0
+
+static func _num(nombre: String, defecto: float) -> float:
+	var v := OS.get_environment(nombre)
+	return defecto if v == "" else float(v)
 
 static func _bandera(nombre: String, defecto: bool) -> bool:
 	var v := OS.get_environment(nombre)
@@ -112,3 +124,82 @@ static func centro(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool
 	m._patear(p, destino, 17.0, 0.0, -signf(yo.x) * 6.0 * -d, "pase")
 	m.pase_a = m._companero_cerca(p, destino)
 	return true
+
+## PACIENCIA ANTE EL TIRO LEJANO (12-11-2026, sesión 13). Con la decisión de siempre se tira casi en cuanto se decide a menos de ~45 m
+## (`MotorTiroLimpio.alcance(30) × 1,5` y umbral 0,05): C4 hacía ~45 tiros por partido, 28-31 de lejos, y el balón casi no llegaba a la
+## banda ni al área. Desde `PAC_D` m el tiro pasa a ser un sorteo que baja con la distancia, sube con el tiro del jugador y baja si
+## un compañero está mejor colocado (más cerca del arco, libre y con la línea de pase limpia) o si hay espacio para seguir. Si no tira,
+## sigue la decisión de siempre (pase al hueco, mejor pase o conducir). Devuelve las ganas (o −1: no tira).
+static func ganas_tiro(m: Object, p: Dictionary, dist: float, ganas: float, presion: float, rng: RandomNumberGenerator) -> float:
+	if not PACIENCIA or ganas <= 0.0 or dist < PAC_D:
+		return ganas
+	var prob := maxf(PAC_BASE - (dist - PAC_D) * PAC_CAIDA, 0.02) * (0.6 + float(p["attr"]["tir"]) * 0.8)
+	if presion > 5.0:
+		prob *= PAC_ESPACIO
+	if prob > 0.03 and not _companero_mejor(m, p, dist).is_empty():
+		prob *= PAC_MEJOR
+	return ganas if rng.randf() < prob else -1.0
+
+## PASE AL MEJOR COLOCADO (12-11, sesión 13, con la paciencia): a `PAC_D`-45 m del arco, si un compañero está mejor colocado, se le pasa
+## (antes, sin presión y cerca del arco, se seguía conduciendo y casi nunca se le daba). Se llama al decidir, antes de la decisión de siempre.
+static var PASE_MEJOR := _bandera("C4_PASE_MEJOR", true)
+static func pase_al_mejor(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
+	if not (PACIENCIA and PASE_MEJOR):
+		return false
+	var yo: Vector3 = m.pos(p)
+	var arco: Vector3 = m._arco_rival(p)
+	var dist := Vector2(yo.x - arco.x, yo.z - arco.z).length()
+	if dist < PAC_D or dist > 45.0:
+		return false
+	var q := _companero_mejor(m, p, dist)
+	if q.is_empty() or rng.randf() > 0.45 + float(p["attr"]["pas"]) * 0.35:
+		return false
+	m._pasar_a(p, q)
+	return true
+
+## El compañero de campo más cerca del arco (6 m o más que el portador), sin rival a menos de 3 m, habilitado y con la línea de pase
+## limpia; {} si no hay.
+static func _companero_mejor(m: Object, p: Dictionary, dist: float) -> Dictionary:
+	var local := bool(p["es_local"])
+	var yo: Vector3 = m.pos(p)
+	var arco: Vector3 = m._arco_rival(p)
+	var mejor: Dictionary = {}
+	var mejor_d := dist - 6.0
+	for q: Dictionary in m.jugadores:
+		if String(q["id"]) == String(p["id"]) or bool(q["es_local"]) != local or bool(q["por"]):
+			continue
+		var qp: Vector3 = m.pos(q)
+		var qd := Vector2(qp.x - arco.x, qp.z - arco.z).length()
+		if qd > mejor_d or yo.distance_to(qp) > 40.0:
+			continue
+		var libre := true
+		for r: Dictionary in m.jugadores:
+			if bool(r["es_local"]) != local and m.pos(r).distance_to(qp) < 3.0:
+				libre = false
+				break
+		if libre and not m._adelantado(q, p) and not m._linea_tapada(yo, qp, local):
+			mejor = q
+			mejor_d = qd
+	return mejor
+
+## ENCARAR POR LA BANDA (12-11-2026, sesión 13; se probó el 12-11 sin la paciencia y no sirvió porque antes se tiraba de lejos). El
+## portador abierto (|x| > 13 m), a 8-40 m del fondo y sin un rival delante en su carril, conduce pegado a la banda hacia el fondo en vez
+## de ir al centro: así llega a la zona del centro (`centro`, < 30 m del fondo). Se llama después de la decisión de siempre.
+static func encarar_banda(m: Object, p: Dictionary) -> void:
+	if not BANDA or String((m.poseedor as Dictionary).get("id", "")) != String(p["id"]):
+		return
+	var yo: Vector3 = m.pos(p)
+	var arco: Vector3 = m._arco_rival(p)
+	var d: float = m.dir_ataque(bool(p["es_local"]))
+	var al_fondo := (arco.z - yo.z) * d
+	if absf(yo.x) < 13.0 or al_fondo < 8.0 or al_fondo > 40.0:
+		return
+	for r: Dictionary in m.jugadores:
+		if bool(r["es_local"]) == bool(p["es_local"]):
+			continue
+		var rp: Vector3 = m.pos(r)
+		if (rp.z - yo.z) * d > 0.0 and (rp.z - yo.z) * d < 5.0 and absf(rp.x - yo.x) < 2.5:
+			return   ## tapado: que decida (regate o pase) la lógica de siempre
+	var x := signf(yo.x) * clampf(absf(yo.x), 15.0, float(m.ANCHO) - 3.0)
+	p["objetivo"] = Vector3(x, 0.0, yo.z + d * 6.0)
+	p["correr"] = true
