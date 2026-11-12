@@ -159,6 +159,29 @@ func _medir() -> void:
 			print("LISTA %4d  %s" % [por_padre[k], k])
 		get_tree().quit()
 		return
+	if OS.get_environment("POR_HUD") != "":
+		## POR_HUD=1 (12-11): cuántas llamadas pesa cada pieza 2D del partido (hijos Control de PartidoJugable y de los controles táctiles).
+		var base_h: int = await _llamadas()
+		print("HUD base %d llamadas" % base_h)
+		var piezas: Array = []
+		for h in _pj.get_children():
+			if h is Control and not (h is SubViewportContainer) and (h as Control).visible:
+				piezas.append(h)
+		var ct := _pj.get_node_or_null("ControlesTactiles")
+		if ct != null:
+			for h in ct.get_children():
+				if h is CanvasItem and (h as CanvasItem).visible:
+					piezas.append(h)
+		for h: CanvasItem in piezas:
+			h.visible = false
+			var ll: int = await _llamadas()
+			h.visible = true
+			var texto := ""
+			for l in h.find_children("*", "Label", true, false):
+				texto += (l as Label).text.substr(0, 18) + "|"
+			print("HUD -%3d  %s (%s) %s" % [base_h - ll, h.name, h.get_class(), texto])
+		get_tree().quit()
+		return
 	if OS.get_environment("POR_HIJO") != "":
 		## POR_HIJO=1 (12-11): cuántas llamadas pesa cada hijo de la escena 3D (se oculta uno, se cuenta y se vuelve a mostrar).
 		var base_ll: int = await _llamadas()

@@ -267,3 +267,8 @@ Inventario: ≈ 2.100 geometrías visibles en MEDIO (1.000 en MÍNIMO), 853 mate
   táctiles + 77 HUD); jugadores −12 ms (−91 llamadas); el mundo 3D, el resto (~85 ms), repartido en piezas de 1-18 llamadas (`POR_HIJO=1`).
 - Quitado: el fondo negro a pantalla completa detrás del visor 3D (tapado; 1 pasada de pantalla completa por fotograma). Detalle en
   `partido_visual_2026-11-12.md` (bloque 4). Siguiente palanca: el HUD 2D del partido, a medir en el teléfono.
+- HUD del partido (12-11, `POR_HUD=1` de `medir_partido_jugable`, mismo instante congelado, MÍNIMA): **95 → 40 llamadas 2D**.
+  Mando táctil 31 → 16 (fondos, aros y triangulitos como rectángulos de un atlas generado en código: en Compatibility cada círculo, arco o
+  polígono era su propia llamada; y se dibuja por fases: todas las formas, luego contornos, luego textos); estadísticas 32 → 12,
+  ficha del jugador 20 → 8 y marcador 12 → 4 (sin la sombra del texto, que partía el lote, en las etiquetas sobre panel oscuro; el aviso
+  grande sobre el césped la conserva). Misma información, mismos tamaños de toque (`captura_tactil_movil` y `captura_tactil_partido` en 0).
