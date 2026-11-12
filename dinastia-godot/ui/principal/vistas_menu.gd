@@ -160,6 +160,7 @@ func _pintar_clubes() -> void:
 		var tl := p._texto(12, p.COL_ORO)
 		tl.text = l.nombre
 		p._lista_clubes.add_child(tl)
+		var ancho_col := 34 if EscalaMovil.es_vertical() else 64   ## (12-11) de pie, cinco columnas de 64 px sacaban los puntos de la pantalla
 		var g := GridContainer.new()
 		CebraRejilla.poner(g)
 		g.columns = 7
@@ -173,7 +174,7 @@ func _pintar_clubes() -> void:
 				ce.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			elif enc != "#":
 				ce.size_flags_horizontal = Control.SIZE_FILL
-				ce.custom_minimum_size.x = 64
+				ce.custom_minimum_size.x = ancho_col
 			if CompeticionFilas._sigla_larga(enc) != enc:   ## M-305: la sigla, explicada al pasar el ratón
 				ce.tooltip_text = Idiomas.t(CompeticionFilas._sigla_larga(enc))
 				ce.mouse_filter = Control.MOUSE_FILTER_PASS
@@ -203,7 +204,7 @@ func _pintar_clubes() -> void:
 					txt += " (−%d)" % int(fila["sancion"])
 				var cn := p._celda(g, txt, p.COL_TEXTO if clave == "pts" else p.COL_SUAVE, true, 11)
 				cn.size_flags_horizontal = Control.SIZE_FILL
-				cn.custom_minimum_size.x = 64
+				cn.custom_minimum_size.x = ancho_col
 			puesto += 1
 		p._lista_clubes.add_child(HSeparator.new())
 
