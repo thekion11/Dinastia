@@ -24,7 +24,7 @@ static var PAC_BASE := _num("C4_PAC_BASE", 0.55)     ## probabilidad de tirar a 
 static var PAC_CAIDA := _num("C4_PAC_CAIDA", 0.035)  ## ...que baja esto por metro (a 30 m ≈ 0,27; a 38 m ≈ 0,02)
 static var PAC_MEJOR := _num("C4_PAC_MEJOR", 0.35)   ## por esto si un compañero está mejor colocado
 static var PAC_ESPACIO := _num("C4_PAC_ESPACIO", 0.6) ## por esto si tiene espacio para seguir conduciendo
-const CORNER_DESVIO := 0.2          ## probabilidad de que un remate fallado que sale por el fondo sea córner (MotorCorner)
+static var CORNER_DESVIO := _num("C4_DESVIO", 0.2)   ## (perilla C4_DESVIO) probabilidad de que un remate fallado que sale por el fondo sea córner (MotorCorner)
 const CENTRO_BANDA := 13.0          ## a más de esto del eje...
 const CENTRO_FONDO := 30.0          ## ...y a menos de esto de la línea de fondo, se puede centrar
 
@@ -142,7 +142,7 @@ static func ganas_tiro(m: Object, p: Dictionary, dist: float, ganas: float, pres
 
 ## PASE AL MEJOR COLOCADO (12-11, sesión 13, con la paciencia): a `PAC_D`-45 m del arco, si un compañero está mejor colocado, se le pasa
 ## (antes, sin presión y cerca del arco, se seguía conduciendo y casi nunca se le daba). Se llama al decidir, antes de la decisión de siempre.
-static var PASE_MEJOR := _bandera("C4_PASE_MEJOR", true)
+static var PASE_MEJOR := _bandera("C4_PASE_MEJOR", false)   ## medido el 12-11: no mejora a la paciencia sola (descartado, queda apagado)
 static func pase_al_mejor(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
 	if not (PACIENCIA and PASE_MEJOR):
 		return false
