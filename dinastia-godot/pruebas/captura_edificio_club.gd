@@ -66,6 +66,11 @@ func _ready() -> void:
 
 func _foto() -> void:
 	print("LLAMADAS ", _imgs.size(), " ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME), " tris ", RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME), " tex_MB ", snappedf(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TEXTURE_MEM_USED) / 1048576.0, 0.1), " vram_MB ", snappedf(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_VIDEO_MEM_USED) / 1048576.0, 0.1))   ## medida de dibujo por sala
+	if OS.get_environment("TEXTURAS") != "":   ## (12-11) TEXTURAS=1: lista las texturas de vídeo más pesadas (para rebajar memoria)
+		var usos: Array = RenderingServer.texture_debug_usage()
+		usos.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["bytes"]) > int(b["bytes"]))
+		for u: Dictionary in usos.slice(0, int(OS.get_environment("TEXTURAS"))):
+			print("TEX %7.2f MB %dx%d f%d %s" % [int(u["bytes"]) / 1048576.0, int(u["width"]), int(u["height"]), int(u["format"]), String(u["path"])])
 	var img := get_viewport().get_texture().get_image()
 	img.convert(Image.FORMAT_RGBA8)
 	if OS.get_environment("COMPLETA") == "1":   ## cada sala a tamaño completo (para ver el parpadeo del suelo, texturas…)
