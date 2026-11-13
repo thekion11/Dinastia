@@ -223,7 +223,7 @@ func _mostrar_todo() -> void:
 	_pintar_valoraciones()
 	_btn_saltar.visible = false
 	_btn_seguir.visible = true
-	Sonido.toca("pitido_final")
+	EstadioSonidos.final_del_partido()
 	set_process(false)
 
 ## EL PORQUÉ (26-10-2026, fila 4 de la propuesta): las tres causas que más pesaron en el resultado, sacadas

@@ -64,8 +64,10 @@ func _entrar_en(fase: int) -> void:
 		1:
 			_quitar_rotulo()
 			_lona.visible = true
+			Sonido.toca("calentamiento", Sonido.Bus.AMBIENTE)
 		2:
 			Sonido.toca("himno", Sonido.Bus.AMBIENTE)
+			Sonido.toca("presentacion_alineaciones", Sonido.Bus.AMBIENTE)
 			_carta = _carta_alineacion(_local, true)
 		3:
 			if is_instance_valid(_carta):
