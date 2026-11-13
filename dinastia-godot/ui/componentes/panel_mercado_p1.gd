@@ -312,7 +312,7 @@ func _pintar_lista(mio: Club) -> void:
 	CebraRejilla.poner(g)
 	g.columns = 6
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_theme_constant_override("h_separation", 8)
+	g.add_theme_constant_override("h_separation", 14)   ## (13-11) con 8, en alemán «MF» quedaba pegado a «FORDERUNG»
 	g.add_theme_constant_override("v_separation", 2)
 	_caja_lista.add_child(g)
 
