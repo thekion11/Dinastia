@@ -4,6 +4,9 @@ extends RefCounted
 ## = 131 mil) y el público (1.387 personas × 45 = 62 mil) eran lo que más triángulos sumaba del estadio. Aquí, las mismas piezas SIN las caras que ninguna cámara ve
 ## (el suelo de cada caja, que va pegado a la viga o al escalón) y un público lejano más sencillo (a 40-80 m mide 3-5 píxeles a la resolución del 3D de MÍNIMA).
 ## Medido con `MULTI=1` de `pruebas/medir_partido_jugable.gd` (instancias × triángulos de cada MultiMesh); detalle en `docs/04_auditorias/rendimiento_120fps.md`.
+## El público de 16 triángulos pierde redondez (3-5 px a 40-80 m): es un cambio visual y el dueño pidió «sin alterar lo visual, solo código» (13-11), así que NO se usa.
+## Con `true` vuelve (−64 % de triángulos del público en MÍNIMA); decidirlo con el dueño.
+const PUBLICO_SENCILLO := false
 static var _butaca: Mesh = null
 static var _hincha: Mesh = null
 static var _butaca_lejos: Mesh = null
