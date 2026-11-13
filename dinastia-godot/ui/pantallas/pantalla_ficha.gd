@@ -126,7 +126,7 @@ func _ver_ficha(j: Jugador) -> void:
 	var det := p._texto(12, Principal.COL_SUAVE)
 	det.text = Idiomas.t("%s · %d años · %s · %s") % [
 		j.pos_e, j.edad, suyo.nombre if suyo else Idiomas.t("sin club"),
-		Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, [Idiomas.t("sin rasgo")])[0])) if j.rasgo != "" else Idiomas.t("sin rasgo")]
+		Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, [Idiomas.t("sin rasgo")])[0])) if j.rasgo != "" else Idiomas.t("sin rasgo")] + Paises.pasaporte(j)
 	if j.rasgo != "":   ## (M-305) qué hace su rasgo
 		det.tooltip_text = Idiomas.t(String(((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, ["", ""]) as Array)[1]))
 		det.mouse_filter = Control.MOUSE_FILTER_PASS

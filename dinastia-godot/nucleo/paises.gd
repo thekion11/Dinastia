@@ -29,6 +29,11 @@ static func nombre_es(codigo: String) -> String:
 static func nombre(codigo: String) -> String:
 	return Idiomas.t(nombre_es(codigo))
 
+## (13-11) « · pasaporte de X» si el jugador tiene un segundo pasaporte (no ocupa cupo de extranjero allí); si no, "".
+static func pasaporte(j: Jugador) -> String:
+	var pas := String(j.look.get("pasaporte", "")) if j != null else ""
+	return "" if pas == "" or pas == j.pais else " · " + Idiomas.t("pasaporte de %s") % nombre(pas)
+
 ## ISO 3166-1 alfa-2 (o subcódigo británico), el del archivo de la bandera.
 static func iso(codigo: String) -> String:
 	return String((tabla().get(codigo, {}) as Dictionary).get("iso", ""))

@@ -8493,7 +8493,8 @@
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "World seed: %d (used to repeat this world and to report bugs)",
   "Copiar semilla": "Copy seed",
   "Semilla copiada al portapapeles.": "Seed copied to the clipboard.",
-  "Música grabada (libre) en menús y club": "Recorded music (free) in menus and club"
+  "Música grabada (libre) en menús y club": "Recorded music (free) in menus and club",
+  "pasaporte de %s": "%s passport"
  },
  "pt": {
   "Historia": "História",
@@ -16989,7 +16990,8 @@
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Semente do mundo: %d (serve para repetir este mundo e para relatar erros)",
   "Copiar semilla": "Copiar semente",
   "Semilla copiada al portapapeles.": "Semente copiada para a área de transferência.",
-  "Música grabada (libre) en menús y club": "Música gravada (livre) nos menus e no clube"
+  "Música grabada (libre) en menús y club": "Música gravada (livre) nos menus e no clube",
+  "pasaporte de %s": "passaporte de %s"
  },
  "patrones": [
   [
@@ -31625,7 +31627,8 @@
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Graine du monde : %d (sert à rejouer ce monde et à signaler des bugs)",
   "Copiar semilla": "Copier la graine",
   "Semilla copiada al portapapeles.": "Graine copiée dans le presse-papiers.",
-  "Música grabada (libre) en menús y club": "Musique enregistrée (libre) dans les menus et le club"
+  "Música grabada (libre) en menús y club": "Musique enregistrée (libre) dans les menus et le club",
+  "pasaporte de %s": "passeport de %s"
  },
  "it": {
   "Historia": "Storia",
@@ -40121,7 +40124,8 @@
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Seme del mondo: %d (serve per ripetere questo mondo e per segnalare errori)",
   "Copiar semilla": "Copia il seme",
   "Semilla copiada al portapapeles.": "Seme copiato negli appunti.",
-  "Música grabada (libre) en menús y club": "Musica registrata (libera) nei menu e nel club"
+  "Música grabada (libre) en menús y club": "Musica registrata (libera) nei menu e nel club",
+  "pasaporte de %s": "passaporto di %s"
  },
  "de": {
   "Historia": "Geschichte",
@@ -48617,7 +48621,8 @@
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Welt-Startwert: %d (zum Wiederholen dieser Welt und zum Melden von Fehlern)",
   "Copiar semilla": "Startwert kopieren",
   "Semilla copiada al portapapeles.": "Startwert in die Zwischenablage kopiert.",
-  "Música grabada (libre) en menús y club": "Aufgenommene Musik (frei) in Menüs und im Verein"
+  "Música grabada (libre) en menús y club": "Aufgenommene Musik (frei) in Menüs und im Verein",
+  "pasaporte de %s": "Pass von %s"
  },
  "ca": {
   "Historia": "Història",
@@ -57113,7 +57118,8 @@
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Llavor del món: %d (serveix per repetir aquest món i per informar d'errors)",
   "Copiar semilla": "Copiar la llavor",
   "Semilla copiada al portapapeles.": "Llavor copiada al porta-retalls.",
-  "Música grabada (libre) en menús y club": "Música gravada (lliure) als menús i al club"
+  "Música grabada (libre) en menús y club": "Música gravada (lliure) als menús i al club",
+  "pasaporte de %s": "passaport de %s"
  },
  "pl": {
   "Club": "Klub",
@@ -65609,7 +65615,8 @@
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Ziarno świata: %d (służy do powtórzenia tego świata i zgłaszania błędów)",
   "Copiar semilla": "Kopiuj ziarno",
   "Semilla copiada al portapapeles.": "Ziarno skopiowane do schowka.",
-  "Música grabada (libre) en menús y club": "Muzyka nagrana (wolna) w menu i w klubie"
+  "Música grabada (libre) en menús y club": "Muzyka nagrana (wolna) w menu i w klubie",
+  "pasaporte de %s": "paszport: %s"
  },
  "tr": {
   "Club": "Kulüp",
@@ -74105,6 +74112,7 @@
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Dünya tohumu: %d (bu dünyayı tekrarlamak ve hata bildirmek için kullanılır)",
   "Copiar semilla": "Tohumu kopyala",
   "Semilla copiada al portapapeles.": "Tohum panoya kopyalandı.",
-  "Música grabada (libre) en menús y club": "Kayıtlı müzik (özgür) menülerde ve kulüpte"
+  "Música grabada (libre) en menús y club": "Kayıtlı müzik (özgür) menülerde ve kulüpte",
+  "pasaporte de %s": "%s pasaportu"
  }
 }

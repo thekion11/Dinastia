@@ -366,9 +366,9 @@ func _probar_leyes_pais() -> void:
 			for jg: Jugador in cg.plantilla:
 				if String(jg.look.get("pasaporte", "")) != "":
 					pasaportes += 1
-					mal += 1 if jg.pais == cg.pais or LeyesPais.ocupa_cupo(jg, cg.pais, mg.clubes) else 0
+					mal += 1 if jg.pais == cg.pais or Paises.pasaporte(jg) == "" or LeyesPais.ocupa_cupo(jg, cg.pais, mg.clubes) else 0
 		_comprobar(fuera == 0, "%s: ningún club nace con más extranjeros que su cupo" % " + ".join(grupo))
-		_comprobar(pasaportes > 0 and mal == 0, "  %d con pasaporte: conservan su nacionalidad y no ocupan cupo" % pasaportes)
+		_comprobar(pasaportes > 0 and mal == 0, "  %d con pasaporte: conservan su nacionalidad y no ocupan cupo, y la ficha lo dice" % pasaportes)
 
 ## INCUMPLIR LA LEY SE PAGA (7-10-2026): multas que crecen y, desde la
 ## tercera alineación indebida, puntos menos.
