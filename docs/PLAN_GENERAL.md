@@ -12,7 +12,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - PENDIENTE DEL DUEÑO: prueba en el teléfono (`GUIA_PRUEBA_TELEFONO_2026-11-11.md`; ahora con primera persona y el HUD aligerado), keystore para el AAB, y decidir si se abren sesiones nuevas (aviso de uso semanal cerca del límite).
 
 ## PREGUNTAS PARA EL DUEÑO (sesiones Opus) — se acumulan aquí y se envían juntas por Calendar al llegar a 5 (orden 44); se borran al responderse
-- (ninguna todavía)
+- (13-11, sesión 16) «Lo que va pasando» (el registro de la portada) muestra al empezar «Mundo nuevo. Semilla 5361…»: ¿se deja la semilla a la vista (sirve para repetir un mundo y para informar de fallos) o se quita / se mueve a Ajustes → Acerca de?
 
 ## SESIÓN 16 (12-11): CALIDAD DE LO QUE SE VE EN EL CLUB Y EL PARTIDO — rama `sesion16-club-visual`
 - HECHO: (1) MUSEO POR TÍTULOS (orden 36): la planta 3 «Museo ampliado» se abre también con el SÉPTIMO hito (umbral elegido por la sesión: el
