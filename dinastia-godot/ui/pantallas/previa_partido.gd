@@ -18,9 +18,15 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	if not es_copa:
 		par = p.mundo.proximo_partido()
 	if par.is_empty():
-		var descansa := p._texto(13, Principal.COL_SUAVE)
-		descansa.text = Idiomas.t("Tu club descansa esta jornada.")
-		p._lista_partido.add_child(descansa)
+		## (13-11) Semana sin partido: antes era una línea suelta y la pantalla en negro; ahora se dice contra quién se vuelve.
+		var liga := p.mundo.liga_de(c)
+		var sig: Array = liga.siguiente_de(c) if liga != null else []
+		var pista := Idiomas.t("No quedan partidos de liga esta temporada.")
+		if sig.size() == 3:
+			var rival: Club = sig[1] if sig[0] == c else sig[0]
+			pista = (Idiomas.t("Vuelves en la jornada %d, en casa, contra %s.") if sig[0] == c else Idiomas.t("Vuelves en la jornada %d, fuera, contra %s.")) % [int(sig[2]), rival.nombre]
+		p._lista_partido.add_child(EstadoVacio.crear("⚽", Idiomas.t("Tu club descansa esta jornada."), pista,
+			p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 300.0))
 		return
 
 	var local: Club = par[0]

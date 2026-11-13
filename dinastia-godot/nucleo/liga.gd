@@ -116,6 +116,15 @@ func jornadas() -> int:
 func quedan_jornadas() -> bool:
 	return jornada_actual < calendario.size()
 
+## (13-11) El PRÓXIMO partido de liga de `c` desde la jornada actual: [local, visita, jornada (contando desde 1)], o vacío si no le
+## queda ninguno. Para decir contra quién se vuelve cuando esta semana el club descansa.
+func siguiente_de(c: Club) -> Array:
+	for j in range(jornada_actual, calendario.size()):
+		for par: Array in calendario[j]:
+			if par[0] == c or par[1] == c:
+				return [par[0], par[1], j + 1]
+	return []
+
 ## El cruce de esta jornada en el que juega este club, o vacío si descansa.
 ## Lo necesita la interfaz para poder jugar ESE partido en directo antes de que
 ## el mundo simule los otros quince.

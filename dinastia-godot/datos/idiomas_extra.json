@@ -8102,7 +8102,10 @@
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Win or lose something and you'll see: what people say online shows up here.",
   "Lo que os vaya pasando en casa queda anotado aquí.": "Whatever happens at home gets noted here.",
   "enojados": "angry",
-  "contentos": "happy"
+  "contentos": "happy",
+  "No quedan partidos de liga esta temporada.": "No league matches left this season.",
+  "Vuelves en la jornada %d, en casa, contra %s.": "You are back on matchday %d, at home, against %s.",
+  "Vuelves en la jornada %d, fuera, contra %s.": "You are back on matchday %d, away, against %s."
  },
  "pt": {
   "Historia": "História",
@@ -16207,7 +16210,10 @@
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Ganha ou perde alguma coisa e verás: aqui aparece o que as pessoas dizem nas redes.",
   "Lo que os vaya pasando en casa queda anotado aquí.": "O que vos for acontecendo em casa fica anotado aqui.",
   "enojados": "zangados",
-  "contentos": "contentes"
+  "contentos": "contentes",
+  "No quedan partidos de liga esta temporada.": "Não restam jogos da liga esta época.",
+  "Vuelves en la jornada %d, en casa, contra %s.": "Voltas na jornada %d, em casa, contra o %s.",
+  "Vuelves en la jornada %d, fuera, contra %s.": "Voltas na jornada %d, fora, contra o %s."
  },
  "patrones": [
   [
@@ -30452,7 +30458,10 @@
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Gagne ou perds quelque chose et tu verras : ce que disent les gens en ligne apparaît ici.",
   "Lo que os vaya pasando en casa queda anotado aquí.": "Ce qui vous arrive à la maison est noté ici.",
   "enojados": "fâchés",
-  "contentos": "contents"
+  "contentos": "contents",
+  "No quedan partidos de liga esta temporada.": "Il ne reste aucun match de championnat cette saison.",
+  "Vuelves en la jornada %d, en casa, contra %s.": "Tu reprends à la journée %d, à domicile, contre %s.",
+  "Vuelves en la jornada %d, fuera, contra %s.": "Tu reprends à la journée %d, à l'extérieur, contre %s."
  },
  "it": {
   "Historia": "Storia",
@@ -38557,7 +38566,10 @@
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Vinci o perdi qualcosa e vedrai: qui compare quello che dice la gente sui social.",
   "Lo que os vaya pasando en casa queda anotado aquí.": "Quello che vi succede in casa viene annotato qui.",
   "enojados": "arrabbiati",
-  "contentos": "contenti"
+  "contentos": "contenti",
+  "No quedan partidos de liga esta temporada.": "Non restano partite di campionato in questa stagione.",
+  "Vuelves en la jornada %d, en casa, contra %s.": "Torni alla giornata %d, in casa, contro %s.",
+  "Vuelves en la jornada %d, fuera, contra %s.": "Torni alla giornata %d, in trasferta, contro %s."
  },
  "de": {
   "Historia": "Geschichte",
@@ -46662,7 +46674,10 @@
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Gewinn oder verlier etwas, dann siehst du es: Hier erscheint, was die Leute im Netz sagen.",
   "Lo que os vaya pasando en casa queda anotado aquí.": "Was bei euch zu Hause passiert, wird hier festgehalten.",
   "enojados": "verärgert",
-  "contentos": "zufrieden"
+  "contentos": "zufrieden",
+  "No quedan partidos de liga esta temporada.": "In dieser Saison stehen keine Ligaspiele mehr an.",
+  "Vuelves en la jornada %d, en casa, contra %s.": "Weiter geht es am %d. Spieltag, zu Hause gegen %s.",
+  "Vuelves en la jornada %d, fuera, contra %s.": "Weiter geht es am %d. Spieltag, auswärts gegen %s."
  },
  "ca": {
   "Historia": "Història",
@@ -54767,7 +54782,10 @@
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Guanya o perd alguna cosa i ho veuràs: aquí surt el que diu la gent a les xarxes.",
   "Lo que os vaya pasando en casa queda anotado aquí.": "El que us vagi passant a casa queda anotat aquí.",
   "enojados": "enfadats",
-  "contentos": "contents"
+  "contentos": "contents",
+  "No quedan partidos de liga esta temporada.": "No queden partits de lliga aquesta temporada.",
+  "Vuelves en la jornada %d, en casa, contra %s.": "Tornes a la jornada %d, a casa, contra %s.",
+  "Vuelves en la jornada %d, fuera, contra %s.": "Tornes a la jornada %d, a fora, contra %s."
  },
  "pl": {
   "Club": "Klub",
@@ -62872,7 +62890,10 @@
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Wygraj albo przegraj coś, a zobaczysz: tu pojawia się to, co ludzie piszą w sieci.",
   "Lo que os vaya pasando en casa queda anotado aquí.": "To, co dzieje się u was w domu, zostaje zapisane tutaj.",
   "enojados": "rozgniewani",
-  "contentos": "zadowoleni"
+  "contentos": "zadowoleni",
+  "No quedan partidos de liga esta temporada.": "W tym sezonie nie ma już meczów ligowych.",
+  "Vuelves en la jornada %d, en casa, contra %s.": "Wracasz w %d. kolejce, u siebie, przeciwko %s.",
+  "Vuelves en la jornada %d, fuera, contra %s.": "Wracasz w %d. kolejce, na wyjeździe, przeciwko %s."
  },
  "tr": {
   "Club": "Kulüp",
@@ -70977,6 +70998,9 @@
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Bir şey kazan ya da kaybet, görürsün: insanların sosyal medyada söyledikleri burada çıkar.",
   "Lo que os vaya pasando en casa queda anotado aquí.": "Evde başınıza gelenler buraya not edilir.",
   "enojados": "kızgın",
-  "contentos": "memnun"
+  "contentos": "memnun",
+  "No quedan partidos de liga esta temporada.": "Bu sezon lig maçı kalmadı.",
+  "Vuelves en la jornada %d, en casa, contra %s.": "%d. haftada iç sahada %s karşısında dönüyorsun.",
+  "Vuelves en la jornada %d, fuera, contra %s.": "%d. haftada deplasmanda %s karşısında dönüyorsun."
  }
 }
