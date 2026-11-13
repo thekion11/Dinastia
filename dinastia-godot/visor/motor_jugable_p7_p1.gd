@@ -257,6 +257,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	## lejos y con un rival encima; el penal, quieto y a 11 m, no.
 	if TIRO_PULIDO and clase != "penal":
 		error += (0.45 + lejos * PUNTERIA) * (1.15 - tec * 0.5) * (1.3 if _presion(p) < 1.8 else 1.0)
+	error = _error_tiro_extra(p, lejos, error, clase)   ## gancho (sesión 15): aquí no cambia nada
 	var x := clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error)
 	var y := clampf(0.35 + fuerza * 1.2 + apunte_.y * 0.6 + _rng.randf_range(-error, error) * 0.6, 0.15, 3.4)
 	var destino := Vector3(x, y, arco.z + signf(arco.z) * 0.3)
@@ -344,3 +345,8 @@ func _companero_al_hueco(p: Dictionary) -> Dictionary:
 			mejor_nota = nota
 			mejor = q
 	return mejor
+
+## GANCHO DEL ERROR DEL REMATE (13-11-2026, sesión 15, OK del líder): el de siempre lo deja igual (sin azar: la huella no cambia);
+## `MotorCombinado` (C4) lo usa para la definición dentro del área (`MejorasC4Avance.error_tiro`, `C4_ERROR_AREA`).
+func _error_tiro_extra(_p: Dictionary, _lejos: float, error: float, _clase: String) -> float:
+	return error

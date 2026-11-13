@@ -99,3 +99,14 @@ static func definir(m: Object, p: Dictionary, dist: float, apunte: Vector2) -> V
 	if m.get("diag") is Dictionary:
 		(m.diag as Dictionary)["c4_definir"] = int((m.diag as Dictionary).get("c4_definir", 0)) + 1
 	return r
+
+## EL ERROR DEL REMATE DENTRO DEL ÁREA (sesión 15): con `C4_ERROR_AREA=k` (0 = apagada) el error de todo remate que no sea penal a menos
+## de 17 m del arco se multiplica por `k` (< 1 = más preciso; vale para la IA y para el humano). Contador `c4_error_area`.
+static var ERROR_AREA := float(OS.get_environment("C4_ERROR_AREA")) if OS.get_environment("C4_ERROR_AREA") != "" else 0.0
+
+static func error_tiro(m: Object, lejos: float, error: float, clase: String) -> float:
+	if ERROR_AREA <= 0.0 or lejos >= 17.0 or clase == "penal":
+		return error
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_error_area"] = int((m.diag as Dictionary).get("c4_error_area", 0)) + 1
+	return error * ERROR_AREA
