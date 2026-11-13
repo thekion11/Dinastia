@@ -243,7 +243,7 @@ func tasar() -> void:
 ## descenso encima. Lo usan `tasar()` y quien retoca el valor después (parte médico,
 ## bono de habilidades): antes recalculaban a mano y se saltaban los dos factores.
 func sueldo_de_valor() -> int:
-	var s := float(max(30.0, round(1.361 * pow(float(valor), 0.66) / 10.0) * 10.0))
+	var s := float(max(30.0, round(1.361 * pow(float(valor), 0.66) * SueldosPais.del_jugador(self) / 10.0) * 10.0))   ## (13-11) × lo que se cobra en su liga
 	if primer_contrato:
 		s = max(30.0, round(s * FACTOR_PRIMER_CONTRATO / 10.0) * 10.0)
 	return int(max(30.0, round(s * factor_clausula() / 10.0) * 10.0))

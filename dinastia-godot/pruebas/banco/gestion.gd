@@ -314,6 +314,26 @@ func _probar_leyes_pais() -> void:
 		if LeyesPais.reglas(p).is_empty() or not Contratos.JORNADA.has(p):
 			sin_ley += 1
 	_comprobar(sin_ley == 0, "los 24 países del juego tienen reglas de liga y jornada (%d sin)" % sin_ley)
+	## (13-11, decisión del dueño) En las ligas chicas se cobra menos: el mismo futbolista, según la liga de su club.
+	var ms := Mundo.new()
+	var tres: Array[String] = []
+	tres.assign(["URU", "ESP", "BOL"])
+	ms.generar(tres, 21)
+	var cobra := {}
+	for cs: Club in ms.clubes.values():
+		if not cobra.has(cs.pais):
+			var js: Jugador = cs.plantilla[0]
+			var guardado := js.valor
+			js.valor = 20000
+			cobra[cs.pais] = js.sueldo_de_valor()
+			js.valor = guardado
+			if SueldosPais.de(cs.pais) < 1.0:
+				_comprobar(js.sueldo == js.sueldo_de_valor(), "%s: el sueldo con que nace ya es el de su liga (%d)" % [cs.pais, js.sueldo])
+	_comprobar(int(cobra["URU"]) < int(cobra["ESP"]) and int(cobra["BOL"]) < int(cobra["ESP"]) and is_equal_approx(SueldosPais.de("ESP"), 1.0),
+		"el mismo valor cobra %d en España, %d en Uruguay y %d en Bolivia" % [int(cobra["ESP"]), int(cobra["URU"]), int(cobra["BOL"])])
+	var libre := Jugador.new()
+	libre.valor = 20000
+	_comprobar(libre.sueldo_de_valor() == int(cobra["ESP"]), "un jugador libre pide el sueldo sin rebaja de liga")
 	## (13-11, decisión del dueño) Los planteles nacen dentro del cupo: a los extranjeros que sobran se les da pasaporte.
 	for grupo: Array in [["ESP", "USA"], ["FRA", "AUS", "MAR"]]:
 		var lista: Array[String] = []

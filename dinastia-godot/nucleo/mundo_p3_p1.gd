@@ -268,6 +268,11 @@ func _generar_cierre() -> void:
 	LeyesPais.clubes_mundo = clubes
 	LeyesPais.anio_actual = anio
 	LeyesPais.ajustar_planteles(clubes)
+	## (13-11) Los sueldos nacieron sin saber en qué liga juega cada uno: ahora que se sabe, los de las ligas chicas se ajustan.
+	for c: Club in clubes.values():
+		if SueldosPais.de(c.pais) < 1.0:
+			for j: Jugador in c.plantilla:
+				j.sueldo = j.sueldo_de_valor()
 	LigasActivas.registrar(self)   ## (10-11) los países que quedaron cargados (también al generar solo algunos)
 
 func jugadores() -> Array[Jugador]:
