@@ -243,14 +243,18 @@ func _pintar_ajustes() -> void:
 	for s: Array in SECCIONES_AJUSTES:
 		var clave := String(s[0])
 		var b := Button.new()
-		b.text = String(s[1])
+		var partes := Idiomas.t(String(s[1])).split(" ", true, 1)   ## (13-11) icono y palabra juntos (espacio no separable): en alemán el ♿ quedaba solo arriba
+		b.text = partes[0] + "\u00a0" + partes[1] if partes.size() == 2 else partes[0]
 		b.add_theme_font_size_override("font_size", 11)
 		b.toggle_mode = true
 		b.button_pressed = seccion == clave
-		b.clip_text = true
+		b.clip_text = false   ## (13-11) crece con su texto (las pestañas saltan de línea): con el recorte, «♿ Barrierefreiheit» salía cortado
 		b.custom_minimum_size = Vector2(126, 26)
 		b.pressed.connect(func() -> void:
 			seccion = clave
+			for pm: Node in p.find_children("*", "Control", true, false):   ## que la cabecera diga la pestaña abierta
+				if pm is PantallaMenu and (pm as Control).is_visible_in_tree():
+					(pm as PantallaMenu).seguir_seccion(clave)
 			_pintar_ajustes())
 		chips.add_child(b)
 	p._lista_ajustes.add_child(HSeparator.new())

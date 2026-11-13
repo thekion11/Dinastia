@@ -125,9 +125,17 @@ func _auditar_pantalla(nombre: String) -> void:
 	elif nombre != "Inicio":
 		_p.call("_ir_a_pestana", nombre)
 	if nombre == "Ajustes":   ## la categoría «Pantalla»: la del interruptor de la cabecera
-		var aj: Object = _p.get("_ui_ajustes")
-		aj.set("seccion", "pantalla")
-		aj.call("_pintar_ajustes")
+		## (13-11) Se PULSA la pestaña, como el jugador (antes se ponía `seccion` a mano y la cabecera se quedaba en «Sonido»).
+		var pulsada := false
+		for b: Node in _p.find_children("*", "Button", true, false):
+			if b is Button and (b as Button).is_visible_in_tree() and (b as Button).text.begins_with("🖥"):
+				(b as Button).pressed.emit()
+				pulsada = true
+				break
+		if not pulsada:
+			var aj: Object = _p.get("_ui_ajustes")
+			aj.set("seccion", "pantalla")
+			aj.call("_pintar_ajustes")
 	for i in 30:
 		await get_tree().process_frame
 	await get_tree().create_timer(0.4).timeout
