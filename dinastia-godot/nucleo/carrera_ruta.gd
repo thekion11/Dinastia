@@ -29,7 +29,7 @@ const TALENTOS := {
 	"pulmones": ["crack", 1, "Pulmones", "Los partidos te cansan un 30 % menos."],
 	"sangre_fria": ["crack", 2, "Sangre fría", "Los retos del partido dan un 50 % más de experiencia."],
 	"carisma": ["idolo", 0, "Carisma", "Ganas un 50 % más de seguidores por partido."],
-	"portada": ["idolo", 1, "Portada", "+1 de fama cada partido con nota 7 o más."],
+	"portada": ["idolo", 1, "De portada", "+1 de fama cada partido con nota 7 o más."],
 	"marca": ["idolo", 2, "Marca propia", "Las ofertas llegan con un 30 % más de sueldo."],
 	"ejemplo": ["lider", 0, "Ejemplo", "+1 de relación con el DT cada semana."],
 	"voz": ["lider", 1, "Voz del vestuario", "Ninguna decisión te quita más de 2 de relación con el DT."],
@@ -39,7 +39,7 @@ const TALENTOS := {
 const CAPITULOS := [
 	[1, "Promesa", "Nadie te conoce. Todavía."],
 	[4, "Revelación", "Tu nombre empieza a sonar en la grada."],
-	[8, "Titular", "El once se escribe contigo."],
+	[8, "Indiscutible", "El once se escribe contigo."],
 	[13, "Figura", "Los rivales preparan el partido pensando en ti."],
 	[19, "Estrella", "Tu camiseta es la que más se vende."],
 	[26, "Ídolo", "Hay niños que llevan tu nombre a la espalda."],

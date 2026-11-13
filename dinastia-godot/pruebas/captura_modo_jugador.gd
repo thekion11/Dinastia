@@ -2,7 +2,7 @@ extends Node
 ## EL MODO JUGADOR («La Ruta»), EN FOTOS (13-11-2026): la creación, las tres
 ## ofertas, Hoy recién firmado, el mini juego del entreno, el resumen de un
 ## partido y, tras simular unas semanas, Hoy, Yo y Ruta. Fuera del repo, en JPG.
-##   SALIDA=<carpeta> [PUESTO=MC] [NOMBRE=…] [SEMANAS=6] [OFERTA=0..2] [PREFIJO=…] [MOVIL=1] [TEMPORADA=1] [BOTAS=1] xvfb-run -a godot --path . \
+##   SALIDA=<carpeta> [PUESTO=MC] [NOMBRE=…] [SEMANAS=6] [OFERTA=0..2] [PREFIJO=…] [MOVIL=1] [TEMPORADA=1] [BOTAS=1] [IDIOMA=en] xvfb-run -a godot --path . \
 ##     --rendering-driver vulkan --resolution 1280x720 res://pruebas/captura_modo_jugador.tscn
 var _n := 0
 var _ui: CarreraJugadorUI
@@ -26,6 +26,9 @@ func _ready() -> void:
 		EscalaMovil.forzar = true
 		EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	RutaEstilo.sin_animar = true
+	## IDIOMA=en|pt|fr|it|de|ca|pl|tr: para repasar las traducciones en pantalla.
+	if OS.get_environment("IDIOMA") != "":
+		Idiomas.idioma = OS.get_environment("IDIOMA")
 	CarreraJugadorUI.mundo = null
 	CarreraJugadorUI.nombre_pedido = OS.get_environment("NOMBRE")
 	_ui = load("res://escenas/carrera_jugador.tscn").instantiate()
@@ -74,7 +77,7 @@ func _process(_d: float) -> void:
 			_foto("4_toque")
 			_toque.queue_free()
 			CarreraRuta.anotar_toque(c, m, 1.0)
-			c.entrenar(m)
+			_ui._msg = c.entrenar(m)
 			## El partido, en «Los Momentos»: perfecto, bien, (foto), perfecto y fallo.
 			_mo = RutaMomentos.abrir(_ui, _ui._partido_de_la_semana(c.club(m)))
 			_mo.terminado.connect(func(res: Dictionary) -> void: _ui._cerrar_semana(res, true))

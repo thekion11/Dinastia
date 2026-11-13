@@ -10,7 +10,7 @@ const XP_CAPITULO := 100
 const MISIONES := {
 	"Promesa": [["pj", 5], ["media", 62], ["seguidores", 1000]],
 	"Revelación": [["pj", 25], ["aporte", 5], ["fama", 20]],
-	"Titular": [["pj", 60], ["media", 70], ["premios", 1]],
+	"Indiscutible": [["pj", 60], ["media", 70], ["premios", 1]],
 	"Figura": [["aporte", 40], ["fama", 45], ["duelos", 1]],
 	"Estrella": [["pj", 150], ["media", 80], ["caps", 1]],
 	"Ídolo": [["aporte", 120], ["fama", 80], ["premios", 6]],
@@ -109,6 +109,6 @@ static func revisar(c: CarreraJugador, m: Mundo) -> Array:
 			var r := CarreraRuta.asegurar(c)
 			r["puntos"] = int(r["puntos"]) + 1
 			CarreraRuta.sumar_xp(c, XP_CAPITULO)
-			CarreraRuta._grada(c, "🎖", "Misiones de «%s» cumplidas: un punto de talento extra.", [Idiomas.t(nombre)])
+			CarreraRuta._grada(c, "🏅", "Misiones de «%s» cumplidas: un punto de talento extra.", [Idiomas.t(nombre)])
 			out.append(nombre)
 	return out

@@ -8393,7 +8393,18 @@
   "ahorros: %s": "savings: %s",
   "Cobras %s cada semana. Lo que compres es para siempre.": "You earn %s every week. What you buy is forever.",
   "Comprado: %s.": "Bought: %s.",
-  "%d semanas de tu sueldo": "%d weeks of your wages"
+  "%d semanas de tu sueldo": "%d weeks of your wages",
+  "YO": "ME",
+  "tú": "you",
+  "partidos": "matches",
+  "goles": "goals",
+  "nota": "rating",
+  "minutos": "minutes",
+  "racha": "streak",
+  "temporadas": "seasons",
+  "prestigio": "prestige",
+  "Indiscutible": "Undisputed",
+  "De portada": "Front page"
  },
  "pt": {
   "Historia": "História",
@@ -16789,7 +16800,18 @@
   "ahorros: %s": "poupança: %s",
   "Cobras %s cada semana. Lo que compres es para siempre.": "Você recebe %s por semana. O que comprar é para sempre.",
   "Comprado: %s.": "Comprado: %s.",
-  "%d semanas de tu sueldo": "%d semanas do seu salário"
+  "%d semanas de tu sueldo": "%d semanas do seu salário",
+  "YO": "EU",
+  "tú": "você",
+  "partidos": "partidas",
+  "goles": "gols",
+  "nota": "nota",
+  "minutos": "minutos",
+  "racha": "sequência",
+  "temporadas": "temporadas",
+  "prestigio": "prestígio",
+  "Indiscutible": "Indiscutível",
+  "De portada": "De capa"
  },
  "patrones": [
   [
@@ -31325,7 +31347,18 @@
   "ahorros: %s": "économies : %s",
   "Cobras %s cada semana. Lo que compres es para siempre.": "Tu touches %s par semaine. Ce que tu achètes est pour toujours.",
   "Comprado: %s.": "Acheté : %s.",
-  "%d semanas de tu sueldo": "%d semaines de ton salaire"
+  "%d semanas de tu sueldo": "%d semaines de ton salaire",
+  "YO": "MOI",
+  "tú": "toi",
+  "partidos": "matchs",
+  "goles": "buts",
+  "nota": "note",
+  "minutos": "minutes",
+  "racha": "série",
+  "temporadas": "saisons",
+  "prestigio": "prestige",
+  "Indiscutible": "Indiscutable",
+  "De portada": "À la une"
  },
  "it": {
   "Historia": "Storia",
@@ -39721,7 +39754,18 @@
   "ahorros: %s": "risparmi: %s",
   "Cobras %s cada semana. Lo que compres es para siempre.": "Guadagni %s a settimana. Ciò che compri è per sempre.",
   "Comprado: %s.": "Comprato: %s.",
-  "%d semanas de tu sueldo": "%d settimane del tuo stipendio"
+  "%d semanas de tu sueldo": "%d settimane del tuo stipendio",
+  "YO": "IO",
+  "tú": "tu",
+  "partidos": "partite",
+  "goles": "gol",
+  "nota": "voto",
+  "minutos": "minuti",
+  "racha": "striscia",
+  "temporadas": "stagioni",
+  "prestigio": "prestigio",
+  "Indiscutible": "Indiscusso",
+  "De portada": "Da copertina"
  },
  "de": {
   "Historia": "Geschichte",
@@ -48117,7 +48161,18 @@
   "ahorros: %s": "Erspartes: %s",
   "Cobras %s cada semana. Lo que compres es para siempre.": "Du verdienst %s pro Woche. Was du kaufst, bleibt für immer.",
   "Comprado: %s.": "Gekauft: %s.",
-  "%d semanas de tu sueldo": "%d Wochen deines Gehalts"
+  "%d semanas de tu sueldo": "%d Wochen deines Gehalts",
+  "YO": "ICH",
+  "tú": "du",
+  "partidos": "Spiele",
+  "goles": "Tore",
+  "nota": "Note",
+  "minutos": "Minuten",
+  "racha": "Serie",
+  "temporadas": "Saisons",
+  "prestigio": "Ansehen",
+  "Indiscutible": "Unumstritten",
+  "De portada": "Titelseite"
  },
  "ca": {
   "Historia": "Història",
@@ -56513,7 +56568,18 @@
   "ahorros: %s": "estalvis: %s",
   "Cobras %s cada semana. Lo que compres es para siempre.": "Cobres %s cada setmana. El que compris és per sempre.",
   "Comprado: %s.": "Comprat: %s.",
-  "%d semanas de tu sueldo": "%d setmanes del teu sou"
+  "%d semanas de tu sueldo": "%d setmanes del teu sou",
+  "YO": "JO",
+  "tú": "tu",
+  "partidos": "partits",
+  "goles": "gols",
+  "nota": "nota",
+  "minutos": "minuts",
+  "racha": "ratxa",
+  "temporadas": "temporades",
+  "prestigio": "prestigi",
+  "Indiscutible": "Indiscutible",
+  "De portada": "De portada"
  },
  "pl": {
   "Club": "Klub",
@@ -64909,7 +64975,18 @@
   "ahorros: %s": "oszczędności: %s",
   "Cobras %s cada semana. Lo que compres es para siempre.": "Zarabiasz %s tygodniowo. To, co kupisz, zostaje na zawsze.",
   "Comprado: %s.": "Kupiono: %s.",
-  "%d semanas de tu sueldo": "%d tygodni twojej pensji"
+  "%d semanas de tu sueldo": "%d tygodni twojej pensji",
+  "YO": "JA",
+  "tú": "ty",
+  "partidos": "mecze",
+  "goles": "gole",
+  "nota": "ocena",
+  "minutos": "minuty",
+  "racha": "seria",
+  "temporadas": "sezony",
+  "prestigio": "prestiż",
+  "Indiscutible": "Niepodważalny",
+  "De portada": "Z okładki"
  },
  "tr": {
   "Club": "Kulüp",
@@ -73305,6 +73382,17 @@
   "ahorros: %s": "birikim: %s",
   "Cobras %s cada semana. Lo que compres es para siempre.": "Haftada %s kazanırsın. Satın aldığın kalıcıdır.",
   "Comprado: %s.": "Satın alındı: %s.",
-  "%d semanas de tu sueldo": "%d haftalık maaşın"
+  "%d semanas de tu sueldo": "%d haftalık maaşın",
+  "YO": "BEN",
+  "tú": "sen",
+  "partidos": "maç",
+  "goles": "gol",
+  "nota": "not",
+  "minutos": "dakika",
+  "racha": "seri",
+  "temporadas": "sezon",
+  "prestigio": "prestij",
+  "Indiscutible": "Tartışmasız",
+  "De portada": "Kapak yıldızı"
  }
 }
