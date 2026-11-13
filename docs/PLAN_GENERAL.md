@@ -4,7 +4,13 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
-## ESTADO AL 13-11 MADRUGADA (sesiones Opus 15 y 16 cerradas, sin archivar; todo en `main` 88190f81; revisiones automáticas apagadas)
+## ESTADO AL 13-11 MAÑANA (orden «solo pulir código»: sesiones 15 y 16 CERRADAS, ya en Sonnet; todo en `main`; revisiones automáticas apagadas)
+- Pulido de código (orden del dueño 13-11, sin cambiar jugabilidad ni aspecto): resumen y mediciones en `docs/04_auditorias/rendimiento_120fps.md` («RESUMEN sesión 15 — optimización» y «Sesión 16»). Unido: motor del partido −5,9 a −8,9 % por paso con resultados exactos, 14 funciones muertas de `nucleo/`, `AnimTransiciones` 3,5 → 1,2 µs, `club_comun.py` (duplicado de Sonar), 9 importaciones sin usar; descartado con medida: once de la CPU entre jornadas, `Club.disponibles` tipado, `FormaEquipo` (−2,5 %, ruido), puertas, techo, ancla al suelo. El coste que queda es del motor de Godot (AnimationPlayer ×60).
+- Herramientas nuevas: `herramientas/grabar_clip.sh` (clips del partido real en Compatibility, sin GPU: ~3,4× el tiempo real a 720p), `herramientas/escaner_duplicados_gd.py`.
+- Bloqueo de permisos: el clasificador de las sesiones deniega a veces `git commit`/`push` de unión; las sesiones guardan en su rama y el líder las une a `main`. Una regla de permisos fija en la configuración del dueño lo evitaría.
+- PENDIENTE DEL DUEÑO: la pregunta de la semilla (abajo), prueba en el teléfono (aún no), keystore del AAB (aún no), sesiones nuevas (después, en Sonnet).
+
+## ESTADO AL 13-11 MADRUGADA (sesiones 15 y 16, en Opus entonces; todo en `main` 88190f81)
 - `main` comprobado con todo junto: banco «FIN. 0 fallos», huellas 2244399493 / 2180788566, 0 scripts > 450. CI de `main` en verde (f3ad4834 y 7816be83 enteros). Sonar: 0 avisos abiertos.
 - CI (12-11 noche): compilar y plataformas solo se lanzan con push a `main` (las ramas duplicaban cada ejecución y la de `main` nunca terminaba); ramas a mano con «Run workflow». Nocturno «especiales todo»: las pruebas con pantalla se saltan sin Vulkan/xvfb y la sonda de calidad mide C4.
 - Sesión 15 (jugabilidad C4): 15 ideas medidas, solo `C4_HUECO` encendida; conclusión: en C4 el gol nace del desorden. Resumen en `MOTOR_LEAGUE_SOCCER_PLAN.md` («RESUMEN PARA EL DUEÑO — sesión 15»). Abiertas: `C4_RUPTURA` con una 3.ª muestra de países y subir el bloque entero en ataque.
