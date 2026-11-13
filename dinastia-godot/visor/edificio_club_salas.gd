@@ -311,14 +311,16 @@ static func vestuario_visitante(nodo: Node3D, caja: Rect2, y0: float, madera: Ma
 	var largo := float(n)
 	var z_ini := caja.position.y
 	for lado: float in [-1.0, 1.0]:
-		var x_pared := caja.end.x if lado > 0.0 else caja.position.x
+		## (13-11) Separado 1,5 cm de la pared: apoyado justo en su plano, las caras traseras del mueble coincidían con las de la pared (de distinto
+		## material) y podían parpadear de cerca; `prueba_coplanares_club` lo detectó en el CI.
+		var x_pared := (caja.end.x if lado > 0.0 else caja.position.x) - lado * 0.015
 		var x_c := x_pared - lado * prof * 0.5            ## centro del mueble
 		var x_frente := x_pared - lado * prof
 		var x_banco := x_pared - lado * (prof + 0.32)
 		var z_c := z_ini + largo * 0.5
 		PiezasObra._caja(nodo, Vector3(x_banco, y0 + 0.45, cz), Vector3(0.42, 0.08, caja.size.y - 0.6), madera, true)
 		PiezasObra._caja(nodo, Vector3(x_c, y0 + 0.5, z_c), Vector3(prof, 1.0, largo), gris, true)                        ## la parte cerrada (puertas)
-		PiezasObra._caja(nodo, Vector3(x_pared - lado * 0.02, y0 + 1.6, z_c), Vector3(0.04, 1.2, largo), fondo_t, false)  ## el fondo del hueco
+		PiezasObra._caja(nodo, Vector3(x_pared - lado * 0.03, y0 + 1.6, z_c), Vector3(0.04, 1.2, largo), fondo_t, false)  ## el fondo del hueco (1 cm por delante del plano trasero)
 		PiezasObra._caja(nodo, Vector3(x_c, y0 + 2.2, z_c), Vector3(prof, 0.04, largo), gris, false)                      ## el techo
 		PiezasObra._caja(nodo, Vector3(x_c, y0 + 1.92, z_c), Vector3(prof - 0.04, 0.025, largo), gris, false)             ## la balda
 		PiezasObra._caja(nodo, Vector3(x_frente + lado * 0.004, y0 + 0.97, z_c), Vector3(0.01, 0.03, largo), negro, false) ## la ranura de las puertas
