@@ -66,6 +66,8 @@ const RETOS := {
 ## Retos que piden lo mismo con distinta vara: no salen juntos la misma semana.
 const FAMILIAS := [["nota65", "nota7", "nota8"], ["gol", "doblete", "triplete", "gol_asist", "participa"],
 	["minutos", "completo"], ["cero", "encaja1"], ["paradas", "paradas5"]]
+## Lo que sube la conversión del partido simulado en el modo jugador (de ~2,6 a ~3,1 goles por partido).
+const GOLES_SIMULADO := 1.15
 const XP_ENTRENO := 6
 ## Lo máximo que un atributo puede pasar de tu media entrenándolo.
 const TOPE_SOBRE_MEDIA := 14

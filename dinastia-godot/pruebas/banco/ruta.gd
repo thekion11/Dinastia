@@ -256,6 +256,14 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(CarreraRuta.rival(c, m) == lejos, "  y se conserva aunque no juegue en tu liga")
 		j.ovr = ovr_r
 		(c.ruta["rival"] as Dictionary).clear()
+		## Más goles en el simulado, pero solo en el modo jugador.
+		m.avanzar_semana(null)
+		_comprobar(is_equal_approx(Partido.ctx_factor_goles, CarreraRuta.GOLES_SIMULADO), "  en el modo jugador el simulado convierte un %d %% más" % roundi((CarreraRuta.GOLES_SIMULADO - 1.0) * 100.0))
+		var m_dt := Mundo.new()
+		m_dt.generar(lista, int(caso[2]))
+		m_dt.tomar_el_mando(m_dt.ligas[0].clubes[1].id)
+		m_dt.avanzar_semana(null)
+		_comprobar(is_equal_approx(Partido.ctx_factor_goles, 1.0), "  y dirigiendo un club, lo de siempre")
 		## El duelo de la temporada.
 		c.stats_temp["goles"] = 30
 		var d := CarreraRuta.duelo(c, m)

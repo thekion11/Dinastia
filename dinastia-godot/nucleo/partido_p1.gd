@@ -147,6 +147,7 @@ static var ctx_cesped_local: float = 1.0
 ## local (B6.5: el artificial castiga, el híbrido protege). 1.0 = natural.
 static var ctx_lesion_local: float = 1.0
 static var ctx_lesion_mio: float = 1.0   ## el desafío «mala racha» (DesafiosDificultad): tu club, en casa y fuera
+static var ctx_factor_goles: float = 1.0   ## (13-11) el modo jugador sube la conversión del simulado (`CarreraRuta.GOLES_SIMULADO`); el resto del juego, 1
 ## Lo que la moda tactica le hace a cada dibujo esta temporada. Lo pone `Mundo`
 ## junto al resto del contexto: `Liga` crea sus partidos por dentro y no conoce
 ## el mundo.
@@ -309,7 +310,7 @@ static func limpiar_contexto() -> void:
 	ctx_anio = 0
 	ctx_semana = 0
 	ctx_cesped_local = 1.0
-	ctx_lesion_local = 1.0; ctx_lesion_mio = 1.0
+	ctx_lesion_local = 1.0; ctx_lesion_mio = 1.0; ctx_factor_goles = 1.0
 	ctx_moda = {}
 	ctx_analisis = 1.0
 

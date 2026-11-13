@@ -22,6 +22,8 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 	if ya_jugado != null:
 		ya_jugado.cerrar_notas_mirado()
 	_semana_contexto_de_partidos()
+	## (13-11, decisión del dueño) Más goles en el simulado, pero SOLO en el modo jugador.
+	Partido.ctx_factor_goles = CarreraRuta.GOLES_SIMULADO if carrera_jugador != null else 1.0
 	_semana_once_antes_de_jugar()
 	if necesidades.preparacion_cambio():   ## §2.5: cansado o con hambre, el partido de esta semana lo nota
 		aplicar_bonificadores()

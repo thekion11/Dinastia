@@ -309,7 +309,7 @@ func _atacar(c: Club, once: Array[Jugador], es_local: bool) -> void:
 		remates_visita += 1
 		xg_visita += xg_de_esta
 	var r := Azar.f()
-	if r < CONVERSION:
+	if r < CONVERSION * ctx_factor_goles:
 		## Un gol es, por definición, un tiro a puerta.
 		if es_local:
 			tiros_puerta_local += 1

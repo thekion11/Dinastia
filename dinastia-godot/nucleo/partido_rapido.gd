@@ -55,7 +55,7 @@ static func _nativo(p: Partido, nat: Object) -> void:
 		"bono_l": 1.0 if p.neutral else Balance.BONO_LOCAL, "bono_v": 1.0 if p.neutral else Balance.BONO_VISITA, "clima": p.clima, "clima_v": p._f_clima_visita,
 		"ritmo0": p.local.tactica.ritmo == 0,
 		"pc_l": Balance.P_CORNER_LOCAL, "pc_v": Balance.P_CORNER_VISITA, "pf_l": Balance.P_FALTA_LOCAL, "pf_v": Balance.P_FALTA_VISITA, "pfuera": Balance.P_FUERA,
-		"k": Balance.LLEGADAS_K, "conv": Balance.CONVERSION, "r_ataj": Balance.R_ATAJADA, "r_poste": Balance.R_POSTE,
+		"k": Balance.LLEGADAS_K, "conv": Balance.CONVERSION * Partido.ctx_factor_goles, "r_ataj": Balance.R_ATAJADA, "r_poste": Balance.R_POSTE,
 		"p_penal": Balance.P_PENAL * float(Balance.PENAL_PERFIL.get(perfil, 1.0)),
 		"f_var": Partido.ctx_factor_tarjetas / Balance.LLEGADAS_K,
 		"p_amarilla": Balance.P_AMARILLA * Partido.ctx_factor_tarjetas * float({"tarjetero": 1.4, "estricto": 1.15, "permisivo": 0.7}.get(perfil, 1.0)),
