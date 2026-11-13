@@ -135,6 +135,38 @@ func _medir() -> void:
 	if OS.get_environment("MESH_LOD") != "":
 		_pj._vp.mesh_lod_threshold = float(OS.get_environment("MESH_LOD"))   ## (13-11) umbral de LOD del viewport del partido, para comparar
 	await _conteos("base")
+	if OS.get_environment("TRANSP") != "":
+		## (13-11) TRANSP=1: mallas visibles con transparencia o mezcla (sobredibujo), por nombre: cuántas y el área mayor de su caja (m²).
+		var tr := {}
+		for mi in _pj.find_children("*", "GeometryInstance3D", true, false):
+			var g := mi as GeometryInstance3D
+			if not g.is_visible_in_tree() or g is Label3D:
+				continue
+			var mats: Array = []
+			if g.material_override != null:
+				mats.append(g.material_override)
+			if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
+				for si in (g as MeshInstance3D).mesh.get_surface_count():
+					var mt: Material = (g as MeshInstance3D).get_active_material(si)
+					if mt != null:
+						mats.append(mt)
+			var trans := false
+			for mt in mats:
+				if mt is BaseMaterial3D and (mt as BaseMaterial3D).transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
+					trans = true
+				elif mt is ShaderMaterial and (mt as ShaderMaterial).shader != null and (mt as ShaderMaterial).shader.code.contains("blend_"):
+					trans = true
+			if not trans:
+				continue
+			var k := String(g.name).rstrip("0123456789@_") + " <" + String(g.get_parent().name).rstrip("0123456789@_") + ">"
+			var ab := g.get_aabb().size
+			var f: Array = tr.get(k, [0, 0.0])
+			f[0] += 1; f[1] = maxf(f[1], maxf(ab.x * ab.z, maxf(ab.x * ab.y, ab.y * ab.z)))
+			tr[k] = f
+		for k in tr:
+			print("TRANSP x%-3d área máx %7.0f m²  %s" % [tr[k][0], tr[k][1], k])
+		get_tree().quit()
+		return
 	if OS.get_environment("PELO") != "":
 		## (13-11) PELO=1: sobre la MISMA escena congelada, triángulos al cambiar la distancia a la que el pelo pasa de `Cuero` (cerca) a `CueroLejos`.
 		for d in [22.0, 15.0, 10.0, 6.0, 3.0]:
