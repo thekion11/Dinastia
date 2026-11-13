@@ -272,3 +272,11 @@ Inventario: ≈ 2.100 geometrías visibles en MEDIO (1.000 en MÍNIMO), 853 mate
   polígono era su propia llamada; y se dibuja por fases: todas las formas, luego contornos, luego textos); estadísticas 32 → 12,
   ficha del jugador 20 → 8 y marcador 12 → 4 (sin la sombra del texto, que partía el lote, en las etiquetas sobre panel oscuro; el aviso
   grande sobre el césped la conserva). Misma información, mismos tamaños de toque (`captura_tactil_movil` y `captura_tactil_partido` en 0).
+
+## Perfil del núcleo (13-11, sesión 15; solo medida, sin cambios de código)
+Orden del dueño vía el líder: pulir y optimizar CÓDIGO sin cambiar el comportamiento. Línea base con las herramientas del repo (contenedor, `--headless`, extensión C++ cargada; las cifras sirven para comparar antes/después, no entre máquinas):
+- `medir_semanas.tscn` (12 ligas): semana media 199,9 ms, peor 466 ms; generar el mundo 399 ms.
+- `zz_perfil_semana.tscn` (mundo entero, 2.206 clubes, 12 semanas): 1.190 ms por semana; `_semana_jugar_ligas` 1.060 ms (89 %), `_semana_caja_y_plantillas` 110 ms, `_semana_modulos_del_club` 15 ms, `_semana_mercado` 4 ms; el resto < 0,1 ms.
+- `zz_medir_simular.tscn` (partido simulado de la IA, 200 cruces, huella 585088903): 1.664 µs por cruce = 90 minutos 1.196 µs (72 %), `once` x2 397 µs (24 %), cierre 48 µs, crear 63 µs, clima 25 µs.
+- `Club.once()` 175 µs por club: `disponibles()` 27 µs, `LeyesPais.ajustar_once` 35 µs, el resto (primera vuelta `OnceAuto.asignar`, ya en C++) ~110 µs.
+Conclusión: los 90 minutos y el once ya tienen versión C++ (`PartidoRapido`, `OnceAuto`) y no queda una palanca barata en GDScript puro dentro de `nucleo/`: lo que pesa es el volumen (~1.100 cruces por semana en el mundo entero). Candidatos, sin tocar: cachear el once de la IA entre jornadas si no cambió la plantilla (riesgo de azar y de huella) y reducir el paso de datos GDScript → C++ de `simular_90`.
