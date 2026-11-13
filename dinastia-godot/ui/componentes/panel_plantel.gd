@@ -371,6 +371,12 @@ static func _ajustar_nombre(g: GridContainer, desde: int, j: Jugador) -> void:
 	celda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for k in range(desde + 1, g.get_child_count()):
 		(g.get_child(k) as Control).size_flags_horizontal = Control.SIZE_FILL
+	## (13-11) La última celda (el valor) deja 10 px a su derecha: quedaba pegada a la barra de desplazamiento.
+	var ultima := g.get_child(g.get_child_count() - 1) as Label
+	if ultima != null:
+		var aire := StyleBoxEmpty.new()
+		aire.content_margin_right = 10
+		ultima.add_theme_stylebox_override("normal", aire)
 	for h in celda.get_children():
 		if h is Button:
 			var b := h as Button

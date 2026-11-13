@@ -53,6 +53,7 @@ func _probar() -> void:
 	plantel._pintar_plantel(mio)
 	_comprobar(_rejilla(lista) == null and _texto_con(lista, "Tu plantel está vacío"), "plantel vacío: mensaje y sin rejilla")
 	## Cantera sin canteranos: también lo dice.
+	_p._secc_extra["Cantera"] = "juveniles"   ## (12-11) la cantera va en tres pantallas: los canteranos del plantel están en «Juveniles»
 	_p.get("_ui_cantera")._pintar_cantera(mio)
 	_comprobar(_texto_con(_p.get("_lista_cantera"), "Todavía no hay canteranos"), "cantera sin canteranos: mensaje")
 	mio.plantilla.assign(guardado)
