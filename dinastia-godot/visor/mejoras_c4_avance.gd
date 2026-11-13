@@ -125,3 +125,42 @@ static func parada(m: Object, gk: Dictionary, desde: Vector3, prob: float) -> fl
 	if m.get("diag") is Dictionary:
 		(m.diag as Dictionary)["c4_parada_area"] = int((m.diag as Dictionary).get("c4_parada_area", 0)) + 1
 	return prob * PARADA_AREA
+
+## EL PASE ATRÁS DESDE EL FONDO (sesión 15): el extremo que llega al fondo (`C4_BANDA`) solo sabía centrar por arriba (`MejorasC4.centro`).
+## Con `C4_PASE_ATRAS=1`, abierto (|x| > 9) y a menos de 10 m de la línea de fondo, con probabilidad `PASE_ATRAS_P` busca un compañero
+## de campo en el área (a 6-16 m del arco y |x| < 9, habilitado, línea limpia) y se la da RASA (el pase de siempre); elige al más libre.
+## Va antes que el centro por arriba. Contador `c4_pase_atras`.
+static var PASE_ATRAS := OS.get_environment("C4_PASE_ATRAS") == "1"
+const PASE_ATRAS_P := 0.6
+static var PASE_ATRAS_Z := float(OS.get_environment("C4_PASE_ATRAS_Z")) if OS.get_environment("C4_PASE_ATRAS_Z") != "" else 10.0   ## m a la línea de fondo
+static var PASE_ATRAS_ANCHO := PASE_ATRAS_Z > 12.0   ## con zona amplia: desde |x| > 7, receptor a 5-18 m y |x| < 11
+
+static func pase_atras(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
+	if not PASE_ATRAS:
+		return false
+	var yo: Vector3 = m.pos(p)
+	var arco: Vector3 = m._arco_rival(p)
+	if absf(yo.x) < (7.0 if PASE_ATRAS_ANCHO else 9.0) or absf(arco.z - yo.z) > PASE_ATRAS_Z:
+		return false
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_fondo_zona"] = int((m.diag as Dictionary).get("c4_fondo_zona", 0)) + 1
+	var local := bool(p["es_local"])
+	var mejor: Dictionary = {}
+	var libre := 0.0
+	for q: Dictionary in m.jugadores:
+		if q == p or bool(q["es_local"]) != local or bool(q["por"]):
+			continue
+		var qp: Vector3 = m.pos(q)
+		var da := Vector2(qp.x - arco.x, qp.z - arco.z).length()
+		if da < (5.0 if PASE_ATRAS_ANCHO else 6.0) or da > (18.0 if PASE_ATRAS_ANCHO else 16.0) or absf(qp.x) > (11.0 if PASE_ATRAS_ANCHO else 9.0) or m._adelantado(q, p) or m._linea_tapada(yo, qp, local):
+			continue
+		var pr: float = m._presion(q)
+		if pr > libre:
+			libre = pr
+			mejor = q
+	if mejor.is_empty() or rng.randf() > PASE_ATRAS_P:
+		return false
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_pase_atras"] = int((m.diag as Dictionary).get("c4_pase_atras", 0)) + 1
+	m._pasar_a(p, mejor)
+	return true
