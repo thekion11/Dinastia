@@ -244,6 +244,20 @@ func _probar_cara_a_cara_simulado() -> void:
 			pj += int(lg.h2h[k]["pj"])
 		_comprobar(lg.h2h.size() >= 3, "%s: tras 5 semanas simuladas hay rivales en el cara a cara (%d)" % [caso[0], lg.h2h.size()])
 		_comprobar(pj == int(lg.carrera.get("pj", 0)) and pj > 0, "%s: y suman los mismos partidos que la carrera (%d y %d)" % [caso[0], pj, int(lg.carrera.get("pj", 0))])
+		## (13-11 tarde) La Vitrina se llena simulando: récords de marcador y partidos y goles de cada uno.
+		var jugados := 0
+		for k2: String in lg.rec["pj"]:
+			jugados += int(lg.rec["pj"][k2]["n"])
+		var goles_v := 0
+		for k3: String in lg.rec["goles"]:
+			goles_v += int(lg.rec["goles"][k3])
+		_comprobar(lg.rec.has("mayor_goleada") or lg.rec.has("peor_derrota") or pj > 0 and jugados > 0, "%s: hay récords de marcador sin haber dirigido" % caso[0])
+		_comprobar(jugados >= pj * 11, "%s: los futbolistas suman sus partidos (%d en %d partidos)" % [caso[0], jugados, pj])
+		_comprobar(goles_v <= int(lg.carrera.get("gf", 0)) and (goles_v > 0 or int(lg.carrera.get("gf", 0)) == 0), "%s: y sus goles (%d de %d del equipo)" % [caso[0], goles_v, int(lg.carrera.get("gf", 0))])
+		## Copa y continental simulados también entran en el cara a cara.
+		var antes_c := int(lg.carrera.get("pj", 0))
+		m._memoria_simulada([{"local": m.mi_club(), "visita": m.ligas[0].clubes[0 if int(caso[1]) != 0 else 1], "gl": 3, "gv": 0}], "Copa")
+		_comprobar(int(lg.carrera.get("pj", 0)) == antes_c + 1 and String(lg.rec["mayor_goleada"]["competicion"]) in ["Copa", "Liga"], "%s: un cruce de copa simulado cuenta como partido de tu club" % caso[0])
 	Partido.limpiar_contexto()
 
 ## (13-11) El plantel heredado no se multa (solo lo que se pase de él) y el tope votado da de plazo hasta el cierre de la próxima ventana.

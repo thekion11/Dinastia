@@ -201,18 +201,23 @@ func tras_partido(p: Partido, competicion: String = "Liga", publico: int = 0, po
 			texto = "Paliza %d-%d de %s" % [sus_goles, mis_goles, rival.nombre]
 		_apuntar_efemeride(texto)
 
+	LogrosSimulado.poner_al_dia(self)
 	revisar()
 
 ## Un partido de tu club que NO dirigiste (simulado por la jornada): no trae
 ## el once ni los goleadores, pero el marcador basta para las rachas. Sin esto,
 ## quien simula toda la temporada veía «RACHAS» a 0 en Récords.
 ## `rival` (13-11): con él, el partido simulado cuenta también en el cara a cara (con 14 jornadas jugadas sin dirigir ninguna, la pantalla
-## «Rivales» decía «0 rivales enfrentados» y el cara a cara no existía). Los récords y goleadores siguen siendo solo de los dirigidos.
-func tras_partido_simulado(gane: bool, empate: bool, gf: int = 0, gc: int = 0, rival: Club = null) -> void:
+## «Rivales» decía «0 rivales enfrentados» y el cara a cara no existía).
+## (13-11 tarde, decisión del dueño) La Vitrina también se llena simulando: los récords de marcador, y los partidos y goles de
+## cada futbolista (`LogrosSimulado`). `competicion`: también llegan aquí la copa y lo continental que no dirigiste.
+func tras_partido_simulado(gane: bool, empate: bool, gf: int = 0, gc: int = 0, rival: Club = null, competicion: String = "Liga") -> void:
 	if mundo == null or mundo.mi_club() == null:
 		return
 	if rival != null:
 		_anotar_cara_a_cara(rival, gf, gc, gane, empate)
+		_anotar_records(rival, gf, gc, competicion, 0)
+	LogrosSimulado.anotar_plantel(self)
 	_anotar_rachas(gane, empate)
 	_anotar_carrera(gane, empate, gf, gc)
 	revisar()

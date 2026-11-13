@@ -224,6 +224,8 @@ func _semana_continental(ya_jugado: Partido) -> void:
 		## así que nunca hacía falta -ahora sí-.
 		var res_c: Array = t.jugar_ronda(ya_jugado if _continental_es_de(t, ya_jugado) else null)
 		_rueda_de_eliminatoria(res_c, "conti", t.participantes)
+		if not _continental_es_de(t, ya_jugado):
+			_memoria_simulada(res_c, "Continental")
 		## El continental se corona a mitad de temporada, no al cierre:
 		## por eso esta celebración no puede esperar a cerrar_temporada()
 		## como la de liga y copa. `en_curso()` pasa a false en cuanto hay
@@ -244,6 +246,22 @@ func _semana_copa(ya_jugado: Partido) -> void:
 	if copa != null and copa.en_curso() and semana % 4 == 0:
 		var res_copa: Array = copa.jugar_ronda(ya_jugado if _copa_es_de(ya_jugado) else null)
 		_rueda_de_eliminatoria(res_copa, "copa", copa.participantes)
+		if not _copa_es_de(ya_jugado):
+			_memoria_simulada(res_copa, "Copa")
+
+## (13-11, decisión del dueño) El partido de copa o continental de tu club que NO dirigiste también entra en su memoria
+## (cara a cara, rachas, récords, partidos y goles de cada uno), como ya pasaba con el de liga.
+func _memoria_simulada(resultados: Array, competicion: String) -> void:
+	var mio := mi_club()
+	if logros == null or mio == null:
+		return
+	for r: Dictionary in resultados:
+		if r.get("local") != mio and r.get("visita") != mio:
+			continue
+		var soy_local: bool = r["local"] == mio
+		var gf := int(r["gl"] if soy_local else r["gv"])
+		var gc := int(r["gv"] if soy_local else r["gl"])
+		logros.tras_partido_simulado(gf > gc, gf == gc, gf, gc, r["visita"] if soy_local else r["local"], competicion)
 
 ## Los retos de la semana: con el marcador de tu partido (dirigido o simulado) se juzgan los de esta semana y
 ## salen los de la próxima. Va antes de la memoria del partido, que vacía `_marcador_liga_semana`.

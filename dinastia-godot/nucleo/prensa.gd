@@ -205,16 +205,17 @@ func narrador_temporada() -> String:
 		if pd is Dictionary and int((pd as Dictionary).get("anio", 0)) == m.anio:
 			partes.append("La peor, el %s con %s." % [
 				String((pd as Dictionary).get("marcador", "")), String((pd as Dictionary).get("rival", ""))])
-		## El hombre gol. `rec["goles"]` va por id de jugador con {nombre, n} -no
-		## por nombre-, que es la trampa que ya costó una lectura en vacío.
+		## El hombre gol. `rec["goles"]` va por NOMBRE visible con su número de goles (así lo escribe `Logros`). (13-11) Aquí se leía
+		## como si fuera por id con {nombre, n}: reventaba en cuanto había un gol anotado, y no se vio porque simulando la lista estaba vacía.
 		var mejor := ""
 		var mejor_n := 0
 		var goles: Dictionary = rec.get("goles", {})
-		for pid: String in goles:
-			var g: Dictionary = goles[pid]
-			if int(g.get("n", 0)) > mejor_n:
-				mejor_n = int(g.get("n", 0))
-				mejor = String(g.get("nombre", ""))
+		for quien: String in goles:
+			var g: Variant = goles[quien]
+			var n := int((g as Dictionary).get("n", 0)) if g is Dictionary else int(g)
+			if n > mejor_n:
+				mejor_n = n
+				mejor = String((g as Dictionary).get("nombre", "")) if g is Dictionary else quien
 		if mejor != "" and mejor_n > 0:
 			partes.append("%s fue el hombre gol con %d tantos." % [mejor, mejor_n])
 
