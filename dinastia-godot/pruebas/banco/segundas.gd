@@ -422,6 +422,24 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(CarreraRuta.nivel(c2) == CarreraRuta.nivel(c) and CarreraRuta.tiene(c2, "voz") and (c2.ruta["grada"] as Array).size() == (c.ruta["grada"] as Array).size(),
 			"  la ruta se guarda y se carga igual")
 		_comprobar(CarreraRuta.texto_grada((c2.ruta["grada"] as Array)[0]) != "", "  la grada tiene algo que decir")
+		## Y en disco: la partida entera se guarda, se carga y la ruta vuelve igual.
+		CarreraVida.semana(c, m)
+		c.ruta["vida"] = {"fisio": true}
+		c.ruta["patro"] = {"marca": "roca", "nivel": 2}
+		var nombre_g := "prueba_ruta_%s" % String(caso[1]).to_lower()
+		_comprobar(Partida.guardar(m, nombre_g), "  la partida con la ruta se guarda en disco")
+		var m3 := Partida.cargar(nombre_g)
+		Partida.borrar(nombre_g)
+		var c3: CarreraJugador = m3.carrera_jugador if m3 != null else null
+		_comprobar(c3 != null and c3.jugador(m3) != null and c3.club(m3).nombre == c.club(m).nombre, "  al cargar sigues en tu club (%s)" % c.club(m).nombre)
+		if c3 != null:
+			_comprobar(CarreraRuta.nivel(c3) == CarreraRuta.nivel(c) and int(c3.ruta["xp"]) == int(c.ruta["xp"]) and CarreraVida.ahorros(c3) == CarreraVida.ahorros(c)
+				and CarreraVida.tiene(c3, "fisio") and CarreraPatrocinio.etiqueta(c3) == "👟 Roca II" and CarreraMisiones.cobrada(c3, "Promesa") == CarreraMisiones.cobrada(c, "Promesa")
+				and CarreraRuta.retos(c3, m3).size() == 3 and CarreraRuta.rival(c3, m3) != null and CarreraRuta.rival(c3, m3).id == CarreraRuta.rival(c, m).id,
+				"  nivel, experiencia, ahorros, compras, botas, misiones, retos y rival vuelven igual")
+		c.ruta["vida"] = {}
+		c.ruta["patro"] = {}
+		c.ruta["ahorros"] = 0
 		## El duelo de la temporada.
 		c.stats_temp["goles"] = 30
 		var d := CarreraRuta.duelo(c, m)
