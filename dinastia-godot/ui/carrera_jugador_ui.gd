@@ -28,6 +28,8 @@ func _pintar_semana() -> void:
 	if resumen:
 		_pestana = "hoy"
 		_cuerpo.add_child(RutaResumen.pintar(self, _msg))
+	elif CarreraPremios.pendiente(carrera):
+		_cuerpo.add_child(RutaTemporada.pintar(self))
 	Idiomas.traducir_arbol(_cuerpo)
 	RutaEstilo.enfocar(_cuerpo)
 

@@ -20,6 +20,8 @@ static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
 	var sub := E.fila(8)
 	tit.add_child(sub)
 	sub.add_child(E.chip(Idiomas.t(String(CarreraRuta.capitulo(c)[1])).to_upper(), E.ORO))
+	if c.energia < 30:
+		sub.add_child(E.chip(Idiomas.t("SIN PIERNAS"), E.CORAL))
 	var texto := Idiomas.t("%s · %s · %d años · temporada %d, semana %d") % [Nombres.visible(club.nombre), j.pos_e, j.edad, m.anio, m.semana]
 	if angosto or ui.get_viewport_rect().size.x < 1000.0:
 		texto = Idiomas.t("%s · %d años · sem. %d") % [j.pos_e, j.edad, m.semana]

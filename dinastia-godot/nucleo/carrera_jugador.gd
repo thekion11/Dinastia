@@ -21,6 +21,14 @@ func entrenar(m: Mundo) -> String:
 	var tabla := CarreraPortero.focos_para(j) if j != null else {}
 	var attr := String((tabla.get(foco, ["", ""]) as Array)[1]) if foco != "descanso" else ""
 	var antes := int(j.atributos.get(attr, 0)) if j != null else 0
+	## (13-11) Un atributo no se despega del resto de tu juego: a 14 puntos de tu
+	## media ya no sube (entrenando solo tiro se llegaba a 91 en una temporada).
+	if j != null and attr != "" and antes >= mini(99, j.ovr + CarreraRuta.TOPE_SOBRE_MEDIA):
+		energia = maxi(0, energia - 14)
+		CarreraRuta.sumar_xp(self, CarreraRuta.XP_ENTRENO)
+		entreno_msg = Idiomas.t("%s ya está muy por encima del resto de tu juego: entrena otra cosa para seguir creciendo.") % Idiomas.t(String(tabla[foco][0]))
+		entreno_semana = ahora
+		return entreno_msg
 	entreno_msg = super(m)
 	var plus := CarreraRuta.tras_entreno(self, m, attr, j != null and int(j.atributos.get(attr, 0)) > antes)
 	if plus != "":
@@ -32,7 +40,9 @@ func entrenar(m: Mundo) -> String:
 func semana(m: Mundo) -> Array:
 	var nuevos: Array = []
 	aviso_agenda = CarreraAgenda.aplicar(self, jugador(m))
-	energia = mini(ENERGIA_MAX, energia + 12)
+	## (13-11) La semana recupera 28 (antes 12): entrenar y jugar cuestan ~44, así
+	## que hay que descansar una semana de cada cuatro o cinco, no todas.
+	energia = mini(ENERGIA_MAX, energia + 28)
 	relacion_dt = clampi(relacion_dt + (1 if nota_media() >= 6.8 else 0) - (1 if energia < 25 else 0), 0, 100)
 	seguidores += int(float(fama) * 3.0) + _rng.randi_range(0, 20)
 	var j := jugador(m)
@@ -205,7 +215,7 @@ func tras_partido(m: Mundo, d: Dictionary) -> void:
 ## Cierra la temporada: la guarda en tu historial y cumples un año.
 func fin_de_temporada(m: Mundo) -> void:
 	var c := club(m)
-	CarreraRuta.cerrar_duelo(self, m)
+	CarreraPremios.cerrar(self, m)
 	temporadas.append({"anio": m.anio, "club": c.nombre if c != null else "", "pj": int(stats_temp["pj"]),
 		"goles": int(stats_temp["goles"]), "asist": int(stats_temp["asist"]), "nota": snappedf(nota_media(), 0.01),
 		"ovr": jugador(m).ovr if jugador(m) != null else 0})

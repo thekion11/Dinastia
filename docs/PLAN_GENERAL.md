@@ -15,11 +15,13 @@ Hecho (bloque 1, «LA RUTA»):
 
 Hecho (bloque 2): móvil. De pie (lienzo de 540 px): una sola columna, cabecera compacta, pestañas en una barra abajo, lo que hay que decidir antes que el entreno; tumbado: dos columnas con cabecera corta; creación, ofertas y retiro con desplazamiento. Las tres ofertas salen de una liga humilde, una media y una fuerte (`nucleo/carrera_comienzo.gd`). Capturas con `MOVIL=1`.
 
+Hecho (bloque 3): cierre de temporada con premios personales (`nucleo/carrera_premios.gd`, `ui/carrera/ruta_temporada.gd`: revelación, goleador y jugador del año del club, once ideal, guante, hombre de hierro, duelo, gran salto; palmarés en «Ruta»); equilibrio: la semana recupera 28 de energía (antes 12; simulando se quedaba en 12 de 100) y un atributo deja de subir a 14 puntos de tu media (entrenando solo tiro llegaba a 91 en un año); aviso «sin piernas»; animaciones del resumen (se apagan con el ahorro de menús).
+
 Falta (siguientes bloques):
 - Repasar con el mando real el orden del foco (hoy el foco cae en la acción principal de cada pantalla; el resto lo navega Godot solo).
-- Más variedad: más retos y eventos, premios de fin de temporada, objetivos de capítulo, patrocinios, vida fuera del campo.
-- Animaciones (barra de experiencia, subida de nivel) y sonido de interfaz.
-- Equilibrio: la energía se agota simulando semanas seguidas (12 de 100 a la semana 8); ritmo de niveles (hoy ~nivel 8 al acabar la primera temporada).
+- Más variedad: más retos y eventos, objetivos de capítulo, patrocinios, vida fuera del campo.
+- Sonido de interfaz en las pantallas nuevas.
+- Equilibrio: jugar varias temporadas seguidas y mirar el ritmo (hoy: nivel 6 y +media tras la primera temporada simulada de un delantero).
 - Pendiente de decisión del dueño: nada por ahora.
 
 ## ESTADO AL 12-11 MEDIODÍA (sesiones Opus 13 y 14 cerradas y ARCHIVADAS; todo en `main`)

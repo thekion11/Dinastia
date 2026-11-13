@@ -16,6 +16,35 @@ const TEXTO := Color("f2f5fb")
 const SUAVE := Color("93a0bd")
 
 static var _titular: Font
+## Las capturas y las pruebas apagan las animaciones (la foto caería a medias).
+static var sin_animar := false
+
+static func _anima() -> bool:
+	return not sin_animar and not AhorroMenu.fondo_estatico()
+
+## Una capa que aparece fundiéndose.
+static func entrada(n: Control) -> void:
+	if not _anima():
+		return
+	n.modulate.a = 0.0
+	n.ready.connect(func() -> void: n.create_tween().tween_property(n, "modulate:a", 1.0, 0.25))
+
+## Una barra que se llena desde cero.
+static func llenar(b: ProgressBar, retraso := 0.2) -> void:
+	if not _anima():
+		return
+	var hasta := b.value
+	b.value = 0.0
+	b.ready.connect(func() -> void:
+		b.create_tween().tween_property(b, "value", hasta, 0.8).set_delay(retraso).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT))
+
+## Un número que sube contando hasta su valor (`formato` como "%.1f").
+static func contar(l: Label, hasta: float, formato: String) -> void:
+	if not _anima():
+		return
+	l.text = formato % 0.0
+	l.ready.connect(func() -> void:
+		l.create_tween().tween_method(func(x: float) -> void: l.text = formato % x, 0.0, hasta, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT))
 
 ## La fuente de los titulares (con la del juego de respaldo para lo que no trae).
 static func titular() -> Font:

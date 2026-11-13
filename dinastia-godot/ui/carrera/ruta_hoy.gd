@@ -153,6 +153,8 @@ static func _entreno(ui: Variant, j: Jugador) -> Control:
 	if toque >= 0.0:
 		cab.add_child(E.chip(Idiomas.t("TOQUE PERFECTO") if toque >= 0.85 else (Idiomas.t("BUEN TOQUE") if toque >= 0.5 else Idiomas.t("TOQUE FLOJO")),
 			E.MENTA if toque >= 0.85 else (E.ORO if toque >= 0.5 else E.CORAL)))
+	if c.energia < 30:
+		v.add_child(E.lbl(13, E.CORAL, "Vas sin piernas: con menos de 30 de energía el entreno rinde menos de la mitad y el DT lo nota. Descansa esta semana."))
 	var ff := E.flujo()
 	v.add_child(ff)
 	var grupo := ButtonGroup.new()
@@ -160,7 +162,11 @@ static func _entreno(ui: Variant, j: Jugador) -> Control:
 	for f: String in focos:
 		var attr := String(focos[f][1])
 		var txt := Idiomas.t(String(focos[f][0])) + ("  %d" % int(j.atributos.get(attr, 0)) if attr != "" and j.atributos.has(attr) else "")
-		ff.add_child(E.opcion(txt, E.CIELO, grupo, c.foco == f, func() -> void: c.foco = f, 36))
+		var tope := attr != "" and int(j.atributos.get(attr, 0)) >= mini(99, j.ovr + CarreraRuta.TOPE_SOBRE_MEDIA)
+		var bf := E.opcion(txt + (" ⛔" if tope else ""), E.CORAL if tope else E.CIELO, grupo, c.foco == f, func() -> void: c.foco = f, 36)
+		if tope:
+			bf.tooltip_text = Idiomas.t("Ya está muy por encima del resto de tu juego: entrena otra cosa.")
+		ff.add_child(bf)
 	if toque < 0.0 and c.entreno_semana != m.anio * 60 + m.semana:
 		var bt := E.boton("🎯  EL TOQUE: juega el entreno" if E.estrecho(ui) else "🎯  EL TOQUE: juega el entreno (perfecto = mejora asegurada)", E.MENTA, func() -> void: RutaToque.abrir(ui), 44)
 		v.add_child(bt)

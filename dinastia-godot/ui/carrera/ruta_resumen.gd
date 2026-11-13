@@ -34,7 +34,9 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 	var n := E.columna(-10)
 	n.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	arriba.add_child(n)
-	n.add_child(E.titulo(96, tono, "%.1f" % nota))
+	var grande := E.titulo(96, tono, "%.1f" % nota)
+	E.contar(grande, nota, "%.1f")
+	n.add_child(grande)
 	n.add_child(E.lbl(13, E.SUAVE, "tu nota", true))
 	var d := E.columna(8)
 	arriba.add_child(d)
@@ -66,13 +68,16 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 	xp.add_child(xv)
 	var subio := int(u.get("niveles", 0))
 	xv.add_child(E.titulo(26, E.ORO, Idiomas.t("+%d de experiencia") % int(u.get("xp", 0)) + ("   ·   " + Idiomas.t("¡NIVEL %d!") % int(r["nivel"]) if subio > 0 else "")))
-	xv.add_child(E.barra(float(r["xp"]), float(CarreraRuta.xp_para(int(r["nivel"]))), E.ORO, 10))
+	var bx := E.barra(float(r["xp"]), float(CarreraRuta.xp_para(int(r["nivel"]))), E.ORO, 10)
+	E.llenar(bx, 0.5)
+	xv.add_child(bx)
 	if subio > 0:
 		xv.add_child(E.lbl(13, E.MENTA, Idiomas.t("Tienes %d punto(s) de talento por gastar en «Yo».") % int(r["puntos"]), true))
 	if texto_semana != "":
 		var t := E.lbl(13, E.SUAVE, texto_semana)
 		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		v.add_child(t)
+	E.entrada(velo)
 	var b := E.boton("SEGUIR  ▸", tono, func() -> void: ui._pintar_semana(), 52, true)
 	v.add_child(b)
 	return velo

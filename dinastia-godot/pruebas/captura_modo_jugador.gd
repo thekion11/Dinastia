@@ -2,7 +2,7 @@ extends Node
 ## EL MODO JUGADOR («La Ruta»), EN FOTOS (13-11-2026): la creación, las tres
 ## ofertas, Hoy recién firmado, el mini juego del entreno, el resumen de un
 ## partido y, tras simular unas semanas, Hoy, Yo y Ruta. Fuera del repo, en JPG.
-##   SALIDA=<carpeta> [PUESTO=MC] [NOMBRE=…] [SEMANAS=6] [OFERTA=0..2] [PREFIJO=…] [MOVIL=1] xvfb-run -a godot --path . \
+##   SALIDA=<carpeta> [PUESTO=MC] [NOMBRE=…] [SEMANAS=6] [OFERTA=0..2] [PREFIJO=…] [MOVIL=1] [TEMPORADA=1] xvfb-run -a godot --path . \
 ##     --rendering-driver vulkan --resolution 1280x720 res://pruebas/captura_modo_jugador.tscn
 var _n := 0
 var _ui: CarreraJugadorUI
@@ -18,6 +18,7 @@ func _ready() -> void:
 	if OS.get_environment("MOVIL") == "1":
 		EscalaMovil.forzar = true
 		EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
+	RutaEstilo.sin_animar = true
 	CarreraJugadorUI.mundo = null
 	CarreraJugadorUI.nombre_pedido = OS.get_environment("NOMBRE")
 	_ui = load("res://escenas/carrera_jugador.tscn").instantiate()
@@ -63,6 +64,13 @@ func _process(_d: float) -> void:
 		8:
 			for _i in _semanas:
 				_ui._cerrar_semana({})
+			## TEMPORADA=1: hasta el final, para la pantalla del cierre.
+			var tope := 70
+			while OS.get_environment("TEMPORADA") == "1" and m.temporada_en_curso() and tope > 0:
+				_ui._cerrar_semana({})
+				tope -= 1
+			if OS.get_environment("TEMPORADA") == "1" and c.ruta.get("temporada") is Dictionary:
+				(c.ruta["temporada"] as Dictionary)["visto"] = false
 			_ui._pintar_semana()
 		9:
 			_foto("6_hoy_semanas")

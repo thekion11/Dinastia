@@ -290,6 +290,15 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(int(j.atributos[attr]) == v0 + 1, "  con toque perfecto el entreno mejora seguro (%s %d → %d)" % [attr, v0, int(j.atributos[attr])])
 		c.entrenar(m)
 		_comprobar(int(j.atributos[attr]) == v0 + 1, "  y no se entrena dos veces la misma semana")
+		## Un atributo no se despega: a 14 de la media deja de subir.
+		j.atributos[attr] = mini(99, j.ovr + CarreraRuta.TOPE_SOBRE_MEDIA)
+		c.entreno_semana = -1
+		c.ruta["toque_semana"] = -1
+		CarreraRuta.anotar_toque(c, m, 1.0)
+		var tope0 := int(j.atributos[attr])
+		c.entrenar(m)
+		_comprobar(int(j.atributos[attr]) == tope0, "  un atributo a 14 puntos de tu media ya no sube (ni con toque perfecto)")
+		j.atributos[attr] = v0 + 1
 		## Guardar y cargar conserva la ruta.
 		var c2 := CarreraJugador.desde_dic(JSON.parse_string(JSON.stringify(c.a_dic())))
 		_comprobar(CarreraRuta.nivel(c2) == CarreraRuta.nivel(c) and CarreraRuta.tiene(c2, "voz") and (c2.ruta["grada"] as Array).size() == (c.ruta["grada"] as Array).size(),
@@ -298,5 +307,20 @@ func _probar_carrera_ruta() -> void:
 		## El duelo de la temporada.
 		c.stats_temp["goles"] = 30
 		var d := CarreraRuta.duelo(c, m)
-		_comprobar(int(d[0]) > int(d[1]) and CarreraRuta.cerrar_duelo(c, m) and int(c.ruta["duelos_ganados"]) == 1, "  con 30 goles le ganas el duelo a tu rival")
+		_comprobar(int(d[0]) > int(d[1]), "  con 30 goles vas ganando el duelo a tu rival")
+		## El cierre de temporada: premios con su experiencia, una vez.
+		c.stats_temp["pj"] = 32
+		c.stats_temp["notas"] = [7.6, 7.4, 7.8]
+		c.ovr_inicio = j.ovr - 5
+		var fama0 := c.fama
+		c.fin_de_temporada(m)
+		var t: Dictionary = c.ruta["temporada"]
+		var ids: Array = t["premios"]
+		_comprobar(bool(t["gano_duelo"]) and int(c.ruta["duelos_ganados"]) == 1 and ids.has("duelo"), "  el cierre apunta el duelo ganado")
+		_comprobar(ids.has("revelacion") and ids.has("goleador_club") and ids.has("once_ideal") and ids.has("hierro") and ids.has("salto"),
+			"  premios del año: %s" % ", ".join(ids))
+		_comprobar(c.fama > fama0 and int(t["pj"]) == 32 and int(t["goles"]) == 30 and int(c.stats_temp["pj"]) == 0, "  el resumen guarda tus números antes de ponerlos a cero")
+		_comprobar(CarreraPremios.pendiente(c) and int(CarreraPremios.palmares(c).get("once_ideal", 0)) == 1, "  queda pendiente de enseñar y entra en tu palmarés")
+		c.fin_de_temporada(m)
+		_comprobar(not ((c.ruta["temporada"] as Dictionary)["premios"] as Array).has("revelacion"), "  la revelación solo se gana el primer año")
 	Partido.limpiar_contexto()

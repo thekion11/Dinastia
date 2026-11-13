@@ -58,6 +58,8 @@ const RETOS := {
 	"paradas": ["Haz tres paradas", 35, ["POR"]],
 }
 const XP_ENTRENO := 6
+## Lo máximo que un atributo puede pasar de tu media entrenándolo.
+const TOPE_SOBRE_MEDIA := 14
 const XP_DECISION := 5
 const XP_DUELO := 80
 
