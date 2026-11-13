@@ -91,6 +91,9 @@ func _probar_carrera_ruta() -> void:
 		for tipo_m: String in CarreraMomentos.TIPOS:
 			if not RutaPizarra.JUGADAS.has(tipo_m):
 				_comprobar(false, "  la jugada «%s» no tiene dibujo en la pizarra" % tipo_m)
+		## Con la selección: tu equipo es el de paso, sea local o visitante.
+		var sel_m := CarreraMomentos.resultado(c, m, [rv_club(m, rv), c.club(m)], buenas, -1, false, rv_club(m, rv))
+		_comprobar(int(sel_m["goles_local"]) >= int(sel_m["goles"]) + int(sel_m["asist"]), "  jugando con otro equipo (la selección), tus goles van a su marcador")
 		var copa_m := CarreraMomentos.resultado(c, m, par_m, [], -1, true)
 		_comprobar(int(copa_m["goles_local"]) != int(copa_m["goles_visita"]), "  en copa no hay empate")
 		## Los eventos de la ruta: salen de lo que te pasa y sus efectos se aplican.

@@ -82,10 +82,19 @@ func _cerrar_seleccion(res: Dictionary) -> void:
 	carrera.tras_seleccion(res)
 	if mundo.selecciones != null:
 		mundo.selecciones._anotar_resultado("%s %d - %d %s" % [nombre, int(res.get("goles_local", 0)), int(res.get("goles_visita", 0)), rival])
-	_msg = "🌎 %s %d - %d %s · tu nota %.1f%s" % [nombre, int(res.get("goles_local", 0)), int(res.get("goles_visita", 0)), rival,
-		float(res.get("nota", 6.0)), (" · ¡%d gol(es) con la selección!" % int(res["goles"])) if int(res.get("goles", 0)) > 0 else ""]
+	_msg = Idiomas.t("🌎 %s %d - %d %s · tu nota %.1f") % [nombre, int(res.get("goles_local", 0)), int(res.get("goles_visita", 0)), rival, float(res.get("nota", 6.0))]
+	if int(res.get("goles", 0)) > 0:
+		_msg += " · " + Idiomas.t("¡%d gol(es) con la selección!") % int(res["goles"])
 	Partida.guardar(mundo, GUARDADO)
 	(self as CarreraJugadorUI)._pintar_semana()
+
+## El partido con la selección, en «Los Momentos».
+func _momentos_seleccion() -> void:
+	var eq := carrera.equipos_seleccion(mundo)
+	if eq.size() < 2:
+		return
+	var mo := RutaMomentos.abrir(self, [eq[0], eq[1]], -1, false, eq[0])
+	mo.terminado.connect(func(res: Dictionary) -> void: _cerrar_seleccion(res))
 
 ## El partido con la selección: clubes de paso, tú del lado de tu país.
 func _jugar_seleccion() -> void:

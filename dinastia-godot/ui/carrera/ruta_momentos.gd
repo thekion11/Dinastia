@@ -12,6 +12,7 @@ var ui: Variant
 var par: Array = []
 var entra_al := -1
 var eliminatoria := false
+var mi_equipo: Club       ## con la selección: el equipo de paso; si no, tu club
 var _guion: Array = []
 var _hechas: Array = []
 var _pausa := 0.0
@@ -27,8 +28,9 @@ var _marcador: Label
 var _boton: Button
 var _azar := RandomNumberGenerator.new()
 
-static func abrir(ui_carrera: Variant, partido: Array, minuto_entrada := -1, es_copa := false) -> RutaMomentos:
+static func abrir(ui_carrera: Variant, partido: Array, minuto_entrada := -1, es_copa := false, equipo: Club = null) -> RutaMomentos:
 	var t := RutaMomentos.new()
+	t.mi_equipo = equipo if equipo != null else ui_carrera.carrera.club(ui_carrera.mundo)
 	t.ui = ui_carrera
 	t.par = partido
 	t.entra_al = minuto_entrada
@@ -47,7 +49,7 @@ func _ready() -> void:
 	var centro := CenterContainer.new()
 	centro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(centro)
-	var tono := E.de_club(ui.carrera.club(ui.mundo))
+	var tono := E.de_club(mi_equipo)
 	_tono = tono
 	var p := E.tarjeta(tono, E.TINTA.lerp(tono, 0.08))
 	p.custom_minimum_size = Vector2(minf(680.0, get_viewport_rect().size.x - 24.0), 0)
@@ -133,7 +135,7 @@ func golpear() -> void:
 	_estado.text = Idiomas.t(String(d["texto"]))
 	_estado.add_theme_color_override("font_color", RutaBarra.color_de(q))
 	## El marcador en vivo: lo tuyo ya cuenta; lo de los demás, al final.
-	var club: Club = ui.carrera.club(ui.mundo)
+	var club := mi_equipo
 	var mios := 0
 	var suyos := 0
 	for h2: Dictionary in _hechas:
@@ -144,7 +146,7 @@ func golpear() -> void:
 
 func _terminar() -> void:
 	_fin = true
-	var res := CarreraMomentos.resultado(ui.carrera, ui.mundo, par, _hechas, entra_al, eliminatoria)
+	var res := CarreraMomentos.resultado(ui.carrera, ui.mundo, par, _hechas, entra_al, eliminatoria, mi_equipo)
 	queue_free()
 	terminado.emit(res)
 

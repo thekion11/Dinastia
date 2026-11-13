@@ -90,8 +90,9 @@ static func desenlace(tipo: String, q: float) -> Dictionary:
 
 ## El resumen del partido (el mismo que da el partido jugado en el césped) a
 ## partir de las jugadas resueltas. El resto del marcador lo ponen los otros 21.
-static func resultado(c: CarreraJugador, m: Mundo, par: Array, hechas: Array, entra_al := -1, eliminatoria := false) -> Dictionary:
-	var club := c.club(m)
+## `mi_equipo`: con la selección, el equipo de paso con el que juegas (si no, tu club).
+static func resultado(c: CarreraJugador, m: Mundo, par: Array, hechas: Array, entra_al := -1, eliminatoria := false, mi_equipo: Club = null) -> Dictionary:
+	var club := mi_equipo if mi_equipo != null else c.club(m)
 	var soy_local: bool = par.size() == 2 and par[0] == club
 	var g := CarreraRuta._azar(c, m, 9)
 	var goles := 0

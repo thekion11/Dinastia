@@ -37,6 +37,7 @@ static func _seleccion(ui: Variant) -> Control:
 	var b := E.boton("🎮  JUGAR CON LA SELECCIÓN", E.ORO, ui._jugar_seleccion, 48, true)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	f.add_child(b)
+	f.add_child(E.boton("⚡  LOS MOMENTOS", E.MENTA, ui._momentos_seleccion, 48))
 	f.add_child(E.boton("⏩  Simular", E.CIELO, ui._simular_seleccion, 48))
 	return p
 
