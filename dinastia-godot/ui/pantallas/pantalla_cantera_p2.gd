@@ -174,7 +174,7 @@ func _pintar_roles_prometidos(c: Club) -> void:
 		var def := v.def_rol(actual)
 		if not def.is_empty():
 			var mn := p._texto(11, Principal.COL_SUAVE)
-			mn.text = Idiomas.t("%d%% min.") % int(def[3])
+			mn.text = Idiomas.t("%d%% min.") % roundi(float(def[3]) * 100.0)   ## (13-11) es una fracción (0,38): salía «0 %» en todos
 			mn.custom_minimum_size = Vector2(56, 0)
 			fila.add_child(mn)
 	p._lista_contratos.add_child(HSeparator.new())
