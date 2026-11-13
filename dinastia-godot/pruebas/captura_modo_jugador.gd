@@ -2,7 +2,7 @@ extends Node
 ## EL MODO JUGADOR («La Ruta»), EN FOTOS (13-11-2026): la creación, las tres
 ## ofertas, Hoy recién firmado, el mini juego del entreno, el resumen de un
 ## partido y, tras simular unas semanas, Hoy, Yo y Ruta. Fuera del repo, en JPG.
-##   SALIDA=<carpeta> [PUESTO=MC] [NOMBRE=…] [SEMANAS=6] [OFERTA=0..2] [PREFIJO=…] [MOVIL=1] [TEMPORADA=1] xvfb-run -a godot --path . \
+##   SALIDA=<carpeta> [PUESTO=MC] [NOMBRE=…] [SEMANAS=6] [OFERTA=0..2] [PREFIJO=…] [MOVIL=1] [TEMPORADA=1] [BOTAS=1] xvfb-run -a godot --path . \
 ##     --rendering-driver vulkan --resolution 1280x720 res://pruebas/captura_modo_jugador.tscn
 var _n := 0
 var _ui: CarreraJugadorUI
@@ -54,7 +54,17 @@ func _process(_d: float) -> void:
 			var ofertas := CarreraComienzo.pruebas(m, hash(c.jugador_id))
 			_ui._firmar(ofertas[clampi(int(OS.get_environment("OFERTA")), 0, ofertas.size() - 1)])
 		4:
+			## BOTAS=1: con fama para la primera oferta de botas, que se firma (Rayo) antes del partido.
+			if OS.get_environment("BOTAS") == "1":
+				c.fama = 20
+				c.eventos.insert(0, CarreraPatrocinio.eventos(c)[0])
+				c.hitos["patro_1"] = true
+				_ui._pintar_semana()
+				await get_tree().process_frame
+				await get_tree().process_frame
 			_foto("3_hoy")
+			if OS.get_environment("BOTAS") == "1":
+				c.resolver(m, 0, 0)
 			_toque = RutaToque.abrir(_ui)
 		5:
 			_toque._pista.parada = true
