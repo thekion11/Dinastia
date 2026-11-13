@@ -48,6 +48,9 @@ static func pintar(ui: Variant) -> Control:
 		fr.add_child(ld)
 	## Los premios.
 	v.add_child(E.rotulo("TUS PREMIOS"))
+	var gala := RutaGala.vista(ui, t)   ## la entrega en 3D (nada sin pantalla o en calidad mínima)
+	if gala != null:
+		v.add_child(gala)
 	var premios: Array = t.get("premios", []) if t.get("premios") is Array else []
 	var copas: Array = t.get("trofeos", []) if t.get("trofeos") is Array else []
 	for tr: Variant in copas:

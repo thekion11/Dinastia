@@ -137,6 +137,8 @@ func _process(_d: float) -> void:
 				j.edad = 20
 			if OS.get_environment("TEMPORADA") == "1" and c.ruta.get("temporada") is Dictionary:
 				(c.ruta["temporada"] as Dictionary)["visto"] = false
+				if OS.get_environment("PREMIOS") != "":   ## PREMIOS=goleador_liga,mvp_liga: para ver esas entregas en 3D
+					(c.ruta["temporada"] as Dictionary)["premios"] = Array(OS.get_environment("PREMIOS").split(","))
 			if OS.get_environment("LOGRO") != "":   ## LOGRO=triplete: enseña el aviso dorado de un logro recién ganado
 				c.ruta["logros_nuevos"] = [OS.get_environment("LOGRO")]
 			_ui._pintar_semana()
