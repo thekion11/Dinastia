@@ -63,12 +63,12 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   ~28 % (el medidor cuenta como «parado» el de córner; mirar `diag.gol_cabeza`), el problema es que sustituye al tiro con el pie;
   regate y remate (`C4_REGATE_TIRO`): neutro; no tocar atrás cerca del área (`C4_NO_ATRAS`): neutro; más 1 contra 1 en la frontal
   (`C4_REGATE_AREA`): bajan las cadenas sin crear ocasiones; pase al hueco con más manga (`C4_HUECO_L`=14): peor; rechace vivo del
-  portero (`C4_RECHACE`): se pierden los goles de córner; definir al palo contrario (`C4_DEFINIR`): más paradas. MIXTA y apagada: ruptura del 9 (`C4_RUPTURA`: +0,3 goles, pero menos de jugada).
+  portero (`C4_RECHACE`): se pierden los goles de córner; definir al palo contrario (`C4_DEFINIR`): más paradas; remate más preciso en el área (`C4_ERROR_AREA`): menos goles. MIXTA y apagada: ruptura del 9 (`C4_RUPTURA`: +0,3 goles, pero menos de jugada).
 - ENCENDIDO Y EN `main`: más pases al hueco (`C4_HUECO`, también al lateral que se incorpora): tiros en el área 7,7 → 8,2 y goles de
   jugada 0,59 → 0,67 (4 tandas de 12 con 6 países). Método: con 12 partidos el ruido es de ±0,7 goles; decidir con 2 muestras de países.
-- SIGUIENTE: los goles de jugada siguen en ~0,7 de ~4,4 y ninguna palanca de decisión, colocación ni apunte los sube (11 variantes
-  medidas). Lo que queda: el error del tiro dentro del área (`_tirar`, fuera de C4 toca la puntería de siempre: pedir OK al líder) y
-  retomar `C4_RUPTURA` con una 3.ª muestra de países o haciendo que el pasador mire primero al que rompe.
+- SIGUIENTE: los goles de jugada siguen en ~0,7 de ~4,4 y ninguna palanca de decisión, colocación, apunte ni precisión los sube (12
+  variantes medidas): en C4 el gol nace del desorden (rechaces, desvíos, balón parado). Siguiente frente propuesto: el PORTERO (que
+  pare menos los remates limpios desde dentro del área, `MotorParada`) y la 3.ª muestra de países para `C4_RUPTURA` (aparcada).
 
 ## SESIÓN 14 (12-11): LO QUE SE VE Y SE SIENTE EN EL PARTIDO — rama `sesion14-partido-visual` (informe `docs/04_auditorias/partido_visual_2026-11-12.md`)
 - HECHO: botas con horma (sin dedos), costura cara-cuello (borde pegado a la piel en 3D, también peatones y personal), nuca a la altura del
