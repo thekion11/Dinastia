@@ -262,6 +262,11 @@ func portada() -> void:
 	marco.add_child(rej)
 	_ancho_tarjeta = clampf((ancho - 18.0 * float(rej.columns - 1)) / float(rej.columns), 300.0, 440.0)
 	_alto_tarjeta = clampf(get_viewport_rect().size.y * 0.25, 176.0, 220.0)
+	## (13-11) Con tres filas o más, la tercera quedaba cortada por abajo (su dato a medias): menos aire arriba y el alto justo para tres.
+	if ceili(float(subs.size()) / float(rej.columns)) >= 3 and get_viewport_rect().size.y >= 600.0:   ## en un teléfono tumbado (480 px) tres filas no caben: se deja como estaba
+		marco.add_theme_constant_override("margin_top", 14)
+		var libre := get_viewport_rect().size.y - 124.0 - 14.0 - MenuLateral.reserva().y
+		_alto_tarjeta = clampf((libre - 36.0) / 3.0, 150.0, _alto_tarjeta)
 	for i in subs.size():
 		var tarjeta := TarjetaPortada.crear(self, subs[i], i)
 		rej.add_child(tarjeta)
