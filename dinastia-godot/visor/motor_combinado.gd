@@ -71,7 +71,7 @@ func _ia_portador(p: Dictionary) -> void:
 		return
 	if _mejoras_c4 and MejorasC4Pared.vuelta(self, p):
 		return   ## (12-11) la vuelta de la pared, de primera
-	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4Pared.ida(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
+	if _mejoras_c4 and t >= _decision_en and (MejorasC4Avance.pase_atras(self, p, _rng) or MejorasC4.centro(self, p, _rng) or MejorasC4Pared.ida(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
 		return
 	var guardado := equipos
 	var antes := _decision_en
