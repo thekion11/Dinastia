@@ -4,6 +4,14 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## ESTADO AL 13-11 MADRUGADA (sesiones Opus 15 y 16 cerradas, sin archivar; todo en `main` 88190f81; revisiones automáticas apagadas)
+- `main` comprobado con todo junto: banco «FIN. 0 fallos», huellas 2244399493 / 2180788566, 0 scripts > 450. CI de `main` en verde (f3ad4834 y 7816be83 enteros). Sonar: 0 avisos abiertos.
+- CI (12-11 noche): compilar y plataformas solo se lanzan con push a `main` (las ramas duplicaban cada ejecución y la de `main` nunca terminaba); ramas a mano con «Run workflow». Nocturno «especiales todo»: las pruebas con pantalla se saltan sin Vulkan/xvfb y la sonda de calidad mide C4.
+- Sesión 15 (jugabilidad C4): 15 ideas medidas, solo `C4_HUECO` encendida; conclusión: en C4 el gol nace del desorden. Resumen en `MOTOR_LEAGUE_SOCCER_PLAN.md` («RESUMEN PARA EL DUEÑO — sesión 15»). Abiertas: `C4_RUPTURA` con una 3.ª muestra de países y subir el bloque entero en ataque.
+- Sesión 16 (club y visual): museo por títulos con mini evento, muebles CC0, reacción del infractor, vestuario −6 MB en ALTA, personas que flotaban 3,7 cm, primera persona (ascensor, valla del fondo, taquillas, butacas, casa), menús (ficha, Fichajes, Ajustes, Calendario, Táctica). Fuera de este contenedor: vídeo de reacciones y cuelgue de lavapipe (PC con GPU), HUD en el teléfono.
+- Líder: 5 fallos del plan arreglados (1, 3, 4, 7, 8), Sonar S7044, fila de portadas y de países que siguen al foco, adelanto del pase medido y descartado.
+- PENDIENTE DEL DUEÑO: la pregunta de la semilla (abajo), prueba en el teléfono, keystore para el AAB, y si se abren sesiones nuevas.
+
 ## ESTADO AL 12-11 MEDIODÍA (sesiones Opus 13 y 14 cerradas y ARCHIVADAS; todo en `main`)
 - CI de `main` en VERDE ENTERO por primera vez (f9147058): banco, 6 especiales, Windows, Windows ligero, Linux, Android, Android armv7, Web, Web móvil, C++ Android y C++ ARM. Solo se salta el AAB de Play (falta la keystore, la lleva el dueño). Arreglos del día: CI que se cancelaba en `main`, directiva con ligas de 13 clubes, tarjetas de C4, entrada arm64 del .gdextension en el trabajo ARM y acción de exportar idempotente (Web + Web móvil).
 - Sesión 13 (jugabilidad de C4, 10 bloques): resumen para el dueño en `MOTOR_LEAGUE_SOCCER_PLAN.md` («RESUMEN PARA EL DUEÑO — sesión 13»). Encendido: paciencia ante el tiro lejano, encarar por la banda, falta lateral ensayada, no entrar por detrás a toda velocidad, seguir el tiro v2 y apoyo de cara. SIGUIENTE idea medida: el ADELANTO del pase (el rival llega antes al punto; el pasador debería compararlo y darla al pie o a otro).
