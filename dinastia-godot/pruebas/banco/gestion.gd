@@ -314,6 +314,23 @@ func _probar_leyes_pais() -> void:
 		if LeyesPais.reglas(p).is_empty() or not Contratos.JORNADA.has(p):
 			sin_ley += 1
 	_comprobar(sin_ley == 0, "los 24 países del juego tienen reglas de liga y jornada (%d sin)" % sin_ley)
+	## (13-11, decisión del dueño) Los planteles nacen dentro del cupo: a los extranjeros que sobran se les da pasaporte.
+	for grupo: Array in [["ESP", "USA"], ["FRA", "AUS", "MAR"]]:
+		var lista: Array[String] = []
+		lista.assign(grupo)
+		var mg := Mundo.new()
+		mg.generar(lista, 13)
+		var fuera := 0
+		var pasaportes := 0
+		var mal := 0
+		for cg: Club in mg.clubes.values():
+			fuera += 1 if LeyesPais.exceso_plantel(cg) > 0 else 0
+			for jg: Jugador in cg.plantilla:
+				if String(jg.look.get("pasaporte", "")) != "":
+					pasaportes += 1
+					mal += 1 if jg.pais == cg.pais or LeyesPais.ocupa_cupo(jg, cg.pais, mg.clubes) else 0
+		_comprobar(fuera == 0, "%s: ningún club nace con más extranjeros que su cupo" % " + ".join(grupo))
+		_comprobar(pasaportes > 0 and mal == 0, "  %d con pasaporte: conservan su nacionalidad y no ocupan cupo" % pasaportes)
 
 ## INCUMPLIR LA LEY SE PAGA (7-10-2026): multas que crecen y, desde la
 ## tercera alineación indebida, puntos menos.

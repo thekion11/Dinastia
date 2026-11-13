@@ -170,6 +170,10 @@ static func reglas(pais: String) -> Dictionary:
 static func ocupa_cupo(j: Jugador, pais: String, clubes: Dictionary = {}) -> bool:
 	if j == null:
 		return false
+	## (13-11) Con pasaporte del país no ocupa cupo (ni con uno comunitario donde el cupo es de no comunitarios).
+	var pas := String(j.look.get("pasaporte", ""))
+	if pas != "" and (pas == pais or (pas in UE and pais in UE and String(reglas(pais).get("criterio", "")) == "no_ue")):
+		return false
 	if clubes.is_empty():
 		clubes = clubes_mundo
 	var r := reglas(pais)
@@ -184,6 +188,25 @@ static func ocupa_cupo(j: Jugador, pais: String, clubes: Dictionary = {}) -> boo
 			return not (cf is Club and (cf as Club).pais == pais)
 		_:
 			return j.pais != pais
+
+## (13-11, decisión del dueño) LOS PLANTELES NACEN DENTRO DEL CUPO. Al generar el mundo, 25 clubes de 2.206 (España, Francia,
+## EE. UU., Australia, Marruecos) salían con más extranjeros que el tope de su liga. Como en la realidad, a los que sobran -los
+## más veteranos, y a igual edad los de menos media- se les da el PASAPORTE del país: conservan su nacionalidad y dejan de ocupar cupo.
+## Devuelve cuántos pasaportes se dieron.
+static func ajustar_planteles(clubes: Dictionary) -> int:
+	var dados := 0
+	for c: Club in clubes.values():
+		var sobran := exceso_plantel(c)
+		c.cupo_cache = {}   ## la cuenta de arriba no debe quedar recordada: quien cambie luego una nacionalidad a mano leería la vieja
+		if sobran <= 0:
+			continue
+		var ocupan: Array = c.plantilla.filter(func(x: Jugador) -> bool: return ocupa_cupo(x, c.pais, clubes))
+		ocupan.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.edad > b.edad or (a.edad == b.edad and (a.ovr < b.ovr or (a.ovr == b.ovr and a.id < b.id))))
+		for i in mini(sobran, ocupan.size()):
+			(ocupan[i] as Jugador).look["pasaporte"] = c.pais
+			dados += 1
+		c.cupo_cache = {}
+	return dados
 
 ## OPTIMIZADO: el mercado de la IA pregunta esto por cada candidato de cada
 ## club; se recuerda por club mientras no cambie la semana ni el plantel.

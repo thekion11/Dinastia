@@ -267,6 +267,7 @@ func _generar_cierre() -> void:
 		Meta.aplicar_herencia(self)
 	LeyesPais.clubes_mundo = clubes
 	LeyesPais.anio_actual = anio
+	LeyesPais.ajustar_planteles(clubes)
 	LigasActivas.registrar(self)   ## (10-11) los países que quedaron cargados (también al generar solo algunos)
 
 func jugadores() -> Array[Jugador]:
