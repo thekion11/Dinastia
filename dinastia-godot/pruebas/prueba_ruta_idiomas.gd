@@ -31,7 +31,7 @@ func _recorrer() -> Dictionary:
 		_ui._pintar_semana()
 		_textos(_ui, en)
 	c.ruta["logros_nuevos"] = ["debut"]
-	_ui._msg = "Tiro sube a 70."
+	_ui._msg = "Tiro sube a 70.  ·  No saliste del banco.  ·  Terminó la temporada.  ·  El DT te cambió."
 	_ui._pintar_semana()
 	_textos(_ui, en)
 	for id: String in RutaSub.SUBS:
@@ -98,6 +98,7 @@ func _ready() -> void:
 				repetidos[t] = String(repetidos.get(t, "")) + idi + " "
 	## Nombres propios: clubes, jugadores, ligas y las marcas de botas.
 	var propios: Array = ["Rayo", "Roca"]
+	propios.append_array(PesosPuesto._tabla().keys())   ## los puestos se quedan en español en todos los idiomas (orden 15)
 	for cl: Club in m.clubes.values():
 		propios.append(Nombres.visible(cl.nombre))
 		for o: Jugador in cl.plantilla:

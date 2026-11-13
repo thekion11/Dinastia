@@ -66,8 +66,9 @@ static func _nivel(c: CarreraJugador, angosto: bool) -> Control:
 	niv.add_child(nv)
 	nv.add_child(E.titulo(18, E.ORO, Idiomas.t("NIVEL")))
 	nv.add_child(E.lbl(12, E.SUAVE, "%d / %d XP" % [int(r["xp"]), falta], true))
-	if int(r["puntos"]) > 0:
-		nv.add_child(E.lbl(12, E.MENTA, E.plural(int(r["puntos"]), "%d punto libre", "%d puntos libres") % int(r["puntos"]), true))
+	var libres := int(r["puntos"]) + CarreraHabilidad.puntos(c)   ## de talento y de habilidad
+	if libres > 0:
+		nv.add_child(E.lbl(12, E.MENTA, E.plural(libres, "%d punto libre", "%d puntos libres") % libres, true))
 	return niv
 
 ## Energía, relación con el DT y fama: apilados (ancho) o en una fila (estrecho).
@@ -94,7 +95,7 @@ static func _medidores(c: CarreraJugador, ancho: float) -> Control:
 ## Las pestañas: píldoras en la cabecera o, en estrecho, una barra abajo.
 static func pestanas(ui: Variant, barra: bool) -> Control:
 	var c: CarreraJugador = ui.carrera
-	var puntos := int(CarreraRuta.asegurar(c)["puntos"])
+	var puntos := int(CarreraRuta.asegurar(c)["puntos"]) + CarreraHabilidad.puntos(c)
 	var grupo := ButtonGroup.new()
 	var tabs := E.fila(6 if barra else 4)
 	tabs.size_flags_vertical = Control.SIZE_SHRINK_CENTER

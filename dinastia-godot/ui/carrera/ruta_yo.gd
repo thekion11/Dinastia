@@ -95,7 +95,7 @@ static func _talentos(ui: Variant) -> Control:
 		orden.sort_custom(func(x: String, y: String) -> bool: return int(CarreraRuta.TALENTOS[x][1]) < int(CarreraRuta.TALENTOS[y][1]))
 		for id2: String in orden:
 			cv.add_child(_talento(ui, id2, col))
-	v.add_child(E.lbl(12, E.SUAVE, "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «SUBIR +2» de «Tu juego»)."))
+	v.add_child(E.lbl(12, E.SUAVE, "Cada nivel da un punto de talento. Dentro de una rama se aprenden en orden. Las habilidades se suben aparte, con puntos de habilidad, en «Tu juego»."))
 	return p
 
 static func _talento(ui: Variant, id: String, col: Color) -> Control:

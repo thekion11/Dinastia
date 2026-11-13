@@ -313,7 +313,11 @@ func _al_gol(de_local: bool, autor: String, _asist: String) -> void:
 	Mando.vibrar(1.0, 0.6)
 	var yo_id := String(motor.usuario.get("id", ""))
 	if autor != "" and autor == yo_id:
-		_mostrar_banner("¡¡GOOOL TUYO!!")
+		## (13-11) En el modo jugador, el gol que te da un logro lo anuncia aquí mismo.
+		var logro := CarreraLogros.en_vivo(carrera, int(_goles_de.get(autor, 0)) + 1) if carrera != null else ""
+		_mostrar_banner("¡¡GOOOL TUYO!!" if logro == "" else Idiomas.t("¡¡GOOOL TUYO!!") + "\n" + CarreraLogros.texto(logro))
+		if logro != "":
+			Sonido.toca("logro", Sonido.Bus.INTERFAZ, 2.0)
 	else:
 		_mostrar_banner("¡GOL de %s!" % (Nombres.visible(local.nombre) if de_local else Nombres.visible(visita.nombre)))
 	Sonido.toca("gol" if de_local == _es_local_usuario else "gol_rival", Sonido.Bus.INTERFAZ)

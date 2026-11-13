@@ -21,7 +21,6 @@ mano_penal
 palo_doble
 posesion_larga
 recuperacion_balon
-sesion_tactica
 tarjeta_banco
 tiro_flojo
 veto_fichaje

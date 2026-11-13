@@ -107,6 +107,7 @@ static func _dorsal_libre(club: Club) -> int:
 
 # ---------------------------------------------------------------- creación
 
+const BASE_INICIAL := 55   ## con el sesgo del puesto y el estilo, la media sale en unos 60
 ## Crea al futbolista y lo pone en un club modesto: el peor de la segunda
 ## división del primer país del mundo (o de la primera, si no hay segunda).
 static func crear(m: Mundo, nombre: String, pos_e: String, pie_zurdo: bool, semilla: int = 0) -> CarreraJugador:
@@ -124,11 +125,11 @@ static func crear(m: Mundo, nombre: String, pos_e: String, pie_zurdo: bool, semi
 	j.moral = 75
 	j.anios_contrato = 2
 	j.rasgo = ""
-	## Atributos con el generador propio (no `Azar`): 58 de media, con el
-	## sesgo de su puesto.
+	## Atributos con el generador propio (no `Azar`), con el sesgo de su puesto.
+	## (13-11 noche, dueño) La media parte en unos 60.
 	var pesos: Dictionary = (posd.get(pos_e, posd.get("MC", {})) as Dictionary).get("p", {})
 	for k: String in pesos:
-		j.atributos[k] = clampi(58 + c._rng.randi_range(-6, 6) + (6 if float(pesos[k]) >= 0.2 else 0), 40, 75)
+		j.atributos[k] = clampi(BASE_INICIAL + c._rng.randi_range(-5, 5) + (6 if float(pesos[k]) >= 0.2 else 0), 40, 75)
 	j.ovr = j.media_en(pos_e)
 	j.ovr_al_empezar = j.ovr
 	if pie_zurdo:
@@ -230,7 +231,8 @@ func entrenar(m: Mundo) -> String:
 		attr = j.atributos.keys()[0]
 	var margen := maxf(0.0, float(j.pot - j.ovr)) / 30.0
 	var juventud := clampf((24.0 - float(j.edad)) / 7.0, 0.2, 1.0)
-	var prob := clampf(0.35 + margen * 0.5 + juventud * 0.25 + CarreraAgenda.extra_entreno(agenda), 0.15, 0.95) * (1.0 if energia > 30 else 0.4)
+	## (13-11 noche, dueño: «la velocidad de crecimiento está muy alta») Antes 0,35 + 0,5 + 0,25 (casi un punto cada semana).
+	var prob := clampf(0.15 + margen * 0.30 + juventud * 0.12 + CarreraAgenda.extra_entreno(agenda), 0.08, 0.60) * (1.0 if energia > 30 else 0.4)
 	energia = maxi(0, energia - 14)
 	if _rng.randf() < prob:
 		j.atributos[attr] = mini(99, int(j.atributos[attr]) + 1)

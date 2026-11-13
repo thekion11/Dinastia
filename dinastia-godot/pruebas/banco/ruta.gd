@@ -125,6 +125,7 @@ func _probar_carrera_ruta() -> void:
 			var antes_cad: bool = ids_ev.call().has(String(par[2]))
 			(c.ruta["marcas"] as Dictionary)[String(par[0])] = m.anio * 60 + m.semana - int(par[1])
 			_comprobar(not antes_cad and ids_ev.call().has(String(par[2])), "  la marca «%s» trae su evento %d semanas después" % [par[0], par[1]])
+		load("res://pruebas/banco/ruta_hab.gd").probar(self, c, m, j)
 		## Los logros propios de La Ruta: se ganan una vez, dan experiencia y esperan a que la pantalla los anuncie.
 		var logros_guardados: Dictionary = CarreraLogros.ganados(c).duplicate()
 		var cuenta_guardada: Dictionary = (c.ruta.get("cuenta", {}) as Dictionary).duplicate()

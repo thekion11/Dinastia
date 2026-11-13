@@ -6,6 +6,7 @@ extends RefCounted
 ## roja que parecía un error), con el logro recién ganado en oro y con sonido.
 
 const E := preload("res://ui/carrera/ruta_estilo.gd")
+const A_LA_VISTA := 2
 
 static func cuenta(c: CarreraJugador) -> String:
 	return "%d / %d" % [CarreraLogros.ganados(c).size(), CarreraLogros.LOGROS.size()]
@@ -64,11 +65,24 @@ static func avisos(texto: String, nuevos: Array) -> Control:
 	var caja := E.columna(6)   ## una por fila: en un contenedor de flujo el texto con salto de línea se plegaba letra a letra
 	for id: String in nuevos:
 		if CarreraLogros.LOGROS.has(id):
-			var def: Array = CarreraLogros.LOGROS[id]
-			caja.add_child(_ficha(Idiomas.t("🏅 Logro: %s  ·  +%d XP") % [Idiomas.t(String(def[1])), int(def[3])], E.ORO))
+			caja.add_child(_ficha(CarreraLogros.texto(id), E.ORO))
+	## Como mucho DOS noticias a la vista (los logros, siempre); el resto, tras «ver más».
+	var resto: Array = []
 	for trozo: String in texto.split("·", false):
-		if trozo.strip_edges() != "":
-			caja.add_child(_ficha(trozo.strip_edges(), E.CIELO))
+		if trozo.strip_edges() == "":
+			continue
+		var f := _ficha(trozo.strip_edges(), E.CIELO)
+		caja.add_child(f)
+		if caja.get_child_count() - nuevos.size() > A_LA_VISTA:
+			f.visible = false
+			resto.append(f)
+	if not resto.is_empty():
+		var mas := E.boton(E.plural(resto.size(), "Ver %d aviso más", "Ver %d avisos más") % resto.size(), E.CIELO, Callable(), 30)
+		mas.pressed.connect(func() -> void:
+			for f2: Control in resto:
+				f2.visible = true
+			mas.visible = false)
+		caja.add_child(mas)
 	if not nuevos.is_empty():
 		E.son("logro")
 	return caja

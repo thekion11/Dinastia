@@ -52,7 +52,10 @@ static func _detalle(ui: Variant, j: Jugador, id: String) -> String:
 			return "%s · %d – %d" % [o.nombre, int(d[0]), int(d[1])] if o != null else ""
 		"grada":
 			return Idiomas.t("📱 %s seguidores") % E.miles(c.seguidores)
-		"juego", "talentos":
+		"juego":
+			var hab := CarreraHabilidad.puntos(c)
+			return E.plural(hab, "%d punto por gastar", "%d puntos por gastar") % hab
+		"talentos":
 			var puntos := int(CarreraRuta.asegurar(c)["puntos"])
 			return E.plural(puntos, "%d punto por gastar", "%d puntos por gastar") % puntos
 		"vida":
@@ -78,7 +81,7 @@ static func teclas(ui: Variant, j: Jugador, pestana: String, en_columna := false
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.add_theme_font_size_override("font_size", 15)
-		if id in ["talentos", "juego"] and int(CarreraRuta.asegurar(ui.carrera)["puntos"]) > 0:
+		if (id == "talentos" and int(CarreraRuta.asegurar(ui.carrera)["puntos"]) > 0) or (id == "juego" and CarreraHabilidad.puntos(ui.carrera) > 0):
 			b.text += "  ●"
 		caja.add_child(b)
 	return caja

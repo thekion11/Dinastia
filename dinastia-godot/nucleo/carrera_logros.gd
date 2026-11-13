@@ -102,3 +102,13 @@ static func tomar_nuevos(c: CarreraJugador) -> Array:
 	var lista: Array = r.get("logros_nuevos", []) if r.get("logros_nuevos") is Array else []
 	r["logros_nuevos"] = []
 	return lista
+
+## EN VIVO, en el partido en el césped: el logro de goles que ese gol te da (id) o "".
+## Solo avisa; el logro se apunta al cerrar el partido, como todos.
+static func en_vivo(c: CarreraJugador, goles_en_el_partido: int) -> String:
+	var id := "triplete" if goles_en_el_partido == 3 else ("doblete" if goles_en_el_partido == 2 else ("primer_gol" if goles_en_el_partido == 1 else ""))
+	return id if id != "" and not tiene(c, id) else ""
+
+## El texto del aviso de un logro, ya traducido.
+static func texto(id: String) -> String:
+	return Idiomas.t("🏅 Logro: %s  ·  +%d XP") % [Idiomas.t(String(LOGROS[id][1])), int(LOGROS[id][3])]
