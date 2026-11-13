@@ -58,7 +58,9 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   ARREGLADO: taquillas del vestuario visitante con volumen (antes una placa flotante de 10 cm; MÍNIMA 718 → 719, MEDIA +28) y sombra de
   contacto bajo las filas de butacas de la sala de vídeo (desde BAJA; MÍNIMA 881 = 881, MEDIA +3). Hojas en `capturas_primera_persona_2026-11-12/`.
 - FALTA (fuera de este contenedor): vídeo con la cámara real de las reacciones (horas de CPU por software: en un PC con GPU con `herramientas/grabar_partido_hd.sh`); medir el HUD en el teléfono real.
-- EN CURSO: PRIORITARIO 1, estética y diseño de menús (menú central, Plantilla, Fichajes, Tácticas, Calendario y Ajustes; 1600×900 y 2400×1080, alemán).
+- HECHO: PRIORITARIO 1, estética de menús (menú central, Plantilla, Fichajes, Tácticas, Calendario y Ajustes; 1600×900 y 2400×1080, alemán).
+  Bloque 2 (13-11): Calendario entra en `auditoria_gestion_movil` (se lee bien en alemán, sin cortes); en Táctica y Plantilla los botones
+  largos de la ficha («Persönlichkeitsbericht anfordern…») parten línea y ya no sale la barra horizontal que tapaba la fila de atributos.
   HECHO (bloque 1, capturas en `docs/04_auditorias/capturas_menus_2026-11-13/`): ficha del jugador con parejas nombre-valor que saltan de línea
   (en el móvil y en alemán la rejilla fija de 4 columnas cortaba los valores: 76 → «7€»); Fichajes con 14 px entre columnas («MF» pegado a
   «FORDERUNG»); Ajustes: icono y palabra de cada pestaña con espacio no separable (el ♿ quedaba solo en otra línea), las pestañas crecen con

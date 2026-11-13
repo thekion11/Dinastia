@@ -304,6 +304,9 @@ func _ver_ficha(j: Jugador) -> void:
 			func() -> void: p._listar_transferible(j),
 			func() -> void: p._rescindir(j, int((p.mundo.cantera.coste_rescision(j) as Dictionary)["total"])))
 		(p as Principal)._traducir_pantalla(p._ficha)
+	for b: Node in p._ficha.get_children():   ## (13-11) los botones largos («Persönlichkeitsbericht anfordern…») parten línea: si no, scroll horizontal tapando la ficha
+		if b is Button:
+			(b as Button).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		return
 	_ver_ficha_2(j, mio)
 	_ver_ficha_3(j)
@@ -433,16 +436,13 @@ func _ver_ficha_2(j: Jugador, mio: Club) -> void:
 
 ## (Trozo 3 de `_ver_ficha`, partida por responsabilidad: fase 6, §4 del plan.)
 func _ver_ficha_3(j: Jugador) -> void:
-	## `HISTORIA` del HTML: la biografía se enseña siempre, sea o no tuyo -a
-	## diferencia de `perfilHumano()`, que es cosa del vestuario propio y solo
-	## se ve en `_pintar_vida_personal_ficha()`.
+	## `HISTORIA` del HTML: la biografía se enseña siempre, sea o no tuyo (`perfilHumano()` solo en `_pintar_vida_personal_ficha()`).
 	p._ficha.add_child(HSeparator.new())
 	var bio_ajeno := p._texto(11, Principal.COL_SUAVE)
 	bio_ajeno.text = FichaJugadorInfo.bio_de(j, p.mundo)
 	bio_ajeno.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._ficha.add_child(bio_ajeno)
-	## La ficha se rehace entera en cada clic: sin esto, lo que no pasó por
-	## `Idiomas.t` se quedaba en castellano hasta el siguiente repintado general.
+	## La ficha se rehace entera en cada clic: sin esto, lo que no pasó por `Idiomas.t` se quedaba en castellano.
 	(p as Principal)._traducir_pantalla(p._ficha)
 
 ## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.
