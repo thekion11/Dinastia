@@ -20,7 +20,7 @@ static func pintar(raiz: VBoxContainer, c: Club, mundo: Mundo, texto: Callable, 
 		_espacios(raiz, c, mundo, cd, texto, colores, escribir, al_cambiar)
 	if parte in ["", "digital"]:
 		_digital(raiz, c, mundo, cd, texto, colores, miles, escribir, al_cambiar)
-	if parte in ["", "detalles"]:
+	if parte in ["", "digital", "detalles"]:
 		_detalles(raiz, c, cd, texto, colores, al_cambiar)
 
 static func _espacios(raiz: VBoxContainer, c: Club, mundo: Mundo, cd: ClubDentro, texto: Callable, colores: Dictionary, escribir: Callable, al_cambiar: Callable) -> void:

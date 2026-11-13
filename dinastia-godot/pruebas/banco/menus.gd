@@ -268,4 +268,29 @@ func _probar_multa_plantel_heredado() -> void:
 			m.avanzar_semana()
 		var multas := m.libro_financiero.filter(func(e: Dictionary) -> bool: return String(e["concepto"]).begins_with("Multa: plantel")).size()
 		_comprobar(multas == 0, "%s: cuatro semanas sin tocar el plantel, ninguna multa por reglamento (%d)" % [caso[0], multas])
+	## (13-11, decisión del dueño) Con el mercado cerrado no se multa; al abrir, sí.
+	for pais: String in ["ARG", "ITA"]:
+		var m2 := Mundo.new()
+		m2.generar([pais], 20261113)
+		m2.tomar_el_mando(m2.ligas[0].clubes[2].id)
+		var mi := m2.mi_club()
+		m2.federacion.exceso_heredado = 0
+		var tope := int(LeyesPais.reglas(mi.pais).get("plantel", 0))
+		if tope <= 0:
+			m2.federacion.tope_extranjeros = 0
+			continue
+		var sobran := 0
+		for otro: Club in m2.ligas[0].clubes:
+			for jx: Jugador in otro.plantilla.duplicate():
+				if otro != mi and LeyesPais.exceso_plantel(mi) < 2:
+					otro.soltar(jx)
+					mi.fichar(jx)
+		sobran = LeyesPais.exceso_plantel(mi)
+		m2.semana = Mundo.VENTANA_VERANO + 3
+		var saldo := mi.saldo
+		m2.federacion.revisar_leyes_pais(m2, mi)
+		_comprobar(sobran >= 2 and mi.saldo == saldo, "%s: con %d de más y el mercado cerrado, no hay multa" % [pais, sobran])
+		m2.semana = Mundo.VENTANA_INVIERNO_INI
+		m2.federacion.revisar_leyes_pais(m2, mi)
+		_comprobar(mi.saldo < saldo, "%s: al abrir el mercado de invierno, la multa llega" % pais)
 	Partido.limpiar_contexto()   ## simular semanas deja puesto el contexto del partido (médico, césped, moda…): la sección que venga detrás lo heredaría

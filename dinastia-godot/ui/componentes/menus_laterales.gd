@@ -87,8 +87,8 @@ const MENUS := [
 		{"tab": "Gente", "secc": "identidad", "label": "Identidad visual", "icono": "🎨", "desc": "Colores, escudo, apodo y tipografía."},
 		{"tab": "Gente", "secc": "kits", "label": "Equipación", "icono": "👕", "desc": "El diseñador de camisetas, a pantalla completa."},
 		{"tab": "Gente", "secc": "interno", "label": "El club por dentro", "icono": "🏢", "desc": "El vestuario, la sala de prensa y el palco presidencial."},
-		{"tab": "Gente", "secc": "digital", "label": "App y web del club", "icono": "🖥️", "desc": "Lo digital: crece solo cada semana y deja dinero en la caja."},
-		{"tab": "Gente", "secc": "detalles", "label": "Uniforme y frase del vestuario", "icono": "👔", "desc": "Cómo viste el cuerpo técnico y lo que se lee en el túnel."},
+		## (13-11, decisión del dueño) «App y web» y «Uniforme y frase», en una sola pantalla.
+		{"tab": "Gente", "secc": "digital", "label": "App, web y detalles del club", "icono": "🖥️", "desc": "Lo digital, que crece solo y deja dinero; el uniforme del cuerpo técnico y la frase del túnel."},
 		{"tab": "Camarín", "secc": "clima", "label": "Camarín", "icono": "🚪", "desc": "El clima del vestuario y por qué sube o baja la moral."},
 		{"tab": "Camarín", "secc": "grupos", "label": "Clanes y jerarquía", "icono": "👥", "desc": "Las camarillas, sus líderes y quién pesa en el vestuario."},
 		{"tab": "Camarín", "secc": "salud", "label": "Salud mental", "icono": "🩺", "desc": "Quién lo está pasando mal: terapia y descanso."}]},

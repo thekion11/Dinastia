@@ -25,7 +25,7 @@ const CASOS := [
 	["Camarín", "_lista_camarin", "salud", "SALUD MENTAL", "CLANES Y CAMARILLAS"],
 	["Gente", "_lista_gente", "interno", "PALCO PRESIDENCIAL", "LO DIGITAL"],
 	["Gente", "_lista_gente", "digital", "LO DIGITAL", "PALCO PRESIDENCIAL"],
-	["Gente", "_lista_gente", "detalles", "UNIFORME DEL CUERPO TÉCNICO", "LO DIGITAL"],
+	["Gente", "_lista_gente", "digital", "UNIFORME DEL CUERPO TÉCNICO", "PALCO PRESIDENCIAL"],
 ]
 var _p: Principal
 var _fallos := 0

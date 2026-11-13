@@ -151,7 +151,8 @@ func revisar_leyes_pais(m: Mundo, mi: Club) -> void:
 	var inf: Dictionary = infracciones_de(m.anio).duplicate()
 	var norma := String(LeyesPais.reglas(mi.pais).get("norma", "el reglamento de la liga"))
 	var exceso := exceso_multable(LeyesPais.exceso_plantel(mi, tope_multable(m.anio, m.semana)))
-	if exceso > 0:
+	## (13-11, decisión del dueño) Con el mercado CERRADO no se multa: no hay forma de arreglar el plantel hasta que abra.
+	if exceso > 0 and m.mercado_abierto():
 		inf["plantel"] = int(inf["plantel"]) + 1
 		var veces := int(inf["plantel"])
 		var multa := int(Eco.escalar(MULTA_PLANTEL_LEY, float(mi.rep)) * exceso * (1.0 + 0.25 * float(veces - 1)))
