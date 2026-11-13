@@ -52,12 +52,6 @@ const EQUIVALENTE_CAMPO := {"div": "fis", "par": "def", "saq": "pas", "ref": "ri
 static func existe(accion: String) -> bool:
 	return CATALOGO.has(accion)
 
-static func de_tipo(tipo: String) -> Array:
-	var r: Array = []
-	for k: String in CATALOGO:
-		if String(CATALOGO[k]["tipo"]) == tipo:
-			r.append(k)
-	return r
 
 ## Un atributo, traduciéndolo si el jugador es portero (o si no lo es).
 static func atributo(j: Jugador, clave: String) -> float:

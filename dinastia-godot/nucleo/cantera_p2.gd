@@ -289,12 +289,6 @@ func listo_para_debutar(j: Jugador) -> bool:
 	var mio := m.mi_club()
 	return mio != null and j.ovr >= mio.rep - MARGEN_DEBUT
 
-## La media que le falta al chico para estar listo, o 0 si ya lo está.
-func le_falta_para_debutar(j: Jugador) -> int:
-	var m := _mundo()
-	if j == null or m == null or m.mi_club() == null:
-		return 0
-	return maxi(0, (m.mi_club().rep - MARGEN_DEBUT) - j.ovr)
 
 ## Los que hoy podrían subir sin quemarse. Es la lista que se le pone delante al
 ## director de cantera cuando el club le pide debutantes.

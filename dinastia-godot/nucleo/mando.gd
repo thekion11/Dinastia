@@ -307,14 +307,6 @@ static func movimiento() -> Vector2:
 static func accion_de(boton: String, con_balon: bool) -> String:
 	return String((CON_BALON if con_balon else SIN_BALON).get(boton, ""))
 
-## La acción de un evento de entrada ("" si no es de juego). Para `_input`.
-static func accion_del_evento(ev: InputEvent, con_balon: bool) -> String:
-	for boton: String in MAPA:
-		if InputMap.has_action(boton) and ev.is_action_pressed(boton):
-			if boton == "jugar_cambiar" or boton == "jugar_pausa":
-				return boton
-			return accion_de(boton, con_balon)
-	return ""
 
 ## Hay un mando enchufado.
 static func hay_mando() -> bool:

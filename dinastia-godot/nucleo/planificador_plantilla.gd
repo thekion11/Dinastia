@@ -40,8 +40,6 @@ static func minimos() -> Dictionary:
 static func umbral(g: String, minimo: int) -> int:
 	return maxi(int(TITULARES.get(g, 1)) + 1, int(floor(float(minimo) * 0.75)))
 
-static func se_va_en_verano(j: Jugador) -> bool:
-	return j.anios_contrato <= 1 or j.edad >= EDAD_RETIRO_PROBABLE
 
 static func analizar(c: Club) -> Dictionary:
 	var minimo := minimos()
