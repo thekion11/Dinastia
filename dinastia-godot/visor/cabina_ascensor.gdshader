@@ -67,5 +67,6 @@ void fragment() {
 	}
 	c *= 0.62 + 0.38 * smoothstep(0.0, 0.3, arista);
 	c *= 0.8 + 0.2 * smoothstep(0.0, hueco.y, p.y);
-	ALBEDO = c;
+	// (13-11) En primera persona, pegado a la puerta, la cabina se quemaba a blanco con la exposición del edificio: se baja un punto.
+	ALBEDO = c * 0.8;
 }
