@@ -44,7 +44,7 @@ static func cromo(ui: Variant, j: Jugador, club: Club) -> Control:
 	var chips := E.flujo()
 	v.add_child(chips)
 	chips.add_child(E.chip(Idiomas.t("%+d esta temporada") % sube, E.MENTA if sube > 0 else E.SUAVE))
-	chips.add_child(E.chip(Idiomas.t("techo %d") % j.pot, E.ORO))
+	chips.add_child(E.chip(Idiomas.t("techo %d") % (CarreraRuta.techo(c, j) + CarreraRuta.MARGEN_TECHO), E.ORO))
 	chips.add_child(E.chip(Idiomas.t("zurdo") if String(j.look.get("pie", "")) == "zurdo" else Idiomas.t("diestro"), E.CIELO))
 	if c.capitan:
 		chips.add_child(E.chip(Idiomas.t("capitán"), E.CORAL))

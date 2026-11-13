@@ -98,6 +98,22 @@ static func asentado(c: CarreraJugador) -> bool:
 	var desde := int(llegada) if typeof(llegada) in [TYPE_INT, TYPE_FLOAT] else 0
 	return c.pj_carrera - desde >= PARTIDOS_PARA_OFERTA and c.nota_media() >= 6.3
 
+## TU TECHO: el mayor potencial que has tenido (el del mundo baja con los
+## años). Entrenando se llega hasta 3 puntos por encima; más allá, solo con
+## puntos de talento (13-11: un portero llegaba a 91 de media con techo 82).
+const MARGEN_TECHO := 3
+static func techo(c: CarreraJugador, j: Jugador) -> int:
+	var r := asegurar(c)
+	var t: Variant = r.get("techo", 0)
+	var visto := int(t) if typeof(t) in [TYPE_INT, TYPE_FLOAT] else 0
+	if j != null and j.pot > visto:
+		visto = j.pot
+		r["techo"] = visto
+	return visto
+
+static func en_el_techo(c: CarreraJugador, j: Jugador) -> bool:
+	return j != null and j.ovr >= techo(c, j) + MARGEN_TECHO
+
 static func nivel(c: CarreraJugador) -> int:
 	return int(asegurar(c)["nivel"])
 

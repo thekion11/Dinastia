@@ -27,7 +27,7 @@ Falta (siguientes bloques):
 - Repasar con el mando real el orden del foco (hoy el foco cae en la acción principal de cada pantalla; el resto lo navega Godot solo).
 - Más variedad: más eventos con decisiones, patrocinios, vida fuera del campo; en «Los Momentos», más tipos de jugada y un dibujo de la jugada (hoy es texto y barra).
 - OJO con el banco: si un script nuevo no compila, la sección que lo usa se corta SIN contar fallo (pasó con `carrera_talentos.gd`, subido roto en b90870e5 y arreglado en el commit siguiente). Tras tocar clases nuevas, mirar `godot --headless --import` y que la última línea de la sección aparezca en `/tmp/mini_banco.txt`.
-- Equilibrio: repetir la sonda con portero y defensa, y a 10+ temporadas (¿se llega a Leyenda, nivel 34, antes del retiro?).
+- Equilibrio: sonda de portero a 9 temporadas hecha (media 69→91 con techo 82: arreglado, entrenando no se pasa del mejor potencial + 3 y de ahí solo con puntos de talento; nivel 24 «Estrella» a los 25 años, así que Leyenda, nivel 34, cae hacia los 30). Falta la de defensa, y que la sonda juegue los partidos de selección (la misión «juega con tu selección» de Estrella no se cobra simulando).
 - Pendiente de decisión del dueño: nada por ahora.
 
 ## ESTADO AL 12-11 MEDIODÍA (sesiones Opus 13 y 14 cerradas y ARCHIVADAS; todo en `main`)

@@ -8361,7 +8361,8 @@
   "LOS MOMENTOS": "THE MOMENTS",
   "⚡  LOS MOMENTOS": "⚡  THE MOMENTS",
   "Jugada %d de %d": "Play %d of %d",
-  "El partido en tus jugadas clave: rápido y decidido por ti.": "The match in your key plays: quick and decided by you."
+  "El partido en tus jugadas clave: rápido y decidido por ti.": "The match in your key plays: quick and decided by you.",
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "You've hit your ceiling: training no longer raises you. Talent points still do."
  },
  "pt": {
   "Historia": "História",
@@ -16725,7 +16726,8 @@
   "LOS MOMENTOS": "OS MOMENTOS",
   "⚡  LOS MOMENTOS": "⚡  OS MOMENTOS",
   "Jugada %d de %d": "Jogada %d de %d",
-  "El partido en tus jugadas clave: rápido y decidido por ti.": "A partida nas suas jogadas-chave: rápida e decidida por você."
+  "El partido en tus jugadas clave: rápido y decidido por ti.": "A partida nas suas jogadas-chave: rápida e decidida por você.",
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Você atingiu seu teto: treinando não sobe mais. Os pontos de talento ainda melhoram você."
  },
  "patrones": [
   [
@@ -31229,7 +31231,8 @@
   "LOS MOMENTOS": "LES MOMENTS",
   "⚡  LOS MOMENTOS": "⚡  LES MOMENTS",
   "Jugada %d de %d": "Action %d sur %d",
-  "El partido en tus jugadas clave: rápido y decidido por ti.": "Le match en tes actions clés : rapide et décidé par toi."
+  "El partido en tus jugadas clave: rápido y decidido por ti.": "Le match en tes actions clés : rapide et décidé par toi.",
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Tu as atteint ton plafond : l'entraînement ne te fait plus progresser. Les points de talent, si."
  },
  "it": {
   "Historia": "Storia",
@@ -39593,7 +39596,8 @@
   "LOS MOMENTOS": "I MOMENTI",
   "⚡  LOS MOMENTOS": "⚡  I MOMENTI",
   "Jugada %d de %d": "Azione %d di %d",
-  "El partido en tus jugadas clave: rápido y decidido por ti.": "La partita nelle tue azioni chiave: rapida e decisa da te."
+  "El partido en tus jugadas clave: rápido y decidido por ti.": "La partita nelle tue azioni chiave: rapida e decisa da te.",
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Hai toccato il tuo tetto: allenandoti non sali più. I punti talento sì."
  },
  "de": {
   "Historia": "Geschichte",
@@ -47957,7 +47961,8 @@
   "LOS MOMENTOS": "DIE MOMENTE",
   "⚡  LOS MOMENTOS": "⚡  DIE MOMENTE",
   "Jugada %d de %d": "Aktion %d von %d",
-  "El partido en tus jugadas clave: rápido y decidido por ti.": "Das Spiel in deinen Schlüsselszenen: schnell und von dir entschieden."
+  "El partido en tus jugadas clave: rápido y decidido por ti.": "Das Spiel in deinen Schlüsselszenen: schnell und von dir entschieden.",
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Du hast dein Limit erreicht: Training bringt dich nicht mehr weiter. Talentpunkte schon."
  },
  "ca": {
   "Historia": "Història",
@@ -56321,7 +56326,8 @@
   "LOS MOMENTOS": "ELS MOMENTS",
   "⚡  LOS MOMENTOS": "⚡  ELS MOMENTS",
   "Jugada %d de %d": "Jugada %d de %d",
-  "El partido en tus jugadas clave: rápido y decidido por ti.": "El partit en les teves jugades clau: ràpid i decidit per tu."
+  "El partido en tus jugadas clave: rápido y decidido por ti.": "El partit en les teves jugades clau: ràpid i decidit per tu.",
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Has tocat el teu sostre: entrenant ja no puges. Els punts de talent sí que et milloren."
  },
  "pl": {
   "Club": "Klub",
@@ -64685,7 +64691,8 @@
   "LOS MOMENTOS": "MOMENTY",
   "⚡  LOS MOMENTOS": "⚡  MOMENTY",
   "Jugada %d de %d": "Akcja %d z %d",
-  "El partido en tus jugadas clave: rápido y decidido por ti.": "Mecz w twoich kluczowych akcjach: szybko i po twojemu."
+  "El partido en tus jugadas clave: rápido y decidido por ti.": "Mecz w twoich kluczowych akcjach: szybko i po twojemu.",
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Osiągnąłeś swój sufit: trening już cię nie podnosi. Punkty talentu nadal tak."
  },
  "tr": {
   "Club": "Kulüp",
@@ -73049,6 +73056,7 @@
   "LOS MOMENTOS": "ANLAR",
   "⚡  LOS MOMENTOS": "⚡  ANLAR",
   "Jugada %d de %d": "Pozisyon %d / %d",
-  "El partido en tus jugadas clave: rápido y decidido por ti.": "Maç, kilit pozisyonlarınla: hızlı ve senin belirlediğin."
+  "El partido en tus jugadas clave: rápido y decidido por ti.": "Maç, kilit pozisyonlarınla: hızlı ve senin belirlediğin.",
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Tavanına ulaştın: antrenman artık seni yükseltmiyor. Yetenek puanları hâlâ geliştirir."
  }
 }

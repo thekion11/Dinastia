@@ -364,6 +364,19 @@ func _probar_carrera_ruta() -> void:
 		c.entrenar(m)
 		_comprobar(int(j.atributos[attr]) == tope0, "  un atributo a 14 puntos de tu media ya no sube (ni con toque perfecto)")
 		j.atributos[attr] = v0 + 1
+		## El techo: entrenando no se pasa de tu mejor potencial + 3.
+		var ovr0 := j.ovr
+		var pot0 := j.pot
+		var t0 := CarreraRuta.techo(c, j)
+		j.pot = t0 - 6
+		_comprobar(CarreraRuta.techo(c, j) == t0, "  tu techo es el mejor potencial que has tenido (no baja con los años)")
+		j.ovr = t0 + CarreraRuta.MARGEN_TECHO
+		c.entreno_semana = -1
+		var v_t := int(j.atributos[attr])
+		c.entrenar(m)
+		_comprobar(int(j.atributos[attr]) == v_t and CarreraRuta.en_el_techo(c, j), "  en el techo, entrenar ya no sube atributos")
+		j.ovr = ovr0
+		j.pot = pot0
 		## Guardar y cargar conserva la ruta.
 		var c2 := CarreraJugador.desde_dic(JSON.parse_string(JSON.stringify(c.a_dic())))
 		_comprobar(CarreraRuta.nivel(c2) == CarreraRuta.nivel(c) and CarreraRuta.tiene(c2, "voz") and (c2.ruta["grada"] as Array).size() == (c.ruta["grada"] as Array).size(),

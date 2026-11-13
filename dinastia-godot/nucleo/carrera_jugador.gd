@@ -23,6 +23,12 @@ func entrenar(m: Mundo) -> String:
 	var antes := int(j.atributos.get(attr, 0)) if j != null else 0
 	## (13-11) Un atributo no se despega del resto de tu juego: a 14 puntos de tu
 	## media ya no sube (entrenando solo tiro se llegaba a 91 en una temporada).
+	if j != null and attr != "" and CarreraRuta.en_el_techo(self, j):
+		energia = maxi(0, energia - 14)
+		CarreraRuta.sumar_xp(self, CarreraRuta.XP_ENTRENO)
+		entreno_msg = Idiomas.t("Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.")
+		entreno_semana = ahora
+		return entreno_msg
 	if j != null and attr != "" and antes >= mini(99, j.ovr + CarreraRuta.TOPE_SOBRE_MEDIA):
 		energia = maxi(0, energia - 14)
 		CarreraRuta.sumar_xp(self, CarreraRuta.XP_ENTRENO)
