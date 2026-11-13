@@ -97,17 +97,6 @@ static func confed_de(pais: String) -> String:
 			return k
 	return "lib"
 
-## La copa chica de una confederación, o "" si no tiene. Sudamérica y Europa tienen más de un torneo.
-static func segunda_copa(k: String) -> String:
-	if k == "lib":
-		return "sud"
-	if k == "ucl":
-		return "uel"
-	if k == "uel":
-		return "uecl"
-	if k == "afr":
-		return "afr2"
-	return ""
 
 ## ¿Hay algún partido continental esta semana? (para el calendario y la interfaz: ¿juega alguien?). Devuelve 0 si lo hay y -1
 ## si no; el número ya no es «la ronda»: cada torneo tiene SU calendario, que se pregunta con `toca(semana)`.

@@ -197,7 +197,7 @@ const SECCIONES := [
 	"_probar_optimizacion",
 	"_probar_dinastias",
 	"_probar_documental",
-	"_probar_capitulos", "_probar_ascensor_viaje", "_probar_fila_proximos", "_probar_eventos_fecha", "_probar_casa_plano", "_probar_intercambio_once", "_probar_partido_despedida", "_probar_homenaje_despedida", "_probar_camisetas_retiradas_vista", "_probar_estilo_plantilla", "_probar_gestion_once", "_probar_final_temporada", "_probar_habilidades_y_calor", "_probar_puerta_animada", "_probar_flecha_forma", "_probar_quimica_linea", "_probar_objetivo_directiva", "_probar_jugador_del_mes", "_probar_estrategia_rapida", "_probar_copas_mundo", "_probar_selector_direccional", "_probar_eventos_club", "_probar_festejos_titulo", "_probar_torneos_selecciones", "_probar_cargo_seleccionador", "_probar_convocatoria_seleccion", "_probar_estilos_club", "_probar_puertas_ascensor", "_probar_objetivos_por_club", "_probar_league_nucleo", "_probar_formacion_propia", "_probar_league_movimiento", "_probar_league_catalogo", "_probar_league_acciones", "_probar_fecha_seleccion", "_probar_finalissima", "_probar_estadios_variedad", "_probar_finalissima_directo", "_probar_olimpicos", "_probar_fin_temporada_guardado", "_probar_uniformes_segundo", "_probar_cara_por_pais", "_probar_escudos_realistas", "_probar_piezas_estadio_real", "_probar_interior_oculto", "_probar_visita_generada", "_probar_cara_edad", "_probar_motor_ciego", "_probar_mando_tactil_fc", "_probar_mejoras_c4", "_probar_socios_cabecera", "_probar_pie_mando", "_probar_solo_primera_persona", "_probar_piel_paises_nuevos", "_probar_mundo_abandonado", "_probar_fila_portadas_sigue_foco", "_probar_paciencia_c4", "_probar_adelanto_c4", "_probar_cabeza_c4", "_probar_hueco_c4", "_probar_museo_por_titulos",
+	"_probar_capitulos", "_probar_ascensor_viaje", "_probar_fila_proximos", "_probar_eventos_fecha", "_probar_casa_plano", "_probar_intercambio_once", "_probar_partido_despedida", "_probar_homenaje_despedida", "_probar_camisetas_retiradas_vista", "_probar_estilo_plantilla", "_probar_gestion_once", "_probar_final_temporada", "_probar_habilidades_y_calor", "_probar_puerta_animada", "_probar_flecha_forma", "_probar_quimica_linea", "_probar_objetivo_directiva", "_probar_jugador_del_mes", "_probar_estrategia_rapida", "_probar_copas_mundo", "_probar_selector_direccional", "_probar_eventos_club", "_probar_festejos_titulo", "_probar_torneos_selecciones", "_probar_cargo_seleccionador", "_probar_convocatoria_seleccion", "_probar_estilos_club", "_probar_puertas_ascensor", "_probar_objetivos_por_club", "_probar_league_nucleo", "_probar_formacion_propia", "_probar_league_movimiento", "_probar_league_catalogo", "_probar_league_acciones", "_probar_fecha_seleccion", "_probar_finalissima", "_probar_estadios_variedad", "_probar_finalissima_directo", "_probar_olimpicos", "_probar_fin_temporada_guardado", "_probar_uniformes_segundo", "_probar_cara_por_pais", "_probar_escudos_realistas", "_probar_piezas_estadio_real", "_probar_interior_oculto", "_probar_visita_generada", "_probar_cara_edad", "_probar_motor_ciego", "_probar_mando_tactil_fc", "_probar_mejoras_c4", "_probar_socios_cabecera", "_probar_pie_mando", "_probar_solo_primera_persona", "_probar_piel_paises_nuevos", "_probar_mundo_abandonado", "_probar_fila_portadas_sigue_foco", "_probar_paciencia_c4", "_probar_adelanto_c4", "_probar_cabeza_c4", "_probar_hueco_c4", "_probar_museo_por_titulos", "_probar_funciones_puras_ui",
 	"_probar_tribuna_real",
 	"_probar_narracion_traducida",
 	"_probar_rotulo_y_sala",
@@ -214,7 +214,7 @@ const SECCIONES := [
 	"_probar_paridad_idiomas",
 	"_probar_insignia_version",
 	"_probar_lanzamiento_tactica",
-	"_probar_lanzamiento_accesibilidad",
+	"_probar_lanzamiento_accesibilidad", "_probar_fun_economia", "_probar_fun_jugador_y_formacion", "_probar_fun_calendario_y_planos", "_probar_fun_continentales_y_partidas",
 ]
 
 ## Dónde vive cada grupo, en el orden en que se buscan las secciones.
@@ -230,7 +230,7 @@ const ARCHIVOS := {
 	"paises_csv": "res://pruebas/banco/paises_csv.gd",
 	"fases_finales": "res://pruebas/banco/fases_finales.gd",
 	"textos": "res://pruebas/banco/textos.gd",
-	"ideas": "res://pruebas/banco/ideas.gd",
+	"funciones": "res://pruebas/banco/funciones.gd", "ideas": "res://pruebas/banco/ideas.gd",
 	"varios": "res://pruebas/banco/varios.gd",
 	"menus": "res://pruebas/banco/menus.gd", "lanzamiento": "res://pruebas/banco/lanzamiento.gd",
 }
@@ -242,7 +242,7 @@ var _tiempos: Array = []
 ## MINI BANCOS (20-10-2026): grupos de secciones por situación, para probar
 ## solo lo que se tocó en segundos (`herramientas/mini_banco.sh <grupo>`, o
 ## BANCO_GRUPO=<grupo>). Antes de SUBIR sigue mandando el banco entero.
-const GRUPOS := {
+const GRUPOS := {"funciones": ["_probar_fun_economia", "_probar_fun_jugador_y_formacion", "_probar_fun_calendario_y_planos", "_probar_fun_continentales_y_partidas"],
 	"partido": ["_probar_partidos", "_probar_previa", "_probar_arbitros", "_probar_tactica_en_movimiento",
 		"_probar_puente3d", "_probar_fisica_motor", "_probar_faltas_puntos", "_probar_ventaja", "_probar_presion_estable", "_probar_colocacion", "_probar_colocacion_defensa", "_probar_marcaje", "_probar_carreras", "_probar_tiro_limpio", "_probar_tiro_fallido", "_probar_portero_anticipa", "_probar_portero_desliza_pendiente", "_probar_imagen_mental", "_probar_roles_dinamicos", "_probar_apoyo_fuerzas", "_probar_ancla_enjambre", "_probar_regiones", "_probar_traza", "_probar_descarga", "_probar_saque_seguro", "_probar_saque_ofrece", "_probar_traza_corte", "_probar_entrada_momento", "_probar_adaptacion", "_probar_presion_zona", "_probar_linea_prevista", "_probar_primer_toque", "_probar_tactica_viva", "_probar_pase_mejora", "_probar_estilo_club", "_probar_perfiles_ayuda", "_probar_transmision_y_estadisticas",
 		"_probar_arreglos_partido_motor", "_probar_prorroga_y_penales", "_probar_partido_abandonado", "_probar_tanda_c",

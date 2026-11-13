@@ -127,8 +127,6 @@ static func motor_activo() -> String:
 		return POR_DEFECTO
 	return String(orden()[LETRAS.find(s)])
 
-static func motor_de_letra(letra: String) -> String:
-	return String(orden()[LETRAS.find(letra)]) if LETRAS.has(letra) else POR_DEFECTO
 
 static func letra_de(motor: String) -> String:
 	return LETRAS[orden().find(motor)] if MOTORES.has(motor) else ""

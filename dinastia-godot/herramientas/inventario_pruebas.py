@@ -81,7 +81,6 @@ def main():
     sist = {k: [f for f in filas if re.search(p, f["txt"])] for k, p in SISTEMA.items()}
     lentas = [m.group(1) for m in re.finditer(r'pasa "([^"]+)" "([^"]*)"', especiales)
               if "LIMITE_S=" in m.group(2) or "RECORRIDO" in m.group(2)]
-    todo = especiales.split('"todo"')[-1] if '"todo"' in especiales else ""
     duplicadas = collections.defaultdict(list)
     for f in filas:
         k = re.sub(r"\s+", " ", re.sub(r"##.*|#.*", "", f["txt"]))[:600]

@@ -261,31 +261,6 @@ func _bajo_tierra(si: bool) -> void:
 			get_tree().call_group("rotulo_mapa", "show")
 		_env_guardado = {}
 
-func _caja_cabina(tam: Vector3, en: Vector3, giro: Vector3, mat: Material) -> void:
-	var m := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = tam
-	m.mesh = bm
-	m.material_override = mat
-	m.position = en
-	m.rotation_degrees = giro
-	_cabina.add_child(m)
-
-## Una barra de `a` a `b` (pilares y techo).
-func _barra_cabina(a: Vector3, b: Vector3, grosor: float, mat: Material) -> void:
-	var m := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = Vector3(grosor, a.distance_to(b), grosor)
-	m.mesh = bm
-	m.material_override = mat
-	var eje := (b - a).normalized()
-	var lado := eje.cross(Vector3.FORWARD)
-	if lado.length() < 0.01:
-		lado = eje.cross(Vector3.RIGHT)
-	lado = lado.normalized()
-	m.transform = Transform3D(Basis(lado, eje, lado.cross(eje)), (a + b) * 0.5)
-	_cabina.add_child(m)
-
 ## La cabina del coche en primera persona: piezas sencillas hijas de la cámara.
 func _cabina_3d(ver: bool) -> void:
 	if not ver:

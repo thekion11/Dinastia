@@ -160,9 +160,9 @@ func _ver_ficha(j: Jugador) -> void:
 		var fila_attr := HFlowContainer.new()
 		fila_attr.add_theme_constant_override("h_separation", 8)
 		p._ficha.add_child(fila_attr)
-		var g := GridContainer.new()
-		g.columns = 4
-		g.add_theme_constant_override("h_separation", 10)
+		## (13-11) Parejas nombre-valor que saltan de línea (no rejilla fija de 4): en el móvil y en alemán cortaba los valores de la derecha.
+		var g := HFlowContainer.new()
+		g.add_theme_constant_override("h_separation", 16)
 		g.add_theme_constant_override("v_separation", 3)
 		g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila_attr.add_child(g)
@@ -182,11 +182,22 @@ func _ver_ficha(j: Jugador) -> void:
 		## Los atributos, que son la razón de que un central de 90 de ritmo no
 		## sea un central de 90.
 		for k: String in j.atributos:
-			var cn := p._celda(g, String(p.NOMBRES_ATRIBUTOS.get(k, k)), Principal.COL_SUAVE, false, 11)
+			var par := HBoxContainer.new()
+			par.custom_minimum_size.x = 150
+			par.add_theme_constant_override("separation", 6)
+			g.add_child(par)
+			var cn := p._texto(11, Principal.COL_SUAVE)
+			cn.text = String(p.NOMBRES_ATRIBUTOS.get(k, k))
+			cn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			cn.tooltip_text = Idiomas.t(String(TablasMenu.AYUDA_ATRIBUTOS.get(k, "")))
 			cn.mouse_filter = Control.MOUSE_FILTER_PASS
+			par.add_child(cn)
 			var v := int(j.atributos[k])
-			p._celda(g, str(v), Principal.COL_VERDE if v >= 80 else (Principal.COL_TEXTO if v >= 65 else Principal.COL_SUAVE), true, 12)
+			var cv := p._texto(12, Principal.COL_VERDE if v >= 80 else (Principal.COL_TEXTO if v >= 65 else Principal.COL_SUAVE))
+			cv.text = str(v)
+			cv.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+			cv.custom_minimum_size.x = 24
+			par.add_child(cv)
 
 	p._ficha.add_child(HSeparator.new())
 	## La media de un rival tampoco se ve exacta salvo que lo conozcas bien
@@ -293,6 +304,9 @@ func _ver_ficha(j: Jugador) -> void:
 			func() -> void: p._listar_transferible(j),
 			func() -> void: p._rescindir(j, int((p.mundo.cantera.coste_rescision(j) as Dictionary)["total"])))
 		(p as Principal)._traducir_pantalla(p._ficha)
+	for b: Node in p._ficha.get_children():   ## (13-11) los botones largos («Persönlichkeitsbericht anfordern…») parten línea: si no, scroll horizontal tapando la ficha
+		if b is Button:
+			(b as Button).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		return
 	_ver_ficha_2(j, mio)
 	_ver_ficha_3(j)
@@ -422,16 +436,13 @@ func _ver_ficha_2(j: Jugador, mio: Club) -> void:
 
 ## (Trozo 3 de `_ver_ficha`, partida por responsabilidad: fase 6, §4 del plan.)
 func _ver_ficha_3(j: Jugador) -> void:
-	## `HISTORIA` del HTML: la biografía se enseña siempre, sea o no tuyo -a
-	## diferencia de `perfilHumano()`, que es cosa del vestuario propio y solo
-	## se ve en `_pintar_vida_personal_ficha()`.
+	## `HISTORIA` del HTML: la biografía se enseña siempre, sea o no tuyo (`perfilHumano()` solo en `_pintar_vida_personal_ficha()`).
 	p._ficha.add_child(HSeparator.new())
 	var bio_ajeno := p._texto(11, Principal.COL_SUAVE)
 	bio_ajeno.text = FichaJugadorInfo.bio_de(j, p.mundo)
 	bio_ajeno.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._ficha.add_child(bio_ajeno)
-	## La ficha se rehace entera en cada clic: sin esto, lo que no pasó por
-	## `Idiomas.t` se quedaba en castellano hasta el siguiente repintado general.
+	## La ficha se rehace entera en cada clic: sin esto, lo que no pasó por `Idiomas.t` se quedaba en castellano.
 	(p as Principal)._traducir_pantalla(p._ficha)
 
 ## El contrato de la pantalla (`PantallaBase`, fase 0 §7.2): sus secciones, que se abren con `abrir(sección)`.

@@ -58,8 +58,6 @@ static func sector_de(pos: Vector3) -> int:
 		return 400
 	return 100
 
-static func nombre_sector(sector: int) -> String:
-	return String(SECTORES.get(sector, ["?"])[0])
 
 ## Un paradero REAL del mapa para `semilla` dentro del `sector` (los montajes sueltos de pruebas y capturas): siempre el mismo.
 static func codigo(semilla: int, sector: int) -> String:

@@ -143,22 +143,6 @@ static func _textura_bombo() -> Texture2D:
 #  DIBUJO
 # ---------------------------------------------------------------------------
 
-## El bombo: la pecera de metacrilato con las bolas dentro. Va quieto en el
-## centro-abajo, y las bolas salen de él hacia arriba.
-func _pintar_bombo() -> void:
-	_bombo = TextureRect.new()
-	var t := TextureRect.new()
-	t.texture = _textura_bombo()
-	t.custom_minimum_size = Vector2(420, 340)
-	t.set_anchors_preset(Control.PRESET_CENTER)
-	t.offset_left = -210; t.offset_right = 210
-	t.offset_top = 40; t.offset_bottom = 380
-	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_capa.add_child(t)
-	_bombo = t
-
 ## Una bola de sorteo: blanca, con los pentágonos oscuros del balón clásico.
 static func _textura_bola() -> Texture2D:
 	var c := '<svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">'

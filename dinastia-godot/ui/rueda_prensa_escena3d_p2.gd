@@ -405,13 +405,6 @@ func montar(club: Club, acento: Color, nivel: int = Calidad.ALTO, look_dt: Dicti
 		_montar_gesto_dt(look_dt)
 	_montar_camara(); RuedaPrensaMesa.iluminar(self)   ## (10-11) plató a oscuras, periodistas en silueta
 
-## Corta a otro plano -mismo patrón que `SorteoEscena3D.cortar_plano()`-.
-## Se llama sola por tiempo (ver `_process()`); no depende de que
-## `principal.gd` avise de cada pregunta nueva, así que funciona igual
-## aunque el jugador tarde en elegir una respuesta.
-func _cortar_plano() -> void:
-	_plano = (_plano + 1) % PLANOS.size()
-
 func _montar_dt_3d() -> void:
 	_dt_3d_pendiente = false
 	var raiz := Node3D.new()

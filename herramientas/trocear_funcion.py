@@ -171,7 +171,6 @@ def main():
     # variables conocidas
     conocidas = {n: t for n, t in params_orig}
     decl_tipos = {}
-    salida_funcs = []
     todos_tipos_dudosos = []
     info = []
     for (a, b) in tramos:
@@ -220,7 +219,6 @@ def main():
             tp = tipos_manual.get(n) or conocidas.get(n)
             pars.append(f"{n}: {tp}" if tp else n)
         vuelve = list(dict.fromkeys(t["reasig"] + t["salen_decl"]))
-        proto = "[true, " if t["ret"] else "["
         # cuerpo del tramo: `:=` sobre variables sin tipo pasa a `=`
         sin_tipo = {n for n in t["entran"] if not (tipos_manual.get(n) or conocidas.get(n))}
         cuerpo_t = []
@@ -237,7 +235,6 @@ def main():
                 val = l.strip()[len("return"):].strip()
                 l = f"{ind}return [true, {val if val else 'null'}]"
             cuerpo_t.append(l)
-        sufijo = ""
         fin = "\treturn [false" + ("".join(f", {n}" for n in vuelve)) + "]" if t["ret"] else (
             "\treturn [" + ", ".join(vuelve) + "]" if vuelve else "")
         nuevas.append(f"## Tramo {k} de {len(info)} de `{nombre}` (la norma de 450 líneas la troceó).")
@@ -252,13 +249,11 @@ def main():
             llam = "await " + llam
         if vuelve or t["ret"]:
             llamador.append(f"\tvar _r{k} = {llam}")
-            off = 1 if t["ret"] else 0
             if t["ret"] and k == len(info) and ret and ret != "void":
                 llamador.append(f"\treturn _r{k}[1]")   # el último tramo cierra la función
             elif t["ret"]:
                 llamador.append(f"\tif _r{k}[0]:")
                 llamador.append("\t\treturn" + (f" _r{k}[1]" if ret and ret != "void" else ""))
-                off = 1
             for j, n in enumerate(vuelve):
                 idx = j + (1 if t["ret"] else 0)
                 if n in t["reasig"]:

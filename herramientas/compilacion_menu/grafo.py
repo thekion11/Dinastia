@@ -1,4 +1,4 @@
-import os,re,sys,json,collections
+import os,re,json,collections
 RAIZ=os.environ.get('GRAFO_RAIZ','/home/user/Dinastia/dinastia-godot')
 EXCL=('pruebas','terceros','addons','.godot','herramientas')
 scripts={}   # ruta res -> dict

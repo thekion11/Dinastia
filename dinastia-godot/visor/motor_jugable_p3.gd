@@ -195,6 +195,8 @@ func linea_fuera_de_juego(lado: float) -> float:
 	return zs[zs.size() - 2] * signf(lado)
 
 func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
+	if not gesto and String(p.get("anim_actual", "")) == nombre:
+		return   ## (13-11, rendimiento) ya es la animación actual: no hay nada que reproducir (evita dos llamadas nativas por jugador y paso)
 	var ap: AnimationPlayer = p.get("anim")
 	if not is_instance_valid(ap) or not ap.has_animation(nombre):
 		return

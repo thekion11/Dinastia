@@ -155,9 +155,6 @@ func _abrir_examen() -> void:
 	var ex := ExamenLicencia.mostrar(p, p.mundo)
 	ex.cerrado.connect(p._refrescar)
 
-func _abrir_penales() -> void:
-	MinijuegoPenales.mostrar(p, p.mundo)
-
 func _pintar_carrera(r: Roles) -> void:
 	PanelAspectoDT.pintar(p._lista_club, r, p._texto, {"suave": Principal.COL_SUAVE, "acento": p.COL_ACENTO}, p._refrescar,
 		func() -> void:

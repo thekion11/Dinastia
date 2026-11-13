@@ -438,8 +438,3 @@ static func borrar(nombre: String) -> void:
 		if FileAccess.file_exists(ruta_de(nombre) + suf):
 			DirAccess.remove_absolute(ruta_de(nombre) + suf)
 
-## Para el menú de carga solo hacen falta cuatro datos, pero el fichero está
-## comprimido entero, así que hay que abrirlo igual. Se separa en su propia
-## función para que quede claro qué se está pagando.
-static func _leer_cabecera(ruta: String) -> Dictionary:
-	return _cabecera_de(_leer_todo(ruta))

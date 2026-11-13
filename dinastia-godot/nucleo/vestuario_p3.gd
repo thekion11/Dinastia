@@ -313,8 +313,6 @@ func factor_defensa(c: Club = null) -> float:
 #  5 · HERMANOS Y GEMELOS
 # ---------------------------------------------------------------------------
 
-func hermano_de(j: Jugador) -> String:
-	return String(_hermano.get(j.id, ""))
 
 ## Los declara hermanos. Está expuesto para que la cantera o un evento puedan
 ## emparentar a dos que ya existen sin tener que crear a nadie.

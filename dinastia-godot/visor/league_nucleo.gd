@@ -148,16 +148,6 @@ static func odds_pase_a(origen: Vector2, mov_origen: Vector2, receptor: Vector2,
 		destino += Vector2(-lado * d0 * 0.2, 0.0)
 	return odds_pase(origen + mov_origen * 0.12, destino, tipo, rivales)
 
-## L AI_GetAutoPass → [dirección 3D en marco League (x, y, alto), potencia]. Velocidad de salida: `vel_pase`.
-static func auto_pase(tipo: int, vector: Vector2) -> Array:
-	var alto := 0.11
-	var factor := 1.8
-	if tipo == ALTO:
-		alto = 0.45 - normalizado(vector.length(), 0.0, 60.0) * 0.15
-		factor = 1.15
-	var dir := Vector3(vector.normalized().x, vector.normalized().y, alto).normalized()
-	return [dir, pow(normalizado(vector.length(), 0.0, 60.0), 1.4) * factor]
-
 ## L humanoid.cpp: touchVec = ballDirection * 36 * (ballPower + 0.3).
 static func vel_pase(potencia: float) -> float:
 	return 36.0 * (potencia + 0.3)

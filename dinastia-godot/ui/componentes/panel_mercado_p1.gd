@@ -314,7 +314,7 @@ func _pintar_lista(mio: Club) -> void:
 	var con_pos := not EscalaMovil.es_vertical()
 	g.columns = 7 if con_pos else 6
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	g.add_theme_constant_override("h_separation", 8)
+	g.add_theme_constant_override("h_separation", 14)   ## (13-11) con 8, en alemán «MF» quedaba pegado a «FORDERUNG»
 	g.add_theme_constant_override("v_separation", 2)
 	var margen := MarginContainer.new()   ## la barra de desplazamiento pisaba la columna «GANAS»
 	margen.add_theme_constant_override("margin_right", 14)

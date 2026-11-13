@@ -92,9 +92,6 @@ func _al_entrar() -> void:
 		mostrar(_pendiente[0] as Club, String(_pendiente[1]))
 	_pendiente = []
 
-func animal_actual() -> String:
-	return _actual
-
 func _process(delta: float) -> void:
 	if _pivote != null and not Animar.reducidas():
 		_pivote.rotation.y += delta * 0.45

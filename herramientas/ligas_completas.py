@@ -148,22 +148,7 @@ NUEVOS = [
     ("KOR", "Buche0n FC", "Gyeonggi Rojo", "#d50032", "#000000", 66, 34500, "4-4-2", "contra"),
 ]
 
-# Nombre real limpio (sin dígitos) -> ficticio; `base_ficticia.py` lo suma a `CLUBES`.
-UNLEET = {"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "8": "b", "9": "g"}
-
-
-def _limpio(n):
-    """Mismo algoritmo que `base_ficticia.limpiar` (copiado para no importar circularmente)."""
-    def letra(c):
-        u = ord(c)
-        return (65 <= u <= 90) or (97 <= u <= 122) or (0xC0 <= u <= 0x17F)
-    o = ""
-    for i, c in enumerate(n):
-        if c in UNLEET and ((i > 0 and letra(n[i - 1])) or (i + 1 < len(n) and letra(n[i + 1]))):
-            o += UNLEET[c]
-        else:
-            o += c
-    return o
+from club_comun import limpio as _limpio, asegurar_clubes, estadios_por_aforo   # lo común con `segundas_divisiones.py`
 
 
 CLUBES = {_limpio(f[1]): f[2] for f in NUEVOS}
@@ -173,29 +158,12 @@ PAISES = sorted({f[0] for f in NUEVOS})
 
 def asegurar(real: dict) -> None:
     """Quita de cada liga los clubes de `QUITAR` y añade al final los que faltan (idempotente)."""
-    fuera = {_limpio(n) for l in QUITAR.values() for n in l}
-    for pais, d in real["PAISES_LIGAS"].items():
-        d["clubes"] = [f for f in d["clubes"] if _limpio(f[0]) not in fuera]
-    for tabla in ("REALES", "EQUIP_REAL"):
-        for k in [k for k in real.get(tabla, {}) if _limpio(k) in fuera]:
-            del real[tabla][k]
-    for pais, nombre, _fic, c1, c2, media, aforo, _f, _e in NUEVOS:
-        clubes = real["PAISES_LIGAS"][pais]["clubes"]
-        if all(_limpio(f[0]) != _limpio(nombre) for f in clubes):
-            clubes.append([nombre, c1, c2, media, aforo])
+    asegurar_clubes(real, QUITAR, NUEVOS)
 
 
 def estadios():
     """Arquitectura del estadio de cada club nuevo, según su aforo (clave = nombre real limpio) para `estadios_reales.ESTADIOS`."""
-    from estadios_reales_p2 import e
-    sal = {}
-    for f in NUEVOS:
-        aforo = f[6]
-        niv = 1 if aforo < 15000 else (2 if aforo < 40000 else 3)
-        forma = "ingles" if aforo < 8000 else ("rect" if aforo < 40000 else "oval")
-        techo = "sin" if aforo < 8000 else ("parcial" if aforo < 40000 else "anillo")
-        sal[_limpio(f[1])] = e(forma, niv, techo, False, "torres", "hormigon", "")
-    return sal
+    return estadios_por_aforo(NUEVOS)
 
 
 def aspecto():

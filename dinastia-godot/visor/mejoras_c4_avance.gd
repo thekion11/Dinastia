@@ -79,3 +79,128 @@ static func rechace(m: Object, gk: Dictionary) -> void:
 	m.vel_balon = Vector3(v.x * 0.7, v.y, -v.z * 2.0 - signf(propio.z) * 2.0)
 	if m.get("diag") is Dictionary:
 		(m.diag as Dictionary)["c4_rechace_vivo"] = int((m.diag as Dictionary).get("c4_rechace_vivo", 0)) + 1
+
+## DEFINIR DENTRO DEL ÁREA (sesión 15): con `C4_DEFINIR=1`, a menos de `DEFINIR_D` m del arco, el remate de la IA va al palo contrario al
+## portero (si está corrido > 0,3 m) y raso; el error del tiro no cambia. Contador `c4_definir`.
+static var DEFINIR := OS.get_environment("C4_DEFINIR") == "1"
+static var DEFINIR_D := float(OS.get_environment("C4_DEFINIR_D")) if OS.get_environment("C4_DEFINIR_D") != "" else 17.0
+
+static func definir(m: Object, p: Dictionary, dist: float, apunte: Vector2) -> Vector2:
+	if not DEFINIR or dist >= DEFINIR_D:
+		return apunte
+	var gx := 0.0
+	for q: Dictionary in m.jugadores:
+		if bool(q["por"]) and bool(q["es_local"]) != bool(p["es_local"]):
+			gx = (m.pos(q) as Vector3).x
+	var r := apunte
+	if absf(gx) > 0.3:
+		r.x = -signf(gx) * maxf(absf(apunte.x), 0.7)
+	r.y = minf(apunte.y, -0.45)
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_definir"] = int((m.diag as Dictionary).get("c4_definir", 0)) + 1
+	return r
+
+## EL ERROR DEL REMATE DENTRO DEL ÁREA (sesión 15): con `C4_ERROR_AREA=k` (0 = apagada) el error de todo remate que no sea penal a menos
+## de 17 m del arco se multiplica por `k` (< 1 = más preciso; vale para la IA y para el humano). Contador `c4_error_area`.
+static var ERROR_AREA := float(OS.get_environment("C4_ERROR_AREA")) if OS.get_environment("C4_ERROR_AREA") != "" else 0.0
+
+static func error_tiro(m: Object, lejos: float, error: float, clase: String) -> float:
+	if ERROR_AREA <= 0.0 or lejos >= 17.0 or clase == "penal":
+		return error
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_error_area"] = int((m.diag as Dictionary).get("c4_error_area", 0)) + 1
+	return error * ERROR_AREA
+
+## EL PORTERO ANTE EL REMATE DESDE DENTRO DEL ÁREA (sesión 15): con `C4_PARADA_AREA=k` (0 = apagada) la probabilidad de parar un remate
+## que sale a menos de 17 m de su arco se multiplica por `k`; los de lejos no cambian (que no suban los goles «tontos»). Contador
+## `c4_parada_area`.
+static var PARADA_AREA := float(OS.get_environment("C4_PARADA_AREA")) if OS.get_environment("C4_PARADA_AREA") != "" else 0.0
+
+static func parada(m: Object, gk: Dictionary, desde: Vector3, prob: float) -> float:
+	if PARADA_AREA <= 0.0:
+		return prob
+	var arco: Vector3 = m._arco_propio(gk)
+	if Vector2(desde.x - arco.x, desde.z - arco.z).length() >= 17.0:
+		return prob
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_parada_area"] = int((m.diag as Dictionary).get("c4_parada_area", 0)) + 1
+	return prob * PARADA_AREA
+
+## EL PASE ATRÁS DESDE EL FONDO (sesión 15): el extremo que llega al fondo (`C4_BANDA`) solo sabía centrar por arriba (`MejorasC4.centro`).
+## Con `C4_PASE_ATRAS=1`, abierto (|x| > 9) y a menos de 10 m de la línea de fondo, con probabilidad `PASE_ATRAS_P` busca un compañero
+## de campo en el área (a 6-16 m del arco y |x| < 9, habilitado, línea limpia) y se la da RASA (el pase de siempre); elige al más libre.
+## Va antes que el centro por arriba. Contador `c4_pase_atras`.
+static var PASE_ATRAS := OS.get_environment("C4_PASE_ATRAS") == "1"
+const PASE_ATRAS_P := 0.6
+static var PASE_ATRAS_Z := float(OS.get_environment("C4_PASE_ATRAS_Z")) if OS.get_environment("C4_PASE_ATRAS_Z") != "" else 10.0   ## m a la línea de fondo
+static var PASE_ATRAS_ANCHO := PASE_ATRAS_Z > 12.0   ## con zona amplia: desde |x| > 7, receptor a 5-18 m y |x| < 11
+
+static func pase_atras(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
+	if not PASE_ATRAS:
+		return false
+	var yo: Vector3 = m.pos(p)
+	var arco: Vector3 = m._arco_rival(p)
+	if absf(yo.x) < (7.0 if PASE_ATRAS_ANCHO else 9.0) or absf(arco.z - yo.z) > PASE_ATRAS_Z:
+		return false
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_fondo_zona"] = int((m.diag as Dictionary).get("c4_fondo_zona", 0)) + 1
+	var local := bool(p["es_local"])
+	var mejor: Dictionary = {}
+	var libre := 0.0
+	for q: Dictionary in m.jugadores:
+		if q == p or bool(q["es_local"]) != local or bool(q["por"]):
+			continue
+		var qp: Vector3 = m.pos(q)
+		var da := Vector2(qp.x - arco.x, qp.z - arco.z).length()
+		if da < (5.0 if PASE_ATRAS_ANCHO else 6.0) or da > (18.0 if PASE_ATRAS_ANCHO else 16.0) or absf(qp.x) > (11.0 if PASE_ATRAS_ANCHO else 9.0) or m._adelantado(q, p) or m._linea_tapada(yo, qp, local):
+			continue
+		var pr: float = m._presion(q)
+		if pr > libre:
+			libre = pr
+			mejor = q
+	if mejor.is_empty() or rng.randf() > PASE_ATRAS_P:
+		return false
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_pase_atras"] = int((m.diag as Dictionary).get("c4_pase_atras", 0)) + 1
+	m._pasar_a(p, mejor)
+	return true
+
+## LLEGADA AL ÁREA (sesión 15, OK del líder; toca COLOCACIÓN: solo C4 y con bandera). Cuando el extremo encara (`C4_BANDA`) el área
+## está vacía: el pase atrás (`C4_PASE_ATRAS`) no encuentra a nadie y el centro va al aire. Con `C4_LLEGADA=1`, si un compañero tiene el
+## balón abierto (|x| > 9) a menos de 25 m de la línea de fondo, atacan el área: el DC el primer palo, el extremo del otro lado el
+## segundo palo y el MC el punto de penal (cada uno si está a < 35 m de su sitio). Contador `c4_llegada`.
+static var LLEGADA := OS.get_environment("C4_LLEGADA") == "1"
+
+static func llegada(m: Object, p: Dictionary) -> Vector3:
+	if not LLEGADA:
+		return Vector3.INF
+	var b: Dictionary = m.poseedor
+	if b.is_empty() or b == p or bool(b["por"]) or bool(b["es_local"]) != bool(p["es_local"]):
+		return Vector3.INF
+	var bp: Vector3 = m.pos(b)
+	var arco: Vector3 = m._arco_rival(p)
+	if absf(bp.x) < 9.0 or absf(arco.z - bp.z) > 25.0:
+		return Vector3.INF
+	var d: float = m.dir_ataque(bool(p["es_local"]))
+	var lado := signf(bp.x)
+	var rol := String(m._rol(p))
+	var obj := Vector3.INF
+	if rol == "DC":
+		obj = Vector3(lado * 2.5, 0, arco.z - d * 6.0)
+	elif (rol == "ED" or rol == "EI") and signf(m.pos(p).x) != lado:
+		obj = Vector3(-lado * 3.0, 0, arco.z - d * 8.0)
+	elif rol == "MC" and _mc_mas_cerca(m, p, arco):
+		obj = Vector3(0, 0, arco.z - d * 11.0)
+	if obj == Vector3.INF or (m.pos(p) as Vector3).distance_to(obj) > 35.0:
+		return Vector3.INF
+	if m.get("diag") is Dictionary and float(p.get("_c4_llegada_t", -99.0)) < float(b.get("tomo_en", 0.0)):
+		p["_c4_llegada_t"] = float(m.t)
+		(m.diag as Dictionary)["c4_llegada"] = int((m.diag as Dictionary).get("c4_llegada", 0)) + 1
+	return obj
+
+static func _mc_mas_cerca(m: Object, p: Dictionary, arco: Vector3) -> bool:
+	var yo := (m.pos(p) as Vector3).distance_to(arco)
+	for q: Dictionary in m.jugadores:
+		if q != p and bool(q["es_local"]) == bool(p["es_local"]) and String(m._rol(q)) == "MC" and (m.pos(q) as Vector3).distance_to(arco) < yo:
+			return false
+	return true

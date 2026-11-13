@@ -225,7 +225,6 @@ func _pestana(sub: Dictionary, i: int) -> Button:
 	return b
 
 # ---------------------------------------------------------------- portada
-
 ## La portada: el lema del menú y una tarjeta grande por submenú.
 var _ancho_tarjeta := 310.0   ## medidas de las tarjetas de la portada (las fija `portada()` según la ventana)
 var _alto_tarjeta := 168.0
@@ -309,6 +308,16 @@ func elegir(i: int) -> void:
 	if _hueco_contenido != null:
 		_hueco_contenido.modulate.a = 0.35
 		create_tween().tween_property(_hueco_contenido, "modulate:a", 1.0, 0.18)
+
+## (13-11) Una pantalla que cambia de sección por dentro (las pestañas de Ajustes) avisa aquí para que la cabecera diga la misma.
+func seguir_seccion(secc: String) -> void:
+	var subs: Array = _menu["subs"]
+	for i in subs.size():
+		if String((subs[i] as Dictionary).get("secc", "")) == secc and _activo >= 0:
+			_activo = i
+			_marcar_pestana()
+			_titulo_sub.text = "%s  %s" % [String(subs[i].get("icono", "")), Idiomas.t(String(subs[i]["label"]))]
+			return
 
 func _marcar_pestana() -> void:
 	_paginador.actualizar()

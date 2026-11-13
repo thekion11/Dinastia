@@ -351,55 +351,6 @@ func _aprender_dt(clave: String) -> void:
 		p._escribir("[color=#e05555]No puedes aprender eso: %s.[/color]" % problema)
 	p._refrescar()
 
-func _pintar_arbol_dt() -> void:
-	var e := p.mundo.entrenamiento
-	if e == null:
-		return
-	var t := p._texto(11, Principal.COL_SUAVE)
-	t.text = Idiomas.t("🎓 TUS HABILIDADES DE ENTRENADOR")
-	p._lista_legado.add_child(t)
-	var pts := p._texto(14, Principal.COL_ORO if e.dt_puntos > 0 else Principal.COL_SUAVE)
-	pts.text = Idiomas.t("%d punto(s) por gastar  ·  se gana uno cada %d semanas") % [
-		e.dt_puntos, Entrenamiento.SEMANAS_POR_PUNTO_DT]
-	p._lista_legado.add_child(pts)
-	for rama: String in e.dt_ramas():
-		var tr := p._texto(10, p.COL_ACENTO)
-		tr.text = Idiomas.mayusculas(Idiomas.t(rama))
-		p._lista_legado.add_child(tr)
-		for clave: String in (e.dt_ramas()[rama] as Array):
-			var tengo := e.dt_tiene(clave)
-			var fila := HBoxContainer.new()
-			fila.add_theme_constant_override("separation", 6)
-			p._lista_legado.add_child(fila)
-			var nom := p._texto(12, Principal.COL_VERDE if tengo else Principal.COL_TEXTO)
-			nom.text = "%s  %s" % [e.dt_icono(clave), e.dt_nombre(clave)]
-			nom.custom_minimum_size = Vector2(170, 0)
-			fila.add_child(nom)
-			var desc := p._texto(11, Principal.COL_SUAVE)
-			desc.text = e.dt_descripcion(clave)
-			desc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			fila.add_child(desc)
-			if tengo:
-				var ya := p._texto(11, Principal.COL_VERDE)
-				ya.text = "✔"
-				ya.custom_minimum_size = Vector2(70, 0)
-				fila.add_child(ya)
-				continue
-			## Cuando no se puede, el botón dice POR QUÉ en vez de estar gris y
-			## mudo: "antes: Pizarra fina" y "te faltan 2 punto(s)" son dos
-			## problemas distintos y el jugador tiene que poder distinguirlos.
-			var motivo := e.dt_motivo(clave)
-			var b := Button.new()
-			b.text = Idiomas.t("%d pto(s)") % e.dt_coste(clave) if motivo == "" else motivo
-			b.add_theme_font_size_override("font_size", 10)
-			b.disabled = motivo != ""
-			b.custom_minimum_size = Vector2(140, 0)
-			var k := clave
-			b.pressed.connect(func() -> void: _aprender_dt(k))
-			fila.add_child(b)
-	p._lista_legado.add_child(HSeparator.new())
-
 func _filtrar_records() -> void:
 	var titulos: Array = []
 	for k: String in Principal.SECC_RECORDS:

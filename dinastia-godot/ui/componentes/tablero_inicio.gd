@@ -101,27 +101,6 @@ static func _lbl(texto: String, tam: int, col: Color) -> Label:
 static func _titulo(v: VBoxContainer, texto: String) -> void:
 	v.add_child(_lbl(texto, 11, COL_SUAVE))
 
-static func _fila_anillo(v: VBoxContainer, anillo: Control, grande: String, pie: String, col: Color) -> void:
-	var h := HBoxContainer.new()
-	h.add_theme_constant_override("separation", 10)
-	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	v.add_child(h)
-	h.add_child(anillo)
-	var t := VBoxContainer.new()
-	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	t.alignment = BoxContainer.ALIGNMENT_CENTER
-	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	h.add_child(t)
-	## Solo se corta en los espacios (29-9-2026): con WORD_SMART, en polaco o
-	## francés salía "jedenas / tki" o "Moyenn / e", partiendo la palabra.
-	var gr := _lbl(grande, 14, col)
-	gr.autowrap_mode = TextServer.AUTOWRAP_WORD
-	t.add_child(gr)
-	var p := _lbl(pie, 11, COL_SUAVE)
-	p.autowrap_mode = TextServer.AUTOWRAP_WORD
-	p.clip_text = false
-	t.add_child(p)
-
 static func _tarjeta_partido(c: Club, mundo: Mundo, liga: Liga, ir: Callable) -> Control:
 	var par := mundo.proximo_partido()
 	var cc := _caja_tarjeta(ir, "Partido", 104.0)

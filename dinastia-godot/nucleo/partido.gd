@@ -396,9 +396,6 @@ func cerrar_notas_mirado() -> void:
 		j.forma = clampi(int(round(float(j.forma) * 0.7 + n * 10.0 * 0.3)), 20, 99)
 		j.partidos += 1
 
-## La nota de un jugador en este partido, para poder pintarla en directo.
-func nota_de(j: Jugador) -> float:
-	return float(_notas.get(j.id, 6.0))
 
 static func marcar_ex(j: Jugador, club_id: String) -> void:
 	if j == null or club_id == "":

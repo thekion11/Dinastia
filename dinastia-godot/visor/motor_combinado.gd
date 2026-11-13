@@ -71,7 +71,7 @@ func _ia_portador(p: Dictionary) -> void:
 		return
 	if _mejoras_c4 and MejorasC4Pared.vuelta(self, p):
 		return   ## (12-11) la vuelta de la pared, de primera
-	if _mejoras_c4 and t >= _decision_en and (MejorasC4.centro(self, p, _rng) or MejorasC4Pared.ida(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
+	if _mejoras_c4 and t >= _decision_en and (MejorasC4Avance.pase_atras(self, p, _rng) or MejorasC4.centro(self, p, _rng) or MejorasC4Pared.ida(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
 		return
 	var guardado := equipos
 	var antes := _decision_en
@@ -198,6 +198,10 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		return super._ia_ataque_sin_balon(p)
 	var r := _sin_flag3(p, true)
 	if _mejoras_c4:
+		var lle := MejorasC4Avance.llegada(self, p)   ## (sesión 15) C4_LLEGADA
+		if lle != Vector3.INF:
+			p["correr"] = pos(p).distance_to(lle) > 2.0
+			return lle
 		var rup := MejorasC4Avance.ruptura(self, p)   ## (sesión 15) C4_RUPTURA
 		if rup != Vector3.INF:
 			p["correr"] = true
@@ -319,3 +323,15 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 
 func _escala_ritmo() -> float:
 	return super() * _k_regate
+
+## (12-11, sesión 15) definir dentro del área, solo en C4 (`MejorasC4Avance.definir`, `C4_DEFINIR=1`).
+func _apunte_ia(p: Dictionary, dist_arco: float, apunte: Vector2) -> Vector2:
+	return MejorasC4Avance.definir(self, p, dist_arco, apunte) if _mejoras_c4 else apunte
+
+## (13-11, sesión 15) el error del remate dentro del área, solo en C4 (`MejorasC4Avance.error_tiro`, `C4_ERROR_AREA=k`).
+func _error_tiro_extra(p: Dictionary, lejos: float, error: float, clase: String) -> float:
+	return MejorasC4Avance.error_tiro(self, lejos, error, clase) if _mejoras_c4 else error
+
+## (13-11, sesión 15) el portero ante el remate desde dentro del área, solo en C4 (`MejorasC4Avance.parada`, `C4_PARADA_AREA=k`).
+func _prob_parada_extra(gk: Dictionary, desde: Vector3, prob: float) -> float:
+	return MejorasC4Avance.parada(self, gk, desde, prob) if _mejoras_c4 else prob

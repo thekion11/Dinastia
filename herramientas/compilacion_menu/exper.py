@@ -23,7 +23,6 @@ def subarbol(n,out):
 def transformar(dest,fam_nodos):
     prot=set()
     for n in fam_nodos: subarbol(n,prot)
-    clases={nombre[n]:n for n in fam_nodos if n in nombre}
     # también las clases de TODO el subárbol (referencias a cualquiera de ellas desde fuera)
     todas={nombre[x]:x for x in prot if x in nombre}
     cambios=0

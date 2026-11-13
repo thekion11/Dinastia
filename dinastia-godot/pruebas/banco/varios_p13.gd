@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos, _probar_mundo_abandonado, _probar_fila_portadas_sigue_foco, _probar_museo_por_titulos
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos, _probar_mundo_abandonado, _probar_fila_portadas_sigue_foco, _probar_museo_por_titulos, _probar_funciones_puras_ui
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -302,3 +302,34 @@ func _probar_fila_portadas_sigue_foco() -> void:
 	var sc := fila.get_parent() as ScrollContainer if fila != null else null
 	_comprobar(sc != null and sc.follow_focus, "el desplazamiento de las portadas sigue al foco")
 	ini.free()
+
+## (13-11) FUNCIONES PURAS de ui/ y visor/ con casos límite: cifras con puntos de miles, estrellas, columnas de la tipografía, tiempo de caída y matrículas.
+func _probar_funciones_puras_ui() -> void:
+	_titulo("FUNCIONES PURAS DE UI Y VISOR: CASOS LÍMITE")
+	for n in 4:
+		_comprobar(PlantillaEstilos.texto_estrellas(n).length() == 3 and PlantillaEstilos.texto_estrellas(n).count("★") == n, "%d estrellas: %s" % [n, PlantillaEstilos.texto_estrellas(n)])
+	var casos := [
+		[{"clave": "caja_total", "valor": 312, "meta": 500}, "312 / 500 M"],
+		[{"clave": "goles", "valor": 1000, "meta": 999}, "1.000 / 999"],
+		[{"clave": "socios", "valor": 1234567, "meta": 20000000}, "1.234.567 / 20.000.000"],
+		[{"clave": "deuda", "valor": -1500, "meta": 0}, "-1.500 / 0"],
+		[{"clave": "caja_argentina", "valor": 0, "meta": 1}, "0 / 1 M"]]
+	for c: Array in casos:
+		var obtenido := ListaLogrosLargo.cifra(c[0])
+		_comprobar(obtenido == String(c[1]), "cifra de logro «%s»" % String(c[1]) + ("" if obtenido == String(c[1]) else " (salió «%s»)" % obtenido))
+	_comprobar(SponsorKit.columnas("") == 1 and SponsorKit.columnas("   ") == 8 and SponsorKit.columnas("\u0001") == 1, "columnas: vacío = 1, tres espacios = 8, carácter sin letra = 1")
+	var letra := String(SponsorKit.FUENTE.keys()[0])
+	_comprobar(SponsorKit.columnas(letra) == 5 and SponsorKit.columnas(letra + " " + letra) == 6 * 2 + 3 - 1, "columnas: una letra ocupa 6 menos la separación; dos con un espacio, 14")
+	var t := LeagueAcciones.tiempo_a_altura(0.0, 10.0, 0.0, 9.8)
+	_comprobar(absf(t - 20.0 / 9.8) < 0.0001, "tiempo a la altura de salida: vuelve a bajar a los %.3f s" % t)
+	_comprobar(absf(LeagueAcciones.tiempo_a_altura(0.0, 10.0, 4.0, 9.8) - (10.0 + sqrt(21.6)) / 9.8) < 0.0001, "tiempo bajando por 4 m")
+	_comprobar(LeagueAcciones.tiempo_a_altura(0.0, 5.0, 20.0, 9.8) == -1.0, "si no llega a la altura pedida devuelve -1")
+	var rx := RegEx.create_from_string("^[A-HJ-NP-PR-VX-Z]{2} \\d{3} [A-HJ-NP-PR-VX-Z]{2}$")
+	var bien := true
+	for i in [0, 1, 7, 99, 1000, 123456, -5, 2147483647]:
+		bien = bien and rx.search(CocheDetalle.texto_placa(i)) != null and CocheDetalle.texto_placa(i) == CocheDetalle.texto_placa(i)
+	_comprobar(bien, "matrículas «AB 123 CD»: formato correcto, estable y sin letras prohibidas, incluidos 0, negativos y el mayor entero")
+	var distintas := {}
+	for i in 200:
+		distintas[CocheDetalle.texto_placa(i)] = true
+	_comprobar(distintas.size() > 150, "200 coches dan más de 150 matrículas distintas (%d)" % distintas.size())

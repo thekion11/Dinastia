@@ -108,9 +108,6 @@ static func anotar(m: Mundo, pais: String, torneo: String, club: Club) -> void:
 	while m.palmares_mundo.size() > MAX_PALMARES:
 		m.palmares_mundo.pop_front()
 
-## Los títulos de un club en lo que va de partida: [{anio, torneo}].
-static func titulos_de(m: Mundo, c: Club) -> Array:
-	return m.palmares_mundo.filter(func(t: Dictionary) -> bool: return String(t["club"]) == c.id)
 
 # ---------------------------------------------------------------- guardado
 

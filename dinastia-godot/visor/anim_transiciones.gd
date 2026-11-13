@@ -36,8 +36,16 @@ static func poner(ap: AnimationPlayer, semilla: String = "") -> AnimTransiciones
 	return t
 
 ## Fase del paso (0 = apoya el pie izquierdo) de un clip en el instante `pos`.
+## (13-11, optimización) La tabla de fases de `AnimPasos`, con el script guardado la primera vez: antes cada llamada (50 reproductores por fotograma, 2-3
+## veces cada una) hacía un `load()` por ruta (3,5 µs por llamada → 1,2 µs). Sigue siendo carga perezosa por ruta (sin dependencia de compilación).
+static var _pasos: GDScript = null
+static func _fases() -> Dictionary:
+	if _pasos == null:
+		_pasos = load("res://visor/anim_pasos.gd")
+	return _pasos.fases
+
 static func fase_de(clip: String, pos: float, largo: float) -> float:
-	return fposmod(pos / maxf(largo, 0.001) - float(load("res://visor/anim_pasos.gd").fases.get(clip, 0.0)), 1.0)
+	return fposmod(pos / maxf(largo, 0.001) - float(_fases().get(clip, 0.0)), 1.0)
 
 func _process(_d: float) -> void:
 	## 2-11-2026 (120 FPS): con el reproductor parado o su personaje fuera de la vista no hay paso que apuntar.
@@ -50,16 +58,16 @@ func apuntar() -> void:
 	if _ap == null or not is_instance_valid(_ap):
 		return
 	var c := String(_ap.current_animation)
-	if load("res://visor/anim_pasos.gd").fases.has(c):
+	if _fases().has(c):
 		_clip = c
 		_fase = fase_de(c, _ap.current_animation_position, _ap.current_animation_length)
 	else:
 		_clip = ""
 
 func _al_cambiar(nuevo: String) -> void:
-	if _clip == "" or not load("res://visor/anim_pasos.gd").fases.has(nuevo) or not _ap.has_animation(nuevo):
+	if _clip == "" or not _fases().has(nuevo) or not _ap.has_animation(nuevo):
 		_clip = ""
 		return
 	var largo := _ap.get_animation(nuevo).length
-	_ap.seek(fposmod(_fase + float(load("res://visor/anim_pasos.gd").fases[nuevo]), 1.0) * largo, false)
+	_ap.seek(fposmod(_fase + float(_fases()[nuevo]), 1.0) * largo, false)
 	_clip = nuevo

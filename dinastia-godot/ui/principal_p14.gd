@@ -62,13 +62,11 @@ func _reconstruir_grupos() -> void:
 ## Puentes (fase 6, paso 5): hubs y carril viven en `Hubs` (`ui/menu/hubs.gd`).
 func _abrir_hub(clave: String) -> void: _hubs.abrir(clave)
 func _indice_grupo(gid: String) -> int: return _hubs.indice_grupo(gid)
-func _animar_pagina(direccion: int) -> void: _hubs.animar_pagina(direccion)
 func _actualizar_fila_grupos() -> void: _hubs.actualizar_fila_grupos()
 func _grupo_por_id(gid: String) -> Dictionary: return _hubs.grupo_por_id(gid)
 func _seccion_activa(chip: Dictionary) -> bool: return _hubs.seccion_activa(chip)
 func _ir_a_chip(chip: Dictionary) -> void: _hubs.ir_a_chip(chip)
 func _reconstruir_fila_sub() -> void: _hubs.reconstruir_fila_sub()
-func _chips_del_carril(titulo: String) -> Array: return _hubs.chips_del_carril(titulo)
 func _elegir_grupo(gid: String) -> void: _hubs.elegir_grupo(gid)
 func _construir_grupos() -> void: _hubs.construir_grupos()
 func _grupo_de_pestana(titulo: String) -> String: return _hubs.grupo_de_pestana(titulo)

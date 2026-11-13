@@ -219,9 +219,11 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	var rival: Dictionary = {}
 	var al_hombre := MotorTacticaViva.bandera(self as Object as MotorJugable, bool(p["es_local"]), "marca")   ## pizarra: marca al hombre (01-11)
 	var md := 16.0 if al_hombre else 11.0
+	var r_vista := MotorMente.retardo(self as Object as MotorJugable, p)   ## (13-11, rendimiento) una vez por jugador, no por rival
+	var es_local_p := bool(p["es_local"])
 	for q: Dictionary in jugadores:
-		if bool(q["es_local"]) != bool(p["es_local"]) and not bool(q["por"]):
-			var d := MotorMente.pos_vista(self as Object as MotorJugable, p, q).distance_to(obj)
+		if bool(q["es_local"]) != es_local_p and not bool(q["por"]):
+			var d := MotorMente.pos_vista_con(self as Object as MotorJugable, q, r_vista).distance_to(obj)
 			if d < md:
 				md = d
 				rival = q

@@ -21,6 +21,13 @@ static func sala(nodo: Node3D, nombre: String, caja: Rect2, y0: float, c1: Color
 			## Una planta y una lámpara a cada lado de la pantalla (el sofá largo se quitó: tapaba la puerta y no cabía).
 			EdificioClub._mod(nodo, "pottedPlant", Vector3(caja.position.x + 0.4, y0, caja.position.y + 0.5), 0.0, true, 2.2)
 			EdificioClub._mod(nodo, "lampRoundFloor", Vector3(caja.end.x - 0.35, y0, caja.position.y + 0.5), 0.0, true)
+			## (12-11, sesión 16, primera persona) Sombra de contacto bajo cada fila de butacas (las mismas filas que pone `EdificioClub`):
+			## sin ella, de cerca parecían flotar sobre la moqueta. Una pieza translúcida por fila; en ULTRA BAJA no se pone (como todo el relleno).
+			var filas := clampi(1 + EdificioClub.nivel("video") / 3, 1, 4)
+			var n_but := int((caja.size.x - 1.0) / 0.8)
+			for f in filas:
+				PiezasObra._caja(nodo, Vector3(caja.position.x + 0.9 + float(n_but - 1) * 0.4, y0 + 0.034, caja.position.y + 2.2 + f * 1.1),
+					Vector3(float(n_but) * 0.8, 0.002, 0.8), _sombra_contacto(), false)
 		"Cuarto de máquinas":
 			## Cajas de repuestos apiladas en la esquina del fondo.
 			EdificioClub._mod(nodo, "cardboardBoxClosed", Vector3(caja.position.x + 0.45, y0, caja.end.y - 0.45), 0.2, true)
@@ -46,6 +53,15 @@ static func _cc0(nodo: Node3D, nombre: String, caja: Rect2, y0: float) -> void:
 		"Utilería":
 			ModeloCC0.poner(nodo, "worn_metal_rack", Vector3(cx - 0.9, y0, caja.position.y + 0.35), 0.0, 1.8, true, false)   ## entre la estantería de la izquierda y la jaula de balones
 			ModeloCC0.poner(nodo, "WetFloorSign_01", Vector3(cx - 0.6, y0, caja.end.y - 1.3), 0.5, 0.62, true, false)
+
+static var _sombra: StandardMaterial3D = null
+static func _sombra_contacto() -> StandardMaterial3D:
+	if _sombra == null:
+		_sombra = StandardMaterial3D.new()
+		_sombra.albedo_color = Color(0.0, 0.0, 0.0, 0.38)
+		_sombra.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_sombra.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	return _sombra
 
 ## Un banco en el pasillo de cada planta, contra la pared del fondo y sin tapar el ascensor ni las puertas. (Las plantas grandes que se probaron en los
 ## extremos costaban ~38 llamadas de dibujo cada una en ALTA, y la orden es no subir el dibujo: se quedaron fuera.)
