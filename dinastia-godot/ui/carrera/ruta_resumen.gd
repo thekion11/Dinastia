@@ -55,7 +55,7 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 	cif.add_child(E.cifra(str(int(u.get("asist", 0))), "asist."))
 	cif.add_child(E.cifra("%d'" % int(u.get("minutos", 0)), "minutos"))
 	if int(u.get("racha", 0)) >= 2:
-		cif.add_child(E.cifra("🔥 %d" % int(u["racha"]), "racha", E.CORAL))
+		cif.add_child(E.cifra("🔥 %d" % int(u["racha"]), (Idiomas.t("racha") + "  ·  +%d XP" % int(u["bono_racha"])) if int(u.get("bono_racha", 0)) > 0 else "racha", E.CORAL))
 	## Los retos.
 	for reto: Dictionary in u.get("retos", []):
 		var def: Array = CarreraRuta.RETOS.get(String(reto.get("id", "")), ["", 0, []])

@@ -49,7 +49,17 @@ static func pintar(ui: Variant) -> Control:
 	## Los premios.
 	v.add_child(E.rotulo("TUS PREMIOS"))
 	var premios: Array = t.get("premios", []) if t.get("premios") is Array else []
-	if premios.is_empty():
+	var copas: Array = t.get("trofeos", []) if t.get("trofeos") is Array else []
+	for tr: Variant in copas:
+		var ft := E.fila(10)
+		v.add_child(ft)
+		ft.add_child(E.titulo(26, E.ORO, "🏆"))
+		var nt := E.lbl(16, E.TEXTO, Idiomas.t("Campeón: %s") % Nombres.visible(String((tr as Dictionary).get("nombre", ""))), true)
+		nt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		nt.clip_text = true
+		ft.add_child(nt)
+		ft.add_child(E.titulo(20, E.ORO, "+%d XP" % int((tr as Dictionary).get("xp", 0))))
+	if premios.is_empty() and copas.is_empty():
 		v.add_child(E.lbl(14, E.SUAVE, "Este año no cayó ninguno. El próximo, a por ellos."))
 	for id: Variant in premios:
 		if not CarreraPremios.PREMIOS.has(String(id)):

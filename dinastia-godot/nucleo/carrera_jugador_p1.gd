@@ -388,7 +388,7 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 			"La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido." % nota_media(),
 			[_op("Lo levantas ante tu grada.", {"fama": 6, "seguidores": 600, "moral": 6}),
 			_op("Lo dedicas a tus compañeros.", {"fama": 4, "relacion": 4, "moral": 4})], true))
-	if not capitan and j.edad >= 25 and fama >= 45 and relacion_dt >= 65:
+	if not capitan and fama >= 45 and relacion_dt >= 65 and CarreraPremios.apto_capitan(self, m):   ## (13-11) tres años en el club y de los tres mejores
 		p.append(_ev("brazalete", "El brazalete de capitán",
 			"Se retira el capitán y el DT quiere que el brazalete sea tuyo.",
 			[_op("Lo aceptas con orgullo.", {"capitan": true, "relacion": 5, "fama": 5}),

@@ -51,7 +51,7 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(not CarreraTalentos.puede_aprender(c, "pulmones"), "  el segundo talento de una rama pide el primero")
 		c.ruta["puntos"] = 3
 		_comprobar(CarreraTalentos.aprender(c, m, "ejemplo") and CarreraTalentos.aprender(c, m, "voz") and CarreraTalentos.aprender(c, m, "brazalete"), "  se aprende la rama Líder entera")
-		_comprobar(c.capitan and int(c.ruta["puntos"]) == 0 and not CarreraTalentos.aprender(c, m, "instinto"), "  el brazalete te hace capitán y sin puntos no hay más talentos")
+		_comprobar(not c.capitan and int(c.ruta["puntos"]) == 0 and not CarreraTalentos.aprender(c, m, "instinto"), "  recién llegado, el talento del brazalete aún no te hace capitán (pide tres años en el club); y sin puntos no hay más talentos")
 		var rel := c.relacion_dt
 		CarreraRuta.semana(c, m)
 		_comprobar(c.relacion_dt == mini(100, rel + 1), "  «Ejemplo» suma relación con el DT cada semana")
@@ -126,6 +126,7 @@ func _probar_carrera_ruta() -> void:
 			(c.ruta["marcas"] as Dictionary)[String(par[0])] = m.anio * 60 + m.semana - int(par[1])
 			_comprobar(not antes_cad and ids_ev.call().has(String(par[2])), "  la marca «%s» trae su evento %d semanas después" % [par[0], par[1]])
 		load("res://pruebas/banco/ruta_hab.gd").probar(self, c, m, j)
+		load("res://pruebas/banco/ruta_premios.gd").probar(self, c, m, j)
 		## Los logros propios de La Ruta: se ganan una vez, dan experiencia y esperan a que la pantalla los anuncie.
 		var logros_guardados: Dictionary = CarreraLogros.ganados(c).duplicate()
 		var cuenta_guardada: Dictionary = (c.ruta.get("cuenta", {}) as Dictionary).duplicate()

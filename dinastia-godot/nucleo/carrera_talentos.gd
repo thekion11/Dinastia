@@ -21,7 +21,7 @@ static func aprender(c: CarreraJugador, m: Mundo, talento: String) -> bool:
 	r["puntos"] = int(r["puntos"]) - 1
 	(r["talentos"] as Dictionary)[talento] = true
 	if talento == "brazalete":
-		c.capitan = true
+		pass   ## (13-11) el talento ya no da el brazalete: sube la posibilidad (`CarreraPremios.prob_capitan`)
 		var j := c.jugador(m)
 		if j != null and j.moral < 70:
 			j.moral = 70

@@ -33,7 +33,7 @@ const TALENTOS := {
 	"marca": ["idolo", 2, "Marca propia", "Las ofertas llegan con un 30 % más de sueldo."],
 	"ejemplo": ["lider", 0, "Ejemplo", "+1 de relación con el DT cada semana."],
 	"voz": ["lider", 1, "Voz del vestuario", "Ninguna decisión te quita más de 2 de relación con el DT."],
-	"brazalete": ["lider", 2, "Brazalete", "Te dan el brazalete de capitán y el ánimo no te baja de 70."],
+	"brazalete": ["lider", 2, "Brazalete", "El ánimo no te baja de 70 y sube mucho la posibilidad de que te den el brazalete (pide 3 años en el club y ser de los tres de más media)."],
 }
 ## [nivel mínimo, nombre, frase]
 const CAPITULOS := [

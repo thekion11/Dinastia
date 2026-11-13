@@ -50,4 +50,5 @@ static func mudar(c: CarreraJugador, m: Mundo, destino: Club) -> void:
 	j.pais = destino.pais
 	j.dorsal = CarreraJugador._dorsal_libre(destino)
 	j.tasar()
+	c.capitan = false   ## (13-11) el brazalete es de un club: en el nuevo hay que ganárselo otra vez
 	(CarreraRuta.asegurar(c)["rival"] as Dictionary).clear()

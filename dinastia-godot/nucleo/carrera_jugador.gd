@@ -226,6 +226,7 @@ func tras_partido(m: Mundo, d: Dictionary) -> void:
 		j.partidos += 1
 		j.anotar_nota(nota)
 	CarreraRuta.tras_partido(self, m, d)
+	CarreraPremios.bono_racha(self)
 	CarreraDuelo.corte(self, m)
 	CarreraLogros.tras_partido(self, m, d)
 
