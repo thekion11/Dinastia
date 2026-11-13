@@ -378,3 +378,57 @@ func _probar_musica_libre() -> void:
 	Musica.parar()
 	Musica.encendida = enc
 	Musica.libre = lib
+
+## (13-11, queja del dueño: «siento que la mayoría de los sonidos no se ejecutan») De los 215 sonidos del catálogo, 89 no los pedía ningún código. Esta prueba
+## lo vigila: lo que no se pide tiene que estar en `pruebas/sonidos_sin_pedir.txt` (que solo debe encogerse) y lo que ya se pide no puede seguir en ella.
+func _probar_sonidos_pedidos() -> void:
+	_titulo("TODOS LOS SONIDOS SE PIDEN (O ESTÁN APUNTADOS COMO PENDIENTES)")
+	var fuentes := PackedStringArray()
+	_buscar_gd("res://", fuentes)
+	var texto := ""
+	for f: String in fuentes:
+		texto += FileAccess.get_file_as_string(f) + "\n"
+	var prefijos: Array[String] = []
+	var re := RegEx.new()
+	re.compile("toca\\(\\s*\"([a-z0-9_]*)\"\\s*\\+|toca\\(\\s*\"([a-z0-9_]*)%[sd]")
+	for m: RegExMatch in re.search_all(texto):
+		var p := m.get_string(1) if m.get_string(1) != "" else m.get_string(2)
+		if p != "":
+			prefijos.append(p)
+	var pendientes := {}
+	for l: String in FileAccess.get_file_as_string("res://pruebas/sonidos_sin_pedir.txt").split("\n"):
+		if l.strip_edges() != "" and not l.begins_with("#"):
+			pendientes[l.strip_edges()] = true
+	var catalogo: Array = Sonido.catalogo()
+	var sin_pedir: Array[String] = []
+	var ya_pedidos: Array[String] = []
+	var nuevos: Array[String] = []
+	for n: String in catalogo:
+		var pedido := texto.contains("\"" + n + "\"")
+		for p: String in prefijos:
+			pedido = pedido or n.begins_with(p)
+		if not pedido:
+			sin_pedir.append(n)
+			if not pendientes.has(n):
+				nuevos.append(n)
+		elif pendientes.has(n):
+			ya_pedidos.append(n)
+	_linea("  %d sonidos en el catálogo, %d sin pedir, %d apuntados como pendientes" % [catalogo.size(), sin_pedir.size(), pendientes.size()])
+	_comprobar(nuevos.is_empty(), "ningún sonido nuevo sin pedir (o se pide, o se apunta en sonidos_sin_pedir.txt): %s" % str(nuevos))
+	_comprobar(ya_pedidos.is_empty(), "ningún sonido de la lista de pendientes se pide ya (bórralo de la lista): %s" % str(ya_pedidos))
+	for n: String in pendientes:
+		if not catalogo.has(n):
+			_comprobar(false, "«%s» está en la lista de pendientes pero ya no existe en el catálogo (bórralo de la lista)" % n)
+
+func _buscar_gd(dir: String, sal: PackedStringArray) -> void:
+	var d := DirAccess.open(dir)
+	if d == null:
+		return
+	for sub: String in d.get_directories():
+		if not (sub in ["pruebas", "terceros", "addons", ".godot", ".git"]):
+			_buscar_gd(dir.path_join(sub), sal)
+	var rs := RegEx.new()
+	rs.compile("^sonido(_p\\d+)*\\.gd$")
+	for f: String in d.get_files():
+		if f.ends_with(".gd") and rs.search(f) == null:
+			sal.append(dir.path_join(f))
