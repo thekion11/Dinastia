@@ -148,7 +148,7 @@ NUEVOS = [
     ("KOR", "Buche0n FC", "Gyeonggi Rojo", "#d50032", "#000000", 66, 34500, "4-4-2", "contra"),
 ]
 
-from club_comun import UNLEET, limpio as _limpio, asegurar_clubes, estadios_por_aforo   # lo común con `segundas_divisiones.py`
+from club_comun import limpio as _limpio, asegurar_clubes, estadios_por_aforo   # lo común con `segundas_divisiones.py`
 
 
 CLUBES = {_limpio(f[1]): f[2] for f in NUEVOS}

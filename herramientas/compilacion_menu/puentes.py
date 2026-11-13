@@ -1,4 +1,4 @@
-import re,collections
+import re
 from dom import *
 capas=lambda n: re.match(r'res://ui/principal(_p\d+)?\.gd$',n) is not None
 cadena={n for n in base if capas(n)}

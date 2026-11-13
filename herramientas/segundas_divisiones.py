@@ -73,7 +73,7 @@ HISTORIA = {
     "Wrexham": (1864, "los Red Dragons", "el Racecourse", "El club profesional más antiguo de Gales, renacido en los últimos años."),
 }
 
-from club_comun import UNLEET, limpio as _limpio, estadios_por_aforo   # lo común con `ligas_completas.py`
+from club_comun import limpio as _limpio, estadios_por_aforo   # lo común con `ligas_completas.py`
 
 # ---- Paso 3 (ESP, ITA, GER, FRA): se escribe el nombre real LIMPIO y `_leet` le pone el dígito (comprobado: `_limpio` lo devuelve igual).
 # (país, nombre real, ficticio, color 1, color 2, media, aforo, fundado, apodo, estadio, guiño)

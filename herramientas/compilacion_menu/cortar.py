@@ -6,7 +6,7 @@ Cada `Clase.miembro` de una clase de la familia, escrito fuera de ella, pasa a `
 
   python3 cortar.py <familia> [--aplicar]      # familia = estadio_partido | ciudad | pantallas (de fam.json)
 """
-import json,re,sys,os,collections
+import json,re,sys,os
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 import io,contextlib
 with contextlib.redirect_stdout(io.StringIO()):

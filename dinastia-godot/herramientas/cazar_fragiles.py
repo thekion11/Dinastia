@@ -12,7 +12,7 @@ Una prueba es FRÁGIL si su resultado (OK/FALLO) no es el mismo en todas las eje
   --sin-carga | --solo-carga   limita los modos · -j N pruebas a la vez (por defecto 1: la carga ya satura la máquina) · --max M  solo las M primeras
 Salida: una línea por prueba (OK=todas bien, FRÁGIL=cambia, FALLA=siempre falla) y, al final, un resumen. No desactiva ni toca ninguna prueba.
 """
-import os, re, shutil, subprocess, sys, tempfile, time
+import os, re, shutil, subprocess, sys, tempfile
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(RAIZ, "herramientas"))

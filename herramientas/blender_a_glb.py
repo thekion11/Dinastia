@@ -24,7 +24,7 @@ for o in list(bpy.data.objects):
 #
 # Se busca cada imagen en las carpetas de texturas de al lado, primero por
 # nombre exacto y despues por parecido, y se EMPAQUETA dentro del .glb.
-import glob, difflib
+import glob
 
 base = os.path.dirname(bpy.data.filepath)
 candidatos = []
