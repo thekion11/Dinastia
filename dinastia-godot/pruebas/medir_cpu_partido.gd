@@ -45,6 +45,11 @@ func _medir() -> void:
 				por_clase[k] = []
 			por_clase[k].append(n)
 	var rep := maxi(1, int(OS.get_environment("REPETIR")) if OS.get_environment("REPETIR") != "" else 3)
+	if OS.get_environment("SOLO_BASE") != "":   ## SOLO_BASE=n: n medidas seguidas SIN tocar nada (comprueba si la base deriva)
+		for k in int(OS.get_environment("SOLO_BASE")):
+			print("CPUP deriva %d: %.2f ms" % [k, await _cuadros(150)])
+		get_tree().quit()
+		return
 	await _cuadros(400)   ## calentamiento: sin él la base sale inflada (13-11: 17,1 ms al principio y ~3,8 ms estable) y todas las diferencias salen falsas
 	var base := 0.0
 	for i in rep:
