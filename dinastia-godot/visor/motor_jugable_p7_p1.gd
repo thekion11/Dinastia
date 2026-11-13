@@ -88,6 +88,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 					else:
 						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
 				if TIRO_PULIDO: prob *= (1.0 - PARADA_LEJOS * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
+				prob = _prob_parada_extra(p, b, prob)   ## gancho (sesión 15): aquí no cambia nada
 				if lat < alcance and _rng.randf() < prob:
 					MotorParada.programar(self as Object as MotorJugable, p, cruce_gk, lat > 1.2)
 					return true
@@ -350,3 +351,8 @@ func _companero_al_hueco(p: Dictionary) -> Dictionary:
 ## `MotorCombinado` (C4) lo usa para la definición dentro del área (`MejorasC4Avance.error_tiro`, `C4_ERROR_AREA`).
 func _error_tiro_extra(_p: Dictionary, _lejos: float, error: float, _clase: String) -> float:
 	return error
+
+## GANCHO DE LA PROBABILIDAD DE PARADA (13-11-2026, sesión 15, OK del líder): el de siempre la deja igual (sin azar: la huella no
+## cambia); `MotorCombinado` (C4) la baja ante remates desde dentro del área (`MejorasC4Avance.parada`, `C4_PARADA_AREA`).
+func _prob_parada_extra(_gk: Dictionary, _desde: Vector3, prob: float) -> float:
+	return prob

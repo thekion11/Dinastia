@@ -327,3 +327,7 @@ func _apunte_ia(p: Dictionary, dist_arco: float, apunte: Vector2) -> Vector2:
 ## (13-11, sesión 15) el error del remate dentro del área, solo en C4 (`MejorasC4Avance.error_tiro`, `C4_ERROR_AREA=k`).
 func _error_tiro_extra(p: Dictionary, lejos: float, error: float, clase: String) -> float:
 	return MejorasC4Avance.error_tiro(self, lejos, error, clase) if _mejoras_c4 else error
+
+## (13-11, sesión 15) el portero ante el remate desde dentro del área, solo en C4 (`MejorasC4Avance.parada`, `C4_PARADA_AREA=k`).
+func _prob_parada_extra(gk: Dictionary, desde: Vector3, prob: float) -> float:
+	return MejorasC4Avance.parada(self, gk, desde, prob) if _mejoras_c4 else prob
