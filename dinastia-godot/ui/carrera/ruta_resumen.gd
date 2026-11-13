@@ -15,6 +15,7 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 	var r := CarreraRuta.asegurar(c)
 	var u: Dictionary = r["ultimo"]
 	u["visto"] = true
+	E.son("pitido_final", -4.0)
 	var velo := ColorRect.new()
 	velo.color = Color(0.01, 0.02, 0.06, 0.88)
 	velo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -86,7 +87,7 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 	E.llenar(bx, 0.5)
 	xv.add_child(bx)
 	if subio > 0:
-		Sonido.toca("menu_seccion", Sonido.Bus.INTERFAZ, 3.0)
+		E.son("nivel_subido", 3.0)
 		xv.add_child(E.lbl(13, E.MENTA, E.plural(int(r["puntos"]), "Tienes %d punto de talento por gastar en «Yo».", "Tienes %d puntos de talento por gastar en «Yo».") % int(r["puntos"]), true))
 	if texto_semana != "":
 		var t := E.lbl(13, E.SUAVE, texto_semana)

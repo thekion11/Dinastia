@@ -75,6 +75,7 @@ func golpear() -> void:
 	var q := _pista.golpear()
 	_tiros.append(q)
 	_pista.luces = _tiros
+	E.son("objetivo_cumplido" if q >= 1.0 else ("control_balon" if q >= 0.6 else "remate_fuera"))
 	_estado.text = Idiomas.t("¡PERFECTO!") if q >= 1.0 else (Idiomas.t("Bien") if q >= 0.6 else Idiomas.t("Fuera"))
 	_estado.add_theme_color_override("font_color", RutaBarra.color_de(q))
 	_pausa = 0.7

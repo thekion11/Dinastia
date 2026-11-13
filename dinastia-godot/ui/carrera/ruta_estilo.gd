@@ -287,6 +287,10 @@ static func flujo(sep := 6) -> HFlowContainer:
 	return f
 
 ## ¿Pantalla estrecha? (un teléfono de pie: el lienzo mide ~540 px de ancho)
+## Un sonido de la interfaz (los clics de los botones ya los pone `BotonFx`).
+static func son(nombre: String, db := 0.0) -> void:
+	Sonido.toca(nombre, Sonido.Bus.INTERFAZ, db)
+
 ## Singular o plural según la cifra (las dos frases llevan su %d).
 static func plural(n: int, uno: String, varios: String) -> String:
 	return Idiomas.t(uno if n == 1 else varios)

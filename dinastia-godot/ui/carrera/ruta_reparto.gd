@@ -90,6 +90,7 @@ static func _columnas(ui: Variant, j: Jugador) -> Control:
 		if CarreraTalentos.puede_pulir(c, ui.mundo, k):
 			var b := E.boton("SUBIR +2", E.ORO, func() -> void:
 				CarreraTalentos.pulir(c, ui.mundo, k)
+				E.son("confirmar")
 				ui._msg = Idiomas.t("Gastaste un punto de talento: %s +2.") % nombre(k)
 				ui._pintar_semana(), 40)
 			b.tooltip_text = Idiomas.t("Gasta un punto de talento en +2 a este atributo.")

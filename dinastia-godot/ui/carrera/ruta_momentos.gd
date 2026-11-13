@@ -129,6 +129,7 @@ func golpear() -> void:
 	var clase := String(CarreraMomentos.TIPOS[String(mo["tipo"])][3])
 	_pizarra.resolver(q, q >= 1.0 if clase == "gol" else q >= 0.6)
 	_hechas.append(d)
+	E.son("gol" if int(d["gol"]) > 0 else ("ovacion" if float(d["nota"]) >= 0.7 else ("gol_rival" if int(d["encajado"]) > 0 else ("suspiro_grada" if float(d["nota"]) <= 0.0 else "control_balon"))))
 	var luces: Array = []
 	for h: Dictionary in _hechas:
 		luces.append(1.0 if float(h["nota"]) >= 0.7 else (0.6 if float(h["nota"]) > 0.0 else 0.1))

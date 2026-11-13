@@ -46,6 +46,7 @@ func _fundar() -> void:
 ## Firma por `destino` (o se queda donde lo puso el núcleo) y empieza la ruta.
 func _firmar(destino: Club) -> void:
 	CarreraComienzo.mudar(carrera, mundo, destino)
+	RutaEstilo.son("contrato")
 	_msg = Idiomas.t("Firmaste con %s. Dorsal %d.") % [Nombres.visible(carrera.club(mundo).nombre), carrera.jugador(mundo).dorsal]
 	_pestana = "hoy"
 	(self as CarreraJugadorUI)._pintar_semana()

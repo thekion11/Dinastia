@@ -35,6 +35,8 @@ static func por_remontar(c: CarreraJugador) -> bool:
 ## Al cerrar el duelo: la experiencia extra por remontarlo, y se limpia el corte.
 static func cierre(c: CarreraJugador, gane: bool) -> int:
 	var extra := XP_REMONTADA if gane and por_remontar(c) else 0
+	if extra > 0:
+		CarreraLogros.sumar(c, "remontadas")
 	CarreraEventosRuta.quitar_marca(c, "corte")
 	CarreraEventosRuta.quitar_marca(c, "remontada")
 	return extra

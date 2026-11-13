@@ -125,6 +125,25 @@ func _probar_carrera_ruta() -> void:
 			var antes_cad: bool = ids_ev.call().has(String(par[2]))
 			(c.ruta["marcas"] as Dictionary)[String(par[0])] = m.anio * 60 + m.semana - int(par[1])
 			_comprobar(not antes_cad and ids_ev.call().has(String(par[2])), "  la marca «%s» trae su evento %d semanas después" % [par[0], par[1]])
+		## Los logros propios de La Ruta: se ganan una vez, dan experiencia y esperan a que la pantalla los anuncie.
+		var logros_guardados: Dictionary = CarreraLogros.ganados(c).duplicate()
+		var cuenta_guardada: Dictionary = (c.ruta.get("cuenta", {}) as Dictionary).duplicate()
+		CarreraLogros.ganados(c).clear()
+		c.ruta["cuenta"] = {}
+		var lg_antes := 0
+		c.ruta["logros_nuevos"] = []
+		var xp_lg := CarreraRuta.nivel(c) * 100000 + int(c.ruta["xp"])
+		var nuevos_lg := CarreraLogros.tras_partido(c, m, {"minutos": 90, "goles": 3, "asist": 1, "nota": 9.2})
+		_comprobar(nuevos_lg.has("triplete") and nuevos_lg.has("un_diez") and CarreraLogros.tiene(c, "doblete"), "  un partido de tres goles y nota 9 da «Triplete», «Doblete» y «Un diez» (%s)" % str(nuevos_lg))
+		_comprobar(CarreraRuta.nivel(c) * 100000 + int(c.ruta["xp"]) > xp_lg and CarreraLogros.ganados(c).size() == lg_antes + nuevos_lg.size(), "  cada logro da experiencia y queda guardado")
+		_comprobar(CarreraLogros.tras_partido(c, m, {"minutos": 90, "goles": 3, "asist": 0, "nota": 9.5}).is_empty(), "  un logro no se gana dos veces")
+		_comprobar(CarreraLogros.tomar_nuevos(c).size() == nuevos_lg.size() and CarreraLogros.tomar_nuevos(c).is_empty(), "  la pantalla los anuncia una sola vez")
+		for id_lg: String in CarreraLogros.LOGROS:
+			var def_lg: Array = CarreraLogros.LOGROS[id_lg]
+			_comprobar(def_lg.size() == 4 and int(def_lg[3]) > 0 and String(def_lg[2]).length() > 12, "  logro «%s» con su explicación y su premio" % def_lg[1])
+		c.ruta["logros"] = logros_guardados
+		c.ruta["cuenta"] = cuenta_guardada
+		c.ruta["logros_nuevos"] = []
 		## El corte del duelo a mitad de temporada: por detrás nace el objetivo de remontar.
 		var pj_corte := int(c.stats_temp["pj"])
 		var goles_corte := int(c.stats_temp["goles"])

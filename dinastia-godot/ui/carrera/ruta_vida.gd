@@ -50,6 +50,7 @@ static func _cosa(ui: Variant, id: String) -> Control:
 	var precio := Eco.dinero(CarreraVida.precio(c, m, id))
 	var b := E.boton(precio, E.MENTA, func() -> void:
 		if CarreraVida.comprar(c, m, id):
+			E.son("dinero_sale")
 			ui._msg = Idiomas.t("Comprado: %s.") % Idiomas.t(String(def[1])).to_lower()
 		ui._pintar_semana(), 36, puede)
 	b.disabled = not puede

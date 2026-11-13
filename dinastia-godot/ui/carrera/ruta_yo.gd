@@ -114,6 +114,7 @@ static func _talento(ui: Variant, id: String, col: Color) -> Control:
 	if puede:
 		v.add_child(E.boton("Aprender", col, func() -> void:
 			CarreraTalentos.aprender(c, ui.mundo, id)
+			E.son("desbloqueo")
 			ui._msg = Idiomas.t("Talento nuevo: %s.") % Idiomas.t(String(def[2]))
 			ui._pintar_semana(), 34, true))
 	return caja

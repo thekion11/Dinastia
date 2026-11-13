@@ -11,9 +11,7 @@
 agente_llamada
 autogol
 campanas_iglesia
-control_balon
 cronometro
-desbloqueo
 entrada_taquilla
 entrenamiento_lesion
 huelga_hinchas

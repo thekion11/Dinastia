@@ -17,6 +17,7 @@ const SUBS := {
 	"vida": ["yo", "🏠", "TU VIDA", "menta"],
 	"temporadas": ["ruta", "📅", "TUS TEMPORADAS", "suave"],
 	"palmares": ["ruta", "", "🏅 TU PALMARÉS", "oro"],
+	"logros": ["ruta", "🏆", "LOGROS", "oro"],
 	"decisiones": ["ruta", "🧭", "TUS DECISIONES", "suave"],
 }
 
@@ -58,6 +59,8 @@ static func _detalle(ui: Variant, j: Jugador, id: String) -> String:
 			return Eco.dinero(CarreraVida.ahorros(c))
 		"temporadas":
 			return str(m.anio)
+		"logros":
+			return RutaLogros.cuenta(c)
 	return ""
 
 ## Las teclas de una pestaña: en fila en el PC, una bajo otra en el teléfono.
@@ -70,6 +73,7 @@ static func teclas(ui: Variant, j: Jugador, pestana: String, en_columna := false
 		var col := _color(String(SUBS[id][3]))
 		var b := E.boton(_titulo(id) + ("\n" + det if det != "" else "") , col, func() -> void:
 			ui._sub = id
+			E.son("abrir")
 			ui._pintar_semana(), 62)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -120,5 +124,6 @@ static func _contenido(ui: Variant, j: Jugador, _club: Club, id: String) -> Arra
 		"vida": return [RutaVida.pintar(ui)]
 		"temporadas": return [RutaCamino._temporadas(ui)]
 		"palmares": return [RutaTemporada.palmares(ui)]
+		"logros": return [RutaLogros.pintar(ui)]
 		"decisiones": return [RutaCamino._decisiones(ui.carrera)]
 	return []
