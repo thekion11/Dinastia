@@ -84,9 +84,10 @@ func _pintar_libres(c: Club) -> void:
 		filtros.add_child(bd)
 	p._lista_libres.add_child(HSeparator.new())
 
-	if p.mundo.roles != null and not p.mundo.roles.puede_fichar():
+	var aviso_libres: String = p._motivo_fichaje_bloqueado(p.mundo.libres[0]) if not p.mundo.libres.is_empty() else ""
+	if aviso_libres != "":   ## (13-11) el aviso de «mercado cerrado» ya no sale aquí: los libres se fichan todo el año
 		var av := p._texto(12, Principal.COL_SUAVE)
-		av.text = String(p.mundo.roles.motivo_bloqueo("fichar"))
+		av.text = aviso_libres
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_libres.add_child(av)
 		p._lista_libres.add_child(HSeparator.new())
