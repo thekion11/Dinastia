@@ -60,6 +60,8 @@ func _rellenar(foto: Dictionary, resumen: Dictionary) -> void:
 	_centro.add_child(arriba)
 	_centro.add_child(etiqueta("🏆 " + Idiomas.t("Resumen de la temporada"), 30, Tema.ORO, true, false))
 	_centro.add_child(_cabecera(d))
+	if d["campeon"] == d["club"]:
+		Sonido.toca("premio_liga", Sonido.Bus.INTERFAZ)   ## el título de liga se oye al abrir el resumen (sin Azar)
 	var rejilla := GridContainer.new()
 	rejilla.columns = 2
 	rejilla.add_theme_constant_override("h_separation", 24)
@@ -166,6 +168,8 @@ func _tarjeta_premios(d: Dictionary) -> Control:
 	if String(d["joven"]) != "":
 		col.add_child(etiqueta("🌱 " + Idiomas.t("Mejor joven:") + " " + String(d["joven"]), 14, Tema.TEXTO, false))
 	var premios: Array = d["premios"]
+	if not premios.is_empty() and d["campeon"] != d["club"]:
+		Sonido.toca("premio_individual", Sonido.Bus.INTERFAZ)
 	if premios.is_empty():
 		col.add_child(etiqueta(Idiomas.t("Tu club no se llevó premios este año."), 14, Tema.SUAVE, false))
 	for pm: Variant in premios:
@@ -186,6 +190,8 @@ func _veredicto(v: Dictionary) -> Control:
 	if v.is_empty():
 		col.add_child(etiqueta("🏛️ " + Idiomas.t("La directiva no ha dado veredicto."), 17, Tema.SUAVE))
 		return panel
+	## El veredicto suena un poco después del resto del resumen (si no, se pisa con el premio de liga).
+	get_tree().create_timer(0.9).timeout.connect(func() -> void: Sonido.toca("objetivo_cumplido" if bien else "objetivo_fallado", Sonido.Bus.INTERFAZ))
 	var titulo := Idiomas.t("Objetivo CUMPLIDO") if bien else Idiomas.t("Objetivo FALLADO")
 	col.add_child(etiqueta("🏛️ %s: %s" % [titulo, String(v.get("objetivo", ""))], 20, color))
 	col.add_child(etiqueta("%s %d.º · %s %d.º · %s %d" % [Idiomas.t("Acabaste"), int(v.get("puesto", 0)), Idiomas.t("te pedían"),

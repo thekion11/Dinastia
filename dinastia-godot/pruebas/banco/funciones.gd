@@ -336,3 +336,34 @@ func _probar_fun_catalogos_y_calles() -> void:
 	else:
 		DirAccess.remove_absolute(ruta)
 	LigasActivas.elegidas.assign(antes)
+
+## EL SONIDO DE LAS NOTICIAS DE GESTIÓN (`SonidoNoticias.de`): título (y cuerpo) → sonido; sin coincidencia, nada; todo sonido nombrado existe en el catálogo.
+func _probar_fun_sonido_noticias() -> void:
+	_titulo("FUNCIONES PURAS: SONIDO DE LAS NOTICIAS DE GESTIÓN")
+	var casos := {
+		"✅ Alta médica": "alta_medica", "🩹 Mateo Ríos se lesiona": "baja_medica", "🩹 Recaída de Okafor": "baja_medica",
+		"Cedido a préstamo": "prestamo", "Cesión a Lanús del Sur": "cesion_jugador", "Vuelve de la cesión: Haruto Sato": "cesion_jugador",
+		"Entra dinero de un fondo": "dinero_entra", "Te toca pagar el porcentaje pactado": "dinero_sale",
+		"🏛️ Elecciones en la federación": "elecciones_club", "Apelación ACOGIDA": "votacion_ganada", "Apelación RECHAZADA": "votacion_perdida",
+		"🟥 Sanción al entrenador": "sancion_directiva", "LICENCIA DENEGADA": "sancion_directiva", "⚠️ Moción de censura": "sancion_directiva",
+		"🏛️ Junta de accionistas": "reunion_directiva", "Nueva votación en la asamblea": "reunion_directiva",
+		"🌱 Sube un chico del filial": "ascenso_juvenil", "De la academia al primer equipo": "ascenso_juvenil", "Se retira una figura": "retiro_jugador",
+		"Renovado: Pedro Quispe": "renovacion", "🗳️ El vestuario elige capitán": "capitania", "Campaña de abonos": "aumento_socios",
+		"Guerra por Lucas Weber": "rumor_fichaje", "⌛ Oferta retirada por Aiko Mori": "oferta_rechazada",
+		"": "", "Obra terminada": "", "Partido del domingo": "", "Evento extraño": "",
+	}
+	var mal := []
+	for t: String in casos:
+		if SonidoNoticias.de(t) != String(casos[t]):
+			mal.append("%s→%s" % [t, SonidoNoticias.de(t)])
+	_comprobar(mal.is_empty(), "de: título → sonido (%s)" % str(mal))
+	var asamblea := "Asamblea de la liga: Tope salarial"
+	_comprobar(SonidoNoticias.de(asamblea, "Resultado: 12 votos a favor de 20. La moción SE APRUEBA. Tu posición salió ganadora: sumas peso político.") == "votacion_ganada", "de: la asamblea, si tu posición ganó")
+	_comprobar(SonidoNoticias.de(asamblea, "Resultado: 3 votos. La moción se rechaza. Tu posición quedó en minoría.") == "votacion_perdida", "de: la asamblea, si quedaste en minoría")
+	_comprobar(SonidoNoticias.de(asamblea, "") == "reunion_directiva", "de: la asamblea sin resultado = reunión")
+	_comprobar(SonidoNoticias.de("🎬 Gala de fin de año.", "Se entregan los premios. Tu club se va de vacío.") == "" and SonidoNoticias.de("🎬 Gala de fin de año.", "Tu club se lleva: Mejor DT.") == "premio_individual", "de: la gala solo suena si tu club gana algo")
+	var fuera := []
+	for r: Array in SonidoNoticias.REGLAS:
+		if not Sonido.catalogo().has(String(r[1])):
+			fuera.append(String(r[1]))
+	_comprobar(fuera.is_empty() and SonidoNoticias.de("ALTA MÉDICA") == "alta_medica", "REGLAS: todos los sonidos existen en el catálogo y las mayúsculas no importan (%s)" % str(fuera))

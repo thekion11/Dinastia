@@ -1,36 +1,28 @@
 # (13-11) Sonidos del catálogo (`Sonido.NOMBRES`) que NINGÚN código pide por su nombre: se generan y no suenan nunca. Prueba `_probar_sonidos_pedidos`: si pides uno de esta lista, BÓRRALO de aquí; si añades un sonido nuevo sin pedirlo, la prueba falla (o lo pides, o entra aquí con motivo). Meta: lista vacía.
+# sin hecho visible: el agente no llama en ninguna pantalla todavía (13-11, sesión 15)
 agente_llamada
-alta_medica
 amonestacion_verbal
 animador_grada
 arrastrar
-ascenso_juvenil
 atajada_pies
 atajada_punos
-aumento_socios
 autogol
-baja_medica
 bocina_vuvuzela
 bufanda_alzada
 calentamiento
 calor_extremo
 campanas_iglesia
 cancelar
-capitania
 celebracion_grupal
 celebracion_individual
-cesion_jugador
 control_balon
 cornetin
 coro_rival
 cronometro
-debut_juvenil
 desbloqueo
 deseleccionar
-dinero_entra
-dinero_sale
-elecciones_club
 entrada_taquilla
+# la lesión en el entrenamiento no distingue su origen en la UI; el parte médico ya suena (13-11, sesión 15)
 entrenamiento_lesion
 festejo_banco
 fuera_de_banda
@@ -41,13 +33,8 @@ humo_bengala
 libre_indirecto
 mano_fuera_area
 mano_penal
-mejora_instalaciones
 multitud_entrando
 multitud_saliendo
-nivel_subido
-objetivo_cumplido
-objetivo_fallado
-oferta_rechazada
 ola_mexicana
 palo_doble
 pancarta_desplegada
@@ -55,26 +42,15 @@ paso_atras
 penal_fallado
 pitos_arbitro
 posesion_larga
-premio_individual
-premio_liga
 presentacion_alineaciones
 presion_alta
-prestamo
 protesta_jugador
 protesta_masiva
 recuperacion_balon
-renovacion
-renovacion_rechazada
-retiro_jugador
-reunion_directiva
-rueda_prensa_aplauso
-rueda_prensa_pregunta
-rumor_fichaje
-sancion_directiva
 saque_puerta
-scouting_informe
 segunda_amarilla
 seleccionar
+# no hay pantalla de sesión táctica suelta (13-11, sesión 15)
 sesion_tactica
 silbido_agudo
 silbidos_impaciencia
@@ -84,7 +60,6 @@ tarjeta_banco
 tiempo_anadido
 tiro_flojo
 var_anulado
+# ningún fichaje se veta hoy (13-11, sesión 15)
 veto_fichaje
 viento_fuerte
-votacion_ganada
-votacion_perdida

@@ -405,6 +405,7 @@ func _anotar(titulo: String, cuerpo: String) -> void:
 	titulo = CompeticionInfo.visibles_en(titulo)
 	cuerpo = CompeticionInfo.visibles_en(cuerpo)
 	p._bandeja.push_front({"titulo": titulo, "cuerpo": cuerpo, "semana": p.mundo.semana, "anio": p.mundo.anio, "leida": false})
+	SonidoNoticias.tocar(titulo, cuerpo)   ## el sonido de la gestión suena donde se ve la noticia (sin Azar)
 	## Lo que pasa también se comenta en Tribuna (las redes del móvil).
 	if p.mundo.redes != null:
 		p.mundo.redes.desde_noticia(p.mundo, titulo, cuerpo)

@@ -293,11 +293,12 @@ func _renovar(j: Jugador, con_clausula: bool) -> void:
 	var r := p.mundo.cantera.renovar(j, con_clausula)
 	if r.has("error"):
 		p._escribir("[color=#e05555]No se pudo renovar: %s.[/color]" % String(r["error"]))
+		Sonido.toca("renovacion_rechazada", Sonido.Bus.INTERFAZ)
 	else:
 		p._escribir("[color=#4caf6d]RENOVADO: %s.[/color] %d temporadas a %s/sem%s." % [
 			j.nombre, int(r["anios"]), p._dinero(int(r["sueldo"])),
 			" con cláusula de %s" % p._dinero(int(r["clausula"])) if con_clausula else ""])
-		Sonido.toca("fichaje")
+		Sonido.toca("renovacion")
 	p._refrescar()
 
 ## C15: EL GOBIERNO DEL PAÍS. Partidos y personas inventados; la estructura

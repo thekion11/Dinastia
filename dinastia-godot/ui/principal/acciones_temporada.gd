@@ -192,6 +192,7 @@ func _responder_oferta_mercado(indice: int, aceptar: bool) -> void:
 	else:
 		p.mundo.mercado.responder_oferta(indice, false)
 		p._escribir("Oferta por %s rechazada." % j.nombre)
+		Sonido.toca("oferta_rechazada", Sonido.Bus.INTERFAZ)
 	p._refrescar()
 
 func _preparar_mando() -> void:
