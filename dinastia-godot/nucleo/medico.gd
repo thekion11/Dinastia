@@ -53,8 +53,11 @@ func _estimar_semanas(c: Club) -> int:
 	var h := 0
 	for i in c.id.length():
 		h = (h * 31 + c.id.unicode_at(i)) & 0x7FFFFFFF
-	var base := 26.0 - float(c.rep - 50) * 0.16
-	return maxi(4, int(round(base + float(h % 11) - 5.0)))
+	## (13-11) MEDIDO con `pruebas/_sonda/sonda_medico` (12 clubes de 4 países, 19 semanas): el club del jugador perdía de media 19 semanas
+	## y esta referencia daba 11-12, con muy poca dispersión: una mala racha lo dejaba el ÚLTIMO de la liga 4 veces de 9. Con la base ×1,9
+	## (por temporada de `SEMANAS_TEMPORADA`) y el abanico ±16, la media de los rivales sale en 18-21 y el puesto se reparte del 1.º al último.
+	var base := (26.0 - float(c.rep - 50) * 0.16) * 1.9
+	return maxi(6, int(round(base + (float(h % 21) - 10.0) * 1.6)))
 
 ## Dónde estás en la liga por semanas perdidas. Devuelve tu puesto, el total de
 ## clubes, tus semanas y la media.
@@ -66,6 +69,8 @@ func _estimar_semanas(c: Club) -> int:
 ##
 ## `temporadas` (12-11): cuántas temporadas lleva la partida (con decimales). Tus días perdidos se ACUMULAN toda la carrera y la cifra de los
 ## rivales era la de UNA temporada entera: en la semana 1 la media ya marcaba ~21 semanas, y al tercer año salías siempre el último.
+const SEMANAS_TEMPORADA := 42.0   ## el tiempo jugado se cuenta en SEMANAS (las lesiones caen cada semana, haya o no jornada de liga)
+
 func ranking_liga(mio: Club, liga: Liga, temporadas := 1.0) -> Dictionary:
 	if liga == null or mio == null:
 		return {"puesto": 1, "total": 1, "mias": dias_perdidos / 7, "media": dias_perdidos / 7}

@@ -19,8 +19,7 @@ func _pintar_balance_medico(c: Club) -> void:
 	var med := p.mundo.medico
 	var liga := p._liga_de(c)
 	var jugado := float(p.mundo.anio - (p.mundo.logros.anio_inicio if p.mundo.logros != null else p.mundo.anio))
-	if liga != null:
-		jugado += float(liga.jornada_actual) / float(maxi(1, liga.jornadas()))
+	jugado += float(p.mundo.semana - 1) / Medico.SEMANAS_TEMPORADA
 	var r: Dictionary = med.ranking_liga(c, liga, jugado)
 	var enfermeria := c.plantilla.filter(func(j: Jugador) -> bool: return j.lesion > 0).size()
 	## (12-11) Las cuatro cifras del parte, en fichas grandes (`CifrasClave`): la enfermería en rojo si hay alguien, el puesto en verde si se está arriba.
