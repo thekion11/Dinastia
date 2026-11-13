@@ -8528,7 +8528,8 @@
   "repartido %+d": "spent %+d",
   "lo entrenas esta semana": "training it this week",
   "tope del entreno: %d": "training cap: %d",
-  "SUBIR +2": "RAISE +2"
+  "SUBIR +2": "RAISE +2",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «SUBIR +2» de «Tu juego»).": "Each level gives a point. Within a branch they're learned in order. A point is also worth +2 to an attribute (the «RAISE +2» button in «Your game»)."
  },
  "pt": {
   "Historia": "História",
@@ -17059,7 +17060,8 @@
   "repartido %+d": "distribuído %+d",
   "lo entrenas esta semana": "treino desta semana",
   "tope del entreno: %d": "limite do treino: %d",
-  "SUBIR +2": "SUBIR +2"
+  "SUBIR +2": "SUBIR +2",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «SUBIR +2» de «Tu juego»).": "Cada nível dá um ponto. Dentro de um ramo, aprende-se em ordem. Um ponto também vale +2 em um atributo (botão «SUBIR +2» de «Seu jogo»)."
  },
  "patrones": [
   [
@@ -31730,7 +31732,8 @@
   "repartido %+d": "réparti %+d",
   "lo entrenas esta semana": "à l'entraînement cette semaine",
   "tope del entreno: %d": "plafond d'entraînement : %d",
-  "SUBIR +2": "MONTER +2"
+  "SUBIR +2": "MONTER +2",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «SUBIR +2» de «Tu juego»).": "Chaque niveau donne un point. Dans une branche, on apprend dans l'ordre. Un point vaut aussi +2 à un attribut (bouton «MONTER +2» de «Ton jeu»)."
  },
  "it": {
   "Historia": "Storia",
@@ -40261,7 +40264,8 @@
   "repartido %+d": "distribuiti %+d",
   "lo entrenas esta semana": "lo alleni questa settimana",
   "tope del entreno: %d": "tetto dell'allenamento: %d",
-  "SUBIR +2": "ALZA +2"
+  "SUBIR +2": "ALZA +2",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «SUBIR +2» de «Tu juego»).": "Ogni livello dà un punto. In un ramo si imparano in ordine. Un punto vale anche +2 a un attributo (pulsante «ALZA +2» di «Il tuo gioco»)."
  },
  "de": {
   "Historia": "Geschichte",
@@ -48792,7 +48796,8 @@
   "repartido %+d": "verteilt %+d",
   "lo entrenas esta semana": "diese Woche im Training",
   "tope del entreno: %d": "Trainingsgrenze: %d",
-  "SUBIR +2": "ERHÖHEN +2"
+  "SUBIR +2": "ERHÖHEN +2",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «SUBIR +2» de «Tu juego»).": "Jede Stufe gibt einen Punkt. In einem Zweig lernt man der Reihe nach. Ein Punkt ist auch +2 auf ein Attribut wert (Schaltfläche «ERHÖHEN +2» unter «Dein Spiel»)."
  },
  "ca": {
   "Historia": "Història",
@@ -57323,7 +57328,8 @@
   "repartido %+d": "repartit %+d",
   "lo entrenas esta semana": "l'entrenes aquesta setmana",
   "tope del entreno: %d": "límit de l'entrenament: %d",
-  "SUBIR +2": "PUJAR +2"
+  "SUBIR +2": "PUJAR +2",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «SUBIR +2» de «Tu juego»).": "Cada nivell dona un punt. Dins d'una branca s'aprenen en ordre. Un punt també val per +2 en un atribut (botó «PUJAR +2» de «El teu joc»)."
  },
  "pl": {
   "Club": "Klub",
@@ -65854,7 +65860,8 @@
   "repartido %+d": "rozdane %+d",
   "lo entrenas esta semana": "trenujesz w tym tygodniu",
   "tope del entreno: %d": "limit treningu: %d",
-  "SUBIR +2": "PODNIEŚ +2"
+  "SUBIR +2": "PODNIEŚ +2",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «SUBIR +2» de «Tu juego»).": "Każdy poziom daje punkt. W gałęzi uczysz się po kolei. Punkt jest też wart +2 do atrybutu (przycisk «PODNIEŚ +2» w «Twoja gra»)."
  },
  "tr": {
   "Club": "Kulüp",
@@ -74385,6 +74392,7 @@
   "repartido %+d": "dağıtılan %+d",
   "lo entrenas esta semana": "bu hafta çalışıyorsun",
   "tope del entreno: %d": "antrenman sınırı: %d",
-  "SUBIR +2": "YÜKSELT +2"
+  "SUBIR +2": "YÜKSELT +2",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «SUBIR +2» de «Tu juego»).": "Her seviye bir puan verir. Bir dalda sırayla öğrenilir. Bir puan ayrıca bir özelliğe +2 eder («Oyunun» bölümündeki «YÜKSELT +2» düğmesi)."
  }
 }
