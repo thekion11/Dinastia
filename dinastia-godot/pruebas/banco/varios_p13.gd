@@ -343,3 +343,38 @@ func _probar_semilla_en_ajustes() -> void:
 	_comprobar(AjustesRegistro.informe_con_semilla(-1, "solo informe") == "solo informe", "sin mundo, el informe es el de siempre")
 	var fuente := FileAccess.get_file_as_string("res://ui/principal/ciclo_partida.gd")
 	_comprobar(not fuente.contains("Semilla [color"), "el aviso de «Mundo nuevo» de la portada ya no lleva la semilla")
+
+## (13-11, orden del dueño) La MÚSICA LIBRE (`MusicaLibre`): el catálogo está completo y es CC0, cada pista carga, las filas malas se descartan, la
+## rotación y la situación funcionan y `Musica` la pone solo en menús/club/parón.
+func _probar_musica_libre() -> void:
+	_titulo("MÚSICA LIBRE (CC0): CATÁLOGO, FILTRO Y ROTACIÓN")
+	var l := MusicaLibre.pistas()
+	_comprobar(l.size() >= 1, "hay pistas libres utilizables (%d)" % l.size())
+	for d: Dictionary in l:
+		var ok_campos := str(d["autor"]) != "" and str(d["url"]).begins_with("https://") and str(d.get("sha256_original", "")).length() == 64 and str(d["licencia"]) in MusicaLibre.LICENCIAS_VALIDAS
+		var f := MusicaLibre.cargar(d)
+		_comprobar(ok_campos and f != null and f.get_length() > 10.0, "%s: autor, origen, licencia, huella y archivo (%.0f s)" % [d["id"], f.get_length() if f != null else 0.0])
+	var buena := {"id": "a", "archivo": "x.ogg", "autor": "Ana", "licencia": "CC0 1.0", "usos": ["oficina"]}
+	var filas := [buena, buena.merged({"licencia": "CC-BY 4.0"}, true), buena.merged({"autor": ""}, true), buena.merged({"usos": "oficina"}, true), buena.merged({"id": ""}, true), "no es fila"]
+	_comprobar(MusicaLibre._filtrar(filas, false).size() == 1, "el filtro solo deja la fila completa de licencia permitida (CC-BY, sin autor, usos rotos, sin id y no-filas fuera)")
+	_comprobar(MusicaLibre._filtrar([buena], true).is_empty(), "una fila cuyo archivo no está en el proyecto se descarta")
+	for sit: String in ["partido", "final", "celebracion", "grada"]:
+		_comprobar(MusicaLibre.situacion_libre(sit) == "", "en «%s» no suena música grabada (suena la compuesta, que cambia con el juego)" % sit)
+	_comprobar(MusicaLibre.situacion_libre("parón") == "paron" and MusicaLibre.situacion_libre("paron") == "paron", "el parón tiene su situación")
+	_comprobar(MusicaLibre.situacion_libre("") == "oficina" and MusicaLibre.situacion_libre("cualquier cosa") == "oficina", "lo demás es oficina (menús y club)")
+	var n := MusicaLibre.para("oficina").size()
+	if n >= 2:
+		_comprobar(str(MusicaLibre.elegir("oficina", 0)["id"]) != str(MusicaLibre.elegir("oficina", 1)["id"]), "la rotación cambia de pista")
+	_comprobar(MusicaLibre.elegir("oficina", -1) == MusicaLibre.elegir("oficina", n - 1) and MusicaLibre.elegir("oficina", n) == MusicaLibre.elegir("oficina", 0), "la rotación da la vuelta (también con índices negativos)")
+	_comprobar(MusicaLibre.elegir("no_existe", 3).is_empty(), "una situación sin pistas da {}")
+	_comprobar(MusicaLibre.creditos().size() == l.size(), "los créditos listan una línea por pista")
+	var enc := Musica.encendida
+	var lib := Musica.libre
+	Musica.encendida = true
+	Musica.libre = true
+	_comprobar(Musica.poner_libre("oficina") and Musica._sonando.begins_with("libre:"), "con la música libre encendida, el menú pone una pista libre")
+	Musica.encendida = false
+	_comprobar(not Musica.poner_libre("oficina"), "con la música apagada no pone nada")
+	Musica.parar()
+	Musica.encendida = enc
+	Musica.libre = lib

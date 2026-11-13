@@ -71,6 +71,7 @@ func cargar() -> void:
 	p._velocidad_partido = clampi(int(cf.get_value("juego", "velocidad_partido", p._velocidad_partido)), 1, 3)
 	Musica.encendida = bool(cf.get_value("musica", "encendida", Musica.encendida))
 	Musica.volumen = clampf(float(cf.get_value("musica", "volumen", Musica.volumen)), 0.0, 1.0)
+	Musica.libre = bool(cf.get_value("musica", "libre", Musica.libre))
 	var mp := String(cf.get_value("musica", "pieza", Musica.pieza))
 	if mp == "" or Musica.PIEZAS.has(mp):
 		Musica.pieza = mp
@@ -113,6 +114,7 @@ func guardar() -> void:
 	cf.set_value("juego", "velocidad_partido", p._velocidad_partido)
 	cf.set_value("musica", "encendida", Musica.encendida)
 	cf.set_value("musica", "volumen", Musica.volumen)
+	cf.set_value("musica", "libre", Musica.libre)
 	cf.set_value("musica", "pieza", Musica.pieza)
 	cf.set_value("musica", "automatica", Musica.automatica)
 	cf.set_value("aspecto", "clima_interactivo", p._clima_interactivo)

@@ -1,0 +1,15 @@
+MÚSICA LIBRE DE DINASTÍA (13-11-2026)
+
+Las cuatro pistas de esta carpeta se publican en OpenGameArt.org bajo CC0 1.0 Universal (dedicación al dominio público):
+https://creativecommons.org/publicdomain/zero/1.0/
+Permite copiar, modificar, distribuir y usar la obra, incluso con fines comerciales, sin pedir permiso y sin atribuir. Aun así se
+citan (catalogo.json y la pantalla de créditos de Ajustes) por trazabilidad y por cortesía con sus autores:
+
+  Next to You        — Joth     — https://opengameart.org/content/next-to-you          (2016-06-04)
+  Snowfall           — Kistol   — https://opengameart.org/content/snowfall              (2013-09-18)
+  The Field Of Dreams— pauliuw  — https://opengameart.org/content/the-field-of-dreams   (2010-12-08)
+  Menu Music         — mrpoly   — https://opengameart.org/content/menu-music           (2010-12-13)
+
+Cada página de origen mostraba «License(s): CC0» el 13-11-2026. Los archivos de aquí son conversiones a OGG Vorbis con el volumen
+normalizado; `catalogo.json` guarda el SHA-256 del archivo original descargado. Aviso de prudencia: OpenGameArt lo sube cada autor o un
+tercero en su nombre; si un autor reclamara su obra, se retira (borrar el .ogg y su fila del catálogo).

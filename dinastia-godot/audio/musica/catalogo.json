@@ -1,0 +1,68 @@
+{
+ "_nota": "Pistas de música libre (CC0 1.0: dominio público, uso comercial permitido, sin obligación de atribuir; se citan por cortesía y por trazabilidad). Descargadas de OpenGameArt el 13-11-2026, convertidas a OGG Vorbis y normalizadas a -20 LUFS (loudnorm). Para QUITAR una: borrar su .ogg (y su .import) y su fila. `usos`: situaciones de `Musica.ambientar` en las que puede sonar (oficina = menús y club; paron = parón invernal). Los momentos de partido siguen con la música compuesta, que cambia con el juego.",
+ "pistas": [
+  {
+   "id": "next_to_you",
+   "archivo": "next_to_you.ogg",
+   "titulo": "Next to You",
+   "autor": "Joth",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/next-to-you",
+   "publicada": "2016-06-04",
+   "original": "Next to You.mp3",
+   "sha256_original": "95d620e1ad7bd7c73366979e384f172be21ebc5fe68bdc1af3908faf8a7c7b44",
+   "usos": [
+    "oficina",
+    "paron"
+   ],
+   "animo": "emotiva, tranquila"
+  },
+  {
+   "id": "snowfall",
+   "archivo": "snowfall.ogg",
+   "titulo": "Snowfall",
+   "autor": "Kistol",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/snowfall",
+   "publicada": "2013-09-18",
+   "original": "Snowfall_0.ogg",
+   "sha256_original": "76c3e85ea456057fa4a0314b64e2f7ef583d98bf94f0c44641b899d0f52da82a",
+   "usos": [
+    "oficina",
+    "paron"
+   ],
+   "animo": "vals de piano, tranquila"
+  },
+  {
+   "id": "field_of_dreams",
+   "archivo": "field_of_dreams.ogg",
+   "titulo": "The Field Of Dreams",
+   "autor": "pauliuw",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/the-field-of-dreams",
+   "publicada": "2010-12-08",
+   "original": "the_field_of_dreams.mp3",
+   "sha256_original": "103a7032a49be7e8399c5cb771f7759eac9ac1a0d2bf227f41fff42ad8d78194",
+   "usos": [
+    "oficina",
+    "paron"
+   ],
+   "animo": "instrumental cinematográfica de fondo"
+  },
+  {
+   "id": "menu_music",
+   "archivo": "menu_music.ogg",
+   "titulo": "Menu Music",
+   "autor": "mrpoly",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/menu-music",
+   "publicada": "2010-12-13",
+   "original": "awesomeness.wav",
+   "sha256_original": "8fa296fe15051c7030ae16f61f825c83ef50c9d25fa0a9dfc7bf7e38769e1ee7",
+   "usos": [
+    "oficina"
+   ],
+   "animo": "ambiente instrumental de menú"
+  }
+ ]
+}

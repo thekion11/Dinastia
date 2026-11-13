@@ -117,6 +117,25 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | "Fecha FIFA", "Compensación FIFA" en textos | 🟢 cambiados a "fecha internacional" / "federación internacional" |
 | Rótulos del sorteo ("CHAMPIONS LEAGUE", "COPA LIBERTADORES") escritos en el código | 🟢 ahora salen de la tabla `CONFED` |
 
+## Música libre sumada el 13-11-2026 (orden del dueño: «integrar música libre y con permiso para comercializar»)
+
+Hasta hoy el juego no traía ningún archivo de música (las seis piezas de `Musica` se componen en el momento). Ahora suenan pistas grabadas
+SOLO en menús, club y parón invernal (los partidos siguen con lo compuesto, que cambia con el juego). Código: `nucleo/musica_libre.gd`
+(`MusicaLibre`): solo deja sonar licencias de su lista (`CC0 1.0`); una pista con otra (p. ej. CC-BY) no suena hasta sumar sus créditos.
+Catálogo con autor, licencia, origen y SHA-256 del original: `audio/musica/catalogo.json`; permiso explicado en `audio/musica/LICENCIA_CC0.txt`.
+Créditos dentro del juego: Ajustes → Créditos y licencias (una línea «Música: título — autor (licencia)» por pista). Interruptor en Ajustes → Música.
+
+| Qué | Dónde | Fuente | Estado |
+|---|---|---|---|
+| «Next to You» (Joth, 2016) | `audio/musica/next_to_you.ogg` | opengameart.org/content/next-to-you | 🟢 CC0 1.0 (la página lo indicaba el 13-11-2026) |
+| «Snowfall» (Kistol, 2013) | `audio/musica/snowfall.ogg` | opengameart.org/content/snowfall | 🟢 CC0 1.0 |
+| «The Field Of Dreams» (pauliuw, 2010) | `audio/musica/field_of_dreams.ogg` | opengameart.org/content/the-field-of-dreams | 🟢 CC0 1.0 |
+| «Menu Music» (mrpoly, 2010) | `audio/musica/menu_music.ogg` | opengameart.org/content/menu-music | 🟢 CC0 1.0 |
+
+CC0 permite uso comercial y no exige atribución; se cita por trazabilidad. Prudencia: OpenGameArt lo sube cada autor o un tercero; si un autor
+reclamara su obra, se retira (borrar el .ogg y su fila). Fuentes descartadas: FreePD (cerró en 2025), Pixabay (bloquea la descarga automática
+y su licencia no es CC0), Incompetech/Kevin MacLeod (CC-BY: obliga a citar y mantenerlo en cada pantalla donde suene).
+
 ## Pendiente antes de vender
 
 1. ~~Reemplazar `coche1.fbx`/`coche2.fbx` por coches Kenney~~ hecho el 25-9-2026.

@@ -7980,7 +7980,8 @@
   "Pulsa cualquier botón o toca la pantalla para saltar": "Press any button or tap the screen to skip",
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "World seed: %d (used to repeat this world and to report bugs)",
   "Copiar semilla": "Copy seed",
-  "Semilla copiada al portapapeles.": "Seed copied to the clipboard."
+  "Semilla copiada al portapapeles.": "Seed copied to the clipboard.",
+  "Música grabada (libre) en menús y club": "Recorded music (free) in menus and club"
  },
  "pt": {
   "Historia": "História",
@@ -15963,7 +15964,8 @@
   "Pulsa cualquier botón o toca la pantalla para saltar": "Prima qualquer botão ou toque no ecrã para saltar",
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Semente do mundo: %d (serve para repetir este mundo e para relatar erros)",
   "Copiar semilla": "Copiar semente",
-  "Semilla copiada al portapapeles.": "Semente copiada para a área de transferência."
+  "Semilla copiada al portapapeles.": "Semente copiada para a área de transferência.",
+  "Música grabada (libre) en menús y club": "Música gravada (livre) nos menus e no clube"
  },
  "patrones": [
   [
@@ -30086,7 +30088,8 @@
   "Pulsa cualquier botón o toca la pantalla para saltar": "Appuyez sur un bouton ou touchez l'écran pour passer",
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Graine du monde : %d (sert à rejouer ce monde et à signaler des bugs)",
   "Copiar semilla": "Copier la graine",
-  "Semilla copiada al portapapeles.": "Graine copiée dans le presse-papiers."
+  "Semilla copiada al portapapeles.": "Graine copiée dans le presse-papiers.",
+  "Música grabada (libre) en menús y club": "Musique enregistrée (libre) dans les menus et le club"
  },
  "it": {
   "Historia": "Storia",
@@ -38069,7 +38072,8 @@
   "Pulsa cualquier botón o toca la pantalla para saltar": "Premi un tasto qualsiasi o tocca lo schermo per saltare",
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Seme del mondo: %d (serve per ripetere questo mondo e per segnalare errori)",
   "Copiar semilla": "Copia il seme",
-  "Semilla copiada al portapapeles.": "Seme copiato negli appunti."
+  "Semilla copiada al portapapeles.": "Seme copiato negli appunti.",
+  "Música grabada (libre) en menús y club": "Musica registrata (libera) nei menu e nel club"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46052,7 +46056,8 @@
   "Pulsa cualquier botón o toca la pantalla para saltar": "Beliebige Taste drücken oder Bildschirm berühren zum Überspringen",
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Welt-Startwert: %d (zum Wiederholen dieser Welt und zum Melden von Fehlern)",
   "Copiar semilla": "Startwert kopieren",
-  "Semilla copiada al portapapeles.": "Startwert in die Zwischenablage kopiert."
+  "Semilla copiada al portapapeles.": "Startwert in die Zwischenablage kopiert.",
+  "Música grabada (libre) en menús y club": "Aufgenommene Musik (frei) in Menüs und im Verein"
  },
  "ca": {
   "Historia": "Història",
@@ -54035,7 +54040,8 @@
   "Pulsa cualquier botón o toca la pantalla para saltar": "Prem qualsevol botó o toca la pantalla per saltar",
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Llavor del món: %d (serveix per repetir aquest món i per informar d'errors)",
   "Copiar semilla": "Copiar la llavor",
-  "Semilla copiada al portapapeles.": "Llavor copiada al porta-retalls."
+  "Semilla copiada al portapapeles.": "Llavor copiada al porta-retalls.",
+  "Música grabada (libre) en menús y club": "Música gravada (lliure) als menús i al club"
  },
  "pl": {
   "Club": "Klub",
@@ -62018,7 +62024,8 @@
   "Pulsa cualquier botón o toca la pantalla para saltar": "Naciśnij dowolny przycisk lub dotknij ekranu, aby pominąć",
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Ziarno świata: %d (służy do powtórzenia tego świata i zgłaszania błędów)",
   "Copiar semilla": "Kopiuj ziarno",
-  "Semilla copiada al portapapeles.": "Ziarno skopiowane do schowka."
+  "Semilla copiada al portapapeles.": "Ziarno skopiowane do schowka.",
+  "Música grabada (libre) en menús y club": "Muzyka nagrana (wolna) w menu i w klubie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70001,6 +70008,7 @@
   "Pulsa cualquier botón o toca la pantalla para saltar": "Geçmek için herhangi bir tuşa bas veya ekrana dokun",
   "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Dünya tohumu: %d (bu dünyayı tekrarlamak ve hata bildirmek için kullanılır)",
   "Copiar semilla": "Tohumu kopyala",
-  "Semilla copiada al portapapeles.": "Tohum panoya kopyalandı."
+  "Semilla copiada al portapapeles.": "Tohum panoya kopyalandı.",
+  "Música grabada (libre) en menús y club": "Kayıtlı müzik (özgür) menülerde ve kulüpte"
  }
 }
