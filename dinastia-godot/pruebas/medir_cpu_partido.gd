@@ -52,7 +52,7 @@ func _medir() -> void:
 			print("CPUP deriva %d: %.2f ms  (minuto %s, terminado %s)" % [k, ms, str(pa.minuto) if pa != null else "?", str(pa.terminado_ya) if pa != null else "?"])
 		get_tree().quit()
 		return
-	await _cuadros(400)   ## calentamiento: sin él la base sale inflada (13-11: 17,1 ms al principio y ~3,8 ms estable) y todas las diferencias salen falsas
+	await _cuadros(1600)   ## calentamiento: los ~1350 primeros fotogramas tras abrir el estadio gastan 11-17 ms de CPU en hilos de fondo (carga); estable ~3,6 ms
 	var base := 0.0
 	for i in rep:
 		base += await _cuadros(150)
