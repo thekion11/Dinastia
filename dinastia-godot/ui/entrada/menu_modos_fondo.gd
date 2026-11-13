@@ -42,7 +42,7 @@ const AMBIENTES := {
 	"creador": {"estilo": 5, "c": ["0f0716", "1d0f2b", "d08cff"]},    ## el plano del club que vas a fundar
 	"retos": {"estilo": 6, "c": ["170707", "2e0e0e", "ff6b6b"]},      ## anillos: una diana
 	"tutorial": {"estilo": 1, "c": ["051214", "0b2427", "6fe3e3"]},   ## luces suaves para aprender
-	"carrera-m": {"estilo": 3, "c": ["050608", "0e1218", "8fd62a"]},  ## el de la propia Carrera de Jugador
+	"carrera-m": {"estilo": 3, "c": ["070b18", "101a3a", "ffc93c"]},  ## el de la propia Carrera de Jugador («La Ruta»: noche y oro)
 	"fondo": {"estilo": 3, "c": ["07090d", "121720", "9fb0c8"]},      ## los números de un fondo de inversión
 }
 

@@ -8404,7 +8404,9 @@
   "temporadas": "seasons",
   "prestigio": "prestige",
   "Indiscutible": "Undisputed",
-  "De portada": "Front page"
+  "De portada": "Front page",
+  "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "The Path: from prospect to legend. Level up, choose talents and decide matches with your own plays",
+  "La Ruta · Niveles y talentos · Tus jugadas": "The Path · Levels and talents · Your plays"
  },
  "pt": {
   "Historia": "História",
@@ -16811,7 +16813,9 @@
   "temporadas": "temporadas",
   "prestigio": "prestígio",
   "Indiscutible": "Indiscutível",
-  "De portada": "De capa"
+  "De portada": "De capa",
+  "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "A Rota: de promessa a lenda. Você sobe de nível, escolhe talentos e decide as partidas com as suas jogadas",
+  "La Ruta · Niveles y talentos · Tus jugadas": "A Rota · Níveis e talentos · Suas jogadas"
  },
  "patrones": [
   [
@@ -31358,7 +31362,9 @@
   "temporadas": "saisons",
   "prestigio": "prestige",
   "Indiscutible": "Indiscutable",
-  "De portada": "À la une"
+  "De portada": "À la une",
+  "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "La Route : d'espoir à légende. Tu montes de niveau, choisis des talents et décides des matchs par tes actions",
+  "La Ruta · Niveles y talentos · Tus jugadas": "La Route · Niveaux et talents · Tes actions"
  },
  "it": {
   "Historia": "Storia",
@@ -39765,7 +39771,9 @@
   "temporadas": "stagioni",
   "prestigio": "prestigio",
   "Indiscutible": "Indiscusso",
-  "De portada": "Da copertina"
+  "De portada": "Da copertina",
+  "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "La Rotta: da promessa a leggenda. Sali di livello, scegli i talenti e decidi le partite con le tue giocate",
+  "La Ruta · Niveles y talentos · Tus jugadas": "La Rotta · Livelli e talenti · Le tue giocate"
  },
  "de": {
   "Historia": "Geschichte",
@@ -48172,7 +48180,9 @@
   "temporadas": "Saisons",
   "prestigio": "Ansehen",
   "Indiscutible": "Unumstritten",
-  "De portada": "Titelseite"
+  "De portada": "Titelseite",
+  "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "Der Weg: vom Talent zur Legende. Steig auf, wähle Talente und entscheide Spiele mit deinen Aktionen",
+  "La Ruta · Niveles y talentos · Tus jugadas": "Der Weg · Stufen und Talente · Deine Aktionen"
  },
  "ca": {
   "Historia": "Història",
@@ -56579,7 +56589,9 @@
   "temporadas": "temporades",
   "prestigio": "prestigi",
   "Indiscutible": "Indiscutible",
-  "De portada": "De portada"
+  "De portada": "De portada",
+  "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "La Ruta: de promesa a llegenda. Puges de nivell, tries talents i decideixes els partits amb les teves jugades",
+  "La Ruta · Niveles y talentos · Tus jugadas": "La Ruta · Nivells i talents · Les teves jugades"
  },
  "pl": {
   "Club": "Klub",
@@ -64986,7 +64998,9 @@
   "temporadas": "sezony",
   "prestigio": "prestiż",
   "Indiscutible": "Niepodważalny",
-  "De portada": "Z okładki"
+  "De portada": "Z okładki",
+  "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "Droga: od talentu do legendy. Awansuj, wybieraj talenty i rozstrzygaj mecze swoimi akcjami",
+  "La Ruta · Niveles y talentos · Tus jugadas": "Droga · Poziomy i talenty · Twoje akcje"
  },
  "tr": {
   "Club": "Kulüp",
@@ -73393,6 +73407,8 @@
   "temporadas": "sezon",
   "prestigio": "prestij",
   "Indiscutible": "Tartışmasız",
-  "De portada": "Kapak yıldızı"
+  "De portada": "Kapak yıldızı",
+  "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "Yol: umut vadeden oyuncudan efsaneye. Seviye atla, yetenek seç ve maçları kendi hamlelerinle belirle",
+  "La Ruta · Niveles y talentos · Tus jugadas": "Yol · Seviyeler ve yetenekler · Hamlelerin"
  }
 }

@@ -25,7 +25,7 @@ const RASGOS := {
 	"creador": "Tu escudo · Tus colores · Último puesto",
 	"retos": "Cinco situaciones · Una meta · Partidas cortas",
 	"tutorial": "Paso a paso · Tu propia partida · Un minuto",
-	"carrera-m": "Juegas tú · Mando o teclado · Tu carrera",
+	"carrera-m": "La Ruta · Niveles y talentos · Tus jugadas",
 	"fondo": "Hasta el 49 % · Clubes de todo el mundo · Caja propia",
 }
 
