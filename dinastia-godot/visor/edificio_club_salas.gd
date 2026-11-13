@@ -302,18 +302,35 @@ static func vestuario_visitante(nodo: Node3D, caja: Rect2, y0: float, madera: Ma
 	var toalla := PiezasObra._mat(Color(0.35, 0.45, 0.7), 0.95)
 	var negro := PiezasObra._mat(Color(0.12, 0.12, 0.14), 0.5)
 	var n := int(caja.size.y / 1.0)
+	## (12-11, sesión 16, primera persona) TAQUILLAS DE VERDAD: antes, una placa de 10 cm flotando entre 1 y 2,2 m con la camiseta pegada
+	## delante; de cerca se veía plana. Ahora un mueble de 45 cm de fondo apoyado en el suelo: puerta cerrada abajo, hueco abierto arriba con
+	## el fondo más oscuro (se lee la profundidad), balda, separadores y la camiseta colgada dentro. Las tiras largas son una caja por lado (no
+	## una por taquilla) y el banco se adelanta para dejarles su fondo.
+	var fondo_t := PiezasObra._mat(Color(0.30, 0.31, 0.34), 0.8)
+	var prof := 0.45
+	var largo := float(n)
+	var z_ini := caja.position.y
 	for lado: float in [-1.0, 1.0]:
-		var x_pared := caja.end.x - 0.1 if lado > 0.0 else caja.position.x + 0.1
-		var x_banco := caja.end.x - 0.35 if lado > 0.0 else caja.position.x + 0.35
-		PiezasObra._caja(nodo, Vector3(x_banco, y0 + 0.45, cz), Vector3(0.45, 0.08, caja.size.y - 0.6), madera, true)
+		var x_pared := caja.end.x if lado > 0.0 else caja.position.x
+		var x_c := x_pared - lado * prof * 0.5            ## centro del mueble
+		var x_frente := x_pared - lado * prof
+		var x_banco := x_pared - lado * (prof + 0.32)
+		var z_c := z_ini + largo * 0.5
+		PiezasObra._caja(nodo, Vector3(x_banco, y0 + 0.45, cz), Vector3(0.42, 0.08, caja.size.y - 0.6), madera, true)
+		PiezasObra._caja(nodo, Vector3(x_c, y0 + 0.5, z_c), Vector3(prof, 1.0, largo), gris, true)                        ## la parte cerrada (puertas)
+		PiezasObra._caja(nodo, Vector3(x_pared - lado * 0.02, y0 + 1.6, z_c), Vector3(0.04, 1.2, largo), fondo_t, false)  ## el fondo del hueco
+		PiezasObra._caja(nodo, Vector3(x_c, y0 + 2.2, z_c), Vector3(prof, 0.04, largo), gris, false)                      ## el techo
+		PiezasObra._caja(nodo, Vector3(x_c, y0 + 1.92, z_c), Vector3(prof - 0.04, 0.025, largo), gris, false)             ## la balda
+		PiezasObra._caja(nodo, Vector3(x_frente + lado * 0.004, y0 + 0.97, z_c), Vector3(0.01, 0.03, largo), negro, false) ## la ranura de las puertas
+		for k in n + 1:
+			PiezasObra._caja(nodo, Vector3(x_c, y0 + 1.1, z_ini + k), Vector3(prof, 2.2, 0.03), gris, false)               ## separadores
 		for k in n:
-			var z := caja.position.y + 0.5 + k
-			PiezasObra._caja(nodo, Vector3(x_pared, y0 + 1.6, z), Vector3(0.1, 1.2, 0.85), gris, false)   ## la taquilla
-			PiezasObra._caja(nodo, Vector3(x_pared - lado * 0.08, y0 + 1.55, z), Vector3(0.03, 0.55, 0.42), tela, false)   ## la camiseta colgada
-			PiezasObra._caja(nodo, Vector3(x_pared - lado * 0.08, y0 + 1.76, z), Vector3(0.03, 0.12, 0.66), tela, false)   ## sus mangas
-			PiezasObra._rotulo(nodo, str(k * 2 + (1 if lado < 0.0 else 2)), Vector3(x_pared - lado * 0.1, y0 + 1.5, z), -lado * PI * 0.5, 36, Color(0.2, 0.2, 0.25))
+			var z := z_ini + 0.5 + k
+			PiezasObra._caja(nodo, Vector3(x_pared - lado * 0.14, y0 + 1.5, z), Vector3(0.03, 0.55, 0.42), tela, false)   ## la camiseta colgada
+			PiezasObra._caja(nodo, Vector3(x_pared - lado * 0.14, y0 + 1.71, z), Vector3(0.03, 0.12, 0.66), tela, false)  ## sus mangas
+			PiezasObra._rotulo(nodo, str(k * 2 + (1 if lado < 0.0 else 2)), Vector3(x_frente - lado * 0.01, y0 + 0.75, z), -lado * PI * 0.5, 36, Color(0.92, 0.92, 0.95))
 			if k % 2 == 0:   ## una toalla doblada en el banco
-				PiezasObra._caja(nodo, Vector3(x_banco, y0 + 0.51, z), Vector3(0.36, 0.05, 0.3), toalla, false)
+				PiezasObra._caja(nodo, Vector3(x_banco, y0 + 0.51, z), Vector3(0.34, 0.05, 0.3), toalla, false)
 	## La camilla de masajes en el centro y la pizarra táctica en la pared del fondo.
 	PiezasObra._caja(nodo, Vector3(cx, y0 + 0.72, cz + 0.4), Vector3(0.7, 0.1, 1.9), PiezasObra._mat(Color(0.25, 0.3, 0.4), 0.6), true)
 	for dz: float in [-0.8, 0.8]:
