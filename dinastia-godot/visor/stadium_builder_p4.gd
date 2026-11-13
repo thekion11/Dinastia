@@ -6,6 +6,7 @@ extends "res://visor/stadium_builder_p3.gd"
 ## de siempre, y el unico que usan hoy los rivales y la ciudad- no dibuja
 ## ningun escudo, exactamente el comportamiento de antes de esta fase.
 static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
+	StadiumBuilder._tm("")   ## (13-11) arranca el cronómetro de TIEMPOS=1: sin esto la 1.ª marca («pitch_cesped») era `ahora − 0` = el tiempo desde que arrancó el proceso (6,4 s falsos)
 	var pitch := MeshInstance3D.new()
 	var pm := PlaneMesh.new()
 	pm.size = Vector2(PITCH_WID + 12.0, PITCH_LEN + 12.0)
