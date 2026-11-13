@@ -135,6 +135,41 @@ func _medir() -> void:
 	if OS.get_environment("MESH_LOD") != "":
 		_pj._vp.mesh_lod_threshold = float(OS.get_environment("MESH_LOD"))   ## (13-11) umbral de LOD del viewport del partido, para comparar
 	await _conteos("base")
+	if OS.get_environment("PELO") != "":
+		## (13-11) PELO=1: sobre la MISMA escena congelada, triángulos al cambiar la distancia a la que el pelo pasa de `Cuero` (cerca) a `CueroLejos`.
+		for d in [22.0, 15.0, 10.0, 6.0, 3.0]:
+			for j in _pj.motor.jugadores:
+				for mi in ((j as Dictionary)["node"] as Node3D).find_children("*", "MeshInstance3D", true, false):
+					var kn := String(mi.name).rstrip("0123456789@_")
+					if kn == "Cuero":
+						(mi as MeshInstance3D).visibility_range_end = d
+					elif kn == "CueroLejos":
+						(mi as MeshInstance3D).visibility_range_begin = d
+			await _conteos("pelo_lejos_desde=%.0f m" % d)
+		get_tree().quit()
+		return
+	if OS.get_environment("PIEZAS") != "":
+		## (13-11) PIEZAS=1: sobre la MISMA escena congelada, lo que baja ocultar cada pieza de los jugadores (por nombre de malla): llamadas y triángulos.
+		var base_c: int = await _llamadas()
+		var base_t := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
+		print("PIEZA base %d llamadas %d triángulos" % [base_c, base_t])
+		var nombres := {}
+		for j in _pj.motor.jugadores:
+			for mi in ((j as Dictionary)["node"] as Node3D).find_children("*", "MeshInstance3D", true, false):
+				var kn := String(mi.name).rstrip("0123456789@_")
+				if not nombres.has(kn):
+					nombres[kn] = []
+				(nombres[kn] as Array).append(mi)
+		for kn in nombres:
+			for mi in nombres[kn]:
+				(mi as MeshInstance3D).visible = false
+			var c2: int = await _llamadas()
+			var t2 := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
+			for mi in nombres[kn]:
+				(mi as MeshInstance3D).visible = true
+			print("PIEZA -%3d llamadas  -%6d triángulos  %s (x%d)" % [base_c - c2, base_t - t2, kn, (nombres[kn] as Array).size()])
+		get_tree().quit()
+		return
 	if OS.get_environment("ROTULOS") != "":
 		## (13-11) ROTULOS=1: distancia de cada Label3D a la cámara del partido, por padre (mínima y máxima) y cuántos hay.
 		var dist := {}
