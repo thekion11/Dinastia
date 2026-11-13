@@ -95,7 +95,15 @@ static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
 	tit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	tit.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	cab.add_child(tit)
-	v.add_child(E.columnas(ui, _contenido(ui, j, club, id), []))
+	var dentro := _contenido(ui, j, club, id)
+	## El título ya está arriba: el rótulo igual de dentro de la tarjeta sobra (si comparte fila con una ficha, se vacía para no moverla).
+	for tarjeta: Control in dentro:
+		for l: Node in tarjeta.find_children("*", "Label", true, false):
+			if (l as Label).text == String(SUBS[id][2]):
+				(l as Label).text = ""
+				(l as Label).visible = l.get_parent() is HBoxContainer
+				break
+	v.add_child(E.columnas(ui, dentro, []))
 	return v
 
 static func cerrar(ui: Variant) -> void:
