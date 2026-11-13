@@ -128,16 +128,68 @@ static func boton(texto: String, col: Color, accion: Callable, alto := 44, lleno
 		b.set_meta("principal", true)
 	return b
 
-## Pone el foco (mando y teclado) en la acción principal de `raiz`: el último
-## botón relleno que se añadió gana si hay una capa encima (resumen, toque).
+## Pone el foco (mando y teclado) en la acción principal de `raiz`: si hay una
+## capa encima (resumen, toque), en la suya. Sin acción principal, en el primer
+## botón. Y deja cableado el arriba/abajo dentro de las columnas que se desplazan.
 static func enfocar(raiz: Node) -> void:
 	var hallado: Button = null
+	var primero: Button = null
 	for n: Node in raiz.find_children("*", "Button", true, false):
-		if n.has_meta("principal") and (n as Button).is_visible_in_tree() and not (n as Button).disabled:
-			if hallado == null or raiz.get_child(raiz.get_child_count() - 1).is_ancestor_of(n):
-				hallado = n
+		var b := n as Button
+		if not b.is_visible_in_tree() or b.disabled:
+			continue
+		## Sin acción principal, mejor la pestaña en la que estás que la primera.
+		if primero == null or (b.toggle_mode and b.button_pressed and b.get_parent() == primero.get_parent() and not primero.button_pressed):
+			primero = b
+		if n.has_meta("principal") and (hallado == null or raiz.get_child(raiz.get_child_count() - 1).is_ancestor_of(n)):
+			hallado = n
+	if hallado == null:
+		hallado = primero
 	if hallado != null:
 		hallado.grab_focus.call_deferred()
+	for sc: Node in raiz.find_children("*", "ScrollContainer", true, false):
+		(sc as ScrollContainer).follow_focus = true
+	## El cableado necesita las posiciones: dos fotogramas después de pintar.
+	if raiz.is_inside_tree():
+		var arbol := raiz.get_tree()
+		arbol.process_frame.connect(func() -> void:
+			arbol.process_frame.connect(func() -> void:
+				if is_instance_valid(raiz):
+					cablear(raiz), CONNECT_ONE_SHOT), CONNECT_ONE_SHOT)
+
+## Dentro de cada columna con desplazamiento, une los botones por filas: el
+## motor no encuentra solo a los que quedan fuera de la vista, y con mando no se
+## llegaba a lo de abajo (sonda `sonda_foco_ruta`).
+static func cablear(raiz: Node) -> void:
+	for sc: Node in raiz.find_children("*", "ScrollContainer", true, false):
+		var botones: Array = []
+		for n: Node in sc.find_children("*", "Button", true, false):
+			var b := n as Button
+			if b.is_visible_in_tree() and not b.disabled and b.focus_mode == Control.FOCUS_ALL:
+				botones.append(b)
+		botones.sort_custom(func(x: Button, y: Button) -> bool:
+			var px := x.get_global_rect().get_center()
+			var py := y.get_global_rect().get_center()
+			return px.y < py.y - 6.0 or (absf(px.y - py.y) <= 6.0 and px.x < py.x))
+		var filas: Array = []
+		for b2: Button in botones:
+			if filas.is_empty() or absf(b2.get_global_rect().get_center().y - ((filas[-1] as Array)[0] as Button).get_global_rect().get_center().y) > 6.0:
+				filas.append([])
+			(filas[-1] as Array).append(b2)
+		for i in filas.size():
+			for b3: Button in filas[i]:
+				if i > 0:
+					b3.focus_neighbor_top = b3.get_path_to(_cercano(filas[i - 1], b3))
+				if i < filas.size() - 1:
+					b3.focus_neighbor_bottom = b3.get_path_to(_cercano(filas[i + 1], b3))
+
+static func _cercano(fila: Array, a: Button) -> Button:
+	var mejor: Button = fila[0]
+	var x := a.get_global_rect().get_center().x
+	for b: Button in fila:
+		if absf(b.get_global_rect().get_center().x - x) < absf(mejor.get_global_rect().get_center().x - x):
+			mejor = b
+	return mejor
 
 ## Botón de elección (uno de un grupo): queda relleno cuando está elegido.
 static func opcion(texto: String, col: Color, grupo: ButtonGroup, elegido: bool, accion: Callable, alto := 38) -> Button:
