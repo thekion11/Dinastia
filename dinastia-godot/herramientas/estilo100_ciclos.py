@@ -127,7 +127,6 @@ def slerp(a, b, t):
 
 def globales(juntas, R, pos, nombres):
     """Posición global (F,3) de cada articulación pedida (cm)."""
-    F = R.shape[0]
     idx = {d["nombre"]: i for i, d in enumerate(juntas)}
     G = {}
     P = {}

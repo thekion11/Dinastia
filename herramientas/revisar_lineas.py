@@ -47,7 +47,6 @@ def main():
             print(f"{n:6d}  {f}  ({'nuevo' if antes is None else 'crece desde %d' % antes}; límite {LIM_NUEVO})")
         sys.exit(1 if malos else 0)
     p600 = [d for d in datos if d[0] > LIM_NUEVO]
-    p1500 = [d for d in datos if d[0] > LIM_FINAL]
     print(f"{len(datos)} scripts, {sum(n for n, _ in datos)} líneas")
     print(f"pasan de {LIM_NUEVO} líneas: {len(p600)}")
     for n, f in (p600 if "--todos" in sys.argv else datos[:25]):
