@@ -40,7 +40,10 @@ static func retardo(m: MotorJugable, obs: Dictionary) -> float:
 
 ## Dónde ve `obs` al jugador `q` (rival suyo): su posición de hace `retardo` segundos.
 static func pos_vista(m: MotorJugable, obs: Dictionary, q: Dictionary) -> Vector3:
-	var r := retardo(m, obs)
+	return pos_vista_con(m, q, retardo(m, obs))
+
+## Lo mismo con el retardo ya calculado (`retardo(m, obs)` no cambia dentro de un bucle sobre los rivales del mismo `obs`).
+static func pos_vista_con(m: MotorJugable, q: Dictionary, r: float) -> Vector3:
 	if r < 0.0:
 		var v: Vector3 = q.get("vel", Vector3.ZERO)
 		return m.pos(q) + Vector3(v.x, 0.0, v.z) * (-r)
