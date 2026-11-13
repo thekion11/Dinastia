@@ -272,3 +272,13 @@ Inventario: ≈ 2.100 geometrías visibles en MEDIO (1.000 en MÍNIMO), 853 mate
   polígono era su propia llamada; y se dibuja por fases: todas las formas, luego contornos, luego textos); estadísticas 32 → 12,
   ficha del jugador 20 → 8 y marcador 12 → 4 (sin la sombra del texto, que partía el lote, en las etiquetas sobre panel oscuro; el aviso
   grande sobre el césped la conserva). Misma información, mismos tamaños de toque (`captura_tactil_movil` y `captura_tactil_partido` en 0).
+
+## Sesión 16, 13-11: pulido de código en `ui/` y `visor/` (sin cambiar comportamiento) — mediciones
+Método: microbenchmarks de CPU de GDScript (valen en headless; no son tiempo de fotograma) y recuentos de objetos.
+- **Perfil por clase estable** (`medir_partido_jugable` con `CPU=1 REPETIR=12`, base 8,0 ms de proceso por fotograma): lo que pesa son los `AnimationPlayer` (×60, −1,0 ms) y, de nuestros scripts, `ancla_suelo.gd` (×26, −0,36 ms) y `anim_transiciones.gd` (×50, −0,20 ms). Con 1 repetición la misma lectura es ruido (`puerta_animada` dio −2,4, −1,7 y −0,3 ms; con 12, −0,04).
+- **Puertas del club** (`PuertaAnimada`, 12): ~11 µs por fotograma en total (`pruebas/micro_puertas.tscn`). Saltar la escritura de `rotation.y` quieta no cambió la medida (9-13 µs) → NO se aplicó.
+- **`StadiumBuilder.ocultar_techo_ante`** (cada fotograma): 12 piezas, ~5,7 µs por llamada → no se toca.
+- **Fugas al entrar y salir de pantallas** (`pruebas/micro_fugas_pantallas.tscn`, todas las pestañas + competición, 6 rondas): 0 objetos, 0 nodos, 0 huérfanos y 0 recursos de crecimiento tras el calentamiento.
+- **Construcción del estadio** (`TIEMPOS=1`): total ≈ 0,8 s; lo mayor, `tunel_edificio_club` 255 ms y de ahí la Enfermería 196 ms = primera carga (compilación) del script `InteriorInstalacion` vía `CargaCiudad.de` (única por sesión, deliberada por la regla de memoria del menú; cada pieza ~1 ms). La marca `pitch_cesped` salía con 6,4-7 s FALSOS (el cronómetro arrancaba en 0 = tiempo desde el arranque del proceso): arreglado (`build_pitch` arranca el cronómetro).
+- Funciones idénticas duplicadas (≥ 7 líneas): 9 grupos pequeños (p. ej. `_textura_brillo_panel` ×2, texturas de 4×128 px); sin ganancia que justifique acoplar clases.
+- SIGUIENTE: `ancla_suelo.gd` (único script propio con coste visible) con microbenchmark antes/después.
