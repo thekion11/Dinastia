@@ -260,7 +260,7 @@ static func columnas(ui: Variant, izq: Array, der: Array, ancho_der := 390.0) ->
 	for n: Control in izq:
 		a.add_child(n)
 	var b := a
-	if not angosto:
+	if not angosto and not der.is_empty():
 		var sc2 := ScrollContainer.new()
 		sc2.custom_minimum_size = Vector2(ancho_der, 0)
 		sc2.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
