@@ -4,6 +4,22 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+
+## MEGA MISIÓN DEL DUEÑO (13-11): REVOLUCIONAR EL MODO JUGADOR
+
+Orden: «revolucionar completamente el modo jugador, realmente divertido, cambiar la estética, todo a tu mero gusto, pero debe ser increíble». Rama `ccr-8279c839-7t0p6w` (sin `main` ni PR). El motor del partido no se toca (lo llevan otras sesiones).
+
+Hecho (bloque 1, «LA RUTA»):
+- Núcleo `nucleo/carrera_ruta.gd`: experiencia y nivel, 9 talentos en 3 ramas (Crack, Ídolo, Líder) con efecto real, 3 retos por partido según el puesto, racha, rival personal con duelo de temporada, 7 capítulos (Promesa → Leyenda), «la grada» y el toque del entreno. Se guarda en `CarreraJugador.ruta`. Banco: `_probar_carrera_ruta`.
+- Interfaz nueva en `ui/carrera/` (estética «noche de estadio», Bebas Neue): creación en dos pasos (tres clubes de tres países te ofrecen contrato), cabecera con nivel, pestañas Hoy / Yo / Ruta, mini juego «El Toque», resumen tras el partido, retiro. Capturas: `pruebas/captura_modo_jugador.tscn`.
+
+Falta (siguientes bloques):
+- Móvil (vertical y tumbado) de las pantallas nuevas; mando (foco) en todas.
+- Más variedad: más retos y eventos, premios de fin de temporada, objetivos de capítulo, patrocinios, vida fuera del campo.
+- Animaciones (barra de experiencia, subida de nivel) y sonido de interfaz.
+- Equilibrio: la energía se agota simulando semanas seguidas (12 de 100 a la semana 8); ritmo de niveles (hoy ~nivel 8 al acabar la primera temporada).
+- Pendiente de decisión del dueño: nada por ahora.
+
 ## ESTADO AL 12-11 MEDIODÍA (sesiones Opus 13 y 14 cerradas y ARCHIVADAS; todo en `main`)
 - CI de `main` en VERDE ENTERO por primera vez (f9147058): banco, 6 especiales, Windows, Windows ligero, Linux, Android, Android armv7, Web, Web móvil, C++ Android y C++ ARM. Solo se salta el AAB de Play (falta la keystore, la lleva el dueño). Arreglos del día: CI que se cancelaba en `main`, directiva con ligas de 13 clubes, tarjetas de C4, entrada arm64 del .gdextension en el trabajo ARM y acción de exportar idempotente (Web + Web móvil).
 - Sesión 13 (jugabilidad de C4, 10 bloques): resumen para el dueño en `MOTOR_LEAGUE_SOCCER_PLAN.md` («RESUMEN PARA EL DUEÑO — sesión 13»). Encendido: paciencia ante el tiro lejano, encarar por la banda, falta lateral ensayada, no entrar por detrás a toda velocidad, seguir el tiro v2 y apoyo de cara. SIGUIENTE idea medida: el ADELANTO del pase (el rival llega antes al punto; el pasador debería compararlo y darla al pie o a otro).

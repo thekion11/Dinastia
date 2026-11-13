@@ -264,11 +264,11 @@ func _probar_carrera_ruta() -> void:
 		for h: Dictionary in ult["retos"]:
 			hechos += 1 if bool(h["hecho"]) else 0
 		_comprobar(hechos == 3 and int(ult["xp"]) > 60, "  con un partidazo se cumplen los tres retos (%d de experiencia)" % int(ult["xp"]))
-		_comprobar(CarreraRuta.nivel(c) > antes_nivel and int(c.ruta["puntos"]) >= 1, "  subes de nivel y ganas un punto de talento")
 		_comprobar(int(c.ruta["racha"]) == 1, "  empieza la racha")
 		var xp0 := int(c.ruta["xp"]) + CarreraRuta.nivel(c) * 1000
 		c.tras_partido(m, {"minutos": 90, "goles": 2, "asist": 1, "nota": 8.6, "titular": true, "encajados": 0, "paradas": 4})
 		_comprobar(int(c.ruta["xp"]) + CarreraRuta.nivel(c) * 1000 > xp0, "  los retos ya cumplidos no se cobran dos veces, pero el partido sí da")
+		_comprobar(CarreraRuta.nivel(c) > antes_nivel and int(c.ruta["puntos"]) >= 1, "  con dos partidazos subes de nivel y ganas un punto de talento")
 		for h2: Dictionary in (c.ruta["ultimo"] as Dictionary)["retos"]:
 			_comprobar(not bool(h2["hecho"]), "  (reto repetido sin premio)")
 		c.tras_partido(m, {"minutos": 90, "goles": 0, "asist": 0, "nota": 5.0, "titular": true, "encajados": 3})

@@ -83,7 +83,7 @@ static func nivel(c: CarreraJugador) -> int:
 
 ## Experiencia que pide pasar del nivel `n` al siguiente.
 static func xp_para(n: int) -> int:
-	return 80 + 30 * n
+	return 150 + 60 * n
 
 static func capitulo(c: CarreraJugador) -> Array:
 	var cap: Array = CAPITULOS[0]
@@ -240,6 +240,9 @@ static func tras_partido(c: CarreraJugador, m: Mundo, d: Dictionary) -> void:
 ## La grada opina (las últimas ocho frases; se traducen al mostrarlas).
 static func _grada(c: CarreraJugador, icono: String, plantilla: String, datos: Array = []) -> void:
 	var g: Array = asegurar(c)["grada"]
+	## La misma frase dos veces seguidas no es noticia.
+	if not g.is_empty() and String((g[-1] as Dictionary).get("texto", "")) == plantilla and datos.is_empty():
+		return
 	g.append({"icono": icono, "texto": plantilla, "datos": datos})
 	while g.size() > 8:
 		g.remove_at(0)
@@ -415,7 +418,12 @@ static func pruebas(m: Mundo, semilla: int) -> Array[Club]:
 		var orden: Array = liga.clubes.duplicate()
 		orden.sort_custom(func(a: Club, b: Club) -> bool: return a.rep < b.rep)
 		if not orden.is_empty():
-			out.append(orden[g.randi() % mini(4, orden.size())])
+			## Uno humilde, uno de media tabla y uno de los fuertes de su liga:
+			## tres comienzos distintos (minutos fáciles contra escaparate).
+			var tramo := float(out.size()) * 0.4
+			var desde := int(float(orden.size() - 1) * tramo)
+			var hasta := maxi(desde, int(float(orden.size() - 1) * minf(1.0, tramo + 0.2)))
+			out.append(orden[g.randi_range(desde, hasta)])
 	return out
 
 ## Empieza en el club elegido (en vez del que pone `CarreraJugador.crear`).
