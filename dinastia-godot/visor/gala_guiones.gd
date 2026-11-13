@@ -3,21 +3,22 @@ extends RefCounted
 ## LOS GUIONES DE LAS ENTREGAS DE PREMIOS (`GalaPremio3D`) y sus decorados. Uno por premio, todos distintos:
 ## lugar («campo» = tu estadio con tus compañeros; «gala» = el salón de tu liga; «estadio» = la tarima de la final;
 ## «mundo» = la gala mundial), objeto (el galardón, `GalaObjetos`), anim (cómo lo celebras; la primera que tenga
-## el modelo), camara (orbita / frontal / contrapicado / travelling / alta) y extra (cohetes / flashes / lluvia).
-## El galardón va en tu mano derecha: sube y baja con el gesto de cada celebración.
+## el modelo), camara (orbita / frontal / contrapicado / travelling / alta), porte (cómo lo llevas al celebrar: arriba,
+## sobre la cabeza —el de por defecto—; pecho, enseñándolo a las cámaras; beso, del pecho a la cara) y extra.
+## El galardón va en tus DOS manos (cinemática inversa en los brazos).
 
 const GUIONES := {
 	"revelacion": {"lugar": "campo", "objeto": "estrella", "anim": "puno_al_aire|celebrar", "camara": "orbita", "extra": ""},
-	"goleador_club": {"lugar": "campo", "objeto": "bota_plata", "anim": "besar_escudo|celebrar", "camara": "contrapicado", "extra": ""},
-	"mejor_club": {"lugar": "campo", "objeto": "placa", "anim": "saludar_publico|aplaudir|celebrar", "camara": "frontal", "extra": "lluvia"},
-	"hierro": {"lugar": "campo", "objeto": "hierro", "anim": "brazos_jarra|idle", "camara": "travelling", "extra": ""},
+	"goleador_club": {"porte": "beso", "lugar": "campo", "objeto": "bota_plata", "anim": "besar_escudo|celebrar", "camara": "contrapicado", "extra": ""},
+	"mejor_club": {"porte": "pecho", "lugar": "campo", "objeto": "placa", "anim": "saludar_publico|aplaudir|celebrar", "camara": "frontal", "extra": "lluvia"},
+	"hierro": {"porte": "pecho", "lugar": "campo", "objeto": "hierro", "anim": "brazos_jarra|idle", "camara": "travelling", "extra": ""},
 	"duelo": {"lugar": "campo", "objeto": "guante_duelo", "anim": "puno_al_aire|celebrar_ls|celebrar", "camara": "contrapicado", "extra": ""},
-	"salto": {"lugar": "campo", "objeto": "flecha", "anim": "saltar|celebrar", "camara": "alta", "extra": ""},
-	"once_ideal": {"lugar": "gala", "objeto": "camiseta", "anim": "aplaudir|idle", "camara": "travelling", "extra": "flashes"},
-	"muro": {"lugar": "gala", "objeto": "guante", "anim": "puno_al_aire|celebrar", "camara": "frontal", "extra": "flashes"},
+	"salto": {"porte": "arriba", "lugar": "campo", "objeto": "flecha", "anim": "saltar|celebrar", "camara": "alta", "extra": ""},
+	"once_ideal": {"porte": "pecho", "lugar": "gala", "objeto": "camiseta", "anim": "aplaudir|idle", "camara": "travelling", "extra": "flashes"},
+	"muro": {"porte": "beso", "lugar": "gala", "objeto": "guante", "anim": "puno_al_aire|celebrar", "camara": "frontal", "extra": "flashes"},
 	"goleador_liga": {"lugar": "gala", "objeto": "bota", "anim": "aplauso_arriba|celebrar", "camara": "orbita", "extra": "flashes"},
-	"asistidor_liga": {"lugar": "gala", "objeto": "orbita", "anim": "saludar_publico|aplaudir", "camara": "travelling", "extra": "flashes"},
-	"portero_liga": {"lugar": "gala", "objeto": "guante", "anim": "besar_escudo|celebrar", "camara": "contrapicado", "extra": "flashes"},
+	"asistidor_liga": {"porte": "pecho", "lugar": "gala", "objeto": "orbita", "anim": "saludar_publico|aplaudir", "camara": "travelling", "extra": "flashes"},
+	"portero_liga": {"porte": "beso", "lugar": "gala", "objeto": "guante", "anim": "besar_escudo|celebrar", "camara": "contrapicado", "extra": "flashes"},
 	"mvp_liga": {"lugar": "gala", "objeto": "balon", "anim": "celebrar_ls|celebrar", "camara": "alta", "extra": "lluvia"},
 	"mvp_copa": {"lugar": "estadio", "objeto": "copa", "anim": "celebrar|saltar", "camara": "orbita", "extra": "lluvia"},
 	"mvp_continental": {"lugar": "estadio", "objeto": "continental", "anim": "celebrar_ls|celebrar", "camara": "contrapicado", "extra": "cohetes"},
@@ -64,7 +65,6 @@ static func salon(g: GalaPremio3D, raiz: Node3D, datos: Dictionary, club: Club, 
 	g._caja(raiz, Vector3(0, 0.3, -0.4), Vector3(11.0, 0.6, 4.6), g._mat(Color(0.09, 0.08, 0.11), 0.35))   ## el escenario
 	g._caja(raiz, Vector3(0, 0.62, 1.9), Vector3(11.0, 0.05, 0.05), g._mat(oro, 0.3, 1.6))
 	g._caja(raiz, Vector3(0, 3.2, -2.8), Vector3(12.0, 5.4, 0.1), g._mat(Color(0.16, 0.05, 0.08) if not mundial else Color(0.05, 0.07, 0.16), 0.8))   ## el telón
-	g._caja(raiz, Vector3(1.0, 1.15, 0.2), Vector3(0.5, 1.1, 0.4), g._mat(Color(0.12, 0.11, 0.14), 0.4))   ## el atril
 	_rotulo(raiz, titulo, Vector3(0, 4.9, -2.7), 1.25)
 	_rotulo(raiz, Nombres.visible(String(datos.get("liga", ""))) if not mundial else "", Vector3(0, 4.1, -2.7), 0.8)
 	if mundial:
@@ -174,3 +174,37 @@ static func confeti(g: GalaPremio3D, raiz: Node3D, c1: Color, c2: Color, extra: 
 	p.emitting = false
 	raiz.add_child(p)
 	return p
+
+## LOS FOTÓGRAFOS: delante del escenario, de espaldas a la cámara, unos agachados y otros de pie, cada uno con su
+## cámara y su flash. Devuelve las luces de los flashes. En la calidad mínima, dos.
+static func fotografos(g: GalaPremio3D, raiz: Node3D, spawner, club: Club, j: Jugador, suelo: float) -> Array[OmniLight3D]:
+	var luces: Array[OmniLight3D] = []
+	var modelos: Array = []
+	for o: Jugador in club.plantilla:   ## cuerpos de la plantilla (los últimos), vestidos de oscuro
+		if o != j:
+			modelos.push_front(o)
+	var n := mini(modelos.size(), 2 if Calidad.elegida <= Calidad.MINIMO else 4)
+	var negro := g._mat(Color(0.05, 0.05, 0.06), 0.4)
+	for k in n:
+		var agachado := k % 2 == 0
+		var x := -1.9 + float(k) * 1.25
+		var z := 3.3 + (0.0 if agachado else 0.9)
+		var pos := Vector3(x, 0.0 if suelo > 0.0 else 0.0, z)
+		g._jugador(raiz, spawner, modelos[k], pos, PI + (0.1 - x) * 0.12, "agachado|parado" if agachado else "parado|aplaudir", Color(0.09, 0.09, 0.11), Color(0.13, 0.13, 0.16), k * 0.3)
+		g.fotografos += 1
+		## La cámara, a la altura de la cara, y su flash.
+		var alto := 1.0 if agachado else 1.6
+		var cam := Node3D.new()
+		cam.position = pos + Vector3(0, alto, -0.3)
+		raiz.add_child(cam)
+		g._caja(cam, Vector3.ZERO, Vector3(0.17, 0.11, 0.09), negro)
+		g._caja(cam, Vector3(0, 0, -0.08), Vector3(0.08, 0.08, 0.1), negro)
+		g._caja(cam, Vector3(0.05, 0.075, 0), Vector3(0.05, 0.04, 0.05), g._mat(Color(0.9, 0.92, 1.0), 0.3, 2.0))
+		var luz := OmniLight3D.new()
+		luz.position = cam.position + Vector3(0, 0.1, -0.2)
+		luz.omni_range = 9.0
+		luz.light_energy = 0.0
+		luz.light_color = Color(0.95, 0.97, 1.0)
+		raiz.add_child(luz)
+		luces.append(luz)
+	return luces

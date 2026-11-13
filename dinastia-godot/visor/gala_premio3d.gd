@@ -7,21 +7,32 @@ extends FestejoCampo3D
 ## gala mundial), qué galardón te dan (hecho por código, `GalaObjetos`), cómo lo celebras y cómo se mueve la cámara.
 ## Lo que cambia con tu carrera: los colores y el escudo de tu club, la bandera del país de tu liga, el nombre de la liga y
 ## el del premio en el fondo, tus compañeros (los de tu plantilla) y las banderas de la gala mundial (las ligas de tu mundo).
-## La escena: entras caminando, te dan el galardón y lo celebras. Coste: tu jugador + 1 a 4 más, una grada o un patio de
+## La escena (13-11 noche, dueño: «que vaya a la copa, la tome de forma natural y celebre mientras le sacan fotos»):
+## caminas hasta el pedestal, alargas las DOS manos hacia el galardón (`TwoBoneIK3D` en cada brazo, con la influencia
+## subiendo de 0 a 1), lo levantas mientras te giras hacia las cámaras y lo celebras con él EN las manos; delante, los
+## fotógrafos (agachados y de pie) disparan sus flashes. Coste: tu jugador + 1 a 4 más, una grada o un patio de
 ## butacas en UNA llamada. Sin pantalla o en calidad mínima no se monta (`crear` devuelve null).
 
 var premio := ""
 var guion: Dictionary = {}
+var fotografos := 0   ## cuántos se montaron (lo lee la prueba)
 var _yo: Node3D
 var _yo_anim: AnimationPlayer
 var _objeto: Node3D
-var _atril := Vector3(1.0, 1.25, 0.2)
+var _pedestal := Vector3(0.7, 1.0, 0.2)   ## dónde espera el galardón (la y, sobre el suelo del lugar)
 var _suelo := 0.0
-var _fase := 0
-var _destellos: Array[OmniLight3D] = []
+var _fase := 0   ## 0 camina · 1 alarga las manos · 2 lo levanta y se gira · 3 lo celebra
+var _flashes: Array[OmniLight3D] = []
 var _confeti: CPUParticles3D
 var _esq: Skeleton3D
-var _mano := -1   ## el hueso de la mano derecha: el galardón va EN la mano y sube y baja con el gesto
+var _ik: SkeletonModifier3D
+var _mano_d: Node3D
+var _mano_i: Node3D
+
+const T_LLEGA := 2.4
+const T_AGARRA := 3.3
+const T_ARRIBA := 4.6
+const PARADO_EN := -0.02   ## donde te detienes, a un brazo del pedestal
 
 ## `datos`: {jugador, club, liga (nombre), pais (código), mundo}. Devuelve null sin pantalla.
 static func crear_gala(id: String, datos: Dictionary) -> GalaPremio3D:
@@ -74,50 +85,57 @@ func _montar_gala(datos: Dictionary, club: Club, j: Jugador) -> void:
 			_suelo = GalaGuiones.tarima(self, raiz, c1, titulo)
 		_:
 			_suelo = GalaGuiones.salon(self, raiz, datos, club, titulo, lugar == "mundo")
-	## Quien entrega: en el campo, tu capitán; en las galas, alguien de traje oscuro.
-	var entrega: Jugador = GalaGuiones.quien_entrega(club, j)
-	if entrega != null:
-		var traje := lugar in ["gala", "mundo"]
-		_jugador(raiz, spawner, entrega, Vector3(1.7, _suelo, 0.1), -PI * 0.5, "aplaudir|idle", Color(0.1, 0.11, 0.14) if traje else c1, Color(0.2, 0.2, 0.24) if traje else c2, 0.4)
-	## Tú: de gala en las galas (los colores del traje), con tu equipación en el césped.
 	var de_gala := lugar in ["gala", "mundo"]
-	_yo = _jugador(raiz, spawner, j, Vector3(-4.2, _suelo, 0.2), PI * 0.5, "caminar|trotar|idle", Color(0.07, 0.08, 0.11) if de_gala else c1, Color(0.16, 0.17, 0.21) if de_gala else c2)
+	## El pedestal con el galardón encima.
+	_pedestal.y += _suelo
+	_caja(raiz, Vector3(_pedestal.x, _suelo + 0.5, _pedestal.z), Vector3(0.42, 1.0, 0.42), _mat(Color(0.1, 0.1, 0.13), 0.35))
+	_caja(raiz, Vector3(_pedestal.x, _pedestal.y - 0.015, _pedestal.z), Vector3(0.48, 0.03, 0.48), _mat(Color(0.95, 0.78, 0.3), 0.3, 1.2))
+	_objeto = GalaObjetos.crear(String(guion["objeto"]), club)
+	_objeto.scale = Vector3.ONE * 1.35
+	_objeto.position = _pedestal
+	raiz.add_child(_objeto)
+	## Quien preside: en el campo, tu capitán; en las galas, alguien de oscuro. Aplaude a un lado.
+	var preside: Jugador = GalaGuiones.quien_entrega(club, j)
+	if preside != null:
+		_jugador(raiz, spawner, preside, Vector3(2.3, _suelo, -0.3), -PI * 0.3, "aplaudir|parado", Color(0.1, 0.11, 0.14) if de_gala else c1, Color(0.2, 0.2, 0.24) if de_gala else c2, 0.4)
+	## Tú: de oscuro en las galas, con tu equipación en el césped. Entras caminando hacia el pedestal.
+	_yo = _jugador(raiz, spawner, j, Vector3(-4.2, _suelo, _pedestal.z), PI * 0.5, "caminar|trotar", Color(0.07, 0.08, 0.11) if de_gala else c1, Color(0.16, 0.17, 0.21) if de_gala else c2)
 	var aps := _yo.find_children("*", "AnimationPlayer", true, false)
 	_yo_anim = aps[0] if not aps.is_empty() else null
 	var esqs := _yo.find_children("*", "Skeleton3D", true, false)
 	if not esqs.is_empty():
 		_esq = esqs[0]
-		for hueso: String in ["hand_r", "RightHand", "Hand.R", "mano_d"]:
-			if _mano < 0:
-				_mano = _esq.find_bone(hueso)
-		if _mano >= 0:   ## el galardón se coloca DESPUÉS de que la animación mueva el esqueleto (si no, va un fotograma por detrás de la mano)
-			_esq.skeleton_updated.connect(_seguir_mano)
+		_montar_brazos()
+	_flashes = GalaGuiones.fotografos(self, raiz, spawner, club, j, _suelo)
 	if spawner is Node:
 		(spawner as Node).queue_free()
-	_objeto = GalaObjetos.crear(String(guion["objeto"]), club)
-	_objeto.scale = Vector3.ONE * 1.35
-	_atril.y += _suelo
-	_objeto.position = _atril
-	raiz.add_child(_objeto)
 	_confeti = GalaGuiones.confeti(self, raiz, c1, c2, String(guion.get("extra", "")))
 	if String(guion.get("extra", "")) == "cohetes":
 		_cohetes(raiz, c1, c2)
-	if String(guion.get("extra", "")) == "flashes" or lugar in ["gala", "mundo"]:
-		for k in 3:
-			var o := OmniLight3D.new()
-			o.position = Vector3(-3.0 + k * 3.0, 1.6, 6.0)
-			o.omni_range = 11.0
-			o.light_energy = 0.0
-			raiz.add_child(o)
-			_destellos.append(o)
 	_cam = Camera3D.new()
 	_cam.fov = 38.0
 	_vp.add_child(_cam)
 	_colocar_camara()
 
-func _seguir_mano() -> void:
-	if _fase == 2 and _objeto != null:
-		_objeto.global_position = _esq.global_transform * _esq.get_bone_global_pose(_mano).origin + Vector3(0, 0.04, 0.06)
+## Los dos brazos con cinemática inversa hacia dos puntos del galardón (uno por mano). Empieza sin influencia.
+func _montar_brazos() -> void:
+	if _esq.find_bone("hand_r") < 0 or _esq.find_bone("hand_l") < 0 or not ClassDB.class_exists("TwoBoneIK3D"):
+		return
+	_mano_d = Node3D.new()
+	_mano_i = Node3D.new()
+	_objeto.add_child(_mano_d)
+	_objeto.add_child(_mano_i)
+	_ik = ClassDB.instantiate("TwoBoneIK3D")
+	_esq.add_child(_ik)
+	_ik.set("setting_count", 2)
+	var lados := [["r", _mano_d], ["l", _mano_i]]
+	for k in 2:
+		var lado := String(lados[k][0])
+		_ik.call("set_root_bone_name", k, "upperarm_" + lado)
+		_ik.call("set_middle_bone_name", k, "lowerarm_" + lado)
+		_ik.call("set_end_bone_name", k, "hand_" + lado)
+		_ik.call("set_target_node", k, _ik.get_path_to(lados[k][1]))
+	_ik.influence = 0.0
 
 func _pon_anim(nombres: String) -> void:
 	if _yo_anim == null:
@@ -128,50 +146,72 @@ func _pon_anim(nombres: String) -> void:
 			return
 
 func _colocar_camara() -> void:
-	var centro := Vector3(-0.6, _suelo + 1.3, 0.2)
-	var cerca := clampf((_t - 3.2) / 2.5, 0.0, 1.0)   ## tras la entrega, la cámara se acerca
+	var centro := Vector3(0.1, _suelo + 1.35, _pedestal.z)
+	var cerca := clampf((_t - T_AGARRA) / 2.5, 0.0, 1.0)   ## al levantarlo, la cámara se acerca (siempre por detrás de los fotógrafos)
 	var pos: Vector3
 	match String(guion.get("camara", "orbita")):
 		"frontal":
-			pos = Vector3(-0.6 + sin(_t * 0.25) * 0.6, _suelo + 1.6, lerpf(8.5, 4.6, cerca))
+			pos = Vector3(0.1 + sin(_t * 0.25) * 0.6, _suelo + 1.6, lerpf(9.0, 6.4, cerca))
 		"contrapicado":
-			pos = Vector3(-0.6 + sin(_t * 0.2) * 1.8, _suelo + 0.5, lerpf(7.0, 4.2, cerca))
-			centro.y += 0.3
+			pos = Vector3(0.1 + sin(_t * 0.2) * 1.8, _suelo + 0.7, lerpf(8.5, 6.2, cerca))
+			centro.y += 0.25
 		"travelling":
-			pos = Vector3(lerpf(-5.0, 2.5, clampf(_t / 9.0, 0.0, 1.0)), _suelo + 1.9, lerpf(8.0, 5.2, cerca))
+			pos = Vector3(lerpf(-4.5, 3.0, clampf(_t / 9.0, 0.0, 1.0)), _suelo + 1.9, lerpf(9.0, 6.6, cerca))
 		"alta":
-			pos = Vector3(sin(_t * 0.18) * 4.0, _suelo + lerpf(5.5, 2.6, cerca), lerpf(9.5, 5.5, cerca))
+			pos = Vector3(sin(_t * 0.18) * 3.5, _suelo + lerpf(5.0, 2.8, cerca), lerpf(10.0, 7.0, cerca))
 		_:
-			var ang := -0.5 + _t * 0.12
-			pos = Vector3(-0.6 + sin(ang) * lerpf(8.0, 5.0, cerca), _suelo + 2.0, cos(ang) * lerpf(8.0, 5.0, cerca))
+			var ang := -0.45 + _t * 0.1
+			pos = Vector3(0.1 + sin(ang) * lerpf(9.0, 6.6, cerca), _suelo + 2.0, cos(ang) * lerpf(9.0, 6.6, cerca))
 	_cam.transform = Transform3D(Basis(), pos).looking_at(centro, Vector3.UP)
+
+## Dónde llevas el galardón (su base), según cómo lo celebra este premio: arriba (sobre la cabeza), pecho o beso.
+func _porte(celebrando: float) -> Vector3:
+	var frente := Vector3(sin(_yo.rotation.y), 0, cos(_yo.rotation.y))
+	var pecho := _yo.position + Vector3(0, 1.12, 0) + frente * 0.42
+	match String(guion.get("porte", "arriba")):
+		"pecho":
+			return pecho + Vector3(0, 0.12 * celebrando + sin(_t * 2.0) * 0.03 * celebrando, 0)
+		"beso":
+			var sube := (sin(_t * 1.6) * 0.5 + 0.5) * celebrando
+			return pecho.lerp(_yo.position + Vector3(0, 1.42, 0) + frente * 0.3, sube)
+		_:
+			return pecho.lerp(_yo.position + Vector3(0, 1.66 + absf(sin(_t * 1.8)) * 0.12, 0) + frente * 0.22, celebrando)
 
 func _process(d: float) -> void:
 	if _cam == null or _yo == null:
 		return
 	_t += d
 	_colocar_camara()
-	## 0 → 2,2 s: entras; 2,2 → 3,4 s: te lo entregan; después, lo celebras a tu manera.
-	if _t < 2.2:
-		_yo.position.x = lerpf(-4.2, -0.6, _t / 2.2)
-	elif _fase == 0:
-		_fase = 1
-		_yo.position.x = -0.6
-		_yo.rotation.y = 0.0
-		_pon_anim("idle|aplaudir")
-	## Dónde lo llevas: en la mano derecha si el modelo la tiene (sube con el brazo); si no, delante del pecho.
-	var manos := _yo.position + Vector3(0.0, 1.25, 0.42)
-	if _esq != null and _mano >= 0:
-		manos = _esq.global_transform * _esq.get_bone_global_pose(_mano).origin + Vector3(0, 0.04, 0.06)
-	if _fase == 1:
-		_objeto.position = _atril.lerp(manos, clampf((_t - 2.2) / 1.2, 0.0, 1.0))
-		if _t >= 3.4:
-			_fase = 2
+	## Las manos van a los lados del galardón, a media altura.
+	if _mano_d != null:
+		var agarre := float(guion.get("agarre", 0.075))   ## en metros del galardón (va a escala 1,35): las palmas pegadas a sus lados
+		_mano_d.position = Vector3(-agarre, 0.2, 0.02)
+		_mano_i.position = Vector3(agarre, 0.2, 0.02)
+	if _t < T_LLEGA:   ## 0: camina hasta el pedestal
+		_yo.position.x = lerpf(-4.2, PARADO_EN, _t / T_LLEGA)
+	elif _t < T_AGARRA:   ## 1: se para y alarga las manos
+		if _fase == 0:
+			_fase = 1
+			_yo.position.x = PARADO_EN
+			_pon_anim("parado|aplaudir")
+		if _ik != null:
+			_ik.influence = smoothstep(0.0, 1.0, (_t - T_LLEGA) / (T_AGARRA - T_LLEGA))
+	elif _t < T_ARRIBA:   ## 2: lo levanta del pedestal y se gira hacia las cámaras
+		_fase = 2
+		var k := smoothstep(0.0, 1.0, (_t - T_AGARRA) / (T_ARRIBA - T_AGARRA))
+		_yo.rotation.y = lerpf(PI * 0.5, 0.0, k)
+		_objeto.position = _pedestal.lerp(_porte(0.0), k)
+		_objeto.rotation.y = _yo.rotation.y
+	else:   ## 3: lo celebra con él en las manos
+		if _fase != 3:
+			_fase = 3
+			_yo.rotation.y = 0.0
 			_pon_anim(String(guion["anim"]))
 			if _confeti != null:
 				_confeti.emitting = true
-	elif _fase == 2:
-		_objeto.position = manos
-		_objeto.rotation.y = sin(_t * 0.7) * 0.5
-	for k in _destellos.size():
-		_destellos[k].light_energy = maxf(0.0, 1.0 - fmod(_t + k * 0.83, 2.1) * 5.0) * (7.0 if _fase == 2 else 2.0)
+		_objeto.position = _porte(clampf((_t - T_ARRIBA) / 0.8, 0.0, 1.0))
+		_objeto.rotation.y = sin(_t * 0.7) * 0.25
+	## Los flashes: sueltos mientras llegas, en ráfaga cuando lo levantas.
+	for i in _flashes.size():
+		var ritmo := 1.1 if _fase >= 2 else 2.6
+		_flashes[i].light_energy = maxf(0.0, 1.0 - fmod(_t * (1.0 + i * 0.13) + i * 0.71, ritmo) * 9.0) * (9.0 if _fase >= 2 else 4.0)

@@ -1,7 +1,7 @@
 extends Node
 ## LAS ENTREGAS DE PREMIOS DE «LA RUTA» EN 3D (`GalaPremio3D`): monta la de CADA premio, cada una con un club de otro
 ## país (regla 34), la deja correr hasta la celebración y comprueba que hay jugadores 3D, galardón y cámara. Con
-## SALIDA=<carpeta> guarda una foto de cada una (a los 2 s, entrando, y a los 5 s, celebrando).
+## SALIDA=<carpeta> guarda una foto de cada una (a los 3 s, alargando las manos, y a los 6 s, celebrando).
 ##   xvfb-run -a godot --path . --rendering-driver vulkan --resolution 1280x720 res://pruebas/prueba_gala_premio.tscn
 var _fallos := 0
 
@@ -35,12 +35,13 @@ func _ready() -> void:
 			continue
 		g.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		add_child(g)
-		await get_tree().create_timer(2.0).timeout
+		await get_tree().create_timer(3.1).timeout
 		if salida != "":
 			await RenderingServer.frame_post_draw
 			get_viewport().get_texture().get_image().save_jpg("%s/gala_%02d_%s_a.jpg" % [salida, k, id], 0.88)
-		await get_tree().create_timer(3.2).timeout
-		_comprobar(g.jugadores >= 2 and g._objeto != null and g._fase == 2, "  %d jugadores 3D, galardón «%s» y ya lo celebra" % [g.jugadores, g.guion["objeto"]])
+		await get_tree().create_timer(3.0).timeout
+		_comprobar(g.jugadores >= 2 and g._objeto != null and g._fase == 3 and g.fotografos >= 2, "  %d jugadores 3D (%d fotógrafos), galardón «%s» y ya lo celebra" % [g.jugadores, g.fotografos, g.guion["objeto"]])
+		_comprobar(g._ik != null and g._ik.influence > 0.9 and g._objeto.position.distance_to(g._pedestal) > 0.4, "  lo tomó del pedestal con las dos manos")
 		if salida != "":
 			await RenderingServer.frame_post_draw
 			get_viewport().get_texture().get_image().save_jpg("%s/gala_%02d_%s_b.jpg" % [salida, k, id], 0.88)
