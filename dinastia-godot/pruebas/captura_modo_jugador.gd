@@ -2,7 +2,7 @@ extends Node
 ## EL MODO JUGADOR («La Ruta»), EN FOTOS (13-11-2026): la creación, las tres
 ## ofertas, Hoy recién firmado, el mini juego del entreno, el resumen de un
 ## partido y, tras simular unas semanas, Hoy, Yo y Ruta. Fuera del repo, en JPG.
-##   SALIDA=<carpeta> [PUESTO=MC] [NOMBRE=…] [SEMANAS=6] [OFERTA=0..2] [PREFIJO=…] [MOVIL=1] [TEMPORADA=1] [BOTAS=1] [IDIOMA=en] xvfb-run -a godot --path . \
+##   SALIDA=<carpeta> [PUESTO=MC] [NOMBRE=…] [SEMANAS=6] [OFERTA=0..2] [PREFIJO=…] [MOVIL=1] [TEMPORADA=1] [BOTAS=1] [IDIOMA=en] [AVANZADA=1] xvfb-run -a godot --path . \
 ##     --rendering-driver vulkan --resolution 1280x720 res://pruebas/captura_modo_jugador.tscn
 var _n := 0
 var _ui: CarreraJugadorUI
@@ -101,6 +101,39 @@ func _process(_d: float) -> void:
 			while OS.get_environment("TEMPORADA") == "1" and m.temporada_en_curso() and tope > 0:
 				_ui._cerrar_semana({})
 				tope -= 1
+			## AVANZADA=1: una carrera a medio camino (nivel 16, talentos, compras, botas, premios, dos temporadas).
+			if OS.get_environment("AVANZADA") == "1":
+				var j := c.jugador(m)
+				c.ruta["nivel"] = 16
+				c.ruta["xp"] = 640
+				c.ruta["puntos"] = 1
+				c.ruta["talentos"] = {"instinto": true, "pulmones": true, "carisma": true, "portada": true, "ejemplo": true}
+				c.ruta["vida"] = {"gimnasio": true, "fisio": true, "coche": true}
+				c.ruta["ahorros"] = j.sueldo * 17
+				c.ruta["patro"] = {"marca": "roca", "nivel": 2}
+				c.ruta["premios"] = [{"anio": m.anio - 2, "id": "revelacion"}, {"anio": m.anio - 2, "id": "hierro"}, {"anio": m.anio - 1, "id": "goleador_club"},
+					{"anio": m.anio - 1, "id": "duelo"}, {"anio": m.anio - 1, "id": "hierro"}, {"anio": m.anio - 1, "id": "once_ideal"}]
+				c.ruta["misiones_hechas"] = {"Promesa": true, "Revelación": true, "Indiscutible": true}
+				c.ruta["duelos_ganados"] = 1
+				c.ruta["mejor_racha"] = 6
+				c.ruta["racha"] = 3
+				c.temporadas = [{"anio": m.anio - 2, "club": "Lautaro FC", "pj": 31, "goles": 9, "asist": 4, "nota": 6.62, "ovr": 66},
+					{"anio": m.anio - 1, "club": c.club(m).nombre, "pj": 36, "goles": 17, "asist": 8, "nota": 7.21, "ovr": 73}]
+				c.clubes_pasados = ["Lautaro FC"]
+				c.pj_carrera = 78
+				c.goles_carrera = 31
+				c.caps = 4
+				c.fama = 58
+				c.ruta["fama_ref"] = 58
+				c.seguidores = 48200
+				c.relacion_dt = 74
+				c.energia = 71
+				c.capitan = true
+				c.agente = "Agente propio"
+				for k: String in j.atributos:
+					j.atributos[k] = mini(92, int(j.atributos[k]) + 14)
+				j.ovr = j.media_en(j.pos_e)
+				j.edad = 20
 			if OS.get_environment("TEMPORADA") == "1" and c.ruta.get("temporada") is Dictionary:
 				(c.ruta["temporada"] as Dictionary)["visto"] = false
 			_ui._pintar_semana()

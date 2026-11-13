@@ -147,8 +147,6 @@ static func enfocar(raiz: Node) -> void:
 		hallado = primero
 	if hallado != null:
 		hallado.grab_focus.call_deferred()
-	for sc: Node in raiz.find_children("*", "ScrollContainer", true, false):
-		(sc as ScrollContainer).follow_focus = true
 	## El cableado necesita las posiciones: dos fotogramas después de pintar.
 	if raiz.is_inside_tree():
 		var arbol := raiz.get_tree()
@@ -162,6 +160,9 @@ static func enfocar(raiz: Node) -> void:
 ## llegaba a lo de abajo (sonda `sonda_foco_ruta`).
 static func cablear(raiz: Node) -> void:
 	for sc: Node in raiz.find_children("*", "ScrollContainer", true, false):
+		## Seguir al foco solo desde ahora: puesto al pintar, el foco inicial
+		## desplazaba la columna y tapaba la cabecera de la tarjeta.
+		(sc as ScrollContainer).follow_focus = true
 		var botones: Array = []
 		for n: Node in sc.find_children("*", "Button", true, false):
 			var b := n as Button
