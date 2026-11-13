@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/varios_p12.gd"
-## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos, _probar_mundo_abandonado, _probar_fila_portadas_sigue_foco, _probar_museo_por_titulos, _probar_funciones_puras_ui
+## [Capa 13 de `varios.gd`, 10-11] _probar_finalissima, _probar_estadios_variedad, _probar_socios_cabecera, _probar_pie_mando, _probar_solo_primera_persona, _probar_piel_paises_nuevos, _probar_mundo_abandonado, _probar_fila_portadas_sigue_foco, _probar_museo_por_titulos, _probar_funciones_puras_ui, _probar_mallas_grada_minima
 
 ## (10-11) La FINALISSIMA: campeón de Europa contra campeón de América, el año de los dos torneos, sin tocar el azar del juego.
 func _probar_finalissima() -> void:
@@ -432,3 +432,18 @@ func _buscar_gd(dir: String, sal: PackedStringArray) -> void:
 	for f: String in d.get_files():
 		if f.ends_with(".gd") and rs.search(f) == null:
 			sal.append(dir.path_join(f))
+
+## (13-11) Las mallas de grada de MÍNIMA: menos triángulos que antes (butaca 28, público 16) y TODAS las caras hacia fuera (giro horario visto desde fuera; si no, se ven huecas).
+func _probar_mallas_grada_minima() -> void:
+	_titulo("MALLAS DE GRADA DE MÍNIMA: TRIÁNGULOS Y CARAS HACIA FUERA")
+	for caso: Array in [["butaca", MallasGradaMinima.butaca(), 28], ["público", MallasGradaMinima.hincha(), 16]]:
+		var arr: Array = (caso[1] as Mesh).surface_get_arrays(0)
+		var v: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+		var n: PackedVector3Array = arr[Mesh.ARRAY_NORMAL]
+		var mal := 0
+		for t in v.size() / 3:
+			var cruz := (v[t * 3 + 1] - v[t * 3]).cross(v[t * 3 + 2] - v[t * 3])
+			if cruz.dot(n[t * 3]) >= 0.0 or cruz.length() < 0.0001:
+				mal += 1
+		_comprobar(v.size() / 3 == int(caso[2]), "%s: %d triángulos (esperados %d)" % [caso[0], v.size() / 3, int(caso[2])])
+		_comprobar(mal == 0, "%s: ningún triángulo del revés ni degenerado (%d)" % [caso[0], mal])

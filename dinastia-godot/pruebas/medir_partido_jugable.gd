@@ -119,6 +119,12 @@ func _llamadas() -> int:
 	return int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
 
 func _medir() -> void:
+	if OS.get_environment("CAPTURA") != "":
+		## (13-11) CAPTURA=ruta.jpg: la imagen de la cámara real del partido (con pantalla), para comparar antes/después de un cambio visual.
+		await get_tree().process_frame
+		get_viewport().get_texture().get_image().save_jpg(OS.get_environment("CAPTURA"), 0.92)
+		get_tree().quit()
+		return
 	if OS.get_environment("CPU") == "":
 		## Escena CONGELADA (cámara, jugadores y balón quietos): los conteos entre dos ocultaciones se comparan sin deriva (en marcha, las llamadas bailan entre 400 y 700 según el momento).
 		_pj.set_process(false)
@@ -126,7 +132,54 @@ func _medir() -> void:
 		_pj.motor.set_physics_process(false)
 		for h in _pj.get_children():
 			h.set_process(false)
+	if OS.get_environment("MESH_LOD") != "":
+		_pj._vp.mesh_lod_threshold = float(OS.get_environment("MESH_LOD"))   ## (13-11) umbral de LOD del viewport del partido, para comparar
 	await _conteos("base")
+	if OS.get_environment("ROTULOS") != "":
+		## (13-11) ROTULOS=1: distancia de cada Label3D a la cámara del partido, por padre (mínima y máxima) y cuántos hay.
+		var dist := {}
+		for l in _pj.find_children("*", "Label3D", true, false):
+			var lab := l as Label3D
+			if not lab.is_visible_in_tree():
+				continue
+			var d := _pj._cam.global_position.distance_to(lab.global_position)
+			var kp := String(lab.get_parent().name).rstrip("0123456789@_-") + (" [con rango %.0f]" % lab.visibility_range_end if lab.visibility_range_end > 0.0 else "")
+			var f: Array = dist.get(kp, [0, 1e9, 0.0])
+			f[0] += 1; f[1] = minf(f[1], d); f[2] = maxf(f[2], d)
+			dist[kp] = f
+		for k in dist:
+			print("ROTULO x%-3d dist %5.0f–%5.0f m  %s" % [dist[k][0], dist[k][1], dist[k][2], k])
+		get_tree().quit()
+		return
+	if OS.get_environment("MULTI") != "":
+		## (13-11) MULTI=1: triángulos de cada MultiMesh del partido (instancias dibujadas × triángulos de su malla), por nombre.
+		var por := {}
+		for mm in _pj.find_children("*", "MultiMeshInstance3D", true, false):
+			var m := mm as MultiMeshInstance3D
+			if m.multimesh == null or m.multimesh.mesh == null or not m.is_visible_in_tree():
+				continue
+			var n_i := m.multimesh.visible_instance_count if m.multimesh.visible_instance_count >= 0 else m.multimesh.instance_count
+			var tri := 0
+			for si in m.multimesh.mesh.get_surface_count():
+				var arr := m.multimesh.mesh.surface_get_arrays(si)
+				tri += (arr[Mesh.ARRAY_INDEX] as PackedInt32Array).size() / 3 if arr[Mesh.ARRAY_INDEX] != null else (arr[Mesh.ARRAY_VERTEX] as PackedVector3Array).size() / 3
+			var k := String(m.name).rstrip("0123456789@_")
+			var f: Array = por.get(k, [0, 0, 0])
+			f[0] += 1; f[1] += n_i; f[2] += n_i * tri
+			por[k] = f
+		var ks := por.keys()
+		ks.sort_custom(func(x, y) -> bool: return por[x][2] > por[y][2])
+		for k in ks.slice(0, 20):
+			print("MULTI x%-3d instancias=%-7d triángulos=%-8d %s" % [por[k][0], por[k][1], por[k][2], k])
+		get_tree().quit()
+		return
+	if OS.get_environment("LOD_BARRIDO") != "":
+		## (13-11) LOD_BARRIDO=1: sobre la MISMA escena congelada, triángulos y llamadas para cada umbral de LOD (cámara y momento fijos, sin ruido).
+		for u in [1.0, 3.0, 6.0, 12.0, 24.0, 48.0, 96.0, 200.0]:
+			_pj._vp.mesh_lod_threshold = u
+			await _conteos("LOD=%.0f" % u)
+		get_tree().quit()
+		return
 	if OS.get_environment("LUCES") != "":
 		var por := {}
 		for l in _pj.find_children("*", "Light3D", true, false):
@@ -185,17 +238,25 @@ func _medir() -> void:
 	if OS.get_environment("POR_HIJO") != "":
 		## POR_HIJO=1 (12-11): cuántas llamadas pesa cada hijo de la escena 3D (se oculta uno, se cuenta y se vuelve a mostrar).
 		var base_ll: int = await _llamadas()
+		var base_tr := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
 		var filas: Array = []
 		for h in _pj._raiz.get_children():
 			if not (h is Node3D) or not (h as Node3D).visible:
 				continue
 			(h as Node3D).visible = false
 			var ll: int = await _llamadas()
+			var tr := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
 			(h as Node3D).visible = true
-			filas.append([base_ll - ll, "%s (%s, %d hijos)" % [h.name, h.get_class(), h.get_child_count()]])
-		filas.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])
+			var info := ""
+			if h is MeshInstance3D and (h as MeshInstance3D).mesh != null:
+				var m := (h as MeshInstance3D).mesh
+				info = " mesh=%s «%s» sup=%d aabb=%s" % [m.get_class(), m.resource_name, m.get_surface_count(), str(m.get_aabb().size.snapped(Vector3.ONE))]
+			if h.get_child_count() > 0:
+				info += " 1.er hijo=%s/%s" % [h.get_child(0).name, h.get_child(0).get_class()]
+			filas.append([base_ll - ll, "%s (%s, %d hijos)%s" % [h.name, h.get_class(), h.get_child_count(), info], base_tr - tr])
+		filas.sort_custom(func(a: Array, b: Array) -> bool: return a[2] > b[2])   ## (13-11) ordenado por triángulos; se informan los dos
 		for f: Array in filas.slice(0, 25):
-			print("HIJO -%4d  %s" % [f[0], f[1]])
+			print("HIJO -%4d llamadas  -%7d triángulos  %s" % [f[0], f[2], f[1]])
 		get_tree().quit()
 		return
 	if OS.get_environment("CONTEO") != "":
