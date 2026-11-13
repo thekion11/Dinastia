@@ -10,12 +10,21 @@ var vallas_invictas := 0
 ## entrenar: mejora de atributo y 14 de energía por cada intento (se podían farmear atributos abandonando partidos). La semana absoluta (año × 60 + semana) y el mensaje se guardan.
 var entreno_semana := -1
 var entreno_msg := ""
+## «LA RUTA» (13-11): nivel, talentos, retos, racha, rival y grada (`CarreraRuta`).
+var ruta := {}
 
 func entrenar(m: Mundo) -> String:
 	var ahora := m.anio * 60 + m.semana
 	if entreno_semana == ahora:
 		return entreno_msg
+	var j := jugador(m)
+	var tabla := CarreraPortero.focos_para(j) if j != null else {}
+	var attr := String((tabla.get(foco, ["", ""]) as Array)[1]) if foco != "descanso" else ""
+	var antes := int(j.atributos.get(attr, 0)) if j != null else 0
 	entreno_msg = super(m)
+	var plus := CarreraRuta.tras_entreno(self, m, attr, j != null and int(j.atributos.get(attr, 0)) > antes)
+	if plus != "":
+		entreno_msg = "%s %s" % [plus, Idiomas.t("%s sube a %d.") % [Idiomas.t(String(tabla[foco][0])), int(j.atributos[attr])]]
 	entreno_semana = ahora
 	return entreno_msg
 
@@ -32,6 +41,7 @@ func semana(m: Mundo) -> Array:
 	if ovr_inicio < 0:
 		ovr_inicio = j.ovr
 	revisar_convocatoria(m)
+	CarreraRuta.semana(self, m)
 	var ahora := m.anio * 60 + m.semana
 	var pool := _eventos_posibles(m, j).filter(func(e: Dictionary) -> bool:
 		return ahora - int(ultima_vez.get(String(e["id"]), -99)) >= 5)
@@ -46,7 +56,7 @@ func semana(m: Mundo) -> Array:
 	if fama >= 30 and _rng.randf() < 0.08 + float(fama) / 600.0:
 		var destino := _club_interesado(m, j)
 		if destino != null:
-			ofertas.append({"club_id": destino.id, "sueldo": int(float(j.sueldo) * 1.6), "semanas": 3})
+			ofertas.append({"club_id": destino.id, "sueldo": int(float(j.sueldo) * (2.1 if CarreraRuta.tiene(self, "marca") else 1.6)), "semanas": 3})
 	for o: Dictionary in ofertas:
 		o["semanas"] = int(o["semanas"]) - 1
 	ofertas = ofertas.filter(func(o: Dictionary) -> bool: return int(o["semanas"]) > 0)
@@ -93,7 +103,9 @@ func resolver(m: Mundo, indice: int, opcion: int) -> String:
 	var ef: Dictionary = o["efectos"]
 	var j := jugador(m)
 	fama = clampi(fama + int(ef.get("fama", 0)), 0, 100)
-	relacion_dt = clampi(relacion_dt + int(ef.get("relacion", 0)), 0, 100)
+	var rel := int(ef.get("relacion", 0))
+	relacion_dt = clampi(relacion_dt + (maxi(rel, -2) if CarreraRuta.tiene(self, "voz") else rel), 0, 100)
+	CarreraRuta.sumar_xp(self, CarreraRuta.XP_DECISION)
 	energia = clampi(energia + int(ef.get("energia", 0)), 0, ENERGIA_MAX)
 	seguidores = maxi(0, seguidores + int(ef.get("seguidores", 0)))
 	if j != null:
@@ -188,10 +200,12 @@ func tras_partido(m: Mundo, d: Dictionary) -> void:
 		j.asistencias += int(d.get("asist", 0))
 		j.partidos += 1
 		j.anotar_nota(nota)
+	CarreraRuta.tras_partido(self, m, d)
 
 ## Cierra la temporada: la guarda en tu historial y cumples un año.
 func fin_de_temporada(m: Mundo) -> void:
 	var c := club(m)
+	CarreraRuta.cerrar_duelo(self, m)
 	temporadas.append({"anio": m.anio, "club": c.nombre if c != null else "", "pj": int(stats_temp["pj"]),
 		"goles": int(stats_temp["goles"]), "asist": int(stats_temp["asist"]), "nota": snappedf(nota_media(), 0.01),
 		"ovr": jugador(m).ovr if jugador(m) != null else 0})
@@ -328,7 +342,7 @@ func a_dic() -> Dictionary:
 		"convocatoria": convocatoria, "capitan": capitan, "licencia": licencia,
 		"retiro_anunciado": retiro_anunciado, "retirado": retirado, "clubes_pasados": clubes_pasados,
 		"agenda": agenda, "racha_social": racha_social, "ovr_inicio": ovr_inicio, "vallas_invictas": vallas_invictas,
-		"entreno_semana": entreno_semana, "entreno_msg": entreno_msg}
+		"entreno_semana": entreno_semana, "entreno_msg": entreno_msg, "ruta": ruta}
 
 ## (4-11, caza de fallos) Un guardado dañado o a mano con el tipo equivocado (texto donde va un diccionario) reventaba al CARGAR la carrera: se usa el valor por omisión.
 static func _tipo(d: Dictionary, clave: String, defecto: Variant) -> Variant:
@@ -385,4 +399,6 @@ static func desde_dic(d: Dictionary) -> CarreraJugador:
 	c.vallas_invictas = int(d.get("vallas_invictas", 0))
 	c.entreno_semana = int(d.get("entreno_semana", -1))
 	c.entreno_msg = String(d.get("entreno_msg", ""))
+	c.ruta = _tipo(d, "ruta", {})
+	CarreraRuta.asegurar(c)
 	return c

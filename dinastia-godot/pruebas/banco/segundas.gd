@@ -229,3 +229,74 @@ func _probar_segundas_pbt() -> void:
 		var suben := (resumen["suben"] as Array).filter(func(c: Club) -> bool: return c.pais == pais).size()
 		var bajan := (resumen["bajan"] as Array).filter(func(c: Club) -> bool: return c.pais == pais).size()
 		_comprobar(suben == bajan and suben == int(esperado[pais][2]), "%s: suben %d y bajan %d" % [pais, suben, bajan])
+
+## «LA RUTA» DEL MODO JUGADOR (13-11): nivel, talentos, retos, racha, rival,
+## toque del entreno y el club elegido al empezar. Con tres países y puestos.
+func _probar_carrera_ruta() -> void:
+	_titulo("LA RUTA DEL MODO JUGADOR (nivel, talentos, retos, racha y rival)")
+	for caso: Array in [[["ARG", "ESP", "ITA"], "DC", 11], [["GER", "BRA", "FRA"], "DFC", 22], [["ENG", "CHI", "ESP"], "POR", 33]]:
+		var m := Mundo.new()
+		var lista: Array[String] = []
+		lista.assign(caso[0])
+		m.generar(lista, int(caso[2]))
+		m.mi_club_id = ""
+		var c := CarreraJugador.crear(m, "Prueba Ruta", String(caso[1]), false, int(caso[2]))
+		m.carrera_jugador = c
+		var ofertas := CarreraRuta.pruebas(m, int(caso[2]))
+		var paises := {}
+		for cl: Club in ofertas:
+			paises[cl.pais] = true
+		_comprobar(ofertas.size() == 3 and paises.size() == 3, "%s: tres clubes de tres países te ofrecen contrato" % caso[1])
+		CarreraRuta.mudar(c, m, ofertas[2])
+		var j := c.jugador(m)
+		_comprobar(c.club(m) == ofertas[2] and j.pais == ofertas[2].pais, "  empiezas en el club elegido (%s, %s)" % [ofertas[2].nombre, ofertas[2].pais])
+		var rv := CarreraRuta.rival(c, m)
+		_comprobar(rv != null and rv.pos == j.pos and rv.club_id != j.club_id, "  tu rival es de tu línea y de otro club de tu liga")
+		var retos := CarreraRuta.retos(c, m)
+		_comprobar(retos.size() == 3 and CarreraRuta.retos(c, m) == retos, "  tres retos por semana, y no cambian al volver a mirar")
+		for reto: Dictionary in retos:
+			_comprobar((CarreraRuta.RETOS[String(reto["id"])][2] as Array).has(j.pos), "  el reto «%s» es de tu línea" % CarreraRuta.RETOS[String(reto["id"])][0])
+		## Un partidazo: cumple lo que se pueda y da experiencia.
+		var antes_nivel := CarreraRuta.nivel(c)
+		c.tras_partido(m, {"minutos": 90, "goles": 2, "asist": 1, "nota": 8.6, "titular": true, "encajados": 0, "paradas": 4})
+		var ult: Dictionary = c.ruta["ultimo"]
+		var hechos := 0
+		for h: Dictionary in ult["retos"]:
+			hechos += 1 if bool(h["hecho"]) else 0
+		_comprobar(hechos == 3 and int(ult["xp"]) > 60, "  con un partidazo se cumplen los tres retos (%d de experiencia)" % int(ult["xp"]))
+		_comprobar(CarreraRuta.nivel(c) > antes_nivel and int(c.ruta["puntos"]) >= 1, "  subes de nivel y ganas un punto de talento")
+		_comprobar(int(c.ruta["racha"]) == 1, "  empieza la racha")
+		var xp0 := int(c.ruta["xp"]) + CarreraRuta.nivel(c) * 1000
+		c.tras_partido(m, {"minutos": 90, "goles": 2, "asist": 1, "nota": 8.6, "titular": true, "encajados": 0, "paradas": 4})
+		_comprobar(int(c.ruta["xp"]) + CarreraRuta.nivel(c) * 1000 > xp0, "  los retos ya cumplidos no se cobran dos veces, pero el partido sí da")
+		for h2: Dictionary in (c.ruta["ultimo"] as Dictionary)["retos"]:
+			_comprobar(not bool(h2["hecho"]), "  (reto repetido sin premio)")
+		c.tras_partido(m, {"minutos": 90, "goles": 0, "asist": 0, "nota": 5.0, "titular": true, "encajados": 3})
+		_comprobar(int(c.ruta["racha"]) == 0 and int(c.ruta["mejor_racha"]) == 2, "  un mal partido corta la racha (la mejor queda en 2)")
+		## Talentos: en cadena dentro de la rama.
+		_comprobar(not CarreraRuta.puede_aprender(c, "pulmones"), "  el segundo talento de una rama pide el primero")
+		c.ruta["puntos"] = 3
+		_comprobar(CarreraRuta.aprender(c, m, "ejemplo") and CarreraRuta.aprender(c, m, "voz") and CarreraRuta.aprender(c, m, "brazalete"), "  se aprende la rama Líder entera")
+		_comprobar(c.capitan and int(c.ruta["puntos"]) == 0 and not CarreraRuta.aprender(c, m, "instinto"), "  el brazalete te hace capitán y sin puntos no hay más talentos")
+		var rel := c.relacion_dt
+		CarreraRuta.semana(c, m)
+		_comprobar(c.relacion_dt == mini(100, rel + 1), "  «Ejemplo» suma relación con el DT cada semana")
+		## El toque del entreno: perfecto = mejora asegurada; una vez por semana.
+		c.foco = CarreraPortero.focos_para(j).keys()[0]
+		var attr := String(CarreraPortero.focos_para(j)[c.foco][1])
+		_comprobar(CarreraRuta.anotar_toque(c, m, 1.0) and not CarreraRuta.anotar_toque(c, m, 0.2), "  el toque se anota una vez por semana")
+		var v0 := int(j.atributos[attr])
+		c.entrenar(m)
+		_comprobar(int(j.atributos[attr]) == v0 + 1, "  con toque perfecto el entreno mejora seguro (%s %d → %d)" % [attr, v0, int(j.atributos[attr])])
+		c.entrenar(m)
+		_comprobar(int(j.atributos[attr]) == v0 + 1, "  y no se entrena dos veces la misma semana")
+		## Guardar y cargar conserva la ruta.
+		var c2 := CarreraJugador.desde_dic(JSON.parse_string(JSON.stringify(c.a_dic())))
+		_comprobar(CarreraRuta.nivel(c2) == CarreraRuta.nivel(c) and CarreraRuta.tiene(c2, "voz") and (c2.ruta["grada"] as Array).size() == (c.ruta["grada"] as Array).size(),
+			"  la ruta se guarda y se carga igual")
+		_comprobar(CarreraRuta.texto_grada((c2.ruta["grada"] as Array)[0]) != "", "  la grada tiene algo que decir")
+		## El duelo de la temporada.
+		c.stats_temp["goles"] = 30
+		var d := CarreraRuta.duelo(c, m)
+		_comprobar(int(d[0]) > int(d[1]) and CarreraRuta.cerrar_duelo(c, m) and int(c.ruta["duelos_ganados"]) == 1, "  con 30 goles le ganas el duelo a tu rival")
+	Partido.limpiar_contexto()
