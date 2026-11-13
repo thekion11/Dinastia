@@ -223,29 +223,6 @@ func _actualizar_luz_sectores() -> void:
 		_casas_mat.set_shader_parameter("luz_sectores", textura_luz)
 		_casas_mat.set_shader_parameter("usa_sectores", true)
 
-## `luz`: la máscara de las ventanas encendidas (blanco = ventana, unas sí y
-## otras no) para la emisión nocturna.
-func _textura_ventanas(luz: bool = false) -> ImageTexture:
-	var img := Image.create(64, 64, false, Image.FORMAT_RGB8)
-	img.fill(Color(0, 0, 0) if luz else Color(1, 1, 1))
-	if luz:
-		var rr := RandomNumberGenerator.new()
-		rr.seed = 99
-		for vy in 4:
-			for vx in 4:
-				if rr.randf() < 0.35:
-					for y in range(vy * 16 + 4, vy * 16 + 12):
-						for x in range(vx * 16 + 4, vx * 16 + 13):
-							img.set_pixel(x, y, Color(1, 1, 1))
-		return ImageTexture.create_from_image(img)
-	for y in 64:
-		for x in 64:
-			var vx := (x % 16) >= 4 and (x % 16) < 13
-			var vy := (y % 16) >= 4 and (y % 16) < 12
-			if vx and vy:
-				img.set_pixel(x, y, Color(0.35, 0.45, 0.55))
-	return ImageTexture.create_from_image(img)
-
 ## El recorrido por el carril derecho de un circuito de esquinas.
 func _carril(esquinas: Array, sentido: float) -> PackedVector3Array:
 	var pts := PackedVector3Array()

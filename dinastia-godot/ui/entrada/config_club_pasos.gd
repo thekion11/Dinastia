@@ -270,21 +270,3 @@ func _color_kit(i: int, h: String) -> void:
 func _mini_kit(estilo: String) -> Texture2D:
 	var cols := DisenosKit.colores(kit_previa())
 	return DisenosKit.textura_camiseta(estilo, cols, 1, 64)
-
-## EL DISEÑADOR COMPLETO, sobre el club de mentira. `DisenadorKit` trabaja con
-## `mundo.mi_club()`: se le da un mundo vacío que solo tiene ese club y, al
-## cerrar, `Mundo.actual()` vuelve a ser el de antes (crear un mundo lo cambia).
-func _abrir_disenador() -> void:
-	var antes := Mundo.actual()
-	var m := Mundo.new()
-	m.clubes[datos.club.id] = datos.club
-	m.mi_club_id = datos.club.id
-	var dz := DisenadorKit.abrir(self, m)
-	dz.cerrado.connect(func() -> void:
-		m.clubes.clear()
-		if antes != null:
-			Mundo._ultimo = weakref(antes)
-		for k: String in ["escudo_tex", "marca", "sp"]:
-			datos.club.kit_x.erase(k)
-		_cambio_colores()
-		_pintar_paso())
