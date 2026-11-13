@@ -30,15 +30,18 @@ static func _seleccion(ui: Variant) -> Control:
 	var v := E.columna(6)
 	p.add_child(v)
 	v.add_child(E.rotulo("🌎 FECHA FIFA · ¡CONVOCADO!", E.ORO))
-	v.add_child(E.titulo(30, E.TEXTO, "%s  vs  %s" % [String(c.convocatoria["nombre"]), String(c.convocatoria["rival"])]))
+	v.add_child(E.titulo(30, E.TEXTO, "%s  vs  %s" % [Idiomas.t(String(c.convocatoria["nombre"])), Idiomas.t(String(c.convocatoria["rival"]))]))
 	v.add_child(E.lbl(13, E.SUAVE, Idiomas.t("Partidos con la selección: %d  ·  goles: %d") % [c.caps, c.goles_sel], true))
-	var f := E.fila(8)
+	## En el teléfono los tres botones van uno bajo otro: en fila ensanchaban toda la pantalla (francés, alemán).
+	var f := E.reparto(E.estrecho(ui), 8)
 	v.add_child(f)
 	var b := E.boton("🎮  JUGAR CON LA SELECCIÓN", E.ORO, ui._jugar_seleccion, 48, true)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	f.add_child(b)
-	f.add_child(E.boton("⚡  LOS MOMENTOS", E.MENTA, ui._momentos_seleccion, 48))
-	f.add_child(E.boton("⏩  Simular", E.CIELO, ui._simular_seleccion, 48))
+	for bs: Button in [E.boton("⚡  LOS MOMENTOS", E.MENTA, ui._momentos_seleccion, 48), E.boton("⏩  Simular", E.CIELO, ui._simular_seleccion, 48)]:
+		if E.estrecho(ui):
+			bs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		f.add_child(bs)
 	return p
 
 static func _equipo(cl: Club, derecha: bool, angosto := false) -> Control:

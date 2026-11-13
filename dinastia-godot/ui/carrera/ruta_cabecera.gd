@@ -26,6 +26,8 @@ static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
 	## Con el aviso «SIN PIERNAS» al lado la línea larga se corta a 1280: va la corta.
 	if angosto or ui.get_viewport_rect().size.x < (1500.0 if c.energia < 30 else 1000.0):
 		texto = Idiomas.t("%s · %d años · sem. %d") % [j.pos_e, j.edad, m.semana]
+	if angosto and c.energia < 30:   ## en el teléfono, con el aviso al lado, solo cabe lo justo
+		texto = "%s · %d" % [j.pos_e, j.edad]
 	var datos := E.lbl(13, E.SUAVE, texto, true)
 	datos.clip_text = true
 	datos.size_flags_horizontal = Control.SIZE_EXPAND_FILL
