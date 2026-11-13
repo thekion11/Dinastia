@@ -363,7 +363,10 @@ func _cam_grupos(c: Club, v: Vestuario) -> void:
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		cab.add_child(nom)
 		var et2 := p._texto(11, estado_col)
-		et2.text = estado_txt
+		et2.text = Idiomas.t(estado_txt)
+		var aire := StyleBoxEmpty.new()   ## (13-11) la barra de desplazamiento cortaba «neutrales» / «enojados»
+		aire.content_margin_right = 12
+		et2.add_theme_stylebox_override("normal", aire)
 		cab.add_child(et2)
 		var lid := p._texto(11, p.COL_SUAVE)
 		lid.text = Idiomas.t("Líder: %s  ·  %s") % [lider.nombre if lider else "—", ", ".join(nombres)]

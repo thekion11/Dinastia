@@ -8100,7 +8100,9 @@
   "Camiseta sin marca": "No shirt sponsor",
   "Todavía nadie habla de ti": "Nobody is talking about you yet",
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Win or lose something and you'll see: what people say online shows up here.",
-  "Lo que os vaya pasando en casa queda anotado aquí.": "Whatever happens at home gets noted here."
+  "Lo que os vaya pasando en casa queda anotado aquí.": "Whatever happens at home gets noted here.",
+  "enojados": "angry",
+  "contentos": "happy"
  },
  "pt": {
   "Historia": "História",
@@ -16203,7 +16205,9 @@
   "Camiseta sin marca": "Camisola sem marca",
   "Todavía nadie habla de ti": "Ainda ninguém fala de ti",
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Ganha ou perde alguma coisa e verás: aqui aparece o que as pessoas dizem nas redes.",
-  "Lo que os vaya pasando en casa queda anotado aquí.": "O que vos for acontecendo em casa fica anotado aqui."
+  "Lo que os vaya pasando en casa queda anotado aquí.": "O que vos for acontecendo em casa fica anotado aqui.",
+  "enojados": "zangados",
+  "contentos": "contentes"
  },
  "patrones": [
   [
@@ -30446,7 +30450,9 @@
   "Camiseta sin marca": "Maillot sans sponsor",
   "Todavía nadie habla de ti": "Personne ne parle encore de toi",
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Gagne ou perds quelque chose et tu verras : ce que disent les gens en ligne apparaît ici.",
-  "Lo que os vaya pasando en casa queda anotado aquí.": "Ce qui vous arrive à la maison est noté ici."
+  "Lo que os vaya pasando en casa queda anotado aquí.": "Ce qui vous arrive à la maison est noté ici.",
+  "enojados": "fâchés",
+  "contentos": "contents"
  },
  "it": {
   "Historia": "Storia",
@@ -38549,7 +38555,9 @@
   "Camiseta sin marca": "Maglia senza sponsor",
   "Todavía nadie habla de ti": "Nessuno parla ancora di te",
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Vinci o perdi qualcosa e vedrai: qui compare quello che dice la gente sui social.",
-  "Lo que os vaya pasando en casa queda anotado aquí.": "Quello che vi succede in casa viene annotato qui."
+  "Lo que os vaya pasando en casa queda anotado aquí.": "Quello che vi succede in casa viene annotato qui.",
+  "enojados": "arrabbiati",
+  "contentos": "contenti"
  },
  "de": {
   "Historia": "Geschichte",
@@ -46652,7 +46660,9 @@
   "Camiseta sin marca": "Trikot ohne Sponsor",
   "Todavía nadie habla de ti": "Noch spricht niemand über dich",
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Gewinn oder verlier etwas, dann siehst du es: Hier erscheint, was die Leute im Netz sagen.",
-  "Lo que os vaya pasando en casa queda anotado aquí.": "Was bei euch zu Hause passiert, wird hier festgehalten."
+  "Lo que os vaya pasando en casa queda anotado aquí.": "Was bei euch zu Hause passiert, wird hier festgehalten.",
+  "enojados": "verärgert",
+  "contentos": "zufrieden"
  },
  "ca": {
   "Historia": "Història",
@@ -54755,7 +54765,9 @@
   "Camiseta sin marca": "Samarreta sense marca",
   "Todavía nadie habla de ti": "Encara ningú parla de tu",
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Guanya o perd alguna cosa i ho veuràs: aquí surt el que diu la gent a les xarxes.",
-  "Lo que os vaya pasando en casa queda anotado aquí.": "El que us vagi passant a casa queda anotat aquí."
+  "Lo que os vaya pasando en casa queda anotado aquí.": "El que us vagi passant a casa queda anotat aquí.",
+  "enojados": "enfadats",
+  "contentos": "contents"
  },
  "pl": {
   "Club": "Klub",
@@ -62858,7 +62870,9 @@
   "Camiseta sin marca": "Koszulka bez sponsora",
   "Todavía nadie habla de ti": "Nikt jeszcze o tobie nie mówi",
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Wygraj albo przegraj coś, a zobaczysz: tu pojawia się to, co ludzie piszą w sieci.",
-  "Lo que os vaya pasando en casa queda anotado aquí.": "To, co dzieje się u was w domu, zostaje zapisane tutaj."
+  "Lo que os vaya pasando en casa queda anotado aquí.": "To, co dzieje się u was w domu, zostaje zapisane tutaj.",
+  "enojados": "rozgniewani",
+  "contentos": "zadowoleni"
  },
  "tr": {
   "Club": "Kulüp",
@@ -70961,6 +70975,8 @@
   "Camiseta sin marca": "Forma sponsoru yok",
   "Todavía nadie habla de ti": "Henüz kimse senden bahsetmiyor",
   "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Bir şey kazan ya da kaybet, görürsün: insanların sosyal medyada söyledikleri burada çıkar.",
-  "Lo que os vaya pasando en casa queda anotado aquí.": "Evde başınıza gelenler buraya not edilir."
+  "Lo que os vaya pasando en casa queda anotado aquí.": "Evde başınıza gelenler buraya not edilir.",
+  "enojados": "kızgın",
+  "contentos": "memnun"
  }
 }
