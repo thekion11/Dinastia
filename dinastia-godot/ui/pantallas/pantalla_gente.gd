@@ -56,9 +56,8 @@ func _pintar_redes() -> void:
 	tf.text = Idiomas.t("LO QUE SE DICE")
 	p._lista_redes.add_child(tf)
 	if p_local.posts.is_empty():
-		var vac := p._texto(12, Principal.COL_SUAVE)
-		vac.text = Idiomas.t("Todavía nadie habla de ti. Gana o pierde algo y verás.")
-		p._lista_redes.add_child(vac)
+		p._lista_redes.add_child(EstadoVacio.crear("📣", Idiomas.t("Todavía nadie habla de ti"), Idiomas.t("Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes."),
+			p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 240.0))
 		return
 	for i in mini(25, p_local.posts.size()):
 		var m: Dictionary = p_local.posts[i]

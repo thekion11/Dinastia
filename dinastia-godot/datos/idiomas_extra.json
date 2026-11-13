@@ -8097,7 +8097,10 @@
   "Uniforme y frase del vestuario": "Staff outfit and dressing-room motto",
   "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "How the coaching staff dresses and what is read in the tunnel.",
   "En la camiseta: %s": "On the shirt: %s",
-  "Camiseta sin marca": "No shirt sponsor"
+  "Camiseta sin marca": "No shirt sponsor",
+  "Todavía nadie habla de ti": "Nobody is talking about you yet",
+  "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Win or lose something and you'll see: what people say online shows up here.",
+  "Lo que os vaya pasando en casa queda anotado aquí.": "Whatever happens at home gets noted here."
  },
  "pt": {
   "Historia": "História",
@@ -16197,7 +16200,10 @@
   "Uniforme y frase del vestuario": "Uniforme e frase do balneário",
   "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Como veste a equipa técnica e o que se lê no túnel.",
   "En la camiseta: %s": "Na camisola: %s",
-  "Camiseta sin marca": "Camisola sem marca"
+  "Camiseta sin marca": "Camisola sem marca",
+  "Todavía nadie habla de ti": "Ainda ninguém fala de ti",
+  "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Ganha ou perde alguma coisa e verás: aqui aparece o que as pessoas dizem nas redes.",
+  "Lo que os vaya pasando en casa queda anotado aquí.": "O que vos for acontecendo em casa fica anotado aqui."
  },
  "patrones": [
   [
@@ -30437,7 +30443,10 @@
   "Uniforme y frase del vestuario": "Tenue du staff et devise du vestiaire",
   "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "La tenue du staff et ce qu'on lit dans le tunnel.",
   "En la camiseta: %s": "Sur le maillot : %s",
-  "Camiseta sin marca": "Maillot sans sponsor"
+  "Camiseta sin marca": "Maillot sans sponsor",
+  "Todavía nadie habla de ti": "Personne ne parle encore de toi",
+  "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Gagne ou perds quelque chose et tu verras : ce que disent les gens en ligne apparaît ici.",
+  "Lo que os vaya pasando en casa queda anotado aquí.": "Ce qui vous arrive à la maison est noté ici."
  },
  "it": {
   "Historia": "Storia",
@@ -38537,7 +38546,10 @@
   "Uniforme y frase del vestuario": "Divisa dello staff e frase dello spogliatoio",
   "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Come veste lo staff tecnico e cosa si legge nel tunnel.",
   "En la camiseta: %s": "Sulla maglia: %s",
-  "Camiseta sin marca": "Maglia senza sponsor"
+  "Camiseta sin marca": "Maglia senza sponsor",
+  "Todavía nadie habla de ti": "Nessuno parla ancora di te",
+  "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Vinci o perdi qualcosa e vedrai: qui compare quello che dice la gente sui social.",
+  "Lo que os vaya pasando en casa queda anotado aquí.": "Quello che vi succede in casa viene annotato qui."
  },
  "de": {
   "Historia": "Geschichte",
@@ -46637,7 +46649,10 @@
   "Uniforme y frase del vestuario": "Trainer-Outfit und Kabinenspruch",
   "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Wie das Trainerteam gekleidet ist und was im Tunnel zu lesen steht.",
   "En la camiseta: %s": "Auf dem Trikot: %s",
-  "Camiseta sin marca": "Trikot ohne Sponsor"
+  "Camiseta sin marca": "Trikot ohne Sponsor",
+  "Todavía nadie habla de ti": "Noch spricht niemand über dich",
+  "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Gewinn oder verlier etwas, dann siehst du es: Hier erscheint, was die Leute im Netz sagen.",
+  "Lo que os vaya pasando en casa queda anotado aquí.": "Was bei euch zu Hause passiert, wird hier festgehalten."
  },
  "ca": {
   "Historia": "Història",
@@ -54737,7 +54752,10 @@
   "Uniforme y frase del vestuario": "Uniforme i frase del vestidor",
   "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Com vesteix el cos tècnic i el que es llegeix al túnel.",
   "En la camiseta: %s": "A la samarreta: %s",
-  "Camiseta sin marca": "Samarreta sense marca"
+  "Camiseta sin marca": "Samarreta sense marca",
+  "Todavía nadie habla de ti": "Encara ningú parla de tu",
+  "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Guanya o perd alguna cosa i ho veuràs: aquí surt el que diu la gent a les xarxes.",
+  "Lo que os vaya pasando en casa queda anotado aquí.": "El que us vagi passant a casa queda anotat aquí."
  },
  "pl": {
   "Club": "Klub",
@@ -62837,7 +62855,10 @@
   "Uniforme y frase del vestuario": "Strój sztabu i hasło w szatni",
   "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Jak ubiera się sztab i co widnieje w tunelu.",
   "En la camiseta: %s": "Na koszulce: %s",
-  "Camiseta sin marca": "Koszulka bez sponsora"
+  "Camiseta sin marca": "Koszulka bez sponsora",
+  "Todavía nadie habla de ti": "Nikt jeszcze o tobie nie mówi",
+  "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Wygraj albo przegraj coś, a zobaczysz: tu pojawia się to, co ludzie piszą w sieci.",
+  "Lo que os vaya pasando en casa queda anotado aquí.": "To, co dzieje się u was w domu, zostaje zapisane tutaj."
  },
  "tr": {
   "Club": "Kulüp",
@@ -70937,6 +70958,9 @@
   "Uniforme y frase del vestuario": "Teknik ekip kıyafeti ve soyunma odası sözü",
   "Cómo viste el cuerpo técnico y lo que se lee en el túnel.": "Teknik ekibin nasıl giyindiği ve tünelde ne yazdığı.",
   "En la camiseta: %s": "Formada: %s",
-  "Camiseta sin marca": "Forma sponsoru yok"
+  "Camiseta sin marca": "Forma sponsoru yok",
+  "Todavía nadie habla de ti": "Henüz kimse senden bahsetmiyor",
+  "Gana o pierde algo y verás: aquí sale lo que dice la gente en las redes.": "Bir şey kazan ya da kaybet, görürsün: insanların sosyal medyada söyledikleri burada çıkar.",
+  "Lo que os vaya pasando en casa queda anotado aquí.": "Evde başınıza gelenler buraya not edilir."
  }
 }

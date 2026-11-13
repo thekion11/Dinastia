@@ -232,7 +232,7 @@ static func _familia(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 	## Lo que ha pasado.
 	lista.add_child(Tema.rotulo("📔 LO QUE HA PASADO"))
 	if v.historial.is_empty():
-		lista.add_child(Tema.etiqueta(Tema.TAM_CUERPO, Tema.SUAVE, "Todavía nada que contar."))
+		lista.add_child(EstadoVacio.crear("📖", Idiomas.t("Todavía nada que contar."), Idiomas.t("Lo que os vaya pasando en casa queda anotado aquí."), Tema.TEXTO, Tema.SUAVE, 200.0))
 	for h: Dictionary in v.historial.slice(0, 10):
 		var l := Tema.etiqueta(Tema.TAM_CUERPO, Tema.TEXTO, "• " + String(h["texto"]))
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
