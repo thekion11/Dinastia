@@ -18,6 +18,9 @@ func _pintar_semana() -> void:
 	raiz.add_child(RutaCabecera.pintar(self, j, club))
 	var resumen := RutaResumen.pendiente(self)
 	CarreraLogros.revisar(carrera, mundo)
+	if carrera.eventos.size() > _decisiones_vistas:
+		RutaEstilo.son("notificacion")
+	_decisiones_vistas = carrera.eventos.size()
 	var nuevos := CarreraLogros.tomar_nuevos(carrera) if not resumen else []
 	if (_msg != "" or not nuevos.is_empty()) and not resumen:
 		raiz.add_child(RutaLogros.avisos(_msg, nuevos))

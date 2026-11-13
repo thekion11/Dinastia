@@ -50,6 +50,28 @@ static func eventos(c: CarreraJugador, m: Mundo) -> Array:
 			"Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.",
 			[c._op("«Enséñame a leer el juego.»", {"ruta_xp": 120, "relacion": 1}),
 			c._op("«Enséñame a mandar en el vestuario.»", {"relacion": 4, "moral": 3})], true))
+	## (13-11 noche) Los que nacen de los logros, del corte del duelo y de los puntos sin gastar.
+	if not c.hitos.has("ruta_docu") and CarreraLogros.ganados(c).size() >= 5:
+		p.append(c._ev("ruta_docu", "Un documental sobre ti",
+			"Una productora quiere grabar tu día a día: llevas cinco logros y tu historia vende.",
+			[c._op("Les abres la puerta de tu casa.", {"seguidores": 1200, "fama": 2, "energia": -6, "ruta_marca": "docu"}),
+			c._op("Dices que tu historia aún no ha empezado.", {"relacion": 2, "moral": 2})], true))
+	## EN CADENA: catorce semanas después se estrena.
+	if not c.hitos.has("ruta_estreno") and semanas_desde(c, m, "docu") >= 14:
+		p.append(c._ev("ruta_estreno", "El estreno del documental",
+			"Se estrena esta semana y el club te deja ir a la gala, que cae la víspera del partido.",
+			[c._op("Vas a la gala.", {"fama": 3, "seguidores": 2000, "energia": -10, "relacion": -2}),
+			c._op("Lo ves en casa y descansas.", {"energia": 8, "moral": 2})], true))
+	if not c.hitos.has("ruta_burla") and CarreraDuelo.por_remontar(c):
+		p.append(c._ev("ruta_burla", "Tu rival se ríe en la tele",
+			"Va por delante en vuestro duelo y lo dice en directo: «Este año ni se acerca».",
+			[c._op("Recortas el vídeo y lo pegas en tu taquilla.", {"moral": 5, "energia": -4}),
+			c._op("Apagas la tele: a lo tuyo.", {"relacion": 1, "energia": 4})], true))
+	if not c.hitos.has("ruta_estancado") and int(r["puntos"]) >= 3:
+		p.append(c._ev("ruta_estancado", "El preparador te ve estancado",
+			"Tienes puntos de talento sin usar y te lo dice claro: lo que no se trabaja, se pierde.",
+			[c._op("Te quedas a trabajar esta semana.", {"ruta_xp": 40, "energia": -5}),
+			c._op("Prefieres guardarlos para más adelante.", {"moral": 1})], true))
 	var j := c.jugador(m)
 	if not c.hitos.has("ruta_primo") and j != null and CarreraVida.ahorros(c) >= j.sueldo * 20:
 		p.append(c._ev("ruta_primo", "Tu primo tiene un negocio",

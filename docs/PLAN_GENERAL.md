@@ -41,7 +41,8 @@ El modo nuevo es «LA RUTA». Dónde está cada cosa (lo hecho no se lista: est�
   FALTA de esta orden: la misma limpieza en el RESTO del juego (pantallas del club y de gestión: seguir la «NOTA DEL DUEÑO (12-11)» de más abajo, `_secc_extra`), y repasar en La Ruta «Talentos», «Tu vida» y la creación del jugador con el mismo criterio (cifra grande, menos texto).
 - PEDIDO DEL DUEÑO (13-11, 20:40 UTC): «Revisa si algo se puede mejorar: notificaciones, logros propios, sonidos, eventos» (de La Ruta).
   HECHO (rama): LOGROS PROPIOS (`nucleo/carrera_logros.gd`, 18 hitos de tu carrera que dan experiencia una vez; pantalla «Logros» en la pestaña Ruta, `ui/carrera/ruta_logros.gd`); NOTIFICACIONES (cada aviso de la semana en su ficha azul, y el logro recién ganado en oro, en vez de todo seguido en una banda roja); SONIDOS (`RutaEstilo.son`: nivel subido, logro, abrir pantalla, aprender talento, subir atributo, comprar, firmar contrato, pitido final del resumen, cada balón de El Toque y cada jugada de Los Momentos: gol, ovación, gol en contra, suspiro).
-  FALTA de este pedido: EVENTOS (más decisiones propias de La Ruta y alguna cadena más; hoy hay 8 y 4 cadenas) y que el aviso de un logro salga también DENTRO del partido en el césped.
+  EVENTOS (hecho): cuatro decisiones más en `CarreraEventosRuta` («Un documental sobre ti» y su cadena «El estreno del documental», «Tu rival se ríe en la tele», «El preparador te ve estancado»); hoy son 12 y 5 cadenas, y la decisión nueva suena al llegar.
+  FALTA de este pedido: que el dueño ESCUCHE los sonidos (volumen y si pegan; desde el contenedor no se oyen) y que el aviso de un logro salga también DENTRO del partido en el césped.
 Falta:
 - Probar el foco con un MANDO REAL (la prueba automática da 0 botones sin alcanzar en PC y en teléfono de pie, pero nadie lo ha jugado con mando).
 - Que el dueño lo JUEGUE (PC y teléfono) y diga qué le parece: estética, ritmo, «Los Momentos» frente al partido en el césped.

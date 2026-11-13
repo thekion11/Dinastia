@@ -144,6 +144,18 @@ func _probar_carrera_ruta() -> void:
 		c.ruta["logros"] = logros_guardados
 		c.ruta["cuenta"] = cuenta_guardada
 		c.ruta["logros_nuevos"] = []
+		## Los eventos que nacen de los logros, de los puntos sin gastar y del duelo por remontar.
+		var puntos_ev := int(c.ruta["puntos"])
+		c.ruta["puntos"] = 3
+		_comprobar(ids_ev.call().has("ruta_estancado"), "  con tres puntos sin gastar, el preparador te lo dice")
+		c.ruta["puntos"] = puntos_ev
+		CarreraEventosRuta.aplicar(c, m, {"ruta_marca": "docu"})
+		var antes_docu: bool = ids_ev.call().has("ruta_estreno")
+		(c.ruta["marcas"] as Dictionary)["docu"] = m.anio * 60 + m.semana - 14
+		_comprobar(not antes_docu and ids_ev.call().has("ruta_estreno"), "  el documental se estrena catorce semanas después de aceptarlo")
+		CarreraEventosRuta.aplicar(c, m, {"ruta_marca": "remontada"})
+		_comprobar(ids_ev.call().has("ruta_burla"), "  si vas por detrás en el duelo, tu rival se ríe en la tele")
+		CarreraEventosRuta.quitar_marca(c, "remontada")
 		## El corte del duelo a mitad de temporada: por detrás nace el objetivo de remontar.
 		var pj_corte := int(c.stats_temp["pj"])
 		var goles_corte := int(c.stats_temp["goles"])

@@ -19,6 +19,7 @@ var _puesto := "DC"
 var _zurdo := false
 var _campo_nombre: LineEdit
 var _pestana := "hoy"
+var _decisiones_vistas := 0   ## para que suene la decisión nueva una vez
 var _sub := ""            ## la pantalla de dentro abierta (`RutaSub`); "" = la pestaña
 var _estilo := ""        ## el estilo de juego elegido al crear ("" = el primero de su línea)
 var _curva := "constante"
