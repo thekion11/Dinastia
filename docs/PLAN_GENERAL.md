@@ -40,9 +40,8 @@ Falta:
 - Que el dueño lo JUEGUE (PC y teléfono) y diga qué le parece: estética, ritmo, «Los Momentos» frente al partido en el césped.
 - Más cadenas de eventos (hay dos: «El duelo se calienta» y «El bar de tu primo»; el mecanismo de marcas está en `CarreraEventosRuta`).
 - La sonda de ritmo no juega los partidos de selección: la misión «juega con tu selección» (capítulo Estrella) no se cobra simulando; comprobarla jugando o enseñar a la sonda.
-- El rival, cuando ya eres mucho mejor que tu liga, queda muy por debajo (se elige el más parecido que haya): ¿buscarlo fuera de la liga?
 - OJO con el banco: si un script nuevo no compila, la sección que lo usa se corta SIN contar fallo. Tras tocar clases nuevas, mirar `godot --headless --import` y que la última línea de la sección («la revelación solo se gana el primer año», 3 veces) aparezca en `/tmp/mini_banco.txt`.
-- Decisiones tomadas sin preguntar, por si el dueño quiere otras: la semana recupera 28 de energía (antes 12); un atributo deja de subir a 14 puntos de tu media y la media a 3 del techo; la fama cuesta más cuanto más tienes y baja si no rindes; las ofertas esperan 15 partidos con nota 6,3; el capítulo «Titular» se llama «Indiscutible» y el talento «Portada», «De portada» (chocaban con traducciones existentes); la orden de `main` sobre modelos quedó como 48.
+- Decisiones tomadas sin preguntar, por si el dueño quiere otras: la semana recupera 28 de energía (antes 12); un atributo deja de subir a 14 puntos de tu media y la media a 3 del techo; la fama cuesta más cuanto más tienes y baja si no rindes; las ofertas esperan 15 partidos con nota 6,3; el capítulo «Titular» se llama «Indiscutible» y el talento «Portada», «De portada» (chocaban con traducciones existentes); la orden de `main` sobre modelos quedó como 48; si en tu liga nadie está a 6 puntos de lo que te toca de rival, el rival se busca en todo el mundo.
 - PREGUNTA AL DUEÑO (Calendar, 13-11 09:35 UTC): ¿sigue la cadena de 10 min, se para, o se para y se une a `main`? Sin respuesta: se sigue en la rama.
 
 ## ESTADO AL 12-11 MEDIODÍA (sesiones Opus 13 y 14 cerradas y ARCHIVADAS; todo en `main`)

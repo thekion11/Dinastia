@@ -244,6 +244,15 @@ func _probar_carrera_ruta() -> void:
 		c.ruta["vida"] = {}
 		c.ruta["patro"] = {}
 		c.ruta["ahorros"] = 0
+		## Si ya eres mucho mejor que tu liga, el rival se busca en todo el mundo.
+		var ovr_r := j.ovr
+		j.ovr = 93
+		(c.ruta["rival"] as Dictionary).clear()
+		var lejos := CarreraRuta.rival(c, m)
+		_comprobar(lejos != null and lejos.pos == j.pos and lejos.ovr >= 80 and bool((c.ruta["rival"] as Dictionary)["fuera"]), "  con media 93 tu rival es de los mejores del mundo en tu línea (%s, %d)" % [lejos.nombre, lejos.ovr])
+		_comprobar(CarreraRuta.rival(c, m) == lejos, "  y se conserva aunque no juegue en tu liga")
+		j.ovr = ovr_r
+		(c.ruta["rival"] as Dictionary).clear()
 		## El duelo de la temporada.
 		c.stats_temp["goles"] = 30
 		var d := CarreraRuta.duelo(c, m)

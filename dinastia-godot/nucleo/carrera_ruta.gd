@@ -386,23 +386,27 @@ static func rival(c: CarreraJugador, m: Mundo) -> Jugador:
 	if liga == null:
 		return null
 	var actual := _buscar(m, String((r["rival"] as Dictionary).get("id", "")))
-	if actual != null and actual.club_id != mio.id and liga.clubes.has(m.clubes.get(actual.club_id)):
+	if actual != null and actual.club_id != mio.id and (bool((r["rival"] as Dictionary).get("fuera", false)) or liga.clubes.has(m.clubes.get(actual.club_id))):
 		return actual
+	## Un poco mejor que tú, y más cuantos más duelos llevas ganados. Si en tu liga
+	## ya no hay nadie a tu altura (a más de 6 puntos), se busca en todo el mundo.
+	var meta := j.ovr + 4 + mini(6, int(r["duelos_ganados"]) * 2)
+	var mejor := _parecido(liga.clubes, mio, j, meta)
+	var fuera := mejor == null or absi(mejor.ovr - meta) > 6
+	if fuera:
+		mejor = _parecido(m.clubes.values(), mio, j, meta)
+	r["rival"] = {"id": mejor.id, "nombre": mejor.nombre, "fuera": fuera} if mejor != null else {}
+	return mejor
+
+static func _parecido(clubes: Array, mio: Club, j: Jugador, meta: int) -> Jugador:
 	var mejor: Jugador = null
 	var mejor_dist := 9999.0
-	for cl: Club in liga.clubes:
-		if cl == mio:
-			continue
-		for o: Jugador in cl.plantilla:
-			if o.pos != j.pos:
-				continue
-			## Un poco mejor que tú, y más cuantos más duelos llevas ganados.
-			var meta := j.ovr + 4 + mini(6, int(r["duelos_ganados"]) * 2)
+	for cl: Club in clubes:
+		for o: Jugador in (cl.plantilla if cl != mio else []):
 			var dist := absf(float(o.ovr - meta)) + maxf(0.0, float(o.edad - 25)) * 2.0
-			if dist < mejor_dist:
+			if o.pos == j.pos and dist < mejor_dist:
 				mejor_dist = dist
 				mejor = o
-	r["rival"] = {"id": mejor.id, "nombre": mejor.nombre} if mejor != null else {}
 	return mejor
 
 ## Los puntos del duelo de esta temporada: [los tuyos, los de tu rival].
