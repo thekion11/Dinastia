@@ -88,7 +88,7 @@ func arrancar_con(m: Mundo) -> void:
 	## autoguardar, no se repite).
 	PedidoPartida.aplicar(m)
 	_adoptar(m)
-	p._escribir("[color=#8ea595]Mundo nuevo.[/color] Semilla [color=#3fa06a]%d[/color]" % m.semilla)
+	p._escribir("[color=#8ea595]Mundo nuevo.[/color]")   ## (13-11, dueño) la semilla ya no ensucia la portada: está en Ajustes → Informe de fallos
 	_avisar_si_respaldo()
 	p._refrescar()
 

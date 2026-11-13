@@ -333,3 +333,13 @@ func _probar_funciones_puras_ui() -> void:
 	for i in 200:
 		distintas[CocheDetalle.texto_placa(i)] = true
 	_comprobar(distintas.size() > 150, "200 coches dan más de 150 matrículas distintas (%d)" % distintas.size())
+
+## (13-11, decisión del dueño) La semilla del mundo ya no sale en la portada: vive en Ajustes → Informe de fallos y el informe copiado la lleva.
+func _probar_semilla_en_ajustes() -> void:
+	_titulo("LA SEMILLA DEL MUNDO EN AJUSTES")
+	for sem: int in [5361, 0, 2147483647]:
+		var inf := AjustesRegistro.informe_con_semilla(sem, "linea 1\nlinea 2")
+		_comprobar(inf == "Semilla del mundo: %d\nlinea 1\nlinea 2" % sem, "el informe empieza por la semilla %d y conserva el resto" % sem)
+	_comprobar(AjustesRegistro.informe_con_semilla(-1, "solo informe") == "solo informe", "sin mundo, el informe es el de siempre")
+	var fuente := FileAccess.get_file_as_string("res://ui/principal/ciclo_partida.gd")
+	_comprobar(not fuente.contains("Semilla [color"), "el aviso de «Mundo nuevo» de la portada ya no lleva la semilla")

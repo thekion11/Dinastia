@@ -6,7 +6,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 
 ## CIERRE DEL 13-11 (orden del dueño: «vamos cerrando y registrando y todo a main»): TODO en `main`, sesiones 15 y 16 ARCHIVADAS, revisiones automáticas apagadas
 - Tanda final de pulido (sin cambiar jugabilidad ni aspecto): sesión 15 = grupo «funciones» del banco (4 secciones, 52 comprobaciones de funciones puras de `nucleo/`) y revalidación de «FALLOS DETECTADOS» (ninguno resuelto); sesión 16 = 16 comprobaciones de funciones puras de `ui/` y `visor/` y 19 funciones muertas borradas (−209 líneas, 0 referencias en todo el repo, comprobado por el líder).
-- PENDIENTE (para retomar): ~30 funciones puras de `nucleo/` sin prueba directa (lista en «Pruebas por sistema»); caza de frágiles (`cazar_fragiles.py`, solo 2 pruebas de pantalla examinadas, 0 frágiles); `C4_RUPTURA` con una 3.ª muestra de países; más optimización del motor solo bajando la frecuencia de la colocación (cambia el juego) o con colocación/duelos en C++ con gemela; HUD en el teléfono y vídeo de reacciones (usar `herramientas/grabar_clip.sh`); la pregunta de la semilla del mundo (recomendación: Ajustes → Acerca de).
+- PENDIENTE (para retomar): ~30 funciones puras de `nucleo/` sin prueba directa (lista en «Pruebas por sistema»); caza de frágiles (`cazar_fragiles.py`, solo 2 pruebas de pantalla examinadas, 0 frágiles); `C4_RUPTURA` con una 3.ª muestra de países; más optimización del motor solo bajando la frecuencia de la colocación (cambia el juego) o con colocación/duelos en C++ con gemela; HUD en el teléfono y vídeo de reacciones (usar `herramientas/grabar_clip.sh`); la semilla del mundo YA está en Ajustes → Informe de fallos (13-11, decisión del dueño).
 - CI (13-11): la primera compilación con todo junto (0e5a3868) falló SOLO en `prueba_coplanares_club` (parte 3/6 de las especiales): las taquillas nuevas del vestuario visitante (sesión 16) estaban apoyadas en el plano de la pared y su fondo oscuro compartía plano trasero con los separadores. Arreglado en fc921e00 (taquillas 1,5 cm separadas de la pared, fondo 1 cm adelantado; 0 fallos). LECCIÓN: el banco NO ve esa prueba; si se toca geometría del club (`edificio_club*`, `salas`), pasar antes `prueba_coplanares_club.tscn`, `prueba_colisiones_club.tscn` y `f5c_club` (o `especiales.sh`).
 - Nuevas sesiones: en SONNET (orden 46 de CLAUDE.md), cuando el dueño lo diga. Bloqueo de permisos: si el clasificador deniega `git commit`/`push`, guardar en la rama de la sesión y que el líder una a `main`.
 
@@ -14,7 +14,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - Pulido de código (orden del dueño 13-11, sin cambiar jugabilidad ni aspecto): resumen y mediciones en `docs/04_auditorias/rendimiento_120fps.md` («RESUMEN sesión 15 — optimización» y «Sesión 16»). Unido: motor del partido −5,9 a −8,9 % por paso con resultados exactos, 14 funciones muertas de `nucleo/`, `AnimTransiciones` 3,5 → 1,2 µs, `club_comun.py` (duplicado de Sonar), 9 importaciones sin usar; descartado con medida: once de la CPU entre jornadas, `Club.disponibles` tipado, `FormaEquipo` (−2,5 %, ruido), puertas, techo, ancla al suelo. El coste que queda es del motor de Godot (AnimationPlayer ×60).
 - Herramientas nuevas: `herramientas/grabar_clip.sh` (clips del partido real en Compatibility, sin GPU: ~3,4× el tiempo real a 720p), `herramientas/escaner_duplicados_gd.py`.
 - Bloqueo de permisos: el clasificador de las sesiones deniega a veces `git commit`/`push` de unión; las sesiones guardan en su rama y el líder las une a `main`. Una regla de permisos fija en la configuración del dueño lo evitaría.
-- PENDIENTE DEL DUEÑO: la pregunta de la semilla (abajo), prueba en el teléfono (aún no), keystore del AAB (aún no), sesiones nuevas (después, en Sonnet).
+- PENDIENTE DEL DUEÑO: prueba en el teléfono (aún no), keystore del AAB (aún no), sesiones nuevas (después, en Sonnet).
 
 ## ESTADO AL 13-11 MADRUGADA (sesiones 15 y 16, en Opus entonces; todo en `main` 88190f81)
 - `main` comprobado con todo junto: banco «FIN. 0 fallos», huellas 2244399493 / 2180788566, 0 scripts > 450. CI de `main` en verde (f3ad4834 y 7816be83 enteros). Sonar: 0 avisos abiertos.
@@ -33,7 +33,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - PENDIENTE DEL DUEÑO: prueba en el teléfono (`GUIA_PRUEBA_TELEFONO_2026-11-11.md`; ahora con primera persona y el HUD aligerado), keystore para el AAB, y decidir si se abren sesiones nuevas (aviso de uso semanal cerca del límite).
 
 ## PREGUNTAS PARA EL DUEÑO (sesiones Opus) — se acumulan aquí y se envían juntas por Calendar al llegar a 5 (orden 44); se borran al responderse
-- (13-11, sesión 16) «Lo que va pasando» (el registro de la portada) muestra al empezar «Mundo nuevo. Semilla 5361…»: ¿se deja la semilla a la vista (sirve para repetir un mundo y para informar de fallos) o se quita / se mueve a Ajustes → Acerca de?
+- (ninguna todavía)
 
 ## SESIÓN 16 (12-11): CALIDAD DE LO QUE SE VE EN EL CLUB Y EL PARTIDO — rama `sesion16-club-visual`
 - HECHO: (1) MUSEO POR TÍTULOS (orden 36): la planta 3 «Museo ampliado» se abre también con el SÉPTIMO hito (umbral elegido por la sesión: el
