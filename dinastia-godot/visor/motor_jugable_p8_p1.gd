@@ -8,18 +8,18 @@ static var ANTICIPA := OS.get_environment("PMOT_ANT") != "0"   ## encendido el 3
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	var base: Vector3 = MotorRoles.base(self as Object as MotorJugable, p)   ## puesto dinámico (F2, 03-11)
 	var loc0 := bool(p["es_local"])
-	var b := MotorColocacion.balon_lento(self as Object as MotorJugable, loc0)   ## balón con retardo (F1, 03-11)
-	var pesos := MotorColocacion.pesos(self as Object as MotorJugable, loc0, en_posesion)
-	var d := dir_ataque(bool(p["es_local"]))
-	## La pizarra (con todo a 1, lo de siempre): la línea adelanta o retrasa el
-	## bloque, la mentalidad lo empuja y la amplitud abre a los de banda.
-	var loc := bool(p["es_local"])
-	var lin := float(_tac(loc, "linea") - 1) + MotorTacticaViva.f(self as Object as MotorJugable, loc, "linea")   ## + estilo del club (U8)
-	var men := float(_tac(loc, "mentalidad") - 1) + MotorTacticaViva.urgencia(self as Object as MotorJugable, loc)   ## + marcador y reloj (U2, 01-11)
-	var amp := float(_tac(loc, "amplitud") - 1) + MotorTacticaViva.f(self as Object as MotorJugable, loc, "amplitud")
+	## Lo que vale para todo el equipo (balón con retardo F1, pesos, pizarra con estilo U8 y urgencia U2, desvío 3-11) sale de `FormaEquipo`: una vez por equipo y paso.
+	var e := FormaEquipo.de(self as Object as MotorJugable, loc0, en_posesion)
+	var b: Vector3 = e[0]
+	var pesos: PackedFloat64Array = e[1]
+	var d := dir_ataque(loc0)
+	## La pizarra (con todo a 1, lo de siempre): la línea adelanta o retrasa el bloque, la mentalidad lo empuja y la amplitud abre a los de banda.
+	var lin: float = e[2]
+	var men: float = e[3]
+	var amp: float = e[4]
 	var z := base.z * pesos[2] + b.z * pesos[0] + (d * (9.0 + men * 3.0) if en_posesion else -d * 3.0)
 	z += d * (lin * 3.5 + men * 2.0)
-	var x := base.x * (pesos[3] + (amp * 0.12 if en_posesion else 0.0)) + b.x * pesos[1] + MotorAdaptacion.desvio_x(self as Object as MotorJugable, loc0, en_posesion)   ## cubre el lado fuerte del rival (3-11)
+	var x := base.x * (pesos[3] + (amp * 0.12 if en_posesion else 0.0)) + b.x * pesos[1] + float(e[5])
 	## Nadie se mete detrás de su propio arco ni más allá del rival.
 	z = clampf(z, -LARGO + 4.0, LARGO - 4.0)
 	return Vector3(clampf(x, -ANCHO + 2.0, ANCHO - 2.0), 0, z)
@@ -240,6 +240,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 # ---------------------------------------------------------------- IA
 
 func _ia_equipos(delta: float) -> void:
+	FormaEquipo.abrir()   ## (13-11, rendimiento) lo que `_forma` calcula por equipo, una vez en toda esta fase (se cierra al final)
 	var b := balon.position
 	var equipo_con_balon := -1
 	if not poseedor.is_empty():
@@ -295,6 +296,7 @@ func _ia_equipos(delta: float) -> void:
 			p["objetivo"] = _ia_ataque_sin_balon(p)
 		else:
 			p["objetivo"] = _ia_defensa(p)
+	FormaEquipo.cerrar()
 
 ## El stick (o las teclas) en el plano del campo: según la cámara o el campo.
 func _a_mundo(v: Vector2, d: float) -> Vector3:
