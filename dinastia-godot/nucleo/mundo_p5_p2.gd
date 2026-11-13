@@ -25,8 +25,9 @@ func _semana_memoria_del_partido(ya_jugado: Partido) -> void:
 		## El partido de liga que se simuló sin dirigirlo: solo rachas.
 		var gf_s := int(_marcador_liga_semana[0])
 		var gc_s := int(_marcador_liga_semana[1])
-		logros.tras_partido_simulado(gf_s > gc_s, gf_s == gc_s, gf_s, gc_s)
+		logros.tras_partido_simulado(gf_s > gc_s, gf_s == gc_s, gf_s, gc_s, _rival_liga_semana)
 	_marcador_liga_semana = []
+	_rival_liga_semana = null
 	## El interinato se cuenta en fechas, no en semanas: `fechas_interinato_
 	## restantes()` las saca del propio calendario de la liga, así que llamar de
 	## más no adelanta ni atrasa nada -solo hay que no dejar de llamarla.

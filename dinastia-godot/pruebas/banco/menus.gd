@@ -228,3 +228,19 @@ func _probar_dominio_del_club() -> void:
 	_comprobar(ClubDentro.dominio_de(c) == "kashiwasol.jp", "uno japonés: %s" % ClubDentro.dominio_de(c))
 	c.pais = "ZZZ"
 	_comprobar(ClubDentro.dominio_de(c).ends_with(".com"), "un país sin dominio conocido va a .com")
+
+## (13-11) El partido de liga SIMULADO cuenta en el cara a cara con ese rival (antes solo los dirigidos: «0 rivales enfrentados» tras media liga).
+func _probar_cara_a_cara_simulado() -> void:
+	_titulo("CARA A CARA: LOS PARTIDOS SIMULADOS CUENTAN")
+	for caso: Array in [["POR", 4], ["MEX", 9]]:
+		var m := Mundo.new()
+		m.generar([caso[0]], 1311)
+		m.tomar_el_mando(m.ligas[0].clubes[int(caso[1])].id)
+		for s in 5:
+			m.avanzar_semana()
+		var lg := m.logros
+		var pj := 0
+		for k: String in lg.h2h:
+			pj += int(lg.h2h[k]["pj"])
+		_comprobar(lg.h2h.size() >= 3, "%s: tras 5 semanas simuladas hay rivales en el cara a cara (%d)" % [caso[0], lg.h2h.size()])
+		_comprobar(pj == int(lg.carrera.get("pj", 0)) and pj > 0, "%s: y suman los mismos partidos que la carrera (%d y %d)" % [caso[0], pj, int(lg.carrera.get("pj", 0))])

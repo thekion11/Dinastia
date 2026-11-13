@@ -9,6 +9,7 @@ extends "res://nucleo/mundo_p3.gd"
 ## El marcador de liga de tu club esta semana ([gf, gc]; vacío si no jugó). Lo
 ## lee `_semana_memoria_del_partido()` para las rachas de lo que no dirigiste.
 var _marcador_liga_semana: Array = []
+var _rival_liga_semana: Club = null   ## (13-11) contra quién fue: el cara a cara cuenta también los partidos simulados
 ## Los retos de la semana de tu club (`RetosSemana`, semana 6 del plan, 27-10-2026).
 var retos_semana := RetosSemana.new()
 var mentor_mes := MentorPrimerMes.new()   ## el tutorial de gestión del primer mes (M-297)
@@ -49,6 +50,7 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 		_gano_la_ultima = gf > gc
 		_resultado_semana = 1 if gf > gc else (0 if gf == gc else -1)
 		_marcador_liga_semana = [gf, gc]
+		_rival_liga_semana = r["visita"] if soy_local else r["local"]
 		## "G.clubes[miClub].forma.push(...)" del HTML: solo cuenta para esto lo
 		## que se juega de LIGA -este bloque nace de `_avisar_a_la_directiva`,
 		## que `avanzar_semana()` llama justo después de `l.jugar_jornada()`-.
