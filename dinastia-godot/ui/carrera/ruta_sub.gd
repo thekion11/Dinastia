@@ -12,7 +12,7 @@ const SUBS := {
 	"entreno": ["hoy", "🎯", "ENTRENO DE LA SEMANA", "cielo"],
 	"rival": ["hoy", "", "🥊 TU RIVAL", "coral"],
 	"grada": ["hoy", "", "📣 LA GRADA", "cielo"],
-	"juego": ["yo", "📊", "TU JUEGO", "cielo"],
+	"juego": ["yo", "📊", "TU JUEGO", "oro"],
 	"talentos": ["yo", "⭐", "TALENTOS", "oro"],
 	"vida": ["yo", "🏠", "TU VIDA", "menta"],
 	"temporadas": ["ruta", "📅", "TUS TEMPORADAS", "suave"],
@@ -51,9 +51,7 @@ static func _detalle(ui: Variant, j: Jugador, id: String) -> String:
 			return "%s · %d – %d" % [o.nombre, int(d[0]), int(d[1])] if o != null else ""
 		"grada":
 			return Idiomas.t("📱 %s seguidores") % E.miles(c.seguidores)
-		"juego":
-			return "%s · %d" % [j.pos_e, j.ovr]
-		"talentos":
+		"juego", "talentos":
 			var puntos := int(CarreraRuta.asegurar(c)["puntos"])
 			return E.plural(puntos, "%d punto por gastar", "%d puntos por gastar") % puntos
 		"vida":
@@ -76,7 +74,7 @@ static func teclas(ui: Variant, j: Jugador, pestana: String, en_columna := false
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.add_theme_font_size_override("font_size", 15)
-		if id == "talentos" and int(CarreraRuta.asegurar(ui.carrera)["puntos"]) > 0:
+		if id in ["talentos", "juego"] and int(CarreraRuta.asegurar(ui.carrera)["puntos"]) > 0:
 			b.text += "  ●"
 		caja.add_child(b)
 	return caja
@@ -109,7 +107,7 @@ static func _contenido(ui: Variant, j: Jugador, _club: Club, id: String) -> Arra
 		"entreno": return [RutaHoy._entreno(ui, j)]
 		"rival": return [RutaCamino.duelo(ui, true)]
 		"grada": return [RutaCamino.grada(ui, 14)]
-		"juego": return [RutaYo._atributos(ui, j)]
+		"juego": return RutaReparto.pintar(ui, j)
 		"talentos": return [RutaYo._talentos(ui)]
 		"vida": return [RutaVida.pintar(ui)]
 		"temporadas": return [RutaCamino._temporadas(ui)]

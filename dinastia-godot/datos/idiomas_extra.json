@@ -8521,7 +8521,14 @@
   "Gana %d duelo de temporada a tu rival": "Win %d season duel against your rival",
   "Gana %d duelos de temporada a tu rival": "Win %d season duels against your rival",
   "Juega %d partido con tu selección": "Play %d match for your country",
-  "Juega %d partidos con tu selección": "Play %d matches for your country"
+  "Juega %d partidos con tu selección": "Play %d matches for your country",
+  "PUNTOS POR REPARTIR": "POINTS TO SPEND",
+  "Cada punto sube 2 un atributo (o aprende un talento). Ganas uno cada vez que subes de nivel.": "Each point raises an attribute by 2 (or learns a talent). You earn one every time you level up.",
+  "tu estilo %+d": "your style %+d",
+  "repartido %+d": "spent %+d",
+  "lo entrenas esta semana": "training it this week",
+  "tope del entreno: %d": "training cap: %d",
+  "SUBIR +2": "RAISE +2"
  },
  "pt": {
   "Historia": "História",
@@ -17045,7 +17052,14 @@
   "Gana %d duelo de temporada a tu rival": "Vença %d duelo de temporada contra seu rival",
   "Gana %d duelos de temporada a tu rival": "Vença %d duelos de temporada contra seu rival",
   "Juega %d partido con tu selección": "Jogue %d partida pela sua seleção",
-  "Juega %d partidos con tu selección": "Jogue %d partidas pela sua seleção"
+  "Juega %d partidos con tu selección": "Jogue %d partidas pela sua seleção",
+  "PUNTOS POR REPARTIR": "PONTOS PARA DISTRIBUIR",
+  "Cada punto sube 2 un atributo (o aprende un talento). Ganas uno cada vez que subes de nivel.": "Cada ponto sobe 2 em um atributo (ou aprende um talento). Você ganha um a cada nível que sobe.",
+  "tu estilo %+d": "seu estilo %+d",
+  "repartido %+d": "distribuído %+d",
+  "lo entrenas esta semana": "treino desta semana",
+  "tope del entreno: %d": "limite do treino: %d",
+  "SUBIR +2": "SUBIR +2"
  },
  "patrones": [
   [
@@ -31709,7 +31723,14 @@
   "Gana %d duelo de temporada a tu rival": "Gagne %d duel de saison face à ton rival",
   "Gana %d duelos de temporada a tu rival": "Gagne %d duels de saison face à ton rival",
   "Juega %d partido con tu selección": "Joue %d match avec ta sélection",
-  "Juega %d partidos con tu selección": "Joue %d matchs avec ta sélection"
+  "Juega %d partidos con tu selección": "Joue %d matchs avec ta sélection",
+  "PUNTOS POR REPARTIR": "POINTS À RÉPARTIR",
+  "Cada punto sube 2 un atributo (o aprende un talento). Ganas uno cada vez que subes de nivel.": "Chaque point augmente un attribut de 2 (ou apprend un talent). Tu en gagnes un à chaque niveau.",
+  "tu estilo %+d": "ton style %+d",
+  "repartido %+d": "réparti %+d",
+  "lo entrenas esta semana": "à l'entraînement cette semaine",
+  "tope del entreno: %d": "plafond d'entraînement : %d",
+  "SUBIR +2": "MONTER +2"
  },
  "it": {
   "Historia": "Storia",
@@ -40233,7 +40254,14 @@
   "Gana %d duelo de temporada a tu rival": "Vinci %d duello stagionale contro il tuo rivale",
   "Gana %d duelos de temporada a tu rival": "Vinci %d duelli stagionali contro il tuo rivale",
   "Juega %d partido con tu selección": "Gioca %d partita con la tua nazionale",
-  "Juega %d partidos con tu selección": "Gioca %d partite con la tua nazionale"
+  "Juega %d partidos con tu selección": "Gioca %d partite con la tua nazionale",
+  "PUNTOS POR REPARTIR": "PUNTI DA DISTRIBUIRE",
+  "Cada punto sube 2 un atributo (o aprende un talento). Ganas uno cada vez que subes de nivel.": "Ogni punto alza di 2 un attributo (o impara un talento). Ne guadagni uno a ogni livello.",
+  "tu estilo %+d": "il tuo stile %+d",
+  "repartido %+d": "distribuiti %+d",
+  "lo entrenas esta semana": "lo alleni questa settimana",
+  "tope del entreno: %d": "tetto dell'allenamento: %d",
+  "SUBIR +2": "ALZA +2"
  },
  "de": {
   "Historia": "Geschichte",
@@ -48757,7 +48785,14 @@
   "Gana %d duelo de temporada a tu rival": "Gewinne %d Saisonduell gegen deinen Rivalen",
   "Gana %d duelos de temporada a tu rival": "Gewinne %d Saisonduelle gegen deinen Rivalen",
   "Juega %d partido con tu selección": "Bestreite %d Länderspiel",
-  "Juega %d partidos con tu selección": "Bestreite %d Länderspiele"
+  "Juega %d partidos con tu selección": "Bestreite %d Länderspiele",
+  "PUNTOS POR REPARTIR": "PUNKTE ZU VERTEILEN",
+  "Cada punto sube 2 un atributo (o aprende un talento). Ganas uno cada vez que subes de nivel.": "Jeder Punkt erhöht ein Attribut um 2 (oder lernt ein Talent). Pro Levelaufstieg gibt es einen.",
+  "tu estilo %+d": "dein Stil %+d",
+  "repartido %+d": "verteilt %+d",
+  "lo entrenas esta semana": "diese Woche im Training",
+  "tope del entreno: %d": "Trainingsgrenze: %d",
+  "SUBIR +2": "ERHÖHEN +2"
  },
  "ca": {
   "Historia": "Història",
@@ -57281,7 +57316,14 @@
   "Gana %d duelo de temporada a tu rival": "Guanya %d duel de temporada al teu rival",
   "Gana %d duelos de temporada a tu rival": "Guanya %d duels de temporada al teu rival",
   "Juega %d partido con tu selección": "Juga %d partit amb la teva selecció",
-  "Juega %d partidos con tu selección": "Juga %d partits amb la teva selecció"
+  "Juega %d partidos con tu selección": "Juga %d partits amb la teva selecció",
+  "PUNTOS POR REPARTIR": "PUNTS PER REPARTIR",
+  "Cada punto sube 2 un atributo (o aprende un talento). Ganas uno cada vez que subes de nivel.": "Cada punt puja 2 un atribut (o aprèn un talent). En guanyes un cada vegada que puges de nivell.",
+  "tu estilo %+d": "el teu estil %+d",
+  "repartido %+d": "repartit %+d",
+  "lo entrenas esta semana": "l'entrenes aquesta setmana",
+  "tope del entreno: %d": "límit de l'entrenament: %d",
+  "SUBIR +2": "PUJAR +2"
  },
  "pl": {
   "Club": "Klub",
@@ -65805,7 +65847,14 @@
   "Gana %d duelo de temporada a tu rival": "Wygraj %d sezonowy pojedynek z rywalem",
   "Gana %d duelos de temporada a tu rival": "Wygraj sezonowe pojedynki z rywalem: %d",
   "Juega %d partido con tu selección": "Zagraj %d mecz w reprezentacji",
-  "Juega %d partidos con tu selección": "Zagraj mecze w reprezentacji: %d"
+  "Juega %d partidos con tu selección": "Zagraj mecze w reprezentacji: %d",
+  "PUNTOS POR REPARTIR": "PUNKTY DO ROZDANIA",
+  "Cada punto sube 2 un atributo (o aprende un talento). Ganas uno cada vez que subes de nivel.": "Każdy punkt podnosi atrybut o 2 (albo uczy talentu). Dostajesz jeden za każdy nowy poziom.",
+  "tu estilo %+d": "twój styl %+d",
+  "repartido %+d": "rozdane %+d",
+  "lo entrenas esta semana": "trenujesz w tym tygodniu",
+  "tope del entreno: %d": "limit treningu: %d",
+  "SUBIR +2": "PODNIEŚ +2"
  },
  "tr": {
   "Club": "Kulüp",
@@ -74329,6 +74378,13 @@
   "Gana %d duelo de temporada a tu rival": "Rakibine karşı %d sezon düellosu kazan",
   "Gana %d duelos de temporada a tu rival": "Rakibine karşı %d sezon düellosu kazan",
   "Juega %d partido con tu selección": "Milli takımınla %d maç oyna",
-  "Juega %d partidos con tu selección": "Milli takımınla %d maç oyna"
+  "Juega %d partidos con tu selección": "Milli takımınla %d maç oyna",
+  "PUNTOS POR REPARTIR": "DAĞITILACAK PUANLAR",
+  "Cada punto sube 2 un atributo (o aprende un talento). Ganas uno cada vez que subes de nivel.": "Her puan bir özelliği 2 artırır (ya da bir yetenek öğretir). Her seviye atladığında bir puan kazanırsın.",
+  "tu estilo %+d": "tarzın %+d",
+  "repartido %+d": "dağıtılan %+d",
+  "lo entrenas esta semana": "bu hafta çalışıyorsun",
+  "tope del entreno: %d": "antrenman sınırı: %d",
+  "SUBIR +2": "YÜKSELT +2"
  }
 }

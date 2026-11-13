@@ -39,7 +39,11 @@ static func pulir(c: CarreraJugador, m: Mundo, attr: String) -> bool:
 	var r := CarreraRuta.asegurar(c)
 	var j := c.jugador(m)
 	r["puntos"] = int(r["puntos"]) - 1
-	j.atributos[attr] = mini(99, int(j.atributos[attr]) + 2)
+	var antes_attr := int(j.atributos[attr])
+	j.atributos[attr] = mini(99, antes_attr + 2)
+	if not r.get("pulidos") is Dictionary:
+		r["pulidos"] = {}   ## cuánto llevas repartido en cada atributo (lo enseña «Tu juego»)
+	(r["pulidos"] as Dictionary)[attr] = int((r["pulidos"] as Dictionary).get(attr, 0)) + int(j.atributos[attr]) - antes_attr
 	var antes := j.ovr
 	j.ovr = maxi(j.ovr, j.media_en(j.pos_e))
 	if j.ovr != antes:

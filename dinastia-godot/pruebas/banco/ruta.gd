@@ -207,6 +207,7 @@ func _probar_carrera_ruta() -> void:
 		c.ruta["puntos"] = 1
 		var a0 := int(j.atributos[attr])
 		_comprobar(CarreraTalentos.pulir(c, m, attr) and int(j.atributos[attr]) == a0 + 2 and not CarreraTalentos.pulir(c, m, attr), "  un punto de talento vale por +2 en un atributo")
+		_comprobar(int((c.ruta["pulidos"] as Dictionary).get(attr, 0)) >= 2, "  y queda apuntado lo repartido, para la pantalla «Tu juego»")
 		j.atributos[attr] = a0
 		c.ruta["fama_ref"] = 60
 		c.fama = 72

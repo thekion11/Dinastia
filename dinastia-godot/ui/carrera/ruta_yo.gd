@@ -3,15 +3,14 @@ extends RefCounted
 ## «YO»: tu cromo (media, cara, atributos) y el árbol de talentos.
 
 const E := preload("res://ui/carrera/ruta_estilo.gd")
-const NOMBRES := {"rit": "Velocidad", "tir": "Tiro", "pas": "Pase", "reg": "Regate", "def": "Defensa", "fis": "Físico"}
 
 static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
 	if E.estrecho(ui):
-		return E.columnas(ui, [cromo(ui, j, club), RutaSub.teclas(ui, j, "yo")], [])
+		return E.columnas(ui, [cromo(ui, j, club), RutaReparto.resumen(ui, j), RutaSub.teclas(ui, j, "yo")], [])
 	var cols := E.fila(14)
 	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	cols.add_child(cromo(ui, j, club))
-	cols.add_child(E.columnas(ui, [_atributos(ui, j), RutaSub.teclas(ui, j, "yo", false, "juego")], []))
+	cols.add_child(E.columnas(ui, [RutaReparto.resumen(ui, j), RutaSub.teclas(ui, j, "yo", true), RutaReparto.momento(ui, j)], []))
 	cols.get_child(1).size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return cols
 
@@ -66,42 +65,6 @@ static func cromo(ui: Variant, j: Jugador, club: Club) -> Control:
 		chips.add_child(cb)
 	v.add_child(E.lbl(12, E.SUAVE, E.plural(j.anios_contrato, "Contrato: %d año · %s/sem", "Contrato: %d años · %s/sem") % [j.anios_contrato, Eco.dinero(j.sueldo)], true))
 	v.add_child(E.lbl(12, E.SUAVE, c.agente if c.agente != "" else "Sin agente", true))
-	return p
-
-static func _atributos(ui: Variant, j: Jugador) -> Control:
-	var c: CarreraJugador = ui.carrera
-	var p := E.tarjeta()
-	var h := E.reparto(E.estrecho(ui), 18)
-	p.add_child(h)
-	var a := E.columna(5)
-	h.add_child(a)
-	a.add_child(E.rotulo("TU JUEGO", E.CIELO))
-	var foco_attr := String((CarreraPortero.focos_para(j).get(c.foco, ["", ""]) as Array)[1])
-	for k: String in j.atributos:
-		var nombre := Idiomas.t(String(NOMBRES.get(k, k.capitalize())))
-		var fm := E.medidor(("▸ " if k == foco_attr else "") + nombre, int(j.atributos[k]), 99, E.ORO if k == foco_attr else E.CIELO)
-		if CarreraTalentos.puede_pulir(c, ui.mundo, k):
-			var bp := E.boton("+2", E.ORO, func() -> void:
-				CarreraTalentos.pulir(c, ui.mundo, k)
-				ui._msg = Idiomas.t("Gastaste un punto de talento: %s +2.") % nombre
-				ui._pintar_semana(), 28)
-			bp.tooltip_text = Idiomas.t("Gasta un punto de talento en +2 a este atributo.")
-			fm.add_child(bp)
-		a.add_child(fm)
-	var b := E.columna(5)
-	h.add_child(b)
-	b.add_child(E.rotulo("TU MOMENTO", E.CORAL))
-	b.add_child(E.medidor("⚡ " + Idiomas.t("Energía"), c.energia, 100, E.MENTA, 140))
-	b.add_child(E.medidor("🤝 " + Idiomas.t("Relación con el DT"), c.relacion_dt, 100, E.CORAL, 140))
-	b.add_child(E.medidor("⭐ " + Idiomas.t("Fama"), c.fama, 100, E.ORO, 140))
-	b.add_child(E.medidor("🙂 " + Idiomas.t("Ánimo"), j.moral, 100, E.CIELO, 140))
-	var s: Dictionary = c.stats_temp
-	var cif := E.fila(6)
-	b.add_child(cif)
-	cif.add_child(E.cifra(str(int(s["pj"])), "partidos", E.TEXTO, 28))
-	cif.add_child(E.cifra(str(int(s["goles"])), "goles", E.ORO, 28))
-	cif.add_child(E.cifra(str(int(s["asist"])), "asist.", E.TEXTO, 28))
-	cif.add_child(E.cifra(("%.1f" % c.nota_media()) if c.nota_media() > 0.0 else "—", "nota", E.MENTA, 28))
 	return p
 
 ## El árbol: tres ramas de tres talentos en cadena.
