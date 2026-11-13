@@ -102,6 +102,7 @@ func _saque_ensayado(p: Dictionary, tipo: String, lugar: Vector3) -> bool:
 func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	super(p, cruce, estirada)
 	if _mejoras_c4 and String(poseedor.get("id", "")) != String(p["id"]):
+		MejorasC4Avance.rechace(self, p)   ## (sesión 15) C4_RECHACE
 		set_meta("_t_rechace", t)
 		_contar("c4_rechace")
 
@@ -197,6 +198,10 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		return super._ia_ataque_sin_balon(p)
 	var r := _sin_flag3(p, true)
 	if _mejoras_c4:
+		var rup := MejorasC4Avance.ruptura(self, p)   ## (sesión 15) C4_RUPTURA
+		if rup != Vector3.INF:
+			p["correr"] = true
+			return rup
 		var pared := MejorasC4Pared.desmarque(self, p)
 		if pared != Vector3.INF:
 			p["correr"] = true
@@ -314,3 +319,7 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 
 func _escala_ritmo() -> float:
 	return super() * _k_regate
+
+## (12-11, sesión 15) definir dentro del área, solo en C4 (`MejorasC4Avance.definir`, `C4_DEFINIR=1`).
+func _apunte_ia(p: Dictionary, dist_arco: float, apunte: Vector2) -> Vector2:
+	return MejorasC4Avance.definir(self, p, dist_arco, apunte) if _mejoras_c4 else apunte
