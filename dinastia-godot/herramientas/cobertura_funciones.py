@@ -7,7 +7,7 @@ prueba de `pruebas/`? («mencionada» ≠ «bien comprobada», pero una función
   python3 herramientas/cobertura_funciones.py --escribir      # además escribe docs/04_auditorias/cobertura_funciones_AAAA-MM-DD.md
 No cuenta las funciones privadas (`_x`), las del motor (`_ready`…), ni las que son meros ganchos de señales.
 """
-import collections, datetime, glob, os, re, sys
+import datetime, glob, os, re, sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FUNC = re.compile(r"^(?:static )?func ([a-z][A-Za-z0-9_]*)\(", re.M)

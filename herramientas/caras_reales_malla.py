@@ -31,7 +31,6 @@ Salida:
 """
 from ruta_segura import ruta_segura
 import base64
-import colorsys
 import json
 import os
 import sys

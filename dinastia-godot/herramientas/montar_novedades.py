@@ -2,7 +2,7 @@
 """Monta el vídeo de novedades (MEGA AUDITORÍA 2) con los tramos de
 pruebas/capturas/nov/*.avi + dos tarjetas de título hechas con Pillow.
 Salida: pruebas/capturas/nov/dinastia_novedades.mp4 (NO se sube al repo: LFS prohibido)."""
-import subprocess, sys, os
+import subprocess, os
 from PIL import Image, ImageDraw, ImageFont
 FF = "/usr/local/lib/python3.11/dist-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2"
 D = "pruebas/capturas/nov"
