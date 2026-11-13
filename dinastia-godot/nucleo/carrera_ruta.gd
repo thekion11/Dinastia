@@ -239,7 +239,10 @@ static func tras_partido(c: CarreraJugador, m: Mundo, d: Dictionary) -> void:
 			extra += premio
 		hechos.append({"id": String(reto["id"]), "hecho": ok, "xp": premio})
 	var mult := 1.0 + float(mini(int(r["racha"]), 5)) * 0.1
-	var total := int(float(base + extra) * mult)
+	var j0 := c.jugador(m)
+	var botas := CarreraPatrocinio.premio(c, d, j0 != null and j0.es_portero())
+	c.seguidores += int(botas[1])
+	var total := int(float(base + extra) * mult) + int(botas[0])
 	var nivel_antes := int(r["nivel"])
 	sumar_xp(c, total)
 	## Talentos de la rama Ídolo.
@@ -252,7 +255,7 @@ static func tras_partido(c: CarreraJugador, m: Mundo, d: Dictionary) -> void:
 	if tiene(c, "pulmones"):
 		c.energia = mini(CarreraJugador.ENERGIA_MAX, c.energia + int(float(minutos) / 10.0))
 	r["ultimo"] = {"nota": nota, "goles": goles, "asist": asist, "minutos": minutos, "xp": total,
-		"racha": int(r["racha"]), "retos": hechos, "niveles": int(r["nivel"]) - nivel_antes,
+		"racha": int(r["racha"]), "retos": hechos, "botas": int(botas[0]), "niveles": int(r["nivel"]) - nivel_antes,
 		"semana": m.anio * 60 + m.semana}
 	_grada_del_partido(c, nota, goles)
 

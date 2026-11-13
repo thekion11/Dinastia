@@ -322,6 +322,25 @@ func _probar_carrera_ruta() -> void:
 				_comprobar(false, "  la jugada «%s» no tiene dibujo en la pizarra" % tipo_m)
 		var copa_m := CarreraMomentos.resultado(c, m, par_m, [], -1, true)
 		_comprobar(int(copa_m["goles_local"]) != int(copa_m["goles_visita"]), "  en copa no hay empate")
+		## El contrato de botas: llega con la fama, se elige marca y paga por partido.
+		c.fama = 5
+		_comprobar(CarreraPatrocinio.eventos(c).is_empty() and CarreraPatrocinio.etiqueta(c) == "", "  sin fama no hay marca que te quiera")
+		c.fama = 16
+		var of_b := CarreraPatrocinio.eventos(c)
+		_comprobar(of_b.size() == 1 and (of_b[0]["opciones"] as Array).size() == 2, "  con 15 de fama llega la oferta de botas, con dos marcas")
+		c.eventos.append(of_b[0])
+		c.hitos["patro_1"] = true
+		c.resolver(m, c.eventos.size() - 1, 0)
+		_comprobar(CarreraPatrocinio.marca(c) == "rayo" and CarreraPatrocinio.nivel(c) == 1 and CarreraPatrocinio.eventos(c).is_empty(), "  firmas con Rayo I, y no te la vuelven a ofrecer")
+		var pb := CarreraPatrocinio.premio(c, {"goles": 2, "asist": 1, "nota": 6.0, "minutos": 90}, false)
+		_comprobar(int(pb[0]) == 60 and int(pb[1]) == 270, "  Rayo paga por gol y asistencia (%d XP, %d seguidores)" % [int(pb[0]), int(pb[1])])
+		c.fama = 45
+		c.eventos.append(CarreraPatrocinio.eventos(c)[0])
+		c.resolver(m, c.eventos.size() - 1, 1)
+		_comprobar(CarreraPatrocinio.etiqueta(c) == "👟 Roca II" and int(CarreraPatrocinio.premio(c, {"nota": 7.2}, false)[0]) == 37, "  con más fama, Roca II paga un 50 % más por partido de 7")
+		c.fama = 5
+		c.ruta["fama_ref"] = 5
+		c.ruta["patro"] = {}
 		## Las ofertas esperan a que te asientes: 15 partidos y nota 6,3.
 		c.pj_carrera = 3
 		_comprobar(not CarreraRuta.asentado(c), "  con 3 partidos en el club nadie te ofrece nada todavía")

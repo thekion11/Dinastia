@@ -152,6 +152,7 @@ func resolver(m: Mundo, indice: int, opcion: int) -> String:
 		j.lesion = maxi(0, j.lesion - int(ef["lesion_menos"]))
 	if bool(ef.get("cesion", false)):
 		_ceder(m)
+	CarreraPatrocinio.firmar(self, String(ef.get("patro", "")))
 	if bool(ef.get("oferta_fuera", false)) and j != null:
 		var fuera := _club_extranjero(m, j)
 		if fuera != null:
@@ -338,6 +339,7 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 	var p: Array = super(m, j)
 	p.append_array(CarreraAgenda.eventos(self, j))
 	p.append_array(CarreraPortero.eventos(self, j))
+	p.append_array(CarreraPatrocinio.eventos(self))
 	return p
 
 func _evento_bienvenida(m: Mundo) -> void:

@@ -66,6 +66,14 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		f.add_child(l)
 		f.add_child(E.titulo(20, E.ORO if hecho else E.SUAVE, ("+%d XP" % int(reto.get("xp", 0))) if hecho else "—"))
+	if int(u.get("botas", 0)) > 0:
+		var fb := E.fila(8)
+		v.add_child(fb)
+		fb.add_child(E.lbl(16, E.MENTA, "👟", true))
+		var lb := E.lbl(15, E.TEXTO, Idiomas.t("Tu contrato de botas (%s)") % CarreraPatrocinio.etiqueta(c).trim_prefix("👟 "), true)
+		lb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fb.add_child(lb)
+		fb.add_child(E.titulo(20, E.ORO, "+%d XP" % int(u["botas"])))
 	## La experiencia y el nivel.
 	var xp := E.fila(12)
 	v.add_child(xp)

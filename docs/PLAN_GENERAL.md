@@ -23,11 +23,13 @@ Hecho (bloque 5): ritmo medido con `pruebas/_sonda/sonda_ruta.tscn` (varias temp
 
 Hecho (bloque 6): «LOS MOMENTOS» (`nucleo/carrera_momentos.gd`, `ui/carrera/ruta_momentos.gd`, `ruta_barra.gd`): tercera forma de jugar el partido, entre el césped y simular: cuatro jugadas de tu puesto (remate, mano a mano, pase filtrado, robo, última entrada, despeje, paradas), cada una en la barra de toque; tus atributos ensanchan la zona y lo que hagas da el marcador, la nota y los retos. Suplente: dos jugadas si el DT te hace entrar. Las ofertas esperan a que lleves 15 partidos en el club con nota 6,3 (`CarreraRuta.asentado`).
 
+Hecho (bloque 7): contrato de botas (`nucleo/carrera_patrocinio.gd`): con 15, 40 y 70 de fama una marca ficticia te ofrece contrato y eliges entre Rayo (paga por gol o asistencia; al portero, por portería a cero) y Roca (paga por partido de 7 o más), con experiencia y seguidores extra en cada partido; se ve en tu cromo y en el resumen. Sonda de defensa (5 temporadas: media 66-69-73-77-80, nivel 4-8-10-12-14): la misión de goles y asistencias pide la mitad a los defensas.
+
 Falta (siguientes bloques):
 - Repasar con el mando real el orden del foco (hoy el foco cae en la acción principal de cada pantalla; el resto lo navega Godot solo).
-- Más variedad: más eventos con decisiones, patrocinios, vida fuera del campo; en «Los Momentos», más tipos de jugada (la pizarra dibuja las nueve y el balón va a su destino al resolver; visto en PC, teléfono de pie y tumbado, donde el Toque, Los Momentos y el resumen se compactan para caber en 394 px de alto).
+- Más variedad: más eventos con decisiones, vida fuera del campo (en qué gastar el sueldo); en «Los Momentos», más tipos de jugada (la pizarra dibuja las nueve y el balón va a su destino al resolver; visto en PC, teléfono de pie y tumbado, donde el Toque, Los Momentos y el resumen se compactan para caber en 394 px de alto).
 - OJO con el banco: si un script nuevo no compila, la sección que lo usa se corta SIN contar fallo (pasó con `carrera_talentos.gd`, subido roto en b90870e5 y arreglado en el commit siguiente). Tras tocar clases nuevas, mirar `godot --headless --import` y que la última línea de la sección aparezca en `/tmp/mini_banco.txt`.
-- Equilibrio: sonda de portero a 9 temporadas hecha (media 69→91 con techo 82: arreglado, entrenando no se pasa del mejor potencial + 3 y de ahí solo con puntos de talento; nivel 24 «Estrella» a los 25 años, así que Leyenda, nivel 34, cae hacia los 30). Falta la de defensa, y que la sonda juegue los partidos de selección (la misión «juega con tu selección» de Estrella no se cobra simulando).
+- Equilibrio: sonda de portero a 9 temporadas hecha (media 69→91 con techo 82: arreglado, entrenando no se pasa del mejor potencial + 3 y de ahí solo con puntos de talento; nivel 24 «Estrella» a los 25 años, así que Leyenda, nivel 34, cae hacia los 30). Falta que la sonda juegue los partidos de selección (la misión «juega con tu selección» de Estrella no se cobra simulando).
 - Pendiente de decisión del dueño: nada por ahora.
 
 ## ESTADO AL 12-11 MEDIODÍA (sesiones Opus 13 y 14 cerradas y ARCHIVADAS; todo en `main`)

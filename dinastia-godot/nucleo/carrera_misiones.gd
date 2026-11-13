@@ -58,6 +58,10 @@ static func valor(c: CarreraJugador, m: Mundo, tipo: String) -> int:
 static func meta(c: CarreraJugador, m: Mundo, mision: Array) -> int:
 	if String(mision[0]) == "aporte" and _es_portero(c, m):
 		return maxi(2, int(int(mision[1]) / 3.0))
+	## Un defensa marca y asiste poco (sonda: 5 entre goles y asistencias le costó cinco temporadas): la mitad.
+	var j := c.jugador(m)
+	if String(mision[0]) == "aporte" and j != null and j.pos == "DEF":
+		return maxi(2, int(int(mision[1]) / 2.0))
 	return int(mision[1])
 
 static func texto(c: CarreraJugador, m: Mundo, mision: Array) -> String:

@@ -8362,7 +8362,18 @@
   "⚡  LOS MOMENTOS": "⚡  THE MOMENTS",
   "Jugada %d de %d": "Play %d of %d",
   "El partido en tus jugadas clave: rápido y decidido por ti.": "The match in your key plays: quick and decided by you.",
-  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "You've hit your ceiling: training no longer raises you. Talent points still do."
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "You've hit your ceiling: training no longer raises you. Talent points still do.",
+  "Premia el gol: experiencia y seguidores por cada gol o asistencia (portero: por cada portería a cero).": "Rewards goals: experience and followers for every goal or assist (keeper: for every clean sheet).",
+  "Premia la regularidad: experiencia y seguidores por cada partido con nota 7 o más.": "Rewards consistency: experience and followers for every match rated 7 or more.",
+  "Una marca de botas llama a tu puerta": "A boot brand comes knocking",
+  "Te mejoran el contrato de botas": "Your boot deal gets upgraded",
+  "Contrato de botas de estrella": "A star's boot deal",
+  "Dos marcas quieren calzarte. Rayo paga por lo que brilla; Roca, por no fallar nunca. Solo puedes firmar con una.": "Two brands want you in their boots. Rayo pays for what shines; Roca, for never failing. You can only sign with one.",
+  "Tu nombre ya vende. Las dos marcas suben la oferta: los premios por partido valen un 50 % más.": "Your name sells now. Both brands raise their offer: match bonuses are worth 50 % more.",
+  "Eres imagen de portada. Las dos marcas ponen sobre la mesa su mejor contrato: los premios por partido valen el doble.": "You're cover material. Both brands put their best deal on the table: match bonuses are worth double.",
+  "Firmas con Rayo (premia goles y asistencias).": "Sign with Rayo (rewards goals and assists).",
+  "Firmas con Roca (premia los partidos de 7 o más).": "Sign with Roca (rewards matches rated 7 or more).",
+  "Tu contrato de botas (%s)": "Your boot deal (%s)"
  },
  "pt": {
   "Historia": "História",
@@ -16727,7 +16738,18 @@
   "⚡  LOS MOMENTOS": "⚡  OS MOMENTOS",
   "Jugada %d de %d": "Jogada %d de %d",
   "El partido en tus jugadas clave: rápido y decidido por ti.": "A partida nas suas jogadas-chave: rápida e decidida por você.",
-  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Você atingiu seu teto: treinando não sobe mais. Os pontos de talento ainda melhoram você."
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Você atingiu seu teto: treinando não sobe mais. Os pontos de talento ainda melhoram você.",
+  "Premia el gol: experiencia y seguidores por cada gol o asistencia (portero: por cada portería a cero).": "Premia o gol: experiência e seguidores a cada gol ou assistência (goleiro: a cada jogo sem sofrer gols).",
+  "Premia la regularidad: experiencia y seguidores por cada partido con nota 7 o más.": "Premia a regularidade: experiência e seguidores a cada partida com nota 7 ou mais.",
+  "Una marca de botas llama a tu puerta": "Uma marca de chuteiras bate à sua porta",
+  "Te mejoran el contrato de botas": "Seu contrato de chuteiras melhora",
+  "Contrato de botas de estrella": "Contrato de chuteiras de estrela",
+  "Dos marcas quieren calzarte. Rayo paga por lo que brilla; Roca, por no fallar nunca. Solo puedes firmar con una.": "Duas marcas querem calçar você. Rayo paga pelo que brilha; Roca, por nunca falhar. Você só pode assinar com uma.",
+  "Tu nombre ya vende. Las dos marcas suben la oferta: los premios por partido valen un 50 % más.": "Seu nome já vende. As duas marcas aumentam a oferta: os prêmios por partida valem 50 % a mais.",
+  "Eres imagen de portada. Las dos marcas ponen sobre la mesa su mejor contrato: los premios por partido valen el doble.": "Você é capa de revista. As duas marcas colocam na mesa seu melhor contrato: os prêmios por partida valem o dobro.",
+  "Firmas con Rayo (premia goles y asistencias).": "Assinar com a Rayo (premia gols e assistências).",
+  "Firmas con Roca (premia los partidos de 7 o más).": "Assinar com a Roca (premia partidas de nota 7 ou mais).",
+  "Tu contrato de botas (%s)": "Seu contrato de chuteiras (%s)"
  },
  "patrones": [
   [
@@ -31232,7 +31254,18 @@
   "⚡  LOS MOMENTOS": "⚡  LES MOMENTS",
   "Jugada %d de %d": "Action %d sur %d",
   "El partido en tus jugadas clave: rápido y decidido por ti.": "Le match en tes actions clés : rapide et décidé par toi.",
-  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Tu as atteint ton plafond : l'entraînement ne te fait plus progresser. Les points de talent, si."
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Tu as atteint ton plafond : l'entraînement ne te fait plus progresser. Les points de talent, si.",
+  "Premia el gol: experiencia y seguidores por cada gol o asistencia (portero: por cada portería a cero).": "Récompense le but : expérience et abonnés pour chaque but ou passe décisive (gardien : pour chaque clean sheet).",
+  "Premia la regularidad: experiencia y seguidores por cada partido con nota 7 o más.": "Récompense la régularité : expérience et abonnés pour chaque match noté 7 ou plus.",
+  "Una marca de botas llama a tu puerta": "Un équipementier frappe à ta porte",
+  "Te mejoran el contrato de botas": "Ton contrat équipementier est revalorisé",
+  "Contrato de botas de estrella": "Contrat équipementier de star",
+  "Dos marcas quieren calzarte. Rayo paga por lo que brilla; Roca, por no fallar nunca. Solo puedes firmar con una.": "Deux marques veulent te chausser. Rayo paie ce qui brille ; Roca, le fait de ne jamais faillir. Tu ne peux signer qu'avec une seule.",
+  "Tu nombre ya vende. Las dos marcas suben la oferta: los premios por partido valen un 50 % más.": "Ton nom fait vendre. Les deux marques relèvent leur offre : les primes de match valent 50 % de plus.",
+  "Eres imagen de portada. Las dos marcas ponen sobre la mesa su mejor contrato: los premios por partido valen el doble.": "Tu fais la une. Les deux marques posent leur meilleur contrat sur la table : les primes de match valent le double.",
+  "Firmas con Rayo (premia goles y asistencias).": "Signer avec Rayo (récompense buts et passes décisives).",
+  "Firmas con Roca (premia los partidos de 7 o más).": "Signer avec Roca (récompense les matchs notés 7 ou plus).",
+  "Tu contrato de botas (%s)": "Ton contrat équipementier (%s)"
  },
  "it": {
   "Historia": "Storia",
@@ -39597,7 +39630,18 @@
   "⚡  LOS MOMENTOS": "⚡  I MOMENTI",
   "Jugada %d de %d": "Azione %d di %d",
   "El partido en tus jugadas clave: rápido y decidido por ti.": "La partita nelle tue azioni chiave: rapida e decisa da te.",
-  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Hai toccato il tuo tetto: allenandoti non sali più. I punti talento sì."
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Hai toccato il tuo tetto: allenandoti non sali più. I punti talento sì.",
+  "Premia el gol: experiencia y seguidores por cada gol o asistencia (portero: por cada portería a cero).": "Premia il gol: esperienza e follower per ogni gol o assist (portiere: per ogni porta inviolata).",
+  "Premia la regularidad: experiencia y seguidores por cada partido con nota 7 o más.": "Premia la continuità: esperienza e follower per ogni partita con voto 7 o più.",
+  "Una marca de botas llama a tu puerta": "Un marchio di scarpini bussa alla tua porta",
+  "Te mejoran el contrato de botas": "Ti migliorano il contratto degli scarpini",
+  "Contrato de botas de estrella": "Contratto da stella per gli scarpini",
+  "Dos marcas quieren calzarte. Rayo paga por lo que brilla; Roca, por no fallar nunca. Solo puedes firmar con una.": "Due marchi vogliono vestirti i piedi. Rayo paga ciò che brilla; Roca, il non sbagliare mai. Puoi firmare con uno solo.",
+  "Tu nombre ya vende. Las dos marcas suben la oferta: los premios por partido valen un 50 % más.": "Il tuo nome ormai vende. I due marchi alzano l'offerta: i premi partita valgono il 50 % in più.",
+  "Eres imagen de portada. Las dos marcas ponen sobre la mesa su mejor contrato: los premios por partido valen el doble.": "Sei da copertina. I due marchi mettono sul tavolo il loro miglior contratto: i premi partita valgono il doppio.",
+  "Firmas con Rayo (premia goles y asistencias).": "Firmi con Rayo (premia gol e assist).",
+  "Firmas con Roca (premia los partidos de 7 o más).": "Firmi con Roca (premia le partite da 7 o più).",
+  "Tu contrato de botas (%s)": "Il tuo contratto degli scarpini (%s)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -47962,7 +48006,18 @@
   "⚡  LOS MOMENTOS": "⚡  DIE MOMENTE",
   "Jugada %d de %d": "Aktion %d von %d",
   "El partido en tus jugadas clave: rápido y decidido por ti.": "Das Spiel in deinen Schlüsselszenen: schnell und von dir entschieden.",
-  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Du hast dein Limit erreicht: Training bringt dich nicht mehr weiter. Talentpunkte schon."
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Du hast dein Limit erreicht: Training bringt dich nicht mehr weiter. Talentpunkte schon.",
+  "Premia el gol: experiencia y seguidores por cada gol o asistencia (portero: por cada portería a cero).": "Belohnt Tore: Erfahrung und Follower für jedes Tor oder jede Vorlage (Torwart: für jedes Zu-null-Spiel).",
+  "Premia la regularidad: experiencia y seguidores por cada partido con nota 7 o más.": "Belohnt Konstanz: Erfahrung und Follower für jedes Spiel mit Note 7 oder besser.",
+  "Una marca de botas llama a tu puerta": "Eine Schuhmarke klopft an",
+  "Te mejoran el contrato de botas": "Dein Schuhvertrag wird aufgewertet",
+  "Contrato de botas de estrella": "Schuhvertrag eines Stars",
+  "Dos marcas quieren calzarte. Rayo paga por lo que brilla; Roca, por no fallar nunca. Solo puedes firmar con una.": "Zwei Marken wollen dich ausstatten. Rayo zahlt für Glanz, Roca für Verlässlichkeit. Du kannst nur bei einer unterschreiben.",
+  "Tu nombre ya vende. Las dos marcas suben la oferta: los premios por partido valen un 50 % más.": "Dein Name verkauft sich. Beide Marken erhöhen ihr Angebot: Spielprämien sind 50 % mehr wert.",
+  "Eres imagen de portada. Las dos marcas ponen sobre la mesa su mejor contrato: los premios por partido valen el doble.": "Du bist ein Titelgesicht. Beide Marken legen ihren besten Vertrag auf den Tisch: Spielprämien zählen doppelt.",
+  "Firmas con Rayo (premia goles y asistencias).": "Bei Rayo unterschreiben (belohnt Tore und Vorlagen).",
+  "Firmas con Roca (premia los partidos de 7 o más).": "Bei Roca unterschreiben (belohnt Spiele mit Note 7 oder besser).",
+  "Tu contrato de botas (%s)": "Dein Schuhvertrag (%s)"
  },
  "ca": {
   "Historia": "Història",
@@ -56327,7 +56382,18 @@
   "⚡  LOS MOMENTOS": "⚡  ELS MOMENTS",
   "Jugada %d de %d": "Jugada %d de %d",
   "El partido en tus jugadas clave: rápido y decidido por ti.": "El partit en les teves jugades clau: ràpid i decidit per tu.",
-  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Has tocat el teu sostre: entrenant ja no puges. Els punts de talent sí que et milloren."
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Has tocat el teu sostre: entrenant ja no puges. Els punts de talent sí que et milloren.",
+  "Premia el gol: experiencia y seguidores por cada gol o asistencia (portero: por cada portería a cero).": "Premia el gol: experiència i seguidors per cada gol o assistència (porter: per cada porteria a zero).",
+  "Premia la regularidad: experiencia y seguidores por cada partido con nota 7 o más.": "Premia la regularitat: experiència i seguidors per cada partit amb nota 7 o més.",
+  "Una marca de botas llama a tu puerta": "Una marca de botes truca a la teva porta",
+  "Te mejoran el contrato de botas": "Et milloren el contracte de botes",
+  "Contrato de botas de estrella": "Contracte de botes d'estrella",
+  "Dos marcas quieren calzarte. Rayo paga por lo que brilla; Roca, por no fallar nunca. Solo puedes firmar con una.": "Dues marques et volen calçar. Rayo paga pel que brilla; Roca, per no fallar mai. Només pots signar amb una.",
+  "Tu nombre ya vende. Las dos marcas suben la oferta: los premios por partido valen un 50 % más.": "El teu nom ja ven. Les dues marques apugen l'oferta: els premis per partit valen un 50 % més.",
+  "Eres imagen de portada. Las dos marcas ponen sobre la mesa su mejor contrato: los premios por partido valen el doble.": "Ets imatge de portada. Les dues marques posen sobre la taula el seu millor contracte: els premis per partit valen el doble.",
+  "Firmas con Rayo (premia goles y asistencias).": "Signes amb Rayo (premia gols i assistències).",
+  "Firmas con Roca (premia los partidos de 7 o más).": "Signes amb Roca (premia els partits de 7 o més).",
+  "Tu contrato de botas (%s)": "El teu contracte de botes (%s)"
  },
  "pl": {
   "Club": "Klub",
@@ -64692,7 +64758,18 @@
   "⚡  LOS MOMENTOS": "⚡  MOMENTY",
   "Jugada %d de %d": "Akcja %d z %d",
   "El partido en tus jugadas clave: rápido y decidido por ti.": "Mecz w twoich kluczowych akcjach: szybko i po twojemu.",
-  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Osiągnąłeś swój sufit: trening już cię nie podnosi. Punkty talentu nadal tak."
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Osiągnąłeś swój sufit: trening już cię nie podnosi. Punkty talentu nadal tak.",
+  "Premia el gol: experiencia y seguidores por cada gol o asistencia (portero: por cada portería a cero).": "Nagradza gole: doświadczenie i obserwujący za każdego gola lub asystę (bramkarz: za każde czyste konto).",
+  "Premia la regularidad: experiencia y seguidores por cada partido con nota 7 o más.": "Nagradza regularność: doświadczenie i obserwujący za każdy mecz z oceną 7 lub wyższą.",
+  "Una marca de botas llama a tu puerta": "Marka butów puka do twoich drzwi",
+  "Te mejoran el contrato de botas": "Dostajesz lepszy kontrakt na buty",
+  "Contrato de botas de estrella": "Gwiazdorski kontrakt na buty",
+  "Dos marcas quieren calzarte. Rayo paga por lo que brilla; Roca, por no fallar nunca. Solo puedes firmar con una.": "Dwie marki chcą cię obuć. Rayo płaci za błysk, Roca za niezawodność. Możesz podpisać tylko z jedną.",
+  "Tu nombre ya vende. Las dos marcas suben la oferta: los premios por partido valen un 50 % más.": "Twoje nazwisko już sprzedaje. Obie marki podnoszą ofertę: premie meczowe są warte 50 % więcej.",
+  "Eres imagen de portada. Las dos marcas ponen sobre la mesa su mejor contrato: los premios por partido valen el doble.": "Jesteś twarzą z okładki. Obie marki kładą na stół najlepszy kontrakt: premie meczowe są warte podwójnie.",
+  "Firmas con Rayo (premia goles y asistencias).": "Podpisujesz z Rayo (nagradza gole i asysty).",
+  "Firmas con Roca (premia los partidos de 7 o más).": "Podpisujesz z Roca (nagradza mecze z oceną 7 lub wyższą).",
+  "Tu contrato de botas (%s)": "Twój kontrakt na buty (%s)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -73057,6 +73134,17 @@
   "⚡  LOS MOMENTOS": "⚡  ANLAR",
   "Jugada %d de %d": "Pozisyon %d / %d",
   "El partido en tus jugadas clave: rápido y decidido por ti.": "Maç, kilit pozisyonlarınla: hızlı ve senin belirlediğin.",
-  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Tavanına ulaştın: antrenman artık seni yükseltmiyor. Yetenek puanları hâlâ geliştirir."
+  "Has tocado tu techo: entrenando ya no subes. Los puntos de talento sí te siguen mejorando.": "Tavanına ulaştın: antrenman artık seni yükseltmiyor. Yetenek puanları hâlâ geliştirir.",
+  "Premia el gol: experiencia y seguidores por cada gol o asistencia (portero: por cada portería a cero).": "Golü ödüllendirir: her gol veya asist için deneyim ve takipçi (kaleci: gol yemediği her maç için).",
+  "Premia la regularidad: experiencia y seguidores por cada partido con nota 7 o más.": "İstikrarı ödüllendirir: 7 veya üstü notlu her maç için deneyim ve takipçi.",
+  "Una marca de botas llama a tu puerta": "Bir krampon markası kapını çalıyor",
+  "Te mejoran el contrato de botas": "Krampon sözleşmen iyileştiriliyor",
+  "Contrato de botas de estrella": "Yıldız krampon sözleşmesi",
+  "Dos marcas quieren calzarte. Rayo paga por lo que brilla; Roca, por no fallar nunca. Solo puedes firmar con una.": "İki marka seni giydirmek istiyor. Rayo parlayana öder; Roca ise hiç aksatmayana. Yalnızca biriyle imzalayabilirsin.",
+  "Tu nombre ya vende. Las dos marcas suben la oferta: los premios por partido valen un 50 % más.": "Adın artık satıyor. İki marka da teklifi yükseltiyor: maç primleri 50 % daha değerli.",
+  "Eres imagen de portada. Las dos marcas ponen sobre la mesa su mejor contrato: los premios por partido valen el doble.": "Kapak yüzüsün. İki marka da en iyi sözleşmesini masaya koyuyor: maç primleri iki katı değerinde.",
+  "Firmas con Rayo (premia goles y asistencias).": "Rayo ile imzala (gol ve asistleri ödüllendirir).",
+  "Firmas con Roca (premia los partidos de 7 o más).": "Roca ile imzala (7 ve üstü notlu maçları ödüllendirir).",
+  "Tu contrato de botas (%s)": "Krampon sözleşmen (%s)"
  }
 }

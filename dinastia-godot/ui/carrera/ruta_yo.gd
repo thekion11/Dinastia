@@ -48,6 +48,10 @@ static func cromo(ui: Variant, j: Jugador, club: Club) -> Control:
 	chips.add_child(E.chip(Idiomas.t("zurdo") if String(j.look.get("pie", "")) == "zurdo" else Idiomas.t("diestro"), E.CIELO))
 	if c.capitan:
 		chips.add_child(E.chip(Idiomas.t("capitán"), E.CORAL))
+	if CarreraPatrocinio.etiqueta(c) != "":
+		var cb := E.chip(CarreraPatrocinio.etiqueta(c), E.MENTA)
+		cb.tooltip_text = Idiomas.t(String(CarreraPatrocinio.MARCAS[CarreraPatrocinio.marca(c)][1]))
+		chips.add_child(cb)
 	v.add_child(E.lbl(12, E.SUAVE, Idiomas.t("Contrato: %d año(s) · %s/sem") % [j.anios_contrato, Eco.dinero(j.sueldo)], true))
 	v.add_child(E.lbl(12, E.SUAVE, c.agente if c.agente != "" else "Sin agente", true))
 	return p
