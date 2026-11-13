@@ -137,6 +137,8 @@ func _process(_d: float) -> void:
 				j.edad = 20
 			if OS.get_environment("TEMPORADA") == "1" and c.ruta.get("temporada") is Dictionary:
 				(c.ruta["temporada"] as Dictionary)["visto"] = false
+			if OS.get_environment("LOGRO") != "":   ## LOGRO=triplete: enseña el aviso dorado de un logro recién ganado
+				c.ruta["logros_nuevos"] = [OS.get_environment("LOGRO")]
 			_ui._pintar_semana()
 		13:
 			_foto("7_hoy_semanas")
