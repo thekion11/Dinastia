@@ -56,6 +56,14 @@ func _ready() -> void:
 	## PAIS=ARG CLUB=7: otro país y otro club (regla 34: nunca revisar con un solo equipo).
 	m.generar([OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"], 20261103)
 	m.tomar_el_mando(m.ligas[0].clubes[int(OS.get_environment("CLUB")) % m.ligas[0].clubes.size()].id)
+	## SEMANAS=12: se simulan esas semanas antes de las fotos (13-11: todo se revisaba en la semana 1, con las tablas a cero y las listas vacías).
+	for _s in int(OS.get_environment("SEMANAS")):
+		_despachar_eventos(m)
+		m.avanzar_semana()
+	if int(OS.get_environment("SEMANAS")) > 0 and m.prensa != null:
+		m.prensa.entrevista = {}   ## la rueda de prensa pendiente es otra capa a pantalla completa: taparía todas las fotos
+	if int(OS.get_environment("SEMANAS")) > 0 and m.selecciones != null and not m.selecciones.cargo.oferta.is_empty():
+		m.selecciones.cargo.oferta["vista"] = true   ## igual la llamada de una federación (queda en Historia › Tu carrera)
 	if OS.get_environment("EVENTOS") != "1":   ## EVENTOS=1: se dejan (la primera foto es la reunión con la directiva a pantalla completa)
 		_despachar_eventos(m)
 	PedidoPartida.mundo_pregenerado = m
