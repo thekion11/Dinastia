@@ -98,7 +98,8 @@ func _ready() -> void:
 func _siguiente() -> void:
 	var mo: Dictionary = _guion[_hechas.size()]
 	var def: Array = CarreraMomentos.TIPOS[String(mo["tipo"])]
-	var z := CarreraMomentos.zona(ui.carrera.jugador(ui.mundo), String(mo["tipo"]))
+	var yo: Jugador = ui.carrera.jugador(ui.mundo)
+	var z := CarreraMomentos.zona(yo, String(mo["tipo"]), CarreraEstilo.forma(ui.carrera, yo), String(mo["tipo"]) == CarreraEstilo.favorita(ui.carrera, ui.mundo))
 	_minuto.text = "%d'" % int(mo["minuto"])
 	_titulo.text = Idiomas.t(String(def[0])).to_upper()
 	_texto.text = Idiomas.t(String(def[1]))

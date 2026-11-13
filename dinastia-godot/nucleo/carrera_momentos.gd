@@ -46,6 +46,11 @@ const DESENLACES := {
 static func guion(c: CarreraJugador, m: Mundo, entra_al := -1) -> Array:
 	var j := c.jugador(m)
 	var tipos: Array = (GUIONES.get(j.pos if j != null else "MED", GUIONES["MED"]) as Array).duplicate()
+	## La jugada favorita de tu estilo sale siempre, la primera.
+	var fav := CarreraEstilo.favorita(c, m)
+	if fav != "" and TIPOS.has(fav):
+		tipos.erase(fav)
+		tipos.push_front(fav)
 	var g := CarreraRuta._azar(c, m, 7)
 	## Se barajan (menos la primera, que presenta el puesto) y se juegan cuatro.
 	for i in range(tipos.size() - 1, 1, -1):
@@ -65,11 +70,13 @@ static func guion(c: CarreraJugador, m: Mundo, entra_al := -1) -> Array:
 
 ## La zona de la barra para una jugada: [medio ancho perfecto, medio ancho bien].
 ## Con 50 en el atributo es estrecha; con 90, generosa.
-static func zona(j: Jugador, tipo: String) -> Array:
+## `forma` (−3 a +3) suma dos puntos de atributo por punto; `favorita`: la jugada de tu estilo, un 25 % más ancha.
+static func zona(j: Jugador, tipo: String, forma := 0, favorita := false) -> Array:
 	var attr := String(TIPOS[tipo][2])
-	var v := float(j.atributos.get(attr, j.ovr)) if j != null else 60.0
+	var v := (float(j.atributos.get(attr, j.ovr)) if j != null else 60.0) + float(forma) * 2.0
 	var k := clampf((v - 40.0) / 55.0, 0.0, 1.0)
-	return [0.03 + 0.05 * k, 0.09 + 0.09 * k]
+	var ancho := CarreraEstilo.ZONA_FAVORITA if favorita else 1.0
+	return [(0.03 + 0.05 * k) * ancho, (0.09 + 0.09 * k) * ancho]
 
 ## Lo que deja una jugada con calidad `q` (1 perfecto, 0,6 bien, 0,1 fallo).
 static func desenlace(tipo: String, q: float) -> Dictionary:

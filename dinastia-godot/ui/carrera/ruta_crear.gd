@@ -63,9 +63,16 @@ static func pintar(ui: Variant) -> void:
 		lv.add_child(E.lbl(12, col, String(linea[0]), true))
 		for pe: String in linea[1]:
 			var nombre := Idiomas.t(String((posd.get(pe, {}) as Dictionary).get("n", pe)))
-			var bp := E.opcion("%s · %s" % [pe, nombre], col, grupo, pe == ui._puesto, func() -> void: ui._puesto = pe, 36)
+			## Al cambiar de puesto cambian los estilos: se repinta guardando el nombre escrito.
+			var bp := E.opcion("%s · %s" % [pe, nombre], col, grupo, pe == ui._puesto, func() -> void:
+				if pe != ui._puesto:
+					ui._puesto = pe
+					ui._estilo = ""
+					ui.nombre_pedido = ui._campo_nombre.text
+					pintar(ui), 36)
 			bp.clip_text = true
 			lv.add_child(bp)
+	_estilo_y_curva(ui, pv, String((posd.get(ui._puesto, {"g": "MED"}) as Dictionary).get("g", "MED")))
 	pv.add_child(E.rotulo("TU PIE"))
 	var pie := E.fila(6)
 	pv.add_child(pie)
@@ -88,6 +95,31 @@ static func pintar(ui: Variant) -> void:
 	abajo.add_child(E.boton("◂  Volver al menú", E.SUAVE, ui._salir, 44))
 	Idiomas.traducir_arbol(ui._cuerpo)
 	E.enfocar(ui._cuerpo)
+
+## Tu estilo de juego (tres por línea) y tu curva de crecimiento, cada uno con su explicación debajo.
+static func _estilo_y_curva(ui: Variant, pv: VBoxContainer, linea: String) -> void:
+	var estilos := CarreraEstilo.de_linea(linea)
+	if not estilos.has(ui._estilo):
+		ui._estilo = String(estilos.keys()[0])
+	var dos := E.reparto(E.estrecho(ui), 14)
+	pv.add_child(dos)
+	for bloque: Array in [["TU ESTILO", estilos, "_estilo", E.ORO], ["TU CURVA DE CRECIMIENTO", CarreraEstilo.CURVAS, "_curva", E.MENTA]]:
+		var v := E.columna(5)
+		dos.add_child(v)
+		v.add_child(E.rotulo(String(bloque[0])))
+		var f := E.flujo()
+		v.add_child(f)
+		var tabla: Dictionary = bloque[1]
+		var campo := String(bloque[2])
+		var explica := E.lbl(12, E.SUAVE, String(tabla[String(ui.get(campo))][1]))
+		explica.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		explica.custom_minimum_size = Vector2(0, 34)
+		var grupo := ButtonGroup.new()
+		for id: String in tabla:
+			f.add_child(E.opcion(String(tabla[id][0]), bloque[3], grupo, id == String(ui.get(campo)), func() -> void:
+				ui.set(campo, id)
+				explica.text = Idiomas.t(String(tabla[id][1])), 34))
+		v.add_child(explica)
 
 ## Paso 2: tres clubes te ofrecen tu primer contrato.
 static func pintar_ofertas(ui: Variant, clubes: Array) -> void:

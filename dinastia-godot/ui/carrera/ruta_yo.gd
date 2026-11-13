@@ -30,6 +30,10 @@ static func cromo(ui: Variant, j: Jugador, club: Club) -> Control:
 	arriba.add_child(med)
 	med.add_child(E.titulo(84, E.ORO, str(j.ovr)))
 	med.add_child(E.titulo(28, E.TEXTO, j.pos_e))
+	var forma := CarreraEstilo.forma(c, j)
+	var chf := E.chip(Idiomas.t("forma %+d") % forma, E.MENTA if forma > 0 else (E.CORAL if forma < 0 else E.SUAVE))
+	chf.tooltip_text = Idiomas.t("Tu forma (de −3 a +3) sale de tus últimas notas, tu ánimo y tu energía. Se suma a tu media de hoy: en Los Momentos la zona es más ancha o más estrecha, y pesa en tu nota cuando simulas.")
+	med.add_child(chf)
 	var cara := E.imagen(Cara.textura(j, club.color1, club.color2, 170), 170)
 	cara.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	arriba.add_child(cara)
@@ -45,6 +49,14 @@ static func cromo(ui: Variant, j: Jugador, club: Club) -> Control:
 	v.add_child(chips)
 	chips.add_child(E.chip(Idiomas.t("%+d esta temporada") % sube, E.MENTA if sube > 0 else E.SUAVE))
 	chips.add_child(E.chip(Idiomas.t("techo %d") % (CarreraRuta.techo(c, j) + CarreraRuta.MARGEN_TECHO), E.ORO))
+	var fe := CarreraEstilo.ficha(c, ui.mundo)
+	if fe.size() >= 2:
+		var ce := E.chip(Idiomas.t(String(fe[0])), E.ORO)
+		ce.tooltip_text = Idiomas.t(String(fe[1]))
+		chips.add_child(ce)
+		var cc := E.chip(Idiomas.t("curva: %s") % Idiomas.t(String(CarreraEstilo.CURVAS[CarreraEstilo.curva(c)][0])).to_lower(), E.MENTA)
+		cc.tooltip_text = Idiomas.t(String(CarreraEstilo.CURVAS[CarreraEstilo.curva(c)][1]))
+		chips.add_child(cc)
 	chips.add_child(E.chip(Idiomas.t("zurdo") if String(j.look.get("pie", "")) == "zurdo" else Idiomas.t("diestro"), E.CIELO))
 	if c.capitan:
 		chips.add_child(E.chip(Idiomas.t("capitán"), E.CORAL))

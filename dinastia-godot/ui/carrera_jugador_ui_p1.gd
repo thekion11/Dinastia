@@ -19,6 +19,8 @@ var _puesto := "DC"
 var _zurdo := false
 var _campo_nombre: LineEdit
 var _pestana := "hoy"
+var _estilo := ""        ## el estilo de juego elegido al crear ("" = el primero de su línea)
+var _curva := "constante"
 
 func _limpiar() -> void:
 	for n in _cuerpo.get_children():
@@ -38,6 +40,7 @@ func _fundar() -> void:
 	m.carrera_jugador = CarreraJugador.crear(m, nombre, _puesto, _zurdo, int(Time.get_unix_time_from_system()))
 	mundo = m
 	carrera = m.carrera_jugador
+	CarreraEstilo.aplicar(carrera, m, _estilo, _curva)
 
 ## Firma por `destino` (o se queda donde lo puso el núcleo) y empieza la ruta.
 func _firmar(destino: Club) -> void:
@@ -195,7 +198,7 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 			var g := g_copa if es_copa else j.goles - goles_antes
 			## La nota del simulado: la de tu nivel, más lo que marcaste (el
 			## portero, por lo que encajó: `CarreraPortero.nota_simulada`).
-			var nota := clampf(5.6 + float(j.ovr - 55) * 0.04 + float(g) * 0.9 + randf_range(-0.6, 0.6), 4.0, 9.5)
+			var nota := clampf(5.6 + float(CarreraEstilo.media_de_hoy(carrera, j) - 55) * 0.04 + float(g) * 0.9 + randf_range(-0.6, 0.6), 4.0, 9.5)
 			var gc := CarreraPortero.goles_en_contra(m, club) - gc_antes
 			if copa_p != null:
 				gc = copa_p.goles_visita if copa_p.local == club else copa_p.goles_local
@@ -210,7 +213,7 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 			if entra >= 0:
 				var minutos := 90 - entra
 				var g2 := 1 if randf() < float(minutos) / 90.0 * (0.25 if j.pos == "DEL" else (0.0 if j.es_portero() else 0.08)) else 0
-				var nota2 := clampf(5.8 + float(j.ovr - 55) * 0.03 + float(g2) * 0.9 + randf_range(-0.4, 0.4), 4.5, 9.0)
+				var nota2 := clampf(5.8 + float(CarreraEstilo.media_de_hoy(carrera, j) - 55) * 0.03 + float(g2) * 0.9 + randf_range(-0.4, 0.4), 4.5, 9.0)
 				carrera.tras_partido(m, {"minutos": minutos, "goles": g2, "asist": 0, "nota": snappedf(nota2, 0.1), "titular": false})
 				_msg += "  ·  " + Idiomas.t("Entraste en el %d' (simulado): nota %.1f.") % [entra, nota2]
 			else:

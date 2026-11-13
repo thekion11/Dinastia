@@ -327,6 +327,8 @@ static func tras_entreno(c: CarreraJugador, m: Mundo, attr: String, mejoro: bool
 		motivo = "Toque perfecto en el entreno: mejora asegurada."
 	elif tiene(c, "instinto") and _azar(c, m, 2).randf() < 0.35:
 		motivo = "Tu instinto le saca partido a la semana."
+	elif CarreraEstilo.empujon(c, m):
+		motivo = "Tu curva de crecimiento empuja esta semana."
 	if motivo == "":
 		return ""
 	j.atributos[attr] = int(j.atributos[attr]) + 1

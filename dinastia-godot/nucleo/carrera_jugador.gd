@@ -23,6 +23,12 @@ func entrenar(m: Mundo) -> String:
 	var antes := int(j.atributos.get(attr, 0)) if j != null else 0
 	## (13-11) Un atributo no se despega del resto de tu juego: a 14 puntos de tu
 	## media ya no sube (entrenando solo tiro se llegaba a 91 en una temporada).
+	if j != null and attr != "" and CarreraEstilo.semana_floja(self, m) and CarreraRuta.toque_de_la_semana(self, m) < 0.85:
+		energia = maxi(0, energia - 14)
+		CarreraRuta.sumar_xp(self, CarreraRuta.XP_ENTRENO)
+		entreno_msg = Idiomas.t("Semana sin chispa: a esta edad tu curva de crecimiento va más lenta.")
+		entreno_semana = ahora
+		return entreno_msg
 	if j != null and attr != "" and CarreraRuta.en_el_techo(self, j):
 		energia = maxi(0, energia - 14)
 		CarreraRuta.sumar_xp(self, CarreraRuta.XP_ENTRENO)
