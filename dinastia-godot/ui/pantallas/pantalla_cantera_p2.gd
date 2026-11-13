@@ -233,7 +233,8 @@ func _pintar_contratos(c: Club) -> void:
 	## un jugador que se pierde solo.
 	##
 	## Se listan los que entran en su último año, que son los que urgen.
-	if ce != null and p.mundo.cantera != null and puede_ceder:
+	## (13-11) Renovar NO es fichar: con el mercado cerrado esto desaparecía, y es justo cuando el informe semanal te manda aquí a renovar.
+	if ce != null and p.mundo.cantera != null and (puede_ceder or p.mundo.roles._permiso("fichar")):
 		var por_renovar := c.plantilla.filter(func(j: Jugador) -> bool: return j.anios_contrato <= 1)
 		var tr := p._texto(11, Principal.COL_SUAVE)
 		tr.text = Idiomas.t("RENOVACIONES  ·  último año de contrato")
