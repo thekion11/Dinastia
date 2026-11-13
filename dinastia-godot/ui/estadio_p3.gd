@@ -266,6 +266,7 @@ func _banca_gesto(es_local: bool, clip: String, dura: float, otro := "") -> void
 ## la marcha, no hace falta encolar nada más elaborado para esto.
 func _banca_celebra(es_local: bool) -> void:
 	_banca_gesto(es_local, "celebrar", 3.0)
+	Sonido.toca("festejo_banco", Sonido.Bus.AMBIENTE)
 
 func _repetir_gol() -> void:
 	if _repe == null or not _pref("repeticiones", true) or partido == null or partido.terminado_ya:

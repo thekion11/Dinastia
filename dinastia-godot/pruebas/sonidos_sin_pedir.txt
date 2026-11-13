@@ -1,65 +1,29 @@
 # (13-11) Sonidos del catálogo (`Sonido.NOMBRES`) que NINGÚN código pide por su nombre: se generan y no suenan nunca. Prueba `_probar_sonidos_pedidos`: si pides uno de esta lista, BÓRRALO de aquí; si añades un sonido nuevo sin pedirlo, la prueba falla (o lo pides, o entra aquí con motivo). Meta: lista vacía.
 # sin hecho visible: el agente no llama en ninguna pantalla todavía (13-11, sesión 15)
+# la lesión en el entrenamiento no distingue su origen en la UI; el parte médico ya suena (13-11, sesión 15)
+# no hay pantalla de sesión táctica suelta (13-11, sesión 15)
+# ningún fichaje se veta hoy (13-11, sesión 15)
+# MOTIVOS de los de Partido/Grada/Interfaz que NO se enchufaron (sesión 16, 13-11): no hay hecho del juego que los muestre, o falta una señal del motor (visor/motor_*, que esa sesión no toca).
+#  autogol, mano_penal, mano_fuera_area, libre_indirecto: el motor del partido no tiene goles en propia puerta, manos ni faltas indirectas.
+#  control_balon, recuperacion_balon, posesion_larga, tiro_flojo, palo_doble: piden una señal nueva del motor (posesión, recuperación, fuerza del tiro, rebote en dos palos).
+#  tarjeta_banco: el juego no amonesta al banquillo. campanas_iglesia: es de la ciudad 3D (apagada, orden 33). entrada_taquilla: sin acción de entrada en taquilla.
+#  huelga_hinchas: la huelga existe como suceso de prensa (`huelga_impagos`) pero se resuelve en gestión, no en la grada. desbloqueo, cronometro: sin un hecho propio en pantalla todavía.
 agente_llamada
-amonestacion_verbal
-animador_grada
-arrastrar
-atajada_pies
-atajada_punos
 autogol
-bocina_vuvuzela
-bufanda_alzada
-calentamiento
-calor_extremo
 campanas_iglesia
-cancelar
-celebracion_grupal
-celebracion_individual
 control_balon
-cornetin
-coro_rival
 cronometro
 desbloqueo
-deseleccionar
 entrada_taquilla
-# la lesión en el entrenamiento no distingue su origen en la UI; el parte médico ya suena (13-11, sesión 15)
 entrenamiento_lesion
-festejo_banco
-fuera_de_banda
-fuera_terreno_juego
-grada_de_pie
 huelga_hinchas
-humo_bengala
 libre_indirecto
 mano_fuera_area
 mano_penal
-multitud_entrando
-multitud_saliendo
-ola_mexicana
 palo_doble
-pancarta_desplegada
-paso_atras
-penal_fallado
-pitos_arbitro
 posesion_larga
-presentacion_alineaciones
-presion_alta
-protesta_jugador
-protesta_masiva
 recuperacion_balon
-saque_puerta
-segunda_amarilla
-seleccionar
-# no hay pantalla de sesión táctica suelta (13-11, sesión 15)
 sesion_tactica
-silbido_agudo
-silbidos_impaciencia
-soltar
-tambor_visitante
 tarjeta_banco
-tiempo_anadido
 tiro_flojo
-var_anulado
-# ningún fichaje se veta hoy (13-11, sesión 15)
 veto_fichaje
-viento_fuerte

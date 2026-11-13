@@ -19,7 +19,7 @@ static func poner(p: PartidoJugable) -> PartidoJugableTanda:
 	p.motor.tanda_tiro.connect(func(_eq: int, _id: String, marcado: bool) -> void:
 		n._pintar()
 		if not p._simulando:
-			Sonido.toca("gol" if marcado else "ocasion", Sonido.Bus.AMBIENTE))
+			EstadioSonidos.penal_de_tanda(marcado))
 	p.motor.cambio_estado.connect(func(e: String) -> void:
 		if e == "tanda_penal":
 			n._pintar())
