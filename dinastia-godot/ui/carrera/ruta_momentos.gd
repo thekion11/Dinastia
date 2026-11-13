@@ -89,6 +89,7 @@ func _ready() -> void:
 	v.add_child(_estado)
 	_boton = E.boton("⚽  ¡AHORA!", E.ORO, golpear, 46 if chico else 58, true)
 	v.add_child(_boton)
+	Idiomas.traducir_arbol(self)
 	_siguiente()
 	_boton.grab_focus()
 
