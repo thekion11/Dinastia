@@ -43,4 +43,7 @@ static func lineas() -> Array[String]:
 	var l: Array[String] = []
 	for c: Array in LISTA:
 		l.append("%s — %s · %s" % [c[0], c[1], c[2]])
+	## (13-11) La música libre (`MusicaLibre`, catálogo en `audio/musica/`): una línea por pista, con su autor y su licencia.
+	for m: String in MusicaLibre.creditos():
+		l.append("Música: " + m)
 	return l

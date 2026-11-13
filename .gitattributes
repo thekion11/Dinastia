@@ -48,6 +48,8 @@ dinastia-godot/assets/quaternius_muebles/*.glb -filter -diff -merge binary
 
 # Sonidos de interfaz pequeños (26-10): fuera de LFS, el contenedor no puede subir a LFS
 dinastia-godot/audio/ui/*.ogg -filter -diff -merge binary
+# Música libre CC0 (13-11, 14 pistas de ~0,5-2,4 MB, ~19 MB en total): fuera de LFS por la misma razón (orden del dueño: integrar música libre y comercializable)
+dinastia-godot/audio/musica/*.ogg -filter -diff -merge binary
 # Edificios de KayKit City Builder Bits (CC0, ~430 KB, 26-10): archivos normales; sustituyen a complejo_residencial.glb.
 dinastia-godot/assets/ciudad/kaykit/*.gltf -filter -diff -merge
 # Los .bat de Windows con fin de línea CRLF (cmd.exe).

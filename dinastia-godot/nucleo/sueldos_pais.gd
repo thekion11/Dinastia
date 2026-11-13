@@ -30,4 +30,7 @@ static func del_jugador(j: Jugador) -> float:
 	if j == null or j.club_id == "":
 		return 1.0
 	var c: Variant = LeyesPais.clubes_mundo.get(j.club_id)
-	return de((c as Club).pais) if c is Club else 1.0
+	## Solo si ESE club lo tiene de verdad en su plantilla: mientras se genera un mundo nuevo, `clubes_mundo` todavía es el del
+	## mundo anterior y los identificadores coinciden (un inglés cobraba como si jugara en el club chileno del mismo número; lo
+	## cazó `probar_nativo` al generar dos mundos seguidos). Al cerrar la generación se rehacen los sueldos de las ligas con factor.
+	return de((c as Club).pais) if c is Club and (c as Club).plantilla.has(j) else 1.0

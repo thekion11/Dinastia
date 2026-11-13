@@ -331,6 +331,24 @@ func _probar_leyes_pais() -> void:
 				_comprobar(js.sueldo == js.sueldo_de_valor(), "%s: el sueldo con que nace ya es el de su liga (%d)" % [cs.pais, js.sueldo])
 	_comprobar(int(cobra["URU"]) < int(cobra["ESP"]) and int(cobra["BOL"]) < int(cobra["ESP"]) and is_equal_approx(SueldosPais.de("ESP"), 1.0),
 		"el mismo valor cobra %d en España, %d en Uruguay y %d en Bolivia" % [int(cobra["ESP"]), int(cobra["URU"]), int(cobra["BOL"])])
+	## Dos mundos seguidos en la misma sesión: el segundo no hereda los sueldos de liga del primero.
+	var m_chico := Mundo.new()
+	var solo_bol: Array[String] = []
+	solo_bol.assign(["BOL"])
+	m_chico.generar(solo_bol, 21)
+	var m_grande := Mundo.new()
+	var solo_esp: Array[String] = []
+	solo_esp.assign(["ESP"])
+	m_grande.generar(solo_esp, 21)
+	var m_otra := Mundo.new()
+	m_otra.generar(solo_esp, 21)
+	var distintos := 0
+	for id_s: String in m_grande.clubes:
+		var ca: Club = m_grande.clubes[id_s]
+		var cb: Club = m_otra.clubes[id_s]
+		for i_s in ca.plantilla.size():
+			distintos += 1 if ca.plantilla[i_s].sueldo != cb.plantilla[i_s].sueldo else 0
+	_comprobar(distintos == 0, "generar España tras Bolivia o tras España da los mismos sueldos (%d distintos)" % distintos)
 	var libre := Jugador.new()
 	libre.valor = 20000
 	_comprobar(libre.sueldo_de_valor() == int(cobra["ESP"]), "un jugador libre pide el sueldo sin rebaja de liga")

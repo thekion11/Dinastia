@@ -124,7 +124,25 @@ func _pintar_musica() -> void:
 			Musica.parar()
 		p._refrescar())
 	f1.add_child(b1)
-
+	## (13-11) Música grabada (pistas libres CC0 en menús, club y parón); apagada, todo suena compuesto como antes.
+	var f1b := HBoxContainer.new()
+	f1b.add_theme_constant_override("separation", 8)
+	p._lista_ajustes.add_child(f1b)
+	var e1b := p._texto(12, Principal.COL_TEXTO if Musica.encendida else Principal.COL_SUAVE)
+	e1b.text = Idiomas.t("Música grabada (libre) en menús y club")
+	e1b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	e1b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	f1b.add_child(e1b)
+	var b1b := Button.new()
+	b1b.name = "MusicaLibre"
+	b1b.text = "SÍ" if Musica.libre else "NO"
+	b1b.disabled = not Musica.encendida
+	b1b.pressed.connect(func() -> void:
+		Musica.libre = not Musica.libre
+		if Musica.encendida:
+			Musica.ambientar(_situacion_musical())
+		p._refrescar())
+	f1b.add_child(b1b)
 	var f2 := HBoxContainer.new()
 	f2.add_theme_constant_override("separation", 8)
 	p._lista_ajustes.add_child(f2)

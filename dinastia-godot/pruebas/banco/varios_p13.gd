@@ -333,3 +333,102 @@ func _probar_funciones_puras_ui() -> void:
 	for i in 200:
 		distintas[CocheDetalle.texto_placa(i)] = true
 	_comprobar(distintas.size() > 150, "200 coches dan más de 150 matrículas distintas (%d)" % distintas.size())
+
+## (13-11, decisión del dueño) La semilla del mundo ya no sale en la portada: vive en Ajustes → Informe de fallos y el informe copiado la lleva.
+func _probar_semilla_en_ajustes() -> void:
+	_titulo("LA SEMILLA DEL MUNDO EN AJUSTES")
+	for sem: int in [5361, 0, 2147483647]:
+		var inf := AjustesRegistro.informe_con_semilla(sem, "linea 1\nlinea 2")
+		_comprobar(inf == "Semilla del mundo: %d\nlinea 1\nlinea 2" % sem, "el informe empieza por la semilla %d y conserva el resto" % sem)
+	_comprobar(AjustesRegistro.informe_con_semilla(-1, "solo informe") == "solo informe", "sin mundo, el informe es el de siempre")
+	var fuente := FileAccess.get_file_as_string("res://ui/principal/ciclo_partida.gd")
+	_comprobar(not fuente.contains("Semilla [color"), "el aviso de «Mundo nuevo» de la portada ya no lleva la semilla")
+
+## (13-11, orden del dueño) La MÚSICA LIBRE (`MusicaLibre`): el catálogo está completo y es CC0, cada pista carga, las filas malas se descartan, la
+## rotación y la situación funcionan y `Musica` la pone solo en menús/club/parón.
+func _probar_musica_libre() -> void:
+	_titulo("MÚSICA LIBRE (CC0): CATÁLOGO, FILTRO Y ROTACIÓN")
+	var l := MusicaLibre.pistas()
+	_comprobar(l.size() >= 1, "hay pistas libres utilizables (%d)" % l.size())
+	for d: Dictionary in l:
+		var ok_campos := str(d["autor"]) != "" and str(d["url"]).begins_with("https://") and str(d.get("sha256_original", "")).length() == 64 and str(d["licencia"]) in MusicaLibre.LICENCIAS_VALIDAS
+		var f := MusicaLibre.cargar(d)
+		_comprobar(ok_campos and f != null and f.get_length() > 10.0, "%s: autor, origen, licencia, huella y archivo (%.0f s)" % [d["id"], f.get_length() if f != null else 0.0])
+	var buena := {"id": "a", "archivo": "x.ogg", "autor": "Ana", "licencia": "CC0 1.0", "usos": ["oficina"]}
+	var filas := [buena, buena.merged({"licencia": "CC-BY 4.0"}, true), buena.merged({"autor": ""}, true), buena.merged({"usos": "oficina"}, true), buena.merged({"id": ""}, true), "no es fila"]
+	_comprobar(MusicaLibre._filtrar(filas, false).size() == 1, "el filtro solo deja la fila completa de licencia permitida (CC-BY, sin autor, usos rotos, sin id y no-filas fuera)")
+	_comprobar(MusicaLibre._filtrar([buena], true).is_empty(), "una fila cuyo archivo no está en el proyecto se descarta")
+	for sit: String in ["partido", "final", "celebracion", "grada"]:
+		_comprobar(MusicaLibre.situacion_libre(sit) == "", "en «%s» no suena música grabada (suena la compuesta, que cambia con el juego)" % sit)
+	_comprobar(MusicaLibre.situacion_libre("parón") == "paron" and MusicaLibre.situacion_libre("paron") == "paron", "el parón tiene su situación")
+	_comprobar(MusicaLibre.situacion_libre("") == "oficina" and MusicaLibre.situacion_libre("cualquier cosa") == "oficina", "lo demás es oficina (menús y club)")
+	var n := MusicaLibre.para("oficina").size()
+	if n >= 2:
+		_comprobar(str(MusicaLibre.elegir("oficina", 0)["id"]) != str(MusicaLibre.elegir("oficina", 1)["id"]), "la rotación cambia de pista")
+	_comprobar(MusicaLibre.elegir("oficina", -1) == MusicaLibre.elegir("oficina", n - 1) and MusicaLibre.elegir("oficina", n) == MusicaLibre.elegir("oficina", 0), "la rotación da la vuelta (también con índices negativos)")
+	_comprobar(MusicaLibre.elegir("no_existe", 3).is_empty(), "una situación sin pistas da {}")
+	_comprobar(MusicaLibre.creditos().size() == l.size(), "los créditos listan una línea por pista")
+	var enc := Musica.encendida
+	var lib := Musica.libre
+	Musica.encendida = true
+	Musica.libre = true
+	_comprobar(Musica.poner_libre("oficina") and Musica._sonando.begins_with("libre:"), "con la música libre encendida, el menú pone una pista libre")
+	Musica.encendida = false
+	_comprobar(not Musica.poner_libre("oficina"), "con la música apagada no pone nada")
+	Musica.parar()
+	Musica.encendida = enc
+	Musica.libre = lib
+
+## (13-11, queja del dueño: «siento que la mayoría de los sonidos no se ejecutan») De los 215 sonidos del catálogo, 89 no los pedía ningún código. Esta prueba
+## lo vigila: lo que no se pide tiene que estar en `pruebas/sonidos_sin_pedir.txt` (que solo debe encogerse) y lo que ya se pide no puede seguir en ella.
+func _probar_sonidos_pedidos() -> void:
+	_titulo("TODOS LOS SONIDOS SE PIDEN (O ESTÁN APUNTADOS COMO PENDIENTES)")
+	var fuentes := PackedStringArray()
+	_buscar_gd("res://", fuentes)
+	var texto := ""
+	for f: String in fuentes:
+		texto += FileAccess.get_file_as_string(f) + "\n"
+	var prefijos: Array[String] = []
+	var re := RegEx.new()
+	re.compile("toca\\(\\s*\"([a-z0-9_]*)\"\\s*\\+|toca\\(\\s*\"([a-z0-9_]*)%[sd]")
+	for m: RegExMatch in re.search_all(texto):
+		var p := m.get_string(1) if m.get_string(1) != "" else m.get_string(2)
+		if p != "":
+			prefijos.append(p)
+	var pendientes := {}
+	for l: String in FileAccess.get_file_as_string("res://pruebas/sonidos_sin_pedir.txt").split("\n"):
+		if l.strip_edges() != "" and not l.begins_with("#"):
+			pendientes[l.strip_edges()] = true
+	var catalogo: Array = Sonido.catalogo()
+	var sin_pedir: Array[String] = []
+	var ya_pedidos: Array[String] = []
+	var nuevos: Array[String] = []
+	for n: String in catalogo:
+		var pedido := texto.contains("\"" + n + "\"")
+		for p: String in prefijos:
+			pedido = pedido or n.begins_with(p)
+		if not pedido:
+			sin_pedir.append(n)
+			if not pendientes.has(n):
+				nuevos.append(n)
+		elif pendientes.has(n):
+			ya_pedidos.append(n)
+	_linea("  %d sonidos en el catálogo, %d sin pedir, %d apuntados como pendientes" % [catalogo.size(), sin_pedir.size(), pendientes.size()])
+	_comprobar(nuevos.is_empty(), "ningún sonido nuevo sin pedir (o se pide, o se apunta en sonidos_sin_pedir.txt): %s" % str(nuevos))
+	_comprobar(ya_pedidos.is_empty(), "ningún sonido de la lista de pendientes se pide ya (bórralo de la lista): %s" % str(ya_pedidos))
+	for n: String in pendientes:
+		if not catalogo.has(n):
+			_comprobar(false, "«%s» está en la lista de pendientes pero ya no existe en el catálogo (bórralo de la lista)" % n)
+
+func _buscar_gd(dir: String, sal: PackedStringArray) -> void:
+	var d := DirAccess.open(dir)
+	if d == null:
+		return
+	for sub: String in d.get_directories():
+		if not (sub in ["pruebas", "terceros", "addons", ".godot", ".git"]):
+			_buscar_gd(dir.path_join(sub), sal)
+	var rs := RegEx.new()
+	rs.compile("^sonido(_p\\d+)*\\.gd$")
+	for f: String in d.get_files():
+		if f.ends_with(".gd") and rs.search(f) == null:
+			sal.append(dir.path_join(f))

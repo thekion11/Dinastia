@@ -1,0 +1,26 @@
+MÚSICA LIBRE DE DINASTÍA (13-11-2026)
+
+Las 14 pistas de esta carpeta se publican en OpenGameArt.org bajo CC0 1.0 Universal (dedicación al dominio público):
+https://creativecommons.org/publicdomain/zero/1.0/
+Permite copiar, modificar, distribuir y usar la obra, incluso con fines comerciales, sin pedir permiso y sin atribuir. Aun así se
+citan (catalogo.json y la pantalla de créditos de Ajustes) por trazabilidad y por cortesía con sus autores:
+
+  Next to You               — Joth                  — opengameart.org/content/next-to-you (2016-06-04)
+  Snowfall                  — Kistol                — opengameart.org/content/snowfall (2013-09-18)
+  The Field Of Dreams       — pauliuw               — opengameart.org/content/the-field-of-dreams (2010-12-08)
+  Menu Music                — mrpoly                — opengameart.org/content/menu-music (2010-12-13)
+  Apple Cider               — Zane Little Music     — opengameart.org/content/apple-cider (2023-10-01)
+  Chill lofi inspired       — omfgdude              — opengameart.org/content/chill-lofi-inspired (2017-05-29)
+  lofi hip hop              — omfgdude              — opengameart.org/content/lofi-hip-hop (2018-08-10)
+  Balance                   — Loyalty Freak Music   — opengameart.org/content/balance-0 (2018-03-17)
+  Jazzy blues               — LushoGames            — opengameart.org/content/jazzy-blues (2013-03-02)
+  Midnight Cruiser          — Zane Little Music     — opengameart.org/content/midnight-cruiser (2023-11-05)
+  November Snow             — cynicmusic            — opengameart.org/content/november-snow (2017-12-06)
+  Rhythm Factory            — Zane Little Music     — opengameart.org/content/rhythm-factory (2023-07-08)
+  One Step at a time        — Pro Sensory           — opengameart.org/content/one-step-at-a-time (2017-02-20)
+  Sunset Plains             — Yoiyami               — opengameart.org/content/sunset-plains (2025-11-27)
+
+Cada página de origen mostraba «License(s): CC0» (y solo CC0) el 13-11-2026. Los archivos de aquí son conversiones a OGG Vorbis con el
+volumen normalizado (las dos o tres más largas, recortadas a 4 minutos con un fundido de salida); `catalogo.json` guarda el SHA-256 del
+archivo original descargado. Aviso de prudencia: OpenGameArt lo sube cada autor o un tercero en su nombre; si un autor reclamara su obra,
+se retira (borrar el .ogg y su fila del catálogo).

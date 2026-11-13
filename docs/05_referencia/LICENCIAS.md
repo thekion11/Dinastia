@@ -117,6 +117,35 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | "Fecha FIFA", "Compensación FIFA" en textos | 🟢 cambiados a "fecha internacional" / "federación internacional" |
 | Rótulos del sorteo ("CHAMPIONS LEAGUE", "COPA LIBERTADORES") escritos en el código | 🟢 ahora salen de la tabla `CONFED` |
 
+## Música libre sumada el 13-11-2026 (orden del dueño: «integrar música libre y con permiso para comercializar»)
+
+Hasta hoy el juego no traía ningún archivo de música (las seis piezas de `Musica` se componen en el momento). Ahora suenan 14 pistas grabadas
+SOLO en menús, club y parón invernal (los partidos siguen con lo compuesto, que cambia con el juego). Código: `nucleo/musica_libre.gd`
+(`MusicaLibre`): solo deja sonar licencias de su lista (`CC0 1.0`); una pista con otra (p. ej. CC-BY) no suena hasta sumar sus créditos.
+Catálogo con autor, licencia, origen y SHA-256 del original: `audio/musica/catalogo.json`; permiso explicado en `audio/musica/LICENCIA_CC0.txt`.
+Créditos dentro del juego: Ajustes → Créditos y licencias (una línea «Música: título — autor (licencia)» por pista). Interruptor en Ajustes → Música.
+
+| Qué | Dónde | Fuente | Estado |
+|---|---|---|---|
+| «Next to You» (Joth, 2016) | `audio/musica/next_to_you.ogg` | opengameart.org/content/next-to-you | 🟢 CC0 1.0 |
+| «Snowfall» (Kistol, 2013) | `audio/musica/snowfall.ogg` | opengameart.org/content/snowfall | 🟢 CC0 1.0 |
+| «The Field Of Dreams» (pauliuw, 2010) | `audio/musica/field_of_dreams.ogg` | opengameart.org/content/the-field-of-dreams | 🟢 CC0 1.0 |
+| «Menu Music» (mrpoly, 2010) | `audio/musica/menu_music.ogg` | opengameart.org/content/menu-music | 🟢 CC0 1.0 |
+| «Apple Cider» (Zane Little Music, 2023) | `audio/musica/apple_cider.ogg` | opengameart.org/content/apple-cider | 🟢 CC0 1.0 |
+| «Chill lofi inspired» (omfgdude, 2017) | `audio/musica/chill_lofi.ogg` | opengameart.org/content/chill-lofi-inspired | 🟢 CC0 1.0 |
+| «lofi hip hop» (omfgdude, 2018) | `audio/musica/lofi_hip_hop.ogg` | opengameart.org/content/lofi-hip-hop | 🟢 CC0 1.0 |
+| «Balance» (Loyalty Freak Music, 2018) | `audio/musica/balance.ogg` | opengameart.org/content/balance-0 | 🟢 CC0 1.0 |
+| «Jazzy blues» (LushoGames, 2013) | `audio/musica/jazzy_blues.ogg` | opengameart.org/content/jazzy-blues | 🟢 CC0 1.0 |
+| «Midnight Cruiser» (Zane Little Music, 2023) | `audio/musica/midnight_cruiser.ogg` | opengameart.org/content/midnight-cruiser | 🟢 CC0 1.0 |
+| «November Snow» (cynicmusic, 2017) | `audio/musica/november_snow.ogg` | opengameart.org/content/november-snow | 🟢 CC0 1.0 |
+| «Rhythm Factory» (Zane Little Music, 2023) | `audio/musica/rhythm_factory.ogg` | opengameart.org/content/rhythm-factory | 🟢 CC0 1.0 |
+| «One Step at a time» (Pro Sensory, 2017) | `audio/musica/one_step.ogg` | opengameart.org/content/one-step-at-a-time | 🟢 CC0 1.0 |
+| «Sunset Plains» (Yoiyami, 2025) | `audio/musica/sunset_plains.ogg` | opengameart.org/content/sunset-plains | 🟢 CC0 1.0 |
+
+CC0 permite uso comercial y no exige atribución; se cita por trazabilidad. Prudencia: OpenGameArt lo sube cada autor o un tercero; si un autor
+reclamara su obra, se retira (borrar el .ogg y su fila). Fuentes descartadas: FreePD (cerró en 2025), Pixabay (bloquea la descarga automática
+y su licencia no es CC0), Incompetech/Kevin MacLeod (CC-BY: obliga a citar y mantenerlo en cada pantalla donde suene).
+
 ## Pendiente antes de vender
 
 1. ~~Reemplazar `coche1.fbx`/`coche2.fbx` por coches Kenney~~ hecho el 25-9-2026.
@@ -137,7 +166,7 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 | 293 animaciones de fútbol convertidas (+ espejos) | `assets/characters/quaternius/anims_league/league.res` | github.com/awest813/League-Soccer (heredero de GameplayFootball / Google Research Football) | 🟢 Apache 2.0 (`terceros/league_soccer/LICENCIA_Apache-2.0.txt`); citar en los créditos |
 | Golpeo de balón y palo (`pase_corto`, `tiro_potente`, `poste`, `travesano`) | `audio/ui/*.ogg` | League-Soccer, `data/media/sounds/ballsound.wav` y `goalpost.wav` | 🟡 el repositorio es Apache 2.0, pero el WAV no indica su origen (viene de GameplayFootball): confirmar o sustituir antes de vender |
 | Minijuego retro 5 contra 5: código, dibujos y efectos | `minijuegos/retro5v5/` | github.com/Habeeb-Rahman-CA/soccer5v5-game-godot | 🟢 MIT, © 2026 Habeeb Rahman (`minijuegos/retro5v5/LICENCIA_MIT.txt`); citar en los créditos. Clubes con nombre modificado y jugadores inventados (el original traía reales) |
-| Música del minijuego (4 temas) | `minijuegos/retro5v5/assets/music/` | soccer5v5 | 🟡 el repositorio es MIT, pero su autor no dice de dónde salen los temas: confirmar o sustituir antes de vender |
+| Música del minijuego (4 temas) | `minijuegos/retro5v5/assets/music/` | soccer5v5 | 🟡 el repositorio es MIT, pero su autor no dice de dónde salen los temas. **Desde el 13-11 NO viajan en ningún instalador** (`exclude_filter` de los 6 presets) y ningún código del minijuego los reproduce; siguen en el repositorio por si se quieren usar tras confirmar su origen, o se sustituyen por pistas CC0 como las de `audio/musica/` |
 | Fuente «Daydream» de soccer5v5 | solo en `terceros/soccer5v5/` | soccer5v5 | 🔴 SOLO USO PERSONAL: no se usa ni se publica |
 | Fuente «Pixeled» de soccer5v5 | solo en `terceros/soccer5v5/` | soccer5v5 | 🔴 sin licencia: no se usa |
 | Rótulo «World Cup» de soccer5v5 | solo en `terceros/soccer5v5/` | soccer5v5 | 🔴 marca registrada de la FIFA: no se usa |

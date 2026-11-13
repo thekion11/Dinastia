@@ -106,12 +106,18 @@ var _hilo: Thread = null
 var _parar := false
 var _prioridad := ""
 var _esperando := ""
+## (13-11) Música LIBRE grabada (`MusicaLibre`): en menús, club y parón suenan pistas CC0 rotando; en los partidos, lo compuesto. Apagable en Ajustes.
+var libre := true
+var _libre_n := 0
+var _libre_sit := ""
 
 func _ready() -> void:
 	_voz = AudioStreamPlayer.new()
 	## La música va en su propio reproductor, no en la rueda de ocho voces de
 	## `Sonido`: es larga y se pisaría con el noveno efecto que sonara.
 	add_child(_voz)
+	_voz.finished.connect(_al_terminar_pista)
+	_libre_n = int(Time.get_unix_time_from_system() / 60.0)   ## por dónde empieza la rotación (nada de `Azar`)
 	_hilo = Thread.new()
 	_hilo.start(_componer_en_fondo, Thread.PRIORITY_LOW)
 
@@ -168,6 +174,35 @@ func poner(clave: String) -> void:
 	_voz.play()
 	_voz.stream_paused = en_fondo
 
+## Una pista libre de la situación («oficina», «paron»), rotando. Devuelve false si no hay ninguna (entonces suena lo compuesto). Si ya suena
+## una de esa situación, no la corta.
+func poner_libre(sit: String) -> bool:
+	if not encendida:
+		return false
+	if _sonando.begins_with("libre:") and _libre_sit == sit and _voz.playing:
+		_voz.volume_db = _db()
+		return true
+	var d := MusicaLibre.elegir(sit, _libre_n)
+	if d.is_empty():
+		return false
+	var flujo := MusicaLibre.cargar(d)
+	if flujo == null:
+		return false
+	_libre_sit = sit
+	_sonando = "libre:" + str(d["id"])
+	_voz.stream = flujo
+	_voz.volume_db = _db()
+	_voz.play()
+	_voz.stream_paused = en_fondo
+	return true
+
+## Al acabar una pista libre, la siguiente de la situación (las compuestas se repiten solas).
+func _al_terminar_pista() -> void:
+	if _sonando.begins_with("libre:") and encendida:
+		_libre_n += 1
+		_sonando = ""
+		poner_libre(_libre_sit)
+
 ## El volumen en dB, acotado: un valor guardado roto (NaN, 1e9) daba error de motor o +180 dB (caza de fallos 4-11).
 func _db() -> float:
 	return clampf(linear_to_db(clampf(volumen if not is_nan(volumen) else 0.3, 0.001, 2.0)), -80.0, 6.0)
@@ -201,6 +236,10 @@ func ambientar(situacion: String) -> void:
 	if not automatica and PIEZAS.has(pieza):
 		poner(pieza)
 		return
+	if libre:
+		var sit := MusicaLibre.situacion_libre(situacion)
+		if sit != "" and poner_libre(sit):
+			return
 	match situacion:
 		"partido": poner("vestuario")
 		"final": poner("tension")

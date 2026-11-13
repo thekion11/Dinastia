@@ -8489,7 +8489,11 @@
   "curva: %s": "curve: %s",
   "Tu forma (de −3 a +3) sale de tus últimas notas, tu ánimo y tu energía. Se suma a tu media de hoy: en Los Momentos la zona es más ancha o más estrecha, y pesa en tu nota cuando simulas.": "Your form (−3 to +3) comes from your latest ratings, your mood and your energy. It adds to today's overall: in The Moments the zone gets wider or narrower, and it weighs on your rating when you simulate.",
   "Semana sin chispa: a esta edad tu curva de crecimiento va más lenta.": "A flat week: at this age your growth curve runs slower.",
-  "Tu curva de crecimiento empuja esta semana.": "Your growth curve gives you a push this week."
+  "Tu curva de crecimiento empuja esta semana.": "Your growth curve gives you a push this week.",
+  "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "World seed: %d (used to repeat this world and to report bugs)",
+  "Copiar semilla": "Copy seed",
+  "Semilla copiada al portapapeles.": "Seed copied to the clipboard.",
+  "Música grabada (libre) en menús y club": "Recorded music (free) in menus and club"
  },
  "pt": {
   "Historia": "História",
@@ -16981,7 +16985,11 @@
   "curva: %s": "curva: %s",
   "Tu forma (de −3 a +3) sale de tus últimas notas, tu ánimo y tu energía. Se suma a tu media de hoy: en Los Momentos la zona es más ancha o más estrecha, y pesa en tu nota cuando simulas.": "Sua forma (de −3 a +3) vem das suas últimas notas, do seu ânimo e da sua energia. Soma à sua média de hoje: em Os Momentos a zona fica mais larga ou mais estreita, e pesa na sua nota quando você simula.",
   "Semana sin chispa: a esta edad tu curva de crecimiento va más lenta.": "Semana sem brilho: nesta idade sua curva de crescimento anda mais lenta.",
-  "Tu curva de crecimiento empuja esta semana.": "Sua curva de crescimento dá um empurrão esta semana."
+  "Tu curva de crecimiento empuja esta semana.": "Sua curva de crescimento dá um empurrão esta semana.",
+  "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Semente do mundo: %d (serve para repetir este mundo e para relatar erros)",
+  "Copiar semilla": "Copiar semente",
+  "Semilla copiada al portapapeles.": "Semente copiada para a área de transferência.",
+  "Música grabada (libre) en menús y club": "Música gravada (livre) nos menus e no clube"
  },
  "patrones": [
   [
@@ -31613,7 +31621,11 @@
   "curva: %s": "courbe : %s",
   "Tu forma (de −3 a +3) sale de tus últimas notas, tu ánimo y tu energía. Se suma a tu media de hoy: en Los Momentos la zona es más ancha o más estrecha, y pesa en tu nota cuando simulas.": "Ta forme (de −3 à +3) vient de tes dernières notes, de ton moral et de ton énergie. Elle s'ajoute à ta note du jour : dans Les Moments la zone s'élargit ou se resserre, et elle pèse sur ta note quand tu simules.",
   "Semana sin chispa: a esta edad tu curva de crecimiento va más lenta.": "Semaine sans étincelle : à cet âge ta courbe de progression est plus lente.",
-  "Tu curva de crecimiento empuja esta semana.": "Ta courbe de progression te pousse cette semaine."
+  "Tu curva de crecimiento empuja esta semana.": "Ta courbe de progression te pousse cette semaine.",
+  "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Graine du monde : %d (sert à rejouer ce monde et à signaler des bugs)",
+  "Copiar semilla": "Copier la graine",
+  "Semilla copiada al portapapeles.": "Graine copiée dans le presse-papiers.",
+  "Música grabada (libre) en menús y club": "Musique enregistrée (libre) dans les menus et le club"
  },
  "it": {
   "Historia": "Storia",
@@ -40105,7 +40117,11 @@
   "curva: %s": "curva: %s",
   "Tu forma (de −3 a +3) sale de tus últimas notas, tu ánimo y tu energía. Se suma a tu media de hoy: en Los Momentos la zona es más ancha o más estrecha, y pesa en tu nota cuando simulas.": "La tua forma (da −3 a +3) dipende dagli ultimi voti, dal morale e dall'energia. Si somma alla media di oggi: ne I Momenti la zona è più larga o più stretta, e pesa sul voto quando simuli.",
   "Semana sin chispa: a esta edad tu curva de crecimiento va más lenta.": "Settimana senza scintilla: a quest'età la tua curva di crescita va più piano.",
-  "Tu curva de crecimiento empuja esta semana.": "La tua curva di crescita ti dà una spinta questa settimana."
+  "Tu curva de crecimiento empuja esta semana.": "La tua curva di crescita ti dà una spinta questa settimana.",
+  "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Seme del mondo: %d (serve per ripetere questo mondo e per segnalare errori)",
+  "Copiar semilla": "Copia il seme",
+  "Semilla copiada al portapapeles.": "Seme copiato negli appunti.",
+  "Música grabada (libre) en menús y club": "Musica registrata (libera) nei menu e nel club"
  },
  "de": {
   "Historia": "Geschichte",
@@ -48597,7 +48613,11 @@
   "curva: %s": "Kurve: %s",
   "Tu forma (de −3 a +3) sale de tus últimas notas, tu ánimo y tu energía. Se suma a tu media de hoy: en Los Momentos la zona es más ancha o más estrecha, y pesa en tu nota cuando simulas.": "Deine Form (−3 bis +3) ergibt sich aus deinen letzten Noten, deiner Stimmung und deiner Energie. Sie zählt zum heutigen Gesamtwert: In Die Momente wird die Zone breiter oder schmaler, und sie wirkt auf deine Note beim Simulieren.",
   "Semana sin chispa: a esta edad tu curva de crecimiento va más lenta.": "Woche ohne Funken: In diesem Alter läuft deine Wachstumskurve langsamer.",
-  "Tu curva de crecimiento empuja esta semana.": "Deine Wachstumskurve gibt dir diese Woche Schub."
+  "Tu curva de crecimiento empuja esta semana.": "Deine Wachstumskurve gibt dir diese Woche Schub.",
+  "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Welt-Startwert: %d (zum Wiederholen dieser Welt und zum Melden von Fehlern)",
+  "Copiar semilla": "Startwert kopieren",
+  "Semilla copiada al portapapeles.": "Startwert in die Zwischenablage kopiert.",
+  "Música grabada (libre) en menús y club": "Aufgenommene Musik (frei) in Menüs und im Verein"
  },
  "ca": {
   "Historia": "Història",
@@ -57089,7 +57109,11 @@
   "curva: %s": "corba: %s",
   "Tu forma (de −3 a +3) sale de tus últimas notas, tu ánimo y tu energía. Se suma a tu media de hoy: en Los Momentos la zona es más ancha o más estrecha, y pesa en tu nota cuando simulas.": "La teva forma (de −3 a +3) surt de les teves últimes notes, el teu ànim i la teva energia. Se suma a la teva mitjana d'avui: a Els Moments la zona és més ampla o més estreta, i pesa en la teva nota quan simules.",
   "Semana sin chispa: a esta edad tu curva de crecimiento va más lenta.": "Setmana sense espurna: a aquesta edat la teva corba de creixement va més lenta.",
-  "Tu curva de crecimiento empuja esta semana.": "La teva corba de creixement empeny aquesta setmana."
+  "Tu curva de crecimiento empuja esta semana.": "La teva corba de creixement empeny aquesta setmana.",
+  "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Llavor del món: %d (serveix per repetir aquest món i per informar d'errors)",
+  "Copiar semilla": "Copiar la llavor",
+  "Semilla copiada al portapapeles.": "Llavor copiada al porta-retalls.",
+  "Música grabada (libre) en menús y club": "Música gravada (lliure) als menús i al club"
  },
  "pl": {
   "Club": "Klub",
@@ -65581,7 +65605,11 @@
   "curva: %s": "krzywa: %s",
   "Tu forma (de −3 a +3) sale de tus últimas notas, tu ánimo y tu energía. Se suma a tu media de hoy: en Los Momentos la zona es más ancha o más estrecha, y pesa en tu nota cuando simulas.": "Twoja forma (od −3 do +3) wynika z ostatnich ocen, nastroju i energii. Dolicza się do dzisiejszej oceny: w Momentach strefa jest szersza lub węższa, a przy symulacji wpływa na twoją ocenę.",
   "Semana sin chispa: a esta edad tu curva de crecimiento va más lenta.": "Tydzień bez iskry: w tym wieku twoja krzywa rozwoju jest wolniejsza.",
-  "Tu curva de crecimiento empuja esta semana.": "Twoja krzywa rozwoju daje ci w tym tygodniu impuls."
+  "Tu curva de crecimiento empuja esta semana.": "Twoja krzywa rozwoju daje ci w tym tygodniu impuls.",
+  "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Ziarno świata: %d (służy do powtórzenia tego świata i zgłaszania błędów)",
+  "Copiar semilla": "Kopiuj ziarno",
+  "Semilla copiada al portapapeles.": "Ziarno skopiowane do schowka.",
+  "Música grabada (libre) en menús y club": "Muzyka nagrana (wolna) w menu i w klubie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -74073,6 +74101,10 @@
   "curva: %s": "eğri: %s",
   "Tu forma (de −3 a +3) sale de tus últimas notas, tu ánimo y tu energía. Se suma a tu media de hoy: en Los Momentos la zona es más ancha o más estrecha, y pesa en tu nota cuando simulas.": "Formun (−3 ile +3 arası) son notlarından, moralinden ve enerjinden gelir. Bugünkü genel puanına eklenir: Anlar'da bölge genişler veya daralır, simülasyonda notunu etkiler.",
   "Semana sin chispa: a esta edad tu curva de crecimiento va más lenta.": "Kıvılcımsız bir hafta: bu yaşta gelişim eğrin daha yavaş.",
-  "Tu curva de crecimiento empuja esta semana.": "Gelişim eğrin bu hafta seni itiyor."
+  "Tu curva de crecimiento empuja esta semana.": "Gelişim eğrin bu hafta seni itiyor.",
+  "Semilla del mundo: %d (sirve para repetir este mundo y para informar de fallos)": "Dünya tohumu: %d (bu dünyayı tekrarlamak ve hata bildirmek için kullanılır)",
+  "Copiar semilla": "Tohumu kopyala",
+  "Semilla copiada al portapapeles.": "Tohum panoya kopyalandı.",
+  "Música grabada (libre) en menús y club": "Kayıtlı müzik (özgür) menülerde ve kulüpte"
  }
 }
