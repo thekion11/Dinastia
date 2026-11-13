@@ -17,6 +17,8 @@ var _hechas: Array = []
 var _pausa := 0.0
 var _fin := false
 var _barra: RutaBarra
+var _pizarra: RutaPizarra
+var _tono := E.CIELO
 var _minuto: Label
 var _titulo: Label
 var _texto: Label
@@ -46,6 +48,7 @@ func _ready() -> void:
 	centro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(centro)
 	var tono := E.de_club(ui.carrera.club(ui.mundo))
+	_tono = tono
 	var p := E.tarjeta(tono, E.TINTA.lerp(tono, 0.08))
 	p.custom_minimum_size = Vector2(minf(680.0, get_viewport_rect().size.x - 24.0), 0)
 	centro.add_child(p)
@@ -70,6 +73,10 @@ func _ready() -> void:
 	_texto = E.lbl(14, E.SUAVE, "")
 	_texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(_texto)
+	_pizarra = RutaPizarra.new()
+	## En un teléfono tumbado (menos de 420 px de alto) la pizarra se achica.
+	_pizarra.custom_minimum_size = Vector2(0, 150 if get_viewport_rect().size.y >= 520.0 else 84)
+	v.add_child(_pizarra)
 	_barra = RutaBarra.new()
 	_barra.total_luces = _guion.size()
 	v.add_child(_barra)
@@ -91,6 +98,7 @@ func _siguiente() -> void:
 	_estado.text = Idiomas.t("Jugada %d de %d") % [_hechas.size() + 1, _guion.size()]
 	_estado.add_theme_color_override("font_color", E.SUAVE)
 	_barra.lanzar(_azar, 2.5 + float(_hechas.size()) * 0.45, float(z[0]), float(z[1]))
+	_pizarra.poner(String(mo["tipo"]), _tono)
 
 func _process(d: float) -> void:
 	if _fin or _pausa <= 0.0:
@@ -107,6 +115,7 @@ func golpear() -> void:
 	if _fin or _pausa > 0.0:
 		return
 	var q := _barra.golpear()
+	_pizarra.resolver(q)
 	var mo: Dictionary = _guion[_hechas.size()]
 	var d := CarreraMomentos.desenlace(String(mo["tipo"]), q)
 	_hechas.append(d)

@@ -317,6 +317,9 @@ func _probar_carrera_ruta() -> void:
 			int(bien["goles_local"]), int(bien["goles_visita"]), int(mal["goles_local"]), int(mal["goles_visita"])])
 		_comprobar(int(bien["goles"]) + int(bien["asist"]) + int(bien["paradas"]) + (1 if j.pos == "DEF" else 0) >= 1 and int(bien["encajados"]) == int(bien["goles_visita"]),
 			"  el resumen trae goles, asistencias o paradas, y lo que encajó tu equipo")
+		for tipo_m: String in CarreraMomentos.TIPOS:
+			if not RutaPizarra.JUGADAS.has(tipo_m):
+				_comprobar(false, "  la jugada «%s» no tiene dibujo en la pizarra" % tipo_m)
 		var copa_m := CarreraMomentos.resultado(c, m, par_m, [], -1, true)
 		_comprobar(int(copa_m["goles_local"]) != int(copa_m["goles_visita"]), "  en copa no hay empate")
 		## Las ofertas esperan a que te asientes: 15 partidos y nota 6,3.
