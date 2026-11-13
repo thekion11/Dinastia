@@ -8494,7 +8494,15 @@
   "Copiar semilla": "Copy seed",
   "Semilla copiada al portapapeles.": "Seed copied to the clipboard.",
   "Música grabada (libre) en menús y club": "Recorded music (free) in menus and club",
-  "pasaporte de %s": "%s passport"
+  "pasaporte de %s": "%s passport",
+  "El niño de las botas vuelve": "The boy with the boots is back",
+  "Juega con tus botas en el equipo de su barrio y ha traído a todos sus compañeros. Su entrenador te pide que les dirijas un entreno.": "He plays in your boots for his neighbourhood team and has brought all his teammates. Their coach asks you to run a training session for them.",
+  "Les das la tarde entera.": "You give them the whole afternoon.",
+  "Les firmas un balón y les deseas suerte.": "You sign a ball for them and wish them luck.",
+  "El consejo del veterano": "The veteran's advice",
+  "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "After weeks of staying behind, just the two of you, the veteran says he has nothing left to teach you, except one thing: choose.",
+  "«Enséñame a leer el juego.»": "“Teach me to read the game.”",
+  "«Enséñame a mandar en el vestuario.»": "“Teach me to lead the dressing room.”"
  },
  "pt": {
   "Historia": "História",
@@ -16991,7 +16999,15 @@
   "Copiar semilla": "Copiar semente",
   "Semilla copiada al portapapeles.": "Semente copiada para a área de transferência.",
   "Música grabada (libre) en menús y club": "Música gravada (livre) nos menus e no clube",
-  "pasaporte de %s": "passaporte de %s"
+  "pasaporte de %s": "passaporte de %s",
+  "El niño de las botas vuelve": "O menino das chuteiras volta",
+  "Juega con tus botas en el equipo de su barrio y ha traído a todos sus compañeros. Su entrenador te pide que les dirijas un entreno.": "Joga com as tuas chuteiras na equipa do bairro e trouxe todos os colegas. O treinador pede-te que lhes dês um treino.",
+  "Les das la tarde entera.": "Dás-lhes a tarde inteira.",
+  "Les firmas un balón y les deseas suerte.": "Assinas-lhes uma bola e desejas-lhes sorte.",
+  "El consejo del veterano": "O conselho do veterano",
+  "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Depois de semanas a ficarem os dois sozinhos, o veterano diz que já não tem nada para te ensinar, exceto uma coisa: escolhe.",
+  "«Enséñame a leer el juego.»": "«Ensina-me a ler o jogo.»",
+  "«Enséñame a mandar en el vestuario.»": "«Ensina-me a mandar no balneário.»"
  },
  "patrones": [
   [
@@ -31628,7 +31644,15 @@
   "Copiar semilla": "Copier la graine",
   "Semilla copiada al portapapeles.": "Graine copiée dans le presse-papiers.",
   "Música grabada (libre) en menús y club": "Musique enregistrée (libre) dans les menus et le club",
-  "pasaporte de %s": "passeport de %s"
+  "pasaporte de %s": "passeport de %s",
+  "El niño de las botas vuelve": "Le garçon aux crampons revient",
+  "Juega con tus botas en el equipo de su barrio y ha traído a todos sus compañeros. Su entrenador te pide que les dirijas un entreno.": "Il joue avec tes crampons dans l'équipe de son quartier et a amené tous ses coéquipiers. Leur entraîneur te demande de diriger une séance.",
+  "Les das la tarde entera.": "Tu leur consacres tout l'après-midi.",
+  "Les firmas un balón y les deseas suerte.": "Tu leur signes un ballon et leur souhaites bonne chance.",
+  "El consejo del veterano": "Le conseil du vétéran",
+  "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Après des semaines à rester tous les deux, le vétéran te dit qu'il n'a plus rien à t'apprendre, sauf une chose : choisis.",
+  "«Enséñame a leer el juego.»": "« Apprends-moi à lire le jeu. »",
+  "«Enséñame a mandar en el vestuario.»": "« Apprends-moi à mener le vestiaire. »"
  },
  "it": {
   "Historia": "Storia",
@@ -40125,7 +40149,15 @@
   "Copiar semilla": "Copia il seme",
   "Semilla copiada al portapapeles.": "Seme copiato negli appunti.",
   "Música grabada (libre) en menús y club": "Musica registrata (libera) nei menu e nel club",
-  "pasaporte de %s": "passaporto di %s"
+  "pasaporte de %s": "passaporto di %s",
+  "El niño de las botas vuelve": "Il bambino delle scarpe torna",
+  "Juega con tus botas en el equipo de su barrio y ha traído a todos sus compañeros. Su entrenador te pide que les dirijas un entreno.": "Gioca con le tue scarpe nella squadra del quartiere e ha portato tutti i compagni. Il loro allenatore ti chiede di dirigere un allenamento.",
+  "Les das la tarde entera.": "Dedichi loro tutto il pomeriggio.",
+  "Les firmas un balón y les deseas suerte.": "Firmi loro un pallone e auguri buona fortuna.",
+  "El consejo del veterano": "Il consiglio del veterano",
+  "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Dopo settimane rimasti voi due da soli, il veterano ti dice che non ha più nulla da insegnarti, tranne una cosa: scegli.",
+  "«Enséñame a leer el juego.»": "«Insegnami a leggere il gioco.»",
+  "«Enséñame a mandar en el vestuario.»": "«Insegnami a comandare nello spogliatoio.»"
  },
  "de": {
   "Historia": "Geschichte",
@@ -48622,7 +48654,15 @@
   "Copiar semilla": "Startwert kopieren",
   "Semilla copiada al portapapeles.": "Startwert in die Zwischenablage kopiert.",
   "Música grabada (libre) en menús y club": "Aufgenommene Musik (frei) in Menüs und im Verein",
-  "pasaporte de %s": "Pass von %s"
+  "pasaporte de %s": "Pass von %s",
+  "El niño de las botas vuelve": "Der Junge mit den Schuhen ist zurück",
+  "Juega con tus botas en el equipo de su barrio y ha traído a todos sus compañeros. Su entrenador te pide que les dirijas un entreno.": "Er spielt mit deinen Schuhen in seiner Stadtteilmannschaft und hat alle Mitspieler mitgebracht. Ihr Trainer bittet dich, ein Training zu leiten.",
+  "Les das la tarde entera.": "Du schenkst ihnen den ganzen Nachmittag.",
+  "Les firmas un balón y les deseas suerte.": "Du signierst ihnen einen Ball und wünschst viel Glück.",
+  "El consejo del veterano": "Der Rat des Routiniers",
+  "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Nach Wochen zu zweit sagt der Routinier, er habe dir nichts mehr beizubringen, außer einer Sache: Wähle.",
+  "«Enséñame a leer el juego.»": "„Bring mir bei, das Spiel zu lesen.“",
+  "«Enséñame a mandar en el vestuario.»": "„Bring mir bei, die Kabine zu führen.“"
  },
  "ca": {
   "Historia": "Història",
@@ -57119,7 +57159,15 @@
   "Copiar semilla": "Copiar la llavor",
   "Semilla copiada al portapapeles.": "Llavor copiada al porta-retalls.",
   "Música grabada (libre) en menús y club": "Música gravada (lliure) als menús i al club",
-  "pasaporte de %s": "passaport de %s"
+  "pasaporte de %s": "passaport de %s",
+  "El niño de las botas vuelve": "El nen de les botes torna",
+  "Juega con tus botas en el equipo de su barrio y ha traído a todos sus compañeros. Su entrenador te pide que les dirijas un entreno.": "Juga amb les teves botes a l'equip del barri i ha portat tots els companys. El seu entrenador et demana que els dirigeixis un entrenament.",
+  "Les das la tarde entera.": "Els dediques tota la tarda.",
+  "Les firmas un balón y les deseas suerte.": "Els signes una pilota i els desitges sort.",
+  "El consejo del veterano": "El consell del veterà",
+  "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Després de setmanes quedant-vos tots dos sols, el veterà et diu que ja no té res per ensenyar-te, tret d'una cosa: tria.",
+  "«Enséñame a leer el juego.»": "«Ensenya'm a llegir el joc.»",
+  "«Enséñame a mandar en el vestuario.»": "«Ensenya'm a manar al vestidor.»"
  },
  "pl": {
   "Club": "Klub",
@@ -65616,7 +65664,15 @@
   "Copiar semilla": "Kopiuj ziarno",
   "Semilla copiada al portapapeles.": "Ziarno skopiowane do schowka.",
   "Música grabada (libre) en menús y club": "Muzyka nagrana (wolna) w menu i w klubie",
-  "pasaporte de %s": "paszport: %s"
+  "pasaporte de %s": "paszport: %s",
+  "El niño de las botas vuelve": "Chłopiec z butami wraca",
+  "Juega con tus botas en el equipo de su barrio y ha traído a todos sus compañeros. Su entrenador te pide que les dirijas un entreno.": "Gra w twoich butach w osiedlowej drużynie i przyprowadził wszystkich kolegów. Ich trener prosi, żebyś poprowadził im trening.",
+  "Les das la tarde entera.": "Poświęcasz im całe popołudnie.",
+  "Les firmas un balón y les deseas suerte.": "Podpisujesz im piłkę i życzysz powodzenia.",
+  "El consejo del veterano": "Rada weterana",
+  "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Po tygodniach wspólnej pracy weteran mówi, że nie ma cię już czego uczyć, poza jednym: wybierz.",
+  "«Enséñame a leer el juego.»": "„Naucz mnie czytać grę.”",
+  "«Enséñame a mandar en el vestuario.»": "„Naucz mnie rządzić w szatni.”"
  },
  "tr": {
   "Club": "Kulüp",
@@ -74113,6 +74169,14 @@
   "Copiar semilla": "Tohumu kopyala",
   "Semilla copiada al portapapeles.": "Tohum panoya kopyalandı.",
   "Música grabada (libre) en menús y club": "Kayıtlı müzik (özgür) menülerde ve kulüpte",
-  "pasaporte de %s": "%s pasaportu"
+  "pasaporte de %s": "%s pasaportu",
+  "El niño de las botas vuelve": "Kramponlu çocuk geri döndü",
+  "Juega con tus botas en el equipo de su barrio y ha traído a todos sus compañeros. Su entrenador te pide que les dirijas un entreno.": "Mahalle takımında senin kramponlarınla oynuyor ve bütün arkadaşlarını getirmiş. Antrenörleri onlara bir antrenman yaptırmanı istiyor.",
+  "Les das la tarde entera.": "Bütün öğleden sonranı onlara ayırırsın.",
+  "Les firmas un balón y les deseas suerte.": "Onlara bir top imzalar ve şans dilersin.",
+  "El consejo del veterano": "Tecrübeli oyuncunun öğüdü",
+  "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Haftalarca baş başa çalıştıktan sonra tecrübeli oyuncu sana öğretecek bir şeyi kalmadığını söyler, biri hariç: seç.",
+  "«Enséñame a leer el juego.»": "“Bana oyunu okumayı öğret.”",
+  "«Enséñame a mandar en el vestuario.»": "“Bana soyunma odasını yönetmeyi öğret.”"
  }
 }

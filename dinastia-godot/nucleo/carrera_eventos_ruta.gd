@@ -31,13 +31,25 @@ static func eventos(c: CarreraJugador, m: Mundo) -> Array:
 	if not c.hitos.has("ruta_nino") and c.fama >= 25:
 		p.append(c._ev("ruta_nino", "Un niño con tu camiseta",
 			"A la salida del entreno te espera un niño con tu nombre a la espalda. Lleva una hora ahí.",
-			[c._op("Le regalas tus botas.", {"seguidores": 500, "fama": 1, "moral": 3}),
+			[c._op("Le regalas tus botas.", {"seguidores": 500, "fama": 1, "moral": 3, "ruta_marca": "botas"}),
 			c._op("Le firmas la camiseta y te vas.", {"moral": 1})], true))
 	if not c.hitos.has("ruta_veterano") and CarreraRuta.nivel(c) >= 4:
 		p.append(c._ev("ruta_veterano", "El veterano te propone quedarte",
 			"El más viejo del vestuario te ofrece una hora extra de trabajo tras el entreno, los dos solos.",
-			[c._op("Te quedas con él.", {"ruta_xp": 60, "energia": -8, "relacion": 1}),
+			[c._op("Te quedas con él.", {"ruta_xp": 60, "energia": -8, "relacion": 1, "ruta_marca": "veterano"}),
 			c._op("Hoy no: estás cansado.", {"energia": 6})], true))
+	## EN CADENA: el niño de las botas vuelve doce semanas después, con su equipo entero.
+	if not c.hitos.has("ruta_escuela") and semanas_desde(c, m, "botas") >= 12:
+		p.append(c._ev("ruta_escuela", "El niño de las botas vuelve",
+			"Juega con tus botas en el equipo de su barrio y ha traído a todos sus compañeros. Su entrenador te pide que les dirijas un entreno.",
+			[c._op("Les das la tarde entera.", {"seguidores": 800, "fama": 2, "moral": 4, "energia": -6}),
+			c._op("Les firmas un balón y les deseas suerte.", {"seguidores": 150, "moral": 1})], true))
+	## EN CADENA: diez semanas de horas extra con el veterano y te deja su último consejo.
+	if not c.hitos.has("ruta_legado") and semanas_desde(c, m, "veterano") >= 10:
+		p.append(c._ev("ruta_legado", "El consejo del veterano",
+			"Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.",
+			[c._op("«Enséñame a leer el juego.»", {"ruta_xp": 120, "relacion": 1}),
+			c._op("«Enséñame a mandar en el vestuario.»", {"relacion": 4, "moral": 3})], true))
 	var j := c.jugador(m)
 	if not c.hitos.has("ruta_primo") and j != null and CarreraVida.ahorros(c) >= j.sueldo * 20:
 		p.append(c._ev("ruta_primo", "Tu primo tiene un negocio",

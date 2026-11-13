@@ -38,7 +38,7 @@ El modo nuevo es «LA RUTA». Dónde está cada cosa (lo hecho no se lista: est�
 Falta:
 - Probar el foco con un MANDO REAL (la prueba automática da 0 botones sin alcanzar en PC y en teléfono de pie, pero nadie lo ha jugado con mando).
 - Que el dueño lo JUEGUE (PC y teléfono) y diga qué le parece: estética, ritmo, «Los Momentos» frente al partido en el césped.
-- Más cadenas de eventos (hay dos: «El duelo se calienta» y «El bar de tu primo»; el mecanismo de marcas está en `CarreraEventosRuta`).
+- Más cadenas de eventos (hay cuatro: «El duelo se calienta», «El bar de tu primo», «El niño de las botas vuelve» y «El consejo del veterano»; el mecanismo de marcas está en `CarreraEventosRuta`).
 - La sonda de ritmo no juega los partidos de selección (la misión «juega con tu selección» del capítulo Estrella no se cobra en la sonda). En el juego sí: el partido de selección se puede jugar en el césped, en «Los Momentos» (probado: cuenta el partido y los goles) o simular.
 - OJO con el banco: si un script nuevo no compila, la sección que lo usa se corta SIN contar fallo. Tras tocar clases nuevas, mirar `godot --headless --import` y que la última línea de la sección («la revelación solo se gana el primer año», 3 veces) aparezca en `/tmp/mini_banco.txt`.
 - RESPUESTAS DEL DUEÑO (13-11, 14:10 UTC) a las 11 preguntas de la sesión de pulido:

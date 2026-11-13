@@ -120,6 +120,11 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(CarreraEventosRuta.semanas_desde(c, m, "bar") == 0 and not ids_ev.call().has("ruta_bar"), "  recién prestado, el bar todavía no da noticias")
 		(c.ruta["marcas"] as Dictionary)["bar"] = m.anio * 60 + m.semana - 15
 		_comprobar(ids_ev.call().has("ruta_bar"), "  quince semanas después llega «El bar de tu primo»")
+		for par: Array in [["botas", 12, "ruta_escuela"], ["veterano", 10, "ruta_legado"]]:
+			CarreraEventosRuta.aplicar(c, m, {"ruta_marca": String(par[0])})
+			var antes_cad: bool = ids_ev.call().has(String(par[2]))
+			(c.ruta["marcas"] as Dictionary)[String(par[0])] = m.anio * 60 + m.semana - int(par[1])
+			_comprobar(not antes_cad and ids_ev.call().has(String(par[2])), "  la marca «%s» trae su evento %d semanas después" % [par[0], par[1]])
 		CarreraEventosRuta.aplicar(c, m, {"ruta_marca": "pique"})
 		(c.ruta["marcas"] as Dictionary)["pique"] = m.anio * 60 + m.semana - 4
 		_comprobar(ids_ev.call().has("ruta_pique"), "  y si contestaste a tu rival en redes, el duelo se calienta")
