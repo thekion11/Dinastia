@@ -9,7 +9,7 @@ extends RefCounted
 const PREMIOS := {
 	"revelacion": ["Revelación del año", "Tu primera temporada completa, y a buen nivel.", 120, 4],
 	"goleador_club": ["Goleador del equipo", "Nadie marcó más que tú en tu club.", 100, 3],
-	"mejor_club": ["Jugador del año del club", "La mejor nota media de la plantilla.", 100, 3],
+	"mejor_club": ["Jugador del año del club", "La mejor nota media de la plantilla (6,8 o más).", 100, 3],
 	"once_ideal": ["Once ideal de la liga", "Nota media de 7,3 o más en 20 partidos.", 150, 5],
 	"muro": ["Guante de la liga", "Diez porterías a cero o más.", 120, 4],
 	"hierro": ["Hombre de hierro", "Jugaste 30 partidos o más.", 60, 1],
@@ -38,7 +38,7 @@ static func ganados(c: CarreraJugador, m: Mundo, gano_duelo: bool) -> Array:
 	if c.temporadas.is_empty() and pj >= 15 and nota >= 6.6:
 		out.append("revelacion")
 	var mas_goles := true
-	var mejor_nota := pj >= 10
+	var mejor_nota := pj >= 10 and nota >= 6.8
 	for o: Jugador in club.plantilla:
 		if o == j:
 			continue

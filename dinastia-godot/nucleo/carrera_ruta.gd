@@ -56,7 +56,16 @@ const RETOS := {
 	"participa": ["Participa en un gol (gol o asistencia)", 30, ["MED", "DEL"]],
 	"cero": ["Deja la portería a cero", 40, ["POR", "DEF"]],
 	"paradas": ["Haz tres paradas", 35, ["POR"]],
+	"nota65": ["No bajes de 6,5 de nota", 15, ["POR", "DEF", "MED", "DEL"]],
+	"completo": ["Juega los 90 minutos", 20, ["POR", "DEF", "MED", "DEL"]],
+	"gol_asist": ["Marca y asiste en el mismo partido", 70, ["MED", "DEL"]],
+	"triplete": ["Marca tres goles", 130, ["DEL"]],
+	"encaja1": ["Que tu equipo encaje un gol como mucho", 25, ["POR", "DEF"]],
+	"paradas5": ["Haz cinco paradas", 55, ["POR"]],
 }
+## Retos que piden lo mismo con distinta vara: no salen juntos la misma semana.
+const FAMILIAS := [["nota65", "nota7", "nota8"], ["gol", "doblete", "triplete", "gol_asist", "participa"],
+	["minutos", "completo"], ["cero", "encaja1"], ["paradas", "paradas5"]]
 const XP_ENTRENO := 6
 ## Lo máximo que un atributo puede pasar de tu media entrenándolo.
 const TOPE_SOBRE_MEDIA := 14
@@ -69,7 +78,7 @@ const XP_DUELO := 80
 static func asegurar(c: CarreraJugador) -> Dictionary:
 	var r: Dictionary = c.ruta
 	for par: Array in [["xp", 0], ["nivel", 1], ["puntos", 0], ["racha", 0], ["mejor_racha", 0],
-			["toque", -1.0], ["toque_semana", -1], ["retos_semana", -1], ["duelos_ganados", 0]]:
+			["toque", -1.0], ["toque_semana", -1], ["retos_semana", -1], ["duelos_ganados", 0], ["fama_ref", -1]]:
 		if typeof(r.get(par[0])) not in [TYPE_INT, TYPE_FLOAT]:
 			r[par[0]] = par[1]
 	for par2: Array in [["talentos", {}], ["rival", {}], ["ultimo", {}]]:
@@ -118,32 +127,6 @@ static func sumar_xp(c: CarreraJugador, cuanta: int) -> int:
 		_grada(c, "📣", "Capítulo nuevo: %s.", [Idiomas.t(String(capitulo(c)[1]))])
 	return subidas
 
-# ---------------------------------------------------------------- talentos
-
-## ¿Se puede comprar? Hay punto libre y está comprado el anterior de su rama.
-static func puede_aprender(c: CarreraJugador, talento: String) -> bool:
-	if not TALENTOS.has(talento) or tiene(c, talento) or int(asegurar(c)["puntos"]) <= 0:
-		return false
-	var t: Array = TALENTOS[talento]
-	for otro: String in TALENTOS:
-		var o: Array = TALENTOS[otro]
-		if String(o[0]) == String(t[0]) and int(o[1]) < int(t[1]) and not tiene(c, otro):
-			return false
-	return true
-
-static func aprender(c: CarreraJugador, m: Mundo, talento: String) -> bool:
-	if not puede_aprender(c, talento):
-		return false
-	var r := asegurar(c)
-	r["puntos"] = int(r["puntos"]) - 1
-	(r["talentos"] as Dictionary)[talento] = true
-	if talento == "brazalete":
-		c.capitan = true
-		var j := c.jugador(m)
-		if j != null and j.moral < 70:
-			j.moral = 70
-	return true
-
 # ---------------------------------------------------------------- retos
 
 static func _azar(c: CarreraJugador, m: Mundo, sal: int) -> RandomNumberGenerator:
@@ -168,11 +151,14 @@ static func retos(c: CarreraJugador, m: Mundo) -> Array:
 	while elegidos.size() < 3 and not ids.is_empty():
 		var id2: String = ids[g.randi() % ids.size()]
 		ids.erase(id2)
-		## Dos retos de nota o de gol a la vez serían el mismo reto dos veces.
-		if (id2 == "nota8" and elegidos.has("nota7")) or (id2 == "nota7" and elegidos.has("nota8")) \
-				or (id2 == "doblete" and elegidos.has("gol")) or (id2 == "gol" and elegidos.has("doblete")):
-			continue
-		elegidos.append(id2)
+		## Dos retos de la misma familia serían el mismo reto dos veces.
+		var repetido := false
+		for fam: Array in FAMILIAS:
+			if fam.has(id2):
+				for otro: String in elegidos:
+					repetido = repetido or fam.has(otro)
+		if not repetido:
+			elegidos.append(id2)
 	var lista: Array = []
 	for id3: String in elegidos:
 		lista.append({"id": id3, "hecho": false})
@@ -193,6 +179,12 @@ static func _cumple(id: String, d: Dictionary) -> bool:
 		"participa": return g + a >= 1
 		"cero": return d.has("encajados") and int(d["encajados"]) == 0 and int(d.get("minutos", 90)) >= 60
 		"paradas": return int(d.get("paradas", 0)) >= 3
+		"nota65": return float(d.get("nota", 0.0)) >= 6.5
+		"completo": return int(d.get("minutos", 90)) >= 90
+		"gol_asist": return g >= 1 and a >= 1
+		"triplete": return g >= 3
+		"encaja1": return d.has("encajados") and int(d["encajados"]) <= 1 and int(d.get("minutos", 90)) >= 60
+		"paradas5": return int(d.get("paradas", 0)) >= 5
 	return false
 
 # ---------------------------------------------------------------- partido
@@ -317,7 +309,18 @@ static func tras_entreno(c: CarreraJugador, m: Mundo, attr: String, mejoro: bool
 
 ## Lo que la ruta hace al cerrar cada semana.
 static func semana(c: CarreraJugador, m: Mundo) -> void:
-	asegurar(c)
+	var r := asegurar(c)
+	## LA FAMA CUESTA MÁS CUANTO MÁS TIENES (13-11: un delantero de 18 años con
+	## nota 6,2 llegaba a 100 en su segunda temporada): de lo que subió esta
+	## semana se queda una parte, menor cuanto más famoso eres; y se apaga un
+	## punto por semana si eres muy famoso y no rindes.
+	var ref := int(r["fama_ref"])
+	if ref >= 0 and c.fama > ref:
+		var parte := clampf(1.0 - float(ref) / 90.0, 0.12, 1.0)
+		c.fama = mini(100, ref + maxi(1 if c.fama - ref >= 3 else 0, int(round(float(c.fama - ref) * parte))))
+	if c.fama > 40 and c.nota_media() > 0.0 and c.nota_media() < 6.4 and (m.semana % 2) == 0:
+		c.fama -= 1
+	r["fama_ref"] = c.fama
 	if tiene(c, "ejemplo"):
 		c.relacion_dt = mini(100, c.relacion_dt + 1)
 	var j := c.jugador(m)
@@ -363,7 +366,9 @@ static func rival(c: CarreraJugador, m: Mundo) -> Jugador:
 		for o: Jugador in cl.plantilla:
 			if o.pos != j.pos:
 				continue
-			var dist := absf(float(o.ovr - j.ovr - 3)) + maxf(0.0, float(o.edad - 23)) * 2.0
+			## Un poco mejor que tú, y más cuantos más duelos llevas ganados.
+			var meta := j.ovr + 4 + mini(6, int(r["duelos_ganados"]) * 2)
+			var dist := absf(float(o.ovr - meta)) + maxf(0.0, float(o.edad - 25)) * 2.0
 			if dist < mejor_dist:
 				mejor_dist = dist
 				mejor = o
@@ -396,6 +401,8 @@ static func cerrar_duelo(c: CarreraJugador, m: Mundo) -> bool:
 		c.fama = mini(100, c.fama + 3)
 		sumar_xp(c, XP_DUELO)
 		_grada(c, "🏆", "Le ganaste el duelo de la temporada a %s.", [o.nombre])
+		## A rival vencido, rival nuevo (y más fuerte).
+		(r["rival"] as Dictionary).clear()
 	else:
 		_grada(c, "🥊", "%s te ganó el duelo de la temporada. Habrá revancha.", [o.nombre])
 	return gane

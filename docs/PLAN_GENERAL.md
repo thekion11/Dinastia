@@ -19,10 +19,12 @@ Hecho (bloque 3): cierre de temporada con premios personales (`nucleo/carrera_pr
 
 Hecho (bloque 4): misiones por capítulo (`nucleo/carrera_misiones.gd`): tres metas por capítulo (partidos, media, seguidores, goles+asistencias o porterías a cero, fama, premios, duelos, selección); al cumplir las tres, +1 punto de talento y experiencia; se ven en «Ruta». El sonido ya lo ponía `ui/boton_fx.gd` a todos los botones (tic al pasar, clic al pulsar).
 
+Hecho (bloque 5): ritmo medido con `pruebas/_sonda/sonda_ruta.tscn` (varias temporadas simuladas con un jugador sensato). Arreglos: la fama cuesta más cuanto más tienes y se apaga si no rindes (llegaba a 100 en la 2.ª temporada con nota 6,2; ahora 36-44-66-76 en cuatro); el rival es algo mejor que tú y cambia por uno más fuerte al ganarle; «Jugador del año del club» pide nota 6,8; los puntos de talento que sobran valen por +2 en un atributo (`nucleo/carrera_talentos.gd`, botón «+2» en «Yo»); seis retos nuevos (15 en total, por familias que no se repiten la misma semana) y sonido al subir de nivel. Cifras de la sonda (delantero, 5 temporadas): media 65-68-71-75-77, nivel 5-8-12-15-17.
+
 Falta (siguientes bloques):
 - Repasar con el mando real el orden del foco (hoy el foco cae en la acción principal de cada pantalla; el resto lo navega Godot solo).
-- Más variedad: más retos y eventos, patrocinios, vida fuera del campo; un sonido propio al subir de nivel.
-- Equilibrio: jugar varias temporadas seguidas y mirar el ritmo (hoy: nivel 6 y +media tras la primera temporada simulada de un delantero).
+- Más variedad: más eventos con decisiones, patrocinios, vida fuera del campo.
+- Equilibrio: repetir la sonda con portero y defensa, y a 10+ temporadas (¿se llega a Leyenda, nivel 34, antes del retiro?). Las ofertas llegan muy pronto (en la sonda, traspaso al extranjero en la primera temporada).
 - Pendiente de decisión del dueño: nada por ahora.
 
 ## ESTADO AL 12-11 MEDIODÍA (sesiones Opus 13 y 14 cerradas y ARCHIVADAS; todo en `main`)

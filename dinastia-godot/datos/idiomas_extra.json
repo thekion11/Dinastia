@@ -8316,7 +8316,17 @@
   "Misiones de «%s» cumplidas: un punto de talento extra.": "«%s» missions complete: one extra talent point.",
   "MISIONES DE «%s»": "«%s» MISSIONS",
   "COBRADAS": "CLAIMED",
-  "premio: +1 talento": "reward: +1 talent"
+  "premio: +1 talento": "reward: +1 talent",
+  "No bajes de 6,5 de nota": "Don't drop below a 6.5 rating",
+  "Juega los 90 minutos": "Play the full 90 minutes",
+  "Marca y asiste en el mismo partido": "Score and assist in the same match",
+  "Marca tres goles": "Score three goals",
+  "Que tu equipo encaje un gol como mucho": "Your team concedes one goal at most",
+  "Haz cinco paradas": "Make five saves",
+  "La mejor nota media de la plantilla (6,8 o más).": "The best average rating in the squad (6.8 or more).",
+  "Gastaste un punto de talento: %s +2.": "You spent a talent point: %s +2.",
+  "Gasta un punto de talento en +2 a este atributo.": "Spend a talent point for +2 to this attribute.",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «+2» de «Tu juego»).": "Each level gives a point. Within a branch they're learned in order. A point is also worth +2 to an attribute (the «+2» button in «Your game»)."
  },
  "pt": {
   "Historia": "História",
@@ -16635,7 +16645,17 @@
   "Misiones de «%s» cumplidas: un punto de talento extra.": "Missões de «%s» cumpridas: um ponto de talento extra.",
   "MISIONES DE «%s»": "MISSÕES DE «%s»",
   "COBRADAS": "RESGATADAS",
-  "premio: +1 talento": "prêmio: +1 talento"
+  "premio: +1 talento": "prêmio: +1 talento",
+  "No bajes de 6,5 de nota": "Não fique abaixo de nota 6,5",
+  "Juega los 90 minutos": "Jogue os 90 minutos",
+  "Marca y asiste en el mismo partido": "Marque e dê assistência no mesmo jogo",
+  "Marca tres goles": "Marque três gols",
+  "Que tu equipo encaje un gol como mucho": "Seu time sofre no máximo um gol",
+  "Haz cinco paradas": "Faça cinco defesas",
+  "La mejor nota media de la plantilla (6,8 o más).": "A melhor nota média do elenco (6,8 ou mais).",
+  "Gastaste un punto de talento: %s +2.": "Você gastou um ponto de talento: %s +2.",
+  "Gasta un punto de talento en +2 a este atributo.": "Gaste um ponto de talento em +2 neste atributo.",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «+2» de «Tu juego»).": "Cada nível dá um ponto. Dentro de um ramo, aprende-se em ordem. Um ponto também vale +2 em um atributo (botão «+2» de «Seu jogo»)."
  },
  "patrones": [
   [
@@ -31094,7 +31114,17 @@
   "Misiones de «%s» cumplidas: un punto de talento extra.": "Missions de «%s» accomplies : un point de talent en plus.",
   "MISIONES DE «%s»": "MISSIONS DE «%s»",
   "COBRADAS": "VALIDÉES",
-  "premio: +1 talento": "récompense : +1 talent"
+  "premio: +1 talento": "récompense : +1 talent",
+  "No bajes de 6,5 de nota": "Ne descends pas sous 6,5 de note",
+  "Juega los 90 minutos": "Joue les 90 minutes",
+  "Marca y asiste en el mismo partido": "Marque et fais une passe décisive dans le même match",
+  "Marca tres goles": "Marque trois buts",
+  "Que tu equipo encaje un gol como mucho": "Ton équipe encaisse un but au maximum",
+  "Haz cinco paradas": "Réalise cinq arrêts",
+  "La mejor nota media de la plantilla (6,8 o más).": "La meilleure note moyenne de l'effectif (6,8 ou plus).",
+  "Gastaste un punto de talento: %s +2.": "Tu as dépensé un point de talent : %s +2.",
+  "Gasta un punto de talento en +2 a este atributo.": "Dépense un point de talent pour +2 à cet attribut.",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «+2» de «Tu juego»).": "Chaque niveau donne un point. Dans une branche, on apprend dans l'ordre. Un point vaut aussi +2 à un attribut (bouton «+2» de «Ton jeu»)."
  },
  "it": {
   "Historia": "Storia",
@@ -39413,7 +39443,17 @@
   "Misiones de «%s» cumplidas: un punto de talento extra.": "Missioni di «%s» completate: un punto talento extra.",
   "MISIONES DE «%s»": "MISSIONI DI «%s»",
   "COBRADAS": "RISCOSSE",
-  "premio: +1 talento": "premio: +1 talento"
+  "premio: +1 talento": "premio: +1 talento",
+  "No bajes de 6,5 de nota": "Non scendere sotto il 6,5",
+  "Juega los 90 minutos": "Gioca tutti i 90 minuti",
+  "Marca y asiste en el mismo partido": "Segna e fai assist nella stessa partita",
+  "Marca tres goles": "Segna tre gol",
+  "Que tu equipo encaje un gol como mucho": "La tua squadra subisce al massimo un gol",
+  "Haz cinco paradas": "Fai cinque parate",
+  "La mejor nota media de la plantilla (6,8 o más).": "La miglior media voto della rosa (6,8 o più).",
+  "Gastaste un punto de talento: %s +2.": "Hai speso un punto talento: %s +2.",
+  "Gasta un punto de talento en +2 a este atributo.": "Spendi un punto talento per +2 a questo attributo.",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «+2» de «Tu juego»).": "Ogni livello dà un punto. In un ramo si imparano in ordine. Un punto vale anche +2 a un attributo (pulsante «+2» di «Il tuo gioco»)."
  },
  "de": {
   "Historia": "Geschichte",
@@ -47732,7 +47772,17 @@
   "Misiones de «%s» cumplidas: un punto de talento extra.": "Missionen von «%s» erfüllt: ein zusätzlicher Talentpunkt.",
   "MISIONES DE «%s»": "MISSIONEN: «%s»",
   "COBRADAS": "EINGELÖST",
-  "premio: +1 talento": "Belohnung: +1 Talent"
+  "premio: +1 talento": "Belohnung: +1 Talent",
+  "No bajes de 6,5 de nota": "Bleib bei Note 6,5 oder besser",
+  "Juega los 90 minutos": "Spiele die vollen 90 Minuten",
+  "Marca y asiste en el mismo partido": "Triff und leg auf im selben Spiel",
+  "Marca tres goles": "Erziele drei Tore",
+  "Que tu equipo encaje un gol como mucho": "Dein Team kassiert höchstens ein Tor",
+  "Haz cinco paradas": "Zeige fünf Paraden",
+  "La mejor nota media de la plantilla (6,8 o más).": "Die beste Durchschnittsnote im Kader (6,8 oder mehr).",
+  "Gastaste un punto de talento: %s +2.": "Du hast einen Talentpunkt ausgegeben: %s +2.",
+  "Gasta un punto de talento en +2 a este atributo.": "Gib einen Talentpunkt für +2 auf dieses Attribut aus.",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «+2» de «Tu juego»).": "Jede Stufe gibt einen Punkt. In einem Zweig lernt man der Reihe nach. Ein Punkt ist auch +2 auf ein Attribut wert (Schaltfläche «+2» unter «Dein Spiel»)."
  },
  "ca": {
   "Historia": "Història",
@@ -56051,7 +56101,17 @@
   "Misiones de «%s» cumplidas: un punto de talento extra.": "Missions de «%s» complertes: un punt de talent extra.",
   "MISIONES DE «%s»": "MISSIONS DE «%s»",
   "COBRADAS": "COBRADES",
-  "premio: +1 talento": "premi: +1 talent"
+  "premio: +1 talento": "premi: +1 talent",
+  "No bajes de 6,5 de nota": "No baixis de 6,5 de nota",
+  "Juega los 90 minutos": "Juga els 90 minuts",
+  "Marca y asiste en el mismo partido": "Marca i assisteix al mateix partit",
+  "Marca tres goles": "Marca tres gols",
+  "Que tu equipo encaje un gol como mucho": "Que el teu equip encaixi un gol com a molt",
+  "Haz cinco paradas": "Fes cinc aturades",
+  "La mejor nota media de la plantilla (6,8 o más).": "La millor nota mitjana de la plantilla (6,8 o més).",
+  "Gastaste un punto de talento: %s +2.": "Has gastat un punt de talent: %s +2.",
+  "Gasta un punto de talento en +2 a este atributo.": "Gasta un punt de talent en +2 a aquest atribut.",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «+2» de «Tu juego»).": "Cada nivell dona un punt. Dins d'una branca s'aprenen en ordre. Un punt també val per +2 en un atribut (botó «+2» de «El teu joc»)."
  },
  "pl": {
   "Club": "Klub",
@@ -64370,7 +64430,17 @@
   "Misiones de «%s» cumplidas: un punto de talento extra.": "Misje «%s» ukończone: dodatkowy punkt talentu.",
   "MISIONES DE «%s»": "MISJE: «%s»",
   "COBRADAS": "ODEBRANE",
-  "premio: +1 talento": "nagroda: +1 talent"
+  "premio: +1 talento": "nagroda: +1 talent",
+  "No bajes de 6,5 de nota": "Nie zejdź poniżej oceny 6,5",
+  "Juega los 90 minutos": "Zagraj pełne 90 minut",
+  "Marca y asiste en el mismo partido": "Strzel gola i zalicz asystę w jednym meczu",
+  "Marca tres goles": "Strzel trzy gole",
+  "Que tu equipo encaje un gol como mucho": "Twoja drużyna traci najwyżej jednego gola",
+  "Haz cinco paradas": "Obroń pięć strzałów",
+  "La mejor nota media de la plantilla (6,8 o más).": "Najlepsza średnia ocen w kadrze (6,8 lub więcej).",
+  "Gastaste un punto de talento: %s +2.": "Wydałeś punkt talentu: %s +2.",
+  "Gasta un punto de talento en +2 a este atributo.": "Wydaj punkt talentu na +2 do tego atrybutu.",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «+2» de «Tu juego»).": "Każdy poziom daje punkt. W gałęzi uczysz się po kolei. Punkt jest też wart +2 do atrybutu (przycisk «+2» w «Twoja gra»)."
  },
  "tr": {
   "Club": "Kulüp",
@@ -72689,6 +72759,16 @@
   "Misiones de «%s» cumplidas: un punto de talento extra.": "«%s» görevleri tamam: fazladan bir yetenek puanı.",
   "MISIONES DE «%s»": "«%s» GÖREVLERİ",
   "COBRADAS": "ALINDI",
-  "premio: +1 talento": "ödül: +1 yetenek"
+  "premio: +1 talento": "ödül: +1 yetenek",
+  "No bajes de 6,5 de nota": "6,5 notun altına düşme",
+  "Juega los 90 minutos": "90 dakikanın tamamını oyna",
+  "Marca y asiste en el mismo partido": "Aynı maçta gol at ve asist yap",
+  "Marca tres goles": "Üç gol at",
+  "Que tu equipo encaje un gol como mucho": "Takımın en fazla bir gol yesin",
+  "Haz cinco paradas": "Beş kurtarış yap",
+  "La mejor nota media de la plantilla (6,8 o más).": "Kadronun en iyi not ortalaması (6,8 veya üstü).",
+  "Gastaste un punto de talento: %s +2.": "Bir yetenek puanı harcadın: %s +2.",
+  "Gasta un punto de talento en +2 a este atributo.": "Bu özelliğe +2 için bir yetenek puanı harca.",
+  "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «+2» de «Tu juego»).": "Her seviye bir puan verir. Bir dalda sırayla öğrenilir. Bir puan ayrıca bir özelliğe +2 eder («Oyunun» bölümündeki «+2» düğmesi)."
  }
 }

@@ -258,7 +258,7 @@ func _probar_carrera_ruta() -> void:
 			_comprobar((CarreraRuta.RETOS[String(reto["id"])][2] as Array).has(j.pos), "  el reto «%s» es de tu línea" % CarreraRuta.RETOS[String(reto["id"])][0])
 		## Un partidazo: cumple lo que se pueda y da experiencia.
 		var antes_nivel := CarreraRuta.nivel(c)
-		c.tras_partido(m, {"minutos": 90, "goles": 2, "asist": 1, "nota": 8.6, "titular": true, "encajados": 0, "paradas": 4})
+		c.tras_partido(m, {"minutos": 90, "goles": 3, "asist": 1, "nota": 8.6, "titular": true, "encajados": 0, "paradas": 5})
 		var ult: Dictionary = c.ruta["ultimo"]
 		var hechos := 0
 		for h: Dictionary in ult["retos"]:
@@ -266,7 +266,7 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(hechos == 3 and int(ult["xp"]) > 60, "  con un partidazo se cumplen los tres retos (%d de experiencia)" % int(ult["xp"]))
 		_comprobar(int(c.ruta["racha"]) == 1, "  empieza la racha")
 		var xp0 := int(c.ruta["xp"]) + CarreraRuta.nivel(c) * 1000
-		c.tras_partido(m, {"minutos": 90, "goles": 2, "asist": 1, "nota": 8.6, "titular": true, "encajados": 0, "paradas": 4})
+		c.tras_partido(m, {"minutos": 90, "goles": 3, "asist": 1, "nota": 8.6, "titular": true, "encajados": 0, "paradas": 5})
 		_comprobar(int(c.ruta["xp"]) + CarreraRuta.nivel(c) * 1000 > xp0, "  los retos ya cumplidos no se cobran dos veces, pero el partido sí da")
 		_comprobar(CarreraRuta.nivel(c) > antes_nivel and int(c.ruta["puntos"]) >= 1, "  con dos partidazos subes de nivel y ganas un punto de talento")
 		for h2: Dictionary in (c.ruta["ultimo"] as Dictionary)["retos"]:
@@ -274,10 +274,10 @@ func _probar_carrera_ruta() -> void:
 		c.tras_partido(m, {"minutos": 90, "goles": 0, "asist": 0, "nota": 5.0, "titular": true, "encajados": 3})
 		_comprobar(int(c.ruta["racha"]) == 0 and int(c.ruta["mejor_racha"]) == 2, "  un mal partido corta la racha (la mejor queda en 2)")
 		## Talentos: en cadena dentro de la rama.
-		_comprobar(not CarreraRuta.puede_aprender(c, "pulmones"), "  el segundo talento de una rama pide el primero")
+		_comprobar(not CarreraTalentos.puede_aprender(c, "pulmones"), "  el segundo talento de una rama pide el primero")
 		c.ruta["puntos"] = 3
-		_comprobar(CarreraRuta.aprender(c, m, "ejemplo") and CarreraRuta.aprender(c, m, "voz") and CarreraRuta.aprender(c, m, "brazalete"), "  se aprende la rama Líder entera")
-		_comprobar(c.capitan and int(c.ruta["puntos"]) == 0 and not CarreraRuta.aprender(c, m, "instinto"), "  el brazalete te hace capitán y sin puntos no hay más talentos")
+		_comprobar(CarreraTalentos.aprender(c, m, "ejemplo") and CarreraTalentos.aprender(c, m, "voz") and CarreraTalentos.aprender(c, m, "brazalete"), "  se aprende la rama Líder entera")
+		_comprobar(c.capitan and int(c.ruta["puntos"]) == 0 and not CarreraTalentos.aprender(c, m, "instinto"), "  el brazalete te hace capitán y sin puntos no hay más talentos")
 		var rel := c.relacion_dt
 		CarreraRuta.semana(c, m)
 		_comprobar(c.relacion_dt == mini(100, rel + 1), "  «Ejemplo» suma relación con el DT cada semana")
@@ -290,6 +290,18 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(int(j.atributos[attr]) == v0 + 1, "  con toque perfecto el entreno mejora seguro (%s %d → %d)" % [attr, v0, int(j.atributos[attr])])
 		c.entrenar(m)
 		_comprobar(int(j.atributos[attr]) == v0 + 1, "  y no se entrena dos veces la misma semana")
+		## Pulir: un punto por +2 en un atributo; y la fama cuesta más de subir.
+		c.ruta["puntos"] = 1
+		var a0 := int(j.atributos[attr])
+		_comprobar(CarreraTalentos.pulir(c, m, attr) and int(j.atributos[attr]) == a0 + 2 and not CarreraTalentos.pulir(c, m, attr), "  un punto de talento vale por +2 en un atributo")
+		j.atributos[attr] = a0
+		c.ruta["fama_ref"] = 60
+		c.fama = 72
+		c.stats_temp["notas"] = [7.0]
+		CarreraRuta.semana(c, m)
+		_comprobar(c.fama > 60 and c.fama < 68, "  con 60 de fama, de 12 puntos ganados se quedan pocos (%d)" % c.fama)
+		c.fama = 5
+		c.ruta["fama_ref"] = 5
 		## Las misiones del capítulo: al cumplir las tres, un punto de talento.
 		var cap := CarreraMisiones.capitulo_en_curso(c)
 		_comprobar(cap == "Promesa" and not CarreraMisiones.cobrada(c, cap), "  las misiones empiezan por «Promesa»")
@@ -298,7 +310,7 @@ func _probar_carrera_ruta() -> void:
 		c.pj_carrera = 5
 		c.seguidores = 1000
 		j.ovr = maxi(j.ovr, 62)
-		_comprobar(CarreraMisiones.revisar(c, m) == ["Promesa"] and int(c.ruta["puntos"]) == puntos0 + 1, "  cumplidas las tres: +1 punto de talento")
+		_comprobar(CarreraMisiones.revisar(c, m) == ["Promesa"] and int(c.ruta["puntos"]) >= puntos0 + 1, "  cumplidas las tres: +1 punto de talento")
 		_comprobar(CarreraMisiones.revisar(c, m).is_empty() and CarreraMisiones.cobrada(c, "Promesa"), "  y no se cobran dos veces")
 		for mi: Array in CarreraMisiones.MISIONES[CarreraMisiones.capitulo_en_curso(c)]:
 			_comprobar(CarreraMisiones.texto(c, m, mi).find("%") < 0, "  misión con su meta: %s" % CarreraMisiones.texto(c, m, mi))

@@ -63,7 +63,15 @@ static func _atributos(ui: Variant, j: Jugador) -> Control:
 	var foco_attr := String((CarreraPortero.focos_para(j).get(c.foco, ["", ""]) as Array)[1])
 	for k: String in j.atributos:
 		var nombre := Idiomas.t(String(NOMBRES.get(k, k.capitalize())))
-		a.add_child(E.medidor(("▸ " if k == foco_attr else "") + nombre, int(j.atributos[k]), 99, E.ORO if k == foco_attr else E.CIELO))
+		var fm := E.medidor(("▸ " if k == foco_attr else "") + nombre, int(j.atributos[k]), 99, E.ORO if k == foco_attr else E.CIELO)
+		if CarreraTalentos.puede_pulir(c, ui.mundo, k):
+			var bp := E.boton("+2", E.ORO, func() -> void:
+				CarreraTalentos.pulir(c, ui.mundo, k)
+				ui._msg = Idiomas.t("Gastaste un punto de talento: %s +2.") % nombre
+				ui._pintar_semana(), 28)
+			bp.tooltip_text = Idiomas.t("Gasta un punto de talento en +2 a este atributo.")
+			fm.add_child(bp)
+		a.add_child(fm)
 	var b := E.columna(5)
 	h.add_child(b)
 	b.add_child(E.rotulo("TU MOMENTO", E.CORAL))
@@ -108,14 +116,14 @@ static func _talentos(ui: Variant) -> Control:
 		orden.sort_custom(func(x: String, y: String) -> bool: return int(CarreraRuta.TALENTOS[x][1]) < int(CarreraRuta.TALENTOS[y][1]))
 		for id2: String in orden:
 			cv.add_child(_talento(ui, id2, col))
-	v.add_child(E.lbl(12, E.SUAVE, "Cada nivel da un punto. Dentro de una rama se aprenden en orden."))
+	v.add_child(E.lbl(12, E.SUAVE, "Cada nivel da un punto. Dentro de una rama se aprenden en orden. Un punto también vale por +2 en un atributo (botón «+2» de «Tu juego»)."))
 	return p
 
 static func _talento(ui: Variant, id: String, col: Color) -> Control:
 	var c: CarreraJugador = ui.carrera
 	var def: Array = CarreraRuta.TALENTOS[id]
 	var lo_tiene := CarreraRuta.tiene(c, id)
-	var puede := CarreraRuta.puede_aprender(c, id)
+	var puede := CarreraTalentos.puede_aprender(c, id)
 	var caja := PanelContainer.new()
 	caja.add_theme_stylebox_override("panel", E.caja(Color(col, 0.20) if lo_tiene else E.TINTA2, 12, Color(col, 0.8 if lo_tiene or puede else 0.15), 10))
 	var v := E.columna(2)
@@ -126,7 +134,7 @@ static func _talento(ui: Variant, id: String, col: Color) -> Control:
 	v.add_child(d)
 	if puede:
 		v.add_child(E.boton("Aprender", col, func() -> void:
-			CarreraRuta.aprender(c, ui.mundo, id)
+			CarreraTalentos.aprender(c, ui.mundo, id)
 			ui._msg = Idiomas.t("Talento nuevo: %s.") % Idiomas.t(String(def[2]))
 			ui._pintar_semana(), 34, true))
 	return caja
