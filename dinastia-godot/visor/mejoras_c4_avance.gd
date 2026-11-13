@@ -99,3 +99,29 @@ static func definir(m: Object, p: Dictionary, dist: float, apunte: Vector2) -> V
 	if m.get("diag") is Dictionary:
 		(m.diag as Dictionary)["c4_definir"] = int((m.diag as Dictionary).get("c4_definir", 0)) + 1
 	return r
+
+## EL ERROR DEL REMATE DENTRO DEL ÁREA (sesión 15): con `C4_ERROR_AREA=k` (0 = apagada) el error de todo remate que no sea penal a menos
+## de 17 m del arco se multiplica por `k` (< 1 = más preciso; vale para la IA y para el humano). Contador `c4_error_area`.
+static var ERROR_AREA := float(OS.get_environment("C4_ERROR_AREA")) if OS.get_environment("C4_ERROR_AREA") != "" else 0.0
+
+static func error_tiro(m: Object, lejos: float, error: float, clase: String) -> float:
+	if ERROR_AREA <= 0.0 or lejos >= 17.0 or clase == "penal":
+		return error
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_error_area"] = int((m.diag as Dictionary).get("c4_error_area", 0)) + 1
+	return error * ERROR_AREA
+
+## EL PORTERO ANTE EL REMATE DESDE DENTRO DEL ÁREA (sesión 15): con `C4_PARADA_AREA=k` (0 = apagada) la probabilidad de parar un remate
+## que sale a menos de 17 m de su arco se multiplica por `k`; los de lejos no cambian (que no suban los goles «tontos»). Contador
+## `c4_parada_area`.
+static var PARADA_AREA := float(OS.get_environment("C4_PARADA_AREA")) if OS.get_environment("C4_PARADA_AREA") != "" else 0.0
+
+static func parada(m: Object, gk: Dictionary, desde: Vector3, prob: float) -> float:
+	if PARADA_AREA <= 0.0:
+		return prob
+	var arco: Vector3 = m._arco_propio(gk)
+	if Vector2(desde.x - arco.x, desde.z - arco.z).length() >= 17.0:
+		return prob
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_parada_area"] = int((m.diag as Dictionary).get("c4_parada_area", 0)) + 1
+	return prob * PARADA_AREA
