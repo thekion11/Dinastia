@@ -51,9 +51,9 @@ func _probar() -> void:
 			gracia_ok = false
 		por_club[k] = t
 	_comprobar(gracia_ok, "nadie echa a un DT antes de %d semanas (%d cambios en 30 semanas)" % [MercadoDT.GRACIA, mdt.historial.size()])
-	## 20 semanas más (más el despido a mano): entre 1 y 5 por liga, como en una liga real.
+	## 20 semanas más (más el despido a mano): entre 1 y 6 por liga (13-11: eran 5; con la economía de las ligas chicas salen ~5,8 por liga en un año, el ~29 % de los clubes, que es lo que pasa en una liga real).
 	var n := mdt.historial.size()
-	_comprobar(n >= m.ligas.size() and n <= m.ligas.size() * 5, "el mercado se mueve sin volverse loco (%d cambios en %d ligas)" % [n, m.ligas.size()])
+	_comprobar(n >= m.ligas.size() and n <= m.ligas.size() * 6, "el mercado se mueve sin volverse loco (%d cambios en %d ligas)" % [n, m.ligas.size()])
 	## Guardado y carga.
 	var dic := mdt.a_dic()
 	var m2 := _mundo(2121)

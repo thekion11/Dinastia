@@ -17,7 +17,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - PENDIENTE DEL DUEÑO: prueba en el teléfono (aún no), keystore del AAB (aún no), sesiones nuevas (después, en Sonnet).
 
 ## ESTADO AL 13-11 MADRUGADA (sesiones 15 y 16, en Opus entonces; todo en `main` 88190f81)
-- `main` comprobado con todo junto: banco «FIN. 0 fallos», huellas 2244399493 / 2180788566, 0 scripts > 450. CI de `main` en verde (f3ad4834 y 7816be83 enteros). Sonar: 0 avisos abiertos.
+- `main` comprobado con todo junto: banco «FIN. 0 fallos», huellas 2244399493 / 3725505167, 0 scripts > 450. CI de `main` en verde (f3ad4834 y 7816be83 enteros). Sonar: 0 avisos abiertos.
 - CI (12-11 noche): compilar y plataformas solo se lanzan con push a `main` (las ramas duplicaban cada ejecución y la de `main` nunca terminaba); ramas a mano con «Run workflow». Nocturno «especiales todo»: las pruebas con pantalla se saltan sin Vulkan/xvfb y la sonda de calidad mide C4.
 - Sesión 15 (jugabilidad C4): 15 ideas medidas, solo `C4_HUECO` encendida; conclusión: en C4 el gol nace del desorden. Resumen en `MOTOR_LEAGUE_SOCCER_PLAN.md` («RESUMEN PARA EL DUEÑO — sesión 15»). Abiertas: `C4_RUPTURA` con una 3.ª muestra de países y subir el bloque entero en ataque.
 - Sesión 16 (club y visual): museo por títulos con mini evento, muebles CC0, reacción del infractor, vestuario −6 MB en ALTA, personas que flotaban 3,7 cm, primera persona (ascensor, valla del fondo, taquillas, butacas, casa), menús (ficha, Fichajes, Ajustes, Calendario, Táctica). Fuera de este contenedor: vídeo de reacciones y cuelgue de lavapipe (PC con GPU), HUD en el teléfono.
