@@ -127,9 +127,6 @@ func socios_por_temporada(c: Club) -> int:
 		return 0
 	return int(round(float(c.socios) * 0.04 * _desvio("social")))
 
-## Semanas extra de paciencia de la directiva (lealtad).
-func paciencia_extra() -> int:
-	return int(round(4.0 * _desvio("leal")))
 
 ## ---------------------------------------------------------------- NIVELES
 

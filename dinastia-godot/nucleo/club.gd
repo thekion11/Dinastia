@@ -191,8 +191,6 @@ func once(f: String = "") -> Array[Jugador]:
 	## Las reglas de la liga de este club (cupo en cancha, juveniles).
 	return LeyesPais.ajustar_once(self, elegidos)
 
-func _es_puesto_portero(ranura: Variant) -> bool:
-	return PesosPuesto.es_portero(String(ranura[0]))
 
 ## --- EL ESTADIO ------------------------------------------------------------
 ## El recinto de cada club, para el visor 3D.

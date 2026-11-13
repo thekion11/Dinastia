@@ -132,18 +132,6 @@ func _mundo() -> Mundo:
 # EL MENÚ: de tarjeta a rol
 # ---------------------------------------------------------------------------
 
-## Las tarjetas del menú que llevan a una carrera de verdad, con su rol.
-## Sale de MODOS_JUEGO, la tabla que ya trae el HTML: escribir la lista otra vez
-## aquí garantizaría que un día el menú ofrezca un modo que el rol no conoce.
-static func modos_con_rol() -> Array[Dictionary]:
-	var salida: Array[Dictionary] = []
-	var t: Variant = Datos.tabla("MODOS_JUEGO")
-	if t == null:
-		return salida
-	for m: Dictionary in t:
-		if String(m.get("rol", "")) != "":
-			salida.append(m)
-	return salida
 
 ## El rol al que lleva una tarjeta del menú, o "" si esa tarjeta no es una
 ## carrera (los retos y el tutorial no lo son).
