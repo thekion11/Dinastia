@@ -63,6 +63,160 @@
     "oficina"
    ],
    "animo": "ambiente instrumental de menú"
+  },
+  {
+   "id": "apple_cider",
+   "archivo": "apple_cider.ogg",
+   "titulo": "Apple Cider",
+   "autor": "Zane Little Music",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/apple-cider",
+   "publicada": "2023-10-01",
+   "original": "apple_cider.ogg",
+   "sha256_original": "29dfe7f2491fa2cabd159db70db868445be253e395db5f75b30b3113f798f4ca",
+   "usos": [
+    "oficina",
+    "paron"
+   ],
+   "animo": "acústica, cálida"
+  },
+  {
+   "id": "chill_lofi",
+   "archivo": "chill_lofi.ogg",
+   "titulo": "Chill lofi inspired",
+   "autor": "omfgdude",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/chill-lofi-inspired",
+   "publicada": "2017-05-29",
+   "original": "ChillLofi.ogg",
+   "sha256_original": "7ea7fd1b7c95ed1ca5f6ebb796626570137bcb75c7f2ea87b6c61212c7a86694",
+   "usos": [
+    "oficina"
+   ],
+   "animo": "lofi con piano y batería suave"
+  },
+  {
+   "id": "lofi_hip_hop",
+   "archivo": "lofi_hip_hop.ogg",
+   "titulo": "lofi hip hop",
+   "autor": "omfgdude",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/lofi-hip-hop",
+   "publicada": "2018-08-10",
+   "original": "lofihiphop.ogg",
+   "sha256_original": "8641e8203d0e7dc06db0276b69fc15f59e9f45faf76d2d647bc076a3339c1ef1",
+   "usos": [
+    "oficina"
+   ],
+   "animo": "lofi hip hop relajado"
+  },
+  {
+   "id": "balance",
+   "archivo": "balance.ogg",
+   "titulo": "Balance",
+   "autor": "Loyalty Freak Music",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/balance-0",
+   "publicada": "2018-03-17",
+   "original": "Komiku - It's time for adventure vol 2 - 01 Balance_0.mp3",
+   "sha256_original": "0d3bec33aa5515a8c536962160da1c3c953be250c269bec432b5460d0e6019e1",
+   "usos": [
+    "oficina",
+    "paron"
+   ],
+   "animo": "guitarra acústica tranquila"
+  },
+  {
+   "id": "jazzy_blues",
+   "archivo": "jazzy_blues.ogg",
+   "titulo": "Jazzy blues",
+   "autor": "LushoGames",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/jazzy-blues",
+   "publicada": "2013-03-02",
+   "original": "blues_0.mp3",
+   "sha256_original": "9e410244ba3bf767b57a97564a3886fada87661ec51346329f0c2b3435fe9858",
+   "usos": [
+    "oficina"
+   ],
+   "animo": "jazz-blues ligero"
+  },
+  {
+   "id": "midnight_cruiser",
+   "archivo": "midnight_cruiser.ogg",
+   "titulo": "Midnight Cruiser",
+   "autor": "Zane Little Music",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/midnight-cruiser",
+   "publicada": "2023-11-05",
+   "original": "midnight_cruiser_0.mp3",
+   "sha256_original": "be0285ba239d85c47c6a0de6466123e3fe8dbc4ad4d9419ccd224ab8ea2b54fc",
+   "usos": [
+    "oficina"
+   ],
+   "animo": "nocturna, ritmo medio"
+  },
+  {
+   "id": "november_snow",
+   "archivo": "november_snow.ogg",
+   "titulo": "November Snow",
+   "autor": "cynicmusic",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/november-snow",
+   "publicada": "2017-12-06",
+   "original": "155 November_snow-33_tape_leveled.mp3",
+   "sha256_original": "7e4675f6fbc86b97603d620dc54b0753eb5fe773ccc2fab99bc863cb7afde32c",
+   "usos": [
+    "oficina",
+    "paron"
+   ],
+   "animo": "ambiente electrónico lento, piano"
+  },
+  {
+   "id": "rhythm_factory",
+   "archivo": "rhythm_factory.ogg",
+   "titulo": "Rhythm Factory",
+   "autor": "Zane Little Music",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/rhythm-factory",
+   "publicada": "2023-07-08",
+   "original": "rhythm_factory_0.mp3",
+   "sha256_original": "5126faf85adffc64f22a4cd176b84ed47b6014c03328ba8380fdb24efca11f90",
+   "usos": [
+    "oficina"
+   ],
+   "animo": "ritmo constante, instrumental"
+  },
+  {
+   "id": "one_step",
+   "archivo": "one_step.ogg",
+   "titulo": "One Step at a time",
+   "autor": "Pro Sensory",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/one-step-at-a-time",
+   "publicada": "2017-02-20",
+   "original": "OneStepAtATIme.wav",
+   "sha256_original": "351f4c04d435090d50c1a2c33de2e82a9ebea70242aa6a763486ae485d239daf",
+   "usos": [
+    "oficina"
+   ],
+   "animo": "jazz suave"
+  },
+  {
+   "id": "sunset_plains",
+   "archivo": "sunset_plains.ogg",
+   "titulo": "Sunset Plains",
+   "autor": "Yoiyami",
+   "licencia": "CC0 1.0",
+   "url": "https://opengameart.org/content/sunset-plains",
+   "publicada": "2025-11-27",
+   "original": "sunset_plains.wav",
+   "sha256_original": "f3750f8eda8bf42662b12f5726404675689b50f05ccaa968c5cb2e33d9172a62",
+   "usos": [
+    "oficina",
+    "paron"
+   ],
+   "animo": "ambiente abierto, tranquila"
   }
  ]
 }

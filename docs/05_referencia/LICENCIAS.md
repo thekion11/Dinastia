@@ -119,7 +119,7 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
 
 ## Música libre sumada el 13-11-2026 (orden del dueño: «integrar música libre y con permiso para comercializar»)
 
-Hasta hoy el juego no traía ningún archivo de música (las seis piezas de `Musica` se componen en el momento). Ahora suenan pistas grabadas
+Hasta hoy el juego no traía ningún archivo de música (las seis piezas de `Musica` se componen en el momento). Ahora suenan 14 pistas grabadas
 SOLO en menús, club y parón invernal (los partidos siguen con lo compuesto, que cambia con el juego). Código: `nucleo/musica_libre.gd`
 (`MusicaLibre`): solo deja sonar licencias de su lista (`CC0 1.0`); una pista con otra (p. ej. CC-BY) no suena hasta sumar sus créditos.
 Catálogo con autor, licencia, origen y SHA-256 del original: `audio/musica/catalogo.json`; permiso explicado en `audio/musica/LICENCIA_CC0.txt`.
@@ -127,10 +127,20 @@ Créditos dentro del juego: Ajustes → Créditos y licencias (una línea «Mús
 
 | Qué | Dónde | Fuente | Estado |
 |---|---|---|---|
-| «Next to You» (Joth, 2016) | `audio/musica/next_to_you.ogg` | opengameart.org/content/next-to-you | 🟢 CC0 1.0 (la página lo indicaba el 13-11-2026) |
+| «Next to You» (Joth, 2016) | `audio/musica/next_to_you.ogg` | opengameart.org/content/next-to-you | 🟢 CC0 1.0 |
 | «Snowfall» (Kistol, 2013) | `audio/musica/snowfall.ogg` | opengameart.org/content/snowfall | 🟢 CC0 1.0 |
 | «The Field Of Dreams» (pauliuw, 2010) | `audio/musica/field_of_dreams.ogg` | opengameart.org/content/the-field-of-dreams | 🟢 CC0 1.0 |
 | «Menu Music» (mrpoly, 2010) | `audio/musica/menu_music.ogg` | opengameart.org/content/menu-music | 🟢 CC0 1.0 |
+| «Apple Cider» (Zane Little Music, 2023) | `audio/musica/apple_cider.ogg` | opengameart.org/content/apple-cider | 🟢 CC0 1.0 |
+| «Chill lofi inspired» (omfgdude, 2017) | `audio/musica/chill_lofi.ogg` | opengameart.org/content/chill-lofi-inspired | 🟢 CC0 1.0 |
+| «lofi hip hop» (omfgdude, 2018) | `audio/musica/lofi_hip_hop.ogg` | opengameart.org/content/lofi-hip-hop | 🟢 CC0 1.0 |
+| «Balance» (Loyalty Freak Music, 2018) | `audio/musica/balance.ogg` | opengameart.org/content/balance-0 | 🟢 CC0 1.0 |
+| «Jazzy blues» (LushoGames, 2013) | `audio/musica/jazzy_blues.ogg` | opengameart.org/content/jazzy-blues | 🟢 CC0 1.0 |
+| «Midnight Cruiser» (Zane Little Music, 2023) | `audio/musica/midnight_cruiser.ogg` | opengameart.org/content/midnight-cruiser | 🟢 CC0 1.0 |
+| «November Snow» (cynicmusic, 2017) | `audio/musica/november_snow.ogg` | opengameart.org/content/november-snow | 🟢 CC0 1.0 |
+| «Rhythm Factory» (Zane Little Music, 2023) | `audio/musica/rhythm_factory.ogg` | opengameart.org/content/rhythm-factory | 🟢 CC0 1.0 |
+| «One Step at a time» (Pro Sensory, 2017) | `audio/musica/one_step.ogg` | opengameart.org/content/one-step-at-a-time | 🟢 CC0 1.0 |
+| «Sunset Plains» (Yoiyami, 2025) | `audio/musica/sunset_plains.ogg` | opengameart.org/content/sunset-plains | 🟢 CC0 1.0 |
 
 CC0 permite uso comercial y no exige atribución; se cita por trazabilidad. Prudencia: OpenGameArt lo sube cada autor o un tercero; si un autor
 reclamara su obra, se retira (borrar el .ogg y su fila). Fuentes descartadas: FreePD (cerró en 2025), Pixabay (bloquea la descarga automática
