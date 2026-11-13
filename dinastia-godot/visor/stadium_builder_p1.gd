@@ -210,7 +210,6 @@ static var _mat_baranda: StandardMaterial3D
 ## hechas con cinco cajas -asiento corrido, tres respaldos con su hueco y la
 ## viga-: ~120 vértices contra 994. Se usa en las filas altas, donde la
 ## cámara nunca llega a distinguirlas.
-static var _butaca_lejos: Mesh
 
 ## El piso de la grada bajo las butacas: hormigón gris, compartido.
 static var _escalones: StandardMaterial3D

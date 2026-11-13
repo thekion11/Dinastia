@@ -436,7 +436,7 @@ func _buscar_gd(dir: String, sal: PackedStringArray) -> void:
 ## (13-11) Las mallas de grada de MÍNIMA: menos triángulos que antes (butaca 28, público 16) y TODAS las caras hacia fuera (giro horario visto desde fuera; si no, se ven huecas).
 func _probar_mallas_grada_minima() -> void:
 	_titulo("MALLAS DE GRADA DE MÍNIMA: TRIÁNGULOS Y CARAS HACIA FUERA")
-	for caso: Array in [["butaca", MallasGradaMinima.butaca(), 28], ["público", MallasGradaMinima.hincha(), 16]]:
+	for caso: Array in [["butaca", MallasGradaMinima.butaca(), 28], ["butaca de MEDIA", MallasGradaMinima.butaca_lejos(), 68], ["público", MallasGradaMinima.hincha(), 16]]:
 		var arr: Array = (caso[1] as Mesh).surface_get_arrays(0)
 		var v: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
 		var n: PackedVector3Array = arr[Mesh.ARRAY_NORMAL]

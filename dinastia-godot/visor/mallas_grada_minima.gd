@@ -6,6 +6,7 @@ extends RefCounted
 ## Medido con `MULTI=1` de `pruebas/medir_partido_jugable.gd` (instancias × triángulos de cada MultiMesh); detalle en `docs/04_auditorias/rendimiento_120fps.md`.
 static var _butaca: Mesh = null
 static var _hincha: Mesh = null
+static var _butaca_lejos: Mesh = null
 
 ## Un triángulo con su normal exterior `n`: Godot considera frontal el giro HORARIO visto desde fuera, así que se ordena según esa normal.
 static func _tri(st: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, n: Vector3) -> void:
@@ -48,6 +49,22 @@ static func butaca() -> Mesh:
 	_caja(st, Vector3(1.40, 0.30, 0.06), Vector3(-0.05, 0.20, -0.08), 0.0, false, false)
 	_butaca = st.commit()
 	return _butaca
+
+## La butaca lejana de MEDIA y superiores (13-11): la misma de siempre (asiento, tres respaldos, dos reposabrazos y viga) sin el suelo de ninguna caja ni el techo de la viga:
+## 68 triángulos en vez de 84, visualmente idéntica (solo faltan caras que ninguna cámara ve).
+static func butaca_lejos() -> Mesh:
+	if _butaca_lejos != null:
+		return _butaca_lejos
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	_caja(st, Vector3(1.46, 0.07, 0.40), Vector3(-0.05, 0.40, 0.04), 0.0, false, true)
+	for k in 3:
+		_caja(st, Vector3(0.44, 0.38, 0.05), Vector3(-0.55 + float(k) * 0.5, 0.58, -0.20), -0.14, false, true)
+	for xb in [-0.30, 0.20]:
+		_caja(st, Vector3(0.05, 0.05, 0.32), Vector3(xb, 0.50, -0.02), 0.0, false, true)
+	_caja(st, Vector3(1.40, 0.30, 0.06), Vector3(-0.05, 0.20, -0.08), 0.0, false, false)
+	_butaca_lejos = st.commit()
+	return _butaca_lejos
 
 ## El público de MÍNIMA: un tronco de cuatro lados y una cabeza de ocho triángulos (octaedro) en vez de cilindro de cinco lados + esfera: 16 triángulos en vez de 45.
 static func hincha() -> Mesh:
