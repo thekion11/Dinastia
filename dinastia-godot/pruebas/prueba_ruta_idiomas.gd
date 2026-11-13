@@ -1,8 +1,9 @@
 extends Node
-## SONDA DE IDIOMAS DE «LA RUTA»: pinta todas las pantallas del modo jugador en
+## LOS IDIOMAS DE «LA RUTA»: pinta todas las pantallas del modo jugador en
 ## español y en los 8 idiomas y lista los textos que salen IGUAL que en español
 ## (candidatos a «sin traducir»; los nombres propios y las cifras se ven a ojo).
-##   xvfb-run -a godot --path . res://pruebas/_sonda/sonda_idiomas_ruta.tscn
+## Falla con lo que sale igual en los OCHO idiomas y no es un nombre propio ni una cifra.
+##   xvfb-run -a godot --path . res://pruebas/prueba_ruta_idiomas.tscn
 var _ui: CarreraJugadorUI
 
 func _textos(raiz: Node, en: Dictionary) -> void:
@@ -85,9 +86,25 @@ func _ready() -> void:
 		for t: String in en:
 			if base.has(t):
 				repetidos[t] = String(repetidos.get(t, "")) + idi + " "
+	## Nombres propios: clubes, jugadores, ligas y las marcas de botas.
+	var propios: Array = ["Rayo", "Roca"]
+	for cl: Club in m.clubes.values():
+		propios.append(Nombres.visible(cl.nombre))
+		for o: Jugador in cl.plantilla:
+			propios.append(o.nombre)
+	var letras := RegEx.create_from_string("[A-Za-zÁÉÍÓÚÑáéíóúñ]{3,}")
 	var lista: Array = repetidos.keys()
 	lista.sort()
+	var fallos := 0
 	for t2: String in lista:
-		print("IGUAL [%s] %s" % [String(repetidos[t2]).strip_edges(), t2.replace("\n", " ")])
-	print("FIN SONDA IDIOMAS: %d textos iguales en algún idioma" % lista.size())
+		var en_todos := String(repetidos[t2]).strip_edges().split(" ").size() == Idiomas.ORDEN.size()
+		var limpio := t2
+		for pr: String in propios:
+			limpio = limpio.replace(pr, "").replace(pr.to_upper(), "")
+		limpio = limpio.replace("XP", "").replace("EUR", "")
+		var sospechoso := en_todos and letras.search(limpio) != null
+		if sospechoso:
+			fallos += 1
+		print("%s[%s] %s" % ["  FALLO sin traducir " if sospechoso else "  igual ", String(repetidos[t2]).strip_edges(), t2.replace("\n", " ")])
+	print("===== FIN. %d fallos =====" % fallos)
 	get_tree().quit()

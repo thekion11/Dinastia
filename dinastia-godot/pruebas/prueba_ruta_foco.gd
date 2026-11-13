@@ -1,9 +1,11 @@
 extends Node
-## SONDA DEL FOCO DE «LA RUTA» (mando y teclado): en cada pantalla, desde el
+## EL FOCO DE «LA RUTA» (mando y teclado): en cada pantalla, desde el
 ## botón con foco, recorre con arriba/abajo/izquierda/derecha y cuenta los
 ## botones visibles a los que NO se llega.
-##   xvfb-run -a godot --path . --resolution 1280x720 res://pruebas/_sonda/sonda_foco_ruta.tscn
+## Falla si alguna pantalla empieza sin foco o deja botones sin alcanzar.
+##   [MOVIL=1] xvfb-run -a godot --path . --resolution 1280x720 res://pruebas/prueba_ruta_foco.tscn   (de pie: 608x1080)
 var _ui: CarreraJugadorUI
+var _fallos := 0
 
 func _alcanzables(desde: Control) -> Dictionary:
 	var vistos := {desde: true}
@@ -27,17 +29,22 @@ func _mirar(nombre: String, raiz: Node) -> void:
 		if b.is_visible_in_tree() and not b.disabled and b.focus_mode == Control.FOCUS_ALL:
 			botones.append(b)
 	if foco == null:
-		print("FOCO %s: SIN FOCO INICIAL (%d botones)" % [nombre, botones.size()])
+		_fallos += 1
+		print("  FALLO FOCO %s: SIN FOCO INICIAL (%d botones)" % [nombre, botones.size()])
 		return
 	var al := _alcanzables(foco)
 	var fuera: Array = []
 	for b2: Button in botones:
 		if not al.has(b2):
 			fuera.append(b2.text.left(24))
-	print("FOCO %s: empieza en «%s»; %d botones, %d sin alcanzar %s" % [nombre, (foco as Button).text.left(24) if foco is Button else str(foco), botones.size(), fuera.size(), str(fuera.slice(0, 8))])
+	_fallos += fuera.size()
+	print("%sFOCO %s: empieza en «%s»; %d botones, %d sin alcanzar %s" % ["  FALLO " if not fuera.is_empty() else "  ok    ", nombre, (foco as Button).text.left(24) if foco is Button else str(foco), botones.size(), fuera.size(), str(fuera.slice(0, 8))])
 
 func _ready() -> void:
 	RutaEstilo.sin_animar = true
+	if OS.get_environment("MOVIL") == "1":
+		EscalaMovil.forzar = true
+		EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	CarreraJugadorUI.mundo = null
 	_ui = load("res://escenas/carrera_jugador.tscn").instantiate()
 	add_child(_ui)
@@ -63,5 +70,5 @@ func _ready() -> void:
 	_ui._pestana = "hoy"
 	_ui._pintar_semana()
 	await _mirar("resumen", _ui._cuerpo.get_child(_ui._cuerpo.get_child_count() - 1))
-	print("FIN SONDA FOCO")
+	print("===== FIN. %d fallos =====" % _fallos)
 	get_tree().quit()

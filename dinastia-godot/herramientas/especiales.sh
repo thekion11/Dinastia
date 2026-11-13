@@ -86,6 +86,9 @@ pasa "plantilla a la PES" "godot --headless --path . res://pruebas/prueba_planti
 # (12-11) Las pruebas «con pantalla» necesitan xvfb-run; el contenedor del CI no lo trae (como el bloque de a4_limite_mundo): sin él se SALTAN
 # (antes fallaban en 0 s y bloqueaban la exportación). En local, con xvfb, corren como siempre.
 if command -v xvfb-run >/dev/null; then
+pasa "La Ruta: con mando se llega a todos los botones (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/prueba_ruta_foco.tscn" "FIN. 0 fallos"
+pasa "La Ruta: el foco en el teléfono de pie (con pantalla)" "MOVIL=1 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 608x1080 res://pruebas/prueba_ruta_foco.tscn" "FIN. 0 fallos"
+pasa "La Ruta: todas las pantallas en los 8 idiomas (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/prueba_ruta_idiomas.tscn" "FIN. 0 fallos"
 pasa "partido de despedida (UI, con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_despedida_ui.tscn" "0 fallos"
 pasa "rueda de prensa en cruz y eventos con diálogo (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_rueda_eventos.tscn" "FIN. 0 fallos"
 pasa "festejos por tipo de título, 3 clubes (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_festejos.tscn" "FIN. 0 fallos"
