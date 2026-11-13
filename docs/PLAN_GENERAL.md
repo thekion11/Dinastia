@@ -17,10 +17,11 @@ Hecho (bloque 2): móvil. De pie (lienzo de 540 px): una sola columna, cabecera 
 
 Hecho (bloque 3): cierre de temporada con premios personales (`nucleo/carrera_premios.gd`, `ui/carrera/ruta_temporada.gd`: revelación, goleador y jugador del año del club, once ideal, guante, hombre de hierro, duelo, gran salto; palmarés en «Ruta»); equilibrio: la semana recupera 28 de energía (antes 12; simulando se quedaba en 12 de 100) y un atributo deja de subir a 14 puntos de tu media (entrenando solo tiro llegaba a 91 en un año); aviso «sin piernas»; animaciones del resumen (se apagan con el ahorro de menús).
 
+Hecho (bloque 4): misiones por capítulo (`nucleo/carrera_misiones.gd`): tres metas por capítulo (partidos, media, seguidores, goles+asistencias o porterías a cero, fama, premios, duelos, selección); al cumplir las tres, +1 punto de talento y experiencia; se ven en «Ruta». El sonido ya lo ponía `ui/boton_fx.gd` a todos los botones (tic al pasar, clic al pulsar).
+
 Falta (siguientes bloques):
 - Repasar con el mando real el orden del foco (hoy el foco cae en la acción principal de cada pantalla; el resto lo navega Godot solo).
-- Más variedad: más retos y eventos, objetivos de capítulo, patrocinios, vida fuera del campo.
-- Sonido de interfaz en las pantallas nuevas.
+- Más variedad: más retos y eventos, patrocinios, vida fuera del campo; un sonido propio al subir de nivel.
 - Equilibrio: jugar varias temporadas seguidas y mirar el ritmo (hoy: nivel 6 y +media tras la primera temporada simulada de un delantero).
 - Pendiente de decisión del dueño: nada por ahora.
 

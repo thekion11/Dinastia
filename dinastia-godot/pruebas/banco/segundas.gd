@@ -290,6 +290,19 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(int(j.atributos[attr]) == v0 + 1, "  con toque perfecto el entreno mejora seguro (%s %d → %d)" % [attr, v0, int(j.atributos[attr])])
 		c.entrenar(m)
 		_comprobar(int(j.atributos[attr]) == v0 + 1, "  y no se entrena dos veces la misma semana")
+		## Las misiones del capítulo: al cumplir las tres, un punto de talento.
+		var cap := CarreraMisiones.capitulo_en_curso(c)
+		_comprobar(cap == "Promesa" and not CarreraMisiones.cobrada(c, cap), "  las misiones empiezan por «Promesa»")
+		var puntos0 := int(c.ruta["puntos"])
+		_comprobar(CarreraMisiones.revisar(c, m).is_empty(), "  con 3 partidos todavía no se cobran")
+		c.pj_carrera = 5
+		c.seguidores = 1000
+		j.ovr = maxi(j.ovr, 62)
+		_comprobar(CarreraMisiones.revisar(c, m) == ["Promesa"] and int(c.ruta["puntos"]) == puntos0 + 1, "  cumplidas las tres: +1 punto de talento")
+		_comprobar(CarreraMisiones.revisar(c, m).is_empty() and CarreraMisiones.cobrada(c, "Promesa"), "  y no se cobran dos veces")
+		for mi: Array in CarreraMisiones.MISIONES[CarreraMisiones.capitulo_en_curso(c)]:
+			_comprobar(CarreraMisiones.texto(c, m, mi).find("%") < 0, "  misión con su meta: %s" % CarreraMisiones.texto(c, m, mi))
+		c.ruta["puntos"] = 0
 		## Un atributo no se despega: a 14 de la media deja de subir.
 		j.atributos[attr] = mini(99, j.ovr + CarreraRuta.TOPE_SOBRE_MEDIA)
 		c.entreno_semana = -1

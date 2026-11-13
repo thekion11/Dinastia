@@ -7,10 +7,10 @@ const E := preload("res://ui/carrera/ruta_estilo.gd")
 
 static func pintar(ui: Variant) -> Control:
 	var c: CarreraJugador = ui.carrera
-	return E.columnas(ui, [_capitulos(c, E.estrecho(ui)), _temporadas(ui)], [duelo(ui, true), RutaTemporada.palmares(ui), grada(ui, 8), _decisiones(c)])
+	return E.columnas(ui, [_capitulos(c, ui.mundo, E.estrecho(ui)), _temporadas(ui)], [duelo(ui, true), RutaTemporada.palmares(ui), grada(ui, 8), _decisiones(c)])
 
 ## El camino: los siete capítulos como estaciones de una línea.
-static func _capitulos(c: CarreraJugador, angosto := false) -> Control:
+static func _capitulos(c: CarreraJugador, m: Mundo, angosto := false) -> Control:
 	var p := E.tarjeta(E.ORO)
 	var v := E.columna(10)
 	p.add_child(v)
@@ -38,6 +38,7 @@ static func _capitulos(c: CarreraJugador, angosto := false) -> Control:
 		est.add_child(l)
 		if not angosto:
 			est.add_child(E.lbl(11, E.SUAVE, Idiomas.t("nivel %d") % int(cap[0]), true))
+	v.add_child(_misiones(c, m))
 	if not sig.is_empty():
 		v.add_child(E.lbl(13, E.SUAVE, Idiomas.t("Siguiente capítulo: %s, al llegar al nivel %d.") % [Idiomas.t(String(sig[1])), int(sig[0])], true))
 	var r := CarreraRuta.asegurar(c)
@@ -50,6 +51,41 @@ static func _capitulos(c: CarreraJugador, angosto := false) -> Control:
 		cif.add_child(E.cifra(str(int(r["mejor_racha"])), "mejor racha", E.CORAL))
 		cif.add_child(E.cifra(str(int(r["duelos_ganados"])), "duelos ganados", E.MENTA))
 	return p
+
+## Las tres misiones del capítulo en curso, con lo que llevas de cada una.
+static func _misiones(c: CarreraJugador, m: Mundo) -> Control:
+	var cap := CarreraMisiones.capitulo_en_curso(c)
+	var caja := PanelContainer.new()
+	caja.add_theme_stylebox_override("panel", E.caja(E.TINTA2, 12, E.BORDE, 12))
+	var v := E.columna(5)
+	caja.add_child(v)
+	var cab := E.fila(8)
+	v.add_child(cab)
+	var rot := E.rotulo(Idiomas.t("MISIONES DE «%s»") % Idiomas.t(cap).to_upper(), E.ORO)
+	rot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cab.add_child(rot)
+	cab.add_child(E.chip(Idiomas.t("COBRADAS") if CarreraMisiones.cobrada(c, cap) else Idiomas.t("premio: +1 talento"), E.MENTA if CarreraMisiones.cobrada(c, cap) else E.ORO))
+	for mi: Array in CarreraMisiones.MISIONES[cap]:
+		var llevo := CarreraMisiones.valor(c, m, String(mi[0]))
+		var meta := CarreraMisiones.meta(c, m, mi)
+		var hecha := llevo >= meta
+		var f := E.fila(8)
+		v.add_child(f)
+		f.add_child(E.lbl(14, E.MENTA if hecha else E.SUAVE, "✔" if hecha else "○", true))
+		var l := E.lbl(14, E.SUAVE if hecha else E.TEXTO, CarreraMisiones.texto(c, m, mi), true)
+		l.clip_text = true
+		l.custom_minimum_size = Vector2(150, 0)
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		f.add_child(l)
+		var b := E.barra(float(mini(llevo, meta)), float(meta), E.MENTA if hecha else E.ORO, 7)
+		b.size_flags_horizontal = Control.SIZE_SHRINK_END
+		b.custom_minimum_size = Vector2(90, 7)
+		f.add_child(b)
+		var n := E.lbl(12, E.SUAVE, "%s/%s" % [E.miles(mini(llevo, meta)), E.miles(meta)], true)
+		n.custom_minimum_size = Vector2(74, 0)
+		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		f.add_child(n)
+	return caja
 
 static func _temporadas(ui: Variant) -> Control:
 	var c: CarreraJugador = ui.carrera

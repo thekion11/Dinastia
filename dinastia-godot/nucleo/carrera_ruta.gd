@@ -324,6 +324,7 @@ static func semana(c: CarreraJugador, m: Mundo) -> void:
 	if tiene(c, "brazalete") and j != null and j.moral < 70:
 		j.moral = 70
 	rival(c, m)
+	CarreraMisiones.revisar(c, m)
 
 # ---------------------------------------------------------------- el rival
 
