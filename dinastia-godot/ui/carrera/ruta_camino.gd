@@ -7,29 +7,10 @@ const E := preload("res://ui/carrera/ruta_estilo.gd")
 
 static func pintar(ui: Variant) -> Control:
 	var c: CarreraJugador = ui.carrera
-	var cols := E.fila(14)
-	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	var sc := ScrollContainer.new()
-	sc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	cols.add_child(sc)
-	var izq := E.columna(12)
-	sc.add_child(izq)
-	izq.add_child(_capitulos(c))
-	izq.add_child(_temporadas(ui))
-	var sc2 := ScrollContainer.new()
-	sc2.custom_minimum_size = Vector2(390, 0)
-	sc2.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	cols.add_child(sc2)
-	var der := E.columna(12)
-	sc2.add_child(der)
-	der.add_child(duelo(ui, true))
-	der.add_child(grada(ui, 8))
-	der.add_child(_decisiones(c))
-	return cols
+	return E.columnas(ui, [_capitulos(c, E.estrecho(ui)), _temporadas(ui)], [duelo(ui, true), grada(ui, 8), _decisiones(c)])
 
 ## El camino: los siete capítulos como estaciones de una línea.
-static func _capitulos(c: CarreraJugador) -> Control:
+static func _capitulos(c: CarreraJugador, angosto := false) -> Control:
 	var p := E.tarjeta(E.ORO)
 	var v := E.columna(10)
 	p.add_child(v)
@@ -55,7 +36,8 @@ static func _capitulos(c: CarreraJugador) -> Control:
 		var l := E.lbl(12, E.ORO if es_actual else (E.TEXTO if hecho else E.SUAVE), Idiomas.t(String(cap[1])), true)
 		l.clip_text = true
 		est.add_child(l)
-		est.add_child(E.lbl(11, E.SUAVE, Idiomas.t("nivel %d") % int(cap[0]), true))
+		if not angosto:
+			est.add_child(E.lbl(11, E.SUAVE, Idiomas.t("nivel %d") % int(cap[0]), true))
 	if not sig.is_empty():
 		v.add_child(E.lbl(13, E.SUAVE, Idiomas.t("Siguiente capítulo: %s, al llegar al nivel %d.") % [Idiomas.t(String(sig[1])), int(sig[0])], true))
 	var r := CarreraRuta.asegurar(c)
@@ -64,8 +46,9 @@ static func _capitulos(c: CarreraJugador) -> Control:
 	cif.add_child(E.cifra(str(c.pj_carrera), "partidos"))
 	cif.add_child(E.cifra(str(c.goles_carrera), "goles", E.ORO))
 	cif.add_child(E.cifra(str(c.caps), "con la selección"))
-	cif.add_child(E.cifra(str(int(r["mejor_racha"])), "mejor racha", E.CORAL))
-	cif.add_child(E.cifra(str(int(r["duelos_ganados"])), "duelos ganados", E.MENTA))
+	if not angosto:
+		cif.add_child(E.cifra(str(int(r["mejor_racha"])), "mejor racha", E.CORAL))
+		cif.add_child(E.cifra(str(int(r["duelos_ganados"])), "duelos ganados", E.MENTA))
 	return p
 
 static func _temporadas(ui: Variant) -> Control:

@@ -13,8 +13,10 @@ Hecho (bloque 1, «LA RUTA»):
 - Núcleo `nucleo/carrera_ruta.gd`: experiencia y nivel, 9 talentos en 3 ramas (Crack, Ídolo, Líder) con efecto real, 3 retos por partido según el puesto, racha, rival personal con duelo de temporada, 7 capítulos (Promesa → Leyenda), «la grada» y el toque del entreno. Se guarda en `CarreraJugador.ruta`. Banco: `_probar_carrera_ruta`.
 - Interfaz nueva en `ui/carrera/` (estética «noche de estadio», Bebas Neue): creación en dos pasos (tres clubes de tres países te ofrecen contrato), cabecera con nivel, pestañas Hoy / Yo / Ruta, mini juego «El Toque», resumen tras el partido, retiro. Capturas: `pruebas/captura_modo_jugador.tscn`.
 
+Hecho (bloque 2): móvil. De pie (lienzo de 540 px): una sola columna, cabecera compacta, pestañas en una barra abajo, lo que hay que decidir antes que el entreno; tumbado: dos columnas con cabecera corta; creación, ofertas y retiro con desplazamiento. Las tres ofertas salen de una liga humilde, una media y una fuerte (`nucleo/carrera_comienzo.gd`). Capturas con `MOVIL=1`.
+
 Falta (siguientes bloques):
-- Móvil (vertical y tumbado) de las pantallas nuevas; mando (foco) en todas.
+- Repasar con el mando real el orden del foco (hoy el foco cae en la acción principal de cada pantalla; el resto lo navega Godot solo).
 - Más variedad: más retos y eventos, premios de fin de temporada, objetivos de capítulo, patrocinios, vida fuera del campo.
 - Animaciones (barra de experiencia, subida de nivel) y sonido de interfaz.
 - Equilibrio: la energía se agota simulando semanas seguidas (12 de 100 a la semana 8); ritmo de niveles (hoy ~nivel 8 al acabar la primera temporada).

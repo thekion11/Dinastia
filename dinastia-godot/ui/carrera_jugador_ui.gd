@@ -11,8 +11,9 @@ func _pintar_semana() -> void:
 		return
 	var raiz := VBoxContainer.new()
 	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
-	raiz.offset_left = 20; raiz.offset_right = -20; raiz.offset_top = 14; raiz.offset_bottom = -14
-	raiz.add_theme_constant_override("separation", 12)
+	var borde := 10.0 if get_viewport_rect().size.x < 900.0 else 20.0
+	raiz.offset_left = borde; raiz.offset_right = -borde; raiz.offset_top = borde - 4.0; raiz.offset_bottom = 4.0 - borde
+	raiz.add_theme_constant_override("separation", 10 if borde < 20.0 else 12)
 	_cuerpo.add_child(raiz)
 	raiz.add_child(RutaCabecera.pintar(self, j, club))
 	var resumen := RutaResumen.pendiente(self)
@@ -22,10 +23,13 @@ func _pintar_semana() -> void:
 		"yo": raiz.add_child(RutaYo.pintar(self, j, club))
 		"ruta": raiz.add_child(RutaCamino.pintar(self))
 		_: raiz.add_child(RutaHoy.pintar(self, j, club))
+	if RutaEstilo.estrecho(self):
+		raiz.add_child(RutaCabecera.pestanas(self, true))
 	if resumen:
 		_pestana = "hoy"
 		_cuerpo.add_child(RutaResumen.pintar(self, _msg))
 	Idiomas.traducir_arbol(_cuerpo)
+	RutaEstilo.enfocar(_cuerpo)
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)

@@ -6,17 +6,13 @@ const E := preload("res://ui/carrera/ruta_estilo.gd")
 const NOMBRES := {"rit": "Velocidad", "tir": "Tiro", "pas": "Pase", "reg": "Regate", "def": "Defensa", "fis": "Físico"}
 
 static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
+	if E.estrecho(ui):
+		return E.columnas(ui, [cromo(ui, j, club), _atributos(ui, j), _talentos(ui)], [])
 	var cols := E.fila(14)
 	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	cols.add_child(cromo(ui, j, club))
-	var sc := ScrollContainer.new()
-	sc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	cols.add_child(sc)
-	var der := E.columna(12)
-	sc.add_child(der)
-	der.add_child(_atributos(ui, j))
-	der.add_child(_talentos(ui))
+	cols.add_child(E.columnas(ui, [_atributos(ui, j), _talentos(ui)], []))
+	cols.get_child(1).size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return cols
 
 ## El cromo: tu media en grande sobre el color del club.
@@ -59,7 +55,7 @@ static func cromo(ui: Variant, j: Jugador, club: Club) -> Control:
 static func _atributos(ui: Variant, j: Jugador) -> Control:
 	var c: CarreraJugador = ui.carrera
 	var p := E.tarjeta()
-	var h := E.fila(18)
+	var h := E.reparto(E.estrecho(ui), 18)
 	p.add_child(h)
 	var a := E.columna(5)
 	h.add_child(a)
@@ -97,7 +93,7 @@ static func _talentos(ui: Variant) -> Control:
 	rot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(rot)
 	cab.add_child(E.chip(Idiomas.t("%d punto(s) por gastar") % int(r["puntos"]), E.ORO if int(r["puntos"]) > 0 else E.SUAVE))
-	var ramas := E.fila(10)
+	var ramas := E.reparto(E.estrecho(ui), 10)
 	v.add_child(ramas)
 	for rama: String in CarreraRuta.RAMAS:
 		var def: Array = CarreraRuta.RAMAS[rama]

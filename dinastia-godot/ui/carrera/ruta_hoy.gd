@@ -7,30 +7,20 @@ extends RefCounted
 const E := preload("res://ui/carrera/ruta_estilo.gd")
 
 static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
-	var cols := E.fila(14)
-	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	var sc := ScrollContainer.new()
-	sc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	cols.add_child(sc)
-	var izq := E.columna(12)
-	sc.add_child(izq)
+	var izq: Array = []
 	if not ui.carrera.convocatoria.is_empty():
-		izq.add_child(_seleccion(ui))
-	izq.add_child(_partido(ui, j, club))
-	izq.add_child(_entreno(ui, j))
-	var sc2 := ScrollContainer.new()
-	sc2.custom_minimum_size = Vector2(390, 0)
-	sc2.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	cols.add_child(sc2)
-	var der := E.columna(12)
-	sc2.add_child(der)
-	der.add_child(_decision(ui))
-	for o: Control in _ofertas(ui):
-		der.add_child(o)
-	der.add_child(RutaCamino.duelo(ui, false))
-	der.add_child(RutaCamino.grada(ui, 3))
-	return cols
+		izq.append(_seleccion(ui))
+	izq.append(_partido(ui, j, club))
+	## En estrecho, lo que hay que decidir va antes que el entreno.
+	var der: Array = [_decision(ui)]
+	der.append_array(_ofertas(ui))
+	if E.estrecho(ui) and (not ui.carrera.eventos.is_empty() or not ui.carrera.ofertas.is_empty()):
+		izq.append_array(der)
+		der = []
+	izq.append(_entreno(ui, j))
+	der.append(RutaCamino.duelo(ui, false))
+	der.append(RutaCamino.grada(ui, 3))
+	return E.columnas(ui, izq, der)
 
 # ---------------------------------------------------------------- el partido
 
@@ -50,7 +40,17 @@ static func _seleccion(ui: Variant) -> Control:
 	f.add_child(E.boton("⏩  Simular", E.CIELO, ui._simular_seleccion, 48))
 	return p
 
-static func _equipo(cl: Club, derecha: bool) -> Control:
+static func _equipo(cl: Club, derecha: bool, angosto := false) -> Control:
+	if angosto:
+		var v := E.columna(2)
+		var e := E.escudo(cl, 60)
+		e.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		v.add_child(e)
+		var nn := E.titulo(22, E.TEXTO, Nombres.visible(cl.nombre))
+		nn.clip_text = true
+		nn.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		v.add_child(nn)
+		return v
 	var h := E.fila(12)
 	h.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	h.alignment = BoxContainer.ALIGNMENT_END if derecha else BoxContainer.ALIGNMENT_BEGIN
@@ -100,9 +100,9 @@ static func _partido(ui: Variant, j: Jugador, club: Club) -> Control:
 	cab.add_child(E.chip(Idiomas.t("TITULAR") if titular else (Idiomas.t("AL BANCO") if disponible else Idiomas.t("FUERA")), E.MENTA if titular else E.CORAL))
 	var duelo := E.fila(14)
 	v.add_child(duelo)
-	duelo.add_child(_equipo(par[0], false))
+	duelo.add_child(_equipo(par[0], false, E.estrecho(ui)))
 	duelo.add_child(E.titulo(26, E.legible(tono), "VS"))
-	duelo.add_child(_equipo(par[1], true))
+	duelo.add_child(_equipo(par[1], true, E.estrecho(ui)))
 	if copa:
 		v.add_child(E.lbl(12, E.SUAVE, "Partido único: si hay empate, prórroga y penales.", true))
 	## Los retos del partido.
@@ -120,7 +120,7 @@ static func _partido(ui: Variant, j: Jugador, club: Club) -> Control:
 		fr.add_child(lt)
 		var premio := int(float(int(def[1])) * (1.5 if CarreraRuta.tiene(c, "sangre_fria") else 1.0))
 		fr.add_child(E.titulo(18, E.ORO, "+%d XP" % premio))
-	var bot := E.fila(8)
+	var bot := E.reparto(E.estrecho(ui), 8)
 	v.add_child(bot)
 	if titular:
 		var bj := E.boton("🎮  JUGAR EL PARTIDO", E.ORO, ui._jugar_partido, 56, true)
@@ -162,7 +162,7 @@ static func _entreno(ui: Variant, j: Jugador) -> Control:
 		var txt := Idiomas.t(String(focos[f][0])) + ("  %d" % int(j.atributos.get(attr, 0)) if attr != "" and j.atributos.has(attr) else "")
 		ff.add_child(E.opcion(txt, E.CIELO, grupo, c.foco == f, func() -> void: c.foco = f, 36))
 	if toque < 0.0 and c.entreno_semana != m.anio * 60 + m.semana:
-		var bt := E.boton("🎯  EL TOQUE: juega el entreno (perfecto = mejora asegurada)", E.MENTA, func() -> void: RutaToque.abrir(ui), 44)
+		var bt := E.boton("🎯  EL TOQUE: juega el entreno" if E.estrecho(ui) else "🎯  EL TOQUE: juega el entreno (perfecto = mejora asegurada)", E.MENTA, func() -> void: RutaToque.abrir(ui), 44)
 		v.add_child(bt)
 	v.add_child(E.rotulo("EL RESTO DE LA SEMANA"))
 	var fa := E.flujo()

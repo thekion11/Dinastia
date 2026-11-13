@@ -8271,7 +8271,9 @@
   " · ¡%d gol(es) con la selección!": " · %d goal(s) for the national team!",
   "Nueva temporada. Un año más.": "New season. One more year.",
   "zurdo": "left-footed",
-  "diestro": "right-footed"
+  "diestro": "right-footed",
+  "%s · %d años · sem. %d": "%s · age %d · wk %d",
+  "🎯  EL TOQUE: juega el entreno": "🎯  THE TOUCH: play the training"
  },
  "pt": {
   "Historia": "História",
@@ -16545,7 +16547,9 @@
   " · ¡%d gol(es) con la selección!": " · %d gol(s) pela seleção!",
   "Nueva temporada. Un año más.": "Nova temporada. Mais um ano.",
   "zurdo": "canhoto",
-  "diestro": "destro"
+  "diestro": "destro",
+  "%s · %d años · sem. %d": "%s · %d anos · sem. %d",
+  "🎯  EL TOQUE: juega el entreno": "🎯  O TOQUE: jogue o treino"
  },
  "patrones": [
   [
@@ -30959,7 +30963,9 @@
   " · ¡%d gol(es) con la selección!": " · %d but(s) en sélection !",
   "Nueva temporada. Un año más.": "Nouvelle saison. Une année de plus.",
   "zurdo": "gaucher",
-  "diestro": "droitier"
+  "diestro": "droitier",
+  "%s · %d años · sem. %d": "%s · %d ans · sem. %d",
+  "🎯  EL TOQUE: juega el entreno": "🎯  LA TOUCHE : joue l'entraînement"
  },
  "it": {
   "Historia": "Storia",
@@ -39233,7 +39239,9 @@
   " · ¡%d gol(es) con la selección!": " · %d gol in nazionale!",
   "Nueva temporada. Un año más.": "Nuova stagione. Un anno in più.",
   "zurdo": "mancino",
-  "diestro": "destro"
+  "diestro": "destro",
+  "%s · %d años · sem. %d": "%s · %d anni · sett. %d",
+  "🎯  EL TOQUE: juega el entreno": "🎯  IL TOCCO: gioca l'allenamento"
  },
  "de": {
   "Historia": "Geschichte",
@@ -47507,7 +47515,9 @@
   " · ¡%d gol(es) con la selección!": " · %d Tor(e) für die Nationalelf!",
   "Nueva temporada. Un año más.": "Neue Saison. Ein weiteres Jahr.",
   "zurdo": "Linksfuß",
-  "diestro": "Rechtsfuß"
+  "diestro": "Rechtsfuß",
+  "%s · %d años · sem. %d": "%s · %d Jahre · Wo. %d",
+  "🎯  EL TOQUE: juega el entreno": "🎯  DER TOUCH: Training spielen"
  },
  "ca": {
   "Historia": "Història",
@@ -55781,7 +55791,9 @@
   " · ¡%d gol(es) con la selección!": " · %d gol(s) amb la selecció!",
   "Nueva temporada. Un año más.": "Nova temporada. Un any més.",
   "zurdo": "esquerrà",
-  "diestro": "dretà"
+  "diestro": "dretà",
+  "%s · %d años · sem. %d": "%s · %d anys · setm. %d",
+  "🎯  EL TOQUE: juega el entreno": "🎯  EL TOC: juga l'entrenament"
  },
  "pl": {
   "Club": "Klub",
@@ -64055,7 +64067,9 @@
   " · ¡%d gol(es) con la selección!": " · %d gol(e) w reprezentacji!",
   "Nueva temporada. Un año más.": "Nowy sezon. Kolejny rok.",
   "zurdo": "lewonożny",
-  "diestro": "prawonożny"
+  "diestro": "prawonożny",
+  "%s · %d años · sem. %d": "%s · %d lat · tydz. %d",
+  "🎯  EL TOQUE: juega el entreno": "🎯  DOTYK: zagraj trening"
  },
  "tr": {
   "Club": "Kulüp",
@@ -72329,6 +72343,8 @@
   " · ¡%d gol(es) con la selección!": " · millî takımla %d gol!",
   "Nueva temporada. Un año más.": "Yeni sezon. Bir yıl daha.",
   "zurdo": "solak",
-  "diestro": "sağ ayaklı"
+  "diestro": "sağ ayaklı",
+  "%s · %d años · sem. %d": "%s · %d yaş · hf. %d",
+  "🎯  EL TOQUE: juega el entreno": "🎯  DOKUNUŞ: antrenmanı oyna"
  }
 }

@@ -9,69 +9,28 @@ const PESTANAS := [["hoy", "HOY"], ["yo", "YO"], ["ruta", "RUTA"]]
 static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
 	var c: CarreraJugador = ui.carrera
 	var m: Mundo = ui.mundo
-	var r := CarreraRuta.asegurar(c)
-	var cab := E.fila(14)
-	cab.add_child(E.escudo(club, 58))
+	var angosto := E.estrecho(ui)
+	var cab := E.fila(8 if angosto else 14)
+	cab.add_child(E.escudo(club, 44 if angosto else 58))
 	var tit := E.columna(-2)
 	cab.add_child(tit)
-	var nombre := E.titulo(38, E.TEXTO, j.nombre.to_upper())
+	var nombre := E.titulo(26 if angosto else 38, E.TEXTO, j.nombre.to_upper())
 	nombre.clip_text = true
 	tit.add_child(nombre)
 	var sub := E.fila(8)
 	tit.add_child(sub)
 	sub.add_child(E.chip(Idiomas.t(String(CarreraRuta.capitulo(c)[1])).to_upper(), E.ORO))
-	var datos := E.lbl(13, E.SUAVE, Idiomas.t("%s · %s · %d años · temporada %d, semana %d") % [Nombres.visible(club.nombre), j.pos_e, j.edad, m.anio, m.semana], true)
+	var texto := Idiomas.t("%s · %s · %d años · temporada %d, semana %d") % [Nombres.visible(club.nombre), j.pos_e, j.edad, m.anio, m.semana]
+	if angosto or ui.get_viewport_rect().size.x < 1000.0:
+		texto = Idiomas.t("%s · %d años · sem. %d") % [j.pos_e, j.edad, m.semana]
+	var datos := E.lbl(13, E.SUAVE, texto, true)
 	datos.clip_text = true
 	datos.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sub.add_child(datos)
-	## El nivel.
-	var niv := E.fila(8)
-	cab.add_child(niv)
-	var falta := CarreraRuta.xp_para(int(r["nivel"]))
-	niv.add_child(RutaAnillo.crear(float(r["xp"]) / float(falta), str(int(r["nivel"])), E.ORO, 58))
-	var nv := E.columna(-2)
-	nv.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	nv.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	niv.add_child(nv)
-	nv.add_child(E.titulo(18, E.ORO, Idiomas.t("NIVEL")))
-	nv.add_child(E.lbl(12, E.SUAVE, "%d / %d XP" % [int(r["xp"]), falta], true))
-	if int(r["puntos"]) > 0:
-		nv.add_child(E.lbl(12, E.MENTA, Idiomas.t("%d punto(s) libres") % int(r["puntos"]), true))
-	## Los medidores.
-	var med := E.columna(3)
-	med.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	med.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	med.custom_minimum_size = Vector2(170, 0)
-	cab.add_child(med)
-	for par: Array in [["⚡", c.energia, E.MENTA], ["🤝", c.relacion_dt, E.CORAL], ["⭐", c.fama, E.ORO]]:
-		var f := E.fila(6)
-		med.add_child(f)
-		var ic := E.lbl(12, par[2], String(par[0]), true)
-		ic.custom_minimum_size = Vector2(18, 0)
-		f.add_child(ic)
-		f.add_child(E.barra(float(par[1]), 100.0, par[2], 7))
-		var n := E.lbl(12, E.TEXTO, str(int(par[1])), true)
-		n.custom_minimum_size = Vector2(24, 0)
-		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		f.add_child(n)
-	## Las pestañas.
-	var grupo := ButtonGroup.new()
-	var tabs := E.fila(4)
-	tabs.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	cab.add_child(tabs)
-	for par2: Array in PESTANAS:
-		var id := String(par2[0])
-		var aviso := ""
-		if id == "hoy" and not c.eventos.is_empty():
-			aviso = " ●"
-		elif id == "yo" and int(r["puntos"]) > 0:
-			aviso = " ●"
-		var b := E.opcion(Idiomas.t(String(par2[1])) + aviso, E.ORO, grupo, ui._pestana == id, func() -> void:
-			ui._pestana = id
-			ui._pintar_semana(), 40)
-		b.add_theme_font_override("font", E.titular())
-		b.add_theme_font_size_override("font_size", 20)
-		tabs.add_child(b)
+	cab.add_child(_nivel(c, angosto))
+	if not angosto:
+		cab.add_child(_medidores(c, 170.0))
+		cab.add_child(pestanas(ui, false))
 	var bg := E.boton("💾", E.CIELO, ui._guardar, 40)
 	bg.tooltip_text = Idiomas.t("Guardar")
 	bg.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -81,7 +40,73 @@ static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
 	bm.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	cab.add_child(bm)
 	tit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	return cab
+	if not angosto:
+		return cab
+	var v := E.columna(8)
+	v.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	v.add_child(cab)
+	v.add_child(_medidores(c, 0.0))
+	return v
+
+static func _nivel(c: CarreraJugador, angosto: bool) -> Control:
+	var r := CarreraRuta.asegurar(c)
+	var niv := E.fila(8)
+	var falta := CarreraRuta.xp_para(int(r["nivel"]))
+	niv.add_child(RutaAnillo.crear(float(r["xp"]) / float(falta), str(int(r["nivel"])), E.ORO, 46 if angosto else 58))
+	if angosto:
+		return niv
+	var nv := E.columna(-2)
+	nv.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	nv.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	niv.add_child(nv)
+	nv.add_child(E.titulo(18, E.ORO, Idiomas.t("NIVEL")))
+	nv.add_child(E.lbl(12, E.SUAVE, "%d / %d XP" % [int(r["xp"]), falta], true))
+	if int(r["puntos"]) > 0:
+		nv.add_child(E.lbl(12, E.MENTA, Idiomas.t("%d punto(s) libres") % int(r["puntos"]), true))
+	return niv
+
+## Energía, relación con el DT y fama: apilados (ancho) o en una fila (estrecho).
+static func _medidores(c: CarreraJugador, ancho: float) -> Control:
+	var med := E.reparto(ancho > 0.0, 3 if ancho > 0.0 else 12)
+	med.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	if ancho > 0.0:
+		med.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		med.custom_minimum_size = Vector2(ancho, 0)
+	for par: Array in [["⚡", c.energia, E.MENTA], ["🤝", c.relacion_dt, E.CORAL], ["⭐", c.fama, E.ORO]]:
+		var f := E.fila(6)
+		f.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		med.add_child(f)
+		var ic := E.lbl(12, par[2], String(par[0]), true)
+		ic.custom_minimum_size = Vector2(18, 0)
+		f.add_child(ic)
+		f.add_child(E.barra(float(par[1]), 100.0, par[2], 7))
+		var n := E.lbl(12, E.TEXTO, str(int(par[1])), true)
+		n.custom_minimum_size = Vector2(24, 0)
+		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		f.add_child(n)
+	return med
+
+## Las pestañas: píldoras en la cabecera o, en estrecho, una barra abajo.
+static func pestanas(ui: Variant, barra: bool) -> Control:
+	var c: CarreraJugador = ui.carrera
+	var puntos := int(CarreraRuta.asegurar(c)["puntos"])
+	var grupo := ButtonGroup.new()
+	var tabs := E.fila(6 if barra else 4)
+	tabs.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	for par2: Array in PESTANAS:
+		var id := String(par2[0])
+		var marca := ""
+		if (id == "hoy" and not c.eventos.is_empty()) or (id == "yo" and puntos > 0):
+			marca = " ●"
+		var b := E.opcion(Idiomas.t(String(par2[1])) + marca, E.ORO, grupo, ui._pestana == id, func() -> void:
+			ui._pestana = id
+			ui._pintar_semana(), 52 if barra else 40)
+		b.add_theme_font_override("font", E.titular())
+		b.add_theme_font_size_override("font_size", 24 if barra else 20)
+		if barra:
+			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tabs.add_child(b)
+	return tabs
 
 ## El aviso de la semana, en una banda.
 static func aviso(texto: String) -> Control:

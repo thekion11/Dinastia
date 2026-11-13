@@ -2,7 +2,7 @@ extends Node
 ## EL MODO JUGADOR («La Ruta»), EN FOTOS (13-11-2026): la creación, las tres
 ## ofertas, Hoy recién firmado, el mini juego del entreno, el resumen de un
 ## partido y, tras simular unas semanas, Hoy, Yo y Ruta. Fuera del repo, en JPG.
-##   SALIDA=<carpeta> [PUESTO=MC] [NOMBRE=…] [SEMANAS=6] [OFERTA=0..2] [PREFIJO=…] xvfb-run -a godot --path . \
+##   SALIDA=<carpeta> [PUESTO=MC] [NOMBRE=…] [SEMANAS=6] [OFERTA=0..2] [PREFIJO=…] [MOVIL=1] xvfb-run -a godot --path . \
 ##     --rendering-driver vulkan --resolution 1280x720 res://pruebas/captura_modo_jugador.tscn
 var _n := 0
 var _ui: CarreraJugadorUI
@@ -14,6 +14,10 @@ var _paso := 0
 var _toque: RutaToque
 
 func _ready() -> void:
+	## MOVIL=1: como en un teléfono (zoom de interfaz y, de pie, lienzo estrecho).
+	if OS.get_environment("MOVIL") == "1":
+		EscalaMovil.forzar = true
+		EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	CarreraJugadorUI.mundo = null
 	CarreraJugadorUI.nombre_pedido = OS.get_environment("NOMBRE")
 	_ui = load("res://escenas/carrera_jugador.tscn").instantiate()
@@ -39,7 +43,7 @@ func _process(_d: float) -> void:
 			_ui._buscar_club()
 		3:
 			_foto("2_ofertas")
-			var ofertas := CarreraRuta.pruebas(m, hash(c.jugador_id))
+			var ofertas := CarreraComienzo.pruebas(m, hash(c.jugador_id))
 			_ui._firmar(ofertas[clampi(int(OS.get_environment("OFERTA")), 0, ofertas.size() - 1)])
 		4:
 			_foto("3_hoy")

@@ -41,7 +41,7 @@ func _fundar() -> void:
 
 ## Firma por `destino` (o se queda donde lo puso el núcleo) y empieza la ruta.
 func _firmar(destino: Club) -> void:
-	CarreraRuta.mudar(carrera, mundo, destino)
+	CarreraComienzo.mudar(carrera, mundo, destino)
 	_msg = Idiomas.t("Firmaste con %s. Dorsal %d.") % [Nombres.visible(carrera.club(mundo).nombre), carrera.jugador(mundo).dorsal]
 	_pestana = "hoy"
 	(self as CarreraJugadorUI)._pintar_semana()
@@ -54,7 +54,7 @@ func _crear() -> void:
 ## Paso 2 de la creación: tres clubes de tres países te ofrecen contrato.
 func _buscar_club() -> void:
 	_fundar()
-	var ofertas := CarreraRuta.pruebas(mundo, hash(carrera.jugador_id))
+	var ofertas := CarreraComienzo.pruebas(mundo, hash(carrera.jugador_id))
 	if ofertas.is_empty():
 		_firmar(null)
 	else:

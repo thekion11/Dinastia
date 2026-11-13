@@ -75,5 +75,4 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 		v.add_child(t)
 	var b := E.boton("SEGUIR  ▸", tono, func() -> void: ui._pintar_semana(), 52, true)
 	v.add_child(b)
-	b.ready.connect(b.grab_focus)
 	return velo

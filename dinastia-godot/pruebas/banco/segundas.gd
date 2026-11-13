@@ -242,12 +242,12 @@ func _probar_carrera_ruta() -> void:
 		m.mi_club_id = ""
 		var c := CarreraJugador.crear(m, "Prueba Ruta", String(caso[1]), false, int(caso[2]))
 		m.carrera_jugador = c
-		var ofertas := CarreraRuta.pruebas(m, int(caso[2]))
+		var ofertas := CarreraComienzo.pruebas(m, int(caso[2]))
 		var paises := {}
 		for cl: Club in ofertas:
 			paises[cl.pais] = true
 		_comprobar(ofertas.size() == 3 and paises.size() == 3, "%s: tres clubes de tres países te ofrecen contrato" % caso[1])
-		CarreraRuta.mudar(c, m, ofertas[2])
+		CarreraComienzo.mudar(c, m, ofertas[2])
 		var j := c.jugador(m)
 		_comprobar(c.club(m) == ofertas[2] and j.pais == ofertas[2].pais, "  empiezas en el club elegido (%s, %s)" % [ofertas[2].nombre, ofertas[2].pais])
 		var rv := CarreraRuta.rival(c, m)

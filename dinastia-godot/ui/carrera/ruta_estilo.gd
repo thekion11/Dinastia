@@ -95,7 +95,20 @@ static func boton(texto: String, col: Color, accion: Callable, alto := 44, lleno
 	b.add_theme_color_override("font_disabled_color", SUAVE)
 	if accion.is_valid():
 		b.pressed.connect(accion)
+	if lleno:
+		b.set_meta("principal", true)
 	return b
+
+## Pone el foco (mando y teclado) en la acción principal de `raiz`: el último
+## botón relleno que se añadió gana si hay una capa encima (resumen, toque).
+static func enfocar(raiz: Node) -> void:
+	var hallado: Button = null
+	for n: Node in raiz.find_children("*", "Button", true, false):
+		if n.has_meta("principal") and (n as Button).is_visible_in_tree() and not (n as Button).disabled:
+			if hallado == null or raiz.get_child(raiz.get_child_count() - 1).is_ancestor_of(n):
+				hallado = n
+	if hallado != null:
+		hallado.grab_focus.call_deferred()
 
 ## Botón de elección (uno de un grupo): queda relleno cuando está elegido.
 static func opcion(texto: String, col: Color, grupo: ButtonGroup, elegido: bool, accion: Callable, alto := 38) -> Button:
@@ -190,6 +203,44 @@ static func flujo(sep := 6) -> HFlowContainer:
 	f.add_theme_constant_override("h_separation", sep)
 	f.add_theme_constant_override("v_separation", sep)
 	return f
+
+## ¿Pantalla estrecha? (un teléfono de pie: el lienzo mide ~540 px de ancho)
+static func estrecho(ui: Variant) -> bool:
+	return ui.get_viewport_rect().size.x < 760.0
+
+## Fila en ancho, columna en estrecho.
+static func reparto(vertical: bool, sep := 10) -> BoxContainer:
+	var b := BoxContainer.new()
+	b.vertical = vertical
+	b.add_theme_constant_override("separation", sep)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return b
+
+## El cuerpo de una pestaña: dos columnas que se desplazan por separado (la
+## derecha, de ancho fijo) o, en estrecho, una sola columna con todo.
+static func columnas(ui: Variant, izq: Array, der: Array, ancho_der := 390.0) -> Control:
+	var angosto := estrecho(ui)
+	var cols := fila(14)
+	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var sc := ScrollContainer.new()
+	sc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	cols.add_child(sc)
+	var a := columna(12)
+	sc.add_child(a)
+	for n: Control in izq:
+		a.add_child(n)
+	var b := a
+	if not angosto:
+		var sc2 := ScrollContainer.new()
+		sc2.custom_minimum_size = Vector2(ancho_der, 0)
+		sc2.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		cols.add_child(sc2)
+		b = columna(12)
+		sc2.add_child(b)
+	for n2: Control in der:
+		b.add_child(n2)
+	return cols
 
 static func miles(n: int) -> String:
 	var s := str(absi(n))
