@@ -47,4 +47,12 @@ func _process(_d: float) -> void:
 			suma += x
 			mx = maxf(mx, x)
 		print("APERTURA abrir_ms=%.0f suma_60_fotogramas_ms=%.0f peor_fotograma_ms=%.0f estatica_despues=%d" % [_t_abrir / 1000.0, suma, mx, int(Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0)])
+		var orden: Array = []
+		for i in _dts.size():
+			orden.append([_dts[i], i])
+		orden.sort_custom(func(x: Array, y: Array) -> bool: return float(x[0]) > float(y[0]))
+		var top := []
+		for k in mini(6, orden.size()):
+			top.append("#%d %.0f ms" % [int(orden[k][1]) + 1, float(orden[k][0])])
+		print("APERTURA peores fotogramas: ", ", ".join(top))
 		get_tree().quit()
