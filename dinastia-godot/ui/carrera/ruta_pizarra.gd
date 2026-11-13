@@ -27,6 +27,18 @@ const JUGADAS := {
 		"balon": Vector2(0.47, 0.4), "flechas": [[Vector2(0.47, 0.4), Vector2(0.6, 0.94), false]]},
 	"salida": {"abajo": true, "yo": Vector2(0.5, 0.9), "mios": [Vector2(0.42, 0.74)], "suyos": [Vector2(0.9, 0.58), Vector2(0.47, 0.7), Vector2(0.57, 0.72)],
 		"balon": Vector2(0.88, 0.6), "flechas": [[Vector2(0.88, 0.6), Vector2(0.52, 0.76), true], [Vector2(0.5, 0.9), Vector2(0.51, 0.79), false]]},
+	"falta": {"abajo": false, "yo": Vector2(0.44, 0.74), "mios": [Vector2(0.62, 0.3)], "suyos": [Vector2(0.5, 0.1), Vector2(0.41, 0.5), Vector2(0.45, 0.5), Vector2(0.49, 0.5), Vector2(0.53, 0.5)],
+		"balon": Vector2(0.46, 0.7), "flechas": [[Vector2(0.46, 0.7), Vector2(0.56, 0.05), false]]},
+	"cabezazo": {"abajo": false, "yo": Vector2(0.44, 0.24), "mios": [Vector2(0.97, 0.05), Vector2(0.58, 0.3)], "suyos": [Vector2(0.5, 0.08), Vector2(0.4, 0.2), Vector2(0.55, 0.22)],
+		"balon": Vector2(0.95, 0.06), "flechas": [[Vector2(0.95, 0.06), Vector2(0.47, 0.22), true], [Vector2(0.45, 0.22), Vector2(0.52, 0.05), false]]},
+	"centro": {"abajo": false, "yo": Vector2(0.9, 0.2), "mios": [Vector2(0.55, 0.42)], "suyos": [Vector2(0.5, 0.1), Vector2(0.82, 0.26), Vector2(0.48, 0.34)],
+		"balon": Vector2(0.9, 0.16), "flechas": [[Vector2(0.9, 0.16), Vector2(0.56, 0.26), true], [Vector2(0.55, 0.42), Vector2(0.55, 0.28), false]]},
+	"cobertura": {"abajo": true, "yo": Vector2(0.4, 0.66), "mios": [Vector2(0.72, 0.4), Vector2(0.5, 0.9)], "suyos": [Vector2(0.68, 0.5), Vector2(0.4, 0.4)],
+		"balon": Vector2(0.69, 0.54), "flechas": [[Vector2(0.69, 0.54), Vector2(0.6, 0.7), false], [Vector2(0.4, 0.66), Vector2(0.57, 0.69), false]]},
+	"penal": {"abajo": true, "yo": Vector2(0.5, 0.93), "mios": [Vector2(0.3, 0.42)], "suyos": [Vector2(0.5, 0.62), Vector2(0.66, 0.42)],
+		"balon": Vector2(0.5, 0.67), "flechas": [[Vector2(0.5, 0.67), Vector2(0.45, 0.95), false]]},
+	"pies": {"abajo": true, "yo": Vector2(0.5, 0.88), "mios": [Vector2(0.9, 0.6)], "suyos": [Vector2(0.42, 0.7), Vector2(0.58, 0.72)],
+		"balon": Vector2(0.52, 0.84), "flechas": [[Vector2(0.52, 0.84), Vector2(0.87, 0.62), true]]},
 }
 
 ## Adónde va el balón al resolver: tipo -> [si sale bien, si sale mal].
@@ -36,6 +48,9 @@ const DESTINOS := {
 	"entrada": [Vector2(0.52, 0.62), Vector2(0.5, 0.97)], "despeje": [Vector2(0.86, 0.5), Vector2(0.5, 0.97)],
 	"parada": [Vector2(0.52, 0.88), Vector2(0.56, 0.97)], "vuelo": [Vector2(0.72, 0.8), Vector2(0.56, 0.97)],
 	"salida": [Vector2(0.5, 0.87), Vector2(0.48, 0.97)],
+	"falta": [Vector2(0.56, 0.03), Vector2(0.49, 0.5)], "cabezazo": [Vector2(0.52, 0.03), Vector2(0.5, 0.08)],
+	"centro": [Vector2(0.56, 0.27), Vector2(0.48, 0.34)], "cobertura": [Vector2(0.56, 0.69), Vector2(0.6, 0.9)],
+	"penal": [Vector2(0.48, 0.9), Vector2(0.44, 0.97)], "pies": [Vector2(0.88, 0.61), Vector2(0.58, 0.72)],
 }
 
 var tipo := "remate"

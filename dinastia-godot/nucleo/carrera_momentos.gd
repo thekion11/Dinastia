@@ -16,13 +16,22 @@ const TIPOS := {
 	"parada": ["Mano a mano del rival", "Se planta solo delante de ti.", "ref", "guante"],
 	"vuelo": ["Tiro a la escuadra", "Le pega seco desde la frontal.", "div", "guante"],
 	"salida": ["Centro al área", "El balón cuelga en el área chica.", "pos", "guante"],
+	"falta": ["Falta al borde del área", "Veintidós metros, barrera de cinco. La pides tú.", "tir", "gol"],
+	"cabezazo": ["Cabezazo en el córner", "El córner viene cerrado al primer palo.", "fis", "gol"],
+	"centro": ["Centro desde la banda", "Llegas a línea de fondo con el nueve entrando.", "pas", "asist"],
+	"cobertura": ["Cobertura al compañero", "A tu lateral lo han superado. Te toca cerrar.", "def", "robo"],
+	"penal": ["Penal en contra", "Once metros. Solo estáis él y tú.", "ref", "guante"],
+	"pies": ["Salida con los pies", "Te presionan dos y hay un compañero libre en la banda.", "saq", "robo"],
 }
+## Las jugadas que le pueden tocar a cada línea: la primera sale siempre (es la
+## del puesto) y de las demás se sortean tres, distintas, cada partido.
 const GUIONES := {
-	"DEL": ["remate", "pase", "mano", "remate"],
-	"MED": ["pase", "remate", "robo", "pase"],
-	"DEF": ["entrada", "pase", "despeje", "entrada"],
-	"POR": ["parada", "salida", "vuelo", "parada"],
+	"DEL": ["remate", "pase", "mano", "cabezazo", "falta"],
+	"MED": ["pase", "remate", "robo", "falta", "centro", "cobertura"],
+	"DEF": ["entrada", "despeje", "pase", "cabezazo", "centro", "cobertura"],
+	"POR": ["parada", "salida", "vuelo", "penal", "pies"],
 }
+const POR_PARTIDO := 4
 ## clase -> [perfecto, bien, fallo]
 const DESENLACES := {
 	"gol": ["¡GOL!", "Al palo. Casi.", "Se va fuera."],
@@ -38,12 +47,13 @@ static func guion(c: CarreraJugador, m: Mundo, entra_al := -1) -> Array:
 	var j := c.jugador(m)
 	var tipos: Array = (GUIONES.get(j.pos if j != null else "MED", GUIONES["MED"]) as Array).duplicate()
 	var g := CarreraRuta._azar(c, m, 7)
-	## Se barajan (menos la primera, que presenta el puesto).
+	## Se barajan (menos la primera, que presenta el puesto) y se juegan cuatro.
 	for i in range(tipos.size() - 1, 1, -1):
 		var k := g.randi_range(1, i)
 		var tmp: String = tipos[i]
 		tipos[i] = tipos[k]
 		tipos[k] = tmp
+	tipos = tipos.slice(0, POR_PARTIDO)
 	if entra_al >= 0:
 		tipos = tipos.slice(tipos.size() - 2)
 	var desde := maxi(4, entra_al + 3)

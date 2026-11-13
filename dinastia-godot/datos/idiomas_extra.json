@@ -8406,7 +8406,19 @@
   "Indiscutible": "Undisputed",
   "De portada": "Front page",
   "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "The Path: from prospect to legend. Level up, choose talents and decide matches with your own plays",
-  "La Ruta · Niveles y talentos · Tus jugadas": "The Path · Levels and talents · Your plays"
+  "La Ruta · Niveles y talentos · Tus jugadas": "The Path · Levels and talents · Your plays",
+  "Falta al borde del área": "Free kick on the edge of the box",
+  "Veintidós metros, barrera de cinco. La pides tú.": "Twenty-two metres, a five-man wall. You ask for it.",
+  "Cabezazo en el córner": "Header from the corner",
+  "El córner viene cerrado al primer palo.": "The corner swings in to the near post.",
+  "Centro desde la banda": "Cross from the wing",
+  "Llegas a línea de fondo con el nueve entrando.": "You reach the byline with the striker arriving.",
+  "Cobertura al compañero": "Covering a team-mate",
+  "A tu lateral lo han superado. Te toca cerrar.": "Your full-back has been beaten. It's on you to cover.",
+  "Penal en contra": "Penalty against",
+  "Once metros. Solo estáis él y tú.": "Twelve yards. Just him and you.",
+  "Salida con los pies": "Playing out with your feet",
+  "Te presionan dos y hay un compañero libre en la banda.": "Two press you and there's a free team-mate out wide."
  },
  "pt": {
   "Historia": "História",
@@ -16815,7 +16827,19 @@
   "Indiscutible": "Indiscutível",
   "De portada": "De capa",
   "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "A Rota: de promessa a lenda. Você sobe de nível, escolhe talentos e decide as partidas com as suas jogadas",
-  "La Ruta · Niveles y talentos · Tus jugadas": "A Rota · Níveis e talentos · Suas jogadas"
+  "La Ruta · Niveles y talentos · Tus jugadas": "A Rota · Níveis e talentos · Suas jogadas",
+  "Falta al borde del área": "Falta na entrada da área",
+  "Veintidós metros, barrera de cinco. La pides tú.": "Vinte e dois metros, barreira de cinco. Você pede a bola.",
+  "Cabezazo en el córner": "Cabeçada no escanteio",
+  "El córner viene cerrado al primer palo.": "O escanteio vem fechado na primeira trave.",
+  "Centro desde la banda": "Cruzamento da lateral",
+  "Llegas a línea de fondo con el nueve entrando.": "Você chega à linha de fundo com o nove entrando.",
+  "Cobertura al compañero": "Cobertura ao companheiro",
+  "A tu lateral lo han superado. Te toca cerrar.": "Passaram pelo seu lateral. É você quem fecha.",
+  "Penal en contra": "Pênalti contra",
+  "Once metros. Solo estáis él y tú.": "Onze metros. Só ele e você.",
+  "Salida con los pies": "Saída com os pés",
+  "Te presionan dos y hay un compañero libre en la banda.": "Dois pressionam você e há um companheiro livre na lateral."
  },
  "patrones": [
   [
@@ -31364,7 +31388,19 @@
   "Indiscutible": "Indiscutable",
   "De portada": "À la une",
   "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "La Route : d'espoir à légende. Tu montes de niveau, choisis des talents et décides des matchs par tes actions",
-  "La Ruta · Niveles y talentos · Tus jugadas": "La Route · Niveaux et talents · Tes actions"
+  "La Ruta · Niveles y talentos · Tus jugadas": "La Route · Niveaux et talents · Tes actions",
+  "Falta al borde del área": "Coup franc à l'entrée de la surface",
+  "Veintidós metros, barrera de cinco. La pides tú.": "Vingt-deux mètres, un mur de cinq. Tu le demandes.",
+  "Cabezazo en el córner": "Tête sur corner",
+  "El córner viene cerrado al primer palo.": "Le corner arrive rentrant au premier poteau.",
+  "Centro desde la banda": "Centre depuis l'aile",
+  "Llegas a línea de fondo con el nueve entrando.": "Tu arrives sur la ligne de but avec le neuf qui plonge.",
+  "Cobertura al compañero": "Couverture d'un coéquipier",
+  "A tu lateral lo han superado. Te toca cerrar.": "Ton latéral est éliminé. À toi de fermer.",
+  "Penal en contra": "Penalty contre toi",
+  "Once metros. Solo estáis él y tú.": "Onze mètres. Rien que lui et toi.",
+  "Salida con los pies": "Relance au pied",
+  "Te presionan dos y hay un compañero libre en la banda.": "Deux te pressent et un coéquipier est libre sur l'aile."
  },
  "it": {
   "Historia": "Storia",
@@ -39773,7 +39809,19 @@
   "Indiscutible": "Indiscusso",
   "De portada": "Da copertina",
   "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "La Rotta: da promessa a leggenda. Sali di livello, scegli i talenti e decidi le partite con le tue giocate",
-  "La Ruta · Niveles y talentos · Tus jugadas": "La Rotta · Livelli e talenti · Le tue giocate"
+  "La Ruta · Niveles y talentos · Tus jugadas": "La Rotta · Livelli e talenti · Le tue giocate",
+  "Falta al borde del área": "Punizione dal limite",
+  "Veintidós metros, barrera de cinco. La pides tú.": "Ventidue metri, barriera a cinque. La chiedi tu.",
+  "Cabezazo en el córner": "Colpo di testa su corner",
+  "El córner viene cerrado al primer palo.": "Il corner arriva a rientrare sul primo palo.",
+  "Centro desde la banda": "Cross dalla fascia",
+  "Llegas a línea de fondo con el nueve entrando.": "Arrivi sul fondo con il nove che entra.",
+  "Cobertura al compañero": "Copertura al compagno",
+  "A tu lateral lo han superado. Te toca cerrar.": "Hanno saltato il tuo terzino. Tocca a te chiudere.",
+  "Penal en contra": "Rigore contro",
+  "Once metros. Solo estáis él y tú.": "Undici metri. Solo lui e tu.",
+  "Salida con los pies": "Uscita palla al piede",
+  "Te presionan dos y hay un compañero libre en la banda.": "Ti pressano in due e c'è un compagno libero sulla fascia."
  },
  "de": {
   "Historia": "Geschichte",
@@ -48182,7 +48230,19 @@
   "Indiscutible": "Unumstritten",
   "De portada": "Titelseite",
   "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "Der Weg: vom Talent zur Legende. Steig auf, wähle Talente und entscheide Spiele mit deinen Aktionen",
-  "La Ruta · Niveles y talentos · Tus jugadas": "Der Weg · Stufen und Talente · Deine Aktionen"
+  "La Ruta · Niveles y talentos · Tus jugadas": "Der Weg · Stufen und Talente · Deine Aktionen",
+  "Falta al borde del área": "Freistoß an der Strafraumgrenze",
+  "Veintidós metros, barrera de cinco. La pides tú.": "Zweiundzwanzig Meter, Fünfermauer. Du willst ihn.",
+  "Cabezazo en el córner": "Kopfball nach der Ecke",
+  "El córner viene cerrado al primer palo.": "Die Ecke kommt scharf auf den kurzen Pfosten.",
+  "Centro desde la banda": "Flanke vom Flügel",
+  "Llegas a línea de fondo con el nueve entrando.": "Du kommst zur Grundlinie, der Neuner läuft ein.",
+  "Cobertura al compañero": "Absicherung für den Mitspieler",
+  "A tu lateral lo han superado. Te toca cerrar.": "Dein Außenverteidiger ist überspielt. Du musst zumachen.",
+  "Penal en contra": "Elfmeter gegen dich",
+  "Once metros. Solo estáis él y tú.": "Elf Meter. Nur er und du.",
+  "Salida con los pies": "Spielaufbau mit dem Fuß",
+  "Te presionan dos y hay un compañero libre en la banda.": "Zwei laufen dich an, außen ist ein Mitspieler frei."
  },
  "ca": {
   "Historia": "Història",
@@ -56591,7 +56651,19 @@
   "Indiscutible": "Indiscutible",
   "De portada": "De portada",
   "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "La Ruta: de promesa a llegenda. Puges de nivell, tries talents i decideixes els partits amb les teves jugades",
-  "La Ruta · Niveles y talentos · Tus jugadas": "La Ruta · Nivells i talents · Les teves jugades"
+  "La Ruta · Niveles y talentos · Tus jugadas": "La Ruta · Nivells i talents · Les teves jugades",
+  "Falta al borde del área": "Falta a la frontal de l'àrea",
+  "Veintidós metros, barrera de cinco. La pides tú.": "Vint-i-dos metres, barrera de cinc. La demanes tu.",
+  "Cabezazo en el córner": "Cop de cap al córner",
+  "El córner viene cerrado al primer palo.": "El córner ve tancat al primer pal.",
+  "Centro desde la banda": "Centrada des de la banda",
+  "Llegas a línea de fondo con el nueve entrando.": "Arribes a línia de fons amb el nou entrant.",
+  "Cobertura al compañero": "Cobertura al company",
+  "A tu lateral lo han superado. Te toca cerrar.": "Han superat el teu lateral. Et toca tancar.",
+  "Penal en contra": "Penal en contra",
+  "Once metros. Solo estáis él y tú.": "Onze metres. Només sou ell i tu.",
+  "Salida con los pies": "Sortida amb els peus",
+  "Te presionan dos y hay un compañero libre en la banda.": "Te'n pressionen dos i hi ha un company lliure a la banda."
  },
  "pl": {
   "Club": "Klub",
@@ -65000,7 +65072,19 @@
   "Indiscutible": "Niepodważalny",
   "De portada": "Z okładki",
   "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "Droga: od talentu do legendy. Awansuj, wybieraj talenty i rozstrzygaj mecze swoimi akcjami",
-  "La Ruta · Niveles y talentos · Tus jugadas": "Droga · Poziomy i talenty · Twoje akcje"
+  "La Ruta · Niveles y talentos · Tus jugadas": "Droga · Poziomy i talenty · Twoje akcje",
+  "Falta al borde del área": "Rzut wolny sprzed pola karnego",
+  "Veintidós metros, barrera de cinco. La pides tú.": "Dwadzieścia dwa metry, mur z pięciu. Bierzesz to na siebie.",
+  "Cabezazo en el córner": "Główka po rzucie rożnym",
+  "El córner viene cerrado al primer palo.": "Rzut rożny dokręcany na bliższy słupek.",
+  "Centro desde la banda": "Dośrodkowanie ze skrzydła",
+  "Llegas a línea de fondo con el nueve entrando.": "Dochodzisz do linii końcowej, a dziewiątka wbiega.",
+  "Cobertura al compañero": "Asekuracja kolegi",
+  "A tu lateral lo han superado. Te toca cerrar.": "Minęli twojego bocznego obrońcę. Musisz zamknąć.",
+  "Penal en contra": "Rzut karny przeciwko",
+  "Once metros. Solo estáis él y tú.": "Jedenaście metrów. Tylko on i ty.",
+  "Salida con los pies": "Wyprowadzenie nogami",
+  "Te presionan dos y hay un compañero libre en la banda.": "Dwóch cię pressuje, a na skrzydle jest wolny kolega."
  },
  "tr": {
   "Club": "Kulüp",
@@ -73409,6 +73493,18 @@
   "Indiscutible": "Tartışmasız",
   "De portada": "Kapak yıldızı",
   "La Ruta: de promesa a leyenda. Subes de nivel, eliges talentos y decides los partidos con tus jugadas": "Yol: umut vadeden oyuncudan efsaneye. Seviye atla, yetenek seç ve maçları kendi hamlelerinle belirle",
-  "La Ruta · Niveles y talentos · Tus jugadas": "Yol · Seviyeler ve yetenekler · Hamlelerin"
+  "La Ruta · Niveles y talentos · Tus jugadas": "Yol · Seviyeler ve yetenekler · Hamlelerin",
+  "Falta al borde del área": "Ceza sahası çizgisinde serbest vuruş",
+  "Veintidós metros, barrera de cinco. La pides tú.": "Yirmi iki metre, beşli baraj. Topu sen istiyorsun.",
+  "Cabezazo en el córner": "Kornerden kafa vuruşu",
+  "El córner viene cerrado al primer palo.": "Korner ön direğe içe dönerek geliyor.",
+  "Centro desde la banda": "Kanattan orta",
+  "Llegas a línea de fondo con el nueve entrando.": "Dokuz numara koşarken sen çizgiye iniyorsun.",
+  "Cobertura al compañero": "Arkadaşını kademe yapma",
+  "A tu lateral lo han superado. Te toca cerrar.": "Bekin geçildi. Kapatmak sana düşüyor.",
+  "Penal en contra": "Aleyhine penaltı",
+  "Once metros. Solo estáis él y tú.": "On bir metre. Sadece o ve sen.",
+  "Salida con los pies": "Ayakla oyun kurma",
+  "Te presionan dos y hay un compañero libre en la banda.": "İki kişi baskı yapıyor, kanatta boş bir arkadaşın var."
  }
 }
