@@ -242,7 +242,7 @@ static func tras_partido(c: CarreraJugador, m: Mundo, d: Dictionary) -> void:
 	var j0 := c.jugador(m)
 	var botas := CarreraPatrocinio.premio(c, d, j0 != null and j0.es_portero())
 	c.seguidores += int(botas[1])
-	var total := int(float(base + extra) * mult) + int(botas[0])
+	var total := int(float(base + extra) * mult * CarreraVida.factor_xp(c)) + int(botas[0])
 	var nivel_antes := int(r["nivel"])
 	sumar_xp(c, total)
 	## Talentos de la rama Ídolo.
@@ -317,6 +317,7 @@ static func tras_entreno(c: CarreraJugador, m: Mundo, attr: String, mejoro: bool
 		return ""
 	var toque := toque_de_la_semana(c, m)
 	sumar_xp(c, XP_ENTRENO + (10 if toque >= 0.85 else (5 if toque >= 0.5 else 0)))
+	CarreraVida.tras_entreno(c)
 	if mejoro or int(j.atributos[attr]) >= 99:
 		return ""
 	var motivo := ""
@@ -355,6 +356,7 @@ static func semana(c: CarreraJugador, m: Mundo) -> void:
 	if tiene(c, "brazalete") and j != null and j.moral < 70:
 		j.moral = 70
 	rival(c, m)
+	CarreraVida.semana(c, m)
 	CarreraMisiones.revisar(c, m)
 
 # ---------------------------------------------------------------- el rival

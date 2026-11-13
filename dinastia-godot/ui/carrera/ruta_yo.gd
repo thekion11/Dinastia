@@ -7,11 +7,11 @@ const NOMBRES := {"rit": "Velocidad", "tir": "Tiro", "pas": "Pase", "reg": "Rega
 
 static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
 	if E.estrecho(ui):
-		return E.columnas(ui, [cromo(ui, j, club), _atributos(ui, j), _talentos(ui)], [])
+		return E.columnas(ui, [cromo(ui, j, club), _atributos(ui, j), _talentos(ui), RutaVida.pintar(ui)], [])
 	var cols := E.fila(14)
 	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	cols.add_child(cromo(ui, j, club))
-	cols.add_child(E.columnas(ui, [_atributos(ui, j), _talentos(ui)], []))
+	cols.add_child(E.columnas(ui, [_atributos(ui, j), _talentos(ui), RutaVida.pintar(ui)], []))
 	cols.get_child(1).size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return cols
 

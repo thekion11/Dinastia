@@ -322,6 +322,24 @@ func _probar_carrera_ruta() -> void:
 				_comprobar(false, "  la jugada «%s» no tiene dibujo en la pizarra" % tipo_m)
 		var copa_m := CarreraMomentos.resultado(c, m, par_m, [], -1, true)
 		_comprobar(int(copa_m["goles_local"]) != int(copa_m["goles_visita"]), "  en copa no hay empate")
+		## Tu vida: el sueldo se ahorra y lo comprado cambia la carrera.
+		c.ruta["ahorros"] = 0
+		c.ruta["vida"] = {}
+		var energia_v := c.energia
+		CarreraVida.semana(c, m)
+		_comprobar(CarreraVida.ahorros(c) == j.sueldo and not CarreraVida.puede_comprar(c, m, "fisio"), "  cada semana ahorras tu sueldo; con una semana no llega para el fisio")
+		c.ruta["ahorros"] = CarreraVida.precio(c, m, "fisio") + CarreraVida.precio(c, m, "coche")
+		var rel_v := c.relacion_dt
+		_comprobar(CarreraVida.comprar(c, m, "fisio") and CarreraVida.comprar(c, m, "coche") and not CarreraVida.comprar(c, m, "coche") and CarreraVida.ahorros(c) == 0,
+			"  compras el fisio y el deportivo, una vez cada uno, y te quedas a cero")
+		_comprobar(c.relacion_dt == maxi(0, rel_v - 3), "  el deportivo le sienta mal al DT")
+		c.energia = 50
+		CarreraVida.semana(c, m)
+		_comprobar(c.energia == 56 and CarreraVida.factor_xp(c) < 1.05, "  el fisio devuelve 6 de energía cada semana")
+		c.energia = energia_v
+		c.relacion_dt = rel_v
+		c.ruta["vida"] = {}
+		c.ruta["ahorros"] = 0
 		## El contrato de botas: llega con la fama, se elige marca y paga por partido.
 		c.fama = 5
 		_comprobar(CarreraPatrocinio.eventos(c).is_empty() and CarreraPatrocinio.etiqueta(c) == "", "  sin fama no hay marca que te quiera")
