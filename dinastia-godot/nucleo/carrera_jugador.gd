@@ -63,7 +63,7 @@ func semana(m: Mundo) -> Array:
 		if bool(ev.get("unico", false)):
 			hitos[String(ev["id"])] = true
 	## Ofertas de otros clubes si destacas.
-	if fama >= 30 and _rng.randf() < 0.08 + float(fama) / 600.0:
+	if fama >= 30 and CarreraRuta.asentado(self) and _rng.randf() < 0.08 + float(fama) / 600.0:
 		var destino := _club_interesado(m, j)
 		if destino != null:
 			ofertas.append({"club_id": destino.id, "sueldo": int(float(j.sueldo) * (2.1 if CarreraRuta.tiene(self, "marca") else 1.6)), "semanas": 3})
@@ -174,6 +174,7 @@ func aceptar_oferta(m: Mundo, i: int) -> bool:
 	j.dorsal = _dorsal_libre(destino)
 	relacion_dt = 50
 	fama = mini(100, fama + 5)
+	ruta["pj_llegada"] = pj_carrera
 	ofertas.clear()
 	historial.append({"anio": m.anio, "semana": m.semana, "titulo": "Traspaso", "eleccion": "Fichas por %s" % destino.nombre})
 	return true

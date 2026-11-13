@@ -6,18 +6,12 @@ extends Control
 
 const E := preload("res://ui/carrera/ruta_estilo.gd")
 const BALONES := 3
-const PERFECTO := 0.05
-const BUENO := 0.14
 
 var ui: Variant
-var _t := 0.0
-var _marca := 0.0
-var _centro := 0.5
-var _vel := 2.6
 var _tiros: Array = []        ## calidad de cada balón (0-1)
 var _pausa := 0.0
 var _fin := false
-var _pista: Control
+var _pista: RutaBarra
 var _estado: Label
 var _boton: Button
 var _azar := RandomNumberGenerator.new()
@@ -46,9 +40,8 @@ func _ready() -> void:
 	v.add_child(E.rotulo("ENTRENO DE LA SEMANA", E.MENTA))
 	v.add_child(E.titulo(46, E.TEXTO, "EL TOQUE"))
 	v.add_child(E.lbl(14, E.SUAVE, "Tres balones. Para la marca dentro de la zona verde: cuanto más al centro, mejor. Con un toque perfecto la mejora de esta semana está asegurada."))
-	_pista = Control.new()
-	_pista.custom_minimum_size = Vector2(0, 64)
-	_pista.draw.connect(_dibujar)
+	_pista = RutaBarra.new()
+	_pista.total_luces = BALONES
 	v.add_child(_pista)
 	_estado = E.titulo(26, E.ORO, "")
 	_estado.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -60,9 +53,7 @@ func _ready() -> void:
 	_boton.grab_focus()
 
 func _nuevo_balon() -> void:
-	_centro = _azar.randf_range(0.22, 0.78)
-	_vel = 2.6 + float(_tiros.size()) * 0.9
-	_t = _azar.randf_range(0.0, TAU)
+	_pista.lanzar(_azar, 2.6 + float(_tiros.size()) * 0.9)
 	_estado.text = Idiomas.t("Balón %d de %d") % [_tiros.size() + 1, BALONES]
 
 func _process(d: float) -> void:
@@ -76,22 +67,15 @@ func _process(d: float) -> void:
 			else:
 				_nuevo_balon()
 		return
-	_t += d * _vel
-	_marca = 0.5 + 0.5 * sin(_t)
-	_pista.queue_redraw()
-
-## La calidad de parar la marca en `pos` con la zona en `centro`.
-static func calidad(pos: float, centro: float) -> float:
-	var dist := absf(pos - centro)
-	return 1.0 if dist <= PERFECTO else (0.6 if dist <= BUENO else 0.1)
 
 func golpear() -> void:
 	if _fin or _pausa > 0.0:
 		return
-	var q := calidad(_marca, _centro)
+	var q := _pista.golpear()
 	_tiros.append(q)
+	_pista.luces = _tiros
 	_estado.text = Idiomas.t("¡PERFECTO!") if q >= 1.0 else (Idiomas.t("Bien") if q >= 0.6 else Idiomas.t("Fuera"))
-	_estado.add_theme_color_override("font_color", E.MENTA if q >= 1.0 else (E.ORO if q >= 0.6 else E.CORAL))
+	_estado.add_theme_color_override("font_color", RutaBarra.color_de(q))
 	_pausa = 0.7
 	_pista.queue_redraw()
 
@@ -114,24 +98,3 @@ func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_accept"):
 		accept_event()
 		golpear()
-
-func _dibujar() -> void:
-	var w := _pista.size.x
-	var h := _pista.size.y
-	var y := h * 0.5 - 9.0
-	_pista.draw_style_box(_caja(Color(1, 1, 1, 0.08)), Rect2(0, y, w, 18))
-	_pista.draw_style_box(_caja(Color(E.ORO, 0.55)), Rect2((_centro - BUENO) * w, y, BUENO * 2.0 * w, 18))
-	_pista.draw_style_box(_caja(E.MENTA), Rect2((_centro - PERFECTO) * w, y, PERFECTO * 2.0 * w, 18))
-	_pista.draw_circle(Vector2(_marca * w, h * 0.5), 15.0, E.TEXTO)
-	_pista.draw_circle(Vector2(_marca * w, h * 0.5), 9.0, E.NOCHE)
-	for i in BALONES:
-		var col := Color(1, 1, 1, 0.15)
-		if i < _tiros.size():
-			col = E.MENTA if float(_tiros[i]) >= 1.0 else (E.ORO if float(_tiros[i]) >= 0.6 else E.CORAL)
-		_pista.draw_circle(Vector2(w * 0.5 + float(i - 1) * 22.0, h - 4.0), 5.0, col)
-
-func _caja(col: Color) -> StyleBoxFlat:
-	var st := StyleBoxFlat.new()
-	st.bg_color = col
-	st.set_corner_radius_all(9)
-	return st

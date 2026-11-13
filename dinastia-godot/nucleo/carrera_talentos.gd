@@ -8,7 +8,7 @@ static func puede_aprender(c: CarreraJugador, talento: String) -> bool:
 	if not CarreraRuta.TALENTOS.has(talento) or CarreraRuta.tiene(c, talento) or int(CarreraRuta.asegurar(c)["puntos"]) <= 0:
 		return false
 	var t: Array = CarreraRuta.TALENTOS[talento]
-	for otro: String in TALENTOS:
+	for otro: String in CarreraRuta.TALENTOS:
 		var o: Array = CarreraRuta.TALENTOS[otro]
 		if String(o[0]) == String(t[0]) and int(o[1]) < int(t[1]) and not CarreraRuta.tiene(c, otro):
 			return false

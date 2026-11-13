@@ -130,6 +130,12 @@ static func _partido(ui: Variant, j: Jugador, club: Club) -> Control:
 		var bb := E.boton("🪑  IR AL BANCO (puedes entrar)", E.ORO, ui._ir_al_banco, 56, true)
 		bb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		bot.add_child(bb)
+	if disponible:
+		var bm := E.boton("⚡  LOS MOMENTOS", E.MENTA, ui._jugar_momentos, 56)
+		bm.tooltip_text = Idiomas.t("El partido en tus jugadas clave: rápido y decidido por ti.")
+		if E.estrecho(ui):
+			bm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		bot.add_child(bm)
 	var bs := E.boton("⏩  Simular la semana", E.CIELO, func() -> void: ui._cerrar_semana({}), 56)
 	if not titular and not disponible:
 		bs.size_flags_horizontal = Control.SIZE_EXPAND_FILL

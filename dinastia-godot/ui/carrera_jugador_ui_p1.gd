@@ -226,6 +226,25 @@ func _jugar_partido() -> void:
 	var pj = load("res://ui/partido_jugable.gd").abrir(self, mundo, carrera, par[0], par[1], 240.0, -1, null, CarreraCopa.es_copa(mundo, par))
 	pj.terminado.connect(func(res: Dictionary) -> void: _cerrar_semana(res, true))
 
+## «LOS MOMENTOS»: el partido en tus jugadas clave (`RutaMomentos`). Titular,
+## las cuatro; suplente, las dos últimas si el DT te hace entrar.
+func _jugar_momentos() -> void:
+	var club := carrera.club(mundo)
+	var par := _partido_de_la_semana(club)
+	var yo := carrera.jugador(mundo)
+	if par.is_empty() or yo == null or not yo.disponible():
+		return
+	_msg = carrera.entrenar(mundo)
+	var minuto := -1
+	if not carrera.es_titular(mundo):
+		minuto = carrera.minuto_entrada_suplente(yo.es_portero())
+		if minuto < 0:
+			_msg += "  ·  " + Idiomas.t("Calentaste toda la segunda parte, pero el DT no te hizo entrar.")
+			_cerrar_semana({"sin_minutos": true}, true)
+			return
+	var mo := RutaMomentos.abrir(self, par, minuto, CarreraCopa.es_copa(mundo, par))
+	mo.terminado.connect(func(res: Dictionary) -> void: _cerrar_semana(res, true))
+
 ## Suplente: el DT decide si entras y cuándo. Si entras, juegas desde ese
 ## minuto; si no, la semana se cierra con el partido visto desde el banco.
 func _ir_al_banco() -> void:

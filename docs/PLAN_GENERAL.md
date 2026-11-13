@@ -21,10 +21,13 @@ Hecho (bloque 4): misiones por capítulo (`nucleo/carrera_misiones.gd`): tres me
 
 Hecho (bloque 5): ritmo medido con `pruebas/_sonda/sonda_ruta.tscn` (varias temporadas simuladas con un jugador sensato). Arreglos: la fama cuesta más cuanto más tienes y se apaga si no rindes (llegaba a 100 en la 2.ª temporada con nota 6,2; ahora 36-44-66-76 en cuatro); el rival es algo mejor que tú y cambia por uno más fuerte al ganarle; «Jugador del año del club» pide nota 6,8; los puntos de talento que sobran valen por +2 en un atributo (`nucleo/carrera_talentos.gd`, botón «+2» en «Yo»); seis retos nuevos (15 en total, por familias que no se repiten la misma semana) y sonido al subir de nivel. Cifras de la sonda (delantero, 5 temporadas): media 65-68-71-75-77, nivel 5-8-12-15-17.
 
+Hecho (bloque 6): «LOS MOMENTOS» (`nucleo/carrera_momentos.gd`, `ui/carrera/ruta_momentos.gd`, `ruta_barra.gd`): tercera forma de jugar el partido, entre el césped y simular: cuatro jugadas de tu puesto (remate, mano a mano, pase filtrado, robo, última entrada, despeje, paradas), cada una en la barra de toque; tus atributos ensanchan la zona y lo que hagas da el marcador, la nota y los retos. Suplente: dos jugadas si el DT te hace entrar. Las ofertas esperan a que lleves 15 partidos en el club con nota 6,3 (`CarreraRuta.asentado`).
+
 Falta (siguientes bloques):
 - Repasar con el mando real el orden del foco (hoy el foco cae en la acción principal de cada pantalla; el resto lo navega Godot solo).
-- Más variedad: más eventos con decisiones, patrocinios, vida fuera del campo.
-- Equilibrio: repetir la sonda con portero y defensa, y a 10+ temporadas (¿se llega a Leyenda, nivel 34, antes del retiro?). Las ofertas llegan muy pronto (en la sonda, traspaso al extranjero en la primera temporada).
+- Más variedad: más eventos con decisiones, patrocinios, vida fuera del campo; en «Los Momentos», más tipos de jugada y un dibujo de la jugada (hoy es texto y barra).
+- OJO con el banco: si un script nuevo no compila, la sección que lo usa se corta SIN contar fallo (pasó con `carrera_talentos.gd`, subido roto en b90870e5 y arreglado en el commit siguiente). Tras tocar clases nuevas, mirar `godot --headless --import` y que la última línea de la sección aparezca en `/tmp/mini_banco.txt`.
+- Equilibrio: repetir la sonda con portero y defensa, y a 10+ temporadas (¿se llega a Leyenda, nivel 34, antes del retiro?).
 - Pendiente de decisión del dueño: nada por ahora.
 
 ## ESTADO AL 12-11 MEDIODÍA (sesiones Opus 13 y 14 cerradas y ARCHIVADAS; todo en `main`)

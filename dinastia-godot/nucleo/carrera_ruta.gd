@@ -89,6 +89,15 @@ static func asegurar(c: CarreraJugador) -> Dictionary:
 			r[clave] = []
 	return r
 
+## ¿Llevas lo bastante en tu club como para que otro te quiera? (13-11: las
+## ofertas llegaban a las pocas semanas de firmar.) Quince partidos desde que
+## llegaste y una nota media de 6,3 o más.
+const PARTIDOS_PARA_OFERTA := 15
+static func asentado(c: CarreraJugador) -> bool:
+	var llegada: Variant = c.ruta.get("pj_llegada", 0)
+	var desde := int(llegada) if typeof(llegada) in [TYPE_INT, TYPE_FLOAT] else 0
+	return c.pj_carrera - desde >= PARTIDOS_PARA_OFERTA and c.nota_media() >= 6.3
+
 static func nivel(c: CarreraJugador) -> int:
 	return int(asegurar(c)["nivel"])
 

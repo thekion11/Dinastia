@@ -12,6 +12,13 @@ var _semanas := maxi(1, int(OS.get_environment("SEMANAS"))) if OS.get_environmen
 var _hechas := 0
 var _paso := 0
 var _toque: RutaToque
+var _mo: RutaMomentos
+
+## Para la marca a `desvio` anchos de la zona «bien» del centro y golpea.
+func _jugada(desvio: float) -> void:
+	_mo._barra.parada = true
+	_mo._barra.marca = clampf(_mo._barra.centro + _mo._barra.bueno * desvio * (1.0 if _mo._barra.centro < 0.5 else -1.0), 0.0, 1.0)
+	_mo.golpear()
 
 func _ready() -> void:
 	## MOVIL=1: como en un teléfono (zoom de interfaz y, de pie, lienzo estrecho).
@@ -50,18 +57,30 @@ func _process(_d: float) -> void:
 			_foto("3_hoy")
 			_toque = RutaToque.abrir(_ui)
 		5:
-			_toque._marca = _toque._centro + 0.02
+			_toque._pista.parada = true
+			_toque._pista.marca = _toque._pista.centro + 0.02
 			_toque.golpear()
 		6:
 			_foto("4_toque")
 			_toque.queue_free()
 			CarreraRuta.anotar_toque(c, m, 1.0)
 			c.entrenar(m)
-			_ui._cerrar_semana({"goles_local": 2, "goles_visita": 1, "goles": 1, "asist": 1, "nota": 8.2, "minutos": 90, "titular": true, "encajados": 1, "paradas": 3}, true)
+			## El partido, en «Los Momentos»: perfecto, bien, (foto), perfecto y fallo.
+			_mo = RutaMomentos.abrir(_ui, _ui._partido_de_la_semana(c.club(m)))
+			_mo.terminado.connect(func(res: Dictionary) -> void: _ui._cerrar_semana(res, true))
 		7:
-			_foto("5_resumen")
-			_ui._pintar_semana()
+			_jugada(0.0)
 		8:
+			_jugada(0.8)
+		9:
+			_foto("5_momentos")
+			_jugada(0.0)
+		10:
+			_jugada(3.0)
+		11:
+			_foto("6_resumen")
+			_ui._pintar_semana()
+		12:
 			for _i in _semanas:
 				_ui._cerrar_semana({})
 			## TEMPORADA=1: hasta el final, para la pantalla del cierre.
@@ -72,14 +91,14 @@ func _process(_d: float) -> void:
 			if OS.get_environment("TEMPORADA") == "1" and c.ruta.get("temporada") is Dictionary:
 				(c.ruta["temporada"] as Dictionary)["visto"] = false
 			_ui._pintar_semana()
-		9:
-			_foto("6_hoy_semanas")
+		13:
+			_foto("7_hoy_semanas")
 			_ui._pestana = "yo"
 			_ui._pintar_semana()
-		10:
-			_foto("7_yo")
+		14:
+			_foto("8_yo")
 			_ui._pestana = "ruta"
 			_ui._pintar_semana()
-		11:
-			_foto("8_ruta")
+		15:
+			_foto("9_ruta")
 			get_tree().quit()

@@ -230,6 +230,9 @@ func _probar_segundas_pbt() -> void:
 		var bajan := (resumen["bajan"] as Array).filter(func(c: Club) -> bool: return c.pais == pais).size()
 		_comprobar(suben == bajan and suben == int(esperado[pais][2]), "%s: suben %d y bajan %d" % [pais, suben, bajan])
 
+func rv_club(m: Mundo, o: Jugador) -> Club:
+	return m.clubes.get(o.club_id)
+
 ## «LA RUTA» DEL MODO JUGADOR (13-11): nivel, talentos, retos, racha, rival,
 ## toque del entreno y el club elegido al empezar. Con tres países y puestos.
 func _probar_carrera_ruta() -> void:
@@ -290,6 +293,43 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(int(j.atributos[attr]) == v0 + 1, "  con toque perfecto el entreno mejora seguro (%s %d → %d)" % [attr, v0, int(j.atributos[attr])])
 		c.entrenar(m)
 		_comprobar(int(j.atributos[attr]) == v0 + 1, "  y no se entrena dos veces la misma semana")
+		## «Los Momentos»: cuatro jugadas del puesto; la calidad decide el partido.
+		var guion := CarreraMomentos.guion(c, m)
+		_comprobar(guion.size() == 4 and (CarreraMomentos.GUIONES[j.pos] as Array).has(String(guion[0]["tipo"])) and int(guion[0]["minuto"]) < int(guion[3]["minuto"]),
+			"  cuatro jugadas de tu línea, en orden de minuto")
+		_comprobar(CarreraMomentos.guion(c, m, 70).size() == 2 and int(CarreraMomentos.guion(c, m, 70)[0]["minuto"]) > 70, "  de suplente, dos jugadas desde que entras")
+		var z0 := CarreraMomentos.zona(j, String(guion[0]["tipo"]))
+		var a_m := String(CarreraMomentos.TIPOS[String(guion[0]["tipo"])][2])
+		var guardado := int(j.atributos[a_m])
+		j.atributos[a_m] = 95
+		_comprobar(float(CarreraMomentos.zona(j, String(guion[0]["tipo"]))[0]) > float(z0[0]), "  con más atributo la zona perfecta es más ancha")
+		j.atributos[a_m] = guardado
+		var buenas: Array = []
+		var malas: Array = []
+		for mo: Dictionary in guion:
+			buenas.append(CarreraMomentos.desenlace(String(mo["tipo"]), 1.0))
+			malas.append(CarreraMomentos.desenlace(String(mo["tipo"]), 0.1))
+		var par_m := [c.club(m), rv_club(m, rv)]
+		var bien := CarreraMomentos.resultado(c, m, par_m, buenas)
+		var mal := CarreraMomentos.resultado(c, m, par_m, malas)
+		_comprobar(float(bien["nota"]) >= 8.0 and float(mal["nota"]) <= 5.0, "  cuatro perfectas dan nota %.1f; cuatro fallos, %.1f" % [float(bien["nota"]), float(mal["nota"])])
+		_comprobar(int(bien["goles_local"]) - int(bien["goles_visita"]) > int(mal["goles_local"]) - int(mal["goles_visita"]), "  y el marcador lo nota (%d-%d contra %d-%d)" % [
+			int(bien["goles_local"]), int(bien["goles_visita"]), int(mal["goles_local"]), int(mal["goles_visita"])])
+		_comprobar(int(bien["goles"]) + int(bien["asist"]) + int(bien["paradas"]) + (1 if j.pos == "DEF" else 0) >= 1 and int(bien["encajados"]) == int(bien["goles_visita"]),
+			"  el resumen trae goles, asistencias o paradas, y lo que encajó tu equipo")
+		var copa_m := CarreraMomentos.resultado(c, m, par_m, [], -1, true)
+		_comprobar(int(copa_m["goles_local"]) != int(copa_m["goles_visita"]), "  en copa no hay empate")
+		## Las ofertas esperan a que te asientes: 15 partidos y nota 6,3.
+		c.pj_carrera = 3
+		_comprobar(not CarreraRuta.asentado(c), "  con 3 partidos en el club nadie te ofrece nada todavía")
+		c.pj_carrera = 3 + CarreraRuta.PARTIDOS_PARA_OFERTA
+		c.ruta["pj_llegada"] = 3
+		c.stats_temp["notas"] = [6.6, 6.4]
+		_comprobar(CarreraRuta.asentado(c), "  con 15 partidos y nota 6,5 ya pueden llegar ofertas")
+		c.stats_temp["notas"] = [5.9, 6.0]
+		_comprobar(not CarreraRuta.asentado(c), "  y con nota 5,9 no")
+		c.ruta["pj_llegada"] = 0
+		c.pj_carrera = 3
 		## Pulir: un punto por +2 en un atributo; y la fama cuesta más de subir.
 		c.ruta["puntos"] = 1
 		var a0 := int(j.atributos[attr])
