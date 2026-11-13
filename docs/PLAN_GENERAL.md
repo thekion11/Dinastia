@@ -96,6 +96,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   variantes medidas): en C4 el gol nace del desorden (rechaces, desvíos, balón parado) y el portero no es el cuello de botella.
   SESIÓN CERRADA (13-11): resumen para el dueño en `MOTOR_LEAGUE_SOCCER_PLAN.md` («RESUMEN PARA EL DUEÑO — sesión 15»). Queda abierto:
   `C4_RUPTURA` con una 3.ª muestra de países y, como idea mayor, el bloque entero más alto en ataque (no una pieza suelta).
+- PULIDO DE CÓDIGO (13-11, orden del dueño, en `main`; cifras y perfiles en `rendimiento_120fps.md`, «RESUMEN sesión 15 — optimización»): 14 funciones muertas de `nucleo/` fuera; paso del motor del partido −5,9 % (C4) y −8,9 % (de siempre) sin cambiar ninguna cifra de los partidos; grupo `funciones` del banco (4 secciones, 52 comprobaciones de funciones puras de `nucleo/`); «FALLOS DETECTADOS» revalidados (ninguno resuelto).
+  PENDIENTE de esta sesión: (1) ~30 funciones puras de `nucleo/` sin prueba directa (lista en «Pruebas por sistema»); (2) optimizar más el motor exigiría reducir la frecuencia de la colocación (cambia el juego) o pasar colocación/duelos a C++ con gemela (ver el resumen); (3) `C4_RUPTURA` con una 3.ª muestra de países.
 
 ## SESIÓN 14 (12-11): LO QUE SE VE Y SE SIENTE EN EL PARTIDO — rama `sesion14-partido-visual` (informe `docs/04_auditorias/partido_visual_2026-11-12.md`)
 - HECHO: botas con horma (sin dedos), costura cara-cuello (borde pegado a la piel en 3D, también peatones y personal), nuca a la altura del
