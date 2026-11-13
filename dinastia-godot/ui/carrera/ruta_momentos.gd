@@ -52,7 +52,8 @@ func _ready() -> void:
 	var p := E.tarjeta(tono, E.TINTA.lerp(tono, 0.08))
 	p.custom_minimum_size = Vector2(minf(680.0, get_viewport_rect().size.x - 24.0), 0)
 	centro.add_child(p)
-	var v := E.columna(8)
+	var chico := E.bajo(self)
+	var v := E.columna(2 if chico else 8)
 	p.add_child(v)
 	var cab := E.fila(10)
 	v.add_child(cab)
@@ -64,26 +65,29 @@ func _ready() -> void:
 	var mar := E.fila(10)
 	mar.alignment = BoxContainer.ALIGNMENT_CENTER
 	v.add_child(mar)
-	mar.add_child(E.escudo(par[0], 40))
-	_marcador = E.titulo(44, E.TEXTO, "0 - 0")
+	mar.add_child(E.escudo(par[0], 28 if chico else 40))
+	_marcador = E.titulo(30 if chico else 44, E.TEXTO, "0 - 0")
 	mar.add_child(_marcador)
-	mar.add_child(E.escudo(par[1], 40))
-	_titulo = E.titulo(34, E.TEXTO, "")
+	mar.add_child(E.escudo(par[1], 28 if chico else 40))
+	_titulo = E.titulo(24 if chico else 34, E.TEXTO, "")
 	v.add_child(_titulo)
 	_texto = E.lbl(14, E.SUAVE, "")
 	_texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_texto.visible = not chico
 	v.add_child(_texto)
 	_pizarra = RutaPizarra.new()
 	## En un teléfono tumbado (menos de 420 px de alto) la pizarra se achica.
-	_pizarra.custom_minimum_size = Vector2(0, 150 if get_viewport_rect().size.y >= 520.0 else 84)
+	_pizarra.custom_minimum_size = Vector2(0, 76 if chico else 150)
 	v.add_child(_pizarra)
 	_barra = RutaBarra.new()
 	_barra.total_luces = _guion.size()
+	if chico:
+		_barra.custom_minimum_size = Vector2(0, 52)
 	v.add_child(_barra)
-	_estado = E.titulo(26, E.ORO, "")
+	_estado = E.titulo(20 if chico else 26, E.ORO, "")
 	_estado.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(_estado)
-	_boton = E.boton("⚽  ¡AHORA!", E.ORO, golpear, 58, true)
+	_boton = E.boton("⚽  ¡AHORA!", E.ORO, golpear, 46 if chico else 58, true)
 	v.add_child(_boton)
 	_siguiente()
 	_boton.grab_focus()
@@ -115,9 +119,11 @@ func golpear() -> void:
 	if _fin or _pausa > 0.0:
 		return
 	var q := _barra.golpear()
-	_pizarra.resolver(q)
 	var mo: Dictionary = _guion[_hechas.size()]
 	var d := CarreraMomentos.desenlace(String(mo["tipo"]), q)
+	## A tu favor: gol o asistencia si era de eso; si no, cualquier cosa menos el fallo.
+	var clase := String(CarreraMomentos.TIPOS[String(mo["tipo"])][3])
+	_pizarra.resolver(q, q >= 1.0 if clase == "gol" else q >= 0.6)
 	_hechas.append(d)
 	var luces: Array = []
 	for h: Dictionary in _hechas:

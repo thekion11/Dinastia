@@ -25,7 +25,7 @@ Hecho (bloque 6): «LOS MOMENTOS» (`nucleo/carrera_momentos.gd`, `ui/carrera/ru
 
 Falta (siguientes bloques):
 - Repasar con el mando real el orden del foco (hoy el foco cae en la acción principal de cada pantalla; el resto lo navega Godot solo).
-- Más variedad: más eventos con decisiones, patrocinios, vida fuera del campo; en «Los Momentos», más tipos de jugada y que el balón se mueva al resolver (la pizarra de cada jugada ya está: `ui/carrera/ruta_pizarra.gd`, vista en PC y en teléfono de pie).
+- Más variedad: más eventos con decisiones, patrocinios, vida fuera del campo; en «Los Momentos», más tipos de jugada (la pizarra dibuja las nueve y el balón va a su destino al resolver; visto en PC, teléfono de pie y tumbado, donde el Toque, Los Momentos y el resumen se compactan para caber en 394 px de alto).
 - OJO con el banco: si un script nuevo no compila, la sección que lo usa se corta SIN contar fallo (pasó con `carrera_talentos.gd`, subido roto en b90870e5 y arreglado en el commit siguiente). Tras tocar clases nuevas, mirar `godot --headless --import` y que la última línea de la sección aparezca en `/tmp/mini_banco.txt`.
 - Equilibrio: sonda de portero a 9 temporadas hecha (media 69→91 con techo 82: arreglado, entrenando no se pasa del mejor potencial + 3 y de ahí solo con puntos de talento; nivel 24 «Estrella» a los 25 años, así que Leyenda, nivel 34, cae hacia los 30). Falta la de defensa, y que la sonda juegue los partidos de selección (la misión «juega con tu selección» de Estrella no se cobra simulando).
 - Pendiente de decisión del dueño: nada por ahora.

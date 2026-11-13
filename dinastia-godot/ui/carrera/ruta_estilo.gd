@@ -237,6 +237,10 @@ static func flujo(sep := 6) -> HFlowContainer:
 static func estrecho(ui: Variant) -> bool:
 	return ui.get_viewport_rect().size.x < 760.0
 
+## ¿Pantalla baja? (un teléfono tumbado: el lienzo mide ~394 px de alto)
+static func bajo(ui: Variant) -> bool:
+	return ui.get_viewport_rect().size.y < 520.0
+
 ## Fila en ancho, columna en estrecho.
 static func reparto(vertical: bool, sep := 10) -> BoxContainer:
 	var b := BoxContainer.new()

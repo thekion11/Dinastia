@@ -29,7 +29,22 @@ const JUGADAS := {
 		"balon": Vector2(0.88, 0.6), "flechas": [[Vector2(0.88, 0.6), Vector2(0.52, 0.76), true], [Vector2(0.5, 0.9), Vector2(0.51, 0.79), false]]},
 }
 
+## Adónde va el balón al resolver: tipo -> [si sale bien, si sale mal].
+const DESTINOS := {
+	"remate": [Vector2(0.44, 0.03), Vector2(0.3, 0.0)], "mano": [Vector2(0.56, 0.03), Vector2(0.5, 0.24)],
+	"pase": [Vector2(0.62, 0.3), Vector2(0.5, 0.5)], "robo": [Vector2(0.46, 0.64), Vector2(0.5, 0.3)],
+	"entrada": [Vector2(0.52, 0.62), Vector2(0.5, 0.97)], "despeje": [Vector2(0.86, 0.5), Vector2(0.5, 0.97)],
+	"parada": [Vector2(0.52, 0.88), Vector2(0.56, 0.97)], "vuelo": [Vector2(0.72, 0.8), Vector2(0.56, 0.97)],
+	"salida": [Vector2(0.5, 0.87), Vector2(0.48, 0.97)],
+}
+
 var tipo := "remate"
+## 0-1: lo que lleva recorrido el balón hacia su destino tras resolver.
+var avance := 0.0:
+	set(v):
+		avance = v
+		queue_redraw()
+var _destino := Vector2.ZERO
 var tono := E.CIELO
 ## -1 sin resolver; 1 perfecto, 0,6 bien, 0,1 fallo: tiñe las flechas.
 var calidad := -1.0
@@ -41,11 +56,18 @@ func poner(tipo_jugada: String, color_club: Color) -> void:
 	tipo = tipo_jugada if JUGADAS.has(tipo_jugada) else "remate"
 	tono = color_club
 	calidad = -1.0
+	avance = 0.0
 	queue_redraw()
 
-func resolver(q: float) -> void:
+## `bien`: si la jugada acabó a tu favor (el balón va al destino bueno).
+func resolver(q: float, bien := true) -> void:
 	calidad = q
-	queue_redraw()
+	_destino = DESTINOS[tipo][0 if bien else 1]
+	if E._anima() and is_inside_tree():
+		avance = 0.0
+		create_tween().tween_property(self, "avance", 1.0, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	else:
+		avance = 1.0
 
 func _p(u: Vector2, r: Rect2) -> Vector2:
 	return r.position + u * r.size
@@ -80,8 +102,11 @@ func _draw() -> void:
 		draw_arc(_p(mi, r), 9.0, 0.0, TAU, 20, Color(1, 1, 1, 0.7), 1.5)
 	draw_circle(_p(d["yo"], r), 11.0, E.ORO)
 	draw_arc(_p(d["yo"], r), 14.0, 0.0, TAU, 24, Color(E.ORO, 0.6), 2.0)
-	draw_circle(_p(d["balon"], r), 5.0, Color.WHITE)
-	draw_arc(_p(d["balon"], r), 5.0, 0.0, TAU, 12, Color.BLACK, 1.0)
+	var balon: Vector2 = d["balon"]
+	if calidad >= 0.0:
+		balon = balon.lerp(_destino, avance)
+	draw_circle(_p(balon, r), 5.0, Color.WHITE)
+	draw_arc(_p(balon, r), 5.0, 0.0, TAU, 12, Color.BLACK, 1.0)
 
 ## Flecha de `a` a `b`; a trazos si es un pase o un balón que viene.
 func _flecha(a: Vector2, b: Vector2, col: Color, trazos: bool) -> void:

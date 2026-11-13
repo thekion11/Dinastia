@@ -18,9 +18,15 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 	var velo := ColorRect.new()
 	velo.color = Color(0.01, 0.02, 0.06, 0.88)
 	velo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	## Con desplazamiento: en un teléfono tumbado no cabe entero.
+	var sc := ScrollContainer.new()
+	sc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	velo.add_child(sc)
 	var centro := CenterContainer.new()
-	centro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	velo.add_child(centro)
+	centro.custom_minimum_size = ui.get_viewport_rect().size
+	centro.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sc.add_child(centro)
 	var nota := float(u.get("nota", 6.0))
 	var tono := E.MENTA if nota >= 7.0 else (E.ORO if nota >= 6.0 else E.CORAL)
 	var p := E.tarjeta(tono)
@@ -34,7 +40,7 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 	var n := E.columna(-10)
 	n.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	arriba.add_child(n)
-	var grande := E.titulo(96, tono, "%.1f" % nota)
+	var grande := E.titulo(60 if E.bajo(ui) else 96, tono, "%.1f" % nota)
 	E.contar(grande, nota, "%.1f")
 	n.add_child(grande)
 	n.add_child(E.lbl(13, E.SUAVE, "tu nota", true))
