@@ -57,7 +57,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
   `valla_fondo_salida_tunel_ENG_antes_despues.jpg`.
   ARREGLADO: taquillas del vestuario visitante con volumen (antes una placa flotante de 10 cm; MÍNIMA 718 → 719, MEDIA +28) y sombra de
   contacto bajo las filas de butacas de la sala de vídeo (desde BAJA; MÍNIMA 881 = 881, MEDIA +3). Hojas en `capturas_primera_persona_2026-11-12/`.
-- FALTA: vídeo con la cámara real de las reacciones; medir el HUD en el teléfono real.
+- FALTA (fuera de este contenedor): vídeo con la cámara real de las reacciones (horas de CPU por software: en un PC con GPU con `herramientas/grabar_partido_hd.sh`); medir el HUD en el teléfono real.
+- EN CURSO: PRIORITARIO 1, estética y diseño de menús (menú central, Plantilla, Fichajes, Tácticas, Calendario y Ajustes; 1600×900 y 2400×1080, alemán).
 - IDEA ANOTADA: lanzar el mini evento también en el momento de ganar el título que abre la planta (hoy sale en la primera visita).
 ## SESIÓN 15 (12-11): JUGABILIDAD DE C4 — rama `sesion15-jugabilidad` (detalle y cifras en `MOTOR_LEAGUE_SOCCER_PLAN.md`, tabla de banderas)
 - MEDIDO Y DESCARTADO (apagado, cada uno con su bandera): adelanto del pase por zona (`C4_ADELANTO=3`) y eligiendo otro compañero (`=4`):
