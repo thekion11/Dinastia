@@ -12,13 +12,6 @@ static func ventaja(ahora_ms: float, falta_ms: float, perdio: bool) -> int:
 		return 1
 	return 0
 
-## L gameplaytuning.hpp GetFatigueWorkloadFactor.
-static func carga_fatiga(vel: float, vmax: float, con_balon: bool) -> float:
-	if vmax <= 0.0:
-		return 1.0
-	var sprint := clampf((clampf(vel / vmax, 0.0, 1.0) - 0.55) / 0.45, 0.0, 1.0)
-	return 0.90 + sprint * sprint * 0.36 + (sprint * 0.06 if con_balon else 0.0)
-
 ## L aitactics.hpp ShouldStartZonePressure: presión de zona al perder el balón, según la palanca, el campo y el primer defensor.
 static func empezar_presion_zona(presion: float, territorio: float, dist_primero: float) -> bool:
 	var s := clampf(presion, 0.0, 1.0)

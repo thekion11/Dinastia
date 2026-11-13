@@ -429,12 +429,3 @@ func _bloque_modular(frente: Vector3, giro: float, semilla: int, ancho_max: floa
 	_puertas_mod.append(puerta)
 	PuertaVida.registrar(b, puerta + rot * Vector3(0, 0, 0.2), rot * Vector3(0, 0, 1))
 	return puerta
-
-## Un bloque alto hecho con el mismo modelo apilado planta sobre planta (en
-## vez de estirarlo): crece en pisos y las ventanas conservan su forma.
-func _kit_apilado(esc: PackedScene, pos: Vector3, s: float, pisos: int, giro: float) -> void:
-	## (28-10) La altura sale de la malla cacheada (`_malla_kit`), sin instanciar y soltar un nodo por bloque.
-	var k0 := _malla_kit(esc.resource_path)
-	var alto: float = ((k0["caja"] as AABB).size.y if not k0.is_empty() else 0.0) * s
-	for k in pisos:
-		_kit(esc, pos + Vector3(0, float(k) * alto * 0.98, 0), Vector3.ONE * s, giro)

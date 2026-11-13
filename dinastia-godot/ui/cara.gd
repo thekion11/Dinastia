@@ -259,11 +259,6 @@ static func credito_foto(j: Jugador) -> String:
 	var c := String(_creditos_fotos.get(Nombres.limpiar(j.nombre), ""))
 	return "Foto: %s · Wikimedia Commons, recortada" % c if c != "" else ""
 
-## Cuántos reales tienen ya foto encontrada, para enseñarlo en algún sitio sin
-## tener que releer el reporte entero cada vez.
-static func fotos_encontradas() -> int:
-	return _indice_fotos_de().size()
-
 static func limpiar_cache() -> void:
 	_cache.clear()
 	_indice_fotos_listo = false

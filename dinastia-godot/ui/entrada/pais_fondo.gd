@@ -175,12 +175,6 @@ func monumento_actual() -> Array:
 	var lista = CargaCiudad.de("PaisDatos").monumentos(pais)
 	return lista[indice] if indice < lista.size() else []
 
-func segundos_para_el_siguiente() -> float:
-	return maxf(0.0, INTERVALO - _t)
-
-func silueta_visible() -> PaisMonumento:
-	return _monumentos[_mon_activo]
-
 func _mostrar() -> void:
 	var m := monumento_actual()
 	if m.is_empty():

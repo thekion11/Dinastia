@@ -407,8 +407,3 @@ func _avanzar_fisica(delta: float) -> void:
 	if despl.length_squared() > 0.0000001:
 		var eje := Vector3(despl.y, 0.0, -despl.x).normalized()
 		global_rotate(eje, despl.length() / radio)
-
-func en_vuelo() -> bool:
-	if _modo_fisica:
-		return velocidad_vectorial.length() > 0.4 or position.y > radio + 0.05
-	return _t < 1.0
