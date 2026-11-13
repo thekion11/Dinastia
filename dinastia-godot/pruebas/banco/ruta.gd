@@ -113,6 +113,17 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(CarreraRuta.nivel(c) * 100000 + int(c.ruta["xp"]) > nivel_ev, "  la hora extra con el veterano da experiencia")
 		for e_r: Dictionary in lista_ev:
 			_comprobar((e_r["opciones"] as Array).size() == 2 and String(e_r["texto"]).length() > 30, "  evento «%s» con dos salidas" % e_r["titulo"])
+		## En cadena: lo que elegiste trae otro evento semanas después.
+		_comprobar(CarreraEventosRuta.semanas_desde(c, m, "bar") == 0 and not ids_ev.call().has("ruta_bar"), "  recién prestado, el bar todavía no da noticias")
+		(c.ruta["marcas"] as Dictionary)["bar"] = m.anio * 60 + m.semana - 15
+		_comprobar(ids_ev.call().has("ruta_bar"), "  quince semanas después llega «El bar de tu primo»")
+		CarreraEventosRuta.aplicar(c, m, {"ruta_marca": "pique"})
+		(c.ruta["marcas"] as Dictionary)["pique"] = m.anio * 60 + m.semana - 4
+		_comprobar(ids_ev.call().has("ruta_pique"), "  y si contestaste a tu rival en redes, el duelo se calienta")
+		CarreraEventosRuta.aplicar(c, m, {"ruta_marca": "duelo_doble"})
+		_comprobar(CarreraEventosRuta.tiene_marca(c, "duelo_doble"), "  elegir «vale doble» deja la marca para el cierre del duelo")
+		CarreraEventosRuta.quitar_marca(c, "duelo_doble")
+		c.ruta["marcas"] = {}
 		c.energia = 100
 		c.ruta["racha"] = 0
 		## Tu vida: el sueldo se ahorra y lo comprado cambia la carrera.

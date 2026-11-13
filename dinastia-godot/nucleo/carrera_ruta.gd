@@ -429,10 +429,11 @@ static func cerrar_duelo(c: CarreraJugador, m: Mundo) -> bool:
 	if gane:
 		r["duelos_ganados"] = int(r["duelos_ganados"]) + 1
 		c.fama = mini(100, c.fama + 3)
-		sumar_xp(c, XP_DUELO)
+		sumar_xp(c, XP_DUELO * (2 if CarreraEventosRuta.tiene_marca(c, "duelo_doble") else 1))
 		_grada(c, "🏆", "Le ganaste el duelo de la temporada a %s.", [o.nombre])
 		## A rival vencido, rival nuevo (y más fuerte).
 		(r["rival"] as Dictionary).clear()
 	else:
 		_grada(c, "🥊", "%s te ganó el duelo de la temporada. Habrá revancha.", [o.nombre])
+	CarreraEventosRuta.quitar_marca(c, "duelo_doble")
 	return gane

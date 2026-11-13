@@ -8442,7 +8442,15 @@
   "Tu primo tiene un negocio": "Your cousin has a business idea",
   "Ha visto que te va bien y te pide un préstamo para abrir un bar con tu nombre en el cartel.": "He's seen you're doing well and asks for a loan to open a bar with your name on the sign.",
   "Le prestas el dinero (ocho semanas de sueldo).": "You lend him the money (eight weeks' wages).",
-  "Le dices que no mezclas familia y dinero.": "You tell him you don't mix family and money."
+  "Le dices que no mezclas familia y dinero.": "You tell him you don't mix family and money.",
+  "El duelo se calienta": "The duel heats up",
+  "Tu respuesta en redes corrió como la pólvora. Media liga está pendiente de vuestro duelo.": "Your reply on social media spread like wildfire. Half the league is following your duel.",
+  "Lo usas de gasolina: este año el duelo vale doble.": "You use it as fuel: this year the duel counts double.",
+  "Bajas el tono con un mensaje de respeto.": "You cool things down with a message of respect.",
+  "El bar de tu primo": "Your cousin's bar",
+  "El bar con tu nombre se llena cada día de partido. Tu primo quiere saber qué haces con tu parte.": "The bar with your name is packed every matchday. Your cousin wants to know what you'll do with your share.",
+  "Recuperas lo prestado, con un extra (doce semanas de sueldo).": "You get your loan back, with a bonus (twelve weeks' wages).",
+  "Lo dejas dentro: que el bar lleve tu cara.": "You leave it in: let the bar carry your face."
  },
  "pt": {
   "Historia": "História",
@@ -16887,7 +16895,15 @@
   "Tu primo tiene un negocio": "Seu primo tem um negócio",
   "Ha visto que te va bien y te pide un préstamo para abrir un bar con tu nombre en el cartel.": "Ele viu que você vai bem e pede um empréstimo para abrir um bar com seu nome na placa.",
   "Le prestas el dinero (ocho semanas de sueldo).": "Você empresta o dinheiro (oito semanas de salário).",
-  "Le dices que no mezclas familia y dinero.": "Você diz que não mistura família e dinheiro."
+  "Le dices que no mezclas familia y dinero.": "Você diz que não mistura família e dinheiro.",
+  "El duelo se calienta": "O duelo esquenta",
+  "Tu respuesta en redes corrió como la pólvora. Media liga está pendiente de vuestro duelo.": "Sua resposta nas redes se espalhou como pólvora. Meia liga está de olho no duelo de vocês.",
+  "Lo usas de gasolina: este año el duelo vale doble.": "Você usa como combustível: este ano o duelo vale em dobro.",
+  "Bajas el tono con un mensaje de respeto.": "Você baixa o tom com uma mensagem de respeito.",
+  "El bar de tu primo": "O bar do seu primo",
+  "El bar con tu nombre se llena cada día de partido. Tu primo quiere saber qué haces con tu parte.": "O bar com seu nome lota em todo dia de jogo. Seu primo quer saber o que você faz com a sua parte.",
+  "Recuperas lo prestado, con un extra (doce semanas de sueldo).": "Você recupera o que emprestou, com um extra (doze semanas de salário).",
+  "Lo dejas dentro: que el bar lleve tu cara.": "Você deixa lá dentro: que o bar leve o seu rosto."
  },
  "patrones": [
   [
@@ -31472,7 +31488,15 @@
   "Tu primo tiene un negocio": "Ton cousin a une affaire",
   "Ha visto que te va bien y te pide un préstamo para abrir un bar con tu nombre en el cartel.": "Il a vu que ça marche pour toi et te demande un prêt pour ouvrir un bar avec ton nom sur l'enseigne.",
   "Le prestas el dinero (ocho semanas de sueldo).": "Tu lui prêtes l'argent (huit semaines de salaire).",
-  "Le dices que no mezclas familia y dinero.": "Tu lui dis que tu ne mélanges pas famille et argent."
+  "Le dices que no mezclas familia y dinero.": "Tu lui dis que tu ne mélanges pas famille et argent.",
+  "El duelo se calienta": "Le duel s'envenime",
+  "Tu respuesta en redes corrió como la pólvora. Media liga está pendiente de vuestro duelo.": "Ta réponse sur les réseaux s'est répandue comme une traînée de poudre. La moitié du championnat suit votre duel.",
+  "Lo usas de gasolina: este año el duelo vale doble.": "Tu t'en sers comme carburant : cette année le duel compte double.",
+  "Bajas el tono con un mensaje de respeto.": "Tu calmes le jeu avec un message de respect.",
+  "El bar de tu primo": "Le bar de ton cousin",
+  "El bar con tu nombre se llena cada día de partido. Tu primo quiere saber qué haces con tu parte.": "Le bar à ton nom est plein chaque jour de match. Ton cousin veut savoir ce que tu fais de ta part.",
+  "Recuperas lo prestado, con un extra (doce semanas de sueldo).": "Tu récupères ton prêt, avec un bonus (douze semaines de salaire).",
+  "Lo dejas dentro: que el bar lleve tu cara.": "Tu laisses ta part : que le bar porte ton visage."
  },
  "it": {
   "Historia": "Storia",
@@ -39917,7 +39941,15 @@
   "Tu primo tiene un negocio": "Tuo cugino ha un affare",
   "Ha visto que te va bien y te pide un préstamo para abrir un bar con tu nombre en el cartel.": "Ha visto che ti va bene e ti chiede un prestito per aprire un bar col tuo nome sull'insegna.",
   "Le prestas el dinero (ocho semanas de sueldo).": "Gli presti i soldi (otto settimane di stipendio).",
-  "Le dices que no mezclas familia y dinero.": "Gli dici che non mischi famiglia e soldi."
+  "Le dices que no mezclas familia y dinero.": "Gli dici che non mischi famiglia e soldi.",
+  "El duelo se calienta": "Il duello si accende",
+  "Tu respuesta en redes corrió como la pólvora. Media liga está pendiente de vuestro duelo.": "La tua risposta sui social è corsa come un lampo. Mezzo campionato segue il vostro duello.",
+  "Lo usas de gasolina: este año el duelo vale doble.": "Lo usi come benzina: quest'anno il duello vale doppio.",
+  "Bajas el tono con un mensaje de respeto.": "Abbassi i toni con un messaggio di rispetto.",
+  "El bar de tu primo": "Il bar di tuo cugino",
+  "El bar con tu nombre se llena cada día de partido. Tu primo quiere saber qué haces con tu parte.": "Il bar col tuo nome si riempie a ogni giorno di partita. Tuo cugino vuole sapere cosa fai della tua parte.",
+  "Recuperas lo prestado, con un extra (doce semanas de sueldo).": "Recuperi il prestito, con un extra (dodici settimane di stipendio).",
+  "Lo dejas dentro: que el bar lleve tu cara.": "La lasci dentro: che il bar porti la tua faccia."
  },
  "de": {
   "Historia": "Geschichte",
@@ -48362,7 +48394,15 @@
   "Tu primo tiene un negocio": "Dein Cousin hat eine Geschäftsidee",
   "Ha visto que te va bien y te pide un préstamo para abrir un bar con tu nombre en el cartel.": "Er hat gesehen, dass es bei dir läuft, und bittet um ein Darlehen für eine Bar mit deinem Namen am Schild.",
   "Le prestas el dinero (ocho semanas de sueldo).": "Du leihst ihm das Geld (acht Wochengehälter).",
-  "Le dices que no mezclas familia y dinero.": "Du sagst ihm, dass du Familie und Geld nicht vermischst."
+  "Le dices que no mezclas familia y dinero.": "Du sagst ihm, dass du Familie und Geld nicht vermischst.",
+  "El duelo se calienta": "Das Duell heizt sich auf",
+  "Tu respuesta en redes corrió como la pólvora. Media liga está pendiente de vuestro duelo.": "Deine Antwort in den sozialen Medien ging herum wie ein Lauffeuer. Die halbe Liga verfolgt euer Duell.",
+  "Lo usas de gasolina: este año el duelo vale doble.": "Du nutzt es als Antrieb: Dieses Jahr zählt das Duell doppelt.",
+  "Bajas el tono con un mensaje de respeto.": "Du nimmst mit einer respektvollen Nachricht die Schärfe raus.",
+  "El bar de tu primo": "Die Bar deines Cousins",
+  "El bar con tu nombre se llena cada día de partido. Tu primo quiere saber qué haces con tu parte.": "Die Bar mit deinem Namen ist an jedem Spieltag voll. Dein Cousin will wissen, was du mit deinem Anteil machst.",
+  "Recuperas lo prestado, con un extra (doce semanas de sueldo).": "Du bekommst dein Geld zurück, mit Bonus (zwölf Wochengehälter).",
+  "Lo dejas dentro: que el bar lleve tu cara.": "Du lässt es drin: Die Bar soll dein Gesicht tragen."
  },
  "ca": {
   "Historia": "Història",
@@ -56807,7 +56847,15 @@
   "Tu primo tiene un negocio": "El teu cosí té un negoci",
   "Ha visto que te va bien y te pide un préstamo para abrir un bar con tu nombre en el cartel.": "Ha vist que et va bé i et demana un préstec per obrir un bar amb el teu nom al cartell.",
   "Le prestas el dinero (ocho semanas de sueldo).": "Li deixes els diners (vuit setmanes de sou).",
-  "Le dices que no mezclas familia y dinero.": "Li dius que no barreges família i diners."
+  "Le dices que no mezclas familia y dinero.": "Li dius que no barreges família i diners.",
+  "El duelo se calienta": "El duel s'escalfa",
+  "Tu respuesta en redes corrió como la pólvora. Media liga está pendiente de vuestro duelo.": "La teva resposta a les xarxes va córrer com la pólvora. Mitja lliga està pendent del vostre duel.",
+  "Lo usas de gasolina: este año el duelo vale doble.": "Ho fas servir de gasolina: aquest any el duel val el doble.",
+  "Bajas el tono con un mensaje de respeto.": "Abaixes el to amb un missatge de respecte.",
+  "El bar de tu primo": "El bar del teu cosí",
+  "El bar con tu nombre se llena cada día de partido. Tu primo quiere saber qué haces con tu parte.": "El bar amb el teu nom s'omple cada dia de partit. El teu cosí vol saber què fas amb la teva part.",
+  "Recuperas lo prestado, con un extra (doce semanas de sueldo).": "Recuperes el que vas deixar, amb un extra (dotze setmanes de sou).",
+  "Lo dejas dentro: que el bar lleve tu cara.": "Ho deixes a dins: que el bar porti la teva cara."
  },
  "pl": {
   "Club": "Klub",
@@ -65252,7 +65300,15 @@
   "Tu primo tiene un negocio": "Twój kuzyn ma interes",
   "Ha visto que te va bien y te pide un préstamo para abrir un bar con tu nombre en el cartel.": "Widzi, że ci się wiedzie, i prosi o pożyczkę na bar z twoim nazwiskiem na szyldzie.",
   "Le prestas el dinero (ocho semanas de sueldo).": "Pożyczasz mu pieniądze (osiem tygodni pensji).",
-  "Le dices que no mezclas familia y dinero.": "Mówisz mu, że nie mieszasz rodziny z pieniędzmi."
+  "Le dices que no mezclas familia y dinero.": "Mówisz mu, że nie mieszasz rodziny z pieniędzmi.",
+  "El duelo se calienta": "Pojedynek się zaostrza",
+  "Tu respuesta en redes corrió como la pólvora. Media liga está pendiente de vuestro duelo.": "Twoja odpowiedź w sieci rozeszła się błyskawicznie. Pół ligi śledzi wasz pojedynek.",
+  "Lo usas de gasolina: este año el duelo vale doble.": "Robisz z tego paliwo: w tym roku pojedynek liczy się podwójnie.",
+  "Bajas el tono con un mensaje de respeto.": "Łagodzisz ton wiadomością pełną szacunku.",
+  "El bar de tu primo": "Bar twojego kuzyna",
+  "El bar con tu nombre se llena cada día de partido. Tu primo quiere saber qué haces con tu parte.": "Bar z twoim nazwiskiem pęka w szwach w każdy dzień meczowy. Kuzyn pyta, co robisz ze swoją częścią.",
+  "Recuperas lo prestado, con un extra (doce semanas de sueldo).": "Odzyskujesz pożyczkę z nawiązką (dwanaście tygodni pensji).",
+  "Lo dejas dentro: que el bar lleve tu cara.": "Zostawiasz to w interesie: niech bar nosi twoją twarz."
  },
  "tr": {
   "Club": "Kulüp",
@@ -73697,6 +73753,14 @@
   "Tu primo tiene un negocio": "Kuzeninin bir iş fikri var",
   "Ha visto que te va bien y te pide un préstamo para abrir un bar con tu nombre en el cartel.": "İşlerinin iyi gittiğini görmüş ve tabelasında senin adın olan bir bar açmak için borç istiyor.",
   "Le prestas el dinero (ocho semanas de sueldo).": "Ona parayı borç veriyorsun (sekiz haftalık maaş).",
-  "Le dices que no mezclas familia y dinero.": "Aile ile parayı karıştırmadığını söylüyorsun."
+  "Le dices que no mezclas familia y dinero.": "Aile ile parayı karıştırmadığını söylüyorsun.",
+  "El duelo se calienta": "Düello kızışıyor",
+  "Tu respuesta en redes corrió como la pólvora. Media liga está pendiente de vuestro duelo.": "Sosyal medyadaki cevabın hızla yayıldı. Ligin yarısı düellonuzu izliyor.",
+  "Lo usas de gasolina: este año el duelo vale doble.": "Bunu yakıt yapıyorsun: bu yıl düello iki kat sayılıyor.",
+  "Bajas el tono con un mensaje de respeto.": "Saygılı bir mesajla ortamı yumuşatıyorsun.",
+  "El bar de tu primo": "Kuzeninin barı",
+  "El bar con tu nombre se llena cada día de partido. Tu primo quiere saber qué haces con tu parte.": "Senin adını taşıyan bar her maç günü dolup taşıyor. Kuzenin payınla ne yapacağını soruyor.",
+  "Recuperas lo prestado, con un extra (doce semanas de sueldo).": "Verdiğin borcu fazlasıyla geri alıyorsun (on iki haftalık maaş).",
+  "Lo dejas dentro: que el bar lleve tu cara.": "Paranı içeride bırakıyorsun: bar senin yüzünü taşısın."
  }
 }
