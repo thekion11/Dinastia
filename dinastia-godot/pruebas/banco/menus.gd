@@ -244,3 +244,28 @@ func _probar_cara_a_cara_simulado() -> void:
 			pj += int(lg.h2h[k]["pj"])
 		_comprobar(lg.h2h.size() >= 3, "%s: tras 5 semanas simuladas hay rivales en el cara a cara (%d)" % [caso[0], lg.h2h.size()])
 		_comprobar(pj == int(lg.carrera.get("pj", 0)) and pj > 0, "%s: y suman los mismos partidos que la carrera (%d y %d)" % [caso[0], pj, int(lg.carrera.get("pj", 0))])
+	Partido.limpiar_contexto()
+
+## (13-11) El plantel heredado no se multa (solo lo que se pase de él) y el tope votado da de plazo hasta el cierre de la próxima ventana.
+func _probar_multa_plantel_heredado() -> void:
+	_titulo("REGLAMENTO: EL PLANTEL HEREDADO NO SE MULTA")
+	var f := Federacion.new()
+	_comprobar(f.exceso_multable(5) == 0 and f.exceso_multable(5) == 0, "empezar con 5 de más no se multa, ni a la semana siguiente")
+	_comprobar(f.exceso_multable(7) == 2, "fichar dos más por encima de lo heredado sí (2)")
+	_comprobar(f.exceso_multable(3) == 0 and f.exceso_multable(5) == 2, "al ajustar el plantel lo heredado baja y ya no vuelve a subir")
+	var g := Federacion.new()
+	g.desde_dic(f.a_dic())
+	_comprobar(g.exceso_heredado == 3, "y se guarda con la partida (%d)" % g.exceso_heredado)
+	f.tope_extranjeros = 6
+	f.tope_desde = Federacion.fin_del_plazo(2026, 9)
+	_comprobar(f.tope_multable(2026, 10) == 0 and f.tope_multable(2026, 25) == 6, "un tope votado en la semana 9 no se multa hasta cerrar la ventana de invierno")
+	_comprobar(Federacion.fin_del_plazo(2026, 30) == 2027 * 60 + Mundo.VENTANA_VERANO + 1, "y votado en la semana 30, hasta cerrar la de verano siguiente")
+	for caso: Array in [["ESP", 0], ["USA", 0]]:
+		var m := Mundo.new()
+		m.generar([caso[0]], 20261103)
+		m.tomar_el_mando(m.ligas[0].clubes[int(caso[1])].id)
+		for s in 4:
+			m.avanzar_semana()
+		var multas := m.libro_financiero.filter(func(e: Dictionary) -> bool: return String(e["concepto"]).begins_with("Multa: plantel")).size()
+		_comprobar(multas == 0, "%s: cuatro semanas sin tocar el plantel, ninguna multa por reglamento (%d)" % [caso[0], multas])
+	Partido.limpiar_contexto()   ## simular semanas deja puesto el contexto del partido (médico, césped, moda…): la sección que venga detrás lo heredaría

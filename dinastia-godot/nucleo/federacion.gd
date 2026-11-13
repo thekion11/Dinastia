@@ -86,7 +86,7 @@ func dt_sancionado() -> bool:
 func a_dic() -> Dictionary:
 	return {
 		"reparto_tv": reparto_tv, "cupo_juvenil": cupo_juvenil,
-		"tope_extranjeros": tope_extranjeros, "playoffs": playoffs, "infr_ley": infracciones_ley,
+		"tope_extranjeros": tope_extranjeros, "tope_desde": tope_desde, "exceso_heredado": exceso_heredado, "playoffs": playoffs, "infr_ley": infracciones_ley,
 		"superliga": superliga, "var": var_activo,
 		"fpf": fpf_activo, "fpf_avisos": fpf_avisos, "fpf_sancion": fpf_sancionado,
 		"aliados": aliados, "votos": votos, "voto_pendiente": voto_pendiente,
@@ -104,6 +104,8 @@ func desde_dic(d: Dictionary) -> void:
 	reparto_tv = float(d.get("reparto_tv", 1.0))
 	cupo_juvenil = bool(d.get("cupo_juvenil", false))
 	tope_extranjeros = int(d.get("tope_extranjeros", 0))
+	tope_desde = int(d.get("tope_desde", 0))
+	exceso_heredado = int(d.get("exceso_heredado", -1))
 	infracciones_ley = d.get("infr_ley", {})
 	dt_suspension = int(d.get("dt_susp", 0))
 	dt_susp_nueva = bool(d.get("dt_susp_n", false))

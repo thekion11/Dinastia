@@ -112,6 +112,26 @@ var presidente: Dictionary = {}
 var reparto_tv: float = 1.0
 var cupo_juvenil: bool = false     ## obligación de alinear un sub-21
 var tope_extranjeros: int = 0      ## 0 = sin tope
+## (13-11) Desde cuándo se MULTA el tope votado (año × 60 + semana). La moción dice «a partir de la próxima ventana», pero la multa por
+## plantel fuera de cupo caía desde la semana siguiente, con el mercado cerrado (sin forma de vender) y creciendo un 25 % cada semana: a un
+## grande con 168 M le costó 426 M en seis semanas. Ahora hay de plazo hasta que CIERRE la próxima ventana de fichajes.
+var tope_desde: int = 0
+## (13-11) EL PLANTEL HEREDADO. Los planteles con los que se empieza la partida incumplen a veces la norma de su propia liga (un grande
+## español arranca con 8 extracomunitarios y el tope es 3): se multaba desde la semana 1, sin haber hecho nada, y la multa crece cada semana
+## (medido: de 168 M a −388 M en 14 semanas). Lo que ya estaba inscrito al llegar NO se multa: solo el exceso por ENCIMA de lo heredado, y
+## lo heredado baja en cuanto el plantel se ajusta (no se puede volver a subir). −1 = sin fijar todavía (partida nueva o guardada de antes).
+var exceso_heredado: int = -1
+
+func exceso_multable(exceso: int) -> int:
+	if exceso_heredado < 0 or exceso < exceso_heredado:
+		exceso_heredado = exceso
+	return maxi(0, exceso - exceso_heredado)
+
+func tope_multable(anio: int, semana: int) -> int:
+	return tope_extranjeros if anio * 60 + semana >= tope_desde else 0
+
+static func fin_del_plazo(anio: int, semana: int) -> int:
+	return anio * 60 + Mundo.VENTANA_INVIERNO_FIN + 1 if semana < Mundo.VENTANA_INVIERNO_INI else (anio + 1) * 60 + Mundo.VENTANA_VERANO + 1
 var playoffs: bool = false         ## el campeón se juega, no se suma
 var superliga: bool = false        ## te fuiste con los separatistas
 var var_activo: bool = false       ## hay VAR en la categoría
@@ -373,7 +393,9 @@ func _aplicar_mocion(id: String, pasa: bool, opcion: String, mi: Club) -> String
 			return "Desde ahora debes alinear un sub-21; a cambio la federación bonifica por cada minuto juvenil."
 		"extranjeros":
 			tope_extranjeros = TOPE_EXTRANJEROS
-			return "Máximo seis extranjeros por plantel a partir de la próxima ventana."
+			var ahora := Mundo.actual()
+			tope_desde = fin_del_plazo(ahora.anio, ahora.semana) if ahora != null else 0
+			return "Máximo seis extranjeros por plantel: no puedes fichar más y tienes hasta el cierre de la próxima ventana para ajustar el plantel."
 		"playoffs":
 			playoffs = true
 			return "El campeón se decidirá por playoffs desde la próxima temporada."

@@ -75,6 +75,7 @@ func _probar_segundas_divisiones() -> void:
 
 func _probar_segundas_reglas() -> void:
 	_titulo("SEGUNDAS DIVISIONES: PLAYOFF DE ASCENSO Y PROMOCIÓN DE GER Y FRA")
+	Partido.limpiar_contexto()   ## (13-11) el resultado dependía de lo que hubiera simulado la sección anterior del mismo proceso
 	var m := Mundo.new()
 	m.generar(["ENG"] as Array[String], 602)
 	var eng2: Liga = m.ligas.filter(func(l: Liga) -> bool: return l.division() == 2)[0]

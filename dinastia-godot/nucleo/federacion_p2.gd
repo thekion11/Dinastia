@@ -150,7 +150,7 @@ func revisar_leyes_pais(m: Mundo, mi: Club) -> void:
 	var k := str(m.anio)
 	var inf: Dictionary = infracciones_de(m.anio).duplicate()
 	var norma := String(LeyesPais.reglas(mi.pais).get("norma", "el reglamento de la liga"))
-	var exceso := LeyesPais.exceso_plantel(mi, tope_extranjeros)
+	var exceso := exceso_multable(LeyesPais.exceso_plantel(mi, tope_multable(m.anio, m.semana)))
 	if exceso > 0:
 		inf["plantel"] = int(inf["plantel"]) + 1
 		var veces := int(inf["plantel"])
