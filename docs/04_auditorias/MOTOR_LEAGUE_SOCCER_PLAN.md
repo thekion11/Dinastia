@@ -633,6 +633,7 @@ Pendiente: balón parado (córners, faltas, saques de banda), cabezazos (0 goles
 | `C4_ERROR_AREA`=0,7 (sesión 15, OK del líder) | el error de todo remate no penal a < 17 m se multiplica por 0,7 (gancho neutro `_error_tiro_extra` junto a `_tirar`; `MejorasC4Avance.error_tiro`) | apagada | 4 tandas de 12 frente a la base con `C4_HUECO`: ~5 remates por partido; goles 4,42 → 3,96, con el pie 3,35 → 2,83, tiros en el área 8,2 → 6,4, paradas 4,3 → 4,7. Más precisión = más balones al portero; los remates desviados daban rechaces, desvíos y córneres que acababan en gol. CONCLUSIÓN de las 12 variantes: en C4 el gol nace del desorden (rechaces, desvíos, balón parado), no de la jugada limpia |
 | `C4_PARADA_AREA`=0,75 (sesión 15, OK del líder) | la probabilidad de parar un remate que sale a < 17 m se multiplica por 0,75; los lejanos no cambian (gancho neutro `_prob_parada_extra`; `MejorasC4Avance.parada`) | apagada | 4 tandas de 12 frente a la base con `C4_HUECO`: se aplica ~6,8 veces por partido, pero paradas 4,27 → 4,12, goles 4,42 → 4,44, goles de jugada 0,67 → 0,62, tiros en el área 8,2 → 8,1, de lejos igual (0,69): casi idéntico. Desde dentro del área el alcance del portero ya es pequeño (poco tiempo, `MotorParada.SUELO`): la probabilidad casi nunca decide |
 | `C4_PASE_ATRAS` (`C4_PASE_ATRAS_Z`=10 o 16; sesión 15) | abierto y cerca del fondo, pase RASO atrás al compañero más libre en el área (antes del centro por arriba; `MejorasC4Avance.pase_atras`) | apagada (no mide) | Prueba corta (3 + 3 partidos): el portador decide en la zona solo 1-7 veces por partido (`c4_fondo_zona`) y casi nunca hay un compañero libre en el área con la línea limpia: sale 0-0,3 veces por partido también con la zona ampliada a 16 m. Con tan pocas jugadas no se puede medir el efecto. Hace falta antes LLEGADA AL ÁREA de rematadores cuando el extremo encara (colocación) |
+| `C4_LLEGADA` (sesión 15, OK del líder; toca colocación) | con un compañero abierto a < 25 m del fondo, el DC ataca el primer palo, el extremo contrario el segundo y el MC más cercano el penal (`MejorasC4Avance.llegada`) | apagada | 4 tandas de 12 frente a la base con `C4_HUECO` (y con la paciencia encendida, a diferencia de la sesión 13): ~22 veces por partido; centros 1,1 → 1,3, goles de cabeza 0,23 → 0,31, pero goles 4,42 → 3,96, con el pie 3,35 → 2,92, tiros en el área 8,2 → 7,4, cadenas de 5+ 3,5 → 3,1. Llenar el área vacía el centro del campo y la jugada muere antes. `C4_PASE_ATRAS` encima sigue sin salir (0 en 3 partidos) |
 
 ### RESUMEN PARA EL DUEÑO — sesión 13, jugabilidad de C4 (12-11)
 **Qué se nota al jugar (motor C4, el de por defecto):**
@@ -652,3 +653,24 @@ Pendiente: balón parado (córners, faltas, saques de banda), cabezazos (0 goles
 **Diagnóstico de los pases que fallan (12-11, sesión 13, base de `main`):** de 146 pases por partido fallan ~38: ~29 son cortes y ~6 errores de control del receptor. De los cortes, 19 salen con la línea LIMPIA y 18 los corta un rival que estaba a más de 3 m de la línea y llega en más de 1 s (`traza_corte_perp_corriendo`, `traza_corte_t_lento`). El pase más tenso NO lo arregla (los cortes lentos siguen y el control empeora): la causa probable es el ADELANTO del pase (`_pasar_a`: `guia = vel del receptor × d/18`, más 7 m si va al hueco), que manda el balón a un punto al que el rival llega antes que el receptor. Siguiente idea: en C4, que el pasador compare quién llega antes a ese punto (receptor o rival más cercano) y, si gana el rival, la dé al pie o elija otro compañero.
 
 **Adelanto medido (12-11, líder):** comparar quién llega antes SÍ quita cortes (+2,5 puntos de acierto), pero el partido pierde ~1,3 goles y ~2,7 tiros en el área: los pases arriesgados al hueco son los que crean el peligro. Queda detrás de `C4_ADELANTO` (apagada). Si se vuelve a intentar: que solo se aplique en campo propio o con el marcador a favor, no en el último tercio.
+
+### RESUMEN PARA EL DUEÑO — sesión 15, jugabilidad de C4 (12/13-11)
+**Qué cambia al jugar:** un pase más. Cuando el equipo de la CPU busca el pase al hueco y no ve a nadie, ahora también mira al lateral
+que se incorpora y a quien está un poco más lejos de la última línea (`C4_HUECO`, encendida). En 48 partidos con clubes de 6 países:
+tiros dentro del área 7,7 → 8,2, ocasiones 2,65 → 2,77 y goles de jugada 0,59 → 0,67; lo demás, igual.
+
+**Lo que se probó y NO se quedó (15 ideas, cada una con su bandera apagada y sus cifras en la tabla de arriba):** pase más seguro (por
+zona y eligiendo otro compañero), cabezazo al palo contrario, rematar tras ganar un regate, no tocar atrás cerca del área, encarar más
+en la frontal, pase al hueco con más manga, ruptura del 9 (mixta), rechace del portero hacia el área, remate al palo contrario,
+remate más preciso, portero que para menos desde dentro, pase atrás desde el fondo (casi no sale) y llegada de rematadores al área.
+
+**Lo aprendido (para quien siga):**
+- En C4 el gol nace del DESORDEN (rechaces, desvíos, córneres, balón parado), no de la jugada limpia: hacer el remate más preciso o el
+  pase más seguro QUITA goles; el pase arriesgado es el que crea el peligro.
+- El portero no es el cuello de botella dentro del área (ya llega a pocos remates); el cabezazo ya convierte ~28 % (el medidor apunta
+  como «parado» el gol de cabeza tras córner: mirar `diag.gol_cabeza`).
+- Con 12 partidos el ruido llega a ±0,7 goles: decidir siempre con 2 muestras de países (CHI/ESP/BRA y ARG/ITA/FRA), normal e invertida.
+- Ganchos neutros nuevos (el motor de siempre no cambia, huellas iguales): `_apunte_ia` (capa 7), `_error_tiro_extra` y
+  `_prob_parada_extra` (capa 7_p1). Herramienta de medida: `MejorasC4Avance` (todas las variantes de esta sesión).
+- Lo que queda abierto: `C4_RUPTURA` con una 3.ª muestra de países; los goles de jugada (~0,7 de ~4,4) probablemente necesiten más
+  JUGADORES en ataque al mismo tiempo (todo el bloque más alto), no una pieza suelta.
