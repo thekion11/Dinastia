@@ -125,6 +125,27 @@ func _probar_carrera_ruta() -> void:
 			var antes_cad: bool = ids_ev.call().has(String(par[2]))
 			(c.ruta["marcas"] as Dictionary)[String(par[0])] = m.anio * 60 + m.semana - int(par[1])
 			_comprobar(not antes_cad and ids_ev.call().has(String(par[2])), "  la marca «%s» trae su evento %d semanas después" % [par[0], par[1]])
+		## El corte del duelo a mitad de temporada: por detrás nace el objetivo de remontar.
+		var pj_corte := int(c.stats_temp["pj"])
+		var goles_corte := int(c.stats_temp["goles"])
+		if CarreraRuta.rival(c, m) != null:
+			CarreraEventosRuta.quitar_marca(c, "corte")
+			c.stats_temp["pj"] = 30
+			c.stats_temp["goles"] = 0
+			CarreraRuta.rival(c, m).goles += 40
+			CarreraDuelo.corte(c, m)
+			_comprobar(CarreraDuelo.por_remontar(c), "  a mitad de temporada, por detrás en el duelo: objetivo de remontarlo")
+			var grada_corte := (c.ruta["grada"] as Array).size()
+			CarreraDuelo.corte(c, m)
+			_comprobar((c.ruta["grada"] as Array).size() == grada_corte, "  el corte se hace una sola vez por temporada")
+			_comprobar(CarreraDuelo.cierre(c, true) == CarreraDuelo.XP_REMONTADA and not CarreraDuelo.por_remontar(c), "  remontarlo da experiencia extra y limpia el objetivo")
+			CarreraRuta.rival(c, m).goles -= 40
+			c.stats_temp["goles"] = 200
+			CarreraDuelo.corte(c, m)
+			_comprobar(not CarreraDuelo.por_remontar(c) and CarreraEventosRuta.tiene_marca(c, "corte"), "  y si mandas tú, premio y sin objetivo")
+			CarreraDuelo.cierre(c, false)
+		c.stats_temp["pj"] = pj_corte
+		c.stats_temp["goles"] = goles_corte
 		CarreraEventosRuta.aplicar(c, m, {"ruta_marca": "pique"})
 		(c.ruta["marcas"] as Dictionary)["pique"] = m.anio * 60 + m.semana - 4
 		_comprobar(ids_ev.call().has("ruta_pique"), "  y si contestaste a tu rival en redes, el duelo se calienta")

@@ -8502,7 +8502,10 @@
   "El consejo del veterano": "The veteran's advice",
   "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "After weeks of staying behind, just the two of you, the veteran says he has nothing left to teach you, except one thing: choose.",
   "«Enséñame a leer el juego.»": "“Teach me to read the game.”",
-  "«Enséñame a mandar en el vestuario.»": "“Teach me to lead the dressing room.”"
+  "«Enséñame a mandar en el vestuario.»": "“Teach me to lead the dressing room.”",
+  "A mitad de temporada mandas en el duelo con %s: %d a %d.": "At the halfway point you lead the duel with %s: %d to %d.",
+  "%s manda en el duelo a mitad de temporada: %d a %d. Si lo remontas, vale más.": "%s leads the duel at the halfway point: %d to %d. Turn it around and it is worth more.",
+  "🎯 Objetivo: remontar el duelo antes del final (+%d de experiencia).": "🎯 Goal: turn the duel around before the end (+%d experience)."
  },
  "pt": {
   "Historia": "História",
@@ -17007,7 +17010,10 @@
   "El consejo del veterano": "O conselho do veterano",
   "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Depois de semanas a ficarem os dois sozinhos, o veterano diz que já não tem nada para te ensinar, exceto uma coisa: escolhe.",
   "«Enséñame a leer el juego.»": "«Ensina-me a ler o jogo.»",
-  "«Enséñame a mandar en el vestuario.»": "«Ensina-me a mandar no balneário.»"
+  "«Enséñame a mandar en el vestuario.»": "«Ensina-me a mandar no balneário.»",
+  "A mitad de temporada mandas en el duelo con %s: %d a %d.": "A meio da época lideras o duelo com %s: %d a %d.",
+  "%s manda en el duelo a mitad de temporada: %d a %d. Si lo remontas, vale más.": "%s lidera o duelo a meio da época: %d a %d. Se deres a volta, vale mais.",
+  "🎯 Objetivo: remontar el duelo antes del final (+%d de experiencia).": "🎯 Objetivo: dar a volta ao duelo antes do fim (+%d de experiência)."
  },
  "patrones": [
   [
@@ -31652,7 +31658,10 @@
   "El consejo del veterano": "Le conseil du vétéran",
   "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Après des semaines à rester tous les deux, le vétéran te dit qu'il n'a plus rien à t'apprendre, sauf une chose : choisis.",
   "«Enséñame a leer el juego.»": "« Apprends-moi à lire le jeu. »",
-  "«Enséñame a mandar en el vestuario.»": "« Apprends-moi à mener le vestiaire. »"
+  "«Enséñame a mandar en el vestuario.»": "« Apprends-moi à mener le vestiaire. »",
+  "A mitad de temporada mandas en el duelo con %s: %d a %d.": "À la mi-saison, tu mènes le duel face à %s : %d à %d.",
+  "%s manda en el duelo a mitad de temporada: %d a %d. Si lo remontas, vale más.": "%s mène le duel à la mi-saison : %d à %d. Si tu renverses la situation, ça vaut plus.",
+  "🎯 Objetivo: remontar el duelo antes del final (+%d de experiencia).": "🎯 Objectif : renverser le duel avant la fin (+%d d'expérience)."
  },
  "it": {
   "Historia": "Storia",
@@ -40157,7 +40166,10 @@
   "El consejo del veterano": "Il consiglio del veterano",
   "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Dopo settimane rimasti voi due da soli, il veterano ti dice che non ha più nulla da insegnarti, tranne una cosa: scegli.",
   "«Enséñame a leer el juego.»": "«Insegnami a leggere il gioco.»",
-  "«Enséñame a mandar en el vestuario.»": "«Insegnami a comandare nello spogliatoio.»"
+  "«Enséñame a mandar en el vestuario.»": "«Insegnami a comandare nello spogliatoio.»",
+  "A mitad de temporada mandas en el duelo con %s: %d a %d.": "A metà stagione sei avanti nel duello con %s: %d a %d.",
+  "%s manda en el duelo a mitad de temporada: %d a %d. Si lo remontas, vale más.": "%s è avanti nel duello a metà stagione: %d a %d. Se lo ribalti, vale di più.",
+  "🎯 Objetivo: remontar el duelo antes del final (+%d de experiencia).": "🎯 Obiettivo: ribaltare il duello prima della fine (+%d di esperienza)."
  },
  "de": {
   "Historia": "Geschichte",
@@ -48662,7 +48674,10 @@
   "El consejo del veterano": "Der Rat des Routiniers",
   "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Nach Wochen zu zweit sagt der Routinier, er habe dir nichts mehr beizubringen, außer einer Sache: Wähle.",
   "«Enséñame a leer el juego.»": "„Bring mir bei, das Spiel zu lesen.“",
-  "«Enséñame a mandar en el vestuario.»": "„Bring mir bei, die Kabine zu führen.“"
+  "«Enséñame a mandar en el vestuario.»": "„Bring mir bei, die Kabine zu führen.“",
+  "A mitad de temporada mandas en el duelo con %s: %d a %d.": "Zur Saisonhälfte führst du im Duell mit %s: %d zu %d.",
+  "%s manda en el duelo a mitad de temporada: %d a %d. Si lo remontas, vale más.": "%s führt im Duell zur Saisonhälfte: %d zu %d. Wenn du es drehst, zählt es mehr.",
+  "🎯 Objetivo: remontar el duelo antes del final (+%d de experiencia).": "🎯 Ziel: das Duell vor Saisonende drehen (+%d Erfahrung)."
  },
  "ca": {
   "Historia": "Història",
@@ -57167,7 +57182,10 @@
   "El consejo del veterano": "El consell del veterà",
   "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Després de setmanes quedant-vos tots dos sols, el veterà et diu que ja no té res per ensenyar-te, tret d'una cosa: tria.",
   "«Enséñame a leer el juego.»": "«Ensenya'm a llegir el joc.»",
-  "«Enséñame a mandar en el vestuario.»": "«Ensenya'm a manar al vestidor.»"
+  "«Enséñame a mandar en el vestuario.»": "«Ensenya'm a manar al vestidor.»",
+  "A mitad de temporada mandas en el duelo con %s: %d a %d.": "A mitja temporada manes en el duel amb %s: %d a %d.",
+  "%s manda en el duelo a mitad de temporada: %d a %d. Si lo remontas, vale más.": "%s mana en el duel a mitja temporada: %d a %d. Si el remuntes, val més.",
+  "🎯 Objetivo: remontar el duelo antes del final (+%d de experiencia).": "🎯 Objectiu: remuntar el duel abans del final (+%d d'experiència)."
  },
  "pl": {
   "Club": "Klub",
@@ -65672,7 +65690,10 @@
   "El consejo del veterano": "Rada weterana",
   "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Po tygodniach wspólnej pracy weteran mówi, że nie ma cię już czego uczyć, poza jednym: wybierz.",
   "«Enséñame a leer el juego.»": "„Naucz mnie czytać grę.”",
-  "«Enséñame a mandar en el vestuario.»": "„Naucz mnie rządzić w szatni.”"
+  "«Enséñame a mandar en el vestuario.»": "„Naucz mnie rządzić w szatni.”",
+  "A mitad de temporada mandas en el duelo con %s: %d a %d.": "W połowie sezonu prowadzisz w pojedynku z %s: %d do %d.",
+  "%s manda en el duelo a mitad de temporada: %d a %d. Si lo remontas, vale más.": "%s prowadzi w pojedynku w połowie sezonu: %d do %d. Jeśli odrobisz straty, będzie warte więcej.",
+  "🎯 Objetivo: remontar el duelo antes del final (+%d de experiencia).": "🎯 Cel: odwrócić losy pojedynku przed końcem (+%d doświadczenia)."
  },
  "tr": {
   "Club": "Kulüp",
@@ -74177,6 +74198,9 @@
   "El consejo del veterano": "Tecrübeli oyuncunun öğüdü",
   "Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.": "Haftalarca baş başa çalıştıktan sonra tecrübeli oyuncu sana öğretecek bir şeyi kalmadığını söyler, biri hariç: seç.",
   "«Enséñame a leer el juego.»": "“Bana oyunu okumayı öğret.”",
-  "«Enséñame a mandar en el vestuario.»": "“Bana soyunma odasını yönetmeyi öğret.”"
+  "«Enséñame a mandar en el vestuario.»": "“Bana soyunma odasını yönetmeyi öğret.”",
+  "A mitad de temporada mandas en el duelo con %s: %d a %d.": "Sezon ortasında %s ile düelloda öndesin: %d - %d.",
+  "%s manda en el duelo a mitad de temporada: %d a %d. Si lo remontas, vale más.": "Sezon ortasında düelloda %s önde: %d - %d. Geri dönersen daha değerli olur.",
+  "🎯 Objetivo: remontar el duelo antes del final (+%d de experiencia).": "🎯 Hedef: düelloyu sezon bitmeden çevirmek (+%d deneyim)."
  }
 }

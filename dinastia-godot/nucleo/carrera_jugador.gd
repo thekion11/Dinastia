@@ -226,6 +226,7 @@ func tras_partido(m: Mundo, d: Dictionary) -> void:
 		j.partidos += 1
 		j.anotar_nota(nota)
 	CarreraRuta.tras_partido(self, m, d)
+	CarreraDuelo.corte(self, m)
 
 ## Cierra la temporada: la guarda en tu historial y cumples un año.
 func fin_de_temporada(m: Mundo) -> void:

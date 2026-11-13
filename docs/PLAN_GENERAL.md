@@ -35,6 +35,7 @@ El modo nuevo es «LA RUTA». Dónde está cada cosa (lo hecho no se lista: est�
 - Pruebas: banco grupo «ruta» (`mini_banco.sh ruta`), especiales `prueba_ruta_foco` (PC y `MOVIL=1`) y `prueba_ruta_idiomas`; sonda de ritmo `pruebas/_sonda/sonda_ruta.tscn` (PUESTO, TEMPORADAS, SEMILLA); capturas `pruebas/captura_modo_jugador.tscn` (PUESTO, NOMBRE, SEMANAS, OFERTA, MOVIL, TEMPORADA, BOTAS, AVANZADA, IDIOMA).
 - Cifras de la última sonda (extremo, 6 temporadas): media 65-69-74-78-81-83, nivel 6-9-11-12-15-18, fama 34-58-52-46-71-84. Portero a 9 temporadas: nivel 24 «Estrella» a los 25 años (Leyenda, nivel 34, hacia los 30).
 
+- (13-11 tarde, tras la unión a `main`; solo en la rama) Corte del duelo a mitad de temporada (`nucleo/carrera_duelo.gd`: si mandas, +40 de experiencia; si vas por detrás, objetivo de remontarlo, +60 al ganarlo), cuatro cadenas de eventos y el segundo pasaporte en la ficha del jugador (`Paises.pasaporte`).
 Falta:
 - Probar el foco con un MANDO REAL (la prueba automática da 0 botones sin alcanzar en PC y en teléfono de pie, pero nadie lo ha jugado con mando).
 - Que el dueño lo JUEGUE (PC y teléfono) y diga qué le parece: estética, ritmo, «Los Momentos» frente al partido en el césped.

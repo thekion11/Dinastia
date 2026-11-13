@@ -144,6 +144,8 @@ static func duelo(ui: Variant, grande: bool) -> Control:
 	mar.add_child(E.cifra(str(int(d[1])), "tu rival", E.CORAL if int(d[1]) > int(d[0]) else E.TEXTO, 38))
 	var tot := float(maxi(1, int(d[0]) + int(d[1])))
 	v.add_child(E.barra(float(d[0]), tot, E.MENTA, 8))
+	if CarreraDuelo.por_remontar(c):
+		v.add_child(E.lbl(13, E.ORO, Idiomas.t("🎯 Objetivo: remontar el duelo antes del final (+%d de experiencia).") % CarreraDuelo.XP_REMONTADA))
 	if grande:
 		v.add_child(E.lbl(12, E.SUAVE, "Cada gol vale 3, cada asistencia 2 y suma el doble de tu nota media. Quien gane la temporada se lleva experiencia y fama."))
 	return p
