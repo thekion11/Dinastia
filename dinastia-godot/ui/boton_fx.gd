@@ -38,7 +38,7 @@ static func _nuevo(n: Node) -> void:
 		if not n.has_meta("sin_sonido"):
 			b.focus_entered.connect(_sonar.bind("clic_suave"))
 			b.mouse_entered.connect(_sonar.bind("clic_suave"))
-			b.pressed.connect(_sonar.bind("clic"))
+			b.pressed.connect(_pulsado.bind(b))
 	## M-303 (28-10-2026): las pestañas y las listas suenan igual que los botones (tic al pasar, clic al elegir).
 	elif not n.has_meta("sin_sonido") and not n.has_meta("_fx"):
 		if n is TabBar:
@@ -51,6 +51,30 @@ static func _nuevo(n: Node) -> void:
 		elif n is Tree:
 			n.set_meta("_fx", true)
 			(n as Tree).item_selected.connect(_sonar.bind("clic"))
+		elif n is Slider:   ## 13-11: arrastrar y soltar un deslizador tienen su sonido
+			n.set_meta("_fx", true)
+			(n as Slider).drag_started.connect(_sonar.bind("arrastrar"))
+			(n as Slider).drag_ended.connect(func(_c: bool) -> void: _sonar("soltar"))
+
+## Qué suena al PULSAR (13-11-2026): marcar/desmarcar en las casillas y los botones de dos estados; «cancelar» y «paso atrás» según el
+## texto del botón (traducido); el clic de siempre en el resto. Se decide al pulsar porque el texto se pone después de crear el botón.
+const TEXTOS_CANCELAR := ["Cancelar", "Rechazar", "Descartar"]
+const TEXTOS_ATRAS := ["Volver", "Atrás"]
+
+static func _pulsado(b: BaseButton) -> void:
+	if not is_instance_valid(b):
+		return
+	if b is CheckBox or b is CheckButton or b.toggle_mode:
+		_sonar("seleccionar" if b.button_pressed else "deseleccionar")
+		return
+	var texto := (b as Button).text if b is Button else ""
+	_sonar("cancelar" if _dice(texto, TEXTOS_CANCELAR) else ("paso_atras" if _dice(texto, TEXTOS_ATRAS) else "clic"))
+
+static func _dice(texto: String, claves: Array) -> bool:
+	for c: String in claves:
+		if texto.begins_with(c) or texto.begins_with(Idiomas.t(c)) or texto.begins_with("← " + Idiomas.t(c)):
+			return true
+	return false
 
 static var _ultimo_ms := {}
 

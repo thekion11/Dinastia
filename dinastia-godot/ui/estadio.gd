@@ -90,7 +90,7 @@ func _tocar_ambiente() -> void:
 	elif r < 0.8 or partido.goles_local >= partido.goles_visita:
 		Sonido.toca(AMBIENTE_REACCION[_rng_ambiente.randi_range(0, AMBIENTE_REACCION.size() - 1)], Sonido.Bus.AMBIENTE)
 	else:
-		Sonido.toca("abucheo", Sonido.Bus.AMBIENTE)
+		Sonido.toca(AMBIENTE_DISGUSTO[_rng_ambiente.randi_range(0, AMBIENTE_DISGUSTO.size() - 1)], Sonido.Bus.AMBIENTE)
 
 ## Se llama desde `_process` (antes del paso del motor).
 func _cine_paso(delta: float) -> void:

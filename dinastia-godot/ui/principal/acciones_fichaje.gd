@@ -121,6 +121,7 @@ func _intentar_fichar(j: Jugador, monto: int, sueldo: int) -> void:
 	if not p.mundo.mercado.club_acepta(j, monto):
 		p._escribir("[color=#e05555]%s rechaza los %s por %s.[/color]" % [
 			p.mundo.clubes[j.club_id].nombre, p._dinero(monto), j.nombre])
+		Sonido.toca("oferta_rechazada", Sonido.Bus.INTERFAZ)
 		return
 	if not p.mundo.mercado.jugador_firma(j, mio, sueldo):
 		p._escribir("[color=#c9a227]%s no firma: el club aceptó, pero él no se ve aquí.[/color]" % j.nombre)
@@ -169,6 +170,7 @@ func _enviar_oferta_negociacion() -> void:
 		"jugador_rota":
 			p._escribir("[color=#e05555]%s[/color] %s %s" % [Idiomas.t("❌ %s dice que no.") % j.nombre, String(res.get("motivo", "")),
 				Idiomas.t("No se sienta a hablar de él por un tiempo.")])
+			Sonido.toca("oferta_rechazada", Sonido.Bus.INTERFAZ)
 			p.mundo.mercado.cerrar_negociacion()
 		"cerrado":
 			var r: Dictionary = res.get("resumen", {})

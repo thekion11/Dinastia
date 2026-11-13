@@ -280,6 +280,8 @@ func pintar_pregunta(e: Dictionary) -> void:
 	## vienen en castellano del núcleo): el nombre arriba, el resto al lado.
 	var quien_txt := String(e.get("quien", Idiomas.t("Periodista")))
 	var repregunta := quien_txt.ends_with(" (repregunta)")
+	if not repregunta:
+		Sonido.toca("rueda_prensa_pregunta", Sonido.Bus.INTERFAZ)   ## la primera pregunta de cada periodista; la repregunta ya suena con «cambio»
 	quien_txt = quien_txt.trim_suffix(" (repregunta)")
 	var partes := quien_txt.split(" · ", true, 1)
 	var extra: Array[String] = []
@@ -347,6 +349,8 @@ func tras_responder(r: Dictionary) -> void:
 	## La frase y el "cómo" ya los escribe `Prensa.noticia`; aquí solo lo que
 	## movió, que es lo que no dice la noticia.
 	var col := "#4caf6d" if int(r.get("confianza", 0)) >= 0 else "#e05555"
+	if int(r.get("confianza", 0)) > 0 and int(r.get("moral", 0)) >= 0:
+		Sonido.toca("rueda_prensa_aplauso", Sonido.Bus.INTERFAZ)   ## respuesta que suma: aplauso de la sala
 	p._escribir("[color=%s]🎙 moral %+d · confianza %+d · socios %+d[/color]" % [
 		col, int(r.get("moral", 0)), int(r.get("confianza", 0)), int(r.get("socios", 0))])
 	## LA REPREGUNTA: el mismo plató, otra pregunta y otras opciones.

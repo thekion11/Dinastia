@@ -93,9 +93,9 @@ func _montar_motor() -> void:
 		if _rig != null:
 			_rig.impacto(0.45 if roja else 0.25, 0.4))
 	_motor.aviso.connect(_al_aviso_motor)
-	## El silbato del árbitro con su gesto (M-106). El final del partido ya
-	## tiene su pitido (resumen); aquí, el del descanso y cada falta.
+	## El silbato del árbitro con su gesto (M-106); el final ya tiene su pitido (resumen).
 	_motor.gesto_arbitro.connect(func(g: String) -> void:
+		EstadioSonidos.gesto(g)
 		if g in ["mostrar_tarjeta", "mostrar_roja"]:
 			_inserto_tarjeta()
 		if g == "silbato":
@@ -119,7 +119,7 @@ func _montar_motor() -> void:
 			_mostrar_rotulo_suceso(Idiomas.t("Tu portero: elige el lado con el stick antes del disparo")))
 	_motor.tanda_tiro.connect(func(_eq: int, _id: String, marcado: bool) -> void:
 		_pintar_tanda()
-		Sonido.toca("gol" if marcado else "ocasion", Sonido.Bus.AMBIENTE)
+		EstadioSonidos.penal_de_tanda(marcado)
 		if _rig != null and marcado:
 			_rig.impacto(0.35, 0.4))
 	_motor.tanda_terminada.connect(func(gl: int, gv: int) -> void:
@@ -273,11 +273,9 @@ func _arrancar_partido() -> void:
 			_goles_de[a.id] = int(_goles_de.get(a.id, 0)) + 1)
 	partido.lesion.connect(_a_la_lesion); partido.baja_sin_cambio.connect(_a_la_baja)
 	partido.decision_arbitral.connect(_a_la_decision_arbitral)
-	## Saque inicial + murmullo de fondo: lo mismo que ya sonaba en la pantalla
-	## 2D de `partido_vivo.gd`, que hasta hoy este visor 3D -el que de verdad se
-	## juega- nunca reproducía.
+	## Saque inicial + murmullo + gente entrando (lo que ya sonaba en la pantalla 2D de `partido_vivo.gd`).
 	Sonido.toca("saque_inicial")
-	Sonido.toca("murmullo", Sonido.Bus.AMBIENTE)
+	Sonido.toca("murmullo", Sonido.Bus.AMBIENTE); EstadioSonidos.antes_del_saque()
 	GradaFondo.para_estadio(self, partido)   ## (3-11) la capa continua de grada
 	## SONIDOS QUE EXISTÍAN Y NUNCA SONABAN (25-9-2026): de los 205 del
 	## catálogo, 157 no tenían ningún disparador. Aquí los del partido: la
@@ -304,6 +302,7 @@ func _arrancar_partido() -> void:
 		"nieve": "frio_extremo", "noche": "noche_estadio", "dia": "dia_soleado", "tarde": "eco_estadio"}
 	if por_clima.has(clima):
 		Sonido.toca(String(por_clima[clima]), Sonido.Bus.AMBIENTE)
+	EstadioSonidos.clima(clima)
 	partido.minuto_jugado.connect(_al_minuto_sonoro)
 	## SENTADOS NERVIOSOS (26-10, `FestejoGrada.nervios`): desde el 80' con un gol
 	## de diferencia (o empate) media grada se cruza de brazos o se lleva las manos

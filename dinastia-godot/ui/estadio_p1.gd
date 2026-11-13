@@ -163,8 +163,9 @@ var _tween_jugada: Tween
 ## instrumento suelto y reaccion humana (canto/aplauso/abucheo, este ultimo
 ## mas probable si el visitante ataca, nunca si el propio equipo va ganando
 ## comodo -no tiene sentido que la propia hinchada abuchee sin motivo).
-const AMBIENTE_PERCUSION := ["tambor", "trompeta", "bengala"]
-const AMBIENTE_REACCION := ["cantico", "aplauso"]
+const AMBIENTE_PERCUSION := ["tambor", "trompeta", "bengala", "cornetin", "bocina_vuvuzela", "tambor_visitante", "humo_bengala"]
+const AMBIENTE_REACCION := ["cantico", "aplauso", "animador_grada", "bufanda_alzada", "pancarta_desplegada", "grada_de_pie"]
+const AMBIENTE_DISGUSTO := ["abucheo", "silbidos_impaciencia", "pitos_arbitro", "coro_rival", "silbido_agudo"]
 
 
 ## LA OLA (20-10-2026, M-044): una vez por partido, como mucho, la grada da la

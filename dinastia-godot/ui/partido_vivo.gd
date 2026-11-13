@@ -84,7 +84,7 @@ func _escribir_notas() -> void:
 			j.pos_e, ("⭐ " if v == mvp else ""), j.nombre, col, n2])
 
 func _al_final(gl: int, gv: int) -> void:
-	Sonido.toca("pitido_final")
+	EstadioSonidos.final_del_partido()
 	var mio_local := partido.local == mi_club
 	var mios := gl if mio_local else gv
 	var suyos := gv if mio_local else gl

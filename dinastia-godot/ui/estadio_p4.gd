@@ -30,6 +30,7 @@ func _al_gol(c: Club, autor: Jugador, minuto: int, asistente: Jugador = null) ->
 		match int(_goles_autor[autor.id]):
 			2: Sonido.toca("doblete", Sonido.Bus.AMBIENTE)
 			3: Sonido.toca("hat_trick", Sonido.Bus.AMBIENTE)
+		EstadioSonidos.celebracion()
 	if minuto <= 3:
 		Sonido.toca("gol_rapido", Sonido.Bus.AMBIENTE)
 	elif minuto >= 86:
@@ -230,7 +231,7 @@ func _revisar_ola() -> void:
 	var decidido := absi(partido.goles_local - partido.goles_visita) >= 2 and m >= 62
 	if m >= _ola_min or decidido:
 		_ola_min = 0
-		OlaGrada.lanzar(_raiz3d, "ola")
+		OlaGrada.lanzar(_raiz3d, "ola"); EstadioSonidos.ola("ola")
 
 ## Un rótulo corto debajo del marcador (reutiliza el de las jugadas).
 func _mostrar_rotulo_suceso(texto: String) -> void:
@@ -298,6 +299,7 @@ func _anular_gol_motor(de_local: bool, autor: String) -> void:
 		_stats.anular_gol(de_local)
 	_refrescar_marcador()
 	_mostrar_rotulo_suceso("🖥️ " + Idiomas.t("VAR: GOL ANULADO"))
+	EstadioSonidos.var_anulado()
 	var mio := _mi_lado >= 0 and (_mi_lado == 0) == de_local
 	Sonido.toca("abucheo" if mio or _mi_lado < 0 and de_local else "festejo_hinchada_extra")
 	if de_local:
@@ -309,6 +311,7 @@ func _anular_gol_motor(de_local: bool, autor: String) -> void:
 ## protestan los que están de pie (los sentados se quedan sentados, ver abajo).
 func _banca_protesta(es_local: bool) -> void:
 	_banca_gesto(es_local, "discutir_arbitro", 2.6, "protestar")
+	EstadioSonidos.con_espera("protesta_jugador", 6.0)
 
 ## M-102 (27-10): el banquillo del lesionado se lleva las manos a la cabeza (los sentados sin levantarse; los de pie, el gesto de lamento).
 func _banca_lesion(es_local: bool) -> void:
@@ -316,6 +319,7 @@ func _banca_lesion(es_local: bool) -> void:
 
 ## Los avisos del motor que merecen rótulo (los goles ya tienen el suyo).
 func _al_aviso_motor(texto: String) -> void:
+	EstadioSonidos.aviso(texto)
 	## En la tanda: «Penal 3: Nombre» lleva el nombre (no se traduce entero).
 	if texto.begins_with("🥅 Penal ") and texto.contains(":"):
 		var partes := texto.split(":", true, 1)

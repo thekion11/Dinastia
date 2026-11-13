@@ -126,7 +126,7 @@ func _conectar_1() -> void:
 		p.mundo.logros.perfil_subio_de_nivel.connect(func(_nivel: int, nombre: String, lema: String) -> void:
 			p._escribir("[color=#4caf6d][b]Subes de nivel: %s.[/b][/color] %s" % [nombre, lema])
 			p._anotar("Subes de nivel: %s." % nombre, lema)
-			Aviso.mostrar(p, "nivel", "⭐", "Subes de nivel: %s" % nombre, lema))
+			Aviso.mostrar(p, "nivel", "⭐", "Subes de nivel: %s" % nombre, lema, "nivel_subido"))
 		p.mundo.logros.canterano_debuta.connect(func(j: Jugador) -> void:
 			p._escribir("[color=#4caf6d][b]Debut de la casa:[/b][/color] %s se estrena con el primer equipo." % j.nombre)
 			p._anotar("Debut de la casa:", "%s se estrena con el primer equipo." % j.nombre))
@@ -251,7 +251,7 @@ func _conectar_1_2() -> void:
 			p._anotar("🏗️ Obra terminada:", cuerpo_obra)
 			## Una obra son semanas de espera y millones: cuando por fin termina, se
 			## avisa. Es de lo poco que el jugador PIDIÓ que pasara y luego olvidó.
-			Aviso.mostrar(p, "dinero", "🏗️", "Obra terminada", cuerpo_obra, "inauguracion_obra"))
+			Aviso.mostrar(p, "dinero", "🏗️", "Obra terminada", cuerpo_obra, "inauguracion_obra" if clave == "reforma_estadio" else "mejora_instalaciones"))
 	## `procesoLibres()` del HTML: rarísima vez (4%) aparece un agente libre de
 	## calidad. Es lo bastante especial para tener su propio aviso -no el
 	## genérico de "hay agentes libres nuevos", que sería ruido cada semana-.
