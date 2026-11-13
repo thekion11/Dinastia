@@ -17,9 +17,8 @@ static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
 	if E.estrecho(ui) and (not ui.carrera.eventos.is_empty() or not ui.carrera.ofertas.is_empty()):
 		izq.append_array(der)
 		der = []
-	izq.append(_entreno(ui, j))
-	der.append(RutaCamino.duelo(ui, false))
-	der.append(RutaCamino.grada(ui, 3))
+	## (13-11, dueño: menos lleno) El entreno, el rival y la grada tienen su pantalla: aquí solo sus teclas.
+	(izq if E.estrecho(ui) else der).append(RutaSub.teclas(ui, j, "hoy", true))
 	return E.columnas(ui, izq, der)
 
 # ---------------------------------------------------------------- el partido

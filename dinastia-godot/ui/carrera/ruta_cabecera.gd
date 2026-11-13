@@ -105,6 +105,7 @@ static func pestanas(ui: Variant, barra: bool) -> Control:
 			marca = " ●"
 		var b := E.opcion(Idiomas.t(String(par2[1])) + marca, E.ORO, grupo, ui._pestana == id, func() -> void:
 			ui._pestana = id
+			ui._sub = ""
 			ui._pintar_semana(), 52 if barra else 40)
 		b.add_theme_font_override("font", E.titular())
 		b.add_theme_font_size_override("font_size", 24 if barra else 20)

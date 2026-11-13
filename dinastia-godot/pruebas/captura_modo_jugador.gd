@@ -11,6 +11,7 @@ var _prefijo := OS.get_environment("PREFIJO")
 var _semanas := maxi(1, int(OS.get_environment("SEMANAS"))) if OS.get_environment("SEMANAS") != "" else 6
 var _hechas := 0
 var _paso := 0
+var _subs: Array = []
 var _toque: RutaToque
 var _mo: RutaMomentos
 
@@ -147,4 +148,13 @@ func _process(_d: float) -> void:
 			_ui._pintar_semana()
 		15:
 			_foto("9_ruta")
-			get_tree().quit()
+			_subs = RutaSub.SUBS.keys()
+		_:
+			if _paso > 15 and _paso % 2 == 0 and not _subs.is_empty():
+				_ui._pestana = String(RutaSub.SUBS[_subs[0]][0])
+				_ui._sub = String(_subs[0])
+				_ui._pintar_semana()
+			elif _paso > 15 and not _subs.is_empty():
+				_foto("sub_" + String(_subs.pop_front()))
+			elif _paso > 15:
+				get_tree().quit()

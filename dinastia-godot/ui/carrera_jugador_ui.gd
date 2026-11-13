@@ -19,14 +19,20 @@ func _pintar_semana() -> void:
 	var resumen := RutaResumen.pendiente(self)
 	if _msg != "" and not resumen:
 		raiz.add_child(RutaCabecera.aviso(_msg))
-	match _pestana:
-		"yo": raiz.add_child(RutaYo.pintar(self, j, club))
-		"ruta": raiz.add_child(RutaCamino.pintar(self))
-		_: raiz.add_child(RutaHoy.pintar(self, j, club))
+	if resumen:
+		_pestana = "hoy"
+	if resumen or RutaSub.abierta(self) == "":
+		_sub = ""
+	if _sub != "":
+		raiz.add_child(RutaSub.pintar(self, j, club))
+	else:
+		match _pestana:
+			"yo": raiz.add_child(RutaYo.pintar(self, j, club))
+			"ruta": raiz.add_child(RutaCamino.pintar(self))
+			_: raiz.add_child(RutaHoy.pintar(self, j, club))
 	if RutaEstilo.estrecho(self):
 		raiz.add_child(RutaCabecera.pestanas(self, true))
 	if resumen:
-		_pestana = "hoy"
 		_cuerpo.add_child(RutaResumen.pintar(self, _msg))
 	elif CarreraPremios.pendiente(carrera):
 		_cuerpo.add_child(RutaTemporada.pintar(self))
@@ -58,3 +64,9 @@ func _ready() -> void:
 		_pintar_semana()
 	else:
 		_pintar_crear()
+
+## El botón de cancelar del mando (o Escape) cierra la pantalla de dentro.
+func _unhandled_input(e: InputEvent) -> void:
+	if _sub != "" and e.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		RutaSub.cerrar(self)

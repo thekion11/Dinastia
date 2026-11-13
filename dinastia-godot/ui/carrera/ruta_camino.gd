@@ -7,7 +7,7 @@ const E := preload("res://ui/carrera/ruta_estilo.gd")
 
 static func pintar(ui: Variant) -> Control:
 	var c: CarreraJugador = ui.carrera
-	return E.columnas(ui, [_capitulos(c, ui.mundo, E.estrecho(ui)), _temporadas(ui)], [duelo(ui, true), RutaTemporada.palmares(ui), grada(ui, 8), _decisiones(c)])
+	return E.columnas(ui, [_capitulos(c, ui.mundo, E.estrecho(ui))], [RutaSub.teclas(ui, ui.carrera.jugador(ui.mundo), "ruta", true)])
 
 ## El camino: los siete capítulos como estaciones de una línea.
 static func _capitulos(c: CarreraJugador, m: Mundo, angosto := false) -> Control:

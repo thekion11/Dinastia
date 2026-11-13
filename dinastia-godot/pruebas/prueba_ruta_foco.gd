@@ -60,6 +60,12 @@ func _ready() -> void:
 		_ui._pestana = pest
 		_ui._pintar_semana()
 		await _mirar(pest, _ui)
+	for id: String in RutaSub.SUBS:
+		_ui._pestana = String(RutaSub.SUBS[id][0])
+		_ui._sub = id
+		_ui._pintar_semana()
+		await _mirar("dentro: " + id, _ui)
+	_ui._sub = ""
 	var toque := RutaToque.abrir(_ui)
 	await _mirar("toque", toque)
 	toque.free()

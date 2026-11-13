@@ -30,6 +30,12 @@ func _recorrer() -> Dictionary:
 		_ui._pestana = pest
 		_ui._pintar_semana()
 		_textos(_ui, en)
+	for id: String in RutaSub.SUBS:
+		_ui._pestana = String(RutaSub.SUBS[id][0])
+		_ui._sub = id
+		_ui._pintar_semana()
+		_textos(_ui, en)
+	_ui._sub = ""
 	var toque := RutaToque.abrir(_ui)
 	_textos(toque, en)
 	toque.free()
