@@ -262,3 +262,77 @@ func _probar_fun_objetivos_y_textos() -> void:
 	_comprobar(TrofeosReales.para_titulo("Mundial de Clubes", "ARG") == TrofeosReales.receta("mundial"), "para_titulo: el Mundial de Clubes, sea del país que sea")
 	_comprobar(TrofeosReales.para_titulo("Liga", "ESP") == TrofeosReales.receta("liga:ESP") and TrofeosReales.para_titulo("Liga", "GER") == TrofeosReales.receta("liga:GER"), "para_titulo: «Liga» a secas depende del país")
 	_comprobar(TrofeosReales.id_de("Torneo Inventado del Sur", "BRA") == "generico" and TrofeosReales.para_titulo("Torneo Inventado del Sur", "BRA") == TrofeosReales.receta("generico"), "para_titulo: un título desconocido = receta genérica")
+
+## CAMPAÑAS, TERRENOS Y NEGOCIOS, EVENTOS, FERIADOS, CALLES Y LIGAS ELEGIDAS: búsquedas por clave, ¿es partido?, feriados de un día, calle de un tramo y elección guardada.
+func _probar_fun_catalogos_y_calles() -> void:
+	_titulo("FUNCIONES PURAS: CATÁLOGOS, EVENTOS, FERIADOS, CALLES Y LIGAS ELEGIDAS")
+	## Finanzas.def_campana: la fila de la tabla por su clave, o [] si no existe.
+	var mal_camp := []
+	for f: Array in Finanzas.CAMPANAS:
+		if Finanzas.def_campana(String(f[0])) != f:
+			mal_camp.append(String(f[0]))
+	_comprobar(mal_camp.is_empty() and Finanzas.CAMPANAS.size() >= 2, "def_campana: cada clave devuelve su fila (%s)" % str(mal_camp))
+	_comprobar(Finanzas.def_campana("abonos")[1] == "Campaña de abonos" and int(Finanzas.def_campana("abonos")[3]) == 120000, "def_campana: «abonos» cuesta 120.000")
+	_comprobar(Finanzas.def_campana("").is_empty() and Finanzas.def_campana("Abonos").is_empty() and Finanzas.def_campana("nada").is_empty(), "def_campana: vacía, otra mayúscula o desconocida = []")
+	## Ciudad.def_terreno / def_negocio: igual, sobre las tablas de datos.
+	var mal_ciu := []
+	for f2: Array in Ciudad.lista_terrenos():
+		if Ciudad.def_terreno(String(f2[0])) != f2:
+			mal_ciu.append("terreno " + String(f2[0]))
+	for f3: Array in Ciudad.lista_negocios():
+		if Ciudad.def_negocio(String(f3[0])) != f3:
+			mal_ciu.append("negocio " + String(f3[0]))
+	_comprobar(mal_ciu.is_empty() and not Ciudad.lista_terrenos().is_empty() and not Ciudad.lista_negocios().is_empty(), "def_terreno / def_negocio: cada clave devuelve su fila (%s)" % str(mal_ciu))
+	_comprobar(Ciudad.def_terreno("").is_empty() and Ciudad.def_terreno("no_existe").is_empty() and Ciudad.def_negocio("").is_empty() and Ciudad.def_negocio("no_existe").is_empty(), "def_terreno / def_negocio: vacío o desconocido = []")
+	## EventosFecha.es_partido: liga, copa y continental lo son; el resto de eventos del día, no.
+	var tipos := {"liga": true, "copa": true, "conti": true, "mercado_abre": false, "cumple": false, "": false, "Liga": false}
+	var mal_tipo := []
+	for t: String in tipos:
+		if EventosFecha.es_partido({"tipo": t}) != bool(tipos[t]):
+			mal_tipo.append(t)
+	_comprobar(mal_tipo.is_empty(), "es_partido: por tipo de evento (%s)" % str(mal_tipo))
+	## Calendario.del_dia: solo los feriados cuyo mes y día coinciden con la fecha de (año, semana, día). El 1 de mayo existe salvo en USA, AUS, JPN y ENG.
+	var mal_dia := []
+	var mayo := {}
+	for sem in range(1, 53):
+		for d in 7:
+			var fe := Calendario.fecha(2031, sem, d)
+			if int(fe["month"]) == 5 and int(fe["day"]) == 1:
+				mayo = {"sem": sem, "dia": d}
+			for pais: String in ["ESP", "ARG", "USA"]:
+				for x: Dictionary in Calendario.del_dia(pais, 2031, sem, d):
+					if int(x["mes"]) != int(fe["month"]) or int(x["dia"]) != int(fe["day"]):
+						mal_dia.append("%s %d/%d" % [pais, sem, d])
+	_comprobar(mal_dia.is_empty() and not mayo.is_empty(), "del_dia: cada feriado cae en su fecha (%s)" % str(mal_dia))
+	if not mayo.is_empty():
+		var hay: Dictionary = {}
+		for pais2: String in ["ESP", "ARG", "CHI", "ENG", "USA", "JPN", "AUS"]:
+			var trabajo := false
+			for x2: Dictionary in Calendario.del_dia(pais2, 2031, int(mayo["sem"]), int(mayo["dia"])):
+				trabajo = trabajo or String(x2["tipo"]) == "trabajo"
+			hay[pais2] = trabajo
+		_comprobar(bool(hay["ESP"]) and bool(hay["ARG"]) and bool(hay["CHI"]) and not bool(hay["ENG"]) and not bool(hay["USA"]) and not bool(hay["JPN"]) and not bool(hay["AUS"]), "del_dia: el 1 de mayo es feriado salvo en ENG, USA, JPN y AUS (%s)" % str(hay))
+	_comprobar(Calendario.del_dia("Narnia", 2031, 1, 0).size() <= 1, "del_dia: un país desconocido solo tiene el feriado común, si lo hay")
+	## CallesCiudad.calle_del_eje: dentro del núcleo, el nombre de la avenida sobre la que va el tramo; fuera, el de la columna o la fila.
+	_comprobar(CallesCiudad.calle_del_eje(Vector2(205, -100), Vector2(205, 100)) == "Av. Los Hinchas", "calle_del_eje: un tramo sobre la avenida del núcleo")
+	_comprobar(CallesCiudad.calle_del_eje(Vector2(-100, 350), Vector2(100, 350)) == "Av. La Cantera", "calle_del_eje: la avenida horizontal del núcleo")
+	_comprobar(CallesCiudad.calle_del_eje(Vector2(-880, 0), Vector2(-880, 110)) == CallesCiudad.nombre_columna(-8), "calle_del_eje: fuera del núcleo y vertical = la columna")
+	_comprobar(CallesCiudad.calle_del_eje(Vector2(0, 880), Vector2(110, 880)) == CallesCiudad.nombre_fila(8), "calle_del_eje: fuera del núcleo y horizontal = la fila")
+	## LigasActivas.guardar_eleccion: la deja en `elegidas` tal cual y en el archivo; al cargarla se descartan los países que no existen. Se restaura lo que hubiera.
+	var antes: Array[String] = LigasActivas.elegidas.duplicate()
+	var ruta: String = LigasActivas.RUTA_ELECCION
+	var viejo := FileAccess.get_file_as_string(ruta) if FileAccess.file_exists(ruta) else ""
+	var existia := FileAccess.file_exists(ruta)
+	LigasActivas.guardar_eleccion(["ESP", "ARG", "ZZZ"])
+	_comprobar(str(LigasActivas.elegidas) == str(["ESP", "ARG", "ZZZ"]), "guardar_eleccion: queda en `elegidas` tal cual")
+	var cargada := LigasActivas.cargar_eleccion()
+	_comprobar(cargada.has("ESP") and cargada.has("ARG") and not cargada.has("ZZZ"), "guardar_eleccion + cargar_eleccion: se descarta el país inexistente (%s)" % str(cargada))
+	LigasActivas.guardar_eleccion([])
+	_comprobar(LigasActivas.elegidas.is_empty() and str(LigasActivas.cargar_eleccion()) == str(LigasActivas.por_defecto(OS.has_feature("mobile"))), "guardar_eleccion: la lista vacía borra la elección y se vuelve a la de la plataforma")
+	if existia:
+		var fa := FileAccess.open(ruta, FileAccess.WRITE)
+		fa.store_string(viejo)
+		fa.close()
+	else:
+		DirAccess.remove_absolute(ruta)
+	LigasActivas.elegidas.assign(antes)
