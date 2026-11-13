@@ -87,7 +87,7 @@ func _cerrar_seleccion(res: Dictionary) -> void:
 		mundo.selecciones._anotar_resultado("%s %d - %d %s" % [nombre, int(res.get("goles_local", 0)), int(res.get("goles_visita", 0)), rival])
 	_msg = Idiomas.t("🌎 %s %d - %d %s · tu nota %.1f") % [nombre, int(res.get("goles_local", 0)), int(res.get("goles_visita", 0)), rival, float(res.get("nota", 6.0))]
 	if int(res.get("goles", 0)) > 0:
-		_msg += " · " + Idiomas.t("¡%d gol(es) con la selección!") % int(res["goles"])
+		_msg += " · " + RutaEstilo.plural(int(res["goles"]), "¡%d gol con la selección!", "¡%d goles con la selección!") % int(res["goles"])
 	Partida.guardar(mundo, GUARDADO)
 	(self as CarreraJugadorUI)._pintar_semana()
 
@@ -206,7 +206,7 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 				nota = CarreraPortero.nota_simulada(j, gc, randf_range(-0.5, 0.5))
 			j.goles -= g
 			carrera.tras_partido(m, {"minutos": 90, "goles": g, "asist": 0, "nota": snappedf(nota, 0.1), "titular": true, "encajados": gc})
-			_msg += "  ·  " + Idiomas.t("Jugaste (simulado): %d gol(es), nota %.1f.") % [g, nota]
+			_msg += "  ·  " + RutaEstilo.plural(g, "Jugaste (simulado): %d gol, nota %.1f.", "Jugaste (simulado): %d goles, nota %.1f.") % [g, nota]
 		elif not titular and not par.is_empty() and j != null and j.disponible():
 			## Suplente simulado: a veces entras un rato.
 			var entra := carrera.minuto_entrada_suplente(j.es_portero())

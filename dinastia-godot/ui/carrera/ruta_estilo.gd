@@ -287,6 +287,10 @@ static func flujo(sep := 6) -> HFlowContainer:
 	return f
 
 ## ¿Pantalla estrecha? (un teléfono de pie: el lienzo mide ~540 px de ancho)
+## Singular o plural según la cifra (las dos frases llevan su %d).
+static func plural(n: int, uno: String, varios: String) -> String:
+	return Idiomas.t(uno if n == 1 else varios)
+
 static func estrecho(ui: Variant) -> bool:
 	return ui.get_viewport_rect().size.x < 760.0
 

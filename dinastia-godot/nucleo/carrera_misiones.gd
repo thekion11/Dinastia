@@ -23,9 +23,14 @@ const TEXTOS := {
 	"aporte": "Suma %d goles y asistencias",
 	"aporte_por": "Deja %d porterías a cero",
 	"fama": "Alcanza %d de fama",
-	"premios": "Gana %d premio(s) de fin de temporada",
-	"duelos": "Gana %d duelo(s) de temporada a tu rival",
-	"caps": "Juega %d partido(s) con tu selección",
+	"premios": "Gana %d premios de fin de temporada",
+	"duelos": "Gana %d duelos de temporada a tu rival",
+	"caps": "Juega %d partidos con tu selección",
+}
+const TEXTOS_UNO := {   ## cuando la meta es 1
+	"premios": "Gana %d premio de fin de temporada",
+	"duelos": "Gana %d duelo de temporada a tu rival",
+	"caps": "Juega %d partido con tu selección",
 }
 
 static func _es_portero(c: CarreraJugador, m: Mundo) -> bool:
@@ -68,7 +73,8 @@ static func texto(c: CarreraJugador, m: Mundo, mision: Array) -> String:
 	var clave := String(mision[0])
 	if clave == "aporte" and _es_portero(c, m):
 		clave = "aporte_por"
-	return Idiomas.t(String(TEXTOS[clave])) % meta(c, m, mision)
+	var cuanto := meta(c, m, mision)
+	return Idiomas.t(String((TEXTOS_UNO if cuanto == 1 and TEXTOS_UNO.has(clave) else TEXTOS)[clave])) % cuanto
 
 static func cumplida(c: CarreraJugador, m: Mundo, mision: Array) -> bool:
 	return valor(c, m, String(mision[0])) >= meta(c, m, mision)

@@ -64,7 +64,7 @@ static func cromo(ui: Variant, j: Jugador, club: Club) -> Control:
 		var cb := E.chip(CarreraPatrocinio.etiqueta(c), E.MENTA)
 		cb.tooltip_text = Idiomas.t(String(CarreraPatrocinio.MARCAS[CarreraPatrocinio.marca(c)][1]))
 		chips.add_child(cb)
-	v.add_child(E.lbl(12, E.SUAVE, Idiomas.t("Contrato: %d año(s) · %s/sem") % [j.anios_contrato, Eco.dinero(j.sueldo)], true))
+	v.add_child(E.lbl(12, E.SUAVE, E.plural(j.anios_contrato, "Contrato: %d año · %s/sem", "Contrato: %d años · %s/sem") % [j.anios_contrato, Eco.dinero(j.sueldo)], true))
 	v.add_child(E.lbl(12, E.SUAVE, c.agente if c.agente != "" else "Sin agente", true))
 	return p
 
@@ -116,7 +116,7 @@ static func _talentos(ui: Variant) -> Control:
 	var rot := E.rotulo("TALENTOS", E.ORO)
 	rot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(rot)
-	cab.add_child(E.chip(Idiomas.t("%d punto(s) por gastar") % int(r["puntos"]), E.ORO if int(r["puntos"]) > 0 else E.SUAVE))
+	cab.add_child(E.chip(E.plural(int(r["puntos"]), "%d punto por gastar", "%d puntos por gastar") % int(r["puntos"]), E.ORO if int(r["puntos"]) > 0 else E.SUAVE))
 	var ramas := E.reparto(E.estrecho(ui), 10)
 	v.add_child(ramas)
 	for rama: String in CarreraRuta.RAMAS:

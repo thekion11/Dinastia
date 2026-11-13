@@ -65,7 +65,7 @@ static func _nivel(c: CarreraJugador, angosto: bool) -> Control:
 	nv.add_child(E.titulo(18, E.ORO, Idiomas.t("NIVEL")))
 	nv.add_child(E.lbl(12, E.SUAVE, "%d / %d XP" % [int(r["xp"]), falta], true))
 	if int(r["puntos"]) > 0:
-		nv.add_child(E.lbl(12, E.MENTA, Idiomas.t("%d punto(s) libres") % int(r["puntos"]), true))
+		nv.add_child(E.lbl(12, E.MENTA, E.plural(int(r["puntos"]), "%d punto libre", "%d puntos libres") % int(r["puntos"]), true))
 	return niv
 
 ## Energía, relación con el DT y fama: apilados (ancho) o en una fila (estrecho).
