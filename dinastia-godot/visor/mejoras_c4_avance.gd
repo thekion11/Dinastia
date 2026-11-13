@@ -164,3 +164,43 @@ static func pase_atras(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> 
 		(m.diag as Dictionary)["c4_pase_atras"] = int((m.diag as Dictionary).get("c4_pase_atras", 0)) + 1
 	m._pasar_a(p, mejor)
 	return true
+
+## LLEGADA AL ÁREA (sesión 15, OK del líder; toca COLOCACIÓN: solo C4 y con bandera). Cuando el extremo encara (`C4_BANDA`) el área
+## está vacía: el pase atrás (`C4_PASE_ATRAS`) no encuentra a nadie y el centro va al aire. Con `C4_LLEGADA=1`, si un compañero tiene el
+## balón abierto (|x| > 9) a menos de 25 m de la línea de fondo, atacan el área: el DC el primer palo, el extremo del otro lado el
+## segundo palo y el MC el punto de penal (cada uno si está a < 35 m de su sitio). Contador `c4_llegada`.
+static var LLEGADA := OS.get_environment("C4_LLEGADA") == "1"
+
+static func llegada(m: Object, p: Dictionary) -> Vector3:
+	if not LLEGADA:
+		return Vector3.INF
+	var b: Dictionary = m.poseedor
+	if b.is_empty() or b == p or bool(b["por"]) or bool(b["es_local"]) != bool(p["es_local"]):
+		return Vector3.INF
+	var bp: Vector3 = m.pos(b)
+	var arco: Vector3 = m._arco_rival(p)
+	if absf(bp.x) < 9.0 or absf(arco.z - bp.z) > 25.0:
+		return Vector3.INF
+	var d: float = m.dir_ataque(bool(p["es_local"]))
+	var lado := signf(bp.x)
+	var rol := String(m._rol(p))
+	var obj := Vector3.INF
+	if rol == "DC":
+		obj = Vector3(lado * 2.5, 0, arco.z - d * 6.0)
+	elif (rol == "ED" or rol == "EI") and signf(m.pos(p).x) != lado:
+		obj = Vector3(-lado * 3.0, 0, arco.z - d * 8.0)
+	elif rol == "MC" and _mc_mas_cerca(m, p, arco):
+		obj = Vector3(0, 0, arco.z - d * 11.0)
+	if obj == Vector3.INF or (m.pos(p) as Vector3).distance_to(obj) > 35.0:
+		return Vector3.INF
+	if m.get("diag") is Dictionary and float(p.get("_c4_llegada_t", -99.0)) < float(b.get("tomo_en", 0.0)):
+		p["_c4_llegada_t"] = float(m.t)
+		(m.diag as Dictionary)["c4_llegada"] = int((m.diag as Dictionary).get("c4_llegada", 0)) + 1
+	return obj
+
+static func _mc_mas_cerca(m: Object, p: Dictionary, arco: Vector3) -> bool:
+	var yo := (m.pos(p) as Vector3).distance_to(arco)
+	for q: Dictionary in m.jugadores:
+		if q != p and bool(q["es_local"]) == bool(p["es_local"]) and String(m._rol(q)) == "MC" and (m.pos(q) as Vector3).distance_to(arco) < yo:
+			return false
+	return true
