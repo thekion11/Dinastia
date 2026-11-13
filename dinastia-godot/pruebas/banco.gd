@@ -214,7 +214,7 @@ const SECCIONES := [
 	"_probar_paridad_idiomas",
 	"_probar_insignia_version",
 	"_probar_lanzamiento_tactica",
-	"_probar_lanzamiento_accesibilidad", "_probar_fun_economia", "_probar_fun_jugador_y_formacion", "_probar_fun_calendario_y_planos", "_probar_fun_continentales_y_partidas",
+	"_probar_lanzamiento_accesibilidad", "_probar_fun_club_y_redes", "_probar_fun_objetivos_y_textos", "_probar_fun_economia", "_probar_fun_jugador_y_formacion", "_probar_fun_calendario_y_planos", "_probar_fun_continentales_y_partidas",
 ]
 
 ## Dónde vive cada grupo, en el orden en que se buscan las secciones.
@@ -242,7 +242,7 @@ var _tiempos: Array = []
 ## MINI BANCOS (20-10-2026): grupos de secciones por situación, para probar
 ## solo lo que se tocó en segundos (`herramientas/mini_banco.sh <grupo>`, o
 ## BANCO_GRUPO=<grupo>). Antes de SUBIR sigue mandando el banco entero.
-const GRUPOS := {"funciones": ["_probar_fun_economia", "_probar_fun_jugador_y_formacion", "_probar_fun_calendario_y_planos", "_probar_fun_continentales_y_partidas"],
+const GRUPOS := {"funciones": ["_probar_fun_economia", "_probar_fun_jugador_y_formacion", "_probar_fun_calendario_y_planos", "_probar_fun_continentales_y_partidas", "_probar_fun_club_y_redes", "_probar_fun_objetivos_y_textos"],
 	"partido": ["_probar_partidos", "_probar_previa", "_probar_arbitros", "_probar_tactica_en_movimiento",
 		"_probar_puente3d", "_probar_fisica_motor", "_probar_faltas_puntos", "_probar_ventaja", "_probar_presion_estable", "_probar_colocacion", "_probar_colocacion_defensa", "_probar_marcaje", "_probar_carreras", "_probar_tiro_limpio", "_probar_tiro_fallido", "_probar_portero_anticipa", "_probar_portero_desliza_pendiente", "_probar_imagen_mental", "_probar_roles_dinamicos", "_probar_apoyo_fuerzas", "_probar_ancla_enjambre", "_probar_regiones", "_probar_traza", "_probar_descarga", "_probar_saque_seguro", "_probar_saque_ofrece", "_probar_traza_corte", "_probar_entrada_momento", "_probar_adaptacion", "_probar_presion_zona", "_probar_linea_prevista", "_probar_primer_toque", "_probar_tactica_viva", "_probar_pase_mejora", "_probar_estilo_club", "_probar_perfiles_ayuda", "_probar_transmision_y_estadisticas",
 		"_probar_arreglos_partido_motor", "_probar_prorroga_y_penales", "_probar_partido_abandonado", "_probar_tanda_c",
