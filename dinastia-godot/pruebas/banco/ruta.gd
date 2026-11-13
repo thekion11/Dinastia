@@ -93,6 +93,28 @@ func _probar_carrera_ruta() -> void:
 				_comprobar(false, "  la jugada «%s» no tiene dibujo en la pizarra" % tipo_m)
 		var copa_m := CarreraMomentos.resultado(c, m, par_m, [], -1, true)
 		_comprobar(int(copa_m["goles_local"]) != int(copa_m["goles_visita"]), "  en copa no hay empate")
+		## Los eventos de la ruta: salen de lo que te pasa y sus efectos se aplican.
+		var ids_ev := func() -> Array:
+			return CarreraEventosRuta.eventos(c, m).map(func(e: Dictionary) -> String: return String(e["id"]))
+		c.energia = 80
+		c.ruta["racha"] = 0
+		_comprobar(not ids_ev.call().has("ruta_racha") and not ids_ev.call().has("ruta_fundido"), "  sin racha ni cansancio no hay eventos de racha ni de preparador físico")
+		c.ruta["racha"] = 3
+		c.energia = 20
+		_comprobar(ids_ev.call().has("ruta_racha") and ids_ev.call().has("ruta_fundido"), "  con racha de 3 habla la prensa; con 20 de energía te para el preparador")
+		c.ruta["ahorros"] = j.sueldo * 20
+		var lista_ev := CarreraEventosRuta.eventos(c, m)
+		var primo: Dictionary = lista_ev.filter(func(e: Dictionary) -> bool: return String(e["id"]) == "ruta_primo")[0]
+		c.eventos.append(primo)
+		c.resolver(m, c.eventos.size() - 1, 0)
+		_comprobar(CarreraVida.ahorros(c) == j.sueldo * 12, "  prestarle al primo cuesta ocho semanas de sueldo")
+		var nivel_ev := CarreraRuta.nivel(c) * 100000 + int(c.ruta["xp"])
+		CarreraEventosRuta.aplicar(c, m, {"ruta_xp": 60})
+		_comprobar(CarreraRuta.nivel(c) * 100000 + int(c.ruta["xp"]) > nivel_ev, "  la hora extra con el veterano da experiencia")
+		for e_r: Dictionary in lista_ev:
+			_comprobar((e_r["opciones"] as Array).size() == 2 and String(e_r["texto"]).length() > 30, "  evento «%s» con dos salidas" % e_r["titulo"])
+		c.energia = 100
+		c.ruta["racha"] = 0
 		## Tu vida: el sueldo se ahorra y lo comprado cambia la carrera.
 		c.ruta["ahorros"] = 0
 		c.ruta["vida"] = {}

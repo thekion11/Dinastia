@@ -153,6 +153,7 @@ func resolver(m: Mundo, indice: int, opcion: int) -> String:
 	if bool(ef.get("cesion", false)):
 		_ceder(m)
 	CarreraPatrocinio.firmar(self, String(ef.get("patro", "")))
+	CarreraEventosRuta.aplicar(self, m, ef)
 	if bool(ef.get("oferta_fuera", false)) and j != null:
 		var fuera := _club_extranjero(m, j)
 		if fuera != null:
@@ -340,6 +341,7 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 	p.append_array(CarreraAgenda.eventos(self, j))
 	p.append_array(CarreraPortero.eventos(self, j))
 	p.append_array(CarreraPatrocinio.eventos(self))
+	p.append_array(CarreraEventosRuta.eventos(self, m))
 	return p
 
 func _evento_bienvenida(m: Mundo) -> void:
