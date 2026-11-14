@@ -13,7 +13,7 @@ static func activo(nivel: int) -> bool:
 	return nivel <= Calidad.MEDIA_BAJA and OS.get_environment("SIN_IMPOSTORES") == ""
 
 ## Se llama con el jugador YA vestido (cuerpo, ropa, pelo, cara). `altura` = metros del jugador; `color` = color de la camiseta.
-static func aplicar(nodo: Node3D, altura: float, color: Color, nivel: int) -> void:
+static func aplicar(nodo: Node3D, altura: float, color: Color, nivel: int, ap: AnimationPlayer = null) -> void:
 	if nodo == null or not activo(nivel):
 		return
 	var piezas := 0
@@ -44,6 +44,7 @@ static func aplicar(nodo: Node3D, altura: float, color: Color, nivel: int) -> vo
 	mi.visibility_range_begin_margin = MARGEN
 	mi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
 	nodo.add_child(mi)
+	AnimLejana.poner(nodo, ap)   ## y su animación, a 5 Hz mientras esté lejos
 
 static func _material(c: Color) -> StandardMaterial3D:
 	var k := c.to_html(false)
