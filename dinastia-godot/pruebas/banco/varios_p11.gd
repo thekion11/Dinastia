@@ -285,3 +285,17 @@ func _probar_conos_de_luz() -> void:
 	cono.free()
 	StadiumBuilder._mat_cono = viejo
 
+## (13-11) El calentamiento de efectos del partido: no falla sin grada, se apaga con CALENTAR_EFECTOS=0 y no deja nada vivo encima del campo.
+func _probar_calentamiento_efectos() -> void:
+	_titulo("CALENTAMIENTO DE EFECTOS: INVISIBLE Y SIN TOCAR NADA")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	CalentamientoEfectos.calentar(raiz)   ## sin grada solo salen las banderas (en un sitio dado, bajo el campo); el confeti necesita sitios de grada
+	var piezas := raiz.find_children("*", "VisualInstance3D", true, false)
+	var altas := 0
+	for p in piezas:
+		if (p as Node3D).global_position.y > -CalentamientoEfectos.BAJO + 5.0:
+			altas += 1
+	_comprobar(not piezas.is_empty() and altas == 0, "todo lo que dibuja el calentamiento está a unos 60 m bajo el campo (%d piezas, %d por encima)" % [piezas.size(), altas])
+	_comprobar(CalentamientoEfectos.encendido() == (OS.get_environment("CALENTAR_EFECTOS") != "0"), "encendido salvo que CALENTAR_EFECTOS sea 0")
+	raiz.free()
