@@ -50,8 +50,44 @@ static func crear_gala(id: String, datos: Dictionary) -> GalaPremio3D:
 	g._vp.own_world_3d = true
 	g._vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_2X)
 	g.add_child(g._vp)
+	g._calidad_maxima()
 	g._montar_gala(datos, club, j)
 	return g
+
+## (14-11, dueño: «durante esas escenas, la calidad al máximo aunque los gráficos estén en mínimo; 4K, muchos detalles,
+## realismo») La escena es corta y se ve sola: se dibuja por dentro al DOBLE de resolución (una ventana de 1080 líneas
+## se calcula a 2160, «4K», y se reduce), con MSAA 8x, FXAA, sombras de alta resolución en todas las luces, oclusión
+## ambiental, reflejos y brillo, digan lo que digan los Ajustes. (La oclusión y los reflejos solo existen en Forward+:
+## en el renderizador del móvil se ignoran.)
+func _calidad_maxima() -> void:
+	_vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+	_vp.scaling_3d_scale = 2.0
+	_vp.msaa_3d = Viewport.MSAA_8X
+	_vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
+	_vp.positional_shadow_atlas_size = 4096
+	_vp.mesh_lod_threshold = 0.0   ## los modelos con todo su detalle, sin versiones simplificadas
+	RenderingServer.directional_shadow_atlas_set_size(4096, true)
+
+## El entorno de gala: brillo, oclusión ambiental, reflejos en el suelo y un leve ajuste de color.
+static func _entorno_maximo(env: Environment) -> void:
+	env.glow_enabled = true
+	env.glow_intensity = 0.7
+	env.glow_bloom = 0.08
+	env.ssao_enabled = true
+	env.ssao_radius = 1.2
+	env.ssao_intensity = 1.6
+	env.ssr_enabled = true
+	env.ssr_max_steps = 48
+	env.adjustment_enabled = true
+	env.adjustment_contrast = 1.08
+	env.adjustment_saturation = 1.08
+
+## Las sombras de una luz, en su máxima calidad.
+static func _sombra_maxima(luz: Light3D) -> void:
+	luz.shadow_enabled = true
+	luz.shadow_blur = 1.4
+	if luz is DirectionalLight3D:
+		(luz as DirectionalLight3D).directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
 
 func _montar_gala(datos: Dictionary, club: Club, j: Jugador) -> void:
 	var c1 := Color(club.color1)
@@ -64,21 +100,25 @@ func _montar_gala(datos: Dictionary, club: Club, j: Jugador) -> void:
 	env.ambient_light_color = Color(0.55, 0.6, 0.7)
 	env.ambient_light_energy = 0.6 if lugar in ["campo", "estadio"] else 0.75
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.glow_enabled = Calidad.elegida > Calidad.BAJA
-	env.glow_intensity = 0.6
+	_entorno_maximo(env)
 	var we := WorldEnvironment.new()
 	we.environment = env
 	_vp.add_child(we)
 	var raiz := Node3D.new()
 	_vp.add_child(raiz)
 	var spawner = load("res://visor/player_spawner.gd").new()
+	## La equipación REAL del club (colores, diseño de la camiseta y el diseñador completo), como en el partido.
+	var kit: Dictionary = Puente3D.kit(club)
+	var k1 := Color(String(kit.get("c1", club.color1)))
+	var k2 := Color(String(kit.get("c2", club.color2)))
+	_vestir(spawner, kit)
 	var titulo := Idiomas.t(String(CarreraPremios.PREMIOS[premio][0])) if CarreraPremios.PREMIOS.has(premio) else Nombres.visible(String(datos.get("titulo", "")))
 	match lugar:
 		"campo":
 			_cesped(raiz)
 			_grada(raiz, c1, c2)
 			_focos(raiz)
-			GalaGuiones.companeros(self, raiz, spawner, club, j, c1, c2)
+			GalaGuiones.companeros(self, raiz, spawner, club, j, k1, k2)
 		"estadio":
 			_cesped(raiz)
 			_grada(raiz, c1, c2)
@@ -87,6 +127,8 @@ func _montar_gala(datos: Dictionary, club: Club, j: Jugador) -> void:
 		_:
 			_suelo = GalaGuiones.salon(self, raiz, datos, club, titulo, lugar == "mundo")
 	var de_gala := lugar in ["gala", "mundo"]
+	if de_gala:
+		_vestir(spawner, {})   ## en la gala, de oscuro: sin el diseño del club
 	## El pedestal con el galardón encima.
 	_pedestal.y += _suelo
 	_caja(raiz, Vector3(_pedestal.x, _suelo + 0.5, _pedestal.z), Vector3(0.42, 1.0, 0.42), _mat(Color(0.1, 0.1, 0.13), 0.35))
@@ -98,15 +140,16 @@ func _montar_gala(datos: Dictionary, club: Club, j: Jugador) -> void:
 	## Quien preside: en el campo, tu capitán; en las galas, alguien de oscuro. Aplaude a un lado.
 	var preside: Jugador = GalaGuiones.quien_entrega(club, j)
 	if preside != null:
-		_jugador(raiz, spawner, preside, Vector3(2.3, _suelo, -0.3), atan2(PARADO_EN - 2.3, 0.5), "aplaudir|parado", Color(0.1, 0.11, 0.14) if de_gala else c1, Color(0.2, 0.2, 0.24) if de_gala else c2, 0.4)   ## de cara a ti
+		_jugador(raiz, spawner, preside, Vector3(2.3, _suelo, -0.3), atan2(PARADO_EN - 2.3, 0.5), "aplaudir|parado", Color(0.1, 0.11, 0.14) if de_gala else k1, Color(0.2, 0.2, 0.24) if de_gala else k2, 0.4)   ## de cara a ti
 	## Tú: de oscuro en las galas, con tu equipación en el césped. Entras caminando hacia el pedestal.
-	_yo = _jugador(raiz, spawner, j, Vector3(-4.2, _suelo, _pedestal.z), PI * 0.5, "caminar|trotar", Color(0.07, 0.08, 0.11) if de_gala else c1, Color(0.16, 0.17, 0.21) if de_gala else c2)
+	_yo = _jugador(raiz, spawner, j, Vector3(-4.2, _suelo, _pedestal.z), PI * 0.5, "caminar|trotar", Color(0.07, 0.08, 0.11) if de_gala else k1, Color(0.16, 0.17, 0.21) if de_gala else k2)
 	var aps := _yo.find_children("*", "AnimationPlayer", true, false)
 	_yo_anim = aps[0] if not aps.is_empty() else null
 	var esqs := _yo.find_children("*", "Skeleton3D", true, false)
 	if not esqs.is_empty():
 		_esq = esqs[0]
 		_montar_brazos()
+	_vestir(spawner, {})   ## los fotógrafos, de oscuro liso
 	_flashes = GalaGuiones.fotografos(self, raiz, spawner, club, j, _suelo)
 	if spawner is Node:
 		(spawner as Node).queue_free()
@@ -117,6 +160,13 @@ func _montar_gala(datos: Dictionary, club: Club, j: Jugador) -> void:
 	_cam.fov = 38.0
 	_vp.add_child(_cam)
 	_colocar_camara()
+	for luz: Node in raiz.find_children("*", "Light3D", true, false):
+		_sombra_maxima(luz as Light3D)
+
+## Viste a los siguientes modelos con ese uniforme ({} = liso con los colores que se pasen).
+func _vestir(spawner, kit: Dictionary) -> void:
+	estilo_camiseta = String(kit.get("estilo", "liso"))
+	spawner.set("_kit_x", kit.get("x", {}) if kit.get("x") is Dictionary else {})
 
 ## Los dos brazos con cinemática inversa hacia dos puntos del galardón (uno por mano). Empieza sin influencia.
 func _montar_brazos() -> void:

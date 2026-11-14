@@ -43,7 +43,7 @@ static func companeros(g: GalaPremio3D, raiz: Node3D, spawner, club: Club, j: Ju
 	var entrega := quien_entrega(club, j)
 	var n := 0
 	for o: Jugador in club.plantilla:
-		if o == j or o == entrega or n >= (2 if Calidad.elegida <= Calidad.MINIMO else 4):   ## en la calidad mínima, dos compañeros
+		if o == j or o == entrega or n >= 4:   ## (14-11) siempre cuatro: la entrega va a calidad máxima
 			continue
 		var x := -3.0 + float(n) * 1.6
 		g._jugador(raiz, spawner, o, Vector3(x, 0.0, -2.4 - absf(x + 0.6) * 0.15), 0.0, "aplaudir|idle", c1, c2, n * 0.41)
@@ -61,8 +61,8 @@ static func tarima(g: GalaPremio3D, raiz: Node3D, c1: Color, titulo: String) -> 
 ## liga y el del premio, atril y un patio de butacas en una sola llamada. En la mundial, una fila de banderas.
 static func salon(g: GalaPremio3D, raiz: Node3D, datos: Dictionary, club: Club, titulo: String, mundial: bool) -> float:
 	var oro := Color(0.95, 0.78, 0.3)
-	g._caja(raiz, Vector3(0, -0.05, 4.0), Vector3(26, 0.1, 22), g._mat(Color(0.05, 0.05, 0.07), 0.25))   ## el suelo del salón
-	g._caja(raiz, Vector3(0, 0.3, -0.4), Vector3(11.0, 0.6, 4.6), g._mat(Color(0.09, 0.08, 0.11), 0.35))   ## el escenario
+	g._caja(raiz, Vector3(0, -0.05, 4.0), Vector3(30, 0.1, 30), g._mat(Color(0.05, 0.05, 0.07), 0.25))   ## el suelo del salón
+	g._caja(raiz, Vector3(0, 0.3, -0.4), Vector3(11.0, 0.6, 4.6), g._mat(Color(0.06, 0.055, 0.075), 0.12))   ## el escenario, pulido: refleja las luces
 	g._caja(raiz, Vector3(0, 0.62, 1.9), Vector3(11.0, 0.05, 0.05), g._mat(oro, 0.3, 1.6))
 	g._caja(raiz, Vector3(0, 3.2, -2.8), Vector3(12.0, 5.4, 0.1), g._mat(Color(0.16, 0.05, 0.08) if not mundial else Color(0.05, 0.07, 0.16), 0.8))   ## el telón
 	_rotulo(raiz, titulo, Vector3(0, 4.9, -2.7), 1.25)
@@ -78,19 +78,19 @@ static func salon(g: GalaPremio3D, raiz: Node3D, datos: Dictionary, club: Club, 
 	else:
 		_cuadro(raiz, Banderas.textura(String(datos.get("pais", club.pais))), Vector3(-3.6, 2.5, -2.7), Vector2(2.4, 1.5))
 		_cuadro(raiz, load("res://ui/escudo.gd").textura(club, 256), Vector3(3.6, 2.5, -2.7), Vector2(1.6, 1.6))
-	## El patio de butacas: 240 siluetas, casi todas oscuras.
+	## El patio de butacas: 600 siluetas en una sola llamada, casi todas oscuras.
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.use_colors = true
-	mm.instance_count = 240
+	mm.instance_count = 600   ## (14-11) el patio de butacas lleno
 	var bm := BoxMesh.new()
 	bm.size = Vector3(0.42, 0.6, 0.3)
 	mm.mesh = bm
 	var azar := RandomNumberGenerator.new()
 	azar.seed = hash(club.id)
-	for i in 240:
-		var fila := i / 24
-		mm.set_instance_transform(i, Transform3D(Basis(), Vector3(-8.0 + float(i % 24) * 0.7, 0.3 + fila * 0.12, 4.2 + fila * 0.9)))
+	for i in 600:
+		var fila := i / 40
+		mm.set_instance_transform(i, Transform3D(Basis(), Vector3(-13.6 + float(i % 40) * 0.7 + azar.randf_range(-0.08, 0.08), 0.3 + fila * 0.14, 4.2 + fila * 0.9)))
 		var r := azar.randf()
 		mm.set_instance_color(i, Color(0.06, 0.06, 0.08) if r < 0.8 else (Color(club.color1).darkened(0.3) if r < 0.92 else Color(0.5, 0.48, 0.45)))
 	var mmi := MultiMeshInstance3D.new()
@@ -176,14 +176,14 @@ static func confeti(g: GalaPremio3D, raiz: Node3D, c1: Color, c2: Color, extra: 
 	return p
 
 ## LOS FOTÓGRAFOS: delante del escenario, de espaldas a la cámara, unos agachados y otros de pie, cada uno con su
-## cámara y su flash. Devuelve las luces de los flashes. En la calidad mínima, dos.
+## cámara y su flash. Devuelve las luces de los flashes.
 static func fotografos(g: GalaPremio3D, raiz: Node3D, spawner, club: Club, j: Jugador, suelo: float) -> Array[OmniLight3D]:
 	var luces: Array[OmniLight3D] = []
 	var modelos: Array = []
 	for o: Jugador in club.plantilla:   ## cuerpos de la plantilla (los últimos), vestidos de oscuro
 		if o != j:
 			modelos.push_front(o)
-	var n := mini(modelos.size(), 2 if Calidad.elegida <= Calidad.MINIMO else 4)
+	var n := mini(modelos.size(), 4)
 	var negro := g._mat(Color(0.05, 0.05, 0.06), 0.4)
 	for k in n:
 		## (14-11) Los agachados en el centro y los de pie a los lados: nadie tapa al jugador desde la cámara.

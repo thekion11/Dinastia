@@ -3,8 +3,8 @@ extends RefCounted
 ## LA ENTREGA EN 3D DENTRO DEL CIERRE DE TEMPORADA (13-11-2026): una ventana con la ceremonia del premio elegido
 ## (`GalaPremio3D`) o el festejo del título (`FestejoCampo3D`), y debajo un botón por cada premio y cada trofeo del
 ## año para verlos de uno en uno. Solo hay UNA escena 3D viva. Las clases 3D se cargan con `load` (no se nombran:
-## así el menú no las compila). Se ve en TODAS las calidades (en la mínima: sin sombras, menos
-## compañeros y, para los títulos, tú solo con la copa); sin pantalla no se monta nada (devuelve null).
+## así el menú no las compila). Se ve en TODAS las calidades y SIEMPRE a calidad máxima (`GalaPremio3D._calidad_maxima`);
+## en la mínima, los títulos los levantas tú solo (el festejo del equipo entero no se monta ahí). Sin pantalla, nada.
 
 const E := preload("res://ui/carrera/ruta_estilo.gd")
 const FESTEJO_DE := {"liga": "escenario", "copa": "palco", "continental": "fuegos", "otro": "foto"}

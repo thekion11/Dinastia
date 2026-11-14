@@ -27,6 +27,7 @@ var _rival: Club
 var _con_tifos := false   ## finales (copa, continental, supercopa, selección): tifos en la grada
 var tifos := 0   ## lonas montadas (lo lee la prueba)
 var jugadores := 0   ## cuántos modelos 3D se montaron (lo lee la prueba)
+var estilo_camiseta := "liso"   ## (14-11) el diseño de la camiseta; las entregas de premios ponen el del club
 
 ## ¿Se usa el 3D? No en calidad mínima (ahí la escena 2D es el respaldo).
 static func con_3d() -> bool:
@@ -123,7 +124,7 @@ func _jugador(raiz: Node3D, spawner, j: Jugador, pos: Vector3, mira: float, anim
 	raiz.add_child(nodo)
 	var datos := Puente3D.jugador(j)
 	var look: Array = load("res://visor/player_spawner.gd")._look_de(datos)
-	var d: Dictionary = spawner._crear_jugador(nodo, j.id, "POR" if j.pos_e == "POR" else "DEL", "", c1, c2, "liso", maxi(j.dorsal, 1),
+	var d: Dictionary = spawner._crear_jugador(nodo, j.id, "POR" if j.pos_e == "POR" else "DEL", "", c1, c2, estilo_camiseta, maxi(j.dorsal, 1),
 		look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
 	if d.is_empty():
 		return nodo
