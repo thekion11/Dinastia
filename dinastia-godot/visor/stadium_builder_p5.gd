@@ -391,8 +391,6 @@ static func _malla_hincha_minima() -> Mesh:
 	return _malla_hincha_min
 
 static func _malla_hincha_cache() -> Mesh:
-	if MallasGradaMinima.PUBLICO_SENCILLO and Calidad.elegida <= Calidad.MINIMO:
-		return MallasGradaMinima.hincha()   ## 13-11: 16 triángulos por persona en vez de 45 (APAGADO: el dueño pidió no alterar lo visual)
 	if Calidad.elegida <= Calidad.MEDIO:
 		return _malla_hincha_minima()
 	if _malla_hincha != null:
