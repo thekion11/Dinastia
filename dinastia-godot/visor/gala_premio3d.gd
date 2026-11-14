@@ -28,6 +28,7 @@ var _esq: Skeleton3D
 var _ik: SkeletonModifier3D
 var _mano_d: Node3D
 var _mano_i: Node3D
+var _mirada: Node3D
 
 const T_LLEGA := 2.4
 const T_AGARRA := 3.3
@@ -97,7 +98,7 @@ func _montar_gala(datos: Dictionary, club: Club, j: Jugador) -> void:
 	## Quien preside: en el campo, tu capitán; en las galas, alguien de oscuro. Aplaude a un lado.
 	var preside: Jugador = GalaGuiones.quien_entrega(club, j)
 	if preside != null:
-		_jugador(raiz, spawner, preside, Vector3(2.3, _suelo, -0.3), -PI * 0.3, "aplaudir|parado", Color(0.1, 0.11, 0.14) if de_gala else c1, Color(0.2, 0.2, 0.24) if de_gala else c2, 0.4)
+		_jugador(raiz, spawner, preside, Vector3(2.3, _suelo, -0.3), atan2(PARADO_EN - 2.3, 0.5), "aplaudir|parado", Color(0.1, 0.11, 0.14) if de_gala else c1, Color(0.2, 0.2, 0.24) if de_gala else c2, 0.4)   ## de cara a ti
 	## Tú: de oscuro en las galas, con tu equipación en el césped. Entras caminando hacia el pedestal.
 	_yo = _jugador(raiz, spawner, j, Vector3(-4.2, _suelo, _pedestal.z), PI * 0.5, "caminar|trotar", Color(0.07, 0.08, 0.11) if de_gala else c1, Color(0.16, 0.17, 0.21) if de_gala else c2)
 	var aps := _yo.find_children("*", "AnimationPlayer", true, false)
@@ -128,6 +129,11 @@ func _montar_brazos() -> void:
 	_ik = GalaGuiones.brazos_a(_esq, _mano_d, _mano_i)
 	if _ik != null:
 		_ik.influence = 0.0
+		## La mirada: al galardón mientras va a por él; a las cámaras (los fotógrafos) cuando lo levanta.
+		_mirada = Node3D.new()
+		_vp.add_child(_mirada)
+		_ik.set("mirar", _mirada)
+		_ik.set("cuerpo", _yo)
 
 func _pon_anim(nombres: String) -> void:
 	if _yo_anim == null:
@@ -206,6 +212,13 @@ func _process(d: float) -> void:
 				_confeti.emitting = true
 		_objeto.position = _porte(clampf((_t - T_ARRIBA) / 0.8, 0.0, 1.0))
 		_objeto.rotation.y = sin(_t * 0.7) * 0.25
+	## Adónde mira: al galardón al acercarse y tomarlo; luego, a los fotógrafos (y vuelve a la animación al celebrar).
+	if _mirada != null and _ik != null:
+		var a_camaras := Vector3(0.0, _suelo + 1.3, 3.6)
+		var k_m := clampf((_t - T_AGARRA) / (T_ARRIBA - T_AGARRA), 0.0, 1.0)
+		_mirada.global_position = (_objeto.global_position + Vector3(0, 0.15, 0)).lerp(a_camaras, k_m)
+		var peso := clampf(_t / 1.0, 0.0, 1.0) * (1.0 - clampf((_t - T_ARRIBA - 1.5) / 1.0, 0.0, 1.0) * 0.6)
+		_ik.set("peso_mirar", peso)
 	## Los flashes: sueltos mientras llegas, en ráfaga cuando lo levantas.
 	for i in _flashes.size():
 		var ritmo := 1.1 if _fase >= 2 else 2.6

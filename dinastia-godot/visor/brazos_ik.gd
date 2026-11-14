@@ -8,12 +8,18 @@ extends SkeletonModifier3D
 
 var derecha: Node3D
 var izquierda: Node3D
+## (14-11) Y la cabeza: si hay `mirar`, el cuello y la cabeza giran hacia él (hasta `MAX_GIRO`), con el peso `peso_mirar`.
+var mirar: Node3D
+var cuerpo: Node3D   ## el nodo del personaje: su +Z es hacia dónde mira el modelo
+var peso_mirar := 0.0
+const MAX_GIRO := deg_to_rad(55.0)
 
 func _process_modification() -> void:
 	var esq := get_skeleton()
 	if esq == null or not esq.is_inside_tree():
 		return
 	var a_esq := esq.global_transform.affine_inverse()
+	_cabeza(esq, a_esq)
 	for par: Array in [["r", derecha], ["l", izquierda]]:
 		var destino: Node3D = par[1]
 		if destino == null or not is_instance_valid(destino) or not destino.is_inside_tree():
@@ -52,3 +58,29 @@ func _process_modification() -> void:
 		var c2 := esq.get_bone_global_pose(i3).origin
 		var giro2 := Quaternion((c2 - p2.origin).normalized(), (mano - p2.origin).normalized())
 		esq.set_bone_global_pose(i2, Transform3D(Basis(giro2) * p2.basis, p2.origin))
+
+func _cabeza(esq: Skeleton3D, a_esq: Transform3D) -> void:
+	if mirar == null or cuerpo == null or peso_mirar <= 0.001 or not is_instance_valid(mirar) or not mirar.is_inside_tree():
+		return
+	var ic := esq.find_bone("Head")
+	var iu := esq.find_bone("neck_01")
+	if ic < 0:
+		return
+	var adelante := (esq.global_basis.inverse() * cuerpo.global_basis.z).normalized()
+	var pc := esq.get_bone_global_pose(ic)
+	var hacia := ((a_esq * mirar.global_position) - pc.origin).normalized()
+	var angulo := adelante.angle_to(hacia)
+	if angulo < 0.01:
+		return
+	var eje := adelante.cross(hacia).normalized()
+	if eje.length() < 0.5:
+		return
+	var giro := minf(angulo, MAX_GIRO) * clampf(peso_mirar, 0.0, 1.0)
+	## Un tercio lo pone el cuello, el resto la cabeza.
+	if iu >= 0:
+		var pu := esq.get_bone_global_pose(iu)
+		esq.set_bone_global_pose(iu, Transform3D(Basis(eje, giro * 0.35) * pu.basis, pu.origin))
+		pc = esq.get_bone_global_pose(ic)
+		esq.set_bone_global_pose(ic, Transform3D(Basis(eje, giro * 0.65) * pc.basis, pc.origin))
+	else:
+		esq.set_bone_global_pose(ic, Transform3D(Basis(eje, giro) * pc.basis, pc.origin))

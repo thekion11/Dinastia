@@ -186,9 +186,10 @@ static func fotografos(g: GalaPremio3D, raiz: Node3D, spawner, club: Club, j: Ju
 	var n := mini(modelos.size(), 2 if Calidad.elegida <= Calidad.MINIMO else 4)
 	var negro := g._mat(Color(0.05, 0.05, 0.06), 0.4)
 	for k in n:
-		var agachado := k % 2 == 0
-		var x := -1.9 + float(k) * 1.25
-		var z := 3.3 + (0.0 if agachado else 0.9)
+		## (14-11) Los agachados en el centro y los de pie a los lados: nadie tapa al jugador desde la cámara.
+		var agachado := k < 2
+		var x: float = [-0.9, 0.9, -2.5, 2.5][k]
+		var z := 3.3 + (0.0 if agachado else 0.7)
 		var pos := Vector3(x, 0.0 if suelo > 0.0 else 0.0, z)
 		var foto := g._jugador(raiz, spawner, modelos[k], pos, PI + (0.1 - x) * 0.12, "agachado|parado" if agachado else "parado|aplaudir", Color(0.09, 0.09, 0.11), Color(0.13, 0.13, 0.16), k * 0.3)
 		g.fotografos += 1
