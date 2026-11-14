@@ -18,7 +18,8 @@ static func al_montar(raiz: Node3D) -> void:
 
 ## Dibuja una vez, fuera de la vista, lo que luego aparece en el partido (los pasos se suman en `docs/04_auditorias/rendimiento_120fps.md`).
 static func calentar(raiz: Node3D) -> void:
-	if raiz == null or not FestejoGrada.activo():
+	## UNA sola vez por proceso: los recursos guardados ya mantienen el sombreado compilado; repetirlo en cada partido acumulaba ~33 objetos por partido (auditoría 4: fugas en 24 partidos).
+	if raiz == null or not _guardados.is_empty() or not FestejoGrada.activo():
 		return
 	var c1 := Color(0.85, 0.12, 0.12)
 	var c2 := Color(0.95, 0.95, 0.95)

@@ -290,6 +290,7 @@ func _probar_calentamiento_efectos() -> void:
 	_titulo("CALENTAMIENTO DE EFECTOS: INVISIBLE Y SIN TOCAR NADA")
 	var raiz := Node3D.new()
 	add_child(raiz)
+	CalentamientoEfectos._guardados.clear()   ## el calentamiento es de UNA vez por proceso: aquí se pide de cero
 	CalentamientoEfectos.calentar(raiz)   ## sin grada solo salen las banderas (en un sitio dado, bajo el campo); el confeti necesita sitios de grada
 	var piezas := raiz.find_children("*", "VisualInstance3D", true, false)
 	var altas := 0
