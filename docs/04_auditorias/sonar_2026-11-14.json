@@ -1,0 +1,53 @@
+{
+ "fecha": "2026-11-14",
+ "rama": "main",
+ "issues": [],
+ "hotspots": [],
+ "duplicaciones": [
+  {
+   "path": "recursos/modelos3d/cc0_web/kenney_city-kit-commercial/Overview.html",
+   "lineas": 150,
+   "pct": "64.1"
+  },
+  {
+   "path": "recursos/modelos3d/cc0_web/kenney_car-kit/Overview.html",
+   "lineas": 150,
+   "pct": "61.7"
+  },
+  {
+   "path": "herramientas/caras_reales_rescate.ps1",
+   "lineas": 31,
+   "pct": "18.3"
+  },
+  {
+   "path": "herramientas/empaquetar.ps1",
+   "lineas": 28,
+   "pct": "10.3"
+  },
+  {
+   "path": "herramientas/caras_reales_buscar.ps1",
+   "lineas": 27,
+   "pct": "15.1"
+  },
+  {
+   "path": "herramientas/generar_2d_ia.ps1",
+   "lineas": 14,
+   "pct": "16.7"
+  },
+  {
+   "path": "herramientas/generar_3d_ia.ps1",
+   "lineas": 14,
+   "pct": "13.9"
+  },
+  {
+   "path": "herramientas/compilacion_menu/aplicar.py",
+   "lineas": 10,
+   "pct": "19.2"
+  },
+  {
+   "path": "herramientas/compilacion_menu/exper.py",
+   "lineas": 10,
+   "pct": "11.9"
+  }
+ ]
+}
