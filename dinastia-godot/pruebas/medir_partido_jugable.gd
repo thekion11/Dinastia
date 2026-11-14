@@ -119,12 +119,6 @@ func _llamadas() -> int:
 	return int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
 
 func _medir() -> void:
-	if OS.get_environment("CAPTURA") != "":
-		## (13-11) CAPTURA=ruta.jpg: la imagen de la cámara real del partido (con pantalla), para comparar antes/después de un cambio visual.
-		await get_tree().process_frame
-		get_viewport().get_texture().get_image().save_jpg(OS.get_environment("CAPTURA"), 0.92)
-		get_tree().quit()
-		return
 	if OS.get_environment("CPU") == "":
 		## Escena CONGELADA (cámara, jugadores y balón quietos): los conteos entre dos ocultaciones se comparan sin deriva (en marcha, las llamadas bailan entre 400 y 700 según el momento).
 		_pj.set_process(false)
@@ -132,129 +126,8 @@ func _medir() -> void:
 		_pj.motor.set_physics_process(false)
 		for h in _pj.get_children():
 			h.set_process(false)
-	if OS.get_environment("MESH_LOD") != "":
-		_pj._vp.mesh_lod_threshold = float(OS.get_environment("MESH_LOD"))   ## (13-11) umbral de LOD del viewport del partido, para comparar
 	await _conteos("base")
-	if OS.get_environment("VIEWPORTS") != "":
-		## (13-11) VIEWPORTS=1: todos los SubViewport vivos del árbol (también fuera del partido), su tamaño, modo de actualización y si se ven.
-		for sv in get_tree().root.find_children("*", "SubViewport", true, false):
-			var v := sv as SubViewport
-			var c := v.get_parent()
-			var vis := c is CanvasItem and (c as CanvasItem).is_visible_in_tree()
-			print("VIEWPORT %-28s %4dx%-4d modo=%d contenedor_visible=%s padre=%s" % [str(v.get_path()).right(40), v.size.x, v.size.y, v.render_target_update_mode, str(vis), c.get_class()])
-		get_tree().quit()
-		return
-	if OS.get_environment("TRANSP") != "":
-		## (13-11) TRANSP=1: mallas visibles con transparencia o mezcla (sobredibujo), por nombre: cuántas y el área mayor de su caja (m²).
-		var tr := {}
-		for mi in _pj.find_children("*", "GeometryInstance3D", true, false):
-			var g := mi as GeometryInstance3D
-			if not g.is_visible_in_tree() or g is Label3D:
-				continue
-			var mats: Array = []
-			if g.material_override != null:
-				mats.append(g.material_override)
-			if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
-				for si in (g as MeshInstance3D).mesh.get_surface_count():
-					var mt: Material = (g as MeshInstance3D).get_active_material(si)
-					if mt != null:
-						mats.append(mt)
-			var trans := false
-			for mt in mats:
-				if mt is BaseMaterial3D and (mt as BaseMaterial3D).transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
-					trans = true
-				elif mt is ShaderMaterial and (mt as ShaderMaterial).shader != null and (mt as ShaderMaterial).shader.code.contains("blend_"):
-					trans = true
-			if not trans:
-				continue
-			var k := String(g.name).rstrip("0123456789@_") + " <" + String(g.get_parent().name).rstrip("0123456789@_") + ">"
-			var ab := g.get_aabb().size
-			var f: Array = tr.get(k, [0, 0.0])
-			f[0] += 1; f[1] = maxf(f[1], maxf(ab.x * ab.z, maxf(ab.x * ab.y, ab.y * ab.z)))
-			tr[k] = f
-		for k in tr:
-			print("TRANSP x%-3d área máx %7.0f m²  %s" % [tr[k][0], tr[k][1], k])
-		get_tree().quit()
-		return
-	if OS.get_environment("PELO") != "":
-		## (13-11) PELO=1: sobre la MISMA escena congelada, triángulos al cambiar la distancia a la que el pelo pasa de `Cuero` (cerca) a `CueroLejos`.
-		for d in [22.0, 15.0, 10.0, 6.0, 3.0]:
-			for j in _pj.motor.jugadores:
-				for mi in ((j as Dictionary)["node"] as Node3D).find_children("*", "MeshInstance3D", true, false):
-					var kn := String(mi.name).rstrip("0123456789@_")
-					if kn == "Cuero":
-						(mi as MeshInstance3D).visibility_range_end = d
-					elif kn == "CueroLejos":
-						(mi as MeshInstance3D).visibility_range_begin = d
-			await _conteos("pelo_lejos_desde=%.0f m" % d)
-		get_tree().quit()
-		return
-	if OS.get_environment("PIEZAS") != "":
-		## (13-11) PIEZAS=1: sobre la MISMA escena congelada, lo que baja ocultar cada pieza de los jugadores (por nombre de malla): llamadas y triángulos.
-		var base_c: int = await _llamadas()
-		var base_t := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
-		print("PIEZA base %d llamadas %d triángulos" % [base_c, base_t])
-		var nombres := {}
-		for j in _pj.motor.jugadores:
-			for mi in ((j as Dictionary)["node"] as Node3D).find_children("*", "MeshInstance3D", true, false):
-				var kn := String(mi.name).rstrip("0123456789@_")
-				if not nombres.has(kn):
-					nombres[kn] = []
-				(nombres[kn] as Array).append(mi)
-		for kn in nombres:
-			for mi in nombres[kn]:
-				(mi as MeshInstance3D).visible = false
-			var c2: int = await _llamadas()
-			var t2 := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
-			for mi in nombres[kn]:
-				(mi as MeshInstance3D).visible = true
-			print("PIEZA -%3d llamadas  -%6d triángulos  %s (x%d)" % [base_c - c2, base_t - t2, kn, (nombres[kn] as Array).size()])
-		get_tree().quit()
-		return
-	if OS.get_environment("ROTULOS") != "":
-		## (13-11) ROTULOS=1: distancia de cada Label3D a la cámara del partido, por padre (mínima y máxima) y cuántos hay.
-		var dist := {}
-		for l in _pj.find_children("*", "Label3D", true, false):
-			var lab := l as Label3D
-			if not lab.is_visible_in_tree():
-				continue
-			var d := _pj._cam.global_position.distance_to(lab.global_position)
-			var kp := String(lab.get_parent().name).rstrip("0123456789@_-") + (" [con rango %.0f]" % lab.visibility_range_end if lab.visibility_range_end > 0.0 else "")
-			var f: Array = dist.get(kp, [0, 1e9, 0.0])
-			f[0] += 1; f[1] = minf(f[1], d); f[2] = maxf(f[2], d)
-			dist[kp] = f
-		for k in dist:
-			print("ROTULO x%-3d dist %5.0f–%5.0f m  %s" % [dist[k][0], dist[k][1], dist[k][2], k])
-		get_tree().quit()
-		return
-	if OS.get_environment("MULTI") != "":
-		## (13-11) MULTI=1: triángulos de cada MultiMesh del partido (instancias dibujadas × triángulos de su malla), por nombre.
-		var por := {}
-		for mm in _pj.find_children("*", "MultiMeshInstance3D", true, false):
-			var m := mm as MultiMeshInstance3D
-			if m.multimesh == null or m.multimesh.mesh == null or not m.is_visible_in_tree():
-				continue
-			var n_i := m.multimesh.visible_instance_count if m.multimesh.visible_instance_count >= 0 else m.multimesh.instance_count
-			var tri := 0
-			for si in m.multimesh.mesh.get_surface_count():
-				var arr := m.multimesh.mesh.surface_get_arrays(si)
-				tri += (arr[Mesh.ARRAY_INDEX] as PackedInt32Array).size() / 3 if arr[Mesh.ARRAY_INDEX] != null else (arr[Mesh.ARRAY_VERTEX] as PackedVector3Array).size() / 3
-			var k := String(m.name).rstrip("0123456789@_")
-			var f: Array = por.get(k, [0, 0, 0])
-			f[0] += 1; f[1] += n_i; f[2] += n_i * tri
-			por[k] = f
-		var ks := por.keys()
-		ks.sort_custom(func(x, y) -> bool: return por[x][2] > por[y][2])
-		for k in ks.slice(0, 20):
-			print("MULTI x%-3d instancias=%-7d triángulos=%-8d %s" % [por[k][0], por[k][1], por[k][2], k])
-		get_tree().quit()
-		return
-	if OS.get_environment("LOD_BARRIDO") != "":
-		## (13-11) LOD_BARRIDO=1: sobre la MISMA escena congelada, triángulos y llamadas para cada umbral de LOD (cámara y momento fijos, sin ruido).
-		for u in [1.0, 3.0, 6.0, 12.0, 24.0, 48.0, 96.0, 200.0]:
-			_pj._vp.mesh_lod_threshold = u
-			await _conteos("LOD=%.0f" % u)
-		get_tree().quit()
+	if await MedirPartidoModos.new(self, _pj).correr():
 		return
 	if OS.get_environment("LUCES") != "":
 		var por := {}
