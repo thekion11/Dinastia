@@ -121,51 +121,14 @@ static func _primera_malla(n: Node) -> Mesh:
 			return r
 	return null
 
-## R2 (3-11): la butaca de MÍNIMO, tres cajas por grupo de tres (36 triángulos en vez de 84): asiento, un respaldo corrido y la viga.
-static var _butaca_minima: Mesh = null
+## R2 (3-11): la butaca de MÍNIMO, tres cajas por grupo de tres; 13-11: sin las caras que no se ven (28 triángulos en vez de 36, `MallasGradaMinima`).
 static func _malla_butaca_minima() -> Mesh:
-	if _butaca_minima != null:
-		return _butaca_minima
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var asiento := BoxMesh.new()
-	asiento.size = Vector3(1.46, 0.07, 0.40)
-	st.append_from(asiento, 0, Transform3D(Basis(), Vector3(-0.05, 0.40, 0.04)))
-	var respaldo := BoxMesh.new()
-	respaldo.size = Vector3(1.46, 0.38, 0.05)
-	st.append_from(respaldo, 0, Transform3D(Basis(Vector3(1, 0, 0), -0.14), Vector3(-0.05, 0.58, -0.20)))
-	var viga := BoxMesh.new()
-	viga.size = Vector3(1.40, 0.30, 0.06)
-	st.append_from(viga, 0, Transform3D(Basis(), Vector3(-0.05, 0.20, -0.08)))
-	_butaca_minima = st.commit()
-	return _butaca_minima
+	return MallasGradaMinima.butaca()
 
 static func _malla_butaca_lejos() -> Mesh:
 	if Calidad.elegida <= Calidad.MINIMO:
 		return _malla_butaca_minima()
-	if _butaca_lejos != null:
-		return _butaca_lejos
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var asiento := BoxMesh.new()
-	asiento.size = Vector3(1.46, 0.07, 0.40)
-	st.append_from(asiento, 0, Transform3D(Basis(), Vector3(-0.05, 0.40, 0.04)))
-	var respaldo := BoxMesh.new()
-	respaldo.size = Vector3(0.44, 0.38, 0.05)
-	for k in 3:
-		var x := -0.55 + float(k) * 0.5
-		st.append_from(respaldo, 0, Transform3D(Basis(Vector3(1, 0, 0), -0.14), Vector3(x, 0.58, -0.20)))
-	## Los reposabrazos entre asiento y asiento (27-10-2026): dos listones a 50 cm del suelo; con ellos la fila se lee como butacas separadas
-	## y no como un banco corrido (+48 vértices por grupo de tres).
-	var brazo := BoxMesh.new()
-	brazo.size = Vector3(0.05, 0.05, 0.32)
-	for xb in [-0.30, 0.20]:
-		st.append_from(brazo, 0, Transform3D(Basis(), Vector3(xb, 0.50, -0.02)))
-	var viga := BoxMesh.new()
-	viga.size = Vector3(1.40, 0.30, 0.06)
-	st.append_from(viga, 0, Transform3D(Basis(), Vector3(-0.05, 0.20, -0.08)))
-	_butaca_lejos = st.commit()
-	return _butaca_lejos
+	return MallasGradaMinima.butaca_lejos()   ## 13-11: sin las caras ocultas (68 triángulos en vez de 84)
 
 ## ¿Esta columna de butacas es un pasillo? Cada 8 grupos (≈ 12 m), en tribunas
 ## de al menos 12 grupos.

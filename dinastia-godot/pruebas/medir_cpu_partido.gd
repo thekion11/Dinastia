@@ -45,6 +45,14 @@ func _medir() -> void:
 				por_clase[k] = []
 			por_clase[k].append(n)
 	var rep := maxi(1, int(OS.get_environment("REPETIR")) if OS.get_environment("REPETIR") != "" else 3)
+	if OS.get_environment("SOLO_BASE") != "":   ## SOLO_BASE=n: n medidas seguidas SIN tocar nada (comprueba si la base deriva)
+		for k in int(OS.get_environment("SOLO_BASE")):
+			var ms := await _cuadros(150)
+			var pa: Variant = _vista.get("partido")
+			print("CPUP deriva %d: %.2f ms  (minuto %s, terminado %s)" % [k, ms, str(pa.minuto) if pa != null else "?", str(pa.terminado_ya) if pa != null else "?"])
+		get_tree().quit()
+		return
+	await _cuadros(1600)   ## calentamiento: los ~1350 primeros fotogramas tras abrir el estadio gastan 11-17 ms de CPU en hilos de fondo (carga); estable ~3,6 ms
 	var base := 0.0
 	for i in rep:
 		base += await _cuadros(150)

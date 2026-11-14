@@ -127,6 +127,8 @@ func _medir() -> void:
 		for h in _pj.get_children():
 			h.set_process(false)
 	await _conteos("base")
+	if await MedirPartidoModos.new(self, _pj).correr():
+		return
 	if OS.get_environment("LUCES") != "":
 		var por := {}
 		for l in _pj.find_children("*", "Light3D", true, false):
@@ -185,17 +187,25 @@ func _medir() -> void:
 	if OS.get_environment("POR_HIJO") != "":
 		## POR_HIJO=1 (12-11): cuántas llamadas pesa cada hijo de la escena 3D (se oculta uno, se cuenta y se vuelve a mostrar).
 		var base_ll: int = await _llamadas()
+		var base_tr := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
 		var filas: Array = []
 		for h in _pj._raiz.get_children():
 			if not (h is Node3D) or not (h as Node3D).visible:
 				continue
 			(h as Node3D).visible = false
 			var ll: int = await _llamadas()
+			var tr := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
 			(h as Node3D).visible = true
-			filas.append([base_ll - ll, "%s (%s, %d hijos)" % [h.name, h.get_class(), h.get_child_count()]])
-		filas.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0])
+			var info := ""
+			if h is MeshInstance3D and (h as MeshInstance3D).mesh != null:
+				var m := (h as MeshInstance3D).mesh
+				info = " mesh=%s «%s» sup=%d aabb=%s" % [m.get_class(), m.resource_name, m.get_surface_count(), str(m.get_aabb().size.snapped(Vector3.ONE))]
+			if h.get_child_count() > 0:
+				info += " 1.er hijo=%s/%s" % [h.get_child(0).name, h.get_child(0).get_class()]
+			filas.append([base_ll - ll, "%s (%s, %d hijos)%s" % [h.name, h.get_class(), h.get_child_count(), info], base_tr - tr])
+		filas.sort_custom(func(a: Array, b: Array) -> bool: return a[2] > b[2])   ## (13-11) ordenado por triángulos; se informan los dos
 		for f: Array in filas.slice(0, 25):
-			print("HIJO -%4d  %s" % [f[0], f[1]])
+			print("HIJO -%4d llamadas  -%7d triángulos  %s" % [f[0], f[2], f[1]])
 		get_tree().quit()
 		return
 	if OS.get_environment("CONTEO") != "":

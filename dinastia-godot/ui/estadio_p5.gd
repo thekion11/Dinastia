@@ -275,7 +275,7 @@ func _arrancar_partido() -> void:
 	partido.decision_arbitral.connect(_a_la_decision_arbitral)
 	## Saque inicial + murmullo + gente entrando (lo que ya sonaba en la pantalla 2D de `partido_vivo.gd`).
 	Sonido.toca("saque_inicial")
-	Sonido.toca("murmullo", Sonido.Bus.AMBIENTE); EstadioSonidos.antes_del_saque()
+	Sonido.toca("murmullo", Sonido.Bus.AMBIENTE); EstadioSonidos.antes_del_saque(); CalentamientoEfectos.al_montar(_raiz3d)
 	GradaFondo.para_estadio(self, partido)   ## (3-11) la capa continua de grada
 	## SONIDOS QUE EXISTÍAN Y NUNCA SONABAN (25-9-2026): de los 205 del
 	## catálogo, 157 no tenían ningún disparador. Aquí los del partido: la

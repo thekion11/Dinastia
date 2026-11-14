@@ -91,7 +91,7 @@ func _declaracion_estatica(ruta: String, nombre: String) -> String:
 func _probar_creditos() -> void:
 	_linea("· Creditos")
 	var l := Creditos.lineas()
-	_comprobar(l.size() == Creditos.LISTA.size() and l.size() >= 6, "una línea por crédito (%d)" % l.size())
+	_comprobar(l.size() == Creditos.LISTA.size() + MusicaLibre.creditos().size() and l.size() >= 6, "una línea por crédito (%d)" % l.size())
 	var completas := true
 	for c: Array in Creditos.LISTA:
 		completas = completas and c.size() == 3 and String(c[0]).strip_edges() != "" and String(c[1]).strip_edges() != "" and String(c[2]).strip_edges() != ""

@@ -103,6 +103,7 @@ static func abrir(padre: Node, m: Mundo, c: CarreraJugador, l: Club, v: Club, du
 	n.mouse_filter = Control.MOUSE_FILTER_STOP
 	padre.add_child(n)
 	n._montar(duracion_mitad)
+	CalentamientoEfectos.al_montar(n._raiz)   ## 13-11: los efectos del gol se dibujan una vez, bajo el campo, antes de hacer falta
 	return n
 
 func _montar_pantalla(perfil: Dictionary) -> void:

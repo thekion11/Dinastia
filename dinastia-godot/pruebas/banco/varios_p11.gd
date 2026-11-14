@@ -213,3 +213,89 @@ func _probar_visita_generada() -> void:
 	_comprobar(rotos.is_empty(), "los diseños anchos existen (%s)" % str(rotos))
 	var orig := {"dis": "diagonal", "cols": ["#ff0000", "#ffffff"]}
 	_comprobar(KitLegible.para_partido(orig)["dis"] == "sash" and orig["dis"] == "diagonal" and KitLegible.para_partido({"dis": "liso"})["dis"] == "liso", "el diseño fino se ensancha sin tocar el original")
+
+## (13-11) Las butacas de grada sin caras ocultas (`MallasGradaMinima`) son las de siempre MENOS el suelo de cada caja y el techo de la viga: mismas superficies (área por plano y normal), todas hacia fuera.
+func _butaca_antigua(completa: bool) -> Mesh:
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var cajas := [[Vector3(1.46, 0.07, 0.40), Vector3(-0.05, 0.40, 0.04), 0.0], [Vector3(1.40, 0.30, 0.06), Vector3(-0.05, 0.20, -0.08), 0.0]]
+	if completa:
+		for k in 3:
+			cajas.append([Vector3(0.44, 0.38, 0.05), Vector3(-0.55 + float(k) * 0.5, 0.58, -0.20), -0.14])
+		for xb in [-0.30, 0.20]:
+			cajas.append([Vector3(0.05, 0.05, 0.32), Vector3(xb, 0.50, -0.02), 0.0])
+	else:
+		cajas.append([Vector3(1.46, 0.38, 0.05), Vector3(-0.05, 0.58, -0.20), -0.14])
+	for c: Array in cajas:
+		var b := BoxMesh.new()
+		b.size = c[0]
+		st.append_from(b, 0, Transform3D(Basis(Vector3(1, 0, 0), float(c[2])), c[1]))
+	return st.commit()
+
+func _areas_por_normal(m: Mesh) -> Dictionary:
+	var arr: Array = m.surface_get_arrays(0)
+	var v: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+	var n: PackedVector3Array = arr[Mesh.ARRAY_NORMAL]
+	var ind: Variant = arr[Mesh.ARRAY_INDEX]
+	var out := {}
+	for t in (ind.size() if ind != null else v.size()) / 3:
+		var i0: int = ind[t * 3] if ind != null else t * 3
+		var cruz := (v[ind[t * 3 + 1] if ind != null else t * 3 + 1] - v[i0]).cross(v[ind[t * 3 + 2] if ind != null else t * 3 + 2] - v[i0])
+		var k := str(n[i0].snapped(Vector3.ONE * 0.01))
+		out[k] = float(out.get(k, 0.0)) + cruz.length() * 0.5
+		if cruz.dot(n[i0]) >= 0.0:
+			out["revés"] = int(out.get("revés", 0)) + 1
+	return out
+
+func _probar_mallas_grada_minima() -> void:
+	_titulo("BUTACAS DE GRADA SIN CARAS OCULTAS: LAS DE SIEMPRE MENOS SUELO Y TECHO DE VIGA")
+	for caso: Array in [["MÍNIMA", MallasGradaMinima.butaca(), _butaca_antigua(false), 28], ["MEDIA", MallasGradaMinima.butaca_lejos(), _butaca_antigua(true), 68]]:
+		var nuevo := _areas_por_normal(caso[1])
+		var viejo := _areas_por_normal(caso[2])
+		var igual := not nuevo.has("revés")
+		for k in viejo:
+			var ny := float(String(k).split(",")[1].strip_edges())
+			var a_n := float(nuevo.get(k, 0.0))
+			var a_v := float(viejo[k])
+			if ny < -0.5:
+				igual = igual and not nuevo.has(k)                                    ## abajo: ninguna
+			elif ny > 0.5:
+				igual = igual and (absf(a_n - a_v) < 0.0003 or absf(a_v - a_n - 0.084) < 0.0003)   ## arriba: iguales (salvo el techo de la viga, 1,40 × 0,06)
+			else:
+				igual = igual and absf(a_n - a_v) < 0.0003                            ## costados: iguales
+		_comprobar(igual, "%s: mismas superficies que la butaca de siempre; solo faltan las de abajo y el techo de la viga, y ninguna cara del revés" % caso[0])
+		_comprobar((caso[1].surface_get_arrays(0)[Mesh.ARRAY_VERTEX] as PackedVector3Array).size() / 3 == int(caso[3]), "%s: %d triángulos" % [caso[0], int(caso[3])])
+
+## (13-11) Los conos de luz de los focos solo se dibujan si su alfa es mayor que 0 (de día no suman nada, y eran 9 cilindros enormes rasterizados para nada).
+func _probar_conos_de_luz() -> void:
+	_titulo("CONOS DE LUZ DE LOS FOCOS: SOLO SE DIBUJAN CUANDO SE VEN")
+	var viejo: StandardMaterial3D = StadiumBuilder._mat_cono
+	StadiumBuilder._mat_cono = StandardMaterial3D.new()
+	var cono := MeshInstance3D.new()
+	cono.add_to_group("foco_cono")
+	add_child(cono)
+	StadiumBuilder.encender_conos(0.0)
+	_comprobar(not cono.visible and is_zero_approx(StadiumBuilder._mat_cono.albedo_color.a), "de día (oscuro 0): alfa 0 y el cono no se dibuja")
+	StadiumBuilder.encender_conos(0.4)
+	_comprobar(not cono.visible, "justo en el umbral (oscuro 0,4): sigue sin dibujarse")
+	StadiumBuilder.encender_conos(1.0)
+	_comprobar(cono.visible and absf(StadiumBuilder._mat_cono.albedo_color.a - 0.035) < 0.0001, "de noche (oscuro 1): alfa 0,035 y el cono se dibuja")
+	StadiumBuilder.encender_conos(0.7)
+	_comprobar(cono.visible and StadiumBuilder._mat_cono.albedo_color.a > 0.0, "al atardecer (oscuro 0,7): visible")
+	cono.free()
+	StadiumBuilder._mat_cono = viejo
+
+## (13-11) El calentamiento de efectos del partido: no falla sin grada, se apaga con CALENTAR_EFECTOS=0 y no deja nada vivo encima del campo.
+func _probar_calentamiento_efectos() -> void:
+	_titulo("CALENTAMIENTO DE EFECTOS: INVISIBLE Y SIN TOCAR NADA")
+	var raiz := Node3D.new()
+	add_child(raiz)
+	CalentamientoEfectos.calentar(raiz)   ## sin grada solo salen las banderas (en un sitio dado, bajo el campo); el confeti necesita sitios de grada
+	var piezas := raiz.find_children("*", "VisualInstance3D", true, false)
+	var altas := 0
+	for p in piezas:
+		if (p as Node3D).global_position.y > -CalentamientoEfectos.BAJO + 5.0:
+			altas += 1
+	_comprobar(not piezas.is_empty() and altas == 0, "todo lo que dibuja el calentamiento está a unos 60 m bajo el campo (%d piezas, %d por encima)" % [piezas.size(), altas])
+	_comprobar(CalentamientoEfectos.encendido() == (OS.get_environment("CALENTAR_EFECTOS") != "0"), "encendido salvo que CALENTAR_EFECTOS sea 0")
+	raiz.free()
