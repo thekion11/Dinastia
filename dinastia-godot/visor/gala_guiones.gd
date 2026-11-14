@@ -190,7 +190,7 @@ static func fotografos(g: GalaPremio3D, raiz: Node3D, spawner, club: Club, j: Ju
 		var x := -1.9 + float(k) * 1.25
 		var z := 3.3 + (0.0 if agachado else 0.9)
 		var pos := Vector3(x, 0.0 if suelo > 0.0 else 0.0, z)
-		g._jugador(raiz, spawner, modelos[k], pos, PI + (0.1 - x) * 0.12, "agachado|parado" if agachado else "parado|aplaudir", Color(0.09, 0.09, 0.11), Color(0.13, 0.13, 0.16), k * 0.3)
+		var foto := g._jugador(raiz, spawner, modelos[k], pos, PI + (0.1 - x) * 0.12, "agachado|parado" if agachado else "parado|aplaudir", Color(0.09, 0.09, 0.11), Color(0.13, 0.13, 0.16), k * 0.3)
 		g.fotografos += 1
 		## La cámara, a la altura de la cara, y su flash.
 		var alto := 1.0 if agachado else 1.6
@@ -200,6 +200,16 @@ static func fotografos(g: GalaPremio3D, raiz: Node3D, spawner, club: Club, j: Ju
 		g._caja(cam, Vector3.ZERO, Vector3(0.17, 0.11, 0.09), negro)
 		g._caja(cam, Vector3(0, 0, -0.08), Vector3(0.08, 0.08, 0.1), negro)
 		g._caja(cam, Vector3(0.05, 0.075, 0), Vector3(0.05, 0.04, 0.05), g._mat(Color(0.9, 0.92, 1.0), 0.3, 2.0))
+		## Sus dos manos, en la cámara.
+		var esqs := foto.find_children("*", "Skeleton3D", true, false)
+		if not esqs.is_empty():
+			var md := Node3D.new()
+			var mi := Node3D.new()
+			cam.add_child(md)
+			cam.add_child(mi)
+			md.position = Vector3(0.1, -0.02, 0.03)   ## mira hacia −z: su derecha queda en +x
+			mi.position = Vector3(-0.1, -0.02, 0.03)
+			brazos_a(esqs[0], md, mi)
 		var luz := OmniLight3D.new()
 		luz.position = cam.position + Vector3(0, 0.1, -0.2)
 		luz.omni_range = 9.0
@@ -208,3 +218,14 @@ static func fotografos(g: GalaPremio3D, raiz: Node3D, spawner, club: Club, j: Ju
 		raiz.add_child(luz)
 		luces.append(luz)
 	return luces
+
+## Los dos brazos de un esqueleto hacia dos nodos (mano derecha e izquierda), con `BrazosIK`. Devuelve el modificador
+## (su `influence` va de 0 a 1) o null si el modelo no tiene esos huesos.
+static func brazos_a(esq: Skeleton3D, derecha: Node3D, izquierda: Node3D) -> SkeletonModifier3D:
+	if esq.find_bone("hand_r") < 0 or esq.find_bone("hand_l") < 0:
+		return null
+	var ik := BrazosIK.new()
+	ik.derecha = derecha
+	ik.izquierda = izquierda
+	esq.add_child(ik)
+	return ik

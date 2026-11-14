@@ -8,7 +8,7 @@ extends FestejoCampo3D
 ## Lo que cambia con tu carrera: los colores y el escudo de tu club, la bandera del país de tu liga, el nombre de la liga y
 ## el del premio en el fondo, tus compañeros (los de tu plantilla) y las banderas de la gala mundial (las ligas de tu mundo).
 ## La escena (13-11 noche, dueño: «que vaya a la copa, la tome de forma natural y celebre mientras le sacan fotos»):
-## caminas hasta el pedestal, alargas las DOS manos hacia el galardón (`TwoBoneIK3D` en cada brazo, con la influencia
+## caminas hasta el pedestal, alargas las DOS manos hacia el galardón (`BrazosIK` en los brazos, con la influencia
 ## subiendo de 0 a 1), lo levantas mientras te giras hacia las cámaras y lo celebras con él EN las manos; delante, los
 ## fotógrafos (agachados y de pie) disparan sus flashes. Coste: tu jugador + 1 a 4 más, una grada o un patio de
 ## butacas en UNA llamada. Sin pantalla o en calidad mínima no se monta (`crear` devuelve null).
@@ -119,23 +119,15 @@ func _montar_gala(datos: Dictionary, club: Club, j: Jugador) -> void:
 
 ## Los dos brazos con cinemática inversa hacia dos puntos del galardón (uno por mano). Empieza sin influencia.
 func _montar_brazos() -> void:
-	if _esq.find_bone("hand_r") < 0 or _esq.find_bone("hand_l") < 0 or not ClassDB.class_exists("TwoBoneIK3D"):
+	if _esq.find_bone("hand_r") < 0 or _esq.find_bone("hand_l") < 0:
 		return
 	_mano_d = Node3D.new()
 	_mano_i = Node3D.new()
 	_objeto.add_child(_mano_d)
 	_objeto.add_child(_mano_i)
-	_ik = ClassDB.instantiate("TwoBoneIK3D")
-	_esq.add_child(_ik)
-	_ik.set("setting_count", 2)
-	var lados := [["r", _mano_d], ["l", _mano_i]]
-	for k in 2:
-		var lado := String(lados[k][0])
-		_ik.call("set_root_bone_name", k, "upperarm_" + lado)
-		_ik.call("set_middle_bone_name", k, "lowerarm_" + lado)
-		_ik.call("set_end_bone_name", k, "hand_" + lado)
-		_ik.call("set_target_node", k, _ik.get_path_to(lados[k][1]))
-	_ik.influence = 0.0
+	_ik = GalaGuiones.brazos_a(_esq, _mano_d, _mano_i)
+	if _ik != null:
+		_ik.influence = 0.0
 
 func _pon_anim(nombres: String) -> void:
 	if _yo_anim == null:
@@ -194,6 +186,7 @@ func _process(d: float) -> void:
 			_fase = 1
 			_yo.position.x = PARADO_EN
 			_pon_anim("parado|aplaudir")
+			Sonido.toca("flashes", Sonido.Bus.INTERFAZ, -6.0)
 		if _ik != null:
 			_ik.influence = smoothstep(0.0, 1.0, (_t - T_LLEGA) / (T_AGARRA - T_LLEGA))
 	elif _t < T_ARRIBA:   ## 2: lo levanta del pedestal y se gira hacia las cámaras
@@ -207,6 +200,8 @@ func _process(d: float) -> void:
 			_fase = 3
 			_yo.rotation.y = 0.0
 			_pon_anim(String(guion["anim"]))
+			Sonido.toca("ovacion" if String(guion["lugar"]) in ["campo", "estadio"] else "aplauso", Sonido.Bus.INTERFAZ)
+			Sonido.toca("flashes", Sonido.Bus.INTERFAZ)
 			if _confeti != null:
 				_confeti.emitting = true
 		_objeto.position = _porte(clampf((_t - T_ARRIBA) / 0.8, 0.0, 1.0))
