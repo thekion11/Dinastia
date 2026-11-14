@@ -300,3 +300,27 @@ func _probar_calentamiento_efectos() -> void:
 	_comprobar(not piezas.is_empty() and altas == 0, "todo lo que dibuja el calentamiento está a unos 60 m bajo el campo (%d piezas, %d por encima)" % [piezas.size(), altas])
 	_comprobar(CalentamientoEfectos.encendido() == (OS.get_environment("CALENTAR_EFECTOS") != "0"), "encendido salvo que CALENTAR_EFECTOS sea 0")
 	raiz.free()
+
+## (14-11) Siluetas de jugadores a más de 30 m, ajuste de color apagado en ULTRA BAJA y el 3D de ULTRA BAJA al 40 %.
+func _probar_impostores_lejanos() -> void:
+	_titulo("SILUETAS LEJANAS DE JUGADORES, AJUSTE DE COLOR Y 3D AL 40 % EN ULTRA BAJA")
+	_comprobar(ImpostorLejano.activo(Calidad.MINIMO) and ImpostorLejano.activo(Calidad.BAJA) and ImpostorLejano.activo(Calidad.MEDIA_BAJA), "activas de ULTRA BAJA a MEDIA BAJA")
+	_comprobar(not ImpostorLejano.activo(Calidad.MEDIA) and not ImpostorLejano.activo(Calidad.ALTA), "MEDIA y superiores: jugadores como siempre")
+	var nodo := Node3D.new()
+	var cuerpo := MeshInstance3D.new()
+	cuerpo.mesh = BoxMesh.new()
+	nodo.add_child(cuerpo)
+	var rotulo := Label3D.new()
+	nodo.add_child(rotulo)
+	add_child(nodo)
+	ImpostorLejano.aplicar(nodo, 1.8, Color("d32f2f"), Calidad.MEDIA)
+	_comprobar(nodo.get_child_count() == 2 and is_zero_approx(cuerpo.visibility_range_end), "en MEDIA no se toca nada")
+	ImpostorLejano.aplicar(nodo, 1.8, Color("d32f2f"), Calidad.MINIMO)
+	var imp := nodo.get_node_or_null("ImpostorLejano") as MeshInstance3D
+	_comprobar(imp != null and is_equal_approx(cuerpo.visibility_range_end, 30.0) and is_equal_approx(imp.visibility_range_begin, 30.0), "el cuerpo se oculta a 30 m y la silueta aparece desde 30 m")
+	_comprobar(is_zero_approx(rotulo.visibility_range_end), "los rótulos 3D no se tocan")
+	var tris: int = (imp.mesh.surface_get_arrays(0)[Mesh.ARRAY_INDEX] as PackedInt32Array).size() / 3
+	_comprobar(tris <= 90 and is_equal_approx(imp.scale.y, 1.8), "silueta de %d triángulos y a la altura del jugador" % tris)
+	nodo.free()
+	_comprobar(not ModoRendimiento.ajuste_color(Calidad.MINIMO) and ModoRendimiento.ajuste_color(Calidad.BAJA) and ModoRendimiento.ajuste_color(Calidad.MEDIA), "ajuste de color: no en ULTRA BAJA, sí en el resto")
+	_comprobar(is_equal_approx(Calidad.ESCALA_MINIMO, 0.4), "3D de ULTRA BAJA al 40 % por defecto")

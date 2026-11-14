@@ -207,11 +207,12 @@ static func montar(root: Node3D, est: Dictionary, niveles: int, mi: Club = null)
 		nodo.add_child(personal)
 	## R2 (3-11, MÍNIMO): ~540 mallas sueltas (túnel, vestuario y edificio del club) = ~540 llamadas de dibujo; se funden en una malla por material, y las luces de dentro
 	## se apagan a distancia (en un móvil cada luz puntual es una pasada más sobre todo lo que toca). Las colisiones no se tocan.
+	## (14-11) Las luces de dentro se apagan a distancia en TODOS los niveles (a la cámara de TV, 50-76 m, no se nota: 0 píxeles distintos); en MÍNIMO antes, a 28 m.
+	for o in nodo.find_children("*", "OmniLight3D", true, false):
+		(o as OmniLight3D).distance_fade_enabled = true
+		(o as OmniLight3D).distance_fade_begin = 28.0 if Calidad.elegida <= Calidad.MINIMO else 40.0
+		(o as OmniLight3D).distance_fade_length = 8.0
 	if Calidad.elegida <= Calidad.MINIMO:
-		for o in nodo.find_children("*", "OmniLight3D", true, false):
-			(o as OmniLight3D).distance_fade_enabled = true
-			(o as OmniLight3D).distance_fade_begin = 28.0
-			(o as OmniLight3D).distance_fade_length = 8.0
 		if FundirPiezas.activo_r2:
 			for lb in nodo.find_children("*", "Label3D", true, false):
 				(lb as Label3D).visibility_range_end = 30.0   ## los rótulos del túnel (taquillas, puertas) solo se leen de cerca: una llamada de dibujo cada uno
