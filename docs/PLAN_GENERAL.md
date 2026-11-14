@@ -395,6 +395,12 @@ Fuentes: fourfourtwo.com (reseña PES 2020), gamesatlas.com (Master League remas
 
 ## DECISIONES PENDIENTES DEL DUEÑO (no se implementa hasta que conteste)
 - Ninguna abierta a 10-11 noche. Las del motor League-Soccer (calibrar o no: SOLO LO VISUAL), los torneos de selecciones (ya se juegan) y los .mp4 de `marca/` (se quedan) se resolvieron con la orden 36.
+- **FPS en la laptop del dueño (14-11, Intel UHD 31.0.101.4091, 7,7 GB; `pruebas/perfilar_gpu.tscn`, 1280x720, cámara de TV; ideas VISUALES sin aplicar, esperan veredicto):**
+  Base fiable (mediana de 3, `medir_partido`): ultra baja 43 · baja 54 · media baja 41 · media 21 · media alta 20 · alta 14 · ultra alta 9 FPS. En ULTRA el fotograma es GPU (72 de 76 ms; CPU de render 2 ms): relleno de píxeles.
+  Medido en ULTRA (GPU, escena congelada, misma toma): base 80,7 ms · MSAA x2 62,0 · TAA sin MSAA 52,8 · FSR2 77 % 48,3 · FSR1 77 % 40,1. Sombras, SSAO, SSIL, SSR, niebla, glow y SDFGI apagados de uno en uno: sin ganancia medible.
+  (1) MSAA x4 → x2 en ULTRA y ALTA (+3,6 FPS en ULTRA, la diferencia de imagen menor de la tabla); (2) TAA o FSR en lugar de MSAA (+6 a +12 FPS; hay que revisar fantasmas/nitidez con capturas congeladas, `CONGELAR=1 CAPTURA=…` + `herramientas/comparar_imagenes.gd`). Ninguna aplicada.
+  100 FPS no es alcanzable con esta gráfica salvo en ultra baja (80-100 FPS, limitada por CPU ≈12 ms: el motor del partido ≈2,3 ms por paso, terreno de las órdenes 23-24).
+  Hecho SIN cambio visual: `_rotulo_automatico` ya no lee el archivo de ajustes cada fotograma (416 → 3,5 µs; banco 0 fallos). Descartado por ruido: apagar anim_transiciones, ancla_suelo, puerta_animada o scripts sin ruta (±1,5 ms, sin efecto repetible).
 
 ## PULIDO (lo ya completo que se pule después; nada se borra, se afina)
 - TIEMPO HASTA JUGAR (10-11, sesión 5; `docs/04_auditorias/rendimiento_movil_2026-11-10.md`): hechos «Continuar» con pantalla de carga, `_sacar_los_22` en tres tiempos y el CajonAjustes perezoso (E6, −0,24 s de CPU al montar el estadio). E7 NO se aplicó: con menos de 10 fotogramas de estabilizar vuelven los tirones (con 1: 1.015 ms). E5 PENDIENTE: llevar el edificio del túnel (0,26-0,61 s) y los extras (0,24-0,50 s) a la intro solo si antes `EdificioClub.montar` y los extras se parten en pasos de ~100 ms (hoy son síncronos); verificar con capturas fotograma a fotograma de 3 estadios (uno icónico). Si no, cambia espera por un tirón de 0,5-2,5 s en el móvil.
