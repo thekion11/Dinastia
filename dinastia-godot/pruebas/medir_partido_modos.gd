@@ -43,8 +43,76 @@ func _distintos(a: Image, b: Image) -> int:
 				n += 1
 	return n
 
+## Milisegundos de pared de los `n` fotogramas siguientes.
+func _fotogramas(n: int) -> Array:
+	var v: Array = []
+	for i in n:
+		var t0 := Time.get_ticks_usec()
+		await raiz.get_tree().process_frame
+		v.append(float(Time.get_ticks_usec() - t0) / 1000.0)
+	return v
+
+## (13-11) EFECTOS=1|2: el PRIMER uso de cada efecto del partido (la primera vez que se dibuja el driver compila el sombreador). Para cada efecto: mediana de 20 fotogramas
+## de la escena en marcha, y el peor de los 8 siguientes al lanzarlo. EFECTOS=2 hace antes el calentamiento (`CalentamientoEfectos`).
+func _efectos() -> void:
+	if OS.get_environment("EFECTOS") == "2":
+		var t0 := Time.get_ticks_usec()
+		CalentamientoEfectos.calentar(_pj._raiz)
+		print("CALENTAMIENTO cuesta %.1f ms de CPU al montar" % (float(Time.get_ticks_usec() - t0) / 1000.0))
+		await _fotogramas(40)
+	var r: Node3D = _pj._raiz
+	var c1 := Color(_pj.motor.local_color1) if "local_color1" in _pj.motor else Color(0.8, 0.1, 0.1)
+	var lanzamientos := {
+		"confeti y bengalas": func() -> void: FestejoGrada.lanzar(r, c1, Color.WHITE, "calentamiento"),
+		"confeti y bengalas (2.ª)": func() -> void: FestejoGrada.lanzar(r, c1, Color.WHITE, "calentamiento"),
+		"confeti y bengalas (3.ª)": func() -> void: FestejoGrada.lanzar(r, c1, Color.WHITE, "calentamiento"),
+		"banderas del gol": func() -> void: BanderasGrada.lanzar(r, c1, Color.WHITE, FestejoGrada._sitios_de_grada(r), 8.0),
+		"red del arco": func() -> void:
+			for ra in r.find_children("RedArco*", "", true, false):
+				if (ra as RedArco).panos.size() > 0 and is_instance_valid((ra as RedArco).panos[0]):
+					RedArco.golpe(r, (ra as RedArco).panos[0].global_position)
+					break,
+		"ola de la grada": func() -> void: OlaGrada.lanzar(r, "ola"),
+		"onda de la grada": func() -> void: OlaGrada.lanzar(r, "onda", Vector3.ZERO),
+		"protesta de la grada": func() -> void: OlaGrada.lanzar(r, "protesta"),
+		"lluvia": func() -> void: Precipitacion.montar(r, "lluvia", 60.0, 100.0, Calidad.elegida)}
+	for k in lanzamientos:
+		var antes: Array = await _fotogramas(20)
+		antes.sort()
+		(lanzamientos[k] as Callable).call()
+		var despues: Array = await _fotogramas(8)
+		var peor := 0.0
+		for m: float in despues:
+			peor = maxf(peor, m)
+		var serie := ""
+		for m: float in despues:
+			serie += "%.0f " % m
+		print("SERIE %-26s %s" % [k, serie])
+		print("EFECTO %-26s mediana antes %6.1f ms · peor de los 8 siguientes %6.1f ms · pico %+6.1f ms" % [k, antes[antes.size() / 2], peor, peor - float(antes[antes.size() / 2])])
+
 ## true si corrió algún modo (el llamador debe terminar).
 func correr() -> bool:
+	if OS.get_environment("CALENTAR") != "":
+		## (13-11) CALENTAR=1: el calentamiento de efectos es INVISIBLE: misma escena con tiempo parado, con los efectos del calentamiento vivos y dibujándose, y sin ellos.
+		Engine.time_scale = 0.0
+		CalentamientoEfectos.calentar(_pj._raiz)
+		for i in 4:
+			await raiz.get_tree().process_frame
+		var vivos := _pj._raiz.find_children("FestejoGrada*", "", true, false) + _pj._raiz.find_children("BanderasGrada*", "", true, false)
+		var con := raiz.get_viewport().get_texture().get_image()
+		for v in vivos:
+			v.visible = false if v is Node3D else true
+			v.queue_free()
+		for i in 4:
+			await raiz.get_tree().process_frame
+		var sin := raiz.get_viewport().get_texture().get_image()
+		print("CALENTAR efectos vivos: %d · píxeles distintos (tolerancia 3/255) con/sin calentamiento: %d de %d" % [vivos.size(), _distintos(con, sin), con.get_width() * con.get_height()])
+		raiz.get_tree().quit()
+		return true
+	if OS.get_environment("EFECTOS") != "":
+		await _efectos()
+		raiz.get_tree().quit()
+		return true
 	if OS.get_environment("MESH_LOD") != "":
 		_pj._vp.mesh_lod_threshold = float(OS.get_environment("MESH_LOD"))   ## (13-11) umbral de LOD del viewport del partido, para comparar
 	if OS.get_environment("CAPTURA") != "":
