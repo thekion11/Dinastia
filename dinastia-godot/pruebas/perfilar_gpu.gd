@@ -20,6 +20,8 @@ var _cpu: Array[float] = []
 var _frame: Array[float] = []
 var _hecho := false
 var _t_ant := 0
+var _proc: Array[float] = []
+var _fis: Array[float] = []
 
 func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.ALTO)
@@ -75,6 +77,31 @@ func _aplicar_desact() -> void:
 			"esc75": vp.scaling_3d_scale = 0.75
 			"esc50": vp.scaling_3d_scale = 0.5
 
+func _contar(n: Node) -> int:
+	var c := 1
+	for h in n.get_children():
+		c += _contar(h)
+	return c
+
+## LISTAR=1: imprime los hijos directos de la vista con su número de nodos y si procesan.
+## APAGAR=Nombre1,Nombre2: pone process_mode = DISABLED a esos nodos (y sus hijos) SOLO para diagnosticar su coste de CPU.
+func _apagar_procesos() -> void:
+	if OS.get_environment("LISTAR") != "":
+		for h in _vista.get_children():
+			print("LISTA %s (%s) nodos=%d proc=%s" % [h.name, h.get_class(), _contar(h), str(h.is_processing())])
+		var raiz3d: Node = _vista.get("_raiz3d")
+		if raiz3d != null:
+			for h in raiz3d.get_children():
+				print("LISTA3D %s (%s) nodos=%d proc=%s" % [h.name, h.get_class(), _contar(h), str(h.is_processing())])
+	for nombre in OS.get_environment("APAGAR").split(",", false):
+		if nombre == "VISTA":
+			_vista.set_process(false)   ## todo el `_process` de VistaEstadio (motor del partido, cine, HUD)
+			print("APAGADO VistaEstadio._process")
+			continue
+		for n in _vista.find_children(nombre, "", true, false):
+			n.process_mode = Node.PROCESS_MODE_DISABLED
+			print("APAGADO ", n.get_path())
+
 func _mediana(a: Array[float]) -> float:
 	if a.is_empty():
 		return 0.0
@@ -103,20 +130,53 @@ func _process(_d: float) -> void:
 		(_vista.get("_rig") as CameraRig).switch_to(0)
 	if _n == CALENTAR - 20:
 		_aplicar_desact()
+		_apagar_procesos()
 	if _n < CALENTAR:
 		return
 	var rid := get_viewport().get_viewport_rid()
 	_gpu.append(RenderingServer.viewport_get_measured_render_time_gpu(rid))
 	_cpu.append(RenderingServer.viewport_get_measured_render_time_cpu(rid))
 	_frame.append(real_ms)
+	_proc.append(Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0)
+	_fis.append(Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0)
 	if _gpu.size() >= MUESTRAS:
 		_hecho = true
 		var ruta_cap := OS.get_environment("CAPTURA")   ## CAPTURA=ruta.jpg: guarda el último fotograma para comparar la imagen entre variantes
 		if ruta_cap != "":
 			get_viewport().get_texture().get_image().save_jpg(ruta_cap, 0.92)
 		var f := _mediana(_frame)
-		print("PERFIL calidad=%d desact=%s  gpu=%.2f ms  cpu_render=%.2f ms  fotograma=%.2f ms (%.1f FPS)  llamadas=%d  triangulos=%d" % [
-			Calidad.elegida, OS.get_environment("DESACT"), _mediana(_gpu), _mediana(_cpu), f, 1000.0 / maxf(f, 0.001),
+		print("PERFIL calidad=%d desact=%s  gpu=%.2f ms  cpu_render=%.2f ms  scripts=%.2f ms  fisica=%.2f ms  fotograma=%.2f ms (%.1f FPS)  llamadas=%d  triangulos=%d" % [
+			Calidad.elegida, OS.get_environment("DESACT"), _mediana(_gpu), _mediana(_cpu), _mediana(_proc), _mediana(_fis), f, 1000.0 / maxf(f, 0.001),
 			int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)),
 			int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))])
+		if OS.get_environment("PIEZAS") != "":
+			_medir_piezas()
 		get_tree().quit()
+
+## PIEZAS=1: cronometra, llamándolas 200 veces, las piezas del `_process` de VistaEstadio (µs por llamada).
+func _medir_piezas() -> void:
+	var motor: Object = _vista.get("_motor")
+	var stats: Object = _vista.get("_stats")
+	Engine.time_scale = 0.0
+	var piezas: Array = [
+		["motor.paso(1/60)", func() -> void: motor.call("paso", 1.0 / 60.0)],
+		["_pistas_camara", func() -> void: _vista.call("_pistas_camara")],
+		["_rotulo_automatico", func() -> void: _vista.call("_rotulo_automatico")],
+		["_actualizar_tacticas", func() -> void: _vista.call("_actualizar_tacticas")],
+		["_refrescar_marcador", func() -> void: _vista.call("_refrescar_marcador")],
+		["_mover_cursor", func() -> void: _vista.call("_mover_cursor")],
+		["_hud_juego", func() -> void: _vista.call("_hud_juego")],
+		["_cine_paso", func() -> void: _vista.call("_cine_paso", 0.016)],
+		["_escalar_rotulos", func() -> void: _vista.call("_escalar_rotulos")],
+		["_despejar_rotulos", func() -> void: _vista.call("_despejar_rotulos", 0.016)],
+		["_hud_realizacion", func() -> void: _vista.call("_hud_realizacion", 0.016)],
+		["ocultar_techo_ante", func() -> void: StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())],
+	]
+	if stats != null:
+		piezas.append(["stats.muestrear", func() -> void: stats.call("muestrear", motor, 1.0 / 60.0)])
+	for p in piezas:
+		var f: Callable = p[1]
+		var t0 := Time.get_ticks_usec()
+		for i in 200:
+			f.call()
+		print("PIEZA %-24s %8.1f us" % [p[0], (Time.get_ticks_usec() - t0) / 200.0])

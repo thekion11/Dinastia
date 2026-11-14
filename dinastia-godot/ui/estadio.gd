@@ -117,10 +117,14 @@ func _pistas_camara() -> void:
 
 ## Los rótulos de estadísticas de la tele en los momentos muertos.
 func _rotulo_automatico() -> void:
-	if _stats == null or not _pref("rotulos", true) or is_instance_valid(_cine):
+	if _stats == null or is_instance_valid(_cine):
 		return
 	var cual := RotuloEstadisticas.cuando(_motor.minuto(), _motor.estado, _motor.mitad, _rotulos_hechos)
 	if cual == "":
+		return
+	## (14-11, FPS) `_pref` abre y lee el archivo de ajustes en cada llamada: se mira solo cuando de verdad toca un rótulo
+	## (antes se leía el disco en CADA fotograma, ~0,4 ms). Mismo resultado: ninguna de las dos comprobaciones tiene efectos.
+	if not _pref("rotulos", true):
 		return
 	_rotulos_hechos[cual] = true
 	RotuloEstadisticas.mostrar(self, cual, partido, _motor, _stats)
