@@ -135,6 +135,15 @@ func _medir() -> void:
 	if OS.get_environment("MESH_LOD") != "":
 		_pj._vp.mesh_lod_threshold = float(OS.get_environment("MESH_LOD"))   ## (13-11) umbral de LOD del viewport del partido, para comparar
 	await _conteos("base")
+	if OS.get_environment("VIEWPORTS") != "":
+		## (13-11) VIEWPORTS=1: todos los SubViewport vivos del árbol (también fuera del partido), su tamaño, modo de actualización y si se ven.
+		for sv in get_tree().root.find_children("*", "SubViewport", true, false):
+			var v := sv as SubViewport
+			var c := v.get_parent()
+			var vis := c is CanvasItem and (c as CanvasItem).is_visible_in_tree()
+			print("VIEWPORT %-28s %4dx%-4d modo=%d contenedor_visible=%s padre=%s" % [str(v.get_path()).right(40), v.size.x, v.size.y, v.render_target_update_mode, str(vis), c.get_class()])
+		get_tree().quit()
+		return
 	if OS.get_environment("TRANSP") != "":
 		## (13-11) TRANSP=1: mallas visibles con transparencia o mezcla (sobredibujo), por nombre: cuántas y el área mayor de su caja (m²).
 		var tr := {}
