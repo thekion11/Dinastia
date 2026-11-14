@@ -265,3 +265,23 @@ func _probar_mallas_grada_minima() -> void:
 				igual = igual and absf(a_n - a_v) < 0.0003                            ## costados: iguales
 		_comprobar(igual, "%s: mismas superficies que la butaca de siempre; solo faltan las de abajo y el techo de la viga, y ninguna cara del revés" % caso[0])
 		_comprobar((caso[1].surface_get_arrays(0)[Mesh.ARRAY_VERTEX] as PackedVector3Array).size() / 3 == int(caso[3]), "%s: %d triángulos" % [caso[0], int(caso[3])])
+
+## (13-11) Los conos de luz de los focos solo se dibujan si su alfa es mayor que 0 (de día no suman nada, y eran 9 cilindros enormes rasterizados para nada).
+func _probar_conos_de_luz() -> void:
+	_titulo("CONOS DE LUZ DE LOS FOCOS: SOLO SE DIBUJAN CUANDO SE VEN")
+	var viejo: StandardMaterial3D = StadiumBuilder._mat_cono
+	StadiumBuilder._mat_cono = StandardMaterial3D.new()
+	var cono := MeshInstance3D.new()
+	cono.add_to_group("foco_cono")
+	add_child(cono)
+	StadiumBuilder.encender_conos(0.0)
+	_comprobar(not cono.visible and is_zero_approx(StadiumBuilder._mat_cono.albedo_color.a), "de día (oscuro 0): alfa 0 y el cono no se dibuja")
+	StadiumBuilder.encender_conos(0.4)
+	_comprobar(not cono.visible, "justo en el umbral (oscuro 0,4): sigue sin dibujarse")
+	StadiumBuilder.encender_conos(1.0)
+	_comprobar(cono.visible and absf(StadiumBuilder._mat_cono.albedo_color.a - 0.035) < 0.0001, "de noche (oscuro 1): alfa 0,035 y el cono se dibuja")
+	StadiumBuilder.encender_conos(0.7)
+	_comprobar(cono.visible and StadiumBuilder._mat_cono.albedo_color.a > 0.0, "al atardecer (oscuro 0,7): visible")
+	cono.free()
+	StadiumBuilder._mat_cono = viejo
+

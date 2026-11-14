@@ -431,4 +431,5 @@ static func _cono_de_luz(root: Node3D, desde: Vector3, hasta: Vector3, radio_sue
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.transform = Transform3D(Basis(Quaternion(Vector3.UP, dir)), (desde + hasta) * 0.5)
 	mi.add_to_group("foco_cono")
+	mi.visible = _mat_cono.albedo_color.a > 0.0   ## 13-11: de día (alfa 0) no se dibuja; `encender_conos` lo enciende al oscurecer
 	root.add_child(mi)
