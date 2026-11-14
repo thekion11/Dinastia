@@ -9,6 +9,15 @@ func _respiro() -> void:
 	if por_partes:
 		await get_tree().process_frame
 
+## (13-11) Lo que `_arrancar_partido` y la ceremonia sintetizan en el primer uso (salida, murmullo, multitud, himno, alineaciones y el bucle de la grada de fondo): se pide aquí, entre
+## tramos de la carga, y no en el fotograma del saque (~160 + ~160 ms de un golpe). Mismos sonidos, mismas semillas: solo cambia CUÁNDO se sintetizan. Sin sonido o con la carga de un golpe no hace nada.
+func _precalentar_sonidos() -> void:
+	if not por_partes or not Sonido.encendido:
+		return
+	for n: String in ["saque_inicial", "murmullo", "multitud_entrando", "salida_tunel", "presentacion_alineaciones", "himno", "aplauso", "calentamiento"]:
+		Sonido.banco(n)
+	GradaFondo.onda()
+
 func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon: Array = []) -> void:
 	RuidosFondo.precargar()   ## las texturas de ruido, leídas en hilos mientras se construye
 	_ajustar_a_pantalla()
@@ -83,6 +92,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 		OlaGrada.colores_club(_raiz3d, Color(club.color1), Color(club.color2))
 	EntornoEstadio.agrupar(_raiz3d); PartidoLigero.montar(self)   ## entorno en MultiMesh; «Partido ligero» si está encendido (orden 32)
 	OptimizarGrada.trocear(_raiz3d)   ## M-345: butacas e hinchas en trozos con su propia caja
+	_precalentar_sonidos()
 	await _respiro()
 	## LA PANTALLA GIGANTE (22-9-2026, rehecha el 23-9). Ahora se monta SIEMPRE,
 	## haya partido o no: sin partido enseña bienvenida + tabla + goleadores,

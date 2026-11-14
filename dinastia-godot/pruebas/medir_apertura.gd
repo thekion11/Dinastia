@@ -30,6 +30,7 @@ func _process(_d: float) -> void:
 		var t0 := Time.get_ticks_usec()
 		_v = load("res://ui/estadio.gd").new()
 		add_child(_v)
+		_v.por_partes = OS.get_environment("POR_PARTES") != ""   ## POR_PARTES=1: se construye entre fotogramas, como detrás de la pantalla de carga
 		_v.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]))
 		_t_abrir = Time.get_ticks_usec() - t0
 		_t_prev = Time.get_ticks_usec()
@@ -40,11 +41,19 @@ func _process(_d: float) -> void:
 	var intro: Variant = _v.get("_intro")
 	if intro != null and is_instance_valid(intro) and intro.activa:
 		intro.terminar()
-	if _dts.size() >= 60:
+	if _dts.size() >= (120 if OS.get_environment("POR_PARTES") != "" else 60):
 		var suma := 0.0
 		var mx := 0.0
 		for x in _dts:
 			suma += x
 			mx = maxf(mx, x)
 		print("APERTURA abrir_ms=%.0f suma_60_fotogramas_ms=%.0f peor_fotograma_ms=%.0f estatica_despues=%d" % [_t_abrir / 1000.0, suma, mx, int(Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0)])
+		var orden: Array = []
+		for i in _dts.size():
+			orden.append([_dts[i], i])
+		orden.sort_custom(func(x: Array, y: Array) -> bool: return float(x[0]) > float(y[0]))
+		var top := []
+		for k in mini(6, orden.size()):
+			top.append("#%d %.0f ms" % [int(orden[k][1]) + 1, float(orden[k][0])])
+		print("APERTURA peores fotogramas: ", ", ".join(top))
 		get_tree().quit()
