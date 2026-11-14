@@ -1,7 +1,7 @@
 extends Node
 ## LAS ENTREGAS DE PREMIOS DE «LA RUTA» EN 3D (`GalaPremio3D`): monta la de CADA premio, cada una con un club de otro
 ## país (regla 34), la deja correr hasta la celebración y comprueba que hay jugadores 3D, galardón y cámara. Con
-## SALIDA=<carpeta> guarda una foto de cada una (a los 3 s, alargando las manos, y a los 6 s, celebrando).
+## SOLO=<texto> prueba solo las que lo contengan. Con SALIDA=<carpeta> guarda una foto de cada una (a los 3 s, alargando las manos, y a los 6 s, celebrando).
 ##   xvfb-run -a godot --path . --rendering-driver vulkan --resolution 1280x720 res://pruebas/prueba_gala_premio.tscn
 var _fallos := 0
 
@@ -20,6 +20,9 @@ func _ready() -> void:
 	var sin_guion: Array = ids.filter(func(x: String) -> bool: return not GalaGuiones.GUIONES.has(x))
 	_comprobar(sin_guion.is_empty(), "hay un guion por premio (faltan: %s)" % str(sin_guion))
 	ids.append_array(["trofeo_liga", "trofeo_copa", "trofeo_continental", "trofeo_otro"])
+	## SOLO=trofeo: solo las entregas cuyo id contenga ese texto (a calidad máxima, las 19 tardan ~30 min sin GPU).
+	if OS.get_environment("SOLO") != "":
+		ids = ids.filter(func(x: String) -> bool: return x.contains(OS.get_environment("SOLO")))
 	for id: String in ids:
 		var liga: Liga = m.ligas[(k * 3) % m.ligas.size()]
 		var club: Club = liga.clubes[(k * 5 + 2) % liga.clubes.size()]
