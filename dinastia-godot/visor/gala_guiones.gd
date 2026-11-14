@@ -30,7 +30,26 @@ const GUIONES := {
 	"mundial": {"lugar": "mundo", "objeto": "globo", "anim": "celebrar|celebrar_ls", "camara": "orbita", "extra": "cohetes"},
 }
 
-## Quien te lo entrega: el de más media de tu club que no seas tú.
+## (14-11) En las galas te lo entrega una FIGURA de tu liga (el veterano de más media de OTRO club, como hacen los
+## galardonados de años anteriores); en la gala mundial, el de más media del mundo. Si no hay, el de tu club.
+static func figura_entrega(m: Mundo, club: Club, j: Jugador, mundial: bool) -> Jugador:
+	var mejor: Jugador = null
+	if m == null:
+		return null
+	var liga: Liga = null
+	for l: Liga in m.ligas:
+		if l.clubes.has(club):
+			liga = l
+	var clubes: Array = m.clubes.values() if mundial or liga == null else liga.clubes
+	for cl: Club in clubes:
+		if cl == club:
+			continue
+		for o: Jugador in cl.plantilla:
+			if o.edad >= 29 and (mejor == null or o.ovr > mejor.ovr):
+				mejor = o
+	return mejor
+
+## Quien te lo entrega en el campo: el de más media de tu club que no seas tú.
 static func quien_entrega(club: Club, j: Jugador) -> Jugador:
 	var mejor: Jugador = null
 	for o: Jugador in club.plantilla:

@@ -138,7 +138,9 @@ func _montar_gala(datos: Dictionary, club: Club, j: Jugador) -> void:
 	_objeto.position = _pedestal
 	raiz.add_child(_objeto)
 	## Quien preside: en el campo, tu capitán; en las galas, alguien de oscuro. Aplaude a un lado.
-	var preside: Jugador = GalaGuiones.quien_entrega(club, j)
+	var preside: Jugador = GalaGuiones.figura_entrega(datos.get("mundo"), club, j, lugar == "mundo") if de_gala else null
+	if preside == null:
+		preside = GalaGuiones.quien_entrega(club, j)
 	if preside != null:
 		_jugador(raiz, spawner, preside, Vector3(2.3, _suelo, -0.3), atan2(PARADO_EN - 2.3, 0.5), "aplaudir|parado", Color(0.1, 0.11, 0.14) if de_gala else k1, Color(0.2, 0.2, 0.24) if de_gala else k2, 0.4)   ## de cara a ti
 	## Tú: de oscuro en las galas, con tu equipación en el césped. Entras caminando hacia el pedestal.
