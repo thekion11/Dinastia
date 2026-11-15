@@ -5,7 +5,8 @@ extends RefCounted
 ## menú que lo usa. Aquí se hace antes, en reposo (lo llama `AhorroMenu` tras 3 s sin tocar nada), UNA vez por sesión:
 ##   · letras: un SubViewport fuera de la pantalla dibuja una sola vez el abecedario y los iconos de los menús en los tamaños de la interfaz
 ##     (la caché de glifos de la fuente es de todo el juego);
-##   · escudos: los de los clubes de tu liga en los tamaños de las listas (26 y 28 px), de pocos en pocos por fotograma.
+##   · escudos: los de los clubes de tu liga en los tamaños de las listas y tablas (`ESCUDOS`), de pocos en pocos por fotograma.
+const ESCUDOS := [20, 22, 26, 28]   ## los altos de las listas y las tablas (`TablaCompeticion` usa 20 y 28; `Principal._escudo`, 22)
 const TAMANOS := [11, 12, 13, 14, 16, 18, 20, 22, 36, 38, 42]
 const TEXTO := "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ abcdefghijklmnñopqrstuvwxyz 0123456789 áéíóúüÁÉÍÓÚ ·%«»▸◂▦★☆▶◀ .,:;!?¡¿()-+/"
 static var hecho := false
@@ -50,8 +51,8 @@ static func _escudos_y_cerrar(raiz: Node, vp: SubViewport) -> void:
 		return
 	var n := 0
 	for c: Club in liga.clubes:
-		Escudo.textura(c, 26)
-		Escudo.textura(c, 28)
+		for alto: int in ESCUDOS:
+			Escudo.textura(c, alto)
 		n += 1
 		if n % 3 == 0:
 			if not is_instance_valid(raiz) or not raiz.is_inside_tree():
