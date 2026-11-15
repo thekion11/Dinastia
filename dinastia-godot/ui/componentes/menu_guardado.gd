@@ -12,7 +12,7 @@ static var _usos: Dictionary = {}        ## id -> veces abierto, para saber cuá
 static var activo := OS.get_environment("SIN_MENU_GUARDADO") == ""
 ## (15-11) Las pantallas perezosas que pinta cada menú al entrar en sus submenús: en reposo se cargan y compilan de antemano (medido:
 ## la primera entrada a Plantel, 416 → 178 ms con «plantel» y «ficha» ya creadas). Una por llamada, para no trabar si vuelve a tocar.
-const PEREZOSAS := {"plantel": ["plantel", "ficha"], "dinero": ["finanzas"], "historia": ["legado"], "gente": ["gente"], "competiciones": ["plantel"]}
+const PEREZOSAS := {"plantel": ["plantel", "ficha", "cantera", "club_vida"], "dinero": ["finanzas"], "historia": ["legado"], "gente": ["gente"], "competiciones": ["plantel"]}
 
 ## La huella de lo que muestra la portada de un menú: si cambia, lo guardado ya no vale.
 static func huella(p: Principal, menu: Dictionary) -> String:
@@ -84,8 +84,14 @@ static func precargar(p: Principal) -> void:
 			mas = int(_usos[k])
 			id = k
 	if _guardados.has(id):
+		## (15-11) Después, las pantallas perezosas: primero las del menú más usado y luego las de los demás (una por llamada).
 		var perezosas: Dictionary = p.get("_perezosas") if p.get("_perezosas") is Dictionary else {}
-		for nombre: String in PEREZOSAS.get(id, []):
+		var orden: Array = (PEREZOSAS.get(id, []) as Array).duplicate()
+		for lista: Array in PEREZOSAS.values():
+			for nombre: String in lista:
+				if not orden.has(nombre):
+					orden.append(nombre)
+		for nombre: String in orden:
 			if not perezosas.has(nombre):
 				p._pantalla_perezosa(nombre)
 				return
