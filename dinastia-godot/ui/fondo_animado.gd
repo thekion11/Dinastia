@@ -88,7 +88,7 @@ func ajustar_area(tam: Vector2) -> void:
 ## Rehace el emisor entero con los números del modo elegido. Se llama al cambiar
 ## de clima y al arrancar; no en cada fotograma.
 func aplicar() -> void:
-	if modo == "ninguno" or not MODOS.has(modo):
+	if modo == "ninguno" or not MODOS.has(modo) or EstiloMundo.factor_particulas() <= 0.0:   ## (15-11) el Mundo suave no lleva partículas
 		emitting = false
 		visible = false
 		return
@@ -253,6 +253,9 @@ func aplicar() -> void:
 			rampa.set_color(0, Color(0.95, 0.95, 0.92, 0.5))
 			rampa.set_color(1, Color(0.8, 0.82, 0.8, 0.25))
 
+	## (15-11, Mundo clásico) la mitad de partículas y a menos ritmo (pedido del dueño: «reducir las partículas y el movimiento»).
+	amount = maxi(1, int(round(amount * EstiloMundo.factor_particulas())))
+	speed_scale = EstiloMundo.factor_movimiento()
 	if modo not in ["confeti", "humo", "estrellas"]:
 		color_ramp = rampa
 	if modo not in ["confeti", "hojas"]:

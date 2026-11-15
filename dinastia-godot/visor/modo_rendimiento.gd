@@ -15,6 +15,10 @@ static func cesped_barato(nivel: int) -> bool:
 static func glow(nivel: int) -> bool:
 	return nivel > Calidad.MINIMO and not (Calidad.modo_rendimiento and nivel <= Calidad.MEDIO)
 
+## (14-11, orden del dueño) ¿Lleva el ajuste de color (contraste y saturación, una pasada a pantalla completa)? No en ULTRA BAJA.
+static func ajuste_color(nivel: int) -> bool:
+	return nivel > Calidad.MINIMO
+
 ## El interruptor de Ajustes (se ve en todas las calidades).
 static func crear(p: Object) -> void:
 	var cb := CheckButton.new()

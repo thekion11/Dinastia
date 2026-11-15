@@ -300,3 +300,103 @@ func _probar_calentamiento_efectos() -> void:
 	_comprobar(not piezas.is_empty() and altas == 0, "todo lo que dibuja el calentamiento está a unos 60 m bajo el campo (%d piezas, %d por encima)" % [piezas.size(), altas])
 	_comprobar(CalentamientoEfectos.encendido() == (OS.get_environment("CALENTAR_EFECTOS") != "0"), "encendido salvo que CALENTAR_EFECTOS sea 0")
 	raiz.free()
+
+## (14-11) Siluetas de jugadores a más de 30 m, ajuste de color apagado en ULTRA BAJA y el 3D de ULTRA BAJA al 40 %.
+func _probar_impostores_lejanos() -> void:
+	_titulo("SILUETAS LEJANAS DE JUGADORES, AJUSTE DE COLOR Y 3D AL 40 % EN ULTRA BAJA")
+	_comprobar(ImpostorLejano.activo(Calidad.MINIMO) and ImpostorLejano.activo(Calidad.BAJA) and ImpostorLejano.activo(Calidad.MEDIA_BAJA), "activas de ULTRA BAJA a MEDIA BAJA")
+	_comprobar(not ImpostorLejano.activo(Calidad.MEDIA) and not ImpostorLejano.activo(Calidad.ALTA), "MEDIA y superiores: jugadores como siempre")
+	var nodo := Node3D.new()
+	var cuerpo := MeshInstance3D.new()
+	cuerpo.mesh = BoxMesh.new()
+	nodo.add_child(cuerpo)
+	var rotulo := Label3D.new()
+	nodo.add_child(rotulo)
+	add_child(nodo)
+	ImpostorLejano.aplicar(nodo, 1.8, Color("d32f2f"), Calidad.MEDIA)
+	_comprobar(nodo.get_child_count() == 2 and is_zero_approx(cuerpo.visibility_range_end), "en MEDIA no se toca nada")
+	ImpostorLejano.aplicar(nodo, 1.8, Color("d32f2f"), Calidad.MINIMO)
+	var imp := nodo.get_node_or_null("ImpostorLejano") as MeshInstance3D
+	_comprobar(imp != null and is_equal_approx(cuerpo.visibility_range_end, 30.0) and is_equal_approx(imp.visibility_range_begin, 30.0), "el cuerpo se oculta a 30 m y la silueta aparece desde 30 m")
+	_comprobar(is_zero_approx(rotulo.visibility_range_end), "los rótulos 3D no se tocan")
+	var tris: int = (imp.mesh.surface_get_arrays(0)[Mesh.ARRAY_INDEX] as PackedInt32Array).size() / 3
+	_comprobar(tris <= 90 and is_equal_approx(imp.scale.y, 1.8), "silueta de %d triángulos y a la altura del jugador" % tris)
+	nodo.free()
+	## Animación lejana: a más de 36 m del ojo pasa a modo manual (5 Hz) y a menos de 33 m vuelve a su ritmo.
+	var cam := Camera3D.new()
+	add_child(cam)
+	cam.make_current()
+	var jug := Node3D.new()
+	add_child(jug)
+	var ap := AnimationPlayer.new()
+	jug.add_child(ap)
+	AnimLejana.poner(jug, ap)
+	var al := jug.get_node("AnimLejana") as AnimLejana
+	jug.global_position = Vector3(0, 0, -50)
+	al._process(0.016)
+	_comprobar(ap.callback_mode_process == AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL, "a 50 m: animación en modo manual")
+	jug.global_position = Vector3(0, 0, -34.5)
+	al._process(0.016)
+	_comprobar(ap.callback_mode_process == AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL, "a 34,5 m (histéresis): sigue manual")
+	jug.global_position = Vector3(0, 0, -20)
+	al._process(0.016)
+	_comprobar(ap.callback_mode_process == AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_IDLE, "a 20 m: vuelve a su ritmo normal")
+	cam.free()
+	jug.free()
+	_comprobar(not ModoRendimiento.ajuste_color(Calidad.MINIMO) and ModoRendimiento.ajuste_color(Calidad.BAJA) and ModoRendimiento.ajuste_color(Calidad.MEDIA), "ajuste de color: no en ULTRA BAJA, sí en el resto")
+	_comprobar(is_equal_approx(Calidad.ESCALA_MINIMO, 0.4), "3D de ULTRA BAJA al 40 % por defecto")
+
+## (15-11) Mundo clásico / suave: la etapa de la entrada, el ahorro en todas las calidades y menos partículas en el clásico.
+func _probar_estilo_mundo() -> void:
+	_titulo("ESTILO DEL MUNDO: CLÁSICO (MENOS MOVIMIENTO) Y SUAVE (QUIETO)")
+	var antes := EstiloMundo.suave
+	var tenia := EstiloMundo.elegido_antes()
+	_comprobar(OrquestadorEntrada.ETAPAS.any(func(e: Dictionary) -> bool: return e["clave"] == "estilo"), "la etapa «estilo» está en la entrada")
+	var i_estilo := OrquestadorEntrada.ETAPAS.map(func(e: Dictionary) -> String: return e["clave"]).find("estilo")
+	var i_modo := OrquestadorEntrada.ETAPAS.map(func(e: Dictionary) -> String: return e["clave"]).find("modo")
+	_comprobar(i_estilo >= 0 and i_estilo < i_modo, "va antes de elegir el modo y de crear el mundo")
+	EstiloMundo.suave = false
+	_comprobar(is_equal_approx(EstiloMundo.factor_particulas(), 0.5) and EstiloMundo.factor_movimiento() < 1.0, "clásico: la mitad de partículas y menos movimiento")
+	var f := FondoAnimado.new()
+	f.modo = "motas"
+	add_child(f)
+	_comprobar(f.emitting and f.amount == 20, "clásico: las motas pasan de 40 a %d" % f.amount)
+	EstiloMundo.suave = true
+	f.aplicar()
+	_comprobar(not f.emitting and not f.visible, "suave: sin partículas")
+	_comprobar(AhorroMenu.nivel_ahorra(Calidad.ALTA, false) == false and (not AhorroMenu.toca() or DisplayServer.get_name() != "headless"), "el ahorro de siempre no cambia por nivel")
+	f.free()
+	var p := EstiloMundoPantalla.new()
+	p.configurar({"estilo": "suave"})
+	add_child(p)
+	var recibido: Array = []
+	p.terminado.connect(func(d: Dictionary) -> void: recibido.append(d))
+	p.confirmar()
+	_comprobar(recibido.size() == 1 and String((recibido[0] as Dictionary).get("estilo", "")) == "suave" and EstiloMundo.suave, "la pantalla devuelve el estilo y lo deja guardado")
+	p.free()
+	## El reposo del Mundo clásico: congela los shaders con TIME en un uniforme (sin salto) y cualquier toque lo devuelve.
+	var sh := Shader.new()
+	sh.code = "shader_type canvas_item;\nvoid fragment(){ COLOR = vec4(sin(TIME), 0.0, 0.0, 1.0); }"
+	var q := AhorroMenu._quieto_en(sh)
+	_comprobar(q != null and not q.code.contains("TIME") and q.code.contains("uniform float _t_quieto;"), "el shader congelado lee un uniforme en vez de TIME")
+	EstiloMundo.suave = false
+	var am := AhorroMenu.new()
+	add_child(am)
+	var cr := ColorRect.new()
+	var mat := ShaderMaterial.new()
+	mat.shader = sh
+	cr.material = mat
+	add_child(cr)
+	am._poner(true)
+	_comprobar(OS.low_processor_usage_mode and mat.shader == q, "en reposo: bajo consumo y shader congelado")
+	var tecla := InputEventKey.new()
+	tecla.pressed = true
+	am._input(tecla)
+	_comprobar(not OS.low_processor_usage_mode and mat.shader == sh, "una tecla lo devuelve todo al momento")
+	cr.free()
+	am.free()
+	if tenia:
+		EstiloMundo.elegir(antes)
+	else:
+		DirAccess.remove_absolute(EstiloMundo.RUTA)
+		EstiloMundo.suave = antes

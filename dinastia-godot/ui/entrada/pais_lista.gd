@@ -10,6 +10,9 @@ signal elegido(pais: String)
 var _botones: Dictionary = {}   ## pais -> Button
 var _grupo := ButtonGroup.new()
 var _scroll: ScrollContainer
+var _grupos: Array = []   ## [rótulo, hueco o null, países] por continente, para esconder los grupos vacíos
+## (15-11, pedido del dueño) Solo los países de las ligas elegidas; vacío = todos.
+var permitidos: Array = []
 
 func _ready() -> void:
 	var caja := Tema.caja(Color(Tema.PANEL, 0.86), Tema.RADIO_GRANDE, Tema.BORDE)
@@ -21,16 +24,33 @@ func _ready() -> void:
 	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.add_theme_constant_override("separation", 2)
 	_scroll.add_child(v)
-	for c: Array in CargaCiudad.de("PaisDatos").CONTINENTES:
+	for c: Array in CargaCiudad.de("PaisDatos").grupos():
 		var r := Tema.rotulo(Idiomas.t(String(c[0])))
 		r.add_theme_color_override("font_color", Tema.ORO)
+		var hueco: Control = null
 		if v.get_child_count() > 0:
-			var hueco := Control.new()
+			hueco = Control.new()
 			hueco.custom_minimum_size = Vector2(0, 6)
 			v.add_child(hueco)
 		v.add_child(r)
 		for p: String in c[1]:
 			v.add_child(_fila(p))
+		_grupos.append([r, hueco, c[1]])
+	filtrar(permitidos)
+
+## Esconde los países que no se pueden elegir (y los continentes que se quedan sin ninguno).
+func filtrar(lista: Array) -> void:
+	permitidos = lista.duplicate()
+	for p: String in _botones:
+		(_botones[p] as Button).visible = puede(p)
+	for g: Array in _grupos:
+		var alguno := (g[2] as Array).any(func(x: String) -> bool: return puede(x))
+		(g[0] as Control).visible = alguno
+		if g[1] != null:
+			(g[1] as Control).visible = alguno
+
+func puede(p: String) -> bool:
+	return permitidos.is_empty() or permitidos.has(p)
 
 func _fila(p: String) -> Button:
 	var b := Button.new()
@@ -82,7 +102,9 @@ func marcar(p: String) -> void:
 
 ## El país anterior o siguiente en el orden de la lista (para teclado y mando).
 func vecino(p: String, paso: int) -> String:
-	var orden = CargaCiudad.de("PaisDatos").todos()
+	var orden = CargaCiudad.de("PaisDatos").todos().filter(func(x: String) -> bool: return puede(x))
+	if orden.is_empty():
+		return p
 	var i = orden.find(p)
 	if i < 0:
 		return orden[0]

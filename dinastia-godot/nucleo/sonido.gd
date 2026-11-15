@@ -64,7 +64,7 @@ func _sintetizar_banco(nombre: String) -> Array[AudioStreamWAV]:
 ## primero (o una pantalla llama a `completar()`), sigue con el catálogo entero. Cada banco sale igual de las mismas recetas (determinista, sin `Azar`): no cambia lo que suena.
 const BASICOS := ["clic", "clic_suave", "abrir", "cerrar", "error", "aviso", "correo", "guardado", "menu_mover", "menu_aceptar", "menu_atras", "menu_cambio", "menu_seccion",
 	"telefono", "moneda", "logro", "fichaje", "contrato", "despido", "dinero_entra", "dinero_sale", "sorteo", "fin_temporada", "clausula", "contrato_vence", "oferta", "venta",
-	"obra", "lesion", "lesion_grave", "ronda_superada", "trofeo", "ascenso", "descenso", "cambio", "silbato", "pitido_final", "poste", "travesano", "tambor"]
+	"obra", "lesion", "lesion_grave", "ronda_superada", "trofeo", "ascenso", "descenso", "cambio", "silbato", "pitido_final", "poste", "travesano", "tambor", "deslizar"]
 var _completo := false
 
 ## Pide el catálogo entero (lo llama el primer sonido que no es básico; también se puede llamar al entrar a un partido o a la ciudad).

@@ -267,7 +267,7 @@ func _elegir_pais(p: String) -> void:
 	_pais_actual = p
 	for b: Button in _fila_paises.get_children():
 		b.button_pressed = (b.text == p)
-	if _globo != null and Globo3D.GLOBO_PAIS.has(p):
+	if _globo != null and Globo3D.tiene(p):
 		_globo.ir_a(p)
 	## Chile trae dos ligas -Primera y Primera B-; el resto de países, una sola.
 	## Se juntan aquí en vez de obligar a un segundo selector de división: son
@@ -362,7 +362,7 @@ func ficha_pais(p: String, ligas_del_pais: Array[Liga], total_clubes: int) -> St
 				mejor = c
 	var clima := Clima.del_partido(p, _mundo.semana, _mundo.anio, "globo")
 	var prox := Calendario.proximas(p, _mundo.anio, _mundo.semana, 1)
-	var partes: Array[String] = ["📍 %s · " % p + Idiomas.t("capital %s") % String(Globo3D.CAPITAL.get(p, "?")),
+	var partes: Array[String] = ["📍 %s · " % p + Idiomas.t("capital %s") % Globo3D.capital(p),
 		(Idiomas.t("1 liga, %d clubes") % total_clubes) if ligas_del_pais.size() == 1 else (Idiomas.t("%d ligas, %d clubes") % [ligas_del_pais.size(), total_clubes])]
 	if ranking > 0:
 		partes.append(Idiomas.t("n.º %d del ranking de ligas") % ranking)
