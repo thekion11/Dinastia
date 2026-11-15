@@ -161,6 +161,7 @@ func _ready() -> void:
 	_marcador = _crear_marcador()
 	_pivote.add_child(_marcador)
 	_crear_pines()
+	_giro_idle *= EstiloMundo.factor_movimiento()   ## (15-11) más lento en el Mundo clásico; quieto en el suave
 
 	set_process(true)
 

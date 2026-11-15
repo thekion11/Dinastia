@@ -4,6 +4,12 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## PEDIDOS DEL DUEÑO (15-11): MUNDO CLÁSICO / MUNDO SUAVE, LIGAS Y GLOBO — rama `ccr-6155f41a-wlcd6v`
+- HECHO: etapa «Estilo del mundo» en la entrada (después del idioma, antes del modo; `EstiloMundoPantalla`, `EstiloMundo`, interruptor en Ajustes). Clásico = la mitad de partículas y movimiento al 60 % (fondos y globo); suave = sin partículas y repintar solo al cambiar en TODAS las calidades (`AhorroMenu.toca`).
+- HECHO: la pantalla de país solo deja elegir países de las ligas elegidas (lista, globo y teclado); están los 135 países con liga (antes 50; `PaisDatosExtra`); globo con brillo del sol en el mar, atmósfera con ocaso y luces cálidas, pines en un MultiMesh y rótulos solo del elegido y el señalado.
+- FALTA (Mundo suave, fase 2, inspirada en la maqueta https://claude.ai/artifact/YaN8MzHPwbQFM7cgYbhBMz): un color por mundo de juego (Dirigir verde pizarra, Mandar negro y oro, La Ruta azul noche y magenta, Retos naranja; exige pasar las constantes de `Tema` a variables), carruseles quietos en lugar de lo que se desliza solo (portadas), y más submenús a pantalla completa.
+- FALTA (países nuevos): monumentos y nombre oficial de los 85 de `PaisDatosExtra`, y traducir sus capitales (78 sin traducir).
+
 ## ESTADO AL 14-11 (orden del dueño: «ve guardando todo»; meta «+15 FPS promedio, SIN ALTERAR LO VISUAL, SOLO CÓDIGO»; sesiones 15 y 16 en Sonnet)
 - En `main`, con la imagen idéntica y la simulación igual (huellas 2244399493 / 3725505167): butacas lejanas sin caras ocultas (MÍNIMA −69 k y MEDIA −49 k triángulos), conos de luz de los focos ocultos mientras su alfa es 0 (−3,4 % y −9 llamadas), precarga de sonidos y de `GradaFondo` durante la carga del estadio (−433 ms al arrancar el partido), calentamiento de confeti, bengalas y banderas contra el tirón de primer uso (banderas 662 → 172-212 ms; bandera `CalentamientoEfectos.activo`, `CALENTAR_EFECTOS=0` lo apaga). Cifras y descartes: `docs/04_auditorias/rendimiento_120fps.md`.
 - NO demostrado: los +15 FPS. El teléfono va limitado por la GPU (CPU al 0 %): con «solo código» las palancas quedaron casi agotadas (scripts del estadio ~3,4 ms por fotograma, ninguna clase sobre el ruido). Debe medirlo el dueño con el APK de GitHub («-fps1», `compilar.yml` objetivo android).

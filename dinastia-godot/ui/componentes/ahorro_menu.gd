@@ -14,7 +14,7 @@ var _ahorrando := false
 ## (10-11, informe `rendimiento_movil_2026-11-10.md`) Medido con 3 clubes de 3 países: el menú de BAJA se repintaba entero en cada fotograma (46-51 en 3 s, ~400 llamadas cada uno) y solo ULTRA BAJA ahorraba (1 en 3 s);
 ## el ahorro vale ahora también en BAJA y MEDIA BAJA (los niveles «ligeros»); MEDIA y superiores siguen como siempre (decisión de diseño de arriba; el dueño decide si MEDIA en móvil también).
 static func toca() -> bool:
-	return nivel_ahorra(Calidad.elegida, Calidad.ahorro_menu_media) and DisplayServer.get_name() != "headless"
+	return (nivel_ahorra(Calidad.elegida, Calidad.ahorro_menu_media) or EstiloMundo.suave) and DisplayServer.get_name() != "headless"   ## (15-11) el Mundo suave ahorra en todas las calidades
 
 ## (10-11) De MEDIA BAJA hacia abajo siempre; MEDIA solo si el jugador lo pide en Ajustes (`ahorro_menu_media`); ALTA y superiores nunca.
 static func nivel_ahorra(nivel: int, media_pedida: bool) -> bool:

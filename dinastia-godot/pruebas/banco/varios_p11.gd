@@ -345,3 +345,37 @@ func _probar_impostores_lejanos() -> void:
 	jug.free()
 	_comprobar(not ModoRendimiento.ajuste_color(Calidad.MINIMO) and ModoRendimiento.ajuste_color(Calidad.BAJA) and ModoRendimiento.ajuste_color(Calidad.MEDIA), "ajuste de color: no en ULTRA BAJA, sí en el resto")
 	_comprobar(is_equal_approx(Calidad.ESCALA_MINIMO, 0.4), "3D de ULTRA BAJA al 40 % por defecto")
+
+## (15-11) Mundo clásico / suave: la etapa de la entrada, el ahorro en todas las calidades y menos partículas en el clásico.
+func _probar_estilo_mundo() -> void:
+	_titulo("ESTILO DEL MUNDO: CLÁSICO (MENOS MOVIMIENTO) Y SUAVE (QUIETO)")
+	var antes := EstiloMundo.suave
+	var tenia := EstiloMundo.elegido_antes()
+	_comprobar(OrquestadorEntrada.ETAPAS.any(func(e: Dictionary) -> bool: return e["clave"] == "estilo"), "la etapa «estilo» está en la entrada")
+	var i_estilo := OrquestadorEntrada.ETAPAS.map(func(e: Dictionary) -> String: return e["clave"]).find("estilo")
+	var i_modo := OrquestadorEntrada.ETAPAS.map(func(e: Dictionary) -> String: return e["clave"]).find("modo")
+	_comprobar(i_estilo >= 0 and i_estilo < i_modo, "va antes de elegir el modo y de crear el mundo")
+	EstiloMundo.suave = false
+	_comprobar(is_equal_approx(EstiloMundo.factor_particulas(), 0.5) and EstiloMundo.factor_movimiento() < 1.0, "clásico: la mitad de partículas y menos movimiento")
+	var f := FondoAnimado.new()
+	f.modo = "motas"
+	add_child(f)
+	_comprobar(f.emitting and f.amount == 20, "clásico: las motas pasan de 40 a %d" % f.amount)
+	EstiloMundo.suave = true
+	f.aplicar()
+	_comprobar(not f.emitting and not f.visible, "suave: sin partículas")
+	_comprobar(AhorroMenu.nivel_ahorra(Calidad.ALTA, false) == false and (not AhorroMenu.toca() or DisplayServer.get_name() != "headless"), "el ahorro de siempre no cambia por nivel")
+	f.free()
+	var p := EstiloMundoPantalla.new()
+	p.configurar({"estilo": "suave"})
+	add_child(p)
+	var recibido: Array = []
+	p.terminado.connect(func(d: Dictionary) -> void: recibido.append(d))
+	p.confirmar()
+	_comprobar(recibido.size() == 1 and String((recibido[0] as Dictionary).get("estilo", "")) == "suave" and EstiloMundo.suave, "la pantalla devuelve el estilo y lo deja guardado")
+	p.free()
+	if tenia:
+		EstiloMundo.elegir(antes)
+	else:
+		DirAccess.remove_absolute(EstiloMundo.RUTA)
+		EstiloMundo.suave = antes

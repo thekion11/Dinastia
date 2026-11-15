@@ -111,8 +111,8 @@ func _flujo_reemplazar() -> void:
 	var prev := EntradaCampeonato.previsualizar(m0, "reemplazar", "ARG", victima.id) if victima else {}
 	var plantel_victima := victima.plantilla.duplicate() if victima else []
 	pasos.append_array(_recorrer(o, respuestas))
-	_comprobar(pasos == ["intro", "idioma", "modo", "ligas", "pais", "config", "entrada", "personaje"],
-		"recorre las 8 etapas en orden (%s)" % ", ".join(pasos))
+	_comprobar(pasos == ["intro", "idioma", "estilo", "modo", "ligas", "pais", "config", "entrada", "personaje"],
+		"recorre las 9 etapas en orden (%s)" % ", ".join(pasos))
 	_comprobar(_vistas == pasos, "cada etapa avisa al terminar")
 	_comprobar(OrquestadorEntrada.intro_vista(), "la intro queda marcada como vista")
 	var cf := ConfigFile.new()
@@ -158,6 +158,7 @@ func _volver_y_saltar_intro() -> void:
 	var o := _nuevo({"mundo": mini})
 	_comprobar(o.etapa_actual() == "idioma", "con la intro ya vista se empieza por el idioma")
 	o.pantalla_actual().emit_signal("terminado", {"idioma": "es"})
+	o.pantalla_actual().emit_signal("terminado", {"estilo": "clasico"})
 	o.pantalla_actual().emit_signal("terminado", {"modo": "creador"})
 	_comprobar(o.etapa_actual() == "ligas", "tras el modo, las ligas activas")
 	o.pantalla_actual().emit_signal("terminado", {"ligas": {"paises": ["CHI", "ARG"]}})
@@ -176,7 +177,9 @@ func _volver_y_saltar_intro() -> void:
 	_comprobar(o.etapa_actual() == "ligas", "volviendo desde el país se llega a las ligas activas")
 	o.pantalla_actual().emit_signal("volver")
 	o.pantalla_actual().emit_signal("volver")
-	_comprobar(o.etapa_actual() == "idioma", "volviendo dos veces más se llega al idioma, sin pasar por la intro")
+	_comprobar(o.etapa_actual() == "estilo", "volviendo dos veces más se llega al estilo del mundo")
+	o.pantalla_actual().emit_signal("volver")
+	_comprobar(o.etapa_actual() == "idioma", "y una más, al idioma, sin pasar por la intro")
 	o.pantalla_actual().emit_signal("volver")
 	_comprobar(_cancelado and _resultado.is_empty(), "volver desde la primera etapa sale al menú sin crear partida")
 	o.queue_free()
@@ -247,6 +250,6 @@ func _flujo_jugador() -> void:
 	_linea("-- la Carrera de Jugador tiene su propia creación")
 	var o := _nuevo()
 	var pasos := _recorrer(o, {"modo": {"modo": "carrera-m"}, "idioma": {"idioma": "es"}})
-	_comprobar(pasos == ["idioma", "modo"] and String(_resultado.get("escena", "")) == OrquestadorMundo.CARRERA_JUGADOR,
+	_comprobar(pasos == ["idioma", "estilo", "modo"] and String(_resultado.get("escena", "")) == OrquestadorMundo.CARRERA_JUGADOR,
 		"tras elegir el modo va a la Carrera de Jugador (%s)" % ", ".join(pasos))
 	o.queue_free()
