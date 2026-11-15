@@ -53,7 +53,7 @@ static func abrir(p: Principal, menu: Dictionary, sub: int = -1) -> PantallaMenu
 	return n
 
 func _exit_tree() -> void:
-	FocoMando.liberar(self)
+	FocoMando.liberar(self); TaparDetras.destapar(self)   ## (15-11) si se libera sin `cerrar`, lo de debajo vuelve a verse
 
 func _color(i: int) -> Color:
 	return Color(String((_menu["colores"] as Array)[i]))
@@ -157,9 +157,7 @@ func _montar() -> void:
 	_cuerpo.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_raiz.add_child(_cuerpo)
 	_raiz.add_child(PieMando.crear(func() -> bool: return true))   ## (12-11, PES) ayudas del mando: aquí LB/RB = submenú, LT/RT = menú
-	## Estos menús no se repintan con la principal: se traducen aquí (el volver,
-	## el título y las pestañas; el contenido de cada submenú lo traduce la
-	## principal al repintar).
+	## Estos menús no se repintan con la principal: se traducen aquí (el volver, el título y las pestañas; el contenido de cada submenú lo traduce la principal al repintar).
 	Idiomas.traducir_arbol(cab)
 	Idiomas.traducir_arbol(fila)
 
@@ -173,6 +171,7 @@ func _montar() -> void:
 	## (10-11, estética; PES 2020/eFootball pasan de pantalla en ~0,2 s) 0,25/0,3 → 0,18/0,22 s: la entrada se siente ágil, no lenta
 	tw.tween_property(self, "modulate:a", 1.0, 0.18)
 	tw.tween_property(_raiz, "offset_left", base, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.finished.connect(func() -> void: if not _cerrando: TaparDetras.tapar(self))   ## (15-11) ya opaca: lo de debajo deja de dibujarse
 	Sonido.toca("abrir" if Sonido.NOMBRES.has("abrir") else "clic", Sonido.Bus.INTERFAZ)
 	_al_redimensionar()
 
@@ -441,6 +440,7 @@ func cerrar() -> void:
 		return
 	_cerrando = true
 	FocoMando.liberar(self)
+	TaparDetras.destapar(self)
 	_devolver_contenido()
 	cerrada.emit()
 	if is_inside_tree():
