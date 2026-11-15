@@ -5,7 +5,7 @@ extends Node
 ##   MOTOR=combinado|siempre|league  MOTOR_C_PIEZAS=… N_PARTIDOS=2 MITAD=120 godot --headless --path . res://pruebas/perfil_colocacion.tscn
 ## Salida: «PERFIL motor=… método µs/paso llamadas/paso»; termina en «FIN. 0 fallos».
 const DT := 1.0 / 30.0
-const METODOS := ["_estado_league", "_estado_sin_balon", "_interferir", "_forma", "_ia_ataque_sin_balon", "_ia_defensa", "_ia_portador", "_mover_balon", "_mover_jugadores"]
+const METODOS := ["_mas_cercano_al", "_calcular_marcajes", "_presion_zona", "_carreras", "_estado_league", "_estado_sin_balon", "_interferir", "_forma", "_ia_ataque_sin_balon", "_ia_defensa", "_ia_portador", "_mover_balon", "_mover_jugadores"]
 static var us := {}
 static var n := {}
 
@@ -14,6 +14,14 @@ static func _t(m: String, t0: int) -> void:
 	n[m] = int(n.get(m, 0)) + 1
 
 class PerfC extends MotorCombinado:
+	func _mas_cercano_al(punto: Vector2, local: bool, excluir: Array, cuantos: int) -> Array:
+		var t0 := Time.get_ticks_usec(); var r := super(punto, local, excluir, cuantos); PerfilColocacion._t("_mas_cercano_al", t0); return r
+	func _calcular_marcajes(local: bool, lado: float, b0: Vector2) -> Dictionary:
+		var t0 := Time.get_ticks_usec(); var r := super(local, lado, b0); PerfilColocacion._t("_calcular_marcajes", t0); return r
+	func _presion_zona(i: int, local: bool, e: LeagueEquipo, tiene: bool, b0: Vector2) -> void:
+		var t0 := Time.get_ticks_usec(); super(i, local, e, tiene, b0); PerfilColocacion._t("_presion_zona", t0)
+	func _carreras(i: int, local: bool, e: LeagueEquipo) -> void:
+		var t0 := Time.get_ticks_usec(); super(i, local, e); PerfilColocacion._t("_carreras", t0)
 	func _estado_league(d: float) -> void:
 		var t0 := Time.get_ticks_usec(); super(d); PerfilColocacion._t("_estado_league", t0)
 	func _estado_sin_balon(d: float) -> void:
