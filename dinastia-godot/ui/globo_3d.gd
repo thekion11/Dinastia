@@ -97,7 +97,7 @@ func _ready() -> void:
 	_cam = Camera3D.new()
 	_cam.position = Vector3(0, 0, 3.1)
 	_cam.projection = Camera3D.PROJECTION_ORTHOGONAL
-	_cam.size = 2.35
+	_cam.size = 2.1   ## (15-11, pedido del dueño) el globo un poco más grande en el mismo hueco (antes 2,35: un 12 % más)
 	mundo3d.add_child(_cam)
 
 	## Luz muy tenue de relleno: la sombra de verdad la pone el shader (EMISSION +
@@ -331,10 +331,23 @@ func _gui_input(event: InputEvent) -> void:
 		## HTML (rotación directa proporcional al desplazamiento).
 		var rel: Vector2 = event.relative if event is InputEventMouseMotion else (event as InputEventScreenDrag).relative
 		_movido += rel.length()
+		_sonar_giro(rel.length())
 		lon += rel.x * 0.35
 		lat = clampf(lat - rel.y * 0.35, -85.0, 85.0)
 		_lon_obj = lon
 		_lat_obj = lat
+
+## (15-11, pedido del dueño) Un roce suave mientras se gira el globo con el dedo o el ratón: uno cada ~70 px de arrastre, nunca más de 7 por segundo.
+var _rodado := 0.0
+var _ultimo_roce := 0
+func _sonar_giro(px: float) -> void:
+	_rodado += px
+	var ahora := Time.get_ticks_msec()
+	if _rodado < 70.0 or ahora - _ultimo_roce < 140:
+		return
+	_rodado = 0.0
+	_ultimo_roce = ahora
+	Sonido.toca("deslizar", Sonido.Bus.INTERFAZ, -5.0)
 
 ## Anima el viaje hasta un país, como `globoIr()` del HTML: toma el camino
 ## corto -si no, cruzaba medio planeta para ir de Chile a Japón- y deja que

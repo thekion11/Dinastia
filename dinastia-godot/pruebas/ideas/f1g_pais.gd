@@ -156,7 +156,13 @@ func _pantalla_normal() -> void:
 		f._process(30.0)
 	_comprobar(f.indice == 0, "tras los 5, vuelve al primero")
 	f.animar = false
-	_comprobar(s.ficha().clubes_listados.size() == 16, "modo normal: se ven los 16 clubes de primera (%d)" % s.ficha().clubes_listados.size())
+	var segunda_chi: int = (Datos.tabla("DATA_P2") as Array).size()
+	_comprobar(s.ficha().clubes_listados.size() == 16 + segunda_chi and segunda_chi > 0,
+		"modo normal: se ven los 16 clubes de primera y los %d de segunda (%d)" % [segunda_chi, s.ficha().clubes_listados.size()])
+	var rotulos: Array = s.ficha().get("_cuerpo").get_children().filter(func(n: Node) -> bool: return n is Label).map(func(n: Label) -> String: return n.text)
+	_comprobar(rotulos.any(func(t: String) -> bool: return t.begins_with("PRIMERA DIVISIÓN")) and rotulos.any(func(t: String) -> bool: return t.begins_with("SEGUNDA DIVISIÓN")),
+		"separados por división, con su rótulo (%s)" % [rotulos])
+	_comprobar(s.ficha().club_marcado() != null and s.ficha().club_marcado().nombre == s.ficha().clubes_listados[0], "queda marcado el primero de primera")
 	## Cambiar de país desde la lista.
 	(s.get("_lista") as PaisLista).elegido.emit("JPN")
 	_comprobar(s.pais == "JPN" and s.get("_nombre").text == "Japón" and f.pais == "JPN" and f.indice == 0,
