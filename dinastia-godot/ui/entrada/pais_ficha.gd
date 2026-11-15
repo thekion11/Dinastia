@@ -74,7 +74,7 @@ func mostrar(p: String, crear_club: bool, mundo: Mundo) -> void:
 	var n = CargaCiudad.de("PaisDatos").estrellas(p)
 	_nivel.text = ("★".repeat(n) + "☆".repeat(5 - n)) if tiene else ""
 	_nivel.tooltip_text = Idiomas.t("Nivel de la liga")
-	_capital.text = Idiomas.t("Capital: %s") % Idiomas.t(String(Globo3D.CAPITAL.get(p, "?")))
+	_capital.text = Idiomas.t("Capital: %s") % Idiomas.t(Globo3D.capital(p))
 	for h in _cuerpo.get_children():
 		_cuerpo.remove_child(h)
 		h.queue_free()

@@ -187,13 +187,32 @@ const MONUMENTOS := {
 ## Todos los países que se pueden ver en el globo, en el orden de la lista.
 static func todos() -> Array[String]:
 	var salida: Array[String] = []
-	for c: Array in CONTINENTES:
+	for c: Array in grupos():
 		for p: String in c[1]:
 			salida.append(p)
 	return salida
 
+## (15-11) Los grupos de la lista con los 135 países: los de `CONTINENTES` y, al final de cada grupo, los de `PaisDatosExtra`.
+static func grupos() -> Array:
+	var extra: Dictionary = load("res://ui/entrada/pais_datos_extra.gd").EXTRA
+	var salida := []
+	for c: Array in CONTINENTES:
+		var l: Array = (c[1] as Array).duplicate()
+		for p: String in extra:
+			if String(extra[p][4]) == String(c[0]):
+				l.append(p)
+		salida.append([c[0], l])
+	return salida
+
+## ¿Es un país que la pantalla conoce (con nombre y pin)?
+static func existe(p: String) -> bool:
+	return NOMBRE.has(p) or load("res://ui/entrada/pais_datos_extra.gd").EXTRA.has(p)
+
 ## El nombre completo, ya en el idioma del jugador («Corea del Sur», no «KOR»).
 static func nombre(p: String) -> String:
+	if not NOMBRE.has(p):
+		var f: Array = load("res://ui/entrada/pais_datos_extra.gd").EXTRA.get(p, [])
+		return Idiomas.t(String(f[0])) if not f.is_empty() else p
 	return Idiomas.t(String(NOMBRE.get(p, p)))
 
 static func oficial(p: String) -> String:
@@ -203,7 +222,7 @@ static func monumentos(p: String) -> Array:
 	return MONUMENTOS.get(p, [])
 
 static func continente_de(p: String) -> String:
-	for c: Array in CONTINENTES:
+	for c: Array in grupos():
 		if (c[1] as Array).has(p):
 			return String(c[0])
 	return ""
