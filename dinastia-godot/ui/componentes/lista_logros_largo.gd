@@ -33,8 +33,7 @@ static func pintar(lista: VBoxContainer, lg: Logros, texto: Callable) -> void:
 		if bool(a["conseguido"]) != bool(b["conseguido"]):
 			return not bool(a["conseguido"])
 		return _fraccion(a) > _fraccion(b))
-	for f: Dictionary in cat:
-		_fila(lista, f, texto)
+	PorPartes.llenar(lista, cat.size(), func(caja: Container, i: int) -> void: _fila(caja, cat[i], texto), 6)   ## (15-11) ~139 ms de golpe la primera vez
 
 static func _fraccion(f: Dictionary) -> float:
 	return float(f["valor"]) / maxf(1.0, float(f["meta"]))

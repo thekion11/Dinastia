@@ -301,14 +301,15 @@ func _pintar_logros() -> void:
 	var t := p._texto(13, Principal.COL_ORO)
 	t.text = Idiomas.t("%d de %d logros") % [hechos, cat.size()]
 	p._lista_logros.add_child(t)
-	for f: Dictionary in cat:
+	PorPartes.llenar(p._lista_logros, cat.size(), func(caja: Container, i: int) -> void:   ## (15-11) por partes: ~60 logros, 2 etiquetas cada uno
+		var f: Dictionary = cat[i]
 		var l := p._texto(12, Principal.COL_VERDE if f["conseguido"] else Principal.COL_SUAVE)
 		l.text = "%s %s  ·  %s" % [String(f["icono"]), Idiomas.t(String(f["titulo"])), Idiomas.t("hecho") if f["conseguido"] else Idiomas.t("por hacer")]
-		p._lista_logros.add_child(l)
+		caja.add_child(l)
 		var d := p._texto(11, Principal.COL_SUAVE)
 		d.text = "     " + Idiomas.t(String(f["descripcion"]))
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		p._lista_logros.add_child(d)
+		caja.add_child(d), 8)
 	## Los treinta a largo plazo, con su progreso (26-10-2026).
 	ListaLogrosLargo.pintar(p._lista_logros, lg, p._texto)
 
