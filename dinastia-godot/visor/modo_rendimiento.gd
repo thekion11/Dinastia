@@ -1,6 +1,6 @@
 class_name ModoRendimiento
 extends RefCounted
-## MODO RENDIMIENTO (10-11-2026, orden del líder; informe `rendimiento_movil_2026-11-10.md`, propuestas E1 y E2): un interruptor de Ajustes, ENCENDIDO por defecto solo en el móvil (orden 36; `CalidadRes3D.es_movil_tactil`) y apagado en escritorio, que de MEDIA hacia abajo quita
+## MODO RENDIMIENTO (10-11-2026, orden del líder; informe `rendimiento_movil_2026-11-10.md`, propuestas E1 y E2): un interruptor de Ajustes, ENCENDIDO por defecto en todas las plataformas (móvil: orden 36; PC: 15-11, orden del dueño), que de MEDIA hacia abajo quita
 ## el resplandor (glow: −7…−12 % de fotograma relativo), la sombra del sol (−17…−21 %) y simplifica el shader del césped (E4). Cambia el aspecto, por eso lo decide el jugador; ALTA y ULTRA no se tocan. Lo guarda `Calidad` en grafica.cfg (`modo_rendimiento`).
 
 ## ¿Este nivel pierde la sombra del sol con el modo encendido?

@@ -234,8 +234,11 @@ func _probar_foco_mando() -> void:
 func _probar_calidad_minima() -> void:
 	_titulo("CALIDAD MÍNIMA (ultra ligera)")
 	_comprobar(Calidad.MINIMO < Calidad.MEDIO and Calidad.MEDIO == 0 and Calidad.MEDIO < Calidad.ALTO and Calidad.ALTO < Calidad.ULTRA, "los 4 nombres viejos siguen en orden y MEDIA es 0 (los 7 niveles: ver ren_calidad_7_niveles; lo guardado se migra con version_calidad)")
+	var modo_antes := Calidad.modo_rendimiento
+	Calidad.modo_rendimiento = false   ## (15-11) el Modo rendimiento viene encendido por defecto y quita la sombra del sol de MEDIA: aquí se prueba el nivel solo
 	var sol := Calidad.sol(Calidad.MINIMO)
 	var sol_m := Calidad.sol(Calidad.MEDIO)
+	Calidad.modo_rendimiento = modo_antes
 	_comprobar(not sol.shadow_enabled and sol_m.shadow_enabled, "sin sombras en MÍNIMO; MEDIO las conserva")
 	sol.free()
 	sol_m.free()
