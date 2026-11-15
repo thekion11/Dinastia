@@ -54,12 +54,12 @@ static func lanzar(raiz: Node, tipo_ := "ola", centro := Vector3.ZERO, bando := 
 	o._escribir(0.0)
 	return o
 
-## Los materiales del público (los de `hinchada.gdshader`), sin repetir.
+## Los materiales del público (los de `hinchada.gdshader` y `hinchada_2d.gdshader`), sin repetir.
 static func materiales(raiz: Node) -> Array:
 	var out: Array = []
 	for n in raiz.find_children("*", "GeometryInstance3D", true, false):
 		var sm := (n as GeometryInstance3D).material_override as ShaderMaterial
-		if sm != null and sm.shader != null and sm.shader.resource_path.ends_with("hinchada.gdshader") and not out.has(sm):
+		if sm != null and sm.shader != null and sm.shader.resource_path.contains("hinchada") and not out.has(sm):
 			out.append(sm)
 	return out
 
