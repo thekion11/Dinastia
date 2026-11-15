@@ -17,7 +17,6 @@ var _menu: Dictionary
 var _fondo: ColorRect
 var _raiz: VBoxContainer
 var _cuerpo: Control
-var _pestanas_sub: HBoxContainer
 var _titulo_sub: Label
 var _btn_portada: Button
 var _paginador: PaginadorSubmenu
@@ -35,6 +34,24 @@ static func compacta() -> bool:
 	return compacta_pref if EscalaMovil.es_tactil() else compacta_pc
 
 static func abrir(p: Principal, menu: Dictionary, sub: int = -1) -> PantallaMenu:
+	var n := MenuGuardado.tomar(p, menu)   ## (15-11) ya armado (al cerrarlo antes o precargado en reposo) y al día: se enseña tal cual
+	var nueva := n == null
+	if nueva:
+		n = preparar(p, menu)
+	p.add_child(n)
+	FocoMando.aislar(n)   ## (10-11) con el menú encima, la cruceta no se va a lo de detrás
+	if nueva:
+		n._montar()
+	n._entrar()
+	if sub >= 0:
+		n.elegir(sub)
+	elif nueva or n._activo >= 0:
+		n.portada()
+	FocoMando.enfocar.call_deferred(n)
+	MenuGuardado.usado(String(menu["id"]))
+	return n
+
+static func preparar(p: Principal, menu: Dictionary) -> PantallaMenu:
 	var n := PantallaMenu.new()
 	n._p = p
 	n._menu = menu
@@ -42,14 +59,6 @@ static func abrir(p: Principal, menu: Dictionary, sub: int = -1) -> PantallaMenu
 	n.set_meta("id", String(menu["id"]))
 	n.set_anchors_preset(Control.PRESET_FULL_RECT)
 	n.mouse_filter = Control.MOUSE_FILTER_STOP
-	p.add_child(n)
-	FocoMando.aislar(n)   ## (10-11) con el menú encima, la cruceta no se va a lo de detrás
-	n._montar()
-	if sub >= 0:
-		n.elegir(sub)
-	else:
-		n.portada()
-	FocoMando.enfocar.call_deferred(n)
 	return n
 
 func _exit_tree() -> void:
@@ -140,18 +149,9 @@ func _montar() -> void:
 	fila.add_child(_btn_portada)
 	_paginador = PaginadorSubmenu.crear(self, cmp or MenuLateral.abajo())   ## (12-11) ◂ anterior · n / N · siguiente ▸
 	fila.add_child(_paginador)
-	## Sin carril de pestañas hacia la derecha (pedido del usuario al ver la
-	## portada: "que sean así, grandes y hacia abajo"). Se vuelve a las
-	## tarjetas con Portada; L1/R1 siguen pasando de submenú.
-	var carril := ScrollContainer.new()
-	carril.visible = false
-	fila.add_child(carril)
-	_pestanas_sub = HBoxContainer.new()
-	_pestanas_sub.add_theme_constant_override("separation", 6)
-	carril.add_child(_pestanas_sub)
-	var subs: Array = _menu["subs"]
-	for i in subs.size():
-		_pestanas_sub.add_child(_pestana(subs[i], i))
+	## Sin carril de pestañas hacia la derecha (pedido del usuario al ver la portada: "que sean así, grandes y hacia abajo"). Se vuelve a las
+	## tarjetas con Portada; L1/R1 siguen pasando de submenú. (15-11) El carril oculto que quedaba (una pestaña por submenú, con su emoji,
+	## que nadie veía) costaba ~26 ms de cada apertura: se quitó.
 
 	_cuerpo = Control.new()
 	_cuerpo.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -161,7 +161,8 @@ func _montar() -> void:
 	Idiomas.traducir_arbol(cab)
 	Idiomas.traducir_arbol(fila)
 
-	## La entrada: desde la izquierda, que es de donde viene el panel.
+## La entrada: desde la izquierda, que es de donde viene el panel (también al reabrir uno guardado).
+func _entrar() -> void:
 	## Se anima el MARGEN y no `position`: tocar la posición de un control
 	## anclado pisa su margen y el contenido acababa debajo del riel.
 	modulate.a = 0.0
@@ -193,34 +194,6 @@ func _boton_plano(texto: String, tam: int) -> Button:
 	b.add_theme_stylebox_override("focus", enc)
 	b.add_theme_stylebox_override("pressed", enc)
 	ProfundidadUI.boton(b)   ## (10-11, estética) relieve: sombra en reposo, se hunde al pulsar
-	return b
-
-func _pestana(sub: Dictionary, i: int) -> Button:
-	var b := Button.new()
-	b.text = "%s  %s" % [String(sub.get("icono", "")), String(sub["label"])]
-	b.toggle_mode = not sub.has("accion")
-	b.add_theme_font_size_override("font_size", 13)
-	b.custom_minimum_size = Vector2(0, 36)
-	var radio := 18
-	var reposo := StyleBoxFlat.new()
-	reposo.bg_color = Color(0, 0, 0, 0.42)
-	reposo.border_color = Color(1, 1, 1, 0.12)
-	reposo.set_border_width_all(1)
-	reposo.set_corner_radius_all(radio)
-	reposo.content_margin_left = 14
-	reposo.content_margin_right = 14
-	var encima := reposo.duplicate() as StyleBoxFlat
-	encima.bg_color = Color(_color(2), 0.25)
-	var activa := reposo.duplicate() as StyleBoxFlat
-	activa.bg_color = _color(2).lightened(0.15)
-	b.add_theme_stylebox_override("normal", reposo)
-	b.add_theme_stylebox_override("hover", encima)
-	b.add_theme_stylebox_override("focus", encima)
-	b.add_theme_stylebox_override("pressed", activa)
-	b.add_theme_color_override("font_color", Color(1, 1, 1, 0.9))
-	b.add_theme_color_override("font_pressed_color", _color(0))
-	b.add_theme_color_override("font_hover_pressed_color", _color(0))
-	b.pressed.connect(elegir.bind(i))
 	return b
 
 # ---------------------------------------------------------------- portada
@@ -257,7 +230,6 @@ func portada() -> void:
 	for sep: String in ["h_separation", "v_separation"]:
 		rej.add_theme_constant_override(sep, 18)
 	rej.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	marco.add_child(rej)
 	_ancho_tarjeta = clampf((ancho - 18.0 * float(rej.columns - 1)) / float(rej.columns), 300.0, 440.0)
 	_alto_tarjeta = clampf(get_viewport_rect().size.y * 0.25, 176.0, 220.0)
 	## (13-11) Con tres filas o más, la tercera quedaba cortada por abajo (su dato a medias): menos aire arriba y el alto justo para tres.
@@ -265,10 +237,13 @@ func portada() -> void:
 		marco.add_theme_constant_override("margin_top", 14)
 		var libre := get_viewport_rect().size.y - 124.0 - 14.0 - MenuLateral.reserva().y
 		_alto_tarjeta = clampf((libre - 36.0) / 3.0, 150.0, _alto_tarjeta)
-	for i in subs.size():
+	for i in subs.size():   ## (15-11) se arman FUERA de la pantalla y la rejilla entra de una vez: antes cada tarjeta recolocaba todas
 		var tarjeta := TarjetaPortada.crear(self, subs[i], i)
 		rej.add_child(tarjeta)
 		Idiomas.traducir_arbol(tarjeta)
+	marco.add_child(rej)
+	for i in subs.size():
+		var tarjeta := rej.get_child(i) as Control
 		## M-285 (2-11): con mando, la primera tarjeta toma el foco; la cruceta pasa de una a otra y A entra.
 		if i == 0 and not Input.get_connected_joypads().is_empty():
 			FocoSeguro.dar(tarjeta)
@@ -320,8 +295,6 @@ func seguir_seccion(secc: String) -> void:
 
 func _marcar_pestana() -> void:
 	_paginador.actualizar()
-	for k in _pestanas_sub.get_child_count():
-		(_pestanas_sub.get_child(k) as Button).set_pressed_no_signal(k == _activo)
 
 func _montar_detalle() -> void:
 	_btn_portada.get_parent().visible = true
@@ -447,4 +420,4 @@ func cerrar() -> void:
 		_p._elegir_grupo("central")
 	var tw := create_tween()
 	tw.tween_property(self, "modulate:a", 0.0, 0.15)
-	tw.tween_callback(queue_free)
+	tw.tween_callback(MenuGuardado.guardar.bind(self))   ## (15-11) se guarda ya armado en vez de borrarse

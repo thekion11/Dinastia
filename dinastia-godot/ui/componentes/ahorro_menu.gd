@@ -35,6 +35,9 @@ func _process(delta: float) -> void:
 	## `REPOSO_S` sin tocar nada, también se ahorra: partículas en pausa y shaders con TIME congelados en su instante (sin salto).
 	var quieto := (Time.get_ticks_msec() - _ultima_entrada) / 1000.0 > REPOSO_S and DisplayServer.get_name() != "headless"
 	var quiero := (toca() or quieto) and not hay_3d(get_tree().root)
+	if quieto and quiero and principal is Principal:
+		MenuGuardado.precargar(principal as Principal)   ## (15-11) en reposo se arma a escondidas el menú que más se abre
+		CalentarLetras.lanzar(principal)   ## y se rasterizan letras, iconos y escudos de tu liga (una vez)
 	if quiero != _ahorrando:
 		_poner(quiero)
 	elif quiero:
