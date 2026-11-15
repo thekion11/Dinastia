@@ -227,6 +227,61 @@ func _probar() -> void:
 				cuerpos_dis += 1
 	_comprobar(cuerpos_dis == 0, "choques de cuerpos del motor: C++ = GDScript (40 rondas de 44 jugadores; distintos: %d)" % cuerpos_dis)
 	print("cuerpos: GDScript %.1f µs, C++ %.1f µs por ronda" % [tg1 / 40.0, tc1 / 40.0])
+	## (15-11, paso a C++) El movimiento de los 22 (`_mover_fisica_gd` frente a `mover_jugadores_fisica`): posición, rumbo, velocidad, empujón y aguante iguales byte a byte tras 120 pasos.
+	var raiz_m := Node3D.new()
+	add_child(raiz_m)
+	var gm: Array = [[], []]
+	for g in 2:
+		for q in 22:
+			var nm := Node3D.new()
+			raiz_m.add_child(nm)
+			gm[g].append({"node": nm, "id": "j%d" % q, "vel": Vector3.ZERO, "objetivo": Vector3.ZERO, "attr": {"rit": 0.4 + 0.5 * float(q % 5) / 4.0, "fis": 0.5 + float(q % 3) / 4.0},
+				"aguante": 0.7, "correr": q % 2 == 0, "por": q == 0 or q == 11, "es_local": q < 11, "jockey": q % 7 == 3})
+	var mov_dis := 0
+	var tmg := 0
+	var tmc := 0
+	motor.t = 0.0
+	for paso in 120:
+		var bp := Vector3(rr.randf_range(-30, 30), 0, rr.randf_range(-45, 45))
+		if paso % 10 == 0:
+			for q in 22:
+				var obj := Vector3(rr.randf_range(-34, 34), 0, rr.randf_range(-52, 52))
+				var fr := rr.randf_range(0.5, 1.0)
+				var eo := Vector3(rr.randf_range(-3, 3), 0, 0)
+				for g in 2:
+					gm[g][q]["objetivo"] = obj
+					gm[g][q]["freno"] = fr
+					if q % 6 == 2:
+						gm[g][q]["empujon_obj"] = eo
+						gm[g][q]["giro_firme"] = true
+					if q % 9 == 4:
+						gm[g][q]["mirar_hasta"] = motor.t + 0.5
+						gm[g][q]["mirar"] = float(q)
+		var posq := paso % 22
+		motor.jugadores = gm[0]
+		motor.poseedor = gm[0][posq]
+		var m0 := Time.get_ticks_usec()
+		var res_g := motor._mover_fisica_gd(1.0 / 60.0, bp)
+		var m1 := Time.get_ticks_usec()
+		motor.poseedor = gm[1][posq]
+		var res_c: PackedFloat64Array = nat.mover_jugadores_fisica(gm[1], bp, 1.0 / 60.0, motor.t, true, gm[1][posq]["id"], bool(gm[1][posq]["es_local"]), MotorJugable.A_MAX, MotorJugable.ANCHO,
+			MotorJugable.LARGO, Balance.GIRO_RAPIDO, PackedFloat64Array([motor._coste_aguante(true), motor._coste_aguante(false)]))
+		var m2 := Time.get_ticks_usec()
+		tmg += m1 - m0
+		tmc += m2 - m1
+		if var_to_bytes(res_g) != var_to_bytes(res_c):
+			mov_dis += 1
+		for q in 22:
+			var a0: Dictionary = gm[0][q]
+			var a1: Dictionary = gm[1][q]
+			var n0: Node3D = a0["node"]
+			var n1: Node3D = a1["node"]
+			if n0.position != n1.position or n0.rotation != n1.rotation or var_to_bytes(a0["vel"]) != var_to_bytes(a1["vel"]) or var_to_bytes(a0["aguante"]) != var_to_bytes(a1["aguante"]) 					or var_to_bytes(a0.get("sp_antes", 0.0)) != var_to_bytes(a1.get("sp_antes", 0.0)) or a0.get("empujon", Vector3.ZERO) != a1.get("empujon", Vector3.ZERO) 					or a0.get("empujon_obj", Vector3.ZERO) != a1.get("empujon_obj", Vector3.ZERO):
+				mov_dis += 1
+		motor.t += 1.0 / 60.0
+	_comprobar(mov_dis == 0, "movimiento de los 22: C++ = GDScript (120 pasos de 44 jugadores; distintos: %d)" % mov_dis)
+	print("movimiento: GDScript %.1f µs, C++ %.1f µs por paso" % [tmg / 120.0, tmc / 120.0])
+	raiz_m.queue_free()
 	motor.free()
 	raiz_c.queue_free()
 	## (10-11, paso a C++) El partido simulado de la IA entero (90 minutos) en C++: mismo marcador, estadísticas, jugadores y azar que `Partido.simular()`, en cuatro mundos.

@@ -93,6 +93,38 @@ func _apagar_procesos() -> void:
 		if raiz3d != null:
 			for h in raiz3d.get_children():
 				print("LISTA3D %s (%s) nodos=%d proc=%s" % [h.name, h.get_class(), _contar(h), str(h.is_processing())])
+	if OS.get_environment("CONTAR") != "":
+		## CONTAR=1: nodos de todo el árbol con `_process` o `_physics_process` activo, agrupados por script.
+		var por_script := {}
+		var pila: Array[Node] = [get_tree().root]
+		while not pila.is_empty():
+			var n: Node = pila.pop_back()
+			pila.append_array(n.get_children())
+			if n.is_processing() or n.is_physics_processing():
+				var s: Variant = n.get_script()
+				var clave: String = (s as Script).resource_path if s != null else "(nativo) " + n.get_class()
+				if clave == "":
+					clave = "(script sin ruta) %s ej: %s" % [n.get_class(), n.get_path()]
+				por_script[clave] = int(por_script.get(clave, 0)) + 1
+		var claves := por_script.keys()
+		claves.sort_custom(func(a: Variant, b: Variant) -> bool: return por_script[a] > por_script[b])
+		for k in claves:
+			print("PROC %4d  %s" % [por_script[k], k])
+	var por_ruta := OS.get_environment("APAGAR_SCRIPT")   ## APAGAR_SCRIPT=anim_transiciones.gd,...: apaga el `_process` de todos los nodos con ese script (solo diagnóstico)
+	if por_ruta != "":
+		var apagados := 0
+		var pila2: Array[Node] = [get_tree().root]
+		while not pila2.is_empty():
+			var m: Node = pila2.pop_back()
+			pila2.append_array(m.get_children())
+			var sc: Variant = m.get_script()
+			if sc != null:
+				for fin in por_ruta.split(",", false):
+					if (sc as Script).resource_path.ends_with(fin) or (fin == "SINRUTA" and (sc as Script).resource_path == ""):
+						m.set_process(false)
+						m.set_physics_process(false)
+						apagados += 1
+		print("APAGADOS %d nodos por script" % apagados)
 	for nombre in OS.get_environment("APAGAR").split(",", false):
 		if nombre == "VISTA":
 			_vista.set_process(false)   ## todo el `_process` de VistaEstadio (motor del partido, cine, HUD)

@@ -20,6 +20,8 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("once_asignar_libres", "ranuras", "libres", "grupo_de", "orden"), &DinastiaNativo::once_asignar_libres);
 	ClassDB::bind_method(D_METHOD("obstaculos_multimalla", "nodo_t", "buf", "paso", "n", "base", "raiz_y", "min_alto", "max_base", "rej", "celda_rej"), &DinastiaNativo::obstaculos_multimalla);
 	ClassDB::bind_method(D_METHOD("cuerpos_motor", "jugadores", "minimo"), &DinastiaNativo::cuerpos_motor);
+	ClassDB::bind_method(D_METHOD("mover_jugadores_fisica", "jugadores", "bpos", "delta", "t", "hay_poseedor", "poseedor_id", "poseedor_local", "a_max_base", "ancho", "largo", "giro_rapido", "coste_aguante"),
+			&DinastiaNativo::mover_jugadores_fisica);
 	ClassDB::bind_method(D_METHOD("cerrar_notas", "p", "rng"), &DinastiaNativo::cerrar_notas);
 	ClassDB::bind_method(D_METHOD("pcg_coincide"), &DinastiaNativo::pcg_coincide);
 	ClassDB::bind_method(D_METHOD("simular_90", "p", "ayuda", "cfg", "rng", "azar_propio"), &DinastiaNativo::simular_90);

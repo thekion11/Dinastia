@@ -52,6 +52,10 @@ public:
 	// `MotorJugable._cuerpos` (visor/motor_jugable_p11.gd, M-391): separa de dos en dos a los jugadores que se pisan (reparto por masa) y frena la velocidad con que se acercan. `jugadores` = los
 	// diccionarios del motor ({node, vel, fuerza, aguante, ...}); mueve `node.position` y reescribe `vel`, igual que el GDScript. `minimo` = 2 × radio del cuerpo.
 	void cuerpos_motor(const Array &jugadores, double minimo) const;
+	// `MotorJugable._mover_fisica_gd` (visor/motor_jugable_p5.gd, 15-11): el movimiento de los 22 (velocidad, giro, empujón, posición, rumbo, inclinación y aguante). Devuelve 4 valores por jugador
+	// [válido, velocidad, va_atrás, distancia_al_balón] para el bucle de animación, que sigue en GDScript. `coste_aguante` = [local, visitante] (el coste táctico del sprint).
+	PackedFloat64Array mover_jugadores_fisica(const Array &jugadores, const Vector3 &bpos, double delta, double t, bool hay_poseedor, const Variant &poseedor_id, bool poseedor_local, double a_max_base,
+			double ancho, double largo, double giro_rapido, const PackedFloat64Array &coste_aguante) const;
 	// `Partido.simular_minuto()` x 90 de un cruce de la IA que nadie mira (nucleo/partido_rapido.gd): mismo orden de llamadas al azar; los sucesos raros vuelven a GDScript (`ayuda`).
 	void simular_90(Object *p, Object *ayuda, const Dictionary &cfg, const Ref<RandomNumberGenerator> &rng, bool azar_propio) const;
 	// `Partido._cerrar_notas()` (nucleo/partido.gd): nota final, forma y partidos de cada jugador del cruce, con la misma tirada de azar por jugador (`rng` = `Azar._rng`).

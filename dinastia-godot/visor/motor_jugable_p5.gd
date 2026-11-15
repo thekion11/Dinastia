@@ -90,12 +90,28 @@ func _duelos() -> void:
 # ---------------------------------------------------------------- movimiento
 
 const CICLO_ANIM := {"trotar": 3.4, "correr": 7.0, "conducir": 3.6, "trotar_atras": 2.6, "portero_lateral_der": 2.0, "portero_lateral_izq": 2.0}   ## (13-11, rendimiento) antes un Dictionary nuevo por jugador y paso
-func _mover_jugadores(delta: float) -> void:
-	var bpos := balon.position   ## (13-11, rendimiento) el balón no se mueve dentro de este bucle
+func _mover_fisica(delta: float, bpos: Vector3) -> PackedFloat64Array:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("mover_jugadores_fisica"):
+		var cl := _coste_aguante(true)
+		var cv := _coste_aguante(false)
+		return nat.mover_jugadores_fisica(jugadores, bpos, delta, t, not poseedor.is_empty(), poseedor.get("id", ""), bool(poseedor.get("es_local", false)),
+			A_MAX, ANCHO, LARGO, GIRO_RAPIDO, PackedFloat64Array([cl, cv]))
+	return _mover_fisica_gd(delta, bpos)
+
+func _coste_aguante(local: bool) -> float:
+	return 1.0 + 0.35 * float(_tac(local, "presion") - 1) + 0.15 * float(_tac(local, "ritmo") - 1)
+
+func _mover_fisica_gd(delta: float, bpos: Vector3) -> PackedFloat64Array:
+	var salida := PackedFloat64Array()
+	salida.resize(jugadores.size() * 4)
+	var idx := -1
 	for p: Dictionary in jugadores:
+		idx += 1
 		var n: Node3D = p["node"]
 		if not is_instance_valid(n) or not p.has("objetivo"):
 			continue
+		salida[idx * 4] = 1.0
 		var np: Vector3 = n.position   ## (13-11, rendimiento) una lectura y una escritura de la posición del nodo por jugador y paso (antes 5-9 llamadas nativas)
 		var obj: Vector3 = p["objetivo"] if float(p.get("levanta_hasta", 0.0)) <= t else np   ## en el suelo tras la barrida (31-10)
 		obj.y = 0.0
@@ -197,7 +213,26 @@ func _mover_jugadores(delta: float) -> void:
 			p["aguante"] = maxf(0.2, float(p["aguante"]) - delta * 0.012 * (1.4 - float(p["attr"]["fis"])) * coste)
 		else:
 			p["aguante"] = minf(1.0, float(p["aguante"]) + delta * 0.006)
+		salida[idx * 4 + 1] = sp
+		salida[idx * 4 + 2] = 1.0 if atras else 0.0
+		salida[idx * 4 + 3] = hacia_b.length()
+	return salida
 
+## (15-11, paso a C++) El movimiento de los 22 corre en `mover_jugadores_fisica` (extensión nativa, misma aritmética; `igualdad` en `pruebas/probar_nativo.tscn`);
+## sin ella, `_mover_fisica_gd`. Las dos devuelven [válido, velocidad, va_atrás, distancia_al_balón] por jugador para el bucle de animación de abajo.
+func _mover_jugadores(delta: float) -> void:
+	var bpos := balon.position   ## (13-11, rendimiento) el balón no se mueve dentro de este bucle
+	var res := _mover_fisica(delta, bpos)
+	var idx := -1
+	for p: Dictionary in jugadores:
+		idx += 1
+		if res[idx * 4] == 0.0:
+			continue
+		var n: Node3D = p["node"]
+		var sp := res[idx * 4 + 1]
+		var atras := res[idx * 4 + 2] > 0.5
+		var hacia_b_len := res[idx * 4 + 3]
+		var vel: Vector3 = p["vel"]
 		## La animación según la velocidad (salvo que haya un gesto en curso).
 		if float(p.get("levantar_en", 0.0)) > 0.0:
 			if t < float(p["levantar_en"]):
@@ -215,7 +250,7 @@ func _mover_jugadores(delta: float) -> void:
 			anim = "trotar_atras"
 		elif bool(p.get("jockey", false)) and poseedor != p and sp < 4.5:
 			anim = "marcar"
-		elif sp < 0.5 and bool(p["por"]) and hacia_b.length() < 32.0:
+		elif sp < 0.5 and bool(p["por"]) and hacia_b_len < 32.0:
 			anim = "portero_listo"
 		elif bool(p["por"]) and poseedor != p and sp >= 0.5 and sp < 6.0:
 			var fr := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
@@ -232,6 +267,7 @@ func _mover_jugadores(delta: float) -> void:
 		var ap: AnimationPlayer = p.get("anim")
 		if is_instance_valid(ap):
 			ap.speed_scale = clampf(sp / float(CICLO_ANIM[anim]), 0.7, 1.4) if CICLO_ANIM.has(anim) else 1.0
+
 func _actualizar_balon_visual(_delta: float) -> void:
 	if balon == null:
 		return
