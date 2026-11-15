@@ -10,6 +10,9 @@ const MAX := 3
 static var _guardados: Dictionary = {}   ## id -> PantallaMenu (fuera del árbol)
 static var _usos: Dictionary = {}        ## id -> veces abierto, para saber cuál precargar
 static var activo := OS.get_environment("SIN_MENU_GUARDADO") == ""
+## (15-11) Las pantallas perezosas que pinta cada menú al entrar en sus submenús: en reposo se cargan y compilan de antemano (medido:
+## la primera entrada a Plantel, 416 → 178 ms con «plantel» y «ficha» ya creadas). Una por llamada, para no trabar si vuelve a tocar.
+const PEREZOSAS := {"plantel": ["plantel", "ficha"], "dinero": ["finanzas"], "historia": ["legado"], "gente": ["gente"], "competiciones": ["plantel"]}
 
 ## La huella de lo que muestra la portada de un menú: si cambia, lo guardado ya no vale.
 static func huella(p: Principal, menu: Dictionary) -> String:
@@ -81,6 +84,11 @@ static func precargar(p: Principal) -> void:
 			mas = int(_usos[k])
 			id = k
 	if _guardados.has(id):
+		var perezosas: Dictionary = p.get("_perezosas") if p.get("_perezosas") is Dictionary else {}
+		for nombre: String in PEREZOSAS.get(id, []):
+			if not perezosas.has(nombre):
+				p._pantalla_perezosa(nombre)
+				return
 		return
 	var abierta: Variant = p._menu_lateral.pantalla_abierta if p.get("_menu_lateral") != null else null
 	if abierta != null and is_instance_valid(abierta) and not (abierta as PantallaMenu).cerrando():

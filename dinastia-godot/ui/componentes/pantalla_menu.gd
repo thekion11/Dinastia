@@ -276,9 +276,8 @@ func elegir(i: int) -> void:
 	_titulo_sub.text = "%s  %s" % [String(sub.get("icono", "")), Idiomas.t(String(sub["label"]))]
 	var antes: bool = _p._redirigiendo   ## la pestaña se cambia aquí dentro: que no se vuelva a elegir ni abra otro menú
 	_p._redirigiendo = true
-	_p._ir_a_chip(sub)
+	_p._ir_a_chip(sub)   ## ya refresca la principal (`Hubs.ir_a_chip`): (15-11) aquí se refrescaba OTRA vez, 30-127 ms de más por submenú
 	_p._redirigiendo = antes
-	_p._refrescar()
 	if _hueco_contenido != null:
 		_hueco_contenido.modulate.a = 0.35
 		create_tween().tween_property(_hueco_contenido, "modulate:a", 1.0, 0.18)
