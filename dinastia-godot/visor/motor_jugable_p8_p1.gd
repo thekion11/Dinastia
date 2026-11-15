@@ -221,12 +221,20 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	var md := 16.0 if al_hombre else 11.0
 	var r_vista := MotorMente.retardo(self as Object as MotorJugable, p)   ## (13-11, rendimiento) una vez por jugador, no por rival
 	var es_local_p := bool(p["es_local"])
-	for q: Dictionary in jugadores:
-		if bool(q["es_local"]) != es_local_p and not bool(q["por"]):
-			var d := MotorMente.pos_vista_con(self as Object as MotorJugable, q, r_vista).distance_to(obj)
-			if d < md:
-				md = d
-				rival = q
+	if r_vista == 0.0:   ## (15-11, rendimiento) sin retardo `pos_vista_con` devuelve `pos(q)`: se lee directo, sin la llamada estática por rival
+		for q: Dictionary in jugadores:
+			if bool(q["es_local"]) != es_local_p and not bool(q["por"]):
+				var d := (q["node"] as Node3D).position.distance_to(obj)
+				if d < md:
+					md = d
+					rival = q
+	else:
+		for q: Dictionary in jugadores:
+			if bool(q["es_local"]) != es_local_p and not bool(q["por"]):
+				var d := MotorMente.pos_vista_con(self as Object as MotorJugable, q, r_vista).distance_to(obj)
+				if d < md:
+					md = d
+					rival = q
 	if not rival.is_empty():
 		## Marca a distancia de zona: entre el rival y el arco, a 2,4 m (donde LO VE: F8, 03-11).
 		var pv := MotorMente.pos_vista(self as Object as MotorJugable, p, rival)
