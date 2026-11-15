@@ -8658,7 +8658,8 @@
   "Apagado: Mundo clásico, con menos partículas y movimiento que antes. Encendido: pantallas quietas que solo se dibujan al cambiar.": "Off: Classic world, with fewer particles and less motion than before. On: still screens that are only redrawn when something changes.",
   "Estilo del mundo": "World style",
   "RD del Congo": "DR Congo",
-  "Segunda División": "Second Division"
+  "Segunda División": "Second Division",
+  "%d.ª División": "Division %d"
  },
  "pt": {
   "Historia": "História",
@@ -17319,7 +17320,8 @@
   "Apagado: Mundo clásico, con menos partículas y movimiento que antes. Encendido: pantallas quietas que solo se dibujan al cambiar.": "Desligado: Mundo clássico, com menos partículas e movimento do que antes. Ligado: ecrãs quietos que só se desenham ao mudar.",
   "Estilo del mundo": "Estilo do mundo",
   "RD del Congo": "RD do Congo",
-  "Segunda División": "Segunda Divisão"
+  "Segunda División": "Segunda Divisão",
+  "%d.ª División": "%d.ª Divisão"
  },
  "patrones": [
   [
@@ -32120,7 +32122,8 @@
   "Apagado: Mundo clásico, con menos partículas y movimiento que antes. Encendido: pantallas quietas que solo se dibujan al cambiar.": "Désactivé : Monde classique, avec moins de particules et de mouvement qu'avant. Activé : écrans fixes redessinés seulement quand ils changent.",
   "Estilo del mundo": "Style du monde",
   "RD del Congo": "RD du Congo",
-  "Segunda División": "Deuxième division"
+  "Segunda División": "Deuxième division",
+  "%d.ª División": "Division %d"
  },
  "it": {
   "Historia": "Storia",
@@ -40781,7 +40784,8 @@
   "Apagado: Mundo clásico, con menos partículas y movimiento que antes. Encendido: pantallas quietas que solo se dibujan al cambiar.": "Spento: Mondo classico, con meno particelle e movimento di prima. Acceso: schermate ferme che si ridisegnano solo quando cambiano.",
   "Estilo del mundo": "Stile del mondo",
   "RD del Congo": "RD del Congo",
-  "Segunda División": "Seconda divisione"
+  "Segunda División": "Seconda divisione",
+  "%d.ª División": "%d.ª Divisione"
  },
  "de": {
   "Historia": "Geschichte",
@@ -49442,7 +49446,8 @@
   "Apagado: Mundo clásico, con menos partículas y movimiento que antes. Encendido: pantallas quietas que solo se dibujan al cambiar.": "Aus: Klassische Welt, mit weniger Partikeln und Bewegung als bisher. An: ruhige Bildschirme, die nur bei Änderungen neu gezeichnet werden.",
   "Estilo del mundo": "Weltstil",
   "RD del Congo": "DR Kongo",
-  "Segunda División": "Zweite Liga"
+  "Segunda División": "Zweite Liga",
+  "%d.ª División": "%d. Liga"
  },
  "ca": {
   "Historia": "Història",
@@ -58103,7 +58108,8 @@
   "Apagado: Mundo clásico, con menos partículas y movimiento que antes. Encendido: pantallas quietas que solo se dibujan al cambiar.": "Apagat: Món clàssic, amb menys partícules i moviment que abans. Encès: pantalles quietes que només es dibuixen en canviar.",
   "Estilo del mundo": "Estil del món",
   "RD del Congo": "RD del Congo",
-  "Segunda División": "Segona Divisió"
+  "Segunda División": "Segona Divisió",
+  "%d.ª División": "%d.ª Divisió"
  },
  "pl": {
   "Club": "Klub",
@@ -66764,7 +66770,8 @@
   "Apagado: Mundo clásico, con menos partículas y movimiento que antes. Encendido: pantallas quietas que solo se dibujan al cambiar.": "Wyłączone: klasyczny świat, z mniejszą liczbą cząsteczek i ruchu niż wcześniej. Włączone: nieruchome ekrany, rysowane tylko przy zmianie.",
   "Estilo del mundo": "Styl świata",
   "RD del Congo": "DR Konga",
-  "Segunda División": "Druga liga"
+  "Segunda División": "Druga liga",
+  "%d.ª División": "%d. liga"
  },
  "tr": {
   "Club": "Kulüp",
@@ -75425,6 +75432,7 @@
   "Apagado: Mundo clásico, con menos partículas y movimiento que antes. Encendido: pantallas quietas que solo se dibujan al cambiar.": "Kapalı: Klasik dünya, eskisinden daha az parçacık ve hareketle. Açık: yalnızca bir şey değiştiğinde yeniden çizilen sabit ekranlar.",
   "Estilo del mundo": "Dünya stili",
   "RD del Congo": "Kongo DC",
-  "Segunda División": "İkinci lig"
+  "Segunda División": "İkinci lig",
+  "%d.ª División": "%d. Lig"
  }
 }

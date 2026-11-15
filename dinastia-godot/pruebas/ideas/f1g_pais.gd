@@ -163,6 +163,12 @@ func _pantalla_normal() -> void:
 	_comprobar(rotulos.any(func(t: String) -> bool: return t.begins_with("PRIMERA DIVISIÓN")) and rotulos.any(func(t: String) -> bool: return t.begins_with("SEGUNDA DIVISIÓN")),
 		"separados por división, con su rótulo (%s)" % [rotulos])
 	_comprobar(s.ficha().club_marcado() != null and s.ficha().club_marcado().nombre == s.ficha().clubes_listados[0], "queda marcado el primero de primera")
+	var fichas := s.ficha()
+	var visibles := func() -> int: return fichas.get("_cuerpo").get_children().filter(func(n: Node) -> bool: return n is Button and n.has_meta("club") and (n as Button).visible).size()
+	_comprobar(visibles.call() == 16, "con pestañas: se ve solo primera (%d)" % visibles.call())
+	fichas.ver_division(1)
+	_comprobar(visibles.call() == segunda_chi and fichas.club_marcado().nombre == fichas.clubes_listados[0], "la pestaña de segunda enseña sus %d clubes y el marcado sigue siendo el de primera" % segunda_chi)
+	fichas.ver_division(0)
 	## Cambiar de país desde la lista.
 	(s.get("_lista") as PaisLista).elegido.emit("JPN")
 	_comprobar(s.pais == "JPN" and s.get("_nombre").text == "Japón" and f.pais == "JPN" and f.indice == 0,

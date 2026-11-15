@@ -93,18 +93,53 @@ func mostrar(p: String, crear_club: bool, mundo: Mundo) -> void:
 	rot.add_theme_color_override("font_color", Tema.ORO)
 	_cuerpo.add_child(rot)
 	## (15-11, pedido del dueño) Separados por división: primera, segunda… cada una con su rótulo y su nombre de liga.
+	## Con más de una división, pestañas arriba («1.ª División», «2.ª División»): se ve una a la vez y la separación salta a la vista.
 	var primero: Club = null
-	for d: Array in _divisiones(p, mundo):
+	var divs := _divisiones(p, mundo)
+	var pestanas := HBoxContainer.new()
+	pestanas.add_theme_constant_override("separation", 6)
+	if divs.size() > 1:
+		_cuerpo.add_child(pestanas)
+	_filas_div.clear()
+	for i in divs.size():
+		var d: Array = divs[i]
 		var cab := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.mayusculas(String(d[0])))
-		cab.add_theme_constant_override("margin_top", 6)
 		_cuerpo.add_child(cab)
+		var filas: Array = [cab]
 		for c: Club in d[1]:
-			_cuerpo.add_child(_fila(c))
+			var f := _fila(c)
+			_cuerpo.add_child(f)
+			filas.append(f)
 			clubes_listados.append(c.nombre)
 			if primero == null:
 				primero = c
+		_filas_div.append(filas)
+		if divs.size() > 1:
+			var t := Button.new()
+			t.toggle_mode = true
+			t.text = Idiomas.t("%d.ª División") % (i + 1)
+			t.custom_minimum_size = Vector2(0, 36)
+			t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			t.pressed.connect(ver_division.bind(i))
+			pestanas.add_child(t)
+	_pestanas = pestanas
+	ver_division(0)
 	if primero != null:
 		_marcar(primero)
+
+var _filas_div: Array = []   ## por división: [rótulo, filas de clubes…]
+var _pestanas: HBoxContainer
+var division_vista := 0
+
+## Enseña solo los clubes de una división (las otras quedan ocultas, no borradas: el club marcado sigue marcado).
+func ver_division(i: int) -> void:
+	division_vista = i
+	for k in _filas_div.size():
+		for n: Control in _filas_div[k]:
+			n.visible = k == i
+	if _pestanas != null:
+		for k in _pestanas.get_child_count():
+			(_pestanas.get_child(k) as Button).set_pressed_no_signal(k == i)
 
 ## Al fundar un club la ficha quedaba medio vacía (captura del 26-10). Regla del guion
 ## (etapa 3): «si creas un club, no se muestran los demás»; por eso aquí NO hay ningún

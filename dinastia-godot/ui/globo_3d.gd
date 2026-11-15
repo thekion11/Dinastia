@@ -385,6 +385,7 @@ func _process(delta: float) -> void:
 			if AhorroMenu.fondo_estatico():
 				_reposo = true   ## MÍNIMA (3-11): sin deriva; se pinta esta imagen una vez y queda quieto hasta que lo toquen
 				_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+				queue_redraw()   ## (15-11) con el modo de bajo consumo, sin esto la ventana no se volvía a dibujar y el globo quedaba a medio girar
 			else:
 				## Deriva lenta perpetua, como el HTML: el globo sigue vivo aunque nadie lo toque.
 				_lon_obj -= _giro_idle * delta

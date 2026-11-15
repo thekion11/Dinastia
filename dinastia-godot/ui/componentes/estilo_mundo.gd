@@ -13,6 +13,8 @@ const MOVIMIENTO_CLASICO := 0.6   ## a qué ritmo se mueven los fondos y gira el
 static var suave: bool = _leer()
 
 static func _leer() -> bool:
+	if OS.get_environment("ESTILO_MUNDO") != "":   ## para medir y capturar sin tocar lo guardado: ESTILO_MUNDO=suave|clasico
+		return OS.get_environment("ESTILO_MUNDO") == "suave"
 	var cf := ConfigFile.new()
 	return cf.load(RUTA) == OK and bool(cf.get_value("estilo", "suave", false))
 

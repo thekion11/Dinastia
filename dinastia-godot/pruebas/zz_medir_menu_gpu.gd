@@ -37,6 +37,8 @@ func _ready() -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
+	if _n == 4 and OS.get_environment("ESTILO_MENU") != "":   ## (15-11) ESTILO_MENU=pildora|compacto|barra
+		_p.set("_estilo_menu", OS.get_environment("ESTILO_MENU"))
 	if _n == 5 and _p.has_method("_refrescar"):
 		var m := Mundo.new()
 		var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"   ## (10-11) PAIS=ESP CLUB=5: otro país y otro club
