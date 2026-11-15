@@ -1,14 +1,10 @@
 class_name PanelPlantel
 extends RefCounted
-## La pestaña "Mi plantel": la rejilla de 24 fichas con cabeceras que ordenan
-## al pulsarlas. Medida antes de tocarla (26-9-2026, misma disciplina del día):
-## resultó bastante más chica que el resto -57 líneas más el comparador-, pero
-## con una coupling que no tienen `TablaCompeticion`/`FichaJugadorInfo`: pintar
-## una fila de jugador (`Principal._fila_jugador()`) navega DIRECTO a la ficha
-## y cambia de pestaña (`_ver_ficha()`/`_ir_a_pestana()`), y el color de las
-## cabeceras pasa por `Principal._color_de_paleta()` -la traducción de tema,
-## distinta de `_color_accesible()`/`_pal_*()` que ya usan los demás
-## componentes, con su propio salto de contraste (`_con_contraste()`)-.
+## La pestaña "Mi plantel": la rejilla de 24 fichas con cabeceras que ordenan al pulsarlas. Medida antes de tocarla (26-9-2026): bastante
+## más chica que el resto -57 líneas más el comparador-, pero con una coupling que no tienen `TablaCompeticion`/`FichaJugadorInfo`: pintar
+## una fila de jugador (`Principal._fila_jugador()`) navega DIRECTO a la ficha y cambia de pestaña (`_ver_ficha()`/`_ir_a_pestana()`), y el
+## color de las cabeceras pasa por `Principal._color_de_paleta()` -la traducción de tema, distinta de `_color_accesible()`/`_pal_*()` que ya
+## usan los demás componentes, con su propio salto de contraste (`_con_contraste()`)-.
 ##
 ## Duplicar esas dos cosas aquí habría creado una segunda fuente de verdad
 ## sobre cómo se navega a una ficha y sobre cómo se traduce un color de tema.
@@ -104,9 +100,8 @@ static func pintar(lista: VBoxContainer, c: Club, mundo: Mundo, orden: String, o
 			lista.move_child(n, pos)
 			pos += 1
 
-## La rejilla (cabeceras + una fila por jugador) es FIJA: se reusa entre repintados. Cada fila de jugador (cara, nombre con marcas y cinco celdas)
-## se rehace solo si cambió algo de lo que se ve (`_firma`); si no, se queda como estaba y solo se recoloca. Sin esto, cada repintado
-## daba forma otra vez al nombre de los 25 jugadores (con símbolos de fuente de respaldo) y creaba ~200 nodos.
+## La rejilla (cabeceras + una fila por jugador) es FIJA: se reusa entre repintados. Cada fila (cara, nombre con marcas y cinco celdas) se rehace solo si
+## cambió lo que se ve (`_firma`); si no, solo se recoloca. Sin esto, cada repintado daba forma otra vez a 25 nombres y creaba ~200 nodos.
 static func _rejilla(lista: VBoxContainer, fijos: Dictionary, orden: String, orden_desc: bool, col_acento: Color, color_de_paleta: Callable) -> GridContainer:
 	var g := fijos.get("rejilla") as GridContainer
 	if g != null:
@@ -147,11 +142,18 @@ static func _firma(c: Club, textos: Array, colores: Array, ayuda: String, color_
 	return "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % [";".join(PackedStringArray(textos)), ",".join(cs), ayuda, c.color1, c.color2,
 		Tema.escala_texto, Tema.daltonico, Tema.contraste, Idiomas.idioma, "%s%s%s" % [Cara.usar_fotos, Cara.modo_streamer, Datos.base_real]]
 
+const POR_FOTOGRAMA := 10
 static func _filas(g: GridContainer, c: Club, mundo: Mundo, orden_jugadores: Array, fila_jugador: Callable, color_de_paleta: Callable) -> void:
 	var cache: Dictionary = g.get_meta(META_FILAS, {})
 	var vivos := {}
 	var nodos_en_orden: Array = []
+	## (15-11, por partes) Con pantalla, `POR_FOTOGRAMA` filas nuevas por fotograma (cada una ~5 ms: 25 eran ~160 ms de golpe). Sin pantalla, todas.
+	var nuevas := 0; var faltan := false
+	var por_partes := DisplayServer.get_name() != "headless"
 	for j: Jugador in orden_jugadores:
+		if por_partes and nuevas >= POR_FOTOGRAMA and not cache.has(j.get_instance_id()):
+			faltan = true
+			continue
 		var color := COL_TEXTO
 		if not j.disponible():
 			color = COL_ROJO
@@ -202,6 +204,7 @@ static func _filas(g: GridContainer, c: Club, mundo: Mundo, orden_jugadores: Arr
 				celda.mouse_filter = Control.MOUSE_FILTER_PASS
 			fila = {"firma": firma, "nodos": g.get_children().slice(antes)}
 			cache[id] = fila
+			nuevas += 1
 		vivos[id] = true
 		nodos_en_orden.append_array(fila["nodos"])
 	for id: int in cache.keys():
@@ -215,6 +218,10 @@ static func _filas(g: GridContainer, c: Club, mundo: Mundo, orden_jugadores: Arr
 	for n: Node in nodos_en_orden:
 		g.move_child(n, pos)
 		pos += 1
+	if faltan and g.is_inside_tree():
+		g.get_tree().process_frame.connect(func() -> void:
+			if is_instance_valid(g) and g.is_inside_tree():
+				_filas(g, c, mundo, orden_jugadores, fila_jugador, color_de_paleta), CONNECT_ONE_SHOT)
 
 ## Riesgo de lesión de un jugador sano: "alto", "medio" o "" (bajo). Junta el informe del médico (historial y rasgo)
 ## con el físico que le queda; lesionado no se marca (ya lleva 🩹).

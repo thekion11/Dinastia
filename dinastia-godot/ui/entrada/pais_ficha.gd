@@ -74,7 +74,7 @@ func mostrar(p: String, crear_club: bool, mundo: Mundo) -> void:
 	var n = CargaCiudad.de("PaisDatos").estrellas(p)
 	_nivel.text = ("★".repeat(n) + "☆".repeat(5 - n)) if tiene else ""
 	_nivel.tooltip_text = Idiomas.t("Nivel de la liga")
-	_capital.text = Idiomas.t("Capital: %s") % Idiomas.t(String(Globo3D.CAPITAL.get(p, "?")))
+	_capital.text = Idiomas.t("Capital: %s") % Idiomas.t(Globo3D.capital(p))
 	for h in _cuerpo.get_children():
 		_cuerpo.remove_child(h)
 		h.queue_free()
@@ -92,12 +92,54 @@ func mostrar(p: String, crear_club: bool, mundo: Mundo) -> void:
 	var rot := Tema.rotulo(Idiomas.t("Elige tu club"))
 	rot.add_theme_color_override("font_color", Tema.ORO)
 	_cuerpo.add_child(rot)
-	var clubes := _clubes_de(p, mundo)
-	for c: Club in clubes:
-		_cuerpo.add_child(_fila(c))
-		clubes_listados.append(c.nombre)
-	if not clubes.is_empty():
-		_marcar(clubes[0])
+	## (15-11, pedido del dueño) Separados por división: primera, segunda… cada una con su rótulo y su nombre de liga.
+	## Con más de una división, pestañas arriba («1.ª División», «2.ª División»): se ve una a la vez y la separación salta a la vista.
+	var primero: Club = null
+	var divs := _divisiones(p, mundo)
+	var pestanas := HBoxContainer.new()
+	pestanas.add_theme_constant_override("separation", 6)
+	if divs.size() > 1:
+		_cuerpo.add_child(pestanas)
+	_filas_div.clear()
+	for i in divs.size():
+		var d: Array = divs[i]
+		var cab := Tema.etiqueta(Tema.TAM_ROTULO, Tema.SUAVE, Idiomas.mayusculas(String(d[0])))
+		_cuerpo.add_child(cab)
+		var filas: Array = [cab]
+		for c: Club in d[1]:
+			var f := _fila(c)
+			_cuerpo.add_child(f)
+			filas.append(f)
+			clubes_listados.append(c.nombre)
+			if primero == null:
+				primero = c
+		_filas_div.append(filas)
+		if divs.size() > 1:
+			var t := Button.new()
+			t.toggle_mode = true
+			t.text = Idiomas.t("%d.ª División") % (i + 1)
+			t.custom_minimum_size = Vector2(0, 36)
+			t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			t.pressed.connect(ver_division.bind(i))
+			pestanas.add_child(t)
+	_pestanas = pestanas
+	ver_division(0)
+	if primero != null:
+		_marcar(primero)
+
+var _filas_div: Array = []   ## por división: [rótulo, filas de clubes…]
+var _pestanas: HBoxContainer
+var division_vista := 0
+
+## Enseña solo los clubes de una división (las otras quedan ocultas, no borradas: el club marcado sigue marcado).
+func ver_division(i: int) -> void:
+	division_vista = i
+	for k in _filas_div.size():
+		for n: Control in _filas_div[k]:
+			n.visible = k == i
+	if _pestanas != null:
+		for k in _pestanas.get_child_count():
+			(_pestanas.get_child(k) as Button).set_pressed_no_signal(k == i)
 
 ## Al fundar un club la ficha quedaba medio vacía (captura del 26-10). Regla del guion
 ## (etapa 3): «si creas un club, no se muestran los demás»; por eso aquí NO hay ningún
@@ -139,6 +181,49 @@ func _nota(titulo: String, texto: String) -> void:
 	s.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_cuerpo.add_child(s)
 
+## Las divisiones del país, de primera hacia abajo: [rótulo, clubes]. Con el mundo generado, sus ligas (con sus ids, para poder dirigir
+## uno de segunda); sin él, las filas de las tablas (primera y, si la hay, segunda).
+func _divisiones(p: String, mundo: Mundo) -> Array:
+	var salida := []
+	if mundo != null:
+		var ligas: Array = mundo.ligas.filter(func(l: Liga) -> bool: return l.pais == p)
+		ligas.sort_custom(func(a: Liga, b: Liga) -> bool: return a.division() < b.division())
+		for l: Liga in ligas:
+			var lista: Array[Club] = []
+			lista.assign(l.clubes)
+			salida.append([_rotulo_division(l.division(), Idiomas.t(Nombres.de_tabla(l.nombre))), lista])
+		if not salida.is_empty():
+			return salida
+	salida.append([_rotulo_division(1, CargaCiudad.de("PaisDatos").nombre_liga(p)), _clubes_de(p, null)])
+	var segunda := _filas_segunda(p)
+	if not segunda.is_empty():
+		var lista2: Array[Club] = []
+		for fila: Array in segunda:
+			lista2.append(_club_de_fila(p, fila))
+		salida.append([_rotulo_division(2, ""), lista2])
+	return salida
+
+static func _rotulo_division(div: int, liga: String) -> String:
+	var n := Idiomas.t("Primera División") if div == 1 else (Idiomas.t("Segunda División") if div == 2 else Idiomas.t("División %d") % div)
+	return n + (" · " + liga if liga != "" else "")
+
+static func _filas_segunda(p: String) -> Array:
+	if p == "CHI":
+		var p2: Variant = Datos.tabla("DATA_P2")
+		return p2 if p2 is Array else []
+	var pl: Variant = Datos.tabla("PAISES_LIGAS")
+	if pl is Dictionary and (pl as Dictionary).has(p) and ((pl[p] as Dictionary).get("segunda") is Dictionary):
+		return ((pl[p] as Dictionary)["segunda"] as Dictionary).get("clubes", [])
+	return []
+
+static func _club_de_fila(p: String, fila: Array) -> Club:
+	var c := Club.new("", Nombres.de_tabla(String(fila[0])))
+	c.pais = p
+	c.color1 = String(fila[1]) if fila.size() > 1 else "#2b6b45"
+	c.color2 = String(fila[2]) if fila.size() > 2 else "#ffffff"
+	c.rep = int(fila[3]) if fila.size() > 3 else 70
+	return c
+
 ## Los de primera división, en el orden de su liga (el mismo de `club_por_defecto`: el
 ## primero de la lista es el que se dirige si no se toca nada).
 func _clubes_de(p: String, mundo: Mundo) -> Array[Club]:
@@ -149,12 +234,7 @@ func _clubes_de(p: String, mundo: Mundo) -> Array[Club]:
 				salida.assign(l.clubes)
 				return salida
 	for fila: Array in CargaCiudad.de("PaisDatos").filas_clubes(p):
-		var c := Club.new("", Nombres.de_tabla(String(fila[0])))
-		c.pais = p
-		c.color1 = String(fila[1]) if fila.size() > 1 else "#2b6b45"
-		c.color2 = String(fila[2]) if fila.size() > 2 else "#ffffff"
-		c.rep = int(fila[3]) if fila.size() > 3 else 70
-		salida.append(c)
+		salida.append(_club_de_fila(p, fila))
 	return salida
 
 func _fila(c: Club) -> Button:

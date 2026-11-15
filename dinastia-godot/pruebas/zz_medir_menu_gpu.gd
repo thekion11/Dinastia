@@ -37,6 +37,8 @@ func _ready() -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
+	if _n == 4 and OS.get_environment("ESTILO_MENU") != "":   ## (15-11) ESTILO_MENU=pildora|compacto|barra
+		_p.set("_estilo_menu", OS.get_environment("ESTILO_MENU"))
 	if _n == 5 and _p.has_method("_refrescar"):
 		var m := Mundo.new()
 		var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"   ## (10-11) PAIS=ESP CLUB=5: otro país y otro club
@@ -48,7 +50,19 @@ func _process(_d: float) -> void:
 		var id := _pantalla.get_slice(":", 1)
 		for mn: Dictionary in MenuLateral.MENUS:
 			if String(mn["id"]) == id:
+				var t_abrir := Time.get_ticks_usec()
 				PantallaMenu.abrir(_p as Principal, mn)
+				var t_montar := Time.get_ticks_usec()
+				await RenderingServer.frame_post_draw
+				print("MENU apertura %s: montar %d ms · hasta verse %d ms" % [id, (t_montar - t_abrir) / 1000, (Time.get_ticks_usec() - t_abrir) / 1000])
+	if _n == 110 and OS.get_environment("SIN_SOMBRA_CAJAS") != "":   ## (15-11) prueba: las cajas sin sombra, ¿cuántas llamadas ahorra?
+		for c in get_tree().root.find_children("*", "Control", true, false):
+			for nombre: String in ["panel", "normal", "hover", "pressed", "focus"]:
+				if (c as Control).has_theme_stylebox(nombre):
+					var sb := (c as Control).get_theme_stylebox(nombre)
+					if sb is StyleBoxFlat:
+						(sb as StyleBoxFlat).shadow_size = 0
+			(c as Control).queue_redraw()
 	if _n == 120:
 		var vp := get_viewport()
 		print("MENU llamadas %d  objetos %d  primitivas %d" % [
@@ -87,6 +101,31 @@ func _process(_d: float) -> void:
 			if x.is_processing():
 				quien.append(str(x.get_path()).get_file() + ":" + x.get_class())
 		print("MENU procesan: ", quien)
+		if OS.get_environment("CENSO") != "":   ## (15-11) qué rompe el agrupado de dibujo en 2D: sombras de texto y de cajas, texturas distintas
+			var lab := 0
+			var lab_sombra := 0
+			var cajas_sombra := 0
+			var cajas := 0
+			var texs := {}
+			var por_clase := {}
+			for c in get_tree().root.find_children("*", "Control", true, false):
+				if not (c as Control).is_visible_in_tree():
+					continue
+				por_clase[c.get_class()] = int(por_clase.get(c.get_class(), 0)) + 1
+				if c is Label:
+					lab += 1
+					if (c as Label).get_theme_color("font_shadow_color").a > 0.01 or ((c as Label).label_settings != null and (c as Label).label_settings.shadow_color.a > 0.01 and (c as Label).label_settings.shadow_size > 0):
+						lab_sombra += 1
+				for nombre: String in ["panel", "normal"]:
+					if (c as Control).has_theme_stylebox(nombre):
+						var sb := (c as Control).get_theme_stylebox(nombre)
+						if sb is StyleBoxFlat:
+							cajas += 1
+							if (sb as StyleBoxFlat).shadow_size > 0:
+								cajas_sombra += 1
+				if c is TextureRect and (c as TextureRect).texture != null:
+					texs[(c as TextureRect).texture.get_rid()] = true
+			print("MENU censo: etiquetas %d (con sombra %d) · cajas planas %d (con sombra %d) · texturas distintas %d · por clase %s" % [lab, lab_sombra, cajas, cajas_sombra, texs.size(), str(por_clase)])
 		_dibujados = 0
 		RenderingServer.frame_post_draw.connect(func() -> void: _dibujados += 1)
 		_t0 = Time.get_ticks_msec()

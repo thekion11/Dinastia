@@ -40,7 +40,7 @@ static func desde_guardado(valor: int, version: int = 1) -> int:
 	if valor <= -1:
 		return ULTRA_BAJA
 	return MEDIA if valor == 0 else (ALTA if valor == 1 else ULTRA_ALTA)
-const ESCALA_MINIMO := 0.5   ## el valor por defecto; el jugador lo elige en Ajustes (35-100 %)
+const ESCALA_MINIMO := 0.4   ## el valor por defecto (14-11, orden del dueño: 50 → 40 %); el jugador lo elige en Ajustes (35-100 %)
 const ESCALA_MIN_POSIBLE := 0.35
 const ESCALA_MEDIA_MIN := 0.5   ## (4-11) la resolución del 3D también se elige en MEDIA (50-100 %, por defecto 100 %)
 static var escala_media := 1.0
@@ -93,7 +93,7 @@ static var adaptativa: bool = true
 ## PARTIDO LIGERO (4-11, orden 32): agregado aparte de la calidad, apagado por defecto en todas (ver `PartidoLigero`).
 static var partido_ligero: bool = false
 static var ahorro_menu_media: bool = CalidadRes3D.es_movil_tactil()   ## (10-11) Ajustes: el menú también ahorra (repinta solo al cambiar, fondos quietos) en MEDIA (`AhorroMenu`); ENCENDIDO por defecto en el móvil (orden 36)
-static var modo_rendimiento: bool = CalidadRes3D.es_movil_tactil()   ## (10-11) Ajustes: sin glow ni sombra del sol de MEDIA hacia abajo (`ModoRendimiento`); ENCENDIDO por defecto en el móvil (orden 36)
+static var modo_rendimiento: bool = true   ## (10-11) Ajustes: sin glow ni sombra del sol de MEDIA hacia abajo (`ModoRendimiento`); ENCENDIDO por defecto en todas las plataformas (móvil: orden 36; PC: 15-11, orden del dueño)
 
 ## Hora del dia. El atardecer es el que mejor sienta a un complejo deportivo:
 ## luz rasante, sombras largas y contraste, que es lo que hace que un render
@@ -251,7 +251,7 @@ static func entorno(nivel: int, momento: int = TARDE) -> WorldEnvironment:
 		env.fog_sky_affect = 0.0
 
 	## Ajuste fino de color. Poco, pero quita el gris lechoso.
-	env.adjustment_enabled = true
+	env.adjustment_enabled = ModoRendimiento.ajuste_color(nivel)
 	env.adjustment_brightness = 1.0
 	env.adjustment_contrast = 1.06
 	env.adjustment_saturation = 1.08
@@ -393,7 +393,7 @@ static func cargar() -> void:
 	if cf.has_section_key("grafica", "adaptativa"):
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
 	partido_ligero = bool(cf.get_value("grafica", "partido_ligero", false))
-	modo_rendimiento = bool(cf.get_value("grafica", "modo_rendimiento", CalidadRes3D.es_movil_tactil()))
+	modo_rendimiento = bool(cf.get_value("grafica", "modo_rendimiento", true))
 	ahorro_menu_media = bool(cf.get_value("grafica", "ahorro_menu_media", CalidadRes3D.es_movil_tactil()))
 	if cf.has_section_key("grafica", "motor_ligero"):
 		motor_ligero = bool(cf.get_value("grafica", "motor_ligero"))

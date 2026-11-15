@@ -33,6 +33,7 @@ signal cancelado()
 const ETAPAS := [
 	{"clave": "intro", "ruta": "res://ui/entrada/intro.gd", "titulo": "Intro"},
 	{"clave": "idioma", "ruta": "res://ui/entrada/idioma.gd", "titulo": "Idioma"},
+	{"clave": "estilo", "ruta": "res://ui/entrada/estilo_mundo_pantalla.gd", "titulo": "Estilo del mundo"},   ## (15-11) Mundo clásico o suave, antes de crear el mundo
 	{"clave": "modo", "ruta": "res://ui/entrada/menu_modos.gd", "titulo": "Modo de juego"},
 	{"clave": "ligas", "ruta": "res://ui/entrada/ligas_activas_pantalla.gd", "titulo": "Ligas activas"},   ## (10-11) qué países se cargan
 	{"clave": "pais", "ruta": "res://ui/entrada/pais.gd", "titulo": "País"},

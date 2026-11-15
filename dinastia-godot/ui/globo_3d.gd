@@ -51,8 +51,12 @@ signal pais_tocado(pais: String)
 signal pais_sobre(pais: String)
 var _sobre := ""
 
-var _pines: Dictionary = {}      ## pais -> MeshInstance3D
-var _rotulos: Dictionary = {}    ## pais -> Label3D
+var _coords: Dictionary = {}     ## pais -> Vector2(lon, lat) de su capital (los 135 con liga, 15-11)
+var _orden: Array[String] = []   ## el orden de las instancias del MultiMesh de pines
+var _pines_mm: MultiMesh         ## (15-11) TODOS los pines en una sola llamada de dibujo (antes un MeshInstance3D por país)
+var _rotulos: Dictionary = {}    ## pais -> Label3D: solo los que se han rotulado o señalado (antes 50 a la vez)
+## (15-11, pedido del dueño) Los países que se pueden elegir (los de las ligas elegidas); vacío = todos. Los demás, pin apagado y sin respuesta.
+var permitidos: Array = []
 ## Un vecino a menos de esto (radio del globo = 1) se esconde: no pisa al elegido.
 const SEPARACION_ROTULO := 0.24
 var _pulsado_en := Vector2.ZERO
@@ -82,7 +86,7 @@ func _ready() -> void:
 	custom_minimum_size = Vector2(0, 180)
 	_viewport = SubViewport.new()
 	_viewport.transparent_bg = true
-	_viewport.msaa_3d = Viewport.MSAA_2X
+	_viewport.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_2X)
 	_viewport.size = Vector2i(600, 300)
 	add_child(_viewport)
 	stretch = true
@@ -93,7 +97,7 @@ func _ready() -> void:
 	_cam = Camera3D.new()
 	_cam.position = Vector3(0, 0, 3.1)
 	_cam.projection = Camera3D.PROJECTION_ORTHOGONAL
-	_cam.size = 2.35
+	_cam.size = 2.1   ## (15-11, pedido del dueño) el globo un poco más grande en el mismo hueco (antes 2,35: un 12 % más)
 	mundo3d.add_child(_cam)
 
 	## Luz muy tenue de relleno: la sombra de verdad la pone el shader (EMISSION +
@@ -121,7 +125,7 @@ func _ready() -> void:
 	malla.rings = 32
 	esfera.mesh = malla
 	var mat_tierra := ShaderMaterial.new()
-	mat_tierra.shader = _shader_tierra()
+	mat_tierra.shader = GloboShaders.tierra(true)
 	mat_tierra.set_shader_parameter("tex_dia", dia)
 	mat_tierra.set_shader_parameter("tex_noche", noche)
 	mat_tierra.set_shader_parameter("tex_fronteras", fronteras)
@@ -136,7 +140,7 @@ func _ready() -> void:
 	malla_n.rings = 24
 	_nubes.mesh = malla_n
 	var mat_nubes := ShaderMaterial.new()
-	mat_nubes.shader = _shader_nubes()
+	mat_nubes.shader = GloboShaders.nubes()
 	mat_nubes.set_shader_parameter("tex_nubes", nubes_tex)
 	_nubes.material_override = mat_nubes
 	_pivote.add_child(_nubes)
@@ -151,12 +155,13 @@ func _ready() -> void:
 	malla_a.radial_segments = 32
 	malla_a.rings = 16
 	atmosfera.mesh = malla_a
-	atmosfera.material_override = _mat_atmosfera()
+	atmosfera.material_override = GloboShaders.atmosfera()
 	_pivote.add_child(atmosfera)
 
 	_marcador = _crear_marcador()
 	_pivote.add_child(_marcador)
 	_crear_pines()
+	_giro_idle *= EstiloMundo.factor_movimiento()   ## (15-11) más lento en el Mundo clásico; quieto en el suave
 
 	set_process(true)
 
@@ -185,49 +190,88 @@ func _crear_marcador() -> Node3D:
 	n.visible = false
 	return n
 
-## C14: un pin blanco en la capital de cada país con liga, con su nombre al
-## lado (solo se ve cuando mira hacia la cámara). El elegido es el dorado.
+## C14: un pin en la capital de cada país con liga; el elegido es el dorado. (15-11) Los 135, en UN MultiMesh con color por instancia
+## (blanco = se puede elegir, gris = su liga no está elegida). Los rótulos ya no van todos a la vez: se crean al rotular o señalar un país.
 func _crear_pines() -> void:
 	var esf := SphereMesh.new()
-	esf.radius = 0.014
-	esf.height = 0.028
+	esf.radius = 0.011
+	esf.height = 0.022
+	esf.radial_segments = 8
+	esf.rings = 4
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(1, 1, 1)
-	mat.emission_enabled = true
-	mat.emission = Color(0.85, 0.9, 1.0)
-	mat.emission_energy_multiplier = 1.2
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.vertex_color_use_as_albedo = true
+	esf.material = mat
 	for p: String in GLOBO_PAIS:
-		var c: Vector2 = GLOBO_PAIS[p]
-		var pin := MeshInstance3D.new()
-		pin.mesh = esf
-		pin.material_override = mat
-		pin.position = _cartesiano(c.x, c.y) * 1.01
-		_pivote.add_child(pin)
-		_pines[p] = pin
-		var r := Label3D.new()
-		r.text = p
-		r.font_size = 30
-		r.pixel_size = 0.0022
-		r.outline_size = 8
-		r.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-		r.no_depth_test = false
-		r.modulate = Color(1, 1, 1, 0.9)
-		r.position = _cartesiano(c.x, c.y) * 1.04 + Vector3(0, 0.035, 0)
-		## Buenos Aires y Montevideo están a 200 km: se separan los rótulos.
-		if p == "ARG":
-			r.offset = Vector2(-26, 0)
-		elif p == "URU":
-			r.offset = Vector2(26, -6)
-		_pivote.add_child(r)
-		_rotulos[p] = r
+		_coords[p] = GLOBO_PAIS[p]
+	var extra: Dictionary = load("res://ui/entrada/pais_datos_extra.gd").EXTRA
+	for p: String in extra:
+		_coords[p] = Vector2(float(extra[p][2]), float(extra[p][3]))
+	_orden.assign(_coords.keys())
+	_pines_mm = MultiMesh.new()
+	_pines_mm.transform_format = MultiMesh.TRANSFORM_3D
+	_pines_mm.use_colors = true
+	_pines_mm.mesh = esf
+	_pines_mm.instance_count = _orden.size()
+	for i in _orden.size():
+		var c: Vector2 = _coords[_orden[i]]
+		_pines_mm.set_instance_transform(i, Transform3D(Basis(), _cartesiano(c.x, c.y) * 1.01))
+	var mmi := MultiMeshInstance3D.new()
+	mmi.multimesh = _pines_mm
+	_pivote.add_child(mmi)
+	_pintar_pines()
+
+## Fija los países que se pueden elegir (vacío = todos) y repinta los pines.
+func fijar_permitidos(lista: Array) -> void:
+	permitidos = lista.duplicate()
+	if _pines_mm != null:
+		_pintar_pines()
+		_activar()
+
+func se_puede(p: String) -> bool:
+	return _coords.has(p) and (permitidos.is_empty() or permitidos.has(p))
+
+func _pintar_pines() -> void:
+	for i in _orden.size():
+		_pines_mm.set_instance_color(i, Color(1.0, 1.0, 1.0) if se_puede(_orden[i]) else Color(0.42, 0.45, 0.5))
+
+func _rotulo_de(p: String) -> Label3D:
+	if _rotulos.has(p):
+		return _rotulos[p]
+	var c: Vector2 = _coords.get(p, Vector2.ZERO)
+	var r := Label3D.new()
+	r.text = p
+	r.font_size = 30
+	r.pixel_size = 0.0022
+	r.outline_size = 8
+	r.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	r.modulate = Color(1, 1, 1, 0.9)
+	r.position = _cartesiano(c.x, c.y) * 1.04 + Vector3(0, 0.035, 0)
+	_pivote.add_child(r)
+	_rotulos[p] = r
+	return r
+
+## (15-11) Coordenadas y capital de cualquiera de los 135 países (los 50 de siempre y los de `PaisDatosExtra`).
+static func tiene(p: String) -> bool:
+	return GLOBO_PAIS.has(p) or load("res://ui/entrada/pais_datos_extra.gd").EXTRA.has(p)
+
+static func coord(p: String) -> Vector2:
+	return GLOBO_PAIS[p] if GLOBO_PAIS.has(p) else load("res://ui/entrada/pais_datos_extra.gd").coord(p)
+
+static func capital(p: String) -> String:
+	if CAPITAL.has(p):
+		return String(CAPITAL[p])
+	var f: Array = load("res://ui/entrada/pais_datos_extra.gd").EXTRA.get(p, [])
+	return String(f[1]) if not f.is_empty() else "?"
 
 ## Cambia el rótulo 3D de un país (la pantalla de país pone el nombre completo del
 ## elegido; "" vuelve al código de tres letras de siempre).
 func rotular(pais: String, texto: String = "") -> void:
-	var r: Label3D = _rotulos.get(pais)
-	if r != null:
-		r.text = texto if texto != "" else pais
-		_activar()
+	if not _coords.has(pais):
+		return
+	var r := _rotulo_de(pais)
+	r.text = texto if texto != "" else pais
+	_activar()
 
 ## Vuelve a repintar el globo cada fotograma (algo cambió: se tocó, se eligió un país, se rotuló).
 func _activar() -> void:
@@ -242,9 +286,12 @@ func pais_en(punto: Vector2) -> String:
 	var escala := Vector2(_viewport.size) / size
 	var mejor := ""
 	var dist := 22.0
-	for p: String in _pines:
-		var pin: MeshInstance3D = _pines[p]
-		var g := pin.global_position
+	var t := _pivote.global_transform
+	for p: String in _coords:
+		if not se_puede(p):
+			continue
+		var c: Vector2 = _coords[p]
+		var g := t * (_cartesiano(c.x, c.y) * 1.01)
 		if g.z < 0.15:
 			continue
 		var en_pantalla := _cam.unproject_position(g) / escala
@@ -253,84 +300,6 @@ func pais_en(punto: Vector2) -> String:
 			dist = d
 			mejor = p
 	return mejor
-
-func _mat_atmosfera() -> ShaderMaterial:
-	var sh := Shader.new()
-	sh.code = """
-shader_type spatial;
-render_mode cull_front, blend_add, unshaded, depth_draw_never;
-void fragment(){
-	float borde = pow(1.0 - abs(dot(NORMAL, VIEW)), 3.0);
-	ALBEDO = vec3(0.35, 0.58, 0.95);
-	ALPHA = borde * 0.55;
-}
-"""
-	var m := ShaderMaterial.new()
-	m.shader = sh
-	return m
-
-func _shader_tierra() -> Shader:
-	var sh := Shader.new()
-	sh.code = """
-shader_type spatial;
-render_mode unshaded, cull_back;
-uniform sampler2D tex_dia : source_color;
-uniform sampler2D tex_noche : source_color;
-uniform sampler2D tex_fronteras : hint_default_transparent, filter_linear_mipmap;
-// C14: la luz va EN ESPACIO DE VISTA. Antes se calculaba con la normal "de
-// mundo" y el país elegido -que siempre queda de frente- caía del lado de la
-// noche (el globo se veía negro justo donde uno miraba). Con la luz fija
-// respecto de la cámara el país elegido está siempre de día y el terminador
-// cruza el borde derecho, que es lo que buscaba el HTML.
-uniform vec3 luz_vista = vec3(-0.62, 0.40, 0.68);
-// C14, EL RELIEVE: no hay mapa de alturas, así que se saca uno aproximado de
-// la propia foto -la tierra es más clara/parda que el mar y las montañas más
-// claras que los valles- y se inclina la normal según su pendiente. Es un
-// relieve suave, de lectura, no un modelo de terreno.
-float altura(vec2 uv){
-	vec3 c = texture(tex_dia, uv).rgb;
-	float tierra = smoothstep(0.02, 0.12, c.r + c.g * 0.5 - c.b * 0.9);
-	return tierra * (0.35 + dot(c, vec3(0.3, 0.5, 0.2)));
-}
-void fragment(){
-	vec3 n = normalize(NORMAL);
-	vec2 e = vec2(1.0 / 4096.0, 1.0 / 2048.0) * 2.0;
-	float dx = altura(UV + vec2(e.x, 0.0)) - altura(UV - vec2(e.x, 0.0));
-	float dy = altura(UV + vec2(0.0, e.y)) - altura(UV - vec2(0.0, e.y));
-	n = normalize(n - (normalize(TANGENT) * dx + normalize(BINORMAL) * dy) * 2.2);
-	float cara = dot(n, normalize(luz_vista));
-	// El mismo terminador difuso del HTML (smoothstep, no un corte duro): el
-	// amanecer es una franja de cientos de kilómetros, no una línea.
-	float t_dia = smoothstep(-0.14, 0.30, cara);
-	vec3 dia = texture(tex_dia, UV).rgb;
-	vec3 noche = texture(tex_noche, UV).rgb;
-	float frontera = texture(tex_fronteras, UV).a;
-	dia = mix(dia, vec3(1.0, 0.93, 0.7), frontera * 0.55);
-	float t = t_dia;
-	// Sin luces de escena: el sombreado entero lo hace este shader. La luz de
-	// relleno de la escena venía de atrás y dejaba el lado de día en negro.
-	vec3 lado_dia = dia * (0.30 + 0.95 * max(cara, 0.0));
-	ALBEDO = mix(noche * 1.2 + vec3(0.01, 0.02, 0.05) + vec3(frontera * 0.10), lado_dia, t);
-}
-"""
-	return sh
-
-func _shader_nubes() -> Shader:
-	var sh := Shader.new()
-	sh.code = """
-shader_type spatial;
-render_mode diffuse_burley, cull_back, blend_mix;
-uniform sampler2D tex_nubes : hint_default_white;
-uniform vec3 luz_vista = vec3(-0.62, 0.40, 0.68);
-void fragment(){
-	float nub = texture(tex_nubes, UV).r;
-	float dif = max(dot(normalize(NORMAL), normalize(luz_vista)), 0.0);
-	ALBEDO = vec3(0.30 + 0.75 * dif);
-	ALPHA = nub * 0.75;
-	ROUGHNESS = 1.0;
-}
-"""
-	return sh
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -353,16 +322,32 @@ func _gui_input(event: InputEvent) -> void:
 		var p := pais_en((event as InputEventMouseMotion).position)
 		if p != _sobre:
 			_sobre = p
+			if p != "" and p != pais_actual and not _rotulos.has(p):
+				_rotulo_de(p)   ## el señalado lleva su código (antes estaban todos a la vez)
+			_activar()
 			pais_sobre.emit(p)
 	elif (event is InputEventMouseMotion or event is InputEventScreenDrag) and _arrastrando:
 		## Arrastra el globo con el dedo: mismo signo y escala aproximada que el
 		## HTML (rotación directa proporcional al desplazamiento).
 		var rel: Vector2 = event.relative if event is InputEventMouseMotion else (event as InputEventScreenDrag).relative
 		_movido += rel.length()
+		_sonar_giro(rel.length())
 		lon += rel.x * 0.35
 		lat = clampf(lat - rel.y * 0.35, -85.0, 85.0)
 		_lon_obj = lon
 		_lat_obj = lat
+
+## (15-11, pedido del dueño) Un roce suave mientras se gira el globo con el dedo o el ratón: uno cada ~70 px de arrastre, nunca más de 7 por segundo.
+var _rodado := 0.0
+var _ultimo_roce := 0
+func _sonar_giro(px: float) -> void:
+	_rodado += px
+	var ahora := Time.get_ticks_msec()
+	if _rodado < 70.0 or ahora - _ultimo_roce < 140:
+		return
+	_rodado = 0.0
+	_ultimo_roce = ahora
+	Sonido.toca("deslizar", Sonido.Bus.INTERFAZ, -5.0)
 
 ## Anima el viaje hasta un país, como `globoIr()` del HTML: toma el camino
 ## corto -si no, cruzaba medio planeta para ir de Chile a Japón- y deja que
@@ -370,11 +355,11 @@ func _gui_input(event: InputEvent) -> void:
 ## FPS ~ misma velocidad percibida). `instantaneo` salta la animación -solo lo
 ## usa la captura de pruebas, para fotografiar el globo ya detenido.
 func ir_a(pais: String, instantaneo: bool = false) -> void:
-	if not GLOBO_PAIS.has(pais):
+	if not _coords.has(pais):
 		return
 	pais_actual = pais
 	_activar()
-	var c: Vector2 = GLOBO_PAIS[pais]
+	var c: Vector2 = _coords[pais]
 	_lon_obj = c.x
 	_lat_obj = clampf(c.y * 0.72, -55.0, 55.0)
 	while _lon_obj - lon > 180.0:
@@ -400,6 +385,7 @@ func _process(delta: float) -> void:
 			if AhorroMenu.fondo_estatico():
 				_reposo = true   ## MÍNIMA (3-11): sin deriva; se pinta esta imagen una vez y queda quieto hasta que lo toquen
 				_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+				queue_redraw()   ## (15-11) con el modo de bajo consumo, sin esto la ventana no se volvía a dibujar y el globo quedaba a medio girar
 			else:
 				## Deriva lenta perpetua, como el HTML: el globo sigue vivo aunque nadie lo toque.
 				_lon_obj -= _giro_idle * delta
@@ -411,10 +397,10 @@ func _process(delta: float) -> void:
 		var r: Label3D = _rotulos[p]
 		var z := r.global_position.z
 		var pisa := sel != null and r != sel and r.global_position.distance_to(sel.global_position) < SEPARACION_ROTULO
-		r.visible = z > 0.45 and not pisa
+		r.visible = z > 0.45 and not pisa and (p == pais_actual or p == _sobre)
 		r.modulate = Color("ffd24d") if p == pais_actual else Color(1, 1, 1, clampf((z - 0.45) * 3.0, 0.0, 0.9))
 	if _marcador.visible and pais_actual != "":
-		var c: Vector2 = GLOBO_PAIS.get(pais_actual, Vector2.ZERO)
+		var c: Vector2 = _coords.get(pais_actual, Vector2.ZERO)
 		_marcador.position = _cartesiano(c.x, c.y) * 1.03
 
 ## Orienta el pivote para que el punto (lon_g, lat_g) quede mirando de frente a la cámara (+Z local). NO usa `rotation_degrees.x/y` -eso fue el bug real: Godot compone

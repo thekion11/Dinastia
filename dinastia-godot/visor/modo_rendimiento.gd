@@ -1,6 +1,6 @@
 class_name ModoRendimiento
 extends RefCounted
-## MODO RENDIMIENTO (10-11-2026, orden del líder; informe `rendimiento_movil_2026-11-10.md`, propuestas E1 y E2): un interruptor de Ajustes, APAGADO por defecto en todas las plataformas, que de MEDIA hacia abajo quita
+## MODO RENDIMIENTO (10-11-2026, orden del líder; informe `rendimiento_movil_2026-11-10.md`, propuestas E1 y E2): un interruptor de Ajustes, ENCENDIDO por defecto en todas las plataformas (móvil: orden 36; PC: 15-11, orden del dueño), que de MEDIA hacia abajo quita
 ## el resplandor (glow: −7…−12 % de fotograma relativo), la sombra del sol (−17…−21 %) y simplifica el shader del césped (E4). Cambia el aspecto, por eso lo decide el jugador; ALTA y ULTRA no se tocan. Lo guarda `Calidad` en grafica.cfg (`modo_rendimiento`).
 
 ## ¿Este nivel pierde la sombra del sol con el modo encendido?
@@ -14,6 +14,10 @@ static func cesped_barato(nivel: int) -> bool:
 ## ¿Lleva resplandor? (sin el modo: de BAJA hacia arriba, como siempre; con el modo, solo por encima de MEDIA).
 static func glow(nivel: int) -> bool:
 	return nivel > Calidad.MINIMO and not (Calidad.modo_rendimiento and nivel <= Calidad.MEDIO)
+
+## (14-11, orden del dueño) ¿Lleva el ajuste de color (contraste y saturación, una pasada a pantalla completa)? No en ULTRA BAJA.
+static func ajuste_color(nivel: int) -> bool:
+	return nivel > Calidad.MINIMO
 
 ## El interruptor de Ajustes (se ve en todas las calidades).
 static func crear(p: Object) -> void:

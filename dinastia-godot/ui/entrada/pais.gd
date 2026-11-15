@@ -45,10 +45,15 @@ func configurar(estado: Dictionary) -> void:
 	crear = PantallaPais.crea_club(estado)
 	_mundo = estado.get("mundo") if estado.get("mundo") is Mundo else null
 	var p := PantallaPais.pais_del_estado(estado)
-	if CargaCiudad.de("PaisDatos").NOMBRE.has(p):
+	if CargaCiudad.de("PaisDatos").existe(p):
 		_pais_inicial = p
 	if is_node_ready():
 		_subtitulo.text = _texto_subtitulo()
+		var permitidos := PantallaPais.permitidos_del_estado(estado)
+		_globo.fijar_permitidos(permitidos)
+		_lista.filtrar(permitidos)
+		if not _lista.puede(_pais_inicial):
+			_pais_inicial = _lista.vecino(_pais_inicial, 1)
 		pais = ""
 		_elegir(_pais_inicial, true)
 
@@ -73,6 +78,13 @@ static func crea_club(estado: Dictionary) -> bool:
 	var c: Variant = estado.get("config")
 	return c is Dictionary and String((c as Dictionary).get("nombre_club", "")).strip_edges() != ""
 
+## (15-11, pedido del dueño) Los países de las ligas elegidas en la etapa «Ligas activas» (vacío = todos): solo esos se pueden elegir aquí.
+static func permitidos_del_estado(estado: Dictionary) -> Array:
+	var l: Variant = estado.get("ligas")
+	if l is Dictionary and (l as Dictionary).get("paises") is Array:
+		return ((l as Dictionary)["paises"] as Array).duplicate()
+	return LigasActivas.elegidas.duplicate()
+
 static func pais_del_estado(estado: Dictionary) -> String:
 	var p: Variant = estado.get("pais")
 	if p is Dictionary:
@@ -90,7 +102,14 @@ func _ready() -> void:
 	add_child(_globo)
 	_globo.pais_tocado.connect(func(p: String) -> void: _elegir(p))
 	_globo.pais_sobre.connect(_al_pasar)
+	var permitidos := PantallaPais.permitidos_del_estado(_estado)
+	_globo.fijar_permitidos(permitidos)
 	_lista = PaisLista.new()
+	_lista.permitidos = permitidos
+	if not permitidos.is_empty() and not permitidos.has(_pais_inicial):
+		var validos: Array = CargaCiudad.de("PaisDatos").todos().filter(func(x: String) -> bool: return permitidos.has(x))
+		if not validos.is_empty():
+			_pais_inicial = String(validos[0])   ## el país guardado no está entre las ligas elegidas: el primero que sí
 	_colocar(_lista, 20, 96, 0, -84, true, false)
 	_lista.custom_minimum_size.x = 236
 	add_child(_lista)
@@ -209,7 +228,7 @@ func _ajustar_zona() -> void:
 
 ## Marca un país en todas partes: globo, lista, nombre, fondo y ficha.
 func _elegir(p: String, instantaneo := false) -> void:
-	if not CargaCiudad.de("PaisDatos").NOMBRE.has(p):
+	if not CargaCiudad.de("PaisDatos").existe(p) or (_lista != null and not _lista.puede(p)):
 		return
 	var antes := pais
 	pais = p

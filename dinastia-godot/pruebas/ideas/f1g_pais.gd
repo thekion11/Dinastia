@@ -19,6 +19,7 @@ func _ready() -> void:
 	await _dibujos()
 	_titulo("PANTALLA DE PAÍS (f1g): la pantalla, modo normal")
 	await _pantalla_normal()
+	await _pantalla_ligas()
 	_titulo("PANTALLA DE PAÍS (f1g): crear club no enseña clubes")
 	await _pantalla_crear()
 	_titulo("PANTALLA DE PAÍS (f1g): con mundo generado se elige club de verdad")
@@ -39,10 +40,14 @@ func _datos() -> void:
 		var nombres := {}
 		for f: Array in m:
 			nombres[f[0]] = true
-		if m.size() != 5 or nombres.size() != 5 or not PaisDatos.OFICIAL.has(p) \
-				or not Globo3D.GLOBO_PAIS.has(p) or PaisDatos.continente_de(p) == "" or PaisDatos.nombre(p) == p:
+		## (15-11) Los 85 países de `PaisDatosExtra` entran sin monumentos ni nombre oficial (pendiente): se les pide nombre, continente, pin y capital.
+		var extra := PaisDatosExtra.EXTRA.has(p)
+		if (not extra and (m.size() != 5 or nombres.size() != 5 or not PaisDatos.OFICIAL.has(p))) \
+				or not Globo3D.tiene(p) or Globo3D.capital(p) == "?" or PaisDatos.continente_de(p) == "" or PaisDatos.nombre(p) == p:
 			malos.append(p)
-	_comprobar(malos.is_empty(), "cada país: nombre completo, oficial, continente, pin y 5 monumentos distintos %s" % [malos])
+	_comprobar(malos.is_empty(), "cada país: nombre completo, continente, pin y capital; los 50 de siempre, además oficial y 5 monumentos distintos %s" % [malos])
+	_comprobar(PaisDatos.todos().size() == LigasActivas.todos().size() and LigasActivas.todos().all(func(x: String) -> bool: return PaisDatos.existe(x)),
+		"están TODOS los países con liga (%d) en la lista y el globo" % LigasActivas.todos().size())
 	_comprobar(PaisDatos.nombre("KOR") == "Corea del Sur" and PaisDatos.nombre("USA") == "Estados Unidos",
 		"nombre completo, no la abreviatura de las selecciones")
 	## (10-11) Ya TODOS los países del selector tienen liga: para ejercer la rama «sin liga» se quita Venezuela de la tabla un momento y se devuelve.
@@ -102,6 +107,28 @@ func _nueva(estado: Dictionary) -> PantallaPais:
 	caja.add_child(s)
 	return s
 
+## (15-11, pedido del dueño) Con solo España e Italia elegidas en «Ligas activas», la pantalla de país no deja elegir otro país.
+func _pantalla_ligas() -> void:
+	var s := _nueva({"modo": "dt", "pais": "CHI", "ligas": {"paises": ["ESP", "ITA"]}})
+	await get_tree().process_frame
+	s.sin_animaciones()
+	var lista := s.get("_lista") as PaisLista
+	_comprobar(s.pais == "ESP", "Chile no está entre las ligas elegidas: empieza en el primero que sí (%s)" % s.pais)
+	_comprobar(lista.boton("ESP").visible and lista.boton("ITA").visible and not lista.boton("CHI").visible and not lista.boton("JPN").visible,
+		"la lista enseña solo España e Italia")
+	lista.elegido.emit("JPN")
+	_comprobar(s.pais == "ESP", "elegir un país sin su liga no hace nada")
+	_comprobar(not s.globo().se_puede("CHI") and s.globo().se_puede("ITA"), "en el globo, el pin de Chile no responde y el de Italia sí")
+	var ev := InputEventAction.new()
+	ev.action = "ui_down"
+	ev.pressed = true
+	s._unhandled_input(ev)
+	_comprobar(s.pais == "ITA", "flecha abajo salta a Italia, sin pasar por los no elegidos (%s)" % s.pais)
+	s._unhandled_input(ev)
+	_comprobar(s.pais == "ESP", "y vuelve a España (%s)" % s.pais)
+	s.get_parent().queue_free()
+	await get_tree().process_frame
+
 func _pantalla_normal() -> void:
 	var s := _nueva({"modo": "dt"})
 	await get_tree().process_frame
@@ -129,7 +156,19 @@ func _pantalla_normal() -> void:
 		f._process(30.0)
 	_comprobar(f.indice == 0, "tras los 5, vuelve al primero")
 	f.animar = false
-	_comprobar(s.ficha().clubes_listados.size() == 16, "modo normal: se ven los 16 clubes de primera (%d)" % s.ficha().clubes_listados.size())
+	var segunda_chi: int = (Datos.tabla("DATA_P2") as Array).size()
+	_comprobar(s.ficha().clubes_listados.size() == 16 + segunda_chi and segunda_chi > 0,
+		"modo normal: se ven los 16 clubes de primera y los %d de segunda (%d)" % [segunda_chi, s.ficha().clubes_listados.size()])
+	var rotulos: Array = s.ficha().get("_cuerpo").get_children().filter(func(n: Node) -> bool: return n is Label).map(func(n: Label) -> String: return n.text)
+	_comprobar(rotulos.any(func(t: String) -> bool: return t.begins_with("PRIMERA DIVISIÓN")) and rotulos.any(func(t: String) -> bool: return t.begins_with("SEGUNDA DIVISIÓN")),
+		"separados por división, con su rótulo (%s)" % [rotulos])
+	_comprobar(s.ficha().club_marcado() != null and s.ficha().club_marcado().nombre == s.ficha().clubes_listados[0], "queda marcado el primero de primera")
+	var fichas := s.ficha()
+	var visibles := func() -> int: return fichas.get("_cuerpo").get_children().filter(func(n: Node) -> bool: return n is Button and n.has_meta("club") and (n as Button).visible).size()
+	_comprobar(visibles.call() == 16, "con pestañas: se ve solo primera (%d)" % visibles.call())
+	fichas.ver_division(1)
+	_comprobar(visibles.call() == segunda_chi and fichas.club_marcado().nombre == fichas.clubes_listados[0], "la pestaña de segunda enseña sus %d clubes y el marcado sigue siendo el de primera" % segunda_chi)
+	fichas.ver_division(0)
 	## Cambiar de país desde la lista.
 	(s.get("_lista") as PaisLista).elegido.emit("JPN")
 	_comprobar(s.pais == "JPN" and s.get("_nombre").text == "Japón" and f.pais == "JPN" and f.indice == 0,
