@@ -59,6 +59,8 @@ static func escala_3d(nivel: int = -99) -> float:
 		base = lerpf(escala_minimo, escala_media, 0.4 if n == BAJA else 0.7)
 	elif n == MEDIO:
 		base = escala_media
+	elif n >= ULTRA and not es_compatibilidad():
+		base = escala_ultra   ## (15-11) ULTRA al 75 % del 3D + TAA + sombras 2048: ~30 FPS en la laptop del dueño (antes 13)
 	if res3d_auto and n <= MEDIO:
 		return minf(base, CalidadRes3D.tope_escala(CalidadRes3D.alto_pantalla()))
 	return base
@@ -321,6 +323,7 @@ static func es_compatibilidad() -> bool:
 ## esto, a 4K se ven los dientes de sierra de cada farola.
 ## (4-11, R01) Solo la «Prueba de rendimiento» de Ajustes lo enciende: mide cada escala CON y SIN MSAA para que el dueño decida con datos de su teléfono.
 static var sin_msaa := false
+static var escala_ultra := 0.75   ## (15-11) escala 3D de ULTRA en Forward+
 
 static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 	if vp == null:
@@ -334,7 +337,8 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 	## web) el motor avisaba en cada pantalla 3D y no hacía nada.
 	var avanzado := not es_compatibilidad()
 	if nivel >= ULTRA:
-		vp.msaa_3d = Viewport.MSAA_8X
+		## (15-11, FPS en la laptop del dueño: ULTRA iba a 13 FPS) MSAA x8 costaba ~19 ms de GPU en una Intel UHD; en Forward+ el TAA ya suaviza los bordes. Sin MSAA, con TAA+FXAA.
+		vp.msaa_3d = Viewport.MSAA_DISABLED if avanzado else Viewport.MSAA_8X
 		if avanzado:
 			vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 			vp.use_taa = true
@@ -359,7 +363,7 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 	## Atlas de sombra: 4096 a 2048 en ALTO -un cuarto de la memoria/ancho de
 	## banda-, mismo criterio que el MSAA de arriba. 8192 se guarda para ULTRA.
 	if nivel >= ULTRA:
-		RenderingServer.directional_shadow_atlas_set_size(8192, true)
+		RenderingServer.directional_shadow_atlas_set_size(2048, true)   ## (15-11) 8192 -> 2048: la pasada de sombras costaba ~11 ms en la laptop del dueño
 	elif nivel >= ALTO:
 		RenderingServer.directional_shadow_atlas_set_size(2048, true)
 
