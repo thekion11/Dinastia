@@ -114,6 +114,17 @@ func _equipo_con_balon() -> int:
 	return -1
 
 func _mas_cercano_al(punto: Vector2, local: bool, excluir: Array, cuantos: int) -> Array:
+	if cuantos == 1:
+		## (15-11, FPS) el caso de siempre (el más cercano): una pasada buscando el mínimo, sin armar ni ordenar la lista (86 → ~25 µs por paso).
+		var mejor := INF
+		var sel: Dictionary = {}
+		for q: Dictionary in jugadores:
+			if bool(q["es_local"]) == local and (excluir.is_empty() or not excluir.has(q)):
+				var d := (ls(pos(q)) - punto).length_squared()
+				if d < mejor:
+					mejor = d
+					sel = q
+		return [] if sel.is_empty() else [sel]
 	var c: Array = []
 	for q: Dictionary in jugadores:
 		if bool(q["es_local"]) == local and not excluir.has(q):
