@@ -356,6 +356,7 @@ func _pesca_empezar() -> void:
 	sh.code = SHADER_AGUA
 	_agua_mat = ShaderMaterial.new()
 	_agua_mat.shader = sh
+	_agua_mat.set_meta("no_congelar", true)   ## (15-11) un minijuego no se congela por reposo (AhorroMenu)
 	agua.material_override = _agua_mat
 	agua.position = Vector3(0, -0.1, -60)
 	_raiz.add_child(agua)

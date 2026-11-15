@@ -374,6 +374,27 @@ func _probar_estilo_mundo() -> void:
 	p.confirmar()
 	_comprobar(recibido.size() == 1 and String((recibido[0] as Dictionary).get("estilo", "")) == "suave" and EstiloMundo.suave, "la pantalla devuelve el estilo y lo deja guardado")
 	p.free()
+	## El reposo del Mundo clásico: congela los shaders con TIME en un uniforme (sin salto) y cualquier toque lo devuelve.
+	var sh := Shader.new()
+	sh.code = "shader_type canvas_item;\nvoid fragment(){ COLOR = vec4(sin(TIME), 0.0, 0.0, 1.0); }"
+	var q := AhorroMenu._quieto_en(sh)
+	_comprobar(q != null and not q.code.contains("TIME") and q.code.contains("uniform float _t_quieto;"), "el shader congelado lee un uniforme en vez de TIME")
+	EstiloMundo.suave = false
+	var am := AhorroMenu.new()
+	add_child(am)
+	var cr := ColorRect.new()
+	var mat := ShaderMaterial.new()
+	mat.shader = sh
+	cr.material = mat
+	add_child(cr)
+	am._poner(true)
+	_comprobar(OS.low_processor_usage_mode and mat.shader == q, "en reposo: bajo consumo y shader congelado")
+	var tecla := InputEventKey.new()
+	tecla.pressed = true
+	am._input(tecla)
+	_comprobar(not OS.low_processor_usage_mode and mat.shader == sh, "una tecla lo devuelve todo al momento")
+	cr.free()
+	am.free()
 	if tenia:
 		EstiloMundo.elegir(antes)
 	else:
