@@ -348,6 +348,8 @@ static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMe
 
 	## Personas reales (mallas horneadas) en la bandeja baja; el maniquí queda para
 	## el resto y como respaldo si faltan los recursos.
+	if Publico2D.montar(deck, gt):   ## (15-11, prototipo) público de cuadros planos con sprites
+		return
 	var reales_cerca := _hinchas_horneados("cerca")
 	var reales_medio := _hinchas_horneados("medio")
 	if not reales_cerca.is_empty() and not gt.det_xf.is_empty():

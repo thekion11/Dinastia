@@ -92,6 +92,10 @@ uniform int vat_reposo = 0;
 // SENTADOS NERVIOSOS: 0..1, qué parte de la grada se cruza de brazos o se lleva
 // las manos a la cabeza (final apretado). Lo pone `FestejoGrada.nervios`.
 uniform float nervios = 0.0;
+// HORNEADO DE SPRITES (15-11, público 2D; `herramientas/hornear_publico_2d.gd`): con `tiempo_fijo >= 0` y `clip_fijo >= 0` la hinchada se
+// congela en ese clip y ese instante (sin balanceo ni eventos), para fotografiarla. En el juego van en -1: nada cambia.
+uniform float tiempo_fijo = -1.0;
+uniform int clip_fijo = -1;
 const int VAT_FOTOS = 16;
 const int VAT_CLIPS = 13;
 
@@ -139,6 +143,9 @@ void vertex() {
 		float suma = step(0.12, fract(v_azar * 3.7));
 		// Reposo: el del grupo, y uno de cada tres con otro tranquilo (0..5).
 		int reposo = fract(v_azar * 5.3) < 0.33 ? int(fract(v_azar * 11.1) * 5.99) : vat_reposo;
+		if (clip_fijo >= 0) {
+			reposo = clip_fijo;
+		}
 		float ev_w = 0.0;
 		int ev_c = 0;
 		if (nervios > 0.0 && fract(v_azar * 2.9) < nervios) {
@@ -178,7 +185,7 @@ void vertex() {
 		}
 		vec3 p;
 		vec3 n;
-		vat_muestra(col, reposo, TIME + v_azar * 9.0, p, n);
+		vat_muestra(col, reposo, tiempo_fijo >= 0.0 ? tiempo_fijo : TIME + v_azar * 9.0, p, n);
 		if (ev_w > 0.001) {
 			vec3 p2;
 			vec3 n2;
@@ -194,15 +201,16 @@ void vertex() {
 		}
 	}
 	float t = TIME * velocidad + fase;
+	float sin_balanceo = tiempo_fijo >= 0.0 ? 0.0 : 1.0;
 	// 0 en los pies, 1 de los hombros para arriba.
 	float peso = clamp(VERTEX.y / 0.7, 0.0, 1.0);
-	VERTEX.x += sin(t) * amplitud * peso;
-	VERTEX.z += cos(t * 0.73) * amplitud * 0.55 * peso;
+	VERTEX.x += sin(t) * amplitud * peso * sin_balanceo;
+	VERTEX.z += cos(t * 0.73) * amplitud * 0.55 * peso * sin_balanceo;
 	// El salto: casi todo el tiempo vale 0 y de vez en cuando levanta unos
 	// centímetros. Con `max(0, sin(...) - 0.86)` solo el 11% del ciclo queda
 	// por encima del umbral, así que salta una minoría en cada momento -que es
 	// lo que pasa en una grada de verdad, no una ola perfecta.
-	VERTEX.y += max(0.0, sin(t * 0.41 + v_azar * 6.28) - 0.86) * 1.1 * peso;
+	VERTEX.y += max(0.0, sin(t * 0.41 + v_azar * 6.28) - 0.86) * 1.1 * peso * sin_balanceo;
 	// No todos se suman (uno de cada ocho se queda sentado).
 	float se_suma = step(0.12, fract(v_azar * 3.7));
 	// ¿Es del sector visitante? (alfa del color de instancia, ver arriba.)
