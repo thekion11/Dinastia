@@ -18,7 +18,8 @@ static func pintar(ui: Variant, j: Jugador, club: Club) -> Control:
 		izq.append_array(der)
 		der = []
 	## (13-11, dueño: menos lleno) El entreno, el rival y la grada tienen su pantalla: aquí solo sus teclas.
-	(izq if E.estrecho(ui) else der).append(RutaSub.teclas(ui, j, "hoy", true))
+	## (15-11, pulido) En PC van en FILA bajo el partido (la mitad de abajo de la izquierda se quedaba vacía); en estrecho, una bajo otra.
+	izq.append(RutaSub.teclas(ui, j, "hoy", E.estrecho(ui)))
 	return E.columnas(ui, izq, der)
 
 # ---------------------------------------------------------------- el partido
