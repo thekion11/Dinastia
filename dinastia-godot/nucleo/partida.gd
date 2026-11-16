@@ -250,7 +250,6 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 	m.libro_financiero.clear()
 	for x: Dictionary in datos.get("libro_financiero", []):
 		m.libro_financiero.append(x)
-
 	_restaurar_continentales(datos, m)
 
 ## Los ajustes de competición y la sede de la final de copa (también en La Ruta, revisión de G-03).
@@ -449,4 +448,3 @@ static func borrar(nombre: String) -> void:
 	for suf: String in PartidaArchivo.sufijos():
 		if FileAccess.file_exists(ruta_de(nombre) + suf):
 			DirAccess.remove_absolute(ruta_de(nombre) + suf)
-

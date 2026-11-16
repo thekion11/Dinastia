@@ -14,7 +14,6 @@ const EXCEPCIONES := ["res://nucleo/dialogos_ciudad.gd"]
 ## PENDIENTES DE PARTIR, con su tope actual: pasan mientras no CREZCAN. Cada uno lleva quién lo parte;
 ## al partirlo se BORRA de aquí. No añadir nada sin ese motivo.
 const PENDIENTES := {
-	"res://visor/motor_jugable_p5.gd": 486,   ## (16-11) lo parte otra sesión (C++ `mover_jugadores_fisica` y su gemelo)
 }
 
 func _initialize() -> void:
