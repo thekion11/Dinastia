@@ -56,6 +56,9 @@ public:
 	void cuerpos_motor(const Array &jugadores, double minimo) const;
 	// `MotorJugable._mover_fisica_gd` (visor/motor_jugable_p5.gd, 15-11): el movimiento de los 22 (velocidad, giro, empujón, posición, rumbo, inclinación y aguante). Devuelve 4 valores por jugador
 	// [válido, velocidad, va_atrás, distancia_al_balón] para el bucle de animación, que sigue en GDScript. `coste_aguante` = [local, visitante] (el coste táctico del sprint).
+	// `LeagueGuia._paso_gd`, en dos pasadas: índices de los que deciden clip este paso, y luego guía o marcha de todos ([cortes, guiados]).
+	PackedInt32Array guia_pendientes(const Array &jugadores, double t) const;
+	PackedInt32Array guia_seguir(const Array &jugadores, double t, double delta, int64_t usuario, bool marchas) const;
 	PackedFloat64Array mover_jugadores_fisica(const Array &jugadores, const Vector3 &bpos, double delta, double t, bool hay_poseedor, const Variant &poseedor_id, bool poseedor_local, double a_max_base,
 			double ancho, double largo, double giro_rapido, const PackedFloat64Array &coste_aguante) const;
 	// El balón del motor de League (16-11, nativo/src/balon_nativo.cpp): `balon_prediccion` = el bucle de predicción de `MotorLeague._estado_sin_balon` (ya en el sistema de League, `_ls3`);

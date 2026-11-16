@@ -80,9 +80,31 @@ static func decidir(m: MotorJugable, p: Dictionary, n: Node3D) -> void:
 	empezar(p, c, m.t, n.rotation.y)
 
 ## Se llama tras `MotorJugable._mover_jugadores`.
+## (16-11, paso a C++, orden del dueño «50 % del tiempo de CPU en C++») Con la extensión: `guia_pendientes` dice quién decide clip (lo decide
+## GDScript, con el catálogo) y `guia_seguir` aplica guía o marcha a todos; equivale al bucle único de `_paso_gd` porque cada jugador solo toca
+## su propio diccionario. Igualdad en `pruebas/probar_nativo_guia.gd`.
 static func paso(m: MotorJugable, delta: float) -> void:
 	if not activa or delta <= 0.0:
 		return
+	var nat := Nativo.obj()
+	if nat == null or not nat.has_method("guia_seguir"):
+		_paso_gd(m, delta)
+		return
+	var js: Array = m.jugadores
+	for i: int in nat.guia_pendientes(js, m.t):
+		var p: Dictionary = js[i]
+		decidir(m, p, p["node"])
+	var iu := -1
+	if not m.usuario.is_empty():
+		for i in js.size():
+			if is_same(js[i], m.usuario):
+				iu = i
+				break
+	var r: PackedInt32Array = nat.guia_seguir(js, m.t, delta, iu, marchas)
+	cortes += r[0]
+	guiados += r[1]
+
+static func _paso_gd(m: MotorJugable, delta: float) -> void:
 	for p: Dictionary in m.jugadores:
 		var n: Node3D = p.get("node")
 		if not is_instance_valid(n) or float(p.get("levantar_en", 0.0)) > 0.0 or float(p.get("levanta_hasta", 0.0)) > m.t:
