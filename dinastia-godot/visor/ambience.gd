@@ -105,7 +105,9 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 
 	# Luz principal: sol de dia, luna floja de noche.
 	var key := DirectionalLight3D.new()
-	key.rotation_degrees = Vector3(-58.0 + oscuro * 18.0, -35, 0)
+	## (16-11, frente 2) De día el sol de tarde de la tele: más bajo (36°) y casi de costado al campo, así la tribuna
+	## de enfrente echa su sombra sobre una franja del césped como en PES 2020/FC. De noche, la luna de siempre.
+	key.rotation_degrees = Vector3(lerpf(-36.0, -40.0, oscuro), lerpf(-75.0, -35.0, oscuro), 0)
 	key.light_energy = lerpf(1.35, 0.25, oscuro)
 	key.light_color = Color(1.0, 0.97, 0.90).lerp(Color(0.65, 0.72, 0.95), oscuro)
 	key.shadow_enabled = Calidad.sombra_solar(nivel)   ## MÍNIMO: sin la pasada de sombras (~1/4 de las llamadas del partido)
