@@ -261,8 +261,28 @@ func _sin_balon(p: Dictionary) -> Vector3:
 	p["correr"] = bool(p["ls_corre"])
 	return p["ls_obj"]
 
-## La estrategia del puesto (L RequestInput de default_def/mid/off) más la caza del portador (L ElizaController). → [destino, velocidad].
+## (16-11, paso a C++, orden del dueño opción B) Con la extensión, `league_calcular_sin_balon` hace la cuenta entera en una llamada (misma aritmética que
+## `_calcular_sin_balon_gd`); devuelve [] si algún «más cercanos» tiene más de 16 candidatos y entonces sigue la gemela. Con `comparar_sb` (pruebas)
+## se calculan las dos y se cuentan las diferencias (`pruebas/probar_nativo_sin_balon.gd`).
+## OJO: todo ajuste de jugabilidad en `_calcular_sin_balon_gd` se copia en `nativo/src/sin_balon_nativo.cpp` (y al revés).
+static var comparar_sb := false
+static var sb_comparados := 0
+static var sb_distintos := 0
+
 func _calcular_sin_balon(p: Dictionary) -> Array:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_calcular_sin_balon"):
+		var r: Array = nat.league_calcular_sin_balon(self, p, MotorRoles.reparto(self as Object as MotorJugable, bool(p["es_local"])), designado_disputa)
+		if not r.is_empty():
+			if comparar_sb:
+				sb_comparados += 1
+				if var_to_bytes(r) != var_to_bytes(_calcular_sin_balon_gd(p)):
+					sb_distintos += 1
+			return r
+	return _calcular_sin_balon_gd(p)
+
+## La estrategia del puesto (L RequestInput de default_def/mid/off) más la caza del portador (L ElizaController). → [destino, velocidad].
+func _calcular_sin_balon_gd(p: Dictionary) -> Array:
 	var local := bool(p["es_local"])
 	var i := 0 if local else 1
 	var e: LeagueEquipo = equipos[i]

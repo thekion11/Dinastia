@@ -57,6 +57,9 @@ public:
 	// `MotorJugable._mover_fisica_gd` (visor/motor_jugable_p5.gd, 15-11): el movimiento de los 22 (velocidad, giro, empujón, posición, rumbo, inclinación y aguante). Devuelve 4 valores por jugador
 	// [válido, velocidad, va_atrás, distancia_al_balón] para el bucle de animación, que sigue en GDScript. `coste_aguante` = [local, visitante] (el coste táctico del sprint).
 	// `LeagueGuia._paso_gd`, en dos pasadas: índices de los que deciden clip este paso, y luego guía o marcha de todos ([cortes, guiados]).
+	// `MotorLeague._calcular_sin_balon` entero (16-11, nativo/src/sin_balon_nativo.cpp): [destino, velocidad], o [] si hay que seguir en GDScript.
+	Array league_calcular_sin_balon(Object *m, const Dictionary &p, const Dictionary &reparto, bool designado_disputa) const;
+	Vector2 sb_destino_forma(Object *m, const Array &equipos, const Dictionary &p, const Vector2 &forma, const String &puesto, const Dictionary &mezcla) const;
 	PackedInt32Array guia_pendientes(const Array &jugadores, double t) const;
 	PackedInt32Array guia_seguir(const Array &jugadores, double t, double delta, int64_t usuario, bool marchas) const;
 	PackedFloat64Array mover_jugadores_fisica(const Array &jugadores, const Vector3 &bpos, double delta, double t, bool hay_poseedor, const Variant &poseedor_id, bool poseedor_local, double a_max_base,

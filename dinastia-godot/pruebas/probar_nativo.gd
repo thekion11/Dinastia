@@ -356,6 +356,12 @@ func _probar() -> void:
 	_comprobar((gu["fallos"] as Array).is_empty(), "guía de clips de League: C++ = GDScript (600 pasos de 22 jugadores)")
 	for t: String in gu["textos"]:
 		print(t)
+	var sb := ProbarNativoSinBalon.probar(nat, raiz_gu)
+	for f: String in sb["fallos"]:
+		_comprobar(false, "colocación sin balón de League en C++: " + f)
+	_comprobar((sb["fallos"] as Array).is_empty(), "colocación sin balón de League: C++ = GDScript (3 cruces reales)")
+	for t: String in sb["textos"]:
+		print(t)
 	raiz_gu.queue_free()
 	## (16-11, auditoría) Casos límite: historiales cortos, equipos vacíos, NaN/inf, entradas inválidas que no deben cerrar Godot.
 	var li := ProbarNativoLimites.probar(nat)
