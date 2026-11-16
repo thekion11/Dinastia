@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p5.gd"
-## [Capa 6/7 de `partido.gd`] _probar_frontera_mitad, _probar_entrada_por_pasos, _probar_arreglos_motor_c6
+## [Capa 6/7 de `partido.gd`] _probar_frontera_mitad, _probar_entrada_por_pasos, _probar_arreglos_motor_c6, _probar_perfil_manejo_c4
 ## (16-11) Las pruebas de los arreglos del capítulo 6 del informe AAA (fallos del motor del partido) y de su revisión
 ## independiente (anexo A): el cambio de mitad con el MISMO motor, la entrada a 30 y 120 FPS y el reglamento.
 
@@ -158,7 +158,7 @@ func _probar_arreglos_motor_c6() -> void:
 		var x: float = rueda.call(vu)
 		if x < n or x > n + 4.0:
 			cortos.append("%d m→%.1f" % [int(n), x])
-	_comprobar(cortos.is_empty() and c4._raso_max() > 20.0 and c4._raso_max() < 26.0, "C4: el pase manual de 8-20 m llega y muere a menos de 4 m del destino (%s); más de %.1f m va por arriba" % [str(cortos), c4._raso_max()])
+	_comprobar(cortos.is_empty() and c4._raso_max() > 20.0 and c4._raso_max() < 26.0, "C4: el pase raso de 8-20 m pedido con `_velocidad_pase` (el de la IA) llega y muere a menos de 4 m del destino (%s); más de %.1f m va por arriba" % [str(cortos), c4._raso_max()])
 	_comprobar(is_equal_approx(MotorJugable.velocidad_para(20.0), LeyBalon.velocidad_siempre(20.0)), "el motor de siempre pide sus pases con su ley de siempre")
 	## M6-07: el clima llega al balón suelto de League.
 	var seco: float = rueda.call(14.0)
@@ -253,3 +253,67 @@ func _probar_arreglos_motor_c6() -> void:
 	mo._en_mano = {}
 	MotorLeague.fase3 = f3
 	raiz.queue_free()
+
+## (16-11, informe AAA H1, A1.1 y A1.2; perfil completo en `pruebas/_sonda/perfil_manejo.tscn`) Lo determinista y barato del
+## perfil de manejo de C4, con dos partidos de países distintos: el PASE MANUAL raso de 12 m (por `_pase_manual`, el camino real
+## del botón) se para a 12 ± 1,5 m del pie (antes lo pedía con la ley de siempre y rodaba 8,3 m) y sale en el MISMO paso en que se
+## pulsa; el pase asistido también sale en ese paso.
+func _probar_perfil_manejo_c4() -> void:
+	_titulo("PARTIDO: PERFIL DE MANEJO DE C4 (PASE MANUAL DE 12 m Y LATENCIA DE PULSACIÓN)")
+	Mando.registrar()
+	for a: StringName in InputMap.get_actions():
+		if String(a).begins_with("jugar_"):
+			Input.action_release(a)   ## nada sostenido de otras secciones (tiro, sprint, modificadores)
+	var ayudas_antes: Dictionary = Mando.ayudas.duplicate()
+	Mando.ayudas["direccion"] = "campo"
+	Mando.pasos_activar(true)
+	for caso: Array in [[["URU", "GER"], 9], [["JPN", "POR"], 14]]:
+		var raiz := Node3D.new()
+		add_child(raiz)
+		var mo := _motor_c6(raiz, "combinado_c4", caso[0], int(caso[1]))
+		mo.autopiloto = false
+		mo.control_equipo = 0
+		var paradas: Array = []
+		var lat: Array = []
+		for k in 4:
+			Mando.ayudas["pase"] = "manual" if k < 3 else "asistido"
+			var u: Dictionary = mo.jugadores[6 + k]
+			mo.estado = "juego"
+			mo._poner_usuario(u)
+			mo.bloqueo = true
+			(u["node"] as Node3D).position = Vector3(-6.0 + 6.0 * k, 0, -8.0)
+			(u["node"] as Node3D).rotation.y = 0.0
+			u["vel"] = Vector3.ZERO
+			mo.poseedor = {}
+			mo.vel_balon = Vector3.ZERO
+			mo.balon.position = mo.pos(u) + Vector3(0, 0.11, 0.4)
+			mo._tomar(u)
+			for q: Dictionary in mo.jugadores:
+				q["enfriar"] = 3.0
+			Input.action_press("jugar_arriba")
+			for i in 3:
+				mo.paso(1.0 / 60.0)
+				Mando.pasos_consumir()
+			var p0 := mo.pos(u)
+			Mando.pasos_inyectar(&"jugar_pase")
+			mo.paso(1.0 / 60.0)
+			Mando.pasos_consumir()
+			Input.action_release("jugar_arriba")
+			lat.append(1 if mo.vel_balon.length() > 3.0 else 0)
+			if k >= 3:
+				continue
+			mo.poseedor = {}
+			mo.estado = "saque"
+			for i in 900:
+				mo._mover_balon(1.0 / 60.0)
+				if mo.vel_balon.length() < 0.05:
+					break
+			paradas.append(snappedf(Vector2(mo.balon.position.x - p0.x, mo.balon.position.z - p0.z).length(), 0.1))
+		var bien := paradas.size() == 3
+		for x: float in paradas:
+			bien = bien and absf(x - 12.0) <= 1.5
+		_comprobar(bien, "C4 %s: el pase manual raso de 12 m se para a 12 ± 1,5 m del pie (%s m)" % [str(caso[0]), str(paradas)])
+		_comprobar(not lat.has(0), "C4 %s: el pase (manual y asistido) sale en el mismo paso de 1/60 s en que se pulsa (%s)" % [str(caso[0]), str(lat)])
+		raiz.queue_free()
+	Mando.pasos_activar(false)
+	Mando.ayudas = ayudas_antes

@@ -83,7 +83,7 @@ func _pase_manual(p: Dictionary, dir: Vector3, dist: float, por_arriba: bool) ->
 	if por_arriba:
 		_patear(p, destino, clampf(dist * 0.45 + 6.0, 10.0, 19.0), 2.0, 0.0, "pase")
 	else:
-		_patear(p, destino, clampf(velocidad_para(dist, 4.0), 7.0, 24.0), 0.0, 0.0, "pase")
+		_patear(p, destino, clampf(_velocidad_pase_manual(dist), 7.0, 24.0), 0.0, 0.0, "pase")
 	pase_a = _companero_cerca(p, destino)
 	_pase_eq = 0 if bool(p["es_local"]) else 1
 	pases[_pase_eq] += 1
