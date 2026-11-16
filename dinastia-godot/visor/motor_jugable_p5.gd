@@ -233,7 +233,7 @@ func _tiene_clip(p: Dictionary, clip: String) -> bool:
 	return is_instance_valid(ap) and ap.has_animation(clip)
 
 func _tomar(p: Dictionary) -> void:
-	if poseedor == p:
+	if poseedor == p or MotorReglas.doble_toque(self as Object as MotorJugable, p):   ## (16-11, M6-20) doble toque del que sacó
 		return
 	MotorTraza.tomar(self as Object as MotorJugable, p)   ## traza de posesiones (ciclo 9, solo cuenta)
 	if not _tiro_vivo.is_empty() and _tiro_vivo["p"] != p:

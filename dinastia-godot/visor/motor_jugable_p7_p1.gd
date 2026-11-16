@@ -243,6 +243,7 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 ## Un tiro al arco rival. `apunte.x` ∈ [-1, 1] mueve el objetivo de palo a
 ## palo; `fuerza` ∈ [0, 1] es la carga. Mucha fuerza sin técnica se va alta.
 func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
+	if MotorReglas.doble_toque(self as Object as MotorJugable, p): return   ## (16-11, M6-20) el lanzador no remata su propio rechace
 	var arco := _arco_rival(p)
 	var tec := GestoTecnico.tiro(p, _mod_tiro)   ## cada tiro pesa sus atributos (27-10)
 	## El error crece con la distancia: desde 25 m se falla mucho más que

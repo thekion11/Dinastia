@@ -96,6 +96,7 @@ func _centro_usuario(p: Dictionary, arco: Vector3, d: float, lb: bool, rb: bool)
 	var destino := Vector3(_rng.randf_range(-3, 3), 1.6, arco.z - d * 7.0)
 	var vh := 17.0
 	var efecto := -signf(pos(p).x) * 6.0 * -d
+	_ctx_golpeo = "centro"   ## (16-11, M6-14) ANTES de patear: el gesto es el del centro (y no se queda pendiente para el siguiente golpeo)
 	if lb:
 		destino.y = 2.2
 		destino.z = arco.z - d * 9.0
@@ -106,11 +107,8 @@ func _centro_usuario(p: Dictionary, arco: Vector3, d: float, lb: bool, rb: bool)
 		_patear(p, destino, 23.0, 0.0, efecto * 0.4, "pase")
 	else:
 		_patear(p, destino, vh, 0.0, efecto, "pase")
-	_ctx_golpeo = "centro"
 	pase_a = _companero_cerca(p, destino)
-	stats["pases"] += 1
-	_pase_usuario_vivo = true
-	_pase_usuario_de = usuario
+	_pase_usuario_vivo = false   ## (16-11, M6-25) el centro no es un pase, ni en el equipo (`pases[]`) ni en tus cifras (`stats`)
 
 ## El compañero que sale a presionar con RB: el más cercano al rival.
 func _segundo_presionador(p: Dictionary, menos: Dictionary = {}) -> Dictionary:

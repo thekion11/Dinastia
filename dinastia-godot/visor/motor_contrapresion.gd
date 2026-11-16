@@ -46,8 +46,9 @@ static func objetivo(m: MotorJugable, p: Dictionary, pp: Array) -> Vector3:
 ## {id → punto} de los que cierran líneas de pase; se calcula una vez por paso y por equipo.
 static func _cierres(m: MotorJugable, local: bool, pp: Array) -> Dictionary:
 	var cache: Dictionary = m.get_meta("contrapresion", {})
-	if not is_equal_approx(float(cache.get("t", -1.0)), m.t):
-		cache = {"t": m.t}
+	var pid := String(m.poseedor.get("id", ""))   ## (16-11, revisión de F-01) la posesión puede cambiar dentro del mismo paso
+	if not is_equal_approx(float(cache.get("t", -1.0)), m.t) or String(cache.get("pid", "")) != pid:
+		cache = {"t": m.t, "pid": pid}
 	if cache.has(local):
 		return cache[local]
 	var b := m.balon.position

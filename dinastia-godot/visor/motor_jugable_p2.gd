@@ -239,8 +239,7 @@ func _cambiar(sale: Dictionary, entra: Dictionary, entra_es_usuario: bool) -> vo
 	ultimo_cambio = {"sale": sale, "entra": entra, "pos": ns.position}
 	ns.position = Vector3(ANCHO + 2.5, 0, 4.0)
 	ns.visible = false
-	if poseedor == sale:
-		poseedor = {}
+	MotorReglas.limpiar_sale(self as Object as MotorJugable, sale, entra)   ## (16-11, M6-13) ni pases ni toques hacia el que sale
 	if entra_es_usuario:
 		usuario = entra
 	elif sale == usuario:

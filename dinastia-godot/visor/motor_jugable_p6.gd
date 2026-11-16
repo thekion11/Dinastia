@@ -7,6 +7,8 @@ const SUELTA_MANO := 0.45
 var _en_mano: Dictionary = {}
 
 func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 0.0, anim := "pase") -> void:
+	if MotorReglas.doble_toque(self as Object as MotorJugable, p): return   ## (16-11, M6-20) el que sacó no repite antes que otro
+	MotorReglas.marcar_ejecutor(self as Object as MotorJugable, p)
 	_ultima_anim = anim
 	_n_patada += 1
 	## SAQUE DE MANO (31-10): el portero con el balón en las manos que pasa raso y corto lo lanza con la mano (clip de la UAL2):
@@ -78,7 +80,7 @@ func _companero_cerca(p: Dictionary, punto: Vector3) -> Dictionary:
 	return mejor
 
 func _cabezazo(p: Dictionary) -> void:
-	if _pitar_offside(p):   ## (16-11, M6-04) el adelantado que cabecea también está en fuera de juego
+	if _pitar_offside(p) or MotorReglas.doble_toque(self as Object as MotorJugable, p):   ## (16-11, M6-04 y M6-20) fuera de juego o doble toque
 		return
 	var arco := _arco_rival(p)
 	var cerca := absf(pos(p).z - arco.z) < 18.0
