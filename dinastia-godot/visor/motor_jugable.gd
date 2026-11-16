@@ -135,7 +135,7 @@ func _retener_en_mano() -> void:
 const _RELOJES := ["_cambio_rs_hasta", "_manual_hasta", "_palo_largo_hasta", "_posee_desde", "_presion_doble",
 	"_presion_equipo_hasta", "_rb_ultimo", "_t_estado_liga", "_y_ultimo", "pedido_hasta", "pase_dirigido_hasta",
 	"_arb_hasta", "_decision_league", "_linea_def_t", "_ls_t_marca", "_ls_presion_hasta", "_ls_zona_hasta",
-	"_ls_zona_refresco", "_ls_corre_hasta", "_ls_t_carrera", "_ls_t_adelantado"]
+	"_ls_zona_refresco", "_ls_corre_hasta", "_ls_t_carrera", "_ls_t_adelantado", "_eq_tomo_en"]
 const _CLAVES_T := ["ls_t", "ls_seguir_t", "_urge_t"]
 
 func _desplazar_relojes(d: float) -> void:
