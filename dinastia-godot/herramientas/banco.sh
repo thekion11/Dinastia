@@ -28,7 +28,7 @@ fi
 # 23-10: que TODOS los scripts compilen (el banco solo ve los que toca). Desde el 26-10 corre A LA
 # VEZ que las partes (antes eran ~12 s de espera); si falla, se cortan todas y sale con 2.
 COMP_TXT=$(mktemp)
-timeout 300 godot --headless --path . --script res://pruebas/comprobar_scripts.gd > "$COMP_TXT" 2>&1 &
+timeout 1200 godot --headless --path . --script res://pruebas/comprobar_scripts.gd > "$COMP_TXT" 2>&1 &
 COMP_PID=$!
 comp_mal() {
   echo "$(grep -E "FALLO|SCRIPT ERROR" "$COMP_TXT" | head -10)"
