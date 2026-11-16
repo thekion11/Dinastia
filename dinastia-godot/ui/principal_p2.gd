@@ -103,6 +103,7 @@ var _secc_club: String = "directorio"
 ## La única excepción es quedarse sin banco: esa tapa a todas a propósito,
 ## porque hasta que no firmes en algún sitio no hay club que gestionar.
 var _aviso_abierto: int = 0
+var _aviso_plegado := true   ## (16-11, frente 1) el asunto abierto se ve plegado (solo su fila) hasta que se toca
 ## La cinemática de pantalla completa de la rueda de prensa, o null si no hay
 ## ninguna abierta: un `ui/principal/rueda_prensa.gd` (fase 0, paso 6b).
 var _rueda_pop: Control = null

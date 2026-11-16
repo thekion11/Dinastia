@@ -56,6 +56,10 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 static func ocultar_columnas(p: Principal) -> void:
 	if p._col_derecha == null or p._lista_tabla == null:
 		return
+	compactar_cabecera(p)
+	var raiz := p._despacho.get_parent() if p._despacho != null else null
+	if raiz is Container and raiz.get_node_or_null("BarraAyudas") == null:
+		BarraAyudas.montar(p, raiz)   ## la barra de abajo: teclas, mensajes, ayuda y reloj
 	var fila := p._col_derecha.get_parent()
 	if fila == null or not (fila is BoxContainer):   ## de pie (`DisenoVertical.apilar`) es una VBoxContainer
 		return
@@ -87,6 +91,33 @@ static func _entrada(cuerpo: VBoxContainer) -> void:
 		tw.tween_property(b, "modulate:a", 1.0, 0.18)
 		i += 1
 
+## (16-11, frente 1) LA CABECERA MÁS BAJA: la tira de días sube a la fila de Calendario / Un día / Hito / Buscar (con los días
+## abreviados: «Sáb 14»), y el mosaico gana ese renglón. De pie no: allí cada fila ya se desliza sola.
+static func compactar_cabecera(p: Principal) -> void:
+	if DisenoVertical.activo() or p._fila_dias == null or p._botones == null or p._fila_dias.get_parent() == p._botones:
+		return
+	var padre := p._fila_dias.get_parent()
+	if padre == null:
+		return
+	padre.remove_child(p._fila_dias)
+	p._botones.add_child(p._fila_dias)
+	var cal := -1
+	for i in p._botones.get_child_count():
+		var h := p._botones.get_child(i)
+		if h is MenuButton:
+			cal = i
+			(h as Control).custom_minimum_size.x = 56.0 if EscalaMovil.es_tactil() else 132.0   ## táctil: solo el 📅
+			if EscalaMovil.es_tactil():
+				(h as MenuButton).text = "📅"
+			(h as Control).size_flags_horizontal = Control.SIZE_FILL
+	p._botones.move_child(p._fila_dias, cal + 1)
+	p._fila_dias.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	p._fila_dias.add_theme_constant_override("separation", 3)
+	## En el teléfono tumbado (480 px de alto) la línea de estado se oculta: liga, jornada, sueldos, media, objetivo, confianza y
+	## socios ya están en las tarjetas del mosaico (partido, cuentas, plantel, oficina del DT). Sigue escribiéndose.
+	if EscalaMovil.es_tactil() and p._sub != null:
+		p._sub.visible = false
+
 static func _marcar(botones: Array[Button]) -> void:
 	for i in botones.size():
 		botones[i].button_pressed = i == pestana
@@ -100,9 +131,9 @@ static func _cuerpo(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, di
 		_: MosaicoTarjetas.avanzar(p, cuerpo, c, liga, dias, acento)
 
 ## Coloca el mosaico: `grande` (2 de ancho), `altas` (columnas de 1 o 2 tarjetas) y `bajas` (la fila de abajo).
-## De pie (teléfono vertical) todo baja a dos columnas.
+## En el teléfono (de pie o tumbado) todo baja a dos columnas.
 static func colocar(cuerpo: VBoxContainer, grande: Control, altas: Array, bajas: Array) -> void:
-	if DisenoVertical.activo():
+	if DisenoVertical.activo() or EscalaMovil.es_tactil():   ## en el teléfono (de pie o tumbado) la letra es grande: dos columnas, sin recortes
 		grande.custom_minimum_size.y = ALTO_ALTA
 		cuerpo.add_child(grande)
 		var g := GridContainer.new()
