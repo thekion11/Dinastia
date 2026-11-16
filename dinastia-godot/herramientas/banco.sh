@@ -143,11 +143,14 @@ done
 fallos=0
 sin_fin=""
 for i in $(seq 0 $((N - 1))); do
-  linea=$(limpio "$TMP/parte$i.txt" | grep -E "===== FIN" | tail -1)
+  ## (16-11) Solo la línea final de verdad («===== FIN. n fallos/FALLOS»): con «===== FIN» a secas, el título de una sección
+  ## («===== FINANZAS…») hacía pasar por terminada una parte muerta a mitad (p. ej. por falta de memoria) y el banco salía en verde.
+  linea=$(limpio "$TMP/parte$i.txt" | grep -E "^===== FIN\. [0-9]+ " | tail -1)
   if [[ -z "$linea" ]]; then
     sin_fin="$sin_fin $i"
   elif ! echo "$linea" | grep -q "FIN. 0 fallos"; then
-    fallos=$(( fallos + $(echo "$linea" | grep -oE '[0-9]+' | head -1) ))
+    n_f=$(echo "$linea" | grep -oE '[0-9]+' | head -1)
+    fallos=$(( fallos + ${n_f:-1} ))
   fi
 done
 errores=$(limpio "$LOG" | grep -c "^SCRIPT ERROR\|^SHADER ERROR")

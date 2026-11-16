@@ -11,5 +11,6 @@
 Condition "err != 1" is true	_probar_guardado_seguro
 
 # El mando táctil estilo FC Mobile se prueba fijando `size` a controles anclados a pantalla completa
-# (sus anclajes opuestos no coinciden): el aviso es del montaje de la prueba, no del juego.
+# (sus anclajes opuestos no coinciden): el aviso es del montaje de la prueba, no del juego. En Godot 4.7.2 sale
+# como WARNING (no cuenta); la entrada queda por si el motor lo sube a ERROR.
 Nodes with non-equal opposite anchors	_probar_mando_tactil_fc
