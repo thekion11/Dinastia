@@ -293,6 +293,8 @@ func _terminar() -> void:
 	terminado.emit()
 
 func _fin_de_mitad() -> void:
+	if not _tiro_vivo.is_empty():
+		_cerrar_tiro("fallo")   ## (16-11) el remate en el aire al pitar cuenta en el acta, como en el mapa de tiros
 	var empate := int(goles[0]) == int(goles[1])
 	## El silbato largo, con los brazos arriba (M-106); el sonido sale ya (tras el final el motor deja de correr).
 	gesto_arbitro.emit("fin")

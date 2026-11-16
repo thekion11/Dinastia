@@ -26,6 +26,8 @@ COLA=()
 BLOQUE=""
 pasa() {  # nombre, comando, patrón de éxito
   if [[ -n "$ESPECIALES_SOLO" ]] && [[ "$ESPECIALES_SOLO" != "$BLOQUE" ]]; then return; fi
+  ## (16-11) ESPECIALES_DESDE="nombre": salta las anteriores (retomar una tanda cortada por tiempo).
+  if [[ -n "$ESPECIALES_DESDE" ]]; then [[ "$1" == "$ESPECIALES_DESDE" ]] && ESPECIALES_DESDE=""; [[ -n "$ESPECIALES_DESDE" ]] && return; fi
   CONT=$((CONT + 1))
   if [[ -n "$PARTE_I" ]]; then
     if [[ "$PARTE_N" -eq "$REPARTO_N" ]] && [[ -n "${REPARTO[$1]+x}" ]]; then

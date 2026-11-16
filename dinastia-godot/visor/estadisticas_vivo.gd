@@ -24,7 +24,8 @@ var rojas := [0, 0]
 ## [equipo][fila * COLS + col] = muestras con el balón en esa zona.
 var calor: Array = [PackedInt32Array(), PackedInt32Array()]
 var _t_muestra := 0.0
-var _tiro_t := -1.0
+## (16-11) El remate vivo se reconoce por IDENTIDAD: en el descanso el motor desplaza su «t» (M6-08) y no es un remate nuevo.
+var _tiro_dic: Dictionary = {}
 
 func _init() -> void:
 	for i in 2:
@@ -51,8 +52,8 @@ func muestrear(motor: MotorJugable, delta: float) -> void:
 		return
 	## Un remate nuevo: el motor deja `_tiro_vivo` con el instante del golpeo.
 	var tv: Dictionary = motor.get("_tiro_vivo") if motor.get("_tiro_vivo") is Dictionary else {}
-	if not tv.is_empty() and float(tv.get("t", -1.0)) != _tiro_t:
-		_tiro_t = float(tv.get("t", -1.0))
+	if not tv.is_empty() and not is_same(tv, _tiro_dic):
+		_tiro_dic = tv
 		var p: Dictionary = tv.get("p", {})
 		var n: Node3D = p.get("node")
 		var donde: Vector3 = n.position if is_instance_valid(n) else motor.balon.position
