@@ -322,6 +322,13 @@ func _probar() -> void:
 	_comprobar((po["fallos"] as Array).is_empty(), "decisión con balón de League (situación, regate, decidir): C++ = GDScript (4000 casos cada una)")
 	for t: String in po["textos"]:
 		print(t)
+	## (16-11, auditoría) Casos límite: historiales cortos, equipos vacíos, NaN/inf, entradas inválidas que no deben cerrar Godot.
+	var li := ProbarNativoLimites.probar(nat)
+	for f: String in li["fallos"]:
+		_comprobar(false, "casos límite de League en C++: " + f)
+	_comprobar((li["fallos"] as Array).is_empty(), "casos límite de League: C++ = GDScript y sin cierres")
+	for t: String in li["textos"]:
+		print(t)
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:
