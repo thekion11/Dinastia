@@ -287,7 +287,7 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 				apq.play("parado")
 			## Cambios de paso en fase y la respiración de cada uno a su ritmo.
 			AnimTransiciones.poner(apq, jid)
-			ImpostorLejano.aplicar(dq["nodo"], float(dq["altura"]), color_liso if puesto == "ARB" else c1, Calidad.elegida, apq)   ## (14-11) a más de 30 m, silueta simple
+			ImpostorLejano.aplicar(dq["nodo"], float(dq["altura"]), color_liso if puesto == "ARB" else c1, Calidad.elegida, apq, piel)   ## (14-11) a más de 30 m, silueta simple (16-11: con su equipación)
 			return {"nodo": dq["nodo"], "anim": apq, "realista": true}
 		push_error("PlayerSpawner: no cargo el modelo Quaternius (el muñeco de Kenney, no realista, se quitó el 11-11)")
 	return {}

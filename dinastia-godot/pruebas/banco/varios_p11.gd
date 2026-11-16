@@ -322,6 +322,24 @@ func _probar_impostores_lejanos() -> void:
 	var tris: int = (imp.mesh.surface_get_arrays(0)[Mesh.ARRAY_INDEX] as PackedInt32Array).size() / 3
 	_comprobar(tris <= 90 and is_equal_approx(imp.scale.y, 1.8), "silueta de %d triángulos y a la altura del jugador" % tris)
 	nodo.free()
+	## (16-11, frente 2) Con la piel, la silueta lleva short y medias de su equipación (mismos triángulos).
+	var n2 := Node3D.new()
+	var c2 := MeshInstance3D.new()
+	c2.mesh = BoxMesh.new()
+	var eq := ShaderMaterial.new()
+	eq.shader = load("res://visor/equipacion_q.gdshader")
+	eq.set_shader_parameter("color_pantalon", Color("101010"))
+	eq.set_shader_parameter("color_medias", Color("1565c0"))
+	c2.material_override = eq
+	n2.add_child(c2)
+	add_child(n2)
+	ImpostorLejano.aplicar(n2, 1.8, Color("d32f2f"), Calidad.MINIMO, null, Color("c08060"))
+	var imp2 := n2.get_node_or_null("ImpostorLejano") as MeshInstance3D
+	var m2 := imp2.material_override as ShaderMaterial if imp2 != null else null
+	_comprobar(m2 != null and Color(m2.get_shader_parameter("c_short")).is_equal_approx(Color("101010"))
+		and Color(m2.get_shader_parameter("c_medias")).is_equal_approx(Color("1565c0")) and ImpostorLejano.TONOS_PIEL.has(Color(m2.get_shader_parameter("c_piel"))),
+		"silueta con su equipación: short, medias y uno de los 4 tonos de piel")
+	n2.free()
 	## Animación lejana: a más de 36 m del ojo pasa a modo manual (5 Hz) y a menos de 33 m vuelve a su ritmo.
 	var cam := Camera3D.new()
 	add_child(cam)
