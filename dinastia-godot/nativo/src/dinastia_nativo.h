@@ -69,6 +69,10 @@ public:
 	double league_media_f(const PackedFloat32Array &hist, double ms) const;
 	// `MotorLeague._mas_cercano_al(punto, local, [], 1)`: índice en `jugadores` del más cercano de un equipo, o -1.
 	int64_t league_mas_cercano(const Array &jugadores, const Vector2 &punto, bool local) const;
+	// Piezas de `MotorLeague._estado_sin_balon` / `_estado_league`: el más cercano de todos (por la raíz), el índice por id y la línea del penúltimo (`LeagueEquipo.linea_penultimo` con sus `xs`).
+	int64_t league_mas_cercano_todos(const Array &jugadores, const Vector2 &punto) const;
+	void league_indexar(const Array &jugadores, Dictionary destino) const;
+	double league_linea_penultimo(const Array &jugadores, bool local, bool con_vel, double lado_, double balon_x) const;
 	// `LeagueNucleo.movimiento_campo` y `LeagueSinBalon.apoyo` (el apoyo ofensivo sin balón, con su campo de fuerzas).
 	Vector2 league_movimiento_campo(const Array &campo, const Vector2 &actual, double amortigua) const;
 	Vector2 league_apoyo(const Dictionary &e) const;

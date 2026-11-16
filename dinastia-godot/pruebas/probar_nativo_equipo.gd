@@ -190,6 +190,43 @@ static func probar(nat: Object) -> Dictionary:
 		tm2[1] += w2 - w1
 		if rg.size() != rc.size() or (rg.size() == 1 and rg[0] != rc[0]):
 			dis_m2 += 1
+	## 5. El índice por id, el más cercano de todos (por la raíz) y la línea del penúltimo (con y sin velocidad).
+	var dis_6 := 0
+	var t6 := [0, 0]
+	var y := 1500
+	var motor2 := MotorLeague.new()
+	motor2.jugadores = lista
+	for caso in y:
+		for q in 22:
+			(lista[q]["node"] as Node3D).position = Vector3(rr.randf_range(-34, 34), 0, rr.randf_range(-52, 52)) if caso % 9 != 0 else Vector3(float(q % 3), 0, 1.0)
+			lista[q]["vel"] = Vector3(rr.randf_range(-8, 8), 0, rr.randf_range(-8, 8))
+		var pt := Vector2(rr.randf_range(-52, 52), rr.randf_range(-34, 34))
+		var lg := 1.0 if caso % 2 == 0 else -1.0
+		var bxx := rr.randf_range(-52, 52)
+		var d_g := {}
+		var d_c := {"basura": 1}
+		var z0 := Time.get_ticks_usec()
+		motor2._indexar_gd(d_g)
+		var cg := motor2._mas_cercano_a_todos_gd(pt)
+		var l1 := motor2._linea_penultimo_gd(caso % 3 == 0, true, lg, bxx)
+		var l2 := motor2._linea_penultimo_gd(caso % 4 == 0, false, lg, bxx)
+		var z1 := Time.get_ticks_usec()
+		nat.league_indexar(lista, d_c)
+		var kk: int = nat.league_mas_cercano_todos(lista, pt)
+		var m1: float = nat.league_linea_penultimo(lista, caso % 3 == 0, true, lg, bxx)
+		var m2: float = nat.league_linea_penultimo(lista, caso % 4 == 0, false, lg, bxx)
+		var z2 := Time.get_ticks_usec()
+		t6[0] += z1 - z0
+		t6[1] += z2 - z1
+		var ok6: bool = d_g.size() == d_c.size() and (lista[kk] if kk >= 0 else {}) == cg and var_to_bytes(l1) == var_to_bytes(m1) and var_to_bytes(l2) == var_to_bytes(m2)
+		for id: String in d_g:
+			ok6 = ok6 and d_c.has(id) and is_same(d_c[id], d_g[id])
+		if not ok6:
+			dis_6 += 1
+	motor2.free()
+	if dis_6 > 0:
+		fallos.append("índice, más cercano de todos o línea del penúltimo distintos en %d de %d casos" % [dis_6, y])
+	textos.append("índice + más cercano de todos + 2 líneas del penúltimo: GDScript %.1f µs, C++ %.1f µs por conjunto" % [t6[0] / float(y), t6[1] / float(y)])
 	for nd2: Dictionary in lista:
 		(nd2["node"] as Node3D).free()
 	raiz.free()

@@ -88,15 +88,11 @@ func _estado_league(delta: float) -> void:
 		var e: LeagueEquipo = equipos[i]
 		var p60: float = (float(posesion[i]) / tot) if tot > 0.0 else 0.5
 		e.actualizar_tactica(goles[i], goles[1 - i], (minuto() * 60000.0), p60, _palancas(i == 0), delta)
-		var xs := PackedFloat32Array()
-		for q: Dictionary in jugadores:
-			if bool(q["es_local"]) == (i == 0):
-				xs.append(ls(pos(q)).x)
 		var rival: Array = []
 		if not poseedor.is_empty() and bool(poseedor["es_local"]) != (i == 0):
 			rival = [ls(pos(poseedor)), ls(poseedor["vel"])]
 		var b0 := ls(balon.position)
-		e.calcular_trampa(b0, b0 + ls(vel_balon) * 0.7, rival, LeagueEquipo.linea_penultimo(xs, e.lado, b0.x))
+		e.calcular_trampa(b0, b0 + ls(vel_balon) * 0.7, rival, _linea_penultimo(i == 0, false, e.lado, b0.x))
 
 ## La pizarra del club (`Tactica`, 0..2 con 1 = neutro; ver `EstiloClub`) traducida a las palancas de League (0..1, 0,5 = neutro):
 ## amplitud → anchura del bloque; presión → foco defensivo del bloque y del medio; mentalidad → foco del medio en ataque;
@@ -273,3 +269,47 @@ func _mas_cercano_uno_gd(punto: Vector2, local: bool, excluir: Array) -> Array:
 				mejor = d
 				sel = q
 	return [] if sel.is_empty() else [sel]
+
+## (16-11, paso a C++) Piezas de `_estado_sin_balon` y `_estado_league`: cada una usa la extensión si está y, si no, su gemela `*_gd` (misma cuenta; `probar_nativo`).
+func _indexar_jugadores(destino: Dictionary) -> void:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_indexar"):
+		nat.league_indexar(jugadores, destino)
+	else:
+		_indexar_gd(destino)
+
+func _indexar_gd(destino: Dictionary) -> void:
+	destino.clear()
+	for q: Dictionary in jugadores:
+		destino[String(q["id"])] = q
+
+func _mas_cercano_a_todos(punto: Vector2) -> Dictionary:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_mas_cercano_todos"):
+		var k: int = nat.league_mas_cercano_todos(jugadores, punto)
+		return jugadores[k] if k >= 0 else {}
+	return _mas_cercano_a_todos_gd(punto)
+
+func _mas_cercano_a_todos_gd(punto: Vector2) -> Dictionary:
+	var mejor := INF
+	var sel: Dictionary = {}
+	for q: Dictionary in jugadores:
+		var d := (ls(pos(q)) - punto).length()
+		if d < mejor:
+			mejor = d
+			sel = q
+	return sel
+
+## `LeagueEquipo.linea_penultimo` de los jugadores con `es_local == local` (con su velocidad por 0,24 s si `con_vel`).
+func _linea_penultimo(local: bool, con_vel: bool, lado_: float, balon_x: float) -> float:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_linea_penultimo"):
+		return nat.league_linea_penultimo(jugadores, local, con_vel, lado_, balon_x)
+	return _linea_penultimo_gd(local, con_vel, lado_, balon_x)
+
+func _linea_penultimo_gd(local: bool, con_vel: bool, lado_: float, balon_x: float) -> float:
+	var xs := PackedFloat32Array()
+	for q: Dictionary in jugadores:
+		if bool(q["es_local"]) == local:
+			xs.append(ls(pos(q)).x + ls(q["vel"]).x * 0.24 if con_vel else ls(pos(q)).x)
+	return LeagueEquipo.linea_penultimo(xs, lado_, balon_x)
