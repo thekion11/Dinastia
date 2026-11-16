@@ -63,8 +63,11 @@ vec3 cesped_color(vec2 w, vec2 uv, vec3 mundo, vec3 cam) {
 	vec3 vista = normalize(cam - mundo);
 	float sentido = m * 2.0 - 1.0;
 	float sheen = sentido * (0.45 + 0.55 * abs(vista.z)) * fuerza_franjas;
-	vec3 base = mix(oscuro, claro, 0.5 + 0.5 * sentido * mix(0.7, 1.0, abs(vista.z)));
-	base *= (1.0 + 0.1 * sheen) * brillo;
+	// FRANJAS DE TRANSMISIÓN (frente 2, 16-11): al lado de PES 2020, eFootball y FC el corte se leía como
+	// césped pintado (claro lima contra oscuro casi el doble de hondo). En la tele las franjas se ven, pero
+	// con ~70 % de esa diferencia: el centro de las dos tintas del club no cambia, solo se acercan.
+	vec3 base = mix(oscuro, claro, 0.5 + 0.36 * sentido * mix(0.7, 1.0, abs(vista.z)));
+	base *= (1.0 + 0.07 * sheen) * brillo;
 	float macro = fbm(w * 0.045);
 	base *= 0.92 + 0.16 * macro;
 	base = mix(base, base * vec3(1.08, 1.04, 0.82), smoothstep(0.62, 0.85, fbm(w * 0.09 + 7.0)) * 0.35);
@@ -80,7 +83,8 @@ vec3 cesped_color(vec2 w, vec2 uv, vec3 mundo, vec3 cam) {
 	base = mix(base, base * vec3(0.95, 0.78, 0.45) + vec3(0.03, 0.02, 0.0), gast * 0.55);
 	// Verde de transmisión: más profundo y saturado (el claro salía menta lavado).
 	float gris = dot(base, vec3(0.30, 0.59, 0.11));
-	base = mix(vec3(gris), base, 1.15);
+	// (16-11) 1,15 → 1,05: con el ajuste de color y ACES encima el claro salía verde neón.
+	base = mix(vec3(gris), base, 1.05);
 	base *= vec3(0.94, 0.99, 0.92);
 	return base;
 }
