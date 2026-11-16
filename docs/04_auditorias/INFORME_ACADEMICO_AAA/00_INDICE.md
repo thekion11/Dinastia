@@ -17,6 +17,7 @@ Alcance acordado: 40.000-80.000 palabras, por capítulos, guardados y subidos un
 | 8 | Brechas frente a PES 2020 y FC 27 (síntesis con fuentes) | `cap_08_brechas.md` | pendiente |
 | 9 | Plan hacia 1.0: hitos, métricas y criterios de aceptación | `cap_09_plan.md` | pendiente |
 | 10 | Conclusiones y bibliografía unificada | `cap_10_conclusiones.md` | pendiente |
+| 11 | Recursos públicos gratuitos con licencia comercial (catálogo por necesidad, top 25, plantilla para `LICENCIAS.md`) | `cap_11_recursos_publicos.md` | hecho (16-11) |
 
 ## Convenciones
 - [M] medido · [D] documento del proyecto · [F n] fuente externa numerada (bibliografía del cap. 2) · [E] estimación.
