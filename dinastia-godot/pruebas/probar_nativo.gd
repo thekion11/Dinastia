@@ -316,6 +316,12 @@ func _probar() -> void:
 	_comprobar((eq["fallos"] as Array).is_empty(), "colocación e historial de League: C++ = GDScript (5000 posiciones, 300 historiales)")
 	for t: String in eq["textos"]:
 		print(t)
+	var po := ProbarNativoPortador.probar(nat)
+	for f: String in po["fallos"]:
+		_comprobar(false, "decisión con balón de League en C++: " + f)
+	_comprobar((po["fallos"] as Array).is_empty(), "decisión con balón de League (situación, regate, decidir): C++ = GDScript (4000 casos cada una)")
+	for t: String in po["textos"]:
+		print(t)
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:

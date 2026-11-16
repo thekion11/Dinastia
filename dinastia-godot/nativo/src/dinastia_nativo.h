@@ -95,6 +95,13 @@ public:
 	// El bucle de huesos de `LeagueAuto.construir`: rellena `sal` mezclando `a1` y `a2` en `cuadros` (centésimas) con `mezclas` ([bias, orig] por cuadro) y gira la pelvis.
 	void league_mezclar(const Ref<Animation> &sal, const Ref<Animation> &a1, const Ref<Animation> &a2, const PackedInt32Array &cuadros, const PackedFloat64Array &mezclas,
 			double ang, const Quaternion &giro_padre) const;
+	// --- portador (agente B) ---
+	// La decisión con balón de League (16-11, nativo/src/league_portador_nativo.cpp): `LeagueNucleo.situacion`, `regate` y `decidir` (con `zona_tiro` = `LeagueNucleo.ZONA_TIRO`).
+	Array league_situacion(const Vector2 &pos, const Vector2 &mov, double lado, const Array &rivales) const;
+	Array league_regate(const Vector2 &pos, const Vector2 &mov, const Vector2 &mirada, double lado, const Array &cercanos, double mente, double ofensivo, double iman) const;
+	Dictionary league_decidir(const Dictionary &yo, const Array &companeros, const Array &rivales, const Vector2 &mov_balon, double posesion, const Ref<RandomNumberGenerator> &azar, int64_t muestras,
+			double zona_tiro) const;
+	// --- fin portador (agente B) ---
 	int64_t elegir_ponderado(const Array &once, const Dictionary &grupo_de, const Dictionary &bases, double base_def, const String &atr, const PackedFloat64Array &pesos_rol, double r_unit, Object *excluir) const;
 };
 

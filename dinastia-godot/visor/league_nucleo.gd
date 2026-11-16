@@ -2,13 +2,10 @@ class_name LeagueNucleo
 extends RefCounted
 ## NÚCLEO DE LEAGUE-SOCCER PORTADO A GDSCRIPT (10-11-2026, orden del dueño: el motor del partido pasa a ser el de League-Soccer,
 ## C++ Apache 2.0, heredero de GameplayFootball / Google Research Football; copia en `terceros/league_soccer/codigo_y_recursos`).
-## Plan y cifras: `docs/04_auditorias/MOTOR_LEAGUE_SOCCER_PLAN.md`. Atribución: `terceros/league_soccer/NOTICE_DINASTIA.md`.
-##
+## Plan: `docs/04_auditorias/MOTOR_LEAGUE_SOCCER_PLAN.md`. Atribución: `terceros/league_soccer/NOTICE_DINASTIA.md`.
 ## Funciones PURAS (sin nodos ni azar propio: el azar entra por argumento) traducidas línea a línea del original, en SU MARCO:
-##   Vector2(x, y) con x = largo (nuestro Z) e y = ancho (nuestro X); `lado` = signo del arco PROPIO (League `team->GetSide()`),
-##   es decir lado = -dir_ataque. Medio largo 52,5 m (`pitchHalfW`), medio ancho 34 m (`pitchHalfH`).
-## Origen de cada función (ruta L = `terceros/league_soccer/codigo_y_recursos/src/onthepitch/`) en su comentario.
-## Si algún día se pasa a la extensión C++ (`nativo/`), cada función nativa debe ser copia exacta de esta.
+##   Vector2(x, y) con x = largo (nuestro Z) e y = ancho (nuestro X); `lado` = signo del arco PROPIO (League `team->GetSide()`), es decir lado = -dir_ataque. Medio largo 52,5 m (`pitchHalfW`), medio ancho 34 m (`pitchHalfH`).
+## Origen de cada función (ruta L = `terceros/league_soccer/codigo_y_recursos/src/onthepitch/`) en su comentario. Con la extensión C++ (`nativo/`) cada función nativa es copia exacta (gemelas `*_gd`).
 
 const MEDIO_LARGO := 52.5   ## pitchHalfW
 const MEDIO_ANCHO := 34.0   ## pitchHalfH
@@ -106,8 +103,12 @@ static func espacio_libre(foco: Vector2, rivales: Array, seguro: float, futuro: 
 		suma += 1.0 - clampf((rp - foco).length(), 0.0, seguro) / seguro
 	return 1.0 - normalizado(suma, 0.0, 2.5)
 
-## L Player::_CalculateTacticalSituation → [espacio_adelante, espacio, adelante].
 static func situacion(pos: Vector2, mov: Vector2, lado: float, rivales: Array) -> Array:
+	var nat := Nativo.obj()   ## (16-11, paso a C++) misma cuenta que `situacion_gd`
+	return nat.league_situacion(pos, mov, lado, rivales) if nat != null and nat.has_method("league_situacion") else situacion_gd(pos, mov, lado, rivales)
+
+## L Player::_CalculateTacticalSituation → [espacio_adelante, espacio, adelante].
+static func situacion_gd(pos: Vector2, mov: Vector2, lado: float, rivales: Array) -> Array:
 	var adelante_pos := pos + Vector2(-lado, 0.0) * V_SPRINT * 0.5
 	var esp_adelante := espacio_libre(adelante_pos, rivales, 5.0, 0.5)
 	var esp := espacio_libre(pos + mov * 0.1, rivales, 5.0, 0.1)
@@ -154,13 +155,17 @@ static func vel_pase(potencia: float) -> float:
 
 # ------------------------------------------------------------------ decisión con balón (L ElizaController::GetOnTheBallCommands)
 
+static func decidir(yo: Dictionary, companeros: Array, rivales: Array, mov_balon: Vector2, posesion: float, azar: RandomNumberGenerator, muestras := 1) -> Dictionary:
+	var nat := Nativo.obj()   ## (16-11, paso a C++) misma cuenta que `decidir_gd`
+	return nat.league_decidir(yo, companeros, rivales, mov_balon, posesion, azar, muestras, ZONA_TIRO) if nat != null and nat.has_method("league_decidir") else decidir_gd(yo, companeros, rivales, mov_balon, posesion, azar, muestras)
+
 ## `yo`: {pos, mov, lado, puesto, tec_pase, tec_tiro, posee_ms, sit: [esp_adel, esp, adel]}.
 ## `companeros`: Array de {i, pos, mov, puesto, sit}. `rivales` como en `espacio_libre`. `azar`: RandomNumberGenerator.
 ## Devuelve {accion: "pase"|"panico"|"tiro"|"conducir", ...}. El original encola varias órdenes y el muñeco ejecuta la primera
 ## que puede: aquí se devuelve la de más prioridad en el mismo orden (pánico, pase, tiro; si no, conducir).
 ## `muestras`: cuántos ciclos de 10 ms del original cubre esta decisión (el original sortea el tiro en CADA ciclo; aquí se toma el
 ## máximo de `muestras` sorteos, que tiene la misma probabilidad: u^(1/n) es el máximo de n uniformes).
-static func decidir(yo: Dictionary, companeros: Array, rivales: Array, mov_balon: Vector2, posesion: float, azar: RandomNumberGenerator, muestras := 1) -> Dictionary:
+static func decidir_gd(yo: Dictionary, companeros: Array, rivales: Array, mov_balon: Vector2, posesion: float, azar: RandomNumberGenerator, muestras := 1) -> Dictionary:
 	var mov: Vector2 = yo["mov"]
 	var pos: Vector2 = yo["pos"]
 	var lado := float(yo["lado"])
@@ -258,8 +263,12 @@ static func dir_panico(mirada: Vector2, lado: float) -> Vector2:
 
 # ------------------------------------------------------------------ regate (L AI_GetBestDribbleMovement + AI_GetForceFieldMovement)
 
-## Campo de fuerzas: los 5 rivales más cercanos repelen, las bandas repelen, el arco atrae. Devuelve [dirección, velocidad].
 static func regate(pos: Vector2, mov: Vector2, mirada: Vector2, lado: float, cercanos: Array, mente: float, ofensivo := 0.5, iman := 0.5) -> Array:
+	var nat := Nativo.obj()   ## (16-11, paso a C++) misma cuenta que `regate_gd`
+	return nat.league_regate(pos, mov, mirada, lado, cercanos, mente, ofensivo, iman) if nat != null and nat.has_method("league_regate") else regate_gd(pos, mov, mirada, lado, cercanos, mente, ofensivo, iman)
+
+## Campo de fuerzas: los 5 rivales más cercanos repelen, las bandas repelen, el arco atrae. Devuelve [dirección, velocidad].
+static func regate_gd(pos: Vector2, mov: Vector2, mirada: Vector2, lado: float, cercanos: Array, mente: float, ofensivo := 0.5, iman := 0.5) -> Array:
 	var empuje := 0.55 + clampf(ofensivo, 0.0, 1.0) * 0.28 + clampf(mente, 0.0, 1.0) * 0.12
 	var fondo := normalizado(absf(pos.x) / MEDIO_LARGO, 0.0, 1.0)
 	var centro_inv := (1.0 - fondo * fondo) * 0.5
