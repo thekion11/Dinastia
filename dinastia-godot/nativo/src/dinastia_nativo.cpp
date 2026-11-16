@@ -18,6 +18,7 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("terreno", "ruido", "detalle", "lado", "celdas", "baldosas", "llano_radio", "llano_trans", "alto", "monte", "monte_alto", "monte_radio"), &DinastiaNativo::terreno);
 	ClassDB::bind_method(D_METHOD("hierba", "manchas", "semilla"), &DinastiaNativo::hierba);
 	ClassDB::bind_method(D_METHOD("once_asignar_libres", "ranuras", "libres", "grupo_de", "orden"), &DinastiaNativo::once_asignar_libres);
+	ClassDB::bind_method(D_METHOD("once_armar", "plantilla", "ranuras", "grupo_de", "orden"), &DinastiaNativo::once_armar);
 	ClassDB::bind_method(D_METHOD("obstaculos_multimalla", "nodo_t", "buf", "paso", "n", "base", "raiz_y", "min_alto", "max_base", "rej", "celda_rej"), &DinastiaNativo::obstaculos_multimalla);
 	ClassDB::bind_method(D_METHOD("cuerpos_motor", "jugadores", "minimo"), &DinastiaNativo::cuerpos_motor);
 	ClassDB::bind_method(D_METHOD("mover_jugadores_fisica", "jugadores", "bpos", "delta", "t", "hay_poseedor", "poseedor_id", "poseedor_local", "a_max_base", "ancho", "largo", "giro_rapido", "coste_aguante"),
@@ -302,4 +303,48 @@ PackedInt32Array DinastiaNativo::once_asignar_libres(const Dictionary &ranuras, 
 		}
 	}
 	return res;
+}
+
+// `Club.once()` (el once automático sin once manual), entero: `disponibles()` + primera vuelta (`once_asignar_libres`) + segunda vuelta sin filtro de portería + el once en el orden de las ranuras.
+// Devuelve [] si hay menos de 7 libres (entonces `Club.once()` sigue con su red de seguridad en GDScript).
+Array DinastiaNativo::once_armar(const Array &plantilla, const Dictionary &ranuras, const Dictionary &grupo_de, const PackedInt32Array &orden) const {
+	static const StringName k_lesion("lesion"), k_suspension("suspension");
+	Array libres;
+	for (int64_t k = 0; k < plantilla.size(); k++) {
+		Object *o = plantilla[k];
+		if (int64_t(o->get(k_lesion)) <= 0 && int64_t(o->get(k_suspension)) <= 0) {
+			libres.push_back(plantilla[k]);
+		}
+	}
+	Array salida;
+	if (libres.size() < 7) {
+		return salida;
+	}
+	PackedInt32Array res = once_asignar_libres(ranuras, libres, grupo_de, orden);
+	const int64_t ns = res.size();
+	std::vector<uint8_t> usado(libres.size(), 0);
+	for (int64_t i = 0; i < ns; i++) {
+		if (res[i] >= 0) {
+			usado[res[i]] = 1;
+		}
+	}
+	for (int64_t i = 0; i < ns; i++) {
+		if (res[i] >= 0) {
+			continue;
+		}
+		for (int64_t k = 0; k < libres.size(); k++) {
+			if (usado[k]) {
+				continue;
+			}
+			usado[k] = 1;
+			res.set(i, int32_t(k));
+			break;
+		}
+	}
+	for (int64_t i = 0; i < ns; i++) {
+		if (res[i] >= 0) {
+			salida.push_back(libres[res[i]]);
+		}
+	}
+	return salida;
 }

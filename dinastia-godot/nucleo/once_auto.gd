@@ -10,6 +10,17 @@ static func asignar(libres: Array, ranuras: Array, orden: Array) -> Dictionary:
 		return _nativo(nat, libres, ranuras, orden)
 	return asignar_gd(libres, ranuras, orden)
 
+## (16-11, paso a C++) El once automático ENTERO en una llamada (`disponibles()` + las dos vueltas + el orden de las ranuras): en C++ si la extensión está. Devuelve [] si no hay extensión
+## o si hay menos de 7 libres: entonces `Club.once()` sigue con su camino de siempre (GDScript, con la red de seguridad). La gemela es ese mismo camino de `Club.once()`.
+static func armar(plantilla: Array, ranuras: Array, orden: Array) -> Array:
+	var nat := Nativo.obj()
+	if nat == null or not nat.has_method("once_armar"):
+		return []
+	if _grupo_de.is_empty():
+		for k: String in Datos.posd().keys():
+			_grupo_de[k] = PesosPuesto.grupo(k)
+	return nat.once_armar(plantilla, _entrada(ranuras)[2], _grupo_de, _entrada(ranuras)[3])
+
 ## demarcación → grupo (POR/DEF/MED/DEL), una vez: el nativo la pide para el encaje por línea.
 static var _grupo_de: Dictionary = {}
 
@@ -35,7 +46,10 @@ static func _entrada(ranuras: Array) -> Array:
 		ws.append(e[1] if not e.is_empty() else PackedFloat64Array())
 		grupos.append(PesosPuesto.grupo(puesto))
 		por_r.append(1 if PesosPuesto.es_portero(puesto) else 0)
-	var entrada := [ranuras, orden, {"puestos": puestos, "ks": ks, "ws": ws, "grupos": grupos, "por": por_r}]
+	var o32 := PackedInt32Array()
+	for i: int in orden:
+		o32.append(i)
+	var entrada := [ranuras, orden, {"puestos": puestos, "ks": ks, "ws": ws, "grupos": grupos, "por": por_r}, o32]
 	if _cache.size() >= 32:
 		_cache.clear()
 	_cache.append(entrada)

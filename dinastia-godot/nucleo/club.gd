@@ -158,6 +158,16 @@ func once(f: String = "") -> Array[Jugador]:
 	var def: Dictionary = forms.get(forma, forms.get("4-3-3", {}))
 	var ranuras: Array = def.get("s", [])
 
+	## (16-11) El camino corto: todo el once automático en una llamada a la extensión (la gemela es lo que sigue, que también cubre la red de seguridad de menos de 7 libres).
+	var rapido := OnceAuto.armar(plantilla, ranuras, OnceAuto.orden_de(ranuras))
+	if not rapido.is_empty():
+		var el: Array[Jugador] = []
+		el.assign(rapido)
+		return LeyesPais.ajustar_once(self, el)
+	return LeyesPais.ajustar_once(self, _once_auto_gd(ranuras))
+
+## El once automático de siempre (GDScript): la gemela de `OnceAuto.armar` y el camino de la red de seguridad (menos de 7 libres). Sin `ajustar_once`.
+func _once_auto_gd(ranuras: Array) -> Array[Jugador]:
 	var libres := disponibles()
 	if libres.size() < 7:
 		libres = plantilla.filter(func(j: Jugador) -> bool: return j.suspension <= 0)
@@ -189,7 +199,7 @@ func once(f: String = "") -> Array[Jugador]:
 		if asignado.has(i):
 			elegidos.append(asignado[i])
 	## Las reglas de la liga de este club (cupo en cancha, juveniles).
-	return LeyesPais.ajustar_once(self, elegidos)
+	return elegidos
 
 
 ## --- EL ESTADIO ------------------------------------------------------------

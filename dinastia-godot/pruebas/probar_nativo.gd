@@ -95,6 +95,32 @@ func _probar() -> void:
 			if not igual:
 				distintos += 1
 	_comprobar(comparados > 1000 and distintos == 0, "once automático: C++ = GDScript en %d armados de %d clubes (distintos: %d)" % [comparados, mundo.clubes.size(), distintos])
+	## El once automático ENTERO (`once_armar`): mismo once que el camino de GDScript (`_once_auto_gd`), con lesionados y sancionados al azar.
+	var armados := 0
+	var armados_distintos := 0
+	for c: Club in mundo.clubes.values():
+		for j: Jugador in c.plantilla:
+			j.lesion = 1 if rng.randf() < 0.15 else 0
+			j.suspension = 1 if rng.randf() < 0.1 else 0
+		for fk: String in forms:
+			var ranuras2: Array = (forms[fk] as Dictionary).get("s", [])
+			var rap := OnceAuto.armar(c.plantilla, ranuras2, OnceAuto.orden_de(ranuras2))
+			if c.disponibles().size() < 7:
+				_comprobar(rap.is_empty(), "once armado: con menos de 7 libres devuelve vacío (club %s)" % c.id)
+				continue
+			var viejo := c._once_auto_gd(ranuras2)
+			armados += 1
+			var mismo := rap.size() == viejo.size()
+			if mismo:
+				for i in rap.size():
+					mismo = mismo and (rap[i] as Jugador).id == viejo[i].id
+			if not mismo:
+				armados_distintos += 1
+	_comprobar(armados > 1000 and armados_distintos == 0, "once armado entero: C++ = GDScript en %d (distintos: %d)" % [armados, armados_distintos])
+	for c: Club in mundo.clubes.values():
+		for j: Jugador in c.plantilla:
+			j.lesion = 0
+			j.suspension = 0
 	print("once automático: GDScript %.0f µs, C++ %.0f µs por once" % [t_gd / float(comparados), t_cpp / float(comparados)])
 	## El alisado, con las mallas reales de los cuerpos.
 	for ruta in [FutbolistaQ.MODELO_MALE, FutbolistaQ.MODELO_FEMALE]:
