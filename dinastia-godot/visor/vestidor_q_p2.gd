@@ -94,6 +94,11 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		mat.set_shader_parameter("estilo", i_estilo)
 		## Legibilidad del dibujo de la camiseta a la cámara real (10-11): 0,7 por defecto; apagada en MÍNIMA (nivel más bajo) y con «Partido ligero» (la GPU manda).
 		mat.set_shader_parameter("legible", 0.0 if Calidad.elegida <= Calidad.ULTRA_BAJA or Calidad.partido_ligero else 0.7)
+		## Tela de punto CC0 (16-11, `cotton_jersey` de Poly Haven): solo relieve fino, mismo criterio que `legible`.
+		var tela_on := not (Calidad.elegida <= Calidad.ULTRA_BAJA or Calidad.partido_ligero)
+		mat.set_shader_parameter("tela_detalle", 0.8 if tela_on else 0.0)
+		if tela_on:
+			mat.set_shader_parameter("tela_nor", load(TELA_NOR))
 		mat.set_shader_parameter("tinte_piel", _tinte(piel))
 		## La muñeca (fin de la manga larga) del cuerpo de mujer está más adentro.
 		mat.set_shader_parameter("muneca", 0.69 if es_mujer else 0.755)

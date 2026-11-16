@@ -43,6 +43,8 @@ const PIEZAS_MALE := [
 const SHADER_EQUIPACION := "res://visor/equipacion_q.gdshader"
 const MASCARA := "res://assets/characters/quaternius/equipacion_mascara.png"
 const COORDS := "res://assets/characters/quaternius/equipacion_coords.png"
+## Normal del punto de camiseta (Poly Haven `cotton_jersey`, CC0; 16-11), en la tela del uniforme.
+const TELA_NOR := "res://assets/cc0/cotton_jersey/nor.jpg"
 const MATERIAL_CUERPO := "MI_Superhero_Male"
 const MATERIAL_CEJAS := "MI_Hair_1"
 const MATERIAL_OJOS := "MI_Eyes"

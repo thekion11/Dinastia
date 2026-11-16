@@ -137,6 +137,19 @@ uniform float escala_holgura = 0.3;
 // alisada del todo). Ropa de calle más; camisetas de juego menos.
 uniform float alisar = 0.0;
 varying vec3 v_reposo;
+// TELA DE PUNTO (16-11, Frente 2): el normal del tejido `cotton_jersey` de Poly Haven (CC0; ver LICENCIAS.md),
+// repetido en las UV, como detalle de baja intensidad: no cambia el color del uniforme. `tela_detalle` = 0 lo
+// apaga (MÍNIMA y «Partido ligero», `VestidorQ`); de lejos (la cámara de TV) no se lee y no se muestrea.
+uniform sampler2D tela_nor : hint_normal, filter_linear_mipmap, repeat_enable;
+uniform float tela_detalle = 0.0;
+uniform float tela_escala = 6.0;   // repeticiones por unidad de UV (~40 cm por repetición en el torso)
+// LOS EJES DE REPOSO EN EL ESPACIO TANGENTE (16-11, «parches claros»): el relieve de arrugas y pliegues
+// (`relieve_tela`) se calcula en las coordenadas de reposo (x a la derecha, y arriba), pero el mapa de normales
+// se lee en el espacio tangente de las UV del atlas, y cada isla del atlas de Quaternius tiene su propio giro
+// (y algunas, espejo). Sumarlo tal cual inclinaba la normal hacia otro lado en cada isla y salían bloques
+// rectangulares más claros u oscuros con el borde de la isla. Aquí van x e y de reposo, llevados a la pose
+// actual, medidos sobre la tangente y la binormal de cada vértice: (x·T, x·B, y·T, y·B).
+varying vec4 v_ejes;
 
 // EL ESCOTE DE VERDAD (17-10-2026). Antes la camiseta acababa en un plano
 // horizontal (y = 1,535) y el cuello era «todo lo que queda por encima de
@@ -180,6 +193,17 @@ vec3 girar(vec3 a, vec3 b, vec3 x) {
 
 void vertex() {
 	v_reposo = vec3(UV2.x, UV2.y, COLOR.r);
+	{
+		vec3 ex = vec3(1.0, 0.0, 0.0);
+		vec3 ey = vec3(0.0, 1.0, 0.0);
+		if (dot(CUSTOM1.xyz, CUSTOM1.xyz) > 0.25) {
+			vec3 a = normalize(CUSTOM1.xyz);
+			vec3 b = normalize(NORMAL);
+			ex = girar(a, b, ex);
+			ey = girar(a, b, ey);
+		}
+		v_ejes = vec4(dot(ex, TANGENT), dot(ex, BINORMAL), dot(ey, TANGENT), dot(ey, BINORMAL));
+	}
 	// LA ROPA SUELTA (26-9-2026, pedido: "están muy pegadas al cuerpo"): los
 	// vértices de la camiseta y el pantalón se separan del cuerpo por su
 	// normal -la tela no se pega a cada músculo-, y la manga y el pantalón se
@@ -1070,9 +1094,19 @@ void fragment() {
 	}
 	vec3 nm = usa_normal ? texture(normal_tex, UV).rgb : vec3(0.5, 0.5, 1.0);
 	vec2 nm_cuerpo = nm.xy - 0.5;
-	// Micro relieve del tejido sobre el relieve del cuerpo.
-	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * (usa_reposo && !civil ? 0.018 : 0.045) * tela * nitidez;
-	nm.xy += relieve_tela * tela;
+	// Micro relieve del tejido sobre el relieve del cuerpo: el punto de verdad (`tela_nor`) si está encendido;
+	// si no, el de siempre (dos cosenos). La textura se muestrea con sus derivadas (fuera de la rama) y solo
+	// cuando una repetición ocupa más de ~8 píxeles: de lejos no se ve y no cuesta.
+	vec2 uv_t = UV * tela_escala;
+	vec2 duv_x = dFdx(uv_t);
+	vec2 duv_y = dFdy(uv_t);
+	float cerca_t = tela_detalle * (1.0 - smoothstep(0.06, 0.12, max(length(duv_x), length(duv_y))));
+	if (cerca_t > 0.0 && tela > 0.0) {
+		nm.xy += (textureGrad(tela_nor, uv_t, duv_x, duv_y).rg - 0.5) * cerca_t * tela;
+	} else if (tela_detalle <= 0.0) {
+		nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * (usa_reposo && !civil ? 0.018 : 0.045) * tela * nitidez;
+	}
+	nm.xy += (relieve_tela.x * v_ejes.xy + relieve_tela.y * v_ejes.zw) * tela;
 	// Equipación de juego (17-10-2026): el músculo se atenúa ANTES de sumar el
 	// relieve propio de la tela (arrugas, pliegues, canalé), y así la tela se
 	// puede marcar más sin que vuelvan los abdominales pintados.
