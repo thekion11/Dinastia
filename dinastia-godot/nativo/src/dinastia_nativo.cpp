@@ -18,6 +18,7 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("terreno", "ruido", "detalle", "lado", "celdas", "baldosas", "llano_radio", "llano_trans", "alto", "monte", "monte_alto", "monte_radio"), &DinastiaNativo::terreno);
 	ClassDB::bind_method(D_METHOD("hierba", "manchas", "semilla"), &DinastiaNativo::hierba);
 	ClassDB::bind_method(D_METHOD("once_asignar_libres", "ranuras", "libres", "grupo_de", "orden"), &DinastiaNativo::once_asignar_libres);
+	ClassDB::bind_method(D_METHOD("once_armar", "plantilla", "ranuras", "grupo_de", "orden"), &DinastiaNativo::once_armar);
 	ClassDB::bind_method(D_METHOD("obstaculos_multimalla", "nodo_t", "buf", "paso", "n", "base", "raiz_y", "min_alto", "max_base", "rej", "celda_rej"), &DinastiaNativo::obstaculos_multimalla);
 	ClassDB::bind_method(D_METHOD("cuerpos_motor", "jugadores", "minimo"), &DinastiaNativo::cuerpos_motor);
 	ClassDB::bind_method(D_METHOD("mover_jugadores_fisica", "jugadores", "bpos", "delta", "t", "hay_poseedor", "poseedor_id", "poseedor_local", "a_max_base", "ancho", "largo", "giro_rapido", "coste_aguante"),
@@ -26,9 +27,35 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("pcg_coincide"), &DinastiaNativo::pcg_coincide);
 	ClassDB::bind_method(D_METHOD("simular_90", "p", "ayuda", "cfg", "rng", "azar_propio"), &DinastiaNativo::simular_90);
 	ClassDB::bind_method(D_METHOD("medias_linea", "once", "grupo_de", "lateral_de", "banda_de", "impulsos", "minuto", "arenga_mult", "ley_ex", "ex_de_mi_club", "ex_id"), &DinastiaNativo::medias_linea);
+	ClassDB::bind_method(D_METHOD("balon_prediccion", "bp0", "bv0", "cfg", "hay_poseedor", "vel_poseedor", "total", "dt", "radio"), &DinastiaNativo::balon_prediccion);
+	ClassDB::bind_method(D_METHOD("balon_avanzar", "p0", "vel0", "giro0", "resto0", "delta", "cfg", "k"), &DinastiaNativo::balon_avanzar);
+	ClassDB::bind_method(D_METHOD("league_posicion_formacion", "e"), &DinastiaNativo::league_posicion_formacion);
+	ClassDB::bind_method(D_METHOD("league_destino_forma", "acum", "foco", "yo", "forma", "puesto", "lado", "posesion_desvanecida", "ofensividad", "lado_medio", "trampa_x", "mezcla"), &DinastiaNativo::league_destino_forma);
+	ClassDB::bind_method(D_METHOD("league_acumular", "hist"), &DinastiaNativo::league_acumular);
+	ClassDB::bind_method(D_METHOD("league_media_f", "hist", "ms"), &DinastiaNativo::league_media_f);
+	ClassDB::bind_method(D_METHOD("league_movimiento_campo", "campo", "actual", "amortigua"), &DinastiaNativo::league_movimiento_campo);
+	ClassDB::bind_method(D_METHOD("league_apoyo", "e"), &DinastiaNativo::league_apoyo);
+	ClassDB::bind_method(D_METHOD("league_mas_cercano", "jugadores", "punto", "local"), &DinastiaNativo::league_mas_cercano);
+	ClassDB::bind_method(D_METHOD("league_mas_cercano_todos", "jugadores", "punto"), &DinastiaNativo::league_mas_cercano_todos);
+	ClassDB::bind_method(D_METHOD("league_indexar", "jugadores", "destino"), &DinastiaNativo::league_indexar);
+	ClassDB::bind_method(D_METHOD("league_linea_penultimo", "jugadores", "local", "con_vel", "lado", "balon_x"), &DinastiaNativo::league_linea_penultimo);
+	// --- estado (agente C) ---
+	ClassDB::bind_method(D_METHOD("league_estado_base", "jugadores", "b", "lado0", "lado1"), &DinastiaNativo::league_estado_base);
+	ClassDB::bind_method(D_METHOD("league_cercanos_equipos", "jugadores", "punto"), &DinastiaNativo::league_cercanos_equipos);
+	ClassDB::bind_method(D_METHOD("league_registrar", "balon_hist", "lado_hist", "resto", "balon", "lado_posesion", "dt"), &DinastiaNativo::league_registrar);
+	ClassDB::bind_method(D_METHOD("league_interferir_candidatos", "jugadores", "rival_local", "usuario_id", "t", "bola"), &DinastiaNativo::league_interferir_candidatos);
+	ClassDB::bind_method(D_METHOD("league_cortar_candidatos", "jugadores", "local_pasa", "usuario_id", "t", "bola"), &DinastiaNativo::league_cortar_candidatos);
+	ClassDB::bind_method(D_METHOD("league_mas_cercanos", "jugadores", "punto", "local", "cuantos", "excluidos"), &DinastiaNativo::league_mas_cercanos);
+	// --- fin estado (agente C) ---
+	ClassDB::bind_method(D_METHOD("league_alcanza", "por_tipo", "r0", "r1", "bono_vel", "pos", "mirada", "vel", "pred"), &DinastiaNativo::league_alcanza);
 	ClassDB::bind_method(D_METHOD("league_elegir", "grupos", "sp", "rel", "deseada", "parado", "mirar", "pie"), &DinastiaNativo::league_elegir);
 	ClassDB::bind_method(D_METHOD("league_legal", "vi", "vo", "cuerpo_sale", "cuerpo_ini", "a"), &DinastiaNativo::league_legal);
 	ClassDB::bind_method(D_METHOD("league_mezclar", "sal", "a1", "a2", "cuadros", "mezclas", "ang", "giro_padre"), &DinastiaNativo::league_mezclar);
+	// --- portador (agente B) ---
+	ClassDB::bind_method(D_METHOD("league_situacion", "pos", "mov", "lado", "rivales"), &DinastiaNativo::league_situacion);
+	ClassDB::bind_method(D_METHOD("league_regate", "pos", "mov", "mirada", "lado", "cercanos", "mente", "ofensivo", "iman"), &DinastiaNativo::league_regate);
+	ClassDB::bind_method(D_METHOD("league_decidir", "yo", "companeros", "rivales", "mov_balon", "posesion", "azar", "muestras", "zona_tiro"), &DinastiaNativo::league_decidir);
+	// --- fin portador (agente B) ---
 	ClassDB::bind_method(D_METHOD("elegir_ponderado", "once", "grupo_de", "bases", "base_def", "atr", "pesos_rol", "r_unit", "excluir"), &DinastiaNativo::elegir_ponderado);
 }
 
@@ -289,4 +316,48 @@ PackedInt32Array DinastiaNativo::once_asignar_libres(const Dictionary &ranuras, 
 		}
 	}
 	return res;
+}
+
+// `Club.once()` (el once automático sin once manual), entero: `disponibles()` + primera vuelta (`once_asignar_libres`) + segunda vuelta sin filtro de portería + el once en el orden de las ranuras.
+// Devuelve [] si hay menos de 7 libres (entonces `Club.once()` sigue con su red de seguridad en GDScript).
+Array DinastiaNativo::once_armar(const Array &plantilla, const Dictionary &ranuras, const Dictionary &grupo_de, const PackedInt32Array &orden) const {
+	static const StringName k_lesion("lesion"), k_suspension("suspension");
+	Array libres;
+	for (int64_t k = 0; k < plantilla.size(); k++) {
+		Object *o = plantilla[k];
+		if (int64_t(o->get(k_lesion)) <= 0 && int64_t(o->get(k_suspension)) <= 0) {
+			libres.push_back(plantilla[k]);
+		}
+	}
+	Array salida;
+	if (libres.size() < 7) {
+		return salida;
+	}
+	PackedInt32Array res = once_asignar_libres(ranuras, libres, grupo_de, orden);
+	const int64_t ns = res.size();
+	std::vector<uint8_t> usado(libres.size(), 0);
+	for (int64_t i = 0; i < ns; i++) {
+		if (res[i] >= 0) {
+			usado[res[i]] = 1;
+		}
+	}
+	for (int64_t i = 0; i < ns; i++) {
+		if (res[i] >= 0) {
+			continue;
+		}
+		for (int64_t k = 0; k < libres.size(); k++) {
+			if (usado[k]) {
+				continue;
+			}
+			usado[k] = 1;
+			res.set(i, int32_t(k));
+			break;
+		}
+	}
+	for (int64_t i = 0; i < ns; i++) {
+		if (res[i] >= 0) {
+			salida.push_back(libres[res[i]]);
+		}
+	}
+	return salida;
 }

@@ -45,7 +45,11 @@ static func _detalle(ui: Variant, j: Jugador, id: String) -> String:
 	match id:
 		"entreno":
 			var focos := CarreraPortero.focos_para(j)
-			return Idiomas.t(String(focos[c.foco][0])) if focos.has(c.foco) else ""
+			var nombre := Idiomas.t(String(focos[c.foco][0])) if focos.has(c.foco) else ""
+			## El icono ya va en el título de la tecla: el del foco se quita para no repetirlo.
+			if nombre.length() > 2 and nombre.unicode_at(0) > 0x2000 and nombre.substr(1, 2).strip_edges() != nombre.substr(1, 2):
+				nombre = nombre.substr(nombre.find(" ") + 1)
+			return nombre
 		"rival":
 			var o := CarreraRuta.rival(c, m)
 			var d := CarreraRuta.duelo(c, m)

@@ -95,6 +95,32 @@ func _probar() -> void:
 			if not igual:
 				distintos += 1
 	_comprobar(comparados > 1000 and distintos == 0, "once automático: C++ = GDScript en %d armados de %d clubes (distintos: %d)" % [comparados, mundo.clubes.size(), distintos])
+	## El once automático ENTERO (`once_armar`): mismo once que el camino de GDScript (`_once_auto_gd`), con lesionados y sancionados al azar.
+	var armados := 0
+	var armados_distintos := 0
+	for c: Club in mundo.clubes.values():
+		for j: Jugador in c.plantilla:
+			j.lesion = 1 if rng.randf() < 0.15 else 0
+			j.suspension = 1 if rng.randf() < 0.1 else 0
+		for fk: String in forms:
+			var ranuras2: Array = (forms[fk] as Dictionary).get("s", [])
+			var rap := OnceAuto.armar(c.plantilla, ranuras2, OnceAuto.orden_de(ranuras2))
+			if c.disponibles().size() < 7:
+				_comprobar(rap.is_empty(), "once armado: con menos de 7 libres devuelve vacío (club %s)" % c.id)
+				continue
+			var viejo := c._once_auto_gd(ranuras2)
+			armados += 1
+			var mismo := rap.size() == viejo.size()
+			if mismo:
+				for i in rap.size():
+					mismo = mismo and (rap[i] as Jugador).id == viejo[i].id
+			if not mismo:
+				armados_distintos += 1
+	_comprobar(armados > 1000 and armados_distintos == 0, "once armado entero: C++ = GDScript en %d (distintos: %d)" % [armados, armados_distintos])
+	for c: Club in mundo.clubes.values():
+		for j: Jugador in c.plantilla:
+			j.lesion = 0
+			j.suspension = 0
 	print("once automático: GDScript %.0f µs, C++ %.0f µs por once" % [t_gd / float(comparados), t_cpp / float(comparados)])
 	## El alisado, con las mallas reales de los cuerpos.
 	for ruta in [FutbolistaQ.MODELO_MALE, FutbolistaQ.MODELO_FEMALE]:
@@ -302,6 +328,38 @@ func _probar() -> void:
 		_comprobar(false, "locomoción League en C++: " + f)
 	_comprobar((lg["fallos"] as Array).is_empty(), "locomoción League: C++ = GDScript (elección, legalidad, intermedias)")
 	for t: String in lg["textos"]:
+		print(t)
+	## (16-11, paso a C++) El balón del motor de League: predicción de 70 pasos y bucle de pasos de 10 ms.
+	var bl := ProbarNativoBalon.probar(nat)
+	for f: String in bl["fallos"]:
+		_comprobar(false, "balón de League en C++: " + f)
+	_comprobar((bl["fallos"] as Array).is_empty(), "balón de League: C++ = GDScript (predicción y pasos, 600 casos)")
+	for t: String in bl["textos"]:
+		print(t)
+	var eq := ProbarNativoEquipo.probar(nat)
+	for f: String in eq["fallos"]:
+		_comprobar(false, "colocación de League en C++: " + f)
+	_comprobar((eq["fallos"] as Array).is_empty(), "colocación e historial de League: C++ = GDScript (5000 posiciones, 300 historiales)")
+	for t: String in eq["textos"]:
+		print(t)
+	var po := ProbarNativoPortador.probar(nat)
+	for f: String in po["fallos"]:
+		_comprobar(false, "decisión con balón de League en C++: " + f)
+	_comprobar((po["fallos"] as Array).is_empty(), "decisión con balón de League (situación, regate, decidir): C++ = GDScript (4000 casos cada una)")
+	for t: String in po["textos"]:
+		print(t)
+	## (16-11, auditoría) Casos límite: historiales cortos, equipos vacíos, NaN/inf, entradas inválidas que no deben cerrar Godot.
+	var li := ProbarNativoLimites.probar(nat)
+	for f: String in li["fallos"]:
+		_comprobar(false, "casos límite de League en C++: " + f)
+	_comprobar((li["fallos"] as Array).is_empty(), "casos límite de League: C++ = GDScript y sin cierres")
+	for t: String in li["textos"]:
+		print(t)
+	var es := ProbarNativoEstado.probar(nat)   ## (16-11, agente C) el estado por paso del motor de League
+	for f: String in es["fallos"]:
+		_comprobar(false, "estado de League en C++: " + f)
+	_comprobar((es["fallos"] as Array).is_empty(), "estado por paso de League: C++ = GDScript (pasada de estado, historial y filtro de interferir)")
+	for t: String in es["textos"]:
 		print(t)
 	_fin()
 

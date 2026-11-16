@@ -180,14 +180,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: dinastia-godot/bin_nativo/libdinastia.android.*
-          key: cpp-android-${{ hashFiles('dinastia-godot/nativo/**', 'dinastia-godot/herramientas/compilar_nativo.sh') }}
+          key: cpp-android-ndk27.2.12479018-${{ hashFiles('dinastia-godot/nativo/**', 'dinastia-godot/herramientas/compilar_nativo.sh') }}
 
       - name: Compilar la extensión (arm64)
         if: steps.cpp.outputs.cache-hit != 'true'
         working-directory: dinastia-godot
         run: |
           sudo apt-get update -q && sudo apt-get install -y -q scons
-          export ANDROID_NDK_ROOT="$ANDROID_NDK_LATEST_HOME"
+          ## (16-11) NDK r27c FIJO (= 27.2.12479018), el mismo con que se compilaron los .so del repo; antes se usaba «el último»
+          ## del runner, que puede cambiar los últimos bits. El .so de ARM va con -ffp-contract=off (lo pone nativo/SConstruct).
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" > /dev/null
+          export ANDROID_NDK_ROOT="$ANDROID_HOME/ndk/27.2.12479018"
+          test -d "$ANDROID_NDK_ROOT" || { echo "Falta el NDK r27c"; exit 1; }
           bash herramientas/compilar_nativo.sh android
           ls -la bin_nativo/libdinastia.android.*
 
@@ -575,6 +579,82 @@ jobs:
           gh release create "$ETIQUETA" paquetes/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft \
             --title "Dinastía $ETIQUETA" --notes-file notas.md
           echo "### 📦 Borrador de Release «$ETIQUETA» creado. Publícalo desde la pestaña Releases." >> "$GITHUB_STEP_SUMMARY"
+
+  ## (16-11) La extensión de Linux x86_64, Windows y Web se COMPILA aquí con las mismas opciones que `herramientas/compilar_nativo.sh`
+  ## (hasta hoy solo se probaban los binarios ya subidos al repo, sin comprobar que el C++ siga compilando):
+  ##   - Windows: MinGW-w64 con runtime msvcrt (NO UCRT: con UCRT la prueba de locomoción de League falla por la libm). Se comprueba
+  ##     que la .dll importa msvcrt.dll y ninguna api-ms-win-crt*/ucrtbase.
+  ##   - Web: Emscripten 4.0.11 (el de la plantilla oficial), wasm32 SIN hilos (preset Web: thread_support=false + extensions_support).
+  nativo-sistemas:
+    name: ⚫ C++ Linux, Windows y Web
+    needs: [banco, especiales]
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.objetivo == 'todo' || inputs.objetivo == 'arm' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Herramientas (scons, MinGW-w64)
+        run: sudo apt-get update -q && sudo apt-get install -y -q scons g++-mingw-w64-x86-64
+
+      - name: Emscripten 4.0.11
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: 4.0.11
+
+      - name: Compilar Linux, Windows y Web
+        working-directory: dinastia-godot
+        run: |
+          bash herramientas/compilar_nativo.sh linux windows web
+          ls -la bin_nativo/
+
+      - name: La .dll usa msvcrt (no UCRT)
+        working-directory: dinastia-godot
+        run: |
+          for f in bin_nativo/libdinastia.windows.*.dll; do
+            x86_64-w64-mingw32-objdump -p "$f" | grep "DLL Name" | sort -u | tee /tmp/dll.txt
+            grep -qi "msvcrt.dll" /tmp/dll.txt || { echo "$f no importa msvcrt.dll"; exit 1; }
+            ! grep -qi "api-ms-win-crt\|ucrtbase" /tmp/dll.txt || { echo "$f usa UCRT: la prueba de League falla por la libm"; exit 1; }
+          done
+
+      - name: Subir las extensiones compiladas
+        uses: actions/upload-artifact@v4
+        with:
+          name: nativo-sistemas
+          path: |
+            dinastia-godot/bin_nativo/libdinastia.linux.*
+            dinastia-godot/bin_nativo/libdinastia.windows.*
+            dinastia-godot/bin_nativo/libdinastia.web.*
+
+  ## La extensión de Linux x86_64 RECIÉN compilada = GDScript (misma prueba que en ARM y Windows).
+  nativo-linux-prueba:
+    name: ⚫ C++ Linux x86_64 (prueba)
+    needs: nativo-sistemas
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Preparar (LFS, caché e importación)
+        uses: ./.github/actions/preparar
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: nativo-sistemas
+          path: dinastia-godot/bin_nativo
+
+      - name: Prueba C++ = GDScript (binario recién compilado)
+        working-directory: dinastia-godot
+        run: |
+          ls -la bin_nativo/libdinastia.linux.*
+          timeout 900 godot --headless --path . res://pruebas/probar_nativo.tscn | tee /tmp/nativo.txt
+          grep -q "FIN. 0 fallos" /tmp/nativo.txt
 
   nativo-arm:
     name: 🟠 C++ en ARM (prueba)

@@ -40,6 +40,12 @@ static func sesgo_ataque(g: String, posesion_desv: float, mente: float) -> float
 ## companeros: Array de [pos, mov] (los 6 más cercanos, sin él), posesion_desv, balon_pred: Array de 4 Vector2 (200/350/500/650 ms),
 ## linea_offside, red (L support web scale)}.
 static func apoyo(e: Dictionary) -> Vector2:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_apoyo"):   ## (16-11, paso a C++) misma cuenta que `apoyo_gd`
+		return nat.league_apoyo(e)
+	return apoyo_gd(e)
+
+static func apoyo_gd(e: Dictionary) -> Vector2:
 	var lado := float(e["lado"])
 	var actual: Vector2 = (e["pos"] as Vector2) + (e["mov"] as Vector2) * 0.1
 	var principal: Vector2 = e["principal"]

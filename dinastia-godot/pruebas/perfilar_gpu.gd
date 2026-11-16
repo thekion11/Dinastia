@@ -89,6 +89,27 @@ func _contar(n: Node) -> int:
 ## LISTAR=1: imprime los hijos directos de la vista con su número de nodos y si procesan.
 ## APAGAR=Nombre1,Nombre2: pone process_mode = DISABLED a esos nodos (y sus hijos) SOLO para diagnosticar su coste de CPU.
 func _apagar_procesos() -> void:
+	## OCULTAR_JUG=1: esconde a los 22 (sin dibujarlos ni animarlos de vista); ANIM_OFF=1: desactiva TODOS los AnimationPlayer (solo diagnóstico).
+	var motor: Object = _vista.get("_motor")
+	if OS.get_environment("OCULTAR_JUG") != "" and motor != null:
+		for q: Dictionary in motor.jugadores:
+			if is_instance_valid(q.get("node")):
+				(q["node"] as Node3D).visible = false
+	for nom in OS.get_environment("OCULTAR_NODO").split(",", false):   ## OCULTAR_NODO=EntornoEstadio,TunelVestuario: esconde hijos de la raíz 3D (diagnóstico)
+		var r3: Node = _vista.get("_raiz3d")
+		if r3 != null and r3.has_node(nom):
+			(r3.get_node(nom) as Node3D).visible = false
+			print("OCULTO ", nom)
+	for sv in get_tree().root.find_children("*", "SubViewport", true, false):
+		var hijos := []
+		for h in sv.get_children():
+			hijos.append(h.name)
+		print("SUBVP ", sv.get_path(), " tam=", (sv as SubViewport).size, " modo=", (sv as SubViewport).render_target_update_mode, " hijos=", hijos.slice(0, 4))
+		if OS.get_environment("SUBVP_OFF") != "":
+			(sv as SubViewport).render_target_update_mode = SubViewport.UPDATE_DISABLED
+	if OS.get_environment("ANIM_OFF") != "":
+		for ap in _vista.find_children("*", "AnimationPlayer", true, false):
+			(ap as AnimationPlayer).active = false
 	if OS.get_environment("LISTAR") != "":
 		for h in _vista.get_children():
 			print("LISTA %s (%s) nodos=%d proc=%s" % [h.name, h.get_class(), _contar(h), str(h.is_processing())])

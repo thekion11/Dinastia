@@ -44,6 +44,16 @@ static func radio(tipo: String, cuadro: int, vel: float) -> float:
 ## ¿Alguna animación de `tipo` toca el balón? `pred` = balón previsto cada 10 ms (marco League, Vector3 con z arriba; índice 0 =
 ## ahora). Devuelve {anim, ms, punto} de la que toca antes, o {} si ninguna. Se miran la clase de velocidad del jugador y las vecinas.
 static func alcanza(tipo: String, pos: Vector2, mirada: Vector2, vel: float, pred: PackedVector3Array) -> Dictionary:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_alcanza"):   ## (16-11, paso a C++) misma cuenta que `alcanza_gd`
+		var por_tipo_n: Dictionary = catalogo().get(tipo, {})
+		if por_tipo_n.is_empty() or pred.is_empty():
+			return {}
+		var r: Array = RADIO.get(tipo, [1.0, 0.0])
+		return nat.league_alcanza(por_tipo_n, float(r[0]), float(r[1]), 1.0 - LeagueNucleo.normalizado(vel, LeagueNucleo.V_PARADO, LeagueNucleo.V_SPRINT), pos, mirada, vel, pred)
+	return alcanza_gd(tipo, pos, mirada, vel, pred)
+
+static func alcanza_gd(tipo: String, pos: Vector2, mirada: Vector2, vel: float, pred: PackedVector3Array) -> Dictionary:
 	var por_tipo: Dictionary = catalogo().get(tipo, {})
 	if por_tipo.is_empty() or pred.is_empty():
 		return {}
