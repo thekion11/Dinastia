@@ -124,7 +124,7 @@ func nueva_temporada() -> Dictionary:
 		var f_fpf := Finanzas.new(mi_club(), 0.0, 0, 0.0)
 		f_fpf.aplica_operacion = true
 		f_fpf.factor_operacion = obras.abarata_operacion() if obras != null else 1.0
-		var proy := f_fpf.proyeccion_anual(15, ingreso_tienda(mi_club()))
+		var proy := f_fpf.proyeccion_anual(15, ingreso_tienda(mi_club()), meses_de_la_temporada())
 		resumen["fpf"] = federacion.revisar_fair_play(mi_club(), int(proy["pct_salarial"]))
 	if auspicio != null and mi_club() != null:
 		auspicio.generar_ofertas(mi_club(),
@@ -327,6 +327,13 @@ func semanas_hasta_mercado() -> int:
 	var l := liga_de(mi_club())
 	var quedan := (l.jornadas() - l.jornada_actual) if l != null else 8
 	return maxi(1, quedan + VENTANA_VERANO)
+
+## (16-11, informe G-07) Cierres de mes reales de la temporada: uno cada 4 semanas del MUNDO, que dura lo que su liga más larga.
+func meses_de_la_temporada() -> int:
+	var sem := 0
+	for l in ligas:
+		sem = maxi(sem, l.jornadas())
+	return maxi(1, sem / Finanzas.SEMANAS_DEL_MES) if sem > 0 else 0
 
 func texto_de_mercado() -> String:
 	if mercado_abierto():

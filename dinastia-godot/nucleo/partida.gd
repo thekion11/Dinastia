@@ -93,6 +93,8 @@ static func _dic_a_copa(d: Dictionary, m: Mundo) -> Copa:
 			c.vivos.append(k)
 	c.ronda = int(d.get("ronda", 0))
 	c.campeon = m.clubes.get(String(d.get("campeon", "")))
+	c.peso_premio = float(d.get("peso_premio", 1.0))   ## (16-11, informe G-05) la copa secundaria cobraba el premio entero tras cargar
+	c.historial_desde_ids(d.get("historial", []), m.clubes)
 	return c
 
 static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
