@@ -150,6 +150,20 @@ func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 		return 0.0   ## (12-11) no se entra de pie por detrás (C4_NO_DETRAS)
 	return MejorasC4.radio_entrada(self, p, victima, base, r)
 
+## (16-11, frente 3) el pase por dirección del mando estilo PES (`MejorasC4Mando`, `C4_PASE_DIR=1`, apagado: cambia la sensación).
+func _companero_en_direccion(p: Dictionary, dir: Vector3, para_cambio := false) -> Dictionary:
+	if _mejoras_c4 and MejorasC4Mando.PASE_DIR and not para_cambio:
+		var q := MejorasC4Mando.companero(self, p, dir)
+		if not q.is_empty():
+			return q
+	return super(p, dir, para_cambio)
+
+## (16-11, frente 3) la carrera del que manejas: punta sin tope y giro seco (`MejorasC4Mando`, `C4_PUNTA`, `C4_GIRO_SECO`, `C4_INERCIA`; apagados).
+func _control_usuario(delta: float) -> void:
+	super(delta)
+	if _mejoras_c4 and not autopiloto:
+		MejorasC4Mando.carrera(self, usuario, delta)
+
 func _radio_cabezazo(p: Dictionary) -> float:
 	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)
 
@@ -173,7 +187,7 @@ func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	equipos = []
 	var r := super(p, en_posesion)
 	equipos = guardado
-	return r
+	return r if en_posesion or not _mejoras_c4 else MejorasC4Bloque.retrasar(self, p, r)   ## (16-11, frente 3) `C4_BLOQUE`
 
 ## HÍBRIDO (11-11, sesión 9, orden 39): las ablaciones de C4 mostraron que NUESTRA colocación sin balón es lo que baja el acierto de pase (84 → 67 %) y
 ## las cadenas de 5+ (2,3 → 0,5), pero también lo que da el roce (duelos 7,7 → 29, regates 9,7 → 18). Con `C_ATAQUE_LEAGUE=1` el equipo que tiene el balón se
