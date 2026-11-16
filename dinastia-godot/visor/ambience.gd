@@ -43,6 +43,9 @@ const CLIMA_PARTIDO := {
 ## la ciudad.
 static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Calidad.ALTO) -> void:
 	var amb_key := str(est.get("clima", "dia"))
+	## AMBIENTE=noche (o dia, tarde…): fuerza el ambiente del estadio, solo para capturas y comparaciones (16-11, frente 2).
+	if OS.get_environment("AMBIENTE") != "":
+		amb_key = OS.get_environment("AMBIENTE")
 	var amb: Dictionary = AMBIENTES.get(amb_key, AMBIENTES["dia"])
 
 	var clima_key := "despejado"
@@ -89,6 +92,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env.tonemap_exposure = lerpf(1.05, 1.35, oscuro)
 	env.tonemap_white = 6.0
+	_tono_de_prueba(env)
 	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY if nivel > Calidad.MINIMO else Environment.REFLECTION_SOURCE_DISABLED   ## (4-11) MÍNIMO: sin reflejos del cielo también aquí (se los devolvía el ambiente)
 	if nivel >= Calidad.ALTO:
 		env.ssao_enabled = true
@@ -137,3 +141,14 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 		## "columna misteriosa" (ver `StadiumBuilder.build_pitch()`).
 		fill.light_specular = 0.0
 		root.add_child(fill)
+
+## MAPEO DE TONOS A ELEGIR (16-11, frente 2): el juego sigue con ACES; `TONO=agx` o `TONO=aces_bajo` (ACES con 15 %
+## menos de exposición) solo existen para que el dueño compare capturas y decida (ACES lava las pieles claras muy
+## iluminadas y satura los medios). No es una opción del juego todavía.
+static func _tono_de_prueba(env: Environment) -> void:
+	match OS.get_environment("TONO"):
+		"agx":
+			env.tonemap_mode = Environment.TONE_MAPPER_AGX
+			env.tonemap_white = 16.0
+		"aces_bajo":
+			env.tonemap_exposure *= 0.85
