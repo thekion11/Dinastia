@@ -88,7 +88,7 @@ const FIJAS := {
 	"URU": [[7, 18, "Jura de la Constitución", "fiesta", "La primera constitución, 1830."],
 		[8, 25, "Declaratoria de la Independencia", "fiesta", "Florida, 25 de agosto de 1825."]],
 	"USA": [[7, 4, "Independence Day", "fiesta", "La Declaración de Independencia de 1776: fuegos artificiales y barbacoas."],
-		[9, 11, "11 de septiembre", "memoria", "Aniversario de los atentados de 2001. Es un día de memoria: minuto de silencio antes de los partidos."]],
+		[9, 11, "Conmemoración de las Torres Gemelas", "memoria", "Aniversario de los atentados del 11 de septiembre de 2001. Es un día de memoria: minuto de silencio antes de los partidos."]],
 	"VEN": [[4, 19, "Declaración de Independencia", "fiesta", "El 19 de abril de 1810."],
 		[6, 24, "Batalla de Carabobo", "fiesta", "La batalla de 1821."],
 		[7, 5, "Día de la Independencia", "fiesta", "El acta de independencia de 1811."]],
