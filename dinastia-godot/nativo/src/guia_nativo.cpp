@@ -387,3 +387,95 @@ PackedFloat64Array DinastiaNativo::animar_jugadores(const Array &jugadores, cons
 	}
 	return out;
 }
+
+// `LeagueLocomocion._paso` (visor/league_locomocion.gd, 16-11-2026): el bucle de los 22. Hace aquí el camino común de `_uno` (clip en curso, o la compensación
+// del giro que se apaga y el modelo que se recoloca) y devuelve, en orden, lo que necesita GDScript: índice·2 = puede empezar clip (`_quizas_empezar`),
+// índice·2+1 = `_uno` entero (terminar un clip, enderezar fuera de cámara, ciclo del cuerpo girado que toca revisar o empezar clip tras la compensación).
+// Cada jugador solo toca lo suyo y lo que se hace aquí no mira bibliotecas de clips ni cámara, así que el orden relativo de lo que hace GDScript es el de siempre.
+PackedInt32Array DinastiaNativo::loco_paso(const Array &jugadores, double t, double delta, int64_t poseedor, double recolocar) const {
+	static const StringName k_propio("ls_propio_hasta"), k_trans("ls_trans_hasta"), k_off("ls_off"), k_cuerpo("ls_cuerpo"), k_anim_act("anim_actual"), k_revisar("ls_revisar"),
+			k_por("por"), k_gesto("gesto_hasta"), k_mirar("mirar_hasta"), k_espera("ls_espera"), k_visto("ls_visto"), k_node("node"), k_modelo("ls_modelo"), k_anim("anim"),
+			k_yaw0("ls_yaw0"), k_fin_yaw("ls_fin_yaw"), k_seguir_t("ls_seguir_t"), k_ciclo_act("ls_ciclo_actual"), k_escala("ls_escala"), k_off_extra("ls_off_extra"),
+			k_modelo_base("ls_modelo_base");
+	static const Variant w_off(String("ls_off")), w_cuerpo(String("ls_cuerpo")), w_off_extra(String("ls_off_extra"));
+	static const String c_parado("parado"), c_trotar("trotar"), c_correr("correr");
+	auto en_ciclos = [&](const Variant &v) {
+		const Variant::Type tipo = v.get_type();
+		if (tipo != Variant::STRING && tipo != Variant::STRING_NAME) {
+			return false;
+		}
+		const String a = v;
+		return a == c_parado || a == c_trotar || a == c_correr;
+	};
+	PackedInt32Array salida;
+	const int64_t total = jugadores.size();
+	for (int64_t i = 0; i < total; i++) {
+		Dictionary p = jugadores[i];
+		if (p.has(k_propio)) {
+			continue;
+		}
+		const bool en_curso = double(p.get(k_trans, 0.0)) > t;
+		double off = double(p.get(k_off, 0.0));
+		const double cuerpo = double(p.get(k_cuerpo, 0.0));
+		if (!en_curso && off == 0.0 && cuerpo == 0.0) { // NOSONAR(cpp:S1244): copia exacta de la gemela
+			if (!en_ciclos(p.get(k_anim_act, Variant()))) {
+				continue;
+			}
+			if (double(p.get(k_revisar, -1.0)) > t || i == poseedor || bool(p.get(k_por, false)) || double(p.get(k_gesto, 0.0)) > t || double(p.get(k_mirar, 0.0)) > t ||
+					double(p.get(k_espera, 0.0)) > t) {
+				continue;
+			}
+			salida.push_back(int32_t(i * 2));
+			continue;
+		}
+		// `_uno`: ¿todo por el camino común?
+		if (!en_curso && cuerpo != 0.0 && !bool(p.get(k_visto, true))) { // NOSONAR(cpp:S1244)
+			salida.push_back(int32_t(i * 2 + 1));
+			continue;
+		}
+		Node3D *n = Object::cast_to<Node3D>(static_cast<Object *>(p.get(k_node, Variant())));
+		Node3D *modelo = Object::cast_to<Node3D>(static_cast<Object *>(p.get(k_modelo, Variant())));
+		if (n == nullptr || modelo == nullptr) {
+			p[w_off] = 0.0;
+			p[w_cuerpo] = 0.0;
+			continue;
+		}
+		AnimationPlayer *ap = Object::cast_to<AnimationPlayer>(static_cast<Object *>(p.get(k_anim, Variant())));
+		if (en_curso) {
+			if (ap != nullptr) {
+				ap->set_speed_scale(1.0);
+			}
+			off = UtilityFunctions::angle_difference(double(n->get_rotation().y), double(p[k_yaw0]));
+		} else {
+			if (p.has(k_fin_yaw)) {
+				salida.push_back(int32_t(i * 2 + 1));
+				continue;
+			}
+			const bool cuerpo_quieto = cuerpo == 0.0; // NOSONAR(cpp:S1244)
+			const bool ciclo_vigente = double(p.get(k_seguir_t, -1.0)) > t && p.get(k_anim_act, Variant()) == p.get(k_ciclo_act, Variant());
+			if (!cuerpo_quieto && !ciclo_vigente) {
+				salida.push_back(int32_t(i * 2 + 1));
+				continue;
+			}
+			if (double(p.get(k_trans, 0.0)) <= t && cuerpo_quieto && en_ciclos(String(p.get(k_anim_act, "")))) {
+				salida.push_back(int32_t(i * 2 + 1)); // tras la compensación puede empezar un clip: `_quizas_empezar` desde `_uno`
+				continue;
+			}
+			off = std::fabs(off) > 0.01 ? off * std::exp(-recolocar * delta) : 0.0;
+			p[w_off] = off;
+			if (!cuerpo_quieto && ap != nullptr) {
+				ap->set_speed_scale(double(p.get(k_escala, 1.0)));
+			}
+		}
+		const double nuevo_off = off + double(p.get(k_off_extra, 0.0));
+		p[w_off] = nuevo_off;
+		p[w_off_extra] = 0.0;
+		const double giro = double(p[k_modelo_base]) + nuevo_off;
+		Vector3 rot = modelo->get_rotation();
+		if (std::fabs(giro - double(rot.y)) > 0.002) {
+			rot.y = giro;
+			modelo->set_rotation(rot);
+		}
+	}
+	return salida;
+}

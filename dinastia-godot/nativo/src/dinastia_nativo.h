@@ -68,6 +68,8 @@ public:
 	PackedFloat64Array colocacion_cerca(const Array &jugadores, const Vector3 &b) const;
 	// `MotorJugable._mover_jugadores`: la animación de los 22 ([código, escala] por jugador; con `aplicar`, también la pone).
 	PackedFloat64Array animar_jugadores(const Array &jugadores, const PackedFloat64Array &res, double t, const Variant &poseedor_id, bool cansancio_real, bool league, bool aplicar) const;
+	// `LeagueLocomocion._paso`: camino común de los 22 y, en orden, lo que hace GDScript (índice·2 = `_quizas_empezar`, índice·2+1 = `_uno`).
+	PackedInt32Array loco_paso(const Array &jugadores, double t, double delta, int64_t poseedor, double recolocar) const;
 	PackedInt32Array guia_pendientes(const Array &jugadores, double t) const;
 	PackedInt32Array guia_seguir(const Array &jugadores, double t, double delta, int64_t usuario, bool marchas) const;
 	PackedFloat64Array mover_jugadores_fisica(const Array &jugadores, const Vector3 &bpos, double delta, double t, bool hay_poseedor, const Variant &poseedor_id, bool poseedor_local, double a_max_base,

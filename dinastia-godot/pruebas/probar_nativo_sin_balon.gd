@@ -55,6 +55,9 @@ static func probar(nat: Object, raiz: Node3D) -> Dictionary:
 		MotorJugable.comparar_disputas = true
 		MotorColocacion.comparar = true
 		MotorJugable.comparar_anim = true
+		LeagueLocomocion.comparar = true
+		LeagueLocomocion.comparados = 0
+		LeagueLocomocion.distintos = 0
 		MotorJugable.anim_comparados = 0
 		MotorJugable.anim_distintos = 0
 		MotorColocacion.comparados = 0
@@ -67,6 +70,10 @@ static func probar(nat: Object, raiz: Node3D) -> Dictionary:
 		MotorJugable.comparar_disputas = false
 		MotorColocacion.comparar = false
 		MotorJugable.comparar_anim = false
+		LeagueLocomocion.comparar = false
+		if LeagueLocomocion.distintos > 0 or LeagueLocomocion.comparados < 1000:
+			fallos.append("locomoción (camino común) %s - %s: distinta en %d de %d jugadores-paso" % [a.nombre, b.nombre, LeagueLocomocion.distintos, LeagueLocomocion.comparados])
+		textos.append("locomoción (camino común) %s - %s: C++ = GDScript en %d jugadores-paso" % [a.nombre, b.nombre, LeagueLocomocion.comparados])
 		if MotorJugable.anim_distintos > 0 or MotorJugable.anim_comparados < 1000:
 			fallos.append("animación de los 22 %s - %s: distinta en %d (de %d pasos)" % [a.nombre, b.nombre, MotorJugable.anim_distintos, MotorJugable.anim_comparados])
 		textos.append("animación de los 22 %s - %s: C++ = GDScript en %d pasos" % [a.nombre, b.nombre, MotorJugable.anim_comparados])
