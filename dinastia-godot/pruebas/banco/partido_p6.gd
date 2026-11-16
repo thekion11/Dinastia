@@ -113,7 +113,8 @@ func _probar_entrada_por_pasos() -> void:
 		var acum := 0.0
 		var vistas := 0
 		for f in 24:
-			Mando.pasos_fotograma()
+			## (`Mando.pasos_fotograma` no se llama: el banco corre en UN fotograma del motor y el `Input` de otras secciones
+			## seguiría «recién pulsado»; la pulsación del fotograma se inyecta, que es lo que haría `pasos_fotograma`.)
 			if f == 4:
 				Mando.pasos_inyectar(&"jugar_cambiar")   ## a 120 FPS cae en un fotograma sin paso: la ve el paso siguiente
 			if mult <= 0.0:
