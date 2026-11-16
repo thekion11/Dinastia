@@ -65,6 +65,8 @@ public:
 	Vector2 league_posicion_formacion(const Dictionary &e) const;
 	PackedVector2Array league_acumular(const PackedVector2Array &hist) const;
 	double league_media_f(const PackedFloat32Array &hist, double ms) const;
+	// `MotorLeague._mas_cercano_al(punto, local, [], 1)`: índice en `jugadores` del más cercano de un equipo, o -1.
+	int64_t league_mas_cercano(const Array &jugadores, const Vector2 &punto, bool local) const;
 	// `LeagueNucleo.movimiento_campo` y `LeagueSinBalon.apoyo` (el apoyo ofensivo sin balón, con su campo de fuerzas).
 	Vector2 league_movimiento_campo(const Array &campo, const Vector2 &actual, double amortigua) const;
 	Vector2 league_apoyo(const Dictionary &e) const;

@@ -265,3 +265,15 @@ static func prediccion_gd(bp0: Vector3, bv0: Vector3, cfg: Dictionary, hay_posee
 			bp += vel_poseedor * 0.01
 		sal[k] = Vector3(bp.z, bp.x, bp.y)
 	return sal
+
+## Gemela GDScript de `league_mas_cercano` (y el caso con excluidos): una pasada buscando el mínimo, sin armar ni ordenar la lista (15-11, FPS: 86 → ~25 µs por paso).
+func _mas_cercano_uno_gd(punto: Vector2, local: bool, excluir: Array) -> Array:
+	var mejor := INF
+	var sel: Dictionary = {}
+	for q: Dictionary in jugadores:
+		if bool(q["es_local"]) == local and (excluir.is_empty() or not excluir.has(q)):
+			var d := (ls(pos(q)) - punto).length_squared()
+			if d < mejor:
+				mejor = d
+				sel = q
+	return [] if sel.is_empty() else [sel]

@@ -33,6 +33,7 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("league_media_f", "hist", "ms"), &DinastiaNativo::league_media_f);
 	ClassDB::bind_method(D_METHOD("league_movimiento_campo", "campo", "actual", "amortigua"), &DinastiaNativo::league_movimiento_campo);
 	ClassDB::bind_method(D_METHOD("league_apoyo", "e"), &DinastiaNativo::league_apoyo);
+	ClassDB::bind_method(D_METHOD("league_mas_cercano", "jugadores", "punto", "local"), &DinastiaNativo::league_mas_cercano);
 	ClassDB::bind_method(D_METHOD("league_elegir", "grupos", "sp", "rel", "deseada", "parado", "mirar", "pie"), &DinastiaNativo::league_elegir);
 	ClassDB::bind_method(D_METHOD("league_legal", "vi", "vo", "cuerpo_sale", "cuerpo_ini", "a"), &DinastiaNativo::league_legal);
 	ClassDB::bind_method(D_METHOD("league_mezclar", "sal", "a1", "a2", "cuadros", "mezclas", "ang", "giro_padre"), &DinastiaNativo::league_mezclar);

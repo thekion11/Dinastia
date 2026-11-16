@@ -126,4 +126,37 @@ static func probar(nat: Object) -> Dictionary:
 	if dis_p > 0:
 		fallos.append("apoyo distinto en %d de %d casos" % [dis_p, k])
 	textos.append("campo de fuerzas: GDScript %.1f µs, C++ %.1f µs; apoyo ofensivo: GDScript %.1f µs, C++ %.1f µs por llamada" % [tc2[0] / float(k), tc2[1] / float(k), tp2[0] / float(k), tp2[1] / float(k)])
+	## 4. El más cercano a un punto (con nodos de verdad, dos equipos, empates exactos incluidos).
+	var raiz := Node3D.new()
+	var lista: Array = []
+	for q in 22:
+		var nd := Node3D.new()
+		raiz.add_child(nd)
+		lista.append({"node": nd, "es_local": q < 11, "id": "j%d" % q})
+	var motor := MotorLeague.new()
+	motor.jugadores = lista
+	var dis_m2 := 0
+	var tm2 := [0, 0]
+	var z := 2000
+	for caso in z:
+		for q in 22:
+			(lista[q]["node"] as Node3D).position = Vector3(rr.randf_range(-34, 34), 0, rr.randf_range(-52, 52)) if caso % 9 != 0 else Vector3(float(q % 3), 0, 1.0)   ## cada 9: muchos en el mismo punto
+		var punto := Vector2(rr.randf_range(-52, 52), rr.randf_range(-34, 34))
+		var loc := caso % 2 == 0
+		var w0 := Time.get_ticks_usec()
+		var rg := motor._mas_cercano_uno_gd(punto, loc, [])
+		var w1 := Time.get_ticks_usec()
+		var rc: Array = motor._mas_cercano_al(punto, loc, [], 1)
+		var w2 := Time.get_ticks_usec()
+		tm2[0] += w1 - w0
+		tm2[1] += w2 - w1
+		if rg.size() != rc.size() or (rg.size() == 1 and rg[0] != rc[0]):
+			dis_m2 += 1
+	for nd2: Dictionary in lista:
+		(nd2["node"] as Node3D).free()
+	raiz.free()
+	motor.free()
+	if dis_m2 > 0:
+		fallos.append("más cercano distinto en %d de %d consultas" % [dis_m2, z])
+	textos.append("más cercano al punto: GDScript %.1f µs, C++ %.1f µs por consulta" % [tm2[0] / float(z), tm2[1] / float(z)])
 	return {"fallos": fallos, "textos": textos}
