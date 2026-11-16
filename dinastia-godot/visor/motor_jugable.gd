@@ -86,6 +86,7 @@ func paso(delta: float) -> void:
 				if estado == "descanso":
 					## 2 = segunda parte (saca la visita), 3 y 4 = prórroga.
 					mitad += 1
+					_desplazar_relojes(t)
 					t = 0.0
 					_saque_de_centro(mitad % 2 == 1)
 				else:
@@ -128,3 +129,37 @@ func _retener_en_mano() -> void:
 	if i >= 0:
 		balon.global_position = esq.global_transform * esq.get_bone_global_pose(i).origin
 
+## (16-11, informe M6-02/03/08/09) El reloj `t` vuelve a 0 en cada mitad, pero los plazos guardados («hasta», «desde»,
+## «en») son absolutos: quien cayó al final del primer tiempo seguía en el suelo toda la segunda parte, la CPU veía
+## posiciones viejas y la IA de League no decidía. Se restan `d` segundos a todos, como si el reloj siguiera corriendo.
+const _RELOJES := ["_cambio_rs_hasta", "_manual_hasta", "_palo_largo_hasta", "_posee_desde", "_presion_doble",
+	"_presion_equipo_hasta", "_rb_ultimo", "_t_estado_liga", "_y_ultimo", "pedido_hasta", "pase_dirigido_hasta",
+	"_arb_hasta", "_decision_league", "_linea_def_t", "_ls_t_marca", "_ls_presion_hasta", "_ls_zona_hasta",
+	"_ls_zona_refresco", "_ls_corre_hasta", "_ls_t_carrera", "_ls_t_adelantado"]
+const _CLAVES_T := ["ls_t", "ls_seguir_t", "_urge_t"]
+
+func _desplazar_relojes(d: float) -> void:
+	for nombre: String in _RELOJES:
+		var v: Variant = get(nombre)
+		if v is float:
+			set(nombre, float(v) - d)
+		elif v is Array:
+			var a: Array = v
+			for i: int in a.size():
+				if a[i] is float:
+					a[i] = float(a[i]) - d
+	for p: Dictionary in jugadores + arbitros:
+		for k: Variant in p.keys():
+			var ks := String(k)
+			if p[k] is float and (ks.ends_with("_hasta") or ks.ends_with("_en") or _CLAVES_T.has(ks)):
+				p[k] = float(p[k]) - d
+	if has_meta("_mente"):
+		remove_meta("_mente")
+
+## (16-11, informe M6-05) El estadio se rehace en el descanso con un motor nuevo: las amarillas que ya lleva cada
+## jugador en ESTE partido vienen del acta, para que la segunda sea roja.
+func sembrar_amarillas(acta: Partido) -> void:
+	for p: Dictionary in jugadores:
+		var am := acta.amarillas_hoy(String(p.get("id", "")))
+		if am > 0:
+			p["amarillas"] = am

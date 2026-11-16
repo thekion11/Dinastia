@@ -186,6 +186,10 @@ func remate_externo(es_local: bool, autor_id: String, tipo: String) -> void:
 	_momentum_push(1, es_local)
 	remate.emit(c, _por_id(autor_id), tipo, minuto)
 
+## Amarillas de ESTE partido de un jugador: el motor 3D que se monta en el descanso las recibe (informe M6-05).
+func amarillas_hoy(jugador_id: String) -> int:
+	return int(_amarillas_hoy.get(jugador_id, 0))
+
 ## Una tarjeta que sacó el árbitro del 3D. La roja deja al equipo con uno menos
 ## también aquí (sale del once: la fuerza se vuelve a medir).
 func tarjeta_externa(jugador_id: String, roja: bool) -> void:
@@ -194,6 +198,9 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 		return
 	## Una ROJA DIRECTA no es una amarilla de temporada (mega auditoría 4): solo cuenta la amarilla de verdad y la segunda amarilla (la que la motiva: ya hubo una en este partido).
 	var previas := int(_amarillas_hoy.get(jugador_id, 0))
+	## (16-11, informe M6-05) Una 2.ª amarilla en este partido es roja aunque el 3D no lo sepa (el estadio se rehace en el descanso).
+	if not roja and previas > 0:
+		roja = true
 	if not roja or previas > 0:
 		j.amarillas += 1
 	if not roja:

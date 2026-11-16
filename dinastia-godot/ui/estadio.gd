@@ -212,18 +212,22 @@ func _hud_juego() -> void:
 
 func _paso_motor(delta: float) -> void:
 	if _panel_dt != null or _panel_controles != null or _sala_var != null or _panel_stats != null:
+		Mando.pasos_consumir()
 		return
+	Mando.pasos_fotograma()
 	## LA OCASIÓN JUGABLE: mientras eliges, el motor no da ni un paso; y se mira
 	## tras CADA paso, para cazar la llegada antes de que la IA la resuelva.
 	if _ocasion != null:
 		_ocasion.vigilar(delta)
 		if _ocasion.congela():
 			_acum_motor = 0.0
+			Mando.pasos_consumir()
 			return
 	var mult := _juego.velocidad() if _juego != null else 1.0
 	_acum_motor = minf(_acum_motor + delta * mult, DT_MOTOR * 16.0)
 	while _acum_motor >= DT_MOTOR:
 		_motor.paso(DT_MOTOR)
+		Mando.pasos_consumir()
 		_acum_motor -= DT_MOTOR
 		## Cada paso: así no se pierde un remate que empieza y acaba en el mismo fotograma.
 		if _stats != null:
@@ -351,6 +355,7 @@ func _unhandled_input(e: InputEvent) -> void:
 ## Al salir del 3D el partido puede seguir en la pantalla 2D: ahí vuelve a
 ## jugarlo el `Partido` por su cuenta (si no, no habría goles).
 func _exit_tree() -> void:
+	Mando.pasos_activar(false)
 	if partido != null and _motor != null:
 		partido.motor_externo = false
 		PlayerSpawner.mostrar_nombres = _nombres_globales

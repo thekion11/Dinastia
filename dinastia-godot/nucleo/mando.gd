@@ -89,6 +89,35 @@ static var esquema := "wasd"
 static var propio := {}
 static var _cargado := false
 
+## (16-11, informe M6-01) ENTRADA POR PASOS: el estadio avanza el motor a pasos fijos de 1/60 s desde `_process`;
+## `is_action_just_pressed` vale todo el fotograma, así que con varios pasos por fotograma la pulsación se repetía
+## y con cero pasos se perdía. En ese modo las pulsaciones se acumulan por fotograma y las consume el PRIMER paso.
+static var _por_pasos := false
+static var _pendientes := {}
+static var _acciones_juego: Array[StringName] = []
+
+static func pulsado(accion: StringName) -> bool:
+	if not _por_pasos:
+		return Input.is_action_just_pressed(accion)
+	return _pendientes.has(accion)
+
+static func pasos_activar(si: bool) -> void:
+	_por_pasos = si
+	_pendientes.clear()
+
+static func pasos_fotograma() -> void:
+	_por_pasos = true
+	if _acciones_juego.is_empty():
+		for a: StringName in InputMap.get_actions():
+			if String(a).begins_with("jugar_"):
+				_acciones_juego.append(a)
+	for a: StringName in _acciones_juego:
+		if Input.is_action_just_pressed(a):
+			_pendientes[a] = true
+
+static func pasos_consumir() -> void:
+	_pendientes.clear()
+
 static func ayuda(k: String) -> String:
 	if not _cargado:
 		cargar()
