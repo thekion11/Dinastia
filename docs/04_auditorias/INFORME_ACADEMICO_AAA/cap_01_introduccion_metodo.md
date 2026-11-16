@@ -183,18 +183,4 @@ El informe respeta las reglas fijas del proyecto sobre datos personales y derech
 
 ## 1.10 Estructura del informe
 
-| Cap. | Título | Pregunta principal |
-|---|---|---|
-| 1 | Introducción, preguntas y método | — |
-| 2 | Estado del arte | RQ1, RQ4, RQ5 |
-| 3 | Arquitectura (cifras del código) | RQ2 |
-| 4 | Rendimiento medido | RQ2 |
-| 5 | Pruebas automáticas reales | RQ3 |
-| 6 | Fallos del motor del partido | RQ3 |
-| 7 | Fallos de gestión, La Ruta y menús | RQ3 |
-| 8 | Brechas frente a PES 2020 y FC 27 | RQ2, RQ4 |
-| 9 | Plan hacia 1.0: hitos, métricas y criterios de aceptación | RQ4, RQ5 |
-| 10 | Conclusiones y bibliografía unificada | RQ1-RQ5 |
-| 11 | Recursos públicos gratuitos con licencia comercial | RQ5 |
-
-El capítulo 11 se numera al final porque se redactó como anexo de catálogo; se lee junto al capítulo 9, que lo usa para asignar recursos a cada hito.
+Los capítulos 2 a 7 y 11 aportan la evidencia (estado del arte; arquitectura; rendimiento; pruebas; fallos del motor; fallos de gestión, La Ruta y menús; recursos públicos) y los capítulos 8 a 10 la síntesis (brechas, plan y conclusiones). La correspondencia entre preguntas y capítulos está en la tabla de §1.3. El capítulo 11 se numera al final porque se redactó como anexo de catálogo; se lee junto al capítulo 9, que lo usa para asignar recursos a cada hito.

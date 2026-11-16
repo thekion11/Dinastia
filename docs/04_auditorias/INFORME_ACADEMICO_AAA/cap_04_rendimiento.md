@@ -303,11 +303,7 @@ Mientras no haya mediciones del teléfono, la laptop actúa como puerta: ningún
 
 ## 4.10 Amenazas a la validez
 
-1. **Un solo equipo de referencia.** Todas las cifras absolutas proceden de una laptop. Un i3-N300 con Intel UHD es representativo de un equipo modesto actual, pero no de los equipos de 4 GB DDR3 con Pentium que nombra la orden 19.
-2. **Cifras de varias fechas.** Las tablas mezclan mediciones del 3-11 al 16-11; entre ellas cambiaron el motor, la calidad y la escena. Se fechan siempre.
-3. **Medidas en caliente.** La laptop se calienta y la propia fuente avisa de que las cifras caen; no consta cuántas medidas se tomaron en frío.
-4. **Contenedor sin GPU.** Los porcentajes relativos del contenedor reflejan el relleno de píxeles de un rasterizador por software; su correspondencia con una GPU de teléfono es cualitativa.
-5. **Datos orales.** La cifra de 30 FPS del ~4-11 procede de una comunicación del dueño, no de un informe de la prueba integrada.
+Todas las cifras absolutas proceden de una sola laptop (representativa de un equipo modesto actual, no de los Pentium con 4 GB DDR3 de la orden 19), que se calienta y cuyas cifras caen; las tablas mezclan fechas del 3-11 al 16-11, entre las que cambiaron el motor, la calidad y la escena; los porcentajes del contenedor reflejan un rasterizador por software y su correspondencia con una GPU de teléfono es cualitativa; y la cifra del ~4-11 es una comunicación oral del dueño, no un informe de la prueba integrada.
 
 ---
 

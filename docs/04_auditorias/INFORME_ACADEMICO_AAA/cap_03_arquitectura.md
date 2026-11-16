@@ -337,10 +337,9 @@ Los riesgos 3, 4 y 10 son baratos de mitigar y ya han producido fallos documenta
 
 ## 3.11 Conclusiones
 
-1. **Dinastía es un proyecto grande para su equipo**: 338.521 líneas de GDScript propio, de las que 224.495 son juego y 112.101 pruebas, más 3.052 de C++ [M]. La interfaz es la carpeta más grande (88.412 líneas).
-2. **La norma de 450 líneas se cumple casi siempre, pero ha creado un acantilado**: 32 scripts tienen exactamente 450 líneas y 68 están a cinco o menos del límite [M]. Las 265 capas por herencia parten por tamaño, no por responsabilidad, y concentran estado compartido sin interfaz, que es el terreno de los fallos de frontera del capítulo 6.
-3. **El mundo generado es mucho mayor de lo que dicen los documentos anteriores**: 2.206 clubes, 147 ligas, 135 países, 55.150 jugadores y 135 selecciones [M]. La amplitud supera a la declarada por FC 27 [F 17]; la fidelidad no.
-4. **El motor del partido ocupa unas 11.800 líneas y admite un espacio de configuraciones muy amplio** (6 motores, 55 banderas `C4_*`) [M], de las que se usan unas pocas. Hay dos integraciones con fronteras distintas, que explican la distribución de los fallos por modo.
-5. **La extensión C++ es pequeña (1,4 % del código de juego) y eficaz donde el trabajo es aritmético** (semana del mundo −50 %) [M][D]; en el partido 3D su efecto sobre el fotograma es marginal (capítulo 4).
-6. **La infraestructura de pruebas es abundante pero ciega en las fronteras**; la de calidad gráfica es sofisticada pero carece de un oráculo único.
-7. Se identifican doce riesgos de deuda técnica; los tres más baratos de mitigar (acantilado de líneas, invariantes implícitos, oráculos desfasados) deben resolverse antes de pulir.
+1. **Dinastía es un proyecto grande para su equipo**: 338.521 líneas de GDScript propio (224.495 de juego y 112.101 de pruebas) y 3.052 de C++ [M].
+2. **La norma de 450 líneas se cumple casi siempre, pero ha creado un acantilado** (32 scripts de exactamente 450 líneas) y 265 capas que parten por tamaño, no por responsabilidad: el terreno de los fallos de frontera del capítulo 6.
+3. **El mundo generado es mucho mayor de lo que dicen los documentos anteriores** (2.206 clubes, 147 ligas, 135 países) [M]; la amplitud supera a la declarada por FC 27 [F 17], la fidelidad no.
+4. **El motor del partido** (~11.800 líneas, 6 motores, 55 banderas `C4_*`) tiene dos integraciones con fronteras distintas que explican el reparto de los fallos por modo.
+5. **La extensión C++ es pequeña y eficaz donde el trabajo es aritmético** (semana del mundo −50 %); en el fotograma del partido su efecto es marginal (capítulo 4).
+6. **Las pruebas son abundantes pero ciegas en las fronteras** y la calidad gráfica carece de un oráculo único. De los doce riesgos de deuda, los tres más baratos de mitigar (acantilado, invariantes implícitos, oráculos desfasados) deben resolverse antes de pulir.
