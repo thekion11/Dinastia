@@ -40,7 +40,7 @@ static func partido(p: Principal, c: Club, liga: Liga, _dias: int, acento: Color
 	var visita: Club = rival if en_casa else c
 	var fondo := Color(local.color1).darkened(0.74)
 	fondo.a = 0.94
-	var tc := TableroInicio.tarjeta(Idiomas.t("Próximo partido"), acento, func() -> void: TableroInicio.abrir(p, "Próximo partido"), fondo)
+	var tc := TableroInicio.tarjeta(Idiomas.t("Próximo partido"), acento, func() -> void: TableroInicio.abrir(p, "Próximo partido"), fondo, "estadio")
 	var b: Button = tc[0]
 	var cancha := Cancha.new()   ## el césped dibujado detrás (línea de medio campo y círculo central)
 	cancha.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -145,7 +145,7 @@ static func _tabla(p: Principal, c: Club, liga: Liga, acento: Color) -> Control:
 	return tc[0]
 
 static func _proximos(p: Principal, acento: Color) -> Control:
-	var tc := TableroInicio.tarjeta(Idiomas.t("Calendario"), acento, func() -> void: CalendarioSemanas.mostrar(p, p.mundo, p._dia_semana))
+	var tc := TableroInicio.tarjeta(Idiomas.t("Calendario"), acento, func() -> void: CalendarioSemanas.mostrar(p, p.mundo, p._dia_semana), Color(0, 0, 0, 0), "tunel")
 	var v: VBoxContainer = tc[1]
 	var lista := EventosFecha.proximos(p.mundo, p._dia_semana, 5)
 	if lista.is_empty():

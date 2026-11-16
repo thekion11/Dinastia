@@ -137,7 +137,7 @@ func _construir() -> void:
 	add_child(fondo)
 	for tipo: String in ["bokeh", "motas"]:
 		var fp := FondoParticulas.new(tipo)
-		fp.color = Tema.ORO.lerp(Color.WHITE, 0.4) if tipo == "motas" else Tema.ACENTO.lerp(Color.WHITE, 0.2)
+		fp.color = Tema.al_mundo(Tema.ORO, 2).lerp(Color.WHITE, 0.4) if tipo == "motas" else Tema.al_mundo(Tema.ACENTO, 2).lerp(Color.WHITE, 0.2)   ## (16-11) con el mundo
 		add_child(fp)
 		fp.ajustar_area(get_viewport_rect().size)
 	var raiz := VBoxContainer.new()

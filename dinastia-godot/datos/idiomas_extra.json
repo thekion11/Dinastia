@@ -8699,7 +8699,9 @@
   "Media de los sub-21": "U21 average",
   "En venta": "For sale",
   "Ofertas recibidas": "Offers received",
-  "Jóvenes de casa (≤ 23)": "Homegrown youngsters (≤ 23)"
+  "Jóvenes de casa (≤ 23)": "Homegrown youngsters (≤ 23)",
+  "Portada anterior": "Previous cover",
+  "Portada siguiente": "Next cover"
  },
  "pt": {
   "Historia": "História",
@@ -17401,7 +17403,9 @@
   "Media de los sub-21": "Média dos sub-21",
   "En venta": "À venda",
   "Ofertas recibidas": "Ofertas recebidas",
-  "Jóvenes de casa (≤ 23)": "Jovens da casa (≤ 23)"
+  "Jóvenes de casa (≤ 23)": "Jovens da casa (≤ 23)",
+  "Portada anterior": "Capa anterior",
+  "Portada siguiente": "Próxima capa"
  },
  "patrones": [
   [
@@ -32243,7 +32247,9 @@
   "Media de los sub-21": "Moyenne des moins de 21 ans",
   "En venta": "À vendre",
   "Ofertas recibidas": "Offres reçues",
-  "Jóvenes de casa (≤ 23)": "Jeunes formés au club (≤ 23)"
+  "Jóvenes de casa (≤ 23)": "Jeunes formés au club (≤ 23)",
+  "Portada anterior": "Couverture précédente",
+  "Portada siguiente": "Couverture suivante"
  },
  "it": {
   "Historia": "Storia",
@@ -40945,7 +40951,9 @@
   "Media de los sub-21": "Media degli under 21",
   "En venta": "In vendita",
   "Ofertas recibidas": "Offerte ricevute",
-  "Jóvenes de casa (≤ 23)": "Giovani del vivaio (≤ 23)"
+  "Jóvenes de casa (≤ 23)": "Giovani del vivaio (≤ 23)",
+  "Portada anterior": "Copertina precedente",
+  "Portada siguiente": "Copertina successiva"
  },
  "de": {
   "Historia": "Geschichte",
@@ -49647,7 +49655,9 @@
   "Media de los sub-21": "Schnitt der U21",
   "En venta": "Zum Verkauf",
   "Ofertas recibidas": "Erhaltene Angebote",
-  "Jóvenes de casa (≤ 23)": "Eigene Talente (≤ 23)"
+  "Jóvenes de casa (≤ 23)": "Eigene Talente (≤ 23)",
+  "Portada anterior": "Vorheriges Titelbild",
+  "Portada siguiente": "Nächstes Titelbild"
  },
  "ca": {
   "Historia": "Història",
@@ -58349,7 +58359,9 @@
   "Media de los sub-21": "Mitjana dels sub-21",
   "En venta": "En venda",
   "Ofertas recibidas": "Ofertes rebudes",
-  "Jóvenes de casa (≤ 23)": "Joves de casa (≤ 23)"
+  "Jóvenes de casa (≤ 23)": "Joves de casa (≤ 23)",
+  "Portada anterior": "Portada anterior",
+  "Portada siguiente": "Portada següent"
  },
  "pl": {
   "Club": "Klub",
@@ -67051,7 +67063,9 @@
   "Media de los sub-21": "Średnia U21",
   "En venta": "Na sprzedaż",
   "Ofertas recibidas": "Otrzymane oferty",
-  "Jóvenes de casa (≤ 23)": "Młodzi wychowankowie (≤ 23)"
+  "Jóvenes de casa (≤ 23)": "Młodzi wychowankowie (≤ 23)",
+  "Portada anterior": "Poprzednia okładka",
+  "Portada siguiente": "Następna okładka"
  },
  "tr": {
   "Club": "Kulüp",
@@ -75753,6 +75767,8 @@
   "Media de los sub-21": "U21 ortalaması",
   "En venta": "Satılık",
   "Ofertas recibidas": "Gelen teklifler",
-  "Jóvenes de casa (≤ 23)": "Altyapıdan gençler (≤ 23)"
+  "Jóvenes de casa (≤ 23)": "Altyapıdan gençler (≤ 23)",
+  "Portada anterior": "Önceki kapak",
+  "Portada siguiente": "Sonraki kapak"
  }
 }
