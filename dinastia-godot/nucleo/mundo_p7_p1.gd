@@ -37,6 +37,7 @@ func nueva_temporada() -> Dictionary:
 			j.edad += 1
 			j.partidos = 0
 			j.goles = 0
+			j.asistencias = 0   ## (16-11, informe G-02) como los goles: la temporada ya quedó en `registrar_temporada`
 			j.amarillas = 0
 			## La curva de progreso: los jovenes suben hacia su techo, los
 			## veteranos bajan. Es lo que hace que una plantilla envejezca.
