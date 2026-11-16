@@ -25,6 +25,13 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
 .escena{position:absolute;left:0;top:0;width:1200px;height:540px;transform-origin:0 0;overflow:hidden;overflow:clip;font-family:var(--fb)}
 .fondo{position:absolute;inset:0;background:linear-gradient(135deg,#0a1020 0%,#0e1830 55%,#0a1020 100%)}
 .fondo i{position:absolute;display:block;transform:skewX(-24deg);background:var(--acc);opacity:.9}
+.fondo i{transition:opacity .7s}
+.escena.av:not(.dwell) .fondo i{opacity:0!important}
+.banner .cap:not(.vacio){animation:bannerEnt .55s ease-out}
+.banner .cap.vacio{background:rgba(8,13,24,.55)}
+.banner .cap.vacio .tit b{font-size:30px;color:#cfd7ee}
+.banner .cap.vacio .tit span{color:var(--mute)}
+@keyframes bannerEnt{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
 .fondo i:nth-child(1){left:-120px;top:-40px;width:260px;height:640px;opacity:.55}
 .fondo i:nth-child(2){left:150px;top:-40px;width:40px;height:640px;background:var(--acc2);opacity:.16}
 .fondo i:nth-child(3){right:-140px;top:-40px;width:300px;height:640px;opacity:.5}
@@ -88,10 +95,10 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
 .modal .caja p{margin:12px 0 18px;font:500 16px/1.4 var(--fb);color:#33405e}
 .modal .caja .btn{height:46px}
 /* ---------- AVANZAR ---------- */
-.cabecera{position:absolute;left:36px;top:22px;width:840px;height:52px;background:rgba(8,13,24,.86);display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line)}
+.cabecera{position:absolute;left:36px;top:22px;width:1128px;height:52px;background:rgba(8,13,24,.86);display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line)}
 .cabecera b{font:700 26px var(--fd);letter-spacing:.03em;text-transform:uppercase}
 .cabecera span{font:600 14px var(--fb);color:var(--mute)}
-.banner{position:absolute;left:36px;top:74px;width:840px;height:156px;overflow:hidden;background:#0c1426}
+.banner{position:absolute;left:36px;top:74px;width:1128px;height:156px;overflow:hidden;background:#0c1426}
 .banner .cap{position:absolute;inset:0}
 .banner .tit{position:absolute;left:26px;bottom:16px;right:300px}
 .banner .tit b{display:block;font:700 38px/1 var(--fd);text-transform:uppercase;letter-spacing:.02em;text-shadow:0 2px 10px rgba(0,0,0,.5)}
@@ -101,15 +108,15 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
 .banner .vs em{font:700 22px var(--fd);font-style:normal;color:rgba(255,255,255,.75)}
 .banner .eti,.pc .sobre{font:700 12px var(--fb);letter-spacing:.16em;text-transform:uppercase}
 .banner .eti{position:absolute;left:26px;top:14px;background:rgba(0,0,0,.38);padding:4px 9px}
-.cal{position:absolute;left:36px;top:236px;width:840px;display:grid;grid-template-columns:repeat(7,1fr)}
-.dia{position:relative;height:96px;background:rgba(16,24,40,.9);border:1px solid #0a1120;cursor:pointer;padding:0;color:var(--ink);text-align:left}
-.dia .n{display:block;height:22px;line-height:22px;padding:0 8px;background:rgba(6,10,20,.95);font:700 14px var(--fb);color:var(--mute)}
-.dia .ic{display:flex;gap:6px;align-items:center;justify-content:center;height:72px}
-.dia.pas{opacity:.5}
+.cal{position:absolute;left:36px;top:238px;width:1128px;display:grid;grid-template-columns:repeat(7,1fr)}
+.dia{position:relative;height:100px;background:rgba(226,230,244,.94);border:1px solid #0a1120;cursor:pointer;padding:0;color:#14203a;text-align:left}
+.dia .n{display:block;height:22px;line-height:22px;padding:0 8px;background:rgba(10,14,30,.94);font:700 14px var(--fb);color:#cfd7ee}
+.dia .ic{display:flex;gap:6px;align-items:center;justify-content:center;height:76px}
+.dia.pas{opacity:.55}
 .dia.pas .n::after{content:"✓";float:right;color:var(--t-dinero)}
-.dia.sel{background:var(--ink);color:#0a1020;z-index:2;box-shadow:0 0 0 2px var(--ink),0 10px 24px rgba(0,0,0,.5)}
+.dia.sel{background:#fff;color:#0a1020;z-index:2;box-shadow:0 0 0 3px var(--acc),0 12px 26px rgba(0,0,0,.5);transform:scale(1.05)}
 .dia.sel .n{background:var(--acc);color:#fff}
-.dia .ficha{position:absolute;right:6px;top:25px;width:22px;height:26px}
+.dia .ficha{position:absolute;right:6px;top:26px;width:22px;height:26px}
 .ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;flex:none}
 .ico svg{width:24px;height:24px}
 .ico.sm{width:34px;height:34px}.ico.sm svg{width:19px;height:19px}
@@ -119,7 +126,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
 .dia.hoy .ficha{animation:salto .9s ease-in-out infinite}
 .dia.alto{animation:pulso .8s ease-out 2}
 @keyframes pulso{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}100%{box-shadow:0 0 0 18px rgba(255,255,255,0)}}
-.pie{position:absolute;left:36px;top:452px;width:840px;height:64px;display:flex;align-items:center;gap:10px}
+.pie{position:absolute;left:36px;top:458px;width:1128px;height:64px;display:flex;align-items:center;gap:10px}
 .pie .ayuda{margin-left:auto;text-align:right;max-width:300px}
 .lat{position:absolute;left:896px;top:22px;width:268px;height:494px;background:rgba(8,13,24,.88);display:flex;flex-direction:column}
 .lat h3{margin:0;padding:12px 16px 8px;font:700 15px var(--fd);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--line)}
@@ -280,7 +287,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
 .ctrl2 .on{background:var(--acc);border-color:var(--acc)}
 .pag{display:flex;gap:6px;align-items:center}
 .pag button{background:#243656;color:#fff;border:0;width:30px;height:28px;cursor:pointer;font:700 14px var(--fb)}
-.progr{position:absolute;left:36px;top:230px;width:840px;height:6px;background:rgba(255,255,255,.1)}
+.progr{position:absolute;left:36px;top:231px;width:1128px;height:4px;background:rgba(255,255,255,.1)}
 .progr i{display:block;height:100%;background:var(--acc);transition:width .2s}
 .estado{position:absolute;left:36px;top:452px}
 .tabla{margin-top:10px;display:grid;gap:3px}
@@ -326,7 +333,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
         <button class="btn" id="bMenu">Menú</button>
         <div class="ayuda"><span class="kbd">Espacio</span>avanzar · <span class="kbd">N</span>siguiente evento<br>clic en un día para ver su banner</div>
       </div>
-      <div class="lat"><h3>Cadenas conectadas</h3><div id="cads"></div><h3>Bitácora</h3><div class="bit" id="bit"></div></div>
+      
     </section>
 
     <section class="pant pre" id="pre"></section>
@@ -611,6 +618,7 @@ let rafVer=0;
 function ir(p){
   cancelAnimationFrame(rafVer);
   PANT.forEach(id=>$(id).classList.toggle("on",id===p));
+  $("escena").classList.toggle("av",p==="av");$("escena").classList.remove("dwell");
   if(p==="hub")pintaHub();
   if(p==="av")pintaAv();
 }
@@ -703,37 +711,14 @@ function pintaCal(){
 }
 function pintaBanner(){
   const i=S.sel,evs=delDia(i),e=evs.find(x=>!S.done[x.id])||evs[0],c=S.club;
-  if(!e){$("banner").innerHTML=`<div class="cap" style="background:linear-gradient(110deg,#1a2640,#0f1830)"><div class="eti">${fecha(i)} · sin eventos</div>${arte("libre",c,null,150)}<div class="tit"><b>Día de entrenamiento</b><span>Nada que decidir. El tiempo corre hasta el próximo evento.</span></div></div>`;return;}
+  if(!e){$("banner").innerHTML=`<div class="cap vacio"><div class="tit"><b>${fecha(i)}</b><span>Sin eventos. El tiempo sigue corriendo.</span></div></div>`;return;}
   const T=TIPOS[e.t],col=tcol(e.t);
   let bg=`background:linear-gradient(110deg,${col} 0%,color-mix(in srgb,${col} 40%,#08101f) 70%,#08101f 100%)`;
   if(e.t==="partido")bg=`background:linear-gradient(110deg,${c.c1} 0%,color-mix(in srgb,${c.c1} 45%,#08101f) 60%,${e.riv.c1} 100%)`;
   let h=`<div class="cap" style="${bg}"><div class="rayos"></div><div class="eti">${fecha(i)} · ${e.comp||T.e}</div>`;
   if(e.t==="partido")h+=`<div class="vs">${crest(c,96)}<em>VS</em>${crest(e.riv,96)}</div><div class="tit" style="right:340px"><b>${e.loc?c.n+" · "+e.riv.n:e.riv.n+" · "+c.n}</b><span>${e.tt}</span></div>`;
-  else h+=arte(e.t,c,null,150)+`<div class="tit"><b>${e.tt}</b><span>${e.ss}</span></div>`;
+  else h+=arte(e.t,c,null,150,true)+`<div class="tit"><b>${e.tt}</b><span>${e.ss}</span></div>`;
   $("banner").innerHTML=h+"</div>";
-}
-function pintaCad(){
-  const f=S.flags;
-  const pso=(txt,d,est)=>`<div class="pso ${est}"><i></i>${txt}<span>${d!=null?fecha(d):""}</span></div>`;
-  // cadena de fichaje activa
-  let k=["f1","f2","f3"].find(x=>!S.done[x+"_pr"]&&f[x+"_of"]!=="no"&&f[x+"_ne"]!=="retira")||"f3";
-  const get=id=>S.ev.find(e=>e.id===id),F=S.F[k];
-  const cancel=f[k+"_of"]==="no"||f[k+"_ne"]==="retira";
-  const of=get(k+"_of"),ne=get(k+"_ne"),pr=get(k+"_pr");
-  const e1=S.done[of.id]?"hecho":"actual";
-  const e2=f[k+"_of"]==="no"?"cancel":(S.done[ne.id]?(f[k+"_ne"]==="retira"?"cancel":"hecho"):(S.done[of.id]?"actual":""));
-  const e3=cancel?"cancel":(S.done[pr.id]?"hecho":(S.done[ne.id]?"actual":""));
-  let h=`<div class="cad"><b>Fichaje de ${F.n}</b><div class="pasos">${pso("Propuesta",of.d,e1)}${pso("Negociación",ne.d,e2)}${pso("Presentación",pr.d,e3)}</div></div>`;
-  if(S.ultDec){const d=S.ev.find(x=>x.id===S.ultDec.id),cs=S.ev.find(x=>x.id===S.ultDec.cons);h+=`<div class="cad"><b>${d.tt}</b><div class="pasos">${pso("Decisión tomada",d.d,"hecho")}${pso(cs.tt,cs.d,S.done[cs.id]?"hecho":"actual")}</div></div>`;}
-  else h+=`<div class="cad"><b>Decisiones</b><div class="pasos">${pso("Aún no has tomado ninguna",null,"")}</div></div>`;
-  const cop=S.flags.copaOut!=null?`eliminado (ronda ${S.flags.copaOut})`:"sigue vivo";
-  const con=S.flags.contPase===false?"eliminado en grupos":(S.flags.ko1Out?"eliminado":"sigue vivo");
-  h+=`<div class="cad"><b>Competiciones</b><div class="pasos">${pso("Liga: "+(S.rec.pj?posicion()+".º · "+S.pts+" pts":"sin jugar"),null,S.rec.pj?"actual":"")}${pso("Copa: "+cop,null,S.flags.copaOut!=null?"cancel":"actual")}${pso("Continental: "+con,null,(S.flags.contPase===false||S.flags.ko1Out)?"cancel":"actual")}</div></div>`;
-  $("cads").innerHTML=h;
-}
-function pintaBit(){
-  const l=S.log.slice(-4).reverse();
-  $("bit").innerHTML=l.length?l.map(x=>`<p>${x.t}<small>${x.d}</small></p>`).join(""):`<p class="vacio">Aquí se anota lo que vas resolviendo.</p>`;
 }
 function pintaBotones(){
   const b=$("bAv");
@@ -745,7 +730,7 @@ function pintaBotones(){
   $("progr").firstElementChild.style.width=(S.hoy/(TOTAL-1)*100)+"%";
   const ba=$("bAuto");if(ba){ba.textContent=S.auto?"■ Detener automático":"▶ Temporada completa (auto)";ba.classList.toggle("on",S.auto);}
 }
-function pintaAv(){pintaCal();pintaBanner();pintaCad();pintaBit();pintaBotones();}
+function pintaAv(){pintaCal();pintaBanner();pintaBotones();}
 function parar(){S.run=false;clearTimeout(S.t);pintaBotones();}
 function paso(){
   if(S.abierto||S.fin||S.hoy>=TOTAL-1)return;
@@ -760,7 +745,8 @@ function paso(){
   S.cola=evs.filter(e=>e.pc&&e.t!=="partido");
   S.huboMajor=S.cola.length>0;
   sonido("para");
-  S.t=setTimeout(siguienteCola,S.auto?Math.max(80,500/S.vel):650);
+  $("escena").classList.add("dwell");
+  S.t=setTimeout(siguienteCola,S.auto?Math.max(150,2400/S.vel):(S.fast?1500:2400));
 }
 function arrancar(fast){
   if(S.abierto||S.espera)return;
@@ -770,6 +756,7 @@ function arrancar(fast){
   S.run=true;S.fast=!!fast;pintaBotones();S.t=setTimeout(paso,150);
 }
 function siguienteCola(){
+  $("escena").classList.remove("dwell");
   if(S.cola.length){abrir(S.cola.shift());return;}
   salida();
 }
