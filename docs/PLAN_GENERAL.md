@@ -4,6 +4,14 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
+## TRES FRENTES (orden del dueño, 16-11) — EN CURSO, sesiones en la nube (Opus, esfuerzo medio, excepción a la orden 48)
+- Meta: el nivel de las referencias del Drive (`Dinastia_respaldo_2026-10-24` → `referencias_del_dueño`; NO van al repo). Son: (1) menú central de la Liga Master de PES 2020 (barra superior de pestañas «Avanzar en el tiempo / Dirección del equipo / Información de mi equipo», mosaico de tarjetas: oficina del DT, base de datos, sistema, tabla de posiciones, próximos partidos con estadio y fecha, noticias con cita de jugador, seguidores y patrocinadores, barra inferior de ayuda); (2) mando táctil de FC Mobile con y sin balón (palanca a la izquierda, botones grandes a la derecha: pase, pase al hueco, tiro, sprint y regate; sin balón: presión, entrada, cambio); (3) ficha de reparto de atributos (cifra grande por columna con su detalle). En la carpeta padre hay vídeos de referencia (prólogo, menú avanzado, juego en Android) de 57-806 MB.
+- Recursos: SOLO gratuitos con licencia comercial (CC0, CC-BY con atribución en los créditos, MIT, Apache, Mixamo…; nada NC ni «solo uso personal»). Cada recurso nuevo se anota con su licencia y origen.
+- Frente 1, MENÚS E INTERFAZ: cada pantalla al nivel de la referencia (mosaico de tarjetas, jerarquía, tipografía, color por mundo, transiciones), con capturas antes/después.
+- Frente 2, ASPECTO DEL PARTIDO: arreglar lo que se ve mal (parches claros en camisetas y shorts, ver pasadas 1-2 de personajes), mejores modelos, texturas y animaciones gratuitas, estadio e iluminación; desde la cámara de TV, que parezca un juego comercial.
+- Frente 3, JUGABILIDAD (motor C4, banderas `C4_*`): animaciones ligadas al movimiento, peso e inercia, pases y tiros con intención, colocación de la IA, portero. El dueño juega y pone nota; sin su nota no se da por buena.
+- FPS: la nube no tiene GPU; la sesión líder (local) mide en la laptop antes de dar algo por bueno (ULTRA ≥30, ULTRA BAJA ≥100).
+
 ## ESTADO AL CIERRE DEL 16-11 MADRUGADA (orden del dueño: «a main, documentar y a cerrar»)
 - FPS en la laptop del dueño (Acer AL14-31P, i3-N300, Intel UHD, 1280x720, cámara del partido): ULTRA ~39-41 FPS en frío con el 3D al 60 % (`Calidad.escala_ultra` 0.75 → 0.6; antes 13 y luego ~30), ULTRA BAJA ~100-107. La laptop se calienta tras varias pasadas y las cifras caen; con otras sesiones abriendo Godot a la vez las medidas no valen (llegó a haber 32 procesos).
 - ULTRA BAJA 150: NO alcanzable en esta laptop con lo medido (suelo ~10 ms por fotograma aunque se oculten jugadores, animaciones o entorno; 6,4 ms solo con la escena quieta). ULTRA: SSAO cuesta ~4,5 ms de ~31 y bajarle la calidad no ahorra (el coste es el pre-paso de normales); no se quitó.
