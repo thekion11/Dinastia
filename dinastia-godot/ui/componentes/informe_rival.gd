@@ -174,11 +174,15 @@ func _construir() -> void:
 	chips.alignment = BoxContainer.ALIGNMENT_CENTER
 	chips.add_theme_constant_override("separation", 10)
 	raiz.add_child(chips)
-	if int(d["puesto"]) > 0:
-		_chip(chips, Idiomas.t("%d.º en la liga · %d pts") % [int(d["puesto"]), int(d["pts"])], Tema.ORO)
-	_chip(chips, Idiomas.t("media del once %d (la tuya %d)") % [roundi(float(d["media_rival"])), roundi(float(d["media_mia"]))], Tema.ACENTO)
-	if int(d["bajas"]) > 0:
-		_chip(chips, Idiomas.t("🩹 Bajas por lesión: %d") % int(d["bajas"]), COL_MAL)
+	## (16-11, frente 1) Las cifras del rival en grande, una por columna (antes, chips de 14 px): puesto, su media, la tuya y sus bajas.
+	var mr := roundi(float(d["media_rival"]))
+	var mm := roundi(float(d["media_mia"]))
+	raiz.add_child(CifrasClave.banda([
+		[Idiomas.t("Puesto en la liga"), ("%d.º · %d pts" % [int(d["puesto"]), int(d["pts"])]) if int(d["puesto"]) > 0 else "—", Tema.ORO],
+		[Idiomas.t("Media de su once"), str(mr), COL_MAL if mr > mm + 2 else Tema.ACENTO],
+		[Idiomas.t("Media del tuyo"), str(mm), COL_BIEN if mm >= mr else COL_SUAVE],
+		[Idiomas.t("Bajas por lesión"), str(int(d["bajas"])), COL_MAL if int(d["bajas"]) > 0 else COL_SUAVE]], COL_SUAVE, 4))
+	raiz.move_child(chips, raiz.get_child_count() - 1)
 	if not (d["racha"] as Array).is_empty():
 		var et := _texto(14, COL_SUAVE)
 		et.text = "   " + Idiomas.t("Últimos partidos:")
