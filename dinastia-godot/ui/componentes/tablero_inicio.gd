@@ -46,7 +46,8 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 		b.pressed.connect(func() -> void:
 			pestana = i
 			_marcar(botones)
-			_cuerpo(p, cuerpo, c, liga, dias_al_partido, acento))
+			_cuerpo(p, cuerpo, c, liga, dias_al_partido, acento)
+			_entrada(cuerpo))
 	_marcar(botones)
 	_cuerpo(p, cuerpo, c, liga, dias_al_partido, acento)
 
@@ -72,6 +73,19 @@ static func ocultar_columnas(p: Principal) -> void:
 		q = q.get_parent()
 	if q is Control:
 		(q as Control).visible = false
+
+## Al cambiar de pestaña, las tarjetas entran escalonadas (como las del PES al pasar de pestaña); en el Mundo suave, de golpe.
+static func _entrada(cuerpo: VBoxContainer) -> void:
+	if EstiloMundo.suave:
+		return
+	var i := 0
+	for t in cuerpo.find_children("*", "Button", true, false):
+		var b := t as Button
+		b.modulate.a = 0.0
+		var tw := b.create_tween()
+		tw.tween_interval(0.03 * i)
+		tw.tween_property(b, "modulate:a", 1.0, 0.18)
+		i += 1
 
 static func _marcar(botones: Array[Button]) -> void:
 	for i in botones.size():
