@@ -69,7 +69,8 @@ const CLASES := {"clave": "clave en tu puesto", "util": "útil en tu puesto", "a
 static func _columnas(ui: Variant, j: Jugador) -> Control:
 	var c: CarreraJugador = ui.carrera
 	var g := GridContainer.new()
-	g.columns = 1 if E.estrecho(ui) else 6
+	## (15-11, pulido) De pie, de a dos: en una sola columna la ficha pedía seis pantallas de desplazamiento.
+	g.columns = 2 if E.estrecho(ui) else 6
 	g.add_theme_constant_override("h_separation", 8)
 	g.add_theme_constant_override("v_separation", 10)
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL

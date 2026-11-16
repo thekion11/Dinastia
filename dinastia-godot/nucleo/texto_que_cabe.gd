@@ -38,8 +38,13 @@ static func _recorta(c: Control) -> bool:
 	return bool(c.get("clip_text")) or int(c.get("text_overrun_behavior")) != TextServer.OVERRUN_NO_TRIMMING
 
 ## Deja la letra en el tamaño más grande (hasta el original) con el que el texto cabe en el control.
-static func ajustar(c: Control) -> void:
-	if not is_instance_valid(c) or not c.is_inside_tree() or c.size.x < 8.0:
+## (15-11) Sin tipo en el argumento: la llamada diferida puede llegar con el control ya liberado (se repinta la pantalla
+## en el mismo fotograma) y un argumento tipado daba «Cannot convert argument 1 from Object to Object».
+static func ajustar(cv: Variant) -> void:
+	if not is_instance_valid(cv) or not (cv is Control):
+		return
+	var c := cv as Control
+	if not c.is_inside_tree() or c.size.x < 8.0:
 		return
 	var t := String(c.get("text"))
 	c.set_meta("texto_medido", t)
