@@ -237,13 +237,10 @@ func portada() -> void:
 		marco.add_theme_constant_override("margin_top", 14)
 		var libre := get_viewport_rect().size.y - 124.0 - 14.0 - MenuLateral.reserva().y
 		_alto_tarjeta = clampf((libre - 36.0) / 3.0, 150.0, _alto_tarjeta)
-	for i in subs.size():   ## (15-11) se arman FUERA de la pantalla y la rejilla entra de una vez: antes cada tarjeta recolocaba todas
-		var tarjeta := TarjetaPortada.crear(self, subs[i], i)
-		rej.add_child(tarjeta)
-		Idiomas.traducir_arbol(tarjeta)
-	marco.add_child(rej)
-	for i in subs.size():
-		var tarjeta := rej.get_child(i) as Control
+	## (16-11, frente 1) Con 5 submenús o más, mosaico tipo PES 2020 (la primera grande); si no, la rejilla (`PortadaMosaico`).
+	var tarjetas := PortadaMosaico.armar(self, marco, rej, subs)
+	for i in tarjetas.size():
+		var tarjeta := tarjetas[i] as Control
 		## M-285 (2-11): con mando, la primera tarjeta toma el foco; la cruceta pasa de una a otra y A entra.
 		if i == 0 and not Input.get_connected_joypads().is_empty():
 			FocoSeguro.dar(tarjeta)
@@ -393,6 +390,7 @@ func _devolver_contenido() -> void:
 ## La ficha del jugador va oculta en el central (rediseño 3-11) y se ve aquí.
 func _ver_ficha(si: bool) -> void:
 	if _p._bloque_ficha != null and is_instance_valid(_p._bloque_ficha): _p._bloque_ficha.visible = si
+	if _p._col_derecha != null and is_instance_valid(_p._col_derecha): _p._col_derecha.visible = si   ## (16-11) en el central la columna no se ve: el mosaico ocupa su sitio
 
 func _al_redimensionar() -> void:
 	if _fondo != null and _fondo.material != null and size.y > 0.0:
