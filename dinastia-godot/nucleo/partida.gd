@@ -98,6 +98,7 @@ static func _dic_a_copa(d: Dictionary, m: Mundo) -> Copa:
 static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 	var mio := m.mi_club()
 	if mio == null:
+		_restaurar_continentales(datos, m)   ## (16-11, informe G-03) en La Ruta no hay club tuyo, pero los continentales siguen
 		return
 	## `tomar_el_mando` crea los sistemas "solo tuyos" de cero y vuelve a sortear los
 	## continentales. Se llama primero y DESPUES se pisan sus valores con los del
@@ -248,6 +249,9 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 	for x: Dictionary in datos.get("libro_financiero", []):
 		m.libro_financiero.append(x)
 
+	_restaurar_continentales(datos, m)
+
+static func _restaurar_continentales(datos: Dictionary, m: Mundo) -> void:
 	var dc: Dictionary = datos.get("continentales", {})
 	if dc.is_empty():
 		return

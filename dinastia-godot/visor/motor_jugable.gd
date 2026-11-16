@@ -156,10 +156,17 @@ func _desplazar_relojes(d: float) -> void:
 	if has_meta("_mente"):
 		remove_meta("_mente")
 
-## (16-11, informe M6-05) El estadio se rehace en el descanso con un motor nuevo: las amarillas que ya lleva cada
-## jugador en ESTE partido vienen del acta, para que la segunda sea roja.
-func sembrar_amarillas(acta: Partido) -> void:
+## (16-11, informe M6-05 y M6-11) El estadio se rehace en el descanso con un motor nuevo: lo que ya pasó en ESTE partido
+## viene del acta (amarillas, para que la segunda sea roja; córners, faltas, fueras de juego y posesión, que el acta
+## recibe por asignación y si no quedarían solo los del segundo tiempo).
+func sembrar_del_acta(acta: Partido) -> void:
 	for p: Dictionary in jugadores:
 		var am := acta.amarillas_hoy(String(p.get("id", "")))
 		if am > 0:
 			p["amarillas"] = am
+	corners = [acta.corners_local, acta.corners_visita]
+	faltas = [acta.faltas_local, acta.faltas_visita]
+	fueras_de_juego = [acta.fueras_local, acta.fueras_visita]
+	if acta.minuto > 0:
+		var seg := float(acta.minuto) * duracion_mitad / 45.0
+		posesion = [seg * acta.posesion_local / 100.0, seg * (100.0 - acta.posesion_local) / 100.0]

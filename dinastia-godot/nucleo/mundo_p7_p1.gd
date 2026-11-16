@@ -133,6 +133,8 @@ func nueva_temporada() -> Dictionary:
 	if entrenamiento != null:
 		entrenamiento.reiniciar_pretemporada()
 		entrenamiento.reiniciar_subidas()
+	if _entreno_mundo != null:
+		_entreno_mundo.reiniciar_subidas()
 	## La copa nacional se sortea de cero cada temporada, con los clubes de
 	## primera del pais donde diriges.
 	## LA SUPERCOPA abre el ano: campeon de liga contra campeon de copa. Va aqui
