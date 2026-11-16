@@ -229,6 +229,69 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
 .leyenda span{display:flex;align-items:center;gap:7px}
 .ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--mute);font-size:13px}
 .ctrl .chip{font-size:13px;padding:5px 12px}
+/* ---------- ANIMACIONES de los eventos a pantalla completa ---------- */
+.anim .an-sube{animation:sube .9s cubic-bezier(.2,.9,.3,1.2) both}
+.anim .an-gira{animation:gira 22s linear infinite}
+.anim .an-cae{animation:cae 3.2s linear infinite both}
+.anim .an-pop{animation:pop .55s cubic-bezier(.2,1.6,.4,1) both}
+.anim .an-izq{animation:izq .8s cubic-bezier(.2,.9,.3,1) both}
+.anim .an-der{animation:der .8s cubic-bezier(.2,.9,.3,1) both}
+.anim .an-clasp{animation:pop .5s .75s cubic-bezier(.2,1.8,.4,1) both;transform-box:fill-box;transform-origin:center}
+.anim .an-trazo{stroke-dasharray:1;stroke-dashoffset:1;animation:trazo 2.4s ease-out forwards}
+.anim .an-ecg{stroke-dasharray:1;stroke-dashoffset:1;animation:trazo 2.2s linear infinite}
+.anim .an-pulso{animation:pulso2 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.anim .an-flash{animation:destello 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.anim .an-barra{animation:barra .7s cubic-bezier(.2,.9,.3,1.15) both;transform-box:fill-box;transform-origin:bottom}
+.anim .an-ondea{animation:ondea 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:left center}
+.anim .an-sello{animation:sello .45s 1.7s cubic-bezier(.2,1.6,.4,1) both;transform-box:fill-box;transform-origin:center}
+.anim .an-desliza{animation:desliza .8s cubic-bezier(.2,.9,.3,1) both}
+@keyframes sube{from{transform:translateY(80px);opacity:0}to{transform:none;opacity:1}}
+@keyframes gira{to{transform:rotate(360deg)}}
+@keyframes cae{from{transform:translateY(-240px) rotate(0)}to{transform:translateY(300px) rotate(540deg)}}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes izq{from{transform:translateX(-180px);opacity:0}to{transform:none;opacity:1}}
+@keyframes der{from{transform:translateX(180px);opacity:0}to{transform:none;opacity:1}}
+@keyframes trazo{to{stroke-dashoffset:0}}
+@keyframes pulso2{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes destello{0%,100%{transform:scale(.3);opacity:0}45%{transform:scale(1.2);opacity:1}70%{transform:scale(.8);opacity:.6}}
+@keyframes barra{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes ondea{0%,100%{transform:skewY(-6deg) scaleX(1)}50%{transform:skewY(6deg) scaleX(.9)}}
+@keyframes sello{from{transform:scale(3) rotate(-30deg);opacity:0}to{transform:scale(1) rotate(0);opacity:.9}}
+@keyframes desliza{from{transform:translateX(-140px) rotate(-14deg);opacity:0}to{transform:none;opacity:1}}
+.pc .cont>*{animation:sube2 .6s ease-out both}
+.pc .cont>*:nth-child(2){animation-delay:.08s}.pc .cont>*:nth-child(3){animation-delay:.16s}.pc .cont>*:nth-child(4){animation-delay:.24s}.pc .cont>*:nth-child(5){animation-delay:.32s}
+@keyframes sube2{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
+.pc .figpres{position:absolute;right:250px;bottom:0;animation:der .9s .3s cubic-bezier(.2,.9,.3,1) both}
+.pc .flashes{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;animation:flashes 4.2s linear infinite}
+@keyframes flashes{0%,100%{opacity:0}12%{opacity:.85}15%{opacity:0}28%{opacity:.7}30%{opacity:0}31%{opacity:.9}34%{opacity:0}58%{opacity:.8}60%{opacity:0}81%{opacity:.7}84%{opacity:0}}
+.pc .auto{position:absolute;right:30px;top:22px;background:rgba(0,0,0,.45);padding:5px 12px;font:700 12px var(--fb);letter-spacing:.14em;text-transform:uppercase;z-index:3}
+.pc .auto i{display:block;height:3px;background:#fff;margin-top:4px;transform-origin:left;animation:cuenta var(--dur,2s) linear forwards}
+@keyframes cuenta{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+.pre .cabz>*:first-child{animation:izq .7s cubic-bezier(.2,.9,.3,1) both}
+.pre .cabz>*:last-child{animation:der .7s cubic-bezier(.2,.9,.3,1) both}
+.pre .cabz>*:nth-child(2){animation:pop .5s .5s cubic-bezier(.2,1.6,.4,1) both}
+.pre .col{animation:sube2 .7s .3s ease-out both}
+.pre .figl{animation:izq .8s .2s cubic-bezier(.2,.9,.3,1) both}
+.pre .figr{animation:der .8s .2s cubic-bezier(.2,.9,.3,1) both}
+/* ---------- TEMPORADA ---------- */
+.ctrl2{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctrl2 .chip{font-size:13px;padding:5px 12px}
+.ctrl2 .sep{width:1px;height:20px;background:var(--line)}
+.ctrl2 .on{background:var(--acc);border-color:var(--acc)}
+.pag{display:flex;gap:6px;align-items:center}
+.pag button{background:#243656;color:#fff;border:0;width:30px;height:28px;cursor:pointer;font:700 14px var(--fb)}
+.progr{position:absolute;left:36px;top:230px;width:840px;height:6px;background:rgba(255,255,255,.1)}
+.progr i{display:block;height:100%;background:var(--acc);transition:width .2s}
+.estado{position:absolute;left:36px;top:452px}
+.tabla{margin-top:10px;display:grid;gap:3px}
+.tabla div{display:grid;grid-template-columns:22px 1fr 34px;gap:8px;font:600 13px var(--fb);color:#c9d4ea;padding:2px 6px}
+.tabla div.yo{background:var(--acc);color:#fff}
+.pc .cont.fin{justify-content:flex-start;padding-top:34px}.pc .cont.fin h2{font-size:54px}.fin .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px;max-width:640px}
+.fin .stats div{background:rgba(0,0,0,.32);padding:10px 14px;font:500 13px var(--fb);color:rgba(255,255,255,.78)}
+.fin .stats b{display:block;font:700 34px var(--fd);color:#fff}
+.fin .logros{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;max-width:640px}
+.fin .logros span{background:rgba(255,255,255,.14);padding:5px 12px;font:600 14px var(--fb)}
+.anim .an-pop{transform-box:fill-box;transform-origin:center}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -236,17 +299,17 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
   <div class="cab">
     <div>
       <h1>Avanzar en el tiempo</h1>
-      <p>Maqueta del flujo completo: menú de inicio con notificaciones, avance por días, eventos con arte propio a pantalla completa, y el día de partido (jugar, saltar, ver, momentos). Pulsa «Avanzar» en el menú.</p>
+      <p>Maqueta del flujo completo con una temporada entera (300 días, 38 jornadas, copa, continental y dos mercados): eventos animados con sonido propio, notificaciones en el menú y día de partido. Pulsa «Avanzar» o mira la temporada de corrido con «Temporada completa (auto)».</p>
     </div>
     <div class="fichas" id="clubes" role="group" aria-label="Club de ejemplo"></div>
   </div>
-  <div class="ctrl" id="atajos"><span>Ir directo a:</span></div>
+  <div class="ctrl2" id="ctrl2"></div>
 
   <div class="marco" id="marco"><div class="escena" id="escena">
     <div class="fondo"><i></i><i></i><i></i><i></i></div>
 
     <section class="pant on" id="hub">
-      <div class="topbar"><b>Dinastía</b><div class="pil"><span>Fecha</span><em id="hFecha" style="font-style:normal"></em></div><div class="pil"><span>Presupuesto de fichajes</span><em id="hPres" style="font-style:normal"></em></div><div class="pil"><span>Presupuesto de salarios</span><em style="font-style:normal">1,9 M€ / mes</em></div></div>
+      <div class="topbar"><b>Dinastía</b><div class="pil"><span>Fecha</span><em id="hFecha" style="font-style:normal"></em></div><div class="pil"><span>Presupuesto de fichajes</span><em id="hPres" style="font-style:normal"></em></div><div class="pil"><span>Liga</span><em id="hLiga" style="font-style:normal"></em></div></div>
       <div class="tiles" id="tiles"></div>
       <div class="prox" id="prox"></div>
       <div class="hint"><span><i class="bt a">A</i>Confirmar</span><span><i class="bt b">B</i>Volver</span></div>
@@ -254,8 +317,8 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
     </section>
 
     <section class="pant" id="av">
-      <div class="cabecera"><b>Avanzar en el tiempo</b><span id="periodo"></span></div>
-      <div class="banner" id="banner"></div>
+      <div class="cabecera"><b>Avanzar en el tiempo</b><span id="periodo"></span><span class="pag"><button id="vPrev" aria-label="Quincena anterior">◀</button><button id="vNext" aria-label="Quincena siguiente">▶</button></span></div>
+      <div class="banner" id="banner"></div><div class="progr" id="progr"><i></i></div>
       <div class="cal" id="cal"></div>
       <div class="pie">
         <button class="btn pri" id="bAv">Avanzar</button>
@@ -278,7 +341,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
 
   <div class="leyenda" id="ley"></div>
   <div class="notas">
-    <div><b>Importante o menor</b><p>Los eventos grandes (fichaje, premio, decisión, lesión, balance) ocupan la pantalla completa. Los menores no: sales al menú, aparece una campana roja en su tarjeta y el avance queda parado hasta que vuelvas a pulsar Avanzar.</p></div>
+    <div><b>Importante o menor</b><p>Los eventos con animación propia (fichaje, premio, decisión, lesión, balance) ocupan la pantalla completa y al cerrarlos vuelves al menú. Los menores (convocatoria, cantera, patrocinio, mercado) no: aparece una campana roja en su tarjeta y el avance queda parado hasta que vuelvas a pulsar Avanzar.</p></div>
     <div><b>Día de partido</b><p>Al llegar un partido vuelves al menú y donde estaba «Avanzar» salen «Jugar partido» y «Saltar partido». Jugar abre la previa con alineaciones; saltar simula y muestra el resultado.</p></div>
     <div><b>Después del partido</b><p>Sobre el botón aparece un menú: jugar de nuevo, ver el partido o jugar momentos específicos (ofensivos, defensivos o todos).</p></div>
     <div><b>En el juego real</b><p>La lógica de eventos del día (qué cae cada día, cadenas, cola y notificaciones) iría en C++ con su gemelo en GDScript. Las pantallas se quedan en GDScript.</p></div>
@@ -362,11 +425,12 @@ function figura(c,num,skin,hair,h){
   <rect x="86" y="70" width="6" height="3" fill="#2a1a12" opacity=".7"/><rect x="108" y="70" width="6" height="3" fill="#2a1a12" opacity=".7"/>
   </svg>`;
 }
-function arte(t,c,r,h){
+function arte(t,c,r,h,an){
   uid++;const g="a"+uid,w=Math.round(h*4/3);
   let b="",d=`<defs><linearGradient id="${g}o" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".5" stop-color="#e2b84a"/><stop offset="1" stop-color="#9a6b12"/></linearGradient><linearGradient id="${g}v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f9a5a"/><stop offset="1" stop-color="#176338"/></linearGradient></defs>`;
   const rayos=(cx,cy,n,L,col,op)=>{let s="";for(let i=0;i<n;i++){const a=i/n*Math.PI*2,a2=a+Math.PI/n*.9;s+=`<polygon points="${cx},${cy} ${(cx+Math.cos(a)*L).toFixed(0)},${(cy+Math.sin(a)*L).toFixed(0)} ${(cx+Math.cos(a2)*L).toFixed(0)},${(cy+Math.sin(a2)*L).toFixed(0)}" fill="${col}" opacity="${op}"/>`;}return s;};
-  const conf=(n,seed)=>{let s="";const cols=["#fff","#e2b84a",c.c1,c.c2,"#4f8ff7"];for(let i=0;i<n;i++){const x=(Math.sin(seed+i*7.3)*.5+.5)*400,y=(Math.sin(seed*2+i*3.1)*.5+.5)*230;s+=`<rect x="${x.toFixed(0)}" y="${y.toFixed(0)}" width="8" height="14" fill="${cols[i%5]}" transform="rotate(${(i*47)%180} ${x.toFixed(0)} ${y.toFixed(0)})" opacity=".9"/>`;}return s;};
+  const conf=(n,seed)=>{let s="";const cols=["#fff","#e2b84a",c.c1,c.c2,"#4f8ff7"];for(let i=0;i<n;i++){const x=(Math.sin(seed+i*7.3)*.5+.5)*400,y=(Math.sin(seed*2+i*3.1)*.5+.5)*230;const rc=`<rect x="${x.toFixed(0)}" y="${y.toFixed(0)}" width="8" height="14" fill="${cols[i%5]}" transform="rotate(${(i*47)%180} ${x.toFixed(0)} ${y.toFixed(0)})" opacity=".9"/>`;s+=an?`<g class="an-cae" style="animation-delay:-${((i*.37)%3.2).toFixed(2)}s;animation-duration:${(2.6+(i%5)*.35).toFixed(2)}s">${rc}</g>`:rc;}return s;};
+  const dl=s=>`style="animation-delay:${s}s"`;
   switch(t){
   case "partido":
     b=`<path d="M0 300L100 170H300L400 300z" fill="url(#${g}v)"/><path d="M100 170H300L330 205H70z" fill="#fff" opacity=".07"/><path d="M60 215H340M200 170V300" stroke="#fff" stroke-opacity=".55" stroke-width="3" fill="none"/><ellipse cx="200" cy="250" rx="46" ry="14" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3"/>
@@ -374,19 +438,19 @@ function arte(t,c,r,h){
     <rect x="357" y="64" width="7" height="140" fill="#1b2538"/><rect x="334" y="30" width="52" height="40" rx="4" fill="#e8eeff"/><path d="M340 38h40M340 48h40M340 58h40" stroke="#8da2d6" stroke-width="2"/><polygon points="334,70 386,70 420,200 250,200" fill="#fff" opacity=".1"/>
     <circle cx="200" cy="118" r="52" fill="#fff"/><path d="M200 92l24 18-9 28h-30l-9-28z" fill="#1a2238"/><path d="M200 66v26M224 110l28-8M215 138l16 22M185 138l-16 22M176 110l-28-8" stroke="#1a2238" stroke-width="4" fill="none"/>`;break;
   case "premio":
-    b=rayos(200,130,16,260,"#fff",.12)+`<path d="M135 55H265V120C265 168 234 192 200 192C166 192 135 168 135 120Z" fill="url(#${g}o)"/><path d="M135 78C92 78 92 140 150 150M265 78C308 78 308 140 250 150" fill="none" stroke="url(#${g}o)" stroke-width="13" stroke-linecap="round"/><rect x="187" y="190" width="26" height="38" fill="url(#${g}o)"/><rect x="148" y="226" width="104" height="18" rx="4" fill="url(#${g}o)"/><rect x="130" y="242" width="140" height="24" rx="5" fill="#7a5410"/><path d="M200 88l9 20 22 2-17 15 6 22-20-12-20 12 6-22-17-15 22-2z" fill="#fff" opacity=".85"/><path d="M150 70c0 40 10 70 40 100" stroke="#fff" stroke-opacity=".5" stroke-width="6" fill="none" stroke-linecap="round"/>`+conf(26,3);break;
+    b=`<g class="an-gira" style="transform-origin:200px 130px">${rayos(200,130,16,260,"#fff",.12)}</g><g class="an-sube"><path d="M135 55H265V120C265 168 234 192 200 192C166 192 135 168 135 120Z" fill="url(#${g}o)"/><path d="M135 78C92 78 92 140 150 150M265 78C308 78 308 140 250 150" fill="none" stroke="url(#${g}o)" stroke-width="13" stroke-linecap="round"/><rect x="187" y="190" width="26" height="38" fill="url(#${g}o)"/><rect x="148" y="226" width="104" height="18" rx="4" fill="url(#${g}o)"/><rect x="130" y="242" width="140" height="24" rx="5" fill="#7a5410"/><path class="an-pulso" d="M200 88l9 20 22 2-17 15 6 22-20-12-20 12 6-22-17-15 22-2z" fill="#fff" opacity=".85"/><path d="M150 70c0 40 10 70 40 100" stroke="#fff" stroke-opacity=".5" stroke-width="6" fill="none" stroke-linecap="round"/></g>`+conf(26,3);break;
   case "oferta":
-    b=`<g transform="rotate(-6 200 150)"><rect x="110" y="30" width="180" height="240" rx="8" fill="#f5f7ff"/><rect x="110" y="30" width="180" height="40" rx="8" fill="${c.c1}"/><text x="200" y="58" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="24" fill="#fff">CONTRATO</text><path d="M132 100h136M132 122h136M132 144h100M132 166h136M132 188h80" stroke="#aab4d2" stroke-width="5" stroke-linecap="round"/><text x="236" y="248" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="36" fill="#2a3f78">€</text><path d="M130 240c20-24 34 12 52-6s20 4 30-4" stroke="#1a2238" stroke-width="3" fill="none"/></g><g transform="rotate(32 300 200)"><rect x="292" y="120" width="16" height="130" rx="3" fill="#1b2438"/><polygon points="292,250 308,250 300,278" fill="#e2b84a"/></g><circle cx="86" cy="220" r="44" fill="none" stroke="#e5484d" stroke-width="6" opacity=".85"/><text x="86" y="232" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="34" fill="#e5484d" opacity=".9">OK</text>`;break;
+    b=`<g class="an-desliza"><g transform="rotate(-6 200 150)"><rect x="110" y="30" width="180" height="240" rx="8" fill="#f5f7ff"/><rect x="110" y="30" width="180" height="40" rx="8" fill="${c.c1}"/><text x="200" y="58" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="24" fill="#fff">CONTRATO</text><path pathLength="1" class="an-trazo" ${dl(.6)} d="M132 100h136M132 122h136M132 144h100M132 166h136M132 188h80" stroke="#aab4d2" stroke-width="5" stroke-linecap="round" fill="none"/><text x="236" y="248" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="36" fill="#2a3f78">€</text><path pathLength="1" class="an-trazo" ${dl(1.3)} d="M130 240c20-24 34 12 52-6s20 4 30-4" stroke="#1a2238" stroke-width="3" fill="none"/></g></g><g class="an-der" ${dl(.2)}><g transform="rotate(32 300 200)"><rect x="292" y="120" width="16" height="130" rx="3" fill="#1b2438"/><polygon points="292,250 308,250 300,278" fill="#e2b84a"/></g></g><g class="an-sello"><circle cx="86" cy="220" r="44" fill="none" stroke="#e5484d" stroke-width="6"/><text x="86" y="232" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="34" fill="#e5484d">OK</text></g>`;break;
   case "nego":
-    b=`<path d="M-10 150L112 116L140 196L18 236z" fill="#18233e"/><path d="M112 116L136 108L166 190L140 196z" fill="#f3f6ff"/><path d="M410 150L288 116L260 196L382 236z" fill="${c.c1}"/><path d="M288 116L264 108L234 190L260 196z" fill="#f3f6ff"/><path d="M154 152C174 128 238 126 254 152C270 174 258 206 232 212L172 212C150 206 138 174 154 152Z" fill="#e0ac84"/><path d="M176 205C182 190 186 178 190 164M198 208C204 192 208 180 212 166M220 208C226 194 230 182 234 170" stroke="#b97f5a" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M178 142C200 122 232 128 240 148" fill="#eab792" stroke="#b97f5a" stroke-width="3"/><path d="M60 80l10-14 10 14M326 70l10-14 10 14" stroke="#fff" stroke-opacity=".6" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="200" cy="64" r="26" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="5"/><text x="200" y="76" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="34" fill="#fff" opacity=".9">€</text>`;break;
+    b=`<g class="an-izq"><path d="M-10 150L112 116L140 196L18 236z" fill="#18233e"/><path d="M112 116L136 108L166 190L140 196z" fill="#f3f6ff"/></g><g class="an-der"><path d="M410 150L288 116L260 196L382 236z" fill="${c.c1}"/><path d="M288 116L264 108L234 190L260 196z" fill="#f3f6ff"/></g><g class="an-clasp"><path d="M154 152C174 128 238 126 254 152C270 174 258 206 232 212L172 212C150 206 138 174 154 152Z" fill="#e0ac84"/><path d="M176 205C182 190 186 178 190 164M198 208C204 192 208 180 212 166M220 208C226 194 230 182 234 170" stroke="#b97f5a" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M178 142C200 122 232 128 240 148" fill="#eab792" stroke="#b97f5a" stroke-width="3"/></g><path class="an-flash" d="M60 80l10-14 10 14M326 70l10-14 10 14" stroke="#fff" stroke-opacity=".6" stroke-width="4" fill="none" stroke-linecap="round"/><g class="an-pop" style="animation-delay:1.1s"><circle cx="200" cy="64" r="26" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="5"/><text x="200" y="76" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="34" fill="#fff" opacity=".9">€</text></g>`;break;
   case "pres":
-    b=rayos(200,-20,10,420,"#fff",.1)+`<polygon points="120,0 160,0 230,300 40,300" fill="#fff" opacity=".08"/><rect x="40" y="250" width="320" height="26" rx="4" fill="#0b0f1a" opacity=".55"/><rect x="250" y="44" width="110" height="130" rx="6" fill="${c.c1}" opacity=".9"/><rect x="258" y="52" width="94" height="114" rx="3" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2"/><text x="305" y="112" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="40" fill="#fff">${c.ini}</text><text x="305" y="140" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="14" fill="#fff" opacity=".8">BIENVENIDO</text>`+[[60,60],[110,32],[340,210],[30,150]].map(p=>`<path d="M${p[0]} ${p[1]-14}L${p[0]+4} ${p[1]-4}L${p[0]+14} ${p[1]}L${p[0]+4} ${p[1]+4}L${p[0]} ${p[1]+14}L${p[0]-4} ${p[1]+4}L${p[0]-14} ${p[1]}L${p[0]-4} ${p[1]-4}z" fill="#fff"/>`).join("")+conf(10,9);break;
+    b=`<g class="an-gira" style="transform-origin:200px -20px">${rayos(200,-20,10,420,"#fff",.1)}</g><polygon points="120,0 160,0 230,300 40,300" fill="#fff" opacity=".08"/><rect x="40" y="250" width="320" height="26" rx="4" fill="#0b0f1a" opacity=".55"/><g class="an-pop" ${dl(.5)}><rect x="250" y="44" width="110" height="130" rx="6" fill="${c.c1}" opacity=".9"/><rect x="258" y="52" width="94" height="114" rx="3" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2"/><text x="305" y="112" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="40" fill="#fff">${c.ini}</text><text x="305" y="140" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-size="14" fill="#fff" opacity=".8">BIENVENIDO</text></g>`+[[60,60],[110,32],[340,210],[30,150]].map((p,i)=>`<path class="an-flash" ${dl(i*.4)} d="M${p[0]} ${p[1]-14}L${p[0]+4} ${p[1]-4}L${p[0]+14} ${p[1]}L${p[0]+4} ${p[1]+4}L${p[0]} ${p[1]+14}L${p[0]-4} ${p[1]+4}L${p[0]-14} ${p[1]}L${p[0]-4} ${p[1]-4}z" fill="#fff"/>`).join("")+conf(10,9);break;
   case "noticia":
     b=`<g transform="rotate(-8 170 150)"><rect x="70" y="40" width="210" height="230" fill="#e9edf8"/><rect x="82" y="54" width="186" height="30" fill="#1a2238"/><text x="175" y="77" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="22" fill="#fff">EL DIARIO</text><rect x="82" y="96" width="92" height="70" fill="#9db4e8"/><path d="M82 166l30-34 24 22 18-14 20 26z" fill="#4f6fb5"/><path d="M184 100h84M184 114h84M184 128h60M82 180h186M82 194h186M82 208h150M82 222h186M82 236h120" stroke="#9aa6c4" stroke-width="5" stroke-linecap="round"/></g><circle cx="300" cy="190" r="70" fill="#2f6fe0"/><path d="M230 190h140M300 120c28 28 28 112 0 140M300 120c-28 28-28 112 0 140M246 150h108M246 230h108" stroke="#fff" stroke-opacity=".8" stroke-width="4" fill="none"/>`;break;
   case "decision":case "cons":
-    b=`<rect x="50" y="40" width="210" height="130" rx="22" fill="#fff"/><path d="M90 170l-8 46 52-46z" fill="#fff"/><text x="155" y="140" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="110" fill="#f08a3c">?</text><rect x="210" y="130" width="150" height="100" rx="18" fill="#1a2238"/><path d="M330 230l12 36-46-36z" fill="#1a2238"/><text x="285" y="210" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="84" fill="#fff">!</text><circle cx="344" cy="70" r="30" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="5"/><rect x="326" y="62" width="36" height="16" rx="3" fill="#fff" opacity=".7"/>`;break;
+    b=`<g class="an-pop" ${dl(.1)} style="transform-box:fill-box;transform-origin:20% 100%"><rect x="50" y="40" width="210" height="130" rx="22" fill="#fff"/><path d="M90 170l-8 46 52-46z" fill="#fff"/><text x="155" y="140" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="110" fill="#f08a3c">?</text></g><g class="an-pop" ${dl(.7)}><rect x="210" y="130" width="150" height="100" rx="18" fill="#1a2238"/><path d="M330 230l12 36-46-36z" fill="#1a2238"/><text x="285" y="210" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="84" fill="#fff">!</text></g><circle class="an-pulso" cx="344" cy="70" r="30" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="5"/><rect x="326" y="62" width="36" height="16" rx="3" fill="#fff" opacity=".7"/>`;break;
   case "lesion":
-    b=`<rect x="110" y="40" width="180" height="180" rx="26" fill="#fff"/><path d="M178 70h44v50h50v44h-50v50h-44v-50h-50v-44h50z" fill="#e5484d"/><path d="M0 260h96l16-30 20 56 22-80 18 54h60l14-20h140" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/><g transform="rotate(-24 330 90)"><rect x="300" y="50" width="60" height="80" rx="6" fill="#f5e0c4"/><path d="M300 70h60M300 90h60M300 110h60" stroke="#d9b98d" stroke-width="4"/></g>`;break;
+    b=`<g class="an-pulso"><rect x="110" y="40" width="180" height="180" rx="26" fill="#fff"/><path d="M178 70h44v50h50v44h-50v50h-44v-50h-50v-44h50z" fill="#e5484d"/></g><path pathLength="1" class="an-ecg" d="M0 260h96l16-30 20 56 22-80 18 54h60l14-20h140" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/><g class="an-pop" ${dl(.6)}><g transform="rotate(-24 330 90)"><rect x="300" y="50" width="60" height="80" rx="6" fill="#f5e0c4"/><path d="M300 70h60M300 90h60M300 110h60" stroke="#d9b98d" stroke-width="4"/></g></g>`;break;
   case "dinero":
     b=[0,1,2,3,4].map(i=>`<ellipse cx="110" cy="${248-i*16}" rx="56" ry="16" fill="${i%2?"#c99a2e":"#e2b84a"}"/><rect x="54" y="${232-i*16}" width="112" height="16" fill="${i%2?"#b8892a":"#d4a73a"}"/><ellipse cx="110" cy="${232-i*16}" rx="56" ry="16" fill="${i%2?"#e8c158":"#f4cc62"}"/>`).join("")+`<circle cx="300" cy="120" r="64" fill="url(#${g}o)"/><circle cx="300" cy="120" r="50" fill="none" stroke="#9a6b12" stroke-width="5"/><text x="300" y="144" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="76" fill="#7a5410">€</text><path d="M190 90l30-30 24 20 40-50" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M270 36h22v22" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;break;
   case "cantera":
@@ -394,63 +458,153 @@ function arte(t,c,r,h){
   case "mercado":
     b=`<rect x="120" y="120" width="160" height="130" rx="12" fill="#c9d3e8"/><path d="M148 120V88a52 52 0 0 1 104 0v32" stroke="#c9d3e8" stroke-width="22" fill="none"/><circle cx="200" cy="176" r="16" fill="#1a2238"/><rect x="194" y="182" width="12" height="38" rx="4" fill="#1a2238"/><g transform="translate(40 40)"><rect x="0" y="0" width="64" height="72" rx="6" fill="#fff"/><rect x="0" y="0" width="64" height="20" rx="6" fill="#e5484d"/><text x="32" y="56" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="40" fill="#1a2238">31</text></g><g transform="translate(306 64)"><path d="M0 0h54M0 90h54M6 0c0 36 20 40 20 45S6 54 6 90M48 0c0 36-20 40-20 45s20 9 20 45" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M12 80c8-10 28-10 36 0z" fill="#e2b84a"/></g>`;break;
   case "hito":
-    b=rayos(200,140,14,280,"#fff",.1)+`<rect x="150" y="150" width="100" height="110" fill="url(#${g}o)"/><rect x="50" y="190" width="100" height="70" fill="#c9d3e8"/><rect x="250" y="210" width="100" height="50" fill="#c9895a"/><text x="200" y="215" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="56" fill="#7a5410">1</text><text x="100" y="240" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="44" fill="#5a6580">2</text><text x="300" y="248" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="38" fill="#7a4a24">3</text><rect x="197" y="50" width="6" height="100" fill="#e8eeff"/><path d="M203 54h70l-16 22 16 22h-70z" fill="${c.c1}"/>`+conf(24,5);break;
+    b=`<g class="an-gira" style="transform-origin:200px 140px">${rayos(200,140,14,280,"#fff",.1)}</g><rect class="an-barra" ${dl(.5)} x="150" y="150" width="100" height="110" fill="url(#${g}o)"/><rect class="an-barra" ${dl(.2)} x="50" y="190" width="100" height="70" fill="#c9d3e8"/><rect class="an-barra" ${dl(.05)} x="250" y="210" width="100" height="50" fill="#c9895a"/><g class="an-pop" ${dl(1.1)}><text x="200" y="215" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="56" fill="#7a5410">1</text><text x="100" y="240" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="44" fill="#5a6580">2</text><text x="300" y="248" text-anchor="middle" font-family="Barlow Condensed,sans-serif" font-weight="700" font-size="38" fill="#7a4a24">3</text></g><rect x="197" y="50" width="6" height="100" fill="#e8eeff"/><path class="an-ondea" d="M203 54h70l-16 22 16 22h-70z" fill="${c.c1}"/>`+conf(24,5);break;
   default:
     b=`<path d="M0 260L120 190H280L400 260V300H0z" fill="url(#${g}v)"/><path d="M90 250l18-60 18 60z" fill="#f08a3c"/><path d="M280 250l18-60 18 60z" fill="#f08a3c"/><circle cx="200" cy="200" r="36" fill="#fff"/><path d="M200 182l16 12-6 18h-20l-6-18z" fill="#1a2238"/>`;
   }
-  return `<svg class="arte" width="${w}" height="${h}" viewBox="0 0 400 300" aria-hidden="true">${d}${b}</svg>`;
+  return `<svg class="arte${an?" anim":""}" width="${w}" height="${h}" viewBox="0 0 400 300" aria-hidden="true">${d}${b}</svg>`;
+}
+/* ---------- SONIDO (sintetizado aquí; en el juego serían muestras CC0 o este mismo generador) ---------- */
+const AU={ctx:null,on:true,master:null,buf:null};
+function ac(){
+  if(!AU.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AU.ctx=new C();AU.master=AU.ctx.createGain();AU.master.gain.value=.7;AU.master.connect(AU.ctx.destination);
+    AU.buf=AU.ctx.createBuffer(1,AU.ctx.sampleRate,AU.ctx.sampleRate);const d=AU.buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;}
+  if(AU.ctx.state==="suspended")AU.ctx.resume();
+  return AU.ctx;
+}
+function tono(f,d,o){
+  o=o||{};const c=ac();if(!c||!AU.on)return;
+  const osc=c.createOscillator(),g=c.createGain(),t0=c.currentTime+(o.t||0),v=o.v==null?.25:o.v;
+  osc.type=o.tipo||"sine";osc.frequency.setValueAtTime(f,t0);
+  if(o.f2)osc.frequency.exponentialRampToValueAtTime(o.f2,t0+d);
+  g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+(o.a||.006));g.gain.exponentialRampToValueAtTime(.0001,t0+d);
+  osc.connect(g);g.connect(AU.master);osc.start(t0);osc.stop(t0+d+.05);
+}
+function ruido(d,o){
+  o=o||{};const c=ac();if(!c||!AU.on)return;
+  const s=c.createBufferSource(),fl=c.createBiquadFilter(),g=c.createGain(),t0=c.currentTime+(o.t||0),v=o.v==null?.2:o.v,at=o.atq||.01;
+  s.buffer=AU.buf;s.loop=true;fl.type=o.tipo||"bandpass";fl.frequency.value=o.f||1000;fl.Q.value=o.q||1;
+  g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+at);g.gain.exponentialRampToValueAtTime(.0001,t0+d);
+  s.connect(fl);fl.connect(g);g.connect(AU.master);s.start(t0);s.stop(t0+d+.05);
+}
+const SND={
+  clic:()=>tono(880,.05,{tipo:"square",v:.05}),
+  dia:()=>tono(500+Math.random()*60,.035,{tipo:"triangle",v:.04}),
+  para:()=>{tono(330,.2,{tipo:"triangle",v:.16,f2:200});ruido(.14,{v:.07,f:1500,tipo:"highpass"});},
+  notif:()=>{tono(988,.22,{v:.18});tono(1319,.45,{v:.18,t:.12});},
+  silbato:()=>{for(let i=0;i<14;i++)tono(i%2?2900:3100,.035,{tipo:"sine",v:.1,t:i*.03});ruido(.5,{v:.05,f:4000,tipo:"highpass"});},
+  gol:()=>{ruido(1.7,{v:.28,f:900,tipo:"bandpass",q:.5,atq:.5});tono(220,.5,{tipo:"sawtooth",v:.04,t:.2});},
+  gana:()=>[392,523,659,784].forEach((f,i)=>tono(f,.3,{tipo:"triangle",v:.15,t:i*.1})),
+  empata:()=>{tono(440,.3,{v:.13});tono(440,.3,{v:.13,t:.2});},
+  pierde:()=>[392,330,262].forEach((f,i)=>tono(f,.42,{tipo:"triangle",v:.13,t:i*.18})),
+  premio:()=>{[523,659,784,1047].forEach((f,i)=>tono(f,.55,{tipo:"triangle",v:.18,t:i*.14}));tono(1047,1,{v:.1,t:.6});ruido(.9,{v:.05,f:6000,tipo:"highpass",t:.5});},
+  oferta:()=>{ruido(.28,{v:.1,f:3000});tono(1800,.04,{tipo:"square",v:.07,t:.4});tono(1500,.04,{tipo:"square",v:.07,t:.5});},
+  nego:()=>{tono(196,.55,{tipo:"sawtooth",v:.07});tono(247,.55,{tipo:"sawtooth",v:.07,t:.3});[0,.12,.26].forEach(t=>tono(2400,.22,{v:.1,t:.85+t,f2:1900}));},
+  pres:()=>{for(let i=0;i<10;i++)ruido(.04,{v:.22,f:2600,tipo:"highpass",t:i*.2+Math.random()*.1});ruido(2.6,{v:.13,f:700,tipo:"bandpass",q:.4,atq:1.3});[392,523,659].forEach((f,i)=>tono(f,.7,{tipo:"triangle",v:.09,t:.9+i*.12}));},
+  decision:()=>{tono(110,.8,{v:.4,f2:70});tono(98,1,{v:.4,t:.5,f2:60});},
+  lesion:()=>{tono(60,.16,{v:.4,f2:40});tono(60,.16,{v:.34,t:.22,f2:40});[0,.8,1.6].forEach(t=>tono(1000,.3,{v:.1,t:.5+t}));},
+  hito:()=>{[262,330,392,523].forEach(f=>tono(f,1.1,{tipo:"triangle",v:.12}));[523,659,784,1047].forEach((f,i)=>tono(f,.8,{tipo:"triangle",v:.12,t:.6+i*.1}));},
+  copa:()=>{[392,494,587,784].forEach((f,i)=>tono(f,.5,{tipo:"square",v:.06,t:i*.12}));}
+};
+const sonido=n=>{try{if(SND[n])SND[n]();}catch(e){}};
+/* ---------- calendario de la temporada ---------- */
+const MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const MESL=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const TOTAL=300;
+const fd=d=>new Date(2026,7,1+d);
+const fecha=d=>{const x=fd(d);return x.getDate()+" "+MES[x.getMonth()];};
+const periodoTxt=d=>{const m=fd(d).getMonth();return MESL[m]+(d<=30?" · Mercado de verano":(d>=153&&d<=182?" · Mercado de invierno":""));};
+const hash=s=>{let h=7;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))%100003;return h;};
+const NOM=["Mateo","Lucas","Iker","Thiago","Davi","Unai","Tomás","Joaquín","Bruno","Caio","Ander","Gorka","Facundo","Asier","Ignacio","Rafael","Enzo","Nicolás","Julián","Mauro"];
+const POSIC=["Extremo","Delantero","Mediocentro","Central","Lateral","Portero","Mediapunta","Pivote"];
+const EXTRA=["Olabe United","Sporting Quezada","Real Fuenzalida","CD Mugica","Unión Arrieta","Atlético Elizondo","Ferreyra FC","Lastra City","Racing Becerra","Deportivo Siqueira","Club Pinheiro","Cáceres SC","Henríquez AC","Vergara Town","Puerto Coquimbo","Azenha FC"];
+const CONT=["Dínamo Karsten","Olympia Brandt","Sporting Velasco","Akademik Moravia","Estrela Cardoso","Union Halden","Rapid Teixeira","Viking Oster"];
+function clubGen(n){const h=hash(n);return {id:n,n,ini:n.replace(/^(Real|Club|CD|Sporting|Atlético|Deportivo|Unión|Union|Racing|Puerto|Dínamo|Olympia|Akademik|Estrela|Rapid|Viking)\s+/,"").slice(0,3).toUpperCase(),c1:`hsl(${h%360} 58% 40%)`,c2:"#f4f1ea",cap:NOM[h%NOM.length]+" "+APE[(h>>3)%APE.length],estadio:"Estadio de "+n};}
+const fichGen=(c,k)=>{const h=hash(c.n+k);return {n:NOM[h%NOM.length]+" "+APE[(h>>2)%APE.length],pos:POSIC[h%POSIC.length],edad:19+(h%12),num:2+(h%28),coste:+(1.2+(h%90)/10).toFixed(1),anios:2+(h%4)};};
+const DEC=[
+ {d:25,sobre:"Vestuario",tit:(c)=>c.cap.split(" ")[0]+" pide hablar",sub:(c)=>"Dice que el grupo no entiende los últimos cambios de once y quiere una respuesta antes del próximo partido.",zona:"vestuario",o:[["Recibirlo y escucharlo","El grupo lo valora; podrías perder autoridad.","El capitán agradece la charla","Dijiste que cuentas con el grupo."],["Dar un mensaje firme al grupo","Ordena el vestuario, pero el capitán queda molesto.","El capitán sigue molesto","Grupo ordenado, capitán distante."],["Dejarlo pasar","Ahorras tiempo, pero el problema puede crecer.","Se filtra el malestar","La prensa habla de un vestuario dividido."]]},
+ {d:70,sobre:"Prensa",tit:()=>"Rueda de prensa incómoda",sub:()=>"Tras un mal resultado, los periodistas preguntan por tu continuidad y por el nivel del equipo.",zona:"prensa",o:[["Defender al equipo","La plantilla se siente respaldada.","Titulares a favor del grupo","La prensa destaca tu apoyo al vestuario."],["Admitir errores","Honesto, pero te exige resultados.","La prensa pide cambios","Te exigen reaccionar ya."],["No responder","Evitas el problema; la prensa especula.","Silencio que se comenta","Se habla de tensión con la directiva."]]},
+ {d:120,sobre:"Finanzas",tit:()=>"Un patrocinador ofrece un trato",sub:()=>"Una marca propone un contrato largo con más dinero, pero con su nombre en la camiseta.",zona:"finanzas",o:[["Aceptar el contrato largo","Más ingresos; menos libertad.","Firmas con el patrocinador","Entran ingresos extra todo el año."],["Pedir mejores condiciones","Puede salir mejor… o romperse.","El patrocinador responde","Acepta parte de tus condiciones."],["Rechazarlo","La afición lo agradece; pierdes dinero.","La afición celebra tu decisión","Los socios valoran que el club mantenga su camiseta."]]},
+ {d:175,sobre:"Cantera",tit:()=>"Un juvenil pide minutos",sub:()=>"El técnico del filial asegura que un chico de 17 años ya está para jugar con el primer equipo.",zona:"cantera",o:[["Subirlo al primer equipo","Ilusiona, pero es un riesgo.","El juvenil debuta en el primer equipo","La cantera celebra el ascenso."],["Seguir esperando","Más seguro; el chico se impacienta.","El juvenil espera su momento","El agente pide una fecha concreta."],["Cederlo a otro club","Gana ritmo lejos de casa.","Sale cedido","Otro club le ofrece minutos."]]},
+ {d:210,sobre:"Afición",tit:()=>"La hinchada protesta",sub:()=>"Los aficionados critican el precio de las entradas y amenazan con no ir al próximo partido.",zona:"prensa",o:[["Bajar el precio","Ganas la grada; pierdes ingresos.","La hinchada llena el estadio","La grada responde con una gran entrada."],["Mantener el precio","Cuidas la caja; riesgo de protestas.","Protesta en la grada","Pancartas contra la directiva."],["Reunirte con los socios","Escuchas y negocias.","Acuerdo con los socios","Se pacta un abono más barato."]]},
+ {d:250,sobre:"Vestuario",tit:()=>"El vestuario pide primas",sub:()=>"Faltan pocas jornadas y los jugadores piden una prima si se logra el objetivo.",zona:"vestuario",o:[["Aprobar la prima","Motiva al grupo; sale caro.","Prima aprobada","El grupo entrena con más ganas."],["Ofrecer una prima menor","Un punto medio.","Acuerdo por una prima menor","El capitán lo acepta con reservas."],["Negarte","Ahorras; el ánimo cae.","Prima rechazada","El vestuario se queja en silencio."]]}
+];
+const plantilla=c=>{
+  const out=[];let s=c.n.length*13+c.ini.charCodeAt(0);
+  const vet=[c.les,c.fich&&c.fich.n].filter(Boolean).map(x=>x.split(" ").pop());
+  while(out.length<11){
+    s=(s*31+7)%9973;const ap=APE[s%APE.length];
+    if(vet.includes(ap)||out.some(o=>o.endsWith(ap)))continue;
+    out.push(INI[(s>>3)%INI.length]+". "+ap);
+  }
+  out[0]+=" (POR)";out[7]=c.cap[0]+". "+c.cap.split(" ").pop()+" (C)";
+  return out;
+};
+const sinTag=n=>n.replace(/ \(.+\)/,"");
+const piscina=c=>CLUBES.filter(k=>k.id!==c.id).concat(EXTRA.map(clubGen)).slice(0,19);
+function construir(c,F){
+  const riv=piscina(c),P=plantilla(c).map(sinTag),ev=[];
+  const add=o=>ev.push(o);
+  for(let j=0;j<38;j++){const loc=j<19?j%2===0:j%2!==0;add({id:"L"+j,d:14+7*j,t:"partido",pc:true,comp:"Liga",jor:j+1,riv:riv[j%19],loc,tt:"Liga · jornada "+(j+1),ss:loc?"En casa":"De visitante"});}
+  [39,102,172,235].forEach((d,i)=>add({id:"C"+i,d,t:"partido",pc:true,comp:"Copa",ronda:i+1,riv:riv[(i*5+3)%19],loc:i%2===0,tt:["Copa · primera ronda","Copa · octavos","Copa · semifinal","Copa · final"][i],ss:"Partido a eliminación"}));
+  [45,66,87,108,129,143].forEach((d,i)=>add({id:"G"+i,d,t:"partido",pc:true,comp:"Continental",grupo:true,riv:clubGen(CONT[i%8]),loc:i%2===0,tt:"Continental · grupos "+(i+1)+"/6",ss:"Competición continental"}));
+  [199,227].forEach((d,i)=>add({id:"K"+i,d,t:"partido",pc:true,comp:"Continental",ko:i+1,riv:clubGen(CONT[(i+4)%8]),loc:i===0,tt:i?"Continental · cuartos":"Continental · octavos",ss:"Eliminatoria"}));
+  [["f1",2,9,13],["f2",18,24,28],["f3",157,162,166]].forEach(([k,a,b,z])=>{
+    const f=F[k];
+    add({id:k+"_of",d:a,t:"oferta",pc:true,ch:k,tt:"Propuesta de fichaje",ss:"El director deportivo quiere a "+f.n});
+    add({id:k+"_ne",d:b,t:"nego",pc:true,ch:k,tt:"Día de negociación",ss:"Hablas con el club de "+f.n});
+    add({id:k+"_pr",d:z,t:"pres",pc:true,ch:k,tt:"Presentación de "+f.n,ss:"Se presenta ante la afición"});
+  });
+  add({id:"mv",d:29,t:"mercado",pc:false,zona:"mercado",tt:"El mercado de verano cierra mañana",ss:"Últimas operaciones del verano"});
+  add({id:"mi",d:181,t:"mercado",pc:false,zona:"mercado",tt:"El mercado de invierno cierra mañana",ss:"Últimas operaciones del invierno"});
+  [31,61,121,151,211,241].forEach((d,i)=>add({id:"P"+i,d,t:"premio",pc:true,jug:P[(i*3+2)%11],tt:"Jugador del mes",ss:P[(i*3+2)%11]+" recibe el premio individual"}));
+  DEC.forEach((x,i)=>add({id:"D"+i,d:x.d,t:"decision",pc:true,dec:i,tt:x.tit(c),ss:x.sub(c)}));
+  [[50,3,"2"],[105,5,"3"],[160,8,"6"],[220,2,"4"]].forEach(([d,k,s],i)=>add({id:"S"+i,d,t:"lesion",pc:true,jug:P[k],sem:s,tt:"Parte médico",ss:P[k]+" se pierde unas "+s+" semanas"}));
+  [30,120,210,290].forEach((d,i)=>add({id:"Q"+i,d,t:"dinero",pc:false,zona:"finanzas",tt:"Cobro de patrocinio",ss:"Entra el pago trimestral: +1,2 M€"}));
+  [35,90,160,240].forEach((d,i)=>add({id:"T"+i,d,t:"cantera",pc:false,zona:"cantera",tt:"Un juvenil destaca",ss:"El filial pide subirlo a entrenar con el primer equipo"}));
+  [40,75,150,215,265].forEach((d,i)=>add({id:"N"+i,d,t:"noticia",pc:false,zona:"prensa",tt:"Convocatoria",ss:"El seleccionador anuncia la lista de la semana"}));
+  add({id:"H0",d:152,t:"hito",pc:true,kind:"mid",tt:"Balance de la primera vuelta",ss:"Qué pasó hasta mitad de temporada"});
+  add({id:"H1",d:299,t:"hito",pc:true,kind:"fin",tt:"Fin de temporada",ss:"Balance de la temporada"});
+  return ev;
 }
 /* ---------- estado ---------- */
 let S=null;
 const rng=a=>{const x=Math.sin(a*9301+49297)*233280;return x-Math.floor(x);};
 const $=id=>document.getElementById(id);
-const rivales=c=>CLUBES.filter(k=>k.id!==c.id);
 const fmt=n=>n.toFixed(1).replace(".",",")+" M€";
-function plantilla(c){
-  const out=[];let s=c.n.length*13+c.ini.charCodeAt(0);
-  const vet=[c.les,c.fich&&c.fich.n].filter(Boolean).map(x=>x.split(" ").pop());
-  while(out.length<11){
-    s=(s*31+7)%9973;
-    const ap=APE[s%APE.length];
-    if(vet.includes(ap)||out.some(o=>o.endsWith(ap)))continue;
-    out.push(INI[(s>>3)%INI.length]+". "+ap);
-  }
-  out[0]+=" (POR)";
-  out[7]=c.cap[0]+". "+c.cap.split(" ").pop()+" (C)";
-  return out;
-}
 function nuevoEstado(c){
-  const r=rivales(c),F=c.fich;
-  const ev=[
-   {id:"ofer",d:1,t:"oferta",pc:true,ch:"fich",tt:"Propuesta de fichaje",ss:"El director deportivo quiere a "+F.n},
-   {id:"noti",d:2,t:"noticia",pc:false,zona:"prensa",tt:"Convocatoria",ss:"El seleccionador anuncia la lista de la semana"},
-   {id:"p1",d:3,t:"partido",pc:true,riv:r[0],loc:true,tt:"Partido de liga",ss:"Jornada · en casa"},
-   {id:"nego",d:4,t:"nego",pc:true,ch:"fich",req:"ofer_ok",tt:"Día de negociación",ss:"Hablas con el club de "+F.n},
-   {id:"prem",d:5,t:"premio",pc:true,tt:"Jugador del mes",ss:c.prem+" recibe el premio individual"},
-   {id:"pres",d:6,t:"pres",pc:true,ch:"fich",req:"nego_ok",tt:"Presentación de "+F.n,ss:"Se presenta ante la afición"},
-   {id:"cant",d:7,t:"cantera",pc:false,zona:"cantera",tt:"Un juvenil destaca",ss:"El filial pide subirlo a entrenar con el primer equipo"},
-   {id:"p2",d:7,t:"partido",pc:true,riv:r[1],loc:false,tt:"Partido de liga",ss:"Jornada · de visitante"},
-   {id:"deci",d:8,t:"decision",pc:true,ch:"vest",tt:"El capitán quiere hablar",ss:c.cap+" pide una reunión"},
-   {id:"lesi",d:9,t:"lesion",pc:true,tt:"Parte médico",ss:c.les+" se pierde unas semanas"},
-   {id:"patr",d:10,t:"dinero",pc:false,zona:"finanzas",tt:"Cobro de patrocinio",ss:"Entra el pago trimestral: +1,2 M€"},
-   {id:"p3",d:11,t:"partido",pc:true,riv:r[2],loc:true,tt:"Partido de liga",ss:"Jornada · en casa"},
-   {id:"merc",d:12,t:"mercado",pc:false,zona:"mercado",tt:"El mercado cierra mañana",ss:"Últimas operaciones del invierno"},
-   {id:"hito",d:13,t:"hito",pc:true,tt:"Balance del tramo",ss:"Resumen de lo vivido"}
-  ];
-  return {club:c,ev,hoy:0,sel:0,run:false,fast:false,flags:{},done:{},log:[],cola:[],minors:[],match:null,abierto:false,espera:false,t:null,fin:false,
-    res:{pts:0,g:0,c:0},fase:"normal",pend:null,ultimo:null,notifs:{},tile:0,pres:54.9,resMap:{},variante:0,timers:[]};
+  const F={f1:c.fich,f2:fichGen(c,2),f3:fichGen(c,3)};
+  const tabla={};tabla[c.n]=0;piscina(c).forEach(x=>tabla[x.n]=0);
+  return {club:c,F,ev:construir(c,F),hoy:0,sel:0,ven:0,run:false,fast:false,flags:{},done:{},log:[],cola:[],minors:[],match:null,abierto:false,espera:false,t:null,fin:false,
+    rec:{pj:0,g:0,e:0,p:0,gf:0,gc:0},pts:0,tabla,contPts:0,trofeos:[],nFich:0,nPrem:0,
+    fase:"normal",pend:null,ultimo:null,notifs:{},tile:0,pres:54.9,resMap:{},variante:0,timers:[],auto:false,vel:2,huboMajor:false,ultDec:null};
 }
 const visible=e=>{
-  if(e.req==="ofer_ok"&&S.flags.ofer!=="ok")return false;
-  if(e.req==="nego_ok"&&(S.flags.ofer!=="ok"||S.flags.nego==="retira"))return false;
+  if(e.t==="nego"&&S.flags[e.ch+"_of"]!=="ok")return false;
+  if(e.t==="pres"&&(S.flags[e.ch+"_of"]!=="ok"||S.flags[e.ch+"_ne"]==="retira"))return false;
+  if(e.comp==="Copa"&&S.flags.copaOut!=null&&e.ronda>S.flags.copaOut)return false;
+  if(e.ko===1&&S.flags.contPase===false)return false;
+  if(e.ko===2&&(S.flags.contPase===false||S.flags.ko1Out))return false;
   return true;
 };
 const delDia=i=>S.ev.filter(e=>e.d===i&&visible(e));
-const fecha=i=>12+i;
 const tcol=t=>`var(${TIPOS[t].c})`;
 const icono=(e,sm,res)=>e.t==="partido"
   ?`<span class="ico${sm?" sm":""}${res?" resuelto":""}" style="background:none">${crest(e.riv,sm?34:46)}</span>`
   :`<span class="ico${sm?" sm":""}${res?" resuelto":""}" style="background:${tcol(e.t)}">${svgIc(TIPOS[e.t].ic)}</span>`;
+function posicion(){
+  const m=S.tabla[S.club.n];return 1+Object.keys(S.tabla).filter(k=>k!==S.club.n&&S.tabla[k]>m).length;
+}
+function actualizaTabla(e,r){
+  const mi=r.pts;
+  Object.keys(S.tabla).forEach(n=>{
+    if(n===S.club.n)return;
+    if(n===e.riv.n){S.tabla[n]+=mi===3?0:(mi===1?1:3);return;}
+    const f=(hash(n)%100)/100,p=rng(e.d*7+hash(n)),t3=.2+.42*f;
+    S.tabla[n]+=p<t3?3:(p<t3+.26?1:0);
+  });
+  S.tabla[S.club.n]+=mi;
+}
 /* ---------- navegación ---------- */
 const PANT=["hub","av","pre","res","ver","mom"];
 let rafVer=0;
@@ -460,29 +614,27 @@ function ir(p){
   if(p==="hub")pintaHub();
   if(p==="av")pintaAv();
 }
-function limpiaTimers(){clearTimeout(S&&S.t);(S&&S.timers||[]).forEach(clearInterval);if(S)S.timers=[];}
+function limpiaTimers(){if(S){clearTimeout(S.t);S.timers.forEach(clearInterval);S.timers=[];}}
 /* ---------- MENÚ DE INICIO ---------- */
 function pintaHub(){
   const c=S.club;
-  $("hFecha").textContent=fecha(S.hoy)+" ene";
+  $("hFecha").textContent=fecha(S.hoy);
   $("hPres").textContent=fmt(S.pres);
+  const j=S.rec.pj;
+  $("hLiga").textContent=j?`J${j}/38 · ${posicion()}.º · ${S.pts} pts`:"J0/38";
   let h="";
   ORDEN_ZONAS.forEach((z,i)=>{
     const Z=ZONAS[z],n=(S.notifs[z]||[]).length;
     h+=`<button class="tile${i===S.tile?" sel":""}" data-z="${z}" data-i="${i}"><span class="ic">${svgIc(Z.ic,1.5)}</span><b>${Z.n}</b><small>${Z.d}</small>${n?`<span class="badge" aria-label="${n} notificación(es)">${svgIc("campana")}</span>`:""}</button>`;
   });
   $("tiles").innerHTML=h;
-  // próximo partido
-  const pm=S.fase==="dia_partido"&&S.pend?S.pend:S.ev.find(e=>e.t==="partido"&&!S.done[e.id]&&e.d>=S.hoy);
+  const pm=S.fase==="dia_partido"&&S.pend?S.pend:S.ev.find(e=>e.t==="partido"&&visible(e)&&!S.done[e.id]&&e.d>=S.hoy);
   let p=`<h3>Próximo partido</h3>`;
   if(pm){
     const dias=pm.d-S.hoy;
-    p+=`<div class="cr">${crest(c,70)}<em>VS</em>${crest(pm.riv,70)}</div><div class="rv">${pm.loc?c.n+" · "+pm.riv.n:pm.riv.n+" · "+c.n}<small>Liga · ${pm.loc?"en casa":"de visitante"} · ${fecha(pm.d)} ene · 20:00</small></div>`;
+    p+=`<div class="cr">${crest(c,64)}<em>VS</em>${crest(pm.riv,64)}</div><div class="rv">${pm.loc?c.n+" · "+pm.riv.n:pm.riv.n+" · "+c.n}<small>${pm.comp} · ${pm.loc?"en casa":"de visitante"} · ${fecha(pm.d)} · 20:00</small></div>`;
     p+=dias<=0?`<div class="hoy">Hoy</div>`:`<div class="hoy" style="background:#243656">En ${dias} día${dias>1?"s":""}</div>`;
-  }else{
-    const u=S.ultimo;
-    p+=`<div class="rv" style="margin-top:50px">${u?"Sin más partidos en este tramo":"Sin partidos a la vista"}<small>${u?"El tramo termina en el balance":""}</small></div>`;
-  }
+  }else p+=`<div class="rv" style="margin-top:50px">${S.fin?"Temporada terminada":"Sin partidos a la vista"}<small></small></div>`;
   const prox=S.ev.filter(e=>!S.done[e.id]&&visible(e)&&e.d>S.hoy&&e.t!=="partido").slice(0,3);
   p+=`<div class="lst">`+prox.map(e=>`<div>${icono(e,true)}<span style="color:#c9d4ea">${e.tt}</span><span class="fe">${fecha(e.d)}</span></div>`).join("")+`</div>`;
   $("prox").innerHTML=p;
@@ -490,17 +642,15 @@ function pintaHub(){
 }
 function pintaAcciones(){
   const a=$("acciones");let h="";
-  if(S.fin){h=`<button class="btn pri" data-a="reiniciar">Reiniciar tramo</button>`;}
-  else if(S.fase==="dia_partido"){
-    h=`<button class="btn pri" data-a="jugar">Jugar partido</button><button class="btn sec" data-a="saltar">Saltar partido</button>`;
-  }else if(S.fase==="jugado"){
-    h=`<div style="position:relative"><div class="pop" id="pop">
+  if(S.fin)h=`<button class="btn pri" data-a="reiniciar">Nueva temporada</button>`;
+  else if(S.fase==="dia_partido")h=`<button class="btn pri" data-a="jugar">Jugar partido</button><button class="btn sec" data-a="saltar">Saltar partido</button>`;
+  else if(S.fase==="jugado")h=`<div style="position:relative"><div class="pop" id="pop">
       <button data-a="de_nuevo">${svgIc("repetir")}Jugar partido de nuevo</button>
       <button data-a="ver">${svgIc("ojo")}Ver partido</button>
       <hr><button data-a="mom_tog">${svgIc("rayo")}Jugar momentos específicos</button>
       <div class="sub" id="popSub"><button data-a="mom_of">Ofensivas</button><button data-a="mom_de">Defensivas</button><button data-a="mom_to">Todas</button></div>
     </div><button class="btn" data-a="popup">Partido jugado ▲<span class="tag">${S.ultimo?S.ultimo.res:""}</span></button></div><button class="btn pri" data-a="avanzar">Avanzar ▸</button>`;
-  }else{h=`<button class="btn pri" data-a="avanzar">Avanzar ▸</button>`;}
+  else h=`<button class="btn pri" data-a="avanzar">Avanzar ▸</button>`;
   a.innerHTML=h;
 }
 $("acciones").addEventListener("click",ev=>{
@@ -509,7 +659,7 @@ $("acciones").addEventListener("click",ev=>{
   if(a==="avanzar")irAvance();
   else if(a==="reiniciar")reiniciar();
   else if(a==="jugar")abrePrevia("completo");
-  else if(a==="saltar")simulacion(true);
+  else if(a==="saltar"){sonido("silbato");simulacion(true);}
   else if(a==="popup")$("pop").classList.toggle("on");
   else if(a==="mom_tog")$("popSub").classList.toggle("on");
   else if(a==="de_nuevo"){S.variante++;abrePrevia("revancha");}
@@ -523,8 +673,8 @@ $("tiles").addEventListener("click",ev=>{
   S.tile=+b.getAttribute("data-i");
   const z=b.getAttribute("data-z"),n=S.notifs[z]||[];
   if(n.length){
-    const x=n.shift(),Z=ZONAS[z];
-    $("modal").innerHTML=`<div class="caja"><div class="ci"><span class="ico" style="background:${tcol(x.t0)}">${svgIc(TIPOS[x.t0].ic)}</span><div><small>Notificación · ${Z.n}</small><b>${x.t}</b></div></div><p>${x.s}.</p><button class="btn pri" id="mOk">Entendido</button></div>`;
+    const x=n.shift(),Z=ZONAS[z];sonido("notif");
+    $("modal").innerHTML=`<div class="caja"><div class="ci"><span class="ico" style="background:${tcol(x.t0)}">${svgIc(TIPOS[x.t0].ic)}</span><div><small>Notificación · ${Z.n}${n.length?` · quedan ${n.length}`:""}</small><b>${x.t}</b></div></div><p>${x.s}.</p><button class="btn pri" id="mOk">Entendido</button></div>`;
     $("modal").classList.add("on");
     $("mOk").onclick=()=>{$("modal").classList.remove("on");pintaHub();};
     $("mOk").focus();
@@ -538,40 +688,47 @@ function irAvance(){
 }
 /* ---------- AVANZAR ---------- */
 function pintaCal(){
-  let h="";
-  for(let i=0;i<14;i++){
-    const evs=delDia(i);let cl="dia";
+  let h="";const W=S.ven;
+  for(let k=0;k<14;k++){
+    const i=W+k;if(i>=TOTAL){h+=`<div class="dia" style="opacity:.2"></div>`;continue;}
+    const evs=delDia(i);let cl="dia";const x=fd(i);
     if(i<S.hoy)cl+=" pas";if(i===S.hoy)cl+=" hoy";if(i===S.sel)cl+=" sel";
     let ic="";
     evs.slice(0,2).forEach(e=>{ic+=icono(e,evs.length>1,S.done[e.id]);});
     if(evs.length>2)ic+=`<span class="mas">+${evs.length-2}</span>`;
-    h+=`<button class="${cl}" data-i="${i}" aria-label="Día ${fecha(i)}${evs.length?": "+evs.map(e=>e.tt).join(", "):""}"><span class="n">${fecha(i)}</span><span class="ic">${ic}</span>${i===S.hoy?`<span class="ficha">${crest(S.club,26)}</span>`:""}</button>`;
+    const lab=x.getDate()===1?x.getDate()+" "+MES[x.getMonth()]:x.getDate();
+    h+=`<button class="${cl}" data-i="${i}" aria-label="${fecha(i)}${evs.length?": "+evs.map(e=>e.tt).join(", "):""}"><span class="n">${lab}</span><span class="ic">${ic}</span>${i===S.hoy?`<span class="ficha">${crest(S.club,26)}</span>`:""}</button>`;
   }
   $("cal").innerHTML=h;
 }
 function pintaBanner(){
   const i=S.sel,evs=delDia(i),e=evs.find(x=>!S.done[x.id])||evs[0],c=S.club;
-  if(!e){$("banner").innerHTML=`<div class="cap" style="background:linear-gradient(110deg,#1a2640,#0f1830)"><div class="eti">Sin eventos</div>${arte("libre",c,null,150)}<div class="tit"><b>Día de entrenamiento</b><span>Nada que decidir. El tiempo corre hasta el próximo evento.</span></div></div>`;return;}
+  if(!e){$("banner").innerHTML=`<div class="cap" style="background:linear-gradient(110deg,#1a2640,#0f1830)"><div class="eti">${fecha(i)} · sin eventos</div>${arte("libre",c,null,150)}<div class="tit"><b>Día de entrenamiento</b><span>Nada que decidir. El tiempo corre hasta el próximo evento.</span></div></div>`;return;}
   const T=TIPOS[e.t],col=tcol(e.t);
   let bg=`background:linear-gradient(110deg,${col} 0%,color-mix(in srgb,${col} 40%,#08101f) 70%,#08101f 100%)`;
   if(e.t==="partido")bg=`background:linear-gradient(110deg,${c.c1} 0%,color-mix(in srgb,${c.c1} 45%,#08101f) 60%,${e.riv.c1} 100%)`;
-  let h=`<div class="cap" style="${bg}"><div class="rayos"></div><div class="eti">${T.e}</div>`;
-  if(e.t==="partido")h+=`<div class="vs">${crest(c,96)}<em>VS</em>${crest(e.riv,96)}</div><div class="tit" style="right:340px"><b>${e.loc?c.n+" · "+e.riv.n:e.riv.n+" · "+c.n}</b><span>${e.ss}</span></div>`;
+  let h=`<div class="cap" style="${bg}"><div class="rayos"></div><div class="eti">${fecha(i)} · ${e.comp||T.e}</div>`;
+  if(e.t==="partido")h+=`<div class="vs">${crest(c,96)}<em>VS</em>${crest(e.riv,96)}</div><div class="tit" style="right:340px"><b>${e.loc?c.n+" · "+e.riv.n:e.riv.n+" · "+c.n}</b><span>${e.tt}</span></div>`;
   else h+=arte(e.t,c,null,150)+`<div class="tit"><b>${e.tt}</b><span>${e.ss}</span></div>`;
   $("banner").innerHTML=h+"</div>";
 }
 function pintaCad(){
-  const c=S.club,f=S.flags;
+  const f=S.flags;
   const pso=(txt,d,est)=>`<div class="pso ${est}"><i></i>${txt}<span>${d!=null?fecha(d):""}</span></div>`;
-  const cancel=f.ofer==="no"||f.nego==="retira";
-  const e1=S.done.ofer?"hecho":"actual";
-  const e2=f.ofer==="no"?"cancel":(S.done.nego?(f.nego==="retira"?"cancel":"hecho"):(S.done.ofer?"actual":""));
-  const e3=cancel?"cancel":(S.done.pres?"hecho":(S.done.nego?"actual":""));
-  let h=`<div class="cad"><b>Fichaje de ${c.fich.n}</b><div class="pasos">${pso("Propuesta",1,e1)}${pso("Negociación",4,e2)}${pso("Presentación",6,e3)}</div></div>`;
-  const d1=S.done.deci,d2=S.done.cons;
-  h+=`<div class="cad"><b>Vestuario</b><div class="pasos">${pso("El capitán habla",8,d1?"hecho":"")}${pso(d1?"Consecuencia":"Consecuencia (según lo que decidas)",d1?10:null,d2?"hecho":(d1?"actual":""))}</div></div>`;
-  const np=S.ev.filter(e=>e.t==="partido"&&S.done[e.id]).length;
-  h+=`<div class="cad"><b>Partidos del tramo</b><div class="pasos">${pso(np+" de 3 jugados · "+S.res.pts+" pts",null,np===3?"hecho":(np?"actual":""))}</div></div>`;
+  // cadena de fichaje activa
+  let k=["f1","f2","f3"].find(x=>!S.done[x+"_pr"]&&f[x+"_of"]!=="no"&&f[x+"_ne"]!=="retira")||"f3";
+  const get=id=>S.ev.find(e=>e.id===id),F=S.F[k];
+  const cancel=f[k+"_of"]==="no"||f[k+"_ne"]==="retira";
+  const of=get(k+"_of"),ne=get(k+"_ne"),pr=get(k+"_pr");
+  const e1=S.done[of.id]?"hecho":"actual";
+  const e2=f[k+"_of"]==="no"?"cancel":(S.done[ne.id]?(f[k+"_ne"]==="retira"?"cancel":"hecho"):(S.done[of.id]?"actual":""));
+  const e3=cancel?"cancel":(S.done[pr.id]?"hecho":(S.done[ne.id]?"actual":""));
+  let h=`<div class="cad"><b>Fichaje de ${F.n}</b><div class="pasos">${pso("Propuesta",of.d,e1)}${pso("Negociación",ne.d,e2)}${pso("Presentación",pr.d,e3)}</div></div>`;
+  if(S.ultDec){const d=S.ev.find(x=>x.id===S.ultDec.id),cs=S.ev.find(x=>x.id===S.ultDec.cons);h+=`<div class="cad"><b>${d.tt}</b><div class="pasos">${pso("Decisión tomada",d.d,"hecho")}${pso(cs.tt,cs.d,S.done[cs.id]?"hecho":"actual")}</div></div>`;}
+  else h+=`<div class="cad"><b>Decisiones</b><div class="pasos">${pso("Aún no has tomado ninguna",null,"")}</div></div>`;
+  const cop=S.flags.copaOut!=null?`eliminado (ronda ${S.flags.copaOut})`:"sigue vivo";
+  const con=S.flags.contPase===false?"eliminado en grupos":(S.flags.ko1Out?"eliminado":"sigue vivo");
+  h+=`<div class="cad"><b>Competiciones</b><div class="pasos">${pso("Liga: "+(S.rec.pj?posicion()+".º · "+S.pts+" pts":"sin jugar"),null,S.rec.pj?"actual":"")}${pso("Copa: "+cop,null,S.flags.copaOut!=null?"cancel":"actual")}${pso("Continental: "+con,null,(S.flags.contPase===false||S.flags.ko1Out)?"cancel":"actual")}</div></div>`;
   $("cads").innerHTML=h;
 }
 function pintaBit(){
@@ -580,104 +737,161 @@ function pintaBit(){
 }
 function pintaBotones(){
   const b=$("bAv");
-  b.textContent=S.fin?"Reiniciar":(S.run?"Pausa":"Avanzar");
-  b.disabled=!!(S.abierto||S.espera);
-  $("bSig").disabled=!!(S.fin||S.abierto||S.espera);
-  $("bMenu").disabled=!!(S.abierto||S.espera);
-  $("periodo").textContent=`Enero · Mercado de invierno · día ${S.hoy+1} de 14`;
+  b.textContent=S.fin?"Nueva temporada":(S.run?"Pausa":"Avanzar");
+  b.disabled=!!(S.abierto||S.espera||S.auto);
+  $("bSig").disabled=!!(S.fin||S.abierto||S.espera||S.auto);
+  $("bMenu").disabled=!!(S.abierto||S.espera||S.auto);
+  $("periodo").textContent=periodoTxt(S.hoy)+" · día "+(S.hoy+1)+"/"+TOTAL;
+  $("progr").firstElementChild.style.width=(S.hoy/(TOTAL-1)*100)+"%";
+  const ba=$("bAuto");if(ba){ba.textContent=S.auto?"■ Detener automático":"▶ Temporada completa (auto)";ba.classList.toggle("on",S.auto);}
 }
 function pintaAv(){pintaCal();pintaBanner();pintaCad();pintaBit();pintaBotones();}
 function parar(){S.run=false;clearTimeout(S.t);pintaBotones();}
 function paso(){
-  if(S.abierto||S.fin||S.hoy>=13)return;
-  S.hoy++;S.sel=S.hoy;pintaAv();
+  if(S.abierto||S.fin||S.hoy>=TOTAL-1)return;
+  S.hoy++;S.sel=S.hoy;S.ven=Math.floor(S.hoy/14)*14;pintaAv();
+  if(!S.auto||S.vel<4)sonido("dia");
   const evs=delDia(S.hoy).filter(e=>!S.done[e.id]);
-  if(!evs.length){S.t=setTimeout(()=>{if(S.run)paso();},S.fast?70:420);return;}
+  if(!evs.length){S.t=setTimeout(()=>{if(S.run)paso();},S.auto?Math.max(6,60/S.vel):(S.fast?30:200));return;}
   S.run=false;S.espera=true;pintaBotones();
-  $("cal").children[S.hoy].classList.add("alto");
+  const cel=document.querySelector(`#cal button[data-i="${S.hoy}"]`);if(cel)cel.classList.add("alto");
   S.minors=evs.filter(e=>!e.pc);
   S.match=evs.find(e=>e.t==="partido")||null;
   S.cola=evs.filter(e=>e.pc&&e.t!=="partido");
-  S.t=setTimeout(siguienteCola,650);
+  S.huboMajor=S.cola.length>0;
+  sonido("para");
+  S.t=setTimeout(siguienteCola,S.auto?Math.max(80,500/S.vel):650);
 }
 function arrancar(fast){
   if(S.abierto||S.espera)return;
   if(S.fin){reiniciar();return;}
   if(S.run&&!fast){parar();return;}
-  if(S.hoy>=13)return;
-  S.run=true;S.fast=!!fast;pintaBotones();S.t=setTimeout(paso,200);
+  if(S.hoy>=TOTAL-1)return;
+  S.run=true;S.fast=!!fast;pintaBotones();S.t=setTimeout(paso,150);
 }
 function siguienteCola(){
   if(S.cola.length){abrir(S.cola.shift());return;}
   salida();
 }
-function resolver(e,txt){S.done[e.id]=true;S.log.push({t:txt||e.tt,d:"Día "+fecha(S.hoy)+" · "+TIPOS[e.t].e});}
+function resolver(e,txt){S.done[e.id]=true;S.log.push({t:txt||e.tt,d:fecha(e.d)+" · "+TIPOS[e.t].e});}
 function salida(){
-  const m=S.minors,hayPartido=!!S.match;
-  if(!m.length&&!hayPartido){S.espera=false;if(S.hoy>=13)S.fin=true;pintaAv();return;}
+  const m=S.minors,hayP=!!S.match;
   m.forEach(e=>{resolver(e,e.tt);(S.notifs[e.zona]=S.notifs[e.zona]||[]).push({t:e.tt,s:e.ss,t0:e.t});});
-  if(hayPartido){S.fase="dia_partido";S.pend=S.match;}
+  if(m.length)sonido("notif");
+  if(S.auto){S.minors=[];if(hayP)autoPartido();else autoSeguir();return;}
+  if(hayP){S.fase="dia_partido";S.pend=S.match;}
   const z=m[0]?ZONAS[m[0].zona].n:null;
-  const txt=m.length&&hayPartido?`Notificación en ${z} · hoy hay partido`:(m.length?`Notificación en ${z}`:"Hoy hay partido");
-  aviso(m[0]||S.match,txt,m[0]?m[0].ss:"Vuelves al menú del club");
-  S.t=setTimeout(()=>{
+  const hayAlgo=m.length||hayP||S.huboMajor;
+  const alHub=()=>{
     $("aviso").classList.remove("on");
     S.minors=[];S.match=null;S.espera=false;
-    S.tile=m[0]?ORDEN_ZONAS.indexOf(m[0].zona):S.tile;
+    if(S.hoy>=TOTAL-1&&!hayP)S.fin=true;
+    if(m[0])S.tile=ORDEN_ZONAS.indexOf(m[0].zona);
     ir("hub");
-  },1900);
+  };
+  if(!hayAlgo){S.espera=false;pintaAv();return;}
+  if(m.length||hayP){
+    const txt=m.length&&hayP?`Notificación en ${z} · hoy hay partido`:(m.length?`Notificación en ${z}`:"Hoy hay partido");
+    aviso(m[0]||S.match,txt,m[0]?m[0].ss:"Vuelves al menú del club");
+    if(hayP&&!m.length)sonido("silbato");
+    S.t=setTimeout(alHub,1700);
+  }else S.t=setTimeout(alHub,250);
 }
 function aviso(e,tt,ss){
   const c=$("aviso");c.style.borderLeftColor=tcol(e.t);
   c.innerHTML=`${icono(e,true)}<div><b>${tt}</b><span>${ss}</span></div>`;
   c.classList.add("on");
 }
+/* ---------- AUTOMÁTICO: la temporada completa de corrido ---------- */
+function autoSeguir(){
+  S.minors=[];S.match=null;S.espera=false;
+  if(S.fin||!S.auto){pintaAv();return;}
+  S.run=true;S.fast=true;pintaBotones();S.t=setTimeout(paso,Math.max(6,60/S.vel));
+}
+function autoPartido(){
+  const e=S.match;S.match=null;
+  const r=resultadoPartido(e,0);registra(e,r);
+  const c=S.club;sonido(r.pts===3?"gana":(r.pts===1?"empata":"pierde"));
+  aviso(e,r.txt,`${e.comp} · ${r.pts===3?"victoria":(r.pts===1?"empate":"derrota")} · ${S.rec.pj?posicion()+".º en la liga":""}`);
+  pintaAv();
+  S.t=setTimeout(()=>{$("aviso").classList.remove("on");autoSeguir();},Math.max(160,1000/S.vel));
+}
+function auto(on){
+  if(on===S.auto)return;
+  S.auto=on;
+  if(on){
+    S.fase="normal";$("modal").classList.remove("on");
+    ir("av");S.run=true;S.fast=true;pintaBotones();S.t=setTimeout(paso,150);
+  }else{clearTimeout(S.t);S.run=false;S.espera=false;if(!S.abierto)pintaAv();}
+  pintaBotones();
+}
+const defAccion=e=>({oferta:"of_si",nego:"n_1",decision:"d_0"}[e.t]||"ok");
 /* ---------- pantallas completas ---------- */
 function pcHtml(e){
-  const c=S.club,col=tcol(e.t),f=c.fich;
+  const c=S.club,col=tcol(e.t),F=e.ch?S.F[e.ch]:null;
   const base=`background:linear-gradient(115deg,${col} 0%,color-mix(in srgb,${col} 35%,#070d1b) 55%,#070d1b 100%)`;
   let h=`<div class="bg" style="${base}"><div class="rayos"></div></div>`;
+  if(S.auto)h+=`<div class="auto">Modo automático${e.kind==="fin"?"":`<i style="--dur:${Math.max(450,3000/S.vel)/1000}s"></i>`}</div>`;
   const ok=`<div class="acc"><button class="btn pri" data-a="ok">Continuar</button></div>`;
-  const art=arte(e.t,c,null,380);
-  if(e.t==="premio")return h+`<div class="cont"><div class="sobre">Premio individual · ${c.n}</div><h2>Jugador<br>del mes</h2><p class="sub">${c.prem} recibe el reconocimiento tras un mes de goles y asistencias decisivas.</p><div class="dato"><div><b>5</b>goles</div><div><b>3</b>asistencias</div><div><b>7,9</b>nota media</div></div></div>${art}${ok}`;
-  if(e.t==="oferta")return h+`<div class="cont"><div class="sobre">Director deportivo</div><h2>Propuesta<br>de fichaje</h2><p class="sub">Hay un jugador que encaja en el once: ${f.n}, ${f.pos.toLowerCase()} de ${f.edad} años.</p><div class="dato"><div><b>${fmt(f.coste)}</b>traspaso pedido</div><div><b>${f.anios} años</b>de contrato</div><div><b>#${f.num}</b>dorsal libre</div></div></div>${art}<div class="acc"><button class="btn pri" data-a="of_si">Abrir negociación</button><button class="btn" data-a="of_no">Descartar</button></div>`;
-  if(e.t==="nego")return h+`<div class="cont"><div class="sobre">Fichaje · ${f.n}</div><h2>Día de<br>negociación</h2><p class="sub">El club vendedor pide ${fmt(f.coste)}. Tú decides cómo cerrar.</p><div class="opc"><button data-a="n_1">Ofrecer ${fmt(f.coste)} sin más<small>Cierra rápido; el club no cede nada más.</small></button><button data-a="n_2">Ofrecer algo menos y pagar a plazos<small>Ahorras caja hoy, pero el jugador tarda más en llegar.</small></button><button data-a="n_3">Retirarte de la operación<small>Se cancela la presentación del jugador.</small></button></div></div>${art}`;
-  if(e.t==="pres")return h+`<div class="cont"><div class="sobre">Presentación oficial</div><h2>${f.n.split(" ")[0]}<br>${f.n.split(" ").slice(1).join(" ")}</h2><p class="sub">${f.pos} · ${f.edad} años · llega a ${c.n} por ${fmt(f.coste)}.</p><p class="cita">«Vengo a ganar títulos con este escudo.»</p></div>${art}<div style="position:absolute;right:250px;bottom:0">${figura(c,f.num,PIEL[1],"#2a1d17",400)}</div>${ok}`;
-  if(e.t==="decision")return h+`<div class="cont"><div class="sobre">Vestuario</div><h2>${c.cap.split(" ")[0]} pide<br>hablar</h2><p class="sub">Dice que el grupo no entiende los últimos cambios de once y quiere una respuesta antes del próximo partido.</p><div class="opc"><button data-a="d_1">Recibirlo y escucharlo<small>El grupo lo valora; podrías perder autoridad en la rueda de prensa.</small></button><button data-a="d_2">Dar un mensaje firme al grupo<small>Ordena el vestuario, pero el capitán queda molesto.</small></button><button data-a="d_3">Dejarlo pasar<small>Ahorras tiempo, pero el problema puede crecer.</small></button></div></div>${art}`;
-  if(e.t==="lesion")return h+`<div class="cont"><div class="sobre">Servicio médico</div><h2>Parte<br>médico</h2><p class="sub">${c.les} sufre una lesión muscular. Los médicos estiman unas ${c.sem} semanas de baja.</p><div class="dato"><div><b>${c.sem} sem.</b>de baja</div><div><b>Leve</b>gravedad</div><div><b>Sí</b>juega la vuelta si se trata ya</div></div></div>${art}${ok}`;
-  if(e.t==="hito"){const r=S.res;return h+`<div class="cont"><div class="sobre">Fin del tramo · ${c.n}</div><h2>Balance<br>del tramo</h2><p class="sub">Esto es lo que pasó en estos 14 días.</p><div class="dato"><div><b>${r.pts}</b>puntos en 3 partidos</div><div><b>${r.g}-${r.c}</b>goles a favor y en contra</div><div><b>${Object.keys(S.done).length}</b>eventos resueltos</div></div></div>${art}<div class="acc"><button class="btn pri" data-a="ok">Cerrar tramo</button></div>`;}
+  const art=arte(e.t,c,null,380,true);
+  const opc=(arr,pre)=>`<div class="opc">${arr.map((o,i)=>`<button data-a="${pre}${i}">${o[0]}<small>${o[1]}</small></button>`).join("")}</div>`;
+  if(e.t==="premio")return h+`<div class="cont"><div class="sobre">Premio individual · ${c.n}</div><h2>Jugador<br>del mes</h2><p class="sub">${e.jug} recibe el reconocimiento tras un mes de goles y asistencias decisivas.</p><div class="dato"><div><b>5</b>goles</div><div><b>3</b>asistencias</div><div><b>7,9</b>nota media</div></div></div>${art}${ok}`;
+  if(e.t==="oferta")return h+`<div class="cont"><div class="sobre">Director deportivo</div><h2>Propuesta<br>de fichaje</h2><p class="sub">Hay un jugador que encaja en el once: ${F.n}, ${F.pos.toLowerCase()} de ${F.edad} años.</p><div class="dato"><div><b>${fmt(F.coste)}</b>traspaso pedido</div><div><b>${F.anios} años</b>de contrato</div><div><b>#${F.num}</b>dorsal libre</div></div></div>${art}<div class="acc"><button class="btn pri" data-a="of_si">Abrir negociación</button><button class="btn" data-a="of_no">Descartar</button></div>`;
+  if(e.t==="nego")return h+`<div class="cont"><div class="sobre">Fichaje · ${F.n}</div><h2>Día de<br>negociación</h2><p class="sub">El club vendedor pide ${fmt(F.coste)}. Tú decides cómo cerrar.</p><div class="opc"><button data-a="n_1">Ofrecer ${fmt(F.coste)} sin más<small>Cierra rápido; el club no cede nada más.</small></button><button data-a="n_2">Ofrecer algo menos y pagar a plazos<small>Ahorras caja hoy, pero el jugador tarda más en llegar.</small></button><button data-a="n_3">Retirarte de la operación<small>Se cancela la presentación del jugador.</small></button></div></div>${art}`;
+  if(e.t==="pres")return h+`<div class="flashes"></div><div class="cont"><div class="sobre">Presentación oficial</div><h2>${F.n.split(" ")[0]}<br>${F.n.split(" ").slice(1).join(" ")}</h2><p class="sub">${F.pos} · ${F.edad} años · llega a ${c.n} por ${fmt(F.coste)}.</p><p class="cita">«Vengo a ganar títulos con este escudo.»</p></div>${art}<div class="figpres">${figura(c,F.num,PIEL[hash(F.n)%PIEL.length],"#2a1d17",400)}</div>${ok}`;
+  if(e.t==="decision"){const D=DEC[e.dec];return h+`<div class="cont"><div class="sobre">${D.sobre}</div><h2>${D.tit(c).replace(/ /,"<br>")}</h2><p class="sub">${D.sub(c)}</p>${opc(D.o,"d_")}</div>${art}`;}
+  if(e.t==="lesion")return h+`<div class="cont"><div class="sobre">Servicio médico</div><h2>Parte<br>médico</h2><p class="sub">${e.jug} sufre una lesión muscular. Los médicos estiman unas ${e.sem} semanas de baja.</p><div class="dato"><div><b>${e.sem} sem.</b>de baja</div><div><b>Leve</b>gravedad</div><div><b>Sí</b>juega la vuelta si se trata ya</div></div></div>${art}${ok}`;
+  if(e.t==="hito"){
+    const fin=e.kind==="fin",R=S.rec,pos=posicion();
+    const tr=S.trofeos.map(x=>`<span>🏆 ${x}</span>`).join("")||`<span>Sin títulos todavía</span>`;
+    return h+`<div class="cont fin"><div class="sobre">${fin?"Fin de temporada":"Mitad de temporada"} · ${c.n}</div><h2>${fin?"Balance de<br>la temporada":"Balance de la<br>primera vuelta"}</h2><p class="sub">${R.pj?`${pos}.º en la liga con ${S.pts} puntos tras ${R.pj} jornadas.`:"Aún sin partidos de liga."}</p><div class="stats"><div><b>${R.g}-${R.e}-${R.p}</b>ganados · empatados · perdidos</div><div><b>${R.gf}-${R.gc}</b>goles a favor y en contra</div><div><b>${fmt(S.pres)}</b>presupuesto de fichajes</div><div><b>${S.nFich}</b>fichajes</div><div><b>${S.nPrem}</b>premios individuales</div><div><b>${Object.keys(S.done).length}</b>eventos resueltos</div></div><div class="logros">${tr}</div></div>${art}<div class="acc"><button class="btn pri" data-a="ok">${fin?"Cerrar temporada":"Seguir"}</button></div>`;
+  }
   return h+ok;
 }
+const SON_EVENTO={premio:"premio",oferta:"oferta",nego:"nego",pres:"pres",decision:"decision",lesion:"lesion",hito:"hito"};
 function abrir(e){
   S.abierto=true;pintaBotones();
   const pc=$("pc");pc.innerHTML=pcHtml(e);pc.classList.add("on");
-  pc.onclick=ev=>{const b=ev.target.closest("button[data-a]");if(b)accion(e,b.getAttribute("data-a"));};
-  const b=pc.querySelector("button");if(b)b.focus();
+  sonido(SON_EVENTO[e.t]||"notif");
+  pc.onclick=ev=>{const b=ev.target.closest("button[data-a]");if(b){sonido("clic");accion(e,b.getAttribute("data-a"));}};
+  const b=pc.querySelector(".acc button, .opc button");if(b&&!S.auto)b.focus();
+  clearTimeout(S.t);
+  if(S.auto&&e.kind!=="fin")S.t=setTimeout(()=>{if(S.abierto&&$("pc").classList.contains("on"))accion(e,defAccion(e));},Math.max(450,3000/S.vel));
+  if(S.auto&&e.kind==="fin"){S.auto=false;S.run=false;pintaBotones();}
+}
+function aplica(e,a){
+  const F=e.ch?S.F[e.ch]:null;
+  if(a==="of_si"){S.flags[e.ch+"_of"]="ok";resolver(e,"Abres la negociación por "+F.n);}
+  else if(a==="of_no"){S.flags[e.ch+"_of"]="no";resolver(e,"Descartas el fichaje de "+F.n);}
+  else if(a==="n_1"){S.flags[e.ch+"_ne"]="ok";S.pres-=F.coste;resolver(e,"Ofreces "+fmt(F.coste)+" por "+F.n);}
+  else if(a==="n_2"){S.flags[e.ch+"_ne"]="ok";S.pres-=F.coste*.35;resolver(e,"Cierras el pago a plazos por "+F.n);}
+  else if(a==="n_3"){S.flags[e.ch+"_ne"]="retira";resolver(e,"Te retiras de la operación");}
+  else if(a.startsWith("d_")){
+    const D=DEC[e.dec],o=D.o[+a.slice(2)];
+    resolver(e,o[0]);
+    const cid="DC"+e.dec;
+    S.ev.push({id:cid,d:Math.min(TOTAL-2,e.d+3),t:"cons",pc:false,zona:D.zona,tt:o[2],ss:o[3]});
+    S.ultDec={id:e.id,cons:cid};
+  }
+  else{
+    if(e.t==="pres")S.nFich++;
+    if(e.t==="premio")S.nPrem++;
+    resolver(e);
+  }
 }
 function accion(e,a){
-  const f=S.club.fich;
-  if(a==="of_si"){S.flags.ofer="ok";resolver(e,"Abres la negociación por "+f.n);}
-  else if(a==="of_no"){S.flags.ofer="no";resolver(e,"Descartas el fichaje de "+f.n);}
-  else if(a==="n_1"){S.flags.nego="ok";S.pres-=f.coste;resolver(e,"Ofreces "+fmt(f.coste)+" por "+f.n);}
-  else if(a==="n_2"){S.flags.nego="ok";S.pres-=f.coste*.35;resolver(e,"Cierras el pago a plazos por "+f.n);}
-  else if(a==="n_3"){S.flags.nego="retira";resolver(e,"Te retiras de la operación");}
-  else if(a==="d_1"||a==="d_2"||a==="d_3"){
-    const t={d_1:["Recibes al capitán","El capitán agradece la charla","Dijiste que cuentas con el grupo."],d_2:["Das un mensaje firme","El capitán sigue molesto","El grupo ordenado, el capitán distante."],d_3:["Dejas pasar el tema","Se filtra el malestar del vestuario","La prensa habla de un vestuario dividido."]}[a];
-    resolver(e,t[0]);
-    S.ev.push({id:"cons",d:10,t:"cons",pc:false,zona:"vestuario",ch:"vest",tt:t[1],ss:t[2]});
-  }else resolver(e);
+  aplica(e,a);
   const pc=$("pc");pc.classList.remove("on");pc.innerHTML="";S.abierto=false;
   pintaAv();
-  S.t=setTimeout(siguienteCola,300);
+  S.t=setTimeout(siguienteCola,S.auto?Math.max(60,250/S.vel):300);
 }
 /* ---------- PARTIDO ---------- */
 function resultadoPartido(e,v){
   const key=e.id+"_"+v;
   if(S.resMap[key])return S.resMap[key];
-  const c=S.club,riv=e.riv,s=e.d*7+c.n.length+v*13;
+  const c=S.club,riv=e.riv,s=e.d*7+c.n.length+v*13+hash(riv.n)%50;
   let g=Math.floor(rng(s)*4);const k=Math.floor(rng(s+3)*3);if(g+k===0)g=1;
   const mi=plantilla(c),su=plantilla(riv);
-  const nom=l=>l[1+Math.floor(rng(s+l.length)*9)%9].replace(/ \(.+\)/,"");
   const gol=[];
   for(let i=0;i<g;i++)gol.push({min:6+Math.floor(rng(s+20+i)*80),mio:true,n:mi[2+Math.floor(rng(s+40+i)*9)%9].replace(/ \(.+\)/,"")});
   for(let i=0;i<k;i++)gol.push({min:6+Math.floor(rng(s+60+i)*80),mio:false,n:su[2+Math.floor(rng(s+80+i)*9)%9].replace(/ \(.+\)/,"")});
@@ -691,10 +905,27 @@ function resultadoPartido(e,v){
     {min:72,lado:"of",txt:"Pared en la frontal y disparo cruzado"},
     {min:86,lado:"de",txt:"Tiro libre peligroso del rival a la salida de la barrera"}
   ];
-  const r={g,k,gol,pos,tir,tirR,pts:g>k?3:(g===k?1:0),mom,txt:(e.loc?`${c.n} ${g}-${k} ${riv.n}`:`${riv.n} ${k}-${g} ${c.n}`)};
+  const r={g,k,gol,pos,tir,tirR,pts:g>k?3:(g===k?1:0),pasa:g>k||(g===k&&rng(s+9)>.5),mom,txt:(e.loc?`${c.n} ${g}-${k} ${riv.n}`:`${riv.n} ${k}-${g} ${c.n}`)};
   S.resMap[key]=r;return r;
 }
-function nombreTab(i){return ["Uniforme","Estadio","Saque inicial","Plan de juego","Opciones generales","Cámara"][i];}
+/* registra un partido oficial en la temporada: tabla, récord, copa y continental */
+function registra(e,r){
+  if(S.done[e.id])return;
+  resolver(e,r.txt);
+  if(e.comp==="Liga"){
+    S.rec.pj++;S.rec.gf+=r.g;S.rec.gc+=r.k;if(r.pts===3)S.rec.g++;else if(r.pts===1)S.rec.e++;else S.rec.p++;
+    S.pts+=r.pts;actualizaTabla(e,r);
+    if(e.jor===38&&posicion()===1)S.trofeos.push("Campeón de liga");
+  }else if(e.comp==="Copa"){
+    if(!r.pasa)S.flags.copaOut=e.ronda;else if(e.ronda===4)S.trofeos.push("Campeón de copa");
+  }else if(e.comp==="Continental"){
+    if(e.grupo){S.contPts+=r.pts;if(e.id==="G5")S.flags.contPase=S.contPts>=7;}
+    else if(e.ko===1&&!r.pasa)S.flags.ko1Out=true;
+    else if(e.ko===2&&r.pasa)S.trofeos.push("Semifinalista continental");
+  }
+  S.ultimo={riv:e.riv,loc:e.loc,id:e.id,d:e.d,res:`${r.g}-${r.k}`,r};
+}
+const nombreTab=i=>["Uniforme","Estadio","Saque inicial","Plan de juego","Opciones generales","Cámara"][i];
 function abrePrevia(modo){
   S.modo=modo;S.tab=2;
   const e=S.pend||S.ultimo,c=S.club,riv=e.riv;
@@ -704,13 +935,13 @@ function abrePrevia(modo){
   const col=(i,x)=>`<div class="col" style="left:${x}px"><h2>${L[i].n}</h2>${pl[i].map(n=>`<div>${n}</div>`).join("")}</div>`;
   $("pre").innerHTML=`<div class="bg" style="${bg}"><div class="rayos"></div></div>
    <div class="cabz">${crest(L[0],112)}${emblemaLiga(60)}${crest(L[1],112)}</div>
-   ${modo!=="completo"?`<div class="modo">${modo==="revancha"?"Partido de práctica":"Momentos"}</div>`:""}
+   ${modo!=="completo"?`<div class="modo">${modo==="revancha"?"Partido de práctica":"Momentos"}</div>`:`<div class="modo" style="background:#243656">${e.comp||"Liga"}</div>`}
    ${col(0,330)}${col(1,570)}
-   <div style="position:absolute;left:-6px;bottom:40px">${figura(L[0],L[0]===c?c.fich.num:7,PIEL[3],"#2a1d17",440)}</div>
-   <div style="position:absolute;right:-6px;bottom:40px">${figura(L[1],L[1]===c?c.fich.num:10,PIEL[0],"#d8c39a",440)}</div>
+   <div class="figl" style="position:absolute;left:-6px;bottom:40px">${figura(L[0],L[0]===c?c.fich.num:7,PIEL[3],"#2a1d17",440)}</div>
+   <div class="figr" style="position:absolute;right:-6px;bottom:40px">${figura(L[1],L[1]===c?c.fich.num:10,PIEL[0],"#d8c39a",440)}</div>
    <div class="det" id="preDet"></div><div class="tabs" id="preTabs"></div>
    <div class="hint"><span><i class="bt a">A</i>Confirmar</span><span><i class="bt b">B</i>Volver</span></div>`;
-  pintaPreTabs();ir("pre");
+  pintaPreTabs();ir("pre");sonido("silbato");
 }
 function pintaPreTabs(){
   const det=["Titular · camiseta de local","Estadio: "+S.club.estadio+" · noche · césped natural","Pulsa Confirmar para empezar el partido"+(S.modo==="completo"?"":" de práctica"),"4-2-3-1 · estilo ofensivo · presión alta","Dificultad Debutante · partido de 10 minutos","Cámara de TV · distancia media"];
@@ -719,8 +950,8 @@ function pintaPreTabs(){
 }
 $("pre").addEventListener("click",ev=>{
   const b=ev.target.closest("button[data-t]");if(!b)return;
-  const t=+b.getAttribute("data-t");
-  if(t===S.tab&&t===2){simulacion(false);return;}
+  const t=+b.getAttribute("data-t");sonido("clic");
+  if(t===S.tab&&t===2){sonido("silbato");simulacion(false);return;}
   S.tab=t;pintaPreTabs();
 });
 function simulacion(salta){
@@ -732,10 +963,11 @@ function simulacion(salta){
    <div class="centro"><div class="marc">${crest(L[0],120)}<div class="g" id="rM">0 - 0</div>${crest(L[1],120)}</div><div class="nm"><span>${L[0].n}</span><span>${L[1].n}</span></div></div>
    <div class="sim"><b id="rMin">0'</b><small>${salta?"Simulando el partido…":"En el juego real aquí se abre el estadio"}</small></div>`;
   ir("res");
-  let m=0;
+  let m=0,vistos=0;
   const iv=setInterval(()=>{
     m+=3;if(m>=90)m=90;
     const gl=r.gol.filter(x=>x.min<=m),a=gl.filter(x=>x.mio).length,b=gl.length-a;
+    if(gl.length>vistos){vistos=gl.length;sonido("gol");}
     $("rMin").textContent=m+"'";
     $("rM").textContent=(e.loc?a+" - "+b:b+" - "+a);
     if(m>=90){clearInterval(iv);S.timers=S.timers.filter(x=>x!==iv);setTimeout(()=>finPartido(e,r,L),500);}
@@ -743,24 +975,22 @@ function simulacion(salta){
   S.timers.push(iv);
 }
 function finPartido(e,r,L){
-  const c=S.club,v=S.modo==="revancha"?S.variante:0;
-  if(S.pend&&S.pend===e&&!S.done[e.id]){
-    S.res.pts+=r.pts;S.res.g+=r.g;S.res.c+=r.k;resolver(e,r.txt);S.ultimo={riv:e.riv,loc:e.loc,id:e.id,d:e.d,res:`${r.g}-${r.k}`,r};
-    S.pend=null;S.fase="jugado";
-  }
+  const c=S.club;
+  if(S.pend&&S.pend===e&&!S.done[e.id]){registra(e,r);S.pend=null;S.fase="jugado";}
+  sonido(r.pts===3?"gana":(r.pts===1?"empata":"pierde"));
   const col=r.pts===3?"#3fb27f":(r.pts===1?"#e2b84a":"#e5484d");
   const gl=r.gol.map(x=>`<p><span>${x.min}'</span>${svgIc("ball",1.8).replace("<svg",'<svg width="16" height="16"')}${x.n} <em style="color:var(--mute);font-style:normal">(${x.mio?c.ini:e.riv.ini})</em></p>`).join("")||`<p style="color:var(--mute)">Sin goles</p>`;
   const f=(a,b,t)=>`<div class="f"><span>${a}</span><div class="barra"><i style="width:${a/(a+b)*100}%"></i><i style="width:${b/(a+b)*100}%"></i></div><span>${b}</span></div><div class="eti" style="margin:-4px 0 12px">${t}</div>`;
   const loc=e.loc;
   $("res").innerHTML=`<div class="bg"></div>
-   <div class="centro"><div style="font:700 14px var(--fb);letter-spacing:.18em;text-transform:uppercase;color:${col}">${r.pts===3?"Victoria":(r.pts===1?"Empate":"Derrota")}</div><div class="marc">${crest(L[0],120)}<div class="g">${loc?r.g+" - "+r.k:r.k+" - "+r.g}</div>${crest(L[1],120)}</div><div class="nm"><span>${L[0].n}</span><span>${L[1].n}</span></div></div>
+   <div class="centro"><div style="font:700 14px var(--fb);letter-spacing:.18em;text-transform:uppercase;color:${col}">${r.pts===3?"Victoria":(r.pts===1?"Empate":"Derrota")} · ${e.comp||"Liga"}</div><div class="marc">${crest(L[0],120)}<div class="g">${loc?r.g+" - "+r.k:r.k+" - "+r.g}</div>${crest(L[1],120)}</div><div class="nm"><span>${L[0].n}</span><span>${L[1].n}</span></div></div>
    <div class="est">${f(loc?r.pos:100-r.pos,loc?100-r.pos:r.pos,"Posesión %")}${f(loc?r.tir:r.tirR,loc?r.tirR:r.tir,"Tiros")}${f(loc?Math.ceil(r.tir/2):Math.ceil(r.tirR/2),loc?Math.ceil(r.tirR/2):Math.ceil(r.tir/2),"Tiros a puerta")}</div>
    <div class="gol" style="width:300px"><h3>Goles</h3>${gl}</div>
    <div class="mvp">${figura(r.pts===0?e.riv:c,r.pts===0?9:10,PIEL[1],"#2a1d17",190)}<div class="tx"><small>Jugador del partido</small><b>${r.gol.length?r.gol[0].n:"Portero"}</b><span>8,${3+r.g}</span></div></div>
    <div class="tl"><div class="bar"></div>${[0,15,30,45,60,75,90].map(m=>`<span class="mn" style="left:${m/90*100}%;transform:translateX(-50%)">${m}'</span>`).join("")}${r.gol.map(x=>`<div class="mk" style="left:${x.min/90*100}%"><i style="background:${x.mio?"var(--acc)":"#cfd8ee"};color:${x.mio?"#fff":"#14203a"}">${svgIc("ball",2)}</i></div>`).join("")}</div>
-   <div class="nota">${S.modo==="revancha"?"Partido de práctica: no cambia el resultado oficial":""}</div>
+   <div class="nota">${S.modo==="revancha"?"Partido de práctica: no cambia el resultado oficial":(e.comp==="Liga"?`Liga: ${posicion()}.º · ${S.pts} pts`:"")}</div>
    <div class="btnz"><button class="btn pri" id="rOk">Continuar</button></div>`;
-  $("rOk").onclick=()=>{S.modo="completo";ir("hub");};
+  $("rOk").onclick=()=>{S.modo="completo";sonido("clic");ir("hub");};
   $("rOk").focus();
 }
 function verPartido(){
@@ -768,7 +998,7 @@ function verPartido(){
   $("ver").innerHTML=`<div class="bg"></div><div class="mar">${crest(L[0],56)}<span id="vM">0 - 0</span>${crest(L[1],56)}<span id="vMin" style="font-size:26px;color:var(--mute)">0'</span></div><canvas id="vc" width="680" height="420"></canvas>
    <div class="lado"><h3>Repetición del partido</h3><div id="vG"></div></div>
    <div class="btnz" style="position:absolute;right:36px;bottom:20px"><button class="btn pri" id="vOk" style="height:52px;font-size:20px">Cerrar</button></div>`;
-  ir("ver");$("vOk").onclick=()=>ir("hub");
+  ir("ver");$("vOk").onclick=()=>ir("hub");sonido("silbato");
   const cv=$("vc"),g=cv.getContext("2d"),W=680,H=420;
   const F=[[.06,.5],[.2,.2],[.2,.4],[.2,.6],[.2,.8],[.4,.35],[.4,.65],[.55,.2],[.55,.5],[.55,.8],[.72,.5]];
   const t0=performance.now();let ball={x:.5,y:.5},tgt=[.5,.5],last=0,golesVistos=0;
@@ -780,18 +1010,18 @@ function verPartido(){
     g.strokeStyle="rgba(255,255,255,.7)";g.lineWidth=2;g.strokeRect(16,16,W-32,H-32);
     g.beginPath();g.moveTo(W/2,16);g.lineTo(W/2,H-16);g.stroke();g.beginPath();g.arc(W/2,H/2,48,0,7);g.stroke();
     g.strokeRect(16,H/2-80,84,160);g.strokeRect(W-100,H/2-80,84,160);
-    const dib2=(eq,flip,col)=>F.forEach((p,i)=>{
+    const dib2=(flip,col)=>F.forEach((p,i)=>{
       const x=(flip?1-p[0]:p[0])+Math.sin(t*1.3+i*2+(flip?9:0))*.025,y=p[1]+Math.cos(t*1.1+i*3)*.03;
       g.fillStyle=col;g.beginPath();g.arc(16+x*(W-32),16+y*(H-32),8,0,7);g.fill();g.strokeStyle="#fff";g.lineWidth=2;g.stroke();
     });
-    dib2(L[0],false,L[0].c1);dib2(L[1],true,L[1].c1);
+    dib2(false,L[0].c1);dib2(true,L[1].c1);
     if(t-last>.6){last=t;tgt=[.15+Math.random()*.7,.2+Math.random()*.6];}
     ball.x+=(tgt[0]-ball.x)*.08;ball.y+=(tgt[1]-ball.y)*.08;
     g.fillStyle="#fff";g.beginPath();g.arc(16+ball.x*(W-32),16+ball.y*(H-32),6,0,7);g.fill();g.strokeStyle="#000";g.lineWidth=1.5;g.stroke();
     const vis=gl.filter(x=>x.min<=min),a=vis.filter(x=>x.mio).length,b=vis.length-a;
     $("vM").textContent=(e.loc?a+" - "+b:b+" - "+a);$("vMin").textContent=min+"'";
     $("vG").innerHTML=vis.map(x=>`<p>${x.min}' · ${x.n} (${x.mio?c.ini:e.riv.ini})</p>`).join("")||`<p style="color:var(--mute)">Aún sin goles</p>`;
-    if(vis.length>golesVistos){golesVistos=vis.length;g.fillStyle="rgba(255,255,255,.18)";g.fillRect(0,0,W,H);}
+    if(vis.length>golesVistos){golesVistos=vis.length;sonido("gol");g.fillStyle="rgba(255,255,255,.18)";g.fillRect(0,0,W,H);}
     if(min<90||t<12.5)rafVer=requestAnimationFrame(dib);
   }
   rafVer=requestAnimationFrame(dib);
@@ -806,9 +1036,9 @@ function momentos(tipo){
    <div class="hint"><span><i class="bt a">A</i>Confirmar</span><span><i class="bt b">B</i>Volver</span></div><div class="btnz" style="position:absolute;right:36px;bottom:20px"><button class="btn pri" id="mVol" style="height:52px;font-size:20px">Volver al menú</button></div>`;
   ir("mom");
   $("mVol").onclick=()=>ir("hub");
-  $("mom").querySelectorAll("button[data-m]").forEach(b=>b.onclick=()=>{S.momJug[b.getAttribute("data-m")]=true;b.textContent="Jugado";b.parentElement.classList.add("jugado");});
+  $("mom").querySelectorAll("button[data-m]").forEach(b=>b.onclick=()=>{sonido("silbato");S.momJug[b.getAttribute("data-m")]=true;b.textContent="Jugado";b.parentElement.classList.add("jugado");});
 }
-/* ---------- chips, atajos, leyenda, escala ---------- */
+/* ---------- controles, atajos, escala ---------- */
 function aplicaClub(c){const r=$("escena").style;r.setProperty("--acc",c.c1);r.setProperty("--acc2",c.c2);}
 function reiniciar(){
   const c=S?S.club:CLUBES[0];
@@ -827,16 +1057,36 @@ function chips(){
   $("clubes").innerHTML=CLUBES.map((c,i)=>`<button class="chip" data-c="${i}" aria-pressed="${i===0}">${crest(c,24)}${c.n}</button>`).join("");
   $("clubes").onclick=ev=>{const b=ev.target.closest("button[data-c]");if(b)cambiaClub(+b.getAttribute("data-c"));};
 }
-/* atajos para revisar cada pantalla sin recorrer todo */
-function atajos(){
-  const A=[["Menú",()=>{reiniciar();}],
-   ["Notificación en el menú",()=>{reiniciar();S.hoy=6;S.sel=6;["ofer","noti","p1","nego","prem","pres"].forEach(id=>S.done[id]=true);S.flags.ofer="ok";S.flags.nego="ok";const e=S.ev.find(x=>x.id==="cant");resolver(e,e.tt);S.notifs.cantera=[{t:e.tt,s:e.ss,t0:e.t}];S.notifs.prensa=[{t:"Convocatoria",s:"El seleccionador anuncia la lista de la semana",t0:"noticia"}];S.tile=2;ir("hub");}],
-   ["Día de partido",()=>{reiniciar();S.hoy=3;S.sel=3;S.fase="dia_partido";S.pend=S.ev.find(x=>x.id==="p1");["ofer","noti"].forEach(id=>S.done[id]=true);S.flags.ofer="ok";ir("hub");}],
-   ["Previa del partido",()=>{reiniciar();S.hoy=3;S.pend=S.ev.find(x=>x.id==="p1");S.fase="dia_partido";abrePrevia("completo");}],
-   ["Partido jugado (menú)",()=>{reiniciar();S.hoy=3;S.pend=S.ev.find(x=>x.id==="p1");S.fase="dia_partido";S.modo="completo";const e=S.pend,r=resultadoPartido(e,0);S.res.pts+=r.pts;S.res.g+=r.g;S.res.c+=r.k;resolver(e,r.txt);S.ultimo={riv:e.riv,loc:e.loc,id:e.id,d:e.d,res:`${r.g}-${r.k}`,r};S.pend=null;S.fase="jugado";ir("hub");$("acciones").querySelector("[data-a=popup]").click();$("acciones").querySelector("[data-a=mom_tog]").click();}]
-  ];
-  const d=$("atajos");
-  A.forEach(a=>{const b=document.createElement("button");b.className="chip";b.textContent=a[0];b.onclick=a[1];d.appendChild(b);});
+/* salta a un día aplicando las decisiones por defecto, sin pantallas (para revisar el medio o el final de la temporada) */
+function saltaA(dia){
+  reiniciar();
+  for(let d=1;d<=dia;d++){
+    S.hoy=d;
+    delDia(d).filter(e=>!S.done[e.id]).forEach(e=>{
+      if(e.t==="partido")registra(e,resultadoPartido(e,0));
+      else if(!e.pc){resolver(e,e.tt);}
+      else aplica(e,defAccion(e));
+    });
+  }
+  S.sel=S.hoy;S.ven=Math.floor(S.hoy/14)*14;
+}
+function controles(){
+  const d=$("ctrl2");
+  const b=(txt,fn,id)=>{const x=document.createElement("button");x.className="chip";x.textContent=txt;if(id)x.id=id;x.onclick=fn;d.appendChild(x);return x;};
+  const sep=()=>{const s=document.createElement("span");s.className="sep";d.appendChild(s);};
+  b("▶ Temporada completa (auto)",()=>{sonido("clic");auto(!S.auto);},"bAuto");
+  [1,2,4,8].forEach(v=>{const x=b("×"+v,()=>{S.vel=v;[...d.querySelectorAll("[data-v]")].forEach(y=>y.classList.toggle("on",+y.dataset.v===v));});x.dataset.v=v;if(v===2)x.classList.add("on");});
+  sep();
+  const snd=b("🔊 Sonido: sí",()=>{AU.on=!AU.on;snd.textContent=AU.on?"🔊 Sonido: sí":"🔇 Sonido: no";if(AU.on)sonido("notif");});
+  sep();
+  const ir2=document.createElement("span");ir2.textContent="Ir a:";d.appendChild(ir2);
+  b("Menú",()=>{reiniciar();});
+  b("Notificación",()=>{saltaA(6);delete S.done.T0;S.done.T0=false;const e=S.ev.find(x=>x.id==="T0");S.notifs.cantera=[{t:e.tt,s:e.ss,t0:e.t}];S.notifs.prensa=[{t:"Convocatoria",s:"El seleccionador anuncia la lista de la semana",t0:"noticia"}];S.tile=2;ir("hub");});
+  b("Día de partido",()=>{saltaA(13);S.hoy=14;const e=S.ev.find(x=>x.id==="L0");S.fase="dia_partido";S.pend=e;ir("hub");});
+  b("Previa",()=>{saltaA(13);S.hoy=14;S.pend=S.ev.find(x=>x.id==="L0");S.fase="dia_partido";abrePrevia("completo");});
+  b("Partido jugado",()=>{saltaA(13);S.hoy=14;const e=S.ev.find(x=>x.id==="L0");registra(e,resultadoPartido(e,0));S.fase="jugado";S.modo="completo";ir("hub");$("acciones").querySelector("[data-a=popup]").click();$("acciones").querySelector("[data-a=mom_tog]").click();});
+  b("Mitad de temporada",()=>{saltaA(151);ir("hub");S.hoy=151;ir("av");const e=S.ev.find(x=>x.id==="H0");S.hoy=152;S.sel=152;S.ven=Math.floor(152/14)*14;pintaAv();S.huboMajor=true;abrir(e);});
+  b("Final de temporada",()=>{saltaA(298);S.hoy=299;S.sel=299;S.ven=Math.floor(299/14)*14;ir("av");const e=S.ev.find(x=>x.id==="H1");abrir(e);});
 }
 function leyenda(){
   const k=["premio","oferta","nego","pres","noticia","decision","lesion","dinero","cantera","mercado","hito"];
@@ -847,8 +1097,10 @@ function leyenda(){
 function escala(){const m=$("marco"),s=m.clientWidth/1200;$("escena").style.transform=`scale(${s})`;m.style.height=Math.round(540*s)+"px";}
 window.addEventListener("resize",escala);
 $("cal").addEventListener("click",ev=>{const b=ev.target.closest("button[data-i]");if(!b||S.abierto)return;S.sel=+b.getAttribute("data-i");pintaCal();pintaBanner();});
-$("bAv").addEventListener("click",()=>arrancar(false));
-$("bSig").addEventListener("click",()=>arrancar(true));
+$("vPrev").addEventListener("click",()=>{S.ven=Math.max(0,S.ven-14);pintaCal();});
+$("vNext").addEventListener("click",()=>{S.ven=Math.min(Math.floor((TOTAL-1)/14)*14,S.ven+14);pintaCal();});
+$("bAv").addEventListener("click",()=>{sonido("clic");arrancar(false);});
+$("bSig").addEventListener("click",()=>{sonido("clic");arrancar(true);});
 $("bMenu").addEventListener("click",()=>{if(!S.abierto&&!S.espera){parar();ir("hub");}});
 document.addEventListener("keydown",ev=>{
   if(ev.target.closest&&ev.target.closest("button")&&ev.key===" ")return;
@@ -856,7 +1108,7 @@ document.addEventListener("keydown",ev=>{
   if(ev.key===" "){ev.preventDefault();if(av&&!S.abierto)arrancar(false);else if(hub){const b=$("acciones").querySelector(".pri");if(b)b.click();}}
   else if(ev.key==="n"||ev.key==="N"){if(av&&!S.abierto)arrancar(true);}
 });
-chips();atajos();leyenda();reiniciar();escala();
-window.__m={S:()=>S,ir,pintaHub,abrir,pintaAv};
+chips();controles();leyenda();reiniciar();escala();
+window.__m={S:()=>S,ir,abrir,pintaAv,saltaA,auto,posicion,AU,SND};
 })();
 </script>
