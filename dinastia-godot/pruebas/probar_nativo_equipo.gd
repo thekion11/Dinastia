@@ -190,6 +190,36 @@ static func probar(nat: Object) -> Dictionary:
 		tm2[1] += w2 - w1
 		if rg.size() != rc.size() or (rg.size() == 1 and rg[0] != rc[0]):
 			dis_m2 += 1
+	## 6. Las animaciones que tocan el balón (catálogo real de League): todos los tipos, velocidades de todas las clases, balones previstos de verdad.
+	var dis_7 := 0
+	var t7 := [0, 0]
+	var vacios := 0
+	var w := 1500
+	var cfg7 := LeagueNucleo.config_balon()
+	for caso in w:
+		var tipo: String = ["interfere", "sliding", "pass", "highpass", "shot", "trap", "ballcontrol", "deflect"][caso % 8]
+		var bp7 := Vector3(rr.randf_range(-3, 3), rr.randf_range(0.11, 1.5) if caso % 3 == 0 else 0.11, rr.randf_range(-3, 3))
+		var bv7 := Vector3(rr.randf_range(-12, 12), rr.randf_range(0, 5) if caso % 3 == 0 else 0.0, rr.randf_range(-12, 12))
+		var pred7 := MotorLeague.prediccion_gd(bp7, bv7, cfg7, caso % 11 == 0, Vector3(1, 0, 1), 70)
+		var yo7 := Vector2(rr.randf_range(-3, 3), rr.randf_range(-3, 3))
+		var mir7 := Vector2(rr.randf_range(-1, 1), rr.randf_range(-1, 1)) if caso % 13 != 0 else Vector2.ZERO
+		var vel7 := rr.randf_range(0.0, 9.0)
+		var c0 := Time.get_ticks_usec()
+		var ag := LeagueToques.alcanza_gd(tipo, yo7, mir7, vel7, pred7)
+		var c1 := Time.get_ticks_usec()
+		var ac := LeagueToques.alcanza(tipo, yo7, mir7, vel7, pred7)
+		var c2 := Time.get_ticks_usec()
+		t7[0] += c1 - c0
+		t7[1] += c2 - c1
+		if ag.is_empty():
+			vacios += 1
+		if var_to_bytes(ag) != var_to_bytes(ac):
+			dis_7 += 1
+	if dis_7 > 0:
+		fallos.append("alcance de animaciones distinto en %d de %d casos" % [dis_7, w])
+	if vacios > w - 50:
+		fallos.append("la prueba de alcance casi nunca toca el balón (%d de %d vacíos): no prueba nada" % [vacios, w])
+	textos.append("alcance de animaciones (%d con toque de %d): GDScript %.1f µs, C++ %.1f µs por llamada" % [w - vacios, w, t7[0] / float(w), t7[1] / float(w)])
 	## 5. El índice por id, el más cercano de todos (por la raíz) y la línea del penúltimo (con y sin velocidad).
 	var dis_6 := 0
 	var t6 := [0, 0]

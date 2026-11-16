@@ -73,6 +73,8 @@ public:
 	int64_t league_mas_cercano_todos(const Array &jugadores, const Vector2 &punto) const;
 	void league_indexar(const Array &jugadores, Dictionary destino) const;
 	double league_linea_penultimo(const Array &jugadores, bool local, bool con_vel, double lado_, double balon_x) const;
+	// `LeagueToques.alcanza`: la animación (de `por_tipo`, el catálogo del tipo) que antes toca el balón previsto, o {}. `r0`/`r1` = RADIO del tipo; `bono_vel` = 1 − normalizado(vel).
+	Dictionary league_alcanza(const Dictionary &por_tipo, double r0, double r1, double bono_vel, const Vector2 &pos, const Vector2 &mirada, double vel, const PackedVector3Array &pred) const;
 	// `LeagueNucleo.movimiento_campo` y `LeagueSinBalon.apoyo` (el apoyo ofensivo sin balón, con su campo de fuerzas).
 	Vector2 league_movimiento_campo(const Array &campo, const Vector2 &actual, double amortigua) const;
 	Vector2 league_apoyo(const Dictionary &e) const;
