@@ -261,9 +261,8 @@ func _sin_balon(p: Dictionary) -> Vector3:
 	p["correr"] = bool(p["ls_corre"])
 	return p["ls_obj"]
 
-## (16-11, paso a C++, orden del dueño opción B) Con la extensión, `league_calcular_sin_balon` hace la cuenta entera en una llamada (misma aritmética que
-## `_calcular_sin_balon_gd`); devuelve [] si algún «más cercanos» tiene más de 16 candidatos y entonces sigue la gemela. Con `comparar_sb` (pruebas)
-## se calculan las dos y se cuentan las diferencias (`pruebas/probar_nativo_sin_balon.gd`).
+## (16-11, paso a C++, opción B del dueño) `league_calcular_sin_balon` = `_calcular_sin_balon_gd` en una llamada; [] si el reparto de roles caducó o hay >16
+## candidatos en un «más cercanos». Con `comparar_sb` (pruebas) se calculan las dos y se cuentan las diferencias (`pruebas/probar_nativo_sin_balon.gd`).
 ## OJO: todo ajuste de jugabilidad en `_calcular_sin_balon_gd` se copia en `nativo/src/sin_balon_nativo.cpp` (y al revés).
 static var comparar_sb := false
 static var sb_comparados := 0
@@ -272,7 +271,12 @@ static var sb_distintos := 0
 func _calcular_sin_balon(p: Dictionary) -> Array:
 	var nat := Nativo.obj()
 	if nat != null and nat.has_method("league_calcular_sin_balon"):
-		var r: Array = nat.league_calcular_sin_balon(self, p, MotorRoles.reparto(self as Object as MotorJugable, bool(p["es_local"])), designado_disputa)
+		var ctx := [equipos, jugadores, poseedor, ultimo_toque, _ls_designado, _ls_por_id, _ls_corredor, _ls_corre_hasta, _ls_adelantado, _ls_pred, _ls_linea_rival,
+			_ls_marca, _ls_presiona, _ls_presion_hasta, _ls_desig_eq, t, tacticas, _lado_medio, balon, self]   ## (el orden lo lee `sin_balon_nativo.cpp`)
+		var r: Array = nat.league_calcular_sin_balon(ctx, p, designado_disputa)
+		if r.is_empty():   ## reparto de roles caducado: se recalcula (el mismo paso que daría la gemela) y se repite
+			MotorRoles.reparto(self as Object as MotorJugable, bool(p["es_local"]))
+			r = nat.league_calcular_sin_balon(ctx, p, designado_disputa)
 		if not r.is_empty():
 			if comparar_sb:
 				sb_comparados += 1

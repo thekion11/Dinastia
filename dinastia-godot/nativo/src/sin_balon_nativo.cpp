@@ -1,7 +1,9 @@
 // `MotorLeague._calcular_sin_balon` (visor/motor_league.gd, 16-11-2026, orden del dueño «50 % del tiempo de CPU en C++», opción B): la colocación sin balón de
 // League de un jugador (estrategia del puesto, roles intercambiados, apoyo ofensivo, componente defensiva, trampa, velocidad perezosa y caza del portador) en UNA
 // llamada. Lee el estado del motor y de sus `LeagueEquipo` con `get` y usa las piezas ya portadas (`league_destino_forma`, `league_apoyo`, `league_mas_cercanos`).
-// Misma aritmética, operación por operación: Vector2/Vector3 en float de 32 bits, escalares en double. Devuelve [destino, velocidad], o [] si algún «más cercanos»
+// El estado del motor llega en `ctx` (lo arma `MotorLeague._ctx_sin_balon`; leerlo con `get` recorría las ~25 capas del script en cada lectura):
+// [equipos, jugadores, poseedor, ultimo_toque, _ls_designado, _ls_por_id, _ls_corredor, _ls_corre_hasta, _ls_adelantado, _ls_pred, _ls_linea_rival, _ls_marca,
+//  _ls_presiona, _ls_presion_hasta, _ls_desig_eq, t, tacticas, _lado_medio, balon, motor (para la meta del reparto de roles)]. Misma aritmética, operación por operación: Vector2/Vector3 en float de 32 bits, escalares en double. Devuelve [destino, velocidad], o [] si algún «más cercanos»
 // tiene más de 16 candidatos (entonces sigue la gemela GDScript, `_calcular_sin_balon_gd`). Igualdad en `pruebas/probar_nativo_sin_balon.gd`.
 // Comparar diccionarios (`a == b` en GDScript compara contenido) equivale aquí a comparar el id: dos jugadores distintos nunca tienen el mismo diccionario.
 #include "dinastia_nativo.h"
@@ -210,31 +212,31 @@ double trampa_offside(double x, double lado, double trampa_x) {
 } // namespace
 
 // `MotorLeague._destino_forma`.
-Vector2 DinastiaNativo::sb_destino_forma(Object *m, const Array &equipos, const Dictionary &p, const Vector2 &forma, const String &puesto, const Dictionary &mezcla) const {
+Vector2 DinastiaNativo::sb_destino_forma(const Array &ctx, const Array &equipos, const Dictionary &p, const Vector2 &forma, const String &puesto, const Dictionary &mezcla) const {
 	static const StringName k_local("es_local"), k_poseedor("poseedor"), k_ultimo("ultimo_toque"), k_balon("balon"), k_tacticas("tacticas"), k_lado_medio("_lado_medio"),
 			k_ofens("ofensividad"), k_acum("acum"), k_lado("lado"), k_desv("posesion_desvanecida"), k_trampa("trampa_x");
 	const bool local = bool(p[k_local]);
 	Object *e = equipos[local ? 0 : 1];
 	Object *e0 = equipos[0];
-	const Dictionary poseedor = m->get(k_poseedor);
-	const Dictionary foco_p = !poseedor.is_empty() ? poseedor : Dictionary(m->get(k_ultimo));
+	const Dictionary poseedor = ctx[2];
+	const Dictionary foco_p = !poseedor.is_empty() ? poseedor : Dictionary(ctx[3]);
 	Vector2 foco;
 	if (!foco_p.is_empty()) {
 		foco = ls(pos(foco_p));
 	} else {
-		const Node3D *b = Object::cast_to<Node3D>(static_cast<Object *>(m->get(k_balon)));
+		const Node3D *b = Object::cast_to<Node3D>(static_cast<Object *>(ctx[18]));
 		foco = ls(b != nullptr ? b->get_position() : Vector3());
 	}
 	const Vector2 yo = ls(pos(p));
-	const Array tacticas = m->get(k_tacticas);
+	const Array tacticas = ctx[16];
 	const double ofens = clampd(double(e->get(k_ofens)) + double(tac(tacticas, local, "mentalidad") - 1) * 0.15, 0.0, 1.0);
 	const double lado = e->get(k_lado);
-	Vector2 r = league_destino_forma(e0->get(k_acum), foco, yo, forma, puesto, lado, e->get(k_desv), ofens, m->get(k_lado_medio), e->get(k_trampa), mezcla);
+	Vector2 r = league_destino_forma(e0->get(k_acum), foco, yo, forma, puesto, lado, e->get(k_desv), ofens, ctx[17], e->get(k_trampa), mezcla);
 	r.x = real_t(double(r.x) + -lado * double(tac(tacticas, local, "linea") - 1) * 4.0);
 	return r;
 }
 
-Array DinastiaNativo::league_calcular_sin_balon(Object *m, const Dictionary &p, const Dictionary &reparto, bool designado_disputa) const {
+Array DinastiaNativo::league_calcular_sin_balon(const Array &ctx, const Dictionary &p, bool designado_disputa) const {
 	static const StringName k_local("es_local"), k_id("id"), k_equipos("equipos"), k_jugadores("jugadores"), k_poseedor("poseedor"), k_ultimo("ultimo_toque"),
 			k_designado("_ls_designado"), k_por_id("_ls_por_id"), k_forma("ls_forma"), k_corredor("_ls_corredor"), k_corre_hasta("_ls_corre_hasta"),
 			k_adelantado("_ls_adelantado"), k_pred("_ls_pred"), k_linea_rival("_ls_linea_rival"), k_marca("_ls_marca"), k_presiona("_ls_presiona"),
@@ -242,29 +244,49 @@ Array DinastiaNativo::league_calcular_sin_balon(Object *m, const Dictionary &p, 
 			k_trampa("trampa_x"), k_aguante("aguante"), k_attr("attr"), k_fis("fis"), k_vel("vel");
 	const bool local = bool(p[k_local]);
 	const int i = local ? 0 : 1;
-	const Array equipos = m->get(k_equipos);
+	const Array equipos = ctx[0];
+	// `MotorRoles.reparto(m, local)`: vale lo guardado en la meta del motor si es de hace menos de 0,5 s (REVISION); si no, hay que recalcularlo (y eso
+	// lo hace GDScript): se devuelve [] y sigue la gemela entera.
+	Dictionary reparto;
+	{
+		Object *m = ctx[19];
+		const StringName clave = local ? StringName("_roles_l") : StringName("_roles_v");
+		if (!m->has_meta(clave)) {
+			return Array();
+		}
+		const Dictionary er = m->get_meta(clave);
+		const double et = er["t"];
+		const double tt = ctx[15];
+		if (!(tt >= et && tt - et < 0.5)) {
+			return Array();
+		}
+		reparto = er["mapa"];
+	}
 	Object *e = equipos[i];
 	const double lado = e->get(k_lado);
 	const double desv = e->get(k_desv);
 	const double trampa_x = e->get(k_trampa);
-	const double t = m->get(k_t);
-	const Array jugadores = m->get(k_jugadores);
-	const Dictionary poseedor = m->get(k_poseedor);
-	const Dictionary por_id = m->get(k_por_id);
+	const double t = ctx[15];
+	const Array jugadores = ctx[1];
+	const Dictionary poseedor = ctx[2];
+	const Dictionary por_id = ctx[5];
 	const Vector2 yo = ls(pos(p));
 	const Vector2 mov = vel_ls(p);
 	const String puesto = rol(p);
 	const Estrategia &g = grupo(puesto);
 	const double mente = mentalidad(puesto);
-	const Dictionary designado = m->get(k_designado);
+	const Dictionary designado = ctx[4];
 	const Dictionary desig = !designado.is_empty() ? designado : p;
 	const double dist_accion = (yo - ls(pos(desig))).length();
-	const Dictionary mezcla = e->call("mezcla_de", puesto);
+	// `LeagueEquipo.mezcla_de`: si ya está en su caché `_mezclas` se lee directo (sin volver a GDScript); si no, se la pide.
+	static const StringName k_mezclas("_mezclas");
+	const Dictionary mz_cache = e->get(k_mezclas);
+	const Dictionary mezcla = mz_cache.has(puesto) ? Dictionary(mz_cache[puesto]) : Dictionary(e->call("mezcla_de", puesto));
 	// Estática (su casilla) y dinámica (la del dueño de su rol).
-	const Vector2 estatica = sb_destino_forma(m, equipos, p, p[k_forma], puesto, mezcla);
+	const Vector2 estatica = sb_destino_forma(ctx, equipos, p, p[k_forma], puesto, mezcla);
 	const String id_p = p[k_id];
 	const Dictionary dueno = por_id.get(String(reparto.get(id_p, p[k_id])), p);
-	const Vector2 dinamica = (mismo(dueno, p) || !dueno.has(k_forma)) ? estatica : sb_destino_forma(m, equipos, p, dueno[k_forma], puesto, mezcla);
+	const Vector2 dinamica = (mismo(dueno, p) || !dueno.has(k_forma)) ? estatica : sb_destino_forma(ctx, equipos, p, dueno[k_forma], puesto, mezcla);
 	const double sb = curva(g.mult * normalizado(dist_accion, g.dmin, g.dmax), 1.0);
 	Vector2 deseada = estatica * sb + dinamica * (1.0 - sb);
 	// Apoyo ofensivo (`LeagueSinBalon.sesgo_ataque`).
@@ -274,11 +296,11 @@ Array DinastiaNativo::league_calcular_sin_balon(Object *m, const Dictionary &p, 
 	}
 	const bool hay_pos = !poseedor.is_empty();
 	const bool pos_mio = hay_pos && bool(poseedor[k_local]) == local;
-	const Dictionary pred = m->get(k_pred);
+	const Dictionary pred = ctx[9];
 	if (ab > 0.0 && pos_mio) {
-		const Array corredor = m->get(k_corredor);
-		const Array corre_hasta = m->get(k_corre_hasta);
-		const Array adelantado = m->get(k_adelantado);
+		const Array corredor = ctx[6];
+		const Array corre_hasta = ctx[7];
+		const Array adelantado = ctx[8];
 		const bool corre = ab > g.umbral_carrera && mismo(corredor[i], p) && t < double(corre_hasta[i]);
 		const Vector2 principal = ls(pos(poseedor)) + vel_ls(poseedor) * 0.1;
 		const PackedInt32Array kr = league_mas_cercanos(jugadores, principal * 0.3 + (yo + mov * 0.1) * 0.7, !local, 3, PackedStringArray());
@@ -304,14 +326,14 @@ Array DinastiaNativo::league_calcular_sin_balon(Object *m, const Dictionary &p, 
 			par.push_back(vel_ls(q));
 			mates.push_back(par);
 		}
-		const Array tacticas = m->get(k_tacticas);
+		const Array tacticas = ctx[16];
 		const double red = 0.68 + clampd(0.5 + double(tac(tacticas, local, "amplitud") - 1) * 0.25, 0.0, 1.0) * 0.20;
 		Array bp;
 		bp.push_back(pred[200]);
 		bp.push_back(pred[350]);
 		bp.push_back(pred[500]);
 		bp.push_back(pred[650]);
-		const Array linea_rival = m->get(k_linea_rival);
+		const Array linea_rival = ctx[10];
 		Dictionary ea;
 		ea["base"] = deseada;
 		ea["pos"] = yo;
@@ -333,7 +355,7 @@ Array DinastiaNativo::league_calcular_sin_balon(Object *m, const Dictionary &p, 
 		deseada = deseada * (1.0 - ab) + apoyo * ab;
 	}
 	// Componente defensiva sobre su marca y trampa del fuera de juego.
-	const Array marcas = m->get(k_marca);
+	const Array marcas = ctx[11];
 	const Dictionary marca = por_id.get(String(Dictionary(marcas[i]).get(id_p, "")), Dictionary());
 	if (!marca.is_empty()) {
 		const Vector2 rp = ls(pos(marca)) + vel_ls(marca) * 0.5;
@@ -354,7 +376,7 @@ Array DinastiaNativo::league_calcular_sin_balon(Object *m, const Dictionary &p, 
 	if (hay_pos) {
 		equipo_con_balon = bool(poseedor[k_local]) ? 0 : 1;
 	} else {
-		const Dictionary ut = m->get(k_ultimo);
+		const Dictionary ut = ctx[3];
 		if (!ut.is_empty()) {
 			equipo_con_balon = bool(ut[k_local]) ? 0 : 1;
 		}
@@ -363,15 +385,15 @@ Array DinastiaNativo::league_calcular_sin_balon(Object *m, const Dictionary &p, 
 	if (equipo_con_balon != i && hay_rival_con) {
 		const Vector2 rv = vel_ls(poseedor);
 		const Vector2 op = ls(pos(poseedor)) + rv * 0.12;
-		const Array presiona = m->get(k_presiona);
-		const Array presion_hasta = m->get(k_presion_hasta);
+		const Array presiona = ctx[12];
+		const Array presion_hasta = ctx[13];
 		if (mismo(presiona[i], p) && double(presion_hasta[i]) > t) {
 			r.push_back(op);
 			r.push_back(V_SPRINT);
 			return r;
 		}
 		const bool cerca_caza = double((op - (yo + mov * 0.04)).length()) < umbral_caza(mente, fresco, vmed, DIFICULTAD);
-		const Array desig_eq = m->get(k_desig_eq);
+		const Array desig_eq = ctx[14];
 		if (designado_disputa && cerca_caza && mismo(desig_eq[i], p)) {
 			r.push_back(op);
 			r.push_back(V_SPRINT);

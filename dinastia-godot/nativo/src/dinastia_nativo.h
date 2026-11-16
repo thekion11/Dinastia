@@ -58,8 +58,8 @@ public:
 	// [válido, velocidad, va_atrás, distancia_al_balón] para el bucle de animación, que sigue en GDScript. `coste_aguante` = [local, visitante] (el coste táctico del sprint).
 	// `LeagueGuia._paso_gd`, en dos pasadas: índices de los que deciden clip este paso, y luego guía o marcha de todos ([cortes, guiados]).
 	// `MotorLeague._calcular_sin_balon` entero (16-11, nativo/src/sin_balon_nativo.cpp): [destino, velocidad], o [] si hay que seguir en GDScript.
-	Array league_calcular_sin_balon(Object *m, const Dictionary &p, const Dictionary &reparto, bool designado_disputa) const;
-	Vector2 sb_destino_forma(Object *m, const Array &equipos, const Dictionary &p, const Vector2 &forma, const String &puesto, const Dictionary &mezcla) const;
+	Array league_calcular_sin_balon(const Array &ctx, const Dictionary &p, bool designado_disputa) const;
+	Vector2 sb_destino_forma(const Array &ctx, const Array &equipos, const Dictionary &p, const Vector2 &forma, const String &puesto, const Dictionary &mezcla) const;
 	// `MotorJugable._duelos`: parejas de rivales (sin porteros) a 1,3 m o menos, en orden ([i, j, …]; [-1] = más de 64 jugadores).
 	PackedInt32Array duelos_parejas(const Array &jugadores) const;
 	PackedInt32Array guia_pendientes(const Array &jugadores, double t) const;
