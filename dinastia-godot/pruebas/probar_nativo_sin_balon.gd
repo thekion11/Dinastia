@@ -2,7 +2,7 @@ class_name ProbarNativoSinBalon
 extends RefCounted
 ## La colocación sin balón de League en C++ (`league_calcular_sin_balon`) = su gemela `MotorLeague._calcular_sin_balon_gd` (16-11-2026, paso a C++, opción B
 ## del dueño; lo llama `probar_nativo.gd`): en partidos reales (motor combinado C4, jugadores 3D) se calculan las dos en CADA llamada sobre el mismo estado
-## (`MotorLeague.comparar_sb`) y se comparan byte a byte. Tres cruces con clubes de países distintos. Devuelve {fallos, textos}.
+## (`MotorLeague.comparar_sb`) y se comparan byte a byte. También las parejas de duelo (`duelos_parejas` frente a `_parejas_gd`, `MotorJugable.comparar_duelos`). Tres cruces con clubes de países distintos. Devuelve {fallos, textos}.
 
 const DT := 1.0 / 30.0
 const PASOS := 2400
@@ -49,8 +49,15 @@ static func probar(nat: Object, raiz: Node3D) -> Dictionary:
 		MotorLeague.comparar_sb = true
 		MotorLeague.sb_comparados = 0
 		MotorLeague.sb_distintos = 0
+		MotorJugable.comparar_duelos = true
+		MotorJugable.duelos_comparados = 0
+		MotorJugable.duelos_distintos = 0
 		_jugar(raiz, a, b, 500 + k)
 		MotorLeague.comparar_sb = false
+		MotorJugable.comparar_duelos = false
+		if MotorJugable.duelos_distintos > 0 or MotorJugable.duelos_comparados < 1000:
+			fallos.append("parejas de duelo %s - %s: distintas en %d de %d pasos" % [a.nombre, b.nombre, MotorJugable.duelos_distintos, MotorJugable.duelos_comparados])
+		textos.append("parejas de duelo %s - %s: C++ = GDScript en %d pasos" % [a.nombre, b.nombre, MotorJugable.duelos_comparados])
 		if MotorLeague.sb_distintos > 0 or MotorLeague.sb_comparados < 1000:
 			fallos.append("sin balón %s - %s: distinta en %d de %d llamadas" % [a.nombre, b.nombre, MotorLeague.sb_distintos, MotorLeague.sb_comparados])
 		textos.append("sin balón %s - %s: C++ = GDScript en %d llamadas (distintas: %d)" % [a.nombre, b.nombre, MotorLeague.sb_comparados, MotorLeague.sb_distintos])

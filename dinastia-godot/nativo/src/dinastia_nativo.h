@@ -60,6 +60,8 @@ public:
 	// `MotorLeague._calcular_sin_balon` entero (16-11, nativo/src/sin_balon_nativo.cpp): [destino, velocidad], o [] si hay que seguir en GDScript.
 	Array league_calcular_sin_balon(Object *m, const Dictionary &p, const Dictionary &reparto, bool designado_disputa) const;
 	Vector2 sb_destino_forma(Object *m, const Array &equipos, const Dictionary &p, const Vector2 &forma, const String &puesto, const Dictionary &mezcla) const;
+	// `MotorJugable._duelos`: parejas de rivales (sin porteros) a 1,3 m o menos, en orden ([i, j, …]; [-1] = más de 64 jugadores).
+	PackedInt32Array duelos_parejas(const Array &jugadores) const;
 	PackedInt32Array guia_pendientes(const Array &jugadores, double t) const;
 	PackedInt32Array guia_seguir(const Array &jugadores, double t, double delta, int64_t usuario, bool marchas) const;
 	PackedFloat64Array mover_jugadores_fisica(const Array &jugadores, const Vector3 &bpos, double delta, double t, bool hay_poseedor, const Variant &poseedor_id, bool poseedor_local, double a_max_base,

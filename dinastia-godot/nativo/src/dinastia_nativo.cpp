@@ -22,6 +22,7 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("obstaculos_multimalla", "nodo_t", "buf", "paso", "n", "base", "raiz_y", "min_alto", "max_base", "rej", "celda_rej"), &DinastiaNativo::obstaculos_multimalla);
 	ClassDB::bind_method(D_METHOD("cuerpos_motor", "jugadores", "minimo"), &DinastiaNativo::cuerpos_motor);
 	ClassDB::bind_method(D_METHOD("league_calcular_sin_balon", "motor", "p", "reparto", "designado_disputa"), &DinastiaNativo::league_calcular_sin_balon);
+	ClassDB::bind_method(D_METHOD("duelos_parejas", "jugadores"), &DinastiaNativo::duelos_parejas);
 	ClassDB::bind_method(D_METHOD("guia_pendientes", "jugadores", "t"), &DinastiaNativo::guia_pendientes);
 	ClassDB::bind_method(D_METHOD("guia_seguir", "jugadores", "t", "delta", "usuario", "marchas"), &DinastiaNativo::guia_seguir);
 	ClassDB::bind_method(D_METHOD("mover_jugadores_fisica", "jugadores", "bpos", "delta", "t", "hay_poseedor", "poseedor_id", "poseedor_local", "a_max_base", "ancho", "largo", "giro_rapido", "coste_aguante"),

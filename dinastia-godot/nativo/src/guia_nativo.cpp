@@ -179,3 +179,43 @@ PackedInt32Array DinastiaNativo::guia_seguir(const Array &jugadores, double t, d
 	r.push_back(int32_t(guiados));
 	return r;
 }
+
+// `MotorJugable._duelos` (visor/motor_jugable_p5.gd, 16-11-2026): las parejas (i < j, de equipos distintos, ningún portero) a 1,3 m o menos en el plano, en el orden
+// del doble bucle de GDScript, como [i0, j0, i1, j1, …]. Dentro de ese bucle nadie cambia de sitio, de equipo ni de puesto (los empujones solo apuntan la fuerza,
+// y si se pita algo el bucle se corta), así que la lista vale para todo el bucle; lo que sí cambia (contacto, gestos) lo sigue mirando GDScript pareja a pareja.
+PackedInt32Array DinastiaNativo::duelos_parejas(const Array &jugadores) const {
+	static const StringName k_node("node"), k_local("es_local"), k_por("por");
+	const int64_t n = jugadores.size();
+	Vector3 ps[64];
+	bool local[64];
+	bool vale[64];
+	PackedInt32Array r;
+	if (n > 64) {
+		r.push_back(-1);
+		return r;
+	}
+	for (int64_t i = 0; i < n; i++) {
+		const Dictionary p = jugadores[i];
+		const Node3D *nodo = Object::cast_to<Node3D>(static_cast<Object *>(p.get(k_node, Variant())));
+		vale[i] = nodo != nullptr && !bool(p.get(k_por, false));
+		local[i] = bool(p.get(k_local, false));
+		ps[i] = nodo != nullptr ? nodo->get_position() : Vector3();
+	}
+	for (int64_t i = 0; i < n; i++) {
+		if (!vale[i]) {
+			continue;
+		}
+		for (int64_t j = i + 1; j < n; j++) {
+			if (!vale[j] || local[i] == local[j]) {
+				continue;
+			}
+			const Vector3 dif = ps[j] - ps[i];
+			if (double(Vector3(dif.x, 0.0, dif.z).length()) > 1.3) {
+				continue;
+			}
+			r.push_back(int32_t(i));
+			r.push_back(int32_t(j));
+		}
+	}
+	return r;
+}
