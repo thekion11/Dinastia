@@ -39,7 +39,7 @@ func _escanear(dir: String, fuera: Array[String]) -> void:
 	for f in DirAccess.get_files_at(dir):
 		if not f.ends_with(".gd"):
 			continue
-		if dir.path_join(f) == "res://visor/calidad.gd":
+		if dir == "res://visor" and (f == "calidad.gd" or f.begins_with("calidad_p")):   ## (16-11) calidad.gd va en capas (calidad_p1.gd…)
 			continue   ## ahí se decide la calidad: cada efecto va dentro de su `if nivel >= …`
 		if EXCEPCIONES.has(dir.path_join(f)):
 			continue

@@ -154,6 +154,11 @@ func _probar_jugador_del_mes() -> void:
 	_comprobar(despues - antes == 2, "en 8 semanas hay 2 jugadores del mes (%d)" % (despues - antes))
 	var g := PremioMensual.elegir(m)
 	_comprobar(g != null and g.notas.size() >= PremioMensual.MINIMO_NOTAS and m.liga_de(m.mi_club()).clubes.any(func(c3: Club) -> bool: return c3.id == g.club_id), "el elegido es de tu liga y tiene notas suficientes")
+	## (16-11, informe G-08) Al empezar otra temporada `partidos` vuelve a 0 y las notas viejas no cuentan: nadie gana con las de mayo.
+	for c4: Club in m.liga_de(m.mi_club()).clubes:
+		for j4: Jugador in c4.plantilla:
+			j4.partidos = 0
+	_comprobar(PremioMensual.elegir(m) == null, "sin partidos en la temporada nueva no hay jugador del mes (las notas viejas no cuentan)")
 
 ## LAS ESTRATEGIAS RÁPIDAS DEL PARTIDO (10-11): preajustes de las 4 palancas de la pizarra; volver a pulsar recupera el plan; hay espera entre cambios.
 func _probar_estrategia_rapida() -> void:

@@ -28,8 +28,13 @@ static func primero(raiz: Node) -> Control:
 ## `pruebas/auditoria_foco_mando`) Si el contenido aún se está montando (pestañas que entran escalonadas: Mercado, Vida) lo
 ## reintenta unos fotogramas; si no tiene NINGÚN control (Palmarés, Glosario, Enfermería…), el foco va a su zona de desplazamiento,
 ## que la cruceta arriba/abajo hace correr: antes el foco quedaba en nada y la cruceta no hacía nada.
-static func enfocar(raiz: Control, intentos := 8) -> void:
-	if raiz == null or not raiz.is_inside_tree() or not hay_mando():
+## (16-11, informe L-03) `raiz` sin tipo Control: encolada con call_deferred puede llegar ya liberada, y el tipo
+## hacía fallar la llamada antes de la guarda («Cannot convert argument 1 from Object to Object»).
+static func enfocar(nodo, intentos := 8) -> void:
+	if not is_instance_valid(nodo) or not (nodo is Control):
+		return
+	var raiz := nodo as Control
+	if not raiz.is_inside_tree() or not hay_mando():
 		return
 	var actual := raiz.get_viewport().gui_get_focus_owner()
 	if actual != null and raiz.is_ancestor_of(actual) and actual.is_visible_in_tree():

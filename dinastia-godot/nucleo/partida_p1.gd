@@ -139,10 +139,8 @@ static func listar() -> Array[Dictionary]:
 		return int(a.get("guardado", 0)) > int(b.get("guardado", 0)))
 	return salida
 
-## La copa. Solo hacen falta tres cosas: el nombre, quiénes siguen vivos y en qué
-## orden. El cuadro se reconstruye emparejando de dos en dos esa lista, que es
-## exactamente como lo hace `Copa.jugar_ronda()`; guardar el árbol entero sería
-## guardar algo que ya se puede deducir.
+## La copa: nombre, quiénes siguen vivos y en qué orden (el cuadro se reconstruye emparejando
+## de dos en dos, como `Copa.jugar_ronda()`), más el peso del premio y las rondas ya jugadas.
 static func _copa_a_dic(c: Copa) -> Dictionary:
 	if c == null:
 		return {}
@@ -155,6 +153,7 @@ static func _copa_a_dic(c: Copa) -> Dictionary:
 	return {
 		"nombre": c.nombre, "ronda": c.ronda, "vivos": vivos,
 		"inscritos": inscritos, "campeon": c.campeon.id if c.campeon else "",
+		"peso_premio": c.peso_premio, "historial": c.historial_a_ids(),   ## (16-11, informe G-05)
 	}
 
 # --- los sistemas que solo existen para TU club ----------------------------

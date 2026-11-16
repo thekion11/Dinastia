@@ -24,7 +24,7 @@ func _pintar_finanzas(c: Club) -> void:
 	## (`Mundo._finanzas_de_la_semana`), solo para PREGUNTARLE: proyectar no mueve la caja.
 	var f_sim: Finanzas = p.mundo._finanzas_de_la_semana(c)
 	var taq := p.mundo.estimar_taquilla(c)
-	var proy := f_sim.proyeccion_anual(int(p._liga_de(c).jornadas() / 2), p.mundo.ingreso_tienda(c))
+	var proy := f_sim.proyeccion_anual(int(p._liga_de(c).jornadas() / 2), p.mundo.ingreso_tienda(c), p.mundo.meses_de_la_temporada())
 	var pal: Dictionary = p._ui_ficha._paleta_ficha()
 	if not todo:
 		p._lista_finanzas.add_child(CifrasClave.banda(_cifras(secc, c, taq, proy), p.COL_SUAVE))

@@ -53,10 +53,15 @@ func _calidad_y_horas() -> void:
 			vc.call("_aplicar_hora")
 			await get_tree().process_frame
 		var con_sombra := 0
+		var cuales := PackedStringArray()   ## (16-11) en el mensaje, para ver qué luz sobra si vuelve la intermitencia (informe E-05)
 		for l in vc.find_children("*", "Light3D", true, false):
 			if (l as Light3D).shadow_enabled and (l as Light3D).visible:
 				con_sombra += 1
-		_comprobar((nivel > Calidad.MINIMO and con_sombra >= 1) or (nivel <= Calidad.MINIMO and con_sombra == 0), "cambiando a calidad %d con la ciudad abierta y el sol alto: sombras según nivel (%d luces con sombra)" % [nivel, con_sombra])
+				cuales.append("%s/%s" % [l.get_parent().name, l.name])
+		## (16-11, informe F-05) El umbral lo decide `Calidad.sombra_solar` (con el modo rendimiento, encendido por defecto desde el 15-11,
+		## MEDIA tampoco proyecta la sombra del sol), no una cifra fija.
+		var debe := Calidad.sombra_solar(nivel)
+		_comprobar((debe and con_sombra >= 1) or (not debe and con_sombra == 0), "cambiando a calidad %d con la ciudad abierta y el sol alto: sombras según nivel (%d luces con sombra; sombra del sol: %s) %s" % [nivel, con_sombra, "sí" if debe else "no", ", ".join(cuales)])
 	for h in [-5.0, 24.0, 25.0, 100.0, 0.0001]:
 		vc.set("_hora", h)
 		vc.call("_aplicar_hora")
