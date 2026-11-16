@@ -79,7 +79,7 @@ const SHADER_OJOS := "res://visor/ojos_q.gdshader"
 ## La misma compensación de saturación que `cara_malla.gdshader`.
 const SATURACION_PIEL := 1.0
 ## Compensación del "pie" del mapeo de tonos (ver `cara_malla.gdshader`).
-const COMPENSAR_PIEL := 1.6
+const COMPENSAR_PIEL := 1.35   ## (16-11, frente 2) 1,6 dejaba la piel gris rosada (medido en captura: ~210,190,180); igual en `cara_malla.gdshader`
 static var _cache_cara := {}
 
 static var _mallas_reposo: Dictionary = {}
