@@ -118,6 +118,10 @@ static func pasos_fotograma() -> void:
 static func pasos_consumir() -> void:
 	_pendientes.clear()
 
+## Una pulsación que no viene del `Input` del fotograma (pruebas, botones táctiles): la consume el próximo paso.
+static func pasos_inyectar(accion: StringName) -> void:
+	_pendientes[accion] = true
+
 static func ayuda(k: String) -> String:
 	if not _cargado:
 		cargar()

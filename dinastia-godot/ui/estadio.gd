@@ -224,6 +224,8 @@ func _paso_motor(delta: float) -> void:
 			Mando.pasos_consumir()
 			return
 	var mult := _juego.velocidad() if _juego != null else 1.0
+	if mult <= 0.0:
+		Mando.pasos_consumir()   ## (16-11, revisión de M6-01) en PAUSA (botón de velocidad) no se acumulan pulsaciones
 	_acum_motor = minf(_acum_motor + delta * mult, DT_MOTOR * 16.0)
 	while _acum_motor >= DT_MOTOR:
 		_motor.paso(DT_MOTOR)
@@ -287,11 +289,8 @@ func _process(delta: float) -> void:
 		return
 	## Durante la repetición y la presentación el partido está CONGELADO: ni
 	## reloj ni minutos.
-	if _repe != null and _repe.reproduciendo:
-		return
-	if _intro != null and _intro.activa:
-		return
-	if is_instance_valid(_ceremonia) and _ceremonia.activa:
+	if (_repe != null and _repe.reproduciendo) or (_intro != null and _intro.activa) or (is_instance_valid(_ceremonia) and _ceremonia.activa):
+		Mando.pasos_consumir()   ## (16-11, revisión de M6-01) lo pulsado antes de congelar no se dispara al volver
 		return
 	if _motor != null:
 		_cine_paso(delta)

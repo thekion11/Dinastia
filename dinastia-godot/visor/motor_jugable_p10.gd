@@ -267,9 +267,10 @@ func _lanzar_usuario(fuerza: float) -> void:
 		var loft := float(apunte["loft"]) * 7.0
 		var efecto_saque := float(apunte["ang"]) * -10.0 + float(apunte.get("efecto", 0.0)) * 9.0
 		_patear(p, destino, 12.0 + fuerza * 18.0, loft, efecto_saque, "patear" if fuerza > 0.6 else "pase")
-		if tipo == "falta" and Vector2(lugar.x, lugar.z - _arco_rival(p).z).length() < 32.0:
-			tiros[0 if bool(p["es_local"]) else 1] += 1
+		if tipo == "falta" and Vector2(lugar.x, lugar.z - _arco_rival(p).z).length() < 32.0 and MotorReglas.va_a_puerta(self as Object as MotorJugable, p, lugar, dir, dist):
+			tiros[0 if bool(p["es_local"]) else 1] += 1   ## (16-11, M6-15) solo si va entre los palos, y con su remate abierto
 			stats["tiros"] += 1
+			_cerrar_tiro("fallo"); _tiro_vivo = {"p": p, "t": t, "clase": "falta"}
 		pase_a = _companero_cerca(p, destino)
 	_reanudar()
 
@@ -395,8 +396,8 @@ func _fuera_del_area(p: Dictionary) -> Vector3:
 	var o := _forma(p, false)
 	var lugar: Vector3 = saque["lugar"]
 	var arco_z := signf(lugar.z) * LARGO
-	if absf(o.z - arco_z) < AREA_Z + 1.0:
-		o.z = arco_z - signf(arco_z) * (AREA_Z + 2.0)
+	if absf(o.z - arco_z) < PUNTO_PENAL + 9.65:   ## (16-11, M6-18) fuera del área Y a más de 9,15 m del punto (antes a 7,5 m)
+		o.z = arco_z - signf(arco_z) * (PUNTO_PENAL + 9.65)
 	return o
 
 ## Córner y falta: los que atacan entran al área (primer palo, segundo palo,

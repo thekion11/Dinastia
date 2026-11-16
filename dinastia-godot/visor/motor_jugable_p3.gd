@@ -362,43 +362,9 @@ func _gol(en_arco_visita: bool) -> void:
 		if is_instance_valid(ap):
 			_celebra_anim = AnimExtra.celebracion(ap, String(jd.get("rasgo", "")), autor_id, not de_local, _rng)
 
-## Postes, larguero, gol, y fuera del campo.
+## Postes, larguero, gol, y fuera del campo (16-11, M6-19: con la pelota entera; en `visor/motor_reglas.gd`).
 func _palos_y_lineas(antes: Vector3) -> void:
-	var p := balon.position
-	for signo: float in [-1.0, 1.0]:
-		var linea := LARGO * signo
-		## ¿Cruzó la línea de gol en este paso?
-		if (antes.z - linea) * (p.z - linea) <= 0.0 and absf(p.z) >= LARGO - 0.001 and signf(p.z) == signo:
-			## Poste: el balón pega en el palo si pasa a un radio de él.
-			if p.y < LARGUERO + R and absf(absf(p.x) - PALO) < 0.12 + R:
-				vel_balon.z = -vel_balon.z * 0.6
-				vel_balon.x += signf(p.x) * 1.5
-				balon.position.z = linea - signo * 0.2
-				aviso.emit("¡AL PALO!")
-				_cerrar_tiro("poste")
-				return
-			if absf(p.x) < PALO and absf(p.y - LARGUERO) < 0.12 + R:
-				vel_balon.y = -absf(vel_balon.y) * 0.5
-				vel_balon.z = -vel_balon.z * 0.5
-				balon.position.z = linea - signo * 0.2
-				aviso.emit("¡AL LARGUERO!")
-				_cerrar_tiro("poste")
-				return
-			if absf(p.x) < PALO and p.y < LARGUERO:
-				_gol(signo > 0.0)
-				return
-			## Fuera por la línea de fondo: córner o saque de puerta.
-			var desvio := MotorCorner.desvio(self as Object as MotorJugable); _cerrar_tiro("fallo")   ## ciclo 26: remate desviado = córner
-			var defiende_local := signo < 0.0   ## el local defiende -Z
-			var toco_defensor := desvio or (not ultimo_toque.is_empty() and bool(ultimo_toque["es_local"]) == defiende_local)
-			if toco_defensor:
-				_empezar_saque("corner", not defiende_local, Vector3(signf(p.x) * (ANCHO - 0.3), R, linea - signo * 0.3))
-			else:
-				_empezar_saque("puerta", defiende_local, Vector3(signf(p.x) * 5.0, R, linea - signo * 5.5))
-			return
-	if absf(p.x) > ANCHO:
-		var local_saca := ultimo_toque.is_empty() or not bool(ultimo_toque["es_local"])
-		_empezar_saque("banda", local_saca, Vector3(signf(p.x) * (ANCHO - 0.2), R, clampf(p.z, -LARGO + 1.0, LARGO - 1.0)))
+	MotorReglas.palos_y_lineas(self as Object as MotorJugable, antes)
 
 ## ¿Hay un defensa del portero entre el rival y el arco?
 func _hay_defensa_entre(gk: Dictionary, desde: Vector3, arco: Vector3) -> bool:

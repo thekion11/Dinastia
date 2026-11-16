@@ -198,9 +198,9 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 		return
 	## Una ROJA DIRECTA no es una amarilla de temporada (mega auditoría 4): solo cuenta la amarilla de verdad y la segunda amarilla (la que la motiva: ya hubo una en este partido).
 	var previas := int(_amarillas_hoy.get(jugador_id, 0))
-	## (16-11, informe M6-05) Una 2.ª amarilla en este partido es roja aunque el 3D no lo sepa (el estadio se rehace en el descanso).
-	if not roja and previas > 0:
+	if not roja and previas > 0:   ## (16-11, M6-05) una 2.ª amarilla de este partido es roja aunque el 3D no lo sepa: se arregla y se avisa
 		roja = true
+		Registro.apuntar("AVISO", "tarjeta_externa: 2.ª amarilla de %s llegó como amarilla (3D y acta desincronizados); se expulsa" % jugador_id)
 	if not roja or previas > 0:
 		j.amarillas += 1
 	if not roja:

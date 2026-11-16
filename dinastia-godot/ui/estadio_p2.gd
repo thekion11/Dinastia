@@ -229,9 +229,11 @@ func _fijar_ritmo(r: String) -> void:
 	cfg.save(CajonAjustes.RUTA)
 	if _motor != null:
 		## Se respeta el minuto en curso: solo cambia lo que dura cada minuto.
-		var frac := _motor.t / maxf(_motor.duracion_mitad, 1.0)
+		var k := 45.0 * float(SEG_POR_MINUTO.get(r, 5.5)) / maxf(_motor.duracion_mitad, 1.0)
 		_motor.duracion_mitad = 45.0 * float(SEG_POR_MINUTO.get(r, 5.5))
-		_motor.t = frac * _motor.duracion_mitad
+		_motor.t *= k
+		for i in _motor.anadido.size():   ## (16-11, informe M6-16) el añadido está en segundos de motor: también se reescala
+			_motor.anadido[i] = float(_motor.anadido[i]) * k
 	_mostrar_banner_gol({"rapido": "⏩ Partido corto", "normal": "⏯ Ritmo normal", "largo": "🐢 Partido largo"}.get(r, r), true)
 
 ## DIFICULTAD DE LA CPU (20-10-2026): se guarda en los ajustes y vale para el próximo partido; en el actual,
