@@ -114,3 +114,47 @@ de la tabla del cap. 9 del informe (A1.7 y la fila de la tabla de brechas) está
 - A1.1 de extremo a extremo y A1.8-A1.10: necesitan al dueño (laptop, teléfono, nota, prueba ciega, FPS).
 - La sonda plausible a 1/60 s cuesta ~75 s por partido en esta máquina: los 50 partidos del criterio no cupieron en esta pasada
   (13 de línea base + 10 del PPDA + 18 de calibración).
+
+## 6. Segunda pasada (16-11, tarde): ¿por qué ~6 goles en C4?
+
+**¿Regresión de H0?** Misma sonda y mismos cruces en el commit anterior a H0 (`bfae8e7f`, worktree aparte) y en el actual:
+
+| Muestra (6 partidos cada una) | Antes de H0 | Con H0 |
+|---|---|---|
+| `DESDE=0` | 3,50 | 6,00 |
+| `DESDE=7` | 5,17 | 5,83 |
+| `DESDE=13` | 4,50 | 4,67 |
+| **18 partidos** | **4,39** | **5,50** |
+
++1,1 goles con un error de ~0,7 (la desviación por partido es ~2 goles): posible subida parcial, no concluyente, y ANTES de H0
+C4 ya estaba muy por encima de la banda (4,4). Con las dos piezas sospechosas de H0 vueltas atrás en la muestra `DESDE=0` (6,00 con H0):
+pase de C4 pedido con la ley de siempre (bandera temporal, ya borrada) → 6,67; sin contrapresión (`SIN_CONTRAPRESION=1`) → 5,17. Ninguna
+explica la diferencia: no se toca H0.
+
+**Lo que se probó para bajar los goles (todo en C4, con bandera; todo APAGADO al final):**
+
+| Bandera | Qué hace | Medido | Veredicto |
+|---|---|---|---|
+| `C4_ALCANCE_AREA=k` | alcance del portero ×k ante remates desde < 17 m | k 1,5 / 2,0: 5,33 / 5,33 goles (6 partidos) | sin efecto medible |
+| `C4_ALCANCE_TIEMPO=v` | el alcance sigue creciendo con el tiempo de vuelo (`v·(tz − 0,5)` m; antes se saturaba a 0,52 s) | aislado: gol de lo que va a puerta desde 22-28 m 35/27 % → 28/20 % | ayuda de lejos, poco en partido |
+| `C4_CIERRE_AREA=1` | con el balón rival a < 24 m: el 2.º presionador tapa la línea de tiro y el compañero libre más cercano marca a cada rival del área | 6,17 (base 6,00) | sin efecto medible |
+| `C4_TIRO_COMPANERO=1` | un compañero del rematador no «controla» un tiro a > 12 m/s que le pasa cerca (hoy se queda el balón con ~85 % y remata a quemarropa) | 5,17 (base 6,00) | dentro del ruido |
+| las tres juntas + `C4_ALCANCE_TIEMPO=3` | — | muestra 1 (ESP, ARG, ITA, BRA, GER), 12 partidos: 5,67 (base 6,42); muestra 2 (ENG, FRA, MEX, POR, NED): 6,58 (base 5,67) | NO baja |
+| `C4_PRESION_AREA=k` | el error del remate desde < 17 m crece con lo cerca que esté el rival | sin medir en partido | apagada |
+| `C4_ERROR_AREA` 1,8 / 2,5 (de la sesión 15) | más error en el remate del área | aislado: más fuera, pero los que van a puerta entran igual (32-37 %) | sin efecto |
+
+**Lo que se aprendió (diagnóstico, con contadores temporales ya quitados):**
+- Remate AISLADO (tirador solo contra el portero, `pruebas/_sonda/sonda_remate_portero.tscn`, nueva): C4 y el motor de siempre conceden
+  ~35 % de lo que va a puerta (real ~30 %; desde 22-28 m 27-35 %, real ~15 %). El portero no está roto; casi todos los goles son remates
+  fuera de su alcance (`lat ≥ alcance`) y ni `PARADA_K` 1,8 ni `PARADA_SUELO` 0,7 lo mueven.
+- En partido, de 8,3 paradas decididas por partido solo se hacen 3,3: el resto se anulan porque otro toca el balón antes (2,3 un compañero
+  del rematador, 1,0 un defensa, 1,0 el propio portero). Es el «desorden» que ya había visto la sesión 15.
+- Al encajar, el portero está a 1,5-4,5 m del balón en lateral en la mayoría de los goles (vencido), y a 4-8 m de su arco en ~1/3.
+- C4 tira ~10 a puerta con el pie y ~3 de cabeza por partido (real ~8,5 en total) con un 40-45 % de gol de lo que va a puerta: sobran
+  tanto el volumen a puerta como la calidad de cada ocasión.
+
+**Conclusión:** sigue la alarma A1.3 (≈ 5,5-6 goles). Ninguna palanca local (portero, cierre, rematador, error) la baja de forma medible
+con 12 partidos por muestra; el ruido (±0,6) tapa efectos de < 1 gol. Lo siguiente tendría que ser estructural (cuántos jugadores
+defienden dentro del área cuando llega el balón y cuántas llegadas limpias hay), con 24+ partidos por variante, o aceptar la cifra si
+el dueño y la prueba ciega prefieren C4 así (cap. 9, «detectores»). Huella `igualdad_motor` sin cambios (4068298361, dos corridas): con
+las banderas apagadas los ganchos nuevos (`_alcance_extra`, `_puede_tomar_tiro`) no cambian nada. Banco `BANCO_PARTES=2`: «FIN. 0 fallos».

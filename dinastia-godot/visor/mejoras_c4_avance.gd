@@ -126,22 +126,31 @@ static func parada(m: Object, gk: Dictionary, desde: Vector3, prob: float) -> fl
 		(m.diag as Dictionary)["c4_parada_area"] = int((m.diag as Dictionary).get("c4_parada_area", 0)) + 1
 	return prob * PARADA_AREA
 
-## EL ALCANCE DEL PORTERO ANTE EL REMATE DESDE DENTRO DEL ÁREA (16-11, informe AAA H1): la sonda `futbol_plausible` medía en C4 un 39 %
-## de gol en los remates desde dentro del área (real ≈ 13-15 %) y 1,6 goles por cada gol esperado (xG propio): a quemarropa el alcance
-## del portero cae a 0,3 de su valor (`MotorParada.SUELO`) y casi todo lo que va entre los palos entra. Con `C4_ALCANCE_AREA=k` (0 =
-## apagada) el alcance ante un remate cuyo balón está a menos de 17 m de su arco se multiplica por `k` (cierra el ángulo: sale, achica).
-## Contador `c4_alcance_area`.
+## EL ALCANCE DEL PORTERO (16-11, informe AAA H1). La sonda `futbol_plausible` medía en C4 ~6 goles por partido, 1,5 goles por gol
+## esperado (xG propio) y un 11-27 % de gol en los remates de fuera del área (real ≈ 3-5 %). En `_reaccion_portero` el alcance crece con
+## el tiempo que tarda el remate en llegar (`tz`) solo hasta 0,52 s y ahí se queda: un tiro de 25 m que tarda 1 s tenía el mismo alcance
+## que uno de 12 m, y todo lo que iba pegado al palo entraba. `C4_ALCANCE_TIEMPO=v` (m/s; 0 = apagada) suma `v·(tz − 0,5)` metros de
+## alcance (el portero se desplaza antes de estirarse), con tope `TOPE_TIEMPO`. `C4_ALCANCE_AREA=k` (0 = apagada; probada y descartada:
+## con 1,5 y 2,0 el gol desde dentro casi no cambiaba) multiplica el alcance ante un remate a menos de 17 m. Contadores `c4_alcance_*`.
+static var ALCANCE_TIEMPO := float(OS.get_environment("C4_ALCANCE_TIEMPO")) if OS.get_environment("C4_ALCANCE_TIEMPO") != "" else 0.0
+const TOPE_TIEMPO := 2.0
 static var ALCANCE_AREA := float(OS.get_environment("C4_ALCANCE_AREA")) if OS.get_environment("C4_ALCANCE_AREA") != "" else 0.0
 
-static func alcance(m: Object, gk: Dictionary, desde: Vector3, a: float) -> float:
-	if ALCANCE_AREA <= 0.0:
-		return a
-	var arco: Vector3 = m._arco_propio(gk)
-	if Vector2(desde.x - arco.x, desde.z - arco.z).length() >= 17.0:
-		return a
+static func alcance(m: Object, gk: Dictionary, desde: Vector3, a: float, tz: float) -> float:
+	var r := a
+	if ALCANCE_TIEMPO > 0.0 and tz > 0.5:
+		r += minf(ALCANCE_TIEMPO * (tz - 0.5), TOPE_TIEMPO)
+		_contar(m, "c4_alcance_tiempo")
+	if ALCANCE_AREA > 0.0:
+		var arco: Vector3 = m._arco_propio(gk)
+		if Vector2(desde.x - arco.x, desde.z - arco.z).length() < 17.0:
+			r *= ALCANCE_AREA
+			_contar(m, "c4_alcance_area")
+	return r
+
+static func _contar(m: Object, k: String) -> void:
 	if m.get("diag") is Dictionary:
-		(m.diag as Dictionary)["c4_alcance_area"] = int((m.diag as Dictionary).get("c4_alcance_area", 0)) + 1
-	return a * ALCANCE_AREA
+		(m.diag as Dictionary)[k] = int((m.diag as Dictionary).get(k, 0)) + 1
 
 ## EL PASE ATRÁS DESDE EL FONDO (sesión 15): el extremo que llega al fondo (`C4_BANDA`) solo sabía centrar por arriba (`MejorasC4.centro`).
 ## Con `C4_PASE_ATRAS=1`, abierto (|x| > 9) y a menos de 10 m de la línea de fondo, con probabilidad `PASE_ATRAS_P` busca un compañero

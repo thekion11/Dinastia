@@ -178,6 +178,7 @@ func _disputas(delta: float) -> void:
 		for p: Dictionary in jugadores:
 			if float(p["enfriar"]) > 0.0 or float(p.get("levanta_hasta", 0.0)) > t:   ## (10-11) en el suelo no se toca el balón (p4_saque_barrida)
 				continue
+			if not _tiro_vivo.is_empty() and not _puede_tomar_tiro(p): continue   ## (16-11, H1) gancho: aquí siempre puede (C4: `C4_TIRO_COMPANERO`)
 			var d := Vector2(pos(p).x - b.x, pos(p).z - b.z).length()
 			var alcance := 1.6 if bool(p["por"]) and _en_su_area(p, b) else 0.9
 			## El que espera el pase va al encuentro del balón y se perfila:
@@ -440,3 +441,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 ## Cuánto más rápido hay que lanzar para llegar con el tiempo previsto: el aire quita ≈ K·v²·t en el vuelo; tope +25 % (a más, el balón pasaría de 36 m/s y la sonda de física lo contaría como salto).
 static func compensa_arrastre(vh: float, tv: float) -> float:
 	return 1.0 / (1.0 - minf(ARRASTRE_CUAD * vh * tv, 0.2))
+
+## GANCHO (16-11, H1): ¿puede `p` hacerse con el balón mientras va un remate? Aquí siempre (la huella no cambia); ver `MejorasC4Area`.
+func _puede_tomar_tiro(_p: Dictionary) -> bool:
+	return true

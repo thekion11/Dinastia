@@ -76,7 +76,7 @@ También el 16-11, fuera del informe: los «parches claros» de camisetas y pant
 | Gestión, bajos | G-05 a G-08 | Baja | H3 |
 | Menús | M-01 | Baja | H3 |
 | Ciudad 3D (apagada) | nº 2 y nº 5 de «FALLOS DETECTADOS» | Alta / baja | fuera de 1.0 |
-| Partido simulado | Recalibrar remates: 10 por partido y 27 % de conversión frente a ~25 y ~11 % reales; goleadas de hasta 15-0 entre divisiones [D: `PLAN_GENERAL.md` §0, 4-11]; el dueño lo aprobó el 4-11 (orden 32), estado sin verificar en este informe | — | H1 |
+| Partido simulado | Recalibrar remates: 10 por partido y 27 % de conversión frente a ~25 y ~11 % reales; goleadas de hasta 15-0 entre divisiones [D: `PLAN_GENERAL.md` §0, 4-11]; el dueño lo aprobó el 4-11 (orden 32); VERIFICADO el 16-11: 23,9 remates, 11,5 % de conversión, 2,75 goles y goleada máxima 9 entre el mejor y el peor (`cifras_partido`, `a4_partido_cruzado`) | — | H1 |
 
 Recuento: capítulo 5, 13 identificadores del proyecto (F-01 a F-05, L-01 a L-04, R5-01 a R5-03, E-04); capítulo 6, 26; capítulo 7, 25. Total 64, de los que 20 cerrados (16 + F-02, L-01, L-04 y F-04), 1 en curso (F-01) y 43 pendientes (incluidos los duplicados M6-12/M-02/F-03, que son un solo defecto) [M: recuento de las tablas].
 
@@ -137,7 +137,7 @@ Recuento: capítulo 5, 13 identificadores del proyecto (F-01 a F-05, L-01 a L-04
 | A1.4 | Tiros por partido; proporción dentro del área | 22-28; ≥ 60 % | [F 49]; cap. 2, I8 |
 | A1.5 | Conversión real frente a xG propio | diferencia ≤ 25 % relativa | [F 45]; criterio [E] |
 | A1.6 | PPDA con «presión alta» frente a «bloque bajo» | significativamente menor con presión alta | [F 47]; F-01 |
-| A1.7 | Partido simulado: conversión de remate | 9-15 % (hoy 27 %) | [F 49]: 11,9 % en la Premier League 2023-24 |
+| A1.7 | Partido simulado: conversión de remate | 9-15 % (medido el 16-11: 11,5 %; la cifra de 27 % era del 4-11, antes de recalibrarlo) | [F 49]: 11,9 % en la Premier League 2023-24 |
 | A1.8 | Nota del dueño al partido | ≥ 65/100 | resumen ejecutivo §10 |
 | A1.9 | Prueba ciega con 5-10 personas externas (selector A/B/C) | media ≥ 60/100 y C4 preferido o empatado | resumen ejecutivo §10, tarea 10 |
 | A1.10 | FPS (puerta de no regresión, laptop) | ULTRA ≥ 38, ULTRA BAJA ≥ 95 | resumen ejecutivo §6.4 |
@@ -224,7 +224,7 @@ Los criterios A1.3-A1.7 son detectores: si el partido se sale de la banda y aun 
 | Partido en MÍNIMA en el teléfono | 30 FPS (~4-11) [D] | 60 (orden 22) | prueba integrada | **no desde ~4-11** |
 | Latencia de extremo a extremo | sin medir | mediana ≤ 100 ms, p90 ≤ 140 ms | cámara 240 imágenes/s | **no** |
 | Goles por partido C4 (mitades de 240 s, piloto automático) | ~4,4 [D] | banda 2,5-3,3 como alarma | `comparar_tres_motores` | sí, con otra duración |
-| Conversión de remate, partido simulado | 27 % [D] | 9-15 % | banco `partido_porteros` | sí |
+| Conversión de remate, partido simulado | 11,5 % (medido el 16-11, `cifras_partido`; 27 % el 4-11) [D] | 9-15 % | banco `partido_porteros` | sí |
 | Cadenas de 5+ pases por partido (C4) | ~3,5 [D] | tendencia al alza (sin umbral con fuente) | `medidor_diversion` | sí |
 | Nota del dueño al partido | «muy mala» (3-11) [D] | ≥ 65/100 | formulario | sin nota sobre C4 |
 | Probadores externos | 0 [D] | 10-30 | formulario | **no** |

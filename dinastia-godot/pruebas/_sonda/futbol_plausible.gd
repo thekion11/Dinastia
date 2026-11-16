@@ -6,7 +6,7 @@ extends Node
 ## frente al xG propio (`EstadisticasVivo.xg_de`; diferencia ≤ 25 %), y PPDA (pases que el rival da en su 60 % del campo por cada
 ## acción defensiva allí: robo, corte o falta) del equipo con presión ALTA frente al de BLOQUE BAJO (el mismo cruce dos veces,
 ## cambiando solo la táctica del local; debe salir menor con presión alta).
-##   N=50 DESDE=0 MITAD=247.5 PPDA=0 godot --headless --path . res://pruebas/_sonda/futbol_plausible.tscn
+##   N=50 DESDE=0 MITAD=247.5 PPDA=0 [PAISES=ENG,FRA,MEX,POR,NED] godot --headless --path . res://pruebas/_sonda/futbol_plausible.tscn
 ## Con `PPDA=1` juega los N cruces dos veces (local con presión alta y con bloque bajo). Para partir en tandas: `DESDE` y `N`.
 ## Una línea «PLAUSIBLE_JSON {…}» por partido (para sumar tandas) y el resumen al final.
 
@@ -23,8 +23,13 @@ func _ready() -> void:
 	var desde := int(OS.get_environment("DESDE")) if OS.get_environment("DESDE") != "" else 0
 	var mitad := float(OS.get_environment("MITAD")) if OS.get_environment("MITAD") != "" else 247.5
 	var ppda := OS.get_environment("PPDA") == "1"
+	var paises: Array[String] = PAISES
+	if OS.get_environment("PAISES") != "":
+		paises = []
+		for x in OS.get_environment("PAISES").split(",", false):
+			paises.append(String(x))
 	var m := Mundo.new()
-	m.generar(PAISES, 4711)
+	m.generar(paises, 4711)
 	for liga: Liga in m.ligas:
 		if int(liga.div) == 1 and liga.clubes.size() >= 4:
 			_clubes.append(liga.clubes[1])
@@ -79,6 +84,7 @@ func _jugar(a: Club, b: Club, semilla: int, mitad: float, modo: String) -> Dicti
 	var ult := {"zona": "", "t": -99.0, "rech": 0}
 	var tiros_prev := 0
 	var goles_prev := 0
+	var r_goles_prev := [0, 0]
 	var tope := int((mitad * 2.0 * 1.6 + 300.0) / DT)
 	while mo.estado != "fin" and pasos < tope:
 		var bpos := mo.balon.position
@@ -100,6 +106,8 @@ func _jugar(a: Club, b: Club, semilla: int, mitad: float, modo: String) -> Dicti
 		var ng := int(mo.goles[0]) + int(mo.goles[1])
 		if ng > goles_prev:
 			goles_prev = ng
+			_diag_gol(mo, zonas, int(mo.goles[0]) > int(r_goles_prev[0]))
+			r_goles_prev = [int(mo.goles[0]), int(mo.goles[1])]
 			if String(ult["zona"]) != "" and mo.t - float(ult["t"]) <= 4.0:
 				var clave := ("zr_" if int((mo.diag as Dictionary).get("c4_rechace", 0)) > int(ult["rech"]) else "zg_") + String(ult["zona"])
 				zonas[clave] = int(zonas.get(clave, 0)) + 1
@@ -148,7 +156,7 @@ func _jugar(a: Club, b: Club, semilla: int, mitad: float, modo: String) -> Dicti
 	## De dónde salen los remates y los goles (contadores del motor: zona del tiro, clase, origen del gol, rechaces de C4).
 	var dg := {}
 	for k: String in (mo.diag as Dictionary).keys():
-		if k.begins_with("tiro_") or k.begins_with("a_puerta") or k.begins_with("gol_") or k.begins_with("traza_gol") or k.begins_with("c4_gol") or k == "c4_rechace" or k == "c4_alcance_area":
+		if k.begins_with("tiro_") or k.begins_with("a_puerta") or k.begins_with("gol_") or k.begins_with("traza_gol") or k.begins_with("c4_gol") or k == "c4_rechace" or k.begins_with("c4_alcance") or k == "c4_cierre_area" or k == "c4_tiro_companero" or k == "c4_presion_area":
 			dg[k] = mo.diag[k]
 	dg.merge(zonas)
 	r["diag"] = dg
@@ -201,3 +209,17 @@ static func resumen(filas: Array) -> String:
 		if int(a[1]) > 0:
 			s += "  PPDA del local%s: %.2f (%d pases / %d acciones)\n" % [" con presión ALTA" if md == "alta" else (" con BLOQUE BAJO" if md == "bajo" else ""), float(a[0]) / float(a[1]), int(a[0]), int(a[1])]
 	return s
+
+## Diagnóstico de cada gol: ¿el portero que lo encaja llegó a decidir sobre ese remate (`_patada_vista`) y dónde estaba?
+func _diag_gol(mo: MotorJugable, zonas: Dictionary, marco_local: bool) -> void:
+	for q: Dictionary in mo.jugadores:
+		if bool(q["por"]) and bool(q["es_local"]) != marco_local:
+			var vio := int(q.get("_patada_vista", -1)) == int(mo.get("_n_patada"))
+			var arco := mo._arco_propio(q)
+			var fuera := Vector2(mo.pos(q).x - arco.x, mo.pos(q).z - arco.z).length()
+			var k := "gk_" + ("vio" if vio else "no_vio") + ("_a%d" % (mini(int(fuera / 4.0), 4) * 4))
+			var bp := mo.balon.position
+			var lado := "gk_lat_%d" % (mini(int(absf(mo.pos(q).x - bp.x) / 1.5), 4))
+			zonas[lado] = int(zonas.get(lado, 0)) + 1
+			zonas[k] = int(zonas.get(k, 0)) + 1
+			return
