@@ -123,6 +123,7 @@ func _empezar_saque(tipo: String, saca_local: bool, lugar: Vector3) -> void:
 	balon.position = lugar
 	var lanzador := _elegir_lanzador(tipo, saca_local, lugar)
 	saque = {"tipo": tipo, "local": saca_local, "lugar": lugar, "lanzador": lanzador}
+	_offside = {}   ## (16-11, M6-04) la jugada se reinicia: el adelantado de un pase que salió no cuenta en el saque
 	_receptor_i = -1
 	_receptor_marcado = {}
 	if tipo == "corner":

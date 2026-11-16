@@ -402,7 +402,7 @@ func _control_sin_balon(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, rb
 	if Mando.pulsado("jugar_tiro") and float(p["enfriar"]) <= 0.0:
 		if rival_con_balon and pos(poseedor).distance_to(pos(p)) < 1.8:
 			_entrada(p, false)
-		elif poseedor.is_empty() and balon.position.distance_to(pos(p)) < 1.6:
+		elif poseedor.is_empty() and balon.position.distance_to(pos(p)) < 1.6 and not _pitar_offside(p):   ## (16-11, M6-04)
 			## Despeje / remate de primera.
 			var arco2 := _arco_rival(p)
 			if absf(arco2.z - pos(p).z) < 25.0:
