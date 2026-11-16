@@ -364,7 +364,7 @@ func _mover_balon(delta: float) -> void:
 	var c: Dictionary = poseedor
 	var toques := int(c.get("toques", 0)) if not c.is_empty() else -1
 	super(delta)
-	if not fase3 or c.is_empty() or poseedor != c or int(c.get("toques", 0)) == toques or estado != "juego":
+	if not fase3 or _sin_toque_league() or c.is_empty() or poseedor != c or int(c.get("toques", 0)) == toques or estado != "juego":
 		return
 	var yo := ls(pos(c))
 	var cerca := INF
@@ -400,6 +400,10 @@ func _mover_balon(delta: float) -> void:
 	var v0 := sqrt((exp(2.0 * k * distancia) - 1.0) * cc / k)
 	vel_balon = dir * v0
 	cuenta_toques["toque_largo"] = int(cuenta_toques.get("toque_largo", 0)) + (1 if distancia > 3.0 else 0)
+
+## (16-11, informe M6-24) El combinado con nuestra locomoción no usa el toque de conducción de League (antes apagaba `fase3`, estática, mientras se emitían señales).
+func _sin_toque_league() -> bool:
+	return false
 
 ## FASE 4c (10-11): LOCOMOCIÓN VISUAL DEL ORIGINAL (`LeagueLocomocion`): ciclos de conducir y arranques, frenadas y giros.
 func _mover_jugadores(delta: float) -> void:

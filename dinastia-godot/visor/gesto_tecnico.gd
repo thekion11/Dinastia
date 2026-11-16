@@ -92,4 +92,12 @@ static func agarre(m: Object) -> float:
 ## Fija el clima del partido en el motor (la clave de `Clima`: dia, tarde, noche, lluvia, nieve, niebla, tormenta).
 static func fijar_clima(m: Object, clave: String) -> void:
 	m.set("clima", clave)
-	m.set("_roce_clima", float(CLIMA.get(clave, [1.0, 1.0, 1.0, 1.0])[3]))
+	var roce := float(CLIMA.get(clave, [1.0, 1.0, 1.0, 1.0])[3])
+	m.set("_roce_clima", roce)
+	## (16-11, informe M6-07) En League y C4 el balón suelto rueda con `cfg_balon`: el clima también frena (o acelera) ahí, y con
+	## él la predicción, el toque de conducción y la fuerza de los pases (`LeyBalon`), que leen la misma configuración.
+	if m.get("cfg_balon") is Dictionary:
+		var cfg := LeagueNucleo.config_balon()
+		cfg["roce"] = float(cfg["roce"]) * roce
+		cfg["roce_lineal"] = float(cfg["roce_lineal"]) * roce
+		m.set("cfg_balon", cfg)

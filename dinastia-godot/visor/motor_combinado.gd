@@ -279,16 +279,13 @@ func _interferir() -> void:
 	if not _nuestra("locomocion"):
 		super()
 
-func _mover_balon(delta: float) -> void:
-	var eq := equipos
-	var f3 := MotorLeague.fase3
-	if _nuestra("fisica_balon"):
-		equipos = []   ## el balón suelto lo mueve la física de siempre (el gancho de League devuelve a `super`)
-	if _nuestra("locomocion"):
-		MotorLeague.fase3 = false   ## sin el toque de conducción de League
-	super(delta)
-	equipos = eq
-	MotorLeague.fase3 = f3
+## (16-11, informe M6-24) Las piezas del balón por gancho, no vaciando `equipos` ni apagando `fase3` (estática) durante `_mover_balon`:
+## dentro se marcan goles y saques y se emiten señales, y quien las oía veía una configuración que no era la real.
+func _ley_league() -> bool:
+	return not _nuestra("fisica_balon")   ## el balón suelto lo mueve la física de siempre con «siempre»
+
+func _sin_toque_league() -> bool:
+	return _nuestra("locomocion")   ## sin el toque de conducción de League
 
 func _mover_jugadores(delta: float) -> void:
 	var f3 := MotorLeague.fase3

@@ -105,6 +105,23 @@ func _coste_aguante(local: bool) -> float:
 func _mover_fisica_gd(delta: float, bpos: Vector3) -> PackedFloat64Array:
 	return MovimientoMotor.mover_gd(self, delta, bpos, PackedFloat64Array([A_MAX, ANCHO, LARGO, GIRO_RAPIDO]))   ## (16-11, M6-12) en `visor/movimiento_motor.gd`
 
+## (16-11, informe M6-06) La ley con que rueda el balón suelto, para quien lo PREDICE: aquí la de siempre; `MotorLeague` las cambia
+## por la de League cuando es su física la que mueve el balón (C4). Ver `visor/ley_balon.gd`.
+func _velocidad_pase(dist: float, sobra: float) -> float:
+	return LeyBalon.velocidad_siempre(dist, sobra)
+
+## El raso más largo que llega con la fuerza máxima de un pase; más lejos, por arriba.
+func _raso_max() -> float:
+	return 36.0
+
+## Cuánto más rápido hay que lanzar para que el aire no lo deje corto (ver `compensa_arrastre`).
+func _compensa_aire(vh: float, tv: float) -> float:
+	return 1.0 / (1.0 - minf(ARRASTRE_CUAD * vh * tv, 0.2))
+
+## (16-11, informe M6-10) El portero solo es intocable y lleva el balón «en la mano» dentro de su área; fuera, conduce como uno más.
+func _portero_intocable(p: Dictionary) -> bool:
+	return bool(p["por"]) and _en_su_area(p, pos(p))
+
 ## (15-11, paso a C++) El movimiento de los 22 corre en `mover_jugadores_fisica` (extensión nativa, misma aritmética; `igualdad` en `pruebas/probar_nativo.tscn`);
 ## sin ella, `_mover_fisica_gd`. Las dos devuelven [válido, velocidad, va_atrás, distancia_al_balón] por jugador para el bucle de animación de abajo.
 func _mover_jugadores(delta: float) -> void:
@@ -260,7 +277,7 @@ func _tomar(p: Dictionary) -> void:
 	var alto := balon.position.y
 	var fuerte := vel_balon.length()
 	p["tomo_en"] = t
-	if bool(p["por"]):
+	if bool(p["por"]) and _en_su_area(p, balon.position):   ## (16-11, M6-10) fuera del área no se bloca con las manos
 		_anim(p, "blocaje_alto" if alto > 1.4 else ("blocaje_rasante" if fuerte > 6.0 else "recoger_balon"), true, 0.8)
 	elif alto > 0.9:
 		_anim(p, "control_pecho" if _tiene_clip(p, "control_pecho") else "golpe_pecho", true, 0.6)   ## (01-11: League-Soccer)
