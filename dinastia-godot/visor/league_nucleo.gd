@@ -278,6 +278,12 @@ static func regate(pos: Vector2, mov: Vector2, mirada: Vector2, lado: float, cer
 	return [dir, rango_velocidad(clampf(m.length() * DIST_A_VEL, V_PARADO, V_SPRINT))]
 
 static func movimiento_campo(campo: Array, actual: Vector2, amortigua: float) -> Vector2:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_movimiento_campo"):   ## (16-11, paso a C++) misma cuenta que `movimiento_campo_gd`
+		return nat.league_movimiento_campo(campo, actual, amortigua)
+	return movimiento_campo_gd(campo, actual, amortigua)
+
+static func movimiento_campo_gd(campo: Array, actual: Vector2, amortigua: float) -> Vector2:
 	var suma := Vector2.ZERO
 	var fuerza_total := 0.0
 	for f: Array in campo:

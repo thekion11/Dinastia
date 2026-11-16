@@ -8,6 +8,7 @@
 #include <godot_cpp/variant/vector2.hpp>
 
 #include <cmath>
+#include <vector>
 
 using namespace godot;
 
@@ -168,4 +169,130 @@ double DinastiaNativo::league_media_f(const PackedFloat32Array &hist, double ms)
 		s += (double)hist[tam - 1 - i];
 	}
 	return s / (double)n;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// El apoyo ofensivo sin balón (`LeagueSinBalon.apoyo`) y su campo de fuerzas (`LeagueNucleo.movimiento_campo`). 16-11-2026.
+namespace {
+
+const double V_SPRINT = 8.0;
+
+struct Fuerza {
+	Vector2 o;
+	bool repele;
+	bool constante;
+	double potencia;
+	double escala;
+	double exp;
+};
+
+// `LeagueNucleo.movimiento_campo`
+Vector2 campo_movimiento(const std::vector<Fuerza> &campo, const Vector2 &actual, double amortigua) {
+	Vector2 suma;
+	double fuerza_total = 0.0;
+	for (const Fuerza &f : campo) {
+		const Vector2 o = f.o;
+		const double dist = (double)(o - actual).length();
+		double intensidad = 1.0;
+		if (!f.constante) {
+			intensidad = clampd(1.0 - dist / f.escala, 0.0, 1.0);
+			if (f.exp != 1.0) {
+				intensidad = std::pow(intensidad, f.exp);
+			}
+		}
+		if (intensidad <= 0.0) {
+			continue;
+		}
+		Vector2 rel = dist > 0.0 ? (o - actual).normalized() : Vector2();
+		if (f.repele) {
+			rel = -rel;
+		} else if (dist < amortigua) {
+			rel *= (float)(dist / amortigua);
+		}
+		const double fz = f.potencia * intensidad;
+		suma += rel * (float)fz;
+		fuerza_total += fz;
+	}
+	return fuerza_total > 0.0 ? (suma / (float)fuerza_total) * (float)V_SPRINT : Vector2();
+}
+
+} // namespace
+
+Vector2 DinastiaNativo::league_movimiento_campo(const Array &campo, const Vector2 &actual, double amortigua) const {
+	std::vector<Fuerza> v;
+	v.reserve(campo.size());
+	for (int64_t i = 0; i < campo.size(); i++) {
+		const Array f = campo[i];
+		v.push_back(Fuerza{ f[0], (bool)f[1], (bool)f[2], (double)f[3], (double)f[4], (double)f[5] });
+	}
+	return campo_movimiento(v, actual, amortigua);
+}
+
+// `LeagueSinBalon.apoyo(e)`: `e` = {base, pos, mov, lado, mente, puesto, correr, adelantado, principal, es_principal, rivales [[pos, mov]], companeros [[pos, mov]], posesion_desv, balon_pred [Vector2 x4], linea_offside, red}.
+Vector2 DinastiaNativo::league_apoyo(const Dictionary &e) const {
+	static const StringName k_lado("lado"), k_pos("pos"), k_mov("mov"), k_principal("principal"), k_mente("mente"), k_red("red"), k_puesto("puesto"), k_base("base"), k_adelantado("adelantado"),
+			k_correr("correr"), k_rivales("rivales"), k_pd("posesion_desv"), k_companeros("companeros"), k_es_principal("es_principal"), k_balon_pred("balon_pred"), k_linea("linea_offside");
+	const double lado = e[k_lado];
+	const Vector2 actual = (Vector2)e[k_pos] + (Vector2)e[k_mov] * 0.1f;
+	const Vector2 principal = e[k_principal];
+	const double mente = e[k_mente];
+	const double red = e[k_red];
+	double peso_rival = 0.3;
+	const String puesto = e[k_puesto];
+	if (puesto == "DFC" || puesto == "LD" || puesto == "LI") {
+		peso_rival *= 2.2;
+	} else if (puesto == "MCD") {
+		peso_rival *= 2.0;
+	} else if (puesto == "MC" || puesto == "MD" || puesto == "MI") {
+		peso_rival *= 1.6;
+	} else if (puesto == "MCO" || puesto == "MP" || puesto == "ED" || puesto == "EI") {
+		peso_rival *= 1.2;
+	}
+	std::vector<Fuerza> campo;
+	Vector2 o = e[k_base];
+	if ((bool)e[k_adelantado]) {
+		o.x = (float)((double)o.x + -lado * (0.3 + 0.7 * mente) * 12.0);
+	} else {
+		const double carril = ((double)principal.y >= 0.0 ? -1.0 : 1.0) * 8.0;
+		const double cant = 22.0 * curva(1.0 - normalizado(std::fabs(carril - (double)actual.y), 0.0, 30.0), 1.0);
+		o.x = (float)((double)o.x + -lado * std::pow(mente, 1.5) * cant);
+	}
+	campo.push_back(Fuerza{ o, false, true, 0.7 * (0.3 + 0.7 * normalizado((double)(o - actual).length(), 0.0, 20.0)), 1.0, 1.0 });
+	const bool corre = (bool)e[k_correr];
+	if (corre) {
+		campo.push_back(Fuerza{ Vector2((float)(-lado * MEDIO_LARGO), (float)((double)actual.y * 0.5)), false, true, 2.0, 1.0, 1.0 });
+	}
+	const Array rivales = e[k_rivales];
+	for (int64_t i = 0; i < rivales.size(); i++) {
+		const Array r = rivales[i];
+		const Vector2 rp = (Vector2)r[0] + (Vector2)r[1] * 0.1f;
+		const Vector2 detras = rp != principal ? rp + (rp - principal).normalized() * 2.0f : rp;
+		campo.push_back(Fuerza{ detras, true, false, peso_rival * (corre ? 0.5 : 1.0), corre ? 2.0 : 5.0, 0.7 });
+	}
+	const double pd = e[k_pd];
+	if (pd >= 1.02) {
+		const Array companeros = e[k_companeros];
+		for (int64_t i = 0; i < companeros.size(); i++) {
+			const Array c = companeros[i];
+			campo.push_back(Fuerza{ (Vector2)c[0] + (Vector2)c[1] * 0.1f, true, false, 0.4, 14.0 * red, 1.0 });
+		}
+	}
+	const bool es_p = e[k_es_principal];
+	if (!es_p && pd >= 1.06) {
+		const Array bps = e[k_balon_pred];
+		for (int64_t i = 0; i < bps.size(); i++) {
+			campo.push_back(Fuerza{ (Vector2)bps[i], true, false, 1.0, 2.0, 0.5 });
+		}
+	}
+	if (!es_p) {
+		campo.push_back(Fuerza{ principal, false, false, 0.45, 28.0 * red, 1.0 });
+		campo.push_back(Fuerza{ principal, true, false, 0.45, 16.0 * red, 1.0 });
+	}
+	Vector2 r2 = actual + campo_movimiento(campo, actual, 7.0);
+	const double linea = e[k_linea];
+	const double margen = 0.08;
+	if ((double)r2.x * -lado > linea * -lado - margen) {
+		r2.x = (float)(linea - margen * -lado);
+	}
+	return Vector2((float)clampd((double)r2.x, -MEDIO_LARGO, MEDIO_LARGO), (float)clampd((double)r2.y, -MEDIO_ANCHO, MEDIO_ANCHO));
 }

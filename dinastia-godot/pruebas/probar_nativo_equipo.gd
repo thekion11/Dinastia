@@ -78,4 +78,52 @@ static func probar(nat: Object) -> Dictionary:
 	if dis_m > 0:
 		fallos.append("media_f distinta en %d de %d consultas" % [dis_m, m * 5])
 	textos.append("historial del balón: acumular GDScript %.1f µs, C++ %.1f µs; media_f GDScript %.1f µs, C++ %.1f µs por llamada" % [ta[0] / float(m), ta[1] / float(m), tm[0] / float(m * 5), tm[1] / float(m * 5)])
+	## 3. El apoyo ofensivo y su campo de fuerzas.
+	var dis_c := 0
+	var dis_p := 0
+	var tc2 := [0, 0]
+	var tp2 := [0, 0]
+	var k := 3000
+	for caso in k:
+		var rnd_v := func() -> Vector2: return Vector2(rr.randf_range(-52, 52), rr.randf_range(-34, 34))
+		var campo: Array = []
+		for _i in rr.randi_range(0, 14):
+			campo.append([rnd_v.call(), rr.randf() < 0.5, rr.randf() < 0.3, rr.randf_range(0.1, 2.0), rr.randf_range(1.0, 30.0), [1.0, 0.5, 0.7, 2.0][rr.randi() % 4]])
+		var actual: Vector2 = rnd_v.call()
+		if caso % 17 == 0 and not campo.is_empty():
+			actual = campo[0][0]   ## distancia 0 al primer origen
+		var amort: float = [1.0, 7.0][caso % 2]
+		var a0 := Time.get_ticks_usec()
+		var mg := LeagueNucleo.movimiento_campo_gd(campo, actual, amort)
+		var a1 := Time.get_ticks_usec()
+		var mc: Vector2 = nat.league_movimiento_campo(campo, actual, amort)
+		var a2 := Time.get_ticks_usec()
+		tc2[0] += a1 - a0
+		tc2[1] += a2 - a1
+		if var_to_bytes(mg) != var_to_bytes(mc):
+			dis_c += 1
+		var principal: Vector2 = rnd_v.call()
+		var rivales: Array = []
+		for _i in rr.randi_range(0, 3):
+			rivales.append([principal if rr.randf() < 0.1 else rnd_v.call(), Vector2(rr.randf_range(-8, 8), rr.randf_range(-8, 8))])
+		var mates: Array = []
+		for _i in rr.randi_range(0, 5):
+			mates.append([rnd_v.call(), Vector2(rr.randf_range(-8, 8), rr.randf_range(-8, 8))])
+		var e := {"base": rnd_v.call(), "pos": rnd_v.call(), "mov": Vector2(rr.randf_range(-8, 8), rr.randf_range(-8, 8)), "lado": 1.0 if caso % 2 == 0 else -1.0, "mente": [0.0, 0.25, 0.5, 0.75, 1.0][caso % 5],
+			"puesto": PUESTOS[caso % PUESTOS.size()], "correr": caso % 3 == 0, "adelantado": caso % 4 == 0, "principal": principal, "es_principal": caso % 6 == 0, "rivales": rivales, "companeros": mates,
+			"posesion_desv": rr.randf_range(0.8, 1.3), "balon_pred": [rnd_v.call(), rnd_v.call(), rnd_v.call(), rnd_v.call()], "linea_offside": rr.randf_range(-52, 52), "red": rr.randf_range(0.68, 0.88)}
+		var b0 := Time.get_ticks_usec()
+		var pg := LeagueSinBalon.apoyo_gd(e)
+		var b1 := Time.get_ticks_usec()
+		var pc: Vector2 = nat.league_apoyo(e)
+		var b2 := Time.get_ticks_usec()
+		tp2[0] += b1 - b0
+		tp2[1] += b2 - b1
+		if var_to_bytes(pg) != var_to_bytes(pc):
+			dis_p += 1
+	if dis_c > 0:
+		fallos.append("movimiento_campo distinto en %d de %d campos" % [dis_c, k])
+	if dis_p > 0:
+		fallos.append("apoyo distinto en %d de %d casos" % [dis_p, k])
+	textos.append("campo de fuerzas: GDScript %.1f µs, C++ %.1f µs; apoyo ofensivo: GDScript %.1f µs, C++ %.1f µs por llamada" % [tc2[0] / float(k), tc2[1] / float(k), tp2[0] / float(k), tp2[1] / float(k)])
 	return {"fallos": fallos, "textos": textos}

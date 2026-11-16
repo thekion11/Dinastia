@@ -65,6 +65,9 @@ public:
 	Vector2 league_posicion_formacion(const Dictionary &e) const;
 	PackedVector2Array league_acumular(const PackedVector2Array &hist) const;
 	double league_media_f(const PackedFloat32Array &hist, double ms) const;
+	// `LeagueNucleo.movimiento_campo` y `LeagueSinBalon.apoyo` (el apoyo ofensivo sin balón, con su campo de fuerzas).
+	Vector2 league_movimiento_campo(const Array &campo, const Vector2 &actual, double amortigua) const;
+	Vector2 league_apoyo(const Dictionary &e) const;
 	// `Partido.simular_minuto()` x 90 de un cruce de la IA que nadie mira (nucleo/partido_rapido.gd): mismo orden de llamadas al azar; los sucesos raros vuelven a GDScript (`ayuda`).
 	void simular_90(Object *p, Object *ayuda, const Dictionary &cfg, const Ref<RandomNumberGenerator> &rng, bool azar_propio) const;
 	// `Partido._cerrar_notas()` (nucleo/partido.gd): nota final, forma y partidos de cada jugador del cruce, con la misma tirada de azar por jugador (`rng` = `Azar._rng`).
