@@ -156,6 +156,64 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		e.xg_v = double(p->get(k_xg_v));
 	};
 	// `_aporte(j, v)`
+	// `Partido._anotar` (nucleo/partido_p2.gd), 16-11-2026: el gol entero aquí, sin volver a GDScript (sin roles: lo garantiza `_puede`). El goleador sale de la misma
+	// tirada de `Azar` (`az`) que daba `PartidoPonderado.goleador`; el asistente, de su generador propio sembrado con «id_minuto», como `asistente`. Las señales
+	// (`marco_gol`, `gol`) se emiten con el azar del motor al día (`az.salir`), por si quien escucha tira dados.
+	const Dictionary bases_asist = cfg["bases_asist"];
+	static const StringName k_gl("goles_local"), k_gv("goles_visita"), k_pdl("peor_diferencia_local"), k_pdv("peor_diferencia_visita"), k_goles("goles"), k_notas("_notas"),
+			k_cronica("cronica"), k_momentum("momentum_eventos"), k_nombre("nombre"), k_marco("marco_gol"), k_gol("gol");
+	auto anotar_gol = [&](Object *club, const Array &once, bool es_local) {
+		Object *autor = nullptr;
+		if (!once.is_empty()) {
+			const int64_t i = elegir_ponderado(once, grupo_de, bases_gol, 0.02, "tir", PackedFloat64Array(), az.randf(), nullptr);
+			if (i >= 0) {
+				autor = once[i];
+			}
+		}
+		az.salir();
+		int64_t gl = int64_t(p->get(k_gl));
+		int64_t gv = int64_t(p->get(k_gv));
+		if (es_local) {
+			gl += 1;
+			p->set(k_gl, gl);
+		} else {
+			gv += 1;
+			p->set(k_gv, gv);
+		}
+		p->set(k_pdl, std::min(int64_t(p->get(k_pdl)), gl - gv));
+		p->set(k_pdv, std::min(int64_t(p->get(k_pdv)), gv - gl));
+		Object *asistente = nullptr;
+		if (autor != nullptr) {
+			autor->set(k_goles, int64_t(autor->get(k_goles)) + 1); // `Jugador.anotar`
+			autor->emit_signal(k_marco);
+			Dictionary notas = p->get(k_notas);
+			const Variant id = autor->get(k_id);
+			const double nota = double(notas.get(id, 6.0)) + 1.1;
+			notas[id] = nota < 10.0 ? nota : 10.0;
+			Ref<RandomNumberGenerator> r2;
+			r2.instantiate();
+			r2->set_seed(uint64_t((String(id) + "_" + String::num_int64(e.minuto)).hash()));
+			const int64_t ia = elegir_ponderado(once, grupo_de, bases_asist, 0.05, "pas", PackedFloat64Array(), r2->randf(), autor);
+			if (ia >= 0) {
+				asistente = once[ia];
+			}
+		}
+		Array cronica = p->get(k_cronica);
+		Dictionary d;
+		d["min"] = e.minuto;
+		d["tipo"] = "gol";
+		d["club"] = club->get(k_id);
+		d["autor"] = autor != nullptr ? autor->get(k_nombre) : Variant(String("?"));
+		cronica.push_back(d);
+		Array mom = p->get(k_momentum); // `_momentum_push(2, es_local)`
+		mom.push_back(es_local ? 2 : -2);
+		if (mom.size() > 12) {
+			mom.remove_at(0);
+		}
+		p->emit_signal(k_gol, club, autor != nullptr ? Variant(autor) : Variant(), e.minuto, asistente != nullptr ? Variant(asistente) : Variant());
+		az.entrar();
+	};
+
 	auto aporte = [&](Object *j, double v) {
 		if (j != nullptr) {
 			const Variant id = j->get(k_id);
@@ -235,9 +293,7 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 				e.tp_v += 1;
 			}
 			p->set(k_minuto, e.minuto);
-			az.salir();
-			p->call("_anotar", club, once, es_local);
-			az.entrar();
+			anotar_gol(club, once, es_local);
 			e.terminado = bool(p->get(k_term));
 			return;
 		}
