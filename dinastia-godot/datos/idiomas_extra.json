@@ -8701,7 +8701,8 @@
   "Ofertas recibidas": "Offers received",
   "Jóvenes de casa (≤ 23)": "Homegrown youngsters (≤ 23)",
   "Portada anterior": "Previous cover",
-  "Portada siguiente": "Next cover"
+  "Portada siguiente": "Next cover",
+  "Conmemoración del golpe de Estado": "Commemoration of the coup d'état"
  },
  "pt": {
   "Historia": "História",
@@ -17405,7 +17406,8 @@
   "Ofertas recibidas": "Ofertas recebidas",
   "Jóvenes de casa (≤ 23)": "Jovens da casa (≤ 23)",
   "Portada anterior": "Capa anterior",
-  "Portada siguiente": "Próxima capa"
+  "Portada siguiente": "Próxima capa",
+  "Conmemoración del golpe de Estado": "Dia de memória do golpe de Estado"
  },
  "patrones": [
   [
@@ -32249,7 +32251,8 @@
   "Ofertas recibidas": "Offres reçues",
   "Jóvenes de casa (≤ 23)": "Jeunes formés au club (≤ 23)",
   "Portada anterior": "Couverture précédente",
-  "Portada siguiente": "Couverture suivante"
+  "Portada siguiente": "Couverture suivante",
+  "Conmemoración del golpe de Estado": "Commémoration du coup d'État"
  },
  "it": {
   "Historia": "Storia",
@@ -40953,7 +40956,8 @@
   "Ofertas recibidas": "Offerte ricevute",
   "Jóvenes de casa (≤ 23)": "Giovani del vivaio (≤ 23)",
   "Portada anterior": "Copertina precedente",
-  "Portada siguiente": "Copertina successiva"
+  "Portada siguiente": "Copertina successiva",
+  "Conmemoración del golpe de Estado": "Commemorazione del colpo di Stato"
  },
  "de": {
   "Historia": "Geschichte",
@@ -49657,7 +49661,8 @@
   "Ofertas recibidas": "Erhaltene Angebote",
   "Jóvenes de casa (≤ 23)": "Eigene Talente (≤ 23)",
   "Portada anterior": "Vorheriges Titelbild",
-  "Portada siguiente": "Nächstes Titelbild"
+  "Portada siguiente": "Nächstes Titelbild",
+  "Conmemoración del golpe de Estado": "Gedenktag an den Staatsstreich"
  },
  "ca": {
   "Historia": "Història",
@@ -58361,7 +58366,8 @@
   "Ofertas recibidas": "Ofertes rebudes",
   "Jóvenes de casa (≤ 23)": "Joves de casa (≤ 23)",
   "Portada anterior": "Portada anterior",
-  "Portada siguiente": "Portada següent"
+  "Portada siguiente": "Portada següent",
+  "Conmemoración del golpe de Estado": "Commemoració del cop d'Estat"
  },
  "pl": {
   "Club": "Klub",
@@ -67065,7 +67071,8 @@
   "Ofertas recibidas": "Otrzymane oferty",
   "Jóvenes de casa (≤ 23)": "Młodzi wychowankowie (≤ 23)",
   "Portada anterior": "Poprzednia okładka",
-  "Portada siguiente": "Następna okładka"
+  "Portada siguiente": "Następna okładka",
+  "Conmemoración del golpe de Estado": "Rocznica zamachu stanu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -75769,6 +75776,7 @@
   "Ofertas recibidas": "Gelen teklifler",
   "Jóvenes de casa (≤ 23)": "Altyapıdan gençler (≤ 23)",
   "Portada anterior": "Önceki kapak",
-  "Portada siguiente": "Sonraki kapak"
+  "Portada siguiente": "Sonraki kapak",
+  "Conmemoración del golpe de Estado": "Darbeyi anma günü"
  }
 }

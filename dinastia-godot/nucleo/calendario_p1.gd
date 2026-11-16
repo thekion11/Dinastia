@@ -46,7 +46,7 @@ const FIJAS := {
 		[9, 7, "Dia da Independência", "fiesta", "El 7 de septiembre de 1822 Brasil se separó de Portugal."],
 		[11, 15, "Proclamação da República", "fiesta", "En 1889 cayó la monarquía y nació la república."]],
 	"CHI": [[5, 21, "Día de las Glorias Navales", "fiesta", "Recuerda el combate naval de Iquique de 1879."],
-		[9, 11, "11 de septiembre", "memoria", "El 11 de septiembre de 1973 hubo un golpe de Estado en Chile. Es una fecha de memoria y de respeto por las víctimas: minuto de silencio y nada de celebraciones."],
+		[9, 11, "Conmemoración del golpe de Estado", "memoria", "El 11 de septiembre de 1973 hubo un golpe de Estado en Chile. Es una fecha de memoria y de respeto por las víctimas: minuto de silencio y nada de celebraciones."],
 		[9, 18, "Fiestas Patrias", "fiesta", "Primera Junta Nacional de Gobierno, 1810. Es la gran fiesta de Chile: fondas, cueca y estadios llenos."],
 		[9, 19, "Día de las Glorias del Ejército", "fiesta", "Segundo día de las Fiestas Patrias."]],
 	"COL": [[7, 20, "Día de la Independencia", "fiesta", "El grito de independencia del 20 de julio de 1810."],
