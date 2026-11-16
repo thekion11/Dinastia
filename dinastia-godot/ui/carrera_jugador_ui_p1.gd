@@ -182,7 +182,8 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 		if es_copa:
 			_msg += " " + CarreraCopa.texto_penales(p, club)
 	else:
-		var goles_antes := j.goles if j != null else 0
+		var antes := CarreraSemana.foto(j)
+		var previo: Variant = CarreraSemana.meter_en_el_once(carrera, m) if titular else null   ## (16-11, informe R-05)
 		var gc_antes := CarreraPortero.goles_en_contra(m, club)
 		## La copa simulada también se decide con prórroga y penales; tus goles
 		## son los del cruce (la liga de tu club se simula aparte esa semana).
@@ -190,9 +191,10 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 		if es_copa:
 			copa_p = Partido.new(par[0], par[1])
 			CarreraCopa.simular(copa_p)
-		var g_copa := (j.goles - goles_antes) if j != null else 0
+		var del_copa := CarreraSemana.lo_del_mundo(j, antes)
 		CarreraRuta.retos(carrera, m)   ## (16-11, informe R-02) fija los retos de ESTA semana antes de avanzarla
 		m.avanzar_semana(copa_p)
+		CarreraSemana.soltar_once(carrera, m, previo)
 		if copa_p != null:
 			_msg += "  ·  " + Idiomas.t("Copa: %s %d-%d %s.") % [Nombres.visible(copa_p.local.nombre), copa_p.goles_local,
 				copa_p.goles_visita, Nombres.visible(copa_p.visita.nombre)]
@@ -200,7 +202,8 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 			if tp != "":
 				_msg += " " + tp
 		if titular and not par.is_empty() and j != null:
-			var g := g_copa if es_copa else j.goles - goles_antes
+			var del_mundo := del_copa if es_copa else CarreraSemana.lo_del_mundo(j, antes)
+			var g := int(del_mundo["goles"])
 			## La nota del simulado: la de tu nivel, más lo que marcaste (el
 			## portero, por lo que encajó: `CarreraPortero.nota_simulada`).
 			var nota := clampf(5.6 + float(CarreraEstilo.media_de_hoy(carrera, j) - 55) * 0.04 + float(g) * 0.9 + randf_range(-0.6, 0.6), 4.0, 9.5)
@@ -209,8 +212,8 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 				gc = copa_p.goles_visita if copa_p.local == club else copa_p.goles_local
 			if j.es_portero():
 				nota = CarreraPortero.nota_simulada(j, gc, randf_range(-0.5, 0.5))
-			j.goles -= g
-			carrera.tras_partido(m, {"minutos": 90, "goles": g, "asist": 0, "nota": snappedf(nota, 0.1), "titular": true, "encajados": gc})
+			carrera.tras_partido(m, {"minutos": 90, "goles": g, "asist": int(del_mundo["asist"]), "nota": snappedf(nota, 0.1), "titular": true,
+				"encajados": gc, "en_mundo": CarreraSemana.lo_del_mundo(j, antes)["en_mundo"]})
 			_msg += "  ·  " + RutaEstilo.plural(g, "Jugaste (simulado): %d gol, nota %.1f.", "Jugaste (simulado): %d goles, nota %.1f.") % [g, nota]
 		elif not titular and not par.is_empty() and j != null and j.disponible():
 			## Suplente simulado: a veces entras un rato.
@@ -227,9 +230,9 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 	if carrera.aviso_agenda != "":
 		_msg += "  ·  " + carrera.aviso_agenda
 	if not nuevos.is_empty():
-		_msg += "  ·  " + Idiomas.t("¡%s!") % Idiomas.t(String(nuevos[0]["titulo"]))
+		_msg += "  ·  " + Idiomas.t("¡%s!") % CarreraEventosRuta.texto(nuevos[0], "titulo")
 	if not m.temporada_en_curso():
-		carrera.fin_de_temporada(m)
+		CarreraSemana.cerrar_temporada(carrera, m)   ## (16-11, informe R-09) copa y continental a medias, antes de tus premios
 		_msg += "  ·  " + Idiomas.t("Terminó la temporada.")
 	Partida.guardar(m, GUARDADO)
 	(self as CarreraJugadorUI)._pintar_semana()

@@ -8659,7 +8659,19 @@
   "Estilo del mundo": "World style",
   "RD del Congo": "DR Congo",
   "Segunda División": "Second Division",
-  "%d.ª División": "Division %d"
+  "%d.ª División": "Division %d",
+  "Un periodista te pregunta si te ves de titular en %s.": "A reporter asks if you see yourself as a starter at %s.",
+  "%s se ofrece a enseñarte": "%s offers to teach you",
+  "El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento.": "The dressing-room veteran (%d years old) suggests you both stay an extra hour every day after training.",
+  "La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido.": "The league names you player of the month with an average of %.1f. You receive the trophy before the match.",
+  "El médico te da %d semanas de baja. Te propone dos caminos para la recuperación.": "The doctor rules you out for %d weeks. He offers you two paths to recovery.",
+  "Vuelves a %s": "Back to %s",
+  "Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año.": "You are %d. In the dressing room they already call you «the old man». Your family asks if this will be your last year.",
+  "Cedido a %s": "Loaned to %s",
+  "Fichas por %s": "You sign for %s",
+  "Cesión": "Loan",
+  "Traspaso": "Transfer",
+  "Vuelta de la cesión": "Back from loan"
  },
  "pt": {
   "Historia": "História",
@@ -17321,7 +17333,19 @@
   "Estilo del mundo": "Estilo do mundo",
   "RD del Congo": "RD do Congo",
   "Segunda División": "Segunda Divisão",
-  "%d.ª División": "%d.ª Divisão"
+  "%d.ª División": "%d.ª Divisão",
+  "Un periodista te pregunta si te ves de titular en %s.": "Um jornalista pergunta se você se vê como titular no %s.",
+  "%s se ofrece a enseñarte": "%s se oferece para te ensinar",
+  "El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento.": "O veterano do vestiário (%d anos) propõe que vocês fiquem uma hora a mais todos os dias depois do treino.",
+  "La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido.": "A liga te elege o melhor jogador do mês com média de %.1f. Você recebe o troféu antes da partida.",
+  "El médico te da %d semanas de baja. Te propone dos caminos para la recuperación.": "O médico te dá %d semanas de afastamento. Ele propõe dois caminhos para a recuperação.",
+  "Vuelves a %s": "De volta ao %s",
+  "Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año.": "Você tem %d anos. No vestiário já te chamam de «o velho». Sua família pergunta se este será o último ano.",
+  "Cedido a %s": "Emprestado ao %s",
+  "Fichas por %s": "Você assina com o %s",
+  "Cesión": "Empréstimo",
+  "Traspaso": "Transferência",
+  "Vuelta de la cesión": "Volta do empréstimo"
  },
  "patrones": [
   [
@@ -32123,7 +32147,19 @@
   "Estilo del mundo": "Style du monde",
   "RD del Congo": "RD du Congo",
   "Segunda División": "Deuxième division",
-  "%d.ª División": "Division %d"
+  "%d.ª División": "Division %d",
+  "Un periodista te pregunta si te ves de titular en %s.": "Un journaliste te demande si tu te vois titulaire à %s.",
+  "%s se ofrece a enseñarte": "%s propose de t'apprendre",
+  "El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento.": "Le vétéran du vestiaire (%d ans) te propose de rester une heure de plus chaque jour après l'entraînement.",
+  "La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido.": "La ligue t'élit joueur du mois avec une moyenne de %.1f. On te remet le trophée avant le match.",
+  "El médico te da %d semanas de baja. Te propone dos caminos para la recuperación.": "Le médecin t'arrête %d semaines. Il te propose deux voies pour la récupération.",
+  "Vuelves a %s": "Retour à %s",
+  "Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año.": "Tu as %d ans. Au vestiaire, on t'appelle déjà « le vieux ». Ta famille te demande si ce sera ta dernière année.",
+  "Cedido a %s": "Prêté à %s",
+  "Fichas por %s": "Tu signes à %s",
+  "Cesión": "Prêt",
+  "Traspaso": "Transfert",
+  "Vuelta de la cesión": "Retour de prêt"
  },
  "it": {
   "Historia": "Storia",
@@ -40785,7 +40821,19 @@
   "Estilo del mundo": "Stile del mondo",
   "RD del Congo": "RD del Congo",
   "Segunda División": "Seconda divisione",
-  "%d.ª División": "%d.ª Divisione"
+  "%d.ª División": "%d.ª Divisione",
+  "Un periodista te pregunta si te ves de titular en %s.": "Un giornalista ti chiede se ti vedi titolare al %s.",
+  "%s se ofrece a enseñarte": "%s si offre di insegnarti",
+  "El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento.": "Il veterano dello spogliatoio (%d anni) ti propone di restare un'ora in più ogni giorno dopo l'allenamento.",
+  "La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido.": "La lega ti elegge giocatore del mese con una media di %.1f. Ti consegnano il trofeo prima della partita.",
+  "El médico te da %d semanas de baja. Te propone dos caminos para la recuperación.": "Il medico ti dà %d settimane di stop. Ti propone due strade per il recupero.",
+  "Vuelves a %s": "Ritorno al %s",
+  "Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año.": "Hai %d anni. Nello spogliatoio ti chiamano già «il vecchio». La tua famiglia ti chiede se sarà l'ultimo anno.",
+  "Cedido a %s": "In prestito al %s",
+  "Fichas por %s": "Firmi per il %s",
+  "Cesión": "Prestito",
+  "Traspaso": "Trasferimento",
+  "Vuelta de la cesión": "Rientro dal prestito"
  },
  "de": {
   "Historia": "Geschichte",
@@ -49447,7 +49495,19 @@
   "Estilo del mundo": "Weltstil",
   "RD del Congo": "DR Kongo",
   "Segunda División": "Zweite Liga",
-  "%d.ª División": "%d. Liga"
+  "%d.ª División": "%d. Liga",
+  "Un periodista te pregunta si te ves de titular en %s.": "Ein Reporter fragt, ob du dich bei %s als Stammspieler siehst.",
+  "%s se ofrece a enseñarte": "%s bietet an, dir etwas beizubringen",
+  "El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento.": "Der Routinier der Kabine (%d Jahre) schlägt vor, jeden Tag nach dem Training eine Stunde länger zu bleiben.",
+  "La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido.": "Die Liga wählt dich mit einem Schnitt von %.1f zum Spieler des Monats. Du bekommst die Trophäe vor dem Spiel.",
+  "El médico te da %d semanas de baja. Te propone dos caminos para la recuperación.": "Der Arzt schreibt dich %d Wochen krank. Er schlägt dir zwei Wege zur Genesung vor.",
+  "Vuelves a %s": "Zurück zu %s",
+  "Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año.": "Du bist %d. In der Kabine nennen sie dich schon «den Alten». Deine Familie fragt, ob das dein letztes Jahr wird.",
+  "Cedido a %s": "An %s verliehen",
+  "Fichas por %s": "Du unterschreibst bei %s",
+  "Cesión": "Leihe",
+  "Traspaso": "Wechsel",
+  "Vuelta de la cesión": "Rückkehr von der Leihe"
  },
  "ca": {
   "Historia": "Història",
@@ -58109,7 +58169,19 @@
   "Estilo del mundo": "Estil del món",
   "RD del Congo": "RD del Congo",
   "Segunda División": "Segona Divisió",
-  "%d.ª División": "%d.ª Divisió"
+  "%d.ª División": "%d.ª Divisió",
+  "Un periodista te pregunta si te ves de titular en %s.": "Un periodista et pregunta si et veus de titular al %s.",
+  "%s se ofrece a enseñarte": "%s s'ofereix a ensenyar-te",
+  "El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento.": "El veterà del vestidor (%d anys) et proposa quedar-vos una hora més cada dia després de l'entrenament.",
+  "La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido.": "La lliga t'escull millor jugador del mes amb una mitjana de %.1f. Et donen el trofeu abans del partit.",
+  "El médico te da %d semanas de baja. Te propone dos caminos para la recuperación.": "El metge et dona %d setmanes de baixa. Et proposa dos camins per a la recuperació.",
+  "Vuelves a %s": "Tornes al %s",
+  "Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año.": "Tens %d anys. Al vestidor ja et diuen «el vell». La teva família et pregunta si aquest serà l'últim any.",
+  "Cedido a %s": "Cedit al %s",
+  "Fichas por %s": "Fitxes pel %s",
+  "Cesión": "Cessió",
+  "Traspaso": "Traspàs",
+  "Vuelta de la cesión": "Tornada de la cessió"
  },
  "pl": {
   "Club": "Klub",
@@ -66771,7 +66843,19 @@
   "Estilo del mundo": "Styl świata",
   "RD del Congo": "DR Konga",
   "Segunda División": "Druga liga",
-  "%d.ª División": "%d. liga"
+  "%d.ª División": "%d. liga",
+  "Un periodista te pregunta si te ves de titular en %s.": "Dziennikarz pyta, czy widzisz się w podstawowym składzie %s.",
+  "%s se ofrece a enseñarte": "%s proponuje, że cię nauczy",
+  "El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento.": "Weteran szatni (%d lat) proponuje, żebyście codziennie zostawali godzinę dłużej po treningu.",
+  "La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido.": "Liga wybiera cię piłkarzem miesiąca ze średnią %.1f. Trofeum dostajesz przed meczem.",
+  "El médico te da %d semanas de baja. Te propone dos caminos para la recuperación.": "Lekarz wyłącza cię z gry na %d tygodni. Proponuje ci dwie drogi powrotu do zdrowia.",
+  "Vuelves a %s": "Wracasz do %s",
+  "Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año.": "Masz %d lat. W szatni już mówią na ciebie «staruszek». Rodzina pyta, czy to będzie twój ostatni rok.",
+  "Cedido a %s": "Wypożyczony do %s",
+  "Fichas por %s": "Podpisujesz kontrakt z %s",
+  "Cesión": "Wypożyczenie",
+  "Traspaso": "Transfer",
+  "Vuelta de la cesión": "Powrót z wypożyczenia"
  },
  "tr": {
   "Club": "Kulüp",
@@ -75433,6 +75517,18 @@
   "Estilo del mundo": "Dünya stili",
   "RD del Congo": "Kongo DC",
   "Segunda División": "İkinci lig",
-  "%d.ª División": "%d. Lig"
+  "%d.ª División": "%d. Lig",
+  "Un periodista te pregunta si te ves de titular en %s.": "Bir gazeteci %s takımında kendini ilk on birde görüp görmediğini soruyor.",
+  "%s se ofrece a enseñarte": "%s sana bir şeyler öğretmeyi teklif ediyor",
+  "El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento.": "Soyunma odasının tecrübelisi (%d yaşında) her gün antrenmandan sonra bir saat daha kalmanızı öneriyor.",
+  "La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido.": "Lig seni %.1f ortalamayla ayın oyuncusu seçiyor. Kupayı maçtan önce alıyorsun.",
+  "El médico te da %d semanas de baja. Te propone dos caminos para la recuperación.": "Doktor seni %d hafta sahalardan uzak tutuyor. İyileşme için iki yol öneriyor.",
+  "Vuelves a %s": "%s takımına dönüyorsun",
+  "Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año.": "%d yaşındasın. Soyunma odasında sana şimdiden «ihtiyar» diyorlar. Ailen bunun son yılın olup olmayacağını soruyor.",
+  "Cedido a %s": "%s takımına kiralandın",
+  "Fichas por %s": "%s ile imzalıyorsun",
+  "Cesión": "Kiralık",
+  "Traspaso": "Transfer",
+  "Vuelta de la cesión": "Kiralıktan dönüş"
  }
 }

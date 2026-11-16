@@ -212,10 +212,10 @@ static func _decision(ui: Variant) -> Control:
 	cab.add_child(rot)
 	if c.eventos.size() > 1:
 		cab.add_child(E.chip(Idiomas.t("+%d en espera") % (c.eventos.size() - 1), E.CORAL))
-	var tit := E.titulo(26, E.TEXTO, Idiomas.t(String(e["titulo"])))
+	var tit := E.titulo(26, E.TEXTO, CarreraEventosRuta.texto(e, "titulo"))
 	tit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(tit)
-	var txt := E.lbl(14, E.SUAVE, String(e["texto"]))
+	var txt := E.lbl(14, E.SUAVE, CarreraEventosRuta.texto(e, "texto"))
 	txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(txt)
 	var ops: Array = e["opciones"]

@@ -39,13 +39,14 @@ func nueva_temporada() -> Dictionary:
 			j.goles = 0
 			j.asistencias = 0   ## (16-11, informe G-02) como los goles: la temporada ya quedó en `registrar_temporada`
 			j.amarillas = 0
+			j.nota_temp = Vector2.ZERO   ## (16-11, informe R-03) la nota de la temporada vuelve a cero
 			## La curva de progreso: los jovenes suben hacia su techo, los
 			## veteranos bajan. Es lo que hace que una plantilla envejezca.
 			## Vive en `ProgresoJugador` (cantera_progreso.gd), con la semanal.
 			ProgresoJugador.anual(j)
 			## (16-11, informe R-01) El futbolista de La Ruta no lo retira ni lo deja libre el mundo: su retiro y su contrato
 			## los lleva `CarreraJugador` (`toca_retirarse`, renovación). Antes podía desaparecer y la partida volvía a «crear jugador».
-			if carrera_jugador != null and j.id == carrera_jugador.jugador_id:
+			if carrera_jugador != null and j.id == carrera_jugador.jugador_id and not carrera_jugador.retirado and j.edad <= CarreraJugador.EDAD_TOPE:
 				j.anios_contrato = maxi(j.anios_contrato - 1, 1)
 				_sigue_retasado(siguen, j)
 				continue
