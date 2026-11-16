@@ -274,11 +274,17 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 	while (!e.terminado) {
 		e.minuto += 1;
 		if (e.hay_lesionados) {
-			p->set(k_minuto, e.minuto);
-			az.salir();
-			ayuda->call("atender", p);
-			az.entrar();
-			refrescar();
+			// (16-11) Con la lista de lesionados vacía `PartidoLesiones.atender` no hace nada (ni azar, ni estado, ni fuerzas): se deja de llamar hasta la próxima lesión.
+			static const StringName k_lesionados("lesionados");
+			if (Dictionary(p->get_meta(k_lesionados, Dictionary())).is_empty()) {
+				e.hay_lesionados = false;
+			} else {
+				p->set(k_minuto, e.minuto);
+				az.salir();
+				ayuda->call("atender", p);
+				az.entrar();
+				refrescar();
+			}
 		}
 		if (e.minuto == 60 && !plan_aplicado) {
 			plan_aplicado = true;
