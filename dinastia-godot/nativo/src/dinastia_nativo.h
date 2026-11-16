@@ -62,6 +62,8 @@ public:
 	Vector2 sb_destino_forma(const Array &ctx, const Array &equipos, const Dictionary &p, const Vector2 &forma, const String &puesto, const Dictionary &mezcla) const;
 	// `MotorJugable._duelos`: parejas de rivales (sin porteros) a 1,3 m o menos, en orden ([i, j, …]; [-1] = más de 64 jugadores).
 	PackedInt32Array duelos_parejas(const Array &jugadores) const;
+	// `MotorJugable._disputas`: enfriamiento de los 22 y, con el balón suelto, el índice del que lo controla (-1 = nadie).
+	int64_t disputas_inicio(const Array &jugadores, double delta, bool suelto, const Vector3 &b, double t, const Variant &pase_a_id, const PackedFloat64Array &arco_z, double area_x, double area_z) const;
 	PackedInt32Array guia_pendientes(const Array &jugadores, double t) const;
 	PackedInt32Array guia_seguir(const Array &jugadores, double t, double delta, int64_t usuario, bool marchas) const;
 	PackedFloat64Array mover_jugadores_fisica(const Array &jugadores, const Vector3 &bpos, double delta, double t, bool hay_poseedor, const Variant &poseedor_id, bool poseedor_local, double a_max_base,

@@ -219,3 +219,49 @@ PackedInt32Array DinastiaNativo::duelos_parejas(const Array &jugadores) const {
 	}
 	return r;
 }
+
+// `MotorJugable._disputas` (visor/motor_jugable_p6.gd, 16-11-2026): el enfriamiento de los 22 (`enfriar` −= delta, sin bajar de 0) y, con el balón suelto
+// (`suelto`), quién lo controla: el más cercano que llega (alcance 0,9 m; el portero en su área 1,6 m y hasta 2,4 m de alto; el que espera el pase 1,25 m con
+// 0,55 m de ventaja). Devuelve su índice, o -1. `arco_z` = [z del arco propio del local, del visitante] (como `_arco_propio`); `pase_a_id` = id del receptor
+// o null. Misma aritmética que la gemela (`_disputas_inicio_gd`).
+int64_t DinastiaNativo::disputas_inicio(const Array &jugadores, double delta, bool suelto, const Vector3 &b, double t, const Variant &pase_a_id, const PackedFloat64Array &arco_z,
+		double area_x, double area_z) const {
+	static const Variant w_enfriar(String("enfriar"));
+	static const StringName k_enfriar("enfriar"), k_levanta("levanta_hasta"), k_node("node"), k_por("por"), k_local("es_local"), k_id("id");
+	const int64_t n = jugadores.size();
+	for (int64_t i = 0; i < n; i++) {
+		Dictionary p = jugadores[i];
+		p[w_enfriar] = std::fmax(0.0, double(p[k_enfriar]) - delta);
+	}
+	if (!suelto) {
+		return -1;
+	}
+	int64_t mejor = -1;
+	double md = 99.0;
+	for (int64_t i = 0; i < n; i++) {
+		const Dictionary p = jugadores[i];
+		if (double(p[k_enfriar]) > 0.0 || double(p.get(k_levanta, 0.0)) > t) {
+			continue;
+		}
+		const Node3D *nodo = Object::cast_to<Node3D>(static_cast<Object *>(p.get(k_node, Variant())));
+		if (nodo == nullptr) {
+			continue;
+		}
+		const Vector3 q = nodo->get_position();
+		const double d = Vector2(double(q.x) - double(b.x), double(q.z) - double(b.z)).length();
+		const bool por = bool(p[k_por]);
+		const double az = arco_z[bool(p[k_local]) ? 0 : 1];
+		const bool en_area = por && std::fabs(double(b.x)) < area_x && std::fabs(double(b.z) - az) < area_z;
+		double alcance = en_area ? 1.6 : 0.9;
+		double ventaja = 0.0;
+		if (pase_a_id.get_type() != Variant::NIL && p.get(k_id, Variant()) == pase_a_id) {
+			alcance = 1.25;
+			ventaja = 0.55;
+		}
+		if (d < alcance && double(b.y) < (en_area ? 2.4 : 1.5) && d - ventaja < md) {
+			md = d - ventaja;
+			mejor = i;
+		}
+	}
+	return mejor;
+}
