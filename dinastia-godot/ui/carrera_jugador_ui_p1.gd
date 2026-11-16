@@ -172,6 +172,7 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 		var pen: Array = res.get("penales", [])
 		if es_copa and p.goles_local == p.goles_visita and pen.size() == 2:
 			p.penales_externos(int(pen[0]), int(pen[1]))
+		CarreraRuta.retos(carrera, m)   ## (16-11, informe R-02) fija los retos de ESTA semana antes de avanzarla
 		m.avanzar_semana(p)
 		carrera.tras_partido(m, res)
 		carrera.partidos_jugables += 1
@@ -190,6 +191,7 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 			copa_p = Partido.new(par[0], par[1])
 			CarreraCopa.simular(copa_p)
 		var g_copa := (j.goles - goles_antes) if j != null else 0
+		CarreraRuta.retos(carrera, m)   ## (16-11, informe R-02) fija los retos de ESTA semana antes de avanzarla
 		m.avanzar_semana(copa_p)
 		if copa_p != null:
 			_msg += "  ·  " + Idiomas.t("Copa: %s %d-%d %s.") % [Nombres.visible(copa_p.local.nombre), copa_p.goles_local,
