@@ -14,6 +14,9 @@
 # - Cuelgue al arrancar (pasa a veces): esa parte se reintenta (hasta 3 veces).
 # - Cuelgue a mitad: si un registro no crece en SIN_AVANCE segundos, se corta.
 # - «SCRIPT ERROR» durante la ejecución (errores que _comprobar no ve).
+# - (16-11) «ERROR:» del motor cuya pila pasa por res:// (errores del juego que no paran la prueba), salvo los
+#   ESPERADOS de `pruebas/errores_esperados.txt` (lista blanca comentada; lo filtra `herramientas/errores_banco.awk`).
+# - (16-11) La norma de 450 líneas: la aplica `pruebas/comprobar_scripts.gd`, que corre a la vez.
 #
 # Código de salida: 0 = «FIN. 0 fallos» y sin errores de script;
 # 1 = fallos o errores de script; 2 = error de sintaxis; 3 = colgado o sin FIN.
@@ -32,7 +35,7 @@ timeout 300 godot --headless --path . --script res://pruebas/comprobar_scripts.g
 COMP_PID=$!
 comp_mal() {
   echo "$(grep -E "FALLO|SCRIPT ERROR" "$COMP_TXT" | head -10)"
-  echo "Hay scripts que no compilan: el banco se corta."
+  echo "Hay scripts que no compilan o que pasan de 450 líneas: el banco se corta."
   rm -f "$COMP_TXT"
 }
 LOG="${1:-${TMPDIR:-/tmp}/banco.txt}"
@@ -148,6 +151,10 @@ for i in $(seq 0 $((N - 1))); do
   fi
 done
 errores=$(limpio "$LOG" | grep -c "^SCRIPT ERROR\|^SHADER ERROR")
+## (16-11, informe académico cap. 5) Errores del motor con pila en res:// que no están en la lista blanca.
+limpio "$LOG" | awk -f herramientas/errores_banco.awk pruebas/errores_esperados.txt - > "$TMP/inesperados.txt"
+inesperados=$(tail -1 "$TMP/inesperados.txt" | grep -oE '[0-9]+$')
+inesperados=${inesperados:-0}
 segundos=$(( $(date +%s) - INICIO ))
 {
   echo "BANCO EN $N PARTES · ${segundos} s · $(limpio "$LOG" | grep -c '^  ok ') comprobaciones"
@@ -162,10 +169,11 @@ if [[ -n "$sin_fin" ]]; then
   rm -rf "$TMP"
   exit 3
 fi
-if [[ "$fallos" = "0" ]]; then
+## Un error inesperado con pila en el juego cuenta como un fallo más (la lista va debajo, en el AVISO).
+if [[ "$fallos" = "0" ]] && [[ "$inesperados" = "0" ]]; then
   echo "===== FIN. 0 fallos =====" >> "$TMP/resumen.txt"
 else
-  echo "===== FIN. $fallos FALLOS =====" >> "$TMP/resumen.txt"
+  echo "===== FIN. $(( fallos + inesperados )) FALLOS =====" >> "$TMP/resumen.txt"
 fi
 cp "$TMP/resumen.txt" pruebas/ultimo_resultado.txt
 cat "$TMP/resumen.txt"
@@ -173,6 +181,10 @@ if [[ "$errores" -gt 0 ]]; then
   echo "AVISO: $errores «SCRIPT ERROR» o «SHADER ERROR» durante el banco:"
   limpio "$LOG" | grep -A1 "^SCRIPT ERROR\|^SHADER ERROR" | head -10
 fi
+if [[ "$inesperados" -gt 0 ]]; then
+  echo "AVISO: $inesperados «ERROR:» del motor con pila en res:// fuera de pruebas/errores_esperados.txt:"
+  head -40 "$TMP/inesperados.txt"
+fi
 rm -rf "$TMP"
-[[ "$fallos" = "0" ]] && [[ "$errores" = "0" ]] && exit 0
+[[ "$fallos" = "0" ]] && [[ "$errores" = "0" ]] && [[ "$inesperados" = "0" ]] && exit 0
 exit 1

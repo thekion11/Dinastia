@@ -24,8 +24,19 @@ func _de_tipo(raiz: Node, clase: String) -> Array:
 func _probar_ambience() -> void:
 	_linea("· Ambience")
 	var n0 := _nodos()
+	## (16-11, informe F-05) El modo rendimiento viene ENCENDIDO por defecto (15-11) y quita el sol con sombra hasta MEDIA:
+	## lo de MEDIA «de siempre» se mira con el modo apagado, y aparte se comprueba qué hace encendido.
+	var modo_antes := Calidad.modo_rendimiento
+	Calidad.modo_rendimiento = true
+	var dia_r := Node3D.new()
+	Ambience.apply(dia_r, {"clima": "dia"}, null, Calidad.MEDIO)
+	var luces_r := _de_tipo(dia_r, "DirectionalLight3D")
+	_comprobar(luces_r.size() == 1 and not (luces_r[0] as DirectionalLight3D).shadow_enabled, "con el modo rendimiento (por defecto), MEDIA sin sombra del sol")
+	dia_r.free()
+	Calidad.modo_rendimiento = false
 	var dia := Node3D.new()
 	Ambience.apply(dia, {"clima": "dia"}, null, Calidad.MEDIO)
+	Calidad.modo_rendimiento = modo_antes
 	var we: WorldEnvironment = _de_tipo(dia, "WorldEnvironment")[0] if _de_tipo(dia, "WorldEnvironment").size() == 1 else null
 	var luces := _de_tipo(dia, "DirectionalLight3D")
 	_comprobar(we != null and luces.size() == 1, "de día: un entorno y el sol, sin focos de relleno")

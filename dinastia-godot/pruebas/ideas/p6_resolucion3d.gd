@@ -1,5 +1,10 @@
 extends BaseIdea
-## (4-11) La resolución del 3D también se elige en MEDIA (50-100 %): Alta y Ultra siempre 100 %, Mínima su propio valor; se guarda y se recupera.
+## (4-11) La resolución del 3D también se elige en MEDIA (50-100 %): Alta al 100 %, Mínima su propio valor; se guarda y se recupera.
+## (16-11, informe F-05) ULTRA va a `Calidad.escala_ultra` en Forward+ (decisión del dueño del 15-11) y al 100 % en compatibilidad:
+## la prueba lee ese valor en vez de suponer 100 %.
+
+static func _ultra_esperada() -> float:
+	return 1.0 if Calidad.es_compatibilidad() else Calidad.escala_ultra
 
 func _probar() -> void:
 	_titulo("P6: RESOLUCIÓN DEL 3D EN MEDIA")
@@ -9,7 +14,7 @@ func _probar() -> void:
 	Calidad.escala_minimo = 0.5
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.MEDIO), 0.8), "media usa su valor (%.2f)" % Calidad.escala_3d(Calidad.MEDIO))
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.MINIMO), 0.5), "mínima usa el suyo")
-	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.ALTO), 1.0) and is_equal_approx(Calidad.escala_3d(Calidad.ULTRA), 1.0), "alta y ultra, 100 %")
+	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.ALTO), 1.0) and is_equal_approx(Calidad.escala_3d(Calidad.ULTRA), _ultra_esperada()), "alta al 100 %%, ultra a su escala (%.2f)" % Calidad.escala_3d(Calidad.ULTRA))
 	var vp := SubViewport.new()
 	add_child(vp)
 	Calidad.aplicar_viewport(vp, Calidad.MEDIO)
@@ -31,7 +36,7 @@ func _probar() -> void:
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.MEDIO), 720.0 / 1080.0), "automática a 1080 px de alto: MEDIA al 67 %% (%.3f)" % Calidad.escala_3d(Calidad.MEDIO))
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.ULTRA_BAJA), 0.5), "ULTRA BAJA ya estaba más abajo (50 %): no sube")
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.BAJA), minf(lerpf(0.5, 1.0, 0.4), 720.0 / 1080.0)) and Calidad.escala_3d(Calidad.BAJA) <= 720.0 / 1080.0 + 0.0001, "BAJA se queda en el tope")
-	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.ALTO), 1.0) and is_equal_approx(Calidad.escala_3d(Calidad.ULTRA), 1.0), "ALTA y ULTRA no se tocan")
+	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.ALTO), 1.0) and is_equal_approx(Calidad.escala_3d(Calidad.ULTRA), _ultra_esperada()), "ALTA y ULTRA no se tocan")
 	OS.set_environment("RES3D_ALTO", "720")
 	_comprobar(is_equal_approx(Calidad.escala_3d(Calidad.MEDIO), 1.0), "ventana de 720 px: sin cambio")
 	_comprobar(is_equal_approx(CalidadRes3D.tope_escala(4320.0), Calidad.ESCALA_MIN_POSIBLE), "nunca baja del mínimo posible (35 %)")

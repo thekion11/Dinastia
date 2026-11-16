@@ -4,6 +4,7 @@
   python3 herramientas/revisar_lineas.py            # resumen y los 25 mayores
   python3 herramientas/revisar_lineas.py --todos    # lista todos los que pasan del límite
   python3 herramientas/revisar_lineas.py --nuevos   # solo archivos añadidos/cambiados en la rama (código 1 si alguno pasa)
+                                                    # (sin base común con origin/main, p. ej. un clon superficial: cae a --todos)
 
 Norma (23-10, decidida por el dueño): ningún script pasa de 450 líneas, ni nuevo ni existente.
 Excepción declarada (EXCEPCIONES): el archivo que genera una herramienta (se parte en el generador).
@@ -18,7 +19,7 @@ EXCEPCIONES = {"dinastia-godot/nucleo/dialogos_ciudad.gd"}  # lo genera herramie
 
 def archivos(solo_nuevos):
     if solo_nuevos:
-        out = subprocess.check_output(["git", "diff", "--name-only", "--diff-filter=AM", "origin/main...HEAD"]).decode()
+        out = subprocess.check_output(["git", "diff", "--name-only", "--diff-filter=AM", "origin/main...HEAD"], stderr=subprocess.DEVNULL).decode()
     else:
         out = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "*.gd"]).decode()
     return [f for f in out.split("\n") if f.endswith(".gd") and f not in EXCEPCIONES and not f.startswith(("dinastia-godot/addons/", "addons/"))]
@@ -35,7 +36,20 @@ def lineas_en_main(f):
 
 def main():
     nuevos = "--nuevos" in sys.argv
-    datos = sorted(((lineas(f), f) for f in archivos(nuevos)), reverse=True)
+    todos = "--todos" in sys.argv
+    caido = False
+    if nuevos:
+        try:
+            lista = archivos(True)
+        except subprocess.CalledProcessError:
+            ## (16-11, informe F-03) En un clon superficial no hay base común con origin/main y el diff «a...b»
+            ## aborta: se cae a --todos (que sí puede decidir) en vez de romper la comprobación.
+            print("--nuevos: sin base común con origin/main (¿clon superficial?); se revisa todo (--todos)")
+            nuevos, todos, caido = False, True, True
+        else:
+            datos = sorted(((lineas(f), f) for f in lista), reverse=True)
+    if not nuevos:
+        datos = sorted(((lineas(f), f) for f in archivos(False)), reverse=True)
     if nuevos:
         ## Falla si un archivo nuevo pasa del límite o si uno grande CRECE.
         malos = []
@@ -49,8 +63,10 @@ def main():
     p600 = [d for d in datos if d[0] > LIM_NUEVO]
     print(f"{len(datos)} scripts, {sum(n for n, _ in datos)} líneas")
     print(f"pasan de {LIM_NUEVO} líneas: {len(p600)}")
-    for n, f in (p600 if "--todos" in sys.argv else datos[:25]):
+    for n, f in (p600 if todos else datos[:25]):
         print(f"{n:6d}  {f}")
+    if caido:
+        sys.exit(1 if p600 else 0)   ## mismo contrato que --nuevos: código 1 si algo pasa del límite
 
 if __name__ == "__main__":
     main()

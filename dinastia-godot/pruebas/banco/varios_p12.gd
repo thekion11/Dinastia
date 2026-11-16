@@ -76,6 +76,14 @@ func _probar_copas_mundo() -> void:
 	_comprobar(Partida.guardar(m, "_prueba_copas_mundo"), "se guarda")
 	var m2 := Partida.cargar("_prueba_copas_mundo")
 	_comprobar(m2 != null and m2.copas_otras.size() == m.copas_otras.size() and m2.palmares_mundo.size() == m.palmares_mundo.size(), "y se carga con sus copas y su palmarés")
+	## (16-11, informe G-05) Con el peso del premio (las copas secundarias pagan menos) y el cuadro de rondas jugadas.
+	var pesos_ok := m2 != null
+	for i in (m.copas_otras.size() if m2 != null else 0):
+		var a: Copa = m.copas_otras[i]
+		var b: Copa = m2.copas_otras[i]
+		pesos_ok = pesos_ok and is_equal_approx(a.peso_premio, b.peso_premio) and a.historial.size() == b.historial.size() \
+			and (a.historial.is_empty() or (b.historial[0]["resultados"] as Array).size() == (a.historial[0]["resultados"] as Array).size())
+	_comprobar(pesos_ok, "las copas cargadas conservan su peso de premio y las rondas jugadas")
 	## Cuántas supercopas toca jugar: los países (menos el tuyo) cuyo campeón de liga no ganó también la copa principal. Con
 	## unos campeones u otros, esa cuenta cambia: la prueba no puede exigir «al menos una» a ciegas.
 	var esperadas := 0
