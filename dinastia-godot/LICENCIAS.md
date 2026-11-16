@@ -157,4 +157,10 @@ Outfits «Fantasy» (Campesino, Explorador), KayKit Adventurers/Skeletons, avata
 ## Texturas PBR (10-11-2026, sesión 7)
 Texturas `assets/cc0/*` (suelos, paredes y azulejo del vestuario): **Poly Haven**, licencia **CC0** (https://polyhaven.com/license), bajadas a 1K con `herramientas/bajar_cc0.py` (rubber_tiles, hinoki_planks, patterned_terracotta_tiling, dark_wooden_planks, beige_wall_001, brick_wall_005, clay_plaster, floor_tiles_06, herringbone_parquet, beige_wall_002, laminate_floor_02, brushed_concrete_03, granite_tile, patterned_clay_plaster, clay_floor_001, patterned_clay_wall). 🟢
 
+Tela de punto de las camisetas y pantalones de los futbolistas (16-11-2026, Frente 2), con la plantilla del informe AAA (cap. 11, §11.8):
+
+| Qué | Dónde (ruta en el repo) | Origen (autor, título, URL exacta) | Licencia (nombre + URL del texto) | Obligación cumplida | Fecha de consulta | Prueba guardada | Estado |
+|---|---|---|---|---|---|---|---|
+| Normal de punto de camiseta, solo como detalle de relieve (sin color ni rugosidad), 512 px | `assets/cc0/cotton_jersey/nor.jpg` (lo usa `visor/equipacion_q.gdshader`, uniforme `tela_nor`) | Poly Haven, «Cotton Jersey» (foto: colormass; proceso: Rico Cilliers), https://polyhaven.com/a/cotton_jersey; mapa `nor_gl` 1K de la API https://api.polyhaven.com/files/cotton_jersey, recortado a 1024², contraste del relieve ×4,3 y reducido a 512 px | CC0 1.0, https://polyhaven.com/license (https://creativecommons.org/publicdomain/zero/1.0/) | — (CC0; crédito de cortesía aquí) | 16-11-2026 | ficha de la API (`/info/cotton_jersey`) consultada el 16-11-2026 | 🟢 |
+
 Modelos `assets/cc0_modelos/*` (muebles de oficina: modern_arm_chair_01, modern_wooden_cabinet, modern_coffee_table_01; texturas reducidas a 512 px. 12-11: prensa, enfermería, utilería y pasillos: wall_clock, korean_fire_extinguisher_01, WetFloorSign_01, metal_stool_02, steel_frame_shelves_03, worn_metal_rack, solo con su textura de color a 256 px): **Poly Haven**, licencia **CC0**, glTF 1K bajados con `herramientas/bajar_cc0_modelos.py`; fuera de LFS con excepción en `.gitattributes` (autorizado por el dueño, 10-11). 🟢

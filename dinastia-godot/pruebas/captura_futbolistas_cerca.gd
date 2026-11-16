@@ -15,12 +15,21 @@ const PLANOS := [
 	["nuca", Vector3(0.4, 1.75, -2.6), Vector3(0, 1.55, 0), 26.0],
 	["cuerpo", Vector3(0, 1.05, 5.6), Vector3(0, 0.92, 0), 30.0],
 	["pies", Vector3(0, 0.45, 2.4), Vector3(0, 0.18, 0), 30.0],
+	## Torsos de cerca (16-11, tela de las camisetas y parches claros), uno por club: pecho, short y manga.
+	["torso1", Vector3(-1.4, 1.2, 1.7), Vector3(-1.4, 1.02, 0), 32.0],
+	["torso2", Vector3(0.0, 1.2, 1.7), Vector3(0.0, 1.02, 0), 32.0],
+	["torso3", Vector3(1.4, 1.2, 1.7), Vector3(1.4, 1.02, 0), 32.0],
 ]
+## SOLO=torso1,cuerpo saca solo esos planos (vacío = todos).
+var _planos: Array = []
 
 func _ready() -> void:
 	var paises: Array[String] = []
 	for t in (OS.get_environment("PAISES") if OS.get_environment("PAISES") != "" else "ENG,ARG,JPN").split(","):
 		paises.append(t)
+	## NIVEL=alto viste con la calidad ALTA (tela de punto, legibilidad); por defecto, la del juego (MÍNIMA).
+	if OS.get_environment("NIVEL") == "alto":
+		Calidad.elegida = Calidad.ALTA
 	var m := Mundo.new()
 	m.generar(paises, 4711)
 	_cam = Camera3D.new()
@@ -85,10 +94,14 @@ func _ready() -> void:
 		for j: Dictionary in _jug:
 			for mi in (j["nodo"] as Node).find_children("*" + t + "*", "GeometryInstance3D", true, false):
 				(mi as GeometryInstance3D).visible = false
+	var solo := OS.get_environment("SOLO").split(",", false)
+	for p: Array in PLANOS:
+		if solo.is_empty() or solo.has(p[0]):
+			_planos.append(p)
 	_poner_plano(0)
 
 func _poner_plano(k: int) -> void:
-	var p: Array = PLANOS[k]
+	var p: Array = _planos[k]
 	_cam.position = p[1]
 	_cam.fov = p[3]
 	_cam.look_at(p[2])
@@ -98,8 +111,8 @@ func _process(_d: float) -> void:
 	var k := (_n - 12) / 6
 	if _n >= 12 and (_n - 12) % 6 == 5:
 		var suf := OS.get_environment("SUFIJO")
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/cerca_%s_%s.png" % [PLANOS[k][0], suf])
-		if k + 1 >= PLANOS.size():
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/cerca_%s_%s.png" % [_planos[k][0], suf])
+		if k + 1 >= _planos.size():
 			get_tree().quit()
 			return
 		_poner_plano(k + 1)
