@@ -15,6 +15,7 @@ func _montar_motor() -> void:
 	_motor.eliminatoria = eliminatoria
 	GestoTecnico.fijar_clima(_motor, String(_perfil.get("clima", "")))   ## lluvia, nieve...: pesan en el juego (27-10)
 	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
+	_motor.sembrar_amarillas(partido)   ## (16-11, informe M6-05) las amarillas del primer tiempo siguen valiendo
 	## La cabeza de cada jugador sigue al balón (M-098).
 	MiradaBalon.poner(_motor.jugadores, _balon)
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)

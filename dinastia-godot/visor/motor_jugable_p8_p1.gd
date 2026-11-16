@@ -329,21 +329,21 @@ func _tacticas_rapidas() -> void:
 		tc["presion"] = int(_tac_base[eq].get("presion", 1))
 		cambio = "presion"
 		aviso.emit("Presión de equipo: se acaba")
-	if Input.is_action_just_pressed("jugar_tac_arriba"):
+	if Mando.pulsado("jugar_tac_arriba"):
 		tc["mentalidad"] = mini(int(tc.get("mentalidad", 1)) + 1, 2)
 		cambio = "mentalidad"
 		aviso.emit("⚔ Mentalidad: %s" % ["defensiva", "equilibrada", "ofensiva"][int(tc["mentalidad"])])
-	elif Input.is_action_just_pressed("jugar_tac_abajo"):
+	elif Mando.pulsado("jugar_tac_abajo"):
 		tc["mentalidad"] = maxi(int(tc.get("mentalidad", 1)) - 1, 0)
 		cambio = "mentalidad"
 		aviso.emit("🛡 Mentalidad: %s" % ["defensiva", "equilibrada", "ofensiva"][int(tc["mentalidad"])])
-	elif Input.is_action_just_pressed("jugar_tac_izquierda"):
+	elif Mando.pulsado("jugar_tac_izquierda"):
 		_tac_base[eq] = tc.duplicate()
 		tc["presion"] = 2
 		cambio = "presion"
 		_presion_equipo_hasta = t + 45.0
 		aviso.emit("🔥 ¡Presión de equipo!")
-	elif Input.is_action_just_pressed("jugar_tac_derecha"):
+	elif Mando.pulsado("jugar_tac_derecha"):
 		tc["amplitud"] = 2 if int(tc.get("amplitud", 1)) < 2 else 1
 		cambio = "amplitud"
 		aviso.emit("↗ Laterales al ataque" if int(tc["amplitud"]) == 2 else "Laterales en su sitio")

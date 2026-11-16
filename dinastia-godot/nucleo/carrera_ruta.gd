@@ -231,7 +231,7 @@ static func tras_partido(c: CarreraJugador, m: Mundo, d: Dictionary) -> void:
 	var base := int(float(minutos) / 6.0) + int(maxf(0.0, nota - 6.0) * 12.0) + goles * 15 + asist * 10
 	var hechos: Array = []
 	var extra := 0
-	for reto: Dictionary in retos(c, m):
+	for reto: Dictionary in (r["retos"] if not (r.get("retos", []) as Array).is_empty() else retos(c, m)):   ## (16-11, R-02) los del partido, no los de la semana que ya empezó
 		var ok := not bool(reto.get("hecho", false)) and _cumple(String(reto["id"]), d)
 		var premio := int(RETOS[String(reto["id"])][1])
 		if tiene(c, "sangre_fria"):

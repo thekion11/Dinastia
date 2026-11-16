@@ -155,7 +155,7 @@ func _saque_banda_usuario() -> void:
 			return
 	if _receptor_i < 0 or _receptor_i >= lista.size():
 		_receptor_i = 0
-	if Input.is_action_just_pressed("jugar_cambiar"):
+	if Mando.pulsado("jugar_cambiar"):
 		_receptor_i = (_receptor_i + 1) % lista.size()
 	## El stick derecho (o el izquierdo) apunta al compañero.
 	var apunta := rs if rs.length() > 0.5 else mv
@@ -167,11 +167,11 @@ func _saque_banda_usuario() -> void:
 	var q: Dictionary = lista[_receptor_i]
 	_receptor_marcado = q
 	var hacer := ""
-	if Input.is_action_just_pressed("jugar_pase"):
+	if Mando.pulsado("jugar_pase"):
 		hacer = "corto"
-	elif Input.is_action_just_pressed("jugar_filtrado"):
+	elif Mando.pulsado("jugar_filtrado"):
 		hacer = "espacio"
-	elif Input.is_action_just_pressed("jugar_centro"):
+	elif Mando.pulsado("jugar_centro"):
 		hacer = "largo"
 	if hacer == "":
 		return
@@ -290,13 +290,13 @@ func _apuntar_usuario(delta: float) -> void:
 		return
 	if tipo in ["corner", "falta"]:
 		## LB: el receptor dentro del área (el apunte va hacia él).
-		if Input.is_action_just_pressed("jugar_cambiar"):
+		if Mando.pulsado("jugar_cambiar"):
 			_siguiente_receptor()
 		## RB / LT: segundo y tercer lanzador (jugada ensayada).
-		if Input.is_action_just_pressed("jugar_mod"):
+		if Mando.pulsado("jugar_mod"):
 			_otro_lanzador(1)
 			return
-		if Input.is_action_just_pressed("jugar_regate"):
+		if Mando.pulsado("jugar_regate"):
 			_otro_lanzador(2)
 			return
 	if tipo == "penal":
@@ -325,7 +325,7 @@ func _apuntar_usuario(delta: float) -> void:
 			_error_extra = lerpf(0.4, 1.7, serenidad())
 		_lanzar_usuario(float(apunte["fuerza"]))
 		_error_extra = 1.0
-	elif Input.is_action_just_pressed("jugar_pase"):
+	elif Mando.pulsado("jugar_pase"):
 		_lanzar_usuario(0.45)
 
 func _ritmo_de_saque(lanzador: Dictionary) -> float:

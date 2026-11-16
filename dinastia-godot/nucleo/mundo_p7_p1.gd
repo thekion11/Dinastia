@@ -37,11 +37,18 @@ func nueva_temporada() -> Dictionary:
 			j.edad += 1
 			j.partidos = 0
 			j.goles = 0
+			j.asistencias = 0   ## (16-11, informe G-02) como los goles: la temporada ya quedó en `registrar_temporada`
 			j.amarillas = 0
 			## La curva de progreso: los jovenes suben hacia su techo, los
 			## veteranos bajan. Es lo que hace que una plantilla envejezca.
 			## Vive en `ProgresoJugador` (cantera_progreso.gd), con la semanal.
 			ProgresoJugador.anual(j)
+			## (16-11, informe R-01) El futbolista de La Ruta no lo retira ni lo deja libre el mundo: su retiro y su contrato
+			## los lleva `CarreraJugador` (`toca_retirarse`, renovación). Antes podía desaparecer y la partida volvía a «crear jugador».
+			if carrera_jugador != null and j.id == carrera_jugador.jugador_id:
+				j.anios_contrato = maxi(j.anios_contrato - 1, 1)
+				_sigue_retasado(siguen, j)
+				continue
 			## EL RETIRO POR LESIONES. `Medico.retiro_forzado()` estaba escrita y no la llamaba nadie: tres lesiones graves seguidas no
 			## acababan con la carrera de nadie, que es justo el peor final que puede tener un futbolista y el que hace que cuidar el fisico importe.
 			if c.id == mi_club_id and medico != null and medico.retiro_forzado(j):

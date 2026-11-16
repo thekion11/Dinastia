@@ -376,16 +376,24 @@ func a_dic() -> Dictionary:
 
 ## (4-11, caza de fallos) Un guardado dañado o a mano con el tipo equivocado (texto donde va un diccionario) reventaba al CARGAR la carrera: se usa el valor por omisión.
 static func _tipo(d: Dictionary, clave: String, defecto: Variant) -> Variant:
-	var v: Variant = d.get(clave, defecto)
-	return v if typeof(v) == typeof(defecto) else defecto
+	return _mismo_tipo(d.get(clave, defecto), defecto)
+
+## (16-11, informe G-01) El JSON devuelve los números como float: un float donde va un int es válido (se redondea),
+## si no, cada carga ponía a 0 partidos, goles y asistencias de la temporada.
+static func _mismo_tipo(v: Variant, defecto: Variant) -> Variant:
+	if typeof(v) == typeof(defecto):
+		return v
+	if typeof(defecto) == TYPE_INT and typeof(v) == TYPE_FLOAT:
+		return roundi(v)
+	return defecto
 
 ## `stats_temp` con todas sus claves (un guardado antiguo o roto no las traía y la nota media fallaba).
 static func _stats_ok(v: Variant, defecto: Dictionary) -> Dictionary:
 	var r: Dictionary = defecto.duplicate(true)
 	if v is Dictionary:
 		for k: String in defecto:
-			if (v as Dictionary).has(k) and typeof((v as Dictionary)[k]) == typeof(defecto[k]):
-				r[k] = (v as Dictionary)[k]
+			if (v as Dictionary).has(k):
+				r[k] = _mismo_tipo((v as Dictionary)[k], defecto[k])
 	return r
 
 static func desde_dic(d: Dictionary) -> CarreraJugador:

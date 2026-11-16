@@ -33,8 +33,13 @@ const MEJORES_CAPITAN := 3
 const PROB_CAPITAN := 0.30           ## por temporada, siendo apto
 const PROB_CAPITAN_TALENTO := 0.45   ## lo que suma el talento «Brazalete»
 
+## (16-11, informe R-03) `Jugador.anotar_nota` guarda solo las 8 últimas: pedir 10 o 20 dejaba a todos los rivales fuera
+## y los premios por nota se ganaban sin competir. Se pide la ventana casi llena (6) y, para el mejor del mundo, entera (8).
+const NOTAS_MIN := 6
+const NOTAS_MUNDIAL := 8
+
 static func _nota_de(o: Jugador) -> float:
-	if o.notas.size() < 10:
+	if o.notas.size() < NOTAS_MIN:
 		return 0.0
 	var s := 0.0
 	for n: float in o.notas:
@@ -119,7 +124,7 @@ static func _puntos_mundial(nota: float, goles: int, asist: int, titulos: int) -
 static func _mejor_del_mundo(m: Mundo, j: Jugador, mios: float) -> bool:
 	for cl: Club in m.clubes.values():
 		for o: Jugador in cl.plantilla:
-			if o != j and o.notas.size() >= 20 and _puntos_mundial(_nota_de(o), o.goles, o.asistencias, 0) >= mios:
+			if o != j and o.notas.size() >= NOTAS_MUNDIAL and _puntos_mundial(_nota_de(o), o.goles, o.asistencias, 0) >= mios:
 				return false
 	return true
 

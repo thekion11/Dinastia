@@ -78,6 +78,8 @@ func _companero_cerca(p: Dictionary, punto: Vector3) -> Dictionary:
 	return mejor
 
 func _cabezazo(p: Dictionary) -> void:
+	if _pitar_offside(p):   ## (16-11, M6-04) el adelantado que cabecea también está en fuera de juego
+		return
 	var arco := _arco_rival(p)
 	var cerca := absf(pos(p).z - arco.z) < 18.0
 	if cerca:

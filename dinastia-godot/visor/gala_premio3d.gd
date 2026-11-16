@@ -67,6 +67,13 @@ func _calidad_maxima() -> void:
 	_vp.positional_shadow_atlas_size = 4096
 	_vp.mesh_lod_threshold = 0.0   ## los modelos con todo su detalle, sin versiones simplificadas
 	RenderingServer.directional_shadow_atlas_set_size(4096, true)
+	tree_exiting.connect(_restaurar_sombras)
+
+## (16-11, informe V-01) El atlas de sombras es GLOBAL: al cerrar la gala vuelve al de la calidad elegida
+## (2048 en ALTA/ULTRA, el del proyecto por debajo; en el móvil es 2048, no 4096).
+func _restaurar_sombras() -> void:
+	var tam := 2048 if Calidad.elegida >= Calidad.ALTO else int(ProjectSettings.get_setting_with_override("rendering/lights_and_shadows/directional_shadow/size"))
+	RenderingServer.directional_shadow_atlas_set_size(tam, true)
 
 ## El entorno de gala: brillo, oclusión ambiental, reflejos en el suelo y un leve ajuste de color.
 static func _entorno_maximo(env: Environment) -> void:

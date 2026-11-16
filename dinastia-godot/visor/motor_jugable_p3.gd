@@ -25,7 +25,7 @@ func _control_de_equipo() -> void:
 		if poseedor != usuario:
 			_poner_usuario(poseedor)
 		return
-	var pedir := Input.is_action_just_pressed("jugar_cambiar")
+	var pedir := Mando.pulsado("jugar_cambiar")
 	## BLOQUEO DE JUGADOR (L3 + R3): te quedas con el mismo hasta quitarlo.
 	if bloqueo and not usuario.is_empty() and not pedir:
 		return
