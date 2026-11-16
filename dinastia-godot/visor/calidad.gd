@@ -60,7 +60,7 @@ static func escala_3d(nivel: int = -99) -> float:
 	elif n == MEDIO:
 		base = escala_media
 	elif n >= ULTRA and not es_compatibilidad():
-		base = escala_ultra   ## (15-11) ULTRA al 75 % del 3D + TAA + sombras 2048: ~30 FPS en la laptop del dueño (antes 13)
+		base = escala_ultra   ## (15-11) ULTRA al 60 % del 3D + TAA + sombras 2048: ~36-40 FPS en la laptop del dueño (antes 13; al 75 % ~30)
 	if res3d_auto and n <= MEDIO:
 		return minf(base, CalidadRes3D.tope_escala(CalidadRes3D.alto_pantalla()))
 	return base
@@ -323,7 +323,7 @@ static func es_compatibilidad() -> bool:
 ## esto, a 4K se ven los dientes de sierra de cada farola.
 ## (4-11, R01) Solo la «Prueba de rendimiento» de Ajustes lo enciende: mide cada escala CON y SIN MSAA para que el dueño decida con datos de su teléfono.
 static var sin_msaa := false
-static var escala_ultra := 0.75   ## (15-11) escala 3D de ULTRA en Forward+
+static var escala_ultra := 0.6   ## (15-11) escala 3D de ULTRA en Forward+
 
 static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 	if vp == null:
