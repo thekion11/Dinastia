@@ -9,6 +9,7 @@ var _z_out := 0.0
 ## (10-11) El VESTUARIO (taquillas, bancos, duchas: piezas sueltas hijas del túnel) queda bajo la tribuna; en el vuelo de la presentación
 ## (cámara a 55 m) costaba ~150 llamadas sin verse. El pasillo del túnel, las paredes y las luces NO se tocan.
 var _vestuario: Array[Node3D] = []
+var _buscado := false   ## (16-11, informe cap. 5) antes la marca era `append(self)`, que falla: este nodo no es Node3D y se buscaba cada fotograma
 var _vest_visible := true
 
 ## Se busca por nombre cada vez: `EdificioClub.reconstruir` lo cambia por uno nuevo al decorar.
@@ -24,7 +25,7 @@ func _process(_d: float) -> void:
 	var edificio := get_parent().get_node_or_null("EdificioClub") as Node3D
 	if edificio == null:
 		return
-	if _vestuario.is_empty():
+	if not _buscado:
 		_juntar_vestuario()
 	var cam := get_viewport().get_camera_3d() if is_inside_tree() else null
 	if cam == null:
@@ -45,6 +46,7 @@ func _process(_d: float) -> void:
 				n.visible = vest
 
 func _juntar_vestuario() -> void:
+	_buscado = true
 	var tunel := get_parent() as Node3D
 	for h in tunel.get_children():
 		if h == self or not h is Node3D or String(h.name) == "EdificioClub":
@@ -59,5 +61,3 @@ func _juntar_vestuario() -> void:
 			z = caja.get_center().z
 		if z > _z_out + 0.5:
 			_vestuario.append(n)
-	if _vestuario.is_empty():
-		_vestuario.append(self)   ## marca de «ya se buscó» (apagarse a sí mismo no hace nada)
