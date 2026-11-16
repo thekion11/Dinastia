@@ -28,6 +28,9 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("medias_linea", "once", "grupo_de", "lateral_de", "banda_de", "impulsos", "minuto", "arenga_mult", "ley_ex", "ex_de_mi_club", "ex_id"), &DinastiaNativo::medias_linea);
 	ClassDB::bind_method(D_METHOD("balon_prediccion", "bp0", "bv0", "cfg", "hay_poseedor", "vel_poseedor", "total", "dt", "radio"), &DinastiaNativo::balon_prediccion);
 	ClassDB::bind_method(D_METHOD("balon_avanzar", "p0", "vel0", "giro0", "resto0", "delta", "cfg", "k"), &DinastiaNativo::balon_avanzar);
+	ClassDB::bind_method(D_METHOD("league_posicion_formacion", "e"), &DinastiaNativo::league_posicion_formacion);
+	ClassDB::bind_method(D_METHOD("league_acumular", "hist"), &DinastiaNativo::league_acumular);
+	ClassDB::bind_method(D_METHOD("league_media_f", "hist", "ms"), &DinastiaNativo::league_media_f);
 	ClassDB::bind_method(D_METHOD("league_elegir", "grupos", "sp", "rel", "deseada", "parado", "mirar", "pie"), &DinastiaNativo::league_elegir);
 	ClassDB::bind_method(D_METHOD("league_legal", "vi", "vo", "cuerpo_sale", "cuerpo_ini", "a"), &DinastiaNativo::league_legal);
 	ClassDB::bind_method(D_METHOD("league_mezclar", "sal", "a1", "a2", "cuadros", "mezclas", "ang", "giro_padre"), &DinastiaNativo::league_mezclar);

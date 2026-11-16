@@ -19,6 +19,7 @@
 #include <godot_cpp/variant/quaternion.hpp>
 #include <godot_cpp/variant/packed_float32_array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
+#include <godot_cpp/variant/packed_vector2_array.hpp>
 #include <godot_cpp/variant/packed_vector3_array.hpp>
 
 namespace godot {
@@ -60,6 +61,10 @@ public:
 	// `balon_avanzar` = el bucle de pasos de 10 ms de `MotorLeague._mover_balon` (devuelve [p, vel, giro, resto]). Ambos llaman a la copia de `LeagueNucleo.fuerzas_balon`.
 	PackedVector3Array balon_prediccion(const Vector3 &bp0, const Vector3 &bv0, const Dictionary &cfg, bool hay_poseedor, const Vector3 &vel_poseedor, int64_t total, double dt, double radio) const;
 	Array balon_avanzar(const Vector3 &p0, const Vector3 &vel0, const Vector3 &giro0, double resto0, double delta, const Dictionary &cfg, const PackedFloat64Array &k) const;
+	// La colocación y el historial de League (16-11, nativo/src/league_equipo_nativo.cpp): `LeagueNucleo.posicion_formacion` (con «mezcla» en `e`), `LeagueEquipo.acumular` y `LeagueEquipo.media_f`.
+	Vector2 league_posicion_formacion(const Dictionary &e) const;
+	PackedVector2Array league_acumular(const PackedVector2Array &hist) const;
+	double league_media_f(const PackedFloat32Array &hist, double ms) const;
 	// `Partido.simular_minuto()` x 90 de un cruce de la IA que nadie mira (nucleo/partido_rapido.gd): mismo orden de llamadas al azar; los sucesos raros vuelven a GDScript (`ayuda`).
 	void simular_90(Object *p, Object *ayuda, const Dictionary &cfg, const Ref<RandomNumberGenerator> &rng, bool azar_propio) const;
 	// `Partido._cerrar_notas()` (nucleo/partido.gd): nota final, forma y partidos de cada jugador del cruce, con la misma tirada de azar por jugador (`rng` = `Azar._rng`).

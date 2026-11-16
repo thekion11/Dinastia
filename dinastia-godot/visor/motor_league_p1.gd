@@ -137,7 +137,8 @@ func _destino_forma(p: Dictionary, forma: Vector2) -> Vector2:
 		"lado_posesion_medio": _lado_medio,
 		"ofensividad": clampf(e.ofensividad + float(_tac(local, "mentalidad") - 1) * 0.15, 0.0, 1.0),
 		"viva": e.viva, "contra": e.contra, "mezcla": e.mezcla_de(_rol(p)), "trampa_x": e.trampa_x}
-	var r := LeagueNucleo.posicion_formacion(entrada)
+	var nat := Nativo.obj()
+	var r: Vector2 = nat.league_posicion_formacion(entrada) if nat != null and nat.has_method("league_posicion_formacion") else LeagueNucleo.posicion_formacion(entrada)   ## (16-11, paso a C++)
 	r.x += -e.lado * float(_tac(local, "linea") - 1) * 4.0   ## la línea de la pizarra adelanta o retrasa el bloque
 	return r
 

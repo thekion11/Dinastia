@@ -31,6 +31,13 @@ func _init(lado_propio: float) -> void:
 var acum: PackedVector2Array = PackedVector2Array()
 
 func acumular() -> void:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_acumular"):   ## (16-11, paso a C++) misma suma que `acumular_gd`
+		acum = nat.league_acumular(balon_hist)
+		return
+	acumular_gd()
+
+func acumular_gd() -> void:
 	acum.resize(balon_hist.size() + 1)
 	var s := Vector2.ZERO
 	acum[0] = s
@@ -57,6 +64,12 @@ static func media(hist: PackedVector2Array, ms: float) -> Vector2:
 	return s / float(n)
 
 static func media_f(hist: PackedFloat32Array, ms: float) -> float:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_media_f"):   ## (16-11, paso a C++) misma media que `media_f_gd`
+		return nat.league_media_f(hist, ms)
+	return media_f_gd(hist, ms)
+
+static func media_f_gd(hist: PackedFloat32Array, ms: float) -> float:
 	var n := mini(hist.size(), maxi(1, int(ms / 10.0)))
 	if n == 0:
 		return 0.0
