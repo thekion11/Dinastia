@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Quita del plan las ideas del dueño que ya tienen una prueba del banco que las comprueba de verdad.
-   python3 herramientas/quitar_ideas.py 5 6 7 ...   (borra las líneas «- N. …» de docs/PLAN_GENERAL.md)"""
+   python3 herramientas/quitar_ideas.py 5 6 7 ...   (borra las líneas «- N. …» de docs/05_referencia/CATALOGO_IDEAS_Y_MEJORAS.md)"""
 import re, sys
-p = "docs/PLAN_GENERAL.md"
+p = "docs/05_referencia/CATALOGO_IDEAS_Y_MEJORAS.md"
 ids = {int(x) for x in sys.argv[1:]}
 L = open(p, encoding="utf-8").read().split("\n")
 out, quitadas = [], []
