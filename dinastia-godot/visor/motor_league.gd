@@ -63,6 +63,7 @@ func _estado_league(delta: float) -> void:
 	_estado_sin_balon(delta)
 	if fase3:
 		_interferir()
+	_base_liga = PackedFloat64Array()   ## solo vale en este paso
 
 static func _ls3(v: Vector3) -> Vector3:
 	return Vector3(v.z, v.x, v.y)
@@ -81,14 +82,15 @@ func _interferir() -> void:
 	var e: LeagueEquipo = equipos[i]
 	var bola: Vector2 = _ls_pred[200]
 	var rp := ls(pos(rival)) + ls(rival["vel"]) * 0.1
-	for p: Dictionary in jugadores:
-		if bool(p["es_local"]) == bool(rival["es_local"]) or bool(p["por"]) or (p == usuario and not autopiloto):
-			continue
-		if float(p["enfriar"]) > 0.0 or float(p.get("gesto_hasta", 0.0)) > t:
-			continue
+	var nat := Nativo.obj()
+	var cand: PackedInt32Array   ## (16-11, paso a C++) el filtro de los 22 jugadores; `_candidatos_interferir_gd` es su gemela
+	if nat != null and nat.has_method("league_interferir_candidatos"):
+		cand = nat.league_interferir_candidatos(jugadores, bool(rival["es_local"]), "" if usuario.is_empty() or autopiloto else String(usuario["id"]), t, bola)
+	else:
+		cand = _candidatos_interferir_gd(rival, bola)
+	for k: int in cand:
+		var p: Dictionary = jugadores[k]
 		var yo := ls(pos(p))
-		if yo.distance_to(bola) > 10.0:
-			continue
 		var mov := ls(p["vel"])
 		var a_rival := (rp - (yo + mov * 0.1)).normalized()
 		var r_bola := (bola - rp).normalized()
@@ -113,67 +115,34 @@ func _equipo_con_balon() -> int:
 		return 0 if bool(ultimo_toque["es_local"]) else 1
 	return -1
 
-func _mas_cercano_al(punto: Vector2, local: bool, excluir: Array, cuantos: int) -> Array:
-	if cuantos == 1:
-		## (15-11, FPS) el caso de siempre (el más cercano): una pasada buscando el mínimo, sin armar ni ordenar la lista (86 → ~25 µs por paso).
-		var mejor := INF
-		var sel: Dictionary = {}
-		for q: Dictionary in jugadores:
-			if bool(q["es_local"]) == local and (excluir.is_empty() or not excluir.has(q)):
-				var d := (ls(pos(q)) - punto).length_squared()
-				if d < mejor:
-					mejor = d
-					sel = q
-		return [] if sel.is_empty() else [sel]
-	var c: Array = []
-	for q: Dictionary in jugadores:
-		if bool(q["es_local"]) == local and not excluir.has(q):
-			c.append([(ls(pos(q)) - punto).length_squared(), q])
-	c.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
-	return c.slice(0, cuantos).map(func(x: Array) -> Dictionary: return x[1])
-
 func _estado_sin_balon(_delta: float) -> void:
-	_ls_por_id.clear()
-	for q: Dictionary in jugadores:
-		_ls_por_id[String(q["id"])] = q
+	_indexar_jugadores(_ls_por_id)
 	## Balón previsto (L Ball::Predict): con la física portada, o con el portador.
-	var bp := balon.position
-	var bv := vel_balon
-	var cfg := cfg_balon
-	_ls_pred3.resize(PRED_TOTAL + 1)
-	_ls_pred3[0] = _ls3(bp)
-	for k in range(1, PRED_TOTAL + 1):
-		if poseedor.is_empty():
-			var r := LeagueNucleo.fuerzas_balon(bp, bv, cfg, 0.01, R)
-			bp = r[0]; bv = r[1]
-			bp += bv * 0.01
-		else:
-			bp += (poseedor["vel"] as Vector3) * 0.01
-		_ls_pred3[k] = _ls3(bp)
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("balon_prediccion"):   ## (16-11, paso a C++) misma cuenta que `prediccion_gd`
+		_ls_pred3 = nat.balon_prediccion(balon.position, vel_balon, cfg_balon, not poseedor.is_empty(), poseedor["vel"] if not poseedor.is_empty() else Vector3.ZERO, PRED_TOTAL, 0.01, R)
+	else:
+		_ls_pred3 = prediccion_gd(balon.position, vel_balon, cfg_balon, not poseedor.is_empty(), poseedor["vel"] if not poseedor.is_empty() else Vector3.ZERO, PRED_TOTAL)
 	for objetivo_ms: int in PRED_MS:
 		var v3 := _ls_pred3[objetivo_ms / 10]
 		_ls_pred[objetivo_ms] = Vector2(v3.x, v3.y)
 	var b0 := ls(balon.position)
-	var mejor := INF
 	_ls_designado = poseedor
 	if poseedor.is_empty():
-		for q: Dictionary in jugadores:
-			var d := (ls(pos(q)) - b0).length()
-			if d < mejor:
-				mejor = d; _ls_designado = q
+		_ls_designado = _designado_base(b0)
 	var con_balon := _equipo_con_balon()
+	var cerc := _cercanos_equipos(_ls_pred[200])   ## (16-11, paso a C++) el más cercano de cada equipo en una pasada (vacío = a mano)
 	for i in 2:
 		var local := i == 0
-		var d_eq := _mas_cercano_al(_ls_pred[200], local, [], 1)
-		_ls_desig_eq[i] = d_eq[0] if not d_eq.is_empty() else {}
+		if cerc.is_empty():
+			var d_eq := _mas_cercano_al(_ls_pred[200], local, [], 1)
+			_ls_desig_eq[i] = d_eq[0] if not d_eq.is_empty() else {}
+		else:
+			_ls_desig_eq[i] = jugadores[cerc[i]] if cerc[i] >= 0 else {}
 		var e: LeagueEquipo = equipos[i]
 		var tiene := con_balon == i
 		## Línea del fuera de juego del RIVAL a 240 ms (L AI_GetOffsideLine(opp, 240)): no pasarla al apoyar.
-		var xs := PackedFloat32Array()
-		for q: Dictionary in jugadores:
-			if bool(q["es_local"]) != local:
-				xs.append(ls(pos(q)).x + ls(q["vel"]).x * 0.24)
-		_ls_linea_rival[i] = LeagueEquipo.linea_penultimo(xs, -e.lado, b0.x)
+		_ls_linea_rival[i] = _linea_rival(i, local, e.lado, b0)
 		if t >= float(_ls_t_marca[i]):   ## L CalculateManMarking cada 0,4 s, escalonado por equipo
 			_ls_t_marca[i] = t + 0.4
 			_ls_marca[i] = _calcular_marcajes(local, e.lado, b0)
@@ -195,8 +164,8 @@ func _calcular_marcajes(local: bool, lado: float, b0: Vector2) -> Dictionary:
 
 ## L TeamAIController: presión de zona al perder el balón y presión de equipo (un segundo presionador).
 func _presion_zona(i: int, local: bool, e: LeagueEquipo, tiene: bool, b0: Vector2) -> void:
-	var pres := clampf(0.5 + float(_tac(local, "presion") - 1) * 0.35 + float(_tac(local, "tras_perdida") - 1) * 0.25, 0.0, 1.0)   ## L team_pressure
 	if bool(_ls_tenia[i]) and not tiene:
+		var pres := clampf(0.5 + float(_tac(local, "presion") - 1) * 0.35 + float(_tac(local, "tras_perdida") - 1) * 0.25, 0.0, 1.0)   ## L team_pressure (solo se necesita al perder el balón)
 		var prim := _mas_cercano_al(b0, local, [], 1)
 		var d_prim := (ls(pos(prim[0])) - b0).length() if not prim.is_empty() else 1000.0
 		var terr := clampf(b0.x * -e.lado / LeagueNucleo.MEDIO_LARGO, -1.0, 1.0)
@@ -368,12 +337,15 @@ func _cortar_pase() -> void:
 		return
 	var local_pasa := bool(ultimo_toque["es_local"])
 	var bola: Vector2 = _ls_pred[200]
-	for p: Dictionary in jugadores:
-		if bool(p["es_local"]) == local_pasa or bool(p["por"]) or (p == usuario and not autopiloto) or float(p.get("ls_cortar_hasta", 0.0)) > t:
-			continue
+	var nat := Nativo.obj()
+	var cand: PackedInt32Array   ## (16-11, paso a C++) el filtro de los 22 jugadores; `_candidatos_cortar_gd` es su gemela
+	if nat != null and nat.has_method("league_cortar_candidatos"):
+		cand = nat.league_cortar_candidatos(jugadores, local_pasa, "" if usuario.is_empty() or autopiloto else String(usuario["id"]), t, bola)
+	else:
+		cand = _candidatos_cortar_gd(local_pasa, bola)
+	for k: int in cand:
+		var p: Dictionary = jugadores[k]
 		var yo := ls(pos(p))
-		if yo.distance_to(bola) > 10.0:
-			continue
 		var mov := ls(p["vel"])
 		var mirada := (bola - yo).normalized()
 		for tipo: String in ["interfere", "trap"]:

@@ -65,6 +65,8 @@ static func se_espera_nativo() -> bool:
 		return arq == "x86_64"
 	if OS.has_feature("android"):
 		return arq == "arm64"
+	if OS.has_feature("web"):
+		return arq == "wasm32"   ## Web (16-11): `web.*.wasm32` en el .gdextension; el preset Web lleva extensions_support
 	return false
 
 ## Carpeta propia de la prueba dentro de `user://` (se vacía al empezar y al acabar; nunca toca las partidas del jugador).
