@@ -54,6 +54,9 @@ static func probar(nat: Object, raiz: Node3D) -> Dictionary:
 		MotorJugable.duelos_distintos = 0
 		MotorJugable.comparar_disputas = true
 		MotorColocacion.comparar = true
+		MotorJugable.comparar_anim = true
+		MotorJugable.anim_comparados = 0
+		MotorJugable.anim_distintos = 0
 		MotorColocacion.comparados = 0
 		MotorColocacion.distintos = 0
 		MotorJugable.disputas_comparadas = 0
@@ -63,6 +66,10 @@ static func probar(nat: Object, raiz: Node3D) -> Dictionary:
 		MotorJugable.comparar_duelos = false
 		MotorJugable.comparar_disputas = false
 		MotorColocacion.comparar = false
+		MotorJugable.comparar_anim = false
+		if MotorJugable.anim_distintos > 0 or MotorJugable.anim_comparados < 1000:
+			fallos.append("animación de los 22 %s - %s: distinta en %d (de %d pasos)" % [a.nombre, b.nombre, MotorJugable.anim_distintos, MotorJugable.anim_comparados])
+		textos.append("animación de los 22 %s - %s: C++ = GDScript en %d pasos" % [a.nombre, b.nombre, MotorJugable.anim_comparados])
 		if MotorColocacion.distintos > 0 or MotorColocacion.comparados < 1000:
 			fallos.append("colocación (cercanía) %s - %s: distinta en %d de %d pasos" % [a.nombre, b.nombre, MotorColocacion.distintos, MotorColocacion.comparados])
 		textos.append("colocación (cercanía al balón) %s - %s: C++ = GDScript en %d pasos" % [a.nombre, b.nombre, MotorColocacion.comparados])

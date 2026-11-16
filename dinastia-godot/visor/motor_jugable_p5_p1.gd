@@ -272,50 +272,53 @@ func _mover_fisica_gd(delta: float, bpos: Vector3) -> PackedFloat64Array:
 func _mover_jugadores(delta: float) -> void:
 	var bpos := balon.position   ## (13-11, rendimiento) el balón no se mueve dentro de este bucle
 	var res := _mover_fisica(delta, bpos)
-	var idx := -1
-	for p: Dictionary in jugadores:
-		idx += 1
-		if res[idx * 4] == 0.0:
-			continue
-		var n: Node3D = p["node"]
-		var sp := res[idx * 4 + 1]
-		var atras := res[idx * 4 + 2] > 0.5
-		var hacia_b_len := res[idx * 4 + 3]
-		var vel: Vector3 = p["vel"]
-		## La animación según la velocidad (salvo que haya un gesto en curso).
-		if float(p.get("levantar_en", 0.0)) > 0.0:
-			if t < float(p["levantar_en"]):
-				continue   ## en el suelo: se queda en la última pose de la caída
-			p["levantar_en"] = 0.0
-			_anim(p, String(p.get("levantar_con", "levantarse_suelo")), true, 1.8)
-		if float(p.get("gesto_hasta", 0.0)) > t:
-			continue
-		var anim := "parado" if sp < 0.5 else ("trotar" if sp < 5.2 else "correr")
-		## Con el balón en los pies se conduce (no se trota); el portero espera
-		## en guardia; el que está fundido se nota parado.
-		if poseedor == p and sp >= 0.5 and sp < 6.5:
-			anim = "conducir"
-		elif atras:
+	for idx in jugadores.size():
+		_animar_uno(idx, res)
+
+## La animación de un jugador según su movimiento (el cuerpo del bucle de `_mover_jugadores`; `res` = [válido, velocidad, va_atrás, distancia_al_balón] por jugador).
+func _animar_uno(idx: int, res: PackedFloat64Array) -> void:
+	var p: Dictionary = jugadores[idx]
+	if res[idx * 4] == 0.0:
+		return
+	var n: Node3D = p["node"]
+	var sp := res[idx * 4 + 1]
+	var atras := res[idx * 4 + 2] > 0.5
+	var hacia_b_len := res[idx * 4 + 3]
+	var vel: Vector3 = p["vel"]
+	## La animación según la velocidad (salvo que haya un gesto en curso).
+	if float(p.get("levantar_en", 0.0)) > 0.0:
+		if t < float(p["levantar_en"]):
+			return   ## en el suelo: se queda en la última pose de la caída
+		p["levantar_en"] = 0.0
+		_anim(p, String(p.get("levantar_con", "levantarse_suelo")), true, 1.8)
+	if float(p.get("gesto_hasta", 0.0)) > t:
+		return
+	var anim := "parado" if sp < 0.5 else ("trotar" if sp < 5.2 else "correr")
+	## Con el balón en los pies se conduce (no se trota); el portero espera
+	## en guardia; el que está fundido se nota parado.
+	if poseedor == p and sp >= 0.5 and sp < 6.5:
+		anim = "conducir"
+	elif atras:
+		anim = "trotar_atras"
+	elif bool(p.get("jockey", false)) and poseedor != p and sp < 4.5:
+		anim = "marcar"
+	elif sp < 0.5 and bool(p["por"]) and hacia_b_len < 32.0:
+		anim = "portero_listo"
+	elif bool(p["por"]) and poseedor != p and sp >= 0.5 and sp < 6.0:
+		var fr := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
+		var der := Vector3(-fr.z, 0, fr.x)
+		var lat := vel.dot(der)
+		var fon := vel.dot(fr)
+		if absf(lat) >= absf(fon) * 0.8:
+			anim = "portero_lateral_der" if lat > 0.0 else "portero_lateral_izq"
+		elif fon < 0.0:
 			anim = "trotar_atras"
-		elif bool(p.get("jockey", false)) and poseedor != p and sp < 4.5:
-			anim = "marcar"
-		elif sp < 0.5 and bool(p["por"]) and hacia_b_len < 32.0:
-			anim = "portero_listo"
-		elif bool(p["por"]) and poseedor != p and sp >= 0.5 and sp < 6.0:
-			var fr := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
-			var der := Vector3(-fr.z, 0, fr.x)
-			var lat := vel.dot(der)
-			var fon := vel.dot(fr)
-			if absf(lat) >= absf(fon) * 0.8:
-				anim = "portero_lateral_der" if lat > 0.0 else "portero_lateral_izq"
-			elif fon < 0.0:
-				anim = "trotar_atras"
-		elif sp < 0.5 and cansancio_real and forma_fisica(p) < 0.6:
-			anim = "cansado"
-		_anim(p, anim, false)
-		var ap: AnimationPlayer = p.get("anim")
-		if is_instance_valid(ap):
-			ap.speed_scale = clampf(sp / float(CICLO_ANIM[anim]), 0.7, 1.4) if CICLO_ANIM.has(anim) else 1.0
+	elif sp < 0.5 and cansancio_real and forma_fisica(p) < 0.6:
+		anim = "cansado"
+	_anim(p, anim, false)
+	var ap: AnimationPlayer = p.get("anim")
+	if is_instance_valid(ap):
+		ap.speed_scale = clampf(sp / float(CICLO_ANIM[anim]), 0.7, 1.4) if CICLO_ANIM.has(anim) else 1.0
 
 func _actualizar_balon_visual(_delta: float) -> void:
 	if balon == null:
