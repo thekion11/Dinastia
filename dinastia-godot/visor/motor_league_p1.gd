@@ -215,6 +215,21 @@ func _mover_balon(delta: float) -> void:
 		return
 	var antes := balon.position
 	var p := antes
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("balon_avanzar"):   ## (16-11, paso a C++) el bucle de pasos de 10 ms; misma cuenta que `_avanzar_balon_gd`
+		var r: Array = nat.balon_avanzar(p, vel_balon, giro_balon, _resto_balon, delta, cfg_balon, PackedFloat64Array([PASO_BALON, R, R + 0.02, 0.2, 0.012, Balance.GIRO_AIRE, Balance.GIRO_SUELO, LARGO, PALO, LARGUERO]))
+		p = r[0]
+		vel_balon = r[1]
+		giro_balon = r[2]
+		_resto_balon = r[3]
+	else:
+		p = _avanzar_balon_gd(p, delta)
+	balon.position = p
+	if estado == "juego":
+		_palos_y_lineas(antes)
+
+## Gemela GDScript del bucle de `balon_avanzar` (respaldo sin la extensión y referencia de `probar_nativo`).
+func _avanzar_balon_gd(p: Vector3, delta: float) -> Vector3:
 	_resto_balon += delta
 	while _resto_balon >= PASO_BALON:
 		_resto_balon -= PASO_BALON
@@ -231,6 +246,21 @@ func _mover_balon(delta: float) -> void:
 		if absf(p.z) > LARGO and absf(p.x) < PALO and p.y < LARGUERO:   ## dentro de la red, el balón se muere
 			vel_balon *= 0.85
 			p.z = clampf(p.z, -LARGO - 1.8, LARGO + 1.8)
-	balon.position = p
-	if estado == "juego":
-		_palos_y_lineas(antes)
+	return p
+
+## Gemela GDScript de `balon_prediccion` (respaldo sin la extensión y referencia de `probar_nativo`): la trayectoria ya en el marco de League (z arriba).
+static func prediccion_gd(bp0: Vector3, bv0: Vector3, cfg: Dictionary, hay_poseedor: bool, vel_poseedor: Vector3, total: int) -> PackedVector3Array:
+	var bp := bp0
+	var bv := bv0
+	var sal := PackedVector3Array()
+	sal.resize(total + 1)
+	sal[0] = Vector3(bp.z, bp.x, bp.y)
+	for k in range(1, total + 1):
+		if not hay_poseedor:
+			var r := LeagueNucleo.fuerzas_balon(bp, bv, cfg, 0.01, R)
+			bp = r[0]; bv = r[1]
+			bp += bv * 0.01
+		else:
+			bp += vel_poseedor * 0.01
+		sal[k] = Vector3(bp.z, bp.x, bp.y)
+	return sal

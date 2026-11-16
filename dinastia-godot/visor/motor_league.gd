@@ -137,19 +137,11 @@ func _estado_sin_balon(_delta: float) -> void:
 	for q: Dictionary in jugadores:
 		_ls_por_id[String(q["id"])] = q
 	## Balón previsto (L Ball::Predict): con la física portada, o con el portador.
-	var bp := balon.position
-	var bv := vel_balon
-	var cfg := cfg_balon
-	_ls_pred3.resize(PRED_TOTAL + 1)
-	_ls_pred3[0] = _ls3(bp)
-	for k in range(1, PRED_TOTAL + 1):
-		if poseedor.is_empty():
-			var r := LeagueNucleo.fuerzas_balon(bp, bv, cfg, 0.01, R)
-			bp = r[0]; bv = r[1]
-			bp += bv * 0.01
-		else:
-			bp += (poseedor["vel"] as Vector3) * 0.01
-		_ls_pred3[k] = _ls3(bp)
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("balon_prediccion"):   ## (16-11, paso a C++) misma cuenta que `prediccion_gd`
+		_ls_pred3 = nat.balon_prediccion(balon.position, vel_balon, cfg_balon, not poseedor.is_empty(), poseedor["vel"] if not poseedor.is_empty() else Vector3.ZERO, PRED_TOTAL, 0.01, R)
+	else:
+		_ls_pred3 = prediccion_gd(balon.position, vel_balon, cfg_balon, not poseedor.is_empty(), poseedor["vel"] if not poseedor.is_empty() else Vector3.ZERO, PRED_TOTAL)
 	for objetivo_ms: int in PRED_MS:
 		var v3 := _ls_pred3[objetivo_ms / 10]
 		_ls_pred[objetivo_ms] = Vector2(v3.x, v3.y)
