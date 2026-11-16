@@ -58,12 +58,21 @@ func _ready() -> void:
 	_reloj.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	fila.add_child(_reloj)
 	_repasar()
+	## La chapa plegada de objetivos (`PanelObjetivos`) se coloca por encima de esta barra: avisarla cuando aparece o cambia.
+	visibility_changed.connect(_avisar_objetivos)
+	resized.connect(_avisar_objetivos)
+
+func _avisar_objetivos() -> void:
+	for po in _p.find_children("*", "PanelObjetivos", true, false):
+		(po as PanelObjetivos).call_deferred("_aplicar_plegado")
 
 func _boton(texto: String, al_pulsar: Callable) -> Button:
 	var b := Button.new()
 	b.text = texto
 	b.flat = true
-	b.focus_mode = Control.FOCUS_NONE   ## el foco del mando se queda en el mosaico: estos se alcanzan con el dedo o el ratón
+	## (16-11) Con FOCUS_NONE no se llegaba con el mando (regla de `s3_auditoria_interfaz`: 0 botones sin foco). Nadie les da
+	## el foco al abrir: el mando sigue empezando en el mosaico y baja hasta aquí con la cruceta.
+	b.focus_mode = Control.FOCUS_ALL
 	b.add_theme_font_size_override("font_size", Tema.letra(11))
 	b.add_theme_color_override("font_color", Tema.SUAVE.lightened(0.25))
 	b.add_theme_color_override("font_hover_color", Color.WHITE)
