@@ -12,12 +12,17 @@ const RADIO_BALON := 0.11
 const SEPARACION := 0.07
 ## Más allá de esto (m, del tobillo del clip al objetivo) no se estira la pierna: el pie volvería a quedar raro.
 const ALCANCE := 0.55
+## m: el otro pie tiene que estar al menos esto más cerca del balón para pasar a ser el del toque (sin saltos de ida y vuelta).
+const CAMBIO_PIE := 0.12
 
 var balon: Node3D
 var cuerpo: Node3D
 var peso := 0.0
 ## "l" o "r": el pie del toque. Se elige el más cercano al balón cuando el peso vuelve a empezar desde cero.
 var lado := ""
+## Lo último que hizo (para la sonda `pruebas/medir_h1_animacion.gd`): distancia del tobillo al objetivo antes y después (m).
+var medida := Vector2.ZERO
+var _k_lado := 1.0
 
 func _process_modification() -> void:
 	var esq := get_skeleton()
@@ -25,8 +30,15 @@ func _process_modification() -> void:
 		return
 	var g := esq.global_transform
 	var a_esq := g.affine_inverse()
+	## El pie del toque es el más cercano al balón; al cambiar de pie (la carrera alterna) el nuevo entra en ~8 fotogramas.
+	var cercano := _pie_cercano(esq, g)
 	if lado == "" or peso < 0.02:
-		lado = _pie_cercano(esq, g)
+		lado = cercano
+		_k_lado = 1.0
+	elif cercano != lado and _mas_cerca(esq, g, cercano, lado) > CAMBIO_PIE:
+		lado = cercano
+		_k_lado = 0.0
+	_k_lado = minf(_k_lado + 0.12, 1.0)
 	var i1 := esq.find_bone("thigh_" + lado)
 	var i2 := esq.find_bone("calf_" + lado)
 	var i3 := esq.find_bone("foot_" + lado)
@@ -41,9 +53,10 @@ func _process_modification() -> void:
 		return
 	var obj := bp + hacia_cuerpo.normalized() * (RADIO_BALON + SEPARACION)
 	obj.y = maxf(tobillo_g.y, bp.y - RADIO_BALON * 0.5)
-	if obj.distance_to(tobillo_g) > ALCANCE:
+	medida = Vector2(obj.distance_to(tobillo_g), -1.0)
+	if medida.x > ALCANCE:
 		return
-	var t := a_esq * tobillo_g.lerp(obj, clampf(peso, 0.0, 1.0))
+	var t := a_esq * tobillo_g.lerp(obj, clampf(peso * _k_lado, 0.0, 1.0))
 	var p1 := esq.get_bone_global_pose(i1)
 	var p3 := esq.get_bone_global_pose(i3)
 	var a := p1.origin
@@ -78,6 +91,7 @@ func _process_modification() -> void:
 	esq.set_bone_global_pose(i2, Transform3D(Basis(giro2) * p2.basis, p2.origin))
 	## El pie conserva la orientación que traía el clip (la planta no se tuerce al estirar la pierna).
 	esq.set_bone_global_pose(i3, Transform3D(p3.basis, esq.get_bone_global_pose(i3).origin))
+	medida.y = obj.distance_to(g * esq.get_bone_global_pose(i3).origin)
 
 func _pie_cercano(esq: Skeleton3D, g: Transform3D) -> String:
 	var il := esq.find_bone("foot_l")
@@ -88,3 +102,10 @@ func _pie_cercano(esq: Skeleton3D, g: Transform3D) -> String:
 	var dl := (g * esq.get_bone_global_pose(il).origin).distance_squared_to(bp)
 	var dr := (g * esq.get_bone_global_pose(ir).origin).distance_squared_to(bp)
 	return "l" if dl < dr else "r"
+
+## Cuánto más cerca del balón está el pie `a` que el `b` (m).
+func _mas_cerca(esq: Skeleton3D, g: Transform3D, a: String, b: String) -> float:
+	var bp := balon.global_position
+	var da := (g * esq.get_bone_global_pose(esq.find_bone("foot_" + a)).origin).distance_to(bp)
+	var db := (g * esq.get_bone_global_pose(esq.find_bone("foot_" + b)).origin).distance_to(bp)
+	return db - da

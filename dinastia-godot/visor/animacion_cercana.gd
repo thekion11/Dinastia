@@ -142,7 +142,7 @@ func actualizar(delta: float, cam: Vector3) -> void:
 		var cerca_cam := gp.distance_squared_to(cam) < lejos_cam2 and n.visible
 		var meta := MIRA_FUERZA if cerca_cam and gp.distance_squared_to(bp) < mira_bal2 else 0.0
 		var meta_p := 0.0
-		if i == del_pie and cerca_cam:
+		if i == del_pie and n.visible:   ## un solo jugador: sin tope de cámara (de lejos `AnimLejana` ya pausa su esqueleto)
 			var tope := PIE_MAX_GESTO if float(p.get("gesto_hasta", 0.0)) > t_motor else PIE_MAX
 			meta_p = tope * clampf((PIE_LEJOS - d_pie) / (PIE_LEJOS - PIE_CERCA), 0.0, 1.0)
 		_llevar(e, meta, k_mira, meta_p, k_pie)
