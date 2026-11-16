@@ -25,8 +25,8 @@ func _ready() -> void:
 	custom_minimum_size.y = ALTO
 	var e := StyleBoxFlat.new()
 	e.bg_color = Color(0, 0, 0, 0.55)
-	e.border_color = Color(1, 1, 1, 0.08)
-	e.border_width_top = 1
+	e.border_color = Color(ColorMundo.acento(_p.mundo), 0.6)   ## el filo del color del mundo de juego (`ColorMundo`)
+	e.border_width_top = 2
 	e.set_corner_radius_all(6)
 	e.content_margin_left = 12; e.content_margin_right = 12
 	e.content_margin_top = 2; e.content_margin_bottom = 2
@@ -64,7 +64,7 @@ func _boton(texto: String, al_pulsar: Callable) -> Button:
 	b.text = texto
 	b.flat = true
 	b.focus_mode = Control.FOCUS_NONE   ## el foco del mando se queda en el mosaico: estos se alcanzan con el dedo o el ratón
-	b.add_theme_font_size_override("font_size", Tema.letra(12))
+	b.add_theme_font_size_override("font_size", Tema.letra(11))
 	b.add_theme_color_override("font_color", Tema.SUAVE.lightened(0.25))
 	b.add_theme_color_override("font_hover_color", Color.WHITE)
 	b.pressed.connect(al_pulsar)

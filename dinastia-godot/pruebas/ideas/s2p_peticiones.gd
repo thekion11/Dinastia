@@ -26,12 +26,16 @@ func _modal(pr: Principal) -> void:
 	_comprobar(not pr._capa_modal_encima(), "sin popups no hay capa modal")
 	var antes := pr._pestanas.current_tab
 	var grupo := pr._grupo_actual
+	var mos_antes := TableroInicio.pestana
 	_pulsar(pr, "dinastia_tab_siguiente")
 	var cambia := pr._pestanas.current_tab != antes
+	## (16-11, frente 1) En el Inicio, R1 pasa de pestaña del mosaico (como en el PES 2020) y no de página.
+	_comprobar(cambia or TableroInicio.pestana != mos_antes, "sin capa encima, R1 se mueve: de página o, en el Inicio, de pestaña del mosaico (%d → %d)" % [mos_antes, TableroInicio.pestana])
 	var pop := Telefono.abrir(pr, pr.mundo)
 	_comprobar(pr._capa_modal_encima(), "con el móvil abierto hay capa modal")
 	var con_movil := pr._pestanas.current_tab
 	var grupo_m := pr._grupo_actual
+	var mos_m := TableroInicio.pestana
 	_pulsar(pr, "dinastia_tab_siguiente")
 	_pulsar(pr, "dinastia_tab_anterior")
 	_pulsar(pr, "dinastia_bloque_siguiente")
@@ -40,8 +44,8 @@ func _modal(pr: Principal) -> void:
 	k.ctrl_pressed = true
 	k.pressed = true
 	pr._input(k)
-	_comprobar(pr._pestanas.current_tab == con_movil and pr._grupo_actual == grupo_m,
-		"con el móvil encima, L1/R1, L2/R2 y Ctrl+E no cambian la pestaña de detrás")
+	_comprobar(pr._pestanas.current_tab == con_movil and pr._grupo_actual == grupo_m and TableroInicio.pestana == mos_m,
+		"con el móvil encima, L1/R1, L2/R2 y Ctrl+E no cambian la pestaña de detrás (ni la del mosaico)")
 	pop.free()
 	_pulsar(pr, "dinastia_bloque_siguiente")
 	## (3-11, rediseño del menú central) Sin fila de bloques: L2/R2 abren el menú del panel lateral de al lado.

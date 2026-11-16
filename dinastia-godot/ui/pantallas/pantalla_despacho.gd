@@ -424,7 +424,7 @@ func _pintar_despacho() -> void:
 	plegar.text = Idiomas.t("▾ Ver") if p._aviso_plegado else Idiomas.t("▴ Plegar")
 	plegar.underline = LinkButton.UNDERLINE_MODE_NEVER
 	plegar.focus_mode = Control.FOCUS_ALL
-	plegar.add_theme_font_size_override("font_size", Tema.letra(12))
+	plegar.add_theme_font_size_override("font_size", Tema.letra(11))
 	plegar.add_theme_color_override("font_color", Tema.oro())
 	plegar.pressed.connect(func() -> void:
 		p._aviso_plegado = not p._aviso_plegado

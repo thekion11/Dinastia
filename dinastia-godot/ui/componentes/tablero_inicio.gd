@@ -17,6 +17,10 @@ const SEP := 10
 
 ## La pestaña elegida sobrevive a los repintados del central.
 static var pestana := 0
+## (16-11) El color del MUNDO de juego (`ColorMundo`: Dirigir verde, Mandar oro, Retos naranja) para las pestañas y el filo de las tarjetas;
+## el foco sigue con el color del club. Lo fija `pintar`.
+static var color_mundo := ColorMundo.DIRIGIR
+static var fondo_mundo := Color(0.03, 0.06, 0.045, 0.86)
 
 ## (Dirección del equipo / Información del club) Tarjetas que abren un submenú del panel lateral, por su rótulo en
 ## `MenusLaterales` (el primero que lo tenga). La primera es la grande; luego dos columnas de dos; luego la fila baja.
@@ -38,9 +42,11 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 	cuerpo.add_theme_constant_override("separation", SEP)
 	mos.add_child(cuerpo)
 	var acento := p._con_contraste(p._acento_de(c))
+	color_mundo = ColorMundo.acento(p.mundo)
+	fondo_mundo = ColorMundo.fondo_tarjeta(p.mundo)
 	var botones: Array[Button] = []
 	for i in PESTANAS.size():
-		var b := _boton_pestana(Idiomas.t(String(PESTANAS[i])).to_upper(), acento)
+		var b := _boton_pestana(Idiomas.t(String(PESTANAS[i])).to_upper(), color_mundo)
 		barra.add_child(b)
 		botones.append(b)
 		b.pressed.connect(func() -> void:
@@ -50,6 +56,18 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 			_entrada(cuerpo))
 	_marcar(botones)
 	_cuerpo(p, cuerpo, c, liga, dias_al_partido, acento)
+
+## L1/R1 en el Inicio: la pestaña de al lado del mosaico (pulsa su botón: repinta y marca). Falso si no hay mosaico a la vista.
+static func saltar(p: Principal, d: int) -> bool:
+	var mos := p._lista_inicio.get_node_or_null("Mosaico") if p._lista_inicio != null else null
+	if mos == null or not (mos as Control).is_visible_in_tree():
+		return false
+	var barra := mos.get_child(0)
+	var i := (pestana + d + PESTANAS.size()) % PESTANAS.size()
+	var b := barra.get_child(i) as Button
+	b.button_pressed = true
+	b.pressed.emit()
+	return true
 
 ## La tabla (izquierda) y la columna derecha del central dejan su sitio al mosaico. La derecha se oculta solo mientras
 ## está en el central: el menú Plantel se la lleva como columna de la ficha y la vuelve a mostrar (`PantallaMenu._ver_ficha`).
@@ -177,7 +195,9 @@ static func colocar(cuerpo: VBoxContainer, grande: Control, altas: Array, bajas:
 
 ## Una TARJETA del mosaico: un botón entero (se pulsa, recibe el foco del mando), su contenido en `contenido` (lo que
 ## devuelve, un VBox) y el NOMBRE abajo a la izquierda, en mayúsculas, como en el PES. `al_pulsar` abre su pantalla.
-static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo := Color(0.03, 0.06, 0.045, 0.86)) -> Array:
+static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo := Color(0, 0, 0, 0)) -> Array:
+	if fondo.a <= 0.0:
+		fondo = fondo_mundo
 	var b := Button.new()
 	b.clip_contents = true
 	b.focus_mode = Control.FOCUS_ALL
@@ -202,7 +222,7 @@ static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo :=
 	for k: String in ["hover", "focus", "pressed", "hover_pressed"]:
 		b.add_theme_stylebox_override(k, enc)
 	var filo := ColorRect.new()   ## el filo de color arriba, como las pestañas de cartón de las tarjetas del PES
-	filo.color = Color(acento, 0.85)
+	filo.color = Color(color_mundo, 0.85)   ## el filo, del color del mundo; el foco (abajo), del club
 	filo.anchor_right = 1.0
 	filo.offset_left = 10; filo.offset_right = -10; filo.offset_top = 0; filo.offset_bottom = 3
 	b.add_child(filo)
@@ -213,7 +233,7 @@ static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo :=
 	b.add_child(v)
 	var pie := Label.new()   ## el nombre de la tarjeta, abajo
 	pie.text = nombre.to_upper()
-	pie.add_theme_font_size_override("font_size", Tema.letra(12))
+	pie.add_theme_font_size_override("font_size", Tema.letra(11))
 	pie.add_theme_color_override("font_color", Color(1, 1, 1, 0.92))
 	pie.anchor_top = 1.0; pie.anchor_bottom = 1.0; pie.anchor_right = 1.0
 	pie.offset_left = 14; pie.offset_right = -30; pie.offset_top = -24; pie.offset_bottom = -4
@@ -221,7 +241,7 @@ static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo :=
 	b.add_child(pie)
 	var flecha := Label.new()
 	flecha.text = "▸"
-	flecha.add_theme_font_size_override("font_size", Tema.letra(14))
+	flecha.add_theme_font_size_override("font_size", Tema.letra(13))
 	flecha.add_theme_color_override("font_color", acento)
 	flecha.anchor_left = 1.0; flecha.anchor_top = 1.0; flecha.anchor_right = 1.0; flecha.anchor_bottom = 1.0
 	flecha.offset_left = -26; flecha.offset_top = -25; flecha.offset_right = -10; flecha.offset_bottom = -4
@@ -241,7 +261,7 @@ static func cerrar(b: Control) -> void:
 static func etiqueta(texto: String, tam: int, col: Color) -> Label:
 	var l := Label.new()
 	l.text = texto
-	l.add_theme_font_size_override("font_size", Tema.letra(tam))
+	l.add_theme_font_size_override("font_size", Tema.letra(EscalaTipografica.nivel(tam)))   ## los tres tamaños de la escala (11, 13, 16) y los héroes ≥ 18
 	l.add_theme_color_override("font_color", col)
 	return l
 

@@ -66,6 +66,8 @@ func _ready() -> void:
 		m.selecciones.cargo.oferta["vista"] = true   ## igual la llamada de una federación (queda en Historia › Tu carrera)
 	if OS.get_environment("EVENTOS") != "1":   ## EVENTOS=1: se dejan (la primera foto es la reunión con la directiva a pantalla completa)
 		_despachar_eventos(m)
+	if OS.get_environment("ROL") != "" and m.roles != null:   ## ROL=dueño: el mundo «Mandar» (color propio, `ColorMundo`)
+		m.roles.rol = OS.get_environment("ROL")
 	PedidoPartida.mundo_pregenerado = m
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
