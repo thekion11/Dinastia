@@ -265,3 +265,25 @@ int64_t DinastiaNativo::disputas_inicio(const Array &jugadores, double delta, bo
 	}
 	return mejor;
 }
+
+// `MotorColocacion.actualizar` (visor/motor_colocacion.gd, 16-11-2026): la distancia del más cercano de cada equipo al balón (en 3D, con tope 40 m), como
+// [local, visitante]. Gemela: `MotorColocacion.cerca_gd`.
+PackedFloat64Array DinastiaNativo::colocacion_cerca(const Array &jugadores, const Vector3 &b) const {
+	static const StringName k_node("node"), k_local("es_local");
+	double cerca[2] = { 40.0, 40.0 };
+	const int64_t n = jugadores.size();
+	for (int64_t i = 0; i < n; i++) {
+		const Dictionary q = jugadores[i];
+		const Node3D *nodo = Object::cast_to<Node3D>(static_cast<Object *>(q.get(k_node, Variant())));
+		if (nodo == nullptr) {
+			continue;
+		}
+		const int e = bool(q[k_local]) ? 0 : 1;
+		const double d = nodo->get_position().distance_to(b);
+		cerca[e] = cerca[e] < d ? cerca[e] : d; // minf(cerca, d)
+	}
+	PackedFloat64Array r;
+	r.push_back(cerca[0]);
+	r.push_back(cerca[1]);
+	return r;
+}

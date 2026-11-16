@@ -64,6 +64,8 @@ public:
 	PackedInt32Array duelos_parejas(const Array &jugadores) const;
 	// `MotorJugable._disputas`: enfriamiento de los 22 y, con el balón suelto, el índice del que lo controla (-1 = nadie).
 	int64_t disputas_inicio(const Array &jugadores, double delta, bool suelto, const Vector3 &b, double t, const Variant &pase_a_id, const PackedFloat64Array &arco_z, double area_x, double area_z) const;
+	// `MotorColocacion.actualizar`: [más cercano al balón del local, del visitante] (3D, tope 40 m).
+	PackedFloat64Array colocacion_cerca(const Array &jugadores, const Vector3 &b) const;
 	PackedInt32Array guia_pendientes(const Array &jugadores, double t) const;
 	PackedInt32Array guia_seguir(const Array &jugadores, double t, double delta, int64_t usuario, bool marchas) const;
 	PackedFloat64Array mover_jugadores_fisica(const Array &jugadores, const Vector3 &bpos, double delta, double t, bool hay_poseedor, const Variant &poseedor_id, bool poseedor_local, double a_max_base,
