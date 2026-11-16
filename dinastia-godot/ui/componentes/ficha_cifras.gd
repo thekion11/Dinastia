@@ -80,3 +80,38 @@ static func _columna(p: Principal, k: String, v: int) -> Control:
 	nom.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pila.add_child(nom)
 	return caja
+
+## (16-11) LA CANTERA EN CIFRAS GRANDES (arriba de Academia, Juveniles y Linaje): lo que sale de casa, de un vistazo.
+static func banda_cantera(c: Club) -> Control:
+	var de_casa := 0
+	var sub21 := 0
+	var promesas := 0
+	var suma := 0
+	for j: Jugador in c.plantilla:
+		if j.club_formacion == c.id and j.edad <= 23:   ## al empezar, todo el plantel figura como formado en el club: solo cuentan los jóvenes
+			de_casa += 1
+		if j.edad <= 21:
+			sub21 += 1
+			suma += j.ovr
+			if j.pot >= 80:
+				promesas += 1
+	return CifrasClave.banda([
+		[Idiomas.t("Jóvenes de casa (≤ 23)"), str(de_casa), Principal.COL_VERDE],
+		[Idiomas.t("Sub-21 en el plantel"), str(sub21), Principal.COL_TEXTO],
+		[Idiomas.t("Promesas (pot. 80+)"), str(promesas), Principal.COL_ORO],
+		[Idiomas.t("Media de los sub-21"), str(roundi(float(suma) / float(sub21))) if sub21 > 0 else "—", Principal.COL_TEXTO]],
+		Principal.COL_SUAVE, 2 if EscalaMovil.es_tactil() else 4)
+
+## (16-11) EL MERCADO EN CIFRAS GRANDES (arriba del mercado de fichajes): caja, sueldos, en venta y ofertas que esperan respuesta.
+static func banda_mercado(m: Mundo, c: Club) -> Control:
+	var en_venta := 0
+	for j: Jugador in c.plantilla:
+		if j.transferible:
+			en_venta += 1
+	var ofertas: int = m.mercado.ofertas_recibidas.size() if m.mercado != null else 0
+	return CifrasClave.banda([
+		[Idiomas.t("Caja"), Eco.dinero(c.saldo), Principal.COL_VERDE if c.saldo >= 0 else Principal.COL_ROJO],
+		[Idiomas.t("Sueldos/sem"), Eco.dinero(c.masa_salarial()), Principal.COL_TEXTO],
+		[Idiomas.t("En venta"), str(en_venta), Principal.COL_ORO],
+		[Idiomas.t("Ofertas recibidas"), str(ofertas), Principal.COL_ORO if ofertas > 0 else Principal.COL_SUAVE]],
+		Principal.COL_SUAVE, 2 if EscalaMovil.es_tactil() else 4)

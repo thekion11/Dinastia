@@ -42,6 +42,7 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 	cuerpo.add_theme_constant_override("separation", SEP)
 	mos.add_child(cuerpo)
 	var acento := p._con_contraste(p._acento_de(c))
+	ColorMundo.aplicar(p.mundo)
 	color_mundo = ColorMundo.acento(p.mundo)
 	fondo_mundo = ColorMundo.fondo_tarjeta(p.mundo)
 	var botones: Array[Button] = []
@@ -195,7 +196,7 @@ static func colocar(cuerpo: VBoxContainer, grande: Control, altas: Array, bajas:
 
 ## Una TARJETA del mosaico: un botón entero (se pulsa, recibe el foco del mando), su contenido en `contenido` (lo que
 ## devuelve, un VBox) y el NOMBRE abajo a la izquierda, en mayúsculas, como en el PES. `al_pulsar` abre su pantalla.
-static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo := Color(0, 0, 0, 0)) -> Array:
+static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo := Color(0, 0, 0, 0), arte := "") -> Array:
 	if fondo.a <= 0.0:
 		fondo = fondo_mundo
 	var b := Button.new()
@@ -221,6 +222,7 @@ static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo :=
 	b.add_theme_stylebox_override("normal", st)
 	for k: String in ["hover", "focus", "pressed", "hover_pressed"]:
 		b.add_theme_stylebox_override(k, enc)
+	_poner_arte(b, arte)
 	var filo := ColorRect.new()   ## el filo de color arriba, como las pestañas de cartón de las tarjetas del PES
 	filo.color = Color(color_mundo, 0.85)   ## el filo, del color del mundo; el foco (abajo), del club
 	filo.anchor_right = 1.0
@@ -252,6 +254,25 @@ static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo :=
 	if al_pulsar.is_valid():
 		b.pressed.connect(al_pulsar)
 	return [b, v]
+
+## (16-11) EL ARTE DE LA TARJETA: un render propio de una sala del club (`herramientas/hornear_arte_mosaico.gd`, 192x108 en grises,
+## ~3 KB) detrás del contenido, teñido con el color del mundo y casi transparente: textura de fondo, como las fotos de las tarjetas
+## del PES, sin colores de un club concreto. Sin el archivo, la tarjeta queda lisa.
+const ARTE := {"Pizarra y dibujo": "video", "Historia del club": "museo", "Personal del club": "despacho", "Camarín": "vestuario",
+	"Diseño del estadio": "museo"}
+
+static func _poner_arte(b: Control, arte: String) -> void:
+	var ruta := "res://assets/ui/mosaico/%s.jpg" % arte
+	if arte == "" or not ResourceLoader.exists(ruta):
+		return
+	var tr := TextureRect.new()
+	tr.texture = load(ruta)
+	tr.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	tr.modulate = Color(color_mundo.lerp(Color.WHITE, 0.35), 0.3)
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(tr)
 
 ## Ignora el ratón en todo lo de dentro (el botón es el que se pulsa). Llamar al terminar de llenar la tarjeta.
 static func cerrar(b: Control) -> void:
@@ -301,7 +322,7 @@ static func _de_subs(p: Principal, cuerpo: VBoxContainer, c: Club, lista: Array,
 			sub = (MenusLaterales.menu_por_id(String(sitio[0]))["subs"] as Array)[int(sitio[1])]
 		elif rot == "*sistema":
 			sub = {"label": "Sistema", "icono": "⚙️", "desc": "Guardar, cargar, pantalla, sonido y controles."}
-		var tc := tarjeta(Idiomas.t(String(sub.get("label", rot))), acento, func() -> void: abrir(p, dest))
+		var tc := tarjeta(Idiomas.t(String(sub.get("label", rot))), acento, func() -> void: abrir(p, dest), Color(0, 0, 0, 0), String(ARTE.get(rot, "")))
 		var v: VBoxContainer = tc[1]
 		(tc[0] as Button).tooltip_text = Idiomas.t(String(sub.get("desc", "")))   ## la descripción, al pasar: la tarjeta lleva icono y dato vivo
 		var fila := HBoxContainer.new()

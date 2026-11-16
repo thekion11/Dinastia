@@ -65,7 +65,7 @@ func _exit_tree() -> void:
 	FocoMando.liberar(self); TaparDetras.destapar(self)   ## (15-11) si se libera sin `cerrar`, lo de debajo vuelve a verse
 
 func _color(i: int) -> Color:
-	return Color(String((_menu["colores"] as Array)[i]))
+	return Tema.al_mundo(Color(String((_menu["colores"] as Array)[i])), i)   ## (16-11) teñido con el mundo de juego (`ColorMundo`)
 
 func _montar() -> void:
 	_fondo = ColorRect.new()
