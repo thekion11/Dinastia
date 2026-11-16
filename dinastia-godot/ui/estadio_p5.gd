@@ -17,7 +17,7 @@ func _montar_motor() -> void:
 	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
 	_motor.sembrar_del_acta(partido)   ## (16-11, informe M6-05/M6-11) lo del primer tiempo sigue valiendo
 	## La cabeza de cada jugador sigue al balón (M-098).
-	MiradaBalon.poner(_motor.jugadores, _balon)
+	MiradaBalon.poner(_motor.jugadores, _balon, _motor)
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
