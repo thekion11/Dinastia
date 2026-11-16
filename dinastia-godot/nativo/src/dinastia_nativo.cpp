@@ -38,6 +38,14 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("league_mas_cercano_todos", "jugadores", "punto"), &DinastiaNativo::league_mas_cercano_todos);
 	ClassDB::bind_method(D_METHOD("league_indexar", "jugadores", "destino"), &DinastiaNativo::league_indexar);
 	ClassDB::bind_method(D_METHOD("league_linea_penultimo", "jugadores", "local", "con_vel", "lado", "balon_x"), &DinastiaNativo::league_linea_penultimo);
+	// --- estado (agente C) ---
+	ClassDB::bind_method(D_METHOD("league_estado_base", "jugadores", "b", "lado0", "lado1"), &DinastiaNativo::league_estado_base);
+	ClassDB::bind_method(D_METHOD("league_cercanos_equipos", "jugadores", "punto"), &DinastiaNativo::league_cercanos_equipos);
+	ClassDB::bind_method(D_METHOD("league_registrar", "balon_hist", "lado_hist", "resto", "balon", "lado_posesion", "dt"), &DinastiaNativo::league_registrar);
+	ClassDB::bind_method(D_METHOD("league_interferir_candidatos", "jugadores", "rival_local", "usuario_id", "t", "bola"), &DinastiaNativo::league_interferir_candidatos);
+	ClassDB::bind_method(D_METHOD("league_cortar_candidatos", "jugadores", "local_pasa", "usuario_id", "t", "bola"), &DinastiaNativo::league_cortar_candidatos);
+	ClassDB::bind_method(D_METHOD("league_mas_cercanos", "jugadores", "punto", "local", "cuantos", "excluidos"), &DinastiaNativo::league_mas_cercanos);
+	// --- fin estado (agente C) ---
 	ClassDB::bind_method(D_METHOD("league_alcanza", "por_tipo", "r0", "r1", "bono_vel", "pos", "mirada", "vel", "pred"), &DinastiaNativo::league_alcanza);
 	ClassDB::bind_method(D_METHOD("league_elegir", "grupos", "sp", "rel", "deseada", "parado", "mirar", "pie"), &DinastiaNativo::league_elegir);
 	ClassDB::bind_method(D_METHOD("league_legal", "vi", "vo", "cuerpo_sale", "cuerpo_ini", "a"), &DinastiaNativo::league_legal);

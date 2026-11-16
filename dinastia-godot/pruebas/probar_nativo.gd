@@ -329,6 +329,12 @@ func _probar() -> void:
 	_comprobar((li["fallos"] as Array).is_empty(), "casos límite de League: C++ = GDScript y sin cierres")
 	for t: String in li["textos"]:
 		print(t)
+	var es := ProbarNativoEstado.probar(nat)   ## (16-11, agente C) el estado por paso del motor de League
+	for f: String in es["fallos"]:
+		_comprobar(false, "estado de League en C++: " + f)
+	_comprobar((es["fallos"] as Array).is_empty(), "estado por paso de League: C++ = GDScript (pasada de estado, historial y filtro de interferir)")
+	for t: String in es["textos"]:
+		print(t)
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:

@@ -78,6 +78,17 @@ public:
 	// `LeagueNucleo.movimiento_campo` y `LeagueSinBalon.apoyo` (el apoyo ofensivo sin balón, con su campo de fuerzas).
 	Vector2 league_movimiento_campo(const Array &campo, const Vector2 &actual, double amortigua) const;
 	Vector2 league_apoyo(const Dictionary &e) const;
+	// --- estado (agente C) ---
+	// El estado por paso del motor de League (16-11, nativo/src/estado_nativo.cpp): `league_estado_base` = ms al balón de los dos equipos, el más cercano de todos y las 4 líneas del penúltimo en una pasada
+	// (devuelve 7 valores, ver el .cpp); `league_cercanos_equipos` = `_mas_cercano_al(p, local, [], 1)` de los dos equipos; `league_registrar` = `LeagueEquipo.registrar` + `acumular` + `media_f(lado_hist, 6000)`
+	// (devuelve [balon_hist, lado_hist, resto, acum, lado_medio]); `league_interferir_candidatos` = el filtro de `MotorLeague._interferir`.
+	PackedFloat64Array league_estado_base(const Array &jugadores, const Vector2 &b, double lado0, double lado1) const;
+	PackedInt32Array league_cercanos_equipos(const Array &jugadores, const Vector2 &punto) const;
+	Array league_registrar(const PackedVector2Array &balon_hist, const PackedFloat32Array &lado_hist, double resto, const Vector2 &balon, double lado_posesion, double dt) const;
+	PackedInt32Array league_interferir_candidatos(const Array &jugadores, bool rival_local, const String &usuario_id, double t, const Vector2 &bola) const;
+	PackedInt32Array league_cortar_candidatos(const Array &jugadores, bool local_pasa, const String &usuario_id, double t, const Vector2 &bola) const;   // el filtro de `_cortar_pase`
+	PackedInt32Array league_mas_cercanos(const Array &jugadores, const Vector2 &punto, bool local, int64_t cuantos, const PackedStringArray &excluidos) const;   // `_mas_cercano_al` con varios o excluidos (≤ 16 candidatos)
+	// --- fin estado (agente C) ---
 	// `Partido.simular_minuto()` x 90 de un cruce de la IA que nadie mira (nucleo/partido_rapido.gd): mismo orden de llamadas al azar; los sucesos raros vuelven a GDScript (`ayuda`).
 	void simular_90(Object *p, Object *ayuda, const Dictionary &cfg, const Ref<RandomNumberGenerator> &rng, bool azar_propio) const;
 	// `Partido._cerrar_notas()` (nucleo/partido.gd): nota final, forma y partidos de cada jugador del cruce, con la misma tirada de azar por jugador (`rng` = `Azar._rng`).
