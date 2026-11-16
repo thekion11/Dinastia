@@ -5,8 +5,8 @@ Aquí está TODO lo que falta: lo del dueño, las fases del guion, la ruta de la
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
 ## INFORME ACADÉMICO AAA (orden del dueño, 16-11) — EN CURSO; `docs/04_auditorias/INFORME_ACADEMICO_AAA/`
-- Hechos y subidos: cap. 2 (estado del arte), 6 y 7 (51 fallos), 11 (recursos públicos). Arreglados 12 fallos (M6-01/02/03/04/05/08/09, G-01/02, R-01/02/03, V-01; banco «FIN. 0 fallos»). Faltan los cap. 1, 3, 4, 5, 8, 9 y 10.
-- Fallos pendientes de arreglar (detalle en cap. 6 y 7): M6-06 (fuerza de pases C4), M6-07 (clima en balón suelto C4), M6-10 (portero intocable fuera del área), M6-11 (acta del DT solo con el 2.º tiempo), G-03 (continentales al cargar La Ruta), G-04 (el mundo no entrena en La Ruta), economía de puntos de La Ruta (portero ~6× más barato), y los bajos/medios restantes; partir `motor_jugable_p5.gd` (486) y `calidad.gd` (454).
+- Hechos y subidos: cap. 2 (estado del arte), 6 y 7 (51 fallos), 11 (recursos públicos). Arreglados 15 fallos (M6-01/02/03/04/05/08/09/11, G-01/02/03/04, R-01/02/03, V-01; banco «FIN. 0 fallos»). Faltan los cap. 1, 3, 4, 5, 8, 9 y 10.
+- Fallos pendientes de arreglar (detalle en cap. 6 y 7): M6-06 (fuerza de pases C4), M6-07 (clima en balón suelto C4), M6-10 (portero intocable fuera del área), economía de puntos de La Ruta (portero ~6× más barato), y los bajos/medios restantes; partir `motor_jugable_p5.gd` (486) y `calidad.gd` (454).
 - RECURSOS (16-11): el dueño aprobó el paquete del cap. 11, incluidas las 4 opciones que esperaban su OK (Mixamo convertido a `.res` sin los FBX en el repo, paquete GDC de Sonniss, música de Kevin MacLeod CC BY 4.0, MetaHuman releyendo antes su licencia). Cada recurso se anota en `LICENCIAS.md` con la plantilla del cap. 11. Red: Freesound (403) y GitHub web bloqueados en la nube; Poly Haven API, ambientCG, raw.githubusercontent y Hugging Face responden.
 
 ## TRES FRENTES (orden del dueño, 16-11) — EN CURSO, sesiones en la nube (Opus, esfuerzo medio, excepción a la orden 48)
