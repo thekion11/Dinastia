@@ -22,6 +22,7 @@ extends RefCounted
 ## No usa `Azar`: su propio generador, para no mover la simulación del mundo.
 
 const ENERGIA_MAX := 100
+const EDAD_TOPE := 40   ## (16-11, revisión de R-01) el mundo protege a tu futbolista hasta esta edad, y nunca ya retirado
 const FOCOS := {
 	"tiro": ["🎯 Tiro", "tir"], "pase": ["🎼 Pase", "pas"], "regate": ["🌀 Regate", "reg"],
 	"fisico": ["💪 Físico", "fis"], "ritmo": ["⚡ Velocidad", "rit"], "defensa": ["🛡️ Defensa", "def"],
@@ -41,7 +42,7 @@ var foco := "tiro"
 var lanzador := {"penales": false, "faltas": false, "corners": true}
 var convocatorias := 0
 var partidos_jugables := 0
-var stats_temp := {"pj": 0, "titular": 0, "goles": 0, "asist": 0, "notas": []}
+var stats_temp := {"pj": 0, "titular": 0, "goles": 0, "asist": 0, "notas": [], "vallas": 0}
 var temporadas: Array = []        ## [{anio, club, pj, goles, asist, nota}]
 var eventos: Array = []           ## pendientes: [{id, titulo, texto, opciones}]
 var historial: Array = []         ## lo que decidiste: [{anio, semana, titulo, eleccion}]
@@ -269,8 +270,10 @@ func revisar_convocatoria(m: Mundo) -> bool:
 		"rival": String(rivales[_rng.randi() % rivales.size()]) if not rivales.is_empty() else "Selección rival"}
 	return true
 
-func _ev(id: String, titulo: String, texto: String, opciones: Array, unico := false) -> Dictionary:
-	return {"id": id, "titulo": titulo, "texto": texto, "opciones": opciones, "unico": unico}
+## (16-11, informe R-12) Título y texto son la PLANTILLA (se traduce al pintar, `CarreraEventosRuta.texto`); los nombres y
+## cifras van aparte, en `titulo_datos` / `texto_datos`.
+func _ev(id: String, titulo: String, texto: String, opciones: Array, unico := false, datos := {}) -> Dictionary:
+	return {"id": id, "titulo": titulo, "texto": texto, "opciones": opciones, "unico": unico}.merged(datos)
 
 ## Una opción: texto y efectos {fama, relacion, energia, seguidores, moral,
 ## lanzador_*, attr_*}.
@@ -335,10 +338,10 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 		_op("Te quedas hasta tarde.", {"energia": -35, "relacion": -6, "seguidores": 200, "fama": 1}),
 		_op("No vas: descanso.", {"energia": 10, "relacion": 1})]))
 	p.append(_ev("prensa", "Micrófono en la zona mixta",
-		"Un periodista te pregunta si te ves de titular en %s." % nombre_club,
+		"Un periodista te pregunta si te ves de titular en %s.",
 		[_op("«Trabajo para ganarme el puesto.»", {"relacion": 2, "fama": 1}),
 		_op("«Si no juego, me buscaré otro club.»", {"relacion": -8, "fama": 5, "seguidores": 250}),
-		_op("«Aquí manda el míster.»", {"relacion": 3})]))
+		_op("«Aquí manda el míster.»", {"relacion": 3})], false, {"texto_datos": [nombre_club]}))
 	p.append(_ev("provocacion", "Te provocan en Tribuna",
 		"Un defensa del próximo rival publica: «Ese pibe no pasa de mí».",
 		[_op("Le respondes con un emoji de reloj.", {"fama": 3, "seguidores": 300, "relacion": -1}),
@@ -373,21 +376,21 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 			_op("Le haces el gesto de silencio a la grada rival.", {"fama": 7, "seguidores": 900, "relacion": -4})], true))
 	var veterano := _veterano(c, j)
 	if not hitos.has("mentor") and j.edad <= 20 and veterano != null:
-		p.append(_ev("mentor", "%s se ofrece a enseñarte" % veterano.nombre,
-			"El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento." % veterano.edad,
+		p.append(_ev("mentor", "%s se ofrece a enseñarte",
+			"El veterano del vestuario (%d años) te propone quedaros una hora más cada día después del entrenamiento.",
 			[_op("Aceptas: aprender de él es oro.", {"attr_%s" % String(CarreraPortero.focos_para(j).get(foco, ["", "pos" if j.es_portero() else "tir"])[1]): 2, "energia": -10, "relacion": 3}),
-			_op("Le das las gracias, pero prefieres descansar.", {"energia": 8})], true))
+			_op("Le das las gracias, pero prefieres descansar.", {"energia": 8})], true, {"titulo_datos": [veterano.nombre], "texto_datos": [veterano.edad]}))
 	var pj_t := int(stats_temp["pj"])
-	if not hitos.has("cesion_%d" % m.anio) and j.edad <= 21 and pj_t >= 6 and float(stats_temp["titular"]) / float(pj_t) < 0.3:
+	if not hitos.has("cesion_%d" % m.anio) and j.edad <= 21 and pj_t >= 6 and float(stats_temp["titular"]) / float(pj_t) < 0.3 and not CarreraTraspasos.destinos_cesion(self, m).is_empty():   ## (R-06) sin destino, no se ofrece
 		p.append(_ev("cesion_%d" % m.anio, "El club te propone una cesión",
 			"Casi no juegas de titular. Un club más modesto te quiere a préstamo hasta final de temporada para darte minutos.",
 			[_op("Aceptas: necesitas jugar.", {"cesion": true}),
 			_op("Te quedas a pelear el puesto.", {"relacion": -2, "moral": -3})], true))
 	if not hitos.has("jugador_mes_%d" % m.anio) and (stats_temp["notas"] as Array).size() >= 4 and nota_media() >= 7.6:
 		p.append(_ev("jugador_mes_%d" % m.anio, "Jugador del mes",
-			"La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido." % nota_media(),
+			"La liga te elige mejor jugador del mes con una media de %.1f. Te entregan el trofeo antes del partido.",
 			[_op("Lo levantas ante tu grada.", {"fama": 6, "seguidores": 600, "moral": 6}),
-			_op("Lo dedicas a tus compañeros.", {"fama": 4, "relacion": 4, "moral": 4})], true))
+			_op("Lo dedicas a tus compañeros.", {"fama": 4, "relacion": 4, "moral": 4})], true, {"texto_datos": [nota_media()]}))
 	if not capitan and fama >= 45 and relacion_dt >= 65 and CarreraPremios.apto_capitan(self, m):   ## (13-11) tres años en el club y de los tres mejores
 		p.append(_ev("brazalete", "El brazalete de capitán",
 			"Se retira el capitán y el DT quiere que el brazalete sea tuyo.",
@@ -395,9 +398,9 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 			_op("Pides que lo lleve alguien con más años en el club.", {"relacion": 3})], true))
 	if j.lesion >= 4 and not hitos.has("lesion_larga_%d" % m.anio):
 		p.append(_ev("lesion_larga_%d" % m.anio, "Una lesión larga",
-			"El médico te da %d semanas de baja. Te propone dos caminos para la recuperación." % j.lesion,
+			"El médico te da %d semanas de baja. Te propone dos caminos para la recuperación.",
 			[_op("Recuperación prudente, sin prisas.", {"energia": 30, "moral": -4}),
-			_op("Plan acelerado para volver antes.", {"lesion_menos": 2, "lesion_riesgo": true, "relacion": 2})], true))
+			_op("Plan acelerado para volver antes.", {"lesion_menos": 2, "lesion_riesgo": true, "relacion": 2})], true, {"texto_datos": [j.lesion]}))
 	if not hitos.has("polemica") and seguidores >= 5000:
 		p.append(_ev("polemica", "Una polémica en las redes",
 			"Alguien desentierra un mensaje tuyo de cuando tenías 15 años. Arde Tribuna.",
@@ -406,10 +409,10 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 			_op("Contestas con ironía.", {"seguidores": 1200, "fama": 3, "relacion": -5})], true))
 	var rival_ex := _rival_ex_club(m, c)
 	if rival_ex != "" and not hitos.has("ex_%s_%d" % [rival_ex, m.anio]):
-		p.append(_ev("ex_%s_%d" % [rival_ex, m.anio], "Vuelves a %s" % rival_ex,
+		p.append(_ev("ex_%s_%d" % [rival_ex, m.anio], "Vuelves a %s",
 			"Esta semana te toca contra tu antiguo club. La prensa te pregunta cómo vas a celebrar si marcas.",
 			[_op("«No celebraré: les tengo respeto.»", {"fama": 2, "seguidores": 250, "moral": 3}),
-			_op("«Si marco, lo celebraré como siempre.»", {"fama": 4, "seguidores": 600, "moral": 5})], true))
+			_op("«Si marco, lo celebraré como siempre.»", {"fama": 4, "seguidores": 600, "moral": 5})], true, {"titulo_datos": [rival_ex]}))
 	if not hitos.has("oferta_extranjero") and fama >= 55 and c != null:
 		p.append(_ev("oferta_extranjero", "Te llaman del extranjero",
 			"Un club grande de otra liga pregunta por ti. Tu agente dice que es ahora o nunca.",
@@ -422,9 +425,9 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 			_op("Ahora no: solo piensas en jugar.", {})], true))
 	if not retiro_anunciado and j.edad >= 33 and not hitos.has("retiro_%d" % m.anio):
 		p.append(_ev("retiro_%d" % m.anio, "¿Cuánto te queda?",
-			"Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año." % j.edad,
+			"Tienes %d años. En el vestuario ya te llaman «el viejo». Tu familia te pregunta si este será el último año.",
 			[_op("Anuncias que te retiras a final de temporada.", {"retiro": true, "fama": 4, "seguidores": 800}),
-			_op("Sigues mientras el cuerpo aguante.", {"moral": 2})], true))
+			_op("Sigues mientras el cuerpo aguante.", {"moral": 2})], true, {"texto_datos": [j.edad]}))
 	if _rng.randf() < 0.3:
 		p.append(_ev("nino_camiseta", "Un niño te espera a la salida",
 			"Un chico de unos ocho años lleva una cartulina con tu nombre y te pide la camiseta.",

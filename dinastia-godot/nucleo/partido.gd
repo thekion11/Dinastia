@@ -136,7 +136,8 @@ func gol_externo(es_local: bool, autor_id: String, asist_id: String, mas := 0) -
 	if autor != null:
 		autor.anotar()
 		_notas[autor.id] = minf(float(_notas.get(autor.id, 6.0)) + 1.1, 10.0)
-	cronica.append({"min": minuto, "tipo": "gol", "club": c.id, "autor": autor.nombre if autor else "en propia puerta"})
+	if asistente != null: asistente.asistencias += 1   ## (16-11, revisión de G-02) también en el césped 3D, como en el simulado
+	cronica.append({"min": minuto, "tipo": "gol", "club": c.id, "autor": autor.nombre if autor else "en propia puerta", "asist_id": asist_id})
 	if mas > 0:
 		cronica[-1]["mas"] = mas
 	_momentum_push(2, es_local)
@@ -148,14 +149,10 @@ func anular_gol_externo(es_local: bool, autor_id: String) -> void:
 	if terminado_ya:
 		return
 	var c := local if es_local else visita
-	if es_local:
-		if goles_local <= 0:
-			return
-		goles_local -= 1
-	else:
-		if goles_visita <= 0:
-			return
-		goles_visita -= 1
+	if (goles_local if es_local else goles_visita) <= 0:
+		return
+	if es_local: goles_local -= 1
+	else: goles_visita -= 1
 	var autor := _por_id(autor_id) if autor_id != "" else null
 	if autor != null:
 		autor.goles = maxi(autor.goles - 1, 0)
@@ -164,6 +161,8 @@ func anular_gol_externo(es_local: bool, autor_id: String) -> void:
 		var e: Dictionary = cronica[i]
 		if String(e.get("tipo", "")) == "gol" and String(e.get("club", "")) == c.id:
 			e["tipo"] = "gol_anulado"
+			var asis := _por_id(String(e.get("asist_id", ""))) if String(e.get("asist_id", "")) != "" else null
+			if asis != null: asis.asistencias = maxi(asis.asistencias - 1, 0)   ## (16-11) el VAR también quita la asistencia
 			break
 	_deshacer_remate_gol(es_local)
 	_momentum_push(1, not es_local)

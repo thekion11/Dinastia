@@ -231,7 +231,12 @@ static func tras_partido(c: CarreraJugador, m: Mundo, d: Dictionary) -> void:
 	var base := int(float(minutos) / 6.0) + int(maxf(0.0, nota - 6.0) * 12.0) + goles * 15 + asist * 10
 	var hechos: Array = []
 	var extra := 0
-	for reto: Dictionary in (r["retos"] if not (r.get("retos", []) as Array).is_empty() else retos(c, m)):   ## (16-11, R-02) los del partido, no los de la semana que ya empezó
+	## (16-11, R-02) Los retos del PARTIDO: los de la semana que se acaba de jugar (o de esta, si el llamador aún no avanzó
+	## el mundo). Si los guardados son de otra semana (nadie los fijó antes), se sacan los de hoy, como antes.
+	var ahora := m.anio * 60 + m.semana
+	var de_semana := int(r["retos_semana"])
+	var del_partido: Array = r["retos"] if (de_semana == ahora or de_semana == ahora - 1) and not (r.get("retos", []) as Array).is_empty() else retos(c, m)
+	for reto: Dictionary in del_partido:
 		var ok := not bool(reto.get("hecho", false)) and _cumple(String(reto["id"]), d)
 		var premio := int(RETOS[String(reto["id"])][1])
 		if tiene(c, "sangre_fria"):
@@ -258,7 +263,7 @@ static func tras_partido(c: CarreraJugador, m: Mundo, d: Dictionary) -> void:
 		c.energia = mini(CarreraJugador.ENERGIA_MAX, c.energia + int(float(minutos) / 10.0))
 	r["ultimo"] = {"nota": nota, "goles": goles, "asist": asist, "minutos": minutos, "xp": total,
 		"racha": int(r["racha"]), "retos": hechos, "botas": int(botas[0]), "niveles": int(r["nivel"]) - nivel_antes,
-		"semana": m.anio * 60 + m.semana}
+		"semana": ahora, "semana_retos": int(r["retos_semana"])}
 	_grada_del_partido(c, nota, goles)
 
 ## La grada opina (las últimas ocho frases; se traducen al mostrarlas).
@@ -343,10 +348,8 @@ static func tras_entreno(c: CarreraJugador, m: Mundo, attr: String, mejoro: bool
 ## Lo que la ruta hace al cerrar cada semana.
 static func semana(c: CarreraJugador, m: Mundo) -> void:
 	var r := asegurar(c)
-	## LA FAMA CUESTA MÁS CUANTO MÁS TIENES (13-11: un delantero de 18 años con
-	## nota 6,2 llegaba a 100 en su segunda temporada): de lo que subió esta
-	## semana se queda una parte, menor cuanto más famoso eres; y se apaga un
-	## punto por semana si eres muy famoso y no rindes.
+	## LA FAMA CUESTA MÁS CUANTO MÁS TIENES (13-11: con nota 6,2 se llegaba a 100 en la segunda temporada): de lo que
+	## subió esta semana se queda una parte, menor cuanto más famoso eres; y se apaga si eres muy famoso y no rindes.
 	var ref := int(r["fama_ref"])
 	if ref >= 0 and c.fama > ref:
 		var parte := clampf(1.0 - float(ref) / 90.0, 0.12, 1.0)
@@ -420,29 +423,28 @@ static func duelo(c: CarreraJugador, m: Mundo) -> Array:
 	var mios := int(s["goles"]) * 3 + int(s["asist"]) * 2 + int(c.nota_media() * 2.0)
 	if o == null:
 		return [mios, 0]
-	var notas := 0.0
-	for n: float in o.notas:
-		notas += n
-	var media := notas / float(o.notas.size()) if not o.notas.is_empty() else 0.0
-	return [mios, o.goles * 3 + o.asistencias * 2 + int(media * 2.0)]
+	## (16-11, informe R-03) La nota de su temporada entera, como la tuya (antes, sus 8 últimas).
+	return [mios, o.goles * 3 + o.asistencias * 2 + int(o.media_temporada() * 2.0)]
 
 ## Fin de temporada: si ganaste el duelo, experiencia y fama. Devuelve si ganaste.
 static func cerrar_duelo(c: CarreraJugador, m: Mundo) -> bool:
 	var r := asegurar(c)
 	var d := duelo(c, m)
 	var o := rival(c, m)
+	var doble := CarreraEventosRuta.tiene_marca(c, "duelo_doble")
+	CarreraEventosRuta.quitar_marca(c, "duelo_doble")   ## (16-11, informe R-11) la marca es de ESTA temporada, haya duelo o no
 	if o == null or int(c.stats_temp["pj"]) == 0:
+		CarreraDuelo.cierre(c, false)
 		return false
 	var gane := int(d[0]) > int(d[1])
 	if gane:
 		r["duelos_ganados"] = int(r["duelos_ganados"]) + 1
-		c.fama = mini(100, c.fama + 3)
-		sumar_xp(c, XP_DUELO * (2 if CarreraEventosRuta.tiene_marca(c, "duelo_doble") else 1) + CarreraDuelo.cierre(c, true))
+		CarreraPremios.fama_entera(c, 3)
+		sumar_xp(c, XP_DUELO * (2 if doble else 1) + CarreraDuelo.cierre(c, true))
 		_grada(c, "🏆", "Le ganaste el duelo de la temporada a %s.", [o.nombre])
 		## A rival vencido, rival nuevo (y más fuerte).
 		(r["rival"] as Dictionary).clear()
 	else:
 		_grada(c, "🥊", "%s te ganó el duelo de la temporada. Habrá revancha.", [o.nombre])
-	CarreraEventosRuta.quitar_marca(c, "duelo_doble")
 	CarreraDuelo.cierre(c, false)
 	return gane

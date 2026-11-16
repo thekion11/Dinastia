@@ -209,16 +209,14 @@ static func _jugador_a_dic_base(j: Jugador) -> Dictionary:
 		"d": j.dorsal, "cap": j.capitan, "ps": j.pide_salir, "tr": j.transferible,
 		"nn": j.no_negociar_hasta, "re": j.real,
 		"ml": j.motivo_libre, "rl": j.rechazos_libre,
-		## Solo lo que el editor haya tocado de su cara. Casi siempre esta vacio y
-		## no pesa nada: diez mil jugadores con quince rasgos cada uno serian dos
-		## megas de guardado para nada.
+		## Solo lo que el editor haya tocado de su cara (casi siempre vacio: diez mil caras enteras serian dos megas para nada).
 		"lk": j.look, "oe": j.ovr_al_empezar, "hs": j.historial, "pr": j.premios,
 		## 28-10 (auditoría): se perdían al cargar las posiciones secundarias, la adaptación, la fidelidad pagada y las notas.
 		"psec": j.pos_sec, "ad": j.adapt, "fh": j.fidelidad_hasta, "no": j.notas.slice(-10),
+		"nt": [snappedf(j.nota_temp.x, 0.1), int(j.nota_temp.y)],   ## (16-11, R-03) la nota de la temporada, para los premios
 	}
 
-## Las claves son cortas a propósito. Con 8.448 jugadores, escribir "atributos"
-## en vez de "at" son 60 KB de más en cada guardado sin que nadie lo lea nunca.
+## Las claves son cortas a propósito: con 8.448 jugadores, "atributos" en vez de "at" son 60 KB de más en cada guardado.
 static func _jugador_a_dic(j: Jugador) -> Dictionary:
 	var d := _jugador_a_dic_base(j)
 	if not j.historial_moral.is_empty():
@@ -324,7 +322,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		"roles": m.roles.a_dic() if m.roles != null else {},
 		"federacion": m.federacion.a_dic(),
 		"estadio": m.estadio.a_dic(),
-		"entrenamiento": m.entrenamiento.a_dic() if m.entrenamiento != null else {},
+		"entrenamiento": m.entrenamiento.a_dic() if m.entrenamiento != null else ({"mundo": m._entreno_mundo.a_dic()} if m._entreno_mundo != null else {}),
 		"vestuario": m.vestuario.a_dic() if m.vestuario != null else {},
 		"hinchada": m.hinchada.a_dic() if m.hinchada != null else {},
 		"gente": m.gente.a_dic() if m.gente != null else {},
@@ -447,4 +445,6 @@ static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	j.adapt = int(d.get("ad", 0))
 	j.fidelidad_hasta = int(d.get("fh", 0))
 	j.notas.assign(d.get("no", []))
+	var nt: Variant = d.get("nt", [])
+	j.nota_temp = Vector2(float(nt[0]), float(nt[1])) if nt is Array and (nt as Array).size() == 2 else Vector2.ZERO
 	return j

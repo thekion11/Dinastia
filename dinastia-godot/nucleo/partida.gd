@@ -99,12 +99,14 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 	var mio := m.mi_club()
 	if mio == null:
 		_restaurar_continentales(datos, m)   ## (16-11, informe G-03) en La Ruta no hay club tuyo, pero los continentales siguen
+		_restaurar_competicion(datos, m)
+		var em: Variant = (datos.get("entrenamiento", {}) as Dictionary).get("mundo") if datos.get("entrenamiento") is Dictionary else null
+		if em is Dictionary:   ## (16-11, revisión de G-04) el tope de subidas del entrenamiento del mundo
+			m._entreno_mundo = Entrenamiento.new()
+			m._entreno_mundo.desde_dic(em)
 		return
-	## `tomar_el_mando` crea los sistemas "solo tuyos" de cero y vuelve a sortear los
-	## continentales. Se llama primero y DESPUES se pisan sus valores con los del
-	## guardado: asi no hay que duplicar aqui la construccion de cada uno, y si
-	## manana se anade un sistema nuevo, cargar una partida vieja lo estrena en
-	## limpio en vez de dejarlo en null.
+	## `tomar_el_mando` crea los sistemas "solo tuyos" de cero y vuelve a sortear los continentales. Se llama primero y DESPUES
+	## se pisan sus valores con los del guardado: un sistema nuevo se estrena en limpio en una partida vieja, en vez de null.
 	m.tomar_el_mando(m.mi_club_id)
 	m.anios_en_club = int(datos.get("anios_en_club", 0))   ## (`tomar_el_mando` lo pone a 0: se restaura DESPUÉS)
 
@@ -187,9 +189,7 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.mercado_av.desde_dic(datos.get("mercado_av", {}))
 	if m.insolvencia != null:
 		m.insolvencia.desde_dic(datos.get("insolvencia", {}))
-	m.ajustes_competicion = (datos.get("ajustes_competicion", {}) as Dictionary).duplicate()
-	if m.copa != null:
-		m.copa.sede_final_id = String(m.ajustes_competicion.get("copa_sede", ""))
+	_restaurar_competicion(datos, m)
 	if m.calendario != null:
 		m.calendario.desde_dic(datos.get("calendario", {}))
 	if m.politica != null:
@@ -250,6 +250,12 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.libro_financiero.append(x)
 
 	_restaurar_continentales(datos, m)
+
+## Los ajustes de competición y la sede de la final de copa (también en La Ruta, revisión de G-03).
+static func _restaurar_competicion(datos: Dictionary, m: Mundo) -> void:
+	m.ajustes_competicion = (datos.get("ajustes_competicion", {}) as Dictionary).duplicate()
+	if m.copa != null:
+		m.copa.sede_final_id = String(m.ajustes_competicion.get("copa_sede", ""))
 
 static func _restaurar_continentales(datos: Dictionary, m: Mundo) -> void:
 	var dc: Dictionary = datos.get("continentales", {})
