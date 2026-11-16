@@ -46,7 +46,7 @@ static func companero(m: MotorJugable, p: Dictionary, dir: Vector3) -> Dictionar
 ## `C4_PUNTA=1`: la palanca ya no topa la velocidad. El de siempre pone el objetivo del que manejas a 3 m y la física limita la marcha a
 ## `distancia × 2,5` = 7,5 m/s: con el balón o sin él, un jugador rápido (ritmo > 0,74, punta 7,5-8,6 m/s con la IA) corre MÁS LENTO cuando lo
 ## manejas tú que cuando lo lleva la máquina (medido: punta 7,5 m/s con ritmo 0,76 y 0,97). Con el objetivo a 4 m el tope sube a 10 m/s.
-static var PUNTA := OS.get_environment("C4_PUNTA") == "1"
+static var PUNTA := OS.get_environment("C4_PUNTA") != "0"   ## (16-11) ENCENDIDA por defecto: era un fallo (la palanca topaba a 7,5 m/s a todos); `C4_PUNTA=0` la apaga
 ## `C4_GIRO_SECO=1`: al invertir la palanca (> 120°) a carrera, primero FRENA en línea recta y gira casi en el sitio (apoyo y giro, como en
 ## PES), en vez de trazar una U de ~3 m de ancho como un patinador.
 static var GIRO_SECO := OS.get_environment("C4_GIRO_SECO") == "1"
