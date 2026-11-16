@@ -8,6 +8,8 @@
 #include <godot_cpp/variant/vector2.hpp>
 #include <godot_cpp/variant/vector3.hpp>
 
+#include <godot_cpp/core/error_macros.hpp>
+
 #include <cmath>
 
 using namespace godot;
@@ -75,6 +77,9 @@ void fuerzas(Vector3 &pos, Vector3 &mom, const CfgBalon &c, double dt, double ra
 PackedVector3Array DinastiaNativo::balon_prediccion(const Vector3 &bp0, const Vector3 &bv0, const Dictionary &cfg, bool hay_poseedor, const Vector3 &vel_poseedor, int64_t total, double dt, double radio) const {
 	const CfgBalon c = leer_cfg(cfg);
 	PackedVector3Array salida;
+	if (total < 0) {
+		total = 0; // `salida[0]` con el arreglo vacío escribía fuera de rango (GDScript solo da error)
+	}
 	salida.resize(total + 1);
 	Vector3 bp = bp0;
 	Vector3 bv = bv0;
@@ -94,6 +99,7 @@ PackedVector3Array DinastiaNativo::balon_prediccion(const Vector3 &bp0, const Ve
 // El bucle de pasos de 10 ms del balón suelto de `MotorLeague._mover_balon`. `estado` = [p, vel, giro, resto]; devuelve lo mismo, ya avanzado.
 // `k` = {paso, radio, alto_aire, vel_y_aire, magnus, giro_aire, giro_suelo_pot, largo, palo, larguero}.
 Array DinastiaNativo::balon_avanzar(const Vector3 &p0, const Vector3 &vel0, const Vector3 &giro0, double resto0, double delta, const Dictionary &cfg, const PackedFloat64Array &k) const {
+	ERR_FAIL_COND_V_MSG(k.size() < 10, Array(), "balon_avanzar: `k` necesita 10 valores");
 	const CfgBalon c = leer_cfg(cfg);
 	const double paso = k[0], radio = k[1], umbral_y = k[2], umbral_vy = k[3], magnus = k[4], giro_aire = k[5], giro_suelo = k[6], largo = k[7], palo = k[8], larguero = k[9];
 	Vector3 p = p0, vel = vel0, giro = giro0;

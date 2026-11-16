@@ -5,6 +5,7 @@
 #   herramientas/compilar_nativo.sh            todo
 #   herramientas/compilar_nativo.sh linux      solo Linux
 #   herramientas/compilar_nativo.sh android    Android arm64 (necesita ANDROID_NDK_ROOT; lo hace el CI, 31-10)
+#   herramientas/compilar_nativo.sh web       Web wasm32 SIN hilos (16-11; necesita Emscripten 4.0.11 activo: `source emsdk_env.sh`)
 #   ARCH=arm64 herramientas/compilar_nativo.sh linux   Linux arm64 (el CI lo compila en una máquina ARM para la prueba)
 # Windows se compila desde Linux con mingw-w64 (apt-get install mingw-w64).
 # Tras compilar: pruebas/probar_nativo.tscn debe terminar en «FIN. 0 fallos».
@@ -22,6 +23,9 @@ for p in $PLATAFORMAS; do
     if [[ "$p" = "android" ]]; then
       ## Con ANDROID_HOME vacío godot-cpp usa ANDROID_NDK_ROOT (el NDK que haya, sin fijar versión).
       scons -j"$(nproc)" GODOT_CPP=godot-cpp platform=android arch=arm64 target="$t" api_version=4.7 ANDROID_HOME=
+    elif [[ "$p" = "web" ]]; then
+      ## Sin hilos: el preset Web usa thread_support=false (plantilla web_dlink_nothreads_*). Con extensions_support=true.
+      scons -j"$(nproc)" GODOT_CPP=godot-cpp platform=web arch=wasm32 threads=no target="$t" api_version=4.7
     else
       scons -j"$(nproc)" GODOT_CPP=godot-cpp platform="$p" target="$t" api_version=4.7 ${ARCH:+arch=$ARCH}
     fi

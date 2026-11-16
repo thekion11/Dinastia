@@ -89,6 +89,24 @@ static func registrar(eq: LeagueEquipo, balon: Vector2, lado_posesion: float, dt
 			eq.balon_hist = eq.balon_hist.slice(eq.balon_hist.size() - HISTORIA)
 			eq.lado_hist = eq.lado_hist.slice(eq.lado_hist.size() - HISTORIA)
 
+## (16-11, paso a C++) `registrar` + `acumular` + la media del lado de la posesión de 6 s (`media_f(lado_hist, 6000)`) en un solo paso: devuelve esa media.
+func registrar_acumular(balon: Vector2, lado_posesion: float, dt: float) -> float:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_registrar"):
+		var r: Array = nat.league_registrar(balon_hist, lado_hist, _resto, balon, lado_posesion, dt)
+		balon_hist = r[0]
+		lado_hist = r[1]
+		_resto = r[2]
+		acum = r[3]
+		return r[4]
+	return registrar_acumular_gd(balon, lado_posesion, dt)
+
+## Gemela GDScript de `league_registrar`.
+func registrar_acumular_gd(balon: Vector2, lado_posesion: float, dt: float) -> float:
+	LeagueEquipo.registrar(self, balon, lado_posesion, dt)
+	acumular_gd()
+	return media_f_gd(lado_hist, 6000.0)
+
 ## L Team::Process: posesión por tiempo de llegada al balón (ms) y su versión que se desvanece. `dt` real.
 func actualizar_posesion(ms_yo: float, ms_rival: float, dt: float) -> void:
 	posesion = (ms_rival + 1500.0) / (ms_yo + 1500.0)
@@ -99,10 +117,18 @@ func actualizar_posesion(ms_yo: float, ms_rival: float, dt: float) -> void:
 
 ## L UpdateTactics (una vez por segundo): marcador, reloj y posesión de los últimos 60 s.
 func actualizar_tactica(goles: int, goles_rival: int, t_ms: float, posesion_60: float, usuario: Dictionary, dt: float) -> void:
+	if tactica_pendiente(dt):
+		aplicar_tactica(goles, goles_rival, t_ms, posesion_60, usuario)
+
+## Gasta `dt` del temporizador de la táctica; true cuando toca recalcularla (así quien llama no arma sus argumentos las otras 29 de cada 30 veces).
+func tactica_pendiente(dt: float) -> bool:
 	_t_tactica -= dt
 	if _t_tactica > 0.0:
-		return
+		return false
 	_t_tactica = 1.0
+	return true
+
+func aplicar_tactica(goles: int, goles_rival: int, t_ms: float, posesion_60: float, usuario: Dictionary) -> void:
 	viva = LeagueNucleo.tactica_viva(usuario)
 	contra = clampf(float(usuario.get("contra", 0.5)), 0.0, 1.0)
 	_mezclas.clear()

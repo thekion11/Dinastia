@@ -29,13 +29,16 @@ Dictionary DinastiaNativo::league_alcanza(const Dictionary &por_tipo, double r0,
 		for (int64_t j = 0; j < lista.size(); j++) {
 			const Dictionary a = lista[j];
 			const int64_t cuadro = (int64_t)(double)a[k_cuadro];
-			if (cuadro >= tam) {
+			if (cuadro < 0 || cuadro >= tam) { // un cuadro negativo (que GDScript leería desde el final) no existe en el catálogo; aquí se salta en vez de leer fuera del arreglo
 				continue;
 			}
 			if (!mejor.is_empty() && cuadro >= mejor_cuadro) {
 				continue;
 			}
 			const Array bal = a[k_balon];
+			if (bal.size() < 3) {
+				continue;
+			}
 			const Vector3 b = pred[cuadro];
 			double dz = std::fabs((double)b.z - (double)bal[2]);
 			if ((double)b.z < 0.5) {

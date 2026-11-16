@@ -12,3 +12,5 @@ windows.debug.x86_64 = "res://bin_nativo/libdinastia.windows.template_debug.x86_
 windows.release.x86_64 = "res://bin_nativo/libdinastia.windows.template_release.x86_64.dll"
 android.debug.arm64 = "res://bin_nativo/libdinastia.android.template_debug.arm64.so"
 android.release.arm64 = "res://bin_nativo/libdinastia.android.template_release.arm64.so"
+web.release.wasm32 = "res://bin_nativo/libdinastia.web.template_release.wasm32.nothreads.wasm"
+web.debug.wasm32 = "res://bin_nativo/libdinastia.web.template_debug.wasm32.nothreads.wasm"

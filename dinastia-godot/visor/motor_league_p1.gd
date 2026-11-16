@@ -65,6 +65,9 @@ func _ms_al_balon(local: bool) -> float:
 			mejor = minf(mejor, (ls(pos(p)) - b).length() / 7.0 * 1000.0)
 	return mejor if mejor < INF else 5000.0
 
+## (16-11, paso a C++) Lo que `_estado_league` y `_estado_sin_balon` piden de las posiciones, calculado en una sola pasada (`league_estado_base`; ver estado_nativo.cpp). Vacío = a mano, con las gemelas GDScript.
+var _base_liga: PackedFloat64Array = PackedFloat64Array()
+
 func _estado_league(delta: float) -> void:
 	if not poseedor.is_empty():
 		if String(poseedor["id"]) != _posee_id:
@@ -72,27 +75,71 @@ func _estado_league(delta: float) -> void:
 			_posee_desde = t
 	else:
 		_posee_id = ""
-	var ml := _ms_al_balon(true)
-	var mv := _ms_al_balon(false)
 	var e0: LeagueEquipo = equipos[0]
 	var e1: LeagueEquipo = equipos[1]
+	var b0 := ls(balon.position)
+	var nat := Nativo.obj()
+	_base_liga = nat.league_estado_base(jugadores, b0, e0.lado, e1.lado) if nat != null and nat.has_method("league_estado_base") else PackedFloat64Array()
+	var ml := _base_liga[0] if not _base_liga.is_empty() else _ms_al_balon(true)
+	var mv := _base_liga[1] if not _base_liga.is_empty() else _ms_al_balon(false)
 	e0.actualizar_posesion(ml, mv, delta)
 	e1.actualizar_posesion(mv, ml, delta)
 	## L Match::Process: el «lado de la posesión» es la suma de (posesión desvanecida − 0,5) · lado de cada equipo.
 	var lado_pos := (e0.posesion_desvanecida - 0.5) * e0.lado + (e1.posesion_desvanecida - 0.5) * e1.lado
-	LeagueEquipo.registrar(e0, ls(balon.position), lado_pos, delta)
-	e0.acumular()
-	_lado_medio = LeagueEquipo.media_f(e0.lado_hist, 6000.0)
+	_lado_medio = e0.registrar_acumular(b0, lado_pos, delta)
 	var tot: float = float(posesion[0]) + float(posesion[1])
 	for i in 2:
 		var e: LeagueEquipo = equipos[i]
-		var p60: float = (float(posesion[i]) / tot) if tot > 0.0 else 0.5
-		e.actualizar_tactica(goles[i], goles[1 - i], (minuto() * 60000.0), p60, _palancas(i == 0), delta)
+		if e.tactica_pendiente(delta):   ## (16-11) las palancas y el reloj solo se arman cuando toca (una vez por segundo)
+			var p60: float = (float(posesion[i]) / tot) if tot > 0.0 else 0.5
+			e.aplicar_tactica(goles[i], goles[1 - i], (minuto() * 60000.0), p60, _palancas(i == 0))
 		var rival: Array = []
 		if not poseedor.is_empty() and bool(poseedor["es_local"]) != (i == 0):
 			rival = [ls(pos(poseedor)), ls(poseedor["vel"])]
-		var b0 := ls(balon.position)
-		e.calcular_trampa(b0, b0 + ls(vel_balon) * 0.7, rival, _linea_penultimo(i == 0, false, e.lado, b0.x))
+		e.calcular_trampa(b0, b0 + ls(vel_balon) * 0.7, rival, float(_base_liga[3 + i]) if not _base_liga.is_empty() else _linea_penultimo(i == 0, false, e.lado, b0.x))
+
+## El más cercano de todos al balón (índice de `_base_liga`, o a mano) y el de cada equipo a un punto (`league_cercanos_equipos`, o `[]`).
+func _designado_base(b0: Vector2) -> Dictionary:
+	if _base_liga.is_empty():
+		return _mas_cercano_a_todos(b0)
+	var k := int(_base_liga[2])
+	return jugadores[k] if k >= 0 else {}
+
+func _cercanos_equipos(punto: Vector2) -> PackedInt32Array:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_cercanos_equipos"):
+		return nat.league_cercanos_equipos(jugadores, punto)
+	return PackedInt32Array()
+
+## Línea del fuera de juego del rival del equipo `i` a 240 ms (`_linea_penultimo(not local, true, -lado, b0.x)`).
+func _linea_rival(i: int, local: bool, lado_: float, b0: Vector2) -> float:
+	return float(_base_liga[5 + i]) if not _base_liga.is_empty() else _linea_penultimo(not local, true, -lado_, b0.x)
+
+## Gemela GDScript de `league_cortar_candidatos`: los del otro equipo que `local_pasa` (no porteros, no el usuario con el mando, sin orden de cortar vigente) a 10 m del balón previsto.
+func _candidatos_cortar_gd(local_pasa: bool, bola: Vector2) -> PackedInt32Array:
+	var r := PackedInt32Array()
+	for k in jugadores.size():
+		var p: Dictionary = jugadores[k]
+		if bool(p["es_local"]) == local_pasa or bool(p["por"]) or (p == usuario and not autopiloto) or float(p.get("ls_cortar_hasta", 0.0)) > t:
+			continue
+		if ls(pos(p)).distance_to(bola) > 10.0:
+			continue
+		r.append(k)
+	return r
+
+## Gemela GDScript de `league_interferir_candidatos`: los defensores que pueden entrar al balón (otro equipo, no porteros, no el usuario con el mando, sin enfriar ni en un gesto, a 10 m del balón).
+func _candidatos_interferir_gd(rival: Dictionary, bola: Vector2) -> PackedInt32Array:
+	var r := PackedInt32Array()
+	for k in jugadores.size():
+		var p: Dictionary = jugadores[k]
+		if bool(p["es_local"]) == bool(rival["es_local"]) or bool(p["por"]) or (p == usuario and not autopiloto):
+			continue
+		if float(p["enfriar"]) > 0.0 or float(p.get("gesto_hasta", 0.0)) > t:
+			continue
+		if ls(pos(p)).distance_to(bola) > 10.0:
+			continue
+		r.append(k)
+	return r
 
 ## La pizarra del club (`Tactica`, 0..2 con 1 = neutro; ver `EstiloClub`) traducida a las palancas de League (0..1, 0,5 = neutro):
 ## amplitud → anchura del bloque; presión → foco defensivo del bloque y del medio; mentalidad → foco del medio en ataque;
@@ -269,6 +316,35 @@ func _mas_cercano_uno_gd(punto: Vector2, local: bool, excluir: Array) -> Array:
 				mejor = d
 				sel = q
 	return [] if sel.is_empty() else [sel]
+
+## Los `cuantos` jugadores del equipo más cercanos a `punto` (sin los de `excluir`), de más cerca a más lejos.
+func _mas_cercano_al(punto: Vector2, local: bool, excluir: Array, cuantos: int) -> Array:
+	var nat := Nativo.obj()
+	if nat != null and cuantos == 1 and excluir.is_empty() and nat.has_method("league_mas_cercano"):   ## (16-11, paso a C++) misma pasada que `_mas_cercano_uno_gd`
+		var k: int = nat.league_mas_cercano(jugadores, punto, local)
+		return [] if k < 0 else [jugadores[k]]
+	if nat != null and nat.has_method("league_mas_cercanos"):   ## (16-11, paso a C++) varios o con excluidos: misma lista que `_mas_cercano_varios_gd` (con 16 o menos candidatos; si no, devuelve [-2])
+		var ids := PackedStringArray()
+		for e: Dictionary in excluir:
+			if e.has("id"):
+				ids.append(String(e["id"]))
+		var ks: PackedInt32Array = nat.league_mas_cercanos(jugadores, punto, local, cuantos, ids)
+		if ks.size() != 1 or ks[0] != -2:
+			var r: Array = []
+			for k: int in ks:
+				r.append(jugadores[k])
+			return r
+	return _mas_cercano_varios_gd(punto, local, excluir, cuantos)
+
+func _mas_cercano_varios_gd(punto: Vector2, local: bool, excluir: Array, cuantos: int) -> Array:
+	if cuantos == 1:
+		return _mas_cercano_uno_gd(punto, local, excluir)
+	var c: Array = []
+	for q: Dictionary in jugadores:
+		if bool(q["es_local"]) == local and not excluir.has(q):
+			c.append([(ls(pos(q)) - punto).length_squared(), q])
+	c.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+	return c.slice(0, cuantos).map(func(x: Array) -> Dictionary: return x[1])
 
 ## (16-11, paso a C++) Piezas de `_estado_sin_balon` y `_estado_league`: cada una usa la extensión si está y, si no, su gemela `*_gd` (misma cuenta; `probar_nativo`).
 func _indexar_jugadores(destino: Dictionary) -> void:

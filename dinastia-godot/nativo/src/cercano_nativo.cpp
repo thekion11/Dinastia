@@ -5,10 +5,26 @@
 #include <cmath>
 
 #include <godot_cpp/classes/node3d.hpp>
+#include <godot_cpp/core/object_id.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/variant/vector2.hpp>
 #include <godot_cpp/variant/vector3.hpp>
 
 using namespace godot;
+
+namespace {
+// El Node3D de un Variant, o nullptr si no es un objeto, es null o YA SE LIBERÓ (sin tocar el puntero colgante: `Variant -> Object*` de un nodo liberado cierra Godot con SIGSEGV).
+const Node3D *nodo_vivo(const Variant &vn) {
+	if (vn.get_type() != Variant::OBJECT) {
+		return nullptr;
+	}
+	const ObjectID id = vn;
+	if (!id.is_valid() || !UtilityFunctions::is_instance_id_valid((int64_t)id)) {
+		return nullptr;
+	}
+	return Object::cast_to<Node3D>(static_cast<Object *>(vn));
+}
+} // namespace
 
 int64_t DinastiaNativo::league_mas_cercano(const Array &jugadores, const Vector2 &punto, bool local) const {
 	static const StringName k_node("node"), k_local("es_local");
@@ -21,7 +37,7 @@ int64_t DinastiaNativo::league_mas_cercano(const Array &jugadores, const Vector2
 			continue;
 		}
 		const Variant vn = q[k_node];
-		const Node3D *nodo = Object::cast_to<Node3D>(static_cast<Object *>(vn));
+		const Node3D *nodo = nodo_vivo(vn);
 		if (nodo == nullptr) {
 			continue; // el motor nunca deja un jugador sin nodo; con un nodo liberado GDScript habría fallado
 		}
@@ -44,7 +60,7 @@ int64_t DinastiaNativo::league_mas_cercano_todos(const Array &jugadores, const V
 	for (int64_t i = 0; i < n; i++) {
 		const Dictionary q = jugadores[i];
 		const Variant vn = q[k_node];
-		const Node3D *nodo = Object::cast_to<Node3D>(static_cast<Object *>(vn));
+		const Node3D *nodo = nodo_vivo(vn);
 		if (nodo == nullptr) {
 			continue;
 		}
@@ -81,7 +97,7 @@ double DinastiaNativo::league_linea_penultimo(const Array &jugadores, bool local
 			continue;
 		}
 		const Variant vn = q[k_node];
-		const Node3D *nodo = Object::cast_to<Node3D>(static_cast<Object *>(vn));
+		const Node3D *nodo = nodo_vivo(vn);
 		if (nodo == nullptr) {
 			continue;
 		}
