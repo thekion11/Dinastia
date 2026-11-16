@@ -61,7 +61,17 @@ func _ready() -> void:
 			int(s["pj"]), int(s["goles"]), int(s["asist"]), c.nota_media(), energia / maxi(1, semanas), (c.ruta["talentos"] as Dictionary).size(), int(c.ruta["puntos"]),
 			""])
 		CarreraSemana.cerrar_temporada(c, m)
-		print("   ficha del mundo: pj %d goles %d · hab libres %d" % [j2.partidos, j2.goles, CarreraHabilidad.puntos(c)])
+		## (16-11, R-03) Con quién compites por los premios de nota: la mejor nota de temporada de tu liga (15+ partidos) y la del club (10+).
+		var liga := CarreraRuta._liga_de(m, c.club(m))
+		var top_liga := 0.0
+		var top_club := 0.0
+		for cl: Club in (liga.clubes if liga != null else []):
+			for o: Jugador in cl.plantilla:
+				if o != j2:
+					top_liga = maxf(top_liga, o.media_temporada(CarreraPremios.PJ_LIGA))
+					if cl == c.club(m):
+						top_club = maxf(top_club, o.media_temporada(CarreraPremios.PJ_CLUB))
+		print("   ficha del mundo: pj %d goles %d asist %d · hab libres %d · mejor nota rival: club %.2f, liga %.2f" % [j2.partidos, j2.goles, j2.asistencias, CarreraHabilidad.puntos(c), top_club, top_liga])
 		print("   premios: %s · misiones cobradas: %s" % [str((c.ruta["temporada"] as Dictionary)["premios"]), str((c.ruta.get("misiones_hechas", {}) as Dictionary).keys())])
 		m.nueva_temporada()
 	get_tree().quit()

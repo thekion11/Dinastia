@@ -283,7 +283,7 @@ const COSTES := {
 	"_probar_modos_simulacion": 6.5, "_probar_ideas_lote_a2": 6.1, "_probar_ideas_lote_a3": 6.1,
 	"_probar_ideas_lote_a1": 5.4, "_probar_repetibilidad": 4.8, "_probar_pie_habil": 4.4,
 	"_probar_palabras_prohibidas": 3.8, "_probar_aspecto_y_audio": 3.8, "_probar_transmision_y_estadisticas": 3.4,
-	"_probar_marcas_y_escudos": 3.4, "_probar_ligas_activas": 25.0, "_probar_ligas_activas_todos": 45.0, "_probar_banquillo": 3.2, "_probar_historia_c4": 3.0, "_probar_estadio_b6": 3.0,
+	"_probar_marcas_y_escudos": 3.4, "_probar_ligas_activas": 25.0, "_probar_ligas_activas_todos": 45.0, "_probar_ruta_ida_vuelta_json": 6.0, "_probar_ruta_semana_interfaz": 5.0, "_probar_ruta_temporada_completa": 8.0, "_probar_ruta_premios_rivales": 5.0, "_probar_ruta_traspasos": 4.0, "_probar_banquillo": 3.2, "_probar_historia_c4": 3.0, "_probar_estadio_b6": 3.0,
 	"_probar_tanda_c": 2.9, "_probar_eventos_nuevos": 2.7, "_probar_guardado_seguro": 2.7,
 	"_probar_eras_y_precios": 2.6, "_probar_estadio": 2.6, "_probar_puente3d": 2.6, "_probar_directiva": 2.6,
 	"_probar_carga_de_ui": 2.5, "_probar_ciudad_animo": 2.3, "_probar_consejeros": 2.3, "_probar_calendario": 2.3,
