@@ -11,7 +11,7 @@ Alcance acordado: 40.000-80.000 palabras, por capítulos, guardados y subidos un
 | 2 | Estado del arte (PES 2020, FC 24-27, game feel, animación, analítica, producción) | `cap_02_estado_del_arte.md` | hecho (16-11) |
 | 3 | Arquitectura de Dinastía (cifras del código) | `cap_03_arquitectura.md` | pendiente |
 | 4 | Rendimiento medido | `cap_04_rendimiento.md` | pendiente |
-| 5 | Pruebas automáticas reales (banco y especiales) | `cap_05_pruebas_automaticas.md` | en curso |
+| 5 | Pruebas automáticas reales (banco y especiales) | `cap_05_pruebas_automaticas.md` | hecho (16-11) |
 | 6 | Fallos del motor del partido (auditoría estática) | `cap_06_fallos_motor_partido.md` | hecho (16-11) |
 | 7 | Fallos de gestión, La Ruta y menús | `cap_07_fallos_gestion_ruta_menus.md` | hecho (16-11) |
 | 8 | Brechas frente a PES 2020 y FC 27 (síntesis con fuentes) | `cap_08_brechas.md` | pendiente |
