@@ -150,6 +150,9 @@ uniform float tela_escala = 6.0;   // repeticiones por unidad de UV (~40 cm por 
 // rectangulares más claros u oscuros con el borde de la isla. Aquí van x e y de reposo, llevados a la pose
 // actual, medidos sobre la tangente y la binormal de cada vértice: (x·T, x·B, y·T, y·B).
 varying vec4 v_ejes;
+// (16-11, H1) Y el eje z de reposo (hacia delante), igual medido: (z·T, z·B). Lo usa el canalé de las medias, cuyo relieve
+// va alrededor de la pierna (en x y z de reposo); antes se sumaba a `nm.x` del atlas y cada isla lo inclinaba a su manera.
+varying vec2 v_ejez;
 
 // EL ESCOTE DE VERDAD (17-10-2026). Antes la camiseta acababa en un plano
 // horizontal (y = 1,535) y el cuello era «todo lo que queda por encima de
@@ -196,13 +199,16 @@ void vertex() {
 	{
 		vec3 ex = vec3(1.0, 0.0, 0.0);
 		vec3 ey = vec3(0.0, 1.0, 0.0);
+		vec3 ez = vec3(0.0, 0.0, 1.0);
 		if (dot(CUSTOM1.xyz, CUSTOM1.xyz) > 0.25) {
 			vec3 a = normalize(CUSTOM1.xyz);
 			vec3 b = normalize(NORMAL);
 			ex = girar(a, b, ex);
 			ey = girar(a, b, ey);
+			ez = girar(a, b, ez);
 		}
 		v_ejes = vec4(dot(ex, TANGENT), dot(ex, BINORMAL), dot(ey, TANGENT), dot(ey, BINORMAL));
+		v_ejez = vec2(dot(ez, TANGENT), dot(ez, BINORMAL));
 	}
 	// LA ROPA SUELTA (26-9-2026, pedido: "están muy pegadas al cuerpo"): los
 	// vértices de la camiseta y el pantalón se separan del cuerpo por su
@@ -854,6 +860,7 @@ void fragment() {
 	// vuelta de arriba más oscura con su canto.
 	float ang_m = 0.0;
 	float fade_m = 0.0;
+	vec2 dir_m = vec2(0.0);   // hacia dónde sube el canalé, en el espacio tangente (alrededor de la pierna)
 	if (usa_reposo && !civil && !largo) {
 		float hp = y - 0.62;
 		pant *= 1.0 - 0.2 * (1.0 - smoothstep(0.0, 0.005, hp));
@@ -862,6 +869,10 @@ void fragment() {
 		pant *= 1.0 - 0.28 * (1.0 - smoothstep(0.0, 0.03, 1.0 - y));
 		ang_m = atan(z * 0.5 - 0.25 + 0.06, abs(x) - 0.122) * 22.0;
 		fade_m = 1.0 - smoothstep(0.35, 1.0, fwidth(ang_m));
+		// La pendiente de `ang_m` en x y z de reposo (alrededor del eje de la pierna), llevada al espacio tangente.
+		vec2 g_m = vec2(-(z * 0.5 - 0.25 + 0.06) * sign(x), abs(x) - 0.122);
+		g_m /= max(length(g_m), 1e-4);
+		dir_m = g_m.x * v_ejes.xy + g_m.y * v_ejez;
 		med *= 1.0 + 0.07 * sin(ang_m * 6.2832) * fade_m;
 		float vuelta = smoothstep(0.425, 0.432, y);
 		med *= 1.0 - 0.1 * vuelta;
@@ -1113,7 +1124,7 @@ void fragment() {
 	bool juego = usa_reposo && !civil && usa_normal;
 	if (juego) {
 		nm.xy -= nm_cuerpo * 1.0 * tela;
-		nm.x += cos(ang_m * 6.2832) * fade_m * 0.07 * m.b;
+		nm.xy += dir_m * (cos(ang_m * 6.2832) * fade_m * 0.07 * m.b);
 	}
 	// Ropa de calle (27-10-2026, plan §2.2e P4): el músculo se quita igual que en la de juego y la
 	// profundidad del relieve vuelve a ser visible (abajo, 0,4 en vez de 0,06): antes, para tapar los

@@ -317,3 +317,96 @@ func _probar_perfil_manejo_c4() -> void:
 		raiz.queue_free()
 	Mando.pasos_activar(false)
 	Mando.ayudas = ayudas_antes
+
+## Huella del motor (como `pruebas/igualdad_motor.gd`): balón, los 22 (con su giro), goles, tiros, estado y estadísticas.
+func _huella_h1(m: MotorJugable) -> String:
+	var s := PackedStringArray()
+	s.append("%.3f,%.3f,%.3f" % [m.balon.position.x, m.balon.position.y, m.balon.position.z])
+	for p: Dictionary in m.jugadores:
+		var q := (p["node"] as Node3D).position
+		s.append("%.3f,%.3f,%.3f,%.3f" % [q.x, q.y, q.z, (p["node"] as Node3D).rotation.y])
+	s.append(str(m.goles) + str(m.tiros) + m.estado + str(m.stats))
+	return str(hash("|".join(s)))
+
+## H1 del informe AAA (16-11): el pie al balón y la cabeza al balón (`AnimacionCercana`, `PieBalonIK`) son SOLO visuales: con
+## ellos encendidos y actualizándose cada paso, la huella del motor es la misma; en las calidades bajas y con «Partido ligero»
+## no se monta nada y la mirada queda apagada (sin coste).
+func _probar_h1_animacion() -> void:
+	_titulo("PARTIDO: H1 ANIMACIÓN (PIE Y CABEZA AL BALÓN SIN TOCAR EL MOTOR; NADA EN LAS CALIDADES BAJAS)")
+	var cal := Calidad.elegida
+	var ligero := Calidad.partido_ligero
+	var huellas: Array[String] = []
+	var con_pie := 0
+	var con_mira := 0
+	var acerca := false
+	for con_ik: bool in [false, true]:
+		Calidad.elegida = Calidad.ALTA
+		Calidad.partido_ligero = false
+		var raiz := Node3D.new()
+		add_child(raiz)
+		var mo := _motor_c6(raiz, "combinado_c4", ["MEX", "ITA"], 9)
+		MiradaBalon.poner(mo.jugadores, mo.balon, mo if con_ik else null)
+		var ac: AnimacionCercana = mo.get_node_or_null("AnimacionCercana")
+		if con_ik:
+			_comprobar(ac != null, "H1: con calidad ALTA se monta `AnimacionCercana`")
+		for i in 900:
+			mo.paso(1.0 / 30.0)
+			if ac == null:
+				continue
+			ac.actualizar(1.0 / 30.0, mo.balon.global_position + Vector3(0, 12, -18))
+			for p: Dictionary in mo.jugadores:
+				var esq := FutbolistaQ.esqueleto_de(p["node"])
+				var pie: PieBalonIK = esq.get_node_or_null("PieBalonIK") if esq != null else null
+				var mira: LookAtModifier3D = esq.get_node_or_null("MiradaBalon") if esq != null else null
+				if pie != null and pie.active and pie.peso > 0.3:
+					con_pie += 1
+					if not acerca and i > 300:
+						acerca = _pie_se_acerca(esq, pie)
+				if mira != null and mira.active:
+					con_mira += 1
+		huellas.append(_huella_h1(mo))
+		raiz.queue_free()
+	_comprobar(huellas[0] == huellas[1], "H1: con el pie y la cabeza al balón la huella del motor no cambia (%s = %s)" % [huellas[0], huellas[1]])
+	_comprobar(con_pie > 20 and con_mira > 900, "H1: el pie se activa en el que toca (%d pasos·jugador) y la cabeza en los cercanos (%d)" % [con_pie, con_mira])
+	_comprobar(acerca, "H1: el IK de dos huesos acerca el tobillo al objetivo junto al balón")
+	## Calidades bajas y «Partido ligero»: nada montado y la mirada apagada.
+	for caso: Array in [[Calidad.ULTRA_BAJA, false], [Calidad.MEDIA_BAJA, false], [Calidad.ULTRA_ALTA, true]]:
+		Calidad.elegida = int(caso[0])
+		Calidad.partido_ligero = bool(caso[1])
+		var raiz := Node3D.new()
+		add_child(raiz)
+		var mo := _motor_c6(raiz, "combinado_c4", ["JPN", "NGA"], 4)
+		MiradaBalon.poner(mo.jugadores, mo.balon, mo)
+		var pies := 0
+		var miras := 0
+		for p: Dictionary in mo.jugadores:
+			var esq := FutbolistaQ.esqueleto_de(p["node"])
+			pies += esq.find_children("*", "PieBalonIK", false, false).size()
+			var mira: LookAtModifier3D = esq.get_node_or_null("MiradaBalon")
+			if mira != null and mira.active:
+				miras += 1
+		_comprobar(mo.get_node_or_null("AnimacionCercana") == null and pies == 0 and miras == 0,
+			"H1: en calidad %d (ligero %s) ni pie ni mirada (%d pies, %d miradas activas)" % [int(caso[0]), str(caso[1]), pies, miras])
+		raiz.queue_free()
+	Calidad.elegida = cal
+	Calidad.partido_ligero = ligero
+
+## Corre el modificador a mano (en el banco no hay fotogramas): el tobillo del pie del toque queda más cerca de su objetivo.
+func _pie_se_acerca(esq: Skeleton3D, pie: PieBalonIK) -> bool:
+	var lado := pie._pie_cercano(esq, esq.global_transform)
+	var i3 := esq.find_bone("foot_" + lado)
+	var bp := pie.balon.global_position
+	var hacia := pie.cuerpo.global_position - bp
+	hacia.y = 0.0
+	var antes := esq.global_transform * esq.get_bone_global_pose(i3).origin
+	var obj := bp + hacia.normalized() * (PieBalonIK.RADIO_BALON + PieBalonIK.SEPARACION)
+	obj.y = maxf(antes.y, bp.y - PieBalonIK.RADIO_BALON * 0.5)
+	if obj.distance_to(antes) > PieBalonIK.ALCANCE or obj.distance_to(antes) < 0.03:
+		return false
+	pie.lado = lado
+	var peso := pie.peso
+	pie.peso = 1.0
+	pie._process_modification()
+	pie.peso = peso
+	var despues := esq.global_transform * esq.get_bone_global_pose(i3).origin
+	return despues.distance_to(obj) < antes.distance_to(obj) * 0.6
