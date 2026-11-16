@@ -128,17 +128,13 @@ func _destino_forma(p: Dictionary, forma: Vector2) -> Vector2:
 	var foco_p: Dictionary = poseedor if not poseedor.is_empty() else ultimo_toque
 	var foco := ls(pos(foco_p)) if not foco_p.is_empty() else ls(balon.position)
 	var yo := ls(pos(p))
-	var urg := 1.0 - LeagueNucleo.normalizado((foco - yo).length(), 2.0, 30.0)
-	var entrada := {"forma": forma, "puesto": _rol(p), "lado": e.lado, "pos": yo, "foco": foco,
-		"balon_x_lento": e0.media_rapida(3500.0 * (1.0 - urg * 0.7)).x,
-		"balon_y_lento": e0.media_rapida(4000.0 * (1.0 - urg * 0.5)).y,
-		"balon_3s": e0.media_rapida(3000.0), "balon_2s": e0.media_rapida(2000.0),
-		"posesion_desvanecida": e.posesion_desvanecida,
-		"lado_posesion_medio": _lado_medio,
-		"ofensividad": clampf(e.ofensividad + float(_tac(local, "mentalidad") - 1) * 0.15, 0.0, 1.0),
-		"viva": e.viva, "contra": e.contra, "mezcla": e.mezcla_de(_rol(p)), "trampa_x": e.trampa_x}
+	var ofens := clampf(e.ofensividad + float(_tac(local, "mentalidad") - 1) * 0.15, 0.0, 1.0)
 	var nat := Nativo.obj()
-	var r: Vector2 = nat.league_posicion_formacion(entrada) if nat != null and nat.has_method("league_posicion_formacion") else LeagueNucleo.posicion_formacion(entrada)   ## (16-11, paso a C++)
+	var r: Vector2
+	if nat != null and nat.has_method("league_destino_forma"):   ## (16-11, paso a C++) misma cuenta que `LeagueEquipo.destino_forma_gd`
+		r = nat.league_destino_forma(e0.acum, foco, yo, forma, _rol(p), e.lado, e.posesion_desvanecida, ofens, _lado_medio, e.trampa_x, e.mezcla_de(_rol(p)))
+	else:
+		r = LeagueEquipo.destino_forma_gd(e0, e, foco, yo, forma, _rol(p), ofens, _lado_medio)
 	r.x += -e.lado * float(_tac(local, "linea") - 1) * 4.0   ## la línea de la pizarra adelanta o retrasa el bloque
 	return r
 

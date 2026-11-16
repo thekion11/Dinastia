@@ -82,34 +82,25 @@ Vector2 formacion_adaptada(Vector2 forma, double lado, double atras, double dela
 
 } // namespace
 
-// `LeagueNucleo.posicion_formacion(e)`; `e` TIENE que traer «mezcla» (el único llamador, `MotorLeague._destino_forma`, siempre la trae).
-Vector2 DinastiaNativo::league_posicion_formacion(const Dictionary &e) const {
-	static const StringName k_puesto("puesto"), k_lado("lado"), k_of("ofensividad"), k_mezcla("mezcla"), k_bx("balon_x_lento"), k_by("balon_y_lento"), k_foco("foco"), k_pd("posesion_desvanecida"),
-			k_b3("balon_3s"), k_b2("balon_2s"), k_lpm("lado_posesion_medio"), k_trampa("trampa_x"), k_forma("forma");
+namespace {
+
+// El cuerpo de `LeagueNucleo.posicion_formacion` con los datos ya leídos.
+Vector2 posicion_nucleo(const String &puesto, double lado, double of, const Dictionary &f, double bx, double by, Vector2 foco, double pd, const Vector2 &b3, const Vector2 &b2, double lpm, double trampa, const Vector2 &forma) {
 	static const StringName k_os("os"), k_ds("ds"), k_od("od"), k_dd("dd"), k_ow("ow"), k_dw("dw"), k_oh("oh"), k_dh("dh"), k_omi("omi"), k_dmi("dmi"), k_om("om"), k_dm("dm"), k_oms("oms"), k_dms("dms");
-	const String puesto = e[k_puesto];
-	const double lado = e[k_lado];
 	const double mente = mentalidad(puesto);
-	const double of = e[k_of];
-	const Dictionary f = e[k_mezcla];
 	const double os = clampd((double)f[k_os] + (-0.5 + mente) * 0.2 - 0.3 + of * 0.3, 0.0, 1.0);
 	const double ds = clampd((double)f[k_ds] + (0.5 - mente) * 0.2 - 0.3 + (1.0 - of) * 0.3, 0.0, 1.0);
-	const double bx = e[k_bx];
-	const double by = e[k_by];
-	Vector2 foco = e[k_foco];
-	const double b_pos = normalizado((double)e[k_pd] - 0.5, 0.3, 0.7);
+	const double b_pos = normalizado(pd - 0.5, 0.3, 0.7);
 	const double b_balon = normalizado((bx / MEDIO_LARGO) * -lado, -0.7, 0.7);
 	const double bb = (1.0 - std::fabs(b_pos * 2.0 - 1.0)) * 0.6;
 	const double pb = clampd(b_pos * (1.0 - bb) + b_balon * bb + (of - 0.5) * 0.3, 0.0, 1.0);
-	const Vector2 b3 = e[k_b3];
-	const Vector2 b2 = e[k_b2];
 	foco = b3 * (float)pb + (b2 * 0.5f + foco * 0.5f) * (float)(1.0 - pb);
 	const double prof = PROFUNDIDAD * ((double)f[k_od] * pb + (double)f[k_dd] * (1.0 - pb));
 	const double anch = ANCHURA * ((double)f[k_ow] * pb + (double)f[k_dw] * (1.0 - pb));
 	const double off_x = MEDIO_LARGO * lado * (((double)f[k_oh] * 2.0 - 1.0) * pb + ((double)f[k_dh] * 2.0 - 1.0) * (1.0 - pb));
 	const double side_f = os * pb + ds * (1.0 - pb);
 	const double sf = pb * 2.0 - 1.0;
-	const double side_x = 0.2 * sf * -lado * MEDIO_LARGO + 0.8 * -(double)e[k_lpm] * MEDIO_LARGO;
+	const double side_x = 0.2 * sf * -lado * MEDIO_LARGO + 0.8 * -lpm * MEDIO_LARGO;
 	double cx = clampd(bx * (1.0 - side_f) + side_x * side_f + off_x, -MEDIO_LARGO, MEDIO_LARGO);
 	double cy = clampd(by, -MEDIO_ANCHO, MEDIO_ANCHO);
 	cx *= (1.0 - prof) * 0.95 + 0.05;
@@ -118,7 +109,6 @@ Vector2 DinastiaNativo::league_posicion_formacion(const Dictionary &e) const {
 	const double delante = cx + prof * MEDIO_LARGO * -lado;
 	const double bajo = cy - anch * MEDIO_ANCHO;
 	const double alto = cy + anch * MEDIO_ANCHO;
-	const double trampa = e[k_trampa];
 	if (atras * lado > trampa * lado) {
 		atras = trampa;
 	}
@@ -134,9 +124,40 @@ Vector2 DinastiaNativo::league_posicion_formacion(const Dictionary &e) const {
 	micro_f *= 0.2 + 0.8 * (std::pow(msb, 0.8) * pb + std::pow(1.0 - msb, 0.6) * (1.0 - pb));
 	const double mf = ((double)f[k_om] * pb + (double)f[k_dm] * (1.0 - pb)) * 0.7 + normalizado((bx / MEDIO_LARGO) * -lado, -0.8, 0.8) * 0.3;
 	const double mfs = (double)f[k_oms] * pb + (double)f[k_dms] * (1.0 - pb);
-	const Vector2 forma = e[k_forma];
 	const Vector2 r = formacion_adaptada(forma, lado, atras, delante, bajo, alto, by, y_fuerza, micro, micro_f, mf, mfs);
 	return Vector2((float)clampd((double)r.x, -MEDIO_LARGO, MEDIO_LARGO), (float)clampd((double)r.y, -MEDIO_ANCHO, MEDIO_ANCHO));
+}
+
+// `LeagueEquipo.media_rapida`
+Vector2 media_rapida(const PackedVector2Array &acum, double ms) {
+	const int64_t total = acum.size() - 1;
+	int64_t quiero = (int64_t)(ms / 10.0);
+	if (quiero < 1) {
+		quiero = 1;
+	}
+	const int64_t n = total < quiero ? total : quiero;
+	if (n <= 0) {
+		return Vector2();
+	}
+	return (acum[total] - acum[total - n]) / (float)n;
+}
+
+} // namespace
+
+// `LeagueNucleo.posicion_formacion(e)`; `e` TIENE que traer «mezcla».
+Vector2 DinastiaNativo::league_posicion_formacion(const Dictionary &e) const {
+	static const StringName k_puesto("puesto"), k_lado("lado"), k_of("ofensividad"), k_mezcla("mezcla"), k_bx("balon_x_lento"), k_by("balon_y_lento"), k_foco("foco"), k_pd("posesion_desvanecida"),
+			k_b3("balon_3s"), k_b2("balon_2s"), k_lpm("lado_posesion_medio"), k_trampa("trampa_x"), k_forma("forma");
+	return posicion_nucleo(e[k_puesto], e[k_lado], e[k_of], e[k_mezcla], e[k_bx], e[k_by], e[k_foco], e[k_pd], e[k_b3], e[k_b2], e[k_lpm], e[k_trampa], e[k_forma]);
+}
+
+// El cálculo de `MotorLeague._destino_forma` hasta antes del retoque de la línea de la pizarra: urgencia, las cuatro medias del historial (`acum` = el del equipo local) y `posicion_formacion`.
+Vector2 DinastiaNativo::league_destino_forma(const PackedVector2Array &acum, const Vector2 &foco, const Vector2 &yo, const Vector2 &forma, const String &puesto, double lado, double posesion_desvanecida,
+		double ofensividad, double lado_medio, double trampa_x, const Dictionary &mezcla) const {
+	const double urg = 1.0 - normalizado((double)(foco - yo).length(), 2.0, 30.0);
+	const double bx = (double)media_rapida(acum, 3500.0 * (1.0 - urg * 0.7)).x;
+	const double by = (double)media_rapida(acum, 4000.0 * (1.0 - urg * 0.5)).y;
+	return posicion_nucleo(puesto, lado, ofensividad, mezcla, bx, by, foco, posesion_desvanecida, media_rapida(acum, 3000.0), media_rapida(acum, 2000.0), lado_medio, trampa_x, forma);
 }
 
 // `LeagueEquipo.acumular`: las sumas acumuladas del historial del balón (n + 1 entradas).

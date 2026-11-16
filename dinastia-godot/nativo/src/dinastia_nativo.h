@@ -63,6 +63,8 @@ public:
 	Array balon_avanzar(const Vector3 &p0, const Vector3 &vel0, const Vector3 &giro0, double resto0, double delta, const Dictionary &cfg, const PackedFloat64Array &k) const;
 	// La colocación y el historial de League (16-11, nativo/src/league_equipo_nativo.cpp): `LeagueNucleo.posicion_formacion` (con «mezcla» en `e`), `LeagueEquipo.acumular` y `LeagueEquipo.media_f`.
 	Vector2 league_posicion_formacion(const Dictionary &e) const;
+	Vector2 league_destino_forma(const PackedVector2Array &acum, const Vector2 &foco, const Vector2 &yo, const Vector2 &forma, const String &puesto, double lado, double posesion_desvanecida,
+			double ofensividad, double lado_medio, double trampa_x, const Dictionary &mezcla) const;
 	PackedVector2Array league_acumular(const PackedVector2Array &hist) const;
 	double league_media_f(const PackedFloat32Array &hist, double ms) const;
 	// `MotorLeague._mas_cercano_al(punto, local, [], 1)`: índice en `jugadores` del más cercano de un equipo, o -1.

@@ -29,6 +29,7 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("balon_prediccion", "bp0", "bv0", "cfg", "hay_poseedor", "vel_poseedor", "total", "dt", "radio"), &DinastiaNativo::balon_prediccion);
 	ClassDB::bind_method(D_METHOD("balon_avanzar", "p0", "vel0", "giro0", "resto0", "delta", "cfg", "k"), &DinastiaNativo::balon_avanzar);
 	ClassDB::bind_method(D_METHOD("league_posicion_formacion", "e"), &DinastiaNativo::league_posicion_formacion);
+	ClassDB::bind_method(D_METHOD("league_destino_forma", "acum", "foco", "yo", "forma", "puesto", "lado", "posesion_desvanecida", "ofensividad", "lado_medio", "trampa_x", "mezcla"), &DinastiaNativo::league_destino_forma);
 	ClassDB::bind_method(D_METHOD("league_acumular", "hist"), &DinastiaNativo::league_acumular);
 	ClassDB::bind_method(D_METHOD("league_media_f", "hist", "ms"), &DinastiaNativo::league_media_f);
 	ClassDB::bind_method(D_METHOD("league_movimiento_campo", "campo", "actual", "amortigua"), &DinastiaNativo::league_movimiento_campo);

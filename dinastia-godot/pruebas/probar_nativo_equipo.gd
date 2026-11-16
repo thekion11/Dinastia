@@ -126,6 +126,44 @@ static func probar(nat: Object) -> Dictionary:
 	if dis_p > 0:
 		fallos.append("apoyo distinto en %d de %d casos" % [dis_p, k])
 	textos.append("campo de fuerzas: GDScript %.1f µs, C++ %.1f µs; apoyo ofensivo: GDScript %.1f µs, C++ %.1f µs por llamada" % [tc2[0] / float(k), tc2[1] / float(k), tp2[0] / float(k), tp2[1] / float(k)])
+	## 3b. `_destino_forma` entero (urgencia, medias del historial y colocación) con dos equipos y un historial real.
+	var dis_d := 0
+	var td := [0, 0]
+	var dd := 1500
+	var eq0 := LeagueEquipo.new(1.0)
+	var eq1 := LeagueEquipo.new(-1.0)
+	for caso in dd:
+		if caso % 250 == 0:
+			eq0.balon_hist.clear()
+			eq0.lado_hist.clear()
+		for _i in rr.randi_range(0, 120):
+			eq0.balon_hist.append(Vector2(rr.randf_range(-52, 52), rr.randf_range(-34, 34)))
+		eq0.acumular_gd()
+		for q: LeagueEquipo in [eq0, eq1]:
+			q.posesion_desvanecida = rr.randf_range(0.5, 1.5)
+			q.trampa_x = rr.randf_range(-52, 52)
+			q.contra = rr.randf()
+			if caso % 5 == 0:
+				q.viva = LeagueNucleo.tactica_viva({"od": rr.randf(), "ow": rr.randf(), "om": rr.randf(), "os": rr.randf()})
+		var eq: LeagueEquipo = eq0 if caso % 2 == 0 else eq1
+		var foco2 := Vector2(rr.randf_range(-52, 52), rr.randf_range(-34, 34))
+		var yo2 := Vector2(rr.randf_range(-52, 52), rr.randf_range(-34, 34)) if caso % 7 != 0 else foco2
+		var forma2 := Vector2(rr.randf_range(-1, 1), rr.randf_range(-1, 1))
+		var pst: String = PUESTOS[caso % PUESTOS.size()]
+		var ofe := rr.randf()
+		var lm := rr.randf_range(-1, 1)
+		var x0 := Time.get_ticks_usec()
+		var rg2 := LeagueEquipo.destino_forma_gd(eq0, eq, foco2, yo2, forma2, pst, ofe, lm)
+		var x1 := Time.get_ticks_usec()
+		var rc2: Vector2 = nat.league_destino_forma(eq0.acum, foco2, yo2, forma2, pst, eq.lado, eq.posesion_desvanecida, ofe, lm, eq.trampa_x, eq.mezcla_de(pst))
+		var x2 := Time.get_ticks_usec()
+		td[0] += x1 - x0
+		td[1] += x2 - x1
+		if var_to_bytes(rg2) != var_to_bytes(rc2):
+			dis_d += 1
+	if dis_d > 0:
+		fallos.append("destino de formación distinto en %d de %d casos" % [dis_d, dd])
+	textos.append("destino de formación entero: GDScript %.1f µs, C++ %.1f µs por llamada" % [td[0] / float(dd), td[1] / float(dd)])
 	## 4. El más cercano a un punto (con nodos de verdad, dos equipos, empates exactos incluidos).
 	var raiz := Node3D.new()
 	var lista: Array = []
