@@ -226,29 +226,23 @@ static func _barra(rotulo: String, valor: int, col: Color) -> Control:
 	h.add_child(b)
 	return h
 
-## Lo último que llegó a la bandeja (titular y texto, como la noticia con cita del PES); sin correo, lo último del registro.
+## Lo último que llegó a la bandeja (titular y texto, como la noticia con cita del PES). Solo noticias de verdad: los avisos
+## técnicos del registro (p. ej. «la última vez el juego anotó N errores») no se pintan aquí (siguen en «Lo que va pasando»).
 static func _noticias(p: Principal, acento: Color) -> Control:
 	var tc := TableroInicio.tarjeta(Idiomas.t("Noticias"), acento, func() -> void: TableroInicio.abrir(p, "Correo"))
 	var v: VBoxContainer = tc[1]
 	var bandeja: Array = p.get("_bandeja") if p.get("_bandeja") != null else []
-	if not bandeja.is_empty():
-		var n: Dictionary = bandeja[0]
-		var t := TableroInicio.etiqueta(String(n.get("titulo", "")), 16, Color.WHITE)
-		t.clip_text = true
-		v.add_child(t)
-		var cu := TableroInicio.etiqueta("«%s»" % String(n.get("cuerpo", "")).strip_edges(), 13, Color(1, 1, 1, 0.72))
-		cu.clip_text = true
-		v.add_child(cu)
+	if bandeja.is_empty():
+		v.add_child(TableroInicio.etiqueta(Idiomas.t("Sin noticias por ahora"), 15, Tema.TEXTO))
+		v.add_child(TableroInicio.etiqueta(Idiomas.t("Lo que pase en el club y en la liga llegará aquí."), 12, Tema.SUAVE))
 		return _fin_noticias(tc[0], bandeja, acento)
-	var lineas: Array = []
-	if p._registro != null:
-		for l: String in p._registro.get_parsed_text().split("\n", false):
-			if l.strip_edges() != "":
-				lineas.append(l.strip_edges())
-	for i in range(lineas.size() - 1, maxi(lineas.size() - 3, 0) - 1, -1):
-		var l := TableroInicio.etiqueta(String(lineas[i]), 15 if i == lineas.size() - 1 else 12, Color.WHITE if i == lineas.size() - 1 else Tema.SUAVE)
-		l.clip_text = true
-		v.add_child(l)
+	var n: Dictionary = bandeja[0]
+	var t := TableroInicio.etiqueta(String(n.get("titulo", "")), 16, Color.WHITE)
+	t.clip_text = true
+	v.add_child(t)
+	var cu := TableroInicio.etiqueta("«%s»" % String(n.get("cuerpo", "")).strip_edges(), 13, Color(1, 1, 1, 0.72))
+	cu.clip_text = true
+	v.add_child(cu)
 	return _fin_noticias(tc[0], bandeja, acento)
 
 static func _fin_noticias(b: Control, bandeja: Array, acento: Color) -> Control:

@@ -52,7 +52,9 @@ func _al_entrar(n: Node) -> void:
 			(n as Control).draw.connect(_ajustar.bind(n), CONNECT_ONE_SHOT)
 
 func _ajustar(c: Control) -> void:
-	if not is_instance_valid(c) or not c.is_inside_tree() or not c.has_theme_font_size_override("font_size"):
+	## (16-11, frente 1) También los que toman la letra del tema sin cambiarla (14 en Label, 12-15 heredados): antes solo se ajustaban los que
+	## la fijaban a mano y en Mi plantel, Táctica y Club quedaban 4-6 tamaños (`auditoria_estetica_menus`).
+	if not is_instance_valid(c) or not c.is_inside_tree():
 		return
 	if not is_equal_approx(float(_p.get("_escala_texto")), 1.0):
 		return

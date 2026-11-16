@@ -17,6 +17,10 @@ const SEP := 10
 
 ## La pestaña elegida sobrevive a los repintados del central.
 static var pestana := 0
+## (16-11) El color del MUNDO de juego (`ColorMundo`: Dirigir verde, Mandar oro, Retos naranja) para las pestañas y el filo de las tarjetas;
+## el foco sigue con el color del club. Lo fija `pintar`.
+static var color_mundo := ColorMundo.DIRIGIR
+static var fondo_mundo := Color(0.03, 0.06, 0.045, 0.86)
 
 ## (Dirección del equipo / Información del club) Tarjetas que abren un submenú del panel lateral, por su rótulo en
 ## `MenusLaterales` (el primero que lo tenga). La primera es la grande; luego dos columnas de dos; luego la fila baja.
@@ -38,9 +42,11 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 	cuerpo.add_theme_constant_override("separation", SEP)
 	mos.add_child(cuerpo)
 	var acento := p._con_contraste(p._acento_de(c))
+	color_mundo = ColorMundo.acento(p.mundo)
+	fondo_mundo = ColorMundo.fondo_tarjeta(p.mundo)
 	var botones: Array[Button] = []
 	for i in PESTANAS.size():
-		var b := _boton_pestana(Idiomas.t(String(PESTANAS[i])).to_upper(), acento)
+		var b := _boton_pestana(Idiomas.t(String(PESTANAS[i])).to_upper(), color_mundo)
 		barra.add_child(b)
 		botones.append(b)
 		b.pressed.connect(func() -> void:
@@ -51,11 +57,27 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 	_marcar(botones)
 	_cuerpo(p, cuerpo, c, liga, dias_al_partido, acento)
 
+## L1/R1 en el Inicio: la pestaña de al lado del mosaico (pulsa su botón: repinta y marca). Falso si no hay mosaico a la vista.
+static func saltar(p: Principal, d: int) -> bool:
+	var mos := p._lista_inicio.get_node_or_null("Mosaico") if p._lista_inicio != null else null
+	if mos == null or not (mos as Control).is_visible_in_tree():
+		return false
+	var barra := mos.get_child(0)
+	var i := (pestana + d + PESTANAS.size()) % PESTANAS.size()
+	var b := barra.get_child(i) as Button
+	b.button_pressed = true
+	b.pressed.emit()
+	return true
+
 ## La tabla (izquierda) y la columna derecha del central dejan su sitio al mosaico. La derecha se oculta solo mientras
 ## está en el central: el menú Plantel se la lleva como columna de la ficha y la vuelve a mostrar (`PantallaMenu._ver_ficha`).
 static func ocultar_columnas(p: Principal) -> void:
 	if p._col_derecha == null or p._lista_tabla == null:
 		return
+	compactar_cabecera(p)
+	var raiz := p._despacho.get_parent() if p._despacho != null else null
+	if raiz is Container and raiz.get_node_or_null("BarraAyudas") == null:
+		BarraAyudas.montar(p, raiz)   ## la barra de abajo: teclas, mensajes, ayuda y reloj
 	var fila := p._col_derecha.get_parent()
 	if fila == null or not (fila is BoxContainer):   ## de pie (`DisenoVertical.apilar`) es una VBoxContainer
 		return
@@ -87,6 +109,33 @@ static func _entrada(cuerpo: VBoxContainer) -> void:
 		tw.tween_property(b, "modulate:a", 1.0, 0.18)
 		i += 1
 
+## (16-11, frente 1) LA CABECERA MÁS BAJA: la tira de días sube a la fila de Calendario / Un día / Hito / Buscar (con los días
+## abreviados: «Sáb 14»), y el mosaico gana ese renglón. De pie no: allí cada fila ya se desliza sola.
+static func compactar_cabecera(p: Principal) -> void:
+	if DisenoVertical.activo() or p._fila_dias == null or p._botones == null or p._fila_dias.get_parent() == p._botones:
+		return
+	var padre := p._fila_dias.get_parent()
+	if padre == null:
+		return
+	padre.remove_child(p._fila_dias)
+	p._botones.add_child(p._fila_dias)
+	var cal := -1
+	for i in p._botones.get_child_count():
+		var h := p._botones.get_child(i)
+		if h is MenuButton:
+			cal = i
+			(h as Control).custom_minimum_size.x = 56.0 if EscalaMovil.es_tactil() else 132.0   ## táctil: solo el 📅
+			if EscalaMovil.es_tactil():
+				(h as MenuButton).text = "📅"
+			(h as Control).size_flags_horizontal = Control.SIZE_FILL
+	p._botones.move_child(p._fila_dias, cal + 1)
+	p._fila_dias.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	p._fila_dias.add_theme_constant_override("separation", 3)
+	## En el teléfono tumbado (480 px de alto) la línea de estado se oculta: liga, jornada, sueldos, media, objetivo, confianza y
+	## socios ya están en las tarjetas del mosaico (partido, cuentas, plantel, oficina del DT). Sigue escribiéndose.
+	if EscalaMovil.es_tactil() and p._sub != null:
+		p._sub.visible = false
+
 static func _marcar(botones: Array[Button]) -> void:
 	for i in botones.size():
 		botones[i].button_pressed = i == pestana
@@ -100,9 +149,9 @@ static func _cuerpo(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, di
 		_: MosaicoTarjetas.avanzar(p, cuerpo, c, liga, dias, acento)
 
 ## Coloca el mosaico: `grande` (2 de ancho), `altas` (columnas de 1 o 2 tarjetas) y `bajas` (la fila de abajo).
-## De pie (teléfono vertical) todo baja a dos columnas.
+## En el teléfono (de pie o tumbado) todo baja a dos columnas.
 static func colocar(cuerpo: VBoxContainer, grande: Control, altas: Array, bajas: Array) -> void:
-	if DisenoVertical.activo():
+	if DisenoVertical.activo() or EscalaMovil.es_tactil():   ## en el teléfono (de pie o tumbado) la letra es grande: dos columnas, sin recortes
 		grande.custom_minimum_size.y = ALTO_ALTA
 		cuerpo.add_child(grande)
 		var g := GridContainer.new()
@@ -146,7 +195,9 @@ static func colocar(cuerpo: VBoxContainer, grande: Control, altas: Array, bajas:
 
 ## Una TARJETA del mosaico: un botón entero (se pulsa, recibe el foco del mando), su contenido en `contenido` (lo que
 ## devuelve, un VBox) y el NOMBRE abajo a la izquierda, en mayúsculas, como en el PES. `al_pulsar` abre su pantalla.
-static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo := Color(0.03, 0.06, 0.045, 0.86)) -> Array:
+static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo := Color(0, 0, 0, 0)) -> Array:
+	if fondo.a <= 0.0:
+		fondo = fondo_mundo
 	var b := Button.new()
 	b.clip_contents = true
 	b.focus_mode = Control.FOCUS_ALL
@@ -171,7 +222,7 @@ static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo :=
 	for k: String in ["hover", "focus", "pressed", "hover_pressed"]:
 		b.add_theme_stylebox_override(k, enc)
 	var filo := ColorRect.new()   ## el filo de color arriba, como las pestañas de cartón de las tarjetas del PES
-	filo.color = Color(acento, 0.85)
+	filo.color = Color(color_mundo, 0.85)   ## el filo, del color del mundo; el foco (abajo), del club
 	filo.anchor_right = 1.0
 	filo.offset_left = 10; filo.offset_right = -10; filo.offset_top = 0; filo.offset_bottom = 3
 	b.add_child(filo)
@@ -182,7 +233,7 @@ static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo :=
 	b.add_child(v)
 	var pie := Label.new()   ## el nombre de la tarjeta, abajo
 	pie.text = nombre.to_upper()
-	pie.add_theme_font_size_override("font_size", Tema.letra(12))
+	pie.add_theme_font_size_override("font_size", Tema.letra(11))
 	pie.add_theme_color_override("font_color", Color(1, 1, 1, 0.92))
 	pie.anchor_top = 1.0; pie.anchor_bottom = 1.0; pie.anchor_right = 1.0
 	pie.offset_left = 14; pie.offset_right = -30; pie.offset_top = -24; pie.offset_bottom = -4
@@ -190,7 +241,7 @@ static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo :=
 	b.add_child(pie)
 	var flecha := Label.new()
 	flecha.text = "▸"
-	flecha.add_theme_font_size_override("font_size", Tema.letra(14))
+	flecha.add_theme_font_size_override("font_size", Tema.letra(13))
 	flecha.add_theme_color_override("font_color", acento)
 	flecha.anchor_left = 1.0; flecha.anchor_top = 1.0; flecha.anchor_right = 1.0; flecha.anchor_bottom = 1.0
 	flecha.offset_left = -26; flecha.offset_top = -25; flecha.offset_right = -10; flecha.offset_bottom = -4
@@ -210,7 +261,7 @@ static func cerrar(b: Control) -> void:
 static func etiqueta(texto: String, tam: int, col: Color) -> Label:
 	var l := Label.new()
 	l.text = texto
-	l.add_theme_font_size_override("font_size", Tema.letra(tam))
+	l.add_theme_font_size_override("font_size", Tema.letra(EscalaTipografica.nivel(tam)))   ## los tres tamaños de la escala (11, 13, 16) y los héroes ≥ 18
 	l.add_theme_color_override("font_color", col)
 	return l
 

@@ -181,7 +181,9 @@ func _avisar_si_respaldo() -> void:
 	var reg := p.get_node_or_null("/root/Registro")
 	if reg != null and int(reg.errores_previos) > 0:
 		var donde := Idiomas.t("mándalo a %s") % String(reg.CONTACTO) if String(reg.CONTACTO) != "" else Idiomas.t("guárdalo para avisar")
-		p._escribir("[color=#c9a227]%s[/color]" % (Idiomas.t("La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.") % [int(reg.errores_previos), donde]))
+		var n_err := int(reg.errores_previos)   ## (16-11) «1 error», no «1 errores»
+		var frase := Idiomas.t("La última vez el juego anotó 1 error. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.") % donde if n_err == 1 			else Idiomas.t("La última vez el juego anotó %d errores. Si algo falló, copia el informe en Ajustes → Partida → «Copiar informe de fallos» y %s.") % [n_err, donde]
+		p._escribir("[color=#c9a227]%s[/color]" % frase)
 		reg.errores_previos = 0
 
 ## Si la última vez se cerró el juego con un partido dirigido a medias, se

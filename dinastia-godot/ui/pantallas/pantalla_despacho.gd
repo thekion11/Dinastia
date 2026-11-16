@@ -416,8 +416,22 @@ func _pintar_despacho() -> void:
 		var idx := i
 		b.pressed.connect(func() -> void:
 			p._aviso_abierto = idx
+			p._aviso_plegado = false
 			_pintar_despacho())
 		fila.add_child(b)
+	## (16-11, frente 1) Plegado por defecto, como una notificación: la fila dice cuántos y cuáles; tocar uno lo abre.
+	var plegar := LinkButton.new()   ## LinkButton y no Button: no cuenta como píldora de asunto
+	plegar.text = Idiomas.t("▾ Ver") if p._aviso_plegado else Idiomas.t("▴ Plegar")
+	plegar.underline = LinkButton.UNDERLINE_MODE_NEVER
+	plegar.focus_mode = Control.FOCUS_ALL
+	plegar.add_theme_font_size_override("font_size", Tema.letra(11))
+	plegar.add_theme_color_override("font_color", Tema.oro())
+	plegar.pressed.connect(func() -> void:
+		p._aviso_plegado = not p._aviso_plegado
+		_pintar_despacho())
+	fila.add_child(plegar)
+	if p._aviso_plegado:
+		return
 
 	match String((asuntos[p._aviso_abierto] as Dictionary)["id"]):
 		"agente": _pintar_exigencia_agente(p.mundo.cantera.exigencia)
