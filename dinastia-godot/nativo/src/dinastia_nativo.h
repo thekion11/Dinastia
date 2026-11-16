@@ -19,6 +19,7 @@
 #include <godot_cpp/variant/quaternion.hpp>
 #include <godot_cpp/variant/packed_float32_array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
+#include <godot_cpp/variant/packed_vector2_array.hpp>
 #include <godot_cpp/variant/packed_vector3_array.hpp>
 
 namespace godot {
@@ -56,6 +57,27 @@ public:
 	// [válido, velocidad, va_atrás, distancia_al_balón] para el bucle de animación, que sigue en GDScript. `coste_aguante` = [local, visitante] (el coste táctico del sprint).
 	PackedFloat64Array mover_jugadores_fisica(const Array &jugadores, const Vector3 &bpos, double delta, double t, bool hay_poseedor, const Variant &poseedor_id, bool poseedor_local, double a_max_base,
 			double ancho, double largo, double giro_rapido, const PackedFloat64Array &coste_aguante) const;
+	// El balón del motor de League (16-11, nativo/src/balon_nativo.cpp): `balon_prediccion` = el bucle de predicción de `MotorLeague._estado_sin_balon` (ya en el sistema de League, `_ls3`);
+	// `balon_avanzar` = el bucle de pasos de 10 ms de `MotorLeague._mover_balon` (devuelve [p, vel, giro, resto]). Ambos llaman a la copia de `LeagueNucleo.fuerzas_balon`.
+	PackedVector3Array balon_prediccion(const Vector3 &bp0, const Vector3 &bv0, const Dictionary &cfg, bool hay_poseedor, const Vector3 &vel_poseedor, int64_t total, double dt, double radio) const;
+	Array balon_avanzar(const Vector3 &p0, const Vector3 &vel0, const Vector3 &giro0, double resto0, double delta, const Dictionary &cfg, const PackedFloat64Array &k) const;
+	// La colocación y el historial de League (16-11, nativo/src/league_equipo_nativo.cpp): `LeagueNucleo.posicion_formacion` (con «mezcla» en `e`), `LeagueEquipo.acumular` y `LeagueEquipo.media_f`.
+	Vector2 league_posicion_formacion(const Dictionary &e) const;
+	Vector2 league_destino_forma(const PackedVector2Array &acum, const Vector2 &foco, const Vector2 &yo, const Vector2 &forma, const String &puesto, double lado, double posesion_desvanecida,
+			double ofensividad, double lado_medio, double trampa_x, const Dictionary &mezcla) const;
+	PackedVector2Array league_acumular(const PackedVector2Array &hist) const;
+	double league_media_f(const PackedFloat32Array &hist, double ms) const;
+	// `MotorLeague._mas_cercano_al(punto, local, [], 1)`: índice en `jugadores` del más cercano de un equipo, o -1.
+	int64_t league_mas_cercano(const Array &jugadores, const Vector2 &punto, bool local) const;
+	// Piezas de `MotorLeague._estado_sin_balon` / `_estado_league`: el más cercano de todos (por la raíz), el índice por id y la línea del penúltimo (`LeagueEquipo.linea_penultimo` con sus `xs`).
+	int64_t league_mas_cercano_todos(const Array &jugadores, const Vector2 &punto) const;
+	void league_indexar(const Array &jugadores, Dictionary destino) const;
+	double league_linea_penultimo(const Array &jugadores, bool local, bool con_vel, double lado_, double balon_x) const;
+	// `LeagueToques.alcanza`: la animación (de `por_tipo`, el catálogo del tipo) que antes toca el balón previsto, o {}. `r0`/`r1` = RADIO del tipo; `bono_vel` = 1 − normalizado(vel).
+	Dictionary league_alcanza(const Dictionary &por_tipo, double r0, double r1, double bono_vel, const Vector2 &pos, const Vector2 &mirada, double vel, const PackedVector3Array &pred) const;
+	// `LeagueNucleo.movimiento_campo` y `LeagueSinBalon.apoyo` (el apoyo ofensivo sin balón, con su campo de fuerzas).
+	Vector2 league_movimiento_campo(const Array &campo, const Vector2 &actual, double amortigua) const;
+	Vector2 league_apoyo(const Dictionary &e) const;
 	// `Partido.simular_minuto()` x 90 de un cruce de la IA que nadie mira (nucleo/partido_rapido.gd): mismo orden de llamadas al azar; los sucesos raros vuelven a GDScript (`ayuda`).
 	void simular_90(Object *p, Object *ayuda, const Dictionary &cfg, const Ref<RandomNumberGenerator> &rng, bool azar_propio) const;
 	// `Partido._cerrar_notas()` (nucleo/partido.gd): nota final, forma y partidos de cada jugador del cruce, con la misma tirada de azar por jugador (`rng` = `Azar._rng`).
@@ -73,6 +95,13 @@ public:
 	// El bucle de huesos de `LeagueAuto.construir`: rellena `sal` mezclando `a1` y `a2` en `cuadros` (centésimas) con `mezclas` ([bias, orig] por cuadro) y gira la pelvis.
 	void league_mezclar(const Ref<Animation> &sal, const Ref<Animation> &a1, const Ref<Animation> &a2, const PackedInt32Array &cuadros, const PackedFloat64Array &mezclas,
 			double ang, const Quaternion &giro_padre) const;
+	// --- portador (agente B) ---
+	// La decisión con balón de League (16-11, nativo/src/league_portador_nativo.cpp): `LeagueNucleo.situacion`, `regate` y `decidir` (con `zona_tiro` = `LeagueNucleo.ZONA_TIRO`).
+	Array league_situacion(const Vector2 &pos, const Vector2 &mov, double lado, const Array &rivales) const;
+	Array league_regate(const Vector2 &pos, const Vector2 &mov, const Vector2 &mirada, double lado, const Array &cercanos, double mente, double ofensivo, double iman) const;
+	Dictionary league_decidir(const Dictionary &yo, const Array &companeros, const Array &rivales, const Vector2 &mov_balon, double posesion, const Ref<RandomNumberGenerator> &azar, int64_t muestras,
+			double zona_tiro) const;
+	// --- fin portador (agente B) ---
 	int64_t elegir_ponderado(const Array &once, const Dictionary &grupo_de, const Dictionary &bases, double base_def, const String &atr, const PackedFloat64Array &pesos_rol, double r_unit, Object *excluir) const;
 };
 

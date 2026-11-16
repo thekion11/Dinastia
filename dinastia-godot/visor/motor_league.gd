@@ -114,17 +114,12 @@ func _equipo_con_balon() -> int:
 	return -1
 
 func _mas_cercano_al(punto: Vector2, local: bool, excluir: Array, cuantos: int) -> Array:
+	var nat := Nativo.obj() if cuantos == 1 and excluir.is_empty() else null
+	if nat != null and nat.has_method("league_mas_cercano"):   ## (16-11, paso a C++) misma pasada que la de abajo
+		var k: int = nat.league_mas_cercano(jugadores, punto, local)
+		return [] if k < 0 else [jugadores[k]]
 	if cuantos == 1:
-		## (15-11, FPS) el caso de siempre (el más cercano): una pasada buscando el mínimo, sin armar ni ordenar la lista (86 → ~25 µs por paso).
-		var mejor := INF
-		var sel: Dictionary = {}
-		for q: Dictionary in jugadores:
-			if bool(q["es_local"]) == local and (excluir.is_empty() or not excluir.has(q)):
-				var d := (ls(pos(q)) - punto).length_squared()
-				if d < mejor:
-					mejor = d
-					sel = q
-		return [] if sel.is_empty() else [sel]
+		return _mas_cercano_uno_gd(punto, local, excluir)
 	var c: Array = []
 	for q: Dictionary in jugadores:
 		if bool(q["es_local"]) == local and not excluir.has(q):
@@ -133,34 +128,20 @@ func _mas_cercano_al(punto: Vector2, local: bool, excluir: Array, cuantos: int) 
 	return c.slice(0, cuantos).map(func(x: Array) -> Dictionary: return x[1])
 
 func _estado_sin_balon(_delta: float) -> void:
-	_ls_por_id.clear()
-	for q: Dictionary in jugadores:
-		_ls_por_id[String(q["id"])] = q
+	_indexar_jugadores(_ls_por_id)
 	## Balón previsto (L Ball::Predict): con la física portada, o con el portador.
-	var bp := balon.position
-	var bv := vel_balon
-	var cfg := cfg_balon
-	_ls_pred3.resize(PRED_TOTAL + 1)
-	_ls_pred3[0] = _ls3(bp)
-	for k in range(1, PRED_TOTAL + 1):
-		if poseedor.is_empty():
-			var r := LeagueNucleo.fuerzas_balon(bp, bv, cfg, 0.01, R)
-			bp = r[0]; bv = r[1]
-			bp += bv * 0.01
-		else:
-			bp += (poseedor["vel"] as Vector3) * 0.01
-		_ls_pred3[k] = _ls3(bp)
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("balon_prediccion"):   ## (16-11, paso a C++) misma cuenta que `prediccion_gd`
+		_ls_pred3 = nat.balon_prediccion(balon.position, vel_balon, cfg_balon, not poseedor.is_empty(), poseedor["vel"] if not poseedor.is_empty() else Vector3.ZERO, PRED_TOTAL, 0.01, R)
+	else:
+		_ls_pred3 = prediccion_gd(balon.position, vel_balon, cfg_balon, not poseedor.is_empty(), poseedor["vel"] if not poseedor.is_empty() else Vector3.ZERO, PRED_TOTAL)
 	for objetivo_ms: int in PRED_MS:
 		var v3 := _ls_pred3[objetivo_ms / 10]
 		_ls_pred[objetivo_ms] = Vector2(v3.x, v3.y)
 	var b0 := ls(balon.position)
-	var mejor := INF
 	_ls_designado = poseedor
 	if poseedor.is_empty():
-		for q: Dictionary in jugadores:
-			var d := (ls(pos(q)) - b0).length()
-			if d < mejor:
-				mejor = d; _ls_designado = q
+		_ls_designado = _mas_cercano_a_todos(b0)
 	var con_balon := _equipo_con_balon()
 	for i in 2:
 		var local := i == 0
@@ -169,11 +150,7 @@ func _estado_sin_balon(_delta: float) -> void:
 		var e: LeagueEquipo = equipos[i]
 		var tiene := con_balon == i
 		## Línea del fuera de juego del RIVAL a 240 ms (L AI_GetOffsideLine(opp, 240)): no pasarla al apoyar.
-		var xs := PackedFloat32Array()
-		for q: Dictionary in jugadores:
-			if bool(q["es_local"]) != local:
-				xs.append(ls(pos(q)).x + ls(q["vel"]).x * 0.24)
-		_ls_linea_rival[i] = LeagueEquipo.linea_penultimo(xs, -e.lado, b0.x)
+		_ls_linea_rival[i] = _linea_penultimo(not local, true, -e.lado, b0.x)
 		if t >= float(_ls_t_marca[i]):   ## L CalculateManMarking cada 0,4 s, escalonado por equipo
 			_ls_t_marca[i] = t + 0.4
 			_ls_marca[i] = _calcular_marcajes(local, e.lado, b0)

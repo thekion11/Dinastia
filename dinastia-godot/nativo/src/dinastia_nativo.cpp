@@ -26,9 +26,27 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("pcg_coincide"), &DinastiaNativo::pcg_coincide);
 	ClassDB::bind_method(D_METHOD("simular_90", "p", "ayuda", "cfg", "rng", "azar_propio"), &DinastiaNativo::simular_90);
 	ClassDB::bind_method(D_METHOD("medias_linea", "once", "grupo_de", "lateral_de", "banda_de", "impulsos", "minuto", "arenga_mult", "ley_ex", "ex_de_mi_club", "ex_id"), &DinastiaNativo::medias_linea);
+	ClassDB::bind_method(D_METHOD("balon_prediccion", "bp0", "bv0", "cfg", "hay_poseedor", "vel_poseedor", "total", "dt", "radio"), &DinastiaNativo::balon_prediccion);
+	ClassDB::bind_method(D_METHOD("balon_avanzar", "p0", "vel0", "giro0", "resto0", "delta", "cfg", "k"), &DinastiaNativo::balon_avanzar);
+	ClassDB::bind_method(D_METHOD("league_posicion_formacion", "e"), &DinastiaNativo::league_posicion_formacion);
+	ClassDB::bind_method(D_METHOD("league_destino_forma", "acum", "foco", "yo", "forma", "puesto", "lado", "posesion_desvanecida", "ofensividad", "lado_medio", "trampa_x", "mezcla"), &DinastiaNativo::league_destino_forma);
+	ClassDB::bind_method(D_METHOD("league_acumular", "hist"), &DinastiaNativo::league_acumular);
+	ClassDB::bind_method(D_METHOD("league_media_f", "hist", "ms"), &DinastiaNativo::league_media_f);
+	ClassDB::bind_method(D_METHOD("league_movimiento_campo", "campo", "actual", "amortigua"), &DinastiaNativo::league_movimiento_campo);
+	ClassDB::bind_method(D_METHOD("league_apoyo", "e"), &DinastiaNativo::league_apoyo);
+	ClassDB::bind_method(D_METHOD("league_mas_cercano", "jugadores", "punto", "local"), &DinastiaNativo::league_mas_cercano);
+	ClassDB::bind_method(D_METHOD("league_mas_cercano_todos", "jugadores", "punto"), &DinastiaNativo::league_mas_cercano_todos);
+	ClassDB::bind_method(D_METHOD("league_indexar", "jugadores", "destino"), &DinastiaNativo::league_indexar);
+	ClassDB::bind_method(D_METHOD("league_linea_penultimo", "jugadores", "local", "con_vel", "lado", "balon_x"), &DinastiaNativo::league_linea_penultimo);
+	ClassDB::bind_method(D_METHOD("league_alcanza", "por_tipo", "r0", "r1", "bono_vel", "pos", "mirada", "vel", "pred"), &DinastiaNativo::league_alcanza);
 	ClassDB::bind_method(D_METHOD("league_elegir", "grupos", "sp", "rel", "deseada", "parado", "mirar", "pie"), &DinastiaNativo::league_elegir);
 	ClassDB::bind_method(D_METHOD("league_legal", "vi", "vo", "cuerpo_sale", "cuerpo_ini", "a"), &DinastiaNativo::league_legal);
 	ClassDB::bind_method(D_METHOD("league_mezclar", "sal", "a1", "a2", "cuadros", "mezclas", "ang", "giro_padre"), &DinastiaNativo::league_mezclar);
+	// --- portador (agente B) ---
+	ClassDB::bind_method(D_METHOD("league_situacion", "pos", "mov", "lado", "rivales"), &DinastiaNativo::league_situacion);
+	ClassDB::bind_method(D_METHOD("league_regate", "pos", "mov", "mirada", "lado", "cercanos", "mente", "ofensivo", "iman"), &DinastiaNativo::league_regate);
+	ClassDB::bind_method(D_METHOD("league_decidir", "yo", "companeros", "rivales", "mov_balon", "posesion", "azar", "muestras", "zona_tiro"), &DinastiaNativo::league_decidir);
+	// --- fin portador (agente B) ---
 	ClassDB::bind_method(D_METHOD("elegir_ponderado", "once", "grupo_de", "bases", "base_def", "atr", "pesos_rol", "r_unit", "excluir"), &DinastiaNativo::elegir_ponderado);
 }
 

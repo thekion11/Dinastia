@@ -31,6 +31,13 @@ func _init(lado_propio: float) -> void:
 var acum: PackedVector2Array = PackedVector2Array()
 
 func acumular() -> void:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_acumular"):   ## (16-11, paso a C++) misma suma que `acumular_gd`
+		acum = nat.league_acumular(balon_hist)
+		return
+	acumular_gd()
+
+func acumular_gd() -> void:
 	acum.resize(balon_hist.size() + 1)
 	var s := Vector2.ZERO
 	acum[0] = s
@@ -57,6 +64,12 @@ static func media(hist: PackedVector2Array, ms: float) -> Vector2:
 	return s / float(n)
 
 static func media_f(hist: PackedFloat32Array, ms: float) -> float:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_media_f"):   ## (16-11, paso a C++) misma media que `media_f_gd`
+		return nat.league_media_f(hist, ms)
+	return media_f_gd(hist, ms)
+
+static func media_f_gd(hist: PackedFloat32Array, ms: float) -> float:
 	var n := mini(hist.size(), maxi(1, int(ms / 10.0)))
 	if n == 0:
 		return 0.0
@@ -143,3 +156,14 @@ static func linea_penultimo(xs: PackedFloat32Array, lado_: float, balon_x: float
 	if linea * lado_ < 0.0:
 		linea = 0.01 * -lado_
 	return clampf(linea, -LeagueNucleo.MEDIO_LARGO, LeagueNucleo.MEDIO_LARGO)
+
+## Gemela GDScript de `league_destino_forma` (el cálculo de `MotorLeague._destino_forma` antes del retoque de la línea de la pizarra). `e0` = el equipo local (dueño del historial).
+static func destino_forma_gd(e0: LeagueEquipo, e: LeagueEquipo, foco: Vector2, yo: Vector2, forma: Vector2, puesto: String, ofens: float, lado_medio: float) -> Vector2:
+	var urg := 1.0 - LeagueNucleo.normalizado((foco - yo).length(), 2.0, 30.0)
+	var entrada := {"forma": forma, "puesto": puesto, "lado": e.lado, "pos": yo, "foco": foco,
+		"balon_x_lento": e0.media_rapida(3500.0 * (1.0 - urg * 0.7)).x,
+		"balon_y_lento": e0.media_rapida(4000.0 * (1.0 - urg * 0.5)).y,
+		"balon_3s": e0.media_rapida(3000.0), "balon_2s": e0.media_rapida(2000.0),
+		"posesion_desvanecida": e.posesion_desvanecida, "lado_posesion_medio": lado_medio, "ofensividad": ofens,
+		"viva": e.viva, "contra": e.contra, "mezcla": e.mezcla_de(puesto), "trampa_x": e.trampa_x}
+	return LeagueNucleo.posicion_formacion(entrada)

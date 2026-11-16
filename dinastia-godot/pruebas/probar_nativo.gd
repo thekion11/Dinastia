@@ -303,6 +303,25 @@ func _probar() -> void:
 	_comprobar((lg["fallos"] as Array).is_empty(), "locomoción League: C++ = GDScript (elección, legalidad, intermedias)")
 	for t: String in lg["textos"]:
 		print(t)
+	## (16-11, paso a C++) El balón del motor de League: predicción de 70 pasos y bucle de pasos de 10 ms.
+	var bl := ProbarNativoBalon.probar(nat)
+	for f: String in bl["fallos"]:
+		_comprobar(false, "balón de League en C++: " + f)
+	_comprobar((bl["fallos"] as Array).is_empty(), "balón de League: C++ = GDScript (predicción y pasos, 600 casos)")
+	for t: String in bl["textos"]:
+		print(t)
+	var eq := ProbarNativoEquipo.probar(nat)
+	for f: String in eq["fallos"]:
+		_comprobar(false, "colocación de League en C++: " + f)
+	_comprobar((eq["fallos"] as Array).is_empty(), "colocación e historial de League: C++ = GDScript (5000 posiciones, 300 historiales)")
+	for t: String in eq["textos"]:
+		print(t)
+	var po := ProbarNativoPortador.probar(nat)
+	for f: String in po["fallos"]:
+		_comprobar(false, "decisión con balón de League en C++: " + f)
+	_comprobar((po["fallos"] as Array).is_empty(), "decisión con balón de League (situación, regate, decidir): C++ = GDScript (4000 casos cada una)")
+	for t: String in po["textos"]:
+		print(t)
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:
