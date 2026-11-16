@@ -225,6 +225,9 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 func _ia_defensa(p: Dictionary) -> Vector3:
 	var r := _sin_flag3(p, false)
 	if _mejoras_c4:
+		var cierre := MejorasC4Area.objetivo(self, p)   ## (16-11, H1) cerrar al rematador dentro del área (`C4_CIERRE_AREA`)
+		if cierre != Vector3.INF:
+			return cierre
 		var cont := MejorasC4.contener_colocacion(self, p)
 		if cont != Vector3.INF:
 			return cont
@@ -327,12 +330,17 @@ func _apunte_ia(p: Dictionary, dist_arco: float, apunte: Vector2) -> Vector2:
 
 ## (13-11, sesión 15) el error del remate dentro del área, solo en C4 (`MejorasC4Avance.error_tiro`, `C4_ERROR_AREA=k`).
 func _error_tiro_extra(p: Dictionary, lejos: float, error: float, clase: String) -> float:
-	return MejorasC4Avance.error_tiro(self, lejos, error, clase) if _mejoras_c4 else error
+	return MejorasC4Area.error_presion(self, p, lejos, MejorasC4Avance.error_tiro(self, lejos, error, clase), clase) if _mejoras_c4 else error
 
 ## (13-11, sesión 15) el portero ante el remate desde dentro del área, solo en C4 (`MejorasC4Avance.parada`, `C4_PARADA_AREA=k`).
 func _prob_parada_extra(gk: Dictionary, desde: Vector3, prob: float) -> float:
 	return MejorasC4Avance.parada(self, gk, desde, prob) if _mejoras_c4 else prob
 
-## (16-11, informe AAA H1, A1.3/A1.5) el alcance del portero ante el remate desde dentro del área, solo en C4 (`MejorasC4Avance.alcance`, `C4_ALCANCE_AREA=k`).
-func _alcance_extra(gk: Dictionary, desde: Vector3, alcance: float) -> float:
-	return MejorasC4Avance.alcance(self, gk, desde, alcance) if _mejoras_c4 else alcance
+## (16-11, informe AAA H1, A1.3/A1.5) el alcance del portero según el tiempo que tarda el remate (`C4_ALCANCE_TIEMPO`) y ante el remate
+## desde dentro del área (`C4_ALCANCE_AREA`), solo en C4 (`MejorasC4Avance.alcance`).
+func _alcance_extra(gk: Dictionary, desde: Vector3, alcance: float, tz: float) -> float:
+	return MejorasC4Avance.alcance(self, gk, desde, alcance, tz) if _mejoras_c4 else alcance
+
+## (16-11, informe AAA H1) un compañero del rematador no controla un tiro fuerte que le pasa cerca, solo en C4 (`C4_TIRO_COMPANERO`).
+func _puede_tomar_tiro(p: Dictionary) -> bool:
+	return MejorasC4Area.puede_tomar_tiro(self, p) if _mejoras_c4 else true
