@@ -280,6 +280,12 @@ const SOBRA_LEAGUE := 2.5
 func _velocidad_pase(dist: float, sobra: float) -> float:
 	return LeyBalon.velocidad_league(dist + minf(sobra, SOBRA_LEAGUE), cfg_balon) if _ley_league() else super(dist, sobra)
 
+## (16-11, H1 A1.2) El pase manual va «al punto exacto hacia donde apuntas»: muere `SOBRA_MANUAL` m pasado ese punto (con el
+## medio metro que el balón sale por delante del pie, un 12 m para a ~12,5 m; con 1 m de sobra paraba a 13,5, en el borde de A1.2).
+const SOBRA_MANUAL := 0.0
+func _velocidad_pase_manual(dist: float) -> float:
+	return LeyBalon.velocidad_league(dist + SOBRA_MANUAL, cfg_balon) if _ley_league() else super(dist)
+
 ## El raso más largo que llega con la fuerza máxima del pase de la IA (≈ 23 m con el césped seco); más lejos, a media altura.
 func _raso_max() -> float:
 	return LeyBalon.rodando_league(26.0 * MotorPaseMejora.VEL_K, cfg_balon) - 2.0 if _ley_league() else super()

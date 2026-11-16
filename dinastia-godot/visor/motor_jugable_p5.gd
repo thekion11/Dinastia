@@ -110,6 +110,11 @@ func _mover_fisica_gd(delta: float, bpos: Vector3) -> PackedFloat64Array:
 func _velocidad_pase(dist: float, sobra: float) -> float:
 	return LeyBalon.velocidad_siempre(dist, sobra)
 
+## (16-11, H1 A1.2) El PASE MANUAL raso (`_pase_manual`), con la ley que mueve el balón: aquí la de siempre y su sobra de 4 m
+## de antes (el motor de siempre no cambia); `MotorLeague` usa la de League (antes C4 lo pedía con esta y un 12 m rodaba 8,3).
+func _velocidad_pase_manual(dist: float) -> float:
+	return LeyBalon.velocidad_siempre(dist, 4.0)
+
 ## El raso más largo que llega con la fuerza máxima de un pase; más lejos, por arriba.
 func _raso_max() -> float:
 	return 36.0
