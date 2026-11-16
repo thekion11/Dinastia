@@ -588,6 +588,11 @@ void fragment() {
 	// Relieve de los pliegues (etapa 2): la pendiente del ruido de arrugas,
 	// que se suma al mapa de normales para que la LUZ los marque, no solo el
 	// color.
+	// PARCHES CLAROS (frente 2, 16-11): el relieve se sumaba al mapa de normales en espacio TANGENTE, pero
+	// se calcula en las coordenadas de reposo (x, y): en cada isla de UV de Quaternius la tangente apunta a
+	// otro lado, y la misma arruga inclinaba la luz en sentidos distintos a cada lado de una costura de UV
+	// (bloques rectangulares claros en camiseta y short). Ahora es la PENDIENTE de una altura en metros
+	// (por metro de x e y de reposo) y se aplica abajo como relieve de superficie, sin pasar por la tangente.
 	vec2 relieve_tela = vec2(0.0);
 	if (usa_reposo) {
 		// La tela no se pega al músculo como la piel: menos relieve del cuerpo
@@ -596,10 +601,10 @@ void fragment() {
 		float arruga = ruido(vec2(x * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2(x * 34.0, y * 11.0 + 7.0)) * 0.4;
 		float arr_x = ruido(vec2((x + 0.006) * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2((x + 0.006) * 34.0, y * 11.0 + 7.0)) * 0.4;
 		float arr_y = ruido(vec2(x * 16.0 + 3.0, (y + 0.012) * 5.0)) * 0.6 + ruido(vec2(x * 34.0, (y + 0.012) * 11.0 + 7.0)) * 0.4;
-		relieve_tela = vec2(arr_x - arruga, arr_y - arruga) * (civil ? 5.0 : 2.0);
+		relieve_tela = vec2((arr_x - arruga) / 0.006, (arr_y - arruga) / 0.012) * (civil ? 0.008 : 0.0025);
 		if (!civil && !largo) {
 			float h0 = pliegues(x, y);
-			relieve_tela += vec2(pliegues(x + 0.004, y) - h0, pliegues(x, y + 0.004) - h0) * 1.6;
+			relieve_tela += vec2(pliegues(x + 0.004, y) - h0, pliegues(x, y + 0.004) - h0) / 0.004 * 0.0045;
 			arruga += h0 * 0.18;
 		}
 		float lado_t = smoothstep(0.1, 0.2, abs(x)) * step(abs(x), 0.215);
@@ -1072,7 +1077,6 @@ void fragment() {
 	vec2 nm_cuerpo = nm.xy - 0.5;
 	// Micro relieve del tejido sobre el relieve del cuerpo.
 	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * (usa_reposo && !civil ? 0.018 : 0.045) * tela * nitidez;
-	nm.xy += relieve_tela * tela;
 	// Equipación de juego (17-10-2026): el músculo se atenúa ANTES de sumar el
 	// relieve propio de la tela (arrugas, pliegues, canalé), y así la tela se
 	// puede marcar más sin que vuelvan los abdominales pintados.
@@ -1098,16 +1102,26 @@ void fragment() {
 	// 7 m: de lejos el borde de un píxel parpadearía).
 	vec3 dpx = dFdx(VERTEX);
 	vec3 dpy = dFdy(VERTEX);
-	float dhx = dFdx(h_escudo) * 0.0007;
-	float dhy = dFdy(h_escudo) * 0.0007;
 	float k_esc = 1.0 - smoothstep(3.0, 7.0, length(VERTEX));
-	if ((dhx != 0.0 || dhy != 0.0) && k_esc > 0.0) {
+	float dhx = dFdx(h_escudo) * 0.0007 * k_esc;
+	float dhy = dFdy(h_escudo) * 0.0007 * k_esc;
+	// Arrugas y pliegues de la tela (frente 2): la pendiente analítica en reposo por la derivada en pantalla
+	// de x e y de reposo (exacta dentro de cada triángulo), así no hay escalones de 2x2 píxeles. Se apaga
+	// entre 6 y 14 m (con la cámara de TV el jugador mide ~30 px y no se ve).
+	float k_tela = (1.0 - smoothstep(6.0, 14.0, length(VERTEX))) * tela;
+	if (k_tela > 0.0 && usa_reposo) {
+		vec2 gx = vec2(dFdx(v_reposo.x), dFdx(v_reposo.y));
+		vec2 gy = vec2(dFdy(v_reposo.x), dFdy(v_reposo.y));
+		dhx += dot(relieve_tela, gx) * k_tela;
+		dhy += dot(relieve_tela, gy) * k_tela;
+	}
+	if (dhx != 0.0 || dhy != 0.0) {
 		vec3 r1 = cross(dpy, NORMAL);
 		vec3 r2 = cross(NORMAL, dpx);
 		float det = dot(dpx, r1);
 		vec3 n_esc = abs(det) * NORMAL - sign(det) * (dhx * r1 + dhy * r2);
 		if (dot(n_esc, n_esc) > 1e-20) {
-			NORMAL = normalize(mix(NORMAL, normalize(n_esc), k_esc));
+			NORMAL = normalize(n_esc);
 		}
 	}
 	// Ropa de calle: casi nada del relieve muscular de la piel atraviesa la tela.
