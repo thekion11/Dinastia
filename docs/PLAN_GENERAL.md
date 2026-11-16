@@ -12,6 +12,11 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - Frente 3, JUGABILIDAD (motor C4, banderas `C4_*`): animaciones ligadas al movimiento, peso e inercia, pases y tiros con intención, colocación de la IA, portero. El dueño juega y pone nota; sin su nota no se da por buena.
 - FPS: la nube no tiene GPU; la sesión líder (local) mide en la laptop antes de dar algo por bueno (ULTRA ≥30, ULTRA BAJA ≥100).
 
+## ORDEN DEL DUEÑO (16-11): «50 % del juego en C++, y que siempre genere ganancias» — opción A elegida
+- META: el 50 % del TIEMPO DE CPU del juego (partido jugable y semana del mundo) corre en C++. NO se cuentan líneas: solo se porta lo que gana tiempo MEDIDO, con gemela GDScript e igualdad de huellas (regla de la extensión). Lo que no gane no se porta.
+- Punto de partida (16-11): GDScript del juego ~225.000 líneas (`ui/` 88k, `visor/` 78k, `nucleo/` 57k); C++ ~3.050. Lo ya portado y lo descartado por medición: `docs/04_auditorias/PASO_CPP_PLAN.md` §2h-2j.
+- Pasos: (1) medir qué % del tiempo de CPU ya corre en C++ en el partido jugable (`perfil_colocacion`) y en la semana del mundo (`zz_medir_rapido`, `zz_medir_simular`); (2) lista de candidatas ordenada por ganancia esperada; (3) portar de una en una, midiendo antes y después; si no gana, se descarta y se anota.
+
 ## ESTADO AL CIERRE DEL 16-11 MADRUGADA (orden del dueño: «a main, documentar y a cerrar»)
 - FPS en la laptop del dueño (Acer AL14-31P, i3-N300, Intel UHD, 1280x720, cámara del partido): ULTRA ~39-41 FPS en frío con el 3D al 60 % (`Calidad.escala_ultra` 0.75 → 0.6; antes 13 y luego ~30), ULTRA BAJA ~100-107. La laptop se calienta tras varias pasadas y las cifras caen; con otras sesiones abriendo Godot a la vez las medidas no valen (llegó a haber 32 procesos).
 - ULTRA BAJA 150: NO alcanzable en esta laptop con lo medido (suelo ~10 ms por fotograma aunque se oculten jugadores, animaciones o entorno; 6,4 ms solo con la escena quieta). ULTRA: SSAO cuesta ~4,5 ms de ~31 y bajarle la calidad no ahorra (el coste es el pre-paso de normales); no se quitó.
