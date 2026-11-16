@@ -44,9 +44,6 @@ static func _telones(deck: MeshInstance3D, tam: Vector3, lateral: bool,
 	## es lo unico que destaca de verdad. Si el segundo color del club ya es
 	## claro, se usa ese; si no, se aclara el primero.
 	var claro: Color = c2 if c2.get_luminance() > 0.55 else c1.lightened(0.7)
-	var telas: Array[StandardMaterial3D] = [
-		Texturas.tela(claro), Texturas.tela(c1), Texturas.tela(claro.darkened(0.12)),
-	]
 	## EL BORDE OSCURO NO ES DECORACION (23-9-2026). Los colores del trapo son
 	## los MISMOS que los de las butacas -es la hinchada de ese club-, asi que
 	## un panel liso de ese color sobre esa grada es invisible: se funde con el
@@ -96,7 +93,9 @@ static func _telones(deck: MeshInstance3D, tam: Vector3, lateral: bool,
 		## 0,36 m sobre el plano del deck: por encima del cojin de las butacas
 		## (0,24) y del propio reborde (0,32), sin peleas de profundidad.
 		m.position = pos_borde + Vector3(0, 0.04, 0)
-		m.material_override = telas[rng.randi_range(0, telas.size() - 1)]
+		## PINTADOS (15-11): rayas, bandas, banda cruzada, cuadros o letras con los colores del club (`TelonesPintados`);
+		## la tela lisa se leía como una losa celeste desde la cámara de TV. El `rng` se consume igual que antes.
+		m.material_override = TelonesPintados.material(c1, claro, rng.randi_range(0, 2) + k * 2, lateral)
 		## Nombre UNICO por telon, no el mismo para los tres. Con el nombre
 		## repetido Godot le pone un sufijo a los hermanos y la busqueda por
 		## nombre de la prueba solo encontraba uno por tribuna -parecia que

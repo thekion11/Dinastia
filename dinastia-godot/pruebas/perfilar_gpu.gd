@@ -26,8 +26,11 @@ var _fis: Array[float] = []
 func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.ALTO)
 	var mundo := Mundo.new()
-	mundo.generar(["CHI"], 4711)
-	mundo.mi_club_id = mundo.ligas[0].clubes[0].id
+	## PAIS=ESP / CLUB=3: varían el estadio de la captura (regla del dueño: nunca un solo equipo).
+	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"
+	mundo.generar([pais], 4711)
+	var clubes: Array = mundo.ligas[0].clubes
+	mundo.mi_club_id = clubes[clampi(OS.get_environment("CLUB").to_int(), 0, clubes.size() - 1)].id
 	var par := mundo.proximo_partido()
 	_vista = VistaEstadio.new()
 	add_child(_vista)
@@ -159,7 +162,7 @@ func _process(_d: float) -> void:
 	if _n == 12 and OS.get_environment("CONGELAR") != "":
 		Engine.time_scale = 0.0   ## CONGELAR=1: la escena se detiene en el mismo punto en todas las variantes, para comparar capturas
 	if _n == 5:
-		(_vista.get("_rig") as CameraRig).switch_to(0)
+		(_vista.get("_rig") as CameraRig).switch_to(OS.get_environment("CAM").to_int())   ## CAM=n: otra cámara del rig para la captura (0 = Transmisión)
 	if _n == CALENTAR - 20:
 		_aplicar_desact()
 		_apagar_procesos()
