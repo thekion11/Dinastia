@@ -21,6 +21,10 @@ struct Claves {
 			ls_espera_g{ "ls_espera_g" }, mirar_hasta{ "mirar_hasta" }, vel{ "vel" }, hasta{ "hasta" }, t0{ "t0" }, dur{ "dur" }, sp0{ "sp0" }, fin{ "fin" }, h0{ "h0" },
 			ang{ "ang" }, ls_humano{ "ls_humano" }, objetivo{ "objetivo" }, ls_trans_hasta{ "ls_trans_hasta" }, ls_fin_yaw{ "ls_fin_yaw" }, ls_off_extra{ "ls_off_extra" },
 			ls_cuerpo{ "ls_cuerpo" }, anim_actual{ "anim_actual" };
+	// Para ESCRIBIR se usan claves String, como GDScript: una clave nueva puesta con StringName quedaría como &"…" en el diccionario (otro tipo
+	// de clave al guardar y al comparar con `var_to_bytes`), aunque se lea igual.
+	String w_vel{ "vel" }, w_ls_trans_hasta{ "ls_trans_hasta" }, w_ls_espera_g{ "ls_espera_g" }, w_ls_off_extra{ "ls_off_extra" }, w_ls_cuerpo{ "ls_cuerpo" },
+			w_anim_actual{ "anim_actual" };
 };
 const Claves &claves() {
 	static const Claves c;
@@ -58,10 +62,10 @@ Node3D *nodo_si_cuenta(const Dictionary &p, double t) {
 // `LeagueLocomocion.enderezar`.
 void enderezar(Dictionary &p) {
 	const Claves &c = claves();
-	p[c.ls_off_extra] = double(p.get(c.ls_off_extra, 0.0)) + double(p.get(c.ls_cuerpo, 0.0));
-	p[c.ls_cuerpo] = 0.0;
+	p[c.w_ls_off_extra] = double(p.get(c.ls_off_extra, 0.0)) + double(p.get(c.ls_cuerpo, 0.0));
+	p[c.w_ls_cuerpo] = 0.0;
 	if (String(p.get(c.anim_actual, "")).begins_with("ls_ciclo__")) {
-		p[c.anim_actual] = "";
+		p[c.w_anim_actual] = "";
 	}
 }
 
@@ -80,11 +84,11 @@ Vector3 seguir_clip(Dictionary &p, Node3D *n, const Vector3 &v, double t, double
 	const double corte = es_humano ? CORTE_USUARIO : CORTE_CPU;
 	const double desvio = double(pide.length()) > 0.5 ? std::fabs(UtilityFunctions::angle_difference(h0 + ang, std::atan2(double(pide.x), double(pide.z)))) : 0.0;
 	if ((u > 0.3 || es_humano) && desvio > corte) {
-		p[c.ls_trans_hasta] = 0.0; // `LeagueLocomocion.cortar`
+		p[c.w_ls_trans_hasta] = 0.0; // `LeagueLocomocion.cortar`
 		p.erase(c.ls_fin_yaw);
 		enderezar(p);
 		p.erase(c.ls_guia);
-		p[c.ls_espera_g] = t + PAUSA_CORTE;
+		p[c.w_ls_espera_g] = t + PAUSA_CORTE;
 		cortes++;
 		return v;
 	}
@@ -166,7 +170,7 @@ PackedInt32Array DinastiaNativo::guia_seguir(const Array &jugadores, double t, d
 			}
 		}
 		if (nuevo != v) {
-			p[c.vel] = nuevo;
+			p[c.w_vel] = nuevo;
 			n->set_position(n->get_position() + (nuevo - v) * delta);
 		}
 	}
