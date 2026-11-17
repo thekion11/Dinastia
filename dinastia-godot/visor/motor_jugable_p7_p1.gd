@@ -135,7 +135,7 @@ func _ia_portero(p: Dictionary) -> Vector3:
 		for q: Dictionary in jugadores:
 			if bool(q["es_local"]) != bool(p["es_local"]) and pos(q).distance_to(b) < pos(p).distance_to(b) * 0.8:
 				suyo = false
-		if suyo:
+		if suyo or _portero_a_por_el(p, b):
 			p["correr"] = true
 			return b
 	## Mano a mano: un rival con el balón entra solo por el centro del área y
@@ -364,6 +364,10 @@ func _agarra(p: Dictionary, estirada: bool, fuerza: float) -> bool:
 
 func _prob_rechace_fuera() -> float:
 	return 0.5
+
+## Gancho (17-11): ¿va a por el balón suelto aunque un rival llegue antes? Aquí no (C4: `C4_DESPEJE_RECHACE`).
+func _portero_a_por_el(_p: Dictionary, _b: Vector3) -> bool:
+	return false
 
 func _prob_parada_cuerpo(_lat: float, _alcance: float, prob: float) -> float:
 	return prob

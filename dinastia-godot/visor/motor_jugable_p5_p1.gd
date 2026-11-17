@@ -388,6 +388,7 @@ func _tomar(p: Dictionary) -> void:
 		## Un tiro fuerte que se topa con un defensor no se controla: se
 		## desvía (muchas veces a córner), como un bloqueo de verdad.
 		var tirador: Dictionary = _tiro_vivo["p"]
+		_contar("tiro_bloqueado")   ## (17-11) para la sonda de goles; no toca el azar
 		_cerrar_tiro("fallo")
 		if bool(tirador["es_local"]) != bool(p["es_local"]) and not bool(p["por"]) and vel_balon.length() > 14.0:
 			_anim(p, LeagueAnim.bloqueo(balon.position.y), true, 0.9)   ## el cuerpo que bloquea (01-11, League-Soccer)

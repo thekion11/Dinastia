@@ -339,6 +339,8 @@ func _probar() -> void:
 	Partido.comparar_fuerza = false
 	print("fuerza de los onces: %d comparadas, %d distintas" % [Partido.fuerza_comparadas, Partido.fuerza_distintas])
 	_comprobar(Partido.fuerza_distintas == 0 and Partido.fuerza_comparadas > 100, "fuerza de los onces (fuerza_dos): C++ = GDScript")
+	var fz := ProbarNativoFuerza.probar()   ## (17-11) con toda la pizarra y todos los roles, no solo la de por defecto
+	_comprobar(int(fz["distintas"]) == 0 and int(fz["comparadas"]) > 200, "fuerza con toda la pizarra y los roles: C++ = GDScript en %d casos de %d variantes (distintas: %d)" % [fz["comparadas"], fz["variantes"], fz["distintas"]])
 	print("reglas de la liga sobre el once: %d comparados, %d distintos" % [LeyesPais.comparados, LeyesPais.distintos])
 	_comprobar(LeyesPais.distintos == 0 and LeyesPais.comparados > 100, "reglas de la liga sobre el once (_ya_cumple): C++ = GDScript en %d onces (distintos: %d)" % [LeyesPais.comparados, LeyesPais.distintos])
 	for f: String in np["fallos"]:

@@ -383,6 +383,16 @@ static var comparar_fuerza := false
 static var fuerza_comparadas := 0
 static var fuerza_distintas := 0
 
+## LOS ROLES POR JUGADOR (26-10-2026, fila 18): lo que cada rol suma o resta al ataque y a la defensa del equipo, según encaje el jugador
+## (`RolTactico`). Sin roles, la fuerza de siempre. La usan `fuerza()` (`partido.gd`) y el camino C++ de `invalidar_fuerza`.
+static func con_roles(f: Dictionary, once: Array[Jugador], c: Club) -> Dictionary:
+	if c == null or c.tactica == null or c.tactica.roles.is_empty():
+		return f
+	var m := RolTactico.multiplicadores(c.tactica, once)
+	f["ata"] = float(f["ata"]) * float(m[0])
+	f["def"] = float(f["def"]) * float(m[1])
+	return f
+
 func invalidar_fuerza() -> void:
 	var nat := Nativo.obj()
 	if nat == null or local == null or visita == null or not nat.has_method("fuerza_dos"):
@@ -395,7 +405,8 @@ func invalidar_fuerza() -> void:
 		LEY_DEL_EX, ex_de_mi_club, ctx_moda, ctx_club_id, ctx_analisis])
 	if comparar_fuerza:
 		fuerza_comparadas += 1
-		if var_to_bytes(r[0]) != var_to_bytes(fuerza(once_local, local)) or var_to_bytes(r[1]) != var_to_bytes(fuerza(once_visita, visita)):
+		if var_to_bytes(con_roles(r[0].duplicate(), once_local, local)) != var_to_bytes(fuerza(once_local, local)) \
+				or var_to_bytes(con_roles(r[1].duplicate(), once_visita, visita)) != var_to_bytes(fuerza(once_visita, visita)):
 			fuerza_distintas += 1
-	_fza_local = r[0]
-	_fza_visita = r[1]
+	_fza_local = con_roles(r[0], once_local, local)   ## (17-11) los roles por jugador: `fuerza_dos` no los aplica (los ignoraba con la extensión)
+	_fza_visita = con_roles(r[1], once_visita, visita)
