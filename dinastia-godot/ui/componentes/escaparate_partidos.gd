@@ -44,7 +44,7 @@ static func _columna(local: Club, visita: Club, centro: String, comp_tipo: Strin
 	fila.alignment = BoxContainer.ALIGNMENT_CENTER
 	fila.add_theme_constant_override("separation", 12)
 	fila.add_child(_escudo(local, 44))
-	var c := EstiloAvanzar.etiqueta(centro, 28, NARANJA if siguiente else Color.WHITE, true)
+	var c := EstiloAvanzar.etiqueta(centro, 34, NARANJA if siguiente else Color.WHITE, true)
 	c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	fila.add_child(c)
 	fila.add_child(_escudo(visita, 44))

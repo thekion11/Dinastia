@@ -15,6 +15,8 @@ func _ready() -> void:
 	var ps: Array[String] = [pais]
 	m.generar(ps, 88 + idx)
 	m.tomar_el_mando(m.ligas[0].clubes[idx % m.ligas[0].clubes.size()].id)
+	for _i in (int(OS.get_environment("JORNADAS")) if OS.get_environment("JORNADAS") != "" else 0):   ## con partidos jugados, para ver el último resultado
+		m.avanzar_semana()
 	PedidoPartida.mundo_pregenerado = m
 	PedidoPartida.modo_elegido = "dt"
 	PedidoPartida.dt_nombre_elegido = "Prueba"
