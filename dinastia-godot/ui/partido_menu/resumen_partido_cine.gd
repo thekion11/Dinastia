@@ -75,7 +75,7 @@ static func montar(raiz: Control, p: Partido, mi_club: Club, descanso: bool) -> 
 
 ## Escudo con sombra, nombre y, debajo, sus goleadores con los minutos.
 static func _equipo(raiz: Control, p: Partido, c: Club, x0: float, x1: float) -> void:
-	var esc := PreviaMenuPartido.escudo(c, 140)
+	var esc: Control = load("res://ui/partido_menu/menu_partido_previa.gd").escudo(c, 140)   ## con load(): el menú central nombra ResultadoPartido y la memoria del menú no debe llegar a MenuPartido
 	raiz.add_child(_ancla(esc, x0 + 0.04, 0.085, x1 - 0.04, 0.24))
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 2)
