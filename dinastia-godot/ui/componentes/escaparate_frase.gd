@@ -4,8 +4,8 @@ extends RefCounted
 ## cuatro plantillas (según el club) para que no sea la misma en todos. Todo pasa por `Idiomas.t`.
 
 const _ESTILOS := {
-	"ofensivo": "juego ofensivo y vertical", "defensivo": "bloque defensivo y contragolpe",
-	"motivador": "garra, intensidad y carácter", "pizarron": "juego táctico y paciente",
+	"ofensivo": "juego ofensivo y vertical", "defensivo": "bloque bajo y contragolpe",
+	"motivador": "garra y carácter", "pizarron": "juego táctico y paciente",
 }
 
 static func _meta(p: Principal, c: Club) -> String:
@@ -26,6 +26,6 @@ static func de(p: Principal, c: Club, nombre: String) -> String:
 	var corto := nombre.get_slice(" ", nombre.get_slice_count(" ") - 1) if nombre.find(" ") >= 0 else nombre
 	match absi(hash("frase|" + c.id)) % 4:
 		0: return Idiomas.t("%s apuesta por el %s con %s.") % [corto, t.formacion, estilo]
-		1: return Idiomas.t("Cuando uses una táctica %s, el estilo de %s será: %s.") % [ment, corto, estilo]
+		1: return Idiomas.t("Con táctica %s, %s juega: %s.") % [ment, corto, estilo]
 		2: return Idiomas.t("%s defiende con %s y busca %s.") % [corto, linea, _meta(p, c)]
 	return Idiomas.t("%s quiere %s con %s y %s.") % [corto, _meta(p, c), t.formacion, pres]

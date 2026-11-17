@@ -9091,7 +9091,10 @@
   "Precisión de pase %": "Pass accuracy %",
   "Repetición de los goles": "Goal replays",
   "Jugar momentos": "Play moments",
-  "Cambios": "Substitutions"
+  "Cambios": "Substitutions",
+  "Con táctica %s, %s juega: %s.": "With a %s tactic, %s plays: %s.",
+  "garra y carácter": "grit and character",
+  "bloque bajo y contragolpe": "a deep block and counters"
  },
  "pt": {
   "Historia": "História",
@@ -18185,7 +18188,10 @@
   "Precisión de pase %": "Precisão de passe %",
   "Repetición de los goles": "Replay dos gols",
   "Jugar momentos": "Jogar momentos",
-  "Cambios": "Substituições"
+  "Cambios": "Substituições",
+  "Con táctica %s, %s juega: %s.": "Com tática %s, %s joga: %s.",
+  "garra y carácter": "garra e caráter",
+  "bloque bajo y contragolpe": "bloco baixo e contra-ataque"
  },
  "patrones": [
   [
@@ -33551,7 +33557,10 @@
   "Precisión de pase %": "Précision des passes %",
   "Repetición de los goles": "Ralenti des buts",
   "Jugar momentos": "Jouer des moments",
-  "Cambios": "Remplacements"
+  "Cambios": "Remplacements",
+  "Con táctica %s, %s juega: %s.": "En tactique %s, %s joue : %s.",
+  "garra y carácter": "du cran et du caractère",
+  "bloque bajo y contragolpe": "un bloc bas et la contre-attaque"
  },
  "it": {
   "Historia": "Storia",
@@ -42645,7 +42654,10 @@
   "Precisión de pase %": "Precisione passaggi %",
   "Repetición de los goles": "Replay dei gol",
   "Jugar momentos": "Gioca momenti",
-  "Cambios": "Sostituzioni"
+  "Cambios": "Sostituzioni",
+  "Con táctica %s, %s juega: %s.": "Con tattica %s, %s gioca: %s.",
+  "garra y carácter": "grinta e carattere",
+  "bloque bajo y contragolpe": "blocco basso e contropiede"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51739,7 +51751,10 @@
   "Precisión de pase %": "Passquote %",
   "Repetición de los goles": "Tor-Wiederholungen",
   "Jugar momentos": "Momente spielen",
-  "Cambios": "Wechsel"
+  "Cambios": "Wechsel",
+  "Con táctica %s, %s juega: %s.": "Mit %s Taktik spielt %s: %s.",
+  "garra y carácter": "Kampfgeist und Charakter",
+  "bloque bajo y contragolpe": "tiefem Block und Kontern"
  },
  "ca": {
   "Historia": "Història",
@@ -60833,7 +60848,10 @@
   "Precisión de pase %": "Precisió de passada %",
   "Repetición de los goles": "Repetició dels gols",
   "Jugar momentos": "Jugar moments",
-  "Cambios": "Canvis"
+  "Cambios": "Canvis",
+  "Con táctica %s, %s juega: %s.": "Amb tàctica %s, %s juga: %s.",
+  "garra y carácter": "garra i caràcter",
+  "bloque bajo y contragolpe": "bloc baix i contraatac"
  },
  "pl": {
   "Club": "Klub",
@@ -69927,7 +69945,10 @@
   "Precisión de pase %": "Celność podań %",
   "Repetición de los goles": "Powtórki goli",
   "Jugar momentos": "Zagraj momenty",
-  "Cambios": "Zmiany"
+  "Cambios": "Zmiany",
+  "Con táctica %s, %s juega: %s.": "Z taktyką %s %s gra: %s.",
+  "garra y carácter": "walkę i charakter",
+  "bloque bajo y contragolpe": "niski blok i kontry"
  },
  "tr": {
   "Club": "Kulüp",
@@ -79021,6 +79042,9 @@
   "Precisión de pase %": "Pas isabeti %",
   "Repetición de los goles": "Gol tekrarları",
   "Jugar momentos": "Anları oyna",
-  "Cambios": "Oyuncu değişikliği"
+  "Cambios": "Oyuncu değişikliği",
+  "Con táctica %s, %s juega: %s.": "%s taktikle %s şöyle oynar: %s.",
+  "garra y carácter": "mücadele ve karakter",
+  "bloque bajo y contragolpe": "derin blok ve kontra"
  }
 }

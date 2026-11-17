@@ -48,6 +48,13 @@ func _revisar(pr: Principal, etiqueta: String, tam: Vector2i) -> void:
 	_ok(vistos > 30, "%s: se revisaron %d controles (ventana %s)" % [etiqueta, vistos, vista.size])
 	_ok(desliza == 0, "%s (%dx%d): hay %d ScrollContainer visibles" % [etiqueta, tam.x, tam.y, desliza])
 
+## Pulsa la pestaña del escaparate (como el jugador); si ya es la elegida, no hace nada.
+func _pulsar_pestana(pr: Principal, i: int) -> void:
+	if TableroInicio.pestana == i:
+		return
+	var barra: Node = (pr.get_meta("escaparate") as Node).find_child("Botones", true, false)
+	((barra.get_meta("tabs") as Array)[i] as Button).pressed.emit()
+
 func _ready() -> void:
 	AvanceDiasUI.sin_pantalla = true
 	JornadaEventos._abierto = true
@@ -71,8 +78,7 @@ func _ready() -> void:
 			get_window().size = tam
 			await _frames(4)
 			for pestana in 3:
-				TableroInicio.pestana = pestana
-				pr._refrescar()
+				_pulsar_pestana(pr, pestana)
 				await _frames(8)
 				_revisar(pr, "%s pestaña %d" % [cfg[0], pestana], tam)
 		TableroInicio.pestana = 0

@@ -31,9 +31,9 @@ func _ready() -> void:
 	for t in get_tree().root.find_children("*", "", true, false):
 		if t is Tutorial:
 			(t as Tutorial)._terminar(false)
-	if OS.get_environment("PESTANA") != "":
-		TableroInicio.pestana = int(OS.get_environment("PESTANA"))
-		pr._refrescar()
+	if OS.get_environment("PESTANA") != "" and int(OS.get_environment("PESTANA")) != TableroInicio.pestana:
+		var barra: Node = (pr.get_meta("escaparate") as Node).find_child("Botones", true, false)   ## se pulsa la pestaña como el jugador
+		((barra.get_meta("tabs") as Array)[int(OS.get_environment("PESTANA"))] as Button).pressed.emit()
 	await _frames(12)
 	if pr.get("_rueda_pop") != null:   ## la rueda de prensa que sale tras los partidos tapa el menú: fuera, para ver el escaparate
 		(pr.get("_rueda_pop") as Node).queue_free()
