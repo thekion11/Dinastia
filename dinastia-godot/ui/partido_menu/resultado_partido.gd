@@ -112,16 +112,27 @@ func _goles() -> void:
 		var club := partido.local if String(e.get("club", "")) == partido.local.id else partido.visita
 		var f := HBoxContainer.new()
 		f.add_theme_constant_override("separation", 10)
-		f.add_child(EstiloAvanzar.etiqueta("%d'" % int(e["min"]), 18, EstiloAvanzar.SUAVE))
+		f.add_child(EstiloAvanzar.etiqueta("%d'" % int(e["min"]), 20, EstiloAvanzar.SUAVE, true))
 		var ic := TextureRect.new()
-		ic.texture = EstiloAvanzar.icono("ball", Color.WHITE, 22)
+		ic.texture = EstiloAvanzar.icono("ball", _color_club(club), 22)
 		f.add_child(ic)
-		f.add_child(EstiloAvanzar.etiqueta(abreviar(String(e.get("autor", "?"))), 20, Color.WHITE))
-		f.add_child(EstiloAvanzar.etiqueta("(%s)" % _sigla(club), 16, EstiloAvanzar.SUAVE))
+		f.add_child(EstiloAvanzar.etiqueta("%s (%s)" % [abreviar(String(e.get("autor", "?"))), _pos(club, String(e.get("autor", "")))], 20, Color.WHITE, true))
 		caja.add_child(f)
 	if not hay:
 		caja.add_child(EstiloAvanzar.etiqueta(Idiomas.t("Sin goles"), 18, EstiloAvanzar.SUAVE))
 	_raiz.add_child(_ancla(caja, 0.47, 0.45, 0.72, 0.80))
+
+## El color del club para los balones: el de su camiseta, aclarado si es muy oscuro (sobre el fondo noche se tiene que ver).
+static func _color_club(c: Club) -> Color:
+	var col := Color(c.kit_color1 if c.kit_color1 != "" else c.color1)
+	return col.lightened(0.45) if col.get_luminance() < 0.18 else col
+
+## La demarcación del goleador («MC»), o la sigla del club si no se encuentra (gol en propia puerta).
+static func _pos(c: Club, autor: String) -> String:
+	for j: Jugador in c.plantilla:
+		if j.nombre == autor:
+			return j.pos_e
+	return _sigla(c)
 
 static func _sigla(c: Club) -> String:
 	var partes := c.nombre.split(" ", false)
@@ -160,6 +171,9 @@ func _linea_de_tiempo() -> void:
 	var l := _Tiempo.new()
 	l.goles = partido.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol")
 	l.mi_id = mi_club.id
+	l.local_id = partido.local.id
+	l.col_local = _color_club(partido.local)
+	l.col_visita = _color_club(partido.visita)
 	_raiz.add_child(_ancla(l, 0.04, 0.83, 0.74, 0.97))
 
 ## La barra de dos colores de las estadísticas (local en rojo, visitante en claro).
@@ -171,19 +185,22 @@ class _Barra extends Control:
 		draw_rect(Rect2(0, 0, w, h), Color("d6dcf0"))
 		draw_rect(Rect2(0, 0, w * local, h), Color("c8102e"))
 
-## La línea de 0' a 90' con los goles (rojo los tuyos, claro los rivales).
+## La línea de 0' a 90': el balón de trazo en el minuto de cada gol, del color del club que marcó; los minutos, pequeños y discretos.
 class _Tiempo extends Control:
 	var goles: Array = []
 	var mi_id := ""
+	var local_id := ""
+	var col_local := Color.WHITE
+	var col_visita := Color.WHITE
 	func _draw() -> void:
 		var y := size.y * 0.35
-		draw_line(Vector2(0, y), Vector2(size.x, y), Color(1, 1, 1, 0.25), 3.0)
-		var f := ThemeDB.fallback_font
+		draw_line(Vector2(0, y), Vector2(size.x, y), Color(1, 1, 1, 0.22), 2.0)
+		var f := EstiloAvanzar.fuente_titulo()
 		for m in [0, 15, 30, 45, 60, 75, 90]:
 			var x := size.x * float(m) / 90.0
-			draw_string(f, Vector2(x - 8, y + 34), "%d'" % m, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 1, 1, 0.5))
+			draw_string(f, Vector2(x - 6, y + 30), "%d'" % m, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 1, 1, 0.4))
 		for e: Dictionary in goles:
 			var x := size.x * clampf(float(e["min"]) / 90.0, 0.0, 1.0)
-			var mio := String(e.get("club", "")) == mi_id
-			draw_circle(Vector2(x, y), 11.0, Color("c8102e") if mio else Color("d6dcf0"))
-			draw_circle(Vector2(x, y), 5.0, Color.WHITE)
+			var col := col_local if String(e.get("club", "")) == local_id else col_visita
+			draw_circle(Vector2(x, y), 15.0, Color(1, 1, 1, 0.92))
+			draw_texture_rect(EstiloAvanzar.icono("ball", col.darkened(0.25), 36, 2.2), Rect2(x - 13, y - 13, 26, 26), false)
