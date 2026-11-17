@@ -183,11 +183,59 @@ func _finta_ia(p: Dictionary, rival: Dictionary, fwd: Vector3, lado: float, sp: 
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	if not _nuestra("coloca_sin_balon"):
 		return super(p, en_posesion)
+	var r := Vector3.INF
+	var nat := Nativo.obj()
+	if nat != null and not MotorColocacion._sin and nat.has_method("forma_c4"):
+		var v: Variant = nat.forma_c4(_ctx_forma(), p, en_posesion)
+		if v != null:
+			r = v
+			if comparar_forma:
+				formas_comparadas += 1
+				if r != _forma_gd(p, en_posesion):
+					formas_distintas += 1
+	if r == Vector3.INF:
+		r = _forma_gd(p, en_posesion)
+	return r if en_posesion or not _mejoras_c4 else MejorasC4Bloque.retrasar(self, p, r)   ## (16-11, frente 3) `C4_BLOQUE`
+
+## (17-11, paso a C++) `_forma` con nuestra colocación: `forma_c4` en la extensión (una llamada con `_ctx_forma`); esta es su gemela, la de siempre
+## (sin `equipos`: así no mira la colocación de League). Igualdad: `probar_nativo_sin_balon` (con `comparar_forma`).
+static var comparar_forma := false
+static var formas_comparadas := 0
+static var formas_distintas := 0
+
+func _forma_gd(p: Dictionary, en_posesion: bool) -> Vector3:
 	var guardado := equipos
 	equipos = []
-	var r := super(p, en_posesion)
+	var r := super._forma(p, en_posesion)
 	equipos = guardado
-	return r if en_posesion or not _mejoras_c4 else MejorasC4Bloque.retrasar(self, p, r)   ## (16-11, frente 3) `C4_BLOQUE`
+	return r
+
+## Lo de `_forma` que no cambia dentro de un paso, armado una vez (se rehace si cambia el reloj, el marcador o quién maneja a quién).
+var _ctx_f: Array = []
+var _ctx_f_clave := Vector4.INF
+
+func paso(delta: float) -> void:
+	_ctx_f_clave = Vector4.INF   ## el ctx de `_forma` vale como mucho un paso (un cambio de táctica en una pausa lo rehace)
+	super(delta)
+
+func _ctx_forma() -> Array:
+	var clave := Vector4(t, float(goles[0]), float(goles[1]), float(control_equipo))
+	if clave == _ctx_f_clave:
+		return _ctx_f
+	_ctx_f_clave = clave
+	var me := self as Object as MotorJugable
+	var c: Array = [self, t, jugadores, MotorColocacion._est(me, true), MotorColocacion._est(me, false)]
+	for k: String in ["linea", "mentalidad", "amplitud"]:
+		for loc: bool in [true, false]:
+			var v := float(_tac(loc, k) - 1)
+			v += MotorTacticaViva.urgencia(me, loc) if k == "mentalidad" else MotorTacticaViva.f(me, loc, k)
+			c.append(v)
+	c.append(null if MotorAdaptacion._sin else MotorAdaptacion._est(me))
+	c.append(MotorRoles._sin)
+	c.append(LARGO)
+	c.append(ANCHO)
+	_ctx_f = c
+	return c
 
 ## HÍBRIDO (11-11, sesión 9, orden 39): las ablaciones de C4 mostraron que NUESTRA colocación sin balón es lo que baja el acierto de pase (84 → 67 %) y
 ## las cadenas de 5+ (2,3 → 0,5), pero también lo que da el roce (duelos 7,7 → 29, regates 9,7 → 18). Con `C_ATAQUE_LEAGUE=1` el equipo que tiene el balón se
@@ -348,16 +396,24 @@ func _error_tiro_extra(p: Dictionary, lejos: float, error: float, clase: String)
 
 ## (13-11, sesión 15) el portero ante el remate desde dentro del área, solo en C4 (`MejorasC4Avance.parada`, `C4_PARADA_AREA=k`).
 func _prob_parada_extra(gk: Dictionary, desde: Vector3, prob: float) -> float:
-	return MejorasC4Avance.parada(self, gk, desde, prob) if _mejoras_c4 else prob
+	return MejorasC4Avance.parada_real(self, gk, desde, MejorasC4Avance.parada(self, gk, desde, prob)) if _mejoras_c4 else prob
 
 ## (17-11, alarma de goles de C4) el portero para lo que le llega al cuerpo, solo en C4 (`MejorasC4Avance.parada_cuerpo`, `C4_PARADA_CUERPO=f`).
+func _agarra(p: Dictionary, estirada: bool, fuerza: float) -> bool:
+	if not (_mejoras_c4 and MejorasC4Avance.PARADA_REAL):
+		return super(p, estirada, fuerza)
+	return MejorasC4Avance.agarra(self, p, estirada, fuerza, _rng)
+
+func _prob_rechace_fuera() -> float:
+	return MejorasC4Avance.PR_FUERA if _mejoras_c4 and MejorasC4Avance.PARADA_REAL else 0.5
+
 func _prob_parada_cuerpo(lat: float, alcance: float, prob: float) -> float:
 	return MejorasC4Avance.parada_cuerpo(self, lat, alcance, prob) if _mejoras_c4 else prob
 
 ## (16-11, informe AAA H1, A1.3/A1.5) el alcance del portero según el tiempo que tarda el remate (`C4_ALCANCE_TIEMPO`) y ante el remate
 ## desde dentro del área (`C4_ALCANCE_AREA`), solo en C4 (`MejorasC4Avance.alcance`).
 func _alcance_extra(gk: Dictionary, desde: Vector3, alcance: float, tz: float) -> float:
-	return MejorasC4Avance.alcance(self, gk, desde, alcance, tz) if _mejoras_c4 else alcance
+	return MejorasC4Avance.alcance_real(self, gk, desde, MejorasC4Avance.alcance(self, gk, desde, alcance, tz)) if _mejoras_c4 else alcance
 
 ## (16-11, informe AAA H1) un compañero del rematador no controla un tiro fuerte que le pasa cerca, solo en C4 (`C4_TIRO_COMPANERO`).
 func _puede_tomar_tiro(p: Dictionary) -> bool:
