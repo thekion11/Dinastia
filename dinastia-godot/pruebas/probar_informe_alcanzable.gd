@@ -1,6 +1,6 @@
 extends Node
-## EL INFORME DE LA SEMANA SE ALCANZA DESDE EL MENÚ CENTRAL (17-11-2026): en «Información del club» hay una tarjeta «Informe de la semana»; con el foco (mando/teclado) y Intro/A se abre su
-## pantalla completa, el foco queda dentro (en un aviso o en «Volver») y Esc/B la cierra. Los avisos urgentes suman en el contador de «Mensajes» del pie. Dos clubes de países distintos.
+## EL INFORME DE LA SEMANA SE ALCANZA DESDE EL MENÚ CENTRAL (17-11-2026): el botón «Mensajes · N» de la barra de arriba (correo, noticias e informe de la semana); con el foco (mando/teclado) y Intro/A se abre su
+## pantalla completa, el foco queda dentro (en un aviso o en «Volver») y Esc/B la cierra. Los avisos urgentes suman en el contador. Dos clubes de países distintos.
 ## Con pantalla (xvfb en `herramientas/especiales.sh`).
 
 var fallos := 0
@@ -50,32 +50,26 @@ func _ready() -> void:
 		var e: String = cfg[0]
 		var pant := pr.get_meta("escaparate") as EscaparatePantalla
 		var barra: Node = pant.find_child("Botones", true, false)
-		((barra.get_meta("tabs") as Array)[2] as Button).pressed.emit()
-		await _frames(6)
-		var tarjeta := _tarjeta(pant, Idiomas.t("Informe de la semana"))
-		_ok(tarjeta != null, "%s: «Información del club» tiene la tarjeta «Informe de la semana»" % e)
-		if tarjeta == null:
+		var boton := barra.get_node_or_null("BotonMensajes") as Button
+		_ok(boton != null, "%s: la barra tiene «Mensajes»" % e)
+		if boton == null:
 			continue
-		tarjeta.grab_focus()
-		await _frames(2)
-		_ok(tarjeta.has_focus(), "%s: la tarjeta recibe el foco (mando/teclado)" % e)
 		var graves := int(InformeSemana.resumen(pr)["graves"])
-		var hay_cont := false
-		for b in pant.find_children("*", "Button", true, false):
-			if (b as Button).text.begins_with("✉") and (graves == 0 or (b as Button).text.contains("(")):
-				hay_cont = true
-		_ok(hay_cont, "%s: el contador de Mensajes suma los %d avisos urgentes del informe" % [e, graves])
+		var rotulo: String = boton.get_meta("rotulo", "")
+		_ok(graves == 0 or rotulo.contains("·"), "%s: «Mensajes» lleva el contador (%d avisos urgentes del informe) «%s»" % [e, graves, rotulo])
+		boton.grab_focus()
+		await _frames(2)
+		_ok(boton.has_focus(), "%s: «Mensajes» recibe el foco (mando/teclado)" % e)
 		await _accion("ui_accept")
 		await _frames(4)
-		_ok(is_instance_valid(pant.informe) and pant.informe.is_visible_in_tree(), "%s: Intro/A abre la pantalla completa del informe" % e)
+		_ok(is_instance_valid(pant.informe) and pant.informe.is_visible_in_tree(), "%s: Intro/A abre Mensajes e informe de la semana a pantalla completa" % e)
 		if is_instance_valid(pant.informe):
 			var dueno := get_viewport().gui_get_focus_owner()
-			_ok(dueno != null and pant.informe.is_ancestor_of(dueno), "%s: el foco queda dentro del informe" % e)
-			var r := pant.informe.get_global_rect()
-			_ok(Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size).grow(1.5).encloses(r), "%s: el informe ocupa la pantalla" % e)
+			_ok(dueno != null and pant.informe.is_ancestor_of(dueno), "%s: el foco queda dentro de la pantalla" % e)
+			_ok(Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size).grow(1.5).encloses(pant.informe.get_global_rect()), "%s: ocupa la pantalla" % e)
 			await _accion("ui_cancel")
 			await _frames(4)
-			_ok(not is_instance_valid(pant.informe) or pant.informe.is_queued_for_deletion(), "%s: Esc/B cierra el informe y se vuelve al menú" % e)
+			_ok(not is_instance_valid(pant.informe), "%s: Esc/B la cierra y se vuelve al menú" % e)
 		TableroInicio.pestana = 0
 		pr.queue_free()
 		await _frames(3)

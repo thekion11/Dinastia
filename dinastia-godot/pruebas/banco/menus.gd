@@ -313,8 +313,8 @@ func _probar_multa_plantel_heredado() -> void:
 		_comprobar(mi.saldo < saldo, "%s: al abrir el mercado de invierno, la multa llega" % pais)
 	Partido.limpiar_contexto()   ## simular semanas deja puesto el contexto del partido (médico, césped, moda…): la sección que venga detrás lo heredaría
 
-## (17-11, orden del dueño: «que NADA quede sin conectar») El menú central nuevo conecta con TODOS los menús antiguos: la pestaña «Índice» enseña cada submenú registrado en `MenusLaterales`,
-## cada tarjeta de «Dirección del equipo» e «Información del club» y cada atajo de la barra resuelve a un submenú real (nada abre un marcador de posición), y cada acción
+## (17-11, orden del dueño: «que NADA quede sin conectar») El menú central nuevo conecta con TODOS los menús antiguos: la barra lateral (los 14 menús de `MenusLaterales` con todos sus submenús) está siempre visible,
+## cada tarjeta del mosaico de «Dirección del equipo» / «Información del club» (que siguen como portada de los submenús) y cada atajo de la barra resuelve a un submenú real (nada abre un marcador de posición), y cada acción
 ## (casa, móvil, minijuegos…) existe en `MenuLateral.ejecutar`. Versión por DATOS (sin ventana); la que pulsa de verdad está en `pruebas/probar_conexion_menu_central.gd` (especiales.sh, xvfb).
 func _probar_conexion_menu_central() -> void:
 	_titulo("MENÚ CENTRAL: TODAS LAS PANTALLAS Y SUBMENÚS TIENEN ENTRADA (DATOS)")
@@ -340,7 +340,7 @@ func _probar_conexion_menu_central() -> void:
 	for e: Array in indice:
 		if vistos.has("%s:%d" % [e[0], e[1]]):
 			en_indice += 1
-	_comprobar(total > 90 and en_indice == total and indice.size() == total, "la pestaña «Índice» enseña los %d submenús de los %d menús del panel lateral (ninguno solo por ≡)" % [total, MenusLaterales.MENUS.size()])
+	_comprobar(total > 90 and en_indice == total and indice.size() == total, "el índice de entradas cubre los %d submenús de los %d menús de la barra lateral (ninguno queda sin entrada)" % [total, MenusLaterales.MENUS.size()])
 	_comprobar(ids_ok, "cada submenú tiene rótulo y destino (una pestaña o una acción)")
 	_comprobar(acciones_ok, "cada acción de un submenú está en `MenuLateral.ejecutar`")
 	var tarjetas_ok := true
@@ -355,3 +355,14 @@ func _probar_conexion_menu_central() -> void:
 			atajos_ok = false
 			print("   atajo sin submenú: ", rot)
 	_comprobar(atajos_ok, "los atajos del Inicio y del pie (Oficina del DT, Mensajes, Ayuda, Calendario, partido, seguidores) llegan a un submenú real")
+	var ruta_ok := true
+	for rot: String in ["Identidad visual", "Cuentas del club"]:   ## escudo y caja de la barra
+		if TableroInicio.buscar(rot).is_empty():
+			ruta_ok = false
+			print("   botón de la barra sin submenú: ", rot)
+	_comprobar(ruta_ok, "el escudo (Identidad visual) y la caja (Cuentas del club) de la barra llevan a un submenú real")
+	var riel_ok := true
+	for m: Dictionary in MenusLaterales.MENUS:   ## cada menú tiene icono, nombre y al menos un submenú: es lo que dibuja el riel siempre visible
+		if String(m.get("icono", "")) == "" or String(m.get("nombre", "")) == "" or (m["subs"] as Array).is_empty():
+			riel_ok = false
+	_comprobar(riel_ok, "los %d menús de la barra lateral tienen icono, nombre y submenús" % MenusLaterales.MENUS.size())
