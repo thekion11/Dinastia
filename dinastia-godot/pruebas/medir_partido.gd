@@ -36,15 +36,7 @@ func _ready() -> void:
 	var mundo := Mundo.new()
 	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "CHI"   ## (10-11) PAIS=ESP CLUB=5: otro país y otro club (regla del dueño: nunca medir con un solo equipo).
 	mundo.generar([pais], 4711)
-	## (17-11) Con ligas por zonas impares (ARG y USA: 2 zonas de 15) dos clubes DESCANSAN cada jornada y el elegido podía no tener
-	## partido (la medición fallaba con «get index 0» y «switch_to on Nil»): se toma el siguiente club que sí juega esta jornada.
-	var cl: Array = mundo.ligas[0].clubes
-	var par: Array = []
-	for k in cl.size():
-		mundo.mi_club_id = cl[(int(OS.get_environment("CLUB")) + k) % cl.size()].id
-		par = mundo.proximo_partido()
-		if not par.is_empty():
-			break
+	var par := MedirPartidoExp.partido_con_juego(mundo)   ## (17-11) ARG/USA por zonas: el elegido podía descansar
 	_vista = VistaEstadio.new()
 	add_child(_vista)
 	## NOCHE=1 (10-11): el estadio se abre CON el perfil de noche, como en el juego (antes se aplicaba `Ambience` otra vez encima del de día y quedaban DOS luces direccionales con sombra: medía de más).

@@ -21,8 +21,11 @@ const TONOS_PIEL: Array[Color] = [Color("5a3a28"), Color("8d5d42"), Color("c08a6
 static var _mats: Dictionary = {}
 static var _malla: CapsuleMesh
 
+## Ajustes → «Jugadores lejanos simplificados» (`Calidad.lejanos_simples`): automático = de ULTRA BAJA a MEDIA BAJA; siempre; nunca.
 static func activo(nivel: int) -> bool:
-	return nivel <= Calidad.MEDIA_BAJA and OS.get_environment("SIN_IMPOSTORES") == ""
+	if OS.get_environment("SIN_IMPOSTORES") != "" or Calidad.lejanos_simples == 2:
+		return false
+	return Calidad.lejanos_simples == 1 or nivel <= Calidad.MEDIA_BAJA
 
 ## Se llama con el jugador YA vestido (cuerpo, ropa, pelo, cara). `altura` = metros del jugador; `color` = color de la camiseta.
 ## (16-11, frente 2) `piel`: con ella la silueta lleva cabeza y rodillas de piel, y short y medias salen de su equipación.
@@ -31,15 +34,18 @@ static func aplicar(nodo: Node3D, altura: float, color: Color, nivel: int, ap: A
 		return
 	var piezas := 0
 	var equip: ShaderMaterial = null
+	var cuerpo: MeshInstance3D = null
 	for g in nodo.find_children("*", "GeometryInstance3D", true, false):
 		if g is Label3D:
 			continue
 		var gi := g as GeometryInstance3D
-		_poner_rango(gi, false)
-		_piezas.append([weakref(gi), false])
+		_poner_rango(gi, 0)
 		piezas += 1
+		var eq := _equipacion_de(gi)
+		if eq != null and gi is MeshInstance3D and (cuerpo == null or _vertices(gi as MeshInstance3D) > _vertices(cuerpo)):
+			cuerpo = gi as MeshInstance3D
 		if equip == null:
-			equip = _equipacion_de(gi)
+			equip = eq
 	if piezas == 0:
 		return
 	if _malla == null:
@@ -56,19 +62,32 @@ static func aplicar(nodo: Node3D, altura: float, color: Color, nivel: int, ap: A
 	mi.position.y = altura * 0.5
 	mi.material_override = _material(color) if piel.a == 0.0 else _material_equipado(color, piel, equip)
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	_poner_rango(mi, true)
-	_piezas.append([weakref(mi), true])
+	_poner_rango(mi, 2)
+	_piezas.append([weakref(mi), 2])
 	nodo.add_child(mi)
+	## (17-11, auditoría) EL CUERPO BARATO de media distancia: una copia del cuerpo (misma malla, esqueleto y material de equipación) sin
+	## sombra, sin pelo, cara ni capas de la cabeza, de `DISTANCIA` m hasta que el jugador mide `PIXELES` de alto; luego, la silueta.
+	if cuerpo != null:
+		var lod := cuerpo.duplicate() as MeshInstance3D
+		lod.name = "CuerpoMedio"
+		lod.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		cuerpo.get_parent().add_child(lod)
+		_poner_rango(lod, 1)
+		_piezas.append([weakref(lod), 1])
 	AnimLejana.poner(nodo, ap)   ## y su animación, a 5 Hz mientras esté lejos
 
-static func _poner_rango(gi: GeometryInstance3D, silueta: bool) -> void:
-	if silueta:
-		gi.visibility_range_begin = distancia
-		gi.visibility_range_begin_margin = MARGEN
-	else:
-		gi.visibility_range_end = distancia
+## `tramo`: 0 = el cuerpo completo y sus capas (hasta `DISTANCIA`), 1 = el cuerpo barato (de `DISTANCIA` a `distancia`), 2 = la silueta.
+static func _poner_rango(gi: GeometryInstance3D, tramo: int) -> void:
+	if tramo != 2:
+		gi.visibility_range_end = DISTANCIA if tramo == 0 else maxf(distancia, DISTANCIA)
 		gi.visibility_range_end_margin = MARGEN
+	if tramo != 0:
+		gi.visibility_range_begin = DISTANCIA if tramo == 1 else distancia
+		gi.visibility_range_begin_margin = MARGEN
 	gi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF   ## fundido corto, sin salto
+
+static func _vertices(m: MeshInstance3D) -> int:
+	return 0 if m.mesh == null or m.mesh.get_surface_count() == 0 else m.mesh.surface_get_array_len(0)
 
 ## La distancia (m) a la que un jugador de `ALTURA_REF` mide `PIXELES` de alto con esta cámara y esta ventana (`alto_px`).
 static func distancia_para(fov_vertical: float, alto_px: float) -> float:
@@ -98,7 +117,7 @@ static func vigilar(vp: Viewport) -> void:
 	for e: Array in _piezas:
 		var gi := (e[0] as WeakRef).get_ref() as GeometryInstance3D
 		if gi != null:
-			_poner_rango(gi, bool(e[1]))
+			_poner_rango(gi, int(e[1]))
 			vivas.append(e)
 	_piezas = vivas
 

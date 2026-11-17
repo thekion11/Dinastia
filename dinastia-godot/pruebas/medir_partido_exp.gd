@@ -197,3 +197,14 @@ static func efecto(vista: Node) -> void:
 					print("EFECTO cesped: material plano en %s" % campo.name)
 			"debanding": vp.use_debanding = false
 			"fxaa": vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
+
+## (17-11) Con ligas por zonas impares (ARG y USA: 2 zonas de 15) dos clubes DESCANSAN cada jornada y el club elegido (`CLUB`) podía no
+## tener partido: la medición fallaba con «get index 0» y «switch_to on Nil». Se toma el siguiente club que sí juega esta jornada.
+static func partido_con_juego(mundo: Mundo) -> Array:
+	var cl: Array = mundo.ligas[0].clubes
+	for k in cl.size():
+		mundo.mi_club_id = cl[(int(OS.get_environment("CLUB")) + k) % cl.size()].id
+		var par := mundo.proximo_partido()
+		if not par.is_empty():
+			return par
+	return []

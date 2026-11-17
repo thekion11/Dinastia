@@ -51,3 +51,20 @@ static func crear(p: Object) -> void:
 		Calidad.partido_ligero = si
 		Calidad.guardar())
 	p._lista_ajustes.add_child(cb)
+	## (17-11, auditoría) «Jugadores lejanos simplificados»: automático (de ULTRA BAJA a MEDIA BAJA), siempre o nunca (`ImpostorLejano`).
+	var fila := HBoxContainer.new()
+	var et := Label.new()
+	et.text = Idiomas.t("Jugadores lejanos simplificados")
+	et.tooltip_text = Idiomas.t("Los jugadores que se ven pequeños se dibujan más simples para ganar fluidez. Se aplica al abrir el estadio.")
+	et.add_theme_font_size_override("font_size", 11)
+	fila.add_child(et)
+	var op := OptionButton.new()
+	for t in ["Automático", "Siempre", "Nunca"]:
+		op.add_item(Idiomas.t(t))
+	op.selected = Calidad.lejanos_simples
+	op.add_theme_font_size_override("font_size", 11)
+	op.item_selected.connect(func(i: int) -> void:
+		Calidad.lejanos_simples = i
+		Calidad.guardar())
+	fila.add_child(op)
+	p._lista_ajustes.add_child(fila)

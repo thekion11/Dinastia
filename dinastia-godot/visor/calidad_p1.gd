@@ -59,6 +59,7 @@ static var elegida: int = NIVEL_DEFECTO
 static var adaptativa: bool = true
 ## PARTIDO LIGERO (4-11, orden 32): agregado aparte de la calidad, apagado por defecto en todas (ver `PartidoLigero`).
 static var partido_ligero: bool = false
+static var lejanos_simples: int = 0   ## (17-11) «Jugadores lejanos simplificados»: 0 automático, 1 siempre, 2 nunca (`ImpostorLejano`)
 static var ahorro_menu_media: bool = CalidadRes3D.es_movil_tactil()   ## (10-11) Ajustes: el menú también ahorra (repinta solo al cambiar, fondos quietos) en MEDIA (`AhorroMenu`); ENCENDIDO por defecto en el móvil (orden 36)
 static var modo_rendimiento: bool = true   ## (10-11) Ajustes: sin glow ni sombra del sol de MEDIA hacia abajo (`ModoRendimiento`); ENCENDIDO por defecto en todas las plataformas (móvil: orden 36; PC: 15-11, orden del dueño)
 
@@ -407,6 +408,7 @@ static func cargar() -> void:
 	if cf.has_section_key("grafica", "adaptativa"):
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))
 	partido_ligero = bool(cf.get_value("grafica", "partido_ligero", false))
+	lejanos_simples = clampi(int(cf.get_value("grafica", "lejanos_simples", 0)), 0, 2)
 	modo_rendimiento = bool(cf.get_value("grafica", "modo_rendimiento", true))
 	ahorro_menu_media = bool(cf.get_value("grafica", "ahorro_menu_media", CalidadRes3D.es_movil_tactil()))
 	if cf.has_section_key("grafica", "motor_ligero"):
@@ -425,6 +427,7 @@ static func guardar() -> void:
 	cf.set_value("grafica", "adaptativa", adaptativa)
 	cf.set_value("grafica", "motor_ligero", motor_ligero)
 	cf.set_value("grafica", "partido_ligero", partido_ligero)
+	cf.set_value("grafica", "lejanos_simples", lejanos_simples)
 	cf.set_value("grafica", "modo_rendimiento", modo_rendimiento)
 	cf.set_value("grafica", "ahorro_menu_media", ahorro_menu_media)
 	cf.set_value("grafica", "escala_minimo", escala_minimo)

@@ -9094,7 +9094,9 @@
   "Cambios": "Substitutions",
   "Con táctica %s, %s juega: %s.": "With a %s tactic, %s plays: %s.",
   "garra y carácter": "grit and character",
-  "bloque bajo y contragolpe": "a deep block and counters"
+  "bloque bajo y contragolpe": "a deep block and counters",
+  "Jugadores lejanos simplificados": "Simplified distant players",
+  "Los jugadores que se ven pequeños se dibujan más simples para ganar fluidez. Se aplica al abrir el estadio.": "Players who look small are drawn more simply for smoother play. Applies when the stadium opens."
  },
  "pt": {
   "Historia": "História",
@@ -18191,7 +18193,9 @@
   "Cambios": "Substituições",
   "Con táctica %s, %s juega: %s.": "Com tática %s, %s joga: %s.",
   "garra y carácter": "garra e caráter",
-  "bloque bajo y contragolpe": "bloco baixo e contra-ataque"
+  "bloque bajo y contragolpe": "bloco baixo e contra-ataque",
+  "Jugadores lejanos simplificados": "Jogadores distantes simplificados",
+  "Los jugadores que se ven pequeños se dibujan más simples para ganar fluidez. Se aplica al abrir el estadio.": "Os jogadores que parecem pequenos são desenhados de forma mais simples para ganhar fluidez. Aplica-se ao abrir o estádio."
  },
  "patrones": [
   [
@@ -33560,7 +33564,9 @@
   "Cambios": "Remplacements",
   "Con táctica %s, %s juega: %s.": "En tactique %s, %s joue : %s.",
   "garra y carácter": "du cran et du caractère",
-  "bloque bajo y contragolpe": "un bloc bas et la contre-attaque"
+  "bloque bajo y contragolpe": "un bloc bas et la contre-attaque",
+  "Jugadores lejanos simplificados": "Joueurs lointains simplifiés",
+  "Los jugadores que se ven pequeños se dibujan más simples para ganar fluidez. Se aplica al abrir el estadio.": "Les joueurs qui paraissent petits sont dessinés plus simplement pour gagner en fluidité. S'applique à l'ouverture du stade."
  },
  "it": {
   "Historia": "Storia",
@@ -42657,7 +42663,9 @@
   "Cambios": "Sostituzioni",
   "Con táctica %s, %s juega: %s.": "Con tattica %s, %s gioca: %s.",
   "garra y carácter": "grinta e carattere",
-  "bloque bajo y contragolpe": "blocco basso e contropiede"
+  "bloque bajo y contragolpe": "blocco basso e contropiede",
+  "Jugadores lejanos simplificados": "Giocatori lontani semplificati",
+  "Los jugadores que se ven pequeños se dibujan más simples para ganar fluidez. Se aplica al abrir el estadio.": "I giocatori che appaiono piccoli vengono disegnati in modo più semplice per guadagnare fluidità. Si applica all'apertura dello stadio."
  },
  "de": {
   "Historia": "Geschichte",
@@ -51754,7 +51762,9 @@
   "Cambios": "Wechsel",
   "Con táctica %s, %s juega: %s.": "Mit %s Taktik spielt %s: %s.",
   "garra y carácter": "Kampfgeist und Charakter",
-  "bloque bajo y contragolpe": "tiefem Block und Kontern"
+  "bloque bajo y contragolpe": "tiefem Block und Kontern",
+  "Jugadores lejanos simplificados": "Vereinfachte entfernte Spieler",
+  "Los jugadores que se ven pequeños se dibujan más simples para ganar fluidez. Se aplica al abrir el estadio.": "Klein wirkende Spieler werden einfacher gezeichnet, damit das Spiel flüssiger läuft. Gilt beim Öffnen des Stadions."
  },
  "ca": {
   "Historia": "Història",
@@ -60851,7 +60861,9 @@
   "Cambios": "Canvis",
   "Con táctica %s, %s juega: %s.": "Amb tàctica %s, %s juga: %s.",
   "garra y carácter": "garra i caràcter",
-  "bloque bajo y contragolpe": "bloc baix i contraatac"
+  "bloque bajo y contragolpe": "bloc baix i contraatac",
+  "Jugadores lejanos simplificados": "Jugadors llunyans simplificats",
+  "Los jugadores que se ven pequeños se dibujan más simples para ganar fluidez. Se aplica al abrir el estadio.": "Els jugadors que es veuen petits es dibuixen més simples per guanyar fluïdesa. S'aplica en obrir l'estadi."
  },
  "pl": {
   "Club": "Klub",
@@ -69948,7 +69960,9 @@
   "Cambios": "Zmiany",
   "Con táctica %s, %s juega: %s.": "Z taktyką %s %s gra: %s.",
   "garra y carácter": "walkę i charakter",
-  "bloque bajo y contragolpe": "niski blok i kontry"
+  "bloque bajo y contragolpe": "niski blok i kontry",
+  "Jugadores lejanos simplificados": "Uproszczeni odlegli zawodnicy",
+  "Los jugadores que se ven pequeños se dibujan más simples para ganar fluidez. Se aplica al abrir el estadio.": "Zawodnicy, którzy wyglądają na małych, są rysowani prościej, aby gra była płynniejsza. Działa po otwarciu stadionu."
  },
  "tr": {
   "Club": "Kulüp",
@@ -79045,6 +79059,8 @@
   "Cambios": "Oyuncu değişikliği",
   "Con táctica %s, %s juega: %s.": "%s taktikle %s şöyle oynar: %s.",
   "garra y carácter": "mücadele ve karakter",
-  "bloque bajo y contragolpe": "derin blok ve kontra"
+  "bloque bajo y contragolpe": "derin blok ve kontra",
+  "Jugadores lejanos simplificados": "Basitleştirilmiş uzak oyuncular",
+  "Los jugadores que se ven pequeños se dibujan más simples para ganar fluidez. Se aplica al abrir el estadio.": "Küçük görünen oyuncular daha akıcı oyun için daha basit çizilir. Stadyum açıldığında uygulanır."
  }
 }

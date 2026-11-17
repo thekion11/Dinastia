@@ -7,6 +7,7 @@ extends Node
 const LEJOS := 36.0
 const CERCA := 33.0
 const PASO := 0.2
+const MEDIO := 1.0 / 30.0   ## s: el paso con el cuerpo barato de media distancia (la mitad de 60 Hz)
 var _ap: AnimationPlayer
 var _cuerpo: Node3D
 var _lejos := false
@@ -28,20 +29,20 @@ func _process(delta: float) -> void:
 	if cam == null or not _cuerpo.is_inside_tree():
 		return
 	ImpostorLejano.vigilar(get_viewport())
-	## (17-11) a saltos solo cuando ya es silueta: el umbral sigue al de `ImpostorLejano` (tamaño en pantalla).
-	var lejos := ImpostorLejano.distancia + (LEJOS - ImpostorLejano.DISTANCIA)
-	var cerca := ImpostorLejano.distancia + (CERCA - ImpostorLejano.DISTANCIA)
+	## (17-11) A saltos desde que deja el cuerpo completo (`LEJOS`): a media frecuencia (30 Hz) con el cuerpo barato de media distancia y a
+	## `PASO` cuando ya es silueta (el umbral de `ImpostorLejano`, por tamaño en pantalla).
 	var d2 := cam.global_position.distance_squared_to(_cuerpo.global_position)
-	if not _lejos and d2 > lejos * lejos:
+	var paso := PASO if d2 > ImpostorLejano.distancia * ImpostorLejano.distancia else MEDIO
+	if not _lejos and d2 > LEJOS * LEJOS:
 		_lejos = true
 		_acum = 0.0
 		_ap.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
-	elif _lejos and d2 < cerca * cerca:
+	elif _lejos and d2 < CERCA * CERCA:
 		_lejos = false
 		_ap.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_IDLE
 	if _lejos:
 		_acum += delta
-		if _acum >= PASO:
+		if _acum >= paso:
 			_ap.advance(_acum)
 			_acum = 0.0
 

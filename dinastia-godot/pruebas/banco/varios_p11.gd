@@ -346,6 +346,8 @@ func _probar_impostores_lejanos() -> void:
 	_comprobar(m2 != null and Color(m2.get_shader_parameter("c_short")).is_equal_approx(Color("101010"))
 		and Color(m2.get_shader_parameter("c_medias")).is_equal_approx(Color("1565c0")) and ImpostorLejano.TONOS_PIEL.has(Color(m2.get_shader_parameter("c_piel"))),
 		"silueta con su equipación: short, medias y uno de los 4 tonos de piel")
+	var med := n2.get_node_or_null("CuerpoMedio") as MeshInstance3D   ## (17-11) el cuerpo barato de media distancia: sin sombra y desde 30 m
+	_comprobar(med != null and med.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF and is_equal_approx(med.visibility_range_begin, ImpostorLejano.DISTANCIA) and is_equal_approx(c2.visibility_range_end, ImpostorLejano.DISTANCIA), "cuerpo barato de media distancia: sin sombra, de 30 m al umbral; el completo, hasta 30 m")
 	n2.free()
 	## Animación lejana: a más de 36 m del ojo pasa a modo manual (5 Hz) y a menos de 33 m vuelve a su ritmo.
 	var cam := Camera3D.new()
