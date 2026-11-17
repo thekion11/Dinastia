@@ -92,6 +92,8 @@ pasa "menú central: Inicio y las otras dos pestañas caben en 1600x900 y 1280x7
 pasa "menú central: el informe de la semana se alcanza con foco y Intro, y Esc lo cierra (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/probar_informe_alcanzable.tscn" "FIN. 0 fallos"
 pasa "La Ruta: con mando se llega a todos los botones (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/prueba_ruta_foco.tscn" "FIN. 0 fallos"
 pasa "La Ruta: el foco en el teléfono de pie (con pantalla)" "MOVIL=1 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 608x1080 res://pruebas/prueba_ruta_foco.tscn" "FIN. 0 fallos"
+## (17-11) El trote CMU (`TROTE_CMU=1`, apagado por defecto) colgó una vez una captura con su 1.ª versión: un partido corto con pantalla y el trote encendido debe llegar al final.
+pasa "Trote CMU encendido: el partido con pantalla termina" "TROTE_CMU=1 PAIS=KOR,MEX SALIDA=/tmp xvfb-run -a godot --path . --rendering-driver vulkan --rendering-method forward_plus --resolution 1280x720 res://pruebas/captura_dorsales_anim.tscn" "CAPTURA TERMINADA trote_cmu=true"
 ## (16-11) A calidad máxima las 19 entregas tardan ~30 min sin GPU: en 6 tandas para caber en los 600 s de cada prueba.
 pasa "La Ruta: la entrega en 3D de cada premio 1/6 (con pantalla)" "PARTE=1/6 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_gala_premio.tscn" "FIN. 0 fallos"
 pasa "La Ruta: la entrega en 3D de cada premio 2/6 (con pantalla)" "PARTE=2/6 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_gala_premio.tscn" "FIN. 0 fallos"

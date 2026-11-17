@@ -3,18 +3,12 @@ extends "res://ui/partido_jugable_p1.gd"
 ## [Capa 2/2 de `partido_jugable.gd`] _montar_hud, _ver_hud, ceremonia_activa, saltar_ceremonia, _silbato, _fin_ceremonia … (+10)
 
 func _montar_hud() -> void:
-	var caja := PanelContainer.new()
-	caja.add_theme_stylebox_override("panel", _panel(LIMA))
-	caja.position = Vector2(24.0 + HudTactil.margen(self).x, 18)   ## HUD del móvil: crece por dpi y respeta la muesca (HudTactil, 4-11)
-	add_child(caja)
-	_hud.append(caja)
-	var h := HBoxContainer.new()
-	h.add_theme_constant_override("separation", 14)
-	caja.add_child(h)
-	_marcador = _etiqueta(HudTactil.tam(24, self), Color.WHITE, false)
-	h.add_child(_marcador)
-	_reloj = _etiqueta(HudTactil.tam(22, self), LIMA, false)
-	h.add_child(_reloj)
+	## (17-11) EL MARCADOR DE TV (`MarcadorTV`: escudos, siglas, resultado en color y reloj aparte; crece con el HUD del móvil y respeta la
+	## muesca). Antes: siglas y reloj en una caja de texto, que siguen dentro, ocultos (`_marcador`, `_reloj`), para quien los lea.
+	_mtv = MarcadorTV.poner(self, local, visita)
+	_hud.append(_mtv)
+	_marcador = _etiqueta(HudTactil.tam(24, self), Color.WHITE, false); _mtv.add_child(_marcador); _marcador.visible = false
+	_reloj = _etiqueta(HudTactil.tam(22, self), LIMA, false); _mtv.add_child(_reloj); _reloj.visible = false
 	var caja2 := PanelContainer.new()
 	caja2.add_theme_stylebox_override("panel", _panel(FUCSIA))
 	caja2.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -23,8 +17,8 @@ func _montar_hud() -> void:
 	caja2.offset_top = HudTactil.alto_fila2(self)   ## (en vertical, bajo el marcador)
 	add_child(caja2)
 	_hud.append(caja2)
-	_mis_stats = _etiqueta(HudTactil.tam(15, self), Color.WHITE, false)
-	caja2.add_child(_mis_stats)
+	_mis_stats = _etiqueta(HudTactil.tam(15, self), Color.WHITE, false); _mis_stats.visible = false   ## (17-11) el texto con emojis, oculto
+	_fila_num = FilaNumeros.crear(HudTactil.tam(15, self)); caja2.add_child(_mis_stats); caja2.add_child(_fila_num)   ## lo que se ve: iconos dibujados
 	## Tu jugador y su aguante, abajo a la izquierda.
 	var caja3 := PanelContainer.new()
 	caja3.add_theme_stylebox_override("panel", _panel(LIMA))
@@ -255,7 +249,7 @@ func _montar(duracion_mitad: float) -> void:
 	_repe.terminada.connect(_fin_repeticion)
 	motor.terminado.connect(_al_terminar)
 	motor.eliminatoria = eliminatoria
-	PartidoJugableTanda.poner(self); MarcadorJugador.poner(self)   ## el triángulo sobre tu jugador (P2, 3-11)
+	PartidoJugableTanda.poner(self); _hud.append(HudTV.montar_jugable(self, motor, local, visita))   ## (17-11) nombres, aros, triángulo y radar en 2D (antes `MarcadorJugador`, en 3D)
 	## La cámara, detrás de tu jugador.
 	_cam = Camera3D.new()
 	_cam.fov = 58.0
@@ -412,7 +406,7 @@ func _process(delta: float) -> void:
 	_t_rotulos -= delta
 	if is_instance_valid(_cine) and _pausa == null:
 		_cine.paso(delta)
-	if _t_rotulos <= 0.0 and motor != null and not _rotulos_fuera:
+	if _t_rotulos <= 0.0 and motor != null and not _rotulos_fuera and not has_node("NombresTV"):   ## (17-11) con los nombres 2D, sin rótulos 3D
 		_t_rotulos = 0.1
 		PlayerSpawner.despejar_rotulos(motor.jugadores, _cam, motor.balon.position, _vp.size.y if _vp != null else 900.0)
 	if motor == null:
@@ -422,8 +416,10 @@ func _process(delta: float) -> void:
 	var yo = motor.usuario
 	_marcador.text = "%s  %d - %d  %s" % [_abrev(local.nombre), motor.goles[0], motor.goles[1], _abrev(visita.nombre)]
 	_reloj.text = "%d'" % motor.minuto()
+	_mtv.fijar(motor.goles[0], motor.goles[1], _reloj.text)
 	var s = motor.stats
 	_mis_stats.text = Idiomas.t("⚽ %d   🅰 %d   🎯 %d/%d   ✔ %d/%d pases   ⭐ %.1f") % [s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], motor.nota_usuario()]
+	_fila_num.poner(s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], motor.nota_usuario())
 	if not yo.is_empty():
 		_aguante.value = motor.forma_fisica(yo)
 		if motor.estado == "juego":

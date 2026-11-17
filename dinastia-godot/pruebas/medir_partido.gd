@@ -25,6 +25,7 @@ var _llamadas: Array[float] = []
 var _triangulos: Array[float] = []
 var _objetos: Array[float] = []
 var _proceso: Array[float] = []
+var _lienzo: Array[float] = []   ## (17-11) llamadas de dibujo del 2D (HUD) del viewport principal
 
 func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.ALTO)
@@ -160,12 +161,13 @@ func _process(_d: float) -> void:
 	_triangulos.append(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
 	_objetos.append(Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME))
 	_proceso.append(Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0)
+	_lienzo.append(MedirHudAB.leer(_vista, _llamadas.size() - 1, MUESTRAS))   ## (17-11) HUD_AB=1: coste 2D del HUD con y sin él
 	if _llamadas.size() >= MUESTRAS:
 		_fin = true
 		if OS.get_environment("FOTO") != "":
 			get_viewport().get_texture().get_image().save_png(OS.get_environment("FOTO"))
-		print("MEDICION calidad=%d  llamadas=%.0f  triangulos=%.0f  objetos=%.0f  fotograma=%.2f ms (peor %.2f)  vram=%.0f MB" % [
-			Calidad.elegida, _media(_llamadas), _media(_triangulos), _media(_objetos),
+		print("MEDICION calidad=%d  llamadas=%.0f  triangulos=%.0f  objetos=%.0f  lienzo2d=%.0f  fotograma=%.2f ms (peor %.2f)  vram=%.0f MB" % [
+			Calidad.elegida, _media(_llamadas), _media(_triangulos), _media(_objetos), _media(_lienzo),
 			_media(_proceso), _proceso.max(),
 			Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0])
 		for l in _vista.find_children("*", "Light3D", true, false):
