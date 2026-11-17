@@ -81,9 +81,10 @@ func simular_minuto() -> void:
 	if not motor_externo:
 		if rng.randf() < p_l:
 			_atacar(local, once_local, true)
-		if rng.randf() < p_v:
+		if rng.randf() < p_v and not terminado_ya:   ## (17-11) una roja que deja a uno con menos de 7 suspende el partido DENTRO del minuto: ya no se juega más (salía un gol tras el final)
 			_atacar(visita, once_visita, false)
-
+	if terminado_ya:
+		return
 	_incidencias()
 	minuto_jugado.emit(minuto)
 	if prorroga_si_empate and minuto >= minutos_fin and minutos_fin == MINUTOS and goles_local == goles_visita:
