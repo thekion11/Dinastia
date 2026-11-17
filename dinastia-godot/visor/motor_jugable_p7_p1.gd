@@ -90,6 +90,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
 				if TIRO_PULIDO: prob *= (1.0 - PARADA_LEJOS * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
 				prob = _prob_parada_extra(p, b, prob)   ## gancho (sesión 15): aquí no cambia nada
+				prob = _prob_parada_cuerpo(lat, alcance, prob)   ## gancho (17-11): aquí no cambia nada
 				if lat < alcance and _rng.randf() < prob:
 					MotorParada.programar(self as Object as MotorJugable, p, cruce_gk, lat > 1.2)
 					return true
@@ -356,6 +357,10 @@ func _error_tiro_extra(_p: Dictionary, _lejos: float, error: float, _clase: Stri
 
 ## GANCHO DE LA PROBABILIDAD DE PARADA (13-11-2026, sesión 15, OK del líder): el de siempre la deja igual (sin azar: la huella no
 ## cambia); `MotorCombinado` (C4) la baja ante remates desde dentro del área (`MejorasC4Avance.parada`, `C4_PARADA_AREA`).
+## GANCHO DE LA PARADA DE LO PARABLE (17-11-2026): el de siempre no la cambia (ni gasta azar: la huella no cambia); C4 lo usa con `C4_PARADA_CUERPO`.
+func _prob_parada_cuerpo(_lat: float, _alcance: float, prob: float) -> float:
+	return prob
+
 func _prob_parada_extra(_gk: Dictionary, _desde: Vector3, prob: float) -> float:
 	return prob
 

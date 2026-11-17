@@ -55,6 +55,13 @@ class PerfJ extends MotorJugable:
 	func _mover_jugadores(d: float) -> void:
 		var t0 := Time.get_ticks_usec(); super(d); PerfilColocacion._t("_mover_jugadores", t0)
 
+func _piezas_de_la_variante() -> String:
+	var c := PerfC.new()
+	c.aplicar_variante(OS.get_environment("VARIANTE") if OS.get_environment("VARIANTE") != "" else "combinado_c4")
+	var r := c.descripcion_piezas()
+	c.free()
+	return r
+
 func _ready() -> void:
 	await get_tree().process_frame
 	var cuantos := int(OS.get_environment("N_PARTIDOS")) if OS.get_environment("N_PARTIDOS") != "" else 2
@@ -81,6 +88,8 @@ func _ready() -> void:
 		lista.append_array(sp.spawn_team(raiz, v["xi"], v["jugadores"], Puente3D.formacion(b.tactica.formacion), false, Puente3D.kit(b), Puente3D.kit_portero(b)))
 		var ball := StadiumBuilder.spawn_ball(raiz, Vector3(0, 0.11, 0))
 		var motor: MotorJugable = PerfJ.new() if cual == "siempre" else PerfC.new()
+		if motor is MotorCombinado and cual != "league":
+			(motor as MotorCombinado).aplicar_variante(OS.get_environment("VARIANTE") if OS.get_environment("VARIANTE") != "" else "combinado_c4")   ## (17-11) la del juego: C4 (antes medía C1 sin querer)
 		if motor is MotorCombinado and cual == "league":
 			for p: String in MotorCombinado.PIEZAS:
 				(motor as MotorCombinado).piezas[p] = "league"
@@ -99,7 +108,7 @@ func _ready() -> void:
 		total += Time.get_ticks_usec() - t0
 		pasos += i
 		raiz.queue_free()
-	var cab := "motor=%s piezas=%s" % [cual, (PerfC.new() as MotorCombinado).descripcion_piezas() if cual != "siempre" else "-"]
+	var cab := "motor=%s variante=%s piezas=%s" % [cual, OS.get_environment("VARIANTE") if OS.get_environment("VARIANTE") != "" else "combinado_c4", _piezas_de_la_variante() if cual != "siempre" else "-"]
 	print("PERFIL ", cab, " total_us_paso=", snappedf(float(total) / float(pasos), 0.1), " pasos=", pasos)
 	for mt in METODOS:
 		if n.has(mt):
