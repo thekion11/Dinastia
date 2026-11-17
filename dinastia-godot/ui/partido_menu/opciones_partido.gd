@@ -6,7 +6,7 @@ extends RefCounted
 
 const GENERALES := [["motor_real", "⚽ Motor real: el resultado se juega en el césped", true], ["indicador_pase", "🎯 Indicador de pase (a quién va el balón)", true]]
 const PANTALLA := [["pantalla_esquina", "📺 Pantalla del estadio en la esquina", true], ["radar", "🗺 Radar táctico", true], ["rotulos", "📺 Rótulos de las jugadas", true],
-	["vineta", "🎞 Viñeta de transmisión", true], ["pie", "ℹ Ficha del estadio abajo", false], ["intro", "🎬 Presentación antes del partido", true],
+	["vineta", "🎞 Viñeta de transmisión", true], ["pie", "🏟 Ficha del estadio abajo", false], ["intro", "🎬 Presentación antes del partido", true],
 	["ceremonia", "🧒 Ceremonia completa (niños, mascota, alineaciones)", true], ["repeticiones", "🔁 Repetición de los goles", true],
 	["nombres_motor", "🏷 Nombres sobre los jugadores en el partido jugable", false], ["pantalla_esquina_motor", "📺 Pantalla del estadio en la esquina en el partido jugable", false]]
 const RITMOS := [["rapido", "⏩ Partido corto"], ["normal", "⏯ Normal"], ["largo", "🐢 Largo (FC)"]]

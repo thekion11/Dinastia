@@ -152,6 +152,13 @@ func _mejor() -> void:
 	var club := partido.local if bool(mvp["local"]) else partido.visita
 	var c1 := Color(club.kit_color1 if club.kit_color1 != "" else club.color1)
 	var c2 := Color(club.kit_color2 if club.kit_color2 != "" else club.color2)
+	## (17-11) El futbolista 3D real con la equipación de su club (`RetratoJugador3D`, se monta en diferido); sin pantalla, la figura plana con su dorsal.
+	var r3d: Control = load("res://ui/partido_menu/retrato_jugador3d.gd").crear(club, j, [], -0.3)
+	if r3d != null:
+		_raiz.add_child(_ancla(r3d, 0.70, 0.36, 0.86, 0.86))
+		r3d.call_deferred("montar")
+		_mejor_texto(j, mvp)
+		return
 	var fig := TextureRect.new()
 	fig.texture = EstiloAvanzar.figura(c1, c2)
 	fig.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -160,6 +167,9 @@ func _mejor() -> void:
 	var num := EstiloAvanzar.etiqueta(str(j.dorsal) if j.dorsal > 0 else "", 30, Color.WHITE, true)
 	num.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_raiz.add_child(_ancla(num, 0.73, 0.645, 0.83, 0.70))
+	_mejor_texto(j, mvp)
+
+func _mejor_texto(j: Jugador, mvp: Dictionary) -> void:
 	var t := VBoxContainer.new()
 	t.add_theme_constant_override("separation", 0)
 	t.add_child(EstiloAvanzar.etiqueta(Idiomas.t("Jugador del partido"), 12, EstiloAvanzar.SUAVE, false, true))

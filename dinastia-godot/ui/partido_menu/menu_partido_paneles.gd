@@ -173,11 +173,28 @@ static func saque(m: MenuPartido, v: VBoxContainer) -> void:
 	d.set_border_width_all(3)
 	moneda.add_theme_stylebox_override("normal", d)
 	v.add_child(moneda)
-	var t := EstiloAvanzar.etiqueta(Idiomas.t("SACA %s") % m.partido.local.nombre.to_upper(), 44, Color.WHITE, true)
+	## EL SORTEO DE VERDAD (17-11): la moneda gira y cae; cara = saca el local. El resultado ya está decidido (`MenuPartido.saca_local`, semilla estable por partido).
+	var gana: Club = m.partido.local if m.saca_local else m.partido.visita
+	moneda.text = "C" if m.saca_local else "S"
+	var t := EstiloAvanzar.etiqueta(Idiomas.t("SACA %s") % gana.nombre.to_upper(), 44, Color.WHITE, true)
+	t.name = "SacaClub"
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(t)
-	var n := nota(v, "El motor del partido aún no sortea el saque: el saque inicial lo hace siempre el equipo local.")
+	var n := nota(v, "Sorteo de campo: gana el sorteo tu club." if gana == m.mio else "Sorteo de campo: gana el sorteo el rival.")
 	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	if not m.sorteo_visto and not Animar.reducidas():
+		m.sorteo_visto = true
+		t.modulate.a = 0.0
+		n.modulate.a = 0.0
+		moneda.pivot_offset = moneda.custom_minimum_size * 0.5
+		var tw := moneda.create_tween()
+		for i in 4:
+			tw.tween_property(moneda, "scale:x", 0.06, 0.09)
+			tw.tween_property(moneda, "scale:x", 1.0, 0.09)
+		tw.tween_callback(func() -> void: Sonido.toca("clic"))
+		tw.tween_property(t, "modulate:a", 1.0, 0.25)
+		tw.parallel().tween_property(n, "modulate:a", 1.0, 0.25)
+	m.sorteo_visto = true
 	var b := PantallaMaqueta.boton(Idiomas.t("Empezar partido"), true, 24)
 	b.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	b.pressed.connect(m.confirmar)

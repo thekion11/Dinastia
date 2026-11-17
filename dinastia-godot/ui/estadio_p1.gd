@@ -107,6 +107,7 @@ var _tiros_de := {}
 var _goles_de := {}
 var _ayuda_control: Label
 var _panel_dt: PanelDTPartido
+var _pausa_menu: MenuPausaPartido   ## la pausa corta (17-11): Reanudar, Táctica y cambios, Estadísticas, Controles, Simular el resto, Salir
 var _panel_controles: PanelControles
 ## Estadísticas a pedido y rótulos de la tele (16-10-2026).
 var _stats: EstadisticasVivo

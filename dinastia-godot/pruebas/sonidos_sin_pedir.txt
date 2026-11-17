@@ -7,7 +7,7 @@
 #  autogol, mano_penal, mano_fuera_area, libre_indirecto: el motor del partido no tiene goles en propia puerta, manos ni faltas indirectas.
 #  control_balon, recuperacion_balon, posesion_larga, tiro_flojo, palo_doble: piden una señal nueva del motor (posesión, recuperación, fuerza del tiro, rebote en dos palos).
 #  tarjeta_banco: el juego no amonesta al banquillo. campanas_iglesia: es de la ciudad 3D (apagada, orden 33). entrada_taquilla: sin acción de entrada en taquilla.
-#  huelga_hinchas: la huelga existe como suceso de prensa (`huelga_impagos`) pero se resuelve en gestión, no en la grada. desbloqueo, cronometro: sin un hecho propio en pantalla todavía.
+#  huelga_hinchas: la huelga existe como suceso de prensa (`huelga_impagos`) pero se resuelve en gestión, no en la grada. desbloqueo: sin un hecho propio en pantalla todavía.
 agente_llamada
 autogol
 campanas_iglesia

@@ -384,3 +384,17 @@ func _seguir_jugada_gol(autor: Jugador) -> void:
 			_rig.objetivo_seguimiento = null
 		if _rig.current_index == idx_tele:
 			_rig.switch_to(idx_antes))
+
+## LA PAUSA CORTA (17-11-2026, dueño): el botón de pausa abre `MenuPausaPartido` (Reanudar, Táctica y cambios, Estadísticas, Controles,
+## Simular el resto, Salir); la pizarra de táctica y cambios es una de sus opciones. El motor no avanza mientras está abierta.
+func abrir_pausa() -> void:
+	if _motor == null or _pausa_menu != null or partido == null or partido.terminado_ya:
+		return
+	if _cajon != null and _cajon.abierto:
+		_cajon.cerrar()
+	_pausa_menu = MenuPausaPartido.abrir(self, partido)
+	_pausa_menu.cerrado.connect(func() -> void: _pausa_menu = null)
+
+## «Salir del partido» de la pausa: lo mismo que el botón «Volver» (el partido sigue en la pantalla 2D).
+func salir() -> void:
+	cerrado.emit()
