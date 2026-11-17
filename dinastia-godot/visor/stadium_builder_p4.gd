@@ -47,9 +47,8 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	gmat.metallic = 0.0
 	gmat.metallic_specular = 0.18
 	pitch.material_override = gmat
-	## EL CÉSPED DE TRANSMISIÓN (14-10-2026): franjas que brillan según el
-	## ángulo, brizna, manchas y desgaste (`visor/cesped.gdshader`). El dibujo
-	## del club sigue saliendo de la misma textura.
+	## EL CÉSPED DE TRANSMISIÓN (14-10-2026): franjas que brillan según el ángulo, brizna, manchas y desgaste
+	## (`visor/cesped.gdshader`). El dibujo del club sigue saliendo de la misma textura.
 	var sm := ShaderMaterial.new()
 	sm.shader = load("res://visor/cesped_barato.gdshader" if ModoRendimiento.cesped_barato(Calidad.elegida) else "res://visor/cesped.gdshader")   ## (10-11) E4: sin brizna ni relieve con el modo rendimiento
 	sm.set_shader_parameter("dibujo", gmat.albedo_texture)
