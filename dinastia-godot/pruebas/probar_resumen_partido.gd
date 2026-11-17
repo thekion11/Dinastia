@@ -36,6 +36,23 @@ func correr(padre: Node) -> int:
 		for g: String in ResumenPartidoCine.goleadores(p, p.local):
 			goles_l += g.count("'")
 		_ok(goles_l == p.goles_local, "%s: los minutos de los goleadores locales (%d) cuadran con su marcador (%d)" % [cfg[0], goles_l, p.goles_local])
+		## TARJETAS (17-11, Auditoría): las del simulado quedan por equipo y en la crónica; las del 3D (`tarjeta_externa`) también.
+		var en_cronica := p.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) in ["amarilla", "roja"])
+		_ok(p.amarillas_local + p.amarillas_visita + p.rojas_local + p.rojas_visita >= en_cronica.size(), "%s: cada tarjeta de la crónica está contada" % cfg[0])
+		for f: Array in filas:
+			if String(f[0]) == "Tarjetas amarillas":
+				_ok(int(f[1]) == p.amarillas_local and int(f[2]) == p.amarillas_visita, "%s: las amarillas del resumen son las del partido" % cfg[0])
+		_ok(rotulos.has("Tarjetas amarillas"), "%s: sale la fila de amarillas" % cfg[0])
+		var ext: Jugador = null
+		for j: Jugador in p.once_visita:
+			if ext == null and p.amarillas_hoy(j.id) == 0:
+				ext = j   ## uno sin tarjetas hoy
+		var antes_a := p.amarillas_visita
+		p.tarjeta_externa(ext.id, false)
+		p.tarjeta_externa(ext.id, false)   ## la 2.ª amarilla es roja
+		_ok(p.amarillas_visita == antes_a + 2 and p.rojas_visita >= 1, "%s: 2 amarillas del 3D = 2 amarillas y 1 roja de la visita" % cfg[0])
+		var suyas := ResumenPartidoCine.tarjetas(p, p.visita).filter(func(t: Array) -> bool: return String(t[0]).ends_with("%d'" % p.minuto))
+		_ok(suyas.size() == 2 and bool(suyas[1][1]), "%s: las tarjetas del 3D salen en la lista del club con su minuto (amarilla y roja)" % cfg[0])
 		p.set_meta("pases", [[312, 280], [270, 221]])
 		var con := ResumenPartidoCine.estadisticas(p).map(func(f: Array) -> String: return String(f[0]))
 		_ok(con.has("Pases") and con.has("Precisión de pase %"), "%s: jugado en el césped, salen los pases y su precisión" % cfg[0])

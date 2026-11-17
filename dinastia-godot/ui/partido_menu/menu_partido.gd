@@ -47,6 +47,7 @@ func _ready() -> void:
 	size = get_viewport_rect().size
 	get_viewport().size_changed.connect(func() -> void: size = get_viewport_rect().size)
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	MandoMenuPartido.escuchar(self, func() -> void: if _modal.visible: cerrar_panel())   ## R2 confirma; Cuadrado cierra la pestaña abierta
 	var ult := EleccionPartido.ultima()
 	if not ult.is_empty():
 		match String(ult.get("modo", "")):
@@ -265,7 +266,13 @@ func _abrir(clave: String) -> void:
 		"camara": PanelesVistas3D.camara(self, _cuerpo)
 	_modal.visible = true
 	_resumen()
-	PreviaMenuPartido.enfocar_panel.call_deferred(_cuerpo, _botones[clave])
+	_enfocar_pestana(clave)
+
+## (17-11, auditoría de mando) Un cuadro DESPUÉS de abrir: así la pestaña anterior ya se borró (si el foco estaba en ella, al borrarse se lo llevaba).
+func _enfocar_pestana(clave: String) -> void:
+	await get_tree().process_frame
+	if is_instance_valid(_cuerpo) and _abierta == clave:
+		PreviaMenuPartido.enfocar_panel(_cuerpo, _botones[clave])
 
 ## (17-11, dueño: «el plan de juego es la alineación; ya tenemos una pantalla de eso») «Plan de juego» abre la pantalla de TÁCTICA del juego, a pantalla
 ## completa (menú lateral «Partido» → Táctica: pizarra, formación, órdenes y el once). La previa se esconde mientras tanto y vuelve al cerrarla, con
@@ -330,8 +337,11 @@ func _unhandled_input(e: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		cerrar_panel()
 		return
+
+## (17-11, auditoría de mando) LB / RB (o Q / E) en `_input`: la pantalla principal usa los mismos botones para sus pestañas y se los comía antes.
+func _input(e: InputEvent) -> void:
 	var paso := PreviaMenuPartido.paso_pestana(e)   ## (PES) LB / RB, o Q / E, pasan de pestaña
-	if paso != 0 and visible:
+	if paso != 0 and is_visible_in_tree():
 		get_viewport().set_input_as_handled()
 		_abrir(PreviaMenuPartido.vecina(_abierta, paso))
 

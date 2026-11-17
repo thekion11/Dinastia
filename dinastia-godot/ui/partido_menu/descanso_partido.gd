@@ -9,11 +9,12 @@ extends PantallaMaqueta
 ## Lo abre `PartidoVivo` con `load()`; no cambia nada del partido por sí mismo.
 
 var vivo: Node
+static var en_pruebas := false   ## el banco lo abre sin pantalla (para probar el mando)
 
 static func mostrar(v: Node) -> DescansoPartido:
 	var p: Partido = v.get("partido")
 	var club: Club = v.get("mi_club")
-	if p == null or club == null or DisplayServer.get_name() == "headless":
+	if p == null or club == null or (DisplayServer.get_name() == "headless" and not en_pruebas):
 		return null
 	var d := DescansoPartido.new()
 	d.vivo = v
@@ -26,6 +27,7 @@ static func mostrar(v: Node) -> DescansoPartido:
 	if pr is Principal and (pr as Principal)._menu_lateral != null:
 		lista.append(["Táctica", d._tactica.bind(pr), false])
 	ResumenPartidoCine.botones(d._raiz, lista)
+	MandoMenuPartido.escuchar(d, d.cerrar_resumen)
 	return d
 
 func _continuar() -> void:

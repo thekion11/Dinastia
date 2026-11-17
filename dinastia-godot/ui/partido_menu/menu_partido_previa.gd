@@ -263,7 +263,7 @@ static func vecina(actual: String, paso: int) -> String:
 static func enfocar_panel(cuerpo: Control, pestana: Control) -> void:
 	for n in cuerpo.find_children("*", "Control", true, false):
 		var c := n as Control
-		if c.focus_mode == Control.FOCUS_ALL and c.is_visible_in_tree():
+		if c.focus_mode == Control.FOCUS_ALL and c.is_visible_in_tree() and not c.is_queued_for_deletion():   ## (17-11) no los de la pestaña anterior, que se están borrando
 			c.grab_focus()
 			return
 	if is_instance_valid(pestana):

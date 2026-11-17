@@ -82,6 +82,7 @@ static func mostrar(pr: Node, p: Partido, club: Club, filtro_: String = "todas")
 	s.mi_club = club
 	s.filtro = filtro_
 	s._armar(pr)
+	MandoMenuPartido.escuchar(s, func() -> void: s.elegido.emit("volver"))
 	return s
 
 func _armar(pr: Node) -> void:
@@ -150,3 +151,8 @@ func _tarjeta(padre: Control, m: Dictionary, i: int) -> Button:
 	v.add_child(b)
 	padre.add_child(panel)
 	return b
+
+func _unhandled_input(e: InputEvent) -> void:
+	if visible and e.is_action_pressed("ui_cancel"):   ## B / Esc: volver (Cuadrado, en `MandoMenuPartido`)
+		get_viewport().set_input_as_handled()
+		elegido.emit("volver")

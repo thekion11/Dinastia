@@ -27,6 +27,9 @@ static func estadisticas(p: Partido) -> Array:
 			filas.append(["Pases", int(tot[0]), int(tot[1]), false])
 			filas.append(["Precisión de pase %", int(round(100.0 * float(ok[0]) / maxf(float(tot[0]), 1.0))), int(round(100.0 * float(ok[1]) / maxf(float(tot[1]), 1.0))), true])
 	filas.append(["Faltas", p.faltas_local, p.faltas_visita, false])
+	filas.append(["Tarjetas amarillas", p.amarillas_local, p.amarillas_visita, false])
+	if p.rojas_local + p.rojas_visita > 0:
+		filas.append(["Tarjetas rojas", p.rojas_local, p.rojas_visita, false])
 	filas.append(["Córners", p.corners_local, p.corners_visita, false])
 	filas.append(["Fueras de juego", p.fueras_local, p.fueras_visita, false])
 	return filas
@@ -46,6 +49,23 @@ static func goleadores(p: Partido, c: Club) -> Array:
 	for n: String in orden:
 		r.append("%s  %s" % [n, ", ".join(por[n])])
 	return r
+
+## Las tarjetas de un club en orden: [«Gómez 34'», roja].
+static func tarjetas(p: Partido, c: Club) -> Array:
+	var r: Array = []
+	for e: Dictionary in p.cronica:
+		var t := String(e.get("tipo", ""))
+		if t in ["amarilla", "roja"] and String(e.get("club", "")) == c.id:
+			r.append(["%s %d'" % [ResultadoPartido.abreviar(String(e.get("autor", "?"))), int(e.get("min", 0))], t == "roja"])
+	return r
+
+## La cartulina dibujada (amarilla o roja), del tamaño de una letra.
+static func cartulina(roja: bool, alto: float = 15.0) -> ColorRect:
+	var cr := ColorRect.new()
+	cr.color = ROJO_BARRA if roja else Color("f2c94c")
+	cr.custom_minimum_size = Vector2(alto * 0.7, alto)
+	cr.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	return cr
 
 static func _ancla(c: Control, l: float, t: float, r: float, b: float) -> Control:
 	return ResultadoPartido._ancla(c, l, t, r, b)
@@ -93,7 +113,20 @@ static func _equipo(raiz: Control, p: Partido, c: Club, x0: float, x1: float) ->
 		f.add_child(ic)
 		f.add_child(EstiloAvanzar.etiqueta(g, 17, Color(1, 1, 1, 0.85), true))
 		col.add_child(f)
-	raiz.add_child(_ancla(col, x0 - 0.04, 0.245, x1 + 0.04, 0.38))
+	var ts := tarjetas(p, c)
+	if not ts.is_empty():
+		var fl := HFlowContainer.new()
+		fl.alignment = FlowContainer.ALIGNMENT_CENTER
+		fl.add_theme_constant_override("h_separation", 12)
+		fl.add_theme_constant_override("v_separation", 0)
+		for t: Array in ts:   ## cartulina y nombre juntos: nunca se separan en dos líneas
+			var par := HBoxContainer.new()
+			par.add_theme_constant_override("separation", 4)
+			par.add_child(cartulina(bool(t[1]), 13.0))
+			par.add_child(EstiloAvanzar.etiqueta(String(t[0]), 13, Color(1, 1, 1, 0.7)))
+			fl.add_child(par)
+		col.add_child(fl)
+	raiz.add_child(_ancla(col, x0 - 0.06, 0.245, x1 + 0.06, 0.40))
 
 ## Las estadísticas comparadas: cifra local, barra a dos colores y cifra visitante, con el rótulo en medio debajo.
 static func _barras(raiz: Control, p: Partido) -> void:
@@ -119,7 +152,7 @@ static func _barras(raiz: Control, p: Partido) -> void:
 		barra.local = float(a) / maxf(float(a + b), 1.0) if (a + b) > 0 else 0.5
 		barra.custom_minimum_size = Vector2(0, 6)
 		caja.add_child(barra)
-	raiz.add_child(_ancla(caja, 0.06, 0.46, 0.60, 0.86))
+	raiz.add_child(_ancla(caja, 0.06, 0.48, 0.60, 0.865))
 
 ## La figura del partido (la mejor nota hasta ahora): su retrato 3D con la equipación de su club, su nombre y su nota. Sin pantalla, solo el texto.
 static func _figura(raiz: Control, p: Partido) -> void:

@@ -125,7 +125,7 @@ func preparar() -> void:
 	minutos_fin = MINUTOS
 	cambios_extra = 0
 	terminado_ya = false
-	cronica.clear(); _amarillas_hoy.clear(); _expulsados_hoy.clear(); suspendido = false
+	cronica.clear(); _amarillas_hoy.clear(); _expulsados_hoy.clear(); suspendido = false; amarillas_local = 0; amarillas_visita = 0; rojas_local = 0; rojas_visita = 0
 	_todos = once_local + once_visita
 	_notas_cerradas = false
 	_notas.clear()
@@ -399,3 +399,23 @@ func invalidar_fuerza() -> void:
 			fuerza_distintas += 1
 	_fza_local = r[0]
 	_fza_visita = r[1]
+
+## LAS TARJETAS DEL PARTIDO (17-11, Auditoría: el resumen del descanso y del final no las veía). Por equipo y en la crónica
+## ({"tipo": "amarilla"/"roja", "min", "club", "autor"}), del 3D (`tarjeta_externa`) y del simulado (`_amonestar`): las dos pasan por aquí.
+## Una 2.ª amarilla cuenta como amarilla Y roja (como en el acta); una roja directa, solo como roja.
+var amarillas_local := 0
+var amarillas_visita := 0
+var rojas_local := 0
+var rojas_visita := 0
+
+func _tarjeta_sacada(j: Jugador, roja: bool) -> void:
+	var es_local := local != null and local.plantilla.has(j)
+	var c := local if es_local else visita
+	if not roja or int(_amarillas_hoy.get(j.id, 0)) >= 1:
+		if es_local: amarillas_local += 1
+		else: amarillas_visita += 1
+	if roja:
+		if es_local: rojas_local += 1
+		else: rojas_visita += 1
+	cronica.append({"min": minuto, "tipo": "roja" if roja else "amarilla", "club": c.id if c != null else "", "autor": j.nombre})
+	tarjeta.emit(j, roja, minuto)
