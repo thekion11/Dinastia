@@ -242,5 +242,12 @@ static func botones(raiz: Control, lista: Array) -> Array:
 	poner(raiz, fila, "botones")
 	TactilPartido.agrandar(fila)
 	if not hechos.is_empty():
+		raiz.set_meta("primero", hechos[0])
 		(hechos[0] as Button).grab_focus.call_deferred()
 	return hechos
+
+## El foco al primer botón (al aparecer bajo el barrido: mientras estaba oculta no lo podía tomar).
+static func enfocar(raiz: Control) -> void:
+	var b: Variant = raiz.get_meta("primero") if raiz.has_meta("primero") else null
+	if b is Button and is_instance_valid(b):
+		(b as Button).grab_focus.call_deferred()

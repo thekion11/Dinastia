@@ -18,7 +18,12 @@ static func mostrar(pr: Node, p: Partido, club: Club) -> ResultadoPartido:
 	r.partido = p
 	r.mi_club = club
 	r._armar(pr)
-	MandoMenuPartido.escuchar(r, func() -> void: r.elegido.emit("0"))   ## R2 confirma; Cuadrado (y B / Esc, abajo) siguen: «Continuar»
+	MandoMenuPartido.escuchar(r, r._seguir)
+	r.visible = false   ## (17-11) entra bajo el barrido de color (`BarridoPartido`): nunca un corte seco
+	BarridoPartido.pasar(pr, BarridoPartido.colores_de(p), func() -> void:
+		if is_instance_valid(r):
+			r.visible = true
+			ResumenPartidoCine.enfocar(r._raiz))   ## R2 confirma; Cuadrado (y B / Esc, abajo) siguen: «Continuar»
 	return r
 
 ## Nombre corto como en la maqueta: «J. Retamal».
@@ -39,12 +44,16 @@ func _armar(pr: Node) -> void:
 	## (17-11, Auditoría) Lo visual es el componente común con el descanso (`ResumenPartidoCine`): marcador, goleadores, barras y figura del partido.
 	ResumenPartidoCine.montar(_raiz, partido, mi_club, false)
 	_linea_de_tiempo()
-	var lista: Array = [["Continuar", func() -> void: elegido.emit("0"), true]]
+	var lista: Array = [["Continuar", _seguir, true]]
 	if pr is Principal and DisplayServer.get_name() != "headless" and not MomentosPartido.lista_de(partido, mi_club).is_empty():
 		if not partido.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol").is_empty():
 			lista.append(["Repetición de los goles", _momentos.bind(pr, "goles"), false])
 		lista.append(["Jugar momentos", _momentos.bind(pr, "todas"), false])
 	ResumenPartidoCine.botones(_raiz, lista)
+
+## «Continuar»: sale con el barrido (lo que venga detrás se monta tapado).
+func _seguir() -> void:
+	BarridoPartido.pasar(_raiz, BarridoPartido.colores_de(partido), func() -> void: elegido.emit("0"))
 
 ## Los momentos del partido (filtrados) y, si eliges uno, la réplica desde un minuto antes (la misma lógica que el popup «Partido jugado»).
 func _momentos(pr: Principal, filtro: String) -> void:
@@ -105,4 +114,4 @@ class _Tiempo extends Control:
 func _unhandled_input(e: InputEvent) -> void:
 	if visible and e.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
-		elegido.emit("0")
+		_seguir()

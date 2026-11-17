@@ -370,11 +370,15 @@ static func sorteo(p: Partido, comp: String, info_clima: Dictionary) -> bool:
 	r.seed = hash("%s|%s|%s|%s" % [p.local.id, p.visita.id, comp, str(info_clima)])
 	return r.randi() % 2 == 0
 
+var _eligiendo := false
 func _elegir(op: String) -> void:
+	if _eligiendo:   ## dos toques seguidos durante el barrido: una sola elección
+		return
+	_eligiendo = true
 	partido.saca_local = saca_local
 	var e := EleccionPartido.eleccion(op, sim)
 	EleccionPartido.aplicar(e)
 	if recordar:
 		EleccionPartido.fijar_preguntar(false)
 	Sonido.toca("clic")
-	elegido.emit(e)
+	BarridoPartido.pasar(self, BarridoPartido.colores_de(partido), func() -> void: elegido.emit(e))   ## (17-11) al saque y al partido, con el barrido de color

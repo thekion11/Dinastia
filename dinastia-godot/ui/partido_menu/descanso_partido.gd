@@ -28,12 +28,19 @@ static func mostrar(v: Node) -> DescansoPartido:
 		lista.append(["Táctica", d._tactica.bind(pr), false])
 	ResumenPartidoCine.botones(d._raiz, lista)
 	MandoMenuPartido.escuchar(d, d.cerrar_resumen)
+	d.visible = false   ## (17-11) entra bajo el barrido de color: del partido al descanso sin corte seco
+	BarridoPartido.pasar(v, BarridoPartido.colores_de(p), func() -> void:
+		if is_instance_valid(d):
+			d.visible = true
+			ResumenPartidoCine.enfocar(d._raiz))
 	return d
 
 func _continuar() -> void:
-	cerrar_resumen()
-	if is_instance_valid(vivo) and vivo.has_method("_salir_segunda"):
-		vivo.call("_salir_segunda")
+	var v := vivo
+	BarridoPartido.pasar(_raiz, BarridoPartido.colores_de(v.get("partido") if is_instance_valid(v) else null), func() -> void:
+		cerrar_resumen()
+		if is_instance_valid(v) and v.has_method("_salir_segunda"):
+			v.call("_salir_segunda"))
 
 func cerrar_resumen() -> void:
 	Sonido.toca("clic")
