@@ -44,7 +44,7 @@ static func dibujar(a: EscaparateArte, tipo: String) -> void:
 			a._l(26, 86, 70, 56, Color(0, 0, 0, 0.18), 1.2); a._l(134, 86, 90, 56, Color(0, 0, 0, 0.18), 1.2)
 			a._o(80, 62, 8, c1); a._o(80, 62, 4.5, c2)
 		"informe":
-			a._r(38, 8, 84, 88, MADERA); a._r(42, 14, 76, 78, Color("f6f3ea")); a._r(64, 4, 32, 12, Color("9aa5b1"))
+			a._r(38, 8, 84, 88, a.MADERA); a._r(42, 14, 76, 78, Color("f6f3ea")); a._r(64, 4, 32, 12, Color("9aa5b1"))
 			for i in 4:
 				var y := 28.0 + i * 15.0
 				a._o(52, y + 3, 3.4, Color("d62b2b") if i < 2 else Color("3aa561")); a._r(60, y + 1, 48 - i * 6, 3, Color(0, 0, 0, 0.4)); a._r(60, y + 7, 36, 2, Color(0, 0, 0, 0.2))
