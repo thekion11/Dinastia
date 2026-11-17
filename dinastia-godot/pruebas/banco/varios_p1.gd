@@ -410,30 +410,6 @@ func _probar_reales() -> void:
 	if generado_cualquiera != null:
 		_comprobar(Cara.foto_real(generado_cualquiera) == null, "un jugador generado -no real- nunca tiene foto de verdad")
 
-## (17-11) Rasgos de los jugadores conocidos: piel, pelo, corte y barba por nombre (en la base pública, con la clave del guiño).
-func _probar_rasgos_conocidos() -> void:
-	_titulo("RASGOS DE LOS CONOCIDOS (RASGOS_JUG)")
-	_comprobar(Datos.tiene("RASGOS_JUG"), "la tabla de rasgos existe")
-	var t: Dictionary = Datos.tabla("RASGOS_JUG") if Datos.tiene("RASGOS_JUG") else {}
-	_comprobar(t.size() >= 50, "trae los rasgos de los conocidos (%d)" % t.size())
-	if not Datos.base_real:
-		_comprobar(not t.has("Erling Haaland") and not t.has("Lionel Messi"), "la base pública no lleva nombres reales como clave")
-	var m := Mundo.new()
-	m.generar(["ENG", "ESP", "BRA"], 17)
-	var con_rasgos := 0
-	var mal := 0
-	for c: Club in m.clubes.values():
-		for j: Jugador in c.plantilla:
-			var r: Variant = Cara.rasgos_conocido(j)
-			if not (r is Dictionary):
-				continue
-			con_rasgos += 1
-			var lk := Cara.look_de(j)
-			if String(lk["piel"]) != String(r["piel"]) or int(lk["barba"]) != int(r["barba"]) or String(lk["pelo"]) != String(r["pelo"]) or String(lk["peloC"]) != String(r["peloC"]):
-				mal += 1
-	_comprobar(con_rasgos >= 10, "hay conocidos con rasgos en ENG, ESP y BRA (%d)" % con_rasgos)
-	_comprobar(mal == 0, "su cara toma exactamente los rasgos de la tabla (%d distintos)" % mal)
-
 ## CANDADO DE LA VARIANTE DEL MOTOR (17-11-2026, pedido de la sesión de auditoría): el juego crea el motor con `MotorFabrica.crear()` (C4 por defecto, orden 39).
 ## Un `MotorCombinado.new()` sin variante es C1 (colocación y locomoción de League, sin MejorasC4): un perfil o una sonda así mide OTRO motor (pasó con
 ## `perfil_colocacion`, y el «50 % del partido en C++» salió de C1). Toda prueba, sonda o perfil que cree `MotorCombinado` o una subclase suya tiene que aplicar

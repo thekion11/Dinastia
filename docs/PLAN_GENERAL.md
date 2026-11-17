@@ -51,7 +51,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 # PARTE 2. LO QUE ESPERA UNA DECISIÓN O RESPUESTA DEL DUEÑO
 
 ## PREGUNTAS PARA EL DUEÑO (sesiones Opus) — se acumulan aquí y se envían juntas por Calendar al llegar a 5 (orden 44); se borran al responderse
-- (ninguna todavía)
+- (17-11, «parecido real», decisión de la sesión de auditoría: por ahora NO se hace) ¿Se pueden publicar, cuantizados a la paleta del juego (7 tonos de piel, 16 de pelo, barba), los rasgos ya medidos de ~1.100 jugadores (`caras_reales_rasgos.json` y `caras_reales_mallas.json`), sin fotos ni medidas finas? Hoy lo público lleva solo ~60 conocidos a mano (`herramientas/rasgos_jugadores.py`, tabla `RASGOS_JUG`); `Cara.look_de` ya acepta cualquier otra fuente en esa tabla sin tocar el juego. Con el `.pck` privado sí se usa lo medido, entero.
 
 ## DECISIONES PENDIENTES DEL DUEÑO (no se implementa hasta que conteste)
 - De la tanda del 10-11 noche no quedaba ninguna; las abiertas hoy son las de la lista «0» y el bloque de FPS de abajo. Las del motor League-Soccer (calibrar o no: SOLO LO VISUAL), los torneos de selecciones (ya se juegan) y los .mp4 de `marca/` (se quedan) se resolvieron con la orden 36.
