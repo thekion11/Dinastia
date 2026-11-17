@@ -69,6 +69,8 @@ func _ia_portador(p: Dictionary) -> void:
 	if not _nuestra("decide_con_balon"):
 		super(p)
 		return
+	if _mejoras_c4 and MejorasC4Despeje.despejar(self, p, _rng):
+		return   ## (17-11) C4_DESPEJE_RECHACE
 	if _mejoras_c4 and MejorasC4Pared.vuelta(self, p):
 		return   ## (12-11) la vuelta de la pared, de primera
 	if _mejoras_c4 and t >= _decision_en and (MejorasC4Avance.pase_atras(self, p, _rng) or MejorasC4.centro(self, p, _rng) or MejorasC4Pared.ida(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
@@ -406,6 +408,20 @@ func _agarra(p: Dictionary, estirada: bool, fuerza: float) -> bool:
 
 func _prob_rechace_fuera() -> float:
 	return MejorasC4Avance.PR_FUERA if _mejoras_c4 and MejorasC4Avance.PARADA_REAL else 0.5
+
+## (17-11) C4_BLOQUEO_REMATE: el que marca al rematador tapa la línea y el cuerpo puede bloquear el tiro.
+func _ia_equipos(delta: float) -> void:
+	super(delta)
+	if _mejoras_c4:
+		MejorasC4Bloqueo.tapar_linea(self)
+
+func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
+	super(p, apunte_, fuerza)
+	if _mejoras_c4:
+		MejorasC4Bloqueo.bloqueo_cuerpo(self, p, _rng)
+
+func _portero_a_por_el(p: Dictionary, b: Vector3) -> bool:
+	return _mejoras_c4 and MejorasC4Despeje.portero_a_por_el(self, p, b)
 
 func _prob_parada_cuerpo(lat: float, alcance: float, prob: float) -> float:
 	return MejorasC4Avance.parada_cuerpo(self, lat, alcance, prob) if _mejoras_c4 else prob
