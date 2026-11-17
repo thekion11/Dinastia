@@ -24,16 +24,21 @@ static func pintar(p: Principal, cuerpo: VBoxContainer, c: Club, acento: Color) 
 	rejilla.add_theme_constant_override("h_separation", TableroInicio.SEP)
 	rejilla.add_theme_constant_override("v_separation", TableroInicio.SEP)
 	desliza.add_child(rejilla)
-	rejilla.add_child(_grupo(Idiomas.t("Accesos"), "", [
+	var accesos: Array = [
+		[Idiomas.t("Despacho"), func() -> void: EscaparatePantalla.de(p).abrir_despacho(p)],
+		[Idiomas.t("Informe de la semana"), func() -> void: EscaparatePantalla.de(p).abrir_informe(p)],
 		[Idiomas.t("Buscar jugadores y clubes"), func() -> void: EscaparatePantalla.de(p).abrir_busqueda(rejilla)],
-		[Idiomas.t("Panel lateral (todos los menús)"), func() -> void: p._menu_lateral.alternar()]], acento, c))
+		[Idiomas.t("Panel lateral (todos los menús)"), func() -> void: p._menu_lateral.alternar()]]
+	for tab: String in p._favoritos:   ## los accesos rápidos que se marcan en Ajustes
+		accesos.append(["⭐ " + Idiomas.t(tab), func() -> void: p._ir_a_pestana(tab)])
+	rejilla.add_child(_grupo(Idiomas.t("Accesos"), "", accesos, acento, c))
 	for m: Dictionary in MenusLaterales.MENUS:
 		var botones: Array = []
 		var subs: Array = m["subs"]
 		for i in subs.size():
 			var idx := i
 			var id := String(m["id"])
-			botones.append([Idiomas.t(String((subs[i] as Dictionary).get("label", ""))), func() -> void: p._menu_lateral.abrir_menu(id, idx)])
+			botones.append([Idiomas.t(String((subs[i] as Dictionary).get("label", ""))), func() -> void: p._menu_lateral.abrir_menu(id, idx), "%s:%d" % [id, idx]])
 		rejilla.add_child(_grupo(Idiomas.t(String(m["nombre"])), String(m.get("icono", "")), botones, acento, c))
 	for h in rejilla.get_children():
 		(h as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -65,5 +70,7 @@ static func _grupo(nombre: String, icono: String, botones: Array, acento: Color,
 		bt.add_theme_font_size_override("font_size", Tema.letra(16))
 		bt.add_theme_color_override("font_color", Color.WHITE)
 		bt.pressed.connect(b[1])
+		if b.size() > 2:
+			bt.set_meta("entrada", String(b[2]))   ## «id:índice» del submenú que abre (la prueba de conexión lo usa)
 		v.add_child(bt)
 	return pc

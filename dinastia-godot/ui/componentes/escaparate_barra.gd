@@ -106,6 +106,15 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	esc.position = Vector2(8, 2)   ## pegado al borde de arriba y colgando por debajo de la barra, como en el PES
 	esc.size = Vector2(112, 112)
 	hueco.add_child(esc)
+	var tocar_esc := Button.new()   ## (17-11) el escudo se pulsa: lleva a la identidad del club (colores, escudo, apodo)
+	tocar_esc.flat = true
+	tocar_esc.focus_mode = Control.FOCUS_ALL
+	tocar_esc.position = Vector2(8, 2)
+	tocar_esc.size = Vector2(112, 112)
+	tocar_esc.z_index = 4
+	tocar_esc.tooltip_text = Idiomas.t("Identidad visual")
+	tocar_esc.pressed.connect(func() -> void: TableroInicio.abrir(p, "Identidad visual"))
+	hueco.add_child(tocar_esc)
 	hb.add_child(hueco)
 	hb.move_child(hueco, 4)   ## ☰, las tres pestañas y, ahora, el escudo
 	for par: Array in [["Oficina del DT", "Mi carrera"], ["Base de datos", "Ligas y clubes"], ["Sistema", "*sistema"]]:
@@ -127,4 +136,15 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	var fecha := EstiloAvanzar.etiqueta(p.fecha_larga(), 11, Color(1, 1, 1, 0.8))
 	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	caja.add_child(fecha)
-	hb.add_child(caja)
+	var cb := Button.new()   ## (17-11) la caja se pulsa: lleva a las cuentas del club
+	cb.flat = true
+	cb.focus_mode = Control.FOCUS_ALL
+	cb.custom_minimum_size = Vector2(134, ALTO - 8)
+	cb.tooltip_text = Idiomas.t("Cuentas del club")
+	cb.pressed.connect(func() -> void: TableroInicio.abrir(p, "Cuentas del club"))
+	caja.set_anchors_preset(Control.PRESET_FULL_RECT)
+	caja.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for h in caja.get_children():
+		(h as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cb.add_child(caja)
+	hb.add_child(cb)

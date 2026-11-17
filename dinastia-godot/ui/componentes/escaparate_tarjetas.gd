@@ -107,7 +107,7 @@ static func dt(p: Principal, c: Club, acento: Color) -> Control:
 	return b
 
 static func noticia(p: Principal, c: Club, liga: Liga, acento: Color) -> Control:
-	var tc := TableroInicio.tarjeta(Idiomas.t("Noticias"), acento, func() -> void: TableroInicio.abrir(p, "Correo"), Color(c.color1).darkened(0.7))
+	var tc := TableroInicio.tarjeta(Idiomas.t("Noticias y correo"), acento, func() -> void: TableroInicio.abrir(p, "Correo"), Color(c.color1).darkened(0.7))
 	var b: Button = tc[0]
 	var v: VBoxContainer = tc[1]
 	var n := EscaparateNoticia.de(p, c, liga)
@@ -204,3 +204,24 @@ static func _fila(v: VBoxContainer, t: Array, i: int, c: Club, acento: Color) ->
 	var pts := EstiloAvanzar.etiqueta("%d" % int(t[i]["pts"]), 16, col, true)
 	pts.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	h.add_child(pts)
+
+## «Despacho»: los asuntos que esperan una decisión del DT (un jugador que te busca, la prensa, el personal, la zona gris, una crisis económica, lo que pasa en casa…), con ALERTA si hay.
+## Abre la pantalla completa del despacho (`EscaparatePantalla.abrir_despacho`).
+static func despacho(p: Principal, c: Club, acento: Color) -> Control:
+	var n: int = p._ui_despacho.asuntos_pendientes().size() if p._ui_despacho != null else 0
+	var tc := TableroInicio.tarjeta(Idiomas.t("Despacho"), acento, func() -> void: EscaparatePantalla.de(p).abrir_despacho(p), Color(0.05, 0.07, 0.09, 1.0))
+	var b: Button = tc[0]
+	var v: VBoxContainer = tc[1]
+	EscaparateArte.poner(b, "contratos", c)
+	_velo(b, 1, 0.3)
+	_al_fondo(v)
+	var cont := EstiloAvanzar.etiqueta(("● %d" % n) if n > 0 else "0", 44, Color("ffc857") if n > 0 else Color.WHITE, true)
+	cont.add_theme_constant_override("outline_size", 6)
+	cont.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
+	v.add_child(cont)
+	var t := EstiloAvanzar.etiqueta(Idiomas.t("asuntos por decidir") if n > 0 else Idiomas.t("Sin asuntos pendientes"), 16, Color.WHITE)
+	t.add_theme_constant_override("outline_size", 4)
+	t.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
+	v.add_child(t)
+	TableroInicio.cerrar(b)
+	return b

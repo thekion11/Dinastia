@@ -8,6 +8,7 @@ extends Control
 
 var _cuerpo: VBoxContainer
 var _busqueda: PopupPanel
+var panel_despacho: EscaparatePanel   ## la pantalla completa del despacho, si está abierta
 var informe: EscaparateInforme   ## la pantalla completa del informe de la semana, si está abierta
 
 ## La pantalla de esta partida (se crea la primera vez, justo encima del menú de siempre y debajo de los menús laterales y de todo lo que se abre después).
@@ -35,7 +36,7 @@ func _soltar(p: Principal) -> void:
 func repintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 	_soltar(p)
 	for h in get_children():
-		if h != _busqueda and h != informe:
+		if h != _busqueda and h != informe and h != panel_despacho:
 			remove_child(h)
 			h.queue_free()
 	var fondo := ColorRect.new()
@@ -84,6 +85,7 @@ func repintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 	TableroInicio._marcar(botones)
 	_pintar_cuerpo(p, c, liga, dias, acento)
 	vb.add_child(EscaparatePie.crear(p))
+	_cablear_luego()
 
 func _pintar_cuerpo(p: Principal, c: Club, liga: Liga, dias: int, acento: Color) -> void:
 	for h in _cuerpo.get_children():
@@ -134,3 +136,34 @@ func abrir_informe(p: Principal) -> void:
 func repintar_ya(p: Principal) -> void:
 	var c: Club = p.mundo.mi_club()
 	repintar(p, c, p._liga_de(c), 5 - int(p._dia_semana))
+
+## La pantalla completa del «Despacho» (los asuntos de decisión): se le presta `p._despacho` (que pinta `PantallaDespacho`) y al cerrar vuelve a su sitio del menú de siempre.
+func abrir_despacho(p: Principal) -> void:
+	if is_instance_valid(panel_despacho) or p._despacho == null:
+		return
+	var pn := EscaparatePanel.abrir(p, self, Idiomas.t("Despacho"))
+	panel_despacho = pn
+	var d: VBoxContainer = p._despacho
+	var padre := d.get_parent()
+	var idx := d.get_index()
+	padre.remove_child(d)
+	d.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pn.contenedor.add_child(d)
+	p._aviso_plegado = false
+	p._ui_despacho._pintar_despacho()
+	if d.get_child_count() == 0:
+		d.add_child(EstiloAvanzar.etiqueta(Idiomas.t("Sin asuntos pendientes"), 22, Color.WHITE))
+	pn.enfocar()
+	pn.cerrada.connect(func() -> void:
+		if is_instance_valid(d):
+			d.get_parent().remove_child(d)
+			padre.add_child(d)
+			padre.move_child(d, idx)
+		repintar_ya(p))
+
+## Los vecinos de foco del mando, con el diseño ya hecho.
+func _cablear_luego() -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if is_instance_valid(self) and is_inside_tree():
+		EscaparateFoco.cablear(self)

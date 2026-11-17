@@ -129,7 +129,7 @@ static func _forma(p: Principal, c: Club) -> Control:
 		e.set_corner_radius_all(4)
 		e.content_margin_left = 8; e.content_margin_right = 8
 		pc.add_theme_stylebox_override("panel", e)
-		pc.add_child(EstiloAvanzar.etiqueta(Idiomas.t(r), 15, Color.WHITE, true))
+		pc.add_child(EstiloAvanzar.etiqueta(r, 15, Color.WHITE, true))
 		h.add_child(pc)
 	return _panel_oscuro(h)
 

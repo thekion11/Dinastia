@@ -54,7 +54,7 @@ static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, ac
 	abajo.size_flags_stretch_ratio = 1.0
 	abajo.custom_minimum_size.y = 130
 	cuerpo.add_child(abajo)
-	for par: Array in [[EscaparatePartidos.proximos(p, c, liga, acento), 3.2], [EscaparatePartidos.hinchada(p, c, acento), 1.4]]:
+	for par: Array in [[EscaparatePartidos.proximos(p, c, liga, acento), 2.7], [EscaparatePartidos.hinchada(p, c, acento), 1.35], [EscaparateTarjetas.despacho(p, c, acento), 1.0]]:
 		var t: Control = par[0]
 		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		t.size_flags_stretch_ratio = float(par[1])

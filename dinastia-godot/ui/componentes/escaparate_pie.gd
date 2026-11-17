@@ -38,10 +38,15 @@ static func crear(p: Principal) -> Control:
 		ayudas.add_child(PieMando._chip(Idiomas.t("Intro"), Idiomas.t("Confirmar")))
 		ayudas.add_child(PieMando._chip(Idiomas.t("Esc"), Idiomas.t("Atrás")))
 	fila.add_child(ayudas)
-	var hueco := Control.new()
-	hueco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	fila.add_child(hueco)
+	var estado := Label.new()   ## (17-11) la línea de estado de siempre (jornada, sueldos, media, objetivo, confianza: `p._sub`) en el hueco del medio
+	estado.text = p._sub.text if p._sub != null else ""
+	estado.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	estado.clip_text = true
+	estado.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	estado.add_theme_font_size_override("font_size", Tema.letra(13))
+	estado.add_theme_color_override("font_color", Color(1, 1, 1, 0.78))
+	estado.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fila.add_child(estado)
 	## Avanzar / Jugar / Saltar / Partido jugado: los mismos botones, ahora aquí
 	if p._botones != null:
 		if p._botones.get_parent() != null:
@@ -63,6 +68,11 @@ static func crear(p: Principal) -> Control:
 	if sin_leer > 0:
 		msg.add_theme_color_override("font_color", Tema.oro())
 	fila.add_child(msg)
+	var asuntos: int = p._ui_despacho.asuntos_pendientes().size() if p._ui_despacho != null else 0
+	if asuntos > 0:   ## los asuntos del despacho (decisiones del DT): alerta en ámbar, abre su pantalla completa
+		var desp := _boton("● " + Idiomas.t("Despacho") + "  (%d)" % asuntos, func() -> void: EscaparatePantalla.de(p).abrir_despacho(p))
+		desp.add_theme_color_override("font_color", Color("ffc857"))
+		fila.add_child(desp)
 	fila.add_child(_boton("? " + Idiomas.t("Ayuda"), func() -> void: TableroInicio.abrir(p, "Glosario")))
 	for po in p.find_children("*", "PanelObjetivos", true, false):   ## la caja flotante de objetivos pasa a un chip del pie
 		var obj := po as PanelObjetivos
@@ -74,11 +84,20 @@ static func crear(p: Principal) -> Control:
 				obj._aplicar_plegado()
 				p.move_child(obj, p.get_child_count() - 1)))
 		break
-	var h := Time.get_time_dict_from_system()
 	var reloj := Label.new()
-	reloj.text = "%02d:%02d" % [int(h["hour"]), int(h["minute"])]
 	reloj.add_theme_font_size_override("font_size", Tema.letra(13))
 	fila.add_child(reloj)
+	var poner := func() -> void:
+		var h := Time.get_time_dict_from_system()
+		reloj.text = "%02d:%02d" % [int(h["hour"]), int(h["minute"])]
+	poner.call()
+	var reloj_t := Timer.new()   ## el reloj avanza solo, y solo mientras el escaparate se ve (una vez por segundo: casi gratis)
+	reloj_t.wait_time = 1.0
+	reloj_t.timeout.connect(func() -> void:
+		if panel.is_visible_in_tree():
+			poner.call())
+	panel.add_child(reloj_t)
+	reloj_t.start()
 	return panel
 
 ## Avanzar / Jugar / Saltar / Partido jugado como botones de la maqueta (rojo el principal).

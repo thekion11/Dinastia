@@ -9102,7 +9102,17 @@
   "A %d de tus jugadores les queda un año de contrato.": "%d of your players have one year left on their contract.",
   "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "You agreed a pre-contract with %s: he will arrive for free when his contract ends.",
   "%s queda sancionado: se pierde %d partido(s).": "%s is suspended: he misses %d match(es).",
-  "La caja del club está en negativo: %d.": "The club's cash is in the red: %d."
+  "La caja del club está en negativo: %d.": "The club's cash is in the red: %d.",
+  "Noticias y correo": "News and mail",
+  "Despacho": "Office",
+  "asuntos por decidir": "matters to decide",
+  "Sin asuntos pendientes": "No pending matters",
+  "Accesos": "Shortcuts",
+  "Buscar jugadores y clubes": "Search players and clubs",
+  "Panel lateral (todos los menús)": "Side panel (all menus)",
+  "Índice": "Index",
+  "%d avisos urgentes": "%d urgent alerts",
+  "Todo en orden esta semana.": "Everything in order this week."
  },
  "pt": {
   "Historia": "História",
@@ -18207,7 +18217,17 @@
   "A %d de tus jugadores les queda un año de contrato.": "%d dos seus jogadores têm um ano de contrato restante.",
   "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Você fechou um pré-contrato com %s: ele chegará de graça quando o contrato terminar.",
   "%s queda sancionado: se pierde %d partido(s).": "%s está suspenso: perde %d jogo(s).",
-  "La caja del club está en negativo: %d.": "O caixa do clube está no negativo: %d."
+  "La caja del club está en negativo: %d.": "O caixa do clube está no negativo: %d.",
+  "Noticias y correo": "Notícias e correio",
+  "Despacho": "Gabinete",
+  "asuntos por decidir": "assuntos por decidir",
+  "Sin asuntos pendientes": "Sem assuntos pendentes",
+  "Accesos": "Atalhos",
+  "Buscar jugadores y clubes": "Procurar jogadores e clubes",
+  "Panel lateral (todos los menús)": "Painel lateral (todos os menus)",
+  "Índice": "Índice",
+  "%d avisos urgentes": "%d avisos urgentes",
+  "Todo en orden esta semana.": "Tudo em ordem esta semana."
  },
  "patrones": [
   [
@@ -33584,7 +33604,17 @@
   "A %d de tus jugadores les queda un año de contrato.": "%d de vos joueurs ont encore un an de contrat.",
   "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Vous avez signé un précontrat avec %s : il arrivera gratuitement à la fin de son contrat.",
   "%s queda sancionado: se pierde %d partido(s).": "%s est suspendu : il manque %d match(s).",
-  "La caja del club está en negativo: %d.": "La caisse du club est dans le rouge : %d."
+  "La caja del club está en negativo: %d.": "La caisse du club est dans le rouge : %d.",
+  "Noticias y correo": "Actualités et courrier",
+  "Despacho": "Bureau",
+  "asuntos por decidir": "affaires à trancher",
+  "Sin asuntos pendientes": "Aucune affaire en attente",
+  "Accesos": "Accès rapides",
+  "Buscar jugadores y clubes": "Chercher joueurs et clubs",
+  "Panel lateral (todos los menús)": "Panneau latéral (tous les menus)",
+  "Índice": "Index",
+  "%d avisos urgentes": "%d alertes urgentes",
+  "Todo en orden esta semana.": "Tout est en ordre cette semaine."
  },
  "it": {
   "Historia": "Storia",
@@ -42689,7 +42719,17 @@
   "A %d de tus jugadores les queda un año de contrato.": "A %d dei tuoi giocatori resta un anno di contratto.",
   "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Hai firmato un precontratto con %s: arriverà a zero alla scadenza del contratto.",
   "%s queda sancionado: se pierde %d partido(s).": "%s è squalificato: salta %d partita/e.",
-  "La caja del club está en negativo: %d.": "La cassa del club è in rosso: %d."
+  "La caja del club está en negativo: %d.": "La cassa del club è in rosso: %d.",
+  "Noticias y correo": "Notizie e posta",
+  "Despacho": "Ufficio",
+  "asuntos por decidir": "questioni da decidere",
+  "Sin asuntos pendientes": "Nessuna questione in sospeso",
+  "Accesos": "Accessi rapidi",
+  "Buscar jugadores y clubes": "Cerca giocatori e club",
+  "Panel lateral (todos los menús)": "Pannello laterale (tutti i menu)",
+  "Índice": "Indice",
+  "%d avisos urgentes": "%d avvisi urgenti",
+  "Todo en orden esta semana.": "Tutto in ordine questa settimana."
  },
  "de": {
   "Historia": "Geschichte",
@@ -51794,7 +51834,17 @@
   "A %d de tus jugadores les queda un año de contrato.": "Bei %d deiner Spieler läuft der Vertrag in einem Jahr aus.",
   "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Du hast einen Vorvertrag mit %s geschlossen: er kommt ablösefrei, wenn sein Vertrag endet.",
   "%s queda sancionado: se pierde %d partido(s).": "%s ist gesperrt: er fehlt %d Spiel(e).",
-  "La caja del club está en negativo: %d.": "Die Vereinskasse ist im Minus: %d."
+  "La caja del club está en negativo: %d.": "Die Vereinskasse ist im Minus: %d.",
+  "Noticias y correo": "Nachrichten und Post",
+  "Despacho": "Büro",
+  "asuntos por decidir": "offene Entscheidungen",
+  "Sin asuntos pendientes": "Keine offenen Angelegenheiten",
+  "Accesos": "Schnellzugriffe",
+  "Buscar jugadores y clubes": "Spieler und Klubs suchen",
+  "Panel lateral (todos los menús)": "Seitenleiste (alle Menüs)",
+  "Índice": "Index",
+  "%d avisos urgentes": "%d dringende Hinweise",
+  "Todo en orden esta semana.": "Diese Woche ist alles in Ordnung."
  },
  "ca": {
   "Historia": "Història",
@@ -60899,7 +60949,17 @@
   "A %d de tus jugadores les queda un año de contrato.": "A %d dels teus jugadors els queda un any de contracte.",
   "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Has tancat un precontracte amb %s: arribarà gratis quan acabi el contracte.",
   "%s queda sancionado: se pierde %d partido(s).": "%s queda sancionat: es perd %d partit(s).",
-  "La caja del club está en negativo: %d.": "La caixa del club està en negatiu: %d."
+  "La caja del club está en negativo: %d.": "La caixa del club està en negatiu: %d.",
+  "Noticias y correo": "Notícies i correu",
+  "Despacho": "Despatx",
+  "asuntos por decidir": "assumptes per decidir",
+  "Sin asuntos pendientes": "Cap assumpte pendent",
+  "Accesos": "Accessos",
+  "Buscar jugadores y clubes": "Cerca jugadors i clubs",
+  "Panel lateral (todos los menús)": "Panell lateral (tots els menús)",
+  "Índice": "Índex",
+  "%d avisos urgentes": "%d avisos urgents",
+  "Todo en orden esta semana.": "Tot en ordre aquesta setmana."
  },
  "pl": {
   "Club": "Klub",
@@ -70004,7 +70064,17 @@
   "A %d de tus jugadores les queda un año de contrato.": "%d twoich zawodników ma jeszcze rok kontraktu.",
   "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Podpisałeś przedkontrakt z %s: przyjdzie za darmo po wygaśnięciu kontraktu.",
   "%s queda sancionado: se pierde %d partido(s).": "%s jest zawieszony: opuści %d mecz(e).",
-  "La caja del club está en negativo: %d.": "Kasa klubu jest na minusie: %d."
+  "La caja del club está en negativo: %d.": "Kasa klubu jest na minusie: %d.",
+  "Noticias y correo": "Wiadomości i poczta",
+  "Despacho": "Gabinet",
+  "asuntos por decidir": "spraw do rozstrzygnięcia",
+  "Sin asuntos pendientes": "Brak spraw do załatwienia",
+  "Accesos": "Skróty",
+  "Buscar jugadores y clubes": "Szukaj graczy i klubów",
+  "Panel lateral (todos los menús)": "Panel boczny (wszystkie menu)",
+  "Índice": "Indeks",
+  "%d avisos urgentes": "%d pilnych ostrzeżeń",
+  "Todo en orden esta semana.": "W tym tygodniu wszystko w porządku."
  },
  "tr": {
   "Club": "Kulüp",
@@ -79109,6 +79179,16 @@
   "A %d de tus jugadores les queda un año de contrato.": "%d oyuncunun sözleşmesinin bitmesine bir yıl kaldı.",
   "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "%s ile ön sözleşme yaptın: sözleşmesi bitince bedelsiz gelecek.",
   "%s queda sancionado: se pierde %d partido(s).": "%s cezalı: %d maç kaçıracak.",
-  "La caja del club está en negativo: %d.": "Kulübün kasası eksi bakiyede: %d."
+  "La caja del club está en negativo: %d.": "Kulübün kasası eksi bakiyede: %d.",
+  "Noticias y correo": "Haberler ve posta",
+  "Despacho": "Ofis",
+  "asuntos por decidir": "karar bekleyen konu",
+  "Sin asuntos pendientes": "Bekleyen konu yok",
+  "Accesos": "Kısayollar",
+  "Buscar jugadores y clubes": "Oyuncu ve kulüp ara",
+  "Panel lateral (todos los menús)": "Yan panel (tüm menüler)",
+  "Índice": "Dizin",
+  "%d avisos urgentes": "%d acil uyarı",
+  "Todo en orden esta semana.": "Bu hafta her şey yolunda."
  }
 }
