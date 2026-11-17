@@ -1,6 +1,6 @@
 extends Node
 ## (16-11) Fotos de la pantalla de reflexión de los días de memoria (`EventoReflexion`) en varios PAÍSES (regla del dueño: nunca uno solo).
-## OUT = carpeta (por defecto /tmp/fotos_reflexion); MOVIL=1 = como en un teléfono. Comprueba que el botón cierra la escena. Sale con «FIN. N fallos».
+## PAISES=NED,TUR,… e IDIOMA=de para otras pruebas. OUT = carpeta (por defecto /tmp/fotos_reflexion); MOVIL=1 = como en un teléfono. Comprueba que el botón cierra la escena. Sale con «FIN. N fallos».
 var _fallos := 0
 
 func _esperar(s: float) -> void:
@@ -22,12 +22,15 @@ func _ready() -> void:
 	add_child(p)
 	await _esperar(3.0)
 	CapasTutorial.poner_activas(false)
-	for pais: String in ["CHI", "USA", "GER", "JPN", "ENG"]:
+	if OS.get_environment("IDIOMA") != "":
+		Idiomas.idioma = OS.get_environment("IDIOMA")
+	var lista: PackedStringArray = (OS.get_environment("PAISES") if OS.get_environment("PAISES") != "" else "CHI,USA,GER,JPN,ENG").split(",")
+	for pais: String in lista:
 		var dia := {}
 		for f: Dictionary in Calendario.del_anio(pais, 2026):
 			if String(f["tipo"]) == "memoria":
 				dia = {"nombre": f["nombre"], "pais": pais, "dia": f["dia"], "mes": f["mes"], "texto": f["texto"],
-					"reflexion": DiasMemoria.REFLEXIONES.get(String(f["nombre"]), "")}
+					"reflexion": DiasMemoria.reflexion_de(f), "cat": f.get("cat", "")}
 				break
 		_ok(not dia.is_empty(), "%s tiene un día de memoria" % pais)
 		var e := EventoReflexion.mostrar(p, dia)

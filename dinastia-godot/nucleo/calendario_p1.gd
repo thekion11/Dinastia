@@ -286,6 +286,11 @@ static func del_anio(pais: String, anio: int) -> Array:
 	var r: Array = []
 	for f: Array in FIJAS.get(pais, []):
 		r.append({"mes": int(f[0]), "dia": int(f[1]), "nombre": String(f[2]), "tipo": String(f[3]), "texto": String(f[4])})
+	for f: Array in CalendarioMemorias.de(pais):   ## (17-11) más días de memoria por país; día negativo = n-ésimo día de la semana
+		var dia := int(f[1])
+		if dia < 0:
+			dia = _enesimo(anio, int(f[0]), int(floori(-dia / 10.0)), (-dia) % 10)
+		r.append({"mes": int(f[0]), "dia": dia, "nombre": String(f[2]), "tipo": "memoria", "texto": String(f[3]), "cat": String(f[4])})
 	if not SIN_PRIMERO_DE_MAYO.has(pais):
 		r.append({"mes": 5, "dia": 1, "nombre": "Día del Trabajador", "tipo": "trabajo",
 			"texto": "El 1 de mayo recuerda las luchas por la jornada de 8 horas. En el club, el personal libra y los jugadores suelen dedicarle el partido."})

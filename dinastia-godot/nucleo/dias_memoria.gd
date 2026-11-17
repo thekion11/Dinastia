@@ -25,6 +25,20 @@ const REFLEXIONES := {
 	"Memorial Day": "Un día para honrar a quienes murieron sirviendo al país y para acompañar a sus familias.",
 }
 
+## categoría (`CalendarioMemorias`) -> frase de reflexión de los días que no tienen una propia en `REFLEXIONES`.
+const CATEGORIAS := {
+	"guerra": "Honramos a quienes cayeron y a las familias que los lloran. La paz también se construye recordando.",
+	"genocidio": "Recordar a las víctimas es el primer paso para que nunca vuelva a ocurrir.",
+	"represion": "Por quienes sufrieron la represión y por las familias que aún buscan verdad y justicia. Que no se repita.",
+	"martires": "Gratitud en silencio con quienes dieron la vida por su país y su libertad.",
+	"desastre": "Recordamos a las víctimas y a quienes ayudaron en los días más difíciles. La memoria también protege.",
+	"terror": "Memoria y respeto para las víctimas y sus familias. Frente al odio, unidad.",
+}
+
+static func reflexion_de(f: Dictionary) -> String:
+	var n := String(f["nombre"])
+	return String(REFLEXIONES[n]) if REFLEXIONES.has(n) else String(CATEGORIAS.get(String(f.get("cat", "")), f["texto"]))
+
 ## El día de memoria que toca esta semana (y no se vio este año) o {}. Claves: clave, nombre, pais, dia, mes, texto (la explicación del mentor), reflexion.
 static func pendiente(m: Mundo) -> Dictionary:
 	if m == null or m.prensa == null or m.mi_club() == null or not m.temporada_en_curso():
@@ -37,7 +51,7 @@ static func pendiente(m: Mundo) -> Dictionary:
 		if m.prensa.eventos_vistos.has(clave):
 			continue
 		return {"clave": clave, "nombre": String(f["nombre"]), "pais": pais, "dia": int(f["dia"]), "mes": int(f["mes"]),
-			"texto": String(f["texto"]), "reflexion": String(REFLEXIONES.get(String(f["nombre"]), String(f["texto"])))}
+			"texto": String(f["texto"]), "reflexion": reflexion_de(f)}
 	return {}
 
 static func clave_de(pais: String, anio: int, nombre: String) -> String:
