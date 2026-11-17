@@ -8,7 +8,8 @@ func _ok(cond: bool, msg: String) -> void:
 		fallos += 1
 		print("FALLO ", msg)
 
-func _ready() -> void:
+func correr(padre: Node = null) -> int:
+	var _p := padre
 	for cfg: Array in [[["CHI"], 11], [["ESP", "ENG"], 12], [["JPN"], 13]]:
 		var m := Mundo.new()
 		var ps: Array[String] = []
@@ -33,5 +34,9 @@ func _ready() -> void:
 		var r0 := ReplicaPartido.partido_de(orig, 0)
 		r0.preparar()
 		_ok(r0.minuto == 0 and r0.goles_local == 0 and r0.goles_visita == 0, "%s: «jugar de nuevo» arranca de cero" % e)
+	return fallos
+
+func _ready() -> void:
+	correr(self)
 	print("FIN. %d fallos" % fallos)
 	get_tree().quit()

@@ -9,6 +9,8 @@ func _ok(cond: bool, msg: String) -> void:
 		fallos += 1
 		print("FALLO ", msg)
 
+var _padre: Node
+
 func _motor(saca_local: bool, paises: Array, semilla: int) -> MotorJugable:
 	var m := Mundo.new()
 	var ps: Array[String] = []
@@ -18,7 +20,7 @@ func _motor(saca_local: bool, paises: Array, semilla: int) -> MotorJugable:
 	var a: Club = m.ligas[0].clubes[0]
 	var b: Club = m.ligas[0].clubes[1]
 	var raiz := Node3D.new()
-	add_child(raiz)
+	_padre.add_child(raiz)
 	var sp := PlayerSpawner.new()
 	var lista: Array = []
 	var l := Puente3D.once(a.once())
@@ -34,7 +36,8 @@ func _motor(saca_local: bool, paises: Array, semilla: int) -> MotorJugable:
 	motor.preparar(lista, ball, "", semilla)
 	return motor
 
-func _ready() -> void:
+func correr(padre: Node = null) -> int:
+	_padre = padre
 	for cfg: Array in [[true, ["CHI"], 3], [false, ["ESP"], 4], [false, ["ARG", "BRA"], 5]]:
 		var saca := bool(cfg[0])
 		var e := "%s/%s" % [",".join(cfg[1]), "local" if saca else "visita"]
@@ -49,5 +52,9 @@ func _ready() -> void:
 				vio_segunda = true
 				_ok(bool(motor.saque["local"]) == (not saca), "%s: en la segunda parte saca el otro" % e)
 		_ok(vio_segunda, "%s: se llegó a la segunda parte" % e)
+	return fallos
+
+func _ready() -> void:
+	correr(self)
 	print("FIN. %d fallos" % fallos)
 	get_tree().quit()

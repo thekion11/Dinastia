@@ -8,7 +8,8 @@ func _ok(cond: bool, msg: String) -> void:
 		fallos += 1
 		print("FALLO ", msg)
 
-func _ready() -> void:
+func correr(padre: Node = null) -> int:
+	var _p := padre
 	var mundos := [[["CHI"], 11], [["ARG", "BRA"], 22], [["ESP", "ENG"], 33], [["GER", "ITA", "FRA"], 44]]
 	var vistos := {"partido": 0, "pantalla": 0, "aviso": 0}
 	for cfg: Array in mundos:
@@ -89,5 +90,9 @@ func _ready() -> void:
 	_ok(not bool(EventosDia.plan_de_parada([])["vuelve_al_menu"]), "sin eventos no vuelve al menú")
 	_ok(int(vistos["partido"]) > 0, "en estos mundos se vieron partidos")
 	print("clases vistas: ", vistos)
+	return fallos
+
+func _ready() -> void:
+	correr(self)
 	print("FIN. %d fallos" % fallos)
 	get_tree().quit()

@@ -14,8 +14,6 @@ static var dias_activo := true
 static var dias_en_curso := false
 var _dias: RefCounted
 ## Estado propio de esta pantalla (fase 6, paso 7: antes eran variables de `Principal`).
-## Para no repetir el aviso del cierre de mercado cada vez que se repinta.
-var _mercado_avisado: int = -1
 var _saldo_mostrado := -1
 var _dia_pintado: int = -1
 var _evento_fin_lanzado := false   ## el evento de fin de temporada ya salió en esta pantalla (se rearma al empezar otra temporada)
@@ -245,16 +243,7 @@ func _avanzar_semana() -> void:
 		return
 	var mio := p.mundo.mi_club()
 	var liga := p._liga_de(mio)
-	var caja_antes := mio.saldo
-	## EL CIERRE DEL MERCADO TIENE QUE NOTARSE. Un mercado que cierra en
-	## silencio es un boton que un dia deja de funcionar; avisado con dos
-	## semanas, es una fecha limite y cambia como se juega esa quincena.
-	if p.mundo.mercado_abierto() and p.mundo.semanas_de_mercado() <= 2 and _mercado_avisado != p.mundo.semana:
-		_mercado_avisado = p.mundo.semana
-		var q := p.mundo.semanas_de_mercado()
-		Aviso.mostrar(p, "mercado", "⏳", "El mercado cierra",
-			"Queda%s %d semana%s para el cierre. Lo que no fiches ahora, no lo fichas hasta la próxima ventana." % [
-				"" if q == 1 else "n", q, "" if q == 1 else "s"], "mercado_cierra")
+	var caja_antes := AvisosSemana.antes(p)   ## el cierre del mercado (y la caja para el cierre de mes): código común a los tres caminos de la semana
 	## ALINEACIÓN INVÁLIDA (01-11, idea 1036): si tu once elegido tiene un lesionado o un sancionado, se avisa.
 	var falla_once := AvisoOnce.motivo(mio)
 	if falla_once != "":
@@ -279,10 +268,7 @@ func _avanzar_semana() -> void:
 	if visto["txt"] != "":
 		p._escribir(visto["txt"])
 	_clubes_seguidos()
-	if p.mundo.semana % Finanzas.SEMANAS_DEL_MES == 1 and p.mundo.semana > 1:
-		var delta := mio.saldo - caja_antes
-		p._escribir("[color=#c9a227]Cierre de mes:[/color] la caja %s %s" % [
-			"sube" if delta >= 0 else "baja", p._dinero(absi(delta))])
+	AvisosSemana.despues(p, caja_antes)
 	p._partida.autoguardar_si_toca()
 	_refrescar()
 	## El partido simulado también cuenta para la racha del plan.

@@ -9,7 +9,8 @@ func _ok(cond: bool, msg: String) -> void:
 		fallos += 1
 		print("FALLO ", msg)
 
-func _ready() -> void:
+func correr(padre: Node = null) -> int:
+	var _p := padre
 	for cfg: Array in [[["CHI"], 11], [["ARG", "BRA"], 22], [["ESP", "ENG"], 33], [["GER", "ITA", "FRA"], 44]]:
 		var m := Mundo.new()
 		var ps: Array[String] = []
@@ -18,6 +19,10 @@ func _ready() -> void:
 		m.generar(ps, int(cfg[1]))
 		m.tomar_el_mando(m.ligas[0].clubes[1 + int(cfg[1]) % 3].id)
 		_temporada(m, "%s/%d" % [",".join(cfg[0]), cfg[1]])
+	return fallos
+
+func _ready() -> void:
+	correr(self)
 	print("FIN. %d fallos" % fallos)
 	get_tree().quit()
 
