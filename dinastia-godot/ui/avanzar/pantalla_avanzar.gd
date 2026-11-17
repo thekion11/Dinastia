@@ -11,7 +11,7 @@ signal cerrado
 
 const PASO := 0.16        ## s por día recorrido
 const DECORADO := 2.4     ## s que se queda el banner en un día de evento
-const ESCENA := Vector2(1200, 540)
+const ESCENA := Vector2(1200, 675)
 
 var _m: Mundo
 var _res: Dictionary
@@ -37,7 +37,7 @@ static func mostrar(pr: Node, m: Mundo, unix0: int, res: Dictionary) -> Pantalla
 	s._res = res
 	s._unix0 = unix0
 	s._unix_parada = unix0 + (res["pasados"] as Array).size() * 86400
-	s.montar(pr, FondoCine.Modo.NOCHE, Color("0b1330"))
+	s.montar(pr, FondoCine.Modo.TARJETA, Color("0b1330"))
 	s._rellenar()
 	s._correr.call_deferred()
 	return s
@@ -68,7 +68,7 @@ func _rellenar() -> void:
 	cab.add_child(_fecha)
 	_banner = Control.new()
 	_banner.position = Vector2(36, 74)
-	_banner.size = Vector2(1128, 156)
+	_banner.size = Vector2(PantallaAvanzarBanner.ANCHO, PantallaAvanzarBanner.ALTO)
 	_banner.clip_contents = true
 	_escena.add_child(_banner)
 	_fondo_banner = FondoCine.new()
@@ -77,17 +77,17 @@ func _rellenar() -> void:
 	_cap.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_banner.add_child(_cap)
 	var riel := ColorRect.new()
-	riel.position = Vector2(36, 231)
-	riel.size = Vector2(1128, 4)
+	riel.position = Vector2(36, 74 + PantallaAvanzarBanner.ALTO)
+	riel.size = Vector2(1128, 6)
 	riel.color = Color(1, 1, 1, 0.1)
 	_escena.add_child(riel)
 	_barra = ColorRect.new()
-	_barra.position = Vector2(36, 231)
-	_barra.size = Vector2(0, 4)
-	_barra.color = _acento
+	_barra.position = riel.position
+	_barra.size = Vector2(0, 6)
+	_barra.color = Color("c8102e")
 	_escena.add_child(_barra)
 	var cal := Control.new()
-	cal.position = Vector2(36, 238)
+	cal.position = Vector2(36, 74 + PantallaAvanzarBanner.ALTO + 8)
 	_escena.add_child(cal)
 	var escudo := Escudo.textura(_m.mi_club(), 64)
 	for i in 14:
@@ -106,18 +106,18 @@ func _ajustar() -> void:
 
 func _pie() -> void:
 	var fila := HBoxContainer.new()
-	fila.position = Vector2(36, 458)
+	fila.position = Vector2(36, 74 + PantallaAvanzarBanner.ALTO + 8 + 2 * PantallaAvanzarPiezas.ALTO_CELDA + 22)
 	fila.size = Vector2(1128, 64)
 	fila.add_theme_constant_override("separation", 10)
 	_escena.add_child(fila)
 	var b_av := boton(Idiomas.t("Avanzar"), true, 21)
-	b_av.custom_minimum_size = Vector2(176, 46)
+	b_av.custom_minimum_size = Vector2(190, 56)
 	b_av.pressed.connect(_pulsar)
 	var b_ev := boton(Idiomas.t("Hasta el próximo evento"), false, 21)
-	b_ev.custom_minimum_size = Vector2(242, 46)
+	b_ev.custom_minimum_size = Vector2(260, 56)
 	b_ev.pressed.connect(_pulsar)
 	var b_menu := boton(Idiomas.t("Menú"), false, 21)
-	b_menu.custom_minimum_size = Vector2(84, 46)
+	b_menu.custom_minimum_size = Vector2(96, 56)
 	b_menu.pressed.connect(_cerrar)
 	for b: Button in [b_av, b_ev, b_menu]:
 		fila.add_child(b)
@@ -165,9 +165,11 @@ func _mostrar_vacio(fh: Dictionary) -> void:
 	_fondo_banner.modo = FondoCine.Modo.EVENTO
 	_fondo_banner.color = Color("0c1426")
 	_fondo_banner.franjas = false
+	_fondo_banner.bokeh = false
+	_fondo_banner.set_process(false)
 	_fondo_banner.queue_redraw()
 	var t := EstiloAvanzar.etiqueta("%s %d %s" % [Idiomas.t(String(Principal.DIAS_LARGOS[(int(fh["weekday"]) + 6) % 7])), int(fh["day"]), Idiomas.t(String(Principal.MESES_LARGOS[int(fh["month"]) - 1]))], 30, Color("cfd7ee"), true, true)
-	t.position = Vector2(26, 86)
+	t.position = Vector2(26, PantallaAvanzarBanner.ALTO - 80.0)
 	_cap.add_child(t)
 
 func _correr() -> void:

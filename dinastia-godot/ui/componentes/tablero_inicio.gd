@@ -35,9 +35,18 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 	mos.name = "Mosaico"
 	mos.add_theme_constant_override("separation", SEP)
 	raiz.add_child(mos)
-	var barra := HBoxContainer.new()
-	barra.add_theme_constant_override("separation", 4)
-	mos.add_child(barra)
+	var escaparate := EscaparateInicio.usa()   ## (17-11) la barra y las tarjetas del escaparate; en el teléfono, el mosaico de siempre
+	var barra: HBoxContainer
+	if escaparate:
+		var aire := Control.new()   ## sitio para que el escudo asome por encima de la barra
+		aire.custom_minimum_size.y = 30
+		mos.add_child(aire)
+		barra = EscaparateBarra.crear(mos, c)
+	else:
+		barra = HBoxContainer.new()
+		barra.name = "Botones"
+		barra.add_theme_constant_override("separation", 4)
+		mos.add_child(barra)
 	var cuerpo := VBoxContainer.new()
 	cuerpo.add_theme_constant_override("separation", SEP)
 	mos.add_child(cuerpo)
@@ -47,7 +56,7 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 	fondo_mundo = ColorMundo.fondo_tarjeta(p.mundo)
 	var botones: Array[Button] = []
 	for i in PESTANAS.size():
-		var b := _boton_pestana(Idiomas.t(String(PESTANAS[i])).to_upper(), color_mundo)
+		var b := EscaparateBarra.boton_pestana(Idiomas.t(String(PESTANAS[i])), 1.6) if escaparate else _boton_pestana(Idiomas.t(String(PESTANAS[i])).to_upper(), color_mundo)
 		barra.add_child(b)
 		botones.append(b)
 		CampanasMenu.marcar_pestana(b, i)   ## (17-11) punto rojo si hay una campana en una tarjeta de esa pestaña
@@ -56,6 +65,8 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 			_marcar(botones)
 			_cuerpo(p, cuerpo, c, liga, dias_al_partido, acento)
 			_entrada(cuerpo))
+	if escaparate:
+		EscaparateBarra.completar(p, barra, botones, c)
 	_marcar(botones)
 	_cuerpo(p, cuerpo, c, liga, dias_al_partido, acento)
 
@@ -64,9 +75,9 @@ static func saltar(p: Principal, d: int) -> bool:
 	var mos := p._lista_inicio.get_node_or_null("Mosaico") if p._lista_inicio != null else null
 	if mos == null or not (mos as Control).is_visible_in_tree():
 		return false
-	var barra := mos.get_child(0)
+	var barra := mos.find_child("Botones", true, false)
 	var i := (pestana + d + PESTANAS.size()) % PESTANAS.size()
-	var b := barra.get_child(i) as Button
+	var b := (barra.get_meta("tabs") as Array)[i] as Button if barra.has_meta("tabs") else barra.get_child(i) as Button
 	b.button_pressed = true
 	b.pressed.emit()
 	return true
@@ -76,7 +87,10 @@ static func saltar(p: Principal, d: int) -> bool:
 static func ocultar_columnas(p: Principal) -> void:
 	if p._col_derecha == null or p._lista_tabla == null:
 		return
-	compactar_cabecera(p)
+	if EscaparateInicio.usa():
+		EscaparateInicio.preparar(p)
+	else:
+		compactar_cabecera(p)
 	var raiz := p._despacho.get_parent() if p._despacho != null else null
 	if raiz is Container and raiz.get_node_or_null("BarraAyudas") == null:
 		BarraAyudas.montar(p, raiz)   ## la barra de abajo: teclas, mensajes, ayuda y reloj
@@ -148,7 +162,11 @@ static func _cuerpo(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, di
 	match pestana:
 		1: _de_subs(p, cuerpo, c, EQUIPO, acento)
 		2: _de_subs(p, cuerpo, c, CLUB, acento)
-		_: MosaicoTarjetas.avanzar(p, cuerpo, c, liga, dias, acento)
+		_:
+			if EscaparateInicio.usa():
+				EscaparateInicio.avanzar(p, cuerpo, c, liga, acento)
+			else:
+				MosaicoTarjetas.avanzar(p, cuerpo, c, liga, dias, acento)
 
 ## Coloca el mosaico: `grande` (2 de ancho), `altas` (columnas de 1 o 2 tarjetas) y `bajas` (la fila de abajo).
 ## En el teléfono (de pie o tumbado) todo baja a dos columnas.

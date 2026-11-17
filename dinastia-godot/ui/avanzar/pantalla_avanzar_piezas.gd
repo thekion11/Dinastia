@@ -4,7 +4,7 @@ extends RefCounted
 ## circulares de los eventos y la ficha con el escudo de tu club), los símbolos, la marca de «visto» y las ayudas de teclas. Medidas de `.dia`, `.ico` y `.kbd` de la maqueta.
 
 const ANCHO_CELDA := 161.0
-const ALTO_CELDA := 100.0
+const ALTO_CELDA := 130.0
 const TILDE := '<path d="M5 12l5 5 9-10"/>'
 
 static func _caja(bg: Color, borde := Color(0, 0, 0, 0), grosor := 0) -> StyleBoxFlat:
@@ -42,7 +42,7 @@ static func celda(escudo: Texture2D) -> Dictionary:
 	panel.add_child(visto)
 	var simbolos := HBoxContainer.new()
 	simbolos.position = Vector2(0, 22)
-	simbolos.size = Vector2(ANCHO_CELDA, 76)
+	simbolos.size = Vector2(ANCHO_CELDA, ALTO_CELDA - 22.0)
 	simbolos.alignment = BoxContainer.ALIGNMENT_CENTER
 	simbolos.add_theme_constant_override("separation", 6)
 	simbolos.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -50,7 +50,7 @@ static func celda(escudo: Texture2D) -> Dictionary:
 	var ficha := TextureRect.new()
 	ficha.texture = escudo
 	ficha.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	ficha.position = Vector2(ANCHO_CELDA - 30, 26)
+	ficha.position = Vector2(ANCHO_CELDA - 30, 28)
 	ficha.size = Vector2(24, 28)
 	ficha.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	ficha.visible = false
@@ -94,7 +94,7 @@ static func pintar(c: Dictionary, fecha: Dictionary, estado: String, eventos: Ar
 	for h in sim.get_children():
 		h.free()
 	for i in mini(eventos.size(), 2):
-		sim.add_child(simbolo(eventos[i], 34, estado == "futuro"))
+		sim.add_child(simbolo(eventos[i], 44, estado == "futuro"))
 	if eventos.size() > 2:
 		sim.add_child(EstiloAvanzar.etiqueta("+%d" % (eventos.size() - 2), 12, Color("52607d"), true))
 

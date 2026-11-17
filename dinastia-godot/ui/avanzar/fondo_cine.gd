@@ -4,7 +4,7 @@ extends Control
 ## (`.rayos`: blancas al 7 %, 30 px cada 90 px a 115°), una viñeta y, opcionalmente, luces desenfocadas (bokeh) que flotan despacio.
 ## Modos: «evento» (degradado de `color`), «dual» (dos colores, izquierda y derecha, como la previa) y «noche» (azul noche con dos haces rojos, como el menú y el resultado).
 
-enum Modo { EVENTO, DUAL, NOCHE }
+enum Modo { EVENTO, DUAL, NOCHE, TARJETA }
 var modo: Modo = Modo.EVENTO
 var color := Color("27a9b8")
 var color_b := Color("1f8a4c")   ## el segundo color del modo «dual»
@@ -45,6 +45,9 @@ func _draw() -> void:
 			var oscuro2 := Color("0a0f1c")
 			draw_polygon(PackedVector2Array([Vector2.ZERO, Vector2(s.x * 0.5, 0), Vector2(s.x * 0.5, s.y), Vector2(0, s.y)]), PackedColorArray([izq, izq.lerp(oscuro2, 0.8), izq.lerp(oscuro2, 0.8), izq]))
 			draw_polygon(PackedVector2Array([Vector2(s.x * 0.5, 0), Vector2(s.x, 0), s, Vector2(s.x * 0.5, s.y)]), PackedColorArray([der.lerp(oscuro2, 0.8), der, der, der.lerp(oscuro2, 0.8)]))
+		Modo.TARJETA:   ## la tarjeta oscura única de la maqueta (pantalla «Avanzar»): azul noche liso con su borde, sin triángulos
+			draw_polygon(PackedVector2Array([Vector2.ZERO, Vector2(s.x, 0), s, Vector2(0, s.y)]), PackedColorArray([Color("0e1730"), Color("0b1226"), Color("080d1c"), Color("0b1226")]))
+			draw_rect(Rect2(Vector2(3, 3), s - Vector2(6, 6)), Color("1d2c52"), false, 2.0)
 		Modo.NOCHE:
 			draw_rect(r, Color("0b1330"))
 			var rojo := Color(ROJO_NOCHE, 0.9)
@@ -53,7 +56,7 @@ func _draw() -> void:
 			draw_polygon(PackedVector2Array([Vector2(s.x, 0), Vector2(s.x * 0.92, 0), Vector2(s.x, s.y * 0.3)]), PackedColorArray([rojo, rojo, rojo]))
 			draw_polygon(PackedVector2Array([Vector2(s.x, s.y), Vector2(s.x * 0.8, s.y), Vector2(s.x, s.y * 0.35)]), PackedColorArray([rojo, rojo, rojo]))
 			draw_polygon(PackedVector2Array([Vector2(s.x * 0.2, 0), Vector2(s.x * 0.25, 0), Vector2(s.x * 0.07, s.y * 0.6), Vector2(s.x * 0.04, s.y * 0.6)]), PackedColorArray([Color(1, 1, 1, 0.16), Color(1, 1, 1, 0.16), Color(1, 1, 1, 0.16), Color(1, 1, 1, 0.16)]))
-	if franjas and modo != Modo.NOCHE:
+	if franjas and modo != Modo.NOCHE and modo != Modo.TARJETA:
 		var inclina := s.y * 0.4663
 		var x := -inclina
 		while x < s.x + 30.0:
@@ -65,7 +68,7 @@ func _draw() -> void:
 			var px := fposmod(float(l["x"]) + sin(_t * float(l["f"]) + float(l["y"]) * 6.0) * 0.03, 1.0) * s.x
 			var py := fposmod(float(l["y"]) - _t * float(l["f"]) * 0.02, 1.0) * s.y
 			draw_circle(Vector2(px, py), float(l["r"]) * s.y / 540.0, Color(cc, float(l["o"])))
-	if modo != Modo.NOCHE:
+	if modo != Modo.NOCHE and modo != Modo.TARJETA:
 		draw_texture_rect(_vineta_tex(), r, false)
 
 const ROJO_NOCHE := Color("7a1128")

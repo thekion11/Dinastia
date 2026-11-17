@@ -25,7 +25,7 @@ const AVISO := "aviso"
 const ZONAS := ["equipo", "mercado", "cantera", "finanzas", "prensa", "vestuario"]
 
 ## Clase de cada tipo de `EventosFecha`. Lo que no esté aquí es un AVISO (lo menor nunca ocupa la pantalla).
-const CLASE_DE_TIPO := {"liga": PARTIDO, "copa": PARTIDO, "conti": PARTIDO, "fin": PANTALLA, "mercado_abre": AVISO, "mercado_cierra": AVISO}
+const CLASE_DE_TIPO := {"liga": PARTIDO, "copa": PARTIDO, "conti": PARTIDO, "fin": PANTALLA, "mercado_abre": AVISO, "mercado_cierra": PANTALLA}   ## (17-11) el último día del mercado es un HITO: pantalla completa con cuenta atrás
 ## Zona de la campana de cada AVISO.
 const ZONA_DE_TIPO := {"mercado_abre": "mercado", "mercado_cierra": "mercado"}
 const ZONA_POR_DEFECTO := "prensa"

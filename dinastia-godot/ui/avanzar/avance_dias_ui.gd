@@ -25,7 +25,7 @@ func _estado() -> Dictionary:
 	if p.mundo.get_instance_id() != _mundo_id:
 		_mundo_id = p.mundo.get_instance_id()
 		_est = DisparadoresDia.nuevo_estado()
-		_abs_vista = -999
+		_abs_vista = _abs()   ## una partida nueva o cargada parte «de hoy»: el primer avance pasa al día siguiente (no se queda en el lunes ya vivido)
 		_arrastre = []
 		CampanasMenu.limpiar()
 	return _est
@@ -75,17 +75,32 @@ func _al_elegir_jugado(op: String) -> void:
 		await rp.elegido
 		rp.queue_free()
 	elif op == "repetir":
-		ReplicaPartido.abrir(p, ult, 0)   ## el partido entero otra vez, con clubes clonados: no toca la liga ni a los jugadores
+		load("res://ui/partido_menu/replica_partido.gd").abrir(p, ult, 0)   ## el partido entero otra vez, con clubes clonados: no toca la liga ni a los jugadores
 	elif op.begins_with("momentos:"):
 		var mo := MomentosPartido.mostrar(p, ult, p.mundo.mi_club(), op.substr(9))
 		var r: String = await mo.elegido
 		var minuto := int(mo._lista[int(r.substr(8))]["min"]) if r.begins_with("momento:") else -1
 		mo.queue_free()
 		if minuto >= 0:
-			ReplicaPartido.abrir(p, ult, minuto)   ## desde un minuto antes de la jugada y con el marcador de entonces
+			load("res://ui/partido_menu/replica_partido.gd").abrir(p, ult, minuto)   ## desde un minuto antes de la jugada y con el marcador de entonces
+
+## ¿Hoy es el último día del mercado (y estás sobre ese día)? Entonces pasar al día siguiente lo cierra: se pregunta antes.
+func _hito_pendiente() -> bool:
+	if _abs() != _abs_vista:
+		return false
+	for ev: Dictionary in EventosDia.del_dia(p.mundo, 0, p._dia_semana):
+		if String(ev.get("tipo", "")) == "mercado_cierra":
+			return true
+	return false
+
+func _confirmar_hito() -> bool:
+	var d := ConfirmarHito.mostrar(p, Idiomas.t("Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?"))
+	var r: String = await d.elegido
+	d.queue_free()
+	return r == "si"
 
 ## EL BOTÓN «AVANZAR».
-func pulsar() -> void:
+func pulsar(un_dia := false) -> void:
 	if p.mundo == null or en_curso:
 		return
 	var m := p.mundo
@@ -94,6 +109,8 @@ func pulsar() -> void:
 		return
 	if partido_hoy():
 		actualizar_botones()
+		return
+	if _con_pantalla() and await _hito_pendiente() and not await _confirmar_hito():
 		return
 	en_curso = true
 	AvanceSemana.dias_en_curso = true
@@ -113,7 +130,7 @@ func pulsar() -> void:
 			AvanceSemana.partido_obliga = false
 			p._avance._avanzar_semana()
 			AvanceSemana.partido_obliga = antes
-		res = AvanceDias.avanzar(m, est, dia, rodar)
+		res = AvanceDias.avanzar(m, est, dia, rodar, un_dia)
 	p._dia_semana = int(res["dia"])
 	_abs_vista = _abs()
 	if _con_pantalla():
@@ -144,6 +161,11 @@ func _pantalla_de(ev: Dictionary) -> void:
 	if String((ev.get("causa", {}) as Dictionary).get("id", "")) == "oferta_seleccion":
 		await load("res://ui/principal/jornada_seleccion.gd").ofrecer_cargo(p)
 		return
+	if String(ev.get("tipo", "")) == "mercado_cierra":
+		var h: Variant = load("res://ui/avanzar/mercado_hito_pantalla.gd").mostrar(p, p.mundo.mi_club())
+		await h.elegido
+		h.queue_free()
+		return
 	if String(ev.get("tipo", "")) == "fin":
 		return   ## el cierre de temporada lo abre `AvanceSemana` (despedida y resumen) al refrescar
 	var t: Variant = load("res://ui/avanzar/evento_dia_pantalla.gd").mostrar(p, ev, p.mundo)
@@ -161,7 +183,7 @@ func saltar() -> void:
 	if not partido_hoy():
 		return
 	_guardar_domingo()
-	JornadaPartido.modo_forzado = "saltar"   ## (17-11) se simula el partido de hoy (con su resultado en pantalla) y la semana corre con él
+	load("res://ui/principal/jornada_partido.gd").modo_forzado = "saltar"   ## (17-11) se simula el partido de hoy (con su resultado en pantalla) y la semana corre con él
 	p._dirigir()
 
 ## Lo que pasa el domingo (mercado que cierra, fechas del país) no se pierde porque el partido ya hizo correr la semana.

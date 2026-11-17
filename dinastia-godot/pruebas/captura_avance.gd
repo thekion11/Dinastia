@@ -44,4 +44,38 @@ func _ready() -> void:
 			s.queue_free()
 			break
 		raiz.queue_free()
+	await _sinteticos()
 	get_tree().quit()
+
+## Eventos que NO son partido, con su arte (res falso como el de `AvanceDias.avanzar`): ultimátum, jugador del mes, golpe de caja, mercado, cantera y fecha del país.
+func _sinteticos() -> void:
+	var m := Mundo.new()
+	var ps: Array[String] = ["ESP", "ARG"]
+	m.generar(ps, 77)
+	m.tomar_el_mando(m.ligas[0].clubes[4].id)
+	var j: Jugador = m.mi_club().plantilla[2]
+	j.goles = 6
+	j.asistencias = 2
+	j.notas = [7.8, 8.1, 7.6] as Array[float]
+	var lista := [
+		{"tipo": "ultimatum", "clase": "pantalla", "origen": "disparador", "causa": {"id": "ultimatum", "datos": {"confianza": 18}}},
+		{"tipo": "jugador_del_mes", "clase": "pantalla", "origen": "disparador", "es_mio": true, "nombre": Nombres.visible(j.nombre), "jugador_id": j.id, "club": m.mi_club().nombre, "causa": {"id": "jugador_del_mes", "datos": {}}},
+		{"tipo": "golpe_caja", "clase": "aviso", "origen": "disparador", "titulo": "Multa de la federación", "texto": "La federación te multa por incidentes en la grada.", "causa": {"id": "golpe_caja", "datos": {"importe": 500000, "semanas": 2}}},
+		{"tipo": "mercado_cierra", "clase": "aviso", "origen": "calendario", "icono": "🔒", "etiqueta": "Mercado", "texto": "Cierra el mercado de fichajes", "causa": {}},
+		{"tipo": "evento_cantera", "clase": "aviso", "origen": "disparador", "texto": "Un chico de la academia quiere dejar el fútbol.", "causa": {"id": "evento_cantera", "datos": {}}},
+		{"tipo": "fecha_pais", "subtipo": "independencia", "clase": "pantalla", "origen": "pais", "pais": "ESP", "nombre": "Día de la independencia", "texto": "Se celebra la independencia del país.", "causa": {}}]
+	var raiz := Control.new()
+	raiz.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(raiz)
+	for ev: Dictionary in lista:
+		var unix0 := Calendario.unix_de(m.anio, m.semana, 0)
+		var pas: Array = []
+		for d in 4:
+			pas.append({"dia": d + 1, "mes": 1, "dia_mes": 1})
+		var res := {"dia": 4, "eventos": [ev], "plan": EventosDia.plan_de_parada([ev]), "pasados": pas, "fin": false}
+		var s := PantallaAvanzar.mostrar(raiz, m, unix0, res)
+		while s._fase == 0:
+			await get_tree().create_timer(0.2).timeout
+		await get_tree().create_timer(0.8).timeout
+		await _foto("sint_%s" % String(ev["tipo"]))
+		s.queue_free()

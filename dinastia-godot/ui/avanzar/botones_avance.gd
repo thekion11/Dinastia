@@ -7,7 +7,7 @@ extends RefCounted
 static func montar(p: Principal, viejos: Array) -> void:
 	for viejo: Control in viejos:
 		viejo.visible = false
-	var nuevos := [["avanzar", "⏩ Avanzar", "Avanza el tiempo día a día: se detiene en cada partido y en cada novedad.", func() -> void: p._avance.dias().pulsar()],
+	var nuevos := [["avanzar", "⏩ Avanzar", "Avanza el tiempo día a día: se detiene en cada partido y en cada novedad.", func() -> void: desplegar(p)],
 		["jugar", "⚽ Jugar partido", "Juega el partido de hoy.", func() -> void: p._avance.dias().jugar()],
 		["saltar", "⏭ Saltar partido", "Simula el partido de hoy y sigue.", func() -> void: p._avance.dias().saltar()],
 		["temporada", "🏁 Temporada siguiente", "La liga terminó: empieza la temporada siguiente.", func() -> void: p._al_elegir_calendario(3)]]
@@ -29,3 +29,17 @@ static func montar(p: Principal, viejos: Array) -> void:
 	p._guia.nodos["b_jugado"] = bj
 	p._guia.nodos["avanzar"] = p._guia.nodos["b_avanzar"]
 	p._guia.nodos["avanzar_caja"] = p._botones
+
+## El desplegable de «Avanzar» (como el del PES 2020, que ofrece «Avanzar 1 hora» y «Siguiente»): «Avanzar 1 día» y «Siguiente» (hasta el próximo evento).
+static func desplegar(p: Principal) -> void:
+	var b: Button = p._guia.nodos["b_avanzar"]
+	var pop := b.get_node_or_null("Desplegable") as PopupMenu
+	if pop == null:
+		pop = PopupMenu.new()
+		pop.name = "Desplegable"
+		pop.add_item(Idiomas.t("Avanzar 1 día"), 0)
+		pop.add_item(Idiomas.t("Siguiente"), 1)
+		pop.id_pressed.connect(func(id: int) -> void: p._avance.dias().pulsar(id == 0))
+		b.add_child(pop)
+	var r := b.get_global_rect()
+	pop.popup(Rect2i(Vector2i(int(r.position.x), int(r.position.y + r.size.y)), Vector2i(maxi(int(r.size.x), 220), 0)))
