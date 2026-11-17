@@ -826,12 +826,6 @@ void fragment() {
 			// De lejos (la celda ya no llega al píxel) las letras se funden en un tono medio en vez de chisporrotear.
 			on = mix(0.35, on, 1.0 - smoothstep(0.55, 1.1, px_tela / cw));
 		}
-		// Acotado: en el borde de la caja de cada cifra la distancia salta y, sin tope, dibujaba un marco fino.
-		float fw_d = clamp(fwidth(dd), 1e-4, 0.02) * 0.75;
-		float on = 1.0 - smoothstep(DIG_T - fw_d, DIG_T + fw_d, dd);
-		// Filete de ~5 mm más oscuro alrededor (como el borde termosellado de los dorsales); se apaga de lejos.
-		float filete = (1.0 - smoothstep(DIG_T + 0.018 - fw_d, DIG_T + 0.018 + fw_d, dd)) * (1.0 - smoothstep(0.01, 0.03, fw_d));
-		camiseta = mix(camiseta, camiseta * 0.55, filete * (1.0 - on));
 		camiseta = mix(camiseta, color_num.rgb, on);
 	}
 
