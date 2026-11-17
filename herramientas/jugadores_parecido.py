@@ -34,6 +34,7 @@ import urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ruta_segura import ruta_segura, RAIZ_REPO  # noqa: E402
 from auditar_parecido_real import cargar, limpiar  # noqa: E402
+from nacionalidades_jugadores import codigos_validos, normalizar_pais, normalizar_pack  # noqa: E402
 
 CLIENTE = "dinastia-datos/1.0 (datos abiertos)"
 PAUSA = 2.5
@@ -42,7 +43,6 @@ PACK = os.path.join(RAIZ_REPO, "dinastia-godot", "datos", "pack_real.json")
 MAPA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "parecido", "clubes_wikipedia.json")
 CACHE = os.environ.get("DINASTIA_CACHE") or os.path.join(tempfile.gettempdir(), "dinastia_cache_wiki")
 ## Wikipedia usa códigos de selección propios en algunos casos; el juego usa los de `PAIS_SELECCION`.
-PAIS = {"SCO": "SCO", "WAL": "WAL", "NIR": "NIR", "IRL": "IRL", "ENG": "ENG", "SUI": "SUI", "NED": "NED"}
 POSD = {"GK": "POR", "DF": "DFC", "MF": "MC", "FW": "DC"}
 ## media = reputación del club − 9 (media del pack: rep − 8); titulares (dorsal 1-11) +2, el resto −3.
 DESCUENTO_MEDIA = 9
@@ -224,6 +224,9 @@ def _semilla(texto):
     return int(hashlib.sha1(texto.encode("utf-8")).hexdigest()[:8], 16) / 0xFFFFFFFF
 
 
+DESCONOCIDAS = {}   ## nacionalidades sin equivalencia de esta ejecución: código → jugadores
+
+
 def media_estimada(j, edad, rep, club, bono=0):
     """Media del jugador DENTRO del club: reputación − 9, y por puesto, edad (pico 25-29), dorsal y una variación estable.
     Los titulares (dorsal 1-11, portero 1) salen +2/+3 por encima de los suplentes y los juveniles bajan. Es una ESTIMACIÓN."""
@@ -268,9 +271,10 @@ def fila(j, wd, rep, club_pais, club, bono=0):
         altura = str(d["altura"])
     else:
         altura, marcas = str(ALTURA_PUESTO.get(pos, 180)), marcas + "h"
-    pais = PAIS.get(j["nat"], j["nat"]) or club_pais
-    if not j["nat"]:
-        marcas += "e"
+    pais = normalizar_pais(j["nat"])
+    if pais is None:   ## sin equivalencia: se anota y el jugador toma el país del club, marcado como estimado
+        DESCONOCIDAS[j["nat"]] = DESCONOCIDAS.get(j["nat"], 0) + 1
+        pais, marcas = club_pais, marcas + "e"
     media = media_estimada(j, edad, rep, club, bono)
     return "|".join([j["nombre"], pos, str(edad), str(media), pais, "", j["no"], altura, marcas])
 
@@ -357,6 +361,9 @@ def fuente_de(mapa, liga, nom):
 
 
 def main():
+    if "--normalizar" in sys.argv:
+        normalizar_pack(PACK)
+        return
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     aplicar = "--aplicar" in sys.argv
     if not args:
@@ -404,9 +411,14 @@ def main():
                 t["REALES"][clave_pack] = propias + nuevos
                 nuevos_total += len(nuevos)
     if aplicar:
+        invalidos = {x.split("|")[4] for v in t["REALES"].values() for x in v if len(x.split("|")) >= 9 and x.split("|")[4] not in codigos_validos()}
+        if invalidos:
+            sys.exit(f"nacionalidades fuera de la tabla del juego, no se escribe el pack: {sorted(invalidos)}")
         with open(ruta_segura(PACK), "w", encoding="utf-8") as f:
             json.dump(pack, f, ensure_ascii=False, separators=(",", ":"))
         print("pack actualizado: +", nuevos_total, "jugadores")
+    if DESCONOCIDAS:
+        print("nacionalidades SIN equivalencia (el jugador toma el país del club, marcado «e»):", DESCONOCIDAS)
     dudosos = [x for x in informe if x[5]]
     print(f"clubes: {len(informe)}; dudosos (no se aplican): {len(dudosos)}")
 

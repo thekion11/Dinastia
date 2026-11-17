@@ -423,3 +423,17 @@ func _probar_escudos_realistas() -> void:
 		if not EscudoEmblemas.FIGURAS.has(k) or im.load_svg_from_string(svg) != OK:
 			dibujan = false
 	_comprobar(dibujan, "las 8 figuras nuevas están en el vocabulario y su SVG se carga")
+
+## (17-11) Toda nacionalidad de las plantillas reales (pack o guiños) tiene bandera: el código es el del juego (`Banderas.ISO`), no un código ajeno de Wikipedia (SPA, ROM, SER…) ni un nombre.
+func _probar_nacionalidades_con_bandera() -> void:
+	_titulo("NACIONALIDADES DE LOS JUGADORES REALES CON SU BANDERA")
+	var sin := {}
+	var total := 0
+	for club: String in Datos.tabla("REALES"):
+		for fila: String in Datos.tabla("REALES")[club]:
+			total += 1
+			var pais := fila.get_slice("|", 4)
+			if not Banderas.ISO.has(pais):
+				sin[pais] = int(sin.get(pais, 0)) + 1
+	_comprobar(total > 0 and sin.is_empty(), "las %d nacionalidades tienen código de bandera del juego (sin él: %s)" % [total, str(sin)])
+

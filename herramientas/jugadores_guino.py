@@ -135,6 +135,16 @@ def guinar(nombre, vetados_bajos=frozenset(), extra=0):
             return res + "o"
 
 
+def _contiene_real(guino, por_primera):
+    """True si el guiño lleva, seguido, las palabras de algún nombre real de dos o más palabras."""
+    p = sin_tildes(guino).lower().split(" ")
+    for i, w in enumerate(p):
+        for nombre in por_primera.get(w, []):
+            if p[i:i + len(nombre)] == nombre:
+                return True
+    return False
+
+
 def tabla_base(reales, clubes, limpiar):
     """`REALES` del pack -> `REALES` de la base: claves con el nombre ficticio
     del club y nombres de guiño. Mismo formato de fila (nombre|pos|edad|media|pais)."""
@@ -143,6 +153,11 @@ def tabla_base(reales, clubes, limpiar):
         for f in filas:
             vetados.add(sin_tildes(limpiar(f.split("|")[0])).lower())
     veto = frozenset(vetados)
+    ## (17-11) Un guiño tampoco puede CONTENER el nombre completo de otro jugador real («Francisco González Metiyi» lleva «Francisco González»): índice por primera palabra.
+    por_primera = {}
+    for v in vetados:
+        if " " in v:
+            por_primera.setdefault(v.split(" ")[0], []).append(v.split(" "))
     salida = {}
     usados = set()
     for club, filas in reales.items():
@@ -162,6 +177,21 @@ def tabla_base(reales, clubes, limpiar):
                 if k > 12:
                     ## Último recurso: una inicial de segundo nombre.
                     g = g + " " + "ABCDEFGHIJKLMNOPRSTV"[k % 20] + "."
+            k = 0
+            while _contiene_real(g, por_primera) and k < 12:
+                k += 1
+                g = guinar(real, veto, k)
+                while g.lower() in usados and k < 12:
+                    k += 1
+                    g = guinar(real, veto, k)
+            if _contiene_real(g, por_primera):
+                ## Último recurso: se guiña TAMBIÉN la palabra anterior a la última (el primer apellido), que es la que repite el nombre real.
+                pal = g.split(" ")
+                if len(pal) >= 3:
+                    pal[-2] = guinar_palabra(pal[-2], 1)
+                    g = " ".join(pal)
+            if _contiene_real(g, por_primera):
+                g = g + " " + "ABCDEFGHIJKLMNOPRSTV"[len(usados) % 20] + "."
             usados.add(g.lower())
             partes[0] = g
             nuevas.append("|".join(partes))
