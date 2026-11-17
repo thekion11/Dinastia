@@ -30,6 +30,7 @@ func _revisar(pr: Principal, etiqueta: String, tam: Vector2i) -> void:
 	var vista := Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size).grow(1.5)
 	var fuera := 0
 	var desliza := 0
+	var vistos := 0
 	for n in pantalla.find_children("*", "Control", true, false):
 		var c := n as Control
 		if not c.is_visible_in_tree():
@@ -38,11 +39,13 @@ func _revisar(pr: Principal, etiqueta: String, tam: Vector2i) -> void:
 			desliza += 1
 		if c.get_global_rect().size.x <= 0.0 or _recortado(c, pantalla):
 			continue
+		vistos += 1
 		if not vista.encloses(c.get_global_rect()):
 			fuera += 1
 			if fuera <= 3:
 				print("   fuera: %s %s en %s" % [c.get_path(), c.get_global_rect(), vista])
 	_ok(fuera == 0, "%s (%dx%d): %d controles se salen de la ventana" % [etiqueta, tam.x, tam.y, fuera])
+	_ok(vistos > 30, "%s: se revisaron %d controles (ventana %s)" % [etiqueta, vistos, vista.size])
 	_ok(desliza == 0, "%s (%dx%d): hay %d ScrollContainer visibles" % [etiqueta, tam.x, tam.y, desliza])
 
 func _ready() -> void:
