@@ -6,12 +6,12 @@ extends "res://pruebas/banco/partido_p6.gd"
 
 func _probar_dorsales_anim() -> void:
 	_titulo("PARTIDO: DORSAL Y NOMBRE EN LA ESPALDA, CARRERA SIN PATINAR E INERCIA (SOLO VISUAL)")
-	_probar_letras_y_ribete()
-	_probar_ciclo_carrera()
-	_probar_inercia_curva()
-	_probar_inercia_partido()
+	_dq_letras_y_ribete()
+	_dq_ciclo_carrera()
+	_dq_inercia_curva()
+	_dq_inercia_partido()
 
-func _probar_letras_y_ribete() -> void:
+func _dq_letras_y_ribete() -> void:
 	var l := DisenosKit.letras_nombre("  Muñoz-Peña ")
 	_comprobar(Array(l) == [13, 21, 14, 15, 26, 28, 16, 5, 14, 1, 0, 0] and DisenosKit.largo_nombre(l) == 10,
 		"dorsal: «Muñoz-Peña» pasa a MUNOZ-PENA en la fuente de 5 × 7 (%s)" % str(l))
@@ -32,7 +32,7 @@ func _probar_letras_y_ribete() -> void:
 		"dorsal: el shader recibe el apellido (5 letras) y, sin dorsal, nada en la espalda")
 
 ## La carrera: histéresis entre trotar y correr y la zancada que va con el cuerpo en todo el tramo de cada ciclo.
-func _probar_ciclo_carrera() -> void:
+func _dq_ciclo_carrera() -> void:
 	var hist := CicloCarrera.ciclo(5.0, "trotar") == "trotar" and CicloCarrera.ciclo(5.0, "correr") == "correr" \
 		and CicloCarrera.ciclo(4.4, "correr") == "trotar" and CicloCarrera.ciclo(5.3, "trotar") == "correr" and CicloCarrera.ciclo(0.3, "correr") == "parado"
 	_comprobar(hist, "carrera: de trotar a correr a 5,2 m/s y de vuelta por debajo de 4,5 (sin cambiar de ciclo cada fotograma)")
@@ -59,7 +59,7 @@ func _probar_ciclo_carrera() -> void:
 	_comprobar(cambios <= 6, "carrera: con la velocidad temblando ±0,15 m/s, solo %d cambios de ciclo en una subida y bajada" % cambios)
 
 ## Un cuerpo que corre en círculo a 6 m/s (radio 8 m): se ladea hacia dentro, sin pasar del tope; en recta, derecho.
-func _probar_inercia_curva() -> void:
+func _dq_inercia_curva() -> void:
 	var raiz := Node3D.new()
 	add_child(raiz)
 	var cuerpo := Node3D.new()
@@ -86,7 +86,7 @@ func _probar_inercia_curva() -> void:
 	raiz.queue_free()
 
 ## En un partido: la inercia se monta en ALTA, se mueve en los cercanos, NO cambia la huella del motor y no existe en las bajas.
-func _probar_inercia_partido() -> void:
+func _dq_inercia_partido() -> void:
 	var cal := Calidad.elegida
 	var ligero := Calidad.partido_ligero
 	var antes := InerciaCuerpo.encendida
