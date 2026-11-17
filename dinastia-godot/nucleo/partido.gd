@@ -430,14 +430,9 @@ func _reaplicar_plan() -> void:
 
 ## LOS ROLES POR JUGADOR (26-10-2026, fila 18): lo que cada rol suma o resta al ataque y a la defensa del
 ## equipo, según encaje el jugador (`RolTactico`). Sin roles, la fuerza de siempre.
+## (17-11) Los roles van en `con_roles` (`partido_p2.gd`), que también aplica el camino C++ (`fuerza_dos`).
 func fuerza(once: Array[Jugador], c: Club) -> Dictionary:
-	var f := super.fuerza(once, c)
-	if c == null or c.tactica == null or c.tactica.roles.is_empty():
-		return f
-	var m := RolTactico.multiplicadores(c.tactica, once)
-	f["ata"] = float(f["ata"]) * float(m[0])
-	f["def"] = float(f["def"]) * float(m[1])
-	return f
+	return con_roles(super.fuerza(once, c), once, c)
 
 ## LOS PENALES DEL PARTIDO SIMULADO (3-11-2026, orden del líder): antes solo el árbitro «estricto» los cobraba (0,00 por partido; el fútbol real: ~0,25-0,3).
 ## Ahora cada llegada puede acabar en falta dentro del área (`Balance.P_PENAL`, escalada por el perfil del árbitro): se pita para el que ataca y
