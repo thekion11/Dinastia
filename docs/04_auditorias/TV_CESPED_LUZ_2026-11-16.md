@@ -68,7 +68,7 @@ máquina (código 137): las medidas de antes se tomaron con `HW_RAM_MB=12000` y 
 `herramientas/captura.sh res://pruebas/captura_tv_cesped_luz.tscn` (Forward+, ALTA, 1920x1080 reducidas a 1280x720), tres cruces de
 países: Brasil-Japón (Morumbi FC, césped «cruz»), Argentina-España (Avellaneda, «cruz») y México-Italia (Cerro Silla FC, «damGrande»).
 `tv_*` = cámara real a los ~2' de juego, `tv2_*` = unos segundos después, `cerca1_*` = plano a ~8 m del que lleva el balón;
-`*_antes_despues.jpg` las pone lado a lado. `tv_lejana_mex_ita_despues.jpg` = la opción «TV lejana» con el césped y la luz nuevos.
+`*_antes_despues.jpg` las pone lado a lado. `tv_lejana_mex_ita_despues.jpg` = la opción «TV lejana» con el césped y la luz nuevos. (17-11: en el repo solo quedan los pares `*_antes_despues.jpg` reducidos a 1280 px; las capturas sueltas originales siguen en el historial de git, commit d97e0502/9231fd63)
 El estadio no repite exactamente igual de una tanda a otra, así que algunas parejas no son el mismo instante; las `tv2_mex_ita_*`
 caen en la realización de un gol (cámara de la grada), no en la TV.
 
