@@ -204,5 +204,8 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 			cuenta[k] = int(cuenta.get(k, 0)) + 1
 		print("    huérfanos nuevos: %s" % str(cuenta))
 	t.memorias.append(mem1)
+	print("    cachés: objetos %d · recursos %d · fotos de estadio %d · retratos 3D %d · caras %d · camisetas %d · texturas de vídeo %.0f MB" % [
+		int(Performance.get_monitor(Performance.OBJECT_COUNT)), int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)), FotosEstadioMenu._hechas.size(),
+		Retrato3D._cache.size(), Cara._cache.size(), Jersey._cache_svg.size() + Jersey._cache_real.size(), Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1048576.0])
 	t.resumen.append("%s %-22s %d-%d · tarjetas %d · memoria %.0f → %.0f MB (%+.0f) · huérfanos %d → %d" % [pais, Nombres.visible(c.nombre), partido.goles_local,
 		partido.goles_visita, tarjetas, mem0, mem1, mem1 - mem0, huerf0, huerf1])
