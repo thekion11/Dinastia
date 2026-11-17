@@ -188,7 +188,7 @@ static func saque(m: MenuPartido, v: VBoxContainer) -> void:
 		n.modulate.a = 0.0
 		moneda.pivot_offset = moneda.custom_minimum_size * 0.5
 		var tw := moneda.create_tween()
-		for i in 6:
+		for i in 4:
 			tw.tween_property(moneda, "scale:x", 0.06, 0.09)
 			tw.tween_property(moneda, "scale:x", 1.0, 0.09)
 		tw.tween_callback(func() -> void: Sonido.toca("clic"))

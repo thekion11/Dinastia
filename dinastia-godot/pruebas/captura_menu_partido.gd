@@ -22,14 +22,22 @@ func _ready() -> void:
 		var rival: Club = liga.clubes[(2 + k + 5) % liga.clubes.size()]
 		var p := Partido.new(mio, rival)
 		var clima := Clima.del_partido(mio.pais, m.semana, m.anio, mio.id + rival.id)
+		var t0 := Time.get_ticks_usec()
+		var mem0 := Performance.get_monitor(Performance.MEMORY_STATIC)
 		var menu := MenuPartido.mostrar(self, p, mio, liga, clima)
-		await get_tree().create_timer(0.8).timeout
+		await get_tree().process_frame
+		print("MEDIDA %s: abrir el menú hasta el primer cuadro %.0f ms" % [paises[k], (Time.get_ticks_usec() - t0) / 1000.0])
+		for f in menu.find_children("*", "SubViewportContainer", true, false):
+			while f.has_signal("listo") and not f.hecho:
+				await get_tree().process_frame
+		print("MEDIDA %s: retratos 3D listos a los %.0f ms · memoria +%.1f MB" % [paises[k], (Time.get_ticks_usec() - t0) / 1000.0, (Performance.get_monitor(Performance.MEMORY_STATIC) - mem0) / 1048576.0])
+		await get_tree().create_timer(0.5).timeout
 		for tab in (["previa", "uniforme", "estadio", "saque", "plan", "opciones", "camara"] if k == 0 else ["previa", "plan"]):
 			if tab == "previa":
 				menu.cerrar_panel()
 			else:
 				menu._abrir(tab)
-			await get_tree().create_timer(0.3).timeout
+			await get_tree().create_timer(1.3 if tab == "saque" else 0.3).timeout
 			await _foto("%s_%s" % [paises[k], tab])
 		menu.queue_free()
 		if k == 1:

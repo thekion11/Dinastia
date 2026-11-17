@@ -27,6 +27,7 @@ var _titulo_modal: Label
 var _pie: Label
 var _abierta := ""
 var _fig_mio: Control
+var _por_montar: Array[Control] = []
 
 static func mostrar(padre: Node, p: Partido, mi_club: Club, liga: Liga, info_clima: Dictionary, comp := "Liga") -> MenuPartido:
 	var m := MenuPartido.new()
@@ -123,10 +124,10 @@ func _montar_figuras(l: Club, v: Club) -> void:
 	var uni := String(OpcionesPartido.leer("uniforme_partido", "titular"))
 	for lado in 2:
 		var c: Club = l if lado == 0 else v
-		var caja := _caja(0.0, 0.29, 0.05, 0.935) if lado == 0 else _caja(0.71, 1.0, 0.05, 0.935)
+		var caja := _caja(0.0, 0.29, 0.035, 0.86) if lado == 0 else _caja(0.71, 1.0, 0.035, 0.86)
 		var cols := PanelesMenuPartido.colores_uniforme(c, uni if c == mio else "titular")
 		## El futbolista 3D real con su equipación (sin pantalla, la figura plana).
-		var fig: Control = load("res://ui/partido_menu/retrato_jugador3d.gd").crear(c, estrella(c), [] if c != mio or uni == "titular" else cols, 0.32 if lado == 0 else -0.32)
+		var fig: Control = load("res://ui/partido_menu/retrato_jugador3d.gd").crear(c, estrella(c), [] if c != mio or uni == "titular" else cols, 0.38 if lado == 0 else -0.38)
 		if fig == null:
 			fig = _figura(c, cols)
 			caja.anchor_top = 0.14
@@ -135,6 +136,17 @@ func _montar_figuras(l: Club, v: Club) -> void:
 		caja.add_child(fig)
 		if c == mio:
 			_fig_mio = fig
+		if fig.has_method("montar"):
+			_por_montar.append(fig)
+	_montar_retratos.call_deferred()
+
+## Los retratos 3D se montan después de abrir (uno por cuadro): el menú sale al instante y los jugadores aparecen con un fundido.
+func _montar_retratos() -> void:
+	for f: Control in _por_montar:
+		await get_tree().process_frame
+		if is_instance_valid(f):
+			f.call("montar")
+	_por_montar.clear()
 
 ## El jugador que sale grande: el mejor del once.
 func estrella(c: Club) -> Jugador:
