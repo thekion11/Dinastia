@@ -10,8 +10,8 @@ extends RefCounted
 static func color_vacia(col: Color, vacias: int) -> Color:
 	var v := clampf(float(vacias) / 3.0, 0.0, 1.0)
 	var gris := col.get_luminance()
-	var c := col.lerp(Color(gris, gris, gris, col.a), 0.35 * v)
-	return c.darkened(0.5 * v)
+	var c := col.lerp(Color(gris, gris, gris, col.a), 0.45 * v)
+	return c.darkened(0.58 * v)
 
 ## Un MultiMesh de butacas colgado del deck, con su plástico barnizado. SIN SOMBRA PROPIA (25-9-2026, `pruebas/medir_partido.gd`): miles de butacas
 ## proyectando sombra se dibujaban otra vez en CADA cascada del sol; bajo el techo no se ve y la de la grada entera (el `deck`) sigue estando.

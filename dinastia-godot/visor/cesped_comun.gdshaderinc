@@ -85,8 +85,8 @@ float cesped_desgaste(vec2 w) {
 		g = max(g, 0.4 * (1.0 - smoothstep(1.0, 2.8, dp)));
 	}
 	float dc = length(w);
-	g = max(g, 0.7 * (1.0 - smoothstep(0.4, 1.2, dc)));
-	g = max(g, 0.35 * (1.0 - smoothstep(1.2, 3.4, dc)));
+	g = max(g, 0.75 * (1.0 - smoothstep(0.5, 1.6, dc)));
+	g = max(g, 0.42 * (1.0 - smoothstep(1.6, 4.5, dc)));
 	return g * desgaste;
 }
 
