@@ -34,6 +34,7 @@ func dia_de_partido(c: Club) -> void:
 	m.prensa.eventos_vistos.append("directiva:%d" % m.anio)
 	p._refrescar()
 	await t.esperar(20)
+	await _contestar_eventos()
 	var mem0 := Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0
 	var huerf0 := int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
 	var liga := m.liga_de(c)
@@ -47,15 +48,19 @@ func dia_de_partido(c: Club) -> void:
 		await t.esperar(3)
 		vueltas += 1
 	dias.sin_pantalla = false
+	await _contestar_eventos()
 	if not t.ok(dias.partido_hoy(), "[%s] «Avanzar» llega al día de partido (%d pasos)" % [pais, vueltas]):
 		return
 	## 2) «JUGAR PARTIDO» → la previa
 	dias.jugar()
 	var menu: MenuPartido = null
 	await t.hasta(func() -> bool:
-		menu = _vivos("MenuPartido") as MenuPartido
-		return menu != null, 20.0)
+		var menu_ = _vivos("MenuPartido") as MenuPartido
+		return menu_ != null, 20.0)
+	menu = _vivos("MenuPartido") as MenuPartido
 	if not t.ok(menu != null, "[%s] «Jugar partido» abre la previa" % pais):
+		print("    registro: ", p._registro.get_parsed_text().right(600).replace("\n", " | "))
+		print("    capas: ", p.get_children().map(func(n: Node) -> String: return n.name if n.get_script() == null else "%s(%s)" % [n.name, n.get_script().get_global_name()]).slice(-8))
 		return
 	await t.esperar(20)
 	## 3) UNIFORME alternativo y CÁMARA lejana
@@ -78,8 +83,9 @@ func dia_de_partido(c: Club) -> void:
 	menu._abrir("plan")
 	var pm: PantallaMenu = null
 	await t.hasta(func() -> bool:
-		pm = _vivos("PantallaMenu") as PantallaMenu
-		return pm != null and pm.is_visible_in_tree(), 12.0)
+		var pm_ = _vivos("PantallaMenu") as PantallaMenu
+		return pm_ != null and pm_.is_visible_in_tree(), 12.0)
+	pm = _vivos("PantallaMenu") as PantallaMenu
 	t.ok(pm != null, "[%s] «Plan de juego» abre la Táctica del juego" % pais)
 	var nueva := "4-4-2" if form0 != "4-4-2" else "4-3-3"
 	if pm != null:
@@ -105,8 +111,9 @@ func dia_de_partido(c: Club) -> void:
 	menu.confirmar()
 	var vista: VistaEstadio = null
 	await t.hasta(func() -> bool:
-		vista = _vivos("VistaEstadio") as VistaEstadio
-		return vista != null and vista.get("_motor") != null and vista.partido != null and vista.partido.minuto >= 0 and String(vista.get("_motor").estado) != "", 120.0)
+		var vista_ = _vivos("VistaEstadio") as VistaEstadio
+		return vista_ != null and vista_.get("_motor") != null and vista_.partido != null and vista_.partido.minuto >= 0 and String(vista_.get("_motor").estado) != "", 120.0)
+	vista = _vivos("VistaEstadio") as VistaEstadio
 	if not t.ok(vista != null, "[%s] Confirmar abre el partido 3D" % pais):
 		return
 	var partido: Partido = vista.partido
@@ -125,6 +132,15 @@ func dia_de_partido(c: Club) -> void:
 	Jugando.soltar()
 	t.ok(partido.minuto >= min0 + 2, "[%s] se juega con el mando simulado (minuto %d → %d, %d pulsaciones)" % [pais, min0, partido.minuto, j.pulsaciones])
 	await load("res://pruebas/e2e_dia_partido_pasos2.gd").new(t, self).despues_de_jugar(c, vista, partido, liga, jugados0, mem0, huerf0)
+
+## Lo que se abre solo (la reunión de la directiva) se contesta como lo haría el jugador: la primera opción.
+func _contestar_eventos() -> void:
+	for h: Node in p.get_children():
+		if h is EventoDialogo and not h.is_queued_for_deletion():
+			(h as EventoDialogo).selector.elegir(0)
+		elif h is EventoPantallaCompleta:
+			h.queue_free()
+	await t.esperar(30)
 
 func _jugados(liga: Liga, c: Club) -> int:
 	return int((liga.tabla_puntos.get(c.id, {}) as Dictionary).get("pj", 0))

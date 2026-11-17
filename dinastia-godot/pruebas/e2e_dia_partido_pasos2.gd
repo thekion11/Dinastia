@@ -23,8 +23,9 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 		bt.pressed.emit()
 	var panel: Node = null
 	await t.hasta(func() -> bool:
-		panel = vista.get("_panel_dt")
-		return panel != null, 5.0)
+		var panel_ = vista.get("_panel_dt")
+		return panel_ != null, 5.0)
+	panel = vista.get("_panel_dt")
 	t.ok(panel != null, "[%s] «Táctica y cambios» abre la pizarra del partido" % pais)
 	var once_mio := partido.once_local if partido.local == c else partido.once_visita
 	var sale: Jugador = null
@@ -69,8 +70,9 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 		bs.pressed.emit()
 	var rp: ResultadoPartido = null
 	await t.hasta(func() -> bool:
-		rp = t.buscar(p, "ResultadoPartido") as ResultadoPartido
-		return rp != null and rp.visible, 120.0)
+		var rp_ = t.buscar(p, "ResultadoPartido") as ResultadoPartido
+		return rp_ != null and rp_.visible, 120.0)
+	rp = t.buscar(p, "ResultadoPartido") as ResultadoPartido
 	t.ok(partido.terminado_ya, "[%s] «Simular el resto» termina el partido (%d-%d)" % [pais, partido.goles_local, partido.goles_visita])
 	if not t.ok(rp != null, "[%s] sale el resultado final" % pais):
 		return
@@ -92,19 +94,21 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 		br.pressed.emit()
 		var mo: MomentosPartido = null
 		await t.hasta(func() -> bool:
-			mo = t.buscar(p, "MomentosPartido") as MomentosPartido
-			return mo != null, 10.0)
+			var mo_ = t.buscar(p, "MomentosPartido") as MomentosPartido
+			return mo_ != null, 10.0)
+		mo = t.buscar(p, "MomentosPartido") as MomentosPartido
 		var bj: BaseButton = a._boton_con(mo._raiz, "Jugar desde el minuto") if mo != null else null
 		t.ok(bj != null, "[%s] los momentos tienen «Jugar desde el minuto N»" % pais)
 		if bj != null:
 			var vistas0 := p.find_children("*", "VistaEstadio", true, false).size()
 			bj.pressed.emit()
-			var vr: VistaEstadio = null
+			var hay := [null]   ## (las lambdas capturan por valor: el resultado va en un arreglo)
 			await t.hasta(func() -> bool:
 				for v in p.find_children("*", "VistaEstadio", true, false):
 					if not v.is_queued_for_deletion() and v.get("_motor") != null:
-						vr = v
-				return vr != null, 120.0)
+						hay[0] = v
+				return hay[0] != null, 120.0)
+			var vr: VistaEstadio = hay[0]
 			t.ok(vr != null and vistas0 == 0, "[%s] «Jugar desde el minuto» abre la réplica jugable" % pais)
 			var pj_liga := int((liga.tabla_puntos.get(c.id, {}) as Dictionary).get("pj", 0))
 			await t.esperar(60)
@@ -121,8 +125,9 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 		rp._seguir()
 	var pie: Node = null
 	await t.hasta(func() -> bool:
-		pie = t.buscar(p, "PieDeCampo")
-		return pie != null or not dias.partido_hoy(), 15.0)
+		var pie_ = t.buscar(p, "PieDeCampo")
+		return pie_ != null or not dias.partido_hoy(), 15.0)
+	pie = t.buscar(p, "PieDeCampo")
 	if pie != null:
 		pie.call("_elegir", -1)
 	await t.hasta(func() -> bool: return t.buscar(p, "ResultadoPartido") == null and t.buscar(p, "PieDeCampo") == null, 15.0)
