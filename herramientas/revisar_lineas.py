@@ -9,6 +9,7 @@ Norma (23-10, decidida por el dueño): ningún script pasa de 450 líneas, ni nu
 Excepción declarada (EXCEPCIONES): el archivo que genera una herramienta (se parte en el generador).
 Fuera de la norma: el código de terceros de `dinastia-godot/addons/` (26-10-2026: Debug Menu, 480 líneas, MIT):
 se deja tal cual viene para poder actualizarlo; partirlo lo haría nuestro.
+(17-11, orden de la sesión de auditoría) También cuenta el C++ de la extensión (`dinastia-godot/nativo/src/*.cpp` y `*.h`; `godot-cpp`, de terceros, no).
 """
 import subprocess, sys
 
@@ -20,8 +21,9 @@ def archivos(solo_nuevos):
     if solo_nuevos:
         out = subprocess.check_output(["git", "diff", "--name-only", "--diff-filter=AM", "origin/main...HEAD"]).decode()
     else:
-        out = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "*.gd"]).decode()
-    return [f for f in out.split("\n") if f.endswith(".gd") and f not in EXCEPCIONES and not f.startswith(("dinastia-godot/addons/", "addons/"))]
+        out = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "*.gd", "*.cpp", "*.h"]).decode()
+    return [f for f in out.split("\n") if (f.endswith(".gd") or (f.startswith("dinastia-godot/nativo/src/") and f.endswith((".cpp", ".h"))))
+            and f not in EXCEPCIONES and not f.startswith(("dinastia-godot/addons/", "addons/"))]
 
 def lineas(f):
     try:

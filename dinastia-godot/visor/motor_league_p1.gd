@@ -158,6 +158,9 @@ func _regate_palancas(local: bool) -> Vector2:
 
 # ------------------------------------------------------------------ colocación
 
+func _anim_league() -> bool:   ## (16-11) `_anim` de este motor pasa por LeagueAcciones y LeagueLocomocion (`animar_jugadores` lo copia)
+	return true
+
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	if equipos.is_empty() or not p.has("ls_forma") or estado != "juego":
 		return super(p, en_posesion)
