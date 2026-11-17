@@ -179,7 +179,13 @@ func _comprobar_uniforme(vista: VistaEstadio, c: Club, pais: String) -> void:
 		mios += 1
 		if (n.get_meta("kit_c1") as Color).is_equal_approx(esperado):
 			bien += 1
-	t.ok(mios >= 10 and bien == mios, "[%s] en el 3D mi equipo lleva la ALTERNATIVA (%d de %d; %s, la titular es %s)" % [pais, bien, mios, esperado.to_html(false), titular.to_html(false)])
+	if not t.ok(mios >= 10 and bien == mios, "[%s] en el 3D mi equipo lleva la ALTERNATIVA (%d de %d; %s, la titular es %s)" % [pais, bien, mios, esperado.to_html(false), titular.to_html(false)]):
+		var vistos := {}
+		for f: Dictionary in vista.get("_en_campo"):
+			var n: Node3D = f.get("node")
+			if is_instance_valid(n) and n.has_meta("kit_c1"):
+				vistos["%s %s" % ["L" if bool(f.get("es_local", false)) else "V", (n.get_meta("kit_c1") as Color).to_html(false)]] = true
+		print("    camisetas en el campo: %s · ctx_club_id=%s · mi club=%s (local: %s) · uniforme_partido=%s" % [vistos.keys(), Partido.ctx_club_id, c.id, str(mio_local), OpcionesPartido.leer("uniforme_partido", "")])
 
 ## La formación que dibujan en el campo los jugadores de mi club (por sus casillas), comparada con las de la tabla.
 func _formacion_en_campo(vista: VistaEstadio, c: Club) -> String:
@@ -189,6 +195,8 @@ func _formacion_en_campo(vista: VistaEstadio, c: Club) -> String:
 		if bool(f.get("es_local", false)) == mio_local and f.has("slot_code"):
 			codigos.append(String(f["slot_code"]))
 	codigos.sort()
+	if OS.get_environment("E2E_DEPURAR") != "" or true:
+		print("    casillas de mi equipo: %s" % str(codigos))
 	for nombre: String in Datos.tabla("FORMS").keys():
 		var otros: Array = []
 		for s: Variant in (Puente3D.formacion(nombre).get("s", []) as Array):
