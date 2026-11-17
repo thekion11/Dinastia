@@ -387,7 +387,7 @@ func _sincronizar_partido() -> bool:
 			objetivo = maxi(objetivo, 45)
 	while partido.minuto < objetivo and not partido.terminado_ya:
 		partido.simular_minuto()
-		partido.fijar_estadisticas(float(_motor.posesion_local()), _motor.corners, _motor.faltas, _motor.fueras_de_juego)
+		partido.fijar_estadisticas(float(_motor.posesion_local()), _motor.corners, _motor.faltas, _motor.fueras_de_juego); partido.set_meta("pases", [_motor.pases.duplicate(), _motor.pases_ok.duplicate()])   ## (17-11) para el resumen del descanso y del final
 		_dt_rival(partido.minuto)
 		if parar_en_descanso and not _descanso_hecho and partido.minuto >= 45:
 			_descanso_hecho = true

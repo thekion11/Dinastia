@@ -9066,7 +9066,13 @@
   "Ajuste fino de la cámara Pro": "Pro camera fine-tuning",
   "Distancia (m)": "Distance (m)",
   "Altura": "Height",
-  "Ángulo de visión (°)": "Field of view (°)"
+  "Ángulo de visión (°)": "Field of view (°)",
+  "DESCANSO": "HALF-TIME",
+  "Figura del partido": "Player of the match",
+  "Precisión de pase %": "Pass accuracy %",
+  "Repetición de los goles": "Goal replays",
+  "Jugar momentos": "Play moments",
+  "Cambios": "Substitutions"
  },
  "pt": {
   "Historia": "História",
@@ -18135,7 +18141,13 @@
   "Ajuste fino de la cámara Pro": "Ajuste fino da câmera Pro",
   "Distancia (m)": "Distância (m)",
   "Altura": "Altura",
-  "Ángulo de visión (°)": "Ângulo de visão (°)"
+  "Ángulo de visión (°)": "Ângulo de visão (°)",
+  "DESCANSO": "INTERVALO",
+  "Figura del partido": "Craque da partida",
+  "Precisión de pase %": "Precisão de passe %",
+  "Repetición de los goles": "Replay dos gols",
+  "Jugar momentos": "Jogar momentos",
+  "Cambios": "Substituições"
  },
  "patrones": [
   [
@@ -33476,7 +33488,13 @@
   "Ajuste fino de la cámara Pro": "Réglage fin de la caméra Pro",
   "Distancia (m)": "Distance (m)",
   "Altura": "Hauteur",
-  "Ángulo de visión (°)": "Champ de vision (°)"
+  "Ángulo de visión (°)": "Champ de vision (°)",
+  "DESCANSO": "MI-TEMPS",
+  "Figura del partido": "Homme du match",
+  "Precisión de pase %": "Précision des passes %",
+  "Repetición de los goles": "Ralenti des buts",
+  "Jugar momentos": "Jouer des moments",
+  "Cambios": "Remplacements"
  },
  "it": {
   "Historia": "Storia",
@@ -42545,7 +42563,13 @@
   "Ajuste fino de la cámara Pro": "Regolazione fine della telecamera Pro",
   "Distancia (m)": "Distanza (m)",
   "Altura": "Altezza",
-  "Ángulo de visión (°)": "Angolo di visione (°)"
+  "Ángulo de visión (°)": "Angolo di visione (°)",
+  "DESCANSO": "INTERVALLO",
+  "Figura del partido": "Migliore in campo",
+  "Precisión de pase %": "Precisione passaggi %",
+  "Repetición de los goles": "Replay dei gol",
+  "Jugar momentos": "Gioca momenti",
+  "Cambios": "Sostituzioni"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51614,7 +51638,13 @@
   "Ajuste fino de la cámara Pro": "Feineinstellung der Pro-Kamera",
   "Distancia (m)": "Abstand (m)",
   "Altura": "Höhe",
-  "Ángulo de visión (°)": "Sichtfeld (°)"
+  "Ángulo de visión (°)": "Sichtfeld (°)",
+  "DESCANSO": "HALBZEIT",
+  "Figura del partido": "Spieler des Spiels",
+  "Precisión de pase %": "Passquote %",
+  "Repetición de los goles": "Tor-Wiederholungen",
+  "Jugar momentos": "Momente spielen",
+  "Cambios": "Wechsel"
  },
  "ca": {
   "Historia": "Història",
@@ -60683,7 +60713,13 @@
   "Ajuste fino de la cámara Pro": "Ajust fi de la càmera Pro",
   "Distancia (m)": "Distància (m)",
   "Altura": "Alçada",
-  "Ángulo de visión (°)": "Angle de visió (°)"
+  "Ángulo de visión (°)": "Angle de visió (°)",
+  "DESCANSO": "DESCANS",
+  "Figura del partido": "Figura del partit",
+  "Precisión de pase %": "Precisió de passada %",
+  "Repetición de los goles": "Repetició dels gols",
+  "Jugar momentos": "Jugar moments",
+  "Cambios": "Canvis"
  },
  "pl": {
   "Club": "Klub",
@@ -69752,7 +69788,13 @@
   "Ajuste fino de la cámara Pro": "Dokładne ustawienie kamery Pro",
   "Distancia (m)": "Odległość (m)",
   "Altura": "Wysokość",
-  "Ángulo de visión (°)": "Kąt widzenia (°)"
+  "Ángulo de visión (°)": "Kąt widzenia (°)",
+  "DESCANSO": "PRZERWA",
+  "Figura del partido": "Zawodnik meczu",
+  "Precisión de pase %": "Celność podań %",
+  "Repetición de los goles": "Powtórki goli",
+  "Jugar momentos": "Zagraj momenty",
+  "Cambios": "Zmiany"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78821,6 +78863,12 @@
   "Ajuste fino de la cámara Pro": "Pro kamera ince ayarı",
   "Distancia (m)": "Mesafe (m)",
   "Altura": "Yükseklik",
-  "Ángulo de visión (°)": "Görüş açısı (°)"
+  "Ángulo de visión (°)": "Görüş açısı (°)",
+  "DESCANSO": "DEVRE ARASI",
+  "Figura del partido": "Maçın oyuncusu",
+  "Precisión de pase %": "Pas isabeti %",
+  "Repetición de los goles": "Gol tekrarları",
+  "Jugar momentos": "Anları oyna",
+  "Cambios": "Oyuncu değişikliği"
  }
 }
