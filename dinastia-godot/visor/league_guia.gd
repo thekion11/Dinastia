@@ -74,6 +74,10 @@ static func decidir(m: MotorJugable, p: Dictionary, n: Node3D) -> void:
 	var gira := entra > LeagueMovimiento.IDLE and sale > LeagueMovimiento.IDLE and absf(rel) >= GIRO_MIN
 	if not (arranca or frena or gira):
 		return
+	decidir_clip(m, p, n, sp, rel, sp_des)
+
+## La segunda mitad de `decidir`: el clip del catálogo para ese arranque, frenada o giro (la ruta nativa llega aquí desde `guia_previo`).
+static func decidir_clip(m: MotorJugable, p: Dictionary, n: Node3D, sp: float, rel: float, sp_des: float) -> void:
 	var c := LeagueMovimiento.elegir(sp, rel, sp_des)
 	if c.is_empty() or LeagueMovimiento.estable(c):
 		return
@@ -91,9 +95,17 @@ static func paso(m: MotorJugable, delta: float) -> void:
 		_paso_gd(m, delta)
 		return
 	var js: Array = m.jugadores
-	for i: int in nat.guia_pendientes(js, m.t):
-		var p: Dictionary = js[i]
-		decidir(m, p, p["node"])
+	var ip := -1
+	if not m.poseedor.is_empty():
+		for i in js.size():
+			if is_same(js[i], m.poseedor):
+				ip = i
+				break
+	## (17-11) `guia_previo` = `guia_pendientes` + la primera mitad de `decidir` (cadencia, velocidad deseada, arranque/frenada/giro): solo vuelven los que eligen clip.
+	var pre: PackedFloat64Array = nat.guia_previo(js, m.t, ip)
+	for k in range(0, pre.size(), 4):
+		var p: Dictionary = js[int(pre[k])]
+		decidir_clip(m, p, p["node"], pre[k + 1], pre[k + 2], pre[k + 3])
 	var iu := -1
 	if not m.usuario.is_empty():
 		for i in js.size():

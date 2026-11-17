@@ -479,3 +479,80 @@ PackedInt32Array DinastiaNativo::loco_paso(const Array &jugadores, double t, dou
 	}
 	return salida;
 }
+
+// `LeagueGuia.paso` (17-11-2026): lo de `guia_pendientes` más la primera mitad de `LeagueGuia.decidir` (cadencia `lg_revisar`, velocidad deseada de
+// `LeagueLocomocion.deseada`, clases de velocidad de `LeagueMovimiento.rango` y la prueba de arranque / frenada / giro). Devuelve, por cada jugador que SÍ tiene
+// que elegir clip, [índice, sp, rel, sp_des] (GDScript sigue con `LeagueGuia.decidir_clip`: catálogo, `estable` y `empezar`). Escribe `lg_revisar` como `decidir`.
+namespace {
+inline double ls_rango(double v) {
+	if (v >= 6.2) {
+		return 8.0;
+	}
+	if (v >= 4.4) {
+		return 5.0;
+	}
+	if (v >= 1.8) {
+		return 3.5;
+	}
+	return 0.0;
+}
+} // namespace
+
+PackedFloat64Array DinastiaNativo::guia_previo(const Array &jugadores, double t, int64_t poseedor) const {
+	const Claves &c = claves();
+	static const StringName k_lg_revisar("lg_revisar"), k_attr("attr"), k_rit("rit"), k_correr("correr"), k_aguante("aguante"), k_freno("freno");
+	static const Variant w_lg_revisar(String("lg_revisar"));
+	PackedFloat64Array salida;
+	const int64_t total = jugadores.size();
+	for (int64_t i = 0; i < total; i++) {
+		Dictionary p = jugadores[i];
+		Node3D *n = nodo_si_cuenta(p, t);
+		if (n == nullptr) {
+			continue;
+		}
+		if (double(p.get(c.gesto_hasta, 0.0)) > t || bool(p.get(c.por, false))) {
+			p.erase(c.ls_guia);
+			continue;
+		}
+		if (p.has(c.ls_guia) || double(p.get(c.ls_espera_g, 0.0)) > t || double(p.get(c.mirar_hasta, 0.0)) > t) {
+			continue;
+		}
+		// `decidir`
+		if (double(p.get(k_lg_revisar, 0.0)) > t || i == poseedor) {
+			continue;
+		}
+		p[w_lg_revisar] = t + 0.1;
+		const Vector3 v = p[c.vel];
+		const double sp = Vector2(v.x, v.z).length();
+		// `LeagueLocomocion.deseada`
+		Vector3 des;
+		if (p.has(c.objetivo) && !(double(p.get(c.levanta_hasta, 0.0)) > t)) {
+			const Vector3 obj = p[c.objetivo];
+			const Vector3 np = n->get_position();
+			const Vector3 dif = Vector3(double(obj.x) - double(np.x), 0.0, double(obj.z) - double(np.z));
+			const double dist = dif.length();
+			if (dist > 0.25) {
+				const Dictionary attr = p[k_attr];
+				const double tope = (4.4 + double(attr[k_rit]) * 4.2) * (bool(p.get(k_correr, false)) ? 1.0 : 0.62) * (0.7 + 0.3 * double(p[k_aguante]));
+				const double a = tope * double(p.get(k_freno, 1.0));
+				const double b = dist * 2.5;
+				des = dif / dist * (a < b ? a : b);
+			}
+		}
+		const double sp_des = des.length();
+		const double entra = ls_rango(sp);
+		const double sale = ls_rango(sp_des);
+		const double rel = sp_des > 0.1 ? UtilityFunctions::angle_difference(double(n->get_rotation().y), std::atan2(double(des.x), double(des.z))) : 0.0;
+		const bool arranca = entra == 0.0 && sale > 0.0; // NOSONAR(cpp:S1244): clases de velocidad exactas, como la gemela
+		const bool frena = entra > 0.0 && sale == 0.0; // NOSONAR(cpp:S1244)
+		const bool gira = entra > 0.0 && sale > 0.0 && std::fabs(rel) >= 0.6;
+		if (!(arranca || frena || gira)) {
+			continue;
+		}
+		salida.push_back(double(i));
+		salida.push_back(sp);
+		salida.push_back(rel);
+		salida.push_back(sp_des);
+	}
+	return salida;
+}
