@@ -146,14 +146,15 @@ func _dirigir() -> void:
 	## MISMO `Partido` con los mismos `simular_minuto()`: solo cambia la vista.
 	var modo := _modo_simulacion(_competicion_de_la_semana())
 	## (3-11, orden 22) Antes de cada partido, a pantalla completa: jugar, solo las jugadas importantes o simular.
+	var vio_previa := false
 	if DisplayServer.get_name() != "headless" and OS.get_environment("SIN_ELECCION_PARTIDO") == "":
 		if EleccionPartido.preguntar():
-			var el := EleccionPartido.new()
-			el.titulo = "%s  vs  %s" % [p.local.nombre, p.visita.nombre]
-			pr.add_child(el)
+			## (17-11) EL MENÚ DEL PARTIDO reemplaza a «¿Cómo quieres este partido?»: previa, uniforme, estadio, plan, opciones y cámara; abajo, jugar / importantes / simular.
+			var el: Control = load("res://ui/partido_menu/menu_partido.gd").mostrar(pr, p, pr.mundo.mi_club(), pr.mundo.liga_de(p.visita if p.local == pr.mundo.mi_club() else p.local), info_clima)
 			var e: Dictionary = await el.elegido
 			el.queue_free()
 			modo = String(e["modo"])
+			vio_previa = true
 		elif not EleccionPartido.ultima().is_empty():
 			modo = String(EleccionPartido.ultima().get("modo", modo))
 	if modo == "instantaneo" or modo == "resumen":
@@ -167,7 +168,7 @@ func _dirigir() -> void:
 		return
 	## EL INFORME DEL RIVAL (17-10-2026) antes de salir a jugar, como en FM/FC.
 	## Sin pantalla (banco) o con SIN_INFORME_RIVAL no se enseña.
-	if InformeRival.activo and DisplayServer.get_name() != "headless" and OS.get_environment("SIN_INFORME_RIVAL") == "":
+	if not vio_previa and InformeRival.activo and DisplayServer.get_name() != "headless" and OS.get_environment("SIN_INFORME_RIVAL") == "":
 		var inf := InformeRival.mostrar(pr, p, pr.mundo.mi_club(), pr.mundo.liga_de(p.visita if p.local == pr.mundo.mi_club() else p.local), pr.mundo)
 		await inf.cerrado
 		inf.queue_free()

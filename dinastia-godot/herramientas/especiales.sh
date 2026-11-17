@@ -119,6 +119,8 @@ pasa "avance por días: disparadores (directiva, caja, imprevistos, jugador del 
 pasa "avance por días: núcleo (paradas)" "godot --headless --path . res://pruebas/probar_avance_dias.tscn" "FIN. 0 fallos"
 # 5f. El avance por días, pasos 3, 5 y 6: el botón «Avanzar» nuevo en el menú central, campanas, «Jugar/Saltar partido» y las pantallas (17-11)
 pasa "avance por días: botón Avanzar en el menú central" "godot --headless --path . res://pruebas/probar_avance_ui.tscn" "FIN. 0 fallos"
+# 5g. El menú del partido nuevo (previa, uniforme, estadio, plan, opciones, cámara) y sus ajustes (17-11)
+pasa "avance por días: menú del partido y sus ajustes" "godot --headless --path . res://pruebas/probar_menu_partido.tscn" "FIN. 0 fallos"
 pasa "textura del césped" "godot --headless --path . res://pruebas/probar_cesped_textura.tscn" "FIN. 0 fallos"
 pasa "texturas en disco (asfalto)" "godot --headless --path . res://pruebas/probar_imagen_en_disco.tscn" "FIN. 0 fallos"
 pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"
