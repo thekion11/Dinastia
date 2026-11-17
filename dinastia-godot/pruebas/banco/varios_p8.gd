@@ -249,6 +249,12 @@ func _probar_calendario_c13() -> void:
 	_comprobar(once_chi.size() == 1 and String(once_chi[0]["tipo"]) == "memoria" and once_usa.size() == 1 and String(once_usa[0]["tipo"]) == "memoria",
 		"el 11 de septiembre es fecha de memoria en Chile y en EE. UU.")
 	_comprobar(chi.any(func(f: Dictionary) -> bool: return int(f["mes"]) == 5 and int(f["dia"]) == 1), "el 1 de mayo está en Chile")
+	## (17-11) Días de la independencia: los que faltaban se suman con la marca «indep» y se reconocen los de siempre.
+	var con_indep := 0
+	for pais: String in Calendario.FIJAS.keys():
+		con_indep += 1 if Calendario.del_anio(pais, 2026).any(func(f: Dictionary) -> bool: return CalendarioMemorias.es_independencia(f)) else 0
+	_comprobar(con_indep >= 75 and CalendarioMemorias.INDEPENDENCIAS.keys().all(func(p2: String) -> bool: return Calendario.del_anio(p2, 2026).any(func(f: Dictionary) -> bool: return f.has("indep"))),
+		"%d países con día de independencia y los 11 añadidos están en su calendario" % con_indep)
 	var usa := Calendario.del_anio("USA", 2026)
 	_comprobar(not usa.any(func(f: Dictionary) -> bool: return int(f["mes"]) == 5 and int(f["dia"]) == 1)
 		and usa.any(func(f: Dictionary) -> bool: return String(f["nombre"]) == "Labor Day" and int(f["dia"]) == 7),

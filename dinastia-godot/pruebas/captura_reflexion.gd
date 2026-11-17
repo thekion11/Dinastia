@@ -1,6 +1,6 @@
 extends Node
 ## (16-11) Fotos de la pantalla de reflexión de los días de memoria (`EventoReflexion`) en varios PAÍSES (regla del dueño: nunca uno solo).
-## PAISES=NED,TUR,… e IDIOMA=de para otras pruebas. OUT = carpeta (por defecto /tmp/fotos_reflexion); MOVIL=1 = como en un teléfono. Comprueba que el botón cierra la escena. Sale con «FIN. N fallos».
+## TIPO=independencia (por defecto, los de memoria), PAISES=NED,TUR,… e IDIOMA=de para otras pruebas. OUT = carpeta (por defecto /tmp/fotos_reflexion); MOVIL=1 = como en un teléfono. Comprueba que el botón cierra la escena. Sale con «FIN. N fallos».
 var _fallos := 0
 
 func _esperar(s: float) -> void:
@@ -28,9 +28,10 @@ func _ready() -> void:
 	for pais: String in lista:
 		var dia := {}
 		for f: Dictionary in Calendario.del_anio(pais, 2026):
-			if String(f["tipo"]) == "memoria":
-				dia = {"nombre": f["nombre"], "pais": pais, "dia": f["dia"], "mes": f["mes"], "texto": f["texto"],
-					"reflexion": DiasMemoria.reflexion_de(f), "cat": f.get("cat", "")}
+			var es_indep := OS.get_environment("TIPO") == "independencia"
+			if (es_indep and CalendarioMemorias.es_independencia(f)) or (not es_indep and String(f["tipo"]) == "memoria"):
+				dia = {"nombre": f["nombre"], "pais": pais, "dia": f["dia"], "mes": f["mes"], "texto": f["texto"], "tipo": "independencia" if es_indep else "memoria",
+					"reflexion": String(DiasMemoria.CATEGORIAS["independencia"]) if es_indep else DiasMemoria.reflexion_de(f), "cat": f.get("cat", "")}
 				break
 		_ok(not dia.is_empty(), "%s tiene un día de memoria" % pais)
 		var e := EventoReflexion.mostrar(p, dia)
@@ -38,7 +39,8 @@ func _ready() -> void:
 		e.elegido.connect(func(_o: String) -> void: cerrado[0] = true)
 		await _esperar(2.5)
 		get_viewport().get_texture().get_image().save_jpg(dir + "/reflexion_" + pais + ".jpg", 0.88)
-		e.barra.value = 1.0
+		if e.barra != null:
+			e.barra.value = 1.0
 		for b in e.find_children("*", "Button", true, false):
 			(b as Button).pressed.emit()
 		await _esperar(0.2)

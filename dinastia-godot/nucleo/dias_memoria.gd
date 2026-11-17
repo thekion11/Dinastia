@@ -1,6 +1,6 @@
 class_name DiasMemoria
 extends RefCounted
-## DÍAS DE MEMORIA CON PANTALLA DE REFLEXIÓN (16-11, orden del dueño): cada país tiene fechas de duelo y de recuerdo (`Calendario`, tipo «memoria»).
+## DÍAS DE MEMORIA (y, desde el 17-11, de INDEPENDENCIA) CON PANTALLA COMPLETA (16-11, orden del dueño): cada país tiene fechas de duelo y de recuerdo (`Calendario`, tipo «memoria»).
 ## La semana en que cae una, el club del jugador (según el PAÍS que eligió) abre un evento breve a pantalla completa (`EventoReflexion`): el nombre
 ## del día, su fecha, una frase de reflexión y un minuto de silencio. UNA vez por año y día (clave en `Prensa.eventos_vistos`, que se guarda).
 ## No mueve moral ni confianza: es un acto de respeto, no una decisión (como en `Calendario.semana`: la memoria no sube la moral).
@@ -33,25 +33,29 @@ const CATEGORIAS := {
 	"martires": "Gratitud en silencio con quienes dieron la vida por su país y su libertad.",
 	"desastre": "Recordamos a las víctimas y a quienes ayudaron en los días más difíciles. La memoria también protege.",
 	"terror": "Memoria y respeto para las víctimas y sus familias. Frente al odio, unidad.",
+	"independencia": "Hoy se celebra la libertad que tantas personas soñaron y defendieron. Un país entero se reúne, y el fútbol es parte de la fiesta.",
 }
 
 static func reflexion_de(f: Dictionary) -> String:
 	var n := String(f["nombre"])
 	return String(REFLEXIONES[n]) if REFLEXIONES.has(n) else String(CATEGORIAS.get(String(f.get("cat", "")), f["texto"]))
 
-## El día de memoria que toca esta semana (y no se vio este año) o {}. Claves: clave, nombre, pais, dia, mes, texto (la explicación del mentor), reflexion.
+## El día de memoria o de independencia que toca esta semana (y no se vio este año) o {}; la memoria va antes. Claves: clave, tipo ("memoria" o
+## "independencia"), nombre, pais, dia, mes, texto (la explicación del mentor), reflexion.
 static func pendiente(m: Mundo) -> Dictionary:
 	if m == null or m.prensa == null or m.mi_club() == null or not m.temporada_en_curso():
 		return {}
 	var pais := String(m.mi_club().pais)
-	for f: Dictionary in Calendario.de_la_semana(pais, m.anio, m.semana):
-		if String(f["tipo"]) != "memoria":
-			continue
-		var clave := clave_de(pais, m.anio, String(f["nombre"]))
-		if m.prensa.eventos_vistos.has(clave):
-			continue
-		return {"clave": clave, "nombre": String(f["nombre"]), "pais": pais, "dia": int(f["dia"]), "mes": int(f["mes"]),
-			"texto": String(f["texto"]), "reflexion": reflexion_de(f)}
+	var fechas := Calendario.de_la_semana(pais, m.anio, m.semana)
+	for tipo: String in ["memoria", "independencia"]:
+		for f: Dictionary in fechas:
+			if (tipo == "memoria" and String(f["tipo"]) != "memoria") or (tipo == "independencia" and not CalendarioMemorias.es_independencia(f)):
+				continue
+			var clave := clave_de(pais, m.anio, String(f["nombre"]))
+			if m.prensa.eventos_vistos.has(clave):
+				continue
+			return {"clave": clave, "tipo": tipo, "nombre": String(f["nombre"]), "pais": pais, "dia": int(f["dia"]), "mes": int(f["mes"]),
+				"texto": String(f["texto"]), "reflexion": reflexion_de(f) if tipo == "memoria" else String(CATEGORIAS["independencia"])}
 	return {}
 
 static func clave_de(pais: String, anio: int, nombre: String) -> String:

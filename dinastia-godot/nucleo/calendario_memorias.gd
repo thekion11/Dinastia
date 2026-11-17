@@ -79,3 +79,33 @@ const FILAS := {
 
 static func de(pais: String) -> Array:
 	return FILAS.get(pais, [])
+
+## DÍAS DE LA INDEPENDENCIA QUE FALTABAN (17-11): se suman como FIESTA y con la marca «indep». Fila: [mes, día, nombre, explicación del mentor].
+const INDEPENDENCIAS := {
+	"ALG": [[7, 5, "Día de la Independencia", "El 5 de julio de 1962 Argelia se independizó de Francia tras ocho años de guerra."]],
+	"BHR": [[8, 15, "Día de la Independencia", "Bahréin se independizó del Reino Unido el 15 de agosto de 1971."]],
+	"CRO": [[10, 8, "Día de la Independencia", "El 8 de octubre de 1991 Croacia cortó los últimos lazos con Yugoslavia."]],
+	"KUW": [[6, 19, "Día de la Independencia", "Kuwait se independizó del Reino Unido el 19 de junio de 1961."]],
+	"LTU": [[3, 11, "Restauración de la Independencia", "El 11 de marzo de 1990 Lituania fue la primera república soviética en declarar su independencia."]],
+	"LVA": [[5, 4, "Restauración de la Independencia", "El 4 de mayo de 1990 Letonia declaró la restauración de su independencia."]],
+	"PAN": [[11, 28, "Independencia de España", "El 28 de noviembre de 1821 Panamá proclamó su independencia de España."]],
+	"POR": [[12, 1, "Restauración de la Independencia", "El 1 de diciembre de 1640 Portugal recuperó su independencia de España."]],
+	"QAT": [[9, 3, "Día de la Independencia", "Catar se independizó del Reino Unido el 3 de septiembre de 1971."]],
+	"ROU": [[5, 9, "Día de la Independencia", "El 9 de mayo de 1877 Rumanía proclamó su independencia del Imperio otomano."]],
+	"SVN": [[12, 26, "Día de la Independencia y la Unidad", "Recuerda el plebiscito de 1990 en el que los eslovenos votaron por la independencia."]]
+}
+
+static func independencias(pais: String) -> Array:
+	return INDEPENDENCIAS.get(pais, [])
+
+## ¿Es esta fecha (de `Calendario.del_anio`) el día de la independencia o de la liberación del país? Abre la pantalla festiva de `DiasMemoria`.
+static func es_independencia(f: Dictionary) -> bool:
+	if String(f.get("tipo", "")) != "fiesta":
+		return false
+	if f.has("indep"):
+		return true
+	var n := String(f["nombre"])
+	for clave: String in ["ndepend", "Patrias", "Grito", "Declaratoria", "Jamhuri", "Liberación", "Evacuación", "Restablecimiento"]:
+		if n.contains(clave):
+			return true
+	return false
