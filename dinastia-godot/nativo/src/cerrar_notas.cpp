@@ -321,3 +321,32 @@ Array DinastiaNativo::fuerza_dos(const Array &once_l, const Array &once_v, Objec
 	r.push_back(fuerza_una(once_v, visita, local, m));
 	return r;
 }
+
+// `Mundo._semana_del_plantel` (nucleo/mundo_p5_p1.gd, 17-11-2026): la semana de cada jugador del club (lesión y sanción que se cumplen, forma que se mueve,
+// el suplente que se harta y pide salir), con las MISMAS tiradas y en el mismo orden sobre el generador del motor (`Azar._rng`). `suelo` = el de la forma
+// (−3, más el preparador y las obras si es el club del jugador). Gemela: `Mundo._semana_del_plantel_gd`.
+void DinastiaNativo::plantel_semana(const Array &plantilla, int64_t semana_global, int64_t suelo, int64_t semana, int64_t anio, const Ref<RandomNumberGenerator> &rng) const {
+	static const StringName k_lesion("lesion"), k_susp("suspension"), k_susp_sem("susp_semana"), k_forma("forma"), k_partidos("partidos"), k_fidel("fidelidad_hasta"),
+			k_pide("pide_salir");
+	const int64_t desde = suelo < 0 ? suelo : 0;
+	for (int64_t i = 0; i < plantilla.size(); i++) {
+		Object *j = plantilla[i];
+		const int64_t lesion = j->get(k_lesion);
+		if (lesion > 0) {
+			j->set(k_lesion, lesion - 1);
+		}
+		const int64_t susp = j->get(k_susp);
+		if (susp > 0 && int64_t(j->get(k_susp_sem)) != semana_global) {
+			j->set(k_susp, susp - 1);
+		}
+		int64_t f = int64_t(j->get(k_forma)) + rng->randi_range(desde, 4);   // `Azar.ent(mini(suelo, 0), 4)`
+		f = f < 20 ? 20 : (f > 99 ? 99 : f);
+		j->set(k_forma, f);
+		if (int64_t(j->get(k_partidos)) == 0 && semana > 6) {
+			const int64_t fh = j->get(k_fidel);
+			if ((fh <= 0 || anio >= fh) && rng->randf() < 0.02) {
+				j->set(k_pide, true);
+			}
+		}
+	}
+}
