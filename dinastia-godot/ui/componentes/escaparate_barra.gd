@@ -6,7 +6,7 @@ extends RefCounted
 ## tira de días y el riel de iconos dejan de verse en esta vista (la tira de días vive ahora en la pantalla «Avanzar»; el riel se abre con ☰).
 ## Las pestañas siguen siendo `mos.find_child("Botones").get_meta("tabs")` (L1/R1 las recorren, `TableroInicio.saltar`).
 
-const ALTO := 76.0
+const ALTO := 64.0
 
 ## El color de la barra: el del club, ni tan claro que no se lea el blanco ni tan oscuro que parezca negro.
 static func color_de(c: Club) -> Color:
@@ -98,12 +98,13 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	hueco.custom_minimum_size = Vector2(128, 0)
 	hueco.clip_contents = false
 	var esc := TextureRect.new()
-	esc.texture = Escudo.textura(c, 120)
+	esc.texture = Escudo.textura(c, 112)
 	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	esc.position = Vector2(4, -34)
-	esc.size = Vector2(120, 120)
+	esc.z_index = 3   ## por encima de las tarjetas que tiene debajo
+	esc.position = Vector2(8, 2)   ## pegado al borde de arriba y colgando por debajo de la barra, como en el PES
+	esc.size = Vector2(112, 112)
 	hueco.add_child(esc)
 	hb.add_child(hueco)
 	hb.move_child(hueco, 4)   ## ☰, las tres pestañas y, ahora, el escudo
@@ -111,7 +112,10 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 		var b := boton_pestana(Idiomas.t(String(par[0])))
 		b.toggle_mode = false
 		var destino := String(par[1])
-		b.pressed.connect(func() -> void: TableroInicio.abrir(p, destino))
+		if destino == "Ligas y clubes":   ## «Base de datos»: abre un cuadro con el BUSCADOR y la puerta a «Ligas y clubes»
+			b.pressed.connect(func() -> void: EscaparatePantalla.de(p).abrir_busqueda(b))
+		else:
+			b.pressed.connect(func() -> void: TableroInicio.abrir(p, destino))
 		hb.add_child(b)
 	var caja := VBoxContainer.new()
 	caja.alignment = BoxContainer.ALIGNMENT_CENTER

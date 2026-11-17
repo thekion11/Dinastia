@@ -15,6 +15,8 @@ func _ready() -> void:
 	var ps: Array[String] = [pais]
 	m.generar(ps, 88 + idx)
 	m.tomar_el_mando(m.ligas[0].clubes[idx % m.ligas[0].clubes.size()].id)
+	for _i in (int(OS.get_environment("JORNADAS")) if OS.get_environment("JORNADAS") != "" else 0):   ## con partidos jugados, para ver el último resultado
+		m.avanzar_semana()
 	PedidoPartida.mundo_pregenerado = m
 	PedidoPartida.modo_elegido = "dt"
 	PedidoPartida.dt_nombre_elegido = "Prueba"
@@ -33,6 +35,10 @@ func _ready() -> void:
 		TableroInicio.pestana = int(OS.get_environment("PESTANA"))
 		pr._refrescar()
 	await _frames(12)
+	if pr.get("_rueda_pop") != null:   ## la rueda de prensa que sale tras los partidos tapa el menú: fuera, para ver el escaparate
+		(pr.get("_rueda_pop") as Node).queue_free()
+		pr.set("_rueda_pop", null)
+		await _frames(8)
 	print("APERTURA_MS ", Time.get_ticks_msec() - t0)
 	get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://pruebas/capturas/menu_central_%s.png" % OS.get_environment("NOMBRE")))
 	get_tree().quit()
