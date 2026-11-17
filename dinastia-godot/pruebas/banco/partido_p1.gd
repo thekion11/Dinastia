@@ -40,7 +40,9 @@ func _probar_partidos() -> void:
 	p2.tarjeta.connect(func(_j: Jugador, _r: bool, _min: int) -> void: oidos["tarjeta"] += 1)
 	p2.terminado.connect(func(_a: int, _b: int) -> void: oidos["fin"] += 1)
 	var r2 := p2.simular()
-	_comprobar(oidos["gol"] == r2["local"] + r2["visita"], "la senal de gol se emite una vez por gol")
+	## (17-11) El VAR anula goles ya emitidos («gol_anulado» en la crónica) y un partido suspendido (<7 jugadores) tiene marcador de MESA: sin goles jugados ni señales.
+	var esperados: int = 0 if p2.suspendido else int(r2["local"]) + int(r2["visita"]) + p2.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol_anulado").size()
+	_comprobar(oidos["gol"] == esperados, "la senal de gol se emite una vez por gol")
 	_comprobar(oidos["fin"] == 1, "la senal de fin de partido se emite una vez")
 
 	## "remate": la llegada que no fue gol. Hasta esta sesion `_atacar()` la

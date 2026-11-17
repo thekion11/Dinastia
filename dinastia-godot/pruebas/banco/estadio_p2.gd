@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/estadio_p1.gd"
-## [Capa extra de `estadio.gd`] _probar_fundir_r2
+## [Capa extra de `estadio.gd`] _probar_fundir_r2 … y (17-11) _probar_hud_tv
 
 ## R2 (3-11): `FundirPiezas.fundir_sueltas` y `fundir_profundo(..., por_firma)` (la grada y el túnel en MÍNIMO).
 func _probar_fundir_r2() -> void:
@@ -373,3 +373,68 @@ func _probar_media_firma() -> void:
 	j.atributos[ks[0]] = 60
 	var d := j.media_en("MC")
 	_comprobar(a == 60 and b == a and c > a and d == a, "media 60 → igual sin cambios → sube con un atributo a 99 (%d) → vuelve al restaurarlo (%d, %d, %d, %d)" % [c, a, b, c, d])
+
+## (17-11) HUD DE TV del partido (`MarcadorTV`, `NombresTV`, `RadarPartido`): siglas de 3 letras y color fuerte por club, el reloj que
+## ensancha el marcador, el foco y su rival más cercano, y el radar orientado como la cámara de TV con el campo dibujado.
+func _probar_hud_tv() -> void:
+	_titulo("HUD DE TV: MARCADOR, NOMBRES Y RADAR")
+	var negro := Club.new("hud_a", "Real Carbonero")
+	negro.color1 = "#0a0a0a"
+	negro.color2 = "#e8c22a"
+	var verde := Club.new("hud_b", "D. Pradera")
+	verde.color1 = "#2e8b3a"
+	verde.color2 = "#f4f4f4"
+	var rojo := Club.new("hud_c", "Puerto Bermejo")
+	rojo.color1 = "#c41e2a"
+	rojo.color2 = "#ffffff"
+	_comprobar(MarcadorTV.color_vivo(negro).is_equal_approx(Color("#e8c22a")) and MarcadorTV.color_vivo(verde).is_equal_approx(Color("#f4f4f4"))
+		and MarcadorTV.color_vivo(rojo).is_equal_approx(Color("#c41e2a")), "color fuerte: el negro y el verde césped pasan al segundo color; el rojo se queda")
+	var blanco := Club.new("hud_d", "Nervión Albo")
+	blanco.color1 = "#ffffff"
+	blanco.color2 = "#c41e2a"
+	var cd := HudTV.colores_distintos(blanco, verde)
+	_comprobar(not HudTV._parecidos(cd[0], cd[1]), "radar: blanco contra verde que pasa a su blanco → colores distintos (%s / %s)" % [cd[0].to_html(false), cd[1].to_html(false)])
+	var host := Control.new()
+	host.size = Vector2(1280, 720)
+	add_child(host)
+	var m := MarcadorTV.poner(host, negro, rojo)
+	var ancho := m.size.x
+	m.fijar(1, 0, "90' +3:12")
+	_comprobar(m._sig == ["REA", "PUE"] and ancho > 150.0 and m.size.x > ancho and m.size.y >= MarcadorTV.ALTO and not m.etiqueta.visible,
+		"marcador: siglas %s, %.0f px y más ancho con el añadido (%.0f); el texto de siempre queda oculto" % [str(m._sig), ancho, m.size.x])
+	## El foco y su rival: el que manejas manda; mirando, el que lleva el balón; el rival a más de 18 m no cuenta.
+	var filas: Array = []
+	for d: Array in [[true, Vector3(0, 0, 0)], [true, Vector3(10, 0, 0)], [false, Vector3(3, 0, 1)], [false, Vector3(-30, 0, 0)]]:
+		var n := Node3D.new()
+		host.add_child(n)
+		n.position = d[1]
+		filas.append({"node": n, "es_local": d[0]})
+	var mirando := NombresTV.elegir(-1, {}, filas[0], filas)
+	var manejas := NombresTV.elegir(0, filas[1], filas[0], filas)
+	var lejos := NombresTV.elegir(-1, {}, filas[3], [filas[3], filas[1]])
+	_comprobar(mirando.size() == 2 and mirando[0] == filas[0] and mirando[1] == filas[2] and manejas[0] == filas[1] and manejas[1] == filas[2]
+		and lejos.size() == 1 and NombresTV.elegir(-1, {}, {}, filas).is_empty(), "nombres: foco (el que manejas o el del balón) y su rival más cercano a menos de 18 m")
+	## El receptor probable del pase: el compañero hacia donde mira (+x), no el de atrás ni el rival.
+	var rec := NombresTV.receptor_probable(filas[0], Vector3(1, 0, 0), filas)
+	_comprobar(rec == filas[1], "nombres: con el balón, el receptor del pase es el compañero hacia donde mira")
+	## El radar: largo del campo a lo ancho, la banda de la cámara (+x) abajo, el arco de −z a la derecha; el campo pintado en UNA textura;
+	## los jugadores son triángulos que apuntan hacia donde miran (rotación 0 = hacia +z = a la izquierda del radar).
+	var r := RadarPartido.new()
+	host.add_child(r)
+	r.size = Vector2(210, 136)
+	var der := r.a_radar(Vector3(0, 0, -52.0))
+	var abajo := r.a_radar(Vector3(33.0, 0, 0))
+	var nm := Node3D.new()
+	host.add_child(nm)
+	var mira := RadarPartido.mira_en_radar(nm)
+	var px := r.campo.get_image().get_pixel(105, 2) if r.campo != null else Color.BLACK
+	_comprobar(der.x > 200.0 and absf(der.y - 68.0) < 1.0 and abajo.y > 128.0 and absf(abajo.x - 105.0) < 1.0 and r.campo != null
+		and r.campo.get_width() == 210 and px.r > 0.4 and mira.x < -0.99 and TrazoSuave.cuantas(r) == 0,
+		"radar como la TV: arco −z a la derecha (%s), banda de la cámara abajo (%s), campo en una textura con la línea de medio campo, triángulo hacia donde mira (%s)" % [str(der), str(abajo), str(mira)])
+	## Los dos escudos en una textura, y el aviso de repetición pequeño arriba a la derecha.
+	var ej := MarcadorTV.escudos_juntos(negro, rojo, 28)
+	var rr := RotuloRepeticion.entrar(host, null)
+	_comprobar(ej.get_width() == 56 and ej.get_height() == 28 and rr.visible and rr.anchor_left == 1.0 and rr.offset_top >= 60.0
+		and rr.custom_minimum_size.y <= 40.0 and rr.texto != "" and not rr.texto.begins_with("⟲"),
+		"escudos juntos (%dx%d) y «%s» pequeño (%.0f px de alto) arriba a la derecha" % [ej.get_width(), ej.get_height(), rr.texto, rr.custom_minimum_size.y])
+	host.free()

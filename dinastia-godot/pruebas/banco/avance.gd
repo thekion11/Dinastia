@@ -13,6 +13,7 @@ func _probar_avance_eventos_y_disparadores() -> void:
 	_titulo("AVANCE POR DÍAS: EVENTOS DEL DÍA Y DISPARADORES")
 	_correr("res://pruebas/probar_eventos_dia.gd", "el modelo de eventos del día (clases, zonas, paradas; 4 mundos)")
 	_correr("res://pruebas/probar_disparadores_dia.gd", "los disparadores solo observan y salen una vez (3 mundos)")
+	_correr("res://pruebas/probar_decisiones_dia.gd", "las decisiones con opciones tienen el efecto real de siempre (agentes y academia; 3 mundos)")
 
 func _probar_avance_nucleo_y_saque() -> void:
 	_titulo("AVANCE POR DÍAS: NÚCLEO DE PARADAS, SAQUE INICIAL Y RÉPLICA")

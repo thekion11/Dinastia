@@ -88,8 +88,11 @@ pasa "plantilla a la PES" "godot --headless --path . res://pruebas/prueba_planti
 # (12-11) Las pruebas «con pantalla» necesitan xvfb-run; el contenedor del CI no lo trae (como el bloque de a4_limite_mundo): sin él se SALTAN
 # (antes fallaban en 0 s y bloqueaban la exportación). En local, con xvfb, corren como siempre.
 if command -v xvfb-run >/dev/null; then
+pasa "menú central: Inicio y las otras dos pestañas caben en 1600x900 y 1280x720, sin desplazamiento (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/probar_menu_central_cabe.tscn" "FIN. 0 fallos"
 pasa "La Ruta: con mando se llega a todos los botones (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/prueba_ruta_foco.tscn" "FIN. 0 fallos"
 pasa "La Ruta: el foco en el teléfono de pie (con pantalla)" "MOVIL=1 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 608x1080 res://pruebas/prueba_ruta_foco.tscn" "FIN. 0 fallos"
+## (17-11) El trote CMU (`TROTE_CMU=1`, apagado por defecto) colgó una vez una captura con su 1.ª versión: un partido corto con pantalla y el trote encendido debe llegar al final.
+pasa "Trote CMU encendido: el partido con pantalla termina" "TROTE_CMU=1 PAIS=KOR,MEX SALIDA=/tmp xvfb-run -a godot --path . --rendering-driver vulkan --rendering-method forward_plus --resolution 1280x720 res://pruebas/captura_dorsales_anim.tscn" "CAPTURA TERMINADA trote_cmu=true"
 ## (16-11) A calidad máxima las 19 entregas tardan ~30 min sin GPU: en 6 tandas para caber en los 600 s de cada prueba.
 pasa "La Ruta: la entrega en 3D de cada premio 1/6 (con pantalla)" "PARTE=1/6 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_gala_premio.tscn" "FIN. 0 fallos"
 pasa "La Ruta: la entrega en 3D de cada premio 2/6 (con pantalla)" "PARTE=2/6 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_gala_premio.tscn" "FIN. 0 fallos"
@@ -135,6 +138,7 @@ pasa "avance por días: menú del partido y sus ajustes" "godot --headless --pat
 pasa "sorteo del saque inicial en el motor" "godot --headless --path . res://pruebas/probar_saque_inicial.tscn" "FIN. 0 fallos"
 # 5j. «Jugar de nuevo» y «Jugar momento» de verdad: réplica con clubes clonados (17-11)
 pasa "réplica del partido (jugar de nuevo y momentos)" "godot --headless --path . res://pruebas/probar_replica_partido.tscn" "FIN. 0 fallos"
+pasa "decisiones con opciones del avance (efecto real)" "godot --headless --path . res://pruebas/probar_decisiones_dia.tscn" "FIN. 0 fallos"
 # 5h. Las pantallas de después del partido: resultado, todos los momentos y el popup «Partido jugado» (17-11)
 pasa "avance por días: resultado, momentos y popup del partido jugado" "godot --headless --path . res://pruebas/probar_resultado_partido.tscn" "FIN. 0 fallos"
 pasa "textura del césped" "godot --headless --path . res://pruebas/probar_cesped_textura.tscn" "FIN. 0 fallos"

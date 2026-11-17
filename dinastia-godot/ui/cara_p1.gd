@@ -201,14 +201,32 @@ static func _rasgos_reales_de() -> Dictionary:
 				_rasgos_reales = jp.data
 	return _rasgos_reales
 
+## Rasgos a mano de un jugador conocido (tabla `RASGOS_JUG`), o null si no está: {piel, peloC, pelo, barba}.
+static func rasgos_conocido(j: Jugador) -> Variant:
+	if not j.real or not Datos.tiene("RASGOS_JUG"):
+		return null
+	var t: Variant = Datos.tabla("RASGOS_JUG")
+	return (t as Dictionary).get(Nombres.limpiar(j.nombre)) if t is Dictionary else null
+
 static func look_de(j: Jugador) -> Dictionary:
 	var base := _look_base(j.id)
 	var medido := false   ## true: el color de pelo viene de su foto/malla real (no se encanece encima)
+	## (17-11) RASGOS DE LOS CONOCIDOS (`herramientas/rasgos_jugadores.py`): piel, pelo, corte y barba de los jugadores de nombre fijo, por nombre
+	## (en la base pública con la clave del guiño; solo rasgos, nunca fotos). Mandan sobre el promedio del país.
+	var rj: Variant = rasgos_conocido(j)
+	if rj is Dictionary:
+		for k: String in (rj as Dictionary):
+			base[k] = rj[k]
+		medido = true
+		base["acc"] = ""
+		base["pecas"] = false
+		base["lunar"] = false
+		base["cicatriz"] = false
 	## LA RECREACIÓN (29-9-2026): un jugador real (con la base real) toma la
 	## piel, el color de pelo y la barba de su foto
 	## (`herramientas/caras_reales_rasgos.py`), así su cara procedural se le
 	## parece aunque no se enseñe la foto.
-	if j.real and Datos.base_real:
+	elif j.real and Datos.base_real:
 		var r: Variant = _rasgos_reales_de().get(Nombres.limpiar(j.nombre))
 		## Sin rasgos viejos: la piel y el pelo medidos para su cara 3D.
 		if not (r is Dictionary):

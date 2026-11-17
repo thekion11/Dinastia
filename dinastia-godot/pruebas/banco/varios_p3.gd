@@ -417,3 +417,32 @@ func _probar_desafios() -> void:
 	_comprobar(m6b != null and m6b.desafios.size() == 2 and m6b.tiene_desafio("invicto"),
 		"vuelven los mismos desafíos al cargar (%s)" % str(m6b.desafios if m6b != null else []))
 	Partida.borrar("_prueba_desafios")
+
+## (17-11) El jugador real sin rasgos propios toma el promedio de SU NACIONALIDAD (`j.pais`), no el del país de su club: los de Asia oriental salen más claros que los de África occidental aunque jueguen en la misma liga.
+func _probar_cara_por_nacionalidad() -> void:
+	_titulo("CARA POR NACIONALIDAD DEL JUGADOR, NO DEL CLUB")
+	var m := Mundo.new()
+	m.generar(["ENG", "FRA", "GER", "ESP", "ITA", "BRA", "JPN", "KOR", "NGA", "GHA"], 23)
+	var asia := []
+	var africa := []
+	for c: Club in m.clubes.values():
+		for j: Jugador in c.plantilla:
+			if not j.real or Cara.rasgos_conocido(j) is Dictionary:
+				continue
+			var lum: float = Color(String(Cara.look_de(j)["piel"])).get_luminance()
+			if j.pais in ["JPN", "KOR", "CHN"]:
+				asia.append(lum)
+			elif j.pais in ["NGA", "GHA", "SEN", "CIV", "CMR", "COD", "MLI", "GUI"]:
+				africa.append(lum)
+	_comprobar(asia.size() >= 3 and africa.size() >= 3, "hay reales sin rasgos de Asia oriental (%d) y de África occidental (%d)" % [asia.size(), africa.size()])
+	if asia.size() >= 3 and africa.size() >= 3:
+		var ma := 0.0
+		for v: float in asia:
+			ma += v
+		var mf := 0.0
+		for v: float in africa:
+			mf += v
+		ma /= float(asia.size())
+		mf /= float(africa.size())
+		_comprobar(ma > mf + 0.08, "los de Asia oriental salen más claros que los de África occidental (%.2f frente a %.2f)" % [ma, mf])
+
