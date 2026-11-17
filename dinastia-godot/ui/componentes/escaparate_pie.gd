@@ -16,6 +16,16 @@ static func _boton(texto: String, al_pulsar: Callable) -> Button:
 	b.pressed.connect(al_pulsar)
 	return b
 
+## Los mensajes sin leer de la bandeja más los avisos graves del informe de la semana (lo que dice «Mensajes · N» de la barra).
+static func sin_leer(p: Principal) -> int:
+	var n := 0
+	var bandeja: Variant = p.get("_bandeja")
+	if bandeja is Array:
+		for x: Dictionary in bandeja:
+			if not bool(x.get("leida", false)):
+				n += 1
+	return n + int(InformeSemana.resumen(p)["graves"])
+
 static func crear(p: Principal) -> Control:
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size.y = 52
@@ -38,15 +48,10 @@ static func crear(p: Principal) -> Control:
 		ayudas.add_child(PieMando._chip(Idiomas.t("Intro"), Idiomas.t("Confirmar")))
 		ayudas.add_child(PieMando._chip(Idiomas.t("Esc"), Idiomas.t("Atrás")))
 	fila.add_child(ayudas)
-	var estado := Label.new()   ## (17-11) la línea de estado de siempre (jornada, sueldos, media, objetivo, confianza: `p._sub`) en el hueco del medio
-	estado.text = p._sub.text if p._sub != null else ""
-	estado.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	estado.clip_text = true
-	estado.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	estado.add_theme_font_size_override("font_size", Tema.letra(13))
-	estado.add_theme_color_override("font_color", Color(1, 1, 1, 0.78))
-	estado.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	fila.add_child(estado)
+	var hueco := Control.new()
+	hueco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fila.add_child(hueco)
 	## Avanzar / Jugar / Saltar / Partido jugado: los mismos botones, ahora aquí
 	if p._botones != null:
 		if p._botones.get_parent() != null:
@@ -57,22 +62,6 @@ static func crear(p: Principal) -> Control:
 			p._botones.remove_child(p._buscador)   ## el buscador vive en «Base de datos»
 		fila.add_child(p._botones)
 		_botones_grandes(p)
-	var sin_leer := 0
-	var bandeja: Variant = p.get("_bandeja")
-	if bandeja is Array:
-		for x: Dictionary in bandeja:
-			if not bool(x.get("leida", false)):
-				sin_leer += 1
-	sin_leer += int(InformeSemana.resumen(p)["graves"])   ## (17-11) los avisos urgentes del informe de la semana (contratos, puntos sin gastar…) cuentan en Mensajes
-	var msg := _boton("✉ " + Idiomas.t("Mensajes") + ("  (%d)" % sin_leer if sin_leer > 0 else ""), func() -> void: TableroInicio.abrir(p, "Correo"))
-	if sin_leer > 0:
-		msg.add_theme_color_override("font_color", Tema.oro())
-	fila.add_child(msg)
-	var asuntos: int = p._ui_despacho.asuntos_pendientes().size() if p._ui_despacho != null else 0
-	if asuntos > 0:   ## los asuntos del despacho (decisiones del DT): alerta en ámbar, abre su pantalla completa
-		var desp := _boton("● " + Idiomas.t("Despacho") + "  (%d)" % asuntos, func() -> void: EscaparatePantalla.de(p).abrir_despacho(p))
-		desp.add_theme_color_override("font_color", Color("ffc857"))
-		fila.add_child(desp)
 	fila.add_child(_boton("? " + Idiomas.t("Ayuda"), func() -> void: TableroInicio.abrir(p, "Glosario")))
 	for po in p.find_children("*", "PanelObjetivos", true, false):   ## la caja flotante de objetivos pasa a un chip del pie
 		var obj := po as PanelObjetivos

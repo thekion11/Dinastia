@@ -34,7 +34,7 @@ func _montar(p: Principal) -> void:
 	barra.add_theme_stylebox_override("panel", sb)
 	vb.add_child(barra)
 	var res := InformeSemana.resumen(p)
-	var tit := EstiloAvanzar.etiqueta("%s  ·  %s" % [Idiomas.t("Informe de la semana"), Idiomas.t("%d avisos urgentes") % int(res["graves"])], 26, Color.WHITE, true)
+	var tit := EstiloAvanzar.etiqueta("%s  ·  %s" % [Idiomas.t("Mensajes"), Idiomas.t("%d avisos urgentes") % int(res["graves"])], 26, Color.WHITE, true)
 	barra.add_child(tit)
 	var margen := MarginContainer.new()
 	margen.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -48,6 +48,23 @@ func _montar(p: Principal) -> void:
 	lista.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lista.add_theme_constant_override("separation", 12)
 	desliza.add_child(lista)
+	var sin := EscaparatePie.sin_leer(p) - int(res["graves"])   ## (17-11) «Mensajes · N»: el correo, las noticias recientes y el informe de la semana, juntos
+	var correo := Button.new()
+	correo.text = "✉  " + Idiomas.t("Correo") + ("  (%d)" % sin if sin > 0 else "")
+	correo.custom_minimum_size = Vector2(0, 52)
+	correo.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	correo.add_theme_font_size_override("font_size", Tema.letra(18))
+	correo.pressed.connect(func() -> void:
+		cerrar()
+		TableroInicio.abrir(p, "Correo"))
+	lista.add_child(correo)
+	var bandeja: Variant = p.get("_bandeja")
+	if bandeja is Array:
+		for x: Dictionary in (bandeja as Array).slice(0, 4):
+			var nt := EstiloAvanzar.etiqueta("• " + String(x.get("titulo", "")), 18, Color(1, 1, 1, 0.9))
+			nt.clip_text = true
+			lista.add_child(nt)
+	lista.add_child(EstiloAvanzar.etiqueta(Idiomas.t("Informe de la semana").to_upper(), 16, Color(1, 1, 1, 0.7), true))
 	InformeSemana.pintar_en(p, lista, true, func() -> void: cerrar())
 	var pie := PanelContainer.new()
 	pie.custom_minimum_size.y = 64

@@ -65,10 +65,10 @@ func repintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 	_cuerpo.add_theme_constant_override("separation", TableroInicio.SEP)
 	margen.add_child(_cuerpo)
 	var botones: Array[Button] = []
-	var nombres: Array = TableroInicio.PESTANAS.duplicate()
-	nombres.append("Índice")   ## (17-11) la cuarta pestaña: todos los menús antiguos con todos sus submenús (`EscaparateIndice`)
+	TableroInicio.pestana = 0   ## (17-11, diseño del dueño) una sola pestaña: «Avanzar en el tiempo»; los menús del club viven en la barra lateral
+	var nombres: Array = [TableroInicio.PESTANAS[0]]
 	for i in nombres.size():
-		var b := EscaparateBarra.boton_pestana(Idiomas.t(String(nombres[i])), 1.35 if i < 3 else 0.8)
+		var b := EscaparateBarra.boton_pestana(Idiomas.t(String(nombres[i])), 1.5)
 		hb.add_child(b)
 		botones.append(b)
 		CampanasMenu.marcar_pestana(b, i)

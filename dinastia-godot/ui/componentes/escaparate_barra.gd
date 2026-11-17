@@ -81,19 +81,27 @@ static func boton_pestana(texto: String, ancho := 1.35) -> Button:
 	b.add_theme_stylebox_override("focus", foco)
 	return b
 
-## Después de las tres pestañas: el escudo en medio, los atajos a la derecha y la caja con la fecha.
+## Un botón de la barra que NO es una pestaña (Despacho, Mensajes, los atajos de la derecha): plano, blanco, con su contador si hay.
+static func _accion(texto: String, al_pulsar: Callable, alerta := false) -> Button:
+	var b := boton_pestana(texto, 1.0)
+	b.toggle_mode = false
+	if alerta:
+		b.get_node("Rotulo").add_theme_color_override("font_color", Color("ffc857"))
+	b.pressed.connect(al_pulsar)
+	return b
+
+## Después de la pestaña «Avanzar en el tiempo»: Despacho · N y Mensajes · N, el escudo en medio, los atajos de la derecha (lo que NO está en la barra lateral) y la caja con la fecha.
+## (17-11, diseño del dueño) La barra lateral izquierda vuelve a estar siempre visible: aquí no se repite ningún menú del club.
 static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: Club) -> void:
 	hb.set_meta("tabs", tabs)
-	var menu := Button.new()   ## ☰ abre el cajón de menús (el riel de iconos ya no se ve en esta vista)
-	menu.flat = true
-	menu.text = "☰"
-	menu.focus_mode = Control.FOCUS_ALL
-	menu.custom_minimum_size = Vector2(52, ALTO - 8)
-	menu.add_theme_font_size_override("font_size", Tema.letra(28))
-	menu.tooltip_text = Idiomas.t("Todos los menús")
-	menu.pressed.connect(func() -> void: if p._menu_lateral != null: p._menu_lateral.alternar())
-	hb.add_child(menu)
-	hb.move_child(menu, 0)
+	var n_desp: int = p._ui_despacho.asuntos_pendientes().size() if p._ui_despacho != null else 0
+	var d := _accion(Idiomas.t("Despacho") + (" · %d" % n_desp if n_desp > 0 else ""), func() -> void: EscaparatePantalla.de(p).abrir_despacho(p), n_desp > 0)
+	d.name = "BotonDespacho"
+	hb.add_child(d)
+	var n_msg := EscaparatePie.sin_leer(p)
+	var m := _accion(Idiomas.t("Mensajes") + (" · %d" % n_msg if n_msg > 0 else ""), func() -> void: EscaparatePantalla.de(p).abrir_informe(p), n_msg > 0)
+	m.name = "BotonMensajes"
+	hb.add_child(m)
 	var hueco := Control.new()   ## el escudo asoma por encima de la barra: no empuja a nadie
 	hueco.custom_minimum_size = Vector2(128, 0)
 	hueco.clip_contents = false
@@ -116,7 +124,6 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	tocar_esc.pressed.connect(func() -> void: TableroInicio.abrir(p, "Identidad visual"))
 	hueco.add_child(tocar_esc)
 	hb.add_child(hueco)
-	hb.move_child(hueco, 4)   ## ☰, las tres pestañas y, ahora, el escudo
 	for par: Array in [["Oficina del DT", "Mi carrera"], ["Base de datos", "Ligas y clubes"], ["Sistema", "*sistema"]]:
 		var b := boton_pestana(Idiomas.t(String(par[0])))
 		b.toggle_mode = false

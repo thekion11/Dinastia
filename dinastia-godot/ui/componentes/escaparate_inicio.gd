@@ -27,16 +27,18 @@ static func sincronizar(p: Principal) -> void:
 		return
 	var en_inicio := p._pestanas.get_tab_title(p._pestanas.current_tab) == "Inicio" and usa()
 	(pant as Control).visible = en_inicio
+	(pant as Control).offset_left = 0.0 if MenuLateral.abajo() else MenuLateral.ANCHO_RIEL   ## (17-11) la barra lateral SIEMPRE visible: el escaparate le deja su sitio
 	var raiz: Node = p._despacho.get_parent() if p._despacho != null else null
 	if raiz is Control:
 		(raiz as Control).visible = not en_inicio
 	if p._menu_lateral != null:
-		p._menu_lateral.esconder_riel(en_inicio)
+		p._menu_lateral.esconder_riel(false)   ## la tira de iconos se ve también en el Inicio (idéntica a la de antes)
 	for po in p.find_children("*", "PanelObjetivos", true, false):   ## su chapa plegada pasa al pie mientras se ve el escaparate
 		(po as Control).visible = not (en_inicio and bool(po.get("_plegado")))
 
 ## La pestaña «Avanzar en el tiempo»: arriba DT, noticia y tabla; abajo los partidos y los seguidores. Las dos filas se REPARTEN el alto que hay (1,5 a 1).
 static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, acento: Color) -> void:
+	cuerpo.add_child(_franja(p, c))
 	var arriba := HBoxContainer.new()
 	arriba.add_theme_constant_override("separation", TableroInicio.SEP)
 	arriba.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -59,3 +61,31 @@ static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, ac
 		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		t.size_flags_stretch_ratio = float(par[1])
 		abajo.add_child(t)
+
+## (17-11) La franja de arriba del Inicio, con los accesorios que vuelven: la LÍNEA DE ESTADO (jornada, sueldos, media, objetivo, confianza: `p._sub`), los ACCESOS RÁPIDOS que se marcan en Ajustes
+## (uno por favorito) y la FORMA (últimos 5 partidos). Una sola fila baja, para que las tarjetas conserven el alto.
+static func _franja(p: Principal, c: Club) -> Control:
+	var f := HBoxContainer.new()
+	f.add_theme_constant_override("separation", 8)
+	f.custom_minimum_size.y = 34
+	var estado := Label.new()
+	estado.text = p._sub.text if p._sub != null else ""
+	estado.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	estado.clip_text = true
+	estado.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	estado.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	estado.add_theme_font_size_override("font_size", Tema.letra(13))
+	estado.add_theme_color_override("font_color", Color(1, 1, 1, 0.85))
+	estado.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	f.add_child(estado)
+	for tab: String in p._favoritos:
+		var b := Button.new()
+		b.text = "⭐ " + Idiomas.t(tab)
+		b.focus_mode = Control.FOCUS_ALL
+		b.add_theme_font_size_override("font_size", Tema.letra(13))
+		b.pressed.connect(func() -> void: p._ir_a_pestana(tab))
+		f.add_child(b)
+	var forma := EscaparateSubs._forma(p, c)
+	if forma != null:
+		f.add_child(forma)
+	return f

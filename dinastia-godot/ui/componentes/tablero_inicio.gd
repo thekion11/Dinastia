@@ -71,6 +71,8 @@ static func saltar(p: Principal, d: int) -> bool:
 		return false
 	var barra := mos.find_child("Botones", true, false)
 	var n: int = (barra.get_meta("tabs") as Array).size() if barra.has_meta("tabs") else PESTANAS.size()
+	if n <= 1:
+		return false   ## (17-11) el escaparate tiene una sola pestaña: L1/R1 no hacen nada ahí
 	var i := (pestana + d + n) % n
 	var b := (barra.get_meta("tabs") as Array)[i] as Button if barra.has_meta("tabs") else barra.get_child(i) as Button
 	b.button_pressed = true
