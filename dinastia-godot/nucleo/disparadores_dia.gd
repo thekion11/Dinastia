@@ -33,6 +33,7 @@ static func consultar(m: Mundo, est: Dictionary) -> Array:
 	out.append_array(de_crisis_caja(m, est))
 	out.append_array(de_imprevistos(m, est))
 	out.append_array(de_premio_mensual(m, est))
+	out.append_array(de_segunda_tanda(m, est))
 	return out
 
 ## ULTIMÁTUM cuando la confianza baja de `ULTIMATUM_HASTA` (sin llegar al despido) y DESPIDO cuando la directiva te echa (`despedido_ya`).
@@ -128,4 +129,122 @@ static func de_premio_mensual(m: Mundo, est: Dictionary) -> Array:
 				ev["es_mio"] = es_mio
 				out.append(ev)
 				return out
+	return out
+
+## SEGUNDA TANDA (17-11): guerra de agentes, cantera, ojeadores, retos, cambio de DT en tu liga, llamada de selección y sanción al DT. Todos OBSERVAN.
+static func de_segunda_tanda(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	out.append_array(de_guerra_agentes(m, est))
+	out.append_array(de_cantera(m, est))
+	out.append_array(de_ojeadores(m, est))
+	out.append_array(de_retos(m, est))
+	out.append_array(de_cambio_dt(m, est))
+	out.append_array(de_seleccion(m, est))
+	out.append_array(de_sancion_dt(m, est))
+	return out
+
+## Un hecho que sale una sola vez: devuelve true la primera vez que se pide `id`.
+static func _nuevo(est: Dictionary, id: String) -> bool:
+	if (est["vistos"] as Dictionary).has(id):
+		return false
+	est["vistos"][id] = true
+	return true
+
+## La guerra de agentes abierta (`Cantera.exigencia`): el representante exige algo; el texto lo trae el propio sistema.
+static func de_guerra_agentes(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	if m.cantera == null or m.cantera.exigencia.is_empty():
+		return out
+	var e: Dictionary = m.cantera.exigencia
+	var id := "agentes:%s:%s:%d" % [String(e.get("agente", "")), String(e.get("tipo", "")), _abs(m)]
+	if not _nuevo(est, "agentes:%s:%s" % [String(e.get("agente", "")), String(e.get("tipo", ""))]):
+		return out
+	var ev := _ev(id, "guerra_agentes", EventosDia.PANTALLA, "", "guerra_agentes", {"tipo": String(e.get("tipo", "")), "perfil": String(e.get("perfil", "")), "agente": String(e.get("agente", ""))})
+	ev["texto"] = Idiomas.t(String(e.get("txt", "")))
+	out.append(ev)
+	return out
+
+## El asunto abierto de la cantera (`EventosCantera.pendiente`): torneo, abandono o padres; aviso en la zona «cantera».
+static func de_cantera(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	if m.eventos_cantera == null or m.eventos_cantera.pendiente.is_empty():
+		return out
+	var p: Dictionary = m.eventos_cantera.pendiente
+	var id := "cantera:%s:%s:%d" % [String(p.get("tipo", "")), String(p.get("id", "")), _abs(m)]
+	if not _nuevo(est, "cantera:%s:%s" % [String(p.get("tipo", "")), String(p.get("id", ""))]):
+		return out
+	var ev := _ev(id, "evento_cantera", EventosDia.AVISO, "cantera", "evento_cantera", {"tipo": String(p.get("tipo", "")), "chico": String(p.get("id", ""))})
+	ev["texto"] = Idiomas.t(String(p.get("tema", "")))
+	out.append(ev)
+	return out
+
+## Un hallazgo nuevo de los ojeadores (`Ojeadores.hallazgos`): aviso en «mercado» con el jugador.
+static func de_ojeadores(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	if m.ojeadores == null:
+		return out
+	for h: Dictionary in m.ojeadores.hallazgos:
+		var id := "hallazgo:%s:%d:%d" % [String(h.get("pid", "")), int(h.get("anio", 0)), int(h.get("semana", 0))]
+		if not _nuevo(est, id):
+			continue
+		var ev := _ev(id, "hallazgo", EventosDia.AVISO, "mercado", "hallazgo", {"jugador": String(h.get("pid", ""))})
+		ev["jugador_id"] = String(h.get("pid", ""))
+		ev["nombre"] = Nombres.visible(String(h.get("nombre", "")))
+		out.append(ev)
+	return out
+
+## Los retos de la semana (`RetosSemana.activos`): se anuncian al estrenarse (una vez por semana), aviso en «vestuario».
+static func de_retos(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	var r: RetosSemana = m.retos_semana
+	if r == null or r.activos.is_empty():
+		return out
+	var id := "retos:%d" % _abs(m)
+	if not _nuevo(est, id):
+		return out
+	var ev := _ev(id, "retos_semana", EventosDia.AVISO, "vestuario", "retos_semana", {"n": r.activos.size()})
+	ev["retos"] = r.activos.duplicate(true)
+	out.append(ev)
+	return out
+
+## Un cambio de entrenador en TU liga esta semana (`MercadoDT.historial`): aviso de prensa. El tuyo lo cuenta la directiva.
+static func de_cambio_dt(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	var liga := m.liga_de(m.mi_club())
+	if liga == null:
+		return out
+	var nombres: Array[String] = []
+	for c: Club in liga.clubes:
+		nombres.append(c.nombre)
+	for h: Dictionary in MercadoDT.de(m).historial:
+		if int(h.get("anio", -1)) != m.anio or int(h.get("semana", -1)) != m.semana or not nombres.has(String(h.get("club", ""))):
+			continue
+		var id := "cambio_dt:%s:%d:%d" % [String(h["club"]), m.anio, m.semana]
+		if not _nuevo(est, id):
+			continue
+		var ev := _ev(id, "cambio_dt", EventosDia.AVISO, "prensa", "cambio_dt", {"club": String(h["club"]), "sale": String(h.get("sale", "")), "entra": String(h.get("entra", ""))})
+		out.append(ev)
+	return out
+
+## Una selección te llama (`CargoSeleccion.oferta`): PANTALLA, es una decisión de carrera.
+static func de_seleccion(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	if m.selecciones == null or m.selecciones.cargo.oferta.is_empty():
+		return out
+	var o: Dictionary = m.selecciones.cargo.oferta
+	var id := "seleccion:%s:%d" % [String(o.get("nombre", "")), _abs(m)]
+	if not _nuevo(est, "seleccion:%s" % String(o.get("nombre", ""))):
+		return out
+	out.append(_ev(id, "oferta_seleccion", EventosDia.PANTALLA, "", "oferta_seleccion", {"seleccion": String(o.get("nombre", "")), "fuerza": int(o.get("fuerza", 0)), "sueldo": int(o.get("sueldo", 0))}))
+	return out
+
+## El tribunal sanciona al DT (`Federacion.dt_suspension`): aviso en «prensa» con las fechas.
+static func de_sancion_dt(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	if m.federacion == null or m.federacion.dt_suspension <= 0:
+		return out
+	var id := "sancion:%d" % _abs(m)
+	if not _nuevo(est, "sancion:%d" % m.federacion.dt_suspension):
+		return out
+	out.append(_ev(id, "sancion_dt", EventosDia.AVISO, "prensa", "sancion_dt", {"fechas": m.federacion.dt_suspension}))
 	return out

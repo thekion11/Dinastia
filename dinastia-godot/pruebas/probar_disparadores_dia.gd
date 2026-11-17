@@ -26,6 +26,7 @@ func _ready() -> void:
 		_caja(m, e)
 		_imprevistos(m, e)
 		_premio(m, e)
+		_segunda(m, e)
 		_sin_efectos(m, e)
 	print("FIN. %d fallos" % fallos)
 	get_tree().quit()
@@ -99,3 +100,34 @@ func _sin_efectos(m: Mundo, e: String) -> void:
 	DisparadoresDia.consultar(m, est)
 	DisparadoresDia.consultar(m, est)
 	_ok(antes == [m.directiva.confianza, m.mi_club().saldo, m.imprevistos.recientes.size(), m.semana], "%s: consultar no cambia el estado de la partida" % e)
+
+func _segunda(m: Mundo, e: String) -> void:
+	var est := DisparadoresDia.nuevo_estado()
+	m.retos_semana.activos = []   ## el mundo nuevo ya trae los retos de su primera semana: se prueban aparte
+	_ok(DisparadoresDia.de_segunda_tanda(m, est).is_empty(), "%s: sin causas, la segunda tanda no inventa nada" % e)
+	m.cantera.exigencia = {"tipo": "mejora", "agente": "Agente X", "pid": "p", "ids": [], "perfil": "tiburon", "txt": "Exige mejorar un contrato."}
+	var a := DisparadoresDia.de_guerra_agentes(m, est)
+	_ok(a.size() == 1 and String(a[0]["tipo"]) == "guerra_agentes" and String(a[0]["clase"]) == EventosDia.PANTALLA, "%s: guerra de agentes abierta = PANTALLA" % e)
+	_ok(DisparadoresDia.de_guerra_agentes(m, est).is_empty(), "%s: la guerra de agentes sale una vez" % e)
+	m.cantera.exigencia = {}
+	m.eventos_cantera.pendiente = {"tipo": "abandono", "id": "c1", "nombre": "Chico", "tema": "Quiere dejar el fútbol."}
+	var b := DisparadoresDia.de_cantera(m, est)
+	_ok(b.size() == 1 and String(b[0]["zona"]) == "cantera" and String(b[0]["clase"]) == EventosDia.AVISO, "%s: asunto de cantera = AVISO de cantera" % e)
+	_ok(DisparadoresDia.de_cantera(m, est).is_empty(), "%s: el asunto de cantera sale una vez" % e)
+	m.eventos_cantera.pendiente = {}
+	m.ojeadores.hallazgos.append({"pid": m.mi_club().plantilla[0].id, "nombre": "Pepe", "anio": m.anio, "semana": m.semana})
+	var c := DisparadoresDia.de_ojeadores(m, est)
+	_ok(c.size() == 1 and String(c[0]["zona"]) == "mercado", "%s: hallazgo de ojeadores = AVISO de mercado" % e)
+	_ok(DisparadoresDia.de_ojeadores(m, est).is_empty(), "%s: el hallazgo sale una vez" % e)
+	m.retos_semana.activos = [{"id": "ganar", "texto": "Ganar", "premio": 1000}]
+	var d := DisparadoresDia.de_retos(m, est)
+	_ok(d.size() == 1 and String(d[0]["zona"]) == "vestuario" and DisparadoresDia.de_retos(m, est).is_empty(), "%s: retos de la semana = AVISO de vestuario, una vez" % e)
+	m.retos_semana.activos = []
+	m.selecciones.cargo.oferta = {"nombre": "Selección Z", "fuerza": 70, "sueldo": 1000}
+	var f := DisparadoresDia.de_seleccion(m, est)
+	_ok(f.size() == 1 and String(f[0]["clase"]) == EventosDia.PANTALLA and DisparadoresDia.de_seleccion(m, est).is_empty(), "%s: llamada de selección = PANTALLA, una vez" % e)
+	m.selecciones.cargo.oferta = {}
+	m.federacion.dt_suspension = 2
+	var g := DisparadoresDia.de_sancion_dt(m, est)
+	_ok(g.size() == 1 and String(g[0]["zona"]) == "prensa" and DisparadoresDia.de_sancion_dt(m, est).is_empty(), "%s: sanción al DT = AVISO de prensa, una vez" % e)
+	m.federacion.dt_suspension = 0
