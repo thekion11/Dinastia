@@ -9115,7 +9115,11 @@
   "Todo en orden esta semana.": "Everything in order this week.",
   "Pretemporada": "Pre-season",
   "Jornada": "Matchday",
-  "Levantarse del PC": "Leave the PC"
+  "Levantarse del PC": "Leave the PC",
+  "Guardar y cargar partida": "Save and load game",
+  "Ayuda y glosario": "Help and glossary",
+  "Créditos y novedades": "Credits and news",
+  "Salir al menú inicial": "Back to the start menu"
  },
  "pt": {
   "Historia": "História",
@@ -18233,7 +18237,11 @@
   "Todo en orden esta semana.": "Tudo em ordem esta semana.",
   "Pretemporada": "Pré-temporada",
   "Jornada": "Rodada",
-  "Levantarse del PC": "Levantar do PC"
+  "Levantarse del PC": "Levantar do PC",
+  "Guardar y cargar partida": "Salvar e carregar partida",
+  "Ayuda y glosario": "Ajuda e glossário",
+  "Créditos y novedades": "Créditos e novidades",
+  "Salir al menú inicial": "Voltar ao menu inicial"
  },
  "patrones": [
   [
@@ -33623,7 +33631,11 @@
   "Todo en orden esta semana.": "Tout est en ordre cette semaine.",
   "Pretemporada": "Pré-saison",
   "Jornada": "Journée",
-  "Levantarse del PC": "Quitter le PC"
+  "Levantarse del PC": "Quitter le PC",
+  "Guardar y cargar partida": "Sauvegarder et charger",
+  "Ayuda y glosario": "Aide et glossaire",
+  "Créditos y novedades": "Crédits et nouveautés",
+  "Salir al menú inicial": "Retour au menu initial"
  },
  "it": {
   "Historia": "Storia",
@@ -42741,7 +42753,11 @@
   "Todo en orden esta semana.": "Tutto in ordine questa settimana.",
   "Pretemporada": "Pre-campionato",
   "Jornada": "Giornata",
-  "Levantarse del PC": "Alzarsi dal PC"
+  "Levantarse del PC": "Alzarsi dal PC",
+  "Guardar y cargar partida": "Salva e carica partita",
+  "Ayuda y glosario": "Aiuto e glossario",
+  "Créditos y novedades": "Crediti e novità",
+  "Salir al menú inicial": "Torna al menu iniziale"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51859,7 +51875,11 @@
   "Todo en orden esta semana.": "Diese Woche ist alles in Ordnung.",
   "Pretemporada": "Vorbereitung",
   "Jornada": "Spieltag",
-  "Levantarse del PC": "Vom PC aufstehen"
+  "Levantarse del PC": "Vom PC aufstehen",
+  "Guardar y cargar partida": "Spiel speichern und laden",
+  "Ayuda y glosario": "Hilfe und Glossar",
+  "Créditos y novedades": "Credits und Neuigkeiten",
+  "Salir al menú inicial": "Zurück zum Startmenü"
  },
  "ca": {
   "Historia": "Història",
@@ -60977,7 +60997,11 @@
   "Todo en orden esta semana.": "Tot en ordre aquesta setmana.",
   "Pretemporada": "Pretemporada",
   "Jornada": "Jornada",
-  "Levantarse del PC": "Aixecar-se del PC"
+  "Levantarse del PC": "Aixecar-se del PC",
+  "Guardar y cargar partida": "Desar i carregar partida",
+  "Ayuda y glosario": "Ajuda i glossari",
+  "Créditos y novedades": "Crèdits i novetats",
+  "Salir al menú inicial": "Tornar al menú inicial"
  },
  "pl": {
   "Club": "Klub",
@@ -70095,7 +70119,11 @@
   "Todo en orden esta semana.": "W tym tygodniu wszystko w porządku.",
   "Pretemporada": "Przedsezonowy okres",
   "Jornada": "Kolejka",
-  "Levantarse del PC": "Wstań od komputera"
+  "Levantarse del PC": "Wstań od komputera",
+  "Guardar y cargar partida": "Zapisz i wczytaj grę",
+  "Ayuda y glosario": "Pomoc i słowniczek",
+  "Créditos y novedades": "Autorzy i nowości",
+  "Salir al menú inicial": "Powrót do menu głównego"
  },
  "tr": {
   "Club": "Kulüp",
@@ -79213,6 +79241,10 @@
   "Todo en orden esta semana.": "Bu hafta her şey yolunda.",
   "Pretemporada": "Sezon öncesi",
   "Jornada": "Hafta",
-  "Levantarse del PC": "Bilgisayardan kalk"
+  "Levantarse del PC": "Bilgisayardan kalk",
+  "Guardar y cargar partida": "Oyunu kaydet ve yükle",
+  "Ayuda y glosario": "Yardım ve sözlük",
+  "Créditos y novedades": "Emekçiler ve yenilikler",
+  "Salir al menú inicial": "Başlangıç menüsüne dön"
  }
 }

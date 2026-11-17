@@ -119,14 +119,17 @@ static func noticia(p: Principal, c: Club, liga: Liga, acento: Color) -> Control
 	var b: Button = tc[0]
 	var v: VBoxContainer = tc[1]
 	var n := EscaparateNoticia.de(p, c, liga)
-	var js: Array = n.get("jugadores", [])
-	_escena(b, "vestuario", Color(EscaparateBarra.color_de(c)))
-	if js.size() >= 2:   ## la escena: dos futbolistas del club con la chaqueta del club, uno a cada lado, mirándose
-		_imagen(b, _cara(js[1], c), Vector4(0.05, 0.0, 0.55, 1.0), 1)
-		_imagen(b, _cara(js[0], c), Vector4(0.45, 0.0, 0.95, 1.0), 2)
-	elif js.size() == 1:
-		_imagen(b, _cara(js[0], c), Vector4(0.25, 0.0, 0.75, 1.0), 1)
-	_velo(b, 1 + mini(js.size(), 2), 0.45)
+	## (17-11, veredicto del dueño) Sin futbolistas en primer plano con la cara grande: el estadio dibujado en los colores del club y su escudo grande.
+	EscaparateArte.poner(b, "estadio", c)
+	var esc := TextureRect.new()
+	esc.texture = Escudo.textura(c, 200)
+	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	esc.anchor_left = 0.62; esc.anchor_right = 0.96; esc.anchor_top = 0.04; esc.anchor_bottom = 0.64
+	esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(esc)
+	b.move_child(esc, 1)
+	_velo(b, 2, 0.45)
 	_al_fondo(v)
 	var t := EstiloAvanzar.etiqueta(String(n["titulo"]), 24, Color.WHITE, true)
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -154,31 +157,54 @@ static func noticia(p: Principal, c: Club, liga: Liga, acento: Color) -> Control
 
 ## La tabla de diez filas: posición, escudo, club y puntos, en letra grande y con aire. Si vas por debajo del 10.º, tu fila sustituye a la última.
 static func tabla(p: Principal, c: Club, liga: Liga, acento: Color) -> Control:
-	var tc := TableroInicio.tarjeta(Idiomas.t("Tabla de posiciones"), acento, func() -> void: TableroInicio.abrir(p, "Ligas y clubes"))
+	var base := EscaparateZonas.color_liga(liga)
+	var tc := TableroInicio.tarjeta(Idiomas.t("Tabla de posiciones"), acento, func() -> void: TableroInicio.abrir(p, "Ligas y clubes"), base.darkened(0.35))
 	var b: Button = tc[0]
 	var v: VBoxContainer = tc[1]
 	v.add_theme_constant_override("separation", 0)
 	if liga == null:
 		TableroInicio.cerrar(b)
 		return b
+	var cab := HBoxContainer.new()   ## arriba: el símbolo recreado de la liga, su nombre y la leyenda mínima de las zonas
+	cab.add_theme_constant_override("separation", 8)
+	cab.add_child(EscaparateZonas.simbolo(liga, 26))
+	var nl := EstiloAvanzar.etiqueta(liga.nombre, 17, Color.WHITE, true)
+	nl.clip_text = true
+	nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	nl.custom_minimum_size.x = 60
+	cab.add_child(nl)
 	var t: Array = liga.tabla()
+	var zonas := EscaparateZonas.de(liga, t.size())
+	for z: Dictionary in EscaparateZonas.leyenda(zonas):
+		var pt := ColorRect.new()
+		pt.color = z["color"]
+		pt.custom_minimum_size = Vector2(9, 9)
+		pt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		cab.add_child(pt)
+		var lg := EstiloAvanzar.etiqueta(String(z["nombre"]), 11, Color(1, 1, 1, 0.85))
+		lg.tooltip_text = String(z["largo"])
+		cab.add_child(lg)
+	v.add_child(cab)
 	var mio := 0
 	for i in t.size():
 		if t[i]["club"] == c:
 			mio = i
-	var filas: Array = range(mini(10, t.size()))
+	var filas: Array = range(mini(9, t.size()))
 	for i: int in filas:
-		_fila(v, t, i, c, acento)
-	if mio >= 10:   ## fuera del top 10: una línea fina y tu fila, resaltada
+		_fila(v, t, i, c, acento, zonas[i])
+	if mio >= 9:   ## fuera de las primeras: una línea fina y tu fila, resaltada
 		var linea := ColorRect.new()
 		linea.color = Color(1, 1, 1, 0.3)
 		linea.custom_minimum_size = Vector2(0, 1)
 		v.add_child(linea)
-		_fila(v, t, mio, c, acento)
+		_fila(v, t, mio, c, acento, zonas[mio])
+	elif t.size() > 9:
+		_fila(v, t, 9, c, acento, zonas[9])
 	TableroInicio.cerrar(b)
 	return b
 
-static func _fila(v: VBoxContainer, t: Array, i: int, c: Club, acento: Color) -> void:
+static func _fila(v: VBoxContainer, t: Array, i: int, c: Club, acento: Color, zona: Dictionary = {}) -> void:
 	var club: Club = t[i]["club"]
 	var col := acento.lightened(0.35) if club == c else Color.WHITE
 	var h := HBoxContainer.new()
@@ -194,6 +220,15 @@ static func _fila(v: VBoxContainer, t: Array, i: int, c: Club, acento: Color) ->
 		v.add_child(pc)
 	else:
 		v.add_child(h)
+	var barra := ColorRect.new()   ## la barrita de la zona (continental con el color de su torneo, rojo en el descenso) y, para el líder, el oro
+	barra.color = zona.get("color", Color(0, 0, 0, 0))
+	barra.custom_minimum_size = Vector2(4, 0)
+	h.add_child(barra)
+	h.move_child(barra, 0)
+	if i == 0:
+		col = EscaparateZonas.ORO
+	elif String(zona.get("clave", "")) == "descenso":
+		col = EscaparateZonas.ROJO.lightened(0.25)
 	var pos := EstiloAvanzar.etiqueta("%d" % (i + 1), 15, col, true)
 	pos.custom_minimum_size.x = 30
 	pos.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -220,14 +255,16 @@ static func despacho(p: Principal, c: Club, acento: Color) -> Control:
 	var tc := TableroInicio.tarjeta(Idiomas.t("Despacho"), acento, func() -> void: EscaparatePantalla.de(p).abrir_despacho(p), Color(0.05, 0.07, 0.09, 1.0))
 	var b: Button = tc[0]
 	var v: VBoxContainer = tc[1]
-	EscaparateArte.poner(b, "contratos", c)
+	EscaparateArte.poner(b, "despacho_%d" % (0 if n == 0 else (1 if n <= 2 else 2)), c)   ## tres estados del escritorio
 	_velo(b, 1, 0.3)
 	_al_fondo(v)
 	var cont := EstiloAvanzar.etiqueta(("● %d" % n) if n > 0 else "0", 44, Color("ffc857") if n > 0 else Color.WHITE, true)
 	cont.add_theme_constant_override("outline_size", 6)
 	cont.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
 	v.add_child(cont)
-	var t := EstiloAvanzar.etiqueta(Idiomas.t("asuntos por decidir") if n > 0 else Idiomas.t("Sin asuntos pendientes"), 16, Color.WHITE)
+	var t := EstiloAvanzar.etiqueta(Idiomas.t("asuntos por decidir") if n > 0 else Idiomas.t("Sin asuntos pendientes"), 15, Color.WHITE)
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	t.max_lines_visible = 2
 	t.add_theme_constant_override("outline_size", 4)
 	t.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
 	v.add_child(t)

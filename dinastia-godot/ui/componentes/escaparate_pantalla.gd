@@ -77,10 +77,8 @@ func repintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 			TableroInicio.pestana = i
 			TableroInicio._marcar(botones)
 			_pintar_cuerpo(p, c, liga, dias, acento)
-			if i == 0 and ya:   ## «Avanzar en el tiempo» pulsada estando ya en ella: el desplegable de Avanzar 1 día / Siguiente
-				var av: Variant = p._guia.nodos.get("b_avanzar")
-				if is_instance_valid(av) and (av as Button).visible:
-					BotonesAvance.desplegar(p))
+			if i == 0 and not p._avance.dias().partido_hoy():   ## «Avanzar en el tiempo» (el botón Avanzar del pie ya no está): desplegable «Avanzar 1 día / Siguiente»; en día de partido, Jugar/Saltar están en el pie
+				BotonesAvance.desplegar(p, b))
 	EscaparateBarra.completar(p, hb, botones, c)
 	TableroInicio._marcar(botones)
 	_pintar_cuerpo(p, c, liga, dias, acento)
@@ -179,3 +177,29 @@ func _cablear_luego() -> void:
 		var p := get_parent() as Principal
 		var riel: Array = p._menu_lateral.find_children("*", "Button", true, false) if p != null and p._menu_lateral != null else []
 		EscaparateFoco.cablear(self, riel)
+
+## «Sistema» (barra de arriba): lo que NO son ajustes del juego: guardar, cargar, salir al menú inicial o del juego, ayuda y glosario, créditos. (Los ajustes de gráficos, sonido, controles,
+## idioma y juego están en «Ajustes» de la barra lateral.)
+func abrir_sistema(p: Principal) -> void:
+	var pn := EscaparatePanel.abrir(p, self, Idiomas.t("Sistema"))
+	var lista := pn.contenedor
+	var filas: Array = [
+		[Idiomas.t("Guardar y cargar partida"), func() -> void: p._ir_a_chip({"tab": "Ajustes", "secc": "partida"})],
+		[Idiomas.t("Ayuda y glosario"), func() -> void: TableroInicio.abrir(p, "Glosario")],
+		[Idiomas.t("Créditos y novedades"), func() -> void: p._ir_a_chip({"tab": "Ajustes", "secc": "partida"})],
+		[Idiomas.t("Salir al menú inicial"), func() -> void:
+			p._partida.autoguardar_si_toca()
+			p.get_tree().change_scene_to_file("res://escenas/entrada.tscn")],
+		[Idiomas.t("Salir del juego"), func() -> void: p.get_tree().root.propagate_notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)]]
+	for f: Array in filas:
+		var b := Button.new()
+		b.text = String(f[0])
+		b.custom_minimum_size = Vector2(0, 56)
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.add_theme_font_size_override("font_size", Tema.letra(20))
+		var accion: Callable = f[1]
+		b.pressed.connect(func() -> void:
+			pn.cerrar()
+			accion.call())
+		lista.add_child(b)
+	pn.enfocar()

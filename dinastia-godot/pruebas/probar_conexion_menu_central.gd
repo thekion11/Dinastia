@@ -102,12 +102,16 @@ func _una(cfg: Array) -> void:
 		if b is Button and ["Oficina del DT", "Base de datos", "Sistema"].has(String(b.get_meta("rotulo", ""))):
 			(b as Button).pressed.emit()
 			await _frames(4)
-			var abierto_algo := _abierto(pr) != null or (is_instance_valid(pant._busqueda) and pant._busqueda.visible)
+			var abierto_algo := _abierto(pr) != null or (is_instance_valid(pant._busqueda) and pant._busqueda.visible) or pant.find_child("Panel", true, false) != null
 			_ok(abierto_algo, "%s: «%s» abre algo" % [e, b.get_meta("rotulo")])
 			if is_instance_valid(pant._busqueda):
 				pant._busqueda.hide()
+			var pn_s := pant.find_child("Panel", true, false)
+			if pn_s != null:
+				pn_s.queue_free()
+				await _frames(3)
 			await _cerrar_menu(pr)
-	_ok(_barra(pant).find_child("BotonEntrarClub", true, false) != null or _barra(pant).find_child("HuecoLevantarse", true, false) != null, "%s: el extremo derecho de la barra tiene «Entrar al club» (o el hueco de «Levantarse del PC»)" % e)
+	_ok(pant.find_child("BotonEntrarClub", true, false) != null or pant.find_child("BotonLevantarse", true, false) != null, "%s: el pie tiene «Entrar al club» (o «Levantarse del PC»)" % e)
 	for rotulo: String in ["Oficina del DT", "Noticias y correo", "Tabla de posiciones", "Hinchada y socios"]:
 		var t2 := _tarjeta_con_nombre(pant, Idiomas.t(rotulo))
 		_ok(t2 != null, "%s: Inicio tiene la tarjeta «%s»" % [e, rotulo])

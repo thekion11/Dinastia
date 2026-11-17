@@ -65,8 +65,7 @@ static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, ac
 		abajo.add_child(t)
 	cuerpo.add_child(_franja(p, c))   ## abajo, para que el escudo que cuelga de la barra no tape la línea de estado
 
-## (17-11) La franja de abajo del Inicio, con los accesorios que vuelven: la LÍNEA DE ESTADO en FICHAS (cifra grande y su rótulo: jornada o «Pretemporada», sueldos, media, objetivo, confianza, socios),
-## los ACCESOS RÁPIDOS que se marcan en Ajustes (uno por favorito) y la FORMA (últimos 5 partidos). Una sola fila baja, para que las tarjetas conserven el alto.
+## (17-11) La franja de abajo del Inicio, con los accesorios que vuelven: los ACCESOS RÁPIDOS que se marcan en Ajustes (uno por favorito) y la FORMA (últimos 5 partidos). Una sola fila baja, para que las tarjetas conserven el alto.
 static func _ficha(valor: String, rotulo: String, col := Color.WHITE) -> Control:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", -3)
@@ -82,20 +81,7 @@ static func _ficha(valor: String, rotulo: String, col := Color.WHITE) -> Control
 static func _franja(p: Principal, c: Club) -> Control:
 	var f := HBoxContainer.new()
 	f.add_theme_constant_override("separation", 22)
-	f.custom_minimum_size.y = 44
-	var liga := p._liga_de(c)
-	var dir: Directiva = p.mundo.directiva
-	if liga != null:
-		if liga.jornada_actual <= 0:
-			f.add_child(_ficha(Idiomas.t("Pretemporada"), liga.nombre))
-		else:
-			f.add_child(_ficha("%d / %d" % [liga.jornada_actual, liga.jornadas()], "%s · %s" % [Idiomas.t("Jornada"), liga.nombre]))
-	f.add_child(_ficha(p._dinero(c.masa_salarial()), Idiomas.t("Sueldos/sem")))
-	f.add_child(_ficha("%.1f" % c.media(), Idiomas.t("Media")))
-	if dir != null and dir.objetivo != "":
-		f.add_child(_ficha(Idiomas.t(dir.objetivo), Idiomas.t("Objetivo")))
-		f.add_child(_ficha("%d" % dir.confianza, Idiomas.t("Confianza"), Tema.bien() if dir.confianza >= 50 else Tema.mal()))
-	f.add_child(_ficha(p._miles(c.socios), Idiomas.t("Socios")))
+	f.custom_minimum_size.y = 36
 	var relleno := Control.new()
 	relleno.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	relleno.mouse_filter = Control.MOUSE_FILTER_IGNORE

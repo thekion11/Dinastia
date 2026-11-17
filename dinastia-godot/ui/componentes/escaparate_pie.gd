@@ -39,15 +39,6 @@ static func crear(p: Principal) -> Control:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 14)
 	panel.add_child(fila)
-	var ayudas := HBoxContainer.new()
-	ayudas.add_theme_constant_override("separation", 14)
-	if Mando.hay_mando():
-		ayudas.add_child(PieMando._chip("R2 / A", Idiomas.t("Confirmar")))
-		ayudas.add_child(PieMando._chip("Cuadrado / B", Idiomas.t("Atrás")))
-	elif not DisplayServer.is_touchscreen_available():
-		ayudas.add_child(PieMando._chip(Idiomas.t("Intro"), Idiomas.t("Confirmar")))
-		ayudas.add_child(PieMando._chip(Idiomas.t("Esc"), Idiomas.t("Atrás")))
-	fila.add_child(ayudas)
 	var hueco := Control.new()
 	hueco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -62,6 +53,17 @@ static func crear(p: Principal) -> Control:
 			p._botones.remove_child(p._buscador)   ## el buscador vive en «Base de datos»
 		fila.add_child(p._botones)
 		_botones_grandes(p)
+		var av: Variant = p._guia.nodos.get("b_avanzar")   ## (17-11) el botón «Avanzar» del pie desaparece (queda «Avanzar en el tiempo» arriba): sigue existiendo y visible para el avance, pero sin ocupar sitio ni verse
+		if is_instance_valid(av):
+			var ba := av as Button
+			ba.clip_text = true
+			ba.custom_minimum_size = Vector2.ZERO
+			ba.size_flags_horizontal = Control.SIZE_SHRINK_END
+			ba.modulate = Color(1, 1, 1, 0)
+			ba.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			ba.focus_mode = Control.FOCUS_NONE
+			ba.add_theme_font_size_override("font_size", 1)
+			ba.text = ""
 	## (17-11) El sitio FIJO de salida, junto a Ayuda: dentro del PC de la oficina, «Levantarse del PC» (con la tecla Esc); fuera, «Entrar al club».
 	var pc := EscaparateBarra.pc_de(p)
 	var salir := _boton(Idiomas.t("Levantarse del PC") if pc != null else Idiomas.t("Entrar al club"),

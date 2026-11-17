@@ -31,7 +31,7 @@ static func montar(p: Principal, viejos: Array) -> void:
 	p._guia.nodos["avanzar_caja"] = p._botones
 
 ## El desplegable de «Avanzar» (como el del PES 2020, que ofrece «Avanzar 1 hora» y «Siguiente»): «Avanzar 1 día» y «Siguiente» (hasta el próximo evento).
-static func desplegar(p: Principal) -> void:
+static func desplegar(p: Principal, ancla: Control = null) -> void:   ## (17-11) `ancla`: de dónde cuelga el desplegable (la pestaña «Avanzar en el tiempo» del menú central)
 	var b: Button = p._guia.nodos["b_avanzar"]
 	var pop := b.get_node_or_null("Desplegable") as PopupMenu
 	if pop == null:
@@ -41,5 +41,5 @@ static func desplegar(p: Principal) -> void:
 		pop.add_item(Idiomas.t("Siguiente"), 1)
 		pop.id_pressed.connect(func(id: int) -> void: p._avance.dias().pulsar(id == 0))
 		b.add_child(pop)
-	var r := b.get_global_rect()
+	var r := (ancla if ancla != null else b).get_global_rect()
 	pop.popup(Rect2i(Vector2i(int(r.position.x), int(r.position.y + r.size.y)), Vector2i(maxi(int(r.size.x), 220), 0)))

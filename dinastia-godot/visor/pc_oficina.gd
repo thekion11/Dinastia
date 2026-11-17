@@ -159,6 +159,9 @@ func encender() -> void:
 	b.pressed.connect(apagar)
 	_capa.add_child(b)
 	_boton_levantar = b
+	var esc: Variant = _principal.get_meta("escaparate", null)   ## el Inicio del menú nuevo ya lleva su «Levantarse del PC» en el pie
+	if is_instance_valid(esc) and (esc as Control).visible:
+		b.visible = false
 	encendido.emit()
 
 ## Apaga el PC: el menú central se esconde y se congela (sigue vivo: Principal

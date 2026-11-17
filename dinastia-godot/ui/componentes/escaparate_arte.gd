@@ -67,6 +67,7 @@ func _draw() -> void:
 		"entrenamiento": _entrenamiento()
 		"personal": _personal()
 		"plantel": _plantel()
+		"despacho_0", "despacho_1", "despacho_2": _despacho(int(tipo.substr(tipo.length() - 1)))
 		_: EscaparateArte2.dibujar(self, tipo)
 
 func _enfermeria() -> void:
@@ -171,3 +172,28 @@ func _plantel() -> void:
 		_o(v.x, v.y, 6.2, c2 if q == 0 else c1); draw_arc(v, 6.2, 0, TAU, 16, Color.WHITE, 1.2)
 		var num := str(numeros[q]) if q < numeros.size() else str(q + 1)
 		_t(v.x - 3.2 * num.length(), v.y + 3.0, num, 8, Color.WHITE)
+
+## El escritorio del DT en tres estados (según los asuntos por decidir): 0 ordenado, 1 con pendientes (papeles y una carpeta abierta), 2 desbordado de papeles. Con luz de lámpara cálida.
+func _despacho(estado: int) -> void:
+	_p([Vector2(96, 6), Vector2(150, 6), Vector2(160, 70), Vector2(78, 70)], Color(1, 0.9, 0.6, 0.10))   ## el cono de la lámpara
+	_r(0, 64, 160, 36, MADERA); _r(0, 64, 160, 3, Color(1, 1, 1, 0.28)); _r(0, 90, 160, 10, Color(0, 0, 0, 0.18))
+	_r(34, 30, 52, 32, Color("1c2430")); _r(37, 33, 46, 26, Color("8fc2ea") if estado < 2 else Color("e5484d")); _r(56, 62, 8, 3, Color("2b323b"))   ## el monitor (rojo si desborda)
+	_r(120, 40, 4, 22, Color("2b323b")); _p([Vector2(106, 38), Vector2(130, 38), Vector2(124, 28), Vector2(112, 28)], c1)   ## la lámpara
+	_o(18, 56, 6, Color("fff3d0")); _r(12, 56, 12, 8, Color("e8e4d6")); _o(150, 58, 6, c2)   ## taza y bola del club
+	var papeles: int = [0, 3, 8][estado]
+	for i in papeles:
+		var x: float = 8.0 + fmod(i * 17.0, 120.0)
+		var y: float = 72.0 + float((i * 7) % 18) - float(i) * (1.0 if estado == 2 else 0.0)
+		var ang := (float(i % 5) - 2.0) * 0.13
+		var pts := [Vector2(0, 0), Vector2(24, 0), Vector2(24, 17), Vector2(0, 17)]
+		var m := PackedVector2Array()
+		for q: Vector2 in pts:
+			m.append(Vector2(x, y) + q.rotated(ang))
+		draw_colored_polygon(m, Color("f6f3ea") if i % 3 != 2 else Color("e8e0c8"))
+		draw_line(Vector2(x, y) + Vector2(3, 5).rotated(ang), Vector2(x, y) + Vector2(19, 5).rotated(ang), Color(0, 0, 0, 0.3), 1.0)
+	if estado >= 1:   ## la carpeta abierta y la nota con color de aviso
+		_p([Vector2(86, 70), Vector2(112, 68), Vector2(116, 90), Vector2(90, 92)], Color("d9b44a")); _p([Vector2(112, 68), Vector2(136, 70), Vector2(132, 92), Vector2(116, 90)], Color("e6c35c"))
+		_r(130, 56, 12, 12, Color("ffc857") if estado == 1 else Color("e5484d"))
+	if estado == 2:
+		for k in 4:
+			_r(40.0 + k * 22.0, 44.0 - k * 5.0, 20, 18.0 + k * 5.0, Color("f6f3ea")); _r(40.0 + k * 22.0, 44.0 - k * 5.0, 20, 2, Color(0, 0, 0, 0.2))

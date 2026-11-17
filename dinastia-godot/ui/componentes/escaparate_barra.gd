@@ -49,8 +49,8 @@ static func boton_pestana(texto: String, ancho := 1.35) -> Button:
 	b.toggle_mode = true
 	b.focus_mode = Control.FOCUS_ALL
 	b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN   ## (17-11) cada botón mide lo que su rótulo: el escudo queda centrado y nada se recorta
-	var ancho_txt := ThemeDB.fallback_font.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, 21).x
-	b.custom_minimum_size = Vector2(maxf(80.0, ancho_txt + 34.0), ALTO - 8)
+	var ancho_txt := ThemeDB.fallback_font.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, 19).x
+	b.custom_minimum_size = Vector2(maxf(70.0, ancho_txt + 22.0), ALTO - 8)
 	b.clip_contents = true
 	b.tooltip_text = texto
 	b.set_meta("rotulo", texto)
@@ -110,10 +110,10 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	var corona := Control.new()   ## (17-11) el escudo, centrado en el área útil (sin la barra lateral), colgando de la barra como en el PES
 	corona.name = "Corona"
 	corona.anchor_left = 0.5; corona.anchor_right = 0.5
-	corona.offset_left = -56.0; corona.offset_right = 56.0; corona.offset_top = 2.0; corona.offset_bottom = 114.0
+	corona.offset_left = -30.0; corona.offset_right = 30.0; corona.offset_top = 4.0; corona.offset_bottom = 60.0   ## (17-11) el escudo DENTRO de la altura de la barra: no tapa ninguna tarjeta
 	corona.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var esc := TextureRect.new()
-	esc.texture = Escudo.textura(c, 112)
+	esc.texture = Escudo.textura(c, 64)
 	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -133,6 +133,8 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 		var destino := String(par[1])
 		if destino == "Ligas y clubes":   ## «Base de datos»: abre un cuadro con el BUSCADOR y la puerta a «Ligas y clubes»
 			b.pressed.connect(func() -> void: EscaparatePantalla.de(p).abrir_busqueda(b))
+		elif destino == "*sistema":   ## «Sistema»: guardar, cargar, salir, ayuda y glosario, créditos (los ajustes del juego están en la barra lateral)
+			b.pressed.connect(func() -> void: EscaparatePantalla.de(p).abrir_sistema(p))
 		else:
 			b.pressed.connect(func() -> void: TableroInicio.abrir(p, destino))
 		hb.add_child(b)
@@ -149,7 +151,7 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	var cb := Button.new()   ## (17-11) la caja se pulsa: lleva a las cuentas del club
 	cb.flat = true
 	cb.focus_mode = Control.FOCUS_ALL
-	cb.custom_minimum_size = Vector2(150, ALTO - 8)
+	cb.custom_minimum_size = Vector2(140, ALTO - 8)
 	cb.tooltip_text = Idiomas.t("Cuentas del club")
 	cb.pressed.connect(func() -> void: TableroInicio.abrir(p, "Cuentas del club"))
 	caja.set_anchors_preset(Control.PRESET_FULL_RECT)
