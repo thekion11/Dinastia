@@ -164,7 +164,7 @@ static func de_guerra_agentes(m: Mundo, est: Dictionary) -> Array:
 	out.append(ev)
 	return out
 
-## El asunto abierto de la cantera (`EventosCantera.pendiente`): torneo, abandono o padres; aviso en la zona «cantera».
+## El asunto abierto de la cantera (`EventosCantera.pendiente`): torneo, abandono o padres. Es una DECISIÓN con opciones (`DecisionesDia`): pantalla completa.
 static func de_cantera(m: Mundo, est: Dictionary) -> Array:
 	var out: Array = []
 	if m.eventos_cantera == null or m.eventos_cantera.pendiente.is_empty():
@@ -173,7 +173,7 @@ static func de_cantera(m: Mundo, est: Dictionary) -> Array:
 	var id := "cantera:%s:%s:%d" % [String(p.get("tipo", "")), String(p.get("id", "")), _abs(m)]
 	if not _nuevo(est, "cantera:%s:%s" % [String(p.get("tipo", "")), String(p.get("id", ""))]):
 		return out
-	var ev := _ev(id, "evento_cantera", EventosDia.AVISO, "cantera", "evento_cantera", {"tipo": String(p.get("tipo", "")), "chico": String(p.get("id", ""))})
+	var ev := _ev(id, "evento_cantera", EventosDia.PANTALLA, "", "evento_cantera", {"tipo": String(p.get("tipo", "")), "chico": String(p.get("id", ""))})
 	ev["texto"] = Idiomas.t(String(p.get("tema", "")))
 	out.append(ev)
 	return out

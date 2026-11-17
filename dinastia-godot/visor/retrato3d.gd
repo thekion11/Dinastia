@@ -37,6 +37,8 @@ static var _cola: Array = []
 var _vp: SubViewport
 var _cam: Camera3D
 var _rim: DirectionalLight3D
+var _sol: DirectionalLight3D
+var _relleno: DirectionalLight3D
 var _ocupado := false
 var _spawner = load("res://visor/player_spawner.gd").new()
 
@@ -123,6 +125,10 @@ func _modo(tam: int, k1: String, env: Environment) -> bool:
 	_vp.msaa_3d = Viewport.MSAA_4X if escap else Viewport.MSAA_2X
 	env.background_mode = Environment.BG_CLEAR_COLOR if escap else Environment.BG_COLOR
 	_rim.light_energy = 1.1 if escap else 0.0
+	## (17-11) luz más baja en el escaparate (igual que la previa del partido): las caras no se queman
+	_sol.light_energy = 0.65 if escap else 1.2
+	_relleno.light_energy = 0.2 if escap else 0.45
+	env.tonemap_exposure = 0.72 if escap else 1.0
 	_rim.light_color = Color(k1).lightened(0.35)
 	return escap
 
@@ -148,10 +154,12 @@ func _ready() -> void:
 	we.environment = env
 	_vp.add_child(we)
 	var sol := DirectionalLight3D.new()
+	_sol = sol
 	sol.rotation_degrees = Vector3(-28, 28, 0)
 	sol.light_energy = 1.2
 	_vp.add_child(sol)
 	var relleno := DirectionalLight3D.new()
+	_relleno = relleno
 	relleno.rotation_degrees = Vector3(-10, -140, 0)
 	relleno.light_energy = 0.45
 	_vp.add_child(relleno)
@@ -208,8 +216,8 @@ func _servir() -> void:
 			_cam.position = Vector3(0.0, alto * 0.93, 1.1)   ## (10-11) algo más abierto: entran el pelo y la barbilla enteros
 			_cam.look_at(Vector3(0.0, alto * 0.912, 0.0), Vector3.UP)
 		elif escap:   ## (17-11) de la cintura para arriba y un poco más abierto: cabeza, hombros y la chaqueta del club
-			_cam.position = Vector3(0.0, alto * 0.86, 2.05)
-			_cam.look_at(Vector3(0.0, alto * 0.82, 0.0), Vector3.UP)
+			_cam.position = Vector3(0.0, alto * 0.9, 2.15)   ## (17-11) más margen arriba: pelo y coronilla enteros
+			_cam.look_at(Vector3(0.0, alto * 0.875, 0.0), Vector3.UP)
 		else:
 			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
 			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
@@ -242,8 +250,8 @@ func _servir_dt(job: Dictionary) -> void:
 			_cam.position = Vector3(0.0, alto * 0.93, 1.1)   ## (10-11) algo más abierto: entran el pelo y la barbilla enteros
 			_cam.look_at(Vector3(0.0, alto * 0.912, 0.0), Vector3.UP)
 		elif escap:
-			_cam.position = Vector3(0.0, alto * 0.86, 2.05)
-			_cam.look_at(Vector3(0.0, alto * 0.82, 0.0), Vector3.UP)
+			_cam.position = Vector3(0.0, alto * 0.9, 2.15)   ## (17-11) más margen arriba: pelo y coronilla enteros
+			_cam.look_at(Vector3(0.0, alto * 0.875, 0.0), Vector3.UP)
 		else:
 			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
 			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)

@@ -257,12 +257,12 @@ func _abrir(clave: String) -> void:
 	_icono_modal.texture = PreviaMenuPartido.icono(clave)
 	_cuerpo.alignment = BoxContainer.ALIGNMENT_BEGIN
 	match clave:
-		"uniforme": PanelesMenuPartido.uniforme(self, _cuerpo)
-		"estadio": PanelesMenuPartido.estadio(self, _cuerpo)
+		"uniforme": PanelesVistas3D.uniforme(self, _cuerpo)
+		"estadio": PanelesVistas3D.estadio(self, _cuerpo)
 		"saque": PanelesMenuPartido.saque(self, _cuerpo)
 		"plan": PanelesMenuPartido.plan(self, _cuerpo)
 		"opciones": PanelesMenuPartido.opciones(self, _cuerpo)
-		"camara": PanelesMenuPartido.camara(self, _cuerpo)
+		"camara": PanelesVistas3D.camara(self, _cuerpo)
 	_modal.visible = true
 	_resumen()
 	PreviaMenuPartido.enfocar_panel.call_deferred(_cuerpo, _botones[clave])

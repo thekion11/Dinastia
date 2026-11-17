@@ -27,6 +27,8 @@ const CENTRO_Y := 1.33
 const ALTURA := 1.84           ## los dos a la MISMA escala (y la misma línea de base), sea cual sea su altura real
 const GIRO_TORSO := 0.35       ## ~20° hacia el centro de la pantalla; la cabeza vuelve a mirar a cámara
 const DISTANCIA := 6.0
+## La luz del estudio (las pruebas la varían para comparar).
+static var luz := {"key": 0.65, "relleno": 0.2, "rim": 0.7, "exp": 0.72, "amb": 0.2}   ## (Auditoría) más suave sobre la piel: con 0,9/1,3/0,85 las pieles claras salían blancas
 
 static func crear(c: Club, j: Jugador, cols: Array, giro: float) -> RetratoJugador3D:
 	if DisplayServer.get_name() == "headless" or c == null or j == null:
@@ -54,9 +56,9 @@ func montar() -> void:
 	env.background_mode = Environment.BG_CLEAR_COLOR
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.62, 0.64, 0.74)
-	env.ambient_light_energy = 0.3
+	env.ambient_light_energy = float(luz["amb"])
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.tonemap_exposure = 0.85   ## fija: los blancos (pantalón y medias) no se queman y la cara y el dorsal se leen
+	env.tonemap_exposure = float(luz["exp"])   ## fija: los blancos (pantalón y medias) no se queman y la cara y el dorsal se leen
 	env.adjustment_enabled = true
 	env.adjustment_contrast = 1.06
 	env.adjustment_saturation = 1.06
@@ -78,14 +80,14 @@ func _luces() -> void:
 	var lado := -1.0 if gira > 0.0 else 1.0
 	var key := DirectionalLight3D.new()
 	key.light_color = Color(1.0, 0.95, 0.88)
-	key.light_energy = 0.9
+	key.light_energy = float(luz["key"])
 	key.shadow_enabled = true
 	key.shadow_blur = 2.0
 	key.rotation_degrees = Vector3(-28, 32 * lado, 0)
 	_raiz.add_child(key)
 	var relleno := DirectionalLight3D.new()
 	relleno.light_color = Color(0.78, 0.84, 1.0)
-	relleno.light_energy = 0.36
+	relleno.light_energy = float(luz["relleno"])
 	relleno.rotation_degrees = Vector3(-8, -60 * lado, 0)
 	_raiz.add_child(relleno)
 	var cc := Color(club.color_kit1()) if club != null else Color.WHITE
@@ -93,7 +95,7 @@ func _luces() -> void:
 	for x: float in [-1.0, 1.0]:
 		var rim := OmniLight3D.new()
 		rim.light_color = borde if x == lado else Color(0.85, 0.88, 1.0)
-		rim.light_energy = 1.3
+		rim.light_energy = float(luz["rim"])
 		rim.omni_range = 4.5
 		rim.position = Vector3(1.4 * x, 1.9, -1.6)
 		_raiz.add_child(rim)
@@ -155,9 +157,9 @@ func _congelar() -> void:
 			_ap.speed_scale = 0.5
 		else:
 			_ap.pause()
-	if not vivo:   ## quieto: se dibuja UNA vez al doble de resolución y se reduce (más nítido, sin coste por cuadro)
-		_vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
-		_vp.scaling_3d_scale = 2.0
+	## Sobremuestreo (Auditoría: dientes de sierra en hombros y cuello): quieto, al doble (se dibuja UNA vez); con la espera a 30 Hz, a 1,5.
+	_vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+	_vp.scaling_3d_scale = 1.5 if vivo else 2.0
 	_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
 	set_process(vivo)
 	if modulate.a < 1.0:
@@ -176,12 +178,21 @@ func _process(delta: float) -> void:
 
 ## El torso va girado hacia el centro; el cuello y la cabeza deshacen ese giro para mirar a cámara. Va como modificador del esqueleto (corre DESPUÉS
 ## de la animación cada vez que se actualiza y no se acumula), así vale tanto quieto como con la espera suave.
+## El ajuste de los brazos cruzados (eje local del hueso y grados): las pruebas lo varían para comparar.
+static var brazos := {"eje": Vector3.UP, "grados": 25.0}   ## (Auditoría) el cruce baja al estómago: en X delante del pecho tapaba el escudo
 class MirarCamara extends SkeletonModifier3D:
 	var giro := 0.0
+	var cruzados := false   ## el ajuste de los brazos solo con los brazos cruzados
 	func _process_modification() -> void:
 		var esq := get_skeleton()
 		if esq == null:
 			return
+		var g := float(RetratoJugador3D.brazos["grados"])
+		if g != 0.0 and cruzados:
+			for par: Array in [["upperarm_l", 1.0], ["upperarm_r", -1.0]]:
+				var k := esq.find_bone(String(par[0]))
+				if k >= 0:
+					esq.set_bone_pose_rotation(k, esq.get_bone_pose_rotation(k) * Quaternion(RetratoJugador3D.brazos["eje"], deg_to_rad(g) * float(par[1])))
 		for par: Array in [["neck_01", 0.45], ["Head", 0.55]]:
 			var i := esq.find_bone(String(par[0]))
 			if i >= 0:
@@ -193,4 +204,5 @@ func _mirar_a_camara() -> void:
 	var m := MirarCamara.new()
 	m.name = "MirarCamara"
 	m.giro = GIRO_TORSO * signf(gira)
+	m.cruzados = _ap != null and _ap.current_animation == "brazos_cruzados"
 	_esq.add_child(m)
