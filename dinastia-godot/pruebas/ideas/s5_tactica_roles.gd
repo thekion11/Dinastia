@@ -146,7 +146,9 @@ func _motor_3d() -> void:
 	var res := {}
 	for clave: String in ["base", "vertical", "contrapresion"]:
 		var s := {"tiros": 0, "pases": 0, "ok_rival": 0, "pases_rival": 0}
-		for semilla in [3, 5, 7]:
+		## (16-11, F-01) seis semillas y no tres: con el rival contrapresionando de verdad el equipo toma ~26 decisiones de pase por
+		## partido y la verticalidad (un peso en esa nota) podía no cambiar ninguna en tres partidos; con doce sí cambia (81 frente a 94 tiros).
+		for semilla in [3, 5, 7, 9, 11, 13]:
 			var r := _motor(semilla, clave)
 			var motor: MotorJugable = r[0]
 			while motor.estado != "fin":

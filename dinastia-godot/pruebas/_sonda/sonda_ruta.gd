@@ -38,24 +38,40 @@ func _ready() -> void:
 						mejor = f
 				c.foco = mejor
 			c.entrenar(m)
+			## (16-11) La semana en el orden de la interfaz (`CarreraJugadorUI._cerrar_semana`, camino simulado).
 			var titular := c.es_titular(m)
-			var goles_antes := j.goles
+			var antes := CarreraSemana.foto(j)
+			var previo: Variant = CarreraSemana.meter_en_el_once(c, m) if titular else null
+			CarreraRuta.retos(c, m)
 			m.avanzar_semana(null)
+			CarreraSemana.soltar_once(c, m, previo)
 			if titular:
-				var g := j.goles - goles_antes
-				j.goles -= g
+				var dm := CarreraSemana.lo_del_mundo(j, antes)
+				var g := int(dm["goles"])
 				var nota := clampf(5.6 + float(j.ovr - 55) * 0.04 + float(g) * 0.9 + randf_range(-0.6, 0.6), 4.0, 9.5)
-				c.tras_partido(m, {"minutos": 90, "goles": g, "asist": 0, "nota": snappedf(nota, 0.1), "titular": true, "encajados": randi_range(0, 2)})
+				c.tras_partido(m, {"minutos": 90, "goles": g, "asist": int(dm["asist"]), "nota": snappedf(nota, 0.1), "titular": true,
+					"encajados": randi_range(0, 2), "en_mundo": dm["en_mundo"]})
 			c.semana(m)
 			energia += c.energia
 			semanas += 1
 		var j2 := c.jugador(m)
 		var s: Dictionary = c.stats_temp
-		print("T%d %s | media %d (techo %d) edad %d | nivel %d %s | fama %d rel %d | pj %d goles %d nota %.2f | energia media %d | talentos %d+%d | premios %s" % [
+		print("T%d %s | media %d (techo %d) edad %d | nivel %d %s | fama %d rel %d | pj %d goles %d asist %d nota %.2f | energia media %d | talentos %d+%d | premios %s" % [
 			t + 1, c.club(m).nombre, j2.ovr, j2.pot, j2.edad, CarreraRuta.nivel(c), CarreraRuta.capitulo(c)[1], c.fama, c.relacion_dt,
-			int(s["pj"]), int(s["goles"]), c.nota_media(), energia / maxi(1, semanas), (c.ruta["talentos"] as Dictionary).size(), int(c.ruta["puntos"]),
+			int(s["pj"]), int(s["goles"]), int(s["asist"]), c.nota_media(), energia / maxi(1, semanas), (c.ruta["talentos"] as Dictionary).size(), int(c.ruta["puntos"]),
 			""])
-		c.fin_de_temporada(m)
+		CarreraSemana.cerrar_temporada(c, m)
+		## (16-11, R-03) Con quién compites por los premios de nota: la mejor nota de temporada de tu liga (15+ partidos) y la del club (10+).
+		var liga := CarreraRuta._liga_de(m, c.club(m))
+		var top_liga := 0.0
+		var top_club := 0.0
+		for cl: Club in (liga.clubes if liga != null else []):
+			for o: Jugador in cl.plantilla:
+				if o != j2:
+					top_liga = maxf(top_liga, o.media_temporada(CarreraPremios.PJ_LIGA))
+					if cl == c.club(m):
+						top_club = maxf(top_club, o.media_temporada(CarreraPremios.PJ_CLUB))
+		print("   ficha del mundo: pj %d goles %d asist %d · hab libres %d · mejor nota rival: club %.2f, liga %.2f" % [j2.partidos, j2.goles, j2.asistencias, CarreraHabilidad.puntos(c), top_club, top_liga])
 		print("   premios: %s · misiones cobradas: %s" % [str((c.ruta["temporada"] as Dictionary)["premios"]), str((c.ruta.get("misiones_hechas", {}) as Dictionary).keys())])
 		m.nueva_temporada()
 	get_tree().quit()

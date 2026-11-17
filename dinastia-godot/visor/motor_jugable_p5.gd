@@ -98,10 +98,33 @@ func _golpeo_anim(p: Dictionary, ap: AnimationPlayer, anim: String, destino: Vec
 			else:
 				ops = [anim]
 	var vivos: Array = ops.filter(func(n: String) -> bool: return ap.has_animation(n))
-	var nombre := String(vivos[_rng.randi() % vivos.size()]) if not vivos.is_empty() else anim
+	## (16-11, M6-21) El sorteo del gesto no gasta el `_rng` del motor: si no, el partido con la misma semilla dependía de qué clips había cargados.
+	var nombre := String(vivos[absi(hash(String(p.get("id", "")) + ":" + str(_n_patada))) % vivos.size()]) if not vivos.is_empty() else anim
 	if AnimExtra.es_zurdo(String(p.get("id", ""))) and ap.has_animation(nombre + "_espejo"):
 		nombre += "_espejo"
 	return nombre
+
+## (16-11, informe M6-06) La ley con que rueda el balón suelto, para quien lo PREDICE: aquí la de siempre; `MotorLeague` las cambia
+## por la de League cuando es su física la que mueve el balón (C4). Ver `visor/ley_balon.gd`.
+func _velocidad_pase(dist: float, sobra: float) -> float:
+	return LeyBalon.velocidad_siempre(dist, sobra)
+
+## (16-11, H1 A1.2) El PASE MANUAL raso (`_pase_manual`), con la ley que mueve el balón: aquí la de siempre y su sobra de 4 m
+## de antes (el motor de siempre no cambia); `MotorLeague` usa la de League (antes C4 lo pedía con esta y un 12 m rodaba 8,3).
+func _velocidad_pase_manual(dist: float) -> float:
+	return LeyBalon.velocidad_siempre(dist, 4.0)
+
+## El raso más largo que llega con la fuerza máxima de un pase; más lejos, por arriba.
+func _raso_max() -> float:
+	return 36.0
+
+## Cuánto más rápido hay que lanzar para que el aire no lo deje corto (ver `compensa_arrastre`).
+func _compensa_aire(vh: float, tv: float) -> float:
+	return 1.0 / (1.0 - minf(ARRASTRE_CUAD * vh * tv, 0.2))
+
+## (16-11, informe M6-10) El portero solo es intocable y lleva el balón «en la mano» dentro de su área; fuera, conduce como uno más.
+func _portero_intocable(p: Dictionary) -> bool:
+	return bool(p["por"]) and _en_su_area(p, pos(p))
 
 # ---------------------------------------------------------------- animación de los 22 en C++
 
@@ -159,7 +182,7 @@ func _anim_decidir_gd(res: PackedFloat64Array) -> PackedFloat64Array:
 		if float(p.get("gesto_hasta", 0.0)) > t:
 			continue
 		var sp := res[idx * 4 + 1]
-		var anim := "parado" if sp < 0.5 else ("trotar" if sp < 5.2 else "correr")
+		var anim := CicloCarrera.ciclo(sp, String(p.get("anim_actual", "")))   ## (17-11) igual que `animar_jugadores` (C++)
 		if poseedor == p and sp >= 0.5 and sp < 6.5:
 			anim = "conducir"
 		elif res[idx * 4 + 2] > 0.5:
@@ -182,7 +205,7 @@ func _anim_decidir_gd(res: PackedFloat64Array) -> PackedFloat64Array:
 			out[idx * 2] = -2.0
 			continue
 		out[idx * 2] = float(ANIMS_NAT.find(anim))
-		out[idx * 2 + 1] = clampf(sp / float(CICLO_ANIM[anim]), 0.7, 1.4) if CICLO_ANIM.has(anim) else 1.0
+		out[idx * 2 + 1] = CicloCarrera.escala(anim, sp)
 	return out
 
 ## Lo que dejaría `_anim(p, nombre, false)` en el jugador: [anim_actual, ls_pedido, ¿sigue ls_tiempo_de?].

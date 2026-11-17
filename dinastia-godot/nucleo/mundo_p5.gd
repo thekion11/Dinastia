@@ -5,6 +5,7 @@ extends "res://nucleo/mundo_p5_p2.gd"
 ## (Fase 0 §7.2, 31-10) La partida se guardó al salir de la entrada con el prólogo 3D aún por hacer:
 ## «Continuar» vuelve al prólogo (`CargaCiudad.de("VidaCiudad").arranque_3d` → "prologo").
 var prologo_pendiente := false
+var _entreno_mundo: Entrenamiento = null   ## (16-11, informe G-04) el entrenamiento del resto del mundo en La Ruta (sin club tuyo)
 
 ## Avanza una semana: jornada, dinero, mercado y recuperación, en ese orden.
 ##
@@ -152,6 +153,15 @@ func _semana_enfermeria() -> void:
 
 ## FASE 18 · EL ENTRENAMIENTO: tu plantel con su plan y el resto del mundo con el suyo.
 func _semana_entrenamiento() -> void:
+	if mi_club() == null and carrera_jugador != null:
+		## (16-11, informe G-04) En La Ruta no hay club tuyo y el mundo se quedaba congelado: entrena igual (tu futbolista va aparte).
+		if _entreno_mundo == null:
+			_entreno_mundo = Entrenamiento.new()
+		for c: Club in clubes.values():
+			for j: Jugador in c.plantilla:
+				if j.id != carrera_jugador.jugador_id:
+					_entreno_mundo.procesar_ajeno(j)
+		return
 	if entrenamiento == null or mi_club() == null:
 		return
 	entrenamiento.procesar_semana(mi_club(), anio, semana)

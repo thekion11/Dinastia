@@ -143,7 +143,7 @@ static func foto(club: Club) -> Dictionary:
 	var f := {}
 	for j: Jugador in club.plantilla:
 		f[j.id] = {"lesion": j.lesion, "suspension": j.suspension, "fisico": j.fisico, "amarillas": j.amarillas, "goles": j.goles,
-			"asistencias": j.asistencias, "partidos": j.partidos, "forma": j.forma, "moral": j.moral, "notas": j.notas.duplicate()}
+			"asistencias": j.asistencias, "partidos": j.partidos, "forma": j.forma, "moral": j.moral, "notas": j.notas.duplicate(), "nt": j.nota_temp}
 	return f
 
 static func restaurar(club: Club, f: Dictionary) -> void:
@@ -153,6 +153,7 @@ static func restaurar(club: Club, f: Dictionary) -> void:
 		var d: Dictionary = f[j.id]
 		j.lesion = int(d["lesion"]); j.suspension = int(d["suspension"]); j.fisico = int(d["fisico"]); j.amarillas = int(d["amarillas"])
 		j.goles = int(d["goles"]); j.asistencias = int(d["asistencias"]); j.partidos = int(d["partidos"]); j.forma = int(d["forma"]); j.moral = int(d["moral"])
+		j.nota_temp = d.get("nt", j.nota_temp)
 		j.notas.clear()
 		for x in d["notas"]:
 			j.notas.append(float(x))

@@ -97,7 +97,7 @@ func asistencia(gano_el_ultimo: bool = false) -> int:
 var precio_de_hoy: float = 0.0
 
 func taquilla(gano_el_ultimo: bool = false, factor_horario: float = 1.0) -> int:
-	var gente := int(round(float(asistencia(gano_el_ultimo)) * factor_horario))
+	var gente := mini(int(round(float(asistencia(gano_el_ultimo)) * factor_horario)), _club.estadio_aforo)   ## (16-11, informe G-06) el horario no supera el aforo
 	var precio: float = precio_de_hoy if precio_de_hoy > 0.0 else _club.precio_entrada
 	var monto := int(round(float(gente) * ingreso_por_espectador(precio)))
 	_club.mover_saldo(monto)
@@ -291,8 +291,9 @@ const MESES_TEMPORADA := 10   ## solo si no se sabe cuántos partidos hay en cas
 static func meses_de(partidos_en_casa: int) -> int:
 	return maxi(1, partidos_en_casa * 2 / SEMANAS_DEL_MES) if partidos_en_casa > 0 else MESES_TEMPORADA
 
-func proyeccion_anual(partidos_en_casa: int, ingreso_tienda_mes: int = 0) -> Dictionary:
-	var meses := meses_de(partidos_en_casa)
+## `meses_reales` (16-11, informe G-07): los cierres de mes del mundo (`Mundo.meses_de_la_temporada`), si se saben.
+func proyeccion_anual(partidos_en_casa: int, ingreso_tienda_mes: int = 0, meses_reales: int = 0) -> Dictionary:
+	var meses := meses_reales if meses_reales > 0 else meses_de(partidos_en_casa)
 	var ingresos := {
 		"Derechos de televisión": int(round(float(derechos_tv_base()) * factor_tv)) * meses,
 		"Patrocinio": patrocinio_base() * meses,

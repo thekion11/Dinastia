@@ -13,21 +13,12 @@ func _linea_tapada(a: Vector3, c: Vector3, local: bool) -> bool:
 ## Cuánto rueda un balón raso que sale a `v0`: con frenado dv/dt = -(k·v + c),
 ## x = v0/k - c/k²·ln(1 + k·v0/c).
 static func distancia_rodando(v0: float) -> float:
-	var k := ROCE_SUELO
-	var c := ROCE_FIJO
-	return v0 / k - c / (k * k) * log(1.0 + k * v0 / c)
+	return LeyBalon.rodando_siempre(v0)   ## (16-11, M6-06) las dos leyes del balón viven en `visor/ley_balon.gd`
 
 ## La velocidad para que un pase raso muera `sobra` metros después del destino: el compañero lo recibe en carrera sin que se le pase de largo.
+## Con la ley de siempre; el motor pide `_velocidad_pase`, que en C4 usa la de League (la que mueve el balón suelto).
 static func velocidad_para(dist: float, sobra := 2.5) -> float:
-	var lo := 1.0
-	var hi := 40.0
-	for _i in 24:
-		var mid := (lo + hi) * 0.5
-		if distancia_rodando(mid) < dist + sobra:
-			lo = mid
-		else:
-			hi = mid
-	return hi
+	return LeyBalon.velocidad_siempre(dist, sobra)
 
 ## `tenso` (RB): raso y fuerte, para romper líneas.
 func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, tenso := false) -> void:
@@ -47,19 +38,19 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 	## que está tapado y lejos, y a media altura.
 	_ctx_golpeo = "filtrado" if al_hueco else ""
 	var tapada := dist > 9.0 and _linea_tapada(pos(p), destino, bool(p["es_local"]))
-	var elevado := largo or ((dist > 36.0 or tapada) and not tenso)
+	var elevado := largo or ((dist > _raso_max() or tapada) and not tenso)   ## (16-11, M6-06) en C4 un raso de más de ~23 m no llega: va a media altura
 	if tenso and not largo:
-		_patear(p, destino, clampf(velocidad_para(dist, 9.0 + dist * 1.5) * 1.15, 12.0, 30.0), 0.0, 0.0, "pase")
+		_patear(p, destino, clampf(_velocidad_pase(dist, 9.0 + dist * 1.5) * 1.15, 12.0, 30.0), 0.0, 0.0, "pase")
 	elif elevado and largo and al_hueco:
 		## Al hueco bombeado: por encima de la línea, cae en el desmarque.
 		_patear(p, destino, clampf(dist * 0.42 + 6.0, 10.0, 18.0), 3.2, 0.0, "pase")
 	elif elevado:
 		## Envío por arriba: el tapado, picado por encima del defensor (bajo);
 		## el largo, con más vuelo.
-		_patear(p, destino, clampf(dist * 0.45 + 6.0, 10.0, 19.0), 0.25 if (tapada and dist < 25.0) else 2.0, 0.0, "pase")
+		_patear(p, destino, clampf(dist * 0.45 + 6.0, 10.0, 19.0), 0.25 if (tapada and dist < 25.0) else (1.0 if not largo and not tapada and dist <= 36.0 else 2.0), 0.0, "pase")
 	else:
 		## Con pace: el balón llega al compañero con fuerza, no muriéndose.
-		_patear(p, destino, clampf(velocidad_para(dist, 4.0 + dist * 1.5) * MotorPaseMejora.VEL_K, 7.0, 26.0 * MotorPaseMejora.VEL_K), 0.0, 0.0, "pase")
+		_patear(p, destino, clampf(_velocidad_pase(dist, 4.0 + dist * 1.5) * MotorPaseMejora.VEL_K, 7.0, 26.0 * MotorPaseMejora.VEL_K), 0.0, 0.0, "pase")
 	pase_a = q
 	MotorTraza.pase(self as Object as MotorJugable, p, q, dist)   ## traza (ciclo 13): solo cuenta
 	_pase_eq = 0 if bool(p["es_local"]) else 1

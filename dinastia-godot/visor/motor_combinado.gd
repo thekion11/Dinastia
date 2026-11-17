@@ -239,6 +239,9 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 func _ia_defensa(p: Dictionary) -> Vector3:
 	var r := _sin_flag3(p, false)
 	if _mejoras_c4:
+		var cierre := MejorasC4Area.objetivo(self, p)   ## (16-11, H1) cerrar al rematador dentro del área (`C4_CIERRE_AREA`)
+		if cierre != Vector3.INF:
+			return cierre
 		var cont := MejorasC4.contener_colocacion(self, p)
 		if cont != Vector3.INF:
 			return cont
@@ -293,16 +296,13 @@ func _interferir() -> void:
 	if not _nuestra("locomocion"):
 		super()
 
-func _mover_balon(delta: float) -> void:
-	var eq := equipos
-	var f3 := MotorLeague.fase3
-	if _nuestra("fisica_balon"):
-		equipos = []   ## el balón suelto lo mueve la física de siempre (el gancho de League devuelve a `super`)
-	if _nuestra("locomocion"):
-		MotorLeague.fase3 = false   ## sin el toque de conducción de League
-	super(delta)
-	equipos = eq
-	MotorLeague.fase3 = f3
+## (16-11, informe M6-24) Las piezas del balón por gancho, no vaciando `equipos` ni apagando `fase3` (estática) durante `_mover_balon`:
+## dentro se marcan goles y saques y se emiten señales, y quien las oía veía una configuración que no era la real.
+func _ley_league() -> bool:
+	return not _nuestra("fisica_balon")   ## el balón suelto lo mueve la física de siempre con «siempre»
+
+func _sin_toque_league() -> bool:
+	return _nuestra("locomocion")   ## sin el toque de conducción de League
 
 func _mover_jugadores(delta: float) -> void:
 	var f3 := MotorLeague.fase3
@@ -344,8 +344,20 @@ func _apunte_ia(p: Dictionary, dist_arco: float, apunte: Vector2) -> Vector2:
 
 ## (13-11, sesión 15) el error del remate dentro del área, solo en C4 (`MejorasC4Avance.error_tiro`, `C4_ERROR_AREA=k`).
 func _error_tiro_extra(p: Dictionary, lejos: float, error: float, clase: String) -> float:
-	return MejorasC4Avance.error_tiro(self, lejos, error, clase) if _mejoras_c4 else error
+	return MejorasC4Area.error_presion(self, p, lejos, MejorasC4Avance.error_tiro(self, lejos, error, clase), clase) if _mejoras_c4 else error
 
 ## (13-11, sesión 15) el portero ante el remate desde dentro del área, solo en C4 (`MejorasC4Avance.parada`, `C4_PARADA_AREA=k`).
 func _prob_parada_extra(gk: Dictionary, desde: Vector3, prob: float) -> float:
 	return MejorasC4Avance.parada(self, gk, desde, prob) if _mejoras_c4 else prob
+
+## (16-11, informe AAA H1, A1.3/A1.5) el alcance del portero según el tiempo que tarda el remate (`C4_ALCANCE_TIEMPO`) y ante el remate
+## desde dentro del área (`C4_ALCANCE_AREA`), solo en C4 (`MejorasC4Avance.alcance`).
+func _alcance_extra(gk: Dictionary, desde: Vector3, alcance: float, tz: float) -> float:
+	return MejorasC4Avance.alcance(self, gk, desde, alcance, tz) if _mejoras_c4 else alcance
+
+## (16-11, informe AAA H1) un compañero del rematador no controla un tiro fuerte que le pasa cerca, solo en C4 (`C4_TIRO_COMPANERO`).
+func _puede_tomar_tiro(p: Dictionary) -> bool:
+	return MejorasC4Area.puede_tomar_tiro(self, p) if _mejoras_c4 else true
+
+func _gancho_tiro() -> bool:
+	return _mejoras_c4 and MejorasC4Area.TIRO_COMPANERO

@@ -43,6 +43,8 @@ static func lanzar(raiz: Node3D, c1: Color, c2: Color, sitios: Array, dura := 8.
 		mi.custom_aabb = AABB(Vector3(-ANCHO, -ALTO - 2.0, -2.0), Vector3(ANCHO * 2.0, ALTO * 2.0 + 2.0, 4.0))
 		## Encima de la gente, de cara al campo (el centro del estadio es el origen).
 		var hacia := Vector3(-s.x, 0.0, -s.z).normalized()
+		if hacia.length_squared() < 1e-6:
+			hacia = Vector3.FORWARD   ## (16-11, informe L-02) un sitio en el eje (el calentamiento) dejaba look_at sin dirección
 		mi.position = s + Vector3(0, ALTO * 0.5 + 1.6, 0) - hacia * 1.0
 		b.add_child(mi)
 		mi.look_at(mi.position - hacia, Vector3.UP)
