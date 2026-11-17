@@ -8999,7 +8999,9 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Simulating the season…",
   "Sorteo de campo: gana el sorteo tu club.": "Coin toss: your club wins the toss.",
   "Sorteo de campo: gana el sorteo el rival.": "Coin toss: the opponent wins the toss.",
-  "¿Simular lo que queda? Pulsa otra vez": "Simulate the rest? Press again"
+  "¿Simular lo que queda? Pulsa otra vez": "Simulate the rest? Press again",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirm · Square / B back",
+  "Enter confirma · Esc vuelve": "Enter confirm · Esc back"
  },
  "pt": {
   "Historia": "História",
@@ -18001,7 +18003,9 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Simulando a temporada…",
   "Sorteo de campo: gana el sorteo tu club.": "Sorteio: seu clube vence o sorteio.",
   "Sorteo de campo: gana el sorteo el rival.": "Sorteio: o rival vence o sorteio.",
-  "¿Simular lo que queda? Pulsa otra vez": "Simular o resto? Pressione de novo"
+  "¿Simular lo que queda? Pulsa otra vez": "Simular o resto? Pressione de novo",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirma · Quadrado / B volta",
+  "Enter confirma · Esc vuelve": "Enter confirma · Esc volta"
  },
  "patrones": [
   [
@@ -33275,7 +33279,9 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Simulation de la saison…",
   "Sorteo de campo: gana el sorteo tu club.": "Tirage au sort : ton club le remporte.",
   "Sorteo de campo: gana el sorteo el rival.": "Tirage au sort : l'adversaire le remporte.",
-  "¿Simular lo que queda? Pulsa otra vez": "Simuler la suite ? Appuie encore"
+  "¿Simular lo que queda? Pulsa otra vez": "Simuler la suite ? Appuie encore",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirme · Carré / B retour",
+  "Enter confirma · Esc vuelve": "Entrée confirme · Échap retour"
  },
  "it": {
   "Historia": "Storia",
@@ -42277,7 +42283,9 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Simulazione della stagione…",
   "Sorteo de campo: gana el sorteo tu club.": "Sorteggio: vince il tuo club.",
   "Sorteo de campo: gana el sorteo el rival.": "Sorteggio: vince l'avversario.",
-  "¿Simular lo que queda? Pulsa otra vez": "Simulare il resto? Premi di nuovo"
+  "¿Simular lo que queda? Pulsa otra vez": "Simulare il resto? Premi di nuovo",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A conferma · Quadrato / B indietro",
+  "Enter confirma · Esc vuelve": "Invio conferma · Esc indietro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51279,7 +51287,9 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Saison wird simuliert…",
   "Sorteo de campo: gana el sorteo tu club.": "Seitenwahl: Dein Verein gewinnt die Wahl.",
   "Sorteo de campo: gana el sorteo el rival.": "Seitenwahl: Der Gegner gewinnt die Wahl.",
-  "¿Simular lo que queda? Pulsa otra vez": "Rest simulieren? Nochmal drücken"
+  "¿Simular lo que queda? Pulsa otra vez": "Rest simulieren? Nochmal drücken",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A bestätigt · Quadrat / B zurück",
+  "Enter confirma · Esc vuelve": "Enter bestätigt · Esc zurück"
  },
  "ca": {
   "Historia": "Història",
@@ -60281,7 +60291,9 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Simulant la temporada…",
   "Sorteo de campo: gana el sorteo tu club.": "Sorteig de camp: guanya el teu club.",
   "Sorteo de campo: gana el sorteo el rival.": "Sorteig de camp: guanya el rival.",
-  "¿Simular lo que queda? Pulsa otra vez": "Simular la resta? Prem un altre cop"
+  "¿Simular lo que queda? Pulsa otra vez": "Simular la resta? Prem un altre cop",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirma · Quadrat / B torna",
+  "Enter confirma · Esc vuelve": "Enter confirma · Esc torna"
  },
  "pl": {
   "Club": "Klub",
@@ -69283,7 +69295,9 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Symulacja sezonu…",
   "Sorteo de campo: gana el sorteo tu club.": "Losowanie: wygrywa twój klub.",
   "Sorteo de campo: gana el sorteo el rival.": "Losowanie: wygrywa rywal.",
-  "¿Simular lo que queda? Pulsa otra vez": "Symulować resztę? Naciśnij ponownie"
+  "¿Simular lo que queda? Pulsa otra vez": "Symulować resztę? Naciśnij ponownie",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A potwierdza · Kwadrat / B wraca",
+  "Enter confirma · Esc vuelve": "Enter potwierdza · Esc wraca"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78285,6 +78299,8 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Sezon simüle ediliyor…",
   "Sorteo de campo: gana el sorteo tu club.": "Yazı tura: kurayı kulübün kazandı.",
   "Sorteo de campo: gana el sorteo el rival.": "Yazı tura: kurayı rakip kazandı.",
-  "¿Simular lo que queda? Pulsa otra vez": "Kalanı simüle edilsin mi? Tekrar bas"
+  "¿Simular lo que queda? Pulsa otra vez": "Kalanı simüle edilsin mi? Tekrar bas",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A onaylar · Kare / B geri",
+  "Enter confirma · Esc vuelve": "Enter onaylar · Esc geri"
  }
 }

@@ -18,9 +18,14 @@ var _vp: SubViewport
 var _raiz: Node3D
 var _cam: Camera3D
 var _ap: AnimationPlayer
+var _esq: Skeleton3D
+var _t := 0.0
 var hecho := false            ## ya está dibujado y quieto
 
-const ALTO_VISTA := 2.25       ## metros que caben de arriba abajo: el cuerpo entero con aire, la cabeza en el tercio superior
+const ALTO_VISTA := 1.38       ## (Auditoría) de 3/4, de medio muslo (~0,62 m) a un palmo sobre la cabeza: la cara grande y nítida, como el PES
+const CENTRO_Y := 1.33
+const ALTURA := 1.84           ## los dos a la MISMA escala (y la misma línea de base), sea cual sea su altura real
+const GIRO_TORSO := 0.35       ## ~20° hacia el centro de la pantalla; la cabeza vuelve a mirar a cámara
 const DISTANCIA := 6.0
 
 static func crear(c: Club, j: Jugador, cols: Array, giro: float) -> RetratoJugador3D:
@@ -64,8 +69,8 @@ func montar() -> void:
 	vestir(colores)
 	_cam = Camera3D.new()
 	_cam.fov = rad_to_deg(2.0 * atan(ALTO_VISTA * 0.5 / DISTANCIA))
-	_cam.position = Vector3(0, 1.0, DISTANCIA)
-	_cam.look_at_from_position(_cam.position, Vector3(0, 1.0, 0))
+	_cam.position = Vector3(0, CENTRO_Y, DISTANCIA)
+	_cam.look_at_from_position(_cam.position, Vector3(0, CENTRO_Y, 0))
 	_vp.add_child(_cam)
 
 ## Luz de estudio: principal suave desde arriba y delante, relleno frío al ~40 % al otro lado y contraluz de borde del color del club (el «recorte» del PES).
@@ -93,9 +98,9 @@ func _luces() -> void:
 		rim.position = Vector3(1.4 * x, 1.9, -1.6)
 		_raiz.add_child(rim)
 
-## La pose de espera de este jugador: brazos cruzados o relajados (siempre la misma para el mismo id).
+## La pose de espera: brazos cruzados (tapa las manos, como en la previa del PES); si el modelo no la tiene, de pie relajado.
 func _pose(ap: AnimationPlayer, esq: Skeleton3D) -> String:
-	if absi(("pose:" + jugador.id).hash()) % 2 == 0 and esq != null and AnimExtra.asegurar(ap, esq, "brazos_cruzados"):
+	if esq != null and AnimExtra.asegurar(ap, esq, "brazos_cruzados"):
 		return "brazos_cruzados"
 	return "parado"
 
@@ -117,7 +122,7 @@ func vestir(cols: Array) -> void:
 		c2 = cols[1]
 	spawner.set("_kit_x", kit.get("x", {}) if titular and kit.get("x") is Dictionary else {})
 	var nodo := Node3D.new()
-	nodo.rotation.y = gira
+	nodo.rotation.y = GIRO_TORSO * signf(gira)
 	_raiz.add_child(nodo)
 	var datos: Dictionary = load("res://visor/puente3d.gd").jugador(jugador)
 	var look: Array = load("res://visor/player_spawner.gd")._look_de(datos)
@@ -125,13 +130,17 @@ func vestir(cols: Array) -> void:
 		maxi(jugador.dorsal, 1), look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
 	if spawner is Node:
 		(spawner as Node).queue_free()
+	var alto := float(d.get("altura", ALTURA)) if d.has("altura") else ALTURA
+	nodo.scale = Vector3.ONE * (ALTURA / maxf(alto, 1.0))
 	_ap = d.get("anim")
+	var esqs := nodo.find_children("*", "Skeleton3D", true, false)
+	_esq = esqs[0] if not esqs.is_empty() else null
 	if _ap != null:
-		var esqs := nodo.find_children("*", "Skeleton3D", true, false)
-		var pose := _pose(_ap, esqs[0] if not esqs.is_empty() else null)
+		var pose := _pose(_ap, _esq)
 		if _ap.has_animation(pose):
 			_ap.play(pose)
 			_ap.seek(minf(1.2, _ap.current_animation_length * 0.5), true)
+	_mirar_a_camara()
 	_congelar.call_deferred()
 
 ## Deja que la pose se aplique, dibuja la vista una vez y la deja quieta.
@@ -139,10 +148,46 @@ func _congelar() -> void:
 	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	await get_tree().process_frame
 	await get_tree().process_frame
+	## (Auditoría) De MEDIA para arriba, una espera muy suave (la animación a media velocidad) redibujada a 30 Hz; abajo, congelado (0 coste).
+	var vivo := Calidad.elegida >= Calidad.MEDIA and not Animar.reducidas()
 	if _ap != null:
-		_ap.pause()
+		if vivo:
+			_ap.speed_scale = 0.5
+		else:
+			_ap.pause()
 	_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	set_process(vivo)
 	if modulate.a < 1.0:
 		create_tween().tween_property(self, "modulate:a", 1.0, 0.25)
 	hecho = true
 	listo.emit()
+
+func _ready() -> void:
+	set_process(false)
+
+func _process(delta: float) -> void:
+	_t += delta
+	if _t >= 1.0 / 30.0:
+		_t = 0.0
+		_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+
+## El torso va girado hacia el centro; el cuello y la cabeza deshacen ese giro para mirar a cámara. Va como modificador del esqueleto (corre DESPUÉS
+## de la animación cada vez que se actualiza y no se acumula), así vale tanto quieto como con la espera suave.
+class MirarCamara extends SkeletonModifier3D:
+	var giro := 0.0
+	func _process_modification() -> void:
+		var esq := get_skeleton()
+		if esq == null:
+			return
+		for par: Array in [["neck_01", 0.45], ["Head", 0.55]]:
+			var i := esq.find_bone(String(par[0]))
+			if i >= 0:
+				esq.set_bone_pose_rotation(i, Quaternion(Vector3.UP, -giro * float(par[1])) * esq.get_bone_pose_rotation(i))
+
+func _mirar_a_camara() -> void:
+	if _esq == null or _esq.has_node("MirarCamara"):
+		return
+	var m := MirarCamara.new()
+	m.name = "MirarCamara"
+	m.giro = GIRO_TORSO * signf(gira)
+	_esq.add_child(m)
