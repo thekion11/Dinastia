@@ -67,8 +67,16 @@ func mejor_del_partido() -> Dictionary:
 	return v[0] if not v.is_empty() else {}
 
 func preparar() -> void:
-	if clima_info.is_empty():
-		fijar_clima(Clima.del_partido(local.pais, ctx_semana, ctx_anio, local.id + visita.id))
+	if clima_info.is_empty():   ## (17-11, paso a C++) `clima_partido` = `fijar_clima(Clima.del_partido(…))` en una llamada (igualdad en `probar_nativo`)
+		var nat := Nativo.obj()
+		var globo: Variant = Datos.tabla("GLOBO_PAIS")
+		if nat != null and nat.has_method("clima_partido") and globo is Dictionary:
+			var c: Array = nat.clima_partido(local.pais, visita.pais, ctx_semana, ctx_anio, local.id + visita.id, neutral, globo)
+			clima_info = c[0]
+			clima = c[1]
+			_f_clima_visita = c[2]
+		else:
+			fijar_clima(Clima.del_partido(local.pais, ctx_semana, ctx_anio, local.id + visita.id))
 	once_local = local.once()
 	once_visita = visita.once()
 	## `Previa.arbitro_de(rival_id, semana)` -la MISMA que ya usa `vPrevia()`

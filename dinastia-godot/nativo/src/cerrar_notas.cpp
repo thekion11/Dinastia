@@ -6,6 +6,7 @@
 #include <godot_cpp/variant/string_name.hpp>
 
 #include <cmath>
+#include <initializer_list>
 
 using namespace godot;
 
@@ -116,4 +117,122 @@ bool DinastiaNativo::leyes_ya_cumple(const Array &once, const String &pais, int6
 		}
 	}
 	return true;
+}
+
+// `Clima.del_partido` + `Clima.factor` + `Clima.factor_visita` (nucleo/clima.gd, 17-11-2026): lo que hace `Partido.fijar_clima(Clima.del_partido(…))`.
+// Devuelve [info, factor, factor del visitante]. `globo` = la tabla GLOBO_PAIS (país → [.., latitud, ..]). Gemela: esas funciones de `Clima`.
+namespace {
+double clima_latitud(const Dictionary &globo, const String &pais) {
+	if (globo.has(pais)) {
+		const Array g = globo[pais];
+		return double(g[1]);
+	}
+	return -33.4;
+}
+bool clima_en(const String &x, std::initializer_list<const char *> l) {
+	for (const char *c : l) {
+		if (x == c) {
+			return true;
+		}
+	}
+	return false;
+}
+String clima_estacion(const Dictionary &globo, const String &pais, int64_t semana) {
+	const double lat = clima_latitud(globo, pais);
+	if (std::fabs(lat) < 23.5) {
+		return "tropical";
+	}
+	const int64_t s = semana > 1 ? semana : 1;
+	int64_t mes = 1 + int64_t(double(s - 1) * 7.0 / 30.4 + 0.85);
+	mes = mes < 1 ? 1 : (mes > 12 ? 12 : mes);
+	if (lat < 0.0) {
+		mes = ((mes + 5) % 12) + 1;
+	}
+	if (mes == 12 || mes == 1 || mes == 2) {
+		return "invierno";
+	}
+	if (mes >= 3 && mes <= 5) {
+		return "primavera";
+	}
+	if (mes >= 6 && mes <= 8) {
+		return "verano";
+	}
+	return "otono";
+}
+} // namespace
+
+Array DinastiaNativo::clima_partido(const String &pais, const String &pais_visita, int64_t semana, int64_t anio, const String &semilla, bool neutral, const Dictionary &globo) const {
+	const String est = clima_estacion(globo, pais, semana);
+	const bool frio = std::fabs(clima_latitud(globo, pais)) >= 45.0;
+	const int64_t h = int64_t((pais + String("|") + String::num_int64(anio) + String("|") + String::num_int64(semana) + String("|") + semilla).hash());   // absi(hash) = hash (no es negativo)
+	const double r = double(h % 1000) / 1000.0;
+	const double r2 = double((h / 1000) % 1000) / 1000.0;
+	const bool desierto = clima_en(pais, { "KSA", "EGY", "QAT", "UAE" });
+	double p_lluvia = est == "invierno" ? 0.34 : (est == "otono" ? 0.28 : (est == "primavera" ? 0.22 : (est == "verano" ? 0.10 : 0.30)));
+	if (desierto) {
+		p_lluvia = 0.03;
+	}
+	String clave;
+	if (frio && est == "invierno" && r < 0.22) {
+		clave = "nieve";
+	} else if (r < p_lluvia) {
+		clave = (clima_en(est, { "verano", "tropical" }) && r2 < 0.35) ? "tormenta" : "lluvia";
+	} else if (clima_en(est, { "otono", "invierno" }) && r < p_lluvia + 0.07) {
+		clave = "niebla";
+	} else {
+		clave = r2 < 0.5 ? "noche" : (r2 < 0.8 ? "tarde" : "dia");
+	}
+	const bool calor = clima_en(clave, { "dia", "tarde" }) && (clima_en(est, { "verano", "tropical" }) || desierto);
+	const bool altura = clima_en(pais, { "BOL", "ECU", "COL", "MEX" });
+	String texto;
+	if (clave == "nieve") {
+		texto = String::utf8("Nieve y frío de invierno");
+	} else if (clave == "lluvia") {
+		texto = String::utf8("Lluvia") + (est == "invierno" ? String::utf8(" fría de invierno") : String());
+	} else if (clave == "tormenta") {
+		texto = String::utf8("Tormenta eléctrica");
+	} else if (clave == "niebla") {
+		texto = String::utf8("Niebla cerrada");
+	} else if (clave == "noche") {
+		texto = String::utf8("Noche despejada");
+	} else if (clave == "tarde") {
+		texto = String::utf8("Tarde despejada");
+	} else {
+		texto = String::utf8("Mediodía despejado");
+	}
+	if (calor) {
+		texto = String::utf8("Calor intenso") + (desierto ? String::utf8(" y seco") : String());
+	}
+	if (altura) {
+		texto += String::utf8(", en la altura");
+	}
+	Dictionary info;
+	info["clave"] = clave;
+	info["calor"] = calor;
+	info["altura"] = altura;
+	info["texto"] = texto;
+	info["estacion"] = est;
+	// `Clima.factor`
+	double f = clave == "lluvia" ? 0.93 : (clave == "tormenta" ? 0.88 : (clave == "nieve" ? 0.85 : (clave == "niebla" ? 0.95 : 1.0)));
+	if (calor) {
+		f *= 0.96;
+	}
+	// `Clima.factor_visita` (1 si el campo es neutral, como `fijar_clima`)
+	double fv = 1.0;
+	if (!neutral && pais_visita != pais) {
+		if (altura && !clima_en(pais_visita, { "BOL", "ECU", "COL", "MEX" })) {
+			fv *= 0.92;
+		}
+		if (calor && std::fabs(clima_latitud(globo, pais_visita)) >= 40.0) {
+			fv *= 0.95;
+		}
+		if (clave == "nieve" && std::fabs(clima_latitud(globo, pais_visita)) < 23.5) {
+			fv *= 0.93;
+		}
+	}
+	Array res;
+	res.push_back(info);
+	res.push_back(f);
+	res.push_back(fv);
+	return res;
 }

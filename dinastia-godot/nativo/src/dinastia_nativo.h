@@ -72,6 +72,8 @@ public:
 	PackedInt32Array loco_paso(const Array &jugadores, double t, double delta, int64_t poseedor, double recolocar) const;
 	// `LeyesPais._ya_cumple`: tope de cupo en cancha y juveniles de la liga.
 	bool leyes_ya_cumple(const Array &once, const String &pais, int64_t tope, const Array &juveniles, const String &criterio, const Array &ue, const Dictionary &clubes) const;
+	// `Partido.fijar_clima(Clima.del_partido(…))`: [info, factor, factor del visitante].
+	Array clima_partido(const String &pais, const String &pais_visita, int64_t semana, int64_t anio, const String &semilla, bool neutral, const Dictionary &globo) const;
 	PackedInt32Array guia_pendientes(const Array &jugadores, double t) const;
 	PackedInt32Array guia_seguir(const Array &jugadores, double t, double delta, int64_t usuario, bool marchas) const;
 	PackedFloat64Array mover_jugadores_fisica(const Array &jugadores, const Vector3 &bpos, double delta, double t, bool hay_poseedor, const Variant &poseedor_id, bool poseedor_local, double a_max_base,

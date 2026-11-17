@@ -311,6 +311,23 @@ func _probar() -> void:
 	motor.free()
 	raiz_c.queue_free()
 	## (10-11, paso a C++) El partido simulado de la IA entero (90 minutos) en C++: mismo marcador, estadísticas, jugadores y azar que `Partido.simular()`, en cuatro mundos.
+	## (17-11) El clima del partido: `clima_partido` frente a `Clima.del_partido` + `factor` + `factor_visita`, en todas las parejas de países del globo.
+	var globo: Dictionary = Datos.tabla("GLOBO_PAIS")
+	var paises: Array = globo.keys() + ["XXX"]
+	var cl_dis := 0
+	var cl_n := 0
+	for a: int in paises.size():
+		for s in range(1, 53, 3):
+			var pl: String = paises[a]
+			var pv: String = paises[(a * 7 + s) % paises.size()]
+			var semilla := "c%d" % (a * 31 + s)
+			var info := Clima.del_partido(pl, s, 2026 + s % 3, semilla)
+			var fv := 1.0 if s % 5 == 0 else Clima.factor_visita(info, pv, pl)
+			var cc: Array = nat.clima_partido(pl, pv, s, 2026 + s % 3, semilla, s % 5 == 0, globo)
+			cl_n += 1
+			if var_to_bytes(info) != var_to_bytes(cc[0]) or var_to_bytes(Clima.factor(info)) != var_to_bytes(cc[1]) or var_to_bytes(fv) != var_to_bytes(cc[2]):
+				cl_dis += 1
+	_comprobar(cl_dis == 0 and cl_n > 500, "clima del partido: C++ = GDScript en %d casos (distintos: %d)" % [cl_n, cl_dis])
 	LeyesPais.comparar = true
 	LeyesPais.comparados = 0
 	LeyesPais.distintos = 0
