@@ -53,7 +53,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 	var b := balon.position
 	var arco := _arco_propio(p)
 	var hacia := signf(arco.z)
-	if poseedor.is_empty() and vel_balon.z * hacia > _umbral_reaccion(p):
+	if poseedor.is_empty() and vel_balon.z * hacia > 6.0:
 		var tz := (arco.z - hacia * 0.6 - b.z) / vel_balon.z
 		if tz > 0.0 and tz < 1.6:
 			var cruce := b + vel_balon * tz
@@ -146,7 +146,7 @@ func _ia_portero(p: Dictionary) -> Vector3:
 		if d_arco < 15.0 and absf(pr.x) < 12.0 and not _hay_defensa_entre(p, pr, arco):
 			p["correr"] = true
 			return pr + (arco - pr).normalized() * clampf(d_arco * 0.25, 1.8, 3.2)
-	return _portero_colocado(p, colocacion_portero(b, arco, _tac(bool(p["es_local"]), "linea")))
+	return colocacion_portero(b, arco, _tac(bool(p["es_local"]), "linea"))
 
 ## La finta en sí (la de antes del duelo y la de último recurso, pegado al
 ## defensor): gesto del repertorio según el regate, empujón lateral de
@@ -358,14 +358,6 @@ func _error_tiro_extra(_p: Dictionary, _lejos: float, error: float, _clase: Stri
 ## GANCHO DE LA PROBABILIDAD DE PARADA (13-11-2026, sesión 15, OK del líder): el de siempre la deja igual (sin azar: la huella no
 ## cambia); `MotorCombinado` (C4) la baja ante remates desde dentro del área (`MejorasC4Avance.parada`, `C4_PARADA_AREA`).
 ## GANCHO DE LA PARADA DE LO PARABLE (17-11-2026): el de siempre no la cambia (ni gasta azar: la huella no cambia); C4 lo usa con `C4_PARADA_CUERPO`.
-## Gancho (17-11): desde qué velocidad hacia su arco reacciona el portero a un balón; aquí 6 m/s, como siempre (C4: `MejorasC4Avance.umbral_lento`).
-func _umbral_reaccion(_p: Dictionary) -> float:
-	return 6.0
-
-## Gancho (17-11): el punto de colocación del portero sin tiro encima; aquí no cambia nada (C4: `MejorasC4Avance.portero_corre`).
-func _portero_colocado(_p: Dictionary, obj: Vector3) -> Vector3:
-	return obj
-
 func _prob_parada_cuerpo(_lat: float, _alcance: float, prob: float) -> float:
 	return prob
 

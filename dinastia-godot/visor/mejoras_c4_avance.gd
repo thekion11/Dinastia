@@ -149,35 +149,6 @@ static func parada_cuerpo(m: Object, lat: float, alcance: float, prob: float) ->
 ## que uno de 12 m, y todo lo que iba pegado al palo entraba. `C4_ALCANCE_TIEMPO=v` (m/s; 0 = apagada) suma `v·(tz − 0,5)` metros de
 ## alcance (el portero se desplaza antes de estirarse), con tope `TOPE_TIEMPO`. `C4_ALCANCE_AREA=k` (0 = apagada; probada y descartada:
 ## con 1,5 y 2,0 el gol desde dentro casi no cambiaba) multiplica el alcance ante un remate a menos de 17 m. Contadores `c4_alcance_*`.
-## EL PORTERO CORRE A SU SITIO (17-11, alarma de goles): sin tiro encima se colocaba siempre al 62 % de su velocidad y, cuando el balón
-## llegaba rápido al área (centro atrás, rechace, contra), quedaba a 1,5-3 m de la línea del tiro: el 54 % de los goles de C4 eran
-## tiros que «no alcanza», muchos desde menos de 5 m. Con `C4_PORTERO_CORRE` = metros (0 = apagado), si su punto queda más lejos que
-## eso y el balón está a menos de 40 m del arco, va corriendo. Cuenta `c4_portero_corre`.
-static var PORTERO_CORRE := float(OS.get_environment("C4_PORTERO_CORRE")) if OS.get_environment("C4_PORTERO_CORRE") != "" else 0.0
-
-static func portero_corre(m: Object, gk: Dictionary, obj: Vector3) -> Vector3:
-	if PORTERO_CORRE <= 0.0:
-		return obj
-	var yo: Vector3 = m.pos(gk)
-	var arco: Vector3 = m._arco_propio(gk)
-	if Vector2(obj.x - yo.x, obj.z - yo.z).length() > PORTERO_CORRE and Vector2(m.balon.position.x - arco.x, m.balon.position.z - arco.z).length() < 40.0:
-		gk["correr"] = true
-		_contar(m, "c4_portero_corre")
-	return obj
-
-## EL BALÓN LENTO (17-11, alarma de goles): el portero solo reaccionaba a balones que iban a su arco a más de 6 m/s; un remate flojo
-## o un toque del rival que entraba rodando no lo veía (≈0,5 goles por partido). Con `C4_PORTERO_LENTO` = m/s (0 = apagado), si el
-## último que tocó es rival, reacciona desde esa velocidad. Con un balón de su equipo sigue en 6 (una cesión no se ataja).
-static var PORTERO_LENTO := float(OS.get_environment("C4_PORTERO_LENTO")) if OS.get_environment("C4_PORTERO_LENTO") != "" else 0.0
-
-static func umbral_lento(m: Object, gk: Dictionary) -> float:
-	if PORTERO_LENTO <= 0.0:
-		return 6.0
-	var ut: Dictionary = m.ultimo_toque
-	if ut.is_empty() or bool(ut["es_local"]) == bool(gk["es_local"]):
-		return 6.0
-	return PORTERO_LENTO
-
 static var ALCANCE_TIEMPO := float(OS.get_environment("C4_ALCANCE_TIEMPO")) if OS.get_environment("C4_ALCANCE_TIEMPO") != "" else 0.0
 const TOPE_TIEMPO := 2.0
 static var ALCANCE_AREA := float(OS.get_environment("C4_ALCANCE_AREA")) if OS.get_environment("C4_ALCANCE_AREA") != "" else 0.0
