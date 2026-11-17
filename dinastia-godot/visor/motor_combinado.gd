@@ -287,6 +287,10 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 	return r
 
 func _ia_defensa(p: Dictionary) -> Vector3:
+	if _mejoras_c4:
+		var marca := MejorasC4Marca.objetivo(self, p)   ## (17-11) marcaje en el área (`C4_MARCA_AREA`), antes que la caché de colocación
+		if marca != Vector3.INF:
+			return marca
 	var r := _sin_flag3(p, false)
 	if _mejoras_c4:
 		var cierre := MejorasC4Area.objetivo(self, p)   ## (16-11, H1) cerrar al rematador dentro del área (`C4_CIERRE_AREA`)
