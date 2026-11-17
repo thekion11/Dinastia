@@ -68,6 +68,14 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 		bs.pressed.emit()
 		await t.esperar(2)
 		bs.pressed.emit()
+	## Al acabar el 3D, la crónica del partido (2D) con su «Volver»: lo que pulsa el jugador para ir al resultado.
+	await t.hasta(func() -> bool:
+		var v_ = t.buscar(p, "PartidoVivo")
+		return v_ != null and v_.get("_btn_volver") != null and (v_.get("_btn_volver") as Control).visible, 120.0)
+	var vivo_fin: Node = t.buscar(p, "PartidoVivo")
+	t.ok(vivo_fin != null and (vivo_fin.get("_btn_volver") as Control).visible, "[%s] tras simular, la crónica del partido ofrece «Volver»" % pais)
+	if vivo_fin != null:
+		(vivo_fin.get("_btn_volver") as BaseButton).pressed.emit()
 	var rp: ResultadoPartido = null
 	await t.hasta(func() -> bool:
 		var rp_ = t.buscar(p, "ResultadoPartido") as ResultadoPartido
