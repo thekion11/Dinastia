@@ -87,7 +87,7 @@ func paso(delta: float) -> void:
 					## 2 = segunda parte (saca la visita), 3 y 4 = prórroga.
 					mitad += 1
 					t = 0.0
-					_saque_de_centro(mitad % 2 == 1)
+					_saque_de_centro((mitad % 2 == 1) == saca_primero_local)   ## (17-11) con el sorteo: la 2.ª parte saca quien no sacó primero
 				else:
 					var saca_local: bool = not bool(saque.get("gol_local", true))
 					_saque_de_centro(saca_local)

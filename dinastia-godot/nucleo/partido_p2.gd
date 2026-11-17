@@ -2,6 +2,7 @@ extends "res://nucleo/partido_p1.gd"
 ## [Capa 2/3 de `partido.gd`] _contar_penal, _aporte_tarjeta, _init, valoraciones, mejor_del_partido, preparar … (+13)
 
 ## Lo que pasó y cómo llegaban (ver `RastroPartido`).
+var saca_local := true   ## (17-11) el sorteo del saque inicial (menú del partido): quién saca al empezar; la 2.ª parte saca el otro
 var rastro: RastroPartido
 
 ## El penal es un remate a puerta (antes sumaba un gol sin remate ni tiro a puerta): con el xG del
