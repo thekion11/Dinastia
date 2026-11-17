@@ -52,6 +52,47 @@ MANO = {
 }
 
 
+## Segunda tanda (17-11): más conocidos de las 8 ligas, mismos criterios (aproximaciones estimadas).
+MANO.update({
+    "Ederson": (3, 0, "rapado", 5), "Josko Gvardiol": (1, 1, "corto", 5), "Tijjani Reijnders": (1, 5, "corto", 0),
+    "Ibrahima Konaté": (5, 0, "corto", 0), "Andy Robertson": (1, 3, "corto", 5), "Dominik Szoboszlai": (1, 2, "corto", 5),
+    "William Saliba": (5, 0, "corto", 5), "Gabriel Magalhães": (4, 0, "rapado", 4), "David Raya": (2, 1, "corto", 5),
+    "Lisandro Martínez": (2, 1, "corto", 0), "Matthijs de Ligt": (1, 5, "corto", 0), "Bryan Mbeumo": (5, 0, "corto", 0),
+    "Moisés Caicedo": (4, 0, "rapado", 0), "Reece James": (4, 0, "corto", 0), "Marc Cucurella": (2, 1, "rizado", 5),
+    "Cristian Romero": (2, 1, "corto", 5), "James Maddison": (1, 3, "corto", 0), "Dejan Kulusevski": (1, 5, "corto", 5),
+    "Bruno Guimarães": (3, 1, "corto", 5), "Sandro Tonali": (2, 1, "corto", 5), "Anthony Gordon": (1, 4, "corto", 0),
+    "Trent Alexander-Arnold": (3, 0, "corto", 0), "Rodrygo": (4, 0, "corto", 0), "Éder Militão": (4, 0, "corto", 5),
+    "Frenkie de Jong": (1, 5, "corto", 0), "Jules Koundé": (5, 0, "corto", 5), "Ronald Araújo": (4, 0, "rapado", 5),
+    "Robin Le Normand": (1, 2, "corto", 5), "José María Giménez": (2, 1, "corto", 5), "Koke": (2, 2, "corto", 5),
+    "Unai Simón": (1, 1, "corto", 5), "Nico Williams": (5, 0, "corto", 0), "Dani Vivian": (1, 2, "corto", 0),
+    "Martín Zubimendi": (1, 1, "corto", 0), "Mikel Oyarzabal": (2, 1, "corto", 5), "Álex Baena": (2, 1, "corto", 0),
+    "Gerard Moreno": (2, 1, "corto", 0), "Dani Parejo": (2, 1, "corto", 5),
+    "Alessandro Bastoni": (2, 1, "corto", 0), "Federico Dimarco": (2, 1, "corto", 5), "Hakan Çalhanoğlu": (2, 1, "corto", 5),
+    "Gleison Bremer": (3, 0, "corto", 5), "Teun Koopmeiners": (1, 5, "corto", 0), "Mike Maignan": (5, 0, "corto", 5),
+    "Théo Hernández": (3, 1, "corto", 5), "Christian Pulisic": (1, 3, "corto", 0), "Giovanni Di Lorenzo": (2, 1, "corto", 4),
+    "Scott McTominay": (1, 7, "corto", 5), "Ademola Lookman": (5, 0, "corto", 5), "Mateo Retegui": (2, 1, "corto", 5),
+    "Mile Svilar": (1, 1, "corto", 5), "Lorenzo Pellegrini": (2, 1, "corto", 5), "Mattia Zaccagni": (2, 2, "corto", 5),
+    "Alessio Romagnoli": (2, 1, "corto", 5),
+    "Michael Olise": (4, 0, "corto", 0), "Luis Díaz": (3, 0, "corto", 0), "Dayot Upamecano": (5, 0, "corto", 5),
+    "Gregor Kobel": (1, 1, "corto", 5), "Serhou Guirassy": (5, 0, "corto", 5), "Nico Schlotterbeck": (1, 5, "corto", 5),
+    "Alejandro Grimaldo": (2, 1, "corto", 0), "Edmond Tapsoba": (5, 0, "corto", 0), "Patrik Schick": (1, 2, "corto", 0),
+    "Xavi Simons": (3, 1, "rizado", 0), "Loïs Openda": (5, 0, "corto", 0), "Benjamin Šeško": (1, 5, "corto", 0),
+    "Mario Götze": (1, 5, "corto", 5),
+    "Nuno Mendes": (4, 0, "corto", 0), "João Neves": (2, 1, "corto", 0), "Fabián Ruiz": (2, 1, "corto", 5),
+    "Adrien Rabiot": (1, 2, "melena", 5), "Mason Greenwood": (4, 0, "corto", 0), "Gerónimo Rulli": (2, 1, "corto", 5),
+    "Corentin Tolisso": (4, 0, "corto", 5), "Olivier Giroud": (1, 2, "corto", 5), "Florian Thauvin": (2, 1, "corto", 5),
+    "Leandro Paredes": (2, 1, "corto", 5), "Miguel Merentiel": (2, 1, "corto", 5), "Edinson Cavani": (2, 1, "corto", 4),
+    "Franco Mastantuono": (2, 1, "corto", 0), "Franco Armani": (2, 1, "corto", 5), "Marcos Acuña": (2, 1, "corto", 5),
+    "Fernando Muslera": (2, 1, "corto", 5),
+    "Giorgian de Arrascaeta": (2, 1, "corto", 5), "Jorginho": (2, 1, "corto", 5), "Pedro": (3, 0, "corto", 5),
+    "Estêvão": (3, 0, "corto", 0), "Gustavo Gómez": (2, 1, "corto", 4), "Raphael Veiga": (2, 1, "corto", 5),
+    "Lucas Moura": (4, 0, "corto", 5), "Oscar": (3, 0, "corto", 0), "Memphis Depay": (4, 0, "fade", 4),
+    "Thiago Silva": (3, 8, "corto", 5), "Hulk": (5, 0, "rapado", 5), "Fábio": (3, 1, "corto", 5),
+    "Lucas Cepeda": (3, 0, "corto", 0), "Vicente Pizarro": (2, 1, "corto", 0), "Fernando de Paul": (2, 1, "corto", 5),
+    "Charles Aránguiz": (2, 1, "corto", 5), "Fernando Zampedri": (2, 1, "corto", 5),
+})
+
+
 def construir_real(tablas):
     """{nombre real: {piel, peloC, pelo, barba}} con los hex de las paletas de `tablas` (PIELES y PELOC de la base)."""
     pieles, peloc = tablas["PIELES"], tablas["PELOC"]
