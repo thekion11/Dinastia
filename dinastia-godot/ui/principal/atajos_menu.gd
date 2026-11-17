@@ -63,11 +63,14 @@ func _input(evento: InputEvent) -> void:
 	## físico no puede disparar dos acciones a la vez: con L1/R1 aquí también,
 	## esta rama nunca se habría alcanzado (quedó comprobado: era justo el bug
 	## que tenía este bloque antes de corregirlo).
-	elif evento.is_action_pressed("dinastia_bloque_siguiente"):
-		p._bloque_vecino(1)
-		p.get_viewport().set_input_as_handled()
-	elif evento.is_action_pressed("dinastia_bloque_anterior"):
-		p._bloque_vecino(-1)
+	elif evento.is_action_pressed("dinastia_bloque_siguiente") or evento.is_action_pressed("dinastia_bloque_anterior"):
+		var paso := 1 if evento.is_action_pressed("dinastia_bloque_siguiente") else -1
+		var esc: Variant = p.get_meta("escaparate", null)
+		if is_instance_valid(esc) and (esc as Control).visible and p._menu_lateral != null:
+			## (17-11) En el Inicio del escaparate, L2/R2 abren el primer/último menú de la barra lateral (desde ahí siguen de menú en menú).
+			p._menu_lateral.abrir_menu(String(MenusLaterales.MENUS[0 if paso > 0 else MenusLaterales.MENUS.size() - 1]["id"]), -1)
+		else:
+			p._bloque_vecino(paso)
 		p.get_viewport().set_input_as_handled()
 	elif evento is InputEventKey and evento.pressed and not evento.echo:
 		var k := evento as InputEventKey

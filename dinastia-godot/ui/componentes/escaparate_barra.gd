@@ -48,9 +48,9 @@ static func boton_pestana(texto: String, ancho := 1.35) -> Button:
 	var b := Button.new()
 	b.toggle_mode = true
 	b.focus_mode = Control.FOCUS_ALL
-	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.size_flags_stretch_ratio = ancho
-	b.custom_minimum_size = Vector2(80, ALTO - 8)
+	b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN   ## (17-11) cada botón mide lo que su rótulo: el escudo queda centrado y nada se recorta
+	var ancho_txt := ThemeDB.fallback_font.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, 21).x
+	b.custom_minimum_size = Vector2(maxf(80.0, ancho_txt + 34.0), ALTO - 8)
 	b.clip_contents = true
 	b.tooltip_text = texto
 	b.set_meta("rotulo", texto)
@@ -102,28 +102,31 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	var m := _accion(Idiomas.t("Mensajes") + (" · %d" % n_msg if n_msg > 0 else ""), func() -> void: EscaparatePantalla.de(p).abrir_informe(p), n_msg > 0)
 	m.name = "BotonMensajes"
 	hb.add_child(m)
-	var hueco := Control.new()   ## el escudo asoma por encima de la barra: no empuja a nadie
-	hueco.custom_minimum_size = Vector2(128, 0)
-	hueco.clip_contents = false
+	var separador := Control.new()   ## empuja los atajos de la derecha: entre los dos grupos queda sitio de sobra para el escudo
+	separador.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	separador.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hb.add_child(separador)
+	var pant: Control = EscaparatePantalla.de(p)
+	var corona := Control.new()   ## (17-11) el escudo, centrado en el área útil (sin la barra lateral), colgando de la barra como en el PES
+	corona.name = "Corona"
+	corona.anchor_left = 0.5; corona.anchor_right = 0.5
+	corona.offset_left = -56.0; corona.offset_right = 56.0; corona.offset_top = 2.0; corona.offset_bottom = 114.0
+	corona.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var esc := TextureRect.new()
 	esc.texture = Escudo.textura(c, 112)
 	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	esc.z_index = 3   ## por encima de las tarjetas que tiene debajo
-	esc.position = Vector2(8, 2)   ## pegado al borde de arriba y colgando por debajo de la barra, como en el PES
-	esc.size = Vector2(112, 112)
-	hueco.add_child(esc)
-	var tocar_esc := Button.new()   ## (17-11) el escudo se pulsa: lleva a la identidad del club (colores, escudo, apodo)
+	esc.set_anchors_preset(Control.PRESET_FULL_RECT)
+	corona.add_child(esc)
+	var tocar_esc := Button.new()   ## el escudo se pulsa: lleva a la identidad del club (colores, escudo, apodo)
 	tocar_esc.flat = true
 	tocar_esc.focus_mode = Control.FOCUS_ALL
-	tocar_esc.position = Vector2(8, 2)
-	tocar_esc.size = Vector2(112, 112)
-	tocar_esc.z_index = 4
+	tocar_esc.set_anchors_preset(Control.PRESET_FULL_RECT)
 	tocar_esc.tooltip_text = Idiomas.t("Identidad visual")
 	tocar_esc.pressed.connect(func() -> void: TableroInicio.abrir(p, "Identidad visual"))
-	hueco.add_child(tocar_esc)
-	hb.add_child(hueco)
+	corona.add_child(tocar_esc)
+	pant.add_child(corona)
 	for par: Array in [["Oficina del DT", "Mi carrera"], ["Base de datos", "Ligas y clubes"], ["Sistema", "*sistema"]]:
 		var b := boton_pestana(Idiomas.t(String(par[0])))
 		b.toggle_mode = false
@@ -155,7 +158,6 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 		(h as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cb.add_child(caja)
 	hb.add_child(cb)
-	salida(p, hb)
 
 ## El PC de la oficina (`visor/pc_oficina.gd`): si el menú es su capa, su padre es el CanvasLayer del PC y el abuelo tiene `apagar` («🚪 Levantarse del PC»). Null si el menú va solo.
 static func pc_de(p: Principal) -> Node:
@@ -163,21 +165,3 @@ static func pc_de(p: Principal) -> Node:
 	if capa is CanvasLayer and capa.get_parent() != null and capa.get_parent().has_method("apagar"):
 		return capa.get_parent()
 	return null
-
-## El sitio FIJO del extremo derecho de la barra: dentro del PC lo ocupa el botón «Levantarse del PC» (lo pone `pc_oficina.gd` encima, con su icono dibujado; aquí se le deja el hueco
-## para que la caja no quede tapada); fuera del PC, «Entrar al club» (antes solo estaba en el cajón lateral).
-static func salida(p: Principal, hb: HBoxContainer) -> void:
-	if pc_de(p) != null:
-		var hueco := Control.new()
-		hueco.name = "HuecoLevantarse"
-		hueco.custom_minimum_size = Vector2(196, 0)
-		hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		hb.add_child(hueco)
-		return
-	var b := _accion(Idiomas.t("Entrar al club"), func() -> void: MenuLateral.ejecutar(p, "ciudad_pie" if InterruptorCiudad.activa else "ver_estadio"))
-	b.name = "BotonEntrarClub"
-	b.icon = IconosUI.textura("🏟️", 24)   ## icono dibujado
-	b.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	b.custom_minimum_size.x = 170
-	b.size_flags_stretch_ratio = 0.01
-	hb.add_child(b)

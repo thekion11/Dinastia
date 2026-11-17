@@ -151,8 +151,18 @@ func abrir_despacho(p: Principal) -> void:
 	pn.contenedor.add_child(d)
 	p._aviso_plegado = false
 	p._ui_despacho._pintar_despacho()
-	if d.get_child_count() == 0:
-		d.add_child(EstiloAvanzar.etiqueta(Idiomas.t("Sin asuntos pendientes"), 22, Color.WHITE))
+	if d.get_child_count() == 0:   ## sin asuntos: el próximo hito del calendario y los accesos rápidos (favoritos), para que la pantalla sirva
+		d.add_child(EstiloAvanzar.etiqueta(Idiomas.t("Sin asuntos pendientes"), 24, Color.WHITE, true))
+		d.add_child(EstiloAvanzar.etiqueta("▸ " + String(EventosFecha.hito(p.mundo, p._dia_semana).get("texto", "")), 18, Color(1, 1, 1, 0.85)))
+		for tab: String in p._favoritos:
+			var bf := Button.new()
+			bf.text = "⭐ " + Idiomas.t(tab)
+			bf.custom_minimum_size = Vector2(0, 44)
+			bf.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			bf.pressed.connect(func() -> void:
+				pn.cerrar()
+				p._ir_a_pestana(tab))
+			d.add_child(bf)
 	pn.enfocar()
 	pn.cerrada.connect(func() -> void:
 		if is_instance_valid(d):
@@ -166,4 +176,6 @@ func _cablear_luego() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if is_instance_valid(self) and is_inside_tree():
-		EscaparateFoco.cablear(self)
+		var p := get_parent() as Principal
+		var riel: Array = p._menu_lateral.find_children("*", "Button", true, false) if p != null and p._menu_lateral != null else []
+		EscaparateFoco.cablear(self, riel)

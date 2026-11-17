@@ -31,6 +31,7 @@ var _principal: Control
 var _aro: MeshInstance3D
 var _t := 0.0
 var _aviso_puesto := false
+var _boton_levantar: Button   ## el botón flotante de arriba a la derecha
 
 ## `padre3d`: dónde colgar el aro (el mismo padre que el explorador).
 func montar(padre3d: Node3D, punto_uso: Vector3, planta_: int) -> void:
@@ -157,6 +158,7 @@ func encender() -> void:
 	b.tooltip_text = Idiomas.t("Apaga el ordenador y vuelve a la oficina (también Esc).")
 	b.pressed.connect(apagar)
 	_capa.add_child(b)
+	_boton_levantar = b
 	encendido.emit()
 
 ## Apaga el PC: el menú central se esconde y se congela (sigue vivo: Principal
@@ -192,3 +194,8 @@ func principal() -> Control:
 func _notification(que: int) -> void:
 	if que == NOTIFICATION_WM_CLOSE_REQUEST and abierto and is_instance_valid(_principal) and _principal.get("_partida") != null:
 		_principal.get("_partida").autoguardar_si_toca()
+
+## (17-11) El menú central nuevo lleva su propio «Levantarse del PC» en el pie del Inicio: el flotante solo se ve cuando el Inicio no está a la vista (hay un menú del panel encima).
+func boton_flotante_visible(si: bool) -> void:
+	if is_instance_valid(_boton_levantar):
+		_boton_levantar.visible = si

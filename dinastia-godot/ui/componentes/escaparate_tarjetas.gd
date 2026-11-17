@@ -4,15 +4,23 @@ extends RefCounted
 ## TABLA de diez filas con escudo. Son `TableroInicio.tarjeta` (botón entero, foco de mando, campana de avisos): lo que cambia es que la IMAGEN manda y el texto es grande y corto.
 
 ## La escena de fondo de una tarjeta (el despacho para el DT; el vestuario o el túnel para los jugadores), oscurecida, y encima los retratos 3D con fondo transparente.
-static func _escena(b: Control, fondo_jpg: String, tinte: Color) -> void:
-	var ruta := "res://assets/ui/mosaico/%s.jpg" % fondo_jpg
+static func _escena(b: Control, _fondo_jpg: String, tinte: Color) -> void:
+	## (17-11) Fondo de ESTUDIO en lugar de la foto de la sala (traía una figura negra al fondo): un foco radial del color del club detrás de los retratos y viñeta oscura en los bordes.
+	var g := Gradient.new()
+	g.offsets = PackedFloat32Array([0.0, 0.55, 1.0])
+	g.colors = PackedColorArray([tinte.lightened(0.28), tinte.darkened(0.45), tinte.darkened(0.8)])
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.42)
+	gt.fill_to = Vector2(1.0, 1.0)
+	gt.width = 128
+	gt.height = 128
 	var t := TextureRect.new()
-	if ResourceLoader.exists(ruta):
-		t.texture = load(ruta)
+	t.texture = gt
 	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	t.stretch_mode = TextureRect.STRETCH_SCALE
 	t.set_anchors_preset(Control.PRESET_FULL_RECT)
-	t.modulate = Color(0.55, 0.57, 0.62).lerp(tinte, 0.35)
 	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(t)
 	b.move_child(t, 0)
@@ -22,7 +30,7 @@ static func _imagen(b: Control, tex: Texture2D, anclas: Vector4, orden: int) -> 
 	var t := TextureRect.new()
 	var recorte := AtlasTexture.new()
 	recorte.atlas = tex
-	recorte.region = Rect2(0, 0, 512, 400)
+	recorte.region = Rect2(0, 0, tex.get_width(), tex.get_height() * 0.78)
 	t.texture = recorte if tex is ImageTexture else tex
 	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -223,5 +231,14 @@ static func despacho(p: Principal, c: Club, acento: Color) -> Control:
 	t.add_theme_constant_override("outline_size", 4)
 	t.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
 	v.add_child(t)
+	if n == 0:   ## sin asuntos, la tarjeta sirve: el próximo hito del calendario y los accesos rápidos (favoritos de Ajustes)
+		var hito := EventosFecha.hito(p.mundo, p._dia_semana)
+		var h := EstiloAvanzar.etiqueta("▸ " + String(hito.get("texto", "")), 13, Color(1, 1, 1, 0.85))
+		h.clip_text = true
+		v.add_child(h)
+		if not p._favoritos.is_empty():
+			var fv := EstiloAvanzar.etiqueta("⭐ " + " · ".join(PackedStringArray(p._favoritos.map(func(x: String) -> String: return Idiomas.t(x)))), 13, Color(1, 1, 1, 0.85))
+			fv.clip_text = true
+			v.add_child(fv)
 	TableroInicio.cerrar(b)
 	return b

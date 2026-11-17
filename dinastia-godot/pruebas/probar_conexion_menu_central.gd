@@ -52,6 +52,9 @@ func _tarjeta_con_nombre(raiz: Node, rotulo: String) -> Button:
 			return l.get_parent() as Button
 	return null
 
+func _barra(pant: Node) -> Node:   ## la barra se repinta al cerrar menús: se vuelve a buscar siempre
+	return pant.find_child("Botones", true, false)
+
 func _ready() -> void:
 	AvanceDiasUI.sin_pantalla = true
 	JornadaEventos._abierto = true
@@ -84,9 +87,8 @@ func _una(cfg: Array) -> void:
 		var bb0: Button = pr._menu_lateral.boton_de(String(mn["id"]))
 		_ok(bb0 != null and bb0.is_visible_in_tree() and bb0.get_global_rect().position.x < MenuLateral.ANCHO_RIEL and bb0.get_global_rect().size.y >= 36.0, "%s: el riel enseña el menú «%s» con el Inicio a la vista" % [e, mn["id"]])
 	## 2. La barra de arriba y las tarjetas del Inicio
-	var barra: Node = pant.find_child("Botones", true, false)
 	for nombre: String in ["BotonDespacho", "BotonMensajes"]:
-		var b := barra.get_node_or_null(nombre) as Button
+		var b := _barra(pant).get_node_or_null(nombre) as Button
 		_ok(b != null, "%s: la barra tiene «%s»" % [e, nombre])
 		if b == null:
 			continue
@@ -96,7 +98,7 @@ func _una(cfg: Array) -> void:
 		await _accion("ui_cancel")
 		await _frames(4)
 		_ok(not is_instance_valid(pant.panel_despacho) and not is_instance_valid(pant.informe), "%s: Esc cierra la pantalla de «%s»" % [e, nombre])
-	for b in barra.get_children():
+	for b in _barra(pant).get_children():
 		if b is Button and ["Oficina del DT", "Base de datos", "Sistema"].has(String(b.get_meta("rotulo", ""))):
 			(b as Button).pressed.emit()
 			await _frames(4)
@@ -105,7 +107,7 @@ func _una(cfg: Array) -> void:
 			if is_instance_valid(pant._busqueda):
 				pant._busqueda.hide()
 			await _cerrar_menu(pr)
-	_ok(barra.find_child("BotonEntrarClub", true, false) != null or barra.find_child("HuecoLevantarse", true, false) != null, "%s: el extremo derecho de la barra tiene «Entrar al club» (o el hueco de «Levantarse del PC»)" % e)
+	_ok(_barra(pant).find_child("BotonEntrarClub", true, false) != null or _barra(pant).find_child("HuecoLevantarse", true, false) != null, "%s: el extremo derecho de la barra tiene «Entrar al club» (o el hueco de «Levantarse del PC»)" % e)
 	for rotulo: String in ["Oficina del DT", "Noticias y correo", "Tabla de posiciones", "Hinchada y socios"]:
 		var t2 := _tarjeta_con_nombre(pant, Idiomas.t(rotulo))
 		_ok(t2 != null, "%s: Inicio tiene la tarjeta «%s»" % [e, rotulo])

@@ -62,6 +62,14 @@ static func crear(p: Principal) -> Control:
 			p._botones.remove_child(p._buscador)   ## el buscador vive en «Base de datos»
 		fila.add_child(p._botones)
 		_botones_grandes(p)
+	## (17-11) El sitio FIJO de salida, junto a Ayuda: dentro del PC de la oficina, «Levantarse del PC» (con la tecla Esc); fuera, «Entrar al club».
+	var pc := EscaparateBarra.pc_de(p)
+	var salir := _boton(Idiomas.t("Levantarse del PC") if pc != null else Idiomas.t("Entrar al club"),
+		(func() -> void: pc.apagar()) if pc != null else (func() -> void: MenuLateral.ejecutar(p, "ciudad_pie" if InterruptorCiudad.activa else "ver_estadio")))
+	salir.name = "BotonLevantarse" if pc != null else "BotonEntrarClub"
+	salir.icon = IconosUI.textura("🚪" if pc != null else "🏟️", 20)   ## icono dibujado, no emoji
+	salir.add_theme_color_override("font_color", Color.WHITE)
+	fila.add_child(salir)
 	fila.add_child(_boton("? " + Idiomas.t("Ayuda"), func() -> void: TableroInicio.abrir(p, "Glosario")))
 	for po in p.find_children("*", "PanelObjetivos", true, false):   ## la caja flotante de objetivos pasa a un chip del pie
 		var obj := po as PanelObjetivos

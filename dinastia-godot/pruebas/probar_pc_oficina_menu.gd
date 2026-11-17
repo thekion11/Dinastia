@@ -51,21 +51,19 @@ func _ready() -> void:
 	var pant := pr.get_meta("escaparate") as EscaparatePantalla
 	var barra: Node = pant.find_child("Botones", true, false)
 	_ok(EscaparateBarra.pc_de(pr) == pc, "el menú sabe que es la capa del PC")
-	_ok(barra.find_child("HuecoLevantarse", true, false) != null, "la barra deja el hueco fijo del extremo derecho para «Levantarse del PC»")
-	_ok(barra.find_child("BotonEntrarClub", true, false) == null, "dentro del PC no hay «Entrar al club» (no se abre otro estadio)")
+	_ok(barra.find_child("BotonEntrarClub", true, false) == null and pant.find_child("BotonEntrarClub", true, false) == null, "dentro del PC no hay «Entrar al club» (no se abre otro estadio)")
 	_ok(not (pr._menu_lateral.find_children("*", "Button", true, false).any(func(b: Node) -> bool: return (b as Button).tooltip_text == Idiomas.t("Entrar al club") and (b as Button).visible)), "el riel tampoco ofrece «Entrar al club» desde el PC")
-	var levantarse: Button = null
+	var levantarse := pant.find_child("BotonLevantarse", true, false) as Button
+	_ok(levantarse != null and levantarse.is_visible_in_tree() and levantarse.icon != null, "el pie del Inicio tiene «Levantarse del PC» con icono dibujado (no emoji), en el sitio fijo junto a Ayuda")
+	if levantarse != null:
+		_ok(levantarse.focus_mode == Control.FOCUS_ALL, "«Levantarse del PC» recibe el foco del mando")
+		var r := levantarse.get_global_rect()
+		_ok(Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size).encloses(r), "«Levantarse del PC» cabe en la pantalla")
+	var flotante: Button = null
 	for b in pc.find_children("*", "Button", true, false):
 		if (b as Button).text == Idiomas.t("Levantarse del PC"):
-			levantarse = b as Button
-	_ok(levantarse != null and levantarse.icon != null, "«Levantarse del PC» existe con icono dibujado (no emoji)")
-	if levantarse != null:
-		var caja: Button = null
-		for b in barra.find_children("*", "Button", true, false):
-			if (b as Button).tooltip_text == Idiomas.t("Cuentas del club"):
-				caja = b as Button
-		_ok(caja != null and not caja.get_global_rect().intersects(levantarse.get_global_rect()), "la capa nueva no se tapa con «Levantarse del PC» (la caja queda libre)")
-		_ok(levantarse.focus_mode == Control.FOCUS_ALL, "«Levantarse del PC» recibe el foco del mando")
+			flotante = b as Button
+	_ok(flotante != null and flotante.icon != null and not flotante.visible, "el botón flotante del PC (icono dibujado) se esconde en el Inicio, que ya lleva el suyo, y no tapa la barra")
 	## navegar: un menú del riel y de vuelta
 	pr._menu_lateral.abrir_menu("plantel", 0)
 	await _frames(6)

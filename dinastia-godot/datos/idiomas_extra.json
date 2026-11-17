@@ -9112,7 +9112,10 @@
   "Panel lateral (todos los menús)": "Side panel (all menus)",
   "Índice": "Index",
   "%d avisos urgentes": "%d urgent alerts",
-  "Todo en orden esta semana.": "Everything in order this week."
+  "Todo en orden esta semana.": "Everything in order this week.",
+  "Pretemporada": "Pre-season",
+  "Jornada": "Matchday",
+  "Levantarse del PC": "Leave the PC"
  },
  "pt": {
   "Historia": "História",
@@ -18227,7 +18230,10 @@
   "Panel lateral (todos los menús)": "Painel lateral (todos os menus)",
   "Índice": "Índice",
   "%d avisos urgentes": "%d avisos urgentes",
-  "Todo en orden esta semana.": "Tudo em ordem esta semana."
+  "Todo en orden esta semana.": "Tudo em ordem esta semana.",
+  "Pretemporada": "Pré-temporada",
+  "Jornada": "Rodada",
+  "Levantarse del PC": "Levantar do PC"
  },
  "patrones": [
   [
@@ -33614,7 +33620,10 @@
   "Panel lateral (todos los menús)": "Panneau latéral (tous les menus)",
   "Índice": "Index",
   "%d avisos urgentes": "%d alertes urgentes",
-  "Todo en orden esta semana.": "Tout est en ordre cette semaine."
+  "Todo en orden esta semana.": "Tout est en ordre cette semaine.",
+  "Pretemporada": "Pré-saison",
+  "Jornada": "Journée",
+  "Levantarse del PC": "Quitter le PC"
  },
  "it": {
   "Historia": "Storia",
@@ -42729,7 +42738,10 @@
   "Panel lateral (todos los menús)": "Pannello laterale (tutti i menu)",
   "Índice": "Indice",
   "%d avisos urgentes": "%d avvisi urgenti",
-  "Todo en orden esta semana.": "Tutto in ordine questa settimana."
+  "Todo en orden esta semana.": "Tutto in ordine questa settimana.",
+  "Pretemporada": "Pre-campionato",
+  "Jornada": "Giornata",
+  "Levantarse del PC": "Alzarsi dal PC"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51844,7 +51856,10 @@
   "Panel lateral (todos los menús)": "Seitenleiste (alle Menüs)",
   "Índice": "Index",
   "%d avisos urgentes": "%d dringende Hinweise",
-  "Todo en orden esta semana.": "Diese Woche ist alles in Ordnung."
+  "Todo en orden esta semana.": "Diese Woche ist alles in Ordnung.",
+  "Pretemporada": "Vorbereitung",
+  "Jornada": "Spieltag",
+  "Levantarse del PC": "Vom PC aufstehen"
  },
  "ca": {
   "Historia": "Història",
@@ -60959,7 +60974,10 @@
   "Panel lateral (todos los menús)": "Panell lateral (tots els menús)",
   "Índice": "Índex",
   "%d avisos urgentes": "%d avisos urgents",
-  "Todo en orden esta semana.": "Tot en ordre aquesta setmana."
+  "Todo en orden esta semana.": "Tot en ordre aquesta setmana.",
+  "Pretemporada": "Pretemporada",
+  "Jornada": "Jornada",
+  "Levantarse del PC": "Aixecar-se del PC"
  },
  "pl": {
   "Club": "Klub",
@@ -70074,7 +70092,10 @@
   "Panel lateral (todos los menús)": "Panel boczny (wszystkie menu)",
   "Índice": "Indeks",
   "%d avisos urgentes": "%d pilnych ostrzeżeń",
-  "Todo en orden esta semana.": "W tym tygodniu wszystko w porządku."
+  "Todo en orden esta semana.": "W tym tygodniu wszystko w porządku.",
+  "Pretemporada": "Przedsezonowy okres",
+  "Jornada": "Kolejka",
+  "Levantarse del PC": "Wstań od komputera"
  },
  "tr": {
   "Club": "Kulüp",
@@ -79189,6 +79210,9 @@
   "Panel lateral (todos los menús)": "Yan panel (tüm menüler)",
   "Índice": "Dizin",
   "%d avisos urgentes": "%d acil uyarı",
-  "Todo en orden esta semana.": "Bu hafta her şey yolunda."
+  "Todo en orden esta semana.": "Bu hafta her şey yolunda.",
+  "Pretemporada": "Sezon öncesi",
+  "Jornada": "Hafta",
+  "Levantarse del PC": "Bilgisayardan kalk"
  }
 }

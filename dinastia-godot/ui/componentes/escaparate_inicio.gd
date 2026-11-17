@@ -31,6 +31,9 @@ static func sincronizar(p: Principal) -> void:
 	var raiz: Node = p._despacho.get_parent() if p._despacho != null else null
 	if raiz is Control:
 		(raiz as Control).visible = not en_inicio
+	var pc := EscaparateBarra.pc_de(p)
+	if pc != null:
+		pc.boton_flotante_visible(not en_inicio)   ## en el Inicio, «Levantarse del PC» está en el pie
 	if p._menu_lateral != null:
 		p._menu_lateral.esconder_riel(false)   ## la tira de iconos se ve también en el Inicio (idéntica a la de antes)
 	for po in p.find_children("*", "PanelObjetivos", true, false):   ## su chapa plegada pasa al pie mientras se ve el escaparate
@@ -55,29 +58,48 @@ static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, ac
 	abajo.size_flags_stretch_ratio = 1.0
 	abajo.custom_minimum_size.y = 130
 	cuerpo.add_child(abajo)
-	for par: Array in [[EscaparatePartidos.proximos(p, c, liga, acento), 2.7], [EscaparatePartidos.hinchada(p, c, acento), 1.35], [EscaparateTarjetas.despacho(p, c, acento), 1.0]]:
+	for par: Array in [[EscaparatePartidos.proximos(p, c, liga, acento), 3.6], [EscaparatePartidos.hinchada(p, c, acento), 1.15], [EscaparateTarjetas.despacho(p, c, acento), 0.85]]:
 		var t: Control = par[0]
 		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		t.size_flags_stretch_ratio = float(par[1])
 		abajo.add_child(t)
 	cuerpo.add_child(_franja(p, c))   ## abajo, para que el escudo que cuelga de la barra no tape la línea de estado
 
-## (17-11) La franja de arriba del Inicio, con los accesorios que vuelven: la LÍNEA DE ESTADO (jornada, sueldos, media, objetivo, confianza: `p._sub`), los ACCESOS RÁPIDOS que se marcan en Ajustes
-## (uno por favorito) y la FORMA (últimos 5 partidos). Una sola fila baja, para que las tarjetas conserven el alto.
+## (17-11) La franja de abajo del Inicio, con los accesorios que vuelven: la LÍNEA DE ESTADO en FICHAS (cifra grande y su rótulo: jornada o «Pretemporada», sueldos, media, objetivo, confianza, socios),
+## los ACCESOS RÁPIDOS que se marcan en Ajustes (uno por favorito) y la FORMA (últimos 5 partidos). Una sola fila baja, para que las tarjetas conserven el alto.
+static func _ficha(valor: String, rotulo: String, col := Color.WHITE) -> Control:
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", -3)
+	var n := EstiloAvanzar.etiqueta(valor, 20, col, true)
+	n.clip_text = true
+	v.add_child(n)
+	var r := EstiloAvanzar.etiqueta(rotulo.to_upper(), 11, Color(1, 1, 1, 0.65))
+	r.clip_text = true
+	v.add_child(r)
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return v
+
 static func _franja(p: Principal, c: Club) -> Control:
 	var f := HBoxContainer.new()
-	f.add_theme_constant_override("separation", 8)
-	f.custom_minimum_size.y = 34
-	var estado := Label.new()
-	estado.text = p._sub.text if p._sub != null else ""
-	estado.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	estado.clip_text = true
-	estado.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	estado.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	estado.add_theme_font_size_override("font_size", Tema.letra(13))
-	estado.add_theme_color_override("font_color", Color(1, 1, 1, 0.85))
-	estado.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	f.add_child(estado)
+	f.add_theme_constant_override("separation", 22)
+	f.custom_minimum_size.y = 44
+	var liga := p._liga_de(c)
+	var dir: Directiva = p.mundo.directiva
+	if liga != null:
+		if liga.jornada_actual <= 0:
+			f.add_child(_ficha(Idiomas.t("Pretemporada"), liga.nombre))
+		else:
+			f.add_child(_ficha("%d / %d" % [liga.jornada_actual, liga.jornadas()], "%s · %s" % [Idiomas.t("Jornada"), liga.nombre]))
+	f.add_child(_ficha(p._dinero(c.masa_salarial()), Idiomas.t("Sueldos/sem")))
+	f.add_child(_ficha("%.1f" % c.media(), Idiomas.t("Media")))
+	if dir != null and dir.objetivo != "":
+		f.add_child(_ficha(Idiomas.t(dir.objetivo), Idiomas.t("Objetivo")))
+		f.add_child(_ficha("%d" % dir.confianza, Idiomas.t("Confianza"), Tema.bien() if dir.confianza >= 50 else Tema.mal()))
+	f.add_child(_ficha(p._miles(c.socios), Idiomas.t("Socios")))
+	var relleno := Control.new()
+	relleno.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	relleno.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	f.add_child(relleno)
 	for tab: String in p._favoritos:
 		var b := Button.new()
 		b.text = "⭐ " + Idiomas.t(tab)

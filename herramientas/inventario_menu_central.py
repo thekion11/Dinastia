@@ -41,69 +41,64 @@ ACCESORIOS = """## 2. Accesorios del menú anterior
 
 | Accesorio | Dónde estaba (menú anterior) | Por dónde se llega AHORA | Qué abre de verdad |
 |---|---|---|---|
-| Campana roja de avisos (`CampanasMenu`) | Tarjetas y pestañas del mosaico | Igual: `TableroInicio.tarjeta` la pone en cada tarjeta y `marcar_pestana` en las pestañas | La zona del aviso (avance por días) |
-| Buscador global | Cabecera, siempre a la vista | Barra > «Base de datos» (cuadro con el buscador y puerta a «Ligas y clubes»); Índice > Accesos; tecla F3 | Ficha del jugador o del club |
-| Botones Avanzar / Jugar / Saltar / Partido jugado / Temporada | Fila de la raíz | Pie del escaparate (los mismos `BotonesAvance`); pulsar de nuevo la pestaña «Avanzar en el tiempo» abre «Avanzar 1 día / Siguiente» | El avance por días y el partido |
-| Selector (OptionButton de la raíz) | Fila de botones | Sigue en la raíz del menú anterior (oculta en PC mientras se ve el Inicio); su función (cambiar de club en modo libre) está en Ajustes > Partida y guardado | Ajustes |
-| Despacho «🔔 N asuntos» (jugador que te busca, prensa, junta, cantera, personal, zona gris, crisis, casa) | `p._despacho` en la raíz | Inicio > tarjeta «Despacho» (alerta ámbar con N), pie > «● Despacho (N)», Índice > Accesos | Pantalla completa `EscaparatePanel` con `p._despacho` (misma lógica de `PantallaDespacho`) |
-| Informe de la semana | Debajo del mosaico del Inicio | Información del club > tarjeta «Informe de la semana» (titular + contador); Índice > Accesos; sus avisos graves suman en «Mensajes» del pie | Pantalla completa `EscaparateInforme` (`InformeSemana.pintar_en`), cada aviso con botón a su pantalla |
-| Mensajes y correo | Botón de la raíz | Pie > «Mensajes (N)» (sin leer + avisos graves); Inicio > tarjeta «Noticias y correo» | Submenú Correo |
-| Ayuda y glosario | Botón de la raíz | Pie > «Ayuda»; Índice > Reglas > Glosario | Submenú Glosario |
-| Accesos rápidos (favoritos de Ajustes) | Fila bajo el mosaico | Índice > Accesos (⭐ uno por favorito) | `_ir_a_pestana` de cada uno |
-| Últimos resultados | Lista bajo el mosaico | Inicio > fila «Calendario» (primera tarjeta = último resultado); Calendario; Partido > Informe | Calendario / Récords |
-| Línea de estado (`p._sub`: jornada, sueldos, media, objetivo, confianza) | Cabecera | Pie, en el hueco del medio (se recorta con «…») | Informativa |
-| Objetivos «🎯 N» (`PanelObjetivos`) | Caja flotante | Pie > chip «🎯 N» | Despliega el panel de objetivos |
+| Barra lateral izquierda (riel de 14 iconos, ☰, cajón de submenús, L2/R2, atajos, «Entrar al club») | Siempre a la izquierda | SIEMPRE visible, también en el Inicio (`esconder_riel(false)`); en el PC de la oficina el «Entrar al club» se esconde | Los 14 menús y sus submenús |
+| Campana roja de avisos (`CampanasMenu`) | Tarjetas y pestañas | `TableroInicio.tarjeta` la pone en cada tarjeta y `marcar_pestana` en la pestaña | La zona del aviso |
+| Buscador global | Cabecera | Barra > «Base de datos» (cuadro con el buscador y puerta a «Ligas y clubes»); tecla F3 | Ficha del jugador o del club |
+| Avanzar / Jugar / Saltar / Partido jugado / Temporada | Fila de la raíz | Pie del Inicio (los mismos `BotonesAvance`); re-pulsar «Avanzar en el tiempo» abre «Avanzar 1 día / Siguiente» | El avance por días y el partido |
+| Despacho «🔔 N asuntos» | `p._despacho` en la raíz | Barra > «Despacho · N» (ámbar), Inicio > tarjeta «Despacho» (con N, o próximo hito y favoritos si no hay asuntos) | `EscaparatePanel` con `p._despacho` (misma lógica de `PantallaDespacho.asuntos_pendientes`) |
+| Informe de la semana | Bajo el mosaico | Barra > «Mensajes · N» | `EscaparateInforme`: correo, noticias recientes e informe (`InformeSemana.pintar_en`), cada aviso con botón a su pantalla |
+| Mensajes y correo | Botón de la raíz | Barra > «Mensajes · N» (sin leer + avisos graves) y tarjeta «Noticias y correo» | Submenú Correo |
+| Ayuda y glosario | Botón de la raíz | Pie > «Ayuda»; barra lateral > Reglas > Glosario | Submenú Glosario |
+| Accesos rápidos (favoritos de Ajustes) | Fila bajo el mosaico | Franja inferior del Inicio (⭐ uno por favorito) y despacho vacío | `_ir_a_pestana` |
+| Últimos resultados | Lista bajo el mosaico | Fila «Calendario» (primera tarjeta = último resultado); Calendario | Calendario |
+| Forma (últimos 5) | Tarjeta «Forma» | Franja inferior del Inicio (fichas G/E/P) | Informativa |
+| Línea de estado (`p._sub`) | Cabecera | Franja inferior del Inicio en fichas (jornada o «Pretemporada», sueldos, media, objetivo, confianza, socios) | Informativa |
+| Objetivos «🎯 N» | Caja flotante | Pie > chip «🎯 N» | Despliega `PanelObjetivos` |
 | Fecha y caja | Cabecera | Barra (caja pulsable → Cuentas del club); reloj del pie con Timer de 1 s | Cuentas del club |
-| Escudo | Cabecera | Barra (pulsable → Identidad visual) | Identidad visual |
-| Guardar / Cargar / otro mundo / ranuras | Ajustes | Barra > «Sistema»; Índice > Ajustes > Partida y guardado | Ajustes · partida |
-| Atajos de teclado (`AtajosCentrales`) | Cualquier pantalla | Siguen activos (menú entero y cada submenú); L1/R1 recorren las 4 pestañas | Cada atajo |
-| Tutorial (`Tutorial`, `CapaTutorial`) | Primera vez | Sin cambios (lo lanza `GuiaTutorial`) | Tarjetas de ayuda |
-| Barra lateral izquierda (riel de iconos) | Siempre a la izquierda | Se oculta en el Inicio de PC; se conserva: «☰» de la barra (cajón completo), L2/R2 y atajos; se ve en cuanto se abre cualquier menú | Los 14 menús |
+| Escudo | Cabecera | Barra, centrado (→ Identidad visual) | Identidad visual |
+| Guardar / Cargar / ranuras | Ajustes | Barra > «Sistema»; barra lateral > Ajustes > Partida y guardado | Ajustes · partida |
+| Atajos de teclado (`AtajosCentrales`) | Cualquier pantalla | Siguen activos; en el Inicio, L2/R2 abren el primer/último menú de la barra lateral | Cada atajo |
+| Tutorial | Primera vez | Sin cambios (`GuiaTutorial`) | Tarjetas de ayuda |
+| Levantarse del PC / Entrar al club | Cajón lateral | Pie del Inicio, junto a Ayuda: «Levantarse del PC» dentro de `PcOficina` (Esc también; autoguarda), «Entrar al club» fuera | `PcOficina.apagar` / `ver_estadio` |
+| Selector (OptionButton) | Fila de la raíz | Sigue en la raíz del menú anterior (oculta); cambio de club en Ajustes > Partida | Ajustes |
+| Mosaicos de «Dirección del equipo» e «Información del club» | Pestañas del Inicio | Quedan en el código (`EscaparateSubs`, `EscaparateIndice`, `EscaparateArte*`) para usarlos como portada de menús; hoy cada menú lateral usa su portada de siempre (`PortadaMosaico`) | — |
 
 ## 3. Pantallas perezosas (`Principal.PANTALLAS_PEREZOSAS`)
 
-Las 12 (`club_vida`, `cantera`, `gente`, `finanzas`, `editor`, `identidad`, `plantel`, `ficha`, `despacho`, `legado`, `opciones`, `elegir_club`) se abren desde los submenús de la sección 1 (cada `tab` del panel lateral llama a `_abrir_perezosa`), así que están cubiertas por el Índice. La prueba `probar_conexion_menu_central` comprueba además que cada submenú abre su menú.
+Las 12 (`club_vida`, `cantera`, `gente`, `finanzas`, `editor`, `identidad`, `plantel`, `ficha`, `despacho`, `legado`, `opciones`, `elegir_club`) se abren desde los submenús de la sección 1 (cada `tab` del panel lateral llama a `_abrir_perezosa`), así que están cubiertas por la barra lateral; `despacho` además por «Despacho · N». La prueba `probar_conexion_menu_central` abre CADA submenú que no es una acción y comprueba menú y submenú.
 
 ## 4. Al revés: cada tarjeta, pestaña y botón nuevo
 
 | Elemento nuevo | Abre |
 |---|---|
-| Pestaña «Avanzar en el tiempo» | Inicio (DT, noticia, tabla, calendario, hinchada, despacho); re-pulsar = desplegable de avance |
-| Pestañas «Dirección del equipo» e «Información del club» | Mosaico de 9 y 10 tarjetas: cada una abre su submenú (`TableroInicio.abrir` → `abrir_menu(id, i)`) |
-| Pestaña «Índice» | Todos los submenús (`MenusLaterales.MENUS`) + accesos |
-| Tarjeta «Oficina del DT» / atajo | Mi carrera |
-| Tarjeta «Noticias y correo» | Correo |
-| Tarjeta «Tabla de posiciones» | Ligas y clubes |
-| Tarjeta «Calendario» | Calendario de semanas |
-| Tarjeta «Hinchada y socios» | Hinchada y socios |
-| Tarjeta «Despacho» | Pantalla completa del despacho |
-| Tarjeta «Informe de la semana» | Pantalla completa del informe |
-| Barra: ☰ | Cajón con todos los menús |
-| Barra: Oficina del DT / Base de datos / Sistema | Mi carrera / buscador / Ajustes |
+| Pestaña «Avanzar en el tiempo» | Inicio; re-pulsar = desplegable de avance |
+| Barra: «Despacho · N» / «Mensajes · N» | Pantalla completa del despacho / de mensajes e informe (Esc o «Volver» cierran) |
 | Barra: escudo / caja | Identidad visual / Cuentas del club |
-| Pie: Mensajes / Despacho / Ayuda / 🎯 / Avanzar… | Correo / despacho / Glosario / objetivos / botones de avance |
+| Barra: Oficina del DT / Base de datos / Sistema | Mi carrera / buscador / Ajustes |
+| Tarjetas del Inicio: Oficina del DT, Noticias y correo, Tabla de posiciones, Calendario, Hinchada y socios, Despacho | Mi carrera, Correo, Ligas y clubes, Calendario de semanas, Hinchada y socios, pantalla del despacho |
+| Pie: Avanzar…, 🎯, Levantarse del PC / Entrar al club, Ayuda | Botones de avance, objetivos, PC / estadio, Glosario |
+| Barra lateral (14 iconos) | Cada menú en su portada |
 """
 TARJETA = {}
-for r in EQUIPO: TARJETA[r] = "Dirección del equipo > tarjeta"
-for r in CLUB: TARJETA[r] = "Información del club > tarjeta"
-TARJETA["Mi plantel"] = "Dirección del equipo > tarjeta «Mi plantel»"
 TARJETA["Mi carrera"] = "Barra > «Oficina del DT» y tarjeta del DT (Inicio)"
+TARJETA["Identidad visual"] = "Barra > escudo"
+TARJETA["Cuentas del club"] = "Barra > caja"
 TARJETA["Correo"] = "Pie > «Mensajes» y tarjeta «Noticias y correo» (Inicio)"
 TARJETA["Glosario"] = "Pie > «Ayuda»"
 TARJETA["Calendario"] = "Inicio > tarjeta «Calendario»"
-TARJETA["Ligas y clubes"] = "Información del club > tarjeta; Inicio > tabla de posiciones; Base de datos"
-TARJETA["Hinchada y socios"] = "Información del club > tarjeta; Inicio > «Hinchada y socios»"
+TARJETA["Ligas y clubes"] = "Inicio > tabla de posiciones; barra > Base de datos"
+TARJETA["Hinchada y socios"] = "Inicio > tarjeta «Hinchada y socios»"
 out = ["# INVENTARIO DEL MENÚ CENTRAL (17-11-2026)", "",
        "Generado con `dinastia-godot/herramientas/inventario_menu_central.py` (lee `MenusLaterales.MENUS`, `TableroInicio.EQUIPO/CLUB`); la prueba `_probar_conexion_menu_central` (banco, grupo `menus`) y `pruebas/probar_conexion_menu_central.gd` (especiales.sh, xvfb) la hacen cumplir.",
-       "", "Todo submenú sale en la pestaña **Índice** (cuarta pestaña del menú central: cada menú del panel lateral con TODOS sus submenús como botones, leídos de `MenusLaterales.MENUS`) y, además, por el «☰» de la barra, L2/R2 y los atajos de teclado. La columna «Entrada directa» dice si ADEMÁS tiene tarjeta o botón propio.", "",
+       "", "**Diseño aprobado por el dueño (17-11):** la barra lateral izquierda (los 14 iconos de `MenusLaterales.MENUS`, con su ☰, el cajón de submenús, L2/R2 y los atajos) está SIEMPRE visible, también en el Inicio; cada menú se abre en su portada (mosaico de tarjetas, una por submenú) y todos sus submenús siguen un clic más allá. La barra de arriba (color del club) NO repite esos menús: «Avanzar en el tiempo», «Despacho · N», «Mensajes · N», escudo (→ Identidad visual), «Oficina del DT», «Base de datos», «Sistema», la caja (→ Cuentas del club) y la fecha. La columna «Entrada directa» dice si el submenú tiene ADEMÁS una tarjeta o botón propio en el Inicio.", "",
        "## 1. Submenús del panel lateral (%d en %d menús)" % (len(filas), len({f[0][0] for f in filas})), "",
-       "| Menú | Submenú | Destino (pestaña · sección / acción) | Entrada directa en el menú nuevo | Índice | ≡ |", "|---|---|---|---|---|---|"]
+       "| Menú | Submenú | Destino (pestaña · sección / acción) | Entrada directa desde el Inicio | Barra lateral |", "|---|---|---|---|---|"]
 for (mid, mn), tab, secc, acc, label in filas:
     dest = ("acción `%s`" % acc) if acc else ("%s%s" % (tab, (" · " + secc) if secc else ""))
     directa = TARJETA.get(label) or "—"
-    out.append("| %s | %s | %s | %s | sí | sí |" % (mn, label, dest, directa))
+    out.append("| %s | %s | %s | %s | sí |" % (mn, label, dest, directa))
 sin = [l for (_, _, _, _, l) in filas if l not in TARJETA]
-out += ["", "Submenús sin tarjeta propia (se alcanzan por el Índice, el «☰», L2/R2 y atajos): **%d de %d**. Ninguno queda «SIN ENTRADA»." % (len(sin), len(filas)), ""]
+out += ["", "Submenús sin tarjeta propia en el Inicio (se alcanzan por la barra lateral siempre visible, L2/R2 y atajos): **%d de %d**. Ninguno queda «SIN ENTRADA»." % (len(sin), len(filas)), ""]
 out += [ACCESORIOS]
 open(ruta_segura("docs/04_auditorias/INVENTARIO_MENU_CENTRAL_2026-11-17.md"), "w", encoding="utf-8").write("\n".join(out) + "\n")
 print("%d submenús; %d sin tarjeta propia" % (len(filas), len(sin)))

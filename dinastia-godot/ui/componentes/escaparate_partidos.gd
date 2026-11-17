@@ -43,11 +43,11 @@ static func _columna(local: Club, visita: Club, centro: String, comp_tipo: Strin
 	var fila := HBoxContainer.new()
 	fila.alignment = BoxContainer.ALIGNMENT_CENTER
 	fila.add_theme_constant_override("separation", 12)
-	fila.add_child(_escudo(local, 44))
-	var c := EstiloAvanzar.etiqueta(centro, 34, NARANJA if siguiente else Color.WHITE, true)
+	fila.add_child(_escudo(local, 38))
+	var c := EstiloAvanzar.etiqueta(centro, 28, NARANJA if siguiente else Color.WHITE, true)
 	c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	fila.add_child(c)
-	fila.add_child(_escudo(visita, 44))
+	fila.add_child(_escudo(visita, 38))
 	col.add_child(fila)
 	var e := EstiloAvanzar.etiqueta(estadio, 12, Color(1, 1, 1, 0.85))
 	e.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -88,7 +88,7 @@ static func proximos(p: Principal, c: Club, liga: Liga, acento: Color) -> Contro
 	for e: Dictionary in EventosFecha.proximos(p.mundo, p._dia_semana, 12):
 		if EventosFecha.es_partido(e) and e.get("rival") is Club:
 			lista.append(e)
-	var cuantos := 2 if not ultimo.is_empty() else 3   ## sin partido jugado aún, los cuatro próximos (nunca un hueco vacío)
+	var cuantos := 3 if not ultimo.is_empty() else 4   ## sin partido jugado aún, los cuatro próximos (nunca un hueco vacío)
 	if not ultimo.is_empty():
 		var l: Club = ultimo["local"]
 		cols.append(_columna(l, ultimo["visita"], "%d - %d" % [int(ultimo["gl"]), int(ultimo["gv"])], "liga", liga.nombre if liga != null else "", l.estadio_nombre if l.estadio_nombre != "" else l.nombre, Idiomas.t("Jornada %d") % int(ultimo["jornada"]), false, c))

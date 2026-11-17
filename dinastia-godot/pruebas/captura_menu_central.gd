@@ -15,6 +15,9 @@ func _ready() -> void:
 	var ps: Array[String] = [pais]
 	m.generar(ps, 88 + idx)
 	m.tomar_el_mando(m.ligas[0].clubes[idx % m.ligas[0].clubes.size()].id)
+	if OS.get_environment("CLARO") == "1":   ## un club de color CLARO (camiseta blanca-crema): comprueba el contraste del blanco sobre su color
+		m.mi_club().color1 = "#f3efe0"
+		m.mi_club().color2 = "#d9a521"
 	for _i in (int(OS.get_environment("JORNADAS")) if OS.get_environment("JORNADAS") != "" else 0):   ## con partidos jugados, para ver el último resultado
 		m.avanzar_semana()
 	PedidoPartida.mundo_pregenerado = m

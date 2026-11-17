@@ -12,8 +12,12 @@ static func enfocables(raiz: Control) -> Array[Control]:
 			salida.append(c)
 	return salida
 
-static func cablear(raiz: Control) -> void:
+## `extra`: controles de fuera de la capa que también entran en el reparto (los botones de la barra lateral: la cruceta izquierda desde el mosaico llega a ella y la derecha vuelve).
+static func cablear(raiz: Control, extra: Array = []) -> void:
 	var lista := enfocables(raiz)
+	for e in extra:
+		if e is Control and (e as Control).is_visible_in_tree() and (e as Control).focus_mode == Control.FOCUS_ALL and (e as Control).get_global_rect().size.x > 1.0:
+			lista.append(e as Control)
 	for a in lista:
 		var ca := a.get_global_rect().get_center()
 		var mejor := [null, null, null, null]   ## izquierda, derecha, arriba, abajo
