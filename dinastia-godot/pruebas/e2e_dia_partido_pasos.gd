@@ -192,11 +192,9 @@ func _formacion_en_campo(vista: VistaEstadio, c: Club) -> String:
 	var mio_local := vista.partido.local == c
 	var codigos: Array = []
 	for f: Dictionary in vista.get("_en_campo"):
-		if bool(f.get("es_local", false)) == mio_local and f.has("slot_code"):
+		if bool(f.get("es_local", false)) == mio_local and f.has("slot_code") and String(f["slot_code"]) != "ARB":   ## los árbitros no son de nadie
 			codigos.append(String(f["slot_code"]))
 	codigos.sort()
-	if OS.get_environment("E2E_DEPURAR") != "" or true:
-		print("    casillas de mi equipo: %s" % str(codigos))
 	for nombre: String in Datos.tabla("FORMS").keys():
 		var otros: Array = []
 		for s: Variant in (Puente3D.formacion(nombre).get("s", []) as Array):
