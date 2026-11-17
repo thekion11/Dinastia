@@ -214,7 +214,6 @@ func _crear_rotulo_jugada() -> void:
 	_rotulo_jugada.add_child(_lbl_jugada)
 
 # --- el partido, jugándose -------------------------------------------------
-
 func _arrancar_partido() -> void:
 	_juego = MatchPlayback.new()
 	## La posesión estimada sale de la fuerza de los dos onces, que es la que ya

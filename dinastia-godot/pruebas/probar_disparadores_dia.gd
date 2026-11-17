@@ -82,6 +82,7 @@ func _premio(m: Mundo, e: String) -> void:
 	_ok(DisparadoresDia.de_premio_mensual(m, est).is_empty(), "%s: sin premio esta semana no hay evento" % e)
 	var j: Jugador = m.mi_club().plantilla[0]
 	j.notas = [9.0, 9.2, 9.4] as Array[float]
+	j.partidos = maxi(j.partidos, 3)   ## (17-11) G-08 de main: solo cuentan las notas de los partidos de esta temporada
 	_ok(PremioMensual.revisar(m) == j, "%s: el juego premia al de las mejores notas" % e)
 	var a := DisparadoresDia.de_premio_mensual(m, est)
 	_ok(a.size() == 1 and String(a[0]["clase"]) == EventosDia.PANTALLA and bool(a[0]["es_mio"]) and String(a[0]["jugador_id"]) == j.id, "%s: jugador del mes tuyo = PANTALLA" % e)
@@ -95,6 +96,7 @@ func _premio(m: Mundo, e: String) -> void:
 			break
 	j.notas = [5.0, 5.0, 5.0] as Array[float]
 	otro.notas = [9.5, 9.5, 9.5] as Array[float]
+	otro.partidos = maxi(otro.partidos, 3)
 	PremioMensual.revisar(m)
 	var b := DisparadoresDia.de_premio_mensual(m, est2)
 	_ok(b.size() == 1 and String(b[0]["clase"]) == EventosDia.AVISO and not bool(b[0]["es_mio"]), "%s: jugador del mes de otro club = AVISO de prensa" % e)
