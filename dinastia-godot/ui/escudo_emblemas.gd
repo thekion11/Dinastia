@@ -45,6 +45,7 @@ const FIGURAS := {
 	"toro": '<path d="M1 8 C2 19 9 22 13 18.5 M39 8 C38 19 31 22 27 18.5" stroke="{F}" stroke-width="3.6" fill="none" stroke-linecap="round"/><path d="M11.5 14 H28.5 L26.5 29 Q20 38 13.5 29 Z" fill="{F}"/><ellipse cx="20" cy="30" rx="6.5" ry="4.5" fill="{D}"/><circle cx="17.5" cy="30" r="1.1" fill="{F}"/><circle cx="22.5" cy="30" r="1.1" fill="{F}"/><circle cx="15.5" cy="20" r="1.6" fill="{D}"/><circle cx="24.5" cy="20" r="1.6" fill="{D}"/>',
 	"dragon": '<path d="M3 36 C3 24 10 14 19 14 L22 5 L26 13 C30 12 34 13 37 16 L31 19 L37 22 L28 24 C25 30 18 34 11 36 Z" fill="{F}"/><path d="M26 13 L31 6 L30 15" fill="{F}"/><path d="M31 19 L33 22 L35 20 M28 24 L30 27 L32 24.5" fill="{D}"/><circle cx="26" cy="15.5" r="1.4" fill="{D}"/><path d="M10 26 Q14 22 18 26 M9 31 Q14 27 20 31" stroke="{D}" stroke-width="1.3" fill="none"/>',
 	"castillo": '<path d="M3 37 V13 H8 V8 H11 V13 H14 V18 H26 V13 H29 V8 H32 V13 H37 V37 Z" fill="{F}"/><path d="M16.5 37 V27 A3.5 3.5 0 0 1 23.5 27 V37 Z" fill="{D}"/><rect x="6" y="19" width="3" height="5" fill="{D}"/><rect x="31" y="19" width="3" height="5" fill="{D}"/>',
+	"rosa": '<g fill="{F}"><ellipse cx="20" cy="9.5" rx="6.8" ry="8.6"/><ellipse cx="20" cy="9.5" rx="6.8" ry="8.6" transform="rotate(72 20 20)"/><ellipse cx="20" cy="9.5" rx="6.8" ry="8.6" transform="rotate(144 20 20)"/><ellipse cx="20" cy="9.5" rx="6.8" ry="8.6" transform="rotate(216 20 20)"/><ellipse cx="20" cy="9.5" rx="6.8" ry="8.6" transform="rotate(288 20 20)"/></g><circle cx="20" cy="20" r="6.2" fill="{D}"/><circle cx="20" cy="20" r="3.4" fill="{F}"/>',
 	"trebol": '<circle cx="12.5" cy="17" r="7.6" fill="{F}"/><circle cx="27.5" cy="17" r="7.6" fill="{F}"/><circle cx="20" cy="9" r="7.6" fill="{F}"/><circle cx="20" cy="19" r="4.5" fill="{F}"/><path d="M19 20 C19 29 17 34 12 38 L15 38.8 C21 35 23.5 29 23.5 20 Z" fill="{F}"/>',
 	"arpa": '<path d="M5 37 L5 8 C5 3 11 1.5 16 3.5 C28 8.5 35 17 35 29 L35 37 Z" fill="{F}"/><path d="M11 12 V37 M16.5 14 V37 M22 17.5 V37 M27.5 22 V37" stroke="{D}" stroke-width="1.7" fill="none"/><path d="M5 37 H35" stroke="{D}" stroke-width="2.4"/>',
 	"delfin": '<path d="M2 27 C7 11 24 6 34 14 C29 14 27 17 28 20 C32 19 37 22 39 28 C33 26 29 27 26 31 C20 36 7 36 2 27 Z" fill="{F}"/><path d="M14 11 C16 4 21 3 24 6 C21 6 19 8 19 10 Z" fill="{F}"/><circle cx="27" cy="13" r="1.3" fill="{D}"/>',
@@ -149,6 +150,20 @@ static func letras_svg(texto: String, cx: float, cy: float, ancho: float, alto: 
 	var g := 'stroke-linecap="round" stroke-linejoin="round" fill="none"'
 	return '<g %s stroke="%s" stroke-width="%.2f" opacity=".9">%s</g><g %s stroke="%s" stroke-width="%.2f">%s</g>' % [g, borde, grosor + 1.6, trazos, g, color, grosor, trazos]
 
+## (17-11) MONOGRAMAS DISTINTOS: los escudos de solo letras no son el mismo sello con otras iniciales; cada club toma un estilo estable (por su nombre):
+## 0 recto · 1 en diagonal · 2 sobre un rombo · 3 con una barra debajo.
+static func monograma_svg(letras: String, ancho: float, color: String, borde: String, estilo: int, fondo: String) -> String:
+	match estilo:
+		1:
+			return '<g transform="rotate(-14 32 33)">%s</g>' % letras_svg(letras, 32.0, 33.0, ancho, 22.0, color, borde)
+		2:
+			var rombo := '<path d="M32 15 L49 33 L32 51 L15 33 Z" fill="%s" fill-opacity=".92" stroke="%s" stroke-width="1.6"/>' % [fondo, color]
+			return rombo + letras_svg(letras, 32.0, 33.0, minf(ancho, 22.0), 12.0, color, borde)
+		3:
+			var barra := '<rect x="14" y="44" width="36" height="3.4" rx="1.2" fill="%s"/>' % color
+			return letras_svg(letras, 32.0, 31.0, ancho, 20.0, color, borde) + barra
+	return letras_svg(letras, 32.0, 33.0, ancho, 24.0, color, borde)
+
 ## La figura `clave` colocada en (cx, cy) con `lado` unidades de alto; "" si no existe o están apagadas.
 static func figura_svg(clave: String, cx: float, cy: float, lado: float, color: String, detalle: String) -> String:
 	if not FIGURAS.has(clave):
@@ -211,6 +226,6 @@ static func capa_de(c: Club, fondo: String) -> String:
 		out += figura_svg(fig, 32.0, 33.0, 32.0 if placa == "" else 26.0, acento, fondo)
 	else:
 		var col := color_letras if color_letras != "" else acento
-		out += letras_svg(letras, 32.0, 33.0, ancho_letras, 24.0, col, "#14171c" if Color(col).get_luminance() > 0.5 else "#ffffff")
+		out += monograma_svg(letras, ancho_letras, col, "#14171c" if Color(col).get_luminance() > 0.5 else "#ffffff", absi(c.nombre.hash()) % 4, fondo)
 	out = placa + out
 	return out

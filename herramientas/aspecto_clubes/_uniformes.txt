@@ -18,7 +18,7 @@ Arsenal||||||#f4d03f|#0b2f66|liso||
 Brentford||||||#ffd100|#111111|liso||
 Juventus||||||#f2c200|#111111|liso||
 Leverkusen|mangas_contraste|#d50032|#000000|#000000|#d50032|#111111|#d50032|liso||
-Frankfurt|franja_pecho|#000000|#d50032|#000000|#000000|#ffffff|#d50032|liso||
+Frankfurt|liso|#000000|#d50032|#000000|#000000|#ffffff|#d50032|liso||
 Lens|franjas|#d50032|#ffd100|#d50032|#d50032|#ffd100|#d50032|liso||
 Nantes||||||#00954c|#ffd100|liso||
 Marsella||||||#2faee0|#ffffff|liso||

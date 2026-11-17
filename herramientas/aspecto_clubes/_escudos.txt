@@ -6,12 +6,12 @@ U. Católica|escudo|liso||UC|#0038a8|#ffffff|
 Palestino|escudo|franjas||CDP|#00843d|#d50032|
 Boca Juniors|clasico|banda_h||CABJ/#0b3d91|#0b3d91|#ffd100|
 River Plate|escudo|banda||CARP/#111111|#ffffff|#d50032|
-Independiente|circulo|liso||CAI/#ffffff|#d50032|#0b2f66|
+Independiente|ojiva|banda||CAI/#ffffff|#d50032|#ffffff|
 Flamengo|circulo|aro||CRF/#ffffff|#d50032|#111111|
 Palmeiras|circulo|liso||SEP/#ffffff|#006437|#ffffff|
 Corinthians|circulo|liso|ancla||#ffffff|#111111|
 Santos|circulo|liso||SFC/#111111|#ffffff|#111111|
-Sao Paulo|circulo|liso|estrellas3||#ffffff|#d50032|#111111
+Sao Paulo|penta|tercios_h|estrellas3||#ffffff|#d50032|#111111
 Gremio|escudo|franjas||GFB/#ffffff|#0d80bf|#111111|
 Fluminense|escudo|franjas||FFC/#ffffff|#7a1f2b|#00843d|
 Botafogo|circulo|liso|estrella||#111111|#ffffff|
@@ -53,7 +53,7 @@ Lazio|circulo|liso|aguila||#75aadb|#ffffff|
 Fiorentina|escudo|liso|flor_lis||#5c2d91|#ffffff|
 Dortmund|circulo|liso||BVB/#14171c|#fde100|#14171c|
 Leipzig|circulo|liso|toro||#ffffff|#dd0741|
-Leverkusen|circulo|liso||B04/#ffffff|#d50032|#111111|
+Leverkusen|circulo|aro|cruz||#d50032|#111111|
 Paris SG|circulo|liso|eiffel||#004170|#ffffff|
 Marsella|circulo|liso||OM/#2faee0|#ffffff|#2faee0|
 Lyon|escudo|liso|leon||#ffffff|#d50032|#0a2240
@@ -192,7 +192,7 @@ Cristal Palace|circulo|franjas|aguila||#1b458f|#d50032|
 Fulham|circulo|liso||FFC/#111111|#ffffff|#111111|
 Brentford|circulo|franjas|abeja||#d50032|#ffffff|
 Nottingham F.|ovalo|liso||NFFC|#d50032|#ffffff|
-Atalanta|escudo|liso||ABC/#ffffff|#1e71b8|#111111|
+Atalanta|ovalo|mitad||ABC/#ffffff|#1e71b8|#111111|
 Torino|escudo|liso|toro||#7a1f2b|#ffffff|
 Bologna|circulo|franjas||BFC/#ffffff|#d50032|#0a2240|
 Udinese|ovalo|franjas||UDI/#ffffff|#111111|#ffffff|
@@ -211,7 +211,7 @@ Mainz|circulo|liso|ancla||#d50032|#ffffff|
 Colonia|circulo|liso||1FC/#ffffff|#d50032|#ffffff|
 Bremen|rombo|liso||SVW/#ffffff|#00954c|#ffffff|
 Augsburgo|clasico|franjas||FCA/#ffffff|#d50032|#00954c|
-Monaco|escudo|mitad||ASM|#d50032|#ffffff|
+Monaco|escudo|rombos|corona||#d50032|#ffffff|
 Lille|escudo|liso|flor_lis||#d50032|#ffffff|
 Niza|escudo|franjas|aguila||#d50032|#111111|
 Rennes|escudo|franjas||SRFC/#ffffff|#d50032|#111111|
@@ -353,7 +353,7 @@ Go Ahead Eagles|clasico|liso|aguila||#e30613|#ffd100|
 Feyenoord|circulo|liso||FEY/#ffffff|#e30613|#111111|
 Bournemouth|circulo|liso||AFC|||
 Burnley|escudo|liso||BFC|||
-Leeds|circulo|liso||LUFC|||
+Leeds|circulo|liso|rosa||#1d428a|#ffffff|#ffffff
 Sunderland|circulo|franjas|torre||||
 Alavés|escudo|franjas||DA|||
 Elche|circulo|liso||ECF|||

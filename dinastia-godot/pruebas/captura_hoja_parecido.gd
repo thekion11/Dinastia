@@ -9,7 +9,9 @@ func _ready() -> void:
 	get_window().content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED   ## coordenadas reales de 1920x1080
 	var paises: Array[String] = ["ENG", "ESP", "ITA", "ARG", "BRA", "GER"]
 	var m := Mundo.new()
-	m.generar(paises, 1117)
+	var generar: Array[String] = []
+	generar.assign(paises if OS.get_environment("NOMBRES") == "" else ["ENG", "ESP", "ITA", "GER", "FRA", "ARG", "BRA", "CHI"])
+	m.generar(generar, 1117)
 	var fondo := ColorRect.new()
 	fondo.color = Color("#24302a")
 	fondo.size = Vector2(1920, 1080)
