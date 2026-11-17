@@ -204,6 +204,7 @@ const SECCIONES := [
 	"_probar_transmision_y_estadisticas",
 	"_probar_arreglos_partido_motor",
 	"_probar_tanda_top25b",
+	"_probar_variante_motor",
 	"_probar_prorroga_y_penales",
 	"_probar_informe_rival",
 	"_probar_logo",

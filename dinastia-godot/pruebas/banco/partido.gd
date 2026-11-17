@@ -283,7 +283,7 @@ func _probar_motor_ciego() -> void:
 		res.append("%.3f,%.3f|%d|%d|%d" % [bola.position.x, bola.position.z, mo.pases[0] + mo.pases[1], mo.tiros[0] + mo.tiros[1], mo.regates_ia])
 		raiz.queue_free()
 	_comprobar(res[0] == res[1], "el combinado con todas las piezas «siempre» (sin caché de colocación) es el de siempre (%s | %s)" % [res[0], res[1]])
-	var c := MotorCombinado.new()
+	var c := MotorCombinado.new()   ## C1 A PROPÓSITO: comprueba las piezas por defecto del combinado sin variante
 	_comprobar(c.piezas == {"decide_con_balon": "siempre", "coloca_sin_balon": "league", "fisica_balon": "league", "locomocion": "league"}, "el combinado arranca como League con nuestra decisión con balón (y no es igual a League)")
 	c.free()
 
