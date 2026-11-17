@@ -85,7 +85,7 @@ func _pantallas() -> void:
 	var res := AvanceDias.avanzar(m, est, -1, func() -> void: m.avanzar_semana())
 	var unix0 := Calendario.unix_de(m.anio, m.semana, -1)
 	var s := PantallaAvanzar.mostrar(raiz, m, unix0, res)
-	_ok(s != null and s._celdas.size() == PantallaAvanzar.CELDAS, "la pantalla Avanzar monta sus 14 días")
+	_ok(s != null and s._celdas.size() == 14, "la pantalla Avanzar monta sus 14 días")
 	await _frames(4)
 	s._cerrar()
 	var ev := {"tipo": "ultimatum", "clase": EventosDia.PANTALLA, "causa": {"id": "ultimatum", "datos": {"confianza": 20}}}

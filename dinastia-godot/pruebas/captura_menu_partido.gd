@@ -23,9 +23,11 @@ func _ready() -> void:
 		var clima := Clima.del_partido(mio.pais, m.semana, m.anio, mio.id + rival.id)
 		var menu := MenuPartido.mostrar(self, p, mio, liga, clima)
 		await get_tree().create_timer(0.8).timeout
-		for tab in (["previa", "uniforme", "estadio", "plan", "opciones", "camara"] if k == 0 else ["previa", "uniforme"]):
-			(menu._botones[tab] as Button).button_pressed = true
-			menu._abrir(tab)
+		for tab in (["previa", "uniforme", "estadio", "saque", "plan", "opciones", "camara"] if k == 0 else ["previa", "plan"]):
+			if tab == "previa":
+				menu.cerrar_panel()
+			else:
+				menu._abrir(tab)
 			await get_tree().create_timer(0.3).timeout
 			await _foto("%s_%s" % [paises[k], tab])
 		menu.queue_free()

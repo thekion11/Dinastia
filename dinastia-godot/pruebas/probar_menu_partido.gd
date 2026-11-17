@@ -32,16 +32,16 @@ func _ready() -> void:
 		var menu := MenuPartido.mostrar(self, p, mio, liga, Clima.del_partido(rival.pais, m.semana, m.anio, rival.id + mio.id))
 		await _frames(3)
 		for tab: Array in MenuPartido.PESTANAS:
-			(menu._botones[String(tab[0])] as Button).button_pressed = true
 			menu._abrir(String(tab[0]))
 			await _frames(2)
 			_ok(menu._cuerpo.get_child_count() > 0 or String(tab[0]) == "x", "%s: la pestaña %s tiene contenido" % [cfg[0], tab[0]])
 		menu.elegido.connect(func(e: Dictionary) -> void: _el = e)
-		menu._elegir("jugar")
+		menu.opcion = "jugar"
+		menu.confirmar()
 		_ok(String(_el.get("modo", "")) == "completo" and bool(_el.get("control", false)), "%s: «Jugar» = partido completo con control" % cfg[0])
 		menu._elegir("importantes")
 		_ok(String(_el.get("modo", "")) == "destacados" and bool(_el.get("ocasiones", false)), "%s: «Solo las importantes» = destacados" % cfg[0])
-		menu._sim = "vivo"
+		menu.sim = "vivo"
 		menu._elegir("simular")
 		_ok(String(_el.get("modo", "")) == "vivo" and not bool(_el.get("control", true)), "%s: «Simular» respeta el modo elegido" % cfg[0])
 		menu.queue_free()

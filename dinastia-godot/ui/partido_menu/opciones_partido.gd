@@ -91,6 +91,10 @@ static func construir(padre: VBoxContainer) -> void:
 	for g: Array in PANTALLA:
 		_interruptor(padre, String(g[0]), String(g[1]), bool(g[2]))
 	_interruptor(padre, "calidad_auto", "⚡ Calidad automática", Calidad.adaptativa, func(si: bool) -> void: Calidad.adaptativa = si)
+	construir_sonido(padre)
+
+## Los volúmenes (grada, efectos, música).
+static func construir_sonido(padre: VBoxContainer) -> void:
 	_titulo(padre, "Sonido")
 	_deslizador(padre, "Grada y ambiente", float(Sonido.volumen.get(Sonido.Bus.AMBIENTE, 0.5)), func(v: float) -> void: Sonido.volumen[Sonido.Bus.AMBIENTE] = v)
 	_deslizador(padre, "Efectos (balón, silbato)", float(Sonido.volumen.get(Sonido.Bus.EFECTOS, 0.8)), func(v: float) -> void: Sonido.volumen[Sonido.Bus.EFECTOS] = v)

@@ -21,5 +21,11 @@ static func montar(p: Principal, viejos: Array) -> void:
 		bn.visible = String(n[0]) == "avanzar"
 		p._botones.add_child(bn)
 		p._guia.nodos["b_" + String(n[0])] = bn
+	var bj := Button.new()   ## (17-11) «PARTIDO JUGADO ▲ 1-0»: el popup de después del partido (`PopupPartidoJugado`); lo muestra `AvanceDiasUI.actualizar_botones`
+	bj.custom_minimum_size = Vector2(150, 32)
+	bj.visible = false
+	bj.pressed.connect(func() -> void: p._avance.dias().abrir_jugado(bj))
+	p._botones.add_child(bj)
+	p._guia.nodos["b_jugado"] = bj
 	p._guia.nodos["avanzar"] = p._guia.nodos["b_avanzar"]
 	p._guia.nodos["avanzar_caja"] = p._botones

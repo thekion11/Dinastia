@@ -51,6 +51,37 @@ func actualizar_botones() -> void:
 		var b: Variant = p._guia.nodos.get("b_" + nombre)
 		if is_instance_valid(b):
 			(b as Button).visible = (nombre == "avanzar" and not hoy and not fin) or (nombre in ["jugar", "saltar"] and hoy) or (nombre == "temporada" and fin)
+	var bj: Variant = p._guia.nodos.get("b_jugado")
+	if is_instance_valid(bj):
+		var ult := MomentosPartido.ultimo
+		(bj as Button).visible = MomentosPartido.hay_ultimo(p.mundo) and not hoy
+		if ult != null:
+			(bj as Button).text = "%s ▲  %d-%d" % [Idiomas.t("PARTIDO JUGADO"), ult.goles_local, ult.goles_visita]
+
+## El popup de «Partido jugado» y lo que elige: jugar de nuevo (la arena de pruebas con los dos clubes: el partido de la liga ya está cerrado), ver el resultado otra
+## vez, o los momentos (ofensivos, defensivos o todos).
+func abrir_jugado(ancla: Control) -> void:
+	if MomentosPartido.ultimo == null:
+		return
+	var pop := PopupPartidoJugado.abrir(p, ancla)
+	pop.elegido.connect(_al_elegir_jugado)
+
+func _al_elegir_jugado(op: String) -> void:
+	var ult := MomentosPartido.ultimo
+	if ult == null or p.mundo == null or DisplayServer.get_name() == "headless":
+		return
+	if op == "ver":
+		var rp := ResultadoPartido.mostrar(p, ult, p.mundo.mi_club())
+		await rp.elegido
+		rp.queue_free()
+	elif op == "repetir":
+		VistaEstadio.abrir_practica(p, p.mundo)
+	elif op.begins_with("momentos:"):
+		var mo := MomentosPartido.mostrar(p, ult, p.mundo.mi_club(), op.substr(9))
+		var r: String = await mo.elegido
+		mo.queue_free()
+		if r.begins_with("momento:"):
+			VistaEstadio.abrir_practica(p, p.mundo)   ## aproximación: el partido ya se cerró; se juega a mano en la arena de pruebas
 
 ## EL BOTÓN «AVANZAR».
 func pulsar() -> void:
@@ -129,12 +160,8 @@ func saltar() -> void:
 	if not partido_hoy():
 		return
 	_guardar_domingo()
-	var antes := AvanceSemana.partido_obliga
-	AvanceSemana.partido_obliga = false
-	p._avance._avanzar_semana()
-	AvanceSemana.partido_obliga = antes
-	p._dia_semana = 0
-	p._refrescar()
+	JornadaPartido.modo_forzado = "saltar"   ## (17-11) se simula el partido de hoy (con su resultado en pantalla) y la semana corre con él
+	p._dirigir()
 
 ## Lo que pasa el domingo (mercado que cierra, fechas del país) no se pierde porque el partido ya hizo correr la semana.
 func _guardar_domingo() -> void:
