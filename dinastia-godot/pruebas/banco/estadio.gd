@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/estadio_p3.gd"
-## [Capa 2/2 de `estadio.gd`] _probar_interiores_club, _probar_galeria_club, _probar_reforma_con_obra
+## [Capa 2/2 de `estadio.gd`] _probar_interiores_club, _probar_galeria_club, _probar_reforma_con_obra, _probar_publico_cesped
 
 func _probar_interiores_club() -> void:
 	_titulo("ESTADIO 2.0: DECORAR LAS SALAS")
@@ -419,3 +419,19 @@ func _probar_vomitorios() -> void:
 		deck.queue_free()
 	_comprobar(contados.size() == 3 and contados[2] >= contados[0], "una grada más larga no tiene menos accesos %s" % str(contados))
 	_comprobar(EstadioObra.new() != null, "EstadioObra se crea (solo datos)")
+
+## PÚBLICO Y CÉSPED (17-11): las butacas vacías se hunden en sombra según sus asientos libres (el grupo lleno no cambia) y el brillo
+## de las franjas sigue el sentido de la cortadora de cada dibujo del césped.
+func _probar_publico_cesped() -> void:
+	_titulo("PÚBLICO Y CÉSPED: BUTACAS VACÍAS EN SOMBRA Y SENTIDO DEL CORTE")
+	for c: Color in [Color("#b01e2d"), Color("#1f5fd0"), Color("#f2f2f2"), Color("#ffd400")]:
+		_comprobar(GradaButacas.color_vacia(c, 0).is_equal_approx(c), "grupo lleno: la butaca conserva el color del club (%s)" % c.to_html(false))
+		var l := [c.get_luminance(), GradaButacas.color_vacia(c, 1).get_luminance(), GradaButacas.color_vacia(c, 2).get_luminance(), GradaButacas.color_vacia(c, 3).get_luminance()]
+		_comprobar(l[0] > l[1] and l[1] > l[2] and l[2] > l[3], "más asientos libres, más oscuro (%s: %s)" % [c.to_html(false), str(l)])
+		var v := GradaButacas.color_vacia(c, 3)
+		_comprobar(v.get_luminance() > c.get_luminance() * 0.35, "la vacía no se va a negro: sigue siendo una butaca del club (%s)" % c.to_html(false))
+	_comprobar(is_equal_approx(GradaButacas.color_vacia(Color(0.5, 0.2, 0.2, 0.5), 3).a, 0.5), "el alfa del color de instancia no se toca")
+	_comprobar(CespedTextura.eje_corte("rayas").is_equal_approx(Vector2(1, 0)), "«rayas»: la cortadora va de banda a banda (X, hacia la cámara de TV)")
+	_comprobar(CespedTextura.eje_corte("rayasH").is_equal_approx(Vector2(0, 1)), "«rayasH»: la cortadora va a lo largo (Z)")
+	for p in ["liso", "mitades", "damero", "damGrande", "circulos", "diagonal", "espiga", "cruz", "abanico", "rombos", "inventado"]:
+		_comprobar(absf(CespedTextura.eje_corte(p).length() - 1.0) < 0.01, "el eje del corte de «%s» es unitario" % p)

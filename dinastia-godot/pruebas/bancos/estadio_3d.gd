@@ -94,10 +94,12 @@ func _butacas(r: Node3D, perfil: Dictionary, nombre: String) -> PackedVector3Arr
 		var mejor := 99.0
 		var cual := -1
 		for j in base.size():
-			var d := Vector3(col.r - base[j].r, col.g - base[j].g, col.b - base[j].b).length()
-			if d < mejor:
-				mejor = d
-				cual = j
+			for v in 4:   ## (17-11) el grupo con asientos libres va en sombra (`GradaButacas.color_vacia`): sigue siendo el color del club
+				var b := GradaButacas.color_vacia(base[j], v)
+				var d := Vector3(col.r - b.r, col.g - b.g, col.b - b.b).length()
+				if d < mejor:
+					mejor = d
+					cual = j
 		if mejor < 0.45:
 			cerca += 1
 			cuenta[cual] = int(cuenta.get(cual, 0)) + 1

@@ -38,7 +38,7 @@ static func montar(padre: Node3D, base: ShaderMaterial, tam: Vector2) -> CespedC
 	c.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var m := ShaderMaterial.new()
 	m.shader = load("res://visor/cesped_capas.gdshader")
-	for k in ["dibujo", "claro_s", "oscuro_s", "claro", "oscuro"]:
+	for k in ["dibujo", "claro_s", "oscuro_s", "claro", "oscuro", "eje_corte"]:
 		m.set_shader_parameter(k, base.get_shader_parameter(k))
 	m.set_shader_parameter("tam_plano", tam)
 	m.set_shader_parameter("altura", alt)
