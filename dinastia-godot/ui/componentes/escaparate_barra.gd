@@ -146,7 +146,7 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	var cb := Button.new()   ## (17-11) la caja se pulsa: lleva a las cuentas del club
 	cb.flat = true
 	cb.focus_mode = Control.FOCUS_ALL
-	cb.custom_minimum_size = Vector2(134, ALTO - 8)
+	cb.custom_minimum_size = Vector2(150, ALTO - 8)
 	cb.tooltip_text = Idiomas.t("Cuentas del club")
 	cb.pressed.connect(func() -> void: TableroInicio.abrir(p, "Cuentas del club"))
 	caja.set_anchors_preset(Control.PRESET_FULL_RECT)

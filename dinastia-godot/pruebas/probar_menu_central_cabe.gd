@@ -1,5 +1,5 @@
 extends Node
-## EL MENÚ CENTRAL CABE (17-11-2026): el Inicio y las otras dos pestañas («Dirección del equipo», «Información del club») caben enteros en 1600×900 y en 1280×720: cada
+## EL MENÚ CENTRAL CABE (17-11-2026): el Inicio (con la barra lateral siempre visible a su izquierda) cabe entero en 1600×900 y en 1280×720: cada
 ## control visible queda dentro de la ventana (salvo lo que recorta un padre con `clip_contents`) y no hay ningún ScrollContainer visible. Dos clubes de países distintos.
 ## Necesita la ventana (xvfb en `herramientas/especiales.sh`): en headless puro el tamaño de la ventana no cambia.
 
@@ -77,7 +77,7 @@ func _ready() -> void:
 		for tam: Vector2i in [Vector2i(1600, 900), Vector2i(1280, 720)]:
 			get_window().size = tam
 			await _frames(4)
-			for pestana in 3:
+			for pestana in 1:   ## (17-11) el escaparate tiene una sola pestaña; los menús del club están en la barra lateral
 				_pulsar_pestana(pr, pestana)
 				await _frames(8)
 				_revisar(pr, "%s pestaña %d" % [cfg[0], pestana], tam)
