@@ -152,7 +152,10 @@ func _montar_motor() -> void:
 	_motor.fijar_preset(preset_guardado())
 	_motor.indicador_pase = _pref("indicador_pase", true)
 	if _rig != null:
-		_rig.pro_distancia = float(CameraRig.PRO_DISTANCIAS[pro_camara_guardada()])
+		var dist := float(OpcionesPartido.leer("pro_dist", 0.0))   ## (17-11) el ajuste fino de la pestaña Cámara (0 = la del botón elegido)
+		_rig.pro_distancia = dist if dist > 0.0 else float(CameraRig.PRO_DISTANCIAS[pro_camara_guardada()])
+		_rig.pro_altura = float(OpcionesPartido.leer("pro_altura", 0.52))
+		_rig.pro_fov = float(OpcionesPartido.leer("pro_fov", 0.0))
 	## Si jugaste tú el último partido, vuelves a jugar (se recuerda).
 	if _pref("control_equipo", false) and _mi_lado >= 0 and not practica:
 		_alternar_control_motor.call_deferred()

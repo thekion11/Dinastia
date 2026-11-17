@@ -27,3 +27,10 @@ func _probar_menu_y_pausa_partido() -> void:
 	var f: int = t.correr(self)
 	_comprobar(f == 0, "el menú (3 países) guarda el sorteo mostrado y la pausa llama a lo suyo, con confirmación al simular (%d fallos)" % f)
 	t.free()
+
+func _probar_resumen_descanso_y_final() -> void:
+	_titulo("RESUMEN DEL DESCANSO Y DEL FINAL: CIFRAS REALES, PASES SOLO SI SE JUGÓ EN EL CÉSPED, GOLEADORES Y MARCADOR")
+	var t: Node = (load("res://pruebas/probar_resumen_partido.gd") as GDScript).new()
+	var f: int = t.correr(self)
+	_comprobar(f == 0, "el resumen (3 países) usa las cifras del partido y se monta en el descanso y en el final (%d fallos)" % f)
+	t.free()

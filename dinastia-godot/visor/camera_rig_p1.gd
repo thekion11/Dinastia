@@ -114,6 +114,7 @@ const CARRO_Z_MAX := 38.0
 ## La cámara «Pro» ajustable (semana 4, 27-10-2026): metros detrás del jugador (la altura va con ella).
 const PRO_DISTANCIAS := {"cerca": 3.0, "normal": 4.2, "lejos": 6.5}
 var pro_distancia := 4.2
+var pro_altura := 0.52; var pro_fov := 0.0   ## (17-11) ajuste fino del menú del partido (pestaña Cámara): altura relativa y ángulo de visión (0 = el de la cámara)
 
 func _add(cam_name: String, pos: Vector3, mira: Vector3, fov: float) -> Camera3D:
 	var cam := Camera3D.new()
@@ -428,7 +429,8 @@ func _process(delta: float) -> void:
 		"Pro (Tercera Persona)":
 			# Detrás del hombro del jugador
 			var fwd2 := -target.global_transform.basis.z.normalized()
-			var pos_atras := t_pos - fwd2 * pro_distancia + Vector3(0, pro_distancia * 0.52, 0)
+			var pos_atras := t_pos - fwd2 * pro_distancia + Vector3(0, pro_distancia * pro_altura, 0)
+			if pro_fov > 0.0: cam.fov = pro_fov
 			cam.global_position = cam.global_position.lerp(pos_atras, 6.0 * delta)
 			cam.look_at(t_pos + fwd2 * 8.0 + Vector3(0, 1.2, 0), Vector3.UP)
 	_efectos(delta)

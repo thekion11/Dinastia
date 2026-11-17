@@ -380,6 +380,7 @@ func _process(delta: float) -> void:
 			Sonido.toca("silbato")
 			_escribir("[color=#c9a227][b]🔵 ENTRETIEMPO.[/b][/color] Camarín abierto: charla, cambios e instrucciones.")
 			_refrescar()
+			load("res://ui/partido_menu/descanso_partido.gd").mostrar(self)   ## (17-11) el resumen de la primera parte a pantalla completa
 			return
 		if _entretiempo:
 			return

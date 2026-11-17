@@ -332,6 +332,7 @@ static func camara(_m: MenuPartido, v: VBoxContainer) -> void:
 		b.pressed.connect(func() -> void:
 			for k: String in marcos:
 				(marcos[k] as Button).set_pressed_no_signal(k == clave)
-			OpcionesPartido.guardar("pro_camara", clave))
+			OpcionesPartido.guardar("pro_camara", clave)
+			OpcionesPartido.guardar("pro_dist", 0.0))   ## el botón manda: la distancia fina vuelve a la del botón
 		fila.add_child(b)
 	nota(v, "La distancia de la cámara Pro (la de jugar). Dentro del partido se cambia de cámara y se acerca o aleja con los botones del cajón.")

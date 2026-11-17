@@ -113,22 +113,33 @@ static func alineaciones(m: MenuPartido, l: Club, v: Club) -> void:
 		g.add_theme_constant_override("v_separation", 3)
 		g.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		col.add_child(g)
+		var cinta := capitan_en_campo(club)
 		for j: Jugador in club.once():
 			var d := EstiloAvanzar.etiqueta(str(j.dorsal) if j.dorsal > 0 else "", 18, SUAVE, true)
 			d.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 			d.custom_minimum_size = Vector2(30, 0)
 			g.add_child(d)
-			g.add_child(_nombre(j))
+			g.add_child(_nombre(j, j.id == cinta))
 			g.add_child(EstiloAvanzar.etiqueta(j.pos_e, 16, SUAVE, true))
 		f.add_child(col)
 
+## Quién lleva la cinta en este once: la misma regla que el partido 3D (`Puente3D.once`): el capitán si juega; si no, el veterano de más media.
+static func capitan_en_campo(c: Club) -> String:
+	var once: Array[Jugador] = []
+	once.assign(c.once())
+	var mapa: Dictionary = load("res://visor/puente3d.gd").once(once)["jugadores"]
+	for id: String in mapa:
+		if bool((mapa[id] as Dictionary).get("capitan", false)):
+			return id
+	return ""
+
 ## «R. GUTIÉRREZ» y, si es el capitán, su brazalete «C» dorado al lado.
-static func _nombre(j: Jugador) -> Control:
+static func _nombre(j: Jugador, con_cinta: bool) -> Control:
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 6)
 	var txt := MenuPartido.linea_jugador(j).replace(" (POR)", "").replace(" (C)", "")
 	h.add_child(EstiloAvanzar.etiqueta(txt, 19, Color(1, 1, 1, 0.94), true))
-	if j.capitan:
+	if con_cinta:
 		var c := EstiloAvanzar.etiqueta("C", 11, Color("1a1300"), true)
 		c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		c.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
