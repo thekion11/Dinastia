@@ -98,6 +98,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 
 # PARTE 3. FRENTES ACTIVOS (rendimiento, público, tres frentes del 16-11)
 
+
 ## INFORME ACADÉMICO AAA (orden del dueño, 16-11; «implementa todo»: plan del cap. 9) — EN CURSO; `docs/04_auditorias/INFORME_ACADEMICO_AAA/`
 - Informe completo (11 capítulos + anexo A de revisión independiente, ~80.700 palabras; 5 recomendaciones en el cap. 10).
 - H0 (saneamiento), código HECHO el 16-11: todos los fallos de los cap. 5-7 y del anexo A arreglados (motor: M6-01…M6-26 salvo media M6-19; La Ruta: R-01…R-14; gestión G-01…G-08, M-01, V-01; F-01…F-05, L-01…L-04, R5-01…R5-03), con pruebas nuevas en el banco (frontera de mitad, entrada 30/45/120 FPS, ida y vuelta JSON, semana de La Ruta en orden de la interfaz, temporada completa, premios contra un rival mejor). Banco estricto (falla ante `ERROR:` fuera de `pruebas/errores_esperados.txt` y ante scripts > 450 líneas): «FIN. 0 fallos», 5.532 comprobaciones; 0 scripts > 450.
@@ -550,6 +551,7 @@ Detalle en `docs/04_auditorias/PLAN_8H_PULIDO_2026-11-06.md` (pistas A rendimien
 
 ## COBERTURA DE PLATAFORMAS (5-11) — se borra al completarse
 - `plataformas.yml` ejecuta el juego en Windows (nativo + mini banco) y en Web (menú en Chromium): ver `04_auditorias/cobertura_sistemas_2026-11-05.md`. Pendiente: banco/especiales completos en Windows (`/tmp` fijos, `xvfb-run`), humo de Android (necesita APK x86_64 o dispositivo), preset de macOS (no existe), renombrar el archivo de `material/escudos_especiales_originales/` con nombre larguísimo (no clona en Windows).
+
 
 - `plataformas.yml` ejecuta el juego en Windows (nativo + mini banco) y en Web (menú en Chromium): ver `04_auditorias/cobertura_sistemas_2026-11-05.md`. Pendiente: banco/especiales completos en Windows (`/tmp` fijos, `xvfb-run`), humo de Android (necesita APK x86_64 o dispositivo), preset de macOS (no existe), renombrar el archivo de `material/escudos_especiales_originales/` con nombre larguísimo (no clona en Windows), entrada Web en `dinastia.gdextension` (ruido de consola).
 

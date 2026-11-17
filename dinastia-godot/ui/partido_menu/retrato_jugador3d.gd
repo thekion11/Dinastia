@@ -42,7 +42,7 @@ static func crear(c: Club, j: Jugador, cols: Array, giro: float) -> RetratoJugad
 	r._vp = SubViewport.new()
 	r._vp.own_world_3d = true
 	r._vp.transparent_bg = true
-	r._vp.msaa_3d = Calidad.msaa_ui(Viewport.MSAA_4X)
+	r._vp.msaa_3d = Viewport.MSAA_4X   ## (Auditoría) sin dientes de sierra en los brazos: se dibuja una vez (o a 30 Hz), el coste es pequeño
 	r._vp.mesh_lod_threshold = 0.0
 	r._vp.render_target_update_mode = SubViewport.UPDATE_DISABLED   ## nada que dibujar hasta que el modelo esté montado
 	r.add_child(r._vp)
@@ -155,6 +155,9 @@ func _congelar() -> void:
 			_ap.speed_scale = 0.5
 		else:
 			_ap.pause()
+	if not vivo:   ## quieto: se dibuja UNA vez al doble de resolución y se reduce (más nítido, sin coste por cuadro)
+		_vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+		_vp.scaling_3d_scale = 2.0
 	_vp.render_target_update_mode = SubViewport.UPDATE_ONCE
 	set_process(vivo)
 	if modulate.a < 1.0:

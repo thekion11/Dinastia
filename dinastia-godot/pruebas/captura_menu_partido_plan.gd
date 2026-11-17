@@ -2,6 +2,7 @@ extends Node
 ## CAPTURA (17-11): el menú del partido sobre el menú principal REAL: «Plan de juego» abre la pantalla de Táctica del juego a pantalla completa y, al
 ## cerrarla, vuelve la previa; las demás pestañas, a pantalla completa.  herramientas/captura.sh res://pruebas/captura_menu_partido_plan.tscn
 var _p: Principal
+var _pais := "BRA"
 
 ## El diálogo de la directiva de la semana 1 (capa 58) taparía la captura: se esconde (solo en esta captura).
 func _quitar_eventos() -> void:
@@ -23,7 +24,7 @@ func _foto(nombre: String) -> void:
 	_quitar_eventos()
 	await get_tree().process_frame
 	await RenderingServer.frame_post_draw
-	get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://pruebas/capturas/menu_partido_%s.png" % nombre))
+	get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://pruebas/capturas/menu_partido_%s_%s.png" % [_pais, nombre]))
 	print("captura ", nombre)
 
 func _ready() -> void:
@@ -33,7 +34,9 @@ func _ready() -> void:
 	for i in 5:
 		await get_tree().process_frame
 	var m := Mundo.new()
-	m.generar(["BRA"], 5150)
+	var pais := OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "BRA"
+	_pais = pais
+	m.generar([pais], 5150 + pais.hash() % 50)
 	m.tomar_el_mando(m.ligas[0].clubes[4].id)
 	for k in 4:
 		m.avanzar_semana()
@@ -52,15 +55,21 @@ func _ready() -> void:
 	await get_tree().create_timer(1.0).timeout
 	menu.call("_abrir", "opciones")
 	await get_tree().create_timer(0.4).timeout
-	await _foto("BRA_opciones_completa")
+	await _foto("opciones_completa")
 	menu.call("_abrir", "plan")
 	await get_tree().create_timer(1.5).timeout
 	print("previa visible mientras la táctica: ", menu.visible)
-	await _foto("BRA_plan_tactica")
-	var pm = _p._menu_lateral.pantalla_abierta
+	await get_tree().create_timer(4.0).timeout   ## los retratos del plantel se generan en segundo plano
+	await _foto("plan_tactica")
+	var pmo = _p._menu_lateral.get_parent().get_node_or_null("PantallaMenu")
+	if pmo != null:
+		pmo.elegir(1)
+		await get_tree().create_timer(3.0).timeout
+		await _foto("plan_once")
+	var pm = _p.get_node_or_null("PantallaMenu")
 	if pm != null:
 		pm.cerrar()
 	await get_tree().create_timer(1.0).timeout
 	print("previa visible al cerrar la táctica: ", menu.visible)
-	await _foto("BRA_vuelta_previa")
+	await _foto("vuelta_previa")
 	get_tree().quit()
