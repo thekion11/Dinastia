@@ -70,7 +70,8 @@ static func saltar(p: Principal, d: int) -> bool:
 	if mos == null or not (mos as Control).is_visible_in_tree():
 		return false
 	var barra := mos.find_child("Botones", true, false)
-	var i := (pestana + d + PESTANAS.size()) % PESTANAS.size()
+	var n: int = (barra.get_meta("tabs") as Array).size() if barra.has_meta("tabs") else PESTANAS.size()
+	var i := (pestana + d + n) % n
 	var b := (barra.get_meta("tabs") as Array)[i] as Button if barra.has_meta("tabs") else barra.get_child(i) as Button
 	b.button_pressed = true
 	b.pressed.emit()

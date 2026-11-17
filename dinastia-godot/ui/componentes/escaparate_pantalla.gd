@@ -64,8 +64,10 @@ func repintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 	_cuerpo.add_theme_constant_override("separation", TableroInicio.SEP)
 	margen.add_child(_cuerpo)
 	var botones: Array[Button] = []
-	for i in TableroInicio.PESTANAS.size():
-		var b := EscaparateBarra.boton_pestana(Idiomas.t(String(TableroInicio.PESTANAS[i])), 1.35)
+	var nombres: Array = TableroInicio.PESTANAS.duplicate()
+	nombres.append("Índice")   ## (17-11) la cuarta pestaña: todos los menús antiguos con todos sus submenús (`EscaparateIndice`)
+	for i in nombres.size():
+		var b := EscaparateBarra.boton_pestana(Idiomas.t(String(nombres[i])), 1.35 if i < 3 else 0.8)
 		hb.add_child(b)
 		botones.append(b)
 		CampanasMenu.marcar_pestana(b, i)
@@ -89,6 +91,9 @@ func _pintar_cuerpo(p: Principal, c: Club, liga: Liga, dias: int, acento: Color)
 		h.queue_free()
 	if TableroInicio.pestana == 0:
 		EscaparateInicio.avanzar(p, _cuerpo, c, liga, acento)
+		return
+	if TableroInicio.pestana >= 3:
+		EscaparateIndice.pintar(p, _cuerpo, c, acento)
 		return
 	EscaparateSubs.pintar(p, _cuerpo, c, TableroInicio.EQUIPO if TableroInicio.pestana == 1 else TableroInicio.CLUB, acento)   ## sin desplazamiento y sin el informe de la semana
 

@@ -312,3 +312,46 @@ func _probar_multa_plantel_heredado() -> void:
 		m2.federacion.revisar_leyes_pais(m2, mi)
 		_comprobar(mi.saldo < saldo, "%s: al abrir el mercado de invierno, la multa llega" % pais)
 	Partido.limpiar_contexto()   ## simular semanas deja puesto el contexto del partido (médico, césped, moda…): la sección que venga detrás lo heredaría
+
+## (17-11, orden del dueño: «que NADA quede sin conectar») El menú central nuevo conecta con TODOS los menús antiguos: la pestaña «Índice» enseña cada submenú registrado en `MenusLaterales`,
+## cada tarjeta de «Dirección del equipo» e «Información del club» y cada atajo de la barra resuelve a un submenú real (nada abre un marcador de posición), y cada acción
+## (casa, móvil, minijuegos…) existe en `MenuLateral.ejecutar`. Versión por DATOS (sin ventana); la que pulsa de verdad está en `pruebas/probar_conexion_menu_central.gd` (especiales.sh, xvfb).
+func _probar_conexion_menu_central() -> void:
+	_titulo("MENÚ CENTRAL: TODAS LAS PANTALLAS Y SUBMENÚS TIENEN ENTRADA (DATOS)")
+	var indice := EscaparateIndice.entradas()
+	var total := 0
+	var vistos := {}
+	var ids_ok := true
+	var fuente := FileAccess.get_file_as_string("res://ui/componentes/menu_lateral.gd")
+	var acciones_ok := true
+	for m: Dictionary in MenusLaterales.MENUS:
+		for i in (m["subs"] as Array).size():
+			total += 1
+			var s: Dictionary = (m["subs"] as Array)[i]
+			var clave := "%s:%d" % [m["id"], i]
+			vistos[clave] = true
+			if String(s.get("label", "")) == "" or (String(s.get("tab", "")) == "" and String(s.get("accion", "")) == ""):
+				ids_ok = false
+				print("   submenú sin destino: ", clave)
+			if s.has("accion") and not fuente.contains("\"%s\"" % s["accion"]):
+				acciones_ok = false
+				print("   acción sin ejecutar: ", s["accion"])
+	var en_indice := 0
+	for e: Array in indice:
+		if vistos.has("%s:%d" % [e[0], e[1]]):
+			en_indice += 1
+	_comprobar(total > 90 and en_indice == total and indice.size() == total, "la pestaña «Índice» enseña los %d submenús de los %d menús del panel lateral (ninguno solo por ≡)" % [total, MenusLaterales.MENUS.size()])
+	_comprobar(ids_ok, "cada submenú tiene rótulo y destino (una pestaña o una acción)")
+	_comprobar(acciones_ok, "cada acción de un submenú está en `MenuLateral.ejecutar`")
+	var tarjetas_ok := true
+	for rot: String in TableroInicio.EQUIPO + TableroInicio.CLUB:
+		if not rot.begins_with("*") and TableroInicio.buscar(rot).is_empty():
+			tarjetas_ok = false
+			print("   tarjeta sin submenú: ", rot)
+	_comprobar(tarjetas_ok, "cada tarjeta de «Dirección del equipo» e «Información del club» abre un submenú que existe")
+	var atajos_ok := true
+	for rot: String in ["Mi carrera", "Correo", "Glosario", "Calendario", "Próximo partido", "Hinchada y socios", "Récords"]:   ## DT, Mensajes, Ayuda, Calendario, noticia/partido, seguidores y tabla del Inicio
+		if TableroInicio.buscar(rot).is_empty():
+			atajos_ok = false
+			print("   atajo sin submenú: ", rot)
+	_comprobar(atajos_ok, "los atajos del Inicio y del pie (Oficina del DT, Mensajes, Ayuda, Calendario, partido, seguidores) llegan a un submenú real")
