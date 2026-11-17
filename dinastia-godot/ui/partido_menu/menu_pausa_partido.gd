@@ -14,6 +14,8 @@ const ROJO := Color("c8102e")
 var vista: Control
 var partido: Partido
 var _primera: Button
+var _confirmando: Button = null   ## «Simular el resto» espera una segunda pulsación
+var _r2_abajo := false
 
 ## Las opciones: [clave, texto, acción de la vista (o "" para cerrar), atajo]
 const OPCIONES := [
@@ -147,6 +149,12 @@ static func _estilo(fondo: Color, marcada: bool) -> StyleBoxFlat:
 
 func _elegir(accion: String) -> void:
 	Sonido.toca("clic")
+	## «Simular el resto» no se puede deshacer: pide una segunda pulsación (Cuadrado / B / Esc lo cancelan).
+	if accion == "_simular_resto_motor" and _confirmando == null:
+		_confirmando = find_child("simular", true, false) as Button
+		if _confirmando != null:
+			_confirmando.text = Idiomas.t("¿Simular lo que queda? Pulsa otra vez")
+			return
 	cerrar()
 	match accion:
 		"":
@@ -161,7 +169,33 @@ func cerrar() -> void:
 	cerrado.emit()
 	queue_free()
 
+## Quita la pregunta de «Simular el resto» (vuelve a su texto).
+func cancelar_confirmacion() -> bool:
+	if _confirmando == null:
+		return false
+	_confirmando.text = Idiomas.t("Simular el resto")
+	_confirmando = null
+	return true
+
+## Mando (orden 33 del dueño): R2 confirma la fila con el foco y Cuadrado vuelve atrás (quita la pregunta o reanuda), además de A y B de siempre.
+func _input(e: InputEvent) -> void:
+	if e is InputEventJoypadMotion and (e as InputEventJoypadMotion).axis == JOY_AXIS_TRIGGER_RIGHT:
+		var abajo := (e as InputEventJoypadMotion).axis_value > 0.6
+		if abajo and not _r2_abajo:
+			var f := get_viewport().gui_get_focus_owner()
+			if f is Button and is_ancestor_of(f):
+				get_viewport().set_input_as_handled()
+				(f as Button).pressed.emit()
+		_r2_abajo = abajo
+	elif e is InputEventJoypadButton and (e as InputEventJoypadButton).pressed and (e as InputEventJoypadButton).button_index == JOY_BUTTON_X:
+		get_viewport().set_input_as_handled()
+		_atras()
+
+func _atras() -> void:
+	if not cancelar_confirmacion():
+		cerrar()
+
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel") or e.is_action_pressed("jugar_pausa"):
 		get_viewport().set_input_as_handled()
-		cerrar()
+		_atras()

@@ -19,3 +19,10 @@ func _probar_avance_nucleo_y_saque() -> void:
 	_correr("res://pruebas/probar_avance_dias.gd", "el avance se detiene en cada parada y recorre una temporada entera (4 mundos)")
 	_correr("res://pruebas/probar_saque_inicial.gd", "el motor respeta el sorteo del saque inicial (3 mundos)")
 	_correr("res://pruebas/probar_replica_partido.gd", "la réplica de un partido clona los clubes y arranca en el minuto y el marcador de la jugada (3 mundos)")
+
+func _probar_menu_y_pausa_partido() -> void:
+	_titulo("MENÚ DEL PARTIDO Y PAUSA: PESTAÑAS, SORTEO DEL SAQUE Y LAS SEIS OPCIONES DE LA PAUSA")
+	var t: Node = (load("res://pruebas/probar_menu_y_pausa.gd") as GDScript).new()
+	var f: int = t.correr(self)
+	_comprobar(f == 0, "el menú (3 países) guarda el sorteo mostrado y la pausa llama a lo suyo, con confirmación al simular (%d fallos)" % f)
+	t.free()

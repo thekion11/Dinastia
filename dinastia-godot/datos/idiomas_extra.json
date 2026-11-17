@@ -8996,7 +8996,10 @@
   "Simular el resto": "Simulate the rest",
   "Salir del partido": "Leave the match",
   "Pausa": "Pause",
-  "⏭⏭ Simulando la temporada…": "⏭⏭ Simulating the season…"
+  "⏭⏭ Simulando la temporada…": "⏭⏭ Simulating the season…",
+  "Sorteo de campo: gana el sorteo tu club.": "Coin toss: your club wins the toss.",
+  "Sorteo de campo: gana el sorteo el rival.": "Coin toss: the opponent wins the toss.",
+  "¿Simular lo que queda? Pulsa otra vez": "Simulate the rest? Press again"
  },
  "pt": {
   "Historia": "História",
@@ -17995,7 +17998,10 @@
   "Simular el resto": "Simular o resto",
   "Salir del partido": "Sair da partida",
   "Pausa": "Pausa",
-  "⏭⏭ Simulando la temporada…": "⏭⏭ Simulando a temporada…"
+  "⏭⏭ Simulando la temporada…": "⏭⏭ Simulando a temporada…",
+  "Sorteo de campo: gana el sorteo tu club.": "Sorteio: seu clube vence o sorteio.",
+  "Sorteo de campo: gana el sorteo el rival.": "Sorteio: o rival vence o sorteio.",
+  "¿Simular lo que queda? Pulsa otra vez": "Simular o resto? Pressione de novo"
  },
  "patrones": [
   [
@@ -33266,7 +33272,10 @@
   "Simular el resto": "Simuler la suite",
   "Salir del partido": "Quitter le match",
   "Pausa": "Pause",
-  "⏭⏭ Simulando la temporada…": "⏭⏭ Simulation de la saison…"
+  "⏭⏭ Simulando la temporada…": "⏭⏭ Simulation de la saison…",
+  "Sorteo de campo: gana el sorteo tu club.": "Tirage au sort : ton club le remporte.",
+  "Sorteo de campo: gana el sorteo el rival.": "Tirage au sort : l'adversaire le remporte.",
+  "¿Simular lo que queda? Pulsa otra vez": "Simuler la suite ? Appuie encore"
  },
  "it": {
   "Historia": "Storia",
@@ -42265,7 +42274,10 @@
   "Simular el resto": "Simula il resto",
   "Salir del partido": "Esci dalla partita",
   "Pausa": "Pausa",
-  "⏭⏭ Simulando la temporada…": "⏭⏭ Simulazione della stagione…"
+  "⏭⏭ Simulando la temporada…": "⏭⏭ Simulazione della stagione…",
+  "Sorteo de campo: gana el sorteo tu club.": "Sorteggio: vince il tuo club.",
+  "Sorteo de campo: gana el sorteo el rival.": "Sorteggio: vince l'avversario.",
+  "¿Simular lo que queda? Pulsa otra vez": "Simulare il resto? Premi di nuovo"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51264,7 +51276,10 @@
   "Simular el resto": "Rest simulieren",
   "Salir del partido": "Spiel verlassen",
   "Pausa": "Pause",
-  "⏭⏭ Simulando la temporada…": "⏭⏭ Saison wird simuliert…"
+  "⏭⏭ Simulando la temporada…": "⏭⏭ Saison wird simuliert…",
+  "Sorteo de campo: gana el sorteo tu club.": "Seitenwahl: Dein Verein gewinnt die Wahl.",
+  "Sorteo de campo: gana el sorteo el rival.": "Seitenwahl: Der Gegner gewinnt die Wahl.",
+  "¿Simular lo que queda? Pulsa otra vez": "Rest simulieren? Nochmal drücken"
  },
  "ca": {
   "Historia": "Història",
@@ -60263,7 +60278,10 @@
   "Simular el resto": "Simular la resta",
   "Salir del partido": "Sortir del partit",
   "Pausa": "Pausa",
-  "⏭⏭ Simulando la temporada…": "⏭⏭ Simulant la temporada…"
+  "⏭⏭ Simulando la temporada…": "⏭⏭ Simulant la temporada…",
+  "Sorteo de campo: gana el sorteo tu club.": "Sorteig de camp: guanya el teu club.",
+  "Sorteo de campo: gana el sorteo el rival.": "Sorteig de camp: guanya el rival.",
+  "¿Simular lo que queda? Pulsa otra vez": "Simular la resta? Prem un altre cop"
  },
  "pl": {
   "Club": "Klub",
@@ -69262,7 +69280,10 @@
   "Simular el resto": "Symuluj resztę",
   "Salir del partido": "Wyjdź z meczu",
   "Pausa": "Pauza",
-  "⏭⏭ Simulando la temporada…": "⏭⏭ Symulacja sezonu…"
+  "⏭⏭ Simulando la temporada…": "⏭⏭ Symulacja sezonu…",
+  "Sorteo de campo: gana el sorteo tu club.": "Losowanie: wygrywa twój klub.",
+  "Sorteo de campo: gana el sorteo el rival.": "Losowanie: wygrywa rywal.",
+  "¿Simular lo que queda? Pulsa otra vez": "Symulować resztę? Naciśnij ponownie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78261,6 +78282,9 @@
   "Simular el resto": "Kalanını simüle et",
   "Salir del partido": "Maçtan çık",
   "Pausa": "Duraklat",
-  "⏭⏭ Simulando la temporada…": "⏭⏭ Sezon simüle ediliyor…"
+  "⏭⏭ Simulando la temporada…": "⏭⏭ Sezon simüle ediliyor…",
+  "Sorteo de campo: gana el sorteo tu club.": "Yazı tura: kurayı kulübün kazandı.",
+  "Sorteo de campo: gana el sorteo el rival.": "Yazı tura: kurayı rakip kazandı.",
+  "¿Simular lo que queda? Pulsa otra vez": "Kalanı simüle edilsin mi? Tekrar bas"
  }
 }

@@ -18,6 +18,8 @@ var competicion := "Liga"
 var opcion := "jugar"          ## jugar / importantes / simular
 var sim := "resumen"           ## cómo se ve si se simula
 var recordar := false          ## «No volver a preguntar»
+var saca_local := true         ## el sorteo del saque inicial (se decide al abrir; va a `partido.saca_local` al confirmar)
+var sorteo_visto := false      ## la moneda gira solo la primera vez
 var _cuerpo: VBoxContainer     ## el contenido del panel abierto
 var _botones: Dictionary = {}
 var _modal: PanelContainer
@@ -52,6 +54,7 @@ func _ready() -> void:
 				sim = String(ult.get("modo", "resumen"))
 	var l := partido.local
 	var v := partido.visita
+	saca_local = sorteo(partido, competicion, clima)
 	var fondo := FondoPrevia.new()
 	fondo.color = _color_club(l)
 	fondo.color_b = _color_club(v)
@@ -343,7 +346,14 @@ func _unhandled_input(e: InputEvent) -> void:
 func confirmar() -> void:
 	_elegir(opcion)
 
+## El sorteo del saque: semilla estable por partido (los dos clubes, la competición y el clima del día, que depende de la fecha), sin tocar el azar global.
+static func sorteo(p: Partido, comp: String, info_clima: Dictionary) -> bool:
+	var r := RandomNumberGenerator.new()
+	r.seed = hash("%s|%s|%s|%s" % [p.local.id, p.visita.id, comp, str(info_clima)])
+	return r.randi() % 2 == 0
+
 func _elegir(op: String) -> void:
+	partido.saca_local = saca_local
 	var e := EleccionPartido.eleccion(op, sim)
 	EleccionPartido.aplicar(e)
 	if recordar:
