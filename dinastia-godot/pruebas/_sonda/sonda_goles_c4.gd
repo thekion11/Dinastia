@@ -18,7 +18,7 @@ func _ready() -> void:
 	for liga: Liga in m.ligas:
 		if int(liga.div) == 1 and liga.clubes.size() >= 10:
 			por_liga.append(liga.clubes)
-	var tot := {"goles": 0, "tiros": 0, "puerta": 0, "paradas": 0, "postes": 0, "fuera": 0, "cabeza": 0, "area": 0, "area_gol": 0, "dist": 0.0, "n_dist": 0}
+	var tot := {"goles": 0, "tiros": 0, "puerta": 0, "paradas": 0, "postes": 0, "fuera": 0, "cabeza": 0, "area": 0, "area_gol": 0, "dist": 0.0, "n_dist": 0, "rechace_gol": 0}
 	var por_partido: Array = []
 	for k in n:
 		var la: Array = por_liga[k % por_liga.size()]
@@ -35,10 +35,10 @@ func _ready() -> void:
 	var s2 := 0.0
 	for g: int in por_partido:
 		s2 += (g - media) * (g - media)
-	print("SONDA RESUMEN %d partidos, banderas «%s»: %.2f goles (±%.2f), %.1f tiros, %.1f a puerta, %.1f paradas, %.1f postes, %.1f fuera, %.1f de cabeza; %.1f tiros desde el área (%.0f %% gol); gol/a puerta %.0f %%; distancia media del tiro %.1f m" % [
+	print("SONDA RESUMEN %d partidos, banderas «%s»: %.2f goles (±%.2f), %.1f tiros, %.1f a puerta, %.1f paradas, %.1f postes, %.1f fuera, %.1f de cabeza; %.1f tiros desde el área (%.0f %% gol); gol/a puerta %.0f %%; distancia media del tiro %.1f m; goles tras parada (≤3 s): %.2f" % [
 		n, OS.get_environment("BANDERAS"), media, sqrt(s2 / maxf(1.0, n - 1)) / sqrt(n), float(tot["tiros"]) / n, float(tot["puerta"]) / n, float(tot["paradas"]) / n,
 		float(tot["postes"]) / n, float(tot["fuera"]) / n, float(tot["cabeza"]) / n, float(tot["area"]) / n, 100.0 * tot["area_gol"] / maxf(1.0, tot["area"]),
-		100.0 * tot["goles"] / maxf(1.0, tot["puerta"]), tot["dist"] / maxf(1.0, tot["n_dist"])])
+		100.0 * tot["goles"] / maxf(1.0, tot["puerta"]), tot["dist"] / maxf(1.0, tot["n_dist"]), float(tot["rechace_gol"]) / n])
 	get_tree().quit()
 
 func _jugar(a: Club, b: Club, mitad: float, semilla: int) -> Dictionary:
@@ -58,7 +58,9 @@ func _jugar(a: Club, b: Club, mitad: float, semilla: int) -> Dictionary:
 	motor.duracion_mitad = mitad
 	motor.tacticas = [MotorJugable.tactica_desde(a.tactica), MotorJugable.tactica_desde(b.tactica)]
 	motor.preparar(lista, ball, "", semilla)
-	var r := {"goles": 0, "tiros": 0, "puerta": 0, "paradas": 0, "postes": 0, "fuera": 0, "cabeza": 0, "area": 0, "area_gol": 0, "dist": 0.0, "n_dist": 0}
+	var r := {"goles": 0, "tiros": 0, "puerta": 0, "paradas": 0, "postes": 0, "fuera": 0, "cabeza": 0, "area": 0, "area_gol": 0, "dist": 0.0, "n_dist": 0, "rechace_gol": 0}
+	var paradas_antes := 0
+	var t_parada := -99.0
 	var tiro_antes: Dictionary = {}
 	var en_area := {}   ## instancia del tiro → ¿desde el área?
 	var goles_antes := 0
@@ -79,6 +81,15 @@ func _jugar(a: Club, b: Club, mitad: float, semilla: int) -> Dictionary:
 			en_area = {"area": d < 16.5}
 		tiro_antes = tv
 		var g := int(motor.goles[0]) + int(motor.goles[1])
+		var par := 0
+		for clave: String in motor.diag:
+			if clave.begins_with("remate_") and clave.ends_with("_atajada"):
+				par += int(motor.diag[clave])
+		if par > paradas_antes:
+			t_parada = motor.t
+		paradas_antes = par
+		if g > goles_antes and motor.t - t_parada < 3.0:
+			r["rechace_gol"] += g - goles_antes   ## gol en los 3 s siguientes a una parada (rechace)
 		if g > goles_antes and bool(en_area.get("area", false)):
 			r["area_gol"] += g - goles_antes
 		goles_antes = g
