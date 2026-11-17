@@ -14,10 +14,10 @@ extends RefCounted
 ##   CausasPartido.de(partido, mi_club) -> [{clave, icono, titulo, texto, signo, peso}] (3 como mucho)
 
 const ICONOS := {"momentum": "📈", "forma": "💪", "plantilla": "📋", "clima": "🌧", "tactica": "♟",
-	"cansancio": "🔋", "arbitro": "🟨", "eficacia": "🎯", "lesion": "🚑", "localia": "🏟", "posesion": "⚽"}
+	"cansancio": "🔋", "arbitro": "🟨", "eficacia": "🎯", "lesion": "🚑", "localia": "🏟", "posesion": "⚽", "suspension": "🚫"}
 const TITULOS := {"momentum": "Momentum", "forma": "Forma", "plantilla": "Plantilla", "clima": "Clima",
 	"tactica": "Táctica", "cansancio": "Cansancio", "arbitro": "Árbitro", "eficacia": "Eficacia",
-	"lesion": "Lesión", "localia": "Localía", "posesion": "Posesión"}
+	"lesion": "Lesión", "localia": "Localía", "posesion": "Posesión", "suspension": "Suspendido"}
 
 static func de(p: Partido, club: Club) -> Array:
 	if p == null or club == null or p.rastro == null or p.rastro.inicio.is_empty():
@@ -55,6 +55,9 @@ static func candidatas(p: Partido, mio: int) -> Array:
 	var gm := p.goles_local if mio == 0 else p.goles_visita
 	var gs := p.goles_visita if mio == 0 else p.goles_local
 	var lado := 1 if mio == 0 else -1   ## para leer el momentum (positivo = local)
+	## (17-11, Auditoría) SUSPENDIDO: un equipo se quedó con menos de siete; el marcador es de mesa y es la causa que más pesa (antes salían 2 causas).
+	if p.suspendido:
+		c.append(_c("suspension", signi(gm - gs), 10.0, Idiomas.t("El partido se suspendió en el %d': un equipo se quedó con menos de siete jugadores y el resultado lo pone la mesa.") % p.minuto))
 	## MOMENTUM: el cuarto de hora en que uno empujó más, y los goles que cayeron ahí.
 	var t := r.tramo_dominante(15)
 	var neto := int(t["neto"]) * lado
@@ -87,6 +90,8 @@ static func candidatas(p: Partido, mio: int) -> Array:
 	if absi(om - os) >= 3:
 		c.append(_c("plantilla", signi(om - os), absf(om - os) / 9.0,
 			(Idiomas.t("Sobre el papel éramos mejores (media del once %d frente a %d).") if om > os else Idiomas.t("Sobre el papel su once era mejor (media %d frente a %d).")) % [om, os]))
+	else:   ## (17-11, s5_causas: un 1-1 tranquilo daba solo 2 causas) parejos sobre el papel también explica un empate; pesa muy poco: es relleno
+		c.append(_c("plantilla", 0, 0.04, Idiomas.t("Sobre el papel, dos onces parejos (media %d frente a %d).") % [om, os]))
 	## CLIMA (solo sin el motor del 3D, que no lo modela).
 	if not r.con_motor:
 		if p.clima < 0.97 and not p.clima_info.is_empty():
