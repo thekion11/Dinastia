@@ -63,12 +63,43 @@ static func a_la_vista(n: Node3D) -> bool:
 	var pos := n.global_position + Vector3(0, 1.0, 0)
 	return pos.distance_to(_cam.global_position) <= LEJOS and _cam.is_position_in_frustum(pos)
 
+## Fuerza el bucle GDScript (mediciones) y prueba de igualdad (`comparar`).
+static var forzar_gd := false
+static var comparar := false
+static var comparados := 0
+static var distintos := 0
+
 static func _paso(m: MotorLeague, delta: float, con_portador := true) -> void:
 	if con_portador:
 		portador(m)
 	if not transiciones_activas:
 		return
 	_cam = m.get_viewport().get_camera_3d() if fuera_camara and m.is_inside_tree() else null
+	## (16-11, paso a C++, orden del dueño «60 % del tiempo de CPU en C++») Con la extensión, `loco_paso` hace el camino común de `_uno` (clip en curso, o la
+	## compensación que se apaga y el modelo que se recoloca) y devuelve EN ORDEN lo que hace GDScript: índice·2 = `_quizas_empezar`, índice·2+1 = `_uno`.
+	## Igualdad: con `comparar`, cada jugador del camino común se rehace con `_uno` sobre una copia y se compara (`pruebas/probar_nativo_sin_balon.gd`).
+	var nat := Nativo.obj()
+	if nat != null and not forzar_gd and nat.has_method("loco_paso"):
+		var js: Array = m.jugadores
+		var ip := -1
+		if not m.poseedor.is_empty():
+			for i in js.size():
+				if is_same(js[i], m.poseedor):
+					ip = i
+					break
+		var antes: Array = []
+		if comparar:
+			for p: Dictionary in js:
+				antes.append(p.duplicate())
+		var lista: PackedInt32Array = nat.loco_paso(js, m.t, delta, ip, RECOLOCAR)
+		for c: int in lista:
+			if c % 2 == 0:
+				_quizas_empezar(m, js[c / 2])
+			else:
+				_uno(m, js[c / 2], delta)
+		if comparar:
+			_comparar(m, js, antes, lista, delta)
+		return
 	for p: Dictionary in m.jugadores:
 		if p.has("ls_propio_hasta"):
 			continue   ## (12-11) con un clip propio de `LeagueAcciones` (salto a disputar, reacción): ningún clip de marcha lo pisa
@@ -80,34 +111,57 @@ static func _paso(m: MotorLeague, delta: float, con_portador := true) -> void:
 			if p.get("anim_actual") in CICLOS:
 				_quizas_empezar(m, p)
 			continue
-		if not en_curso and cuerpo != 0.0 and not bool(p.get("ls_visto", true)):
-			enderezar(p)   ## fuera de cámara no hace falta el cuerpo girado: al camino barato (la compensación se apaga sola)
-		var n: Node3D = p.get("node")
-		var modelo: Node3D = p.get("ls_modelo")
-		if not is_instance_valid(n) or not is_instance_valid(modelo):
-			p["ls_off"] = 0.0
-			p["ls_cuerpo"] = 0.0
+		_uno(m, p, delta)
+
+## Prueba: los del camino común (los que no volvieron a GDScript y no eran del atajo barato) se rehacen con `_uno` sobre la copia de antes y se comparan.
+static func _comparar(m: MotorLeague, js: Array, antes: Array, lista: PackedInt32Array, delta: float) -> void:
+	var en_gd := {}
+	for c: int in lista:
+		en_gd[c / 2] = true
+	for i in js.size():
+		var a: Dictionary = antes[i]
+		if en_gd.has(i) or a.has("ls_propio_hasta"):
 			continue
-		var ap: AnimationPlayer = p["anim"]
-		if en_curso:
-			ap.speed_scale = 1.0
-			off = angle_difference(n.rotation.y, float(p["ls_yaw0"]))
-		else:
-			if p.has("ls_fin_yaw"):
-				_al_acabar(p, n)
-				off = float(p["ls_off"])
-			off = off * exp(-RECOLOCAR * delta) if absf(off) > 0.01 else 0.0   ## (por debajo de ~0,6°, ya está)
-			p["ls_off"] = off
-			_seguir_con_cuerpo(m, p, ap)
-			if float(p.get("ls_trans_hasta", 0.0)) <= m.t and float(p.get("ls_cuerpo", 0.0)) == 0.0 \
-					and String(p.get("anim_actual", "")) in CICLOS:
-				_quizas_empezar(m, p)
-		p["ls_off"] = off + float(p.get("ls_off_extra", 0.0))
-		p["ls_off_extra"] = 0.0
-		## Girar el modelo recalcula todo su árbol: solo si cambia de verdad.
-		var giro := float(p["ls_modelo_base"]) + float(p["ls_off"])
-		if absf(giro - modelo.rotation.y) > 0.002:
-			modelo.rotation.y = giro
+		if float(a.get("ls_trans_hasta", 0.0)) <= m.t and float(a.get("ls_off", 0.0)) == 0.0 and float(a.get("ls_cuerpo", 0.0)) == 0.0:
+			continue
+		comparados += 1
+		_uno(m, a, delta)
+		if var_to_bytes(a) != var_to_bytes(js[i]):
+			distintos += 1
+
+## Un jugador con clip en curso o con el cuerpo girado / compensación pendiente.
+static func _uno(m: MotorLeague, p: Dictionary, delta: float) -> void:
+	var en_curso := float(p.get("ls_trans_hasta", 0.0)) > m.t
+	var off := float(p.get("ls_off", 0.0))
+	var cuerpo := float(p.get("ls_cuerpo", 0.0))
+	if not en_curso and cuerpo != 0.0 and not bool(p.get("ls_visto", true)):
+		enderezar(p)   ## fuera de cámara no hace falta el cuerpo girado: al camino barato (la compensación se apaga sola)
+	var n: Node3D = p.get("node")
+	var modelo: Node3D = p.get("ls_modelo")
+	if not is_instance_valid(n) or not is_instance_valid(modelo):
+		p["ls_off"] = 0.0
+		p["ls_cuerpo"] = 0.0
+		return
+	var ap: AnimationPlayer = p["anim"]
+	if en_curso:
+		ap.speed_scale = 1.0
+		off = angle_difference(n.rotation.y, float(p["ls_yaw0"]))
+	else:
+		if p.has("ls_fin_yaw"):
+			_al_acabar(p, n)
+			off = float(p["ls_off"])
+		off = off * exp(-RECOLOCAR * delta) if absf(off) > 0.01 else 0.0   ## (por debajo de ~0,6°, ya está)
+		p["ls_off"] = off
+		_seguir_con_cuerpo(m, p, ap)
+		if float(p.get("ls_trans_hasta", 0.0)) <= m.t and float(p.get("ls_cuerpo", 0.0)) == 0.0 \
+				and String(p.get("anim_actual", "")) in CICLOS:
+			_quizas_empezar(m, p)
+	p["ls_off"] = off + float(p.get("ls_off_extra", 0.0))
+	p["ls_off_extra"] = 0.0
+	## Girar el modelo recalcula todo su árbol: solo si cambia de verdad.
+	var giro := float(p["ls_modelo_base"]) + float(p["ls_off"])
+	if absf(giro - modelo.rotation.y) > 0.002:
+		modelo.rotation.y = giro
 
 ## Acabó el clip: el cuerpo sigue mirando donde lo dejó. Como la marcha real (la de nuestro motor) no tiene por qué haber girado
 ## lo mismo que el clip, el estado del cuerpo pasa a ser el ángulo permitido más cercano a como mira AHORA respecto a la marcha

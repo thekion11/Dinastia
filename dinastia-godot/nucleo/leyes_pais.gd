@@ -397,7 +397,24 @@ static func resumen(pais: String) -> Array:
 	l.append("📜 " + String(r.get("norma", "")) + ("" if bool(r.get("seguro", true)) else " (por verificar)"))
 	return l
 
+## (16-11, paso a C++) Con la extensión, `leyes_ya_cumple` (misma cuenta, `ocupa_cupo` incluido); esta es su gemela. `comparar` = prueba de igualdad.
+static var comparar := false
+static var comparados := 0
+static var distintos := 0
+
 static func _ya_cumple(c: Club, once: Array[Jugador], r: Dictionary, clubes: Dictionary) -> bool:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("leyes_ya_cumple"):
+		var v: bool = nat.leyes_ya_cumple(once, c.pais, int(r.get("cancha", 0)), r.get("juveniles", []), String(r.get("criterio", "extranjero")), UE,
+			clubes if not clubes.is_empty() else clubes_mundo)
+		if comparar:
+			comparados += 1
+			if v != _ya_cumple_gd(c, once, r, clubes):
+				distintos += 1
+		return v
+	return _ya_cumple_gd(c, once, r, clubes)
+
+static func _ya_cumple_gd(c: Club, once: Array[Jugador], r: Dictionary, clubes: Dictionary) -> bool:
 	var tope := int(r.get("cancha", 0))
 	if tope > 0:
 		var n := 0

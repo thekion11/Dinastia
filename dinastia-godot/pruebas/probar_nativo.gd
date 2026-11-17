@@ -311,7 +311,36 @@ func _probar() -> void:
 	motor.free()
 	raiz_c.queue_free()
 	## (10-11, paso a C++) El partido simulado de la IA entero (90 minutos) en C++: mismo marcador, estadísticas, jugadores y azar que `Partido.simular()`, en cuatro mundos.
+	## (17-11) El clima del partido: `clima_partido` frente a `Clima.del_partido` + `factor` + `factor_visita`, en todas las parejas de países del globo.
+	var globo: Dictionary = Datos.tabla("GLOBO_PAIS")
+	var paises: Array = globo.keys() + ["XXX"]
+	var cl_dis := 0
+	var cl_n := 0
+	for a: int in paises.size():
+		for s in range(1, 53, 3):
+			var pl: String = paises[a]
+			var pv: String = paises[(a * 7 + s) % paises.size()]
+			var semilla := "c%d" % (a * 31 + s)
+			var info := Clima.del_partido(pl, s, 2026 + s % 3, semilla)
+			var fv := 1.0 if s % 5 == 0 else Clima.factor_visita(info, pv, pl)
+			var cc: Array = nat.clima_partido(pl, pv, s, 2026 + s % 3, semilla, s % 5 == 0, globo)
+			cl_n += 1
+			if var_to_bytes(info) != var_to_bytes(cc[0]) or var_to_bytes(Clima.factor(info)) != var_to_bytes(cc[1]) or var_to_bytes(fv) != var_to_bytes(cc[2]):
+				cl_dis += 1
+	_comprobar(cl_dis == 0 and cl_n > 500, "clima del partido: C++ = GDScript en %d casos (distintos: %d)" % [cl_n, cl_dis])
+	LeyesPais.comparar = true
+	LeyesPais.comparados = 0
+	Partido.comparar_fuerza = true
+	Partido.fuerza_comparadas = 0
+	Partido.fuerza_distintas = 0
+	LeyesPais.distintos = 0
 	var np := NativoPartido.probar(6)
+	LeyesPais.comparar = false
+	Partido.comparar_fuerza = false
+	print("fuerza de los onces: %d comparadas, %d distintas" % [Partido.fuerza_comparadas, Partido.fuerza_distintas])
+	_comprobar(Partido.fuerza_distintas == 0 and Partido.fuerza_comparadas > 100, "fuerza de los onces (fuerza_dos): C++ = GDScript")
+	print("reglas de la liga sobre el once: %d comparados, %d distintos" % [LeyesPais.comparados, LeyesPais.distintos])
+	_comprobar(LeyesPais.distintos == 0 and LeyesPais.comparados > 100, "reglas de la liga sobre el once (_ya_cumple): C++ = GDScript en %d onces (distintos: %d)" % [LeyesPais.comparados, LeyesPais.distintos])
 	for f: String in np["fallos"]:
 		_comprobar(false, "partido simulado en C++: " + f)
 	_comprobar(np["fallos"].is_empty() and int(np["rapidos"]) > 300, "partido simulado en C++ = GDScript en %d cruces (por la ruta nativa: %d)" % [np["cruces"], np["rapidos"]])
@@ -348,6 +377,21 @@ func _probar() -> void:
 	_comprobar((po["fallos"] as Array).is_empty(), "decisión con balón de League (situación, regate, decidir): C++ = GDScript (4000 casos cada una)")
 	for t: String in po["textos"]:
 		print(t)
+	var raiz_gu := Node3D.new()
+	add_child(raiz_gu)
+	var gu := ProbarNativoGuia.probar(nat, raiz_gu)
+	for f: String in gu["fallos"]:
+		_comprobar(false, "guía de clips de League en C++: " + f)
+	_comprobar((gu["fallos"] as Array).is_empty(), "guía de clips de League: C++ = GDScript (600 pasos de 22 jugadores)")
+	for t: String in gu["textos"]:
+		print(t)
+	var sb := ProbarNativoSinBalon.probar(nat, raiz_gu)
+	for f: String in sb["fallos"]:
+		_comprobar(false, "colocación sin balón de League en C++: " + f)
+	_comprobar((sb["fallos"] as Array).is_empty(), "colocación sin balón de League: C++ = GDScript (3 cruces reales)")
+	for t: String in sb["textos"]:
+		print(t)
+	raiz_gu.queue_free()
 	## (16-11, auditoría) Casos límite: historiales cortos, equipos vacíos, NaN/inf, entradas inválidas que no deben cerrar Godot.
 	var li := ProbarNativoLimites.probar(nat)
 	for f: String in li["fallos"]:
