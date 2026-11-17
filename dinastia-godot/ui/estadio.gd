@@ -211,7 +211,7 @@ func _hud_juego() -> void:
 		_flecha_apunte.rotation.y = atan2(dir.x, dir.z)
 
 func _paso_motor(delta: float) -> void:
-	if _panel_dt != null or _panel_controles != null or _sala_var != null or _panel_stats != null:
+	if _panel_dt != null or _panel_controles != null or _sala_var != null or _panel_stats != null or _pausa_menu != null:
 		return
 	## LA OCASIÓN JUGABLE: mientras eliges, el motor no da ni un paso; y se mira
 	## tras CADA paso, para cazar la llegada antes de que la IA la resuelva.
@@ -342,11 +342,11 @@ func _unhandled_input(e: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		repetir_jugada()
 		return
-	if _motor != null and _panel_dt == null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_pausa"):
+	if _motor != null and _panel_dt == null and _panel_controles == null and _panel_stats == null and _pausa_menu == null and e.is_action_pressed("jugar_pausa"):
 		if _cajon != null and _cajon.abierto:
 			return
 		get_viewport().set_input_as_handled()
-		_abrir_panel_dt()
+		abrir_pausa()
 
 ## Al salir del 3D el partido puede seguir en la pantalla 2D: ahí vuelve a
 ## jugarlo el `Partido` por su cuenta (si no, no habría goles).

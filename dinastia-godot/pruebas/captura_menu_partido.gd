@@ -6,6 +6,7 @@ func _foto(nombre: String) -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://pruebas/capturas/menu_partido_%s.png" % nombre))
+	print("captura ", nombre, " ", Time.get_ticks_msec())
 
 func _ready() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://pruebas/capturas"))
@@ -31,4 +32,23 @@ func _ready() -> void:
 			await get_tree().create_timer(0.3).timeout
 			await _foto("%s_%s" % [paises[k], tab])
 		menu.queue_free()
+		if k == 1:
+			await _pausa(p)
 	get_tree().quit()
+
+## La pausa del partido (sobre un césped de relleno: la escena del estadio es demasiado pesada para esta captura).
+func _pausa(p: Partido) -> void:
+	var fondo := ColorRect.new()
+	fondo.color = Color("1f6a3a")
+	fondo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var capa := Control.new()
+	capa.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(capa)
+	capa.add_child(fondo)
+	p.minuto = 63
+	p.goles_local = 2
+	p.goles_visita = 1
+	MenuPausaPartido.abrir(capa, p)
+	await get_tree().create_timer(0.4).timeout
+	await _foto("pausa")
+	capa.queue_free()

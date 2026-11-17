@@ -24,7 +24,7 @@ var _modal: PanelContainer
 var _titulo_modal: Label
 var _pie: Label
 var _abierta := ""
-var _fig_mio: FiguraClub
+var _fig_mio: Control
 
 static func mostrar(padre: Node, p: Partido, mi_club: Club, liga: Liga, info_clima: Dictionary, comp := "Liga") -> MenuPartido:
 	var m := MenuPartido.new()
@@ -52,11 +52,9 @@ func _ready() -> void:
 				sim = String(ult.get("modo", "resumen"))
 	var l := partido.local
 	var v := partido.visita
-	var fondo := FondoCine.new()
-	fondo.modo = FondoCine.Modo.DUAL
+	var fondo := FondoPrevia.new()
 	fondo.color = _color_club(l)
 	fondo.color_b = _color_club(v)
-	fondo.bokeh = true
 	add_child(fondo)
 	_montar_cabecera(l, v)
 	_montar_figuras(l, v)
@@ -105,11 +103,7 @@ func _montar_cabecera(l: Club, v: Club) -> void:
 
 ## El jugador mejor del once (el que sale grande), con su dorsal.
 func dorsal_estrella(c: Club) -> int:
-	var o := c.once()
-	var mejor: Jugador = null
-	for j: Jugador in o:
-		if mejor == null or j.ovr > mejor.ovr:
-			mejor = j
+	var mejor := estrella(c)
 	return maxi(mejor.dorsal, 1) if mejor != null else 10
 
 func _figura(c: Club, cols: Array) -> FiguraClub:
@@ -123,23 +117,40 @@ func _figura(c: Club, cols: Array) -> FiguraClub:
 	return f
 
 func _montar_figuras(l: Club, v: Club) -> void:
-	var izq := _caja(0.0, 0.25, 0.14, 0.9)
-	_fig_mio = _figura(l, PanelesMenuPartido.colores_uniforme(l, String(OpcionesPartido.leer("uniforme_partido", "titular")) if l == mio else "titular"))
-	_fig_mio.set_anchors_preset(Control.PRESET_FULL_RECT)
-	izq.add_child(_fig_mio)
-	var der := _caja(0.75, 1.0, 0.14, 0.9)
-	var fv := _figura(v, PanelesMenuPartido.colores_uniforme(v, "titular"))
-	fv.set_anchors_preset(Control.PRESET_FULL_RECT)
-	der.add_child(fv)
+	var uni := String(OpcionesPartido.leer("uniforme_partido", "titular"))
+	for lado in 2:
+		var c: Club = l if lado == 0 else v
+		var caja := _caja(0.0, 0.29, 0.05, 0.935) if lado == 0 else _caja(0.71, 1.0, 0.05, 0.935)
+		var cols := PanelesMenuPartido.colores_uniforme(c, uni if c == mio else "titular")
+		## El futbolista 3D real con su equipación (sin pantalla, la figura plana).
+		var fig: Control = load("res://ui/partido_menu/retrato_jugador3d.gd").crear(c, estrella(c), [] if c != mio or uni == "titular" else cols, 0.32 if lado == 0 else -0.32)
+		if fig == null:
+			fig = _figura(c, cols)
+			caja.anchor_top = 0.14
+			caja.anchor_bottom = 0.9
+		fig.set_anchors_preset(Control.PRESET_FULL_RECT)
+		caja.add_child(fig)
+		if c == mio:
+			_fig_mio = fig
+
+## El jugador que sale grande: el mejor del once.
+func estrella(c: Club) -> Jugador:
+	var mejor: Jugador = null
+	for j: Jugador in c.once():
+		if mejor == null or j.ovr > mejor.ovr:
+			mejor = j
+	return mejor
 
 ## El uniforme elegido se ve en la figura de TU club (sea el local o el visitante).
 func poner_uniforme(clave: String) -> void:
-	var f := _fig_mio if partido.local == mio else null
-	if f == null:
+	if _fig_mio == null:
 		return
 	var col := PanelesMenuPartido.colores_uniforme(mio, clave)
-	f.textura = EstiloAvanzar.figura(col[0], col[1])
-	f.queue_redraw()
+	if _fig_mio is FiguraClub:
+		(_fig_mio as FiguraClub).textura = EstiloAvanzar.figura(col[0], col[1])
+		_fig_mio.queue_redraw()
+	else:
+		_fig_mio.call("vestir", [] if clave == "titular" else col)
 
 static func linea_jugador(j: Jugador) -> String:
 	var partes := Nombres.visible(j.nombre).split(" ", false)
@@ -190,9 +201,12 @@ func _montar_barra() -> void:
 		var n := PanelesMenuPartido._estilo(Color(0.86, 0.88, 0.94, 0.9))
 		b.add_theme_stylebox_override("normal", n)
 		b.add_theme_stylebox_override("hover", PanelesMenuPartido._estilo(Color(0.93, 0.94, 0.98, 0.95)))
+		## La elegida, como en el PES: blanca y encendida, con el texto del color de acento y una raya abajo.
 		var sel := PanelesMenuPartido._estilo(Color.WHITE)
 		sel.border_color = PanelesMenuPartido.ROJO
-		sel.set_border_width_all(3)
+		sel.border_width_bottom = 4
+		sel.shadow_color = Color(1, 1, 1, 0.35)
+		sel.shadow_size = 10
 		for k in ["pressed", "hover_pressed", "focus"]:
 			b.add_theme_stylebox_override(k, sel)
 		for k in ["font_color", "font_hover_color"]:
