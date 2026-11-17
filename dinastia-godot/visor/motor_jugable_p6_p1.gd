@@ -438,3 +438,11 @@ func _rival_mas_cercano(p: Dictionary) -> Dictionary:
 func _presion(p: Dictionary) -> float:
 	var r := _rival_mas_cercano(p)
 	return MotorMente.pos_vista(self as Object as MotorJugable, p, r).distance_to(pos(p)) if not r.is_empty() else 99.0   ## lo que VE (F8, 03-11)
+
+## GANCHO (16-11, H1): ¿puede `p` hacerse con el balón mientras va un remate? Aquí siempre (la huella no cambia); ver `MejorasC4Area`.
+func _puede_tomar_tiro(_p: Dictionary) -> bool:
+	return true
+
+## (17-11) ¿Hay que mirar `_puede_tomar_tiro`? Aquí nunca (las disputas siguen en C++); C4 lo enciende con `C4_TIRO_COMPANERO`.
+func _gancho_tiro() -> bool:
+	return false

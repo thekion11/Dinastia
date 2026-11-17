@@ -59,11 +59,3 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 		stats["pases"] += 1
 		_pase_usuario_vivo = true
 		_pase_usuario_de = p
-
-## GANCHO (16-11, H1): ¿puede `p` hacerse con el balón mientras va un remate? Aquí siempre (la huella no cambia); ver `MejorasC4Area`.
-func _puede_tomar_tiro(_p: Dictionary) -> bool:
-	return true
-
-## (17-11) ¿Hay que mirar `_puede_tomar_tiro`? Aquí nunca (las disputas siguen en C++); C4 lo enciende con `C4_TIRO_COMPANERO`.
-func _gancho_tiro() -> bool:
-	return false
