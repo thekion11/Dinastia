@@ -293,7 +293,8 @@ static func despacho(p: Principal, c: Club, acento: Color) -> Control:
 	var b: Button = tc[0]
 	var v: VBoxContainer = tc[1]
 	var estado := 0 if n == 0 else (1 if n <= 2 else 2)   ## tres estados del escritorio: ordenado, con pendientes, desbordado
-	var tex := EscaparateDespacho3D.textura(p, estado, EscaparateBarra.color_de(c))   ## render 3D del escritorio (una vez, guardado); sin pantalla, el dibujo plano
+	EscaparateArte.poner(b, "despacho_%d" % estado, c)   ## debajo, el dibujo plano (por si no hay gráfica o la escena 3D no sale)
+	var tex := EscaparateDespacho3D.textura(p, estado, EscaparateBarra.color_de(c))   ## encima, el render 3D del escritorio (una vez, guardado); transparente hasta que está listo
 	if tex != null:
 		var foto := TextureRect.new()
 		foto.texture = tex
@@ -302,10 +303,8 @@ static func despacho(p: Principal, c: Club, acento: Color) -> Control:
 		foto.set_anchors_preset(Control.PRESET_FULL_RECT)
 		foto.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(foto)
-		b.move_child(foto, 0)
-	else:
-		EscaparateArte.poner(b, "despacho_%d" % estado, c)
-	_velo(b, 1, 0.3)
+		b.move_child(foto, 1)
+	_velo(b, 2 if tex != null else 1, 0.3)
 	_al_fondo(v)
 	var linea := HBoxContainer.new()   ## el número y su texto, en la misma línea base
 	linea.add_theme_constant_override("separation", 8)

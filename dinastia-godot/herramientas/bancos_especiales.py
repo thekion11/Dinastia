@@ -137,7 +137,7 @@ def correr_banco(nombre, r):
         for l in malas[:6]:
             print("        " + l.strip()[:160])
     for n, cmd, pat in r["especiales"]:
-        p = subprocess.run(["bash", "-c", "timeout 600 bash -c '%s'" % cmd.replace("'", "'\\''")], cwd=RAIZ, capture_output=True, text=True)
+        p = subprocess.run(["bash", "-c", "timeout 600 bash -c '%s'" % cmd.replace("\\$", "$").replace("'", "'\\''")], cwd=RAIZ, capture_output=True, text=True)
         out = p.stdout + p.stderr
         ok = re.search(pat, out) is not None and "SCRIPT ERROR" not in out
         fallos += 0 if ok else 1

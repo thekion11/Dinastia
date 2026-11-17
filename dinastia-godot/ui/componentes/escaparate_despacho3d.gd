@@ -10,26 +10,36 @@ static func textura(padre: Node, estado: int, color: Color) -> Texture2D:
 	if DisplayServer.get_name() == "headless" or padre == null or not padre.is_inside_tree():
 		return null
 	var k := "%d|%s" % [estado, color.to_html(false)]
-	if _vistas.has(k) and is_instance_valid(_vistas[k]):
-		return (_vistas[k] as SubViewport).get_texture()
+	if _vistas.has(k):
+		return _vistas[k]
+	var tex := ImageTexture.create_from_image(Image.create(8, 8, false, Image.FORMAT_RGBA8))   ## de momento un marcador; cuando se dibuja se copia la imagen y se libera la escena
+	_vistas[k] = tex
 	var vp := SubViewport.new()
 	vp.own_world_3d = true
 	vp.size = Vector2i(560, 360)
 	vp.msaa_3d = Viewport.MSAA_4X
-	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS   ## varios fotogramas: el primero sale antes de que estén listos los materiales; luego se congela
+	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	padre.get_tree().root.add_child(vp)
-	_vistas[k] = vp
 	_montar(vp, estado, color)
-	var dibujos := [0]   ## se congela tras 6 fotogramas DIBUJADOS de verdad (no por tiempo: con la carga de la ventana pueden tardar)
+	var dibujos := [0]   ## tras 6 fotogramas DIBUJADOS de verdad (no por tiempo: con la carga de la ventana pueden tardar) se copia la imagen
 	var contar := func() -> void: pass
 	contar = func() -> void:
 		dibujos[0] += 1
-		if dibujos[0] >= 6:
-			if is_instance_valid(vp):
-				vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
-			RenderingServer.frame_post_draw.disconnect(contar)
+		if dibujos[0] < 6:
+			return
+		RenderingServer.frame_post_draw.disconnect(contar)
+		if is_instance_valid(vp):
+			var img := vp.get_texture().get_image()
+			if img != null and not img.is_empty():
+				img.convert(Image.FORMAT_RGBA8)
+				var suma := 0.0   ## si la escena salió negra (sin gráfica útil), no se usa: la tarjeta se queda con el dibujo plano de debajo
+				for i in 40:
+					suma += img.get_pixel((i * 53) % img.get_width(), (i * 31) % img.get_height()).get_luminance()
+				if suma / 40.0 > 0.04:
+					tex.set_image(img)
+			vp.queue_free()
 	RenderingServer.frame_post_draw.connect(contar)
-	return vp.get_texture()
+	return tex
 
 static func _mat(c: Color, emisivo := 0.0) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
