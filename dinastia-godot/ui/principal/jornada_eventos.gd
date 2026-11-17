@@ -12,6 +12,15 @@ static func ofrecer(pr: Principal) -> void:
 		return
 	if await JornadaSeleccion.ofrecer_fecha(pr):   ## (10-11) el partido de la fecha FIFA de la selección que diriges
 		return
+	var dia := DiasMemoria.pendiente(pr.mundo)   ## (16-11) el día de memoria del país: pantalla de reflexión, sin efectos; después sigue el evento del club
+	if not dia.is_empty():
+		_abierto = true
+		DiasMemoria.marcar(pr.mundo, dia)   ## antes de mostrarla: si se cierra la app a medias no se repite
+		var refl := EventoReflexion.mostrar(pr, dia)
+		refl.tree_exiting.connect(func() -> void: _abierto = false)
+		await refl.elegido
+		refl.queue_free()
+		_abierto = false
 	var ev := EventosClub.pendiente(pr.mundo)
 	if ev.is_empty():
 		return

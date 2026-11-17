@@ -167,3 +167,5 @@ CAPTURAS_PENDIENTES
 - Probar `mixamo_a_res.gd` con FBX reales de Mixamo (probado solo con un FBX del pack de Quaternius) y enchufar los clips al
   partido (`CicloCarrera.CICLO` con las velocidades medidas de cada clip con `AnimPasos`).
 - Veredicto del dueño en su laptop (FPS reales) y en el teléfono.
+
+Nota (17-11: en el repo solo quedan los pares `*_antes_despues.jpg` reducidos a 1280 px; las capturas sueltas originales siguen en el historial de git, commit d97e0502/9231fd63)

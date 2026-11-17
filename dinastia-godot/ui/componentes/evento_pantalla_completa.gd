@@ -27,11 +27,11 @@ func _montar_base(pr: Node) -> void:
 	FocoMando.aislar_mientras(_raiz, pr)   ## ni el foco: con mando, lo de debajo (un sorteo abierto, la principal) no es enfocable
 	var fondo := ColorRect.new()
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	fondo.color = SelectorDireccional.NOCHE if paleta_noche else Tema.FONDO
+	fondo.color = SelectorDireccional.NOCHE if paleta_noche else Tema.al_mundo(Tema.FONDO, 0)   ## (16-11) teñido con el mundo de juego
 	_raiz.add_child(fondo)
 	var grad := Gradient.new()
-	grad.set_color(0, Color(0.11, 0.17, 0.29, 1.0) if paleta_noche else Color(0.10, 0.20, 0.13, 1.0))
-	grad.set_color(1, Color(0.02, 0.035, 0.07, 1.0) if paleta_noche else Color(0.03, 0.06, 0.04, 1.0))
+	grad.set_color(0, Color(0.11, 0.17, 0.29, 1.0) if paleta_noche else Tema.al_mundo(Color(0.10, 0.20, 0.13, 1.0), 0))
+	grad.set_color(1, Color(0.02, 0.035, 0.07, 1.0) if paleta_noche else Tema.al_mundo(Color(0.03, 0.06, 0.04, 1.0), 0))
 	var gt := GradientTexture2D.new()
 	gt.gradient = grad
 	gt.fill = GradientTexture2D.FILL_RADIAL

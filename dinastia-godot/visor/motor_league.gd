@@ -261,8 +261,32 @@ func _sin_balon(p: Dictionary) -> Vector3:
 	p["correr"] = bool(p["ls_corre"])
 	return p["ls_obj"]
 
-## La estrategia del puesto (L RequestInput de default_def/mid/off) más la caza del portador (L ElizaController). → [destino, velocidad].
+## (16-11, paso a C++, opción B del dueño) `league_calcular_sin_balon` = `_calcular_sin_balon_gd` en una llamada; [] si el reparto de roles caducó o hay >16
+## candidatos en un «más cercanos». Con `comparar_sb` (pruebas) se calculan las dos y se cuentan las diferencias (`pruebas/probar_nativo_sin_balon.gd`).
+## OJO: todo ajuste de jugabilidad en `_calcular_sin_balon_gd` se copia en `nativo/src/sin_balon_nativo.cpp` (y al revés).
+static var comparar_sb := false
+static var sb_comparados := 0
+static var sb_distintos := 0
+
 func _calcular_sin_balon(p: Dictionary) -> Array:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("league_calcular_sin_balon"):
+		var ctx := [equipos, jugadores, poseedor, ultimo_toque, _ls_designado, _ls_por_id, _ls_corredor, _ls_corre_hasta, _ls_adelantado, _ls_pred, _ls_linea_rival,
+			_ls_marca, _ls_presiona, _ls_presion_hasta, _ls_desig_eq, t, tacticas, _lado_medio, balon, self]   ## (el orden lo lee `sin_balon_nativo.cpp`)
+		var r: Array = nat.league_calcular_sin_balon(ctx, p, designado_disputa)
+		if r.is_empty():   ## reparto de roles caducado: se recalcula (el mismo paso que daría la gemela) y se repite
+			MotorRoles.reparto(self as Object as MotorJugable, bool(p["es_local"]))
+			r = nat.league_calcular_sin_balon(ctx, p, designado_disputa)
+		if not r.is_empty():
+			if comparar_sb:
+				sb_comparados += 1
+				if var_to_bytes(r) != var_to_bytes(_calcular_sin_balon_gd(p)):
+					sb_distintos += 1
+			return r
+	return _calcular_sin_balon_gd(p)
+
+## La estrategia del puesto (L RequestInput de default_def/mid/off) más la caza del portador (L ElizaController). → [destino, velocidad].
+func _calcular_sin_balon_gd(p: Dictionary) -> Array:
 	var local := bool(p["es_local"])
 	var i := 0 if local else 1
 	var e: LeagueEquipo = equipos[i]
@@ -400,10 +424,6 @@ func _mover_balon(delta: float) -> void:
 	var v0 := sqrt((exp(2.0 * k * distancia) - 1.0) * cc / k)
 	vel_balon = dir * v0
 	cuenta_toques["toque_largo"] = int(cuenta_toques.get("toque_largo", 0)) + (1 if distancia > 3.0 else 0)
-
-## (16-11, informe M6-24) El combinado con nuestra locomoción no usa el toque de conducción de League (antes apagaba `fase3`, estática, mientras se emitían señales).
-func _sin_toque_league() -> bool:
-	return false
 
 ## FASE 4c (10-11): LOCOMOCIÓN VISUAL DEL ORIGINAL (`LeagueLocomocion`): ciclos de conducir y arranques, frenadas y giros.
 func _mover_jugadores(delta: float) -> void:

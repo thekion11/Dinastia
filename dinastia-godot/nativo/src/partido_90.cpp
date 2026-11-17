@@ -11,67 +11,7 @@
 
 using namespace godot;
 
-namespace {
-
-// `maxf` de GDScript: (a > b) ? a : b
-inline double maxf_gd(double a, double b) {
-	return a > b ? a : b;
-}
-
-// El generador de azar del juego (`Azar._rng`, PCG32 de Godot). Propio: la misma aritmética que el motor, sobre su `state` (se vuelca antes de cada vuelta a GDScript y se relee después). Si la
-// autocomprobación (`pcg_coincide`) no confirma que el motor hace lo mismo, se usan las llamadas del motor (más lentas, mismo resultado).
-struct AzarNativo {
-	Ref<RandomNumberGenerator> rng;
-	bool propio = false;
-	uint64_t state = 0;
-	static constexpr uint64_t INC = (1442695040888963407ULL << 1) | 1ULL;
-	inline uint32_t rand32() {
-		const uint64_t old = state;
-		state = old * 6364136223846793005ULL + INC;
-		const uint32_t xs = uint32_t(((old >> 18) ^ old) >> 27);
-		const uint32_t rot = uint32_t(old >> 59);
-		return (xs >> rot) | (xs << ((0u - rot) & 31u));
-	}
-	inline float randf() {
-		if (!propio) {
-			return rng->randf();
-		}
-		const uint32_t e = rand32();
-		if (e == 0) {
-			return 0.0f;
-		}
-		return float(std::ldexp(double(rand32() | 0x80000001u), -32 - __builtin_clz(e)));
-	}
-	inline void entrar() {
-		if (propio) {
-			state = rng->get_state();
-		}
-	}
-	inline void salir() {
-		if (propio) {
-			rng->set_state(state);
-		}
-	}
-};
-
-struct Estado {
-	Object *p;
-	Object *ayuda;
-	Array once_l, once_v;
-	Dictionary aportes;
-	Variant club_l, club_v;
-	int64_t minuto;
-	// contadores propios
-	int64_t rem_l = 0, rem_v = 0, tp_l = 0, tp_v = 0, cor_l = 0, cor_v = 0, fal_l = 0, fal_v = 0, fue_l = 0, fue_v = 0;
-	double xg_l = 0.0, xg_v = 0.0, posesion = 50.0;
-	// fuerza (copia de `_fza_*`)
-	double ata_l = 0.0, def_l = 0.0, ata_v = 0.0, def_v = 0.0;
-	double pl = 0.0, pv = 0.0;
-	bool hay_lesionados = false;
-	bool terminado = false;
-};
-
-} // namespace
+#include "partido_90.h"
 
 void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg, const Ref<RandomNumberGenerator> &rng, bool azar_propio) const {
 	static const StringName k_minuto("minuto"), k_term("terminado_ya"), k_fl("_fza_local"), k_fv("_fza_visita"), k_ata("ata"), k_def("def"), k_plan("_plan_aplicado");
@@ -156,6 +96,99 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		e.xg_v = double(p->get(k_xg_v));
 	};
 	// `_aporte(j, v)`
+	// `Partido._anotar` (nucleo/partido_p2.gd), 16-11-2026: el gol entero aquí, sin volver a GDScript (sin roles: lo garantiza `_puede`). El goleador sale de la misma
+	// tirada de `Azar` (`az`) que daba `PartidoPonderado.goleador`; el asistente, de su generador propio sembrado con «id_minuto», como `asistente`. Las señales
+	// (`marco_gol`, `gol`) se emiten con el azar del motor al día (`az.salir`), por si quien escucha tira dados.
+	const Dictionary bases_asist = cfg["bases_asist"];
+	static const StringName k_gl("goles_local"), k_gv("goles_visita"), k_pdl("peor_diferencia_local"), k_pdv("peor_diferencia_visita"), k_goles("goles"), k_asistencias("asistencias"), k_notas("_notas"),
+			k_cronica("cronica"), k_momentum("momentum_eventos"), k_nombre("nombre"), k_marco("marco_gol"), k_gol("gol");
+	auto anotar_gol = [&](Object *club, const Array &once, bool es_local) {
+		Object *autor = nullptr;
+		if (!once.is_empty()) {
+			const int64_t i = elegir_ponderado(once, grupo_de, bases_gol, 0.02, "tir", PackedFloat64Array(), az.randf(), nullptr);
+			if (i >= 0) {
+				autor = once[i];
+			}
+		}
+		az.salir();
+		int64_t gl = int64_t(p->get(k_gl));
+		int64_t gv = int64_t(p->get(k_gv));
+		if (es_local) {
+			gl += 1;
+			p->set(k_gl, gl);
+		} else {
+			gv += 1;
+			p->set(k_gv, gv);
+		}
+		p->set(k_pdl, std::min(int64_t(p->get(k_pdl)), gl - gv));
+		p->set(k_pdv, std::min(int64_t(p->get(k_pdv)), gv - gl));
+		Object *asistente = nullptr;
+		if (autor != nullptr) {
+			autor->set(k_goles, int64_t(autor->get(k_goles)) + 1); // `Jugador.anotar`
+			autor->emit_signal(k_marco);
+			Dictionary notas = p->get(k_notas);
+			const Variant id = autor->get(k_id);
+			const double nota = double(notas.get(id, 6.0)) + 1.1;
+			notas[id] = nota < 10.0 ? nota : 10.0;
+			Ref<RandomNumberGenerator> r2;
+			r2.instantiate();
+			r2->set_seed(uint64_t((String(id) + "_" + String::num_int64(e.minuto)).hash()));
+			const int64_t ia = elegir_ponderado(once, grupo_de, bases_asist, 0.05, "pas", PackedFloat64Array(), r2->randf(), autor);
+			if (ia >= 0) {
+				asistente = once[ia];
+				asistente->set(k_asistencias, int64_t(asistente->get(k_asistencias)) + 1); // (16-11, informe G-02) como `Partido._anotar`
+			}
+		}
+		Array cronica = p->get(k_cronica);
+		Dictionary d;
+		d["min"] = e.minuto;
+		d["tipo"] = "gol";
+		d["club"] = club->get(k_id);
+		d["autor"] = autor != nullptr ? autor->get(k_nombre) : Variant(String("?"));
+		cronica.push_back(d);
+		Array mom = p->get(k_momentum); // `_momentum_push(2, es_local)`
+		mom.push_back(es_local ? 2 : -2);
+		if (mom.size() > 12) {
+			mom.remove_at(0);
+		}
+		p->emit_signal(k_gol, club, autor != nullptr ? Variant(autor) : Variant(), e.minuto, asistente != nullptr ? Variant(asistente) : Variant());
+		az.entrar();
+	};
+
+	// `PartidoRapido.hit_amarilla` + `Partido._amonestar` (16-11-2026), con el generador del motor (se llama tras `az.salir`): el camino de siempre de una
+	// amarilla que no es la segunda del partido. La segunda (que puede ser roja: sanción, fuera del once, `_revisar_siete`) la hace GDScript (`_amonestar`) y la
+	// que completa el ciclo de amarillas, `PartidoRapido.hit_acumula` (`Disciplina`). Devuelve true si el once y la fuerza no cambiaron.
+	const int64_t ciclo_amarillas = int64_t(cfg["ciclo_amarillas"]);
+	static const StringName k_amar_hoy("_amarillas_hoy"), k_amarillas("amarillas"), k_tarjeta("tarjeta");
+	auto amarilla_nativa = [&](bool casero_) -> bool {
+		const bool solo_visita = casero_ && rng->randf() < 0.35;
+		const int64_t nl = solo_visita ? 0 : e.once_l.size();
+		const int64_t n = nl + e.once_v.size();
+		if (n == 0) {
+			return true; // `_alguien` de una lista vacía: nadie
+		}
+		const int64_t k = rng->randi_range(0, n - 1);
+		Object *j = k < nl ? Object::cast_to<Object>(e.once_l[k]) : Object::cast_to<Object>(e.once_v[k - nl]);
+		if (j == nullptr) {
+			return true;
+		}
+		Dictionary hoy = p->get(k_amar_hoy);
+		const Variant id = j->get(k_id);
+		const int64_t previas = int64_t(hoy.get(id, 0));
+		if (previas >= 1) {
+			p->call("_amonestar", j);
+			return false;
+		}
+		const int64_t am = int64_t(j->get(k_amarillas)) + 1;
+		j->set(k_amarillas, am);
+		hoy[id] = previas + 1;
+		p->emit_signal(k_tarjeta, j, false, e.minuto);
+		if (am > 0 && am % ciclo_amarillas == 0) {
+			ayuda->call("hit_acumula", p, j);
+		}
+		return true;
+	};
+
 	auto aporte = [&](Object *j, double v) {
 		if (j != nullptr) {
 			const Variant id = j->get(k_id);
@@ -235,9 +268,7 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 				e.tp_v += 1;
 			}
 			p->set(k_minuto, e.minuto);
-			az.salir();
-			p->call("_anotar", club, once, es_local);
-			az.entrar();
+			anotar_gol(club, once, es_local);
 			e.terminado = bool(p->get(k_term));
 			return;
 		}
@@ -274,11 +305,17 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 	while (!e.terminado) {
 		e.minuto += 1;
 		if (e.hay_lesionados) {
-			p->set(k_minuto, e.minuto);
-			az.salir();
-			ayuda->call("atender", p);
-			az.entrar();
-			refrescar();
+			// (16-11) Con la lista de lesionados vacía `PartidoLesiones.atender` no hace nada (ni azar, ni estado, ni fuerzas): se deja de llamar hasta la próxima lesión.
+			static const StringName k_lesionados("lesionados");
+			if (Dictionary(p->get_meta(k_lesionados, Dictionary())).is_empty()) {
+				e.hay_lesionados = false;
+			} else {
+				p->set(k_minuto, e.minuto);
+				az.salir();
+				ayuda->call("atender", p);
+				az.entrar();
+				refrescar();
+			}
 		}
 		if (e.minuto == 60 && !plan_aplicado) {
 			plan_aplicado = true;
@@ -321,9 +358,12 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		if (az.randf() < p_amarilla) {
 			p->set(k_minuto, e.minuto);
 			az.salir();
-			ayuda->call("hit_amarilla", p, casero);
-			az.entrar();
-			refrescar();
+			if (amarilla_nativa(casero)) {
+				az.entrar(); // ni roja ni cambios en el once: la fuerza no cambia
+			} else {
+				az.entrar();
+				refrescar();
+			}
 		}
 		if (az.randf() < p_lesion) {
 			p->set(k_minuto, e.minuto);

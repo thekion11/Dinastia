@@ -325,9 +325,17 @@ static func aspecto_futbolista(jug: Dictionary, jid: String) -> Dictionary:
 ## PROPORCIONES DE FUTBOLISTA (12-11, sesión 14): de cerca seguían leyéndose como «superhéroe» (cabeza pequeña, cuello corto y grueso,
 ## pecho en V). Un atleta, no un héroe: cabeza un 4 % mayor, cuello un 5 % más largo y algo más fino, pecho un 4 % más estrecho.
 ## `SIN_PROPORCION_FUTBOLISTA=1` mide el antes.
+## (16-11, frente 2) Comparado con PES 2020/FC: brazos y antebrazos de gimnasio y hombros cuadrados, caderas y muslos de
+## menos. Brazos un 8 % más finos, hombros (clavícula) un 4 % más cerrados, cadera un 4 % más ancha y muslos y gemelos
+## un 4 y 3 % más fuertes: la silueta de un jugador de campo (piernas que mandan), no de culturista.
 const PROPORCION_FUTBOLISTA := {
 	"Head": Vector3(1.04, 1.04, 1.04), "neck_01": Vector3(0.96, 1.05, 0.96), "spine_03": Vector3(0.96, 1.0, 0.97),
-	"clavicle_l": Vector3(0.96, 0.97, 0.97), "clavicle_r": Vector3(0.96, 0.97, 0.97),
+	"clavicle_l": Vector3(0.92, 0.97, 0.97), "clavicle_r": Vector3(0.92, 0.97, 0.97),
+	"upperarm_l": Vector3(1.0, 0.92, 0.92), "upperarm_r": Vector3(1.0, 0.92, 0.92),
+	"lowerarm_l": Vector3(1.0, 0.92, 0.92), "lowerarm_r": Vector3(1.0, 0.92, 0.92),
+	"pelvis": Vector3(1.04, 1.0, 1.02),
+	"thigh_l": Vector3(1.04, 1.0, 1.04), "thigh_r": Vector3(1.04, 1.0, 1.04),
+	"calf_l": Vector3(1.03, 1.0, 1.03), "calf_r": Vector3(1.03, 1.0, 1.03),
 }
 
 static func cuerpo_futbolista(d: Dictionary, jug: Dictionary, jid: String) -> void:

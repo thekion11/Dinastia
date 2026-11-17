@@ -31,12 +31,15 @@ const CAIDA_POSESION := 0.8
 static func actualizar(m: MotorJugable, delta: float) -> void:
 	if _sin:
 		return
+	var nat := Nativo.obj()
+	var cercas: PackedFloat64Array = nat.colocacion_cerca(m.jugadores, m.balon.position) if nat != null and nat.has_method("colocacion_cerca") else cerca_gd(m)
+	if comparar and nat != null and nat.has_method("colocacion_cerca"):
+		comparados += 1
+		if var_to_bytes(cercas) != var_to_bytes(cerca_gd(m)):
+			distintos += 1
 	for local: bool in [true, false]:
 		var e := _est(m, local)
-		var cerca := 40.0
-		for q: Dictionary in m.jugadores:
-			if bool(q["es_local"]) == local:
-				cerca = minf(cerca, m.pos(q).distance_to(m.balon.position))
+		var cerca := cercas[0 if local else 1]
 		var urg := 1.0 - clampf((cerca - 2.0) / 28.0, 0.0, 1.0)
 		var tau := lerpf(RETARDO_MAX, RETARDO_MIN, urg)
 		var rival_con_balon := not m.poseedor.is_empty() and bool(m.poseedor["es_local"]) != local
@@ -47,6 +50,21 @@ static func actualizar(m: MotorJugable, delta: float) -> void:
 			var meta := 0.0 if rival_con_balon else 1.0
 			var k := CAIDA_POSESION if meta < float(e["sesgo"]) else MEMORIA_POSESION
 			e["sesgo"] = lerpf(float(e["sesgo"]), meta, 1.0 - exp(-delta / k))
+
+## (16-11, paso a C++) El más cercano de cada equipo al balón: `colocacion_cerca` en la extensión; esta es su gemela. `comparar` = prueba de igualdad.
+static var comparar := false
+static var comparados := 0
+static var distintos := 0
+
+static func cerca_gd(m: MotorJugable) -> PackedFloat64Array:
+	var r := PackedFloat64Array([40.0, 40.0])
+	for local: bool in [true, false]:
+		var cerca := 40.0
+		for q: Dictionary in m.jugadores:
+			if bool(q["es_local"]) == local:
+				cerca = minf(cerca, m.pos(q).distance_to(m.balon.position))
+		r[0 if local else 1] = cerca
+	return r
 
 ## Balón que «ve» el equipo, y sesgo de posesión (0-1).
 static func balon_lento(m: MotorJugable, local: bool) -> Vector3:

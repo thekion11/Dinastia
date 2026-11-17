@@ -21,6 +21,19 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("once_armar", "plantilla", "ranuras", "grupo_de", "orden"), &DinastiaNativo::once_armar);
 	ClassDB::bind_method(D_METHOD("obstaculos_multimalla", "nodo_t", "buf", "paso", "n", "base", "raiz_y", "min_alto", "max_base", "rej", "celda_rej"), &DinastiaNativo::obstaculos_multimalla);
 	ClassDB::bind_method(D_METHOD("cuerpos_motor", "jugadores", "minimo"), &DinastiaNativo::cuerpos_motor);
+	ClassDB::bind_method(D_METHOD("league_calcular_sin_balon", "ctx", "p", "designado_disputa"), &DinastiaNativo::league_calcular_sin_balon);
+	ClassDB::bind_method(D_METHOD("duelos_parejas", "jugadores"), &DinastiaNativo::duelos_parejas);
+	ClassDB::bind_method(D_METHOD("disputas_inicio", "jugadores", "delta", "suelto", "b", "t", "pase_a_id", "arco_z", "area_x", "area_z"), &DinastiaNativo::disputas_inicio);
+	ClassDB::bind_method(D_METHOD("colocacion_cerca", "jugadores", "b"), &DinastiaNativo::colocacion_cerca);
+	ClassDB::bind_method(D_METHOD("animar_jugadores", "jugadores", "res", "t", "poseedor_id", "cansancio_real", "league", "aplicar"), &DinastiaNativo::animar_jugadores);
+	ClassDB::bind_method(D_METHOD("loco_paso", "jugadores", "t", "delta", "poseedor", "recolocar"), &DinastiaNativo::loco_paso);
+	ClassDB::bind_method(D_METHOD("leyes_ya_cumple", "once", "pais", "tope", "juveniles", "criterio", "ue", "clubes"), &DinastiaNativo::leyes_ya_cumple);
+	ClassDB::bind_method(D_METHOD("clima_partido", "pais", "pais_visita", "semana", "anio", "semilla", "neutral", "globo"), &DinastiaNativo::clima_partido);
+	ClassDB::bind_method(D_METHOD("fuerza_dos", "once_l", "once_v", "local", "visita", "m"), &DinastiaNativo::fuerza_dos);
+	ClassDB::bind_method(D_METHOD("plantel_semana", "plantilla", "semana_global", "suelo", "semana", "anio", "rng"), &DinastiaNativo::plantel_semana);
+	ClassDB::bind_method(D_METHOD("guia_previo", "jugadores", "t", "poseedor"), &DinastiaNativo::guia_previo);
+	ClassDB::bind_method(D_METHOD("guia_pendientes", "jugadores", "t"), &DinastiaNativo::guia_pendientes);
+	ClassDB::bind_method(D_METHOD("guia_seguir", "jugadores", "t", "delta", "usuario", "marchas"), &DinastiaNativo::guia_seguir);
 	ClassDB::bind_method(D_METHOD("mover_jugadores_fisica", "jugadores", "bpos", "delta", "t", "hay_poseedor", "poseedor_id", "poseedor_local", "a_max_base", "ancho", "largo", "giro_rapido", "coste_aguante"),
 			&DinastiaNativo::mover_jugadores_fisica);
 	ClassDB::bind_method(D_METHOD("cerrar_notas", "p", "rng"), &DinastiaNativo::cerrar_notas);

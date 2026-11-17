@@ -421,3 +421,30 @@ func _probar_mando_tactil_fc() -> void:
 	ct4.queue_free()
 	PantallaMovil.dpi_forzado = 0.0
 	PantallaMovil.ventana_forzada = Vector2i.ZERO
+
+## (16-11, frente 3) el mando de C4: pase por dirección estilo PES y carrera del que manejas (`MejorasC4Mando`, banderas apagadas).
+func _probar_mando_c4() -> void:
+	_titulo("C4: PASE POR DIRECCIÓN Y CARRERA DEL MANDO")
+	var r := _motor_de_prueba(13)
+	var motor: MotorJugable = r[0]
+	var loc: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
+	for p: Dictionary in motor.jugadores:
+		(p["node"] as Node3D).position = Vector3(-30.0, 0, -50.0) if bool(p["es_local"]) else Vector3(30.0, 0, 45.0)
+	var d := motor.dir_ataque(true)
+	var yo: Dictionary = loc[0]; (yo["node"] as Node3D).position = Vector3.ZERO
+	(loc[1]["node"] as Node3D).position = Vector3(0, 0, 25.0 * d)   ## justo donde apuntas, lejos
+	(loc[2]["node"] as Node3D).position = Vector3(8.0 * sin(deg_to_rad(25.0)), 0, 8.0 * cos(deg_to_rad(25.0)) * d)   ## 25° de lado, cerca
+	_comprobar(motor._companero_en_direccion(yo, Vector3(0, 0, d)) == loc[2], "el de siempre: sale al cercano aunque apuntes al otro")
+	_comprobar(MejorasC4Mando.companero(motor, yo, Vector3(0, 0, d)) == loc[1], "estilo PES: sale al que apuntas")
+	_comprobar(MejorasC4Mando.companero(motor, yo, Vector3(0, 0, -d)).is_empty(), "nadie en el cono: decide el de siempre")
+	yo["manual"] = Vector3(0, 0, d)
+	yo["objetivo"] = Vector3(0, 0, 3.0 * d)
+	var antes := [MejorasC4Mando.PUNTA, MejorasC4Mando.GIRO_SECO, MejorasC4Mando.INERCIA]
+	MejorasC4Mando.PUNTA = false; MejorasC4Mando.GIRO_SECO = false; MejorasC4Mando.INERCIA = false
+	MejorasC4Mando.carrera(motor, yo, 1.0 / 30.0)
+	_comprobar((yo["objetivo"] as Vector3).is_equal_approx(Vector3(0, 0, 3.0 * d)), "con las banderas apagadas no toca la carrera")
+	MejorasC4Mando.PUNTA = true
+	MejorasC4Mando.carrera(motor, yo, 1.0 / 30.0)
+	_comprobar(absf((yo["objetivo"] as Vector3).length() - 4.0) < 0.01, "punta sin tope: objetivo a 4 m")
+	MejorasC4Mando.PUNTA = bool(antes[0]); MejorasC4Mando.GIRO_SECO = bool(antes[1]); MejorasC4Mando.INERCIA = bool(antes[2])
+	(r[1] as Node3D).queue_free()

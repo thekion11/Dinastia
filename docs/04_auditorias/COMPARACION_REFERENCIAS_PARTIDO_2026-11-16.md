@@ -3,7 +3,7 @@
 Pedido del dueño (16-11): comparar el partido con las referencias del Drive y decir qué falta para llegar a ese nivel.
 Referencias usadas (Drive `Dinastia_respaldo_2026-10-24/referencias_del_dueño`, NO van al repo): `FCMobile_mando_sin_balon_2026-11-11.jpg` y `FCMobile_mando_con_balon_2026-11-11.jpg`.
 En el Drive no hay capturas del PARTIDO de PES 2020 (solo el menú central de la Liga Master); los vídeos de la carpeta padre (29-780 MB) no se pueden ver desde la nube.
-Nuestra captura: `capturas_h1_animacion_2026-11-16/tv_bra_jpn_despues.jpg` (cámara real de TV, ULTRA, sin GPU).
+Nuestra captura: `capturas_h1_animacion_2026-11-16/tv_bra_jpn_despues.jpg` (cámara real de TV, ULTRA, sin GPU). (17-11: en el repo solo quedan los pares `*_antes_despues.jpg` reducidos a 1280 px; las capturas sueltas originales siguen en el historial de git, commit d97e0502/9231fd63)
 
 ## Diferencias, de la que más se nota a la que menos
 

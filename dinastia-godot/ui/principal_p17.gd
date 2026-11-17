@@ -57,6 +57,9 @@ func _alternar_favorito(tab: String) -> void:
 ## siempre). Ahora los chips son diccionarios {tab, secc, label}, así que la
 ## posición se busca comparando pestaña Y sección, no el título a secas.
 func _saltar_pestana(d: int) -> void:
+	## (16-11, frente 1) En el Inicio, L1/R1 (y Q/E) pasan de pestaña del mosaico, como en el PES 2020.
+	if _pestanas.get_tab_title(_pestanas.current_tab) == "Inicio" and TableroInicio.saltar(self, d):
+		return
 	var chips: Array = _grupo_por_id(_grupo_actual).get("tabs", [])
 	if chips.is_empty():
 		return

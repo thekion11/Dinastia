@@ -66,3 +66,5 @@ De cerca se ve el pie del toque pegado al balón en vez de a un palmo; en la cá
 - Veredicto del dueño sobre las capturas y en el teléfono (MEDIA).
 - Warping de giros: anotado arriba (tras los clips de giro / motion matching del H1).
 - La mirada podría pasar a C++ con su gemelo GDScript si el perfil en el teléfono lo pide (hoy son ~75 µs).
+
+Nota (17-11: en el repo solo quedan los pares `*_antes_despues.jpg` reducidos a 1280 px; las capturas sueltas originales siguen en el historial de git, commit d97e0502/9231fd63)

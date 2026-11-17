@@ -66,6 +66,8 @@ func _ready() -> void:
 		m.selecciones.cargo.oferta["vista"] = true   ## igual la llamada de una federación (queda en Historia › Tu carrera)
 	if OS.get_environment("EVENTOS") != "1":   ## EVENTOS=1: se dejan (la primera foto es la reunión con la directiva a pantalla completa)
 		_despachar_eventos(m)
+	if OS.get_environment("ROL") != "" and m.roles != null:   ## ROL=dueño: el mundo «Mandar» (color propio, `ColorMundo`)
+		m.roles.rol = OS.get_environment("ROL")
 	PedidoPartida.mundo_pregenerado = m
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
@@ -81,6 +83,14 @@ func _ready() -> void:
 		c.queue_free()
 	await _espera(1.0)
 	await _foto("central_lunes")
+	## MOSAICO=1 (16-11, frente 1): también las otras dos pestañas del mosaico central (Dirección del equipo, Información del club).
+	if OS.get_environment("MOSAICO") == "1":
+		for i in [1, 2]:
+			TableroInicio.pestana = i
+			_p._refrescar()
+			await _foto("central_pestana_%d" % i)
+		TableroInicio.pestana = 0
+		_p._refrescar()
 	var menus: Array = MenusLaterales.MENUS
 	## ABRIR=calendario,palmares: foto de esas pantallas completas (calendario de semanas, palmarés del mundo) y fin.
 	if OS.get_environment("ABRIR") != "":

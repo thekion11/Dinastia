@@ -47,6 +47,8 @@ func _actualizar_picker() -> void:
 	for i in mini(lista.size(), _fila_picker.get_child_count()):
 		var b: Button = _fila_picker.get_child(i)
 		b.button_pressed = (String(lista[i]) == _clave)
+	if _banner != null:
+		CarruselQuieto.marcar(_banner, lista.size(), lista.find(_clave))   ## (16-11) los puntos del carrusel quieto
 
 func _clave_tinte(k: String) -> void:
 	var c := Color(String(TINTE.get(k, "ffffff")))
@@ -63,8 +65,7 @@ func _elegir(k: String) -> void:
 	_pintar_banner()
 	_actualizar_picker()
 	_tenir_particulas()
-	if _reloj_portada != null:
-		_reloj_portada.start()
+	## (16-11) Carrusel quieto: elegir una portada ya no rearranca el cambio automático.
 
 func _construir_selector_portada(raiz: VBoxContainer) -> void:
 	raiz.add_child(HSeparator.new())

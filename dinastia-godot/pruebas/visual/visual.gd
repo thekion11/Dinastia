@@ -82,6 +82,13 @@ func _ready() -> void:
 	var m := Mundo.new()
 	m.generar([], SEMILLA)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	## (16-11) Los eventos de la semana 1 (la reunión con la directiva, `EventosClub`) se abren a pantalla
+	## completa y tapaban las 20 fotos: se marcan como vistos SIN aplicar la respuesta (moral y confianza intactas).
+	for k in 4:
+		var ev := EventosClub.pendiente(m)
+		if ev.is_empty():
+			break
+		m.prensa.eventos_vistos.append(String(ev["clave"]))
 	PedidoPartida.mundo_pregenerado = m
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)

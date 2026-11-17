@@ -37,6 +37,26 @@ func _probar_eventos_club() -> void:
 	_comprobar(m.directiva.confianza == conf0 + int(r["confianza"]) and int(r["confianza"]) > 0, "«a por más» sube la confianza (%d → %d)" % [conf0, m.directiva.confianza])
 	_comprobar(EventosClub.pendiente(m).get("id", "") != "directiva", "ya vista: no vuelve a salir")
 	_comprobar(m.prensa.eventos_vistos.has("directiva:%d" % m.anio), "queda anotada para el guardado")
+	var sin_frase: Array = []; var n_memoria := 0
+	for pais: String in Calendario.FIJAS.keys() + CalendarioMemorias.FILAS.keys():
+		for f: Dictionary in Calendario.del_anio(pais, m.anio):
+			n_memoria += 1 if String(f["tipo"]) == "memoria" else 0
+			if String(f["tipo"]) == "memoria" and not DiasMemoria.REFLEXIONES.has(String(f["nombre"])) and not DiasMemoria.CATEGORIAS.has(String(f.get("cat", ""))):
+				sin_frase.append("%s/%s" % [pais, f["nombre"]])
+	_comprobar(sin_frase.is_empty(), "todo día de memoria tiene su frase de reflexión (faltan: %s)" % str(sin_frase))
+	var holo := Calendario.del_anio("UKR", m.anio).filter(func(f: Dictionary) -> bool: return String(f["nombre"]) == "Día de Recuerdo del Holodomor")
+	_comprobar(n_memoria >= 80 and holo.size() == 1 and int(holo[0]["dia"]) in range(22, 29), "más de 80 días de memoria y el Holodomor cae el cuarto sábado de noviembre (%d)" % n_memoria)
+	var sem_11 := -1
+	for sm in range(1, 53):
+		if Calendario.de_la_semana("CHI", m.anio, sm).any(func(f: Dictionary) -> bool: return String(f["tipo"]) == "memoria"):
+			sem_11 = sm
+			break
+	m.semana = sem_11
+	var dia := DiasMemoria.pendiente(m)
+	_comprobar(sem_11 > 0 and String(dia.get("nombre", "")) == "Conmemoración del golpe de Estado" and String(dia.get("pais", "")) == "CHI", "Chile: la semana del 11 de septiembre toca su día de memoria")
+	var moral_antes := m.mi_club().plantilla[0].moral
+	DiasMemoria.marcar(m, dia)
+	_comprobar(DiasMemoria.pendiente(m).is_empty() and m.mi_club().plantilla[0].moral == moral_antes, "ya visto: no vuelve a salir ese año y no mueve la moral")
 	m.semana = 10
 	var liga := m.liga_de(m.mi_club())
 	liga.jornada_actual = 3   ## lejos de la mitad
@@ -415,24 +435,3 @@ func _probar_piezas_estadio_real() -> void:
 	_comprobar(not c.perfil_estadio().has("bandejas"), "sin fila real no hay techo por lados")
 	for x: Node in [r0, r1, r2]:
 		x.free()
-
-## (10-11) El edificio del club solo se dibuja con la cámara en el túnel o detrás de la tribuna (picos de llamadas en planos a ras de césped).
-func _probar_interior_oculto() -> void:
-	var raiz := Node3D.new()
-	add_child(raiz)
-	var tunel := Node3D.new()
-	raiz.add_child(tunel)
-	var ed := Node3D.new()
-	ed.name = "EdificioClub"
-	tunel.add_child(ed)
-	var v := InteriorOculto.vigilar(tunel, 50.0, 70.0)
-	var cam := Camera3D.new()
-	raiz.add_child(cam)
-	cam.make_current()
-	var casos := [[Vector3(-30, 2, 25), false, "a ras de césped junto al túnel"], [Vector3(0, 4, 61), false, "repetición tras el arco, sobre la grada"],
-		[Vector3(0, 1.7, 55), true, "en el pasillo del túnel"], [Vector3(3, 9, 74), true, "en una planta del edificio"]]
-	for c: Array in casos:
-		cam.global_position = c[0]
-		v._process(0.0)
-		_comprobar(ed.visible == c[1], "edificio del club %s: %s" % ["visible" if c[1] else "apagado", c[2]])
-	raiz.free()

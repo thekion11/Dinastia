@@ -56,6 +56,33 @@ public:
 	void cuerpos_motor(const Array &jugadores, double minimo) const;
 	// `MotorJugable._mover_fisica_gd` (visor/motor_jugable_p5.gd, 15-11): el movimiento de los 22 (velocidad, giro, empujón, posición, rumbo, inclinación y aguante). Devuelve 4 valores por jugador
 	// [válido, velocidad, va_atrás, distancia_al_balón] para el bucle de animación, que sigue en GDScript. `coste_aguante` = [local, visitante] (el coste táctico del sprint).
+	// `LeagueGuia._paso_gd`, en dos pasadas: índices de los que deciden clip este paso, y luego guía o marcha de todos ([cortes, guiados]).
+	// `MotorLeague._calcular_sin_balon` entero (16-11, nativo/src/sin_balon_nativo.cpp): [destino, velocidad], o [] si hay que seguir en GDScript.
+	Array league_calcular_sin_balon(const Array &ctx, const Dictionary &p, bool designado_disputa) const;
+	Vector2 sb_destino_forma(const Array &ctx, const Array &equipos, const Dictionary &p, const Vector2 &forma, const String &puesto, const Dictionary &mezcla) const;
+	// `MotorJugable._duelos`: parejas de rivales (sin porteros) a 1,3 m o menos, en orden ([i, j, …]; [-1] = más de 64 jugadores).
+	PackedInt32Array duelos_parejas(const Array &jugadores) const;
+	// `MotorJugable._disputas`: enfriamiento de los 22 y, con el balón suelto, el índice del que lo controla (-1 = nadie).
+	int64_t disputas_inicio(const Array &jugadores, double delta, bool suelto, const Vector3 &b, double t, const Variant &pase_a_id, const PackedFloat64Array &arco_z, double area_x, double area_z) const;
+	// `MotorColocacion.actualizar`: [más cercano al balón del local, del visitante] (3D, tope 40 m).
+	PackedFloat64Array colocacion_cerca(const Array &jugadores, const Vector3 &b) const;
+	// `MotorJugable._mover_jugadores`: la animación de los 22 ([código, escala] por jugador; con `aplicar`, también la pone).
+	PackedFloat64Array animar_jugadores(const Array &jugadores, const PackedFloat64Array &res, double t, const Variant &poseedor_id, bool cansancio_real, bool league, bool aplicar) const;
+	// `LeagueLocomocion._paso`: camino común de los 22 y, en orden, lo que hace GDScript (índice·2 = `_quizas_empezar`, índice·2+1 = `_uno`).
+	PackedInt32Array loco_paso(const Array &jugadores, double t, double delta, int64_t poseedor, double recolocar) const;
+	// `LeyesPais._ya_cumple`: tope de cupo en cancha y juveniles de la liga.
+	bool leyes_ya_cumple(const Array &once, const String &pais, int64_t tope, const Array &juveniles, const String &criterio, const Array &ue, const Dictionary &clubes) const;
+	// `Partido.fijar_clima(Clima.del_partido(…))`: [info, factor, factor del visitante].
+	Array clima_partido(const String &pais, const String &pais_visita, int64_t semana, int64_t anio, const String &semilla, bool neutral, const Dictionary &globo) const;
+	// `Partido.invalidar_fuerza`: `fuerza()` de los dos onces ([local, visitante]).
+	Array fuerza_dos(const Array &once_l, const Array &once_v, Object *local, Object *visita, const Array &m) const;
+	Dictionary fuerza_una(const Array &once, Object *c, Object *enfrente, const Array &m) const;
+	// `Mundo._semana_del_plantel`: la semana de cada jugador del club (mismas tiradas de azar).
+	void plantel_semana(const Array &plantilla, int64_t semana_global, int64_t suelo, int64_t semana, int64_t anio, const Ref<RandomNumberGenerator> &rng) const;
+	// `LeagueGuia.paso`: pendientes + primera mitad de `decidir` ([índice, sp, rel, sp_des] de los que eligen clip).
+	PackedFloat64Array guia_previo(const Array &jugadores, double t, int64_t poseedor) const;
+	PackedInt32Array guia_pendientes(const Array &jugadores, double t) const;
+	PackedInt32Array guia_seguir(const Array &jugadores, double t, double delta, int64_t usuario, bool marchas) const;
 	PackedFloat64Array mover_jugadores_fisica(const Array &jugadores, const Vector3 &bpos, double delta, double t, bool hay_poseedor, const Variant &poseedor_id, bool poseedor_local, double a_max_base,
 			double ancho, double largo, double giro_rapido, const PackedFloat64Array &coste_aguante) const;
 	// El balón del motor de League (16-11, nativo/src/balon_nativo.cpp): `balon_prediccion` = el bucle de predicción de `MotorLeague._estado_sin_balon` (ya en el sistema de League, `_ls3`);
