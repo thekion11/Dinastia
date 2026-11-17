@@ -18,9 +18,9 @@ static func armar(cap: Control, fondo: FondoCine, evs: Array, m: Mundo, fecha: D
 	if es_partido and rival is Club:
 		var local: Club = m.mi_club() if bool(ev.get("local", true)) else rival
 		var visita: Club = rival if bool(ev.get("local", true)) else m.mi_club()
-		fondo.modo = FondoCine.Modo.DUAL
-		fondo.color = Color(local.color1)
-		fondo.color_b = Color(visita.color1)
+		fondo.modo = FondoCine.Modo.EVENTO
+		fondo.color = Color("0c1426")
+		_degradado(cap, Color(local.color1), Color(visita.color1))
 	else:
 		fondo.modo = FondoCine.Modo.EVENTO
 		fondo.color = col
@@ -83,3 +83,30 @@ static func armar(cap: Control, fondo: FondoCine, evs: Array, m: Mundo, fecha: D
 		a.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		a.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		cap.add_child(a)
+
+## El degradado suave del local al rival (rojo → azul en `b_11.jpg`) pasando por un tono oscuro, con las franjas inclinadas de la maqueta, sin corte a la mitad.
+static func _degradado(cap: Control, a: Color, b: Color) -> void:
+	var noche := Color("0c1426")   ## los colores de club muy claros (blanco, amarillo) se oscurecen para que el titular se lea
+	a = a.lerp(noche, 0.3 + maxf(0.0, a.get_luminance() - 0.3))
+	b = b.lerp(noche, 0.3 + maxf(0.0, b.get_luminance() - 0.3))
+	var g := Gradient.new()
+	g.offsets = PackedFloat32Array([0.0, 0.5, 1.0])
+	var medio := a.lerp(b, 0.5).lerp(Color("0c1426"), 0.55)
+	g.colors = PackedColorArray([Color(a, 0.95), Color(medio, 0.95), Color(b, 0.95)])
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill_from = Vector2(0, 0.4)
+	gt.fill_to = Vector2(1, 0.6)
+	var r := TextureRect.new()
+	r.texture = gt
+	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	r.set_anchors_preset(Control.PRESET_FULL_RECT)
+	cap.add_child(r)
+	var f := Control.new()
+	f.set_anchors_preset(Control.PRESET_FULL_RECT)
+	f.draw.connect(func() -> void:
+		var x := -73.0
+		while x < 1160.0:
+			f.draw_polygon(PackedVector2Array([Vector2(x + 73, 0), Vector2(x + 103, 0), Vector2(x + 30, 156), Vector2(x, 156)]), PackedColorArray([Color(1, 1, 1, 0.07)]))
+			x += 90.0)
+	cap.add_child(f)

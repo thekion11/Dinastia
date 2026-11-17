@@ -31,6 +31,10 @@ func _ready() -> void:
 		await _foto("%s_momentos" % cfg[0])
 		mo.queue_free()
 		if cfg[0] == "CHI":
+			var fondo := ColorRect.new()
+			fondo.color = Color("0b1220")
+			fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
+			add_child(fondo)
 			var base := Control.new()
 			add_child(base)
 			var b := Button.new()
@@ -39,10 +43,12 @@ func _ready() -> void:
 			b.size = Vector2(380, 60)
 			base.add_child(b)
 			var pop := PopupPartidoJugado.abrir(base, b)
-			(pop._sub as Control).visible = true
-			pop.reset_size()
-			pop.position = Vector2(b.global_position.x + b.size.x - pop.size.x, b.global_position.y - pop.size.y - 8)
+			await get_tree().process_frame
+			for x in pop.find_children("*", "Button", true, false):
+				if (x as Button).text == Idiomas.t("Jugar momentos específicos"):
+					(x as Button).pressed.emit()   ## abre la sublista como al pulsar
 			await get_tree().create_timer(0.4).timeout
 			await _foto("popup")
 			base.queue_free()
+			fondo.queue_free()
 	get_tree().quit()
