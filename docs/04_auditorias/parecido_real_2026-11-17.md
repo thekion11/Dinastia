@@ -41,3 +41,10 @@ No hay imagen oficial en el repo (y no deben entrar), así que el parecido se mi
 3. **Escudos y uniformes**: figura/emblema y detalles por club con los generadores existentes (`aspecto_clubes.py`), empezando por los clubes de mayor reputación de cada liga; hojas de comparación con 6+ clubes de 3 países.
 
 Fuente: cifras de `herramientas/auditar_parecido_real.py` (medidas hoy); cantidades reales [C].
+
+## 6. Estado a 17-11 (tarde) y puntos a revisar
+- **Plantillas**: 43 de 43 clubes sin plantilla cubiertos (ENG, ESP, ITA, GER, FRA con Wikipedia en inglés; ARG con Wikipedia en español; BRA en inglés), hasta 26 por club equilibrados por línea; dorsal, edad y altura de Wikipedia/Wikidata cuando existen. Media ESTIMADA (reputación − 9, puesto, edad, dorsal, variación estable) con un bono por notoriedad (artículos en otros idiomas) para los 3-5 más conocidos de cada club.
+- **Rasgos de aspecto**: 61 conocidos a mano (`rasgos_jugadores.py`, tabla `RASGOS_JUG`), estimados; el resto, el promedio de su NACIONALIDAD (`CaraPrior` usa `j.pais`; comprobado en el banco: `_probar_cara_por_nacionalidad`). Corregido un tono equivocado (Son Heung-min tenía la piel de un tono medio-oscuro en vez de clara).
+- **Escudos**: un cambio por club en `_escudos.txt` (Torino toro, Lecce lobo, Genoa cruz, Sevilla y Betis con corona, Newcastle con caballito de mar, Heidenheim con castillo, Hamburgo con contorno de rombo). Hoja antes/después: `capturas_parecido_real/escudos_antes_despues_2026-11-17.jpg`.
+- **A REVISAR (sin fuente abierta)**: uniforme local de **Parma** (blanco con cruz) y de **Hamburgo** (blanco con pantalón azul): están de MEMORIA. Wikidata P6364 de Hamburgo da «azul, negro y blanco» (compatible, no lo confirma); la de Parma no tiene colores. No darlos por buenos hasta contrastarlos con la ficha de Wikipedia del uniforme.
+- **Nombres largos** en la lista del plantel: el botón del nombre se corta ya con puntos suspensivos (la hoja de captura es solo una escena de revisión).

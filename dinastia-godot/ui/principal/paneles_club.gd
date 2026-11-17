@@ -199,6 +199,9 @@ func _fila_jugador(g: GridContainer, j: Jugador, columnas: Array, colores: Array
 	b.flat = true
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	b.clip_text = true   ## (17-11) un nombre largo («Giorgian de Arescaeta») se corta con puntos suspensivos en vez de empujar las columnas
+	b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	b.tooltip_text = columnas[0]
 	b.add_theme_font_size_override("font_size", 12)
 	b.add_theme_color_override("font_color", p._color_de_paleta(colores[0]))
 	## Pulsar a un jugador hace DOS cosas: enseña su ficha a la derecha y salta

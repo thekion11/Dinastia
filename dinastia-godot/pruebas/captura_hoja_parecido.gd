@@ -15,7 +15,11 @@ func _ready() -> void:
 	fondo.size = Vector2(1920, 1080)
 	add_child(fondo)
 	var elegidos: Array[Club] = []
-	for p: String in paises:
+	var nombres := OS.get_environment("NOMBRES").split(",", false)   ## NOMBRES="Sevilla Nervión FC,Elba Rauten" (nombre público) en vez de los 2 por país
+	for c: Club in m.clubes.values():
+		if nombres.has(c.nombre):
+			elegidos.append(c)
+	for p: String in (paises if elegidos.is_empty() else []):
 		var hecho := false
 		for l in m.ligas:
 			if hecho or l.clubes.is_empty() or l.clubes[0].pais != p:
@@ -65,6 +69,6 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_f += 1
 	if _f == 12:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/hoja_parecido.png")
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % (OS.get_environment("SALIDA") if OS.get_environment("SALIDA") != "" else "hoja_parecido"))
 		print("FIN. 0 fallos")
 		get_tree().quit()
