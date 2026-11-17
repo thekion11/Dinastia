@@ -4,8 +4,18 @@ class_name ImpostorLejano
 ## Usa el rango de visibilidad del motor (sin código por fotograma): el cuerpo se oculta a más de `DISTANCIA` m y la cápsula aparece
 ## desde ahí. El esqueleto y su animación siguen corriendo (cerca se ven igual que siempre). Solo en niveles «ligeros» (BAJA e inferiores
 ## más MEDIA BAJA): el jugador de MEDIA hacia arriba no cambia. Apagable con la variable de entorno `SIN_IMPOSTORES=1`.
-const DISTANCIA := 30.0
-const MARGEN := 2.0
+const DISTANCIA := 30.0   ## m: la distancia mínima (y la de partida, antes de ver la cámara)
+const MARGEN := 3.0
+## (17-11, auditoría) EL UMBRAL VA POR TAMAÑO EN PANTALLA, no por metros fijos: con la cámara de TV cercana (21°) un jugador a 30 m mide
+## ~180 px de alto y salía como cápsula al lado de otros con su cuerpo. Ahora la silueta solo aparece por debajo de `PIXELES` de alto
+## en la pantalla (con la cámara y la ventana de ese momento) y con un fundido corto (`MARGEN`).
+const PIXELES := 40.0
+const ALTURA_REF := 1.8
+const DIST_MAX := 220.0
+static var distancia := DISTANCIA
+static var FIJO := OS.get_environment("IMPOSTOR_FIJO") != ""   ## A/B: el umbral de antes (30 m fijos), para medir
+static var _piezas: Array = []        ## [WeakRef(GeometryInstance3D), es_silueta]
+static var _ultimo_cuadro := -1
 const SOMBREADOR := "res://visor/impostor_lejano.gdshader"
 const TONOS_PIEL: Array[Color] = [Color("5a3a28"), Color("8d5d42"), Color("c08a68"), Color("e6bfa3")]
 static var _mats: Dictionary = {}
@@ -25,9 +35,8 @@ static func aplicar(nodo: Node3D, altura: float, color: Color, nivel: int, ap: A
 		if g is Label3D:
 			continue
 		var gi := g as GeometryInstance3D
-		gi.visibility_range_end = DISTANCIA
-		gi.visibility_range_end_margin = MARGEN
-		gi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
+		_poner_rango(gi, false)
+		_piezas.append([weakref(gi), false])
 		piezas += 1
 		if equip == null:
 			equip = _equipacion_de(gi)
@@ -47,11 +56,51 @@ static func aplicar(nodo: Node3D, altura: float, color: Color, nivel: int, ap: A
 	mi.position.y = altura * 0.5
 	mi.material_override = _material(color) if piel.a == 0.0 else _material_equipado(color, piel, equip)
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	mi.visibility_range_begin = DISTANCIA
-	mi.visibility_range_begin_margin = MARGEN
-	mi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
+	_poner_rango(mi, true)
+	_piezas.append([weakref(mi), true])
 	nodo.add_child(mi)
 	AnimLejana.poner(nodo, ap)   ## y su animación, a 5 Hz mientras esté lejos
+
+static func _poner_rango(gi: GeometryInstance3D, silueta: bool) -> void:
+	if silueta:
+		gi.visibility_range_begin = distancia
+		gi.visibility_range_begin_margin = MARGEN
+	else:
+		gi.visibility_range_end = distancia
+		gi.visibility_range_end_margin = MARGEN
+	gi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF   ## fundido corto, sin salto
+
+## La distancia (m) a la que un jugador de `ALTURA_REF` mide `PIXELES` de alto con esta cámara y esta ventana (`alto_px`).
+static func distancia_para(fov_vertical: float, alto_px: float) -> float:
+	var t := tan(deg_to_rad(clampf(fov_vertical, 5.0, 120.0)) * 0.5)
+	return clampf(ALTURA_REF * alto_px / (2.0 * PIXELES * t), DISTANCIA, DIST_MAX)
+
+## Lo llama cada `AnimLejana` (una vez por cuadro en total, y solo cada 15 cuadros): si la cámara o la ventana cambiaron el umbral, lo
+## reparte entre todas las piezas vivas. Sin coste por cuadro el resto del tiempo.
+static func vigilar(vp: Viewport) -> void:
+	var f := Engine.get_process_frames()
+	if f == _ultimo_cuadro or f % 15 != 0 or FIJO:
+		return
+	_ultimo_cuadro = f
+	var cam := vp.get_camera_3d()
+	if cam == null:
+		return
+	var alto := vp.get_visible_rect().size.y
+	var fov_v := cam.fov
+	if cam.keep_aspect == Camera3D.KEEP_WIDTH:
+		var asp := vp.get_visible_rect().size.x / maxf(alto, 1.0)
+		fov_v = rad_to_deg(2.0 * atan(tan(deg_to_rad(cam.fov) * 0.5) / maxf(asp, 0.1)))
+	var d := distancia_para(fov_v, alto)
+	if absf(d - distancia) < 2.0:
+		return
+	distancia = d
+	var vivas: Array = []
+	for e: Array in _piezas:
+		var gi := (e[0] as WeakRef).get_ref() as GeometryInstance3D
+		if gi != null:
+			_poner_rango(gi, bool(e[1]))
+			vivas.append(e)
+	_piezas = vivas
 
 static func _material(c: Color) -> StandardMaterial3D:
 	var k := c.to_html(false)

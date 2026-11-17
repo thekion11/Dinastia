@@ -27,12 +27,16 @@ func _process(delta: float) -> void:
 	var cam := get_viewport().get_camera_3d()
 	if cam == null or not _cuerpo.is_inside_tree():
 		return
+	ImpostorLejano.vigilar(get_viewport())
+	## (17-11) a saltos solo cuando ya es silueta: el umbral sigue al de `ImpostorLejano` (tamaño en pantalla).
+	var lejos := ImpostorLejano.distancia + (LEJOS - ImpostorLejano.DISTANCIA)
+	var cerca := ImpostorLejano.distancia + (CERCA - ImpostorLejano.DISTANCIA)
 	var d2 := cam.global_position.distance_squared_to(_cuerpo.global_position)
-	if not _lejos and d2 > LEJOS * LEJOS:
+	if not _lejos and d2 > lejos * lejos:
 		_lejos = true
 		_acum = 0.0
 		_ap.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
-	elif _lejos and d2 < CERCA * CERCA:
+	elif _lejos and d2 < cerca * cerca:
 		_lejos = false
 		_ap.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_IDLE
 	if _lejos:

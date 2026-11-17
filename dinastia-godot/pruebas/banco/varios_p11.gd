@@ -317,7 +317,14 @@ func _probar_impostores_lejanos() -> void:
 	_comprobar(nodo.get_child_count() == 2 and is_zero_approx(cuerpo.visibility_range_end), "en MEDIA no se toca nada")
 	ImpostorLejano.aplicar(nodo, 1.8, Color("d32f2f"), Calidad.MINIMO)
 	var imp := nodo.get_node_or_null("ImpostorLejano") as MeshInstance3D
-	_comprobar(imp != null and is_equal_approx(cuerpo.visibility_range_end, 30.0) and is_equal_approx(imp.visibility_range_begin, 30.0), "el cuerpo se oculta a 30 m y la silueta aparece desde 30 m")
+	_comprobar(imp != null and is_equal_approx(cuerpo.visibility_range_end, ImpostorLejano.distancia) and is_equal_approx(imp.visibility_range_begin, ImpostorLejano.distancia)
+		and imp.visibility_range_fade_mode == GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF, "el cuerpo se oculta y la silueta aparece a la misma distancia (%.0f m), con fundido" % ImpostorLejano.distancia)
+	## (17-11, auditoría) Por tamaño en pantalla: con la TV cercana (21°, 1080 px de alto) un jugador a 30 m es grande; la silueta, a ~130 m.
+	var d_tv := ImpostorLejano.distancia_para(21.0, 1080.0)
+	var d_ancha := ImpostorLejano.distancia_para(70.0, 720.0)
+	_comprobar(d_tv > 100.0 and d_ancha >= ImpostorLejano.DISTANCIA and d_ancha < d_tv
+		and is_equal_approx(1.8 * 1080.0 / (2.0 * d_tv * tan(deg_to_rad(10.5))), ImpostorLejano.PIXELES),
+		"umbral por tamaño: con la TV cercana %.0f m (= %d px de alto), con una cámara abierta %.0f m" % [d_tv, int(ImpostorLejano.PIXELES), d_ancha])
 	_comprobar(is_zero_approx(rotulo.visibility_range_end), "los rótulos 3D no se tocan")
 	var tris: int = (imp.mesh.surface_get_arrays(0)[Mesh.ARRAY_INDEX] as PackedInt32Array).size() / 3
 	_comprobar(tris <= 90 and is_equal_approx(imp.scale.y, 1.8), "silueta de %d triángulos y a la altura del jugador" % tris)
