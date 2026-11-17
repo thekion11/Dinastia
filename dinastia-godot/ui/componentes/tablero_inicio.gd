@@ -253,6 +253,7 @@ static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo :=
 			b.grab_focus())
 	if al_pulsar.is_valid():
 		b.pressed.connect(al_pulsar)
+	CampanasMenu.poner(b, nombre)   ## (17-11) la campana roja de los avisos del avance por días
 	return [b, v]
 
 ## (16-11) EL ARTE DE LA TARJETA: un render propio de una sala del club (`herramientas/hornear_arte_mosaico.gd`, 192x108 en grises,

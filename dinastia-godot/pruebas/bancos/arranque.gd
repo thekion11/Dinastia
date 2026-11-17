@@ -132,8 +132,8 @@ func _modos_y_dificultades() -> void:
 			## El central montado.
 			_comprobar(_p._pestanas.get_tab_title(_p._pestanas.current_tab) == "Inicio", "%s: empieza en el Inicio del central" % donde)
 			_comprobar(_p._menu_lateral != null and _p._menu_lateral.boton_de("plantel") != null and _p._menu_lateral.boton_de("ajustes") != null, "%s: el riel está montado" % donde)
-			var un_dia: Variant = _p._guia.nodos.get("un_dia")
-			_comprobar(is_instance_valid(un_dia) and (un_dia as Control).is_visible_in_tree(), "%s: el botón «Un día» está a la vista" % donde)
+			var un_dia: Variant = _p._guia.nodos.get("avanzar")
+			_comprobar(is_instance_valid(un_dia) and (un_dia as Control).is_visible_in_tree(), "%s: el botón «Avanzar» está a la vista" % donde)
 			_comprobar(String(_p.get("_titulo_club").text if _p.get("_titulo_club") != null and _p.get("_titulo_club").get("text") != null else mundo.mi_club().nombre).contains(mundo.mi_club().nombre) or true, "%s: la cabecera nombra el club" % donde)
 			## Siete días de juego sin fallar: la fecha avanza y la semana corre.
 			var sem0 := mundo.semana

@@ -120,7 +120,7 @@ static func manejar(p: Principal, ev: InputEvent) -> bool:
 				return false
 			p._menu_lateral.abrir_menu(String(destino["menu"]), int(destino["sub"]))
 		elif destino == "dia":
-			p._avanzar_dia()
+			p._avance.dias().pulsar()   ## (17-11) el avance por días
 		elif destino == "buscar":
 			var b: LineEdit = p.get("_buscador")
 			if b != null:

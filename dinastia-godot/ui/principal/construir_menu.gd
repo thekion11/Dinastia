@@ -186,9 +186,7 @@ func _montar_cabecera() -> VBoxContainer:
 	AvanceSemana.rellenar_calendario(pop_calendario, true)
 	pop_calendario.id_pressed.connect(p._al_elegir_calendario)
 	p._botones.add_child(menu_calendario)
-	## "Un día" tiene botón PROPIO y no una entrada más del desplegable: es la
-	## acción que más se repite en un manager -pasar el rato hasta el sábado-
-	## y esconderla tras dos clics la volvería incómoda. Pedido del usuario.
+	## "Un día" tuvo botón PROPIO (la acción más repetida); hoy lo reemplaza «Avanzar» (`BotonesAvance`).
 	var b_dia := Button.new()
 	b_dia.text = Idiomas.t("⏭ Un día")
 	b_dia.tooltip_text = Idiomas.t("Avanza un día del calendario. Al pasar el domingo corre la semana entera.")
@@ -204,6 +202,7 @@ func _montar_cabecera() -> VBoxContainer:
 	p._botones.add_child(b_hito)
 	p._guia.nodos["hito"] = b_hito
 	p._guia.nodos["calendario"] = menu_calendario
+	BotonesAvance.montar(p, [menu_calendario, b_dia, b_hito])   ## (17-11, orden del dueño) el botón «Avanzar» nuevo reemplaza a estos tres
 	## (3-11, rediseño) El ⚽ y el 💰 tienen su menú en el panel lateral (Partido, Dinero); Guardar, Cargar y Otro mundo
 	## viven en Ajustes → Partida y guardado. La guía del tutorial señala sus botones del riel (abajo, al crear el panel).
 	## El buscador va en la fila de acciones, no en la cabecera: ahí arriba lo
