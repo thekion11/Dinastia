@@ -63,9 +63,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	## cámara de TV pasa cerca del borde del césped**, o sea de la bandeja de
 	## abajo. Las de arriba se ven a 30 m o más, donde la textura de grada +
 	## los hinchas 3D ya cuentan la misma historia.
-	##   bandeja 0 -> las 5 filas de siempre
-	##   bandeja 1 -> 2 filas
-	##   bandeja 2+ -> ninguna (textura + hinchas, que sí siguen en todas)
+	##   bandeja 0 -> las 5 filas de siempre; bandeja 1 -> 2 filas; bandeja 2+ -> ninguna (textura + hinchas, que sí siguen en todas)
 	## Total: ~2,4 millones de vértices, MENOS que antes de esta tanda.
 	## Etapa 3 (8-10-2026): en calidad MEDIO -la de un equipo modesto- solo las
 	## 2 filas pegadas al césped llevan el modelo real (1.944 triángulos por
@@ -422,7 +420,6 @@ static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMe
 	mih.name = "Hinchada"
 	mih.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mih)
-
 
 ## LAS BOCAS DE ACCESO (23-9-2026). En `ea_fc25_referencia.mp4` la grada del
 ## fondo está picada de huecos oscuros: son los vomitorios por donde sale la
