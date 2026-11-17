@@ -31,6 +31,24 @@ func _dq_letras_y_ribete() -> void:
 	var u0 := DisenosKit.uniforms({"dis": "liso", "cols": ["ffd600", "0b1f4d"], "num": "0b1f4d"}, 0, "Gómez")
 	_comprobar(int(u["nombre_n"]) == 5 and int(u0["nombre_n"]) == 0 and u.has("color_num_borde"),
 		"dorsal: el shader recibe el apellido (5 letras) y, sin dorsal, nada en la espalda")
+	_dq_espalda_medidas()
+
+## (17-11, 2.ª pasada) Las medidas de la espalda en `equipacion_q.gdshader`: el apellido de ≥ 6 cm (antes 4: lo tapaban el pelo y la
+## cabeza inclinada), más abajo que antes, y sin pisar el número (ni este al patrocinador de debajo).
+func _dq_espalda_medidas() -> void:
+	var src := FileAccess.get_file_as_string("res://visor/equipacion_q.gdshader")
+	var alto := _dq_num(src, "const float ALTO_N = ")
+	var tope := _dq_num(src, "const float TOPE_N = ")
+	var u_num := _dq_num(src, "const float U_NUM = 1.6 / ")   ## el alto del número (m)
+	var base := _dq_num(src, "dq_numero(dorsal, vec2(-x, y - ")
+	var cima_num := base + u_num * (1.49 + 0.095) / 1.6   ## lo más alto del trazo (con su grosor)
+	var suelo_num := base + u_num * (0.11 - 0.095) / 1.6
+	_comprobar(alto >= 0.06 and tope <= 1.445 and tope - alto > cima_num and suelo_num > 1.035 + 0.065 and u_num >= 0.25,
+		"dorsal: apellido de %.1f cm (antes 4) hasta %.3f m (antes 1,462), sobre el número de %.0f cm (%.3f-%.3f m) y el patrocinador" % [alto * 100.0, tope, u_num * 100.0, suelo_num, cima_num])
+
+static func _dq_num(src: String, tras: String) -> float:
+	var i := src.find(tras)
+	return src.substr(i + tras.length(), 8).to_float() if i >= 0 else -1.0
 
 ## La carrera: histéresis entre trotar y correr y la zancada que va con el cuerpo en todo el tramo de cada ciclo.
 func _dq_ciclo_carrera() -> void:
