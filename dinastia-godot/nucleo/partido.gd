@@ -210,7 +210,7 @@ func tarjeta_externa(jugador_id: String, roja: bool) -> void:
 		once_local.erase(j)
 		once_visita.erase(j)
 		invalidar_fuerza()
-	tarjeta.emit(j, roja, minuto)
+	_tarjeta_sacada(j, roja)
 	if not roja and Disciplina.acumula(j):
 		decision_arbitral.emit(Disciplina.frase(j), minuto)
 	if roja:
@@ -227,7 +227,7 @@ func _amonestar(j: Jugador, frase: String = "") -> void:
 	if roja:
 		Disciplina.sanciona(j); once_local.erase(j); once_visita.erase(j); invalidar_fuerza()
 	if frase != "": decision_arbitral.emit(frase, minuto)
-	tarjeta.emit(j, roja, minuto)
+	_tarjeta_sacada(j, roja)
 	if not roja and Disciplina.acumula(j):
 		decision_arbitral.emit(Disciplina.frase(j), minuto)
 	if roja: _revisar_siete()

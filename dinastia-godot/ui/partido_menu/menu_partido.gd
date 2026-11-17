@@ -18,6 +18,7 @@ var competicion := "Liga"
 var opcion := "jugar"          ## jugar / importantes / simular
 var sim := "resumen"           ## cómo se ve si se simula
 var recordar := false          ## «No volver a preguntar»
+var movil := false            ## (17-11) en el teléfono (~1067×480): diseño compacto (`TactilPartido`)
 var saca_local := true         ## el sorteo del saque inicial (se decide al abrir; va a `partido.saca_local` al confirmar)
 var sorteo_visto := false      ## la moneda gira solo la primera vez
 var _cuerpo: VBoxContainer     ## el contenido del panel abierto
@@ -47,6 +48,8 @@ func _ready() -> void:
 	size = get_viewport_rect().size
 	get_viewport().size_changed.connect(func() -> void: size = get_viewport_rect().size)
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	movil = TactilPartido.es_movil(self)
+	MandoMenuPartido.escuchar(self, func() -> void: if _modal.visible: cerrar_panel())   ## R2 confirma; Cuadrado cierra la pestaña abierta
 	var ult := EleccionPartido.ultima()
 	if not ult.is_empty():
 		match String(ult.get("modo", "")):
@@ -156,13 +159,19 @@ static func linea_jugador(j: Jugador) -> String:
 	return txt
 
 func _montar_barra() -> void:
-	var barra := _caja(0.03, 0.97, 0.855, 0.92)
+	## En el teléfono: solo los iconos (el nombre sale grande al abrirla), de ≥ 9 mm, entre la muesca y «Confirmar».
+	var barra := _caja(0.045, 0.74, 0.855, 0.99) if movil else _caja(0.03, 0.97, 0.855, 0.92)
 	var f := HBoxContainer.new()
 	f.set_anchors_preset(Control.PRESET_FULL_RECT)
 	f.add_theme_constant_override("separation", 12)
 	barra.add_child(f)
 	for par: Array in PESTANAS:
 		var b := PreviaMenuPartido.pestana(String(par[0]), String(par[1]))
+		if movil:
+			b.tooltip_text = b.text
+			b.text = ""
+			b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			b.add_theme_constant_override("icon_max_width", 30)
 		var clave := String(par[0])
 		b.pressed.connect(_abrir.bind(clave))
 		f.add_child(b)
@@ -172,7 +181,7 @@ func _montar_modal() -> void:
 	## (17-11, dueño) Cada pestaña es una PANTALLA COMPLETA: tapa la previa (fondo propio con los colores de los dos clubes) y deja abajo la barra de
 	## pestañas para saltar de una a otra; B / Esc vuelve a la previa.
 	_modal = Control.new()
-	_modal.anchor_right = 1.0; _modal.anchor_bottom = 0.858   ## hasta la barra: tapa del todo a los jugadores de la previa
+	_modal.anchor_right = 1.0; _modal.anchor_bottom = 0.85 if movil else 0.858   ## hasta la barra: tapa del todo a los jugadores de la previa
 	_modal.mouse_filter = Control.MOUSE_FILTER_STOP
 	var fondo := FondoPrevia.new()
 	fondo.color = _color_club(partido.local)
@@ -213,6 +222,7 @@ func _montar_pie() -> void:
 	_pie = EstiloAvanzar.etiqueta(Idiomas.t("Pulsa Confirmar para empezar el partido"), 18, Color(1, 1, 1, 0.85))
 	_pie.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_pie.anchor_left = 0.3; _pie.anchor_right = 0.7; _pie.anchor_top = 0.795; _pie.anchor_bottom = 0.83
+	_pie.visible = not movil   ## en el teléfono no hay sitio: la pestaña abierta ya dice lo suyo
 	add_child(_pie)
 	var ayuda := HBoxContainer.new()
 	ayuda.add_theme_constant_override("separation", 22)
@@ -229,11 +239,18 @@ func _montar_pie() -> void:
 		ayuda.add_child(g)
 	ayuda.anchor_top = 1.0; ayuda.anchor_bottom = 1.0
 	ayuda.offset_left = 38; ayuda.offset_top = -48
+	ayuda.visible = not movil or Mando.hay_mando()
 	add_child(ayuda)
 	var b := PantallaMaqueta.boton(Idiomas.t("Confirmar"), true, 22)
 	b.name = "Confirmar"
 	b.anchor_left = 1.0; b.anchor_right = 1.0; b.anchor_top = 1.0; b.anchor_bottom = 1.0
 	b.offset_left = -240; b.offset_right = -40; b.offset_top = -52; b.offset_bottom = -8
+	if movil:   ## a la derecha de la barra, fuera de la muesca
+		var k := TactilPartido.mm(self)
+		b.offset_right = -TactilPartido.MARGEN_MM * k
+		b.offset_left = b.offset_right - get_viewport_rect().size.x * 0.20
+		b.offset_bottom = -0.01 * get_viewport_rect().size.y
+		b.offset_top = b.offset_bottom - TactilPartido.MIN_MM * k
 	b.pressed.connect(confirmar)
 	add_child(b)
 	b.grab_focus.call_deferred()
@@ -265,7 +282,13 @@ func _abrir(clave: String) -> void:
 		"camara": PanelesVistas3D.camara(self, _cuerpo)
 	_modal.visible = true
 	_resumen()
-	PreviaMenuPartido.enfocar_panel.call_deferred(_cuerpo, _botones[clave])
+	_enfocar_pestana(clave)
+
+## (17-11, auditoría de mando) Un cuadro DESPUÉS de abrir: así la pestaña anterior ya se borró (si el foco estaba en ella, al borrarse se lo llevaba).
+func _enfocar_pestana(clave: String) -> void:
+	await get_tree().process_frame
+	if is_instance_valid(_cuerpo) and _abierta == clave:
+		PreviaMenuPartido.enfocar_panel(_cuerpo, _botones[clave])
 
 ## (17-11, dueño: «el plan de juego es la alineación; ya tenemos una pantalla de eso») «Plan de juego» abre la pantalla de TÁCTICA del juego, a pantalla
 ## completa (menú lateral «Partido» → Táctica: pizarra, formación, órdenes y el once). La previa se esconde mientras tanto y vuelve al cerrarla, con
@@ -330,8 +353,11 @@ func _unhandled_input(e: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		cerrar_panel()
 		return
+
+## (17-11, auditoría de mando) LB / RB (o Q / E) en `_input`: la pantalla principal usa los mismos botones para sus pestañas y se los comía antes.
+func _input(e: InputEvent) -> void:
 	var paso := PreviaMenuPartido.paso_pestana(e)   ## (PES) LB / RB, o Q / E, pasan de pestaña
-	if paso != 0 and visible:
+	if paso != 0 and is_visible_in_tree():
 		get_viewport().set_input_as_handled()
 		_abrir(PreviaMenuPartido.vecina(_abierta, paso))
 
@@ -344,11 +370,15 @@ static func sorteo(p: Partido, comp: String, info_clima: Dictionary) -> bool:
 	r.seed = hash("%s|%s|%s|%s" % [p.local.id, p.visita.id, comp, str(info_clima)])
 	return r.randi() % 2 == 0
 
+var _eligiendo := false
 func _elegir(op: String) -> void:
+	if _eligiendo:   ## dos toques seguidos durante el barrido: una sola elección
+		return
+	_eligiendo = true
 	partido.saca_local = saca_local
 	var e := EleccionPartido.eleccion(op, sim)
 	EleccionPartido.aplicar(e)
 	if recordar:
 		EleccionPartido.fijar_preguntar(false)
 	Sonido.toca("clic")
-	elegido.emit(e)
+	BarridoPartido.pasar(self, BarridoPartido.colores_de(partido), func() -> void: elegido.emit(e))   ## (17-11) al saque y al partido, con el barrido de color

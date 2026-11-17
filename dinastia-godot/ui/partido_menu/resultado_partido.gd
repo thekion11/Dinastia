@@ -18,6 +18,12 @@ static func mostrar(pr: Node, p: Partido, club: Club) -> ResultadoPartido:
 	r.partido = p
 	r.mi_club = club
 	r._armar(pr)
+	MandoMenuPartido.escuchar(r, r._seguir)
+	r.visible = false   ## (17-11) entra bajo el barrido de color (`BarridoPartido`): nunca un corte seco
+	BarridoPartido.pasar(pr, BarridoPartido.colores_de(p), func() -> void:
+		if is_instance_valid(r):
+			r.visible = true
+			ResumenPartidoCine.enfocar(r._raiz))   ## R2 confirma; Cuadrado (y B / Esc, abajo) siguen: «Continuar»
 	return r
 
 ## Nombre corto como en la maqueta: «J. Retamal».
@@ -38,12 +44,16 @@ func _armar(pr: Node) -> void:
 	## (17-11, Auditoría) Lo visual es el componente común con el descanso (`ResumenPartidoCine`): marcador, goleadores, barras y figura del partido.
 	ResumenPartidoCine.montar(_raiz, partido, mi_club, false)
 	_linea_de_tiempo()
-	var lista: Array = [["Continuar", func() -> void: elegido.emit("0"), true]]
+	var lista: Array = [["Continuar", _seguir, true]]
 	if pr is Principal and DisplayServer.get_name() != "headless" and not MomentosPartido.lista_de(partido, mi_club).is_empty():
 		if not partido.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol").is_empty():
 			lista.append(["Repetición de los goles", _momentos.bind(pr, "goles"), false])
 		lista.append(["Jugar momentos", _momentos.bind(pr, "todas"), false])
 	ResumenPartidoCine.botones(_raiz, lista)
+
+## «Continuar»: sale con el barrido (lo que venga detrás se monta tapado).
+func _seguir() -> void:
+	BarridoPartido.pasar(_raiz, BarridoPartido.colores_de(partido), func() -> void: elegido.emit("0"))
 
 ## Los momentos del partido (filtrados) y, si eliges uno, la réplica desde un minuto antes (la misma lógica que el popup «Partido jugado»).
 func _momentos(pr: Principal, filtro: String) -> void:
@@ -61,12 +71,12 @@ static func _color_club(c: Club) -> Color:
 
 func _linea_de_tiempo() -> void:
 	var l := _Tiempo.new()
-	l.goles = partido.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol")
+	l.goles = partido.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) in ["gol", "amarilla", "roja"])
 	l.mi_id = mi_club.id
 	l.local_id = partido.local.id
 	l.col_local = _color_club(partido.local)
 	l.col_visita = _color_club(partido.visita)
-	_raiz.add_child(_ancla(l, 0.06, 0.385, 0.94, 0.45))   ## bajo el marcador: los goles en el tiempo
+	ResumenPartidoCine.poner(_raiz, l, "linea")   ## bajo el marcador: los goles y las tarjetas en el tiempo
 
 ## La barra de dos colores de las estadísticas (local en rojo, visitante en claro).
 class _Barra extends Control:
@@ -94,5 +104,14 @@ class _Tiempo extends Control:
 		for e: Dictionary in goles:
 			var x := size.x * clampf(float(e["min"]) / 90.0, 0.0, 1.0)
 			var col := col_local if String(e.get("club", "")) == local_id else col_visita
+			if String(e.get("tipo", "")) != "gol":   ## las tarjetas, pequeñas sobre la línea (debajo, el color de su club)
+				draw_rect(Rect2(x - 4, y - 21, 8, 12), ResumenPartidoCine.ROJO_BARRA if String(e["tipo"]) == "roja" else Color("f2c94c"))
+				draw_rect(Rect2(x - 4, y - 7, 8, 2), col)
+				continue
 			draw_circle(Vector2(x, y), 15.0, Color(1, 1, 1, 0.92))
 			draw_texture_rect(EstiloAvanzar.icono("ball", col.darkened(0.25), 36, 2.2), Rect2(x - 13, y - 13, 26, 26), false)
+
+func _unhandled_input(e: InputEvent) -> void:
+	if visible and e.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		_seguir()

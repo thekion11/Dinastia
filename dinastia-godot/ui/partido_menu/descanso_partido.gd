@@ -9,11 +9,12 @@ extends PantallaMaqueta
 ## Lo abre `PartidoVivo` con `load()`; no cambia nada del partido por sí mismo.
 
 var vivo: Node
+static var en_pruebas := false   ## el banco lo abre sin pantalla (para probar el mando)
 
 static func mostrar(v: Node) -> DescansoPartido:
 	var p: Partido = v.get("partido")
 	var club: Club = v.get("mi_club")
-	if p == null or club == null or DisplayServer.get_name() == "headless":
+	if p == null or club == null or (DisplayServer.get_name() == "headless" and not en_pruebas):
 		return null
 	var d := DescansoPartido.new()
 	d.vivo = v
@@ -26,12 +27,20 @@ static func mostrar(v: Node) -> DescansoPartido:
 	if pr is Principal and (pr as Principal)._menu_lateral != null:
 		lista.append(["Táctica", d._tactica.bind(pr), false])
 	ResumenPartidoCine.botones(d._raiz, lista)
+	MandoMenuPartido.escuchar(d, d.cerrar_resumen)
+	d.visible = false   ## (17-11) entra bajo el barrido de color: del partido al descanso sin corte seco
+	BarridoPartido.pasar(v, BarridoPartido.colores_de(p), func() -> void:
+		if is_instance_valid(d):
+			d.visible = true
+			ResumenPartidoCine.enfocar(d._raiz))
 	return d
 
 func _continuar() -> void:
-	cerrar_resumen()
-	if is_instance_valid(vivo) and vivo.has_method("_salir_segunda"):
-		vivo.call("_salir_segunda")
+	var v := vivo
+	BarridoPartido.pasar(_raiz, BarridoPartido.colores_de(v.get("partido") if is_instance_valid(v) else null), func() -> void:
+		cerrar_resumen()
+		if is_instance_valid(v) and v.has_method("_salir_segunda"):
+			v.call("_salir_segunda"))
 
 func cerrar_resumen() -> void:
 	Sonido.toca("clic")

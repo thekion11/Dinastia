@@ -75,7 +75,7 @@ static func uniforme(m: MenuPartido, v: VBoxContainer) -> void:
 		fila.add_child(col)
 		var r3d: Control = mio3d if lado == 0 else load("res://ui/partido_menu/retrato_jugador3d.gd").crear(rv, m.estrella(rv), [], -0.3)
 		if r3d != null:
-			r3d.custom_minimum_size = Vector2(Tema.letra(300), Tema.letra(430))
+			r3d.custom_minimum_size = Vector2(170, 240) if m.movil else Vector2(Tema.letra(300), Tema.letra(430))
 			col.add_child(r3d)
 			r3d.call_deferred("montar")
 		var n := EstiloAvanzar.etiqueta(Nombres.visible(club.nombre).to_upper(), 20, Color.WHITE, true)
@@ -157,7 +157,7 @@ static func estadio(m: MenuPartido, v: VBoxContainer) -> void:
 	PanelesMenuPartido.nota(izq, "El clima lo pone la ciudad y la época del año; el estadio es el del equipo local.")
 	var foto := MiniaturaMenu.new()
 	foto.tipo = MiniaturaMenu.Tipo.ESTADIO
-	foto.custom_minimum_size = Vector2(Tema.letra(640), Tema.letra(360))
+	foto.custom_minimum_size = Vector2(380, 214) if m.movil else Vector2(Tema.letra(640), Tema.letra(360))   ## (17-11) en el teléfono cabe al lado de los datos
 	fila.add_child(foto)
 	_pedir_fotos(m, func(f: Dictionary) -> void:
 		if is_instance_valid(foto):

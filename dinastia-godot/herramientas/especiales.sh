@@ -115,6 +115,8 @@ pasa "calendario de varias semanas y fila de próximos (con pantalla)" "XDG_DATA
 pasa "controles táctiles del partido en un teléfono horizontal (tamaños, separación, solapes, toques; con pantalla)" "PARTIDO=1 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/captura_tactil_movil.tscn" "FIN. 0 fallos"
 pasa "controles táctiles del partido en un teléfono vertical (con pantalla)" "PARTIDO=2 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1080x2400 res://pruebas/captura_tactil_movil.tscn" "FIN. 0 fallos"
 pasa "gestión en un teléfono horizontal en alemán (letra en mm, toques ≥ 7 mm, solapes, textos cortados, fuera de pantalla; con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/auditoria_gestion_movil.tscn" "FIN. 0 fallos"
+pasa "pantallas del partido en un teléfono (toques ≥ 9 mm, nada en la muesca, letra, solapes; previa, pestañas, pausa, descanso, final, momentos; con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/auditoria_tactil_partido.tscn" "FIN. 0 fallos"
+pasa "barridos de color entre las pantallas del partido (tapado al cambiar, < 300 ms; con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/prueba_barridos_partido.tscn" "FIN. 0 fallos"
 pasa "estética de los menús en PC (3 tamaños de letra, rejilla, foco y pulsado, caras de 30 px; 2 clubes; con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/auditoria_estetica_menus.tscn" "FIN. 0 fallos"
 pasa "Ligas activas en el teléfono (horizontal, alemán) y con mando, y «Añadir ligas» desde Ajustes (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2400x1080 res://pruebas/auditoria_ligas_activas.tscn" "FIN. 0 fallos"
 pasa "Ligas activas en vertical con mando (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1080x2400 res://pruebas/auditoria_ligas_activas.tscn" "FIN. 0 fallos"
@@ -537,6 +539,7 @@ if [[ "$1" = "todo" ]]; then
   pasa "r2: s3_auditoria_interfaz" "godot --headless --path . res://pruebas/ideas/s3_auditoria_interfaz.tscn" "(^|[^0-9])0 fallos"
   # (10-11) Navegación con mando por todas las pestañas, los 9 menús, dos eventos y el teclado (orden 33): ~10 min
   pasa "navegación con mando (foco, trampas, alcance, Cuadrado/R2)" "godot --headless --path . res://pruebas/auditoria_foco_mando.tscn" "FIN. 0 fallos"
+  pasa "mando en las pantallas del partido (previa, pestañas, plan, pausa, descanso, final, momentos)" "godot --headless --path . res://pruebas/auditoria_foco_partido.tscn" "FIN. 0 fallos"
   pasa "navegación con mando: eventos, temporada y editor de formación" "godot --headless --path . res://pruebas/auditoria_foco_eventos.tscn" "FIN. 0 fallos"
 # 6a. Presupuesto de triángulos y llamadas de dibujo del partido (M-338): con pantalla virtual; ~5 min
 if command -v xvfb-run >/dev/null; then

@@ -66,61 +66,64 @@ static func escudo(c: Club, px: int) -> Control:
 	return caja
 
 static func cabecera(m: MenuPartido, l: Club, v: Club) -> void:
-	var c := m._caja(0.25, 0.75, 0.025, 0.25)
+	var mv := m.movil   ## el teléfono: todo más pequeño (el lienzo es ~1067×480)
+	var c := m._caja(0.25, 0.75, 0.015, 0.22) if mv else m._caja(0.25, 0.75, 0.025, 0.25)
 	var f := HBoxContainer.new()
 	f.set_anchors_preset(Control.PRESET_FULL_RECT)
 	f.alignment = BoxContainer.ALIGNMENT_CENTER
-	f.add_theme_constant_override("separation", 40)
+	f.add_theme_constant_override("separation", 20 if mv else 40)
 	c.add_child(f)
-	f.add_child(escudo(l, 150))
+	f.add_child(escudo(l, 90 if mv else 150))
 	var centro := VBoxContainer.new()
 	centro.alignment = BoxContainer.ALIGNMENT_CENTER
 	centro.add_theme_constant_override("separation", 4)
-	centro.custom_minimum_size = Vector2(300, 0)
+	centro.custom_minimum_size = Vector2(240 if mv else 300, 0)
 	f.add_child(centro)
 	var em := MiniaturaMenu.new()
 	em.tipo = MiniaturaMenu.Tipo.EMBLEMA
-	em.custom_minimum_size = Vector2(64, 64)
+	em.custom_minimum_size = Vector2(36, 36) if mv else Vector2(64, 64)
 	em.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	centro.add_child(em)
-	for par: Array in [[linea_competicion(m), 22, Color.WHITE, true], [linea_estadio(m), 16, SUAVE, false]]:
+	for par: Array in [[linea_competicion(m), 16 if mv else 22, Color.WHITE, true], [linea_estadio(m), 13 if mv else 16, SUAVE, false]]:
 		var e := EstiloAvanzar.etiqueta(String(par[0]), int(par[1]), par[2], bool(par[3]), bool(par[3]))
 		e.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		centro.add_child(e)
-	f.add_child(escudo(v, 150))
+	f.add_child(escudo(v, 90 if mv else 150))
 
 ## Los dos onces en columnas: dorsal · nombre · puesto; bajo el nombre del club, la formación y la media.
 static func alineaciones(m: MenuPartido, l: Club, v: Club) -> void:
-	var c := m._caja(0.29, 0.71, 0.27, 0.83)
+	var mv := m.movil
+	var c := m._caja(0.27, 0.73, 0.23, 0.845) if mv else m._caja(0.29, 0.71, 0.27, 0.83)
 	var f := HBoxContainer.new()
 	f.set_anchors_preset(Control.PRESET_FULL_RECT)
 	f.alignment = BoxContainer.ALIGNMENT_CENTER
-	f.add_theme_constant_override("separation", 56)
+	f.add_theme_constant_override("separation", 24 if mv else 56)
 	c.add_child(f)
 	for club: Club in [l, v]:
 		var col := VBoxContainer.new()
 		col.add_theme_constant_override("separation", 2)
-		var n := EstiloAvanzar.etiqueta(Nombres.visible(club.nombre).to_upper(), 40, Color.WHITE, true)
+		var n := EstiloAvanzar.etiqueta(Nombres.visible(club.nombre).to_upper(), 22 if mv else 40, Color.WHITE, true)
 		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		n.clip_text = mv
 		col.add_child(n)
-		var sub := EstiloAvanzar.etiqueta("%s · %s %d" % [club.tactica.formacion, Idiomas.t("Media"), roundi(club.media())], 16, ORO, true)
+		var sub := EstiloAvanzar.etiqueta("%s · %s %d" % [club.tactica.formacion, Idiomas.t("Media"), roundi(club.media())], 13 if mv else 16, ORO, true)
 		sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		col.add_child(sub)
 		var g := GridContainer.new()
 		g.columns = 3
-		g.add_theme_constant_override("h_separation", 14)
-		g.add_theme_constant_override("v_separation", 3)
+		g.add_theme_constant_override("h_separation", 8 if mv else 14)
+		g.add_theme_constant_override("v_separation", 0 if mv else 3)
 		g.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		col.add_child(g)
 		var cinta := capitan_en_campo(club)
 		for j: Jugador in club.once():
-			var d := EstiloAvanzar.etiqueta(str(j.dorsal) if j.dorsal > 0 else "", 18, SUAVE, true)
+			var d := EstiloAvanzar.etiqueta(str(j.dorsal) if j.dorsal > 0 else "", 13 if mv else 18, SUAVE, true)
 			d.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-			d.custom_minimum_size = Vector2(30, 0)
+			d.custom_minimum_size = Vector2(20 if mv else 30, 0)
 			g.add_child(d)
-			g.add_child(_nombre(j, j.id == cinta))
-			g.add_child(EstiloAvanzar.etiqueta(j.pos_e, 16, SUAVE, true))
+			g.add_child(_nombre(j, j.id == cinta, 14 if mv else 19))
+			g.add_child(EstiloAvanzar.etiqueta(j.pos_e, 13 if mv else 16, SUAVE, true))
 		f.add_child(col)
 
 ## Quién lleva la cinta en este once: la misma regla que el partido 3D (`Puente3D.once`): el capitán si juega; si no, el veterano de más media.
@@ -134,11 +137,11 @@ static func capitan_en_campo(c: Club) -> String:
 	return ""
 
 ## «R. GUTIÉRREZ» y, si es el capitán, su brazalete «C» dorado al lado.
-static func _nombre(j: Jugador, con_cinta: bool) -> Control:
+static func _nombre(j: Jugador, con_cinta: bool, letra := 19) -> Control:
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", 6)
 	var txt := MenuPartido.linea_jugador(j).replace(" (POR)", "").replace(" (C)", "")
-	h.add_child(EstiloAvanzar.etiqueta(txt, 19, Color(1, 1, 1, 0.94), true))
+	h.add_child(EstiloAvanzar.etiqueta(txt, letra, Color(1, 1, 1, 0.94), true))
 	if con_cinta:
 		var c := EstiloAvanzar.etiqueta("C", 11, Color("1a1300"), true)
 		c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -210,11 +213,11 @@ static func cabecera_panel(m: MenuPartido) -> HBoxContainer:
 	ic.self_modulate = Color("e0309a")
 	ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	cab.add_child(ic)
-	var t := EstiloAvanzar.etiqueta("", 38, Color.WHITE, true, true)
+	var t := EstiloAvanzar.etiqueta("", 26 if m.movil else 38, Color.WHITE, true, true)
 	t.name = "Titulo"
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(t)
-	var guia := EstiloAvanzar.etiqueta(guia_pestanas(), 15, SUAVE)
+	var guia := EstiloAvanzar.etiqueta(guia_pestanas() if not m.movil or Mando.hay_mando() else "", 15, SUAVE)
 	guia.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	cab.add_child(guia)
 	var volver := Button.new()
@@ -263,7 +266,7 @@ static func vecina(actual: String, paso: int) -> String:
 static func enfocar_panel(cuerpo: Control, pestana: Control) -> void:
 	for n in cuerpo.find_children("*", "Control", true, false):
 		var c := n as Control
-		if c.focus_mode == Control.FOCUS_ALL and c.is_visible_in_tree():
+		if c.focus_mode == Control.FOCUS_ALL and c.is_visible_in_tree() and not c.is_queued_for_deletion():   ## (17-11) no los de la pestaña anterior, que se están borrando
 			c.grab_focus()
 			return
 	if is_instance_valid(pestana):
