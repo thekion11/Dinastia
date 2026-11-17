@@ -36,6 +36,9 @@ func correr(padre: Node) -> int:
 		for g: String in ResumenPartidoCine.goleadores(p, p.local):
 			goles_l += g.count("'")
 		_ok(goles_l == p.goles_local, "%s: los minutos de los goleadores locales (%d) cuadran con su marcador (%d)" % [cfg[0], goles_l, p.goles_local])
+		## «Repetición de los goles» (17-11, prueba de extremo a extremo: salía vacía): el filtro «goles» deja exactamente los goles del partido.
+		var de_gol := MomentosPartido.lista_de(p, mio).filter(func(m: Dictionary) -> bool: return String(m.get("tipo", "")) == "gol")
+		_ok(de_gol.size() == mini(p.goles_local + p.goles_visita, MomentosPartido.MAX), "%s: los momentos de gol son los goles del partido (%d de %d)" % [cfg[0], de_gol.size(), p.goles_local + p.goles_visita])
 		## TARJETAS (17-11, Auditoría): las del simulado quedan por equipo y en la crónica; las del 3D (`tarjeta_externa`) también.
 		var en_cronica := p.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) in ["amarilla", "roja"])
 		_ok(p.amarillas_local + p.amarillas_visita + p.rojas_local + p.rojas_visita >= en_cronica.size(), "%s: cada tarjeta de la crónica está contada" % cfg[0])

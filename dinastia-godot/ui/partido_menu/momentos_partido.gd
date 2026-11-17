@@ -71,7 +71,7 @@ static func lista_de(p: Partido, club: Club) -> Array:
 			"poste": txt = Idiomas.t("Remate al palo de %s.") % quien
 			"atajada": txt = Idiomas.t("El portero ataja el remate de %s.") % quien
 			"roja": txt = Idiomas.t("Roja a %s.") % quien
-		out.append({"min": int(e["min"]), "ataque": ataque, "txt": txt})
+		out.append({"min": int(e["min"]), "ataque": ataque, "txt": txt, "tipo": String(e["tipo"])})   ## (17-11) el tipo, para el filtro «goles» (sin él, «Repetición de los goles» salía vacía)
 		if out.size() >= MAX:
 			break
 	return out
