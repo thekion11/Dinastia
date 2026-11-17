@@ -66,6 +66,7 @@ static func uniforme(m: MenuPartido, v: VBoxContainer) -> void:
 			_avisar_choque(m, rv, clave, aviso, botones))
 		opciones.add_child(b)
 	opciones.add_child(aviso)
+	PanelesDatos.uniforme(m, opciones)
 	## En el centro, tu jugador con el uniforme elegido; a la derecha, el del rival con su titular.
 	for lado in 2:
 		var club: Club = m.mio if lado == 0 else rv
@@ -152,6 +153,7 @@ static func estadio(m: MenuPartido, v: VBoxContainer) -> void:
 			["Hora", PreviaMenuPartido.hora(m.partido, m.clima)], ["Clima del partido", clima]]:
 		datos.add_child(EstiloAvanzar.etiqueta(Idiomas.t(String(par[0])).to_upper(), 15, PreviaMenuPartido.SUAVE))
 		datos.add_child(EstiloAvanzar.etiqueta(String(par[1]), 22, Color.WHITE, true))
+	PanelesDatos.estadio(m, izq, pf)
 	PanelesMenuPartido.nota(izq, "El clima lo pone la ciudad y la época del año; el estadio es el del equipo local.")
 	var foto := MiniaturaMenu.new()
 	foto.tipo = MiniaturaMenu.Tipo.ESTADIO
@@ -176,10 +178,11 @@ static func camara(m: MenuPartido, v: VBoxContainer) -> void:
 		minis[String(PanelesMenuPartido.CAMARAS[i][0])] = n
 		(n as Control).custom_minimum_size.y = Tema.letra(160)
 		i += 1
+	PanelesDatos.camara(v)
 	_pedir_fotos(m, func(f: Dictionary) -> void:
 		for k: String in minis:
 			if is_instance_valid(minis[k]):
 				(minis[k] as MiniaturaMenu).foto = f.get(k))
 
 static func _pedir_fotos(m: MenuPartido, al_terminar: Callable) -> void:
-	load("res://ui/partido_menu/fotos_estadio_menu.gd").pedir(m, m.partido.local, perfil(m), load("res://ui/partido_menu/fotos_estadio_menu.gd").luz_de(m.clima), al_terminar)
+	load("res://ui/partido_menu/fotos_estadio_menu.gd").pedir(m, m.partido.local, perfil(m), load("res://ui/partido_menu/fotos_estadio_menu.gd").luz_de(m.clima), al_terminar, m.estrella(m.partido.local))

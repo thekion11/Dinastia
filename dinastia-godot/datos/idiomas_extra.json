@@ -9054,7 +9054,19 @@
   "En diagonal": "Diagonal",
   "En rombos": "Diamonds",
   "En espiga": "Herringbone",
-  "En abanico": "Fan"
+  "En abanico": "Fan",
+  "Fabricante": "Kit maker",
+  "Patrocinador": "Sponsor",
+  "Marca propia del club": "Club's own brand",
+  "Sin patrocinador": "No sponsor",
+  "La espalda": "The back",
+  "Asistencia esperada": "Expected attendance",
+  "Últimos partidos en este campo": "Last matches at this ground",
+  "Todavía no se ha jugado aquí esta temporada.": "No matches played here yet this season.",
+  "Ajuste fino de la cámara Pro": "Pro camera fine-tuning",
+  "Distancia (m)": "Distance (m)",
+  "Altura": "Height",
+  "Ángulo de visión (°)": "Field of view (°)"
  },
  "pt": {
   "Historia": "História",
@@ -18111,7 +18123,19 @@
   "En diagonal": "Em diagonal",
   "En rombos": "Em losangos",
   "En espiga": "Espinha de peixe",
-  "En abanico": "Em leque"
+  "En abanico": "Em leque",
+  "Fabricante": "Fornecedor",
+  "Patrocinador": "Patrocinador",
+  "Marca propia del club": "Marca própria do clube",
+  "Sin patrocinador": "Sem patrocinador",
+  "La espalda": "As costas",
+  "Asistencia esperada": "Público esperado",
+  "Últimos partidos en este campo": "Últimos jogos neste campo",
+  "Todavía no se ha jugado aquí esta temporada.": "Ainda não houve jogos aqui nesta temporada.",
+  "Ajuste fino de la cámara Pro": "Ajuste fino da câmera Pro",
+  "Distancia (m)": "Distância (m)",
+  "Altura": "Altura",
+  "Ángulo de visión (°)": "Ângulo de visão (°)"
  },
  "patrones": [
   [
@@ -33440,7 +33464,19 @@
   "En diagonal": "En diagonale",
   "En rombos": "En losanges",
   "En espiga": "En chevrons",
-  "En abanico": "En éventail"
+  "En abanico": "En éventail",
+  "Fabricante": "Équipementier",
+  "Patrocinador": "Sponsor",
+  "Marca propia del club": "Marque du club",
+  "Sin patrocinador": "Sans sponsor",
+  "La espalda": "Le dos",
+  "Asistencia esperada": "Affluence attendue",
+  "Últimos partidos en este campo": "Derniers matchs sur ce terrain",
+  "Todavía no se ha jugado aquí esta temporada.": "Aucun match joué ici cette saison.",
+  "Ajuste fino de la cámara Pro": "Réglage fin de la caméra Pro",
+  "Distancia (m)": "Distance (m)",
+  "Altura": "Hauteur",
+  "Ángulo de visión (°)": "Champ de vision (°)"
  },
  "it": {
   "Historia": "Storia",
@@ -42497,7 +42533,19 @@
   "En diagonal": "In diagonale",
   "En rombos": "A rombi",
   "En espiga": "A spina di pesce",
-  "En abanico": "A ventaglio"
+  "En abanico": "A ventaglio",
+  "Fabricante": "Fornitore tecnico",
+  "Patrocinador": "Sponsor",
+  "Marca propia del club": "Marchio del club",
+  "Sin patrocinador": "Senza sponsor",
+  "La espalda": "Il retro",
+  "Asistencia esperada": "Spettatori attesi",
+  "Últimos partidos en este campo": "Ultime partite in questo campo",
+  "Todavía no se ha jugado aquí esta temporada.": "Nessuna partita giocata qui in questa stagione.",
+  "Ajuste fino de la cámara Pro": "Regolazione fine della telecamera Pro",
+  "Distancia (m)": "Distanza (m)",
+  "Altura": "Altezza",
+  "Ángulo de visión (°)": "Angolo di visione (°)"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51554,7 +51602,19 @@
   "En diagonal": "Diagonal",
   "En rombos": "Rauten",
   "En espiga": "Fischgrät",
-  "En abanico": "Fächer"
+  "En abanico": "Fächer",
+  "Fabricante": "Ausrüster",
+  "Patrocinador": "Sponsor",
+  "Marca propia del club": "Eigenmarke des Vereins",
+  "Sin patrocinador": "Kein Sponsor",
+  "La espalda": "Der Rücken",
+  "Asistencia esperada": "Erwartete Zuschauer",
+  "Últimos partidos en este campo": "Letzte Spiele in diesem Stadion",
+  "Todavía no se ha jugado aquí esta temporada.": "Hier wurde diese Saison noch nicht gespielt.",
+  "Ajuste fino de la cámara Pro": "Feineinstellung der Pro-Kamera",
+  "Distancia (m)": "Abstand (m)",
+  "Altura": "Höhe",
+  "Ángulo de visión (°)": "Sichtfeld (°)"
  },
  "ca": {
   "Historia": "Història",
@@ -60611,7 +60671,19 @@
   "En diagonal": "En diagonal",
   "En rombos": "En rombes",
   "En espiga": "En espiga",
-  "En abanico": "En ventall"
+  "En abanico": "En ventall",
+  "Fabricante": "Fabricant",
+  "Patrocinador": "Patrocinador",
+  "Marca propia del club": "Marca pròpia del club",
+  "Sin patrocinador": "Sense patrocinador",
+  "La espalda": "L'esquena",
+  "Asistencia esperada": "Assistència esperada",
+  "Últimos partidos en este campo": "Últims partits en aquest camp",
+  "Todavía no se ha jugado aquí esta temporada.": "Encara no s'ha jugat aquí aquesta temporada.",
+  "Ajuste fino de la cámara Pro": "Ajust fi de la càmera Pro",
+  "Distancia (m)": "Distància (m)",
+  "Altura": "Alçada",
+  "Ángulo de visión (°)": "Angle de visió (°)"
  },
  "pl": {
   "Club": "Klub",
@@ -69668,7 +69740,19 @@
   "En diagonal": "Po przekątnej",
   "En rombos": "W romby",
   "En espiga": "W jodełkę",
-  "En abanico": "Wachlarz"
+  "En abanico": "Wachlarz",
+  "Fabricante": "Producent",
+  "Patrocinador": "Sponsor",
+  "Marca propia del club": "Własna marka klubu",
+  "Sin patrocinador": "Bez sponsora",
+  "La espalda": "Plecy",
+  "Asistencia esperada": "Spodziewana frekwencja",
+  "Últimos partidos en este campo": "Ostatnie mecze na tym boisku",
+  "Todavía no se ha jugado aquí esta temporada.": "W tym sezonie nie rozegrano tu jeszcze meczu.",
+  "Ajuste fino de la cámara Pro": "Dokładne ustawienie kamery Pro",
+  "Distancia (m)": "Odległość (m)",
+  "Altura": "Wysokość",
+  "Ángulo de visión (°)": "Kąt widzenia (°)"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78725,6 +78809,18 @@
   "En diagonal": "Çapraz",
   "En rombos": "Baklava",
   "En espiga": "Balıksırtı",
-  "En abanico": "Yelpaze"
+  "En abanico": "Yelpaze",
+  "Fabricante": "Üretici",
+  "Patrocinador": "Sponsor",
+  "Marca propia del club": "Kulübün kendi markası",
+  "Sin patrocinador": "Sponsor yok",
+  "La espalda": "Sırt",
+  "Asistencia esperada": "Beklenen seyirci",
+  "Últimos partidos en este campo": "Bu sahadaki son maçlar",
+  "Todavía no se ha jugado aquí esta temporada.": "Bu sezon burada henüz maç oynanmadı.",
+  "Ajuste fino de la cámara Pro": "Pro kamera ince ayarı",
+  "Distancia (m)": "Mesafe (m)",
+  "Altura": "Yükseklik",
+  "Ángulo de visión (°)": "Görüş açısı (°)"
  }
 }

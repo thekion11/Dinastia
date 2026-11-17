@@ -23,7 +23,7 @@ func _esperar_vistas(menu: MenuPartido, tab: String) -> void:
 			break
 		await get_tree().process_frame
 	if tab in ["uniforme", "estadio", "camara"]:
-		print("MEDIDA %s: vistas 3D listas en %d ms" % [tab, Time.get_ticks_msec() - t0])
+		print("MEDIDA %s: vistas 3D listas en %d ms · memoria del montaje %s" % [tab, Time.get_ticks_msec() - t0, str(FotosEstadioMenu.medida)])
 	await get_tree().create_timer(0.3).timeout
 
 func _ready() -> void:
