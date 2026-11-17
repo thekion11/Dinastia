@@ -348,16 +348,24 @@ func _error_tiro_extra(p: Dictionary, lejos: float, error: float, clase: String)
 
 ## (13-11, sesión 15) el portero ante el remate desde dentro del área, solo en C4 (`MejorasC4Avance.parada`, `C4_PARADA_AREA=k`).
 func _prob_parada_extra(gk: Dictionary, desde: Vector3, prob: float) -> float:
-	return MejorasC4Avance.parada(self, gk, desde, prob) if _mejoras_c4 else prob
+	return MejorasC4Avance.parada_real(self, gk, desde, MejorasC4Avance.parada(self, gk, desde, prob)) if _mejoras_c4 else prob
 
 ## (17-11, alarma de goles de C4) el portero para lo que le llega al cuerpo, solo en C4 (`MejorasC4Avance.parada_cuerpo`, `C4_PARADA_CUERPO=f`).
+func _agarra(p: Dictionary, estirada: bool, fuerza: float) -> bool:
+	if not (_mejoras_c4 and MejorasC4Avance.PARADA_REAL):
+		return super(p, estirada, fuerza)
+	return MejorasC4Avance.agarra(self, p, estirada, fuerza, _rng)
+
+func _prob_rechace_fuera() -> float:
+	return MejorasC4Avance.PR_FUERA if _mejoras_c4 and MejorasC4Avance.PARADA_REAL else 0.5
+
 func _prob_parada_cuerpo(lat: float, alcance: float, prob: float) -> float:
 	return MejorasC4Avance.parada_cuerpo(self, lat, alcance, prob) if _mejoras_c4 else prob
 
 ## (16-11, informe AAA H1, A1.3/A1.5) el alcance del portero según el tiempo que tarda el remate (`C4_ALCANCE_TIEMPO`) y ante el remate
 ## desde dentro del área (`C4_ALCANCE_AREA`), solo en C4 (`MejorasC4Avance.alcance`).
 func _alcance_extra(gk: Dictionary, desde: Vector3, alcance: float, tz: float) -> float:
-	return MejorasC4Avance.alcance(self, gk, desde, alcance, tz) if _mejoras_c4 else alcance
+	return MejorasC4Avance.alcance_real(self, gk, desde, MejorasC4Avance.alcance(self, gk, desde, alcance, tz)) if _mejoras_c4 else alcance
 
 ## (16-11, informe AAA H1) un compañero del rematador no controla un tiro fuerte que le pasa cerca, solo en C4 (`C4_TIRO_COMPANERO`).
 func _puede_tomar_tiro(p: Dictionary) -> bool:

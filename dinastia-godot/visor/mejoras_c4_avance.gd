@@ -165,6 +165,53 @@ static func alcance(m: Object, gk: Dictionary, desde: Vector3, a: float, tz: flo
 			_contar(m, "c4_alcance_area")
 	return r
 
+## LA PARADA POR TRAMOS (17-11-2026, decisión de Auditoría tras la sonda de goles: C4 daba 4,1 goles y 46 % de gol de lo que va a puerta con
+## tiros a 20 m de media). Con `C4_PARADA_REAL=1` la probabilidad de GOL de lo que el portero alcanza (1 − prob) se multiplica por un factor que
+## va de 1 a bocajarro (< 6 m: queda como estaba, el portero no es un superhéroe) a `PR_MED` desde 16 m; un tiro flojo (< 22 m/s) fuera del área
+## chica se multiplica además hasta `PR_FLOJO`. Y desde 16 m el alcance crece hasta `PR_ALC` (un tiro de lejos da tiempo a estirarse).
+## Contadores `c4_parada_real` y `c4_alcance_real`. Ajustes: `C4_PR_MED`, `C4_PR_FLOJO`, `C4_PR_ALC`.
+static var PARADA_REAL := OS.get_environment("C4_PARADA_REAL") == "1"
+static var PR_MED := float(OS.get_environment("C4_PR_MED")) if OS.get_environment("C4_PR_MED") != "" else 0.55
+static var PR_FLOJO := float(OS.get_environment("C4_PR_FLOJO")) if OS.get_environment("C4_PR_FLOJO") != "" else 0.6
+static var PR_ALC := float(OS.get_environment("C4_PR_ALC")) if OS.get_environment("C4_PR_ALC") != "" else 1.2
+
+## 0 a bocajarro (< 6 m del arco), 1 desde 16 m.
+static func _tramo(m: Object, gk: Dictionary, desde: Vector3) -> float:
+	var arco: Vector3 = m._arco_propio(gk)
+	return clampf((Vector2(desde.x - arco.x, desde.z - arco.z).length() - 6.0) / 10.0, 0.0, 1.0)
+
+static func parada_real(m: Object, gk: Dictionary, desde: Vector3, prob: float) -> float:
+	if not PARADA_REAL:
+		return prob
+	var w := _tramo(m, gk, desde)
+	var f := lerpf(1.0, PR_MED, w)
+	var v: float = (m.vel_balon as Vector3).length()
+	if v < 22.0:
+		f *= lerpf(1.0, PR_FLOJO, clampf((22.0 - v) / 8.0, 0.0, 1.0) * clampf(w * 2.5, 0.0, 1.0))
+	_contar(m, "c4_parada_real")
+	return 1.0 - (1.0 - clampf(prob, 0.0, 1.0)) * f
+
+static func alcance_real(m: Object, gk: Dictionary, desde: Vector3, a: float) -> float:
+	if not PARADA_REAL:
+		return a
+	_contar(m, "c4_alcance_real")
+	return a * lerpf(1.0, PR_ALC, _tramo(m, gk, desde))
+
+## Y lo que pasa DESPUÉS de la parada (medido: con más paradas subían los goles de rechace y los tiros, de 20 a 24): atrapa los tiros
+## de hasta `PR_AGARRE_V` m/s (antes 22) y, estirado, también los flojos (con la mitad de probabilidad); y el rechace va hacia fuera
+## (a córner) con probabilidad `PR_FUERA` (antes 0,5). Ajustes: `C4_PR_AGARRE_V`, `C4_PR_FUERA`.
+static var PR_AGARRE_V := float(OS.get_environment("C4_PR_AGARRE_V")) if OS.get_environment("C4_PR_AGARRE_V") != "" else 28.0
+static var PR_FUERA := float(OS.get_environment("C4_PR_FUERA")) if OS.get_environment("C4_PR_FUERA") != "" else 0.8
+
+static func agarra(m: Object, gk: Dictionary, estirada: bool, fuerza: float, rng: RandomNumberGenerator) -> bool:
+	if fuerza >= (22.0 if estirada else PR_AGARRE_V):
+		return false
+	var k := float(gk["attr"]["par"]) * 0.9 * GestoTecnico.agarre(m) * (0.5 if estirada else 1.0)
+	var si := rng.randf() < k
+	if si:
+		_contar(m, "c4_agarra")
+	return si
+
 static func _contar(m: Object, k: String) -> void:
 	if m.get("diag") is Dictionary:
 		(m.diag as Dictionary)[k] = int((m.diag as Dictionary).get(k, 0)) + 1
