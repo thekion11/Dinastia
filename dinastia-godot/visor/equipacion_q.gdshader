@@ -795,12 +795,12 @@ void fragment() {
 		camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
 	}
 	// El dorsal, en la espalda (z < 0,5), entre los omóplatos y la cintura.
-	// (17-11) Tipografía deportiva con borde suave y ribete de contraste; 27 cm de alto (antes 30, para que quepan dos cifras
-	// anchas con su ribete en la espalda).
-	if (dorsal > 0 && !civil && !manga && z < 0.45 && y > 1.112 && y < 1.418 && abs(x) < 0.152) {
+	// (17-11) Tipografía deportiva con borde suave y ribete de contraste; 25 cm de alto (antes 30, luego 27: dos cifras anchas
+	// con su ribete en la espalda y, encima, el apellido de 6,5 cm sin subir hasta el cuello).
+	if (dorsal > 0 && !civil && !manga && z < 0.45 && y > 1.097 && y < 1.384 && abs(x) < 0.152) {
 		// Vista desde atrás: la x va al revés (si no, el 12 se lee 21 y en espejo).
-		const float U_NUM = 1.6 / 0.27;
-		float dn = dq_numero(dorsal, vec2(-x, y - 1.13) * U_NUM);
+		const float U_NUM = 1.6 / 0.25;
+		float dn = dq_numero(dorsal, vec2(-x, y - 1.115) * U_NUM);
 		float fw = max(px_tela * U_NUM, 0.004);
 		float ribete = color_num_borde.a;
 		float lleno = 1.0 - smoothstep(DQ_TRAZO - fw * 0.5, DQ_TRAZO + fw * 0.5, dn);
@@ -810,23 +810,31 @@ void fragment() {
 		}
 		camiseta = mix(camiseta, color_num.rgb, lleno);
 	}
-	// El nombre sobre el número: 4 cm de alto, 27 cm de ancho como mucho (los largos se estrechan).
-	if (nombre_n > 0 && !civil && !manga && z < 0.45 && y > 1.418 && y < 1.466 && abs(x) < 0.14) {
-		const float ALTO_N = 0.04;
+	// El nombre sobre el número. (17-11, 2.ª pasada) 6,5 cm de alto (antes 4: lo tapaban el pelo largo y la cabeza inclinada) y
+	// 2,2 cm más abajo (de 1,422-1,462 a 1,375-1,440), 30 cm de ancho como mucho (los largos se estrechan), con el MISMO ribete
+	// que el número cuando el color no contrasta (una celda alrededor de cada letra).
+	if (nombre_n > 0 && !civil && !manga && z < 0.45 && y > 1.364 && y < 1.451 && abs(x) < 0.162) {
+		const float ALTO_N = 0.065;
+		const float TOPE_N = 1.44;
 		float celda = ALTO_N / 7.0;
 		float n_col = float(nombre_n) * 6.0 - 1.0;
-		float cw = min(celda * 0.9, 0.27 / n_col);
+		float cw = min(celda * 0.9, 0.30 / n_col);
 		float fx = (-x + n_col * cw * 0.5) / cw;
-		float fy = (1.462 - y) / celda;
-		float on = 0.0;
-		if (fx >= 0.0 && fx < n_col && fy >= 0.0 && fy < 7.0) {
+		float fy = (TOPE_N - y) / celda;
+		if (fx >= -1.0 && fx < n_col + 1.0 && fy >= -1.0 && fy < 8.0) {
 			int col = int(floor(fx));
-			int i = col / 6;
-			on = dq_letra(nombre_c[min(i, 11)], col - i * 6, int(floor(fy)));
+			int fila = int(floor(fy));
+			float on = dq_nombre(col, fila);
+			float ribete_n = 0.0;
+			if (color_num_borde.a > 0.0 && on == 0.0) {
+				ribete_n = max(max(dq_nombre(col - 1, fila), dq_nombre(col + 1, fila)), max(dq_nombre(col, fila - 1), dq_nombre(col, fila + 1)));
+			}
 			// De lejos (la celda ya no llega al píxel) las letras se funden en un tono medio en vez de chisporrotear.
-			on = mix(0.35, on, 1.0 - smoothstep(0.55, 1.1, px_tela / cw));
+			float cerca = 1.0 - smoothstep(0.55, 1.1, px_tela / cw);
+			bool caja = fx >= 0.0 && fx < n_col && fy >= 0.0 && fy < 7.0;
+			camiseta = mix(camiseta, color_num_borde.rgb, ribete_n * cerca);
+			camiseta = mix(camiseta, color_num.rgb, caja ? mix(0.35, on, cerca) : on * cerca);
 		}
-		camiseta = mix(camiseta, color_num.rgb, on);
 	}
 
 	if (largo) {

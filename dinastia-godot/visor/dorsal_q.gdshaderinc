@@ -5,6 +5,7 @@
 //    se funde en vez de parpadear. Ribete de contraste alrededor (`color_num_borde`, alfa = grosor).
 //  · NOMBRE: letras de 5 × 7 (A-Z, punto, guion y apóstrofo; las tildes y la Ñ llegan ya pasadas a su letra base desde
 //    `DisenosKit.letras_nombre`). Cuando la celda mide menos que un píxel, el nombre se funde en un tono medio (sin ruido).
+//    (17-11, 2.ª pasada) 6,5 cm de alto y más abajo, con ribete de una celda cuando hace falta (`dq_nombre` mira las vecinas).
 // Solo ALU en los píxeles de la espalda: ninguna textura ni llamada de dibujo nueva.
 
 const float DQ_TRAZO = 0.095;   // medio grosor del trazo del número (unidades de la caja)
@@ -89,4 +90,13 @@ float dq_letra(int g, int cx, int fila) {
 		return 0.0;
 	}
 	return float((DQ_FUENTE[(g - 1) * 7 + fila] >> (4 - cx)) & 1);
+}
+
+// ¿Está encendida la celda (col, fila) del apellido entero (`nombre_c`, `nombre_n` letras; cada letra 5 columnas + 1 de aire)?
+float dq_nombre(int col, int fila) {
+	if (col < 0 || col >= nombre_n * 6 - 1) {
+		return 0.0;
+	}
+	int i = col / 6;
+	return dq_letra(nombre_c[min(i, 11)], col - i * 6, fila);
 }

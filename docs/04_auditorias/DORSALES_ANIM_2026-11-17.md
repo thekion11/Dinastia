@@ -103,8 +103,84 @@ Si un nombre no aparece tal cual en Mixamo, vale el más parecido (la clave sale
 Licencia: el dueño la aprobó el 16-11 («Mixamo convertido a `.res` sin los FBX en el repo»); al subir los clips, anotarlos en
 `dinastia-godot/LICENCIAS.md` con la plantilla del cap. 11.
 
+## 2.ª pasada (17-11): trote de captura real (CMU) y apellido más grande
+
+### Por qué no Mixamo (todavía)
+
+El dueño quería animaciones de Mixamo y que las bajara Claude. No se puede desde la nube: Mixamo exige iniciar sesión con una
+cuenta de Adobe en un navegador (no hay API ni descarga directa), y sus términos permiten usar los clips dentro de un juego pero
+NO redistribuir los archivos sueltos (por eso los FBX nunca irían al repo). La herramienta `mixamo_a_res.gd` sigue lista para cuando
+el dueño los baje en su equipo (tabla de arriba). Mientras, se usa lo que ya teníamos y es libre del todo: la base de captura de
+movimiento de **Carnegie Mellon (CMU)**, libre también para uso comercial citando la fuente (ya en los créditos y en `LICENCIAS.md`;
+mismo archivo `anims_cmu/cmu_uso.res`, ningún recurso nuevo).
+
+### A) El trote de cada uno (`visor/trote_cmu.gd`, `TroteCmu`) — HECHO, APAGADO POR DEFECTO (`TROTE_CMU=1`)
+
+El dueño dejó el realismo de los jugadores para después (orden recibida a mitad del bloque): queda listo y probado en el banco, pero
+apagado. Encenderlo es cambiar el valor por defecto de `TroteCmu.encendida` (o `TROTE_CMU=1`).
+
+- Los **12 ciclos de carrera reales** de CMU (+ sus espejos = 24) como «trotar» del partido, **repartidos por jugador** con su id
+  (siempre el mismo para cada uno; 1 de cada 6 conserva el trote de siempre; los porteros, sus desplazamientos). En un partido del
+  banco: 17 jugadores con 10 trotes distintos, y trotan con el suyo.
+- **Sin tocar el motor**: la decisión de qué ciclo y a qué escala (que en `main` hace C++, `animar_jugadores`) no cambia: el motor pide
+  «trotar» y pone su escala de siempre (velocidad / 3,4 m/s). La variedad entra al montar al jugador: una señal de su AnimationPlayer
+  (`current_animation_changed`) cambia «trotar» por su variante en el mismo fotograma. Una primera versión con umbrales propios por
+  clip en `CicloCarrera` y `motor_jugable_p3/p5` se deshizo para no chocar con el paso a C++.
+- **Sin patinar**: la velocidad del pie de apoyo de cada clip se midió con `AnimPasos.medir` en el cuerpo de 1,80 m (3,11-4,33 m/s) y
+  cada clip se **re-cronometra en el propio recurso** a 3,4 m/s (la del trote de siempre): con la misma escala que pone el motor, el
+  pie no patina (banco: los 24 a 3,4 m/s ±0,00; el barrido de 2 a 10 m/s de `CicloCarrera` sigue en 0,00).
+- **Pies en el césped**: la retarget de CMU dejaba los pies flotando **5-21 cm** (el sujeto de la captura es más alto); la pelvis baja
+  lo justo (en el espacio del hueso raíz) y el pie apoya a 0,000 m (banco). La biblioteca guarda las pistas comprimidas: el clip se
+  rehace una vez por biblioteca (23 pistas de ~20 claves).
+- **Paso en fase**: la fase del pie izquierdo de cada clip va a `AnimPasos.fases`.
+- **Coste**: se monta solo donde ya se monta lo cercano (`AnimacionCercana`: de MEDIA hacia arriba y sin «Partido ligero»; en el móvil
+  por defecto no existe). Por fotograma, nada (el mismo `play`). Al montar: ~15 clips copiados una vez.
+- **Motor intacto**: `igualdad_motor` sigue en **4068298361** y el banco compara la huella de un partido KOR-FRA con y sin.
+- Patadas y controles de CMU para tiro y control: **no** se enchufan. Las 6 patadas son grabaciones de 3-7 s desde PARADO (entran a
+  0,01-0,84 m/s) con dos golpeos cada una, y CMU no tiene controles de balón; nuestros tiros y pases salen casi siempre en carrera
+  (los de League, contacto a 0,17-0,27 s). Encajarían solo en el balón parado (falta, penal): queda en «Pendiente».
+
+### B) Apellido de la espalda más grande (`equipacion_q.gdshader`, `dorsal_q.gdshaderinc`)
+
+| | Antes | Ahora |
+|---|---|---|
+| Apellido | 4 cm de alto, 1,422-1,462 m, 27 cm de ancho como mucho | **6,5 cm**, **1,375-1,440 m** (2,2 cm más abajo, lejos del pelo y de la cabeza inclinada), 30 cm |
+| Ribete del apellido | ninguno (sobre una camiseta del mismo tono se perdía) | el del número cuando el color no contrasta (una celda alrededor de cada letra, `dq_nombre`) |
+| Número | 27 cm, base 1,13 m | **25 cm**, base 1,115 m (sigue sobre el patrocinador de la espalda, 1,035-1,10 m) |
+
+Coste: solo ALU en los píxeles de la espalda (4 consultas más a la fuente donde hay ribete); ninguna textura, material ni llamada de
+dibujo nueva (tabla de llamadas abajo). Banco: `_dq_espalda_medidas` lee las medidas del shader y comprueba alto, tope y que nada se pise.
+
+### Capturas de la 2.ª pasada
+
+`capturas_cmu_apellido_2026-11-17/` (Forward+ sin GPU, ALTA, cámara real de TV y de cerca; tres cruces nuevos de países distintos:
+GER-URU y NED-CHI en ALTA, GER-URU también en MÍNIMA). «Antes»: copia del árbol en 9231fd63. El trote CMU queda apagado: las fotos
+muestran el apellido y el dorsal (de espalda y en la TV) y que la carrera de lado no cambia.
+
+Pares (≤ 1280 px, en el repo solo los `*_antes_despues.jpg`; las sueltas, fuera):
+- De espalda: `espalda1_ger_uru_antes_despues.jpg` (MEYER 4: el apellido se lee de lejos), `espalda2_ger_uru_…`, `espalda1_ned_chi_…`,
+  `espalda2_ned_chi_…` (MIERDING 21), `espalda1_minima_ger_uru_…` (MÍNIMA: el apellido, a menos de un píxel por celda, se funde en
+  una franja de tono medio, como antes, sin chisporroteo).
+- Cámara de TV: `tv_ger_uru_…`, `tv_ned_chi_…`, `tv_minima_ger_uru_…`. De lado (carrera, sin cambios con el trote apagado): `lado3_ger_uru_…`.
+- POR-JPN y FRA-COL: la foto «después» no salió (el proceso de captura murió por memoria en este contenedor sin GPU con 15 GB
+  compartidos; POR-JPN dibuja 2,2 M de triángulos) y se cambió por NED-CHI. Tercer cruce: pendiente.
+
+Llamadas de dibujo y triángulos (vista de TV, fotograma 90, mismo motor):
+
+| Cruce | Calidad | Llamadas antes → después | Triángulos antes → después |
+|---|---|---|---|
+| GER-URU (Wupper FC - Belvedere FC) | ALTA | 677 → 672 | 1.537.610 → 1.536.820 |
+| NED-CHI (Kaasstad FC - Levantino SC) | ALTA | 499 → 494 | 1.507.547 → 1.511.757 |
+| GER-URU | MÍNIMA | 157 → 152 | 185.778 → 202.883 |
+
+Ningún material, textura ni llamada nueva: las diferencias son del instante (el público y la animación lejana dependen del reloj
+real de la captura, y en MÍNIMA la foto «antes» y «después» no cayeron en el mismo momento de juego).
+
 ## Pendiente
 
+- Patadas de CMU recortadas (desde `cuadro_toque_balon` de `datos/anims_accion_cmu.json`, ~0,5 s antes y 0,6 s después) solo para el
+  balón parado (falta y penal, que arrancan desde parado), con la duración del clip que pide el motor (`LeagueAcciones._neutra`).
+- Ciclos de carrera rápida (6-9 m/s): CMU no tiene; con Mixamo («Running», «Fast Run») o la base libre que aparezca.
 - Probar `mixamo_a_res.gd` con FBX reales de Mixamo (probado solo con un FBX del pack de Quaternius) y enchufar los clips al
   partido (`CicloCarrera.CICLO` con las velocidades medidas de cada clip con `AnimPasos`).
 - Veredicto del dueño en su laptop (FPS reales) y en el teléfono.
