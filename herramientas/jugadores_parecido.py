@@ -17,7 +17,7 @@ Formato de fila (campos 1-6 igual que antes; los nuevos van detrás y el juego l
 El pie no tiene fuente abierta: lo estima el juego.
 
 Respeta la fuente: pausa entre peticiones, caché FUERA del repo (DINASTIA_CACHE o el directorio temporal),
-nombre de cliente genérico. Valida cada plantilla (18-35 jugadores, ≥2 porteros, sin duplicados entre clubes) y
+nombre de cliente genérico. Valida cada plantilla (18-40 jugadores, ≥2 porteros, sin duplicados entre clubes) y
 saca los casos dudosos a un informe en vez de meterlos a ciegas.
 """
 import hashlib
@@ -67,8 +67,9 @@ def pedir(url, reintentos=4):
             peticion = urllib.request.Request(url, headers={"User-Agent": CLIENTE})
             with urllib.request.urlopen(peticion, timeout=40) as r:  # NOSONAR(S5332): solo HTTPS, URL fija de Wikimedia
                 txt = r.read().decode("utf-8")
-            with open(ruta, "w", encoding="utf-8") as f:
-                f.write(txt)
+            if '"error"' not in txt[:80]:
+                with open(ruta, "w", encoding="utf-8") as f:
+                    f.write(txt)
             return txt
         except urllib.error.HTTPError as e:
             if e.code in (429, 503):
@@ -127,7 +128,7 @@ def datos_wikidata(titulos):
     for k in range(0, len(lista), 40):
         lote = lista[k:k + 40]
         q = urllib.parse.urlencode({"action": "wbgetentities", "sites": "enwiki", "titles": "|".join(lote), "props": "claims|sitelinks",
-                                    "format": "json", "normalize": "1"})
+                                    "format": "json"})
         txt = pedir("https://www.wikidata.org/w/api.php?" + q)
         if not txt:
             continue
@@ -197,7 +198,7 @@ def fila(j, wd, rep, club_pais):
 def validar(jugadores):
     """Problemas de una plantilla: lista de textos (vacía = buena)."""
     p = []
-    if not 18 <= len(jugadores) <= 35:
+    if not 18 <= len(jugadores) <= 40:
         p.append(f"tamaño {len(jugadores)}")
     if sum(1 for j in jugadores if j["pos"] == "GK") < 2:
         p.append("menos de 2 porteros")
@@ -234,7 +235,7 @@ def main():
             nuevos = []
             for j in jug:
                 clave = limpiar(j["nombre"]).lower()
-                if clave in vistos and vistos[clave] != nom:
+                if " " in clave and clave in vistos and vistos[clave] != nom:   ## los apodos de una palabra (Gabriel, Marcos) se repiten de verdad
                     problemas.append("duplicado con " + vistos[clave])
                     continue
                 vistos[clave] = nom
