@@ -346,6 +346,7 @@ func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dicti
 		if not es_local:
 			n.rotation.y = PI
 		poner_rotulo(n, jug, es_local)
+		n.set_meta("kit_c1", kc1)   ## (17-11) la camiseta que lleva de verdad (la prueba del día de partido mira que sea la elegida en la previa)
 		AnclaSuelo.poner(n, nodo["anim"])   ## P4 (3-11): el suelo no se atraviesa
 
 		out.append({"node": n, "anim": nodo["anim"], "id": jid, "jugador": jug,

@@ -119,6 +119,12 @@ func vestir(cols: Array) -> void:
 	var c1 := Color(String(kit.get("c1", club.color1)))
 	var c2 := Color(String(kit.get("c2", club.color2)))
 	var titular := cols.is_empty() or (cols[0] as Color).is_equal_approx(c1)
+	if cols.size() >= 3 and cols[2] is Dictionary:   ## (17-11) el uniforme elegido entero (`Puente3D.kit_elegido`): con su diseño, como en el partido
+		kit = cols[2]
+		titular = true
+		cols = []
+		c1 = Color(String(kit.get("c1", club.color1)))
+		c2 = Color(String(kit.get("c2", club.color2)))
 	if not cols.is_empty():
 		c1 = cols[0]
 		c2 = cols[1]

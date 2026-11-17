@@ -394,8 +394,9 @@ func _sacar_los_22() -> void:
 	var v := Puente3D.once(once_visita)
 	## El local ataca hacia un lado y el visitante hacia el otro: `spawn_team` lo
 	## resuelve con `es_local`, que además le da la vuelta al jugador.
-	var kit_l := Puente3D.kit(club)
-	var kit_v := Puente3D.kit_visita(club, visitante)
+	var kits := Puente3D.kits_partido(club, visitante, Partido.ctx_club_id, String(OpcionesPartido.leer("uniforme_partido", "titular")))   ## (17-11) el uniforme elegido en la previa
+	var kit_l: Dictionary = kits[0]
+	var kit_v: Dictionary = kits[1]
 	var por_l := Puente3D.kit_portero(club)
 	var por_v := Puente3D.kit_portero(visitante)
 	_en_campo.append_array(_spawner.spawn_team(_raiz3d, l["xi"], l["jugadores"],

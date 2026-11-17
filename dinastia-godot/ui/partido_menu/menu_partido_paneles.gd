@@ -81,13 +81,10 @@ static func _interruptor(padre: Control, clave: String, texto: String, defecto: 
 # ---------------------------------------------------------------- UNIFORME
 const UNIFORMES := [["titular", "Titular"], ["alternativa", "Alternativa"], ["tercera", "Tercera"]]
 
+## Los colores de cada uniforme: los MISMOS que se ponen en el partido 3D (`Puente3D.kit_elegido`, con `load()`: la memoria del menú no nombra el 3D).
 static func colores_uniforme(c: Club, cual: String) -> Array:
-	var c1 := Color(c.kit_color1 if c.kit_color1 != "" else c.color1)
-	var c2 := Color(c.kit_color2 if c.kit_color2 != "" else c.color2)
-	match cual:
-		"alternativa": return [c2, c1]
-		"tercera": return [Color("151c33"), c1]
-	return [c1, c2]
+	var k: Dictionary = load("res://visor/puente3d.gd").kit_elegido(c, cual)
+	return [Color(String(k.get("c1", c.color1))), Color(String(k.get("c2", c.color2))), k]   ## el 3.º: el kit entero (diseño), para el retrato 3D
 
 static func uniforme(m: MenuPartido, v: VBoxContainer) -> void:
 	var fila := HBoxContainer.new()
