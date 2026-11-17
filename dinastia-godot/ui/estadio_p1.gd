@@ -422,6 +422,8 @@ func _sacar_personal() -> void:
 func _rotar_camara() -> void:
 	if _rig != null:
 		_rig.cycle()
+		if _rig.current_name() in ["Transmisión", "TV lejana"]:   ## (16-11) se recuerda la TV elegida (cercana o lejana)
+			call("_guardar_pref", "tv_lejana", _rig.current_name() == "TV lejana")   ## (está en la capa 2)
 		if _btn_camara != null:
 			_btn_camara.text = Idiomas.t("📷 Cámara: ") + _rig.current_name()
 		if _pie != null:

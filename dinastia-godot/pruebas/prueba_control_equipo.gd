@@ -38,6 +38,8 @@ func _pulsar(accion: String, si: bool) -> void:
 		Input.action_release(accion)
 
 func _avanzar(n: int) -> void:
+	## (16-11) La prueba mueve el motor a mano: lectura directa del `Input` (la vista en pausa vacía lo retenido por pasos).
+	Mando.pasos_activar(false)
 	for i in n:
 		_motor.paso(1.0 / 60.0)
 

@@ -35,6 +35,11 @@ func _probar_fun_economia() -> void:
 	var k := Finanzas.SEMANAS_DEL_MES
 	_comprobar(Finanzas.meses_de(1) == 1 and Finanzas.meses_de(2) == maxi(1, 4 / k), "Finanzas.meses_de: pocos partidos → mínimo 1 mes")
 	_comprobar(Finanzas.meses_de(19) == 19 * 2 / k and Finanzas.meses_de(38) == 38 * 2 / k, "Finanzas.meses_de: liga de 20 (19 en casa) y de 39 → %d y %d" % [19 * 2 / k, 38 * 2 / k])
+	## (16-11, informe G-06/G-07) La taquilla con el horario de más público no cobra más entradas que asientos; la proyección usa los meses reales si se dan.
+	var cf := Club.new()
+	cf.estadio_aforo = 10000; cf.rep = 99; cf.confianza = 99; cf.precio_entrada = 1.0; cf.socios = 90000
+	_comprobar(Finanzas.new(cf, 0.5, 0, 0.0).taquilla(true, 1.08) == int(round(10000.0 * Finanzas.ingreso_por_espectador(1.0))), "Finanzas.taquilla: estadio lleno con la noche de sábado (×1,08) → como mucho el aforo")
+	_comprobar(Finanzas.new(cf, 0.0, 0, 0.0).proyeccion_anual(15, 0, 9)["ingresos"]["Patrocinio"] == Finanzas.new(cf, 0.0, 0, 0.0).patrocinio_base() * 9, "Finanzas.proyeccion_anual: con 9 cierres reales cobra 9 meses")
 	## Viajes.delegacion: 38 personas con reputación 70, sube 0,45 por punto y se queda entre 32 y 52.
 	_comprobar(Viajes.delegacion(70) == 38 and Viajes.delegacion(60) == 34 and Viajes.delegacion(100) == 52, "Viajes.delegacion: 70 → 38, 60 → 34, 100 → 52")
 	_comprobar(Viajes.delegacion(0) == 32 and Viajes.delegacion(-50) == 32 and Viajes.delegacion(500) == 52, "Viajes.delegacion: tope inferior 32 y superior 52")

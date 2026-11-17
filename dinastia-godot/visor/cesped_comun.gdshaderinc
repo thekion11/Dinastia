@@ -23,6 +23,12 @@ uniform float fuerza_franjas = 1.0;
 uniform float desgaste = 1.0;
 // Multiplicador general (el césped de la tele es un verde hondo, no pastel).
 uniform float brillo = 0.64;
+// EL VERDE NATURAL (16-11, referencia de FC Mobile): algo apagado y tirando a amarillo, no el verde saturado
+// de antes (saturación 1,15 y sin tinte). Mismo coste: solo cambian constantes.
+uniform float saturacion = 0.74;
+uniform vec3 tinte = vec3(1.04, 0.95, 0.64);
+// Cuánto se marcan las franjas de corte (antes el brillo de la franja era ±10 %).
+uniform float marca_franjas = 0.26;
 
 float h21(vec2 p) {
 	p = fract(p * vec2(123.34, 456.21));
@@ -63,13 +69,12 @@ vec3 cesped_color(vec2 w, vec2 uv, vec3 mundo, vec3 cam) {
 	vec3 vista = normalize(cam - mundo);
 	float sentido = m * 2.0 - 1.0;
 	float sheen = sentido * (0.45 + 0.55 * abs(vista.z)) * fuerza_franjas;
-	// FRANJAS DE TRANSMISIÓN (frente 2, 16-11): al lado de PES 2020, eFootball y FC el corte se leía como
-	// césped pintado (claro lima contra oscuro casi el doble de hondo). En la tele las franjas se ven, pero
-	// con ~70 % de esa diferencia: el centro de las dos tintas del club no cambia, solo se acercan.
-	vec3 base = mix(oscuro, claro, 0.5 + 0.36 * sentido * mix(0.7, 1.0, abs(vista.z)));
-	base *= (1.0 + 0.07 * sheen) * brillo;
+	vec3 base = mix(oscuro, claro, 0.5 + 0.5 * sentido * mix(0.7, 1.0, abs(vista.z)));
+	base *= (1.0 + marca_franjas * sheen) * brillo;
+	// Variación de tono a gran escala (~20 m): zonas más secas o más verdes, sin cambiar el número de `fbm`.
 	float macro = fbm(w * 0.045);
-	base *= 0.92 + 0.16 * macro;
+	base *= 0.88 + 0.24 * macro;
+	base = mix(base, base * vec3(1.06, 1.0, 0.8), smoothstep(0.35, 0.7, macro) * 0.5);
 	base = mix(base, base * vec3(1.08, 1.04, 0.82), smoothstep(0.62, 0.85, fbm(w * 0.09 + 7.0)) * 0.35);
 	float gast = 0.0;
 	for (int k = 0; k < 2; k++) {
@@ -81,10 +86,9 @@ vec3 cesped_color(vec2 w, vec2 uv, vec3 mundo, vec3 cam) {
 	gast = max(gast, 0.45 * (1.0 - smoothstep(0.5, 3.0, length(w))));
 	gast *= desgaste * (0.55 + 0.45 * fbm(w * 0.7));
 	base = mix(base, base * vec3(0.95, 0.78, 0.45) + vec3(0.03, 0.02, 0.0), gast * 0.55);
-	// Verde de transmisión: más profundo y saturado (el claro salía menta lavado).
+	// Verde natural (16-11): un poco menos saturado y hacia el amarillo (antes 1,15 y vec3(0.94, 0.99, 0.92)).
 	float gris = dot(base, vec3(0.30, 0.59, 0.11));
-	// (16-11) 1,15 → 1,05: con el ajuste de color y ACES encima el claro salía verde neón.
-	base = mix(vec3(gris), base, 1.05);
-	base *= vec3(0.94, 0.99, 0.92);
+	base = mix(vec3(gris), base, saturacion);
+	base *= tinte;
 	return base;
 }

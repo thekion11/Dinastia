@@ -22,6 +22,8 @@ static var disputas_comparadas := 0
 static var disputas_distintas := 0
 
 func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 0.0, anim := "pase") -> void:
+	if MotorReglas.doble_toque(self as Object as MotorJugable, p): return   ## (16-11, M6-20) el que sacó no repite antes que otro
+	MotorReglas.marcar_ejecutor(self as Object as MotorJugable, p)
 	_ultima_anim = anim
 	_n_patada += 1
 	## SAQUE DE MANO (31-10): el portero con el balón en las manos que pasa raso y corto lo lanza con la mano (clip de la UAL2):
@@ -50,7 +52,7 @@ func _patear(p: Dictionary, destino: Vector3, vh: float, loft := 0.0, efecto := 
 	elif destino.y > R + 0.05:
 		vy = ((destino.y - b.y) + 0.5 * G * tv * tv) / tv
 	## El arrastre frena: se compensa un poco para que llegue.
-	var h := d / dist * vh * compensa_arrastre(vh, tv)
+	var h := d / dist * vh * _compensa_aire(vh, tv)
 	if vy <= 0.0:
 		h = d / dist * vh
 	vel_balon = Vector3(h.x, vy, h.z)
@@ -93,6 +95,8 @@ func _companero_cerca(p: Dictionary, punto: Vector3) -> Dictionary:
 	return mejor
 
 func _cabezazo(p: Dictionary) -> void:
+	if _pitar_offside(p) or MotorReglas.doble_toque(self as Object as MotorJugable, p):   ## (16-11, M6-04 y M6-20) fuera de juego o doble toque
+		return
 	var arco := _arco_rival(p)
 	var cerca := absf(pos(p).z - arco.z) < 18.0
 	if cerca:
@@ -179,7 +183,7 @@ func _disputas(delta: float) -> void:
 	var b := balon.position
 	var nat := Nativo.obj()
 	var k := -2
-	if nat != null and nat.has_method("disputas_inicio"):
+	if nat != null and nat.has_method("disputas_inicio") and not (_gancho_tiro() and not _tiro_vivo.is_empty()):   ## (17-11) con el gancho de C4 encendido y un remate en vuelo, la gemela GDScript (C++ no lo conoce)
 		if comparar_disputas:
 			_comparar_disputas(nat, delta, b)
 		k = nat.disputas_inicio(jugadores, delta, poseedor.is_empty(), b, t, pase_a.get("id") if not pase_a.is_empty() else null,
@@ -187,6 +191,7 @@ func _disputas(delta: float) -> void:
 	else:
 		k = _disputas_inicio_gd(delta, b)
 	if poseedor.is_empty():
+		if not _en_mano.is_empty(): return   ## (16-11, M6-22) el saque de mano: el balón está en la mano del portero, no suelto
 		var mejor: Dictionary = jugadores[k] if k >= 0 else {}
 		_disputa_suelto(mejor, b)
 		return
@@ -228,6 +233,7 @@ func _disputas_inicio_gd(delta: float, b: Vector3) -> int:
 		var p: Dictionary = jugadores[i]
 		if float(p["enfriar"]) > 0.0 or float(p.get("levanta_hasta", 0.0)) > t:   ## (10-11) en el suelo no se toca el balón (p4_saque_barrida)
 			continue
+		if not _tiro_vivo.is_empty() and not _puede_tomar_tiro(p): continue   ## (16-11, H1) gancho: aquí siempre puede (C4: `C4_TIRO_COMPANERO`)
 		var d := Vector2(pos(p).x - b.x, pos(p).z - b.z).length()
 		var alcance := 1.6 if bool(p["por"]) and _en_su_area(p, b) else 0.9
 		## El que espera el pase va al encuentro del balón y se perfila:
@@ -275,7 +281,7 @@ func _disputa_suelto(mejor: Dictionary, b: Vector3) -> void:
 	## Cabezazos: balón alto a la altura de la cabeza.
 	elif b.y > 1.5 and b.y < 2.4:
 		for p: Dictionary in jugadores:
-			if float(p["enfriar"]) > 0.0 or bool(p["por"]):
+			if float(p["enfriar"]) > 0.0 or bool(p["por"]) or float(p.get("levanta_hasta", 0.0)) > t:   ## (16-11, M6-26) tumbado no se cabecea
 				continue
 			if Vector2(pos(p).x - b.x, pos(p).z - b.z).length() < _radio_cabezazo(p):
 				_cabezazo(p)
@@ -283,8 +289,8 @@ func _disputa_suelto(mejor: Dictionary, b: Vector3) -> void:
 
 ## Con dueño: entradas de los rivales cercanos (la del usuario va aparte).
 func _disputa_con_dueno(b: Vector3) -> void:
-	## Al portero con el balón en las manos no se le entra.
-	if bool(poseedor["por"]):
+	## Al portero con el balón en las manos no se le entra; fuera de su área es un jugador más (16-11, M6-10).
+	if _portero_intocable(poseedor):
 		return
 	## El toque largo: si el balón va suelto por delante y un rival llega
 	## antes, se lo lleva sin entrada.
@@ -432,3 +438,11 @@ func _rival_mas_cercano(p: Dictionary) -> Dictionary:
 func _presion(p: Dictionary) -> float:
 	var r := _rival_mas_cercano(p)
 	return MotorMente.pos_vista(self as Object as MotorJugable, p, r).distance_to(pos(p)) if not r.is_empty() else 99.0   ## lo que VE (F8, 03-11)
+
+## GANCHO (16-11, H1): ¿puede `p` hacerse con el balón mientras va un remate? Aquí siempre (la huella no cambia); ver `MejorasC4Area`.
+func _puede_tomar_tiro(_p: Dictionary) -> bool:
+	return true
+
+## (17-11) ¿Hay que mirar `_puede_tomar_tiro`? Aquí nunca (las disputas siguen en C++); C4 lo enciende con `C4_TIRO_COMPANERO`.
+func _gancho_tiro() -> bool:
+	return false

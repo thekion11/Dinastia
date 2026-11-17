@@ -1,6 +1,6 @@
 # Blender v2.70 (sub 0) OBJ File: 'Vagabond.blend'
 # www.blender.org
-mtllib Vagabond.mtl
+mtllib vagabond.mtl
 g Cover_Cabin11.001
 v -0.183367 0.645326 -0.453689
 v -0.182759 0.649263 -0.138627

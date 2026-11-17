@@ -91,10 +91,12 @@ func _conectar_2() -> void:
 			MentorVoz.decir(p, p.mundo, titulo, texto))
 		## LA PORTADA DEL LUNES, COMO PERIÓDICO (C20): si la semana dejó una
 		## portada nueva, se abre sola (se puede desactivar en la propia hoja).
-		p.mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
-			## Una ventana detrás de otra: el periódico primero y la
-			## entrevista al paso cuando se cierra (antes salían apiladas).
-			p.call_deferred("_portada_nueva"))
+		## (16-11, informe M-01) `semana_avanzada` es del propio Mundo: con candado, como `eras`, o cada cambio de club suma otra.
+		if not p.mundo.has_meta("_ui_portada"):
+			p.mundo.set_meta("_ui_portada", true)
+			p.mundo.semana_avanzada.connect(func(_s: int, _a: int) -> void:
+				## Una ventana detrás de otra: el periódico primero y la entrevista al paso cuando se cierra.
+				p.call_deferred("_portada_nueva"))
 		for con_mentor: Object in [p.mundo.calendario, p.mundo.politica, p.mundo.vida]:
 			if con_mentor != null:
 				con_mentor.mentor.connect(func(titulo: String, texto: String) -> void:

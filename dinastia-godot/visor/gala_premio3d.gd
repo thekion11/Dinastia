@@ -67,6 +67,27 @@ func _calidad_maxima() -> void:
 	_vp.positional_shadow_atlas_size = 4096
 	_vp.mesh_lod_threshold = 0.0   ## los modelos con todo su detalle, sin versiones simplificadas
 	RenderingServer.directional_shadow_atlas_set_size(4096, true)
+	tree_entered.connect(_entra)
+	tree_exiting.connect(_restaurar_sombras)
+	if is_inside_tree():
+		_entra()
+
+## (16-11, revisión de V-01) Galas en pantalla: al cambiar de premio la nueva entra ANTES de que salga la vieja, y la
+## vieja devolvía el atlas a 2048 con la nueva aún abierta. Solo lo devuelve la última que se cierra.
+static var _vivas := 0
+
+func _entra() -> void:
+	_vivas += 1
+	RenderingServer.directional_shadow_atlas_set_size(4096, true)
+
+## (16-11, informe V-01) El atlas de sombras es GLOBAL: al cerrar la gala vuelve al de la calidad elegida
+## (2048 en ALTA/ULTRA, el del proyecto por debajo; en el móvil es 2048, no 4096).
+func _restaurar_sombras() -> void:
+	_vivas = maxi(0, _vivas - 1)
+	if _vivas > 0:
+		return
+	var tam := 2048 if Calidad.elegida >= Calidad.ALTO else int(ProjectSettings.get_setting_with_override("rendering/lights_and_shadows/directional_shadow/size"))
+	RenderingServer.directional_shadow_atlas_set_size(tam, true)
 
 ## El entorno de gala: brillo, oclusión ambiental, reflejos en el suelo y un leve ajuste de color.
 static func _entorno_maximo(env: Environment) -> void:

@@ -1,0 +1,16 @@
+# ERRORES ESPERADOS DEL BANCO (16-11-2026, informe académico, cap. 5 § 5.3.3).
+# `herramientas/banco.sh` falla ante cualquier «ERROR:» del motor cuya pila pase por res:// (con
+# `herramientas/errores_banco.awk`), salvo los que casen con una línea de aquí. Los «SCRIPT ERROR»
+# fallan siempre: no tienen lista blanca.
+# Formato: <texto del mensaje><TAB><texto de la pila>, literales (sin expresiones regulares). El de la
+# pila puede quedar vacío, pero conviene atarlo a la prueba que lo provoca para que el mismo error en
+# otro sitio sí falle. Cada entrada lleva encima el motivo. No añadir nada sin él.
+
+# La prueba de guardado ESTROPEA partidas a propósito (bytes cambiados, archivo truncado) y comprueba
+# que se rechazan y se carga la copia: el descompresor del motor avisa al leer los dañados.
+Condition "err != 1" is true	_probar_guardado_seguro
+
+# El mando táctil estilo FC Mobile se prueba fijando `size` a controles anclados a pantalla completa
+# (sus anclajes opuestos no coinciden): el aviso es del montaje de la prueba, no del juego. En Godot 4.7.2 sale
+# como WARNING (no cuenta); la entrada queda por si el motor lo sube a ERROR.
+Nodes with non-equal opposite anchors	_probar_mando_tactil_fc

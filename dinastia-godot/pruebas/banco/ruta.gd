@@ -236,12 +236,19 @@ func _probar_carrera_ruta() -> void:
 		_comprobar(not CarreraRuta.asentado(c), "  y con nota 5,9 no")
 		c.ruta["pj_llegada"] = 0
 		c.pj_carrera = 3
-		## Pulir: un punto por +2 en un atributo; y la fama cuesta más de subir.
+		## Pulir (16-11, R-08): un punto de talento vale lo que los puntos de habilidad de un nivel en esa zona; y la fama cuesta más de subir.
 		c.ruta["puntos"] = 1
 		var a0 := int(j.atributos[attr])
-		_comprobar(CarreraTalentos.pulir(c, m, attr) and int(j.atributos[attr]) == a0 + 2 and not CarreraTalentos.pulir(c, m, attr), "  un punto de talento vale por +2 en un atributo")
-		_comprobar(int((c.ruta["pulidos"] as Dictionary).get(attr, 0)) >= 2, "  y queda apuntado lo repartido, para la pantalla «Tu juego»")
+		var hab0 := CarreraHabilidad.puntos(c)
+		_comprobar(CarreraTalentos.pulir(c, m, attr) and int(c.ruta["puntos"]) == 0 and not CarreraTalentos.pulir(c, m, attr), "  un punto de talento se cambia por los puntos de habilidad de un nivel")
+		var apuntado := 0
+		for par: Array in CarreraHabilidad.de_zona(attr):
+			apuntado += int((c.ruta.get("pulidos", {}) as Dictionary).get(String(par[0]), 0))
+		var sobra := CarreraHabilidad.puntos(c) - hab0
+		_comprobar(int(j.atributos[attr]) >= a0 and sobra >= 0 and sobra <= CarreraHabilidad.PUNTOS_POR_NIVEL and (sobra == CarreraHabilidad.PUNTOS_POR_NIVEL or apuntado > 0),
+			"  y se gastan en esa zona a su precio de hoy; lo que no alcanza queda como puntos de habilidad (%d → %d, sobran %d)" % [a0, int(j.atributos[attr]), sobra])
 		j.atributos[attr] = a0
+		c.ruta["hab"] = hab0
 		c.ruta["fama_ref"] = 60
 		c.fama = 72
 		c.stats_temp["notas"] = [7.0]

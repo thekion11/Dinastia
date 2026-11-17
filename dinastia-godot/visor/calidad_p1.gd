@@ -380,6 +380,16 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 		RenderingServer.directional_shadow_atlas_set_size(2048, true)   ## (15-11) 8192 -> 2048: la pasada de sombras costaba ~11 ms en la laptop del dueño
 	elif nivel >= ALTO:
 		RenderingServer.directional_shadow_atlas_set_size(2048, true)
+	_luces_por_calidad(vp, nivel)
+
+## (16-11, informe E-05) Las luces con sombra «solo en ALTA» (grupo GRUPO_SOMBRA_ALTA, p. ej. la del túnel) siguen al nivel
+## si baja con la escena abierta (aviso de memoria, pruebas): antes conservaban la sombra con la que se montaron.
+const GRUPO_SOMBRA_ALTA := "sombra_solo_alta"
+static func _luces_por_calidad(vp: Viewport, nivel: int) -> void:
+	if not vp.is_inside_tree():
+		return
+	for l in vp.get_tree().get_nodes_in_group(GRUPO_SOMBRA_ALTA):
+		(l as Light3D).shadow_enabled = nivel >= ALTO and sombra_solar(nivel)
 
 static func cargar() -> void:
 	var cf := ConfigFile.new()

@@ -72,6 +72,8 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 	env.ambient_light_sky_contribution = 1.0
+	## LUZ DE DÍA SUAVE (16-11, referencia de FC Mobile): más luz del cielo de día (las sombras no se van a negro); de noche, igual que antes.
+	env.ambient_light_energy = lerpf(1.35, 1.0, oscuro)
 	env.glow_enabled = ModoRendimiento.glow(nivel)   ## (4-11) MÍNIMO: sin resplandor (pasada de pantalla completa)
 	env.glow_intensity = 0.5 + oscuro * 0.5
 	## EL UMBRAL, QUE FALTABA (23-9-2026). Se quedaba en 1.0, o sea que
@@ -117,8 +119,11 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	key.shadow_enabled = Calidad.sombra_solar(nivel)   ## MÍNIMO: sin la pasada de sombras (~1/4 de las llamadas del partido)
 	## Sombras suaves de verdad: el tamano aparente del sol hace que la sombra se
 	## abra con la distancia, como en la realidad. Sin esto salen recortadas.
-	key.light_angular_distance = 0.5
+	key.light_angular_distance = 1.2   ## (16-11) antes 0,5: la penumbra de la tribuna sobre el césped se abre más (borde suave); sin coste extra
 	key.shadow_blur = 1.0
+	## (16-11) Sombras menos negras (también la de la tribuna sobre el césped, que se queda pero más suave). Sin coste: solo cambia
+	## cuánto oscurece la sombra, no la pasada de sombras.
+	key.shadow_opacity = lerpf(0.72, 1.0, oscuro)
 	key.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS if nivel >= Calidad.ALTO \
 		else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	key.directional_shadow_max_distance = 260.0 if nivel >= Calidad.ALTO else 160.0

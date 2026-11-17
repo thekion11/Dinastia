@@ -84,26 +84,9 @@ func semana(m: Mundo) -> Array:
 	ofertas = ofertas.filter(func(o: Dictionary) -> bool: return int(o["semanas"]) > 0)
 	return nuevos
 
-## Cesión: a un club de su país con 8-20 puntos menos de reputación.
+## Cesión: a un club de su país con 8-20 puntos menos de reputación, y de vuelta al cerrar la temporada (`CarreraTraspasos`).
 func _ceder(m: Mundo) -> void:
-	var j := jugador(m)
-	var origen := club(m)
-	if j == null or origen == null:
-		return
-	var candidatos: Array = []
-	for c: Club in m.clubes.values():
-		if c != origen and c.pais == origen.pais and c.rep <= origen.rep - 8 and c.rep >= origen.rep - 20:
-			candidatos.append(c)
-	if candidatos.is_empty():
-		return
-	var destino: Club = candidatos[_rng.randi() % candidatos.size()]
-	origen.soltar(j)
-	if not clubes_pasados.has(origen.nombre):
-		clubes_pasados.append(origen.nombre)
-	destino.fichar(j)
-	j.dorsal = _dorsal_libre(destino)
-	relacion_dt = 62
-	historial.append({"anio": m.anio, "semana": m.semana, "titulo": "Cesión", "eleccion": "Cedido a %s" % destino.nombre})
+	CarreraTraspasos.ceder(self, m)
 
 func _club_extranjero(m: Mundo, j: Jugador) -> Club:
 	var mio := club(m)
@@ -111,6 +94,7 @@ func _club_extranjero(m: Mundo, j: Jugador) -> Club:
 	for c: Club in m.clubes.values():
 		if mio != null and c.pais != mio.pais and c.rep >= mio.rep:
 			mejores.append(c)
+	mejores = CarreraTraspasos.filtrar(self, m, j, mejores)   ## (16-11, informe R-14) con sitio y cupo, sin repetir club
 	return mejores[_rng.randi() % mejores.size()] if not mejores.is_empty() else null
 
 ## Aplica la opción elegida de un evento pendiente.
@@ -164,7 +148,7 @@ func resolver(m: Mundo, indice: int, opcion: int) -> String:
 		var fuera := _club_extranjero(m, j)
 		if fuera != null:
 			ofertas.append({"club_id": fuera.id, "sueldo": int(float(j.sueldo) * 2.2), "semanas": 3})
-	historial.append({"anio": m.anio, "semana": m.semana, "titulo": String(ev["titulo"]), "eleccion": String(o["texto"])})
+	historial.append({"anio": m.anio, "semana": m.semana, "titulo": String(ev["titulo"]), "titulo_datos": ev.get("titulo_datos", []), "eleccion": String(o["texto"])})
 	eventos.remove_at(indice)
 	return String(o["texto"])
 
@@ -178,19 +162,16 @@ func aceptar_oferta(m: Mundo, i: int) -> bool:
 	if destino == null or j == null:
 		return false
 	var origen := club(m)
-	if origen != null:
-		origen.soltar(j)
-		if not clubes_pasados.has(origen.nombre):
-			clubes_pasados.append(origen.nombre)
-	destino.fichar(j)
+	if origen == null or not CarreraTraspasos.destino_valido(m, destino, j):   ## (16-11, informe R-14) se llenó el plantel o el cupo
+		ofertas.remove_at(i)
+		return false
+	CarreraTraspasos._mover(self, m, j, origen, destino, 50)   ## (16-11, informe R-10) sin el brazalete del club de antes
+	ruta.erase("cesion")   ## un traspaso desde la cesión es definitivo: ya no vuelves
 	j.sueldo = int(o["sueldo"])
 	j.anios_contrato = 3
-	j.dorsal = _dorsal_libre(destino)
-	relacion_dt = 50
 	fama = mini(100, fama + 5)
-	ruta["pj_llegada"] = pj_carrera
 	ofertas.clear()
-	historial.append({"anio": m.anio, "semana": m.semana, "titulo": "Traspaso", "eleccion": "Fichas por %s" % destino.nombre})
+	historial.append({"anio": m.anio, "semana": m.semana, "titulo": "Traspaso", "eleccion": "Fichas por %s", "eleccion_datos": [destino.nombre]})
 	return true
 
 ## Lo que dejó un partido tuyo (jugado en el motor o simulado).
@@ -219,7 +200,10 @@ func tras_partido(m: Mundo, d: Dictionary) -> void:
 		seguidores += int(d.get("paradas", 0)) * 40
 		if min_jugados >= 60 and d.has("encajados") and int(d["encajados"]) == 0:
 			vallas_invictas += 1
-	if j != null:
+			stats_temp["vallas"] = int(stats_temp.get("vallas", 0)) + 1   ## (16-11, informe R-04) las de la temporada
+	## (16-11, informe R-05) Si el simulado ya te tuvo en el campo (`en_mundo`), tu ficha del mundo ya lleva goles,
+	## asistencias, partido y nota: no se anotan dos veces.
+	if j != null and not bool(d.get("en_mundo", false)):
 		for _g in int(d.get("goles", 0)):
 			j.anotar()
 		j.asistencias += int(d.get("asist", 0))
@@ -238,7 +222,8 @@ func fin_de_temporada(m: Mundo) -> void:
 		"goles": int(stats_temp["goles"]), "asist": int(stats_temp["asist"]), "nota": snappedf(nota_media(), 0.01),
 		"ovr": jugador(m).ovr if jugador(m) != null else 0})
 	ovr_inicio = jugador(m).ovr if jugador(m) != null else -1
-	stats_temp = {"pj": 0, "titular": 0, "goles": 0, "asist": 0, "notas": []}
+	stats_temp = {"pj": 0, "titular": 0, "goles": 0, "asist": 0, "notas": [], "vallas": 0}
+	CarreraTraspasos.volver_de_cesion(self, m)   ## (16-11, informe R-06) la cesión era «hasta final de temporada»
 
 ## La selección de tu país para el partido (18, por líneas, tú dentro) y la
 ## rival. Clubes de paso, fuera del mundo: no tocan ninguna liga.
@@ -280,7 +265,11 @@ func equipos_seleccion(m: Mundo) -> Array:
 	rival.rep = clampi(m.selecciones.fuerza(rival.nombre), 62, 88) if m.selecciones != null else 75
 	rival.color1 = "#1d3c8f"
 	rival.color2 = "#f2c230"
-	## Si en el mundo no hay jugadores de ese país, se generan con su fuerza.
+	## Si en el mundo no hay jugadores de ese país, se generan con su fuerza. (16-11, informe R-13) Sin mover el mundo:
+	## `crear_jugador` tira de `Azar` y del contador de ids; se guardan y se devuelven tal cual (y los de paso llevan id propio).
+	var azar_antes := Azar._rng.state
+	var seq_antes: int = m._seq_jugador
+	var fijo_antes: int = m._n_fijo
 	for g: String in CUPOS_SEL:
 		var dem := {"POR": "POR", "DEF": "DFC", "MED": "MC", "DEL": "DC"}[g] as String
 		for k in int(CUPOS_SEL[g]):
@@ -291,13 +280,21 @@ func equipos_seleccion(m: Mundo) -> Array:
 		var dem2 := {"POR": "POR", "DEF": "DFC", "MED": "MC", "DEL": "DC"}[g] as String
 		for k in int(cupos[g]):
 			mia.plantilla.append(m.crear_jugador(mia, g, dem2, _rng.randi_range(22, 31), 70))
+	var n_paso := 0
+	for o2: Jugador in rival.plantilla + mia.plantilla:
+		if o2.club_id.begins_with("sel_"):
+			n_paso += 1
+			o2.id = "%s_%d" % [o2.club_id, n_paso]
+	Azar._rng.state = azar_antes
+	m._seq_jugador = seq_antes
+	m._n_fijo = fijo_antes
 	return [mia, rival]
 
 ## Lo que deja un partido con la selección.
 func tras_seleccion(d: Dictionary) -> void:
 	caps += 1
 	goles_sel += int(d.get("goles", 0))
-	fama = clampi(fama + 4 + int(d.get("goles", 0)) * 4, 0, 100)
+	CarreraPremios.fama_entera(self, 4 + int(d.get("goles", 0)) * 4)   ## (16-11, informe R-07) sin el freno semanal
 	seguidores += 600 + int(d.get("goles", 0)) * 900
 	energia = maxi(0, energia - 12)
 	convocatoria = {}
@@ -376,16 +373,24 @@ func a_dic() -> Dictionary:
 
 ## (4-11, caza de fallos) Un guardado dañado o a mano con el tipo equivocado (texto donde va un diccionario) reventaba al CARGAR la carrera: se usa el valor por omisión.
 static func _tipo(d: Dictionary, clave: String, defecto: Variant) -> Variant:
-	var v: Variant = d.get(clave, defecto)
-	return v if typeof(v) == typeof(defecto) else defecto
+	return _mismo_tipo(d.get(clave, defecto), defecto)
+
+## (16-11, informe G-01) El JSON devuelve los números como float: un float donde va un int es válido (se redondea),
+## si no, cada carga ponía a 0 partidos, goles y asistencias de la temporada.
+static func _mismo_tipo(v: Variant, defecto: Variant) -> Variant:
+	if typeof(v) == typeof(defecto):
+		return v
+	if typeof(defecto) == TYPE_INT and typeof(v) == TYPE_FLOAT:
+		return roundi(v)
+	return defecto
 
 ## `stats_temp` con todas sus claves (un guardado antiguo o roto no las traía y la nota media fallaba).
 static func _stats_ok(v: Variant, defecto: Dictionary) -> Dictionary:
 	var r: Dictionary = defecto.duplicate(true)
 	if v is Dictionary:
 		for k: String in defecto:
-			if (v as Dictionary).has(k) and typeof((v as Dictionary)[k]) == typeof(defecto[k]):
-				r[k] = (v as Dictionary)[k]
+			if (v as Dictionary).has(k):
+				r[k] = _mismo_tipo((v as Dictionary)[k], defecto[k])
 	return r
 
 static func desde_dic(d: Dictionary) -> CarreraJugador:

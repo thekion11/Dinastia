@@ -12,16 +12,28 @@ func _probar() -> void:
 			and Calidad.ULTRA == Calidad.ULTRA_ALTA, "los nombres viejos son alias de los nuevos")
 	_comprobar(Calidad.NIVEL_DEFECTO == Calidad.ULTRA_BAJA, "el nivel por defecto es ULTRA BAJA")
 	## Cada escalón es monótono en lo que decide el nivel: la escala del 3D no baja al subir y la sombra del sol, una vez encendida, sigue encendida
+	## (16-11, informe F-05) ULTRA ALTA es la excepción decidida por el dueño el 15-11: en Forward+ va a `Calidad.escala_ultra`
+	## (60 %) para sostener los FPS; se comprueba contra ese valor y la monotonía, de ULTRA BAJA a ALTA.
+	## La sombra del sol se mira con el modo rendimiento APAGADO (su valor por defecto es encendido, que la quita hasta MEDIA).
+	var modo_antes := Calidad.modo_rendimiento
+	Calidad.modo_rendimiento = false
 	var antes_s := -1.0
 	var sombra_vista := false
 	for v in range(-3, 4):
 		var e := Calidad.escala_3d(v)
-		_comprobar(e >= antes_s - 0.0001 and e > 0.0 and e <= 1.0, "escala 3D del nivel %d (%.2f) no baja respecto al anterior" % [v, e])
+		if v == Calidad.ULTRA_ALTA:
+			var esp := 1.0 if Calidad.es_compatibilidad() else Calidad.escala_ultra
+			_comprobar(is_equal_approx(e, esp), "escala 3D de ULTRA ALTA (%.2f) = Calidad.escala_ultra en Forward+ (%.2f)" % [e, esp])
+		else:
+			_comprobar(e >= antes_s - 0.0001 and e > 0.0 and e <= 1.0, "escala 3D del nivel %d (%.2f) no baja respecto al anterior" % [v, e])
 		antes_s = e
 		var s := Calidad.sombra_solar(v)
 		_comprobar(not (sombra_vista and not s), "sombra solar del nivel %d no se apaga tras haberse encendido" % v)
 		sombra_vista = sombra_vista or s
-	_comprobar(not Calidad.sombra_solar(Calidad.ULTRA_BAJA) and not Calidad.sombra_solar(Calidad.BAJA) and Calidad.sombra_solar(Calidad.MEDIA_BAJA), "sin sombra solar en ULTRA BAJA y BAJA; con ella desde MEDIA BAJA")
+	_comprobar(not Calidad.sombra_solar(Calidad.ULTRA_BAJA) and not Calidad.sombra_solar(Calidad.BAJA) and Calidad.sombra_solar(Calidad.MEDIA_BAJA), "sin modo rendimiento: sin sombra solar en ULTRA BAJA y BAJA; con ella desde MEDIA BAJA")
+	Calidad.modo_rendimiento = true
+	_comprobar(not Calidad.sombra_solar(Calidad.MEDIA) and Calidad.sombra_solar(Calidad.MEDIA_ALTA), "con modo rendimiento (por defecto): sin sombra solar hasta MEDIA; con ella desde MEDIA ALTA")
+	Calidad.modo_rendimiento = modo_antes
 	## Esquema viejo (sin versión o 1)
 	for par in [[-1, Calidad.ULTRA_BAJA], [0, Calidad.MEDIA], [1, Calidad.ALTA], [2, Calidad.ULTRA_ALTA], [-9, Calidad.ULTRA_BAJA], [9, Calidad.ULTRA_ALTA]]:
 		_comprobar(Calidad.desde_guardado(par[0]) == par[1] and Calidad.desde_guardado(par[0], 1) == par[1], "viejo %d → %d" % [par[0], par[1]])

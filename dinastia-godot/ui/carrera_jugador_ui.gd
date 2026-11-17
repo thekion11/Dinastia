@@ -6,6 +6,11 @@ func _pintar_semana() -> void:
 	_limpiar()
 	var j := carrera.jugador(mundo) if carrera != null else null
 	var club := carrera.club(mundo) if carrera != null else null
+	## (16-11, revisión de R-01) Con una carrera en marcha NUNCA se cae a «crear jugador» (sobrescribía el guardado): si el
+	## futbolista ya se retiró, o ya no está en ningún club, se enseña el cierre de su carrera.
+	if carrera != null and carrera.jugador_id != "" and (carrera.retirado or j == null or club == null):
+		_pintar_retiro()
+		return
 	if j == null or club == null:
 		_pintar_crear()
 		return
