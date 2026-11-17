@@ -71,7 +71,11 @@ verde más natural), `lejana_jpn_fra_alta_antes_despues.jpg` (huecos azules de l
 - Banco, sección nueva `_probar_publico_cesped` (grupo «estadio»): grupo lleno = color del club, más asientos libres = más oscuro sin irse a
   negro, el alfa (marca del sector visitante) no se toca; eje del corte de cada dibujo unitario y «rayas»/«rayasH» en X/Z.
 - `pruebas/bancos/estadio_3d.gd` (banco especializado con pantalla): la comprobación «85 % de butacas con el color del club» acepta
-  también el color del club en sombra (`GradaButacas.color_vacia`). Cambio intencionado.
+  también el color del club en sombra (`GradaButacas.color_vacia`). Cambio intencionado. Ese banco (`bancos_especiales.py estadio_3d`)
+  pasa sus pruebas propias; su único fallo, `f0m_visor_estadio` («el sol a pleno… y sombras en 2 cascadas»), YA está en la rama base
+  sin estos cambios (comprobado en la copia «antes»): es de la luz del 16-11, no de esto.
+- Banco completo (`BANCO_PARTES=2 herramientas/banco.sh`): «FIN. 0 fallos». `revisar_lineas.py`: 0 scripts de más de 450 líneas.
+  `igualdad_motor`: «FIN. 0 fallos», huella 4068298361.
 
 ## Pendiente
 
