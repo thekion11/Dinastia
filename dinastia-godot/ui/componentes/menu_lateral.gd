@@ -385,6 +385,11 @@ func abrir_menu(id: String, sub: int = -1) -> PantallaMenu:
 	pantalla_abierta.cerrada.connect(func() -> void:
 		if not is_instance_valid(pantalla_abierta) or pantalla_abierta.cerrando():
 			_p._ir_a_pestana("Inicio"))
+	## (16-11, informe cap. 5 F-02) Con la caché `MenuGuardado` la pantalla no se libera al cerrar: se suelta aquí.
+	var esta := pantalla_abierta
+	pantalla_abierta.cerrada.connect(func() -> void:
+		if pantalla_abierta == esta:
+			pantalla_abierta = null)
 	## El panel queda por encima de la pantalla del menú.
 	get_parent().move_child(self, get_parent().get_child_count() - 1)
 	_marcar_riel(id)
@@ -407,8 +412,9 @@ func menu_vecino(paso: int) -> void:
 	abrir_menu(String(MENUS[i]["id"]), -1)
 
 ## Hay algo del panel encima del menú central (el cajón o un menú abierto).
+## (16-11, informe cap. 5) Con la caché `MenuGuardado` la pantalla cerrada sigue siendo válida (fuera del árbol): solo cuenta si se ve.
 func ocupado() -> bool:
-	return _abierto or is_instance_valid(pantalla_abierta)
+	return _abierto or (is_instance_valid(pantalla_abierta) and pantalla_abierta.is_inside_tree() and not pantalla_abierta.cerrando())
 
 func _unhandled_input(e: InputEvent) -> void:
 	## Con el cajón abierto, Esc lo pliega antes que nada.

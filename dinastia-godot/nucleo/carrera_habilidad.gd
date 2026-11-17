@@ -104,12 +104,40 @@ static func clase(j: Jugador, zona: String) -> String:
 static func _factor_nivel(c: CarreraJugador) -> float:
 	return 1.0 + float(CarreraRuta.nivel(c) - 1) * SUBE_NIVEL
 
-## Lo que cuesta subir UN punto esa habilidad, hoy.
-static func coste(c: CarreraJugador, j: Jugador, hab: String) -> int:
+## (16-11, informe R-08) EL PRECIO ES DE LA ZONA, no de la habilidad: +1 de zona cuesta lo mismo tenga la zona 2
+## habilidades (velocidad), 6 (tiro) o 1 (las del portero), y se reparte entre sus habilidades. Antes, +1 de
+## velocidad costaba 2 puntos, +1 de tiro 6 y +1 de una zona de portero 1 (seis veces más barato que un delantero).
+## Y cada puesto paga según lo que le rinde su mejor zona (`PESO_REF`, el tiro del delantero centro): así un punto de
+## habilidad sube la MEDIA más o menos lo mismo en cualquier puesto (portero y delantero, a menos del 20 %).
+const PUNTOS_ZONA := 6.0
+const PESO_REF := 0.39
+
+static func _factor_puesto(j: Jugador) -> float:
+	var e := PesosPuesto.de(j.pos_e)
+	var maximo := 0.0
+	for w: float in (e[1] if not e.is_empty() else PackedFloat64Array()):
+		maximo = maxf(maximo, w)
+	return clampf(maximo / PESO_REF, 0.5, 1.5) if maximo > 0.0 else 1.0
+
+## Lo que cuesta +1 de la zona de esa habilidad, hoy (puede tener decimales: se reparte entre sus habilidades).
+static func precio_zona(c: CarreraJugador, j: Jugador, hab: String) -> float:
 	var v := valor(c, j, hab)
 	var base := 1.0 if v < 60 else (2.0 if v < 70 else (3.0 if v < 80 else (5.0 if v < 90 else 7.0)))
 	var por_puesto: float = {"clave": 1.0, "util": 1.5, "ajena": 2.0}[clase(j, zona_de(hab))]
-	return maxi(1, ceili(base * por_puesto * _factor_nivel(c) - 0.001))
+	return base * por_puesto * _factor_nivel(c) * _factor_puesto(j) * PUNTOS_ZONA
+
+## Lo que cuesta subir UN punto esa habilidad, hoy: su parte del precio de la zona. Las `n` compras que hacen +1 de
+## zona suman el precio de la zona redondeado una sola vez (la k-ésima paga ceil(z·(k+1)/n) − ceil(z·k/n)).
+static func coste(c: CarreraJugador, j: Jugador, hab: String) -> int:
+	var lista := de_zona(zona_de(hab))
+	var d := detalle(c, j)
+	var suma := 0
+	for par: Array in lista:
+		suma += int(d.get(String(par[0]), 0))
+	var n := float(lista.size())
+	var k := float(posmod(suma, lista.size()))
+	var z := precio_zona(c, j, hab)
+	return maxi(1, ceili(z * (k + 1.0) / n - 0.001) - ceili(z * k / n - 0.001))
 
 static func puede_subir(c: CarreraJugador, m: Mundo, hab: String) -> bool:
 	var j := c.jugador(m)

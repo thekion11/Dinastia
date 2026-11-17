@@ -1,0 +1,19 @@
+Texturas sustitutas (16-11-2026, informe académico R5-03)
+
+Superhero_Male_FullBody.gltf y Superhero_Female_FullBody.gltf (Quaternius, CC0; en LFS, no se tocan)
+citan texturas que nunca llegaron al repositorio. Cada importación daba 11 errores «Can't open file».
+Como los .gltf están en LFS, no se cambian sus rutas: se ponen junto a ellos archivos pequeños
+(fuera de LFS) con el nombre que piden.
+
+- T_Hair_1_BaseColor.png, T_Hair_2_BaseColor.png: el original de pelo/ reducido a 64 px.
+  Son las cejas del cuerpo (MI_Hair_1 / MI_Hair_2); el juego las sustituye por un material liso
+  (VestidorQ), así que no se ven.
+- T_Hair_1_Normal_png.png, T_Hair_2_Normal.png: copia de pelo/T_Hair_*_Normal.png (normal plano, 16 px).
+- T_Eye_Normal_png.png: normal plano de 16 px.
+- T_Eye_Brown.png: FALTA EL ORIGINAL (no está en el repositorio ni en ninguna otra carpeta).
+  Se pone un marrón oscuro liso de 16 px; el juego sustituye MI_Eyes por su propio material de ojos
+  (VestidorQ), así que tampoco se ve. Si aparece el original del pack, se puede poner en su lugar.
+
+ropa/Male_Peasant_Arms.gltf (en LFS) cita T_Regular_Male_Normal.png y T_Regular_Male_Roughness.png
+para la piel de la mano (MI_Regular_Male, que sí se ve). Son los originales del mismo pack que ya
+estaban en ../outfits/, reducidos a 512 px.

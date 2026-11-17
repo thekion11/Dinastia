@@ -53,6 +53,9 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	var sm := ShaderMaterial.new()
 	sm.shader = load("res://visor/cesped_barato.gdshader" if ModoRendimiento.cesped_barato(Calidad.elegida) else "res://visor/cesped.gdshader")   ## (10-11) E4: sin brizna ni relieve con el modo rendimiento
 	sm.set_shader_parameter("dibujo", gmat.albedo_texture)
+	if not ModoRendimiento.cesped_barato(Calidad.elegida) and ResourceLoader.exists("res://assets/cc0/grass005/detalle.jpg"):   ## (16-11) brizna de foto CC0
+		sm.set_shader_parameter("brizna_foto", load("res://assets/cc0/grass005/detalle.jpg"))
+		sm.set_shader_parameter("brizna_fuerza", 0.22)
 	var c0: Color = tonos[0]
 	var c1: Color = tonos[1]
 	sm.set_shader_parameter("claro_s", Vector3(c0.r, c0.g, c0.b))

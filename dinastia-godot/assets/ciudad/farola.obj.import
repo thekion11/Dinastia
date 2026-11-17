@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/farola.obj-f5c48622a4ba5ba11388548040e02139.m
 
 [params]
 
-generate_tangents=true
+generate_tangents=false
 generate_lods=true
 generate_shadow_mesh=true
 generate_lightmap_uv2=false

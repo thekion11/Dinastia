@@ -31,14 +31,15 @@ static func probar(b: Variant, c: CarreraJugador, m: Mundo, j: Jugador) -> void:
 	if clave != "" and ajena != "":
 		_poner_zona(c, j, CarreraHabilidad.zona_de(clave), 65)
 		_poner_zona(c, j, CarreraHabilidad.zona_de(ajena), 65)
-		b._comprobar(CarreraHabilidad.coste(c, j, ajena) > CarreraHabilidad.coste(c, j, clave), "  lo que pesa poco en tu puesto cuesta más (%d frente a %d)" % [CarreraHabilidad.coste(c, j, ajena), CarreraHabilidad.coste(c, j, clave)])
+		b._comprobar(CarreraHabilidad.precio_zona(c, j, ajena) > CarreraHabilidad.precio_zona(c, j, clave), "  lo que pesa poco en tu puesto cuesta más (%.1f frente a %.1f por punto de zona)" % [CarreraHabilidad.precio_zona(c, j, ajena), CarreraHabilidad.precio_zona(c, j, clave)])
 		var barato := CarreraHabilidad.coste(c, j, clave)
+		var zona_barata := CarreraHabilidad.precio_zona(c, j, clave)
 		_poner_zona(c, j, CarreraHabilidad.zona_de(clave), 85)
-		b._comprobar(CarreraHabilidad.coste(c, j, clave) > barato, "  cuanto más alta la habilidad, más cuesta el siguiente punto")
-		var a_nivel3 := CarreraHabilidad.coste(c, j, clave)
+		b._comprobar(CarreraHabilidad.precio_zona(c, j, clave) > zona_barata, "  cuanto más alta la habilidad, más cuesta el siguiente punto")
+		var a_nivel3 := CarreraHabilidad.precio_zona(c, j, clave)
 		c.ruta["nivel"] = 30
 		c.ruta["hab_nivel"] = 30
-		b._comprobar(CarreraHabilidad.coste(c, j, clave) > a_nivel3, "  y cuanto más nivel tiene el personaje, más cuesta")
+		b._comprobar(CarreraHabilidad.precio_zona(c, j, clave) > a_nivel3, "  y cuanto más nivel tiene el personaje, más cuesta")
 		c.ruta["nivel"] = 3
 		c.ruta["hab_nivel"] = 3
 		## Subir: se cobra, sube la habilidad y la zona pasa a ser el promedio nuevo.

@@ -253,7 +253,7 @@ func _ejecutar(p: Dictionary, dec: Dictionary, mirada: Vector2, lado: float) -> 
 # ------------------------------------------------------------------ balón suelto
 
 func _mover_balon(delta: float) -> void:
-	if not poseedor.is_empty() or equipos.is_empty():
+	if not poseedor.is_empty() or not _ley_league():
 		super(delta)
 		return
 	var antes := balon.position
@@ -270,6 +270,47 @@ func _mover_balon(delta: float) -> void:
 	balon.position = p
 	if estado == "juego":
 		_palos_y_lineas(antes)
+
+## (16-11, informe M6-06 y M6-24) ¿Mueve el balón suelto la física de League? En League, sí (una vez preparado); el combinado lo
+## decide por su pieza `fisica_balon` (sin vaciar `equipos` mientras se mueve el balón y se emiten señales).
+func _ley_league() -> bool:
+	return not equipos.is_empty()
+
+## Con la física de League, quien predice el balón usa su ley (`LeyBalon`): antes los pases se pedían con la de siempre y en C4
+## se quedaban cortos (un pase manual de 12 m rodaba 8). El pase muere como mucho `SOBRA_LEAGUE` m pasado el destino: con el
+## roce cuadrático de League, la «sobra» larga de la ley de siempre pediría velocidades de tiro.
+const SOBRA_LEAGUE := 2.5
+func _velocidad_pase(dist: float, sobra: float) -> float:
+	return LeyBalon.velocidad_league(dist + minf(sobra, SOBRA_LEAGUE), cfg_balon) if _ley_league() else super(dist, sobra)
+
+## (16-11, H1 A1.2) El pase manual va «al punto exacto hacia donde apuntas»: muere `SOBRA_MANUAL` m pasado ese punto (con el
+## medio metro que el balón sale por delante del pie, un 12 m para a ~12,5 m; con 1 m de sobra paraba a 13,5, en el borde de A1.2).
+const SOBRA_MANUAL := 0.0
+func _velocidad_pase_manual(dist: float) -> float:
+	return LeyBalon.velocidad_league(dist + SOBRA_MANUAL, cfg_balon) if _ley_league() else super(dist)
+
+## El raso más largo que llega con la fuerza máxima del pase de la IA (≈ 23 m con el césped seco); más lejos, a media altura.
+func _raso_max() -> float:
+	return LeyBalon.rodando_league(26.0 * MotorPaseMejora.VEL_K, cfg_balon) - 2.0 if _ley_league() else super()
+
+## En el aire, el arrastre de League (0,017·|v|·v, el doble del de siempre) frena también la subida y el balón cae antes: integrado
+## con su paso de 10 ms, el envío cae donde se apunta lanzándolo e^{0,78·K·x} veces más rápido (x = vh·tv; error < 4 % entre
+## 16 y 55 m y alturas de 2 a 7 m). Tope: 36 m/s o +25 % (como la de siempre), lo que sea mayor.
+func _compensa_aire(vh: float, tv: float) -> float:
+	if not _ley_league():
+		return super(vh, tv)
+	return minf(exp(0.78 * float(cfg_balon["arrastre"]) * vh * tv), maxf(1.25, 36.0 / maxf(vh, 1.0)))
+
+## Dónde conviene recibir el pase: donde estará el balón en 0,72 s (lo que pedía la fórmula de siempre), con lo que frena de verdad.
+func _punto_de_recepcion() -> Vector3:
+	if not _ley_league():
+		return super()
+	var b := balon.position
+	var v := Vector3(vel_balon.x, 0, vel_balon.z)
+	var sp := v.length()
+	if sp < 1.0:
+		return b
+	return Vector3(b.x, 0, b.z) + v / sp * LeyBalon.recorrido_league(sp, 0.72, cfg_balon)
 
 ## Gemela GDScript del bucle de `balon_avanzar` (respaldo sin la extensión y referencia de `probar_nativo`).
 func _avanzar_balon_gd(p: Vector3, delta: float) -> Vector3:
@@ -392,3 +433,7 @@ func _linea_penultimo_gd(local: bool, con_vel: bool, lado_: float, balon_x: floa
 		if bool(q["es_local"]) == local:
 			xs.append(ls(pos(q)).x + ls(q["vel"]).x * 0.24 if con_vel else ls(pos(q)).x)
 	return LeagueEquipo.linea_penultimo(xs, lado_, balon_x)
+
+## (16-11, informe M6-24) El combinado con nuestra locomoción no usa el toque de conducción de League (antes apagaba `fase3`, estática, mientras se emitían señales).
+func _sin_toque_league() -> bool:
+	return false

@@ -12,7 +12,7 @@ static var duelos_distintos := 0
 
 # ---------------------------------------------------------------- movimiento
 
-const CICLO_ANIM := {"trotar": 3.4, "correr": 7.0, "conducir": 3.6, "trotar_atras": 2.6, "portero_lateral_der": 2.0, "portero_lateral_izq": 2.0}   ## (13-11, rendimiento) antes un Dictionary nuevo por jugador y paso
+## (17-11) Las velocidades de cada ciclo (antes `CICLO_ANIM` aquí) y su margen de escala viven en `CicloCarrera.CICLO` (y en `CICLOS` de nativo/src/pasos_nativo.cpp).
 ## [Capa 5/12 de `motor_jugable.gd`] _duelo_agarron, _duelos, _mover_jugadores, _actualizar_balon_visual, _rol, _pitar_offside … (+3)
 
 ## AGARRÓN: el defensor llega por detrás (o pegado al costado de atrás) del
@@ -293,7 +293,7 @@ func _animar_uno(idx: int, res: PackedFloat64Array) -> void:
 		_anim(p, String(p.get("levantar_con", "levantarse_suelo")), true, 1.8)
 	if float(p.get("gesto_hasta", 0.0)) > t:
 		return
-	var anim := "parado" if sp < 0.5 else ("trotar" if sp < 5.2 else "correr")
+	var anim := CicloCarrera.ciclo(sp, String(p.get("anim_actual", "")))   ## (17-11) con histéresis: sin tartamudeo a 5 m/s
 	## Con el balón en los pies se conduce (no se trota); el portero espera
 	## en guardia; el que está fundido se nota parado.
 	if poseedor == p and sp >= 0.5 and sp < 6.5:
@@ -318,7 +318,7 @@ func _animar_uno(idx: int, res: PackedFloat64Array) -> void:
 	_anim(p, anim, false)
 	var ap: AnimationPlayer = p.get("anim")
 	if is_instance_valid(ap):
-		ap.speed_scale = clampf(sp / float(CICLO_ANIM[anim]), 0.7, 1.4) if CICLO_ANIM.has(anim) else 1.0
+		ap.speed_scale = CicloCarrera.escala(anim, sp)   ## (17-11) margen por ciclo: la zancada va con el cuerpo, sin patinar
 
 func _actualizar_balon_visual(_delta: float) -> void:
 	if balon == null:
@@ -375,8 +375,13 @@ func _pitar_offside(p: Dictionary) -> bool:
 		clampf(lugar.z, -LARGO + 1.0, LARGO - 1.0)))
 	return true
 
+## (16-11, M6-23) Un futbolista con modelo sin clips trae `anim` nulo: comprobarlo como en el resto del motor.
+func _tiene_clip(p: Dictionary, clip: String) -> bool:
+	var ap: AnimationPlayer = p.get("anim")
+	return is_instance_valid(ap) and ap.has_animation(clip)
+
 func _tomar(p: Dictionary) -> void:
-	if poseedor == p:
+	if poseedor == p or MotorReglas.doble_toque(self as Object as MotorJugable, p):   ## (16-11, M6-20) doble toque del que sacó
 		return
 	MotorTraza.tomar(self as Object as MotorJugable, p)   ## traza de posesiones (ciclo 9, solo cuenta)
 	if not _tiro_vivo.is_empty() and _tiro_vivo["p"] != p:
@@ -420,12 +425,12 @@ func _tomar(p: Dictionary) -> void:
 	var alto := balon.position.y
 	var fuerte := vel_balon.length()
 	p["tomo_en"] = t
-	if bool(p["por"]):
+	if bool(p["por"]) and _en_su_area(p, balon.position):   ## (16-11, M6-10) fuera del área no se bloca con las manos
 		_anim(p, "blocaje_alto" if alto > 1.4 else ("blocaje_rasante" if fuerte > 6.0 else "recoger_balon"), true, 0.8)
 	elif alto > 0.9:
-		_anim(p, "control_pecho" if (p["anim"] as AnimationPlayer).has_animation("control_pecho") else "golpe_pecho", true, 0.6)   ## (01-11: League-Soccer)
+		_anim(p, "control_pecho" if _tiene_clip(p, "control_pecho") else "golpe_pecho", true, 0.6)   ## (01-11: League-Soccer)
 	elif fuerte > 7.0 and (p["vel"] as Vector3).length() < 2.0:
-		_anim(p, "control_pie" if (p["anim"] as AnimationPlayer).has_animation("control_pie") else "parada_pie", true, 0.6)
+		_anim(p, "control_pie" if _tiene_clip(p, "control_pie") else "parada_pie", true, 0.6)
 	if MotorControl.se_le_va(self as Object as MotorJugable, p):   ## el primer toque se escapa (U5, 01-11)
 		return
 	poseedor = p

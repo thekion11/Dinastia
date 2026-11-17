@@ -3,6 +3,8 @@ extends BaseIdea
 ## aquí se comprueba (1) en el código, que ninguna asignación de sombra/glow/SSAO/MSAA alto en visor/ y ui/ se haga sin mirar la calidad, y (2) con la ciudad y el estadio
 ## abiertos en MÍNIMO y el sol ya girado, que NINGUNA luz tiene sombra y que ningún entorno tiene glow, SSAO, SSIL, SSR, SDFGI ni niebla volumétrica.
 
+## Excepciones declaradas (cada una con su motivo): no se cuentan como «sin mirar la calidad».
+const EXCEPCIONES := {"res://visor/gala_premio3d.gd": "la gala de premios de La Ruta va siempre a calidad máxima (orden del dueño, 14-11; confirmada el 16-11)"}
 const PATRON := "shadow_enabled = true|glow_enabled = true|ssao_enabled = true|msaa_3d = Viewport.MSAA_4X|msaa_3d = Viewport.MSAA_8X|shadow_enabled = dia"
 
 func _probar() -> void:
@@ -37,8 +39,10 @@ func _escanear(dir: String, fuera: Array[String]) -> void:
 	for f in DirAccess.get_files_at(dir):
 		if not f.ends_with(".gd"):
 			continue
-		if dir.path_join(f) == "res://visor/calidad.gd":
+		if dir == "res://visor" and (f == "calidad.gd" or f.begins_with("calidad_p")):   ## (16-11) calidad.gd va en capas (calidad_p1.gd…)
 			continue   ## ahí se decide la calidad: cada efecto va dentro de su `if nivel >= …`
+		if EXCEPCIONES.has(dir.path_join(f)):
+			continue
 		var n := 0
 		var previa := ""
 		for l in FileAccess.get_file_as_string(dir.path_join(f)).split("\n"):

@@ -1,5 +1,5 @@
-extends "res://pruebas/banco/partido_p5.gd"
-## [Capa 6/6 de `partido.gd`] _probar_prorroga_y_penales, _probar_partido_abandonado
+extends "res://pruebas/banco/partido_p7.gd"
+## [Capa 8/8 de `partido.gd`] _probar_prorroga_y_penales, _probar_partido_abandonado
 
 ## PRÓRROGA Y PENALES (17-10-2026). Lo que no necesita el 3D: el acta que se
 ## alarga al 120' con un cambio más, la tanda del césped que `penales()` ya no

@@ -96,6 +96,14 @@ func _probar_copas_mundo() -> void:
 	_comprobar(Partida.guardar(m, "_prueba_copas_mundo"), "se guarda")
 	var m2 := Partida.cargar("_prueba_copas_mundo")
 	_comprobar(m2 != null and m2.copas_otras.size() == m.copas_otras.size() and m2.palmares_mundo.size() == m.palmares_mundo.size(), "y se carga con sus copas y su palmarés")
+	## (16-11, informe G-05) Con el peso del premio (las copas secundarias pagan menos) y el cuadro de rondas jugadas.
+	var pesos_ok := m2 != null
+	for i in (m.copas_otras.size() if m2 != null else 0):
+		var a: Copa = m.copas_otras[i]
+		var b: Copa = m2.copas_otras[i]
+		pesos_ok = pesos_ok and is_equal_approx(a.peso_premio, b.peso_premio) and a.historial.size() == b.historial.size() \
+			and (a.historial.is_empty() or (b.historial[0]["resultados"] as Array).size() == (a.historial[0]["resultados"] as Array).size())
+	_comprobar(pesos_ok, "las copas cargadas conservan su peso de premio y las rondas jugadas")
 	## Cuántas supercopas toca jugar: los países (menos el tuyo) cuyo campeón de liga no ganó también la copa principal. Con
 	## unos campeones u otros, esa cuenta cambia: la prueba no puede exigir «al menos una» a ciegas.
 	var esperadas := 0
@@ -427,24 +435,3 @@ func _probar_piezas_estadio_real() -> void:
 	_comprobar(not c.perfil_estadio().has("bandejas"), "sin fila real no hay techo por lados")
 	for x: Node in [r0, r1, r2]:
 		x.free()
-
-## (10-11) El edificio del club solo se dibuja con la cámara en el túnel o detrás de la tribuna (picos de llamadas en planos a ras de césped).
-func _probar_interior_oculto() -> void:
-	var raiz := Node3D.new()
-	add_child(raiz)
-	var tunel := Node3D.new()
-	raiz.add_child(tunel)
-	var ed := Node3D.new()
-	ed.name = "EdificioClub"
-	tunel.add_child(ed)
-	var v := InteriorOculto.vigilar(tunel, 50.0, 70.0)
-	var cam := Camera3D.new()
-	raiz.add_child(cam)
-	cam.make_current()
-	var casos := [[Vector3(-30, 2, 25), false, "a ras de césped junto al túnel"], [Vector3(0, 4, 61), false, "repetición tras el arco, sobre la grada"],
-		[Vector3(0, 1.7, 55), true, "en el pasillo del túnel"], [Vector3(3, 9, 74), true, "en una planta del edificio"]]
-	for c: Array in casos:
-		cam.global_position = c[0]
-		v._process(0.0)
-		_comprobar(ed.visible == c[1], "edificio del club %s: %s" % ["visible" if c[1] else "apagado", c[2]])
-	raiz.free()

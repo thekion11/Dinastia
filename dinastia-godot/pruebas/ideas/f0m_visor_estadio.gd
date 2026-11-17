@@ -24,16 +24,27 @@ func _de_tipo(raiz: Node, clase: String) -> Array:
 func _probar_ambience() -> void:
 	_linea("· Ambience")
 	var n0 := _nodos()
+	## (16-11, informe F-05) El modo rendimiento viene ENCENDIDO por defecto (15-11) y quita el sol con sombra hasta MEDIA:
+	## lo de MEDIA «de siempre» se mira con el modo apagado, y aparte se comprueba qué hace encendido.
+	var modo_antes := Calidad.modo_rendimiento
+	Calidad.modo_rendimiento = true
+	var dia_r := Node3D.new()
+	Ambience.apply(dia_r, {"clima": "dia"}, null, Calidad.MEDIO)
+	var luces_r := _de_tipo(dia_r, "DirectionalLight3D")
+	_comprobar(luces_r.size() == 1 and not (luces_r[0] as DirectionalLight3D).shadow_enabled, "con el modo rendimiento (por defecto), MEDIA sin sombra del sol")
+	dia_r.free()
+	Calidad.modo_rendimiento = false
 	var dia := Node3D.new()
 	Ambience.apply(dia, {"clima": "dia"}, null, Calidad.MEDIO)
+	Calidad.modo_rendimiento = modo_antes
 	var we: WorldEnvironment = _de_tipo(dia, "WorldEnvironment")[0] if _de_tipo(dia, "WorldEnvironment").size() == 1 else null
 	var luces := _de_tipo(dia, "DirectionalLight3D")
 	_comprobar(we != null and luces.size() == 1, "de día: un entorno y el sol, sin focos de relleno")
 	if we != null and luces.size() == 1:
 		var sol: DirectionalLight3D = luces[0]
 		_comprobar(not we.environment.fog_enabled and not we.environment.ssao_enabled and we.environment.glow_hdr_threshold > 1.0, "calidad media y despejado: sin niebla ni SSAO; el bloom con umbral")
-		_comprobar(is_equal_approx(sol.light_energy, 1.35) and sol.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS and sol.shadow_enabled,
-			"el sol a pleno y sombras en 2 cascadas (Medio alivia el partido)")
+		_comprobar(is_equal_approx(sol.light_energy, 1.2) and sol.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS and sol.shadow_enabled,
+			"el sol a pleno (1,2 desde el 16-11: más luz del cielo) y sombras en 2 cascadas (Medio alivia el partido)")
 	var noche := Node3D.new()
 	Ambience.apply(noche, {"clima": "noche", "focos": "torres", "luzFocos": "calida"}, ["lluvia"], Calidad.ALTO)
 	var we2: WorldEnvironment = _de_tipo(noche, "WorldEnvironment")[0]

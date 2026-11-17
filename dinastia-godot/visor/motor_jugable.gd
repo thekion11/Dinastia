@@ -30,7 +30,7 @@ func paso(delta: float) -> void:
 			if not extra.is_empty() and not _cambio_hecho:
 				var due := entra_usuario_min if entra_usuario_min >= 0 else 60
 				if minuto() >= due + 3:
-					_revisar_cambio(true)
+					MotorReglas.parar_para_cambio(self)   ## (16-11, M6-13) el árbitro para el juego; el cambio se hace en ese saque
 			if t >= dur_mitad() + _anadido_de(mitad):
 				_fin_de_mitad()
 				return
@@ -86,6 +86,7 @@ func paso(delta: float) -> void:
 				if estado == "descanso":
 					## 2 = segunda parte (saca la visita), 3 y 4 = prórroga.
 					mitad += 1
+					_desplazar_relojes(t)
 					t = 0.0
 					_saque_de_centro((mitad % 2 == 1) == saca_primero_local)   ## (17-11) con el sorteo: la 2.ª parte saca quien no sacó primero
 				else:
@@ -128,3 +129,73 @@ func _retener_en_mano() -> void:
 	if i >= 0:
 		balon.global_position = esq.global_transform * esq.get_bone_global_pose(i).origin
 
+## (16-11, informe M6-02/03/08/09) El reloj `t` vuelve a 0 en cada mitad, pero los plazos guardados («hasta», «desde»,
+## «en») son absolutos: quien cayó al final del primer tiempo seguía en el suelo toda la segunda parte, la CPU veía
+## posiciones viejas y la IA de League no decidía. Se restan `d` segundos a todos, como si el reloj siguiera corriendo.
+const _RELOJES := ["_cambio_rs_hasta", "_manual_hasta", "_palo_largo_hasta", "_posee_desde", "_presion_doble",
+	"_presion_equipo_hasta", "_rb_ultimo", "_t_estado_liga", "_y_ultimo", "pedido_hasta", "pase_dirigido_hasta",
+	"_arb_hasta", "_decision_league", "_linea_def_t", "_ls_t_marca", "_ls_presion_hasta", "_ls_zona_hasta",
+	"_ls_zona_refresco", "_ls_corre_hasta", "_ls_t_carrera", "_ls_t_adelantado", "_eq_tomo_en"]
+const _CLAVES_T := ["ls_t", "ls_seguir_t", "_urge_t", "lg_revisar", "ls_revisar", "ls_espera", "ls_espera_g"]
+## (16-11, revisión del informe M6-08) También los plazos de las variables del motor que son diccionarios y los de los
+## METADATOS de los módulos (presión por zona, carreras al espacio, pared y centro de C4, ventaja, trazas y cachés).
+const _DICS_T := ["_tiro_vivo", "_en_mano", "_offside", "_offside_previo", "_margen_recepcion"]
+const _CLAVES_DIC_T := ["t", "hasta", "libre", "ult", "cache_t", "desde", "t0"]
+
+func _desplazar_relojes(d: float) -> void:
+	for nombre: String in _RELOJES + ["_decision_en"]:
+		var v: Variant = get(nombre)
+		if v is float:
+			set(nombre, float(v) - d)
+		elif v is Array:
+			var a: Array = v
+			for i: int in a.size():
+				if a[i] is float:
+					a[i] = float(a[i]) - d
+	for p: Dictionary in jugadores + arbitros:
+		for k: Variant in p.keys():
+			var ks := String(k)
+			if p[k] is float and (ks.ends_with("_hasta") or ks.ends_with("_en") or ks.ends_with("_desde") or _CLAVES_T.has(ks)):
+				p[k] = float(p[k]) - d
+	if has_meta("_mente"):
+		remove_meta("_mente")
+	for nombre: String in _DICS_T:
+		_desplazar_dic(get(nombre), d, false)
+	var col: Variant = get("_cache_col")   ## (C4) la caché de colocación: cada entrada caduca en «t»
+	if col is Dictionary:
+		for e: Variant in (col as Dictionary).values():
+			_desplazar_dic(e, d, false)
+	for nombre: StringName in get_meta_list():
+		var n := String(nombre)
+		var v: Variant = get_meta(nombre)
+		if v is float and (n.begins_with("_t_") or n.begins_with("_traza_")):
+			set_meta(nombre, float(v) - d)   ## marcas sueltas: `_t_centro`, `_t_rechace`, `_traza_ent`…
+		elif v is Dictionary:
+			_desplazar_dic(v, d, n == "zona_hasta")   ## `zona_hasta` = {equipo: plazo}; el resto, por claves de tiempo
+			for sub: Variant in (v as Dictionary).values():
+				if sub is Dictionary and n != "zona_hasta":
+					_desplazar_dic(sub, d, false)   ## un nivel más (`_traza` → «ent»)
+
+## Resta `d` a los tiempos de un diccionario: todos sus valores (`todo`) o solo los de las claves de `_CLAVES_DIC_T`.
+func _desplazar_dic(v: Variant, d: float, todo: bool) -> void:
+	if not v is Dictionary:
+		return
+	var dic: Dictionary = v
+	for k: Variant in dic.keys():
+		if dic[k] is float and (todo or _CLAVES_DIC_T.has(String(k))):
+			dic[k] = float(dic[k]) - d
+
+## (16-11, informe M6-05 y M6-11) El estadio se rehace en el descanso con un motor nuevo: lo que ya pasó en ESTE partido
+## viene del acta (amarillas, para que la segunda sea roja; córners, faltas, fueras de juego y posesión, que el acta
+## recibe por asignación y si no quedarían solo los del segundo tiempo).
+func sembrar_del_acta(acta: Partido) -> void:
+	for p: Dictionary in jugadores:
+		var am := acta.amarillas_hoy(String(p.get("id", "")))
+		if am > 0:
+			p["amarillas"] = am
+	corners = [acta.corners_local, acta.corners_visita]
+	faltas = [acta.faltas_local, acta.faltas_visita]
+	fueras_de_juego = [acta.fueras_local, acta.fueras_visita]
+	if acta.minuto > 0:
+		var seg := float(acta.minuto) * duracion_mitad / 45.0
+		posesion = [seg * acta.posesion_local / 100.0, seg * (100.0 - acta.posesion_local) / 100.0]

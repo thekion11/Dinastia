@@ -37,11 +37,19 @@ func nueva_temporada() -> Dictionary:
 			j.edad += 1
 			j.partidos = 0
 			j.goles = 0
+			j.asistencias = 0   ## (16-11, informe G-02) como los goles: la temporada ya quedó en `registrar_temporada`
 			j.amarillas = 0
+			j.nota_temp = Vector2.ZERO   ## (16-11, informe R-03) la nota de la temporada vuelve a cero
 			## La curva de progreso: los jovenes suben hacia su techo, los
 			## veteranos bajan. Es lo que hace que una plantilla envejezca.
 			## Vive en `ProgresoJugador` (cantera_progreso.gd), con la semanal.
 			ProgresoJugador.anual(j)
+			## (16-11, informe R-01) El futbolista de La Ruta no lo retira ni lo deja libre el mundo: su retiro y su contrato
+			## los lleva `CarreraJugador` (`toca_retirarse`, renovación). Antes podía desaparecer y la partida volvía a «crear jugador».
+			if carrera_jugador != null and j.id == carrera_jugador.jugador_id and not carrera_jugador.retirado and j.edad <= CarreraJugador.EDAD_TOPE:
+				j.anios_contrato = maxi(j.anios_contrato - 1, 1)
+				_sigue_retasado(siguen, j)
+				continue
 			## EL RETIRO POR LESIONES. `Medico.retiro_forzado()` estaba escrita y no la llamaba nadie: tres lesiones graves seguidas no
 			## acababan con la carrera de nadie, que es justo el peor final que puede tener un futbolista y el que hace que cuidar el fisico importe.
 			if c.id == mi_club_id and medico != null and medico.retiro_forzado(j):
@@ -117,7 +125,7 @@ func nueva_temporada() -> Dictionary:
 		var f_fpf := Finanzas.new(mi_club(), 0.0, 0, 0.0)
 		f_fpf.aplica_operacion = true
 		f_fpf.factor_operacion = obras.abarata_operacion() if obras != null else 1.0
-		var proy := f_fpf.proyeccion_anual(15, ingreso_tienda(mi_club()))
+		var proy := f_fpf.proyeccion_anual(15, ingreso_tienda(mi_club()), meses_de_la_temporada())
 		resumen["fpf"] = federacion.revisar_fair_play(mi_club(), int(proy["pct_salarial"]))
 	if auspicio != null and mi_club() != null:
 		auspicio.generar_ofertas(mi_club(),
@@ -126,6 +134,8 @@ func nueva_temporada() -> Dictionary:
 	if entrenamiento != null:
 		entrenamiento.reiniciar_pretemporada()
 		entrenamiento.reiniciar_subidas()
+	if _entreno_mundo != null:
+		_entreno_mundo.reiniciar_subidas()
 	## La copa nacional se sortea de cero cada temporada, con los clubes de
 	## primera del pais donde diriges.
 	## LA SUPERCOPA abre el ano: campeon de liga contra campeon de copa. Va aqui
@@ -318,6 +328,13 @@ func semanas_hasta_mercado() -> int:
 	var l := liga_de(mi_club())
 	var quedan := (l.jornadas() - l.jornada_actual) if l != null else 8
 	return maxi(1, quedan + VENTANA_VERANO)
+
+## (16-11, informe G-07) Cierres de mes reales de la temporada: uno cada 4 semanas del MUNDO, que dura lo que su liga más larga.
+func meses_de_la_temporada() -> int:
+	var sem := 0
+	for l in ligas:
+		sem = maxi(sem, l.jornadas())
+	return maxi(1, sem / Finanzas.SEMANAS_DEL_MES) if sem > 0 else 0
 
 func texto_de_mercado() -> String:
 	if mercado_abierto():

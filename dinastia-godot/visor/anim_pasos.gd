@@ -22,7 +22,7 @@ const UMBRAL_APOYO := 0.025
 const ALTURA_REF := 1.80
 
 ## clip -> [velocidad del pie de apoyo con speed_scale 1 (m/s), duración del
-## ciclo (s)]. Las velocidades son las del `ciclo` de `MotorJugable` (el motor
+## ciclo (s)]. Las velocidades son las de `CicloCarrera.CICLO` (el motor
 ## pone speed_scale = velocidad / ciclo): si cambian allí, cambian aquí. Las
 ## cadencias son las de un futbolista real a esa velocidad (2,4 pasos/s al
 ## trote, 3,2 al sprint; hacia atrás y con el balón, algo más cortos).

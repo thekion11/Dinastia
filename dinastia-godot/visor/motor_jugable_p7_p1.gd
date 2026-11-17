@@ -70,6 +70,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, MotorParada.SUELO, 1.0)
 				if cruce.y > 1.8:
 					alcance *= 0.85
+				alcance = _alcance_extra(p, b, alcance, tz)   ## gancho (16-11, H1): aquí no cambia nada
 				## El alcance se mide donde está ÉL (adelantado tapa más ángulo), no en la línea de gol.
 				var tg := clampf((pos(p).z - b.z) / vel_balon.z, 0.0, tz)
 				var cruce_gk := b + vel_balon * tg
@@ -243,6 +244,7 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 ## Un tiro al arco rival. `apunte.x` ∈ [-1, 1] mueve el objetivo de palo a
 ## palo; `fuerza` ∈ [0, 1] es la carga. Mucha fuerza sin técnica se va alta.
 func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
+	if MotorReglas.doble_toque(self as Object as MotorJugable, p): return   ## (16-11, M6-20) el lanzador no remata su propio rechace
 	var arco := _arco_rival(p)
 	var tec := GestoTecnico.tiro(p, _mod_tiro)   ## cada tiro pesa sus atributos (27-10)
 	## El error crece con la distancia: desde 25 m se falla mucho más que
@@ -356,3 +358,8 @@ func _error_tiro_extra(_p: Dictionary, _lejos: float, error: float, _clase: Stri
 ## cambia); `MotorCombinado` (C4) la baja ante remates desde dentro del área (`MejorasC4Avance.parada`, `C4_PARADA_AREA`).
 func _prob_parada_extra(_gk: Dictionary, _desde: Vector3, prob: float) -> float:
 	return prob
+
+## GANCHO DEL ALCANCE DEL PORTERO (16-11, informe AAA H1): el de siempre lo deja igual (sin azar: la huella no cambia); `MotorCombinado`
+## (C4) lo sube con el tiempo que tarda el remate en llegar (`MejorasC4Avance.alcance`, `C4_ALCANCE_TIEMPO` y `C4_ALCANCE_AREA`).
+func _alcance_extra(_gk: Dictionary, _desde: Vector3, alcance: float, _tz: float) -> float:
+	return alcance
