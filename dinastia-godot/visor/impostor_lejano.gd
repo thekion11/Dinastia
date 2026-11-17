@@ -79,8 +79,8 @@ static func distancia_para(fov_vertical: float, alto_px: float) -> float:
 ## reparte entre todas las piezas vivas. Sin coste por cuadro el resto del tiempo.
 static func vigilar(vp: Viewport) -> void:
 	var f := Engine.get_process_frames()
-	if f == _ultimo_cuadro or f % 15 != 0 or FIJO:
-		return
+	if f == _ultimo_cuadro or f % 15 != 0 or FIJO or Calidad.elegida <= Calidad.MINIMO:
+		return   ## (17-11, decisión de la auditoría) en ULTRA BAJA, 30 m fijos (con fundido) mientras el LOD intermedio no lo deje neutro
 	_ultimo_cuadro = f
 	var cam := vp.get_camera_3d()
 	if cam == null:
