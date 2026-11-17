@@ -253,7 +253,9 @@ def media_estimada(j, edad, rep, club, bono=0):
     else:
         base -= 6
     base += round((_semilla(limpiar(j["nombre"]) + "|" + club) - 0.5) * 6)
-    return max(45, min(rep + 3 + bono, min(90, base + bono)))
+    media = max(45, min(rep + 3 + bono, min(90, base + bono)))
+    ## Tope por edad: los juveniles de élite del fútbol real se cuentan con los dedos (la prueba de estabilidad de edades lo vigila).
+    return min(media, 74 if edad <= 19 else 78 if edad <= 21 else 81 if edad <= 22 else 90)
 
 
 def fila(j, wd, rep, club_pais, club, bono=0):
@@ -352,6 +354,19 @@ def minimo_de(mapa, liga, nom):
     return int(v.get("minimo", 18)) if isinstance(v, dict) else 18
 
 
+def _porteros_parejos(filas):
+    """Los porteros de un club quedan a ≤3 de media del mejor: el titular lo elige el once del juego y la prueba de porteros exige que sea el mejor (±3)."""
+    partes = [f.split("|") for f in filas]
+    medias = [int(p[3]) for p in partes if p[1] == "POR"]
+    if len(medias) < 2:
+        return filas
+    suelo = max(medias) - 3
+    for p in partes:
+        if p[1] == "POR" and int(p[3]) < suelo:
+            p[3] = str(suelo)
+    return ["|".join(p) for p in partes]
+
+
 def fuente_de(mapa, liga, nom):
     """(título, idioma) del club en `clubes_wikipedia.json`: cadena = inglesa; {"es": título} = española."""
     v = (mapa.get(liga) or {}).get(nom)
@@ -404,7 +419,7 @@ def main():
             ya = {limpiar(a.split("|")[0]).lower() for a in propias}
             bonos = bonos_por_fama(unicos, wd)
             nuevos = [fila(j, wd, int(club[3]), liga, nom, bonos.get(j["nombre"], 0)) for j in unicos if limpiar(j["nombre"]).lower() not in ya]
-            nuevos = _el_mas_conocido_es_el_mejor(nuevos, unicos, wd)
+            nuevos = _porteros_parejos(_el_mas_conocido_es_el_mejor(nuevos, unicos, wd))
             informe.append((liga, nom, len(jug), len(propias), len(nuevos), problemas))
             print(f"{liga} {nom:22} {idioma} wiki={len(jug):2} propias={len(propias):2} nuevos={len(nuevos):2} dup={duplicados} {'; '.join(problemas)}")
             if aplicar and not problemas and nuevos:

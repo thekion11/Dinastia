@@ -38,6 +38,7 @@ import hashlib
 import historia_clubes
 import jugadores_guino
 import rasgos_jugadores
+import comprobar_nombres_reales
 import estadios_reales
 import estadios_variedad
 import aspecto_clubes
@@ -761,6 +762,11 @@ def main():
     escribir(PACK, pack)
     for k in TABLAS_DEL_PACK:
         base[k] = fic[k]
+    ## (17-11) LEGAL: ningún nombre real (reales_lista, créditos de fotos y plantillas del pack) puede quedar escrito en la base pública; si hay, no se escribe.
+    reales_en_publico = comprobar_nombres_reales.encontrar(json.dumps(base, ensure_ascii=False), real["REALES"])
+    if reales_en_publico:
+        sys.exit("NOMBRES REALES EN LA BASE PÚBLICA (%d), no se escribe tablas.json: %s" % (len(reales_en_publico), reales_en_publico[:10]))
+    print("nombres reales en la base pública: 0 (comprobados %d)" % len(comprobar_nombres_reales.nombres_reales(real["REALES"])))
     escribir(TABLAS, base)
     print("escrito:", os.path.relpath(TABLAS, RAIZ), "y", os.path.relpath(PACK, RAIZ))
 

@@ -173,6 +173,21 @@ static func candidatas(p: Partido, mio: int) -> Array:
 	if not r.con_motor and not p.neutral:
 		c.append(_c("localia", 1 if mio == 0 else -1, 0.15,
 			Idiomas.t("Jugar en casa: un 8 % más de llegadas.") if mio == 0 else Idiomas.t("Jugar fuera: un 6 % menos de llegadas.")))
+	## (17-11) «Siempre tres causas»: en un partido neutro y parejo solo quedaban la localía y la posesión (2). Relleno HONESTO: la diferencia real de plantilla, forma o físico,
+	## aunque sea chica (peso mínimo: nunca le gana a una causa de verdad).
+	var claves_hay := {}
+	for x: Dictionary in c:
+		claves_hay[x["clave"]] = true
+	if claves_hay.size() < 4:   ## + la posesión, que se añade debajo
+		if not claves_hay.has("plantilla") and om != os:
+			c.append(_c("plantilla", signi(om - os), 0.04,
+				(Idiomas.t("Sobre el papel éramos mejores (media del once %d frente a %d).") if om > os else Idiomas.t("Sobre el papel su once era mejor (media %d frente a %d).")) % [om, os]))
+		if not claves_hay.has("forma") and fm != fs:
+			c.append(_c("forma", signi(fm - fs), 0.04,
+				(Idiomas.t("Llegábamos en mejor forma (media %d frente a %d).") if fm > fs else Idiomas.t("El rival llegaba en mejor forma (media %d frente a %d).")) % [fm, fs]))
+		if not claves_hay.has("cansancio") and fim != fis:
+			c.append(_c("cansancio", signi(fim - fis), 0.04,
+				(Idiomas.t("Llegamos más frescos (físico %d frente a %d).") if fim > fis else Idiomas.t("Llegamos cansados (físico %d frente a %d).")) % [fim, fis]))
 	var pos := int(round(p.posesion_local)) if mio == 0 else 100 - int(round(p.posesion_local))
 	## La posesión es relleno: nunca le gana a algo que pasó de verdad (una lesión pesa 0,35).
 	c.append(_c("posesion", signi(pos - 50) if absi(pos - 50) >= 8 else 0, 0.05 + absf(pos - 50) / 200.0,

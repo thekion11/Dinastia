@@ -48,3 +48,10 @@ Fuente: cifras de `herramientas/auditar_parecido_real.py` (medidas hoy); cantida
 - **Escudos**: un cambio por club en `_escudos.txt` (Torino toro, Lecce lobo, Genoa cruz, Sevilla y Betis con corona, Newcastle con caballito de mar, Heidenheim con castillo, Hamburgo con contorno de rombo). Hoja antes/después: `capturas_parecido_real/escudos_antes_despues_2026-11-17.jpg`.
 - **A REVISAR (sin fuente abierta)**: uniforme local de **Parma** (blanco con cruz) y de **Hamburgo** (blanco con pantalón azul): están de MEMORIA. Wikidata P6364 de Hamburgo da «azul, negro y blanco» (compatible, no lo confirma); la de Parma no tiene colores. No darlos por buenos hasta contrastarlos con la ficha de Wikipedia del uniforme.
 - **Nombres largos** en la lista del plantel: el botón del nombre se corta ya con puntos suspensivos (la hoja de captura es solo una escena de revisión).
+
+## 7. Cierre (17-11, tarde): comprobaciones y fallos encontrados
+- **Legal**: la comprobación de nombres reales vive ahora dentro de `base_ficticia.py` (`comprobar_nombres_reales.py`, 4.260 nombres completos de `reales_lista`, créditos y pack): primera pasada = 1 coincidencia en el banco (`Francisco González`) y 12 con la comprobación más estricta (un guiño era el real con una letra añadida); corregidas todas, hoy 0.
+- **Nacionalidades**: tabla de equivalencias a los 151 códigos de `Banderas.ISO`; 3 desconocidas (DOM, MTN, PUR) y 133 sin dato pasan al país de la liga con la marca «e».
+- **Causas del resultado** (`CausasPartido`): en un partido parejo y neutro solo salían 2 causas (localía y posesión); ahora hay un relleno honesto con la diferencia real de plantilla, forma o físico. `s5_causas` en 0.
+- **Porteros**: los de cada club importado quedan a ≤3 de media del mejor.
+- **Estabilidad de edades** (`cant_estabilidad`): tope de media por edad en lo importado (≤19: 74; ≤21: 78; ≤22: 81). La prueba falla según la semilla, con o sin estos datos (ver el mensaje a la auditoría).

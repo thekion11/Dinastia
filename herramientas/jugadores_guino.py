@@ -136,13 +136,26 @@ def guinar(nombre, vetados_bajos=frozenset(), extra=0):
 
 
 def _contiene_real(guino, por_primera):
-    """True si el guiño lleva, seguido, las palabras de algún nombre real de dos o más palabras."""
-    p = sin_tildes(guino).lower().split(" ")
-    for i, w in enumerate(p):
+    """True si el guiño LLEVA escrito (como texto, con letras añadidas o no) el nombre completo de algún real de dos o más palabras."""
+    gl = sin_tildes(guino).lower()
+    for w in gl.split(" "):
         for nombre in por_primera.get(w, []):
-            if p[i:i + len(nombre)] == nombre:
+            if nombre in gl:
                 return True
     return False
+
+
+def _mutar(guino, intento):
+    """Último recurso: cambia una letra de la última palabra (la anterior si hace falta) hasta que deje de contener un nombre real."""
+    pal = guino.split(" ")
+    pos = len(pal) - 1 - (intento // 6) % max(1, len(pal) - 1) if len(pal) > 1 else 0
+    w = pal[pos]
+    if len(w) < 3:
+        return guino
+    i = len(w) - 1 - intento % 3
+    cambio = {"a": "o", "e": "a", "i": "e", "o": "u", "u": "o"}.get(w[i].lower(), "a")
+    pal[pos] = w[:i] + (cambio.upper() if w[i].isupper() else cambio) + w[i + 1:]
+    return " ".join(pal)
 
 
 def tabla_base(reales, clubes, limpiar):
@@ -157,7 +170,7 @@ def tabla_base(reales, clubes, limpiar):
     por_primera = {}
     for v in vetados:
         if " " in v:
-            por_primera.setdefault(v.split(" ")[0], []).append(v.split(" "))
+            por_primera.setdefault(v.split(" ")[0], []).append(v)
     salida = {}
     usados = set()
     for club, filas in reales.items():
@@ -184,14 +197,13 @@ def tabla_base(reales, clubes, limpiar):
                 while g.lower() in usados and k < 12:
                     k += 1
                     g = guinar(real, veto, k)
-            if _contiene_real(g, por_primera):
-                ## Último recurso: se guiña TAMBIÉN la palabra anterior a la última (el primer apellido), que es la que repite el nombre real.
-                pal = g.split(" ")
-                if len(pal) >= 3:
-                    pal[-2] = guinar_palabra(pal[-2], 1)
-                    g = " ".join(pal)
-            if _contiene_real(g, por_primera):
-                g = g + " " + "ABCDEFGHIJKLMNOPRSTV"[len(usados) % 20] + "."
+            intento = 0
+            while _contiene_real(g, por_primera) and intento < 30:
+                g = _mutar(g, intento)
+                intento += 1
+            while g.lower() in usados:
+                g = _mutar(g, intento)
+                intento += 1
             usados.add(g.lower())
             partes[0] = g
             nuevas.append("|".join(partes))
