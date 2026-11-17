@@ -12,11 +12,11 @@ static func nueva(patron: String, claro: Color, oscuro: Color) -> Image:
 			var v := float(y) / n
 			var band := 0
 			match patron:
-				## ~6 m por franja (20 a lo largo), como el corte real.
+				## ~7,3 m por franja (16 a lo largo; 16-11, referencia de FC Mobile: franjas ANCHAS; antes 20, de ~5,9 m).
 				"rayas":
-					band = int(v * 20.0)
+					band = int(v * 16.0)
 				"rayasH":
-					band = int(u * 20.0)
+					band = int(u * 14.0)
 				"damero":
 					band = int(u * 10.0) + int(v * 10.0)
 				"damGrande":
@@ -41,14 +41,14 @@ static func nueva(patron: String, claro: Color, oscuro: Color) -> Image:
 				"mitades":
 					var lado := claro if v < 0.5 else oscuro
 					var otro := oscuro if v < 0.5 else claro
-					img.set_pixel(x, y, lado.lerp(otro, 0.3) if int(v * 20.0) % 2 == 1 else lado)
+					img.set_pixel(x, y, lado.lerp(otro, 0.3) if int(v * 16.0) % 2 == 1 else lado)
 					continue
 				## "liso" (y lo desconocido): en un campo de verdad el corte
 				## siempre se nota un poco -franjas muy suaves, un tercio-. (Hasta el
 				## 25-10 la máscara del shader era de dos niveles y «liso» salía con
 				## las mismas franjas fuertes que «rayas».)
 				_:
-					band = int(v * 20.0)
+					band = int(v * 16.0)
 					img.set_pixel(x, y, oscuro.lerp(claro, 0.3) if band % 2 == 0 else oscuro)
 					continue
 			img.set_pixel(x, y, claro if band % 2 == 0 else oscuro)

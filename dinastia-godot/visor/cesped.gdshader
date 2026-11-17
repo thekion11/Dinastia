@@ -14,6 +14,10 @@ render_mode diffuse_lambert, specular_schlick_ggx;
 #include "res://visor/cesped_comun.gdshaderinc"
 
 varying vec3 v_mundo;
+// BRIZNA DE FOTO (16-11): la luminancia (pasa-alto) de «Grass005» de ambientCG (CC0, `assets/cc0/grass005/detalle.jpg`), en
+// teselas de 1,7 m y con mipmaps (de lejos se promedia a gris medio: no cambia el tono). Solo en este shader: el barato no la lleva.
+uniform sampler2D brizna_foto : filter_linear_mipmap, repeat_enable;
+uniform float brizna_fuerza = 0.0;
 
 void vertex() {
 	v_mundo = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
@@ -32,6 +36,7 @@ void fragment() {
 	float mechon = fbm(w * 2.6 + 3.0);
 	float parche = fbm(w * 0.55 + 11.0);
 	base *= (0.92 + 0.16 * fino) * (0.86 + 0.28 * mechon) * (0.93 + 0.14 * parche);
+	base *= 1.0 + brizna_fuerza * (texture(brizna_foto, w / 1.7).r - 0.5) * 2.0;
 	ALBEDO = base;
 	ROUGHNESS = 0.96 - 0.06 * fino;
 	SPECULAR = 0.08;

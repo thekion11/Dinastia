@@ -22,7 +22,7 @@ func ajustar_zoom(delta_fov: float) -> void:
 		var cam: Camera3D = cameras[current_index]
 		## En la transmisión el zoom se recalcula cada fotograma: lo del
 		## usuario se guarda como un ajuste que se suma al plano automático.
-		if current_name() == "Transmisión":
+		if current_name() in ["Transmisión", "TV lejana"]:
 			_zoom_usuario = clampf(_zoom_usuario + delta_fov, -12.0, 24.0)
 		cam.fov = clampf(cam.fov + delta_fov, 18.0, 88.0)
 		camera_changed.emit("%s (FOV: %d°)" % [current_name(), int(cam.fov)])
@@ -70,6 +70,34 @@ func _unhandled_input(event: InputEvent) -> void:
 		if idx >= 0 and idx < cameras.size():
 			switch_to(idx)
 			get_viewport().set_input_as_handled()
+
+## SmoothDamp (amortiguador crítico de Game Programming Gems 4): llega sin pasarse
+## y con la velocidad acotada. Devuelve (valor, velocidad).
+static func amortiguar(actual: float, objetivo: float, vel: float, tiempo: float, vmax: float, delta: float) -> Vector2:
+	if delta <= 0.0:
+		return Vector2(actual, vel)
+	tiempo = maxf(tiempo, 0.0001)
+	var omega := 2.0 / tiempo
+	var x := omega * delta
+	var e := 1.0 / (1.0 + x + 0.48 * x * x + 0.235 * x * x * x)
+	var cambio := clampf(actual - objetivo, -vmax * tiempo, vmax * tiempo)
+	var meta := actual - cambio
+	var temp := (vel + omega * cambio) * delta
+	var nv := (vel - omega * temp) * e
+	var res := meta + (cambio + temp) * e
+	if (objetivo - actual > 0.0) == (res > objetivo):
+		res = objetivo
+		nv = 0.0
+	return Vector2(res, nv)
+
+## La apertura vertical que mantiene, en una pantalla MÁS ESTRECHA que 16:9 (tableta 4:3, cuadrada, teléfono en vertical), el ancho
+## de campo que se ve en 16:9 (16-11, con la TV cercana): ahí el jugador sale algo más pequeño, pero se siguen viendo los compañeros
+## para pasar. En 16:9 y más ancho (PC, teléfono en horizontal) no cambia nada.
+const ASPECTO_REF := 16.0 / 9.0
+static func fov_para_aspecto(fov: float, aspecto: float) -> float:
+	if aspecto >= ASPECTO_REF or aspecto <= 0.0:
+		return fov
+	return minf(rad_to_deg(2.0 * atan(tan(deg_to_rad(fov) * 0.5) * ASPECTO_REF / aspecto)), 75.0)
 
 ## Cuánto cierra (área/ocasión) y cuánto abre (contraataque, balón largo) el
 ## plano según la jugada. Estático para poder probarlo sin escena.
@@ -130,7 +158,7 @@ static func foco_con_balon(desde: Vector3, foco: Vector3, fov: float, aspecto: f
 ## tele (con la cámara del jugador o la subjetiva no se corta nada) y solo si en pantalla
 ## está la cámara del rig (no en plena realización del gol, repetición o ceremonia).
 
-const PLANOS_TV := ["Transmisión", "Principal (TV)", "Tele Dinámica", "Tribuna alta"]
+const PLANOS_TV := ["Transmisión", "TV lejana", "Principal (TV)", "Tele Dinámica", "Tribuna alta"]
 var inserto := ""            ## el inserto en pantalla ("" = ninguno)
 var _ins_cam: Camera3D
 var _ins_t := 0.0

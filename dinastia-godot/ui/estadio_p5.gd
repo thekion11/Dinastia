@@ -136,7 +136,7 @@ func _montar_motor() -> void:
 	## pantalla limpia (sin nombres sobre los 22 ni la pantalla gigante en la
 	## esquina; se pueden encender en ⚙).
 	if _rig != null:
-		var it := _rig.camera_names.find("Transmisión")
+		var it := _rig.camera_names.find("TV lejana" if _pref("tv_lejana", false) else "Transmisión")   ## (16-11) la TV cercana por defecto; la lejana si se eligió
 		if it >= 0 and not (PersonajeDT.sancionado and _rig.current_name().begins_with("Desde la grada")):
 			_rig.switch_to(it)
 			if _btn_camara != null:
