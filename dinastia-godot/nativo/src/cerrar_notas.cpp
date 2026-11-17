@@ -236,3 +236,88 @@ Array DinastiaNativo::clima_partido(const String &pais, const String &pais_visit
 	res.push_back(fv);
 	return res;
 }
+
+// `Partido.invalidar_fuerza` (nucleo/partido_p1.gd, 17-11-2026): `fuerza()` de los dos onces en una llamada: las cuatro medias (`medias_linea`, como
+// `PartidoMedias.nativo`), los multiplicadores de la táctica (`Tactica.multiplicador_ataque/defensa`, con sus tablas copiadas), los bonus del club, la moda
+// táctica, el videoanálisis del club del jugador y los rasgos del once. `m` = [mapa_grupos, mapa_lateral, mapa_banda, impulsos, minuto, arenga, ley_del_ex,
+// ex_de_mi_club, ctx_moda, ctx_club_id, ctx_analisis]. Devuelve [{ata, def} del local, del visitante]. Gemela: `Partido._invalidar_fuerza_gd`.
+namespace {
+const double MENT_ATA[] = { 0.88, 1.0, 1.12 }, MENT_DEF[] = { 1.10, 1.0, 0.90 }, PRES_ATA[] = { 0.97, 1.0, 1.05 }, RITMO_ATA[] = { 0.95, 1.0, 1.07 },
+			 RITMO_DEF[] = { 1.05, 1.0, 0.95 }, LINEA_ATA[] = { 0.96, 1.0, 1.06 }, LINEA_DEF[] = { 1.06, 1.0, 0.93 }, AMPL_ATA[] = { 0.98, 1.0, 1.04 },
+			 AMPL_DEF[] = { 1.03, 1.0, 0.98 }, VERT_ATA[] = { 0.97, 1.0, 1.04 }, VERT_DEF[] = { 1.03, 1.0, 0.96 }, PERD_ATA[] = { 0.97, 1.0, 1.04 },
+			 PERD_DEF[] = { 1.04, 1.0, 0.97 };
+} // namespace
+
+Dictionary DinastiaNativo::fuerza_una(const Array &once, Object *c, Object *enfrente, const Array &m) const {
+	static const StringName k_tactica("tactica"), k_ment("mentalidad"), k_pres("presion"), k_ritmo("ritmo"), k_linea("linea"), k_ampl("amplitud"), k_salida("salida_corta"),
+			k_marca("marca_al_hombre"), k_tiro("tiro_lejano"), k_vert("verticalidad"), k_perd("tras_perdida"), k_fdj("fuera_de_juego"), k_form("formacion"),
+			k_bon_a("bonus_ataque"), k_bon_d("bonus_defensa"), k_id("id"), k_rasgo("rasgo");
+	const PackedFloat64Array medias = medias_linea(once, m[0], m[1], m[2], m[3], int64_t(m[4]), double(m[5]), double(m[6]), m[7], enfrente != nullptr ? String(enfrente->get(k_id)) : String());
+	double por = medias[0];
+	if (por <= 0.0) {
+		por = 35.0;
+	}
+	const double defe = medias[1], med = medias[2], del = medias[3];
+	double ata = del * 0.55 + med * 0.38 + defe * 0.07;
+	double dfa = defe * 0.5 + por * 0.3 + med * 0.2;
+	Object *t = c->get(k_tactica);
+	const int64_t ment = t->get(k_ment), pres = t->get(k_pres), ritmo = t->get(k_ritmo), linea = t->get(k_linea), ampl = t->get(k_ampl), vert = t->get(k_vert), perd = t->get(k_perd);
+	double ma = MENT_ATA[ment] * PRES_ATA[pres] * RITMO_ATA[ritmo] * LINEA_ATA[linea] * AMPL_ATA[ampl];
+	if (bool(t->get(k_salida))) {
+		ma *= 1.03;
+	}
+	if (bool(t->get(k_marca))) {
+		ma *= 0.98;
+	}
+	if (bool(t->get(k_tiro))) {
+		ma *= 1.02;
+	}
+	ma *= VERT_ATA[vert] * PERD_ATA[perd];
+	double md = MENT_DEF[ment] * RITMO_DEF[ritmo] * LINEA_DEF[linea] * AMPL_DEF[ampl];
+	if (bool(t->get(k_marca))) {
+		md *= 1.03;
+	}
+	if (bool(t->get(k_fdj))) {
+		md *= 1.06;
+	}
+	md *= VERT_DEF[vert] * PERD_DEF[perd];
+	ata *= ma * double(c->get(k_bon_a));
+	dfa *= md * double(c->get(k_bon_d));
+	int64_t killer = 0, muralla = 0, cerebro = 0, veloz = 0;
+	for (int64_t i = 0; i < once.size(); i++) {
+		Object *j = once[i];
+		const String r = j->get(k_rasgo);
+		if (r == "killer") {
+			killer++;
+		} else if (r == "muralla") {
+			muralla++;
+		} else if (r == "cerebro") {
+			cerebro++;
+		} else if (r == "veloz") {
+			veloz++;
+		}
+	}
+	const Dictionary moda = m[8];
+	const Variant form = t->get(k_form);
+	const double fm = double(moda.get(form, 1.0));
+	ata *= fm;
+	dfa *= fm;
+	const double analisis = m[10];
+	if (String(c->get(k_id)) == String(m[9]) && analisis > 1.0) {
+		ata *= analisis;
+		dfa *= analisis;
+	}
+	ata *= 1.0 + 0.012 * double(killer) + 0.008 * double(veloz) + 0.005 * double(cerebro);
+	dfa *= 1.0 + 0.012 * double(muralla) + 0.005 * double(cerebro);
+	Dictionary r;
+	r["ata"] = ata;
+	r["def"] = dfa;
+	return r;
+}
+
+Array DinastiaNativo::fuerza_dos(const Array &once_l, const Array &once_v, Object *local, Object *visita, const Array &m) const {
+	Array r;
+	r.push_back(fuerza_una(once_l, local, visita, m));
+	r.push_back(fuerza_una(once_v, visita, local, m));
+	return r;
+}

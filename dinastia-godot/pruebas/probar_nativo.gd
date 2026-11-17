@@ -330,9 +330,15 @@ func _probar() -> void:
 	_comprobar(cl_dis == 0 and cl_n > 500, "clima del partido: C++ = GDScript en %d casos (distintos: %d)" % [cl_n, cl_dis])
 	LeyesPais.comparar = true
 	LeyesPais.comparados = 0
+	Partido.comparar_fuerza = true
+	Partido.fuerza_comparadas = 0
+	Partido.fuerza_distintas = 0
 	LeyesPais.distintos = 0
 	var np := NativoPartido.probar(6)
 	LeyesPais.comparar = false
+	Partido.comparar_fuerza = false
+	print("fuerza de los onces: %d comparadas, %d distintas" % [Partido.fuerza_comparadas, Partido.fuerza_distintas])
+	_comprobar(Partido.fuerza_distintas == 0 and Partido.fuerza_comparadas > 100, "fuerza de los onces (fuerza_dos): C++ = GDScript")
 	print("reglas de la liga sobre el once: %d comparados, %d distintos" % [LeyesPais.comparados, LeyesPais.distintos])
 	_comprobar(LeyesPais.distintos == 0 and LeyesPais.comparados > 100, "reglas de la liga sobre el once (_ya_cumple): C++ = GDScript en %d onces (distintos: %d)" % [LeyesPais.comparados, LeyesPais.distintos])
 	for f: String in np["fallos"]:
