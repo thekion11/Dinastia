@@ -214,6 +214,40 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		az.entrar();
 	};
 
+	// `PartidoRapido.hit_amarilla` + `Partido._amonestar` (16-11-2026), con el generador del motor (se llama tras `az.salir`): el camino de siempre de una
+	// amarilla que no es la segunda del partido. La segunda (que puede ser roja: sanción, fuera del once, `_revisar_siete`) la hace GDScript (`_amonestar`) y la
+	// que completa el ciclo de amarillas, `PartidoRapido.hit_acumula` (`Disciplina`). Devuelve true si el once y la fuerza no cambiaron.
+	const int64_t ciclo_amarillas = int64_t(cfg["ciclo_amarillas"]);
+	static const StringName k_amar_hoy("_amarillas_hoy"), k_amarillas("amarillas"), k_tarjeta("tarjeta");
+	auto amarilla_nativa = [&](bool casero_) -> bool {
+		const bool solo_visita = casero_ && rng->randf() < 0.35;
+		const int64_t nl = solo_visita ? 0 : e.once_l.size();
+		const int64_t n = nl + e.once_v.size();
+		if (n == 0) {
+			return true; // `_alguien` de una lista vacía: nadie
+		}
+		const int64_t k = rng->randi_range(0, n - 1);
+		Object *j = k < nl ? Object::cast_to<Object>(e.once_l[k]) : Object::cast_to<Object>(e.once_v[k - nl]);
+		if (j == nullptr) {
+			return true;
+		}
+		Dictionary hoy = p->get(k_amar_hoy);
+		const Variant id = j->get(k_id);
+		const int64_t previas = int64_t(hoy.get(id, 0));
+		if (previas >= 1) {
+			p->call("_amonestar", j);
+			return false;
+		}
+		const int64_t am = int64_t(j->get(k_amarillas)) + 1;
+		j->set(k_amarillas, am);
+		hoy[id] = previas + 1;
+		p->emit_signal(k_tarjeta, j, false, e.minuto);
+		if (am > 0 && am % ciclo_amarillas == 0) {
+			ayuda->call("hit_acumula", p, j);
+		}
+		return true;
+	};
+
 	auto aporte = [&](Object *j, double v) {
 		if (j != nullptr) {
 			const Variant id = j->get(k_id);
@@ -383,9 +417,12 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		if (az.randf() < p_amarilla) {
 			p->set(k_minuto, e.minuto);
 			az.salir();
-			ayuda->call("hit_amarilla", p, casero);
-			az.entrar();
-			refrescar();
+			if (amarilla_nativa(casero)) {
+				az.entrar(); // ni roja ni cambios en el once: la fuerza no cambia
+			} else {
+				az.entrar();
+				refrescar();
+			}
 		}
 		if (az.randf() < p_lesion) {
 			p->set(k_minuto, e.minuto);

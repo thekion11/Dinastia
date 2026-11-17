@@ -61,7 +61,7 @@ static func _nativo(p: Partido, nat: Object) -> void:
 		"p_amarilla": Balance.P_AMARILLA * Partido.ctx_factor_tarjetas * float({"tarjetero": 1.4, "estricto": 1.15, "permisivo": 0.7}.get(perfil, 1.0)),
 		"p_lesion": 0.0024 * 1.0,
 		"perfil": perfil, "hay_arbitro": not p.arbitro.is_empty(), "fin": p.minutos_fin,
-		"grupo_de": Datos.mapa_grupos(), "bases_gol": PartidoPonderado.BASES_GOL, "bases_asist": PartidoPonderado.BASES_ASIST,
+		"grupo_de": Datos.mapa_grupos(), "bases_gol": PartidoPonderado.BASES_GOL, "bases_asist": PartidoPonderado.BASES_ASIST, "ciclo_amarillas": Disciplina.AMARILLAS_CICLO,
 	}
 	por_ruta_nativa += 1
 	nat.simular_90(p, _ayuda, cfg, Azar._rng, _azar_propio(nat))
@@ -116,6 +116,11 @@ static func hit_penal(p: Partido, c: Club, once: Array[Jugador], es_local: bool)
 		p.remate.emit(c, p._elegir_goleador(once), "atajada", p.minuto)
 
 ## La amarilla de `_incidencias` una vez que la tirada salió.
+## La amarilla que completa el ciclo (la ruta nativa hace el resto de `_amonestar` y llama aquí solo para esto): sanción y aviso, como en `_amonestar`.
+static func hit_acumula(p: Partido, j: Jugador) -> void:
+	if Disciplina.acumula(j):
+		p.decision_arbitral.emit(Disciplina.frase(j), p.minuto)
+
 static func hit_amarilla(p: Partido, casero: bool) -> void:
 	var l := p._alguien(p.once_visita if casero and Azar.suerte(0.35) else p.once_local + p.once_visita)
 	if l != null:
