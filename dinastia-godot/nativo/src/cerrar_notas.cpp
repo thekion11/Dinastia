@@ -59,3 +59,61 @@ void DinastiaNativo::cerrar_notas(Object *p, const Ref<RandomNumberGenerator> &r
 		j->set(k_partidos, int64_t(j->get(k_partidos)) + 1);
 	}
 }
+
+// `LeyesPais._ya_cumple` (nucleo/leyes_pais.gd, 16-11-2026): ¿el once ya cumple el tope de cupo en cancha y los juveniles que pide la liga? Con `ocupa_cupo`
+// copiado tal cual (pasaporte del país o comunitario, y los criterios «extranjero», «no_ue» y «no_formado»). `clubes` ya resuelto (si venía vacío, `clubes_mundo`).
+bool DinastiaNativo::leyes_ya_cumple(const Array &once, const String &pais, int64_t tope, const Array &juveniles, const String &criterio, const Array &ue, const Dictionary &clubes) const {
+	static const StringName k_look("look"), k_pais("pais"), k_formacion("club_formacion"), k_edad("edad");
+	static const Variant v_pasaporte(String("pasaporte"));
+	const bool pais_ue = ue.has(pais);
+	if (tope > 0) {
+		int64_t n = 0;
+		for (int64_t i = 0; i < once.size(); i++) {
+			Object *j = once[i];
+			if (j == nullptr) {
+				continue; // `ocupa_cupo(null)` = false
+			}
+			const Dictionary look = j->get(k_look);
+			const String pas = look.get(v_pasaporte, "");
+			if (pas != "" && (pas == pais || (ue.has(pas) && pais_ue && criterio == "no_ue"))) {
+				continue;
+			}
+			const String jp = j->get(k_pais);
+			bool ocupa;
+			if (criterio == "no_ue") {
+				ocupa = jp != pais && !(ue.has(jp) && pais_ue);
+			} else if (criterio == "no_formado") {
+				if (jp == pais) {
+					ocupa = false;
+				} else {
+					const Variant cf = clubes.get(j->get(k_formacion), Variant());
+					Object *club = cf.get_type() == Variant::OBJECT ? static_cast<Object *>(cf) : nullptr;
+					ocupa = !(club != nullptr && String(club->get(k_pais)) == pais);
+				}
+			} else {
+				ocupa = jp != pais;
+			}
+			if (ocupa) {
+				n += 1;
+			}
+		}
+		if (n > tope) {
+			return false;
+		}
+	}
+	for (int64_t q = 0; q < juveniles.size(); q++) {
+		const int64_t edad = juveniles[q];
+		bool hay = false;
+		for (int64_t i = 0; i < once.size(); i++) {
+			Object *j = once[i];
+			if (j != nullptr && int64_t(j->get(k_edad)) <= edad) {
+				hay = true;
+				break;
+			}
+		}
+		if (!hay) {
+			return false;
+		}
+	}
+	return true;
+}

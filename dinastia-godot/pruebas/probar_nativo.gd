@@ -311,7 +311,13 @@ func _probar() -> void:
 	motor.free()
 	raiz_c.queue_free()
 	## (10-11, paso a C++) El partido simulado de la IA entero (90 minutos) en C++: mismo marcador, estadísticas, jugadores y azar que `Partido.simular()`, en cuatro mundos.
+	LeyesPais.comparar = true
+	LeyesPais.comparados = 0
+	LeyesPais.distintos = 0
 	var np := NativoPartido.probar(6)
+	LeyesPais.comparar = false
+	print("reglas de la liga sobre el once: %d comparados, %d distintos" % [LeyesPais.comparados, LeyesPais.distintos])
+	_comprobar(LeyesPais.distintos == 0 and LeyesPais.comparados > 100, "reglas de la liga sobre el once (_ya_cumple): C++ = GDScript en %d onces (distintos: %d)" % [LeyesPais.comparados, LeyesPais.distintos])
 	for f: String in np["fallos"]:
 		_comprobar(false, "partido simulado en C++: " + f)
 	_comprobar(np["fallos"].is_empty() and int(np["rapidos"]) > 300, "partido simulado en C++ = GDScript en %d cruces (por la ruta nativa: %d)" % [np["cruces"], np["rapidos"]])
