@@ -1,5 +1,5 @@
 extends "res://visor/stadium_builder_p5.gd"
-## [Capa 6/10 de `estadio_partes_tribuna.gd`] _butacas, _vomitorios, _cabeza_foco
+## [Capa 6/10 de `estadio_partes_tribuna.gd`] _butacas, _vomitorios, _cabeza_foco (el color y el nodo de las butacas: `GradaButacas`)
 
 ## Ocupación máxima de una grada (un estadio «lleno» tiene siempre alguna butaca libre).
 const TOPE_OCUPACION := 0.86
@@ -230,6 +230,11 @@ static func _poblar_grada(mm: MultiMesh, mm_lejos: MultiMesh, g: Dictionary) -> 
 				if f == 0:
 					gt.pasillos.append(l)
 				continue
+			## Un hincha por asiento ocupado. Las filas pegadas al césped de la
+			## bandeja de abajo llevan el hincha de detalle; el resto, el barato.
+			var antes := gt.det_xf.size() + gt.med_xf.size() + gt.hinchas_xf.size()
+			var plazas := _hinchas_del_asiento(g, gt, rng, p, l, f)
+			col = GradaButacas.color_vacia(col, plazas - (gt.det_xf.size() + gt.med_xf.size() + gt.hinchas_xf.size() - antes))
 			if f < filas:
 				mm.set_instance_transform(i, Transform3D(base, p))
 				mm.set_instance_color(i, col)
@@ -238,13 +243,11 @@ static func _poblar_grada(mm: MultiMesh, mm_lejos: MultiMesh, g: Dictionary) -> 
 				mm_lejos.set_instance_transform(j, Transform3D(base, p))
 				mm_lejos.set_instance_color(j, col)
 				j += 1
-			## Un hincha por asiento ocupado. Las filas pegadas al césped de la
-			## bandeja de abajo llevan el hincha de detalle; el resto, el barato.
-			_hinchas_del_asiento(g, gt, rng, p, l, f)
 	return gt
 
 ## La hinchada de un grupo de butacas (hasta tres personas en la de arriba): consume el azar en el mismo orden de siempre.
-static func _hinchas_del_asiento(g: Dictionary, gt: _Gente, rng: RandomNumberGenerator, p: Vector3, l: float, f: int) -> void:
+## Devuelve cuántas plazas tiene el grupo (los asientos que no suman a nadie quedan vacíos; 3 siempre).
+static func _hinchas_del_asiento(g: Dictionary, gt: _Gente, rng: RandomNumberGenerator, p: Vector3, l: float, f: int) -> int:
 	var bandeja: int = g["bandeja"]
 	var ocupacion: float = g["ocupacion"]
 	var giro: float = g["giro"]
@@ -307,25 +310,7 @@ static func _hinchas_del_asiento(g: Dictionary, gt: _Gente, rng: RandomNumberGen
 		else:
 			gt.hinchas_xf.append(xf)
 			gt.hinchas_col.append(col_h)
-
-## Un MultiMesh de butacas colgado del deck, con su plástico barnizado. SIN SOMBRA PROPIA (25-9-2026, `pruebas/medir_partido.gd`): miles de butacas
-## proyectando sombra se dibujaban otra vez en CADA cascada del sol; bajo el techo no se ve y la de la grada entera (el `deck`) sigue estando.
-static func _nodo_butacas(deck: MeshInstance3D, mm: MultiMesh, nombre: String, rugosidad: float, metal: float, barniz: float, barniz_rug: float) -> void:
-	var mat := StandardMaterial3D.new()
-	mat.vertex_color_use_as_albedo = true
-	mat.albedo_color = Color(0.9, 0.9, 0.9)
-	mat.roughness = rugosidad
-	if metal > 0.0:
-		mat.metallic = metal
-	mat.clearcoat_enabled = true
-	mat.clearcoat = barniz
-	mat.clearcoat_roughness = barniz_rug
-	var mi := MultiMeshInstance3D.new()
-	mi.multimesh = mm
-	mi.material_override = mat
-	mi.name = nombre
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	deck.add_child(mi)
+	return 3
 
 ## Los nodos de la grada: pasillos y escaleras, las butacas lejanas y cercanas y las personas (con su nivel de detalle).
 static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMesh, gt: _Gente, g: Dictionary) -> void:
@@ -343,10 +328,10 @@ static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMe
 	## falta y entre fila y fila se veía como manchas estiradas.
 	deck.material_override = _mat_escalones()
 	if mm_lejos.instance_count > 0:
-		_nodo_butacas(deck, mm_lejos, "ButacasLejos", 0.5, 0.0, 0.25, 0.4)
+		GradaButacas.nodo(deck, mm_lejos, "ButacasLejos", 0.5, 0.0, 0.25, 0.4)
 	## Plástico de butaca con brillo suave de barniz (calidad de material, 27-10-2026): el respaldo y el asiento recogen la luz del sol bajo.
 	if mm.instance_count > 0:
-		_nodo_butacas(deck, mm, "ButacasCerca", 0.45, 0.05, 0.3, 0.35)
+		GradaButacas.nodo(deck, mm, "ButacasCerca", 0.45, 0.05, 0.3, 0.35)
 
 	## Personas reales (mallas horneadas) en la bandeja baja; el maniquí queda para
 	## el resto y como respaldo si faltan los recursos.

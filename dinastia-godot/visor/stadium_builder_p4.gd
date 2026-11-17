@@ -53,6 +53,7 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	var sm := ShaderMaterial.new()
 	sm.shader = load("res://visor/cesped_barato.gdshader" if ModoRendimiento.cesped_barato(Calidad.elegida) else "res://visor/cesped.gdshader")   ## (10-11) E4: sin brizna ni relieve con el modo rendimiento
 	sm.set_shader_parameter("dibujo", gmat.albedo_texture)
+	sm.set_shader_parameter("eje_corte", CespedTextura.eje_corte(str(est.get("cesped", "rayas"))))   ## (17-11) franjas según el sentido de la cortadora
 	if not ModoRendimiento.cesped_barato(Calidad.elegida) and ResourceLoader.exists("res://assets/cc0/grass005/detalle.jpg"):   ## (16-11) brizna de foto CC0
 		sm.set_shader_parameter("brizna_foto", load("res://assets/cc0/grass005/detalle.jpg"))
 		sm.set_shader_parameter("brizna_fuerza", 0.22)

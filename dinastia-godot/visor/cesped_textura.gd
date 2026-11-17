@@ -3,6 +3,19 @@ extends RefCounted
 ## LA TEXTURA DEL CORTE DEL CÉSPED (franjas, damero, círculos…), píxel a píxel. Salió de
 ## `StadiumBuilder._make_grass_texture` (30-10-2026), que ahora la guarda en caché.
 
+## EL SENTIDO DE LA CORTADORA de cada dibujo (17-11), en XZ del mundo: la franja cambia de tono cuando se la mira en ese sentido
+## (`eje_corte` de `cesped_comun.gdshaderinc`). «rayas» y los que se suceden a lo largo se cortan de banda a banda (X, hacia la cámara
+## de TV); «rayasH», a lo largo (Z); los dibujos mixtos, en diagonal (se leen a medias desde cualquier lado).
+static func eje_corte(patron: String) -> Vector2:
+	match patron:
+		"rayasH":
+			return Vector2(0.0, 1.0)
+		"damero", "damGrande", "circular", "circulos", "cruz", "abanico", "rombos":
+			return Vector2(0.7071, 0.7071)
+		"diagonal":
+			return Vector2(0.7071, -0.7071)
+	return Vector2(1.0, 0.0)
+
 static func nueva(patron: String, claro: Color, oscuro: Color) -> Image:
 	var n := 256
 	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
