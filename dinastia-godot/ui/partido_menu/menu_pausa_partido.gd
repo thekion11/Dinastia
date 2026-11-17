@@ -54,6 +54,7 @@ func _montar() -> void:
 	var centro := CenterContainer.new()
 	centro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(centro)
+	var movil := TactilPartido.es_movil(self)   ## (17-11) el teléfono (~1067×480): las seis opciones en dos columnas, si no la última no cabe
 	var caja := PanelContainer.new()
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color.WHITE
@@ -61,10 +62,10 @@ func _montar() -> void:
 	sb.shadow_size = 24
 	sb.content_margin_left = 30
 	sb.content_margin_right = 30
-	sb.content_margin_top = 26
-	sb.content_margin_bottom = 26
+	sb.content_margin_top = 14 if movil else 26
+	sb.content_margin_bottom = 14 if movil else 26
 	caja.add_theme_stylebox_override("panel", sb)
-	caja.custom_minimum_size = Vector2(Tema.letra(460), 0)
+	caja.custom_minimum_size = Vector2(get_viewport_rect().size.x * 0.72 if movil else Tema.letra(460), 0)
 	centro.add_child(caja)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
@@ -72,7 +73,7 @@ func _montar() -> void:
 	var cab := HBoxContainer.new()
 	cab.add_theme_constant_override("separation", 12)
 	v.add_child(cab)
-	var titulo := EstiloAvanzar.etiqueta(Idiomas.t("Pausa"), 46, TINTA, true, true)
+	var titulo := EstiloAvanzar.etiqueta(Idiomas.t("Pausa"), 32 if movil else 46, TINTA, true, true)
 	titulo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(titulo)
 	if partido != null:
@@ -89,11 +90,21 @@ func _montar() -> void:
 	raya.custom_minimum_size = Vector2(56, 4)
 	raya.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	v.add_child(raya)
+	var lista: Container = v
+	if movil:
+		var rejilla := GridContainer.new()
+		rejilla.columns = 2
+		rejilla.add_theme_constant_override("h_separation", 10)
+		rejilla.add_theme_constant_override("v_separation", 8)
+		v.add_child(rejilla)
+		lista = rejilla
 	for op: Array in OPCIONES:
 		var b := _fila(Idiomas.t(String(op[1])), String(op[3]))
 		b.name = String(op[0])
 		b.pressed.connect(_elegir.bind(String(op[2])))
-		v.add_child(b)
+		if movil:
+			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		lista.add_child(b)
 		if _primera == null:
 			_primera = b
 	## Cómo se maneja, con el aparato que se usa (orden 33: con mando, R2 confirma y Cuadrado vuelve).

@@ -10,12 +10,15 @@ var atras: Callable
 var _r2_abajo := false
 
 ## Cuelga el oyente de `pantalla`. `al_volver` es lo que hace Cuadrado (vacío: Cuadrado no hace nada en esa pantalla).
-static func escuchar(p: Node, al_volver: Callable = Callable()) -> MandoMenuPartido:
+## `tactil`: además, lo que se toca de la pantalla a ≥ 9 mm en el teléfono (`TactilPartido.agrandar`).
+static func escuchar(p: Node, al_volver: Callable = Callable(), tactil := true) -> MandoMenuPartido:
 	var m := MandoMenuPartido.new()
 	m.name = "MandoMenuPartido"
 	m.pantalla = p
 	m.atras = al_volver
 	p.add_child(m)
+	if tactil:
+		TactilPartido.agrandar.call_deferred(p)
 	return m
 
 func _input(e: InputEvent) -> void:

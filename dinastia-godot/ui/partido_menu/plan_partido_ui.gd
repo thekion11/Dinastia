@@ -29,7 +29,7 @@ static func abrir(p: Principal) -> PantallaMenu:
 			(b as Button).text = "◂  " + Idiomas.t("Volver a la previa")
 			break
 	if not pm.has_node("MandoMenuPartido"):   ## Cuadrado = B: del detalle a la portada; de la portada, a la previa
-		MandoMenuPartido.escuchar(pm, func() -> void: pm.portada() if pm._activo >= 0 else pm.cerrar())
+		MandoMenuPartido.escuchar(pm, func() -> void: pm.portada() if pm._activo >= 0 else pm.cerrar(), false)
 	pm.cerrada.connect(func() -> void:
 		if is_instance_valid(riel):
 			riel.visible = se_veia)

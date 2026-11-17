@@ -67,7 +67,7 @@ func _linea_de_tiempo() -> void:
 	l.local_id = partido.local.id
 	l.col_local = _color_club(partido.local)
 	l.col_visita = _color_club(partido.visita)
-	_raiz.add_child(_ancla(l, 0.06, 0.405, 0.94, 0.47))   ## bajo el marcador: los goles en el tiempo
+	ResumenPartidoCine.poner(_raiz, l, "linea")   ## bajo el marcador: los goles y las tarjetas en el tiempo
 
 ## La barra de dos colores de las estadísticas (local en rojo, visitante en claro).
 class _Barra extends Control:
