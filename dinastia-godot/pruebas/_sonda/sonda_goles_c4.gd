@@ -6,6 +6,7 @@ extends Node
 ## ~8,5 a puerta, ~30 % de lo que va a puerta acaba en gol.
 ##   VARIANTE=combinado_c4 (por defecto; la de `MotorFabrica`) N=24 BANDERAS="C4_X=1" godot --headless --path . res://pruebas/_sonda/sonda_goles_c4.tscn      (las banderas se leen del entorno del proceso)
 const DT := 1.0 / 30.0
+var _c4 := {}   ## contadores c4_* de las banderas (suma de todos los partidos)
 const LIGAS: Array[String] = ["ESP", "ENG", "ITA", "GER", "ARG", "BRA"]
 
 func _ready() -> void:
@@ -39,6 +40,7 @@ func _ready() -> void:
 		n, OS.get_environment("BANDERAS"), media, sqrt(s2 / maxf(1.0, n - 1)) / sqrt(n), float(tot["tiros"]) / n, float(tot["puerta"]) / n, float(tot["paradas"]) / n,
 		float(tot["postes"]) / n, float(tot["fuera"]) / n, float(tot["cabeza"]) / n, float(tot["area"]) / n, 100.0 * tot["area_gol"] / maxf(1.0, tot["area"]),
 		100.0 * tot["goles"] / maxf(1.0, tot["puerta"]), tot["dist"] / maxf(1.0, tot["n_dist"]), float(tot["rechace_gol"]) / n])
+	print("SONDA C4 ", _c4)
 	get_tree().quit()
 
 func _jugar(a: Club, b: Club, mitad: float, semilla: int) -> Dictionary:
@@ -107,5 +109,8 @@ func _jugar(a: Club, b: Club, mitad: float, semilla: int) -> Dictionary:
 			if clave.begins_with("remate_cabeza_"):
 				r["cabeza"] += c
 	r["puerta"] = r["goles"] + r["paradas"]
+	for clave: String in motor.diag:
+		if clave.begins_with("c4_"):
+			_c4[clave] = int(_c4.get(clave, 0)) + int(motor.diag[clave])
 	raiz.queue_free()
 	return r

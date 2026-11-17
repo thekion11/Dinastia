@@ -351,6 +351,12 @@ func _prob_parada_extra(gk: Dictionary, desde: Vector3, prob: float) -> float:
 	return MejorasC4Avance.parada(self, gk, desde, prob) if _mejoras_c4 else prob
 
 ## (17-11, alarma de goles de C4) el portero para lo que le llega al cuerpo, solo en C4 (`MejorasC4Avance.parada_cuerpo`, `C4_PARADA_CUERPO=f`).
+func _umbral_reaccion(p: Dictionary) -> float:
+	return MejorasC4Avance.umbral_lento(self, p) if _mejoras_c4 else 6.0
+
+func _portero_colocado(p: Dictionary, obj: Vector3) -> Vector3:
+	return MejorasC4Avance.portero_corre(self, p, obj) if _mejoras_c4 else obj
+
 func _prob_parada_cuerpo(lat: float, alcance: float, prob: float) -> float:
 	return MejorasC4Avance.parada_cuerpo(self, lat, alcance, prob) if _mejoras_c4 else prob
 
