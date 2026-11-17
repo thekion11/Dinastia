@@ -11,8 +11,11 @@ const ALTO := 76.0
 ## El color de la barra: el del club, ni tan claro que no se lea el blanco ni tan oscuro que parezca negro.
 static func color_de(c: Club) -> Color:
 	var col := Color(c.color1)
-	if col.get_luminance() > 0.42:
-		col = col.darkened(0.42)
+	var otro := Color(c.color2)
+	if col.get_luminance() > 0.4 and otro.get_luminance() < col.get_luminance() - 0.15:
+		col = otro   ## camiseta clara (blanca, amarilla): la barra toma el otro color del club
+	if col.get_luminance() > 0.36:
+		col = col.darkened(0.45)
 	elif col.get_luminance() < 0.05:
 		col = col.lightened(0.28)
 	return col
@@ -41,22 +44,27 @@ static func crear(mos: VBoxContainer, c: Club) -> HBoxContainer:
 	return hb
 
 ## Una pestaña de la barra: texto grande, plano, blanco; la activa lleva la raya blanca de abajo.
-static func boton_pestana(texto: String) -> Button:
+static func boton_pestana(texto: String, ancho := 1.0) -> Button:
 	var b := Button.new()
 	b.toggle_mode = true
-	b.flat = true
-	b.text = texto
 	b.focus_mode = Control.FOCUS_ALL
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.size_flags_stretch_ratio = ancho
 	b.custom_minimum_size = Vector2(80, ALTO - 8)
-	b.clip_text = true
+	b.clip_contents = true
 	b.tooltip_text = texto
-	b.add_theme_font_override("font", EstiloAvanzar.fuente_titulo())
-	b.add_theme_font_size_override("font_size", Tema.letra(26))
-	for k: String in ["font_color", "font_hover_color", "font_focus_color", "font_pressed_color", "font_hover_pressed_color"]:
-		b.add_theme_color_override(k, Color.WHITE if k != "font_color" else Color(1, 1, 1, 0.78))
-	b.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.35))
-	b.add_theme_constant_override("outline_size", 3)
+	b.set_meta("rotulo", texto)
+	## El rótulo es una Label propia (no el texto del botón): así la escala tipográfica de los menús no le cambia el tamaño.
+	var l := EstiloAvanzar.etiqueta(texto, 20, Color(1, 1, 1, 0.8), true)
+	l.name = "Rotulo"
+	l.set_anchors_preset(Control.PRESET_FULL_RECT)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	l.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.35))
+	l.add_theme_constant_override("outline_size", 3)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(l)
+	b.toggled.connect(func(si: bool) -> void: l.add_theme_color_override("font_color", Color.WHITE if si else Color(1, 1, 1, 0.8)))
 	var vacio := StyleBoxEmpty.new()
 	var activa := StyleBoxFlat.new()
 	activa.bg_color = Color(1, 1, 1, 0.12)
@@ -87,19 +95,19 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	hb.add_child(menu)
 	hb.move_child(menu, 0)
 	var hueco := Control.new()   ## el escudo asoma por encima de la barra: no empuja a nadie
-	hueco.custom_minimum_size = Vector2(150, 0)
+	hueco.custom_minimum_size = Vector2(128, 0)
 	hueco.clip_contents = false
 	var esc := TextureRect.new()
 	esc.texture = Escudo.textura(c, 120)
 	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	esc.position = Vector2(15, -34)
+	esc.position = Vector2(4, -34)
 	esc.size = Vector2(120, 120)
 	hueco.add_child(esc)
 	hb.add_child(hueco)
 	hb.move_child(hueco, 4)   ## ☰, las tres pestañas y, ahora, el escudo
-	for par: Array in [["Oficina del director técnico", "Mi carrera"], ["Base de datos", "Ligas y clubes"], ["Sistema", "*sistema"]]:
+	for par: Array in [["Oficina del DT", "Mi carrera"], ["Base de datos", "Ligas y clubes"], ["Sistema", "*sistema"]]:
 		var b := boton_pestana(Idiomas.t(String(par[0])))
 		b.toggle_mode = false
 		var destino := String(par[1])
@@ -108,7 +116,7 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	var caja := VBoxContainer.new()
 	caja.alignment = BoxContainer.ALIGNMENT_CENTER
 	caja.add_theme_constant_override("separation", -4)
-	caja.custom_minimum_size.x = 150
+	caja.custom_minimum_size.x = 130
 	var dinero := EstiloAvanzar.etiqueta(p._dinero(c.saldo), 20, Color.WHITE, true)
 	dinero.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	caja.add_child(dinero)

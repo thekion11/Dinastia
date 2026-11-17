@@ -36,24 +36,24 @@ static func _columna(local: Club, visita: Club, centro: String, comp_tipo: Strin
 	var col := VBoxContainer.new()
 	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	col.alignment = BoxContainer.ALIGNMENT_CENTER
-	col.add_theme_constant_override("separation", 6)
+	col.add_theme_constant_override("separation", 3)
 	var tag := EstiloAvanzar.etiqueta(Idiomas.t("Siguiente") if siguiente else " ", 13, NARANJA, true)
 	col.add_child(tag)
 	col.add_child(_insignia(comp_tipo, comp))
 	var fila := HBoxContainer.new()
 	fila.alignment = BoxContainer.ALIGNMENT_CENTER
 	fila.add_theme_constant_override("separation", 12)
-	fila.add_child(_escudo(local, 58))
-	var c := EstiloAvanzar.etiqueta(centro, 30, NARANJA if siguiente else Color.WHITE, true)
+	fila.add_child(_escudo(local, 44))
+	var c := EstiloAvanzar.etiqueta(centro, 28, NARANJA if siguiente else Color.WHITE, true)
 	c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	fila.add_child(c)
-	fila.add_child(_escudo(visita, 58))
+	fila.add_child(_escudo(visita, 44))
 	col.add_child(fila)
-	var e := EstiloAvanzar.etiqueta(estadio, 14, Color(1, 1, 1, 0.85))
+	var e := EstiloAvanzar.etiqueta(estadio, 12, Color(1, 1, 1, 0.85))
 	e.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	e.clip_text = true
 	col.add_child(e)
-	var f := EstiloAvanzar.etiqueta(fecha, 13, Color(1, 1, 1, 0.6))
+	var f := EstiloAvanzar.etiqueta(fecha, 12, Color(1, 1, 1, 0.6))
 	f.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col.add_child(f)
 	return col
@@ -122,14 +122,12 @@ static func hinchada(p: Principal, c: Club, acento: Color) -> Control:
 	var v: VBoxContainer = tc[1]
 	v.add_theme_constant_override("separation", 0)
 	v.add_child(EstiloAvanzar.etiqueta(Idiomas.t("Seguidores"), 13, Color(1, 1, 1, 0.7)))
-	var esc := _escudo(c, 56)
-	esc.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	v.add_child(esc)
-	var tag := "#" + c.nombre.replace(" ", "").to_upper().left(16)
-	var h := EstiloAvanzar.etiqueta(tag, 15, Color(1, 1, 1, 0.8))
-	h.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	v.add_child(h)
-	var n := EstiloAvanzar.etiqueta(p._miles(c.socios), 32, Color.WHITE, true)
+	var cab := HBoxContainer.new()
+	cab.add_theme_constant_override("separation", 8)
+	cab.add_child(_escudo(c, 28))
+	cab.add_child(EstiloAvanzar.etiqueta("#" + c.nombre.replace(" ", "").to_upper().left(16), 15, Color(1, 1, 1, 0.85)))
+	v.add_child(cab)
+	var n := EstiloAvanzar.etiqueta(p._miles(c.socios), 26, Color.WHITE, true)
 	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(n)
 	v.add_child(EstiloAvanzar.etiqueta(Idiomas.t("Colaboradores oficiales"), 12, Color(1, 1, 1, 0.7)))
@@ -147,6 +145,7 @@ static func hinchada(p: Principal, c: Club, acento: Color) -> Control:
 		pc.add_theme_stylebox_override("panel", sb)
 		pc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var l := EstiloAvanzar.etiqueta(String(par[0]), 14, Color.WHITE if Color(par[1]).get_luminance() < 0.5 else Color("101820"), true)
+		l.custom_minimum_size.y = 22
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

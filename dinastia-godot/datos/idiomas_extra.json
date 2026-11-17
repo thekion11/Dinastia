@@ -9009,7 +9009,17 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Simulating the season…",
   "Sorteo de campo: gana el sorteo tu club.": "Coin toss: your club wins the toss.",
   "Sorteo de campo: gana el sorteo el rival.": "Coin toss: the opponent wins the toss.",
-  "¿Simular lo que queda? Pulsa otra vez": "Simulate the rest? Press again"
+  "¿Simular lo que queda? Pulsa otra vez": "Simulate the rest? Press again",
+  "%s entrena a tope antes del debut": "%s trains flat out before its debut",
+  "Colaboradores oficiales": "Official partners",
+  "El plantel tiene ganas de que empiece la liga.": "The squad can't wait for the league to start.",
+  "La previa: %s recibe a %s": "Preview: %s host %s",
+  "La previa: %s visita a %s": "Preview: %s visit %s",
+  "Llegamos con hambre: cada entrenamiento en %s cuenta.": "We arrive hungry: every training session at %s counts.",
+  "No hay rival fácil en esta liga: vamos partido a partido.": "There is no easy opponent in this league: we go match by match.",
+  "Nos preparamos a fondo para %s.": "We are preparing thoroughly for %s.",
+  "Pretemporada: %s ya prepara la jornada 1": "Pre-season: %s is already preparing for matchday 1",
+  "Todos los menús": "All menus"
  },
  "pt": {
   "Historia": "História",
@@ -18021,7 +18031,17 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Simulando a temporada…",
   "Sorteo de campo: gana el sorteo tu club.": "Sorteio: seu clube vence o sorteio.",
   "Sorteo de campo: gana el sorteo el rival.": "Sorteio: o rival vence o sorteio.",
-  "¿Simular lo que queda? Pulsa otra vez": "Simular o resto? Pressione de novo"
+  "¿Simular lo que queda? Pulsa otra vez": "Simular o resto? Pressione de novo",
+  "%s entrena a tope antes del debut": "%s treina a todo vapor antes da estreia",
+  "Colaboradores oficiales": "Parceiros oficiais",
+  "El plantel tiene ganas de que empiece la liga.": "O elenco está ansioso para o início da liga.",
+  "La previa: %s recibe a %s": "A prévia: %s recebe o %s",
+  "La previa: %s visita a %s": "A prévia: %s visita o %s",
+  "Llegamos con hambre: cada entrenamiento en %s cuenta.": "Chegamos com fome: cada treino no %s conta.",
+  "No hay rival fácil en esta liga: vamos partido a partido.": "Não há rival fácil nesta liga: vamos jogo a jogo.",
+  "Nos preparamos a fondo para %s.": "Estamos nos preparando a fundo para o %s.",
+  "Pretemporada: %s ya prepara la jornada 1": "Pré-temporada: o %s já prepara a rodada 1",
+  "Todos los menús": "Todos os menus"
  },
  "patrones": [
   [
@@ -33305,7 +33325,17 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Simulation de la saison…",
   "Sorteo de campo: gana el sorteo tu club.": "Tirage au sort : ton club le remporte.",
   "Sorteo de campo: gana el sorteo el rival.": "Tirage au sort : l'adversaire le remporte.",
-  "¿Simular lo que queda? Pulsa otra vez": "Simuler la suite ? Appuie encore"
+  "¿Simular lo que queda? Pulsa otra vez": "Simuler la suite ? Appuie encore",
+  "%s entrena a tope antes del debut": "%s s'entraîne à fond avant ses débuts",
+  "Colaboradores oficiales": "Partenaires officiels",
+  "El plantel tiene ganas de que empiece la liga.": "L'effectif a hâte que le championnat commence.",
+  "La previa: %s recibe a %s": "L'avant-match : %s reçoit %s",
+  "La previa: %s visita a %s": "L'avant-match : %s rend visite à %s",
+  "Llegamos con hambre: cada entrenamiento en %s cuenta.": "On arrive avec faim : chaque entraînement à %s compte.",
+  "No hay rival fácil en esta liga: vamos partido a partido.": "Il n'y a pas d'adversaire facile dans ce championnat : on y va match après match.",
+  "Nos preparamos a fondo para %s.": "Nous nous préparons à fond pour %s.",
+  "Pretemporada: %s ya prepara la jornada 1": "Présaison : %s prépare déjà la journée 1",
+  "Todos los menús": "Tous les menus"
  },
  "it": {
   "Historia": "Storia",
@@ -42317,7 +42347,17 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Simulazione della stagione…",
   "Sorteo de campo: gana el sorteo tu club.": "Sorteggio: vince il tuo club.",
   "Sorteo de campo: gana el sorteo el rival.": "Sorteggio: vince l'avversario.",
-  "¿Simular lo que queda? Pulsa otra vez": "Simulare il resto? Premi di nuovo"
+  "¿Simular lo que queda? Pulsa otra vez": "Simulare il resto? Premi di nuovo",
+  "%s entrena a tope antes del debut": "%s si allena a tutta prima dell'esordio",
+  "Colaboradores oficiales": "Partner ufficiali",
+  "El plantel tiene ganas de que empiece la liga.": "La rosa non vede l'ora che inizi il campionato.",
+  "La previa: %s recibe a %s": "L'anteprima: %s ospita il %s",
+  "La previa: %s visita a %s": "L'anteprima: %s fa visita al %s",
+  "Llegamos con hambre: cada entrenamiento en %s cuenta.": "Arriviamo con fame: ogni allenamento a %s conta.",
+  "No hay rival fácil en esta liga: vamos partido a partido.": "Non ci sono avversari facili in questo campionato: andiamo partita per partita.",
+  "Nos preparamos a fondo para %s.": "Ci prepariamo a fondo per il %s.",
+  "Pretemporada: %s ya prepara la jornada 1": "Pre-campionato: il %s prepara già la prima giornata",
+  "Todos los menús": "Tutti i menu"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51329,7 +51369,17 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Saison wird simuliert…",
   "Sorteo de campo: gana el sorteo tu club.": "Seitenwahl: Dein Verein gewinnt die Wahl.",
   "Sorteo de campo: gana el sorteo el rival.": "Seitenwahl: Der Gegner gewinnt die Wahl.",
-  "¿Simular lo que queda? Pulsa otra vez": "Rest simulieren? Nochmal drücken"
+  "¿Simular lo que queda? Pulsa otra vez": "Rest simulieren? Nochmal drücken",
+  "%s entrena a tope antes del debut": "%s trainiert vor dem Debüt auf Hochtouren",
+  "Colaboradores oficiales": "Offizielle Partner",
+  "El plantel tiene ganas de que empiece la liga.": "Der Kader kann den Ligastart kaum erwarten.",
+  "La previa: %s recibe a %s": "Die Vorschau: %s empfängt %s",
+  "La previa: %s visita a %s": "Die Vorschau: %s gastiert bei %s",
+  "Llegamos con hambre: cada entrenamiento en %s cuenta.": "Wir sind hungrig: jedes Training in %s zählt.",
+  "No hay rival fácil en esta liga: vamos partido a partido.": "In dieser Liga gibt es keinen leichten Gegner: wir gehen Spiel für Spiel.",
+  "Nos preparamos a fondo para %s.": "Wir bereiten uns gründlich auf %s vor.",
+  "Pretemporada: %s ya prepara la jornada 1": "Vorbereitung: %s bereitet sich schon auf den 1. Spieltag vor",
+  "Todos los menús": "Alle Menüs"
  },
  "ca": {
   "Historia": "Història",
@@ -60341,7 +60391,17 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Simulant la temporada…",
   "Sorteo de campo: gana el sorteo tu club.": "Sorteig de camp: guanya el teu club.",
   "Sorteo de campo: gana el sorteo el rival.": "Sorteig de camp: guanya el rival.",
-  "¿Simular lo que queda? Pulsa otra vez": "Simular la resta? Prem un altre cop"
+  "¿Simular lo que queda? Pulsa otra vez": "Simular la resta? Prem un altre cop",
+  "%s entrena a tope antes del debut": "%s entrena a tope abans del debut",
+  "Colaboradores oficiales": "Col·laboradors oficials",
+  "El plantel tiene ganas de que empiece la liga.": "La plantilla té ganes que comenci la lliga.",
+  "La previa: %s recibe a %s": "La prèvia: %s rep el %s",
+  "La previa: %s visita a %s": "La prèvia: %s visita el %s",
+  "Llegamos con hambre: cada entrenamiento en %s cuenta.": "Arribem amb gana: cada entrenament a %s compta.",
+  "No hay rival fácil en esta liga: vamos partido a partido.": "No hi ha rival fàcil en aquesta lliga: anem partit a partit.",
+  "Nos preparamos a fondo para %s.": "Ens preparem a fons per al %s.",
+  "Pretemporada: %s ya prepara la jornada 1": "Pretemporada: el %s ja prepara la jornada 1",
+  "Todos los menús": "Tots els menús"
  },
  "pl": {
   "Club": "Klub",
@@ -69353,7 +69413,17 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Symulacja sezonu…",
   "Sorteo de campo: gana el sorteo tu club.": "Losowanie: wygrywa twój klub.",
   "Sorteo de campo: gana el sorteo el rival.": "Losowanie: wygrywa rywal.",
-  "¿Simular lo que queda? Pulsa otra vez": "Symulować resztę? Naciśnij ponownie"
+  "¿Simular lo que queda? Pulsa otra vez": "Symulować resztę? Naciśnij ponownie",
+  "%s entrena a tope antes del debut": "%s trenuje na pełnych obrotach przed debiutem",
+  "Colaboradores oficiales": "Oficjalni partnerzy",
+  "El plantel tiene ganas de que empiece la liga.": "Drużyna nie może się doczekać startu ligi.",
+  "La previa: %s recibe a %s": "Zapowiedź: %s podejmuje %s",
+  "La previa: %s visita a %s": "Zapowiedź: %s jedzie do %s",
+  "Llegamos con hambre: cada entrenamiento en %s cuenta.": "Jesteśmy głodni: każdy trening na %s się liczy.",
+  "No hay rival fácil en esta liga: vamos partido a partido.": "W tej lidze nie ma łatwych rywali: gramy mecz po meczu.",
+  "Nos preparamos a fondo para %s.": "Przygotowujemy się solidnie na %s.",
+  "Pretemporada: %s ya prepara la jornada 1": "Przedsezonowo: %s już przygotowuje się do 1. kolejki",
+  "Todos los menús": "Wszystkie menu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78365,6 +78435,16 @@
   "⏭⏭ Simulando la temporada…": "⏭⏭ Sezon simüle ediliyor…",
   "Sorteo de campo: gana el sorteo tu club.": "Yazı tura: kurayı kulübün kazandı.",
   "Sorteo de campo: gana el sorteo el rival.": "Yazı tura: kurayı rakip kazandı.",
-  "¿Simular lo que queda? Pulsa otra vez": "Kalanı simüle edilsin mi? Tekrar bas"
+  "¿Simular lo que queda? Pulsa otra vez": "Kalanı simüle edilsin mi? Tekrar bas",
+  "%s entrena a tope antes del debut": "%s, ilk maçtan önce son sürat çalışıyor",
+  "Colaboradores oficiales": "Resmi ortaklar",
+  "El plantel tiene ganas de que empiece la liga.": "Kadro ligin başlamasını sabırsızlıkla bekliyor.",
+  "La previa: %s recibe a %s": "Ön izleme: %s, %s takımını ağırlıyor",
+  "La previa: %s visita a %s": "Ön izleme: %s, %s deplasmanında",
+  "Llegamos con hambre: cada entrenamiento en %s cuenta.": "Aç geldik: %s'deki her antrenman önemli.",
+  "No hay rival fácil en esta liga: vamos partido a partido.": "Bu ligde kolay rakip yok: maç maç ilerliyoruz.",
+  "Nos preparamos a fondo para %s.": "%s maçı için iyice hazırlanıyoruz.",
+  "Pretemporada: %s ya prepara la jornada 1": "Hazırlık dönemi: %s 1. haftaya hazırlanıyor",
+  "Todos los menús": "Tüm menüler"
  }
 }

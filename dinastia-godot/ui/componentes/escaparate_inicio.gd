@@ -25,6 +25,7 @@ static func preparar(p: Principal) -> void:
 		var destino := raiz.get_child_count() - 1 if ayuda == null else ayuda.get_index()
 		raiz.move_child(p._botones, destino)   ## Avanzar / Jugar / Saltar abajo, encima de la barra de ayudas
 	_botones_grandes(p)
+	p._botones.alignment = BoxContainer.ALIGNMENT_END   ## abajo a la derecha, como en la maqueta
 	_riel(p)
 	if not _enganchado and p._pestanas != null:
 		_enganchado = true
@@ -46,8 +47,7 @@ static func _botones_grandes(p: Principal) -> void:
 		var bt := b as Button
 		bt.custom_minimum_size = Vector2(220, 52)
 		bt.size_flags_horizontal = Control.SIZE_SHRINK_END
-		bt.add_theme_font_override("font", EstiloAvanzar.fuente_titulo())
-		bt.add_theme_font_size_override("font_size", Tema.letra(24))
+		bt.add_theme_font_size_override("font_size", Tema.letra(22))
 		var rojo := clave in ["b_avanzar", "b_jugar"]
 		var n := StyleBoxFlat.new()
 		n.bg_color = Color("c8102e") if rojo else Color("243656")
@@ -64,7 +64,7 @@ static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, ac
 	var alto := p.get_viewport_rect().size.y
 	var arriba := HBoxContainer.new()
 	arriba.add_theme_constant_override("separation", TableroInicio.SEP)
-	arriba.custom_minimum_size.y = alto * 0.42
+	arriba.custom_minimum_size.y = alto * 0.35
 	cuerpo.add_child(arriba)
 	var dt := EscaparateTarjetas.dt(p, c, acento)
 	dt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -80,7 +80,7 @@ static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, ac
 	arriba.add_child(tabla)
 	var abajo := HBoxContainer.new()
 	abajo.add_theme_constant_override("separation", TableroInicio.SEP)
-	abajo.custom_minimum_size.y = alto * 0.24
+	abajo.custom_minimum_size.y = alto * 0.25
 	cuerpo.add_child(abajo)
 	var prox := EscaparatePartidos.proximos(p, c, liga, acento)
 	prox.size_flags_horizontal = Control.SIZE_EXPAND_FILL

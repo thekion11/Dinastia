@@ -5,7 +5,10 @@ extends RefCounted
 
 static func _imagen(b: Control, tex: Texture2D, anclas: Vector4, atras := true) -> TextureRect:
 	var t := TextureRect.new()
-	t.texture = tex
+	var recorte := AtlasTexture.new()   ## el busto cuadrado entra en una tarjeta apaisada: se enseña su parte de arriba (cabeza y hombros), no el centro
+	recorte.atlas = tex
+	recorte.region = Rect2(0, 0, 256, 186)
+	t.texture = recorte if tex is ImageTexture else tex
 	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	t.anchor_left = anclas.x; t.anchor_top = anclas.y; t.anchor_right = anclas.z; t.anchor_bottom = anclas.w
@@ -16,10 +19,10 @@ static func _imagen(b: Control, tex: Texture2D, anclas: Vector4, atras := true) 
 	return t
 
 ## Un degradado negro de abajo hacia arriba para que el texto se lea sobre la imagen.
-static func _velo(b: Control, desde := 0.45) -> void:
+static func _velo(b: Control, imagenes := 1, desde := 0.35) -> void:
 	var g := Gradient.new()
 	g.offsets = PackedFloat32Array([0.0, 1.0])
-	g.colors = PackedColorArray([Color(0, 0, 0, 0), Color(0, 0, 0, 0.88)])
+	g.colors = PackedColorArray([Color(0, 0, 0, 0), Color(0, 0, 0, 0.94)])
 	var gt := GradientTexture2D.new()
 	gt.gradient = g
 	gt.fill_from = Vector2(0.5, desde)
@@ -33,6 +36,7 @@ static func _velo(b: Control, desde := 0.45) -> void:
 	v.set_anchors_preset(Control.PRESET_FULL_RECT)
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(v)
+	b.move_child(v, imagenes)   ## justo encima de las imágenes y debajo del texto
 
 static func _cara(j: Jugador, c: Club) -> Texture2D:
 	return Cara.textura(j, c.color1, c.color2, 256)
@@ -62,11 +66,13 @@ static func dt(p: Principal, c: Club, acento: Color) -> Control:
 	var b: Button = tc[0]
 	var v: VBoxContainer = tc[1]
 	_imagen(b, _cara_dt(p, c), Vector4(0, 0, 1, 0.74))
-	_velo(b, 0.5)
+	_velo(b, 1, 0.5)
 	_al_fondo(v)
 	var estilo: Dictionary = Previa.dt_de(c)
 	var frase := String(estilo.get("descripcion", ""))
-	var nombre := p.mundo.roles.dt_nombre() if p.mundo.roles != null else String(estilo.get("nombre", ""))
+	var nombre := p.mundo.roles.dt_nombre() if p.mundo.roles != null else ""
+	if nombre.length() <= 1:
+		nombre = String(estilo.get("nombre", ""))
 	var l := EstiloAvanzar.etiqueta(Idiomas.t("%s: %s") % [nombre, frase] if frase != "" else nombre, 17, Color.WHITE)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.max_lines_visible = 2
@@ -90,7 +96,7 @@ static func noticia(p: Principal, c: Club, liga: Liga, acento: Color) -> Control
 		_imagen(b, _cara(js[0], c), Vector4(0.42, 0.0, 1.0, 0.74))
 	elif js.size() == 1:
 		_imagen(b, _cara(js[0], c), Vector4(0.3, 0.0, 0.8, 0.74))
-	_velo(b, 0.45)
+	_velo(b, mini(js.size(), 2), 0.45)
 	_al_fondo(v)
 	var t := EstiloAvanzar.etiqueta(String(n["titulo"]), 24, Color.WHITE, true)
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -121,11 +127,10 @@ static func tabla(p: Principal, c: Club, liga: Liga, acento: Color) -> Control:
 	var tc := TableroInicio.tarjeta(Idiomas.t("Tabla de posiciones"), acento, func() -> void: TableroInicio.abrir(p, "Ligas y clubes"))
 	var b: Button = tc[0]
 	var v: VBoxContainer = tc[1]
-	v.add_theme_constant_override("separation", 2)
+	v.add_theme_constant_override("separation", 0)
 	if liga == null:
 		TableroInicio.cerrar(b)
 		return b
-	v.add_child(EstiloAvanzar.etiqueta(liga.nombre, 13, Color(1, 1, 1, 0.65)))
 	var t: Array = liga.tabla()
 	var filas: Array = range(mini(10, t.size()))
 	var mio := 0
@@ -140,22 +145,22 @@ static func tabla(p: Principal, c: Club, liga: Liga, acento: Color) -> Control:
 		var h := HBoxContainer.new()
 		h.add_theme_constant_override("separation", 10)
 		h.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		var pos := EstiloAvanzar.etiqueta("%d" % (i + 1), 19, col, true)
+		var pos := EstiloAvanzar.etiqueta("%d" % (i + 1), 15, col, true)
 		pos.custom_minimum_size.x = 30
 		pos.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		h.add_child(pos)
 		var esc := TextureRect.new()
-		esc.texture = Escudo.textura(club, 28)
-		esc.custom_minimum_size = Vector2(28, 28)
+		esc.texture = Escudo.textura(club, 22)
+		esc.custom_minimum_size = Vector2(22, 22)
 		esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		esc.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		h.add_child(esc)
-		var n := EstiloAvanzar.etiqueta(club.nombre, 19, col, true)
+		var n := EstiloAvanzar.etiqueta(club.nombre, 15, col, true)
 		n.clip_text = true
 		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		h.add_child(n)
-		var pts := EstiloAvanzar.etiqueta("%d" % int(t[i]["pts"]), 20, col, true)
+		var pts := EstiloAvanzar.etiqueta("%d" % int(t[i]["pts"]), 16, col, true)
 		pts.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		h.add_child(pts)
 		v.add_child(h)
