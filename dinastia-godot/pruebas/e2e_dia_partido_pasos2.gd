@@ -76,14 +76,17 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 		bs.pressed.emit()
 		await t.esperar(2)
 		bs.pressed.emit()
-	## Al acabar el 3D, la crónica del partido (2D) con su «Volver»: lo que pulsa el jugador para ir al resultado.
-	await t.hasta(func() -> bool:
-		var v_ = t.buscar(p, "PartidoVivo")
-		return v_ != null and v_.get("_btn_volver") != null and (v_.get("_btn_volver") as Control).visible, 120.0)
-	var vivo_fin: Node = t.buscar(p, "PartidoVivo")
-	t.ok(vivo_fin != null and (vivo_fin.get("_btn_volver") as Control).visible, "[%s] tras simular, la crónica del partido ofrece «Volver»" % pais)
-	if vivo_fin != null:
-		(vivo_fin.get("_btn_volver") as BaseButton).pressed.emit()
+	## «Simular el resto» en la 1.ª parte se para en el DESCANSO (Auditoría): «Continuar simulando / Volver a jugar / Cambios».
+	await t.hasta(func() -> bool: return t.buscar(p, "DescansoPartido") != null, 120.0)
+	var des: Node = t.buscar(p, "DescansoPartido")
+	t.ok(des != null, "[%s] simulando desde la 1.ª parte, el partido se para en el descanso (%d')" % [pais, partido.minuto])
+	if des != null:
+		await t.esperar(15)
+		var bcs: BaseButton = a._boton_con(des._raiz, Idiomas.t("Continuar simulando"))
+		t.ok(bcs != null and a._boton_con(des._raiz, Idiomas.t("Volver a jugar")) != null and a._boton_con(des._raiz, Idiomas.t("Cambios")) != null,
+			"[%s] el descanso ofrece «Continuar simulando», «Volver a jugar» y «Cambios»" % pais)
+		if bcs != null:
+			bcs.pressed.emit()
 	var rp: ResultadoPartido = null
 	await t.hasta(func() -> bool:
 		var rp_ = t.buscar(p, "ResultadoPartido") as ResultadoPartido
@@ -102,6 +105,20 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 	var tarjetas := partido.amarillas_local + partido.amarillas_visita + partido.rojas_local + partido.rojas_visita
 	var rotulos := ResumenPartidoCine.estadisticas(partido).map(func(f: Array) -> String: return String(f[0]))
 	t.ok(rotulos.has("Tarjetas amarillas") and rotulos.has("Pases"), "[%s] el final muestra tarjetas (%d) y los pases del césped" % [pais, tarjetas])
+	## La crónica ya no sale antes del resumen (eran dos finales): está en su botón.
+	var bcr: BaseButton = a._boton_con(rp._raiz, Idiomas.t("Crónica"))
+	t.ok(bcr != null, "[%s] el resumen final tiene el botón «Crónica»" % pais)
+	if bcr != null:
+		bcr.pressed.emit()
+		await t.esperar(10)
+		var cr: Node = null
+		for n: Node in p.get_children():
+			if n.get_script() != null and String(n.get_script().resource_path).ends_with("resultado_partido.gd") and n != rp:
+				cr = n
+		t.ok(partido.has_meta("cronica_texto") and String(partido.get_meta("cronica_texto")).length() > 200, "[%s] la crónica guardada tiene el partido (%d letras)" % [pais, String(partido.get_meta("cronica_texto", "")).length()])
+		if cr != null:
+			cr.call("cerrar_cronica")
+		await t.esperar(5)
 	## 11) REPETICIÓN DE LOS GOLES (o los momentos si no hubo goles) → «Jugar desde el minuto N»
 	var hubo_goles := partido.goles_local + partido.goles_visita > 0
 	var br: BaseButton = a._boton_con(rp._raiz, Idiomas.t("Repetición de los goles") if hubo_goles else Idiomas.t("Jugar momentos"))

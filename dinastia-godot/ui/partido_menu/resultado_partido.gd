@@ -49,6 +49,8 @@ func _armar(pr: Node) -> void:
 		if not partido.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol").is_empty():
 			lista.append(["Repetición de los goles", _momentos.bind(pr, "goles"), false])
 		lista.append(["Jugar momentos", _momentos.bind(pr, "todas"), false])
+	if partido.has_meta("cronica_texto"):   ## (17-11, Auditoría) la crónica del partido ya no sale antes del resumen: se lee desde aquí
+		lista.append(["Crónica", _ver_cronica.bind(pr), false])
 	ResumenPartidoCine.botones(_raiz, lista)
 
 ## «Continuar»: sale con el barrido (lo que venga detrás se monta tapado).
@@ -115,3 +117,31 @@ func _unhandled_input(e: InputEvent) -> void:
 	if visible and e.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		_seguir()
+
+## LA CRÓNICA DEL PARTIDO (la de `PartidoVivo`, minuto a minuto), a pantalla completa encima del resumen; «Volver», B o Cuadrado la cierran.
+func _ver_cronica(pr: Node) -> void:
+	var c := _Cronica.new()
+	c.montar(pr, FondoCine.Modo.NOCHE, Color.BLACK)
+	var z := TactilPartido.zona_segura(c._raiz)
+	var titulo := EstiloAvanzar.etiqueta(Idiomas.t("Crónica del partido"), 30, Color.WHITE, true, true)
+	z.add_child(_ancla(titulo, 0.05, 0.03, 0.95, 0.1))
+	var texto := RichTextLabel.new()
+	texto.text = String(partido.get_meta("cronica_texto", ""))
+	texto.scroll_following = false
+	texto.focus_mode = Control.FOCUS_ALL   ## con el foco, la cruceta la hace correr
+	texto.add_theme_font_size_override("normal_font_size", 17)
+	z.add_child(_ancla(texto, 0.05, 0.11, 0.95, 0.85))
+	var b := PantallaMaqueta.boton(Idiomas.t("Volver"), true)
+	b.pressed.connect(c.cerrar_cronica)
+	z.add_child(_ancla(b, 0.75, 0.88, 0.95, 0.96))
+	MandoMenuPartido.escuchar(c, c.cerrar_cronica)
+	texto.grab_focus.call_deferred()
+
+class _Cronica extends PantallaMaqueta:
+	func cerrar_cronica() -> void:
+		Sonido.toca("clic")
+		queue_free()
+	func _unhandled_input(e: InputEvent) -> void:
+		if visible and e.is_action_pressed("ui_cancel"):
+			get_viewport().set_input_as_handled()
+			cerrar_cronica()

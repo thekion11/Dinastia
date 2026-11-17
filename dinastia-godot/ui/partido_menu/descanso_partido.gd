@@ -24,7 +24,12 @@ static func mostrar(v: Node) -> DescansoPartido:
 	d.montar(pr if pr != null else v, FondoCine.Modo.NOCHE, Color.BLACK)
 	ResumenPartidoCine.montar(d._raiz, p, club, true)
 	var lista: Array = [["Continuar", d._continuar, true], ["Cambios", d.cerrar_resumen, false]]
-	if pr is Principal and (pr as Principal)._menu_lateral != null:
+	if p.has_meta("simulando_resto") and bool(p.get_meta("simulando_resto")):
+		## (17-11, Auditoría) Se llegó aquí con «Simular el resto» en la 1.ª parte: seguir simulando (la 2.ª parte la juega el simulador del juego), volver
+		## a jugar la 2.ª parte en 3D o hacer cambios en el camarín.
+		p.remove_meta("simulando_resto")
+		lista = [["Continuar simulando", d._seguir_simulando, true], ["Volver a jugar", d._continuar, false], ["Cambios", d.cerrar_resumen, false]]
+	elif pr is Principal and (pr as Principal)._menu_lateral != null:
 		lista.append(["Táctica", d._tactica.bind(pr), false])
 	ResumenPartidoCine.botones(d._raiz, lista)
 	MandoMenuPartido.escuchar(d, d.cerrar_resumen)
@@ -41,6 +46,15 @@ func _continuar() -> void:
 		cerrar_resumen()
 		if is_instance_valid(v) and v.has_method("_salir_segunda"):
 			v.call("_salir_segunda"))
+
+## La 2.ª parte simulada con el `Partido` (el simulador calibrado del juego), del marcador y el minuto de ahora; al acabar sale el resultado final.
+func _seguir_simulando() -> void:
+	var v := vivo
+	BarridoPartido.pasar(_raiz, BarridoPartido.colores_de(v.get("partido") if is_instance_valid(v) else null), func() -> void:
+		cerrar_resumen()
+		if is_instance_valid(v) and v.has_method("_hasta_el_final"):
+			v.set("_entretiempo", false)
+			v.call("_hasta_el_final"))
 
 func cerrar_resumen() -> void:
 	Sonido.toca("clic")
