@@ -38,11 +38,18 @@ func _ready() -> void:
 		menu.elegido.connect(func(e: Dictionary) -> void: _el = e)
 		menu.opcion = "jugar"
 		menu.confirmar()
+		await _hasta_elegido()
 		_ok(String(_el.get("modo", "")) == "completo" and bool(_el.get("control", false)), "%s: «Jugar» = partido completo con control" % cfg[0])
+		menu._eligiendo = false   ## (17-11) el barrido de color deja pasar una sola elección por vez: se reabre para probar la siguiente
+		_el = {}
 		menu._elegir("importantes")
+		await _hasta_elegido()
 		_ok(String(_el.get("modo", "")) == "destacados" and bool(_el.get("ocasiones", false)), "%s: «Solo las importantes» = destacados" % cfg[0])
 		menu.sim = "vivo"
+		menu._eligiendo = false
+		_el = {}
 		menu._elegir("simular")
+		await _hasta_elegido()
 		_ok(String(_el.get("modo", "")) == "vivo" and not bool(_el.get("control", true)), "%s: «Simular» respeta el modo elegido" % cfg[0])
 		menu.queue_free()
 		await _frames(2)
@@ -74,3 +81,10 @@ func _ready() -> void:
 	cfg2.save(CajonAjustes.RUTA)
 	print("FIN. %d fallos" % fallos)
 	get_tree().quit()
+
+## Espera (hasta ~1 s) a que el barrido de color termine y salga `elegido`.
+func _hasta_elegido() -> void:
+	for i in 60:
+		if not _el.is_empty():
+			return
+		await _frames(1)

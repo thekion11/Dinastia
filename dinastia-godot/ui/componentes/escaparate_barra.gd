@@ -111,10 +111,10 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	var corona := Control.new()   ## (17-11) el escudo, centrado en el área útil (sin la barra lateral), colgando de la barra como en el PES
 	corona.name = "Corona"
 	corona.anchor_left = 0.5; corona.anchor_right = 0.5
-	corona.offset_left = -26.0; corona.offset_right = 26.0; corona.offset_top = 4.0; corona.offset_bottom = 56.0   ## (17-11) el escudo DENTRO de la altura de la barra: no tapa ninguna tarjeta
+	corona.offset_left = -33.0; corona.offset_right = 33.0; corona.offset_top = 2.0; corona.offset_bottom = 68.0   ## (17-11) el escudo DENTRO de la altura de la barra: no tapa ninguna tarjeta
 	corona.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var esc := TextureRect.new()
-	esc.texture = Escudo.textura(c, 64)
+	esc.texture = Escudo.textura(c, 96)
 	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -129,7 +129,7 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	corona.add_child(tocar_esc)
 	pant.add_child(corona)
 	for par: Array in [["Oficina del DT", "Mi carrera"], ["Base de datos", "Ligas y clubes"], ["Sistema", "*sistema"]]:
-		var b := boton_pestana(Idiomas.t(String(par[0])), 100.0)
+		var b := boton_pestana(Idiomas.t(String(par[0])), 90.0)
 		b.toggle_mode = false
 		var destino := String(par[1])
 		if destino == "Ligas y clubes":   ## «Base de datos»: abre un cuadro con el BUSCADOR y la puerta a «Ligas y clubes»
@@ -139,7 +139,7 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 		else:
 			b.pressed.connect(func() -> void: TableroInicio.abrir(p, destino))
 		hb.add_child(b)
-	var fecha := EstiloAvanzar.etiqueta("%d/%d/%d" % _fecha_corta(p), 14, Color(1, 1, 1, 0.9))   ## (17-11, dueño) el saldo ya no sale en el menú central (solo en Finanzas): en la barra queda la fecha
+	var fecha := EstiloAvanzar.etiqueta("%d/%d/%d" % _fecha_corta(p), 13, Color(1, 1, 1, 0.9))   ## (17-11, dueño) el saldo ya no sale en el menú central (solo en Finanzas): en la barra queda la fecha
 	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	fecha.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	fecha.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -151,8 +151,10 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	salir.name = "BotonLevantarse" if pc != null else "BotonEntrarClub"
 	salir.icon = IconosUI.textura("🚪" if pc != null else "🏟️", 22)   ## icono dibujado, no emoji
 	salir.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
-	salir.custom_minimum_size.x = 130
+	salir.add_theme_constant_override("h_separation", 8)
+	salir.custom_minimum_size.x = 120
 	hb.add_child(salir)
+	_equilibrar(hb, separador)
 
 ## El PC de la oficina (`visor/pc_oficina.gd`): si el menú es su capa, su padre es el CanvasLayer del PC y el abuelo tiene `apagar` («🚪 Levantarse del PC»). Null si el menú va solo.
 static func pc_de(p: Principal) -> Node:
@@ -165,3 +167,29 @@ static func pc_de(p: Principal) -> Node:
 static func _fecha_corta(p: Principal) -> Array:
 	var f := Calendario.fecha(p.mundo.anio, p.mundo.semana, p._dia_semana)
 	return [int(f["day"]), int(f["month"]), int(f["year"])]
+
+## Reparte la barra en DOS MITADES IGUALES a cada lado del escudo (que va en el centro real del ancho útil): a la izquierda las tres pestañas, a la derecha los tres atajos, la fecha y la salida;
+## los botones de cada mitad se reparten el aire (mismo aire a ambos lados).
+static func _equilibrar(hb: HBoxContainer, separador: Control) -> void:
+	var izq := HBoxContainer.new()
+	var der := HBoxContainer.new()
+	var lado := izq
+	for h in hb.get_children():
+		hb.remove_child(h)
+		if h == separador:
+			lado = der
+			continue
+		lado.add_child(h)
+	for g: HBoxContainer in [izq, der]:
+		g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		g.size_flags_stretch_ratio = 1.0
+		g.add_theme_constant_override("separation", 8)
+		for h in g.get_children():
+			if h is Button and not String(h.name).begins_with("BotonEntrar") and not String(h.name).begins_with("BotonLev"):
+				(h as Button).size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	der.alignment = BoxContainer.ALIGNMENT_END
+	separador.size_flags_horizontal = Control.SIZE_FILL
+	separador.custom_minimum_size.x = 76
+	hb.add_child(izq)
+	hb.add_child(separador)
+	hb.add_child(der)

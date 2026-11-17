@@ -80,18 +80,31 @@ static func _ficha(valor: String, rotulo: String, col := Color.WHITE) -> Control
 
 static func _franja(p: Principal, c: Club) -> Control:
 	var f := HBoxContainer.new()
-	f.add_theme_constant_override("separation", 22)
-	f.custom_minimum_size.y = 36
-	var relleno := Control.new()
-	relleno.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	relleno.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	f.add_child(relleno)
+	f.add_theme_constant_override("separation", TableroInicio.SEP)
+	f.custom_minimum_size.y = 42
+	var t := EstiloAvanzar.etiqueta(Idiomas.t("Accesos rápidos").to_upper(), 12, Color(1, 1, 1, 0.7), true)   ## el hueco de la izquierda: el rótulo de la franja
+	t.custom_minimum_size.x = 150
+	t.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	f.add_child(t)
 	var accesos: Array = p._favoritos if not p._favoritos.is_empty() else ["Mi plantel", "Táctica", "Partido", "Calendario"]   ## sin favoritos marcados en Ajustes, los cuatro más usados
 	for tab: String in accesos:
-		var b := Button.new()
-		b.text = "⭐ " + Idiomas.t(tab)
+		var b := Button.new()   ## fichas con el lenguaje de las tarjetas (mismo fondo, borde y esquinas) y repartidas a lo ancho, alineadas con ellas
+		b.text = "★  " + Idiomas.t(tab)
 		b.focus_mode = Control.FOCUS_ALL
-		b.add_theme_font_size_override("font_size", Tema.letra(13))
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.custom_minimum_size = Vector2(80, 40)
+		b.add_theme_font_size_override("font_size", Tema.letra(16))
+		var st := StyleBoxFlat.new()
+		st.bg_color = TableroInicio.fondo_mundo
+		st.border_color = Color(1, 1, 1, 0.12)
+		st.set_border_width_all(1)
+		st.set_corner_radius_all(6)
+		var enc := st.duplicate() as StyleBoxFlat
+		enc.border_color = Color.WHITE
+		enc.set_border_width_all(3)
+		b.add_theme_stylebox_override("normal", st)
+		for k: String in ["hover", "focus", "pressed", "hover_pressed"]:
+			b.add_theme_stylebox_override(k, enc)
 		b.pressed.connect(func() -> void: p._ir_a_pestana(tab))
 		f.add_child(b)
 	return f

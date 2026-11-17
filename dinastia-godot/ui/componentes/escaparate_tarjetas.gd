@@ -99,6 +99,14 @@ static func dt(p: Principal, c: Club, acento: Color) -> Control:
 	var v: VBoxContainer = tc[1]
 	_escena(b, "despacho", Color(EscaparateBarra.color_de(c)))
 	_imagen(b, _cara_dt(p, c), Vector4(0.04, 0.0, 0.96, 1.0), 1)
+	var insignia := TextureRect.new()   ## (17-11) el detalle del club en su ropa: la insignia en el pecho
+	insignia.texture = Escudo.textura(c, 48)
+	insignia.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	insignia.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	insignia.anchor_left = 0.50; insignia.anchor_right = 0.62; insignia.anchor_top = 0.60; insignia.anchor_bottom = 0.74
+	insignia.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(insignia)
+	b.move_child(insignia, 2)
 	_velo(b, 2, 0.5)
 	_al_fondo(v)
 	var estilo: Dictionary = Previa.dt_de(c)
@@ -114,8 +122,8 @@ static func dt(p: Principal, c: Club, acento: Color) -> Control:
 	TableroInicio.cerrar(b)
 	return b
 
-static func create_fade(n: CanvasItem) -> void:
-	n.create_tween().tween_property(n, "modulate:a", 1.0, 0.35)
+static func create_fade(n: CanvasItem) -> void:   ## aparece con un fundido y algo más clara (la foto 3D sale oscura en el menú)
+	n.create_tween().tween_property(n, "modulate", Color(1.4, 1.4, 1.4, 1.0), 0.35)
 
 static func noticia(p: Principal, c: Club, liga: Liga, acento: Color) -> Control:
 	var tc := TableroInicio.tarjeta(Idiomas.t("Noticias y correo"), acento, func() -> void: TableroInicio.abrir(p, "Correo"), Color(c.color1).darkened(0.7))
@@ -135,7 +143,7 @@ static func noticia(p: Principal, c: Club, liga: Liga, acento: Color) -> Control
 	b.move_child(foto, 1)
 	var perfil: Dictionary = p.mundo.perfil_estadio_de(c) if p.mundo.has_method("perfil_estadio_de") else c.perfil_estadio()
 	var fotos := load("res://ui/partido_menu/fotos_estadio_menu.gd")   ## por load: la memoria del menú no nombra clases del estadio 3D
-	fotos.pedir(p, c, perfil, "tarde", func(f: Dictionary) -> void:
+	fotos.pedir(p, c, perfil, "dia", func(f: Dictionary) -> void:
 		if is_instance_valid(foto) and f.get("estadio") is Texture2D:
 			foto.texture = f["estadio"]
 			create_fade(foto))
@@ -143,7 +151,7 @@ static func noticia(p: Principal, c: Club, liga: Liga, acento: Color) -> Control
 	esc.texture = Escudo.textura(c, 120)
 	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	esc.anchor_left = 0.80; esc.anchor_right = 0.97; esc.anchor_top = 0.05; esc.anchor_bottom = 0.34
+	esc.anchor_left = 0.88; esc.anchor_right = 0.98; esc.anchor_top = 0.04; esc.anchor_bottom = 0.20
 	esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(esc)
 	b.move_child(esc, 2)
@@ -284,7 +292,19 @@ static func despacho(p: Principal, c: Club, acento: Color) -> Control:
 	var tc := TableroInicio.tarjeta(Idiomas.t("Despacho"), acento, func() -> void: EscaparatePantalla.de(p).abrir_despacho(p), Color(0.05, 0.07, 0.09, 1.0))
 	var b: Button = tc[0]
 	var v: VBoxContainer = tc[1]
-	EscaparateArte.poner(b, "despacho_%d" % (0 if n == 0 else (1 if n <= 2 else 2)), c)   ## tres estados del escritorio
+	var estado := 0 if n == 0 else (1 if n <= 2 else 2)   ## tres estados del escritorio: ordenado, con pendientes, desbordado
+	var tex := EscaparateDespacho3D.textura(p, estado, EscaparateBarra.color_de(c))   ## render 3D del escritorio (una vez, guardado); sin pantalla, el dibujo plano
+	if tex != null:
+		var foto := TextureRect.new()
+		foto.texture = tex
+		foto.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		foto.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		foto.set_anchors_preset(Control.PRESET_FULL_RECT)
+		foto.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(foto)
+		b.move_child(foto, 0)
+	else:
+		EscaparateArte.poner(b, "despacho_%d" % estado, c)
 	_velo(b, 1, 0.3)
 	_al_fondo(v)
 	var linea := HBoxContainer.new()   ## el número y su texto, en la misma línea base

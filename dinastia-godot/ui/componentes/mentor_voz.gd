@@ -28,8 +28,12 @@ static func _siguiente() -> void:
 		_mostrando = false
 		return
 	var d: Dictionary = _cola.pop_front()
-	var padre: Control = d["padre"]
-	if padre == null or not is_instance_valid(padre) or not padre.is_inside_tree():
+	var padre_v: Variant = d["padre"]   ## (17-11) un nodo ya liberado no cabe en una variable tipada: se mira antes
+	if padre_v == null or not is_instance_valid(padre_v):
+		_siguiente()
+		return
+	var padre: Control = padre_v
+	if not padre.is_inside_tree():
 		_siguiente()
 		return
 	_mostrando = true

@@ -9125,7 +9125,8 @@
   "%d.º de %d · jornada %d": "%dth of %d · matchday %d",
   "%d.º de %d · pretemporada": "%dth of %d · pre-season",
   "Objetivos": "Goals",
-  "Con táctica %s, %s apuesta por %s.": "With a %s tactic, %s goes for %s."
+  "Con táctica %s, %s apuesta por %s.": "With a %s tactic, %s goes for %s.",
+  "Accesos rápidos": "Quick access"
  },
  "pt": {
   "Historia": "História",
@@ -18253,7 +18254,8 @@
   "%d.º de %d · jornada %d": "%dº de %d · rodada %d",
   "%d.º de %d · pretemporada": "%dº de %d · pré-temporada",
   "Objetivos": "Objetivos",
-  "Con táctica %s, %s apuesta por %s.": "Com tática %s, %s aposta em %s."
+  "Con táctica %s, %s apuesta por %s.": "Com tática %s, %s aposta em %s.",
+  "Accesos rápidos": "Acessos rápidos"
  },
  "patrones": [
   [
@@ -33653,7 +33655,8 @@
   "%d.º de %d · jornada %d": "%de sur %d · journée %d",
   "%d.º de %d · pretemporada": "%de sur %d · pré-saison",
   "Objetivos": "Objectifs",
-  "Con táctica %s, %s apuesta por %s.": "En tactique %s, %s mise sur %s."
+  "Con táctica %s, %s apuesta por %s.": "En tactique %s, %s mise sur %s.",
+  "Accesos rápidos": "Accès rapides"
  },
  "it": {
   "Historia": "Storia",
@@ -42781,7 +42784,8 @@
   "%d.º de %d · jornada %d": "%dº su %d · giornata %d",
   "%d.º de %d · pretemporada": "%dº su %d · pre-campionato",
   "Objetivos": "Obiettivi",
-  "Con táctica %s, %s apuesta por %s.": "Con tattica %s, %s punta su %s."
+  "Con táctica %s, %s apuesta por %s.": "Con tattica %s, %s punta su %s.",
+  "Accesos rápidos": "Accessi rapidi"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51909,7 +51913,8 @@
   "%d.º de %d · jornada %d": "%d. von %d · Spieltag %d",
   "%d.º de %d · pretemporada": "%d. von %d · Vorbereitung",
   "Objetivos": "Ziele",
-  "Con táctica %s, %s apuesta por %s.": "Mit %s Taktik setzt %s auf %s."
+  "Con táctica %s, %s apuesta por %s.": "Mit %s Taktik setzt %s auf %s.",
+  "Accesos rápidos": "Schnellzugriff"
  },
  "ca": {
   "Historia": "Història",
@@ -61037,7 +61042,8 @@
   "%d.º de %d · jornada %d": "%dè de %d · jornada %d",
   "%d.º de %d · pretemporada": "%dè de %d · pretemporada",
   "Objetivos": "Objectius",
-  "Con táctica %s, %s apuesta por %s.": "Amb tàctica %s, %s aposta per %s."
+  "Con táctica %s, %s apuesta por %s.": "Amb tàctica %s, %s aposta per %s.",
+  "Accesos rápidos": "Accessos ràpids"
  },
  "pl": {
   "Club": "Klub",
@@ -70165,7 +70171,8 @@
   "%d.º de %d · jornada %d": "%d. z %d · kolejka %d",
   "%d.º de %d · pretemporada": "%d. z %d · przedsezonowy okres",
   "Objetivos": "Cele",
-  "Con táctica %s, %s apuesta por %s.": "Z taktyką %s %s stawia na %s."
+  "Con táctica %s, %s apuesta por %s.": "Z taktyką %s %s stawia na %s.",
+  "Accesos rápidos": "Szybki dostęp"
  },
  "tr": {
   "Club": "Kulüp",
@@ -79293,6 +79300,7 @@
   "%d.º de %d · jornada %d": "%d. / %d · hafta %d",
   "%d.º de %d · pretemporada": "%d. / %d · sezon öncesi",
   "Objetivos": "Hedefler",
-  "Con táctica %s, %s apuesta por %s.": "%s taktikle %s, %s üzerine oynar."
+  "Con táctica %s, %s apuesta por %s.": "%s taktikle %s, %s üzerine oynar.",
+  "Accesos rápidos": "Hızlı erişim"
  }
 }

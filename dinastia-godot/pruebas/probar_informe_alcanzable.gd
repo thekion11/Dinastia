@@ -50,7 +50,7 @@ func _ready() -> void:
 		var e: String = cfg[0]
 		var pant := pr.get_meta("escaparate") as EscaparatePantalla
 		var barra: Node = pant.find_child("Botones", true, false)
-		var boton := barra.get_node_or_null("BotonMensajes") as Button
+		var boton := barra.find_child("BotonMensajes", true, false) as Button
 		_ok(boton != null, "%s: la barra tiene «Mensajes»" % e)
 		if boton == null:
 			continue

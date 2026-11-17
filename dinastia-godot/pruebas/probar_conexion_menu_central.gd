@@ -88,7 +88,7 @@ func _una(cfg: Array) -> void:
 		_ok(bb0 != null and bb0.is_visible_in_tree() and bb0.get_global_rect().position.x < MenuLateral.ANCHO_RIEL and bb0.get_global_rect().size.y >= 36.0, "%s: el riel enseña el menú «%s» con el Inicio a la vista" % [e, mn["id"]])
 	## 2. La barra de arriba y las tarjetas del Inicio
 	for nombre: String in ["BotonDespacho", "BotonMensajes"]:
-		var b := _barra(pant).get_node_or_null(nombre) as Button
+		var b := _barra(pant).find_child(nombre, true, false) as Button
 		_ok(b != null, "%s: la barra tiene «%s»" % [e, nombre])
 		if b == null:
 			continue
@@ -98,7 +98,7 @@ func _una(cfg: Array) -> void:
 		await _accion("ui_cancel")
 		await _frames(4)
 		_ok(not is_instance_valid(pant.panel_despacho) and not is_instance_valid(pant.informe), "%s: Esc cierra la pantalla de «%s»" % [e, nombre])
-	for b in _barra(pant).get_children():
+	for b in _barra(pant).find_children("*", "Button", true, false):
 		if b is Button and ["Oficina del DT", "Base de datos", "Sistema"].has(String(b.get_meta("rotulo", ""))):
 			(b as Button).pressed.emit()
 			await _frames(4)
@@ -112,7 +112,7 @@ func _una(cfg: Array) -> void:
 				await _frames(3)
 			await _cerrar_menu(pr)
 	## «Sistema»: su panel (guardar y cargar, ayuda, créditos, salir) y sus entradas abren algo
-	for b in _barra(pant).get_children():
+	for b in _barra(pant).find_children("*", "Button", true, false):
 		if b is Button and String(b.get_meta("rotulo", "")) == Idiomas.t("Sistema"):
 			(b as Button).pressed.emit()
 			await _frames(4)
@@ -122,12 +122,15 @@ func _una(cfg: Array) -> void:
 				var botones_s := pn.find_children("*", "Button", true, false).filter(func(x: Node) -> bool: return (x as Button).text != Idiomas.t("Volver"))
 				_ok(botones_s.size() >= 5, "%s: el panel Sistema ofrece guardar/cargar, ayuda, créditos y las dos salidas (%d)" % [e, botones_s.size()])
 				for bs in botones_s:
+					if not is_instance_valid(bs):   ## (17-11) al abrir una pantalla, el panel Sistema se libera con sus botones
+						continue
 					if (bs as Button).text == Idiomas.t("Guardar y cargar partida") or (bs as Button).text == Idiomas.t("Ayuda y glosario"):
+						var rotulo_bs := (bs as Button).text   ## (17-11) el botón se libera al abrir la pantalla: se guarda el rótulo antes
 						(bs as Button).pressed.emit()
 						await _frames(5)
-						_ok(_abierto(pr) != null, "%s: «%s» abre su pantalla" % [e, (bs as Button).text])
+						_ok(_abierto(pr) != null, "%s: «%s» abre su pantalla" % [e, rotulo_bs])
 						await _cerrar_menu(pr)
-						for b2 in _barra(pant).get_children():   ## la barra se repinta al cerrar el menú: se vuelve a buscar «Sistema»
+						for b2 in _barra(pant).find_children("*", "Button", true, false):   ## la barra se repinta al cerrar el menú: se vuelve a buscar «Sistema»
 							if b2 is Button and String(b2.get_meta("rotulo", "")) == Idiomas.t("Sistema"):
 								(b2 as Button).pressed.emit()
 						await _frames(4)
