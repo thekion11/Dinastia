@@ -8,6 +8,7 @@ func _probar_dorsales_anim() -> void:
 	_titulo("PARTIDO: DORSAL Y NOMBRE EN LA ESPALDA, CARRERA SIN PATINAR E INERCIA (SOLO VISUAL)")
 	_dq_letras_y_ribete()
 	_dq_ciclo_carrera()
+	_dq_trote_cmu()
 	_dq_inercia_curva()
 	_dq_inercia_partido()
 
@@ -30,6 +31,24 @@ func _dq_letras_y_ribete() -> void:
 	var u0 := DisenosKit.uniforms({"dis": "liso", "cols": ["ffd600", "0b1f4d"], "num": "0b1f4d"}, 0, "Gómez")
 	_comprobar(int(u["nombre_n"]) == 5 and int(u0["nombre_n"]) == 0 and u.has("color_num_borde"),
 		"dorsal: el shader recibe el apellido (5 letras) y, sin dorsal, nada en la espalda")
+	_dq_espalda_medidas()
+
+## (17-11, 2.ª pasada) Las medidas de la espalda en `equipacion_q.gdshader`: el apellido de ≥ 6 cm (antes 4: lo tapaban el pelo y la
+## cabeza inclinada), más abajo que antes, y sin pisar el número (ni este al patrocinador de debajo).
+func _dq_espalda_medidas() -> void:
+	var src := FileAccess.get_file_as_string("res://visor/equipacion_q.gdshader")
+	var alto := _dq_num(src, "const float ALTO_N = ")
+	var tope := _dq_num(src, "const float TOPE_N = ")
+	var u_num := _dq_num(src, "const float U_NUM = 1.6 / ")   ## el alto del número (m)
+	var base := _dq_num(src, "dq_numero(dorsal, vec2(-x, y - ")
+	var cima_num := base + u_num * (1.49 + 0.095) / 1.6   ## lo más alto del trazo (con su grosor)
+	var suelo_num := base + u_num * (0.11 - 0.095) / 1.6
+	_comprobar(alto >= 0.06 and tope <= 1.445 and tope - alto > cima_num and suelo_num > 1.035 + 0.065 and u_num >= 0.25,
+		"dorsal: apellido de %.1f cm (antes 4) hasta %.3f m (antes 1,462), sobre el número de %.0f cm (%.3f-%.3f m) y el patrocinador" % [alto * 100.0, tope, u_num * 100.0, suelo_num, cima_num])
+
+static func _dq_num(src: String, tras: String) -> float:
+	var i := src.find(tras)
+	return src.substr(i + tras.length(), 8).to_float() if i >= 0 else -1.0
 
 ## La carrera: histéresis entre trotar y correr y la zancada que va con el cuerpo en todo el tramo de cada ciclo.
 func _dq_ciclo_carrera() -> void:
@@ -57,6 +76,56 @@ func _dq_ciclo_carrera() -> void:
 			peor = maxf(peor, CicloCarrera.patina(c, sp))
 	_comprobar(peor < 0.05 and peor_antes > 0.4, "carrera: entre 2 y 10 m/s el pie no patina (%.2f m/s; antes hasta %.2f)" % [peor, peor_antes])
 	_comprobar(cambios <= 6, "carrera: con la velocidad temblando ±0,15 m/s, solo %d cambios de ciclo en una subida y bajada" % cambios)
+
+## EL TROTE DE CAPTURA REAL (`TroteCmu`, apagado por defecto: aquí se enciende): repartido por jugador, re-cronometrado a 3,4 m/s y, en el
+## cuerpo de verdad, con el pie de apoyo a la velocidad de la tabla y apoyado en el césped (la retarget de CMU flotaba 5-21 cm).
+func _dq_trote_cmu() -> void:
+	var usados := {}
+	var originales := 0
+	for i in 22:
+		var b := TroteCmu.base_de("jug_%d_%d" % [i, i * 37])
+		if b == "":
+			originales += 1
+		else:
+			usados[b] = true
+	_comprobar(usados.size() >= 10 and originales >= 1 and originales <= 8 and TroteCmu.base_de("x7") == TroteCmu.base_de("x7"),
+		"trote CMU: 22 jugadores, %d trotes distintos y %d con el de siempre (siempre el mismo para cada uno)" % [usados.size(), originales])
+	var raiz := Node3D.new()
+	add_child(raiz)
+	var d := FutbolistaQ.crear(1.8, "male")
+	raiz.add_child(d["nodo"])
+	FutbolistaQ.terminar(d, true)
+	var ap: AnimationPlayer = d["anim"]
+	var dv := 0.0
+	var suelo := 0.0
+	var en_fase := 0
+	for base: String in TroteCmu.CLIPS:
+		var clave := TroteCmu.PREFIJO + base
+		if not TroteCmu.asegurar(ap, d["esqueleto"], base, clave):
+			continue
+		var m := AnimPasos.medir(ap.get_animation(clave), d["esqueleto"])
+		dv = maxf(dv, absf(float(m["vel"]) - TroteCmu.V_TROTE))
+		suelo = maxf(suelo, absf(float(m["suelo"])))
+		en_fase += 1 if AnimPasos.fases.has(clave) and ap.get_animation(clave).loop_mode == Animation.LOOP_LINEAR else 0
+	## Re-cronometrados a 3,4 m/s: con la MISMA escala que el motor pone al «trotar» de siempre, el pie no patina.
+	_comprobar(dv < 0.06 and suelo < 0.01 and en_fase == TroteCmu.CLIPS.size(),
+		"trote CMU: en el cuerpo real, los 24 con el pie de apoyo a 3,4 m/s como el trote de siempre (±%.2f m/s), en el césped (%.3f m); %d en bucle y con su fase" % [dv, suelo, en_fase])
+	## La señal: el motor pide «trotar» y suena la variante del jugador.
+	var antes := TroteCmu.encendida
+	TroteCmu.encendida = true
+	var id := "x0"
+	for i in 50:
+		if TroteCmu.base_de("x%d" % i) != "":
+			id = "x%d" % i
+			break
+	var p := {"id": id, "anim": ap, "node": d["nodo"], "por": false}
+	TroteCmu.repartir(p)
+	ap.play("trotar")
+	var suena := String(ap.current_animation)
+	TroteCmu.encendida = antes
+	_comprobar(suena == TroteCmu.PREFIJO + TroteCmu.base_de(id) and ap.has_animation("trotar"),
+		"trote CMU: el motor pide «trotar» (sin tocar su decisión ni su escala) y suena «%s»" % suena)
+	raiz.queue_free()
 
 ## Un cuerpo que corre en círculo a 6 m/s (radio 8 m): se ladea hacia dentro, sin pasar del tope; en recta, derecho.
 func _dq_inercia_curva() -> void:
@@ -95,8 +164,12 @@ func _dq_inercia_partido() -> void:
 	var max_lean := 0.0
 	var max_torso := 0.0
 	var pelvis_mueve := false
+	var trote_antes := TroteCmu.encendida
+	var con_trote := {}
+	var trotando_cmu := 0
 	for con: bool in [false, true]:
 		InerciaCuerpo.encendida = con
+		TroteCmu.encendida = con
 		Calidad.elegida = Calidad.ALTA
 		Calidad.partido_ligero = false
 		var raiz := Node3D.new()
@@ -111,6 +184,12 @@ func _dq_inercia_partido() -> void:
 			if not con:
 				continue
 			for p: Dictionary in mo.jugadores:
+				var tc: Array = p.get("trote_cmu", [])
+				if not tc.is_empty():
+					if i == 0:
+						con_trote[String(tc[0])] = int(con_trote.get(String(tc[0]), 0)) + 1
+					if p.get("anim_actual") == "trotar" and String((p["anim"] as AnimationPlayer).current_animation) == String(tc[0]):
+						trotando_cmu += 1
 				var esq := FutbolistaQ.esqueleto_de(p["node"])
 				var iner: InerciaCuerpo = esq.get_node_or_null("InerciaCuerpo") if esq != null else null
 				if iner == null or not iner.active:
@@ -123,7 +202,13 @@ func _dq_inercia_partido() -> void:
 		huellas.append(_huella_h1(mo))
 		raiz.queue_free()
 	InerciaCuerpo.encendida = antes
-	_comprobar(huellas[0] == huellas[1], "inercia: con el ladeo y el torso la huella del motor no cambia (%s = %s)" % [huellas[0], huellas[1]])
+	TroteCmu.encendida = trote_antes
+	_comprobar(huellas[0] == huellas[1], "inercia y trote CMU: con el ladeo, el torso y el trote de cada uno la huella del motor no cambia (%s = %s)" % [huellas[0], huellas[1]])
+	var n_trote := 0
+	for k: String in con_trote:
+		n_trote += int(con_trote[k])
+	_comprobar(con_trote.size() >= 6 and n_trote >= 12 and trotando_cmu > 300,
+		"trote CMU: en el partido %d jugadores con %d trotes distintos, y trotan con el suyo (%d pasos·jugador)" % [n_trote, con_trote.size(), trotando_cmu])
 	_comprobar(activos > 500 and max_lean > 0.05 and max_lean <= Vector2(InerciaCuerpo.LADEO_MAX, InerciaCuerpo.CABECEO_MAX).length() + 0.01 and max_torso > 0.05 and max_torso <= InerciaCuerpo.TORSO_MAX + 0.01,
 		"inercia: activa en los cercanos (%d pasos·jugador), ladeo máx. %.1f° (tope 13° de lado y 9° de frente), torso máx. %.1f°" % [activos, rad_to_deg(atan(max_lean)), rad_to_deg(max_torso)])
 	_comprobar(pelvis_mueve, "inercia: el modificador inclina de verdad la pelvis del esqueleto")
@@ -136,7 +221,8 @@ func _dq_inercia_partido() -> void:
 	for p: Dictionary in mo2.jugadores:
 		var esq := FutbolistaQ.esqueleto_de(p["node"])
 		n_iner += esq.find_children("*", "InerciaCuerpo", false, false).size() if esq != null else 0
-	_comprobar(n_iner == 0, "inercia: en ULTRA BAJA no se monta en nadie (%d)" % n_iner)
+		n_iner += 0 if (p.get("trote_cmu", []) as Array).is_empty() else 1
+	_comprobar(n_iner == 0, "inercia y trote CMU: en ULTRA BAJA no se montan en nadie (%d)" % n_iner)
 	raiz2.queue_free()
 	Calidad.elegida = cal
 	Calidad.partido_ligero = ligero
