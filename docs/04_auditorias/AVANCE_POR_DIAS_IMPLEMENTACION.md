@@ -31,3 +31,7 @@ La maqueta (v8) ya funciona así: estado del club (moral, confianza de la direct
 - La temporada del juego arranca el 1 de febrero y se cuenta por semanas (mercado de verano semanas 1-6, invierno 18-24, `Mundo.VENTANA_*`); la maqueta usa 300 días y 38 jornadas fijas.
 - Los sonidos de la maqueta son sintetizados.
 - El arte de la maqueta es código (SVG); para el juego conviene decidir si se sube de nivel con arte aparte (gratis y con licencia comercial).
+
+## ESTADO 17-11 (noche): pantallas fieles a la maqueta
+Rehechas tras el reclamo del dueño («no se parece en nada»): base `EstiloAvanzar`/`FondoCine`/`PantallaMaqueta` (+ arte pre-renderizado de la maqueta en `assets/ui/avanzar/`), `EventoDiaPantalla` (arte por evento con confeti, sonido por tipo), `PantallaAvanzar` (+ `_banner`, `_piezas`), `MenuPartido` (+ paneles, figura, dibujos; todos los ajustes en `OpcionesPartido`), `ResultadoPartido`, `MomentosPartido` y `PopupPartidoJugado`; botón «Partido jugado» junto a Avanzar. Capturas de la maqueta para comparar: `docs/04_auditorias/maqueta_capturas/`. Banco en 0 fallos.
+FALTA: realismo tipo PES de la previa (figuras), menú de pausa del partido nuevo (sesión par `avance-por-dias-menu`), «Saque inicial» real (el motor no tiene sorteo), «Jugar momento» real desde un minuto (hoy abre la arena de pruebas), repetición 2D de «Ver partido», más arte por evento (decisiones con opciones, negociación, presentación), disparadores pendientes (precontratos, cesiones, charlas, contratos, disciplina, insolvencia, cierre de temporada), C++ gemelo.
