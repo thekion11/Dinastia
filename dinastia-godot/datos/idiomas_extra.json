@@ -9043,7 +9043,18 @@
   "Mentalidad, presión, ritmo y línea.": "Mentality, pressing, tempo and line.",
   "Preparando las caras del plan…": "Preparing the plan faces…",
   "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB tab · B back",
-  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E tab · Esc back"
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E tab · Esc back",
+  "No se confunde con el rival.": "No clash with the opponent.",
+  "⚠ Se confunde con el rival: usa «%s».": "⚠ Clashes with the opponent: use «%s».",
+  "⚠ Se confunde con el rival.": "⚠ Clashes with the opponent.",
+  "Hora": "Kick-off time",
+  "A rayas": "Striped",
+  "A rayas transversales": "Cross stripes",
+  "En círculos": "Circles",
+  "En diagonal": "Diagonal",
+  "En rombos": "Diamonds",
+  "En espiga": "Herringbone",
+  "En abanico": "Fan"
  },
  "pt": {
   "Historia": "História",
@@ -18089,7 +18100,18 @@
   "Mentalidad, presión, ritmo y línea.": "Mentalidade, pressão, ritmo e linha.",
   "Preparando las caras del plan…": "Preparando os rostos do plano…",
   "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB aba · B voltar",
-  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E aba · Esc voltar"
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E aba · Esc voltar",
+  "No se confunde con el rival.": "Não se confunde com o rival.",
+  "⚠ Se confunde con el rival: usa «%s».": "⚠ Confunde-se com o rival: use «%s».",
+  "⚠ Se confunde con el rival.": "⚠ Confunde-se com o rival.",
+  "Hora": "Horário",
+  "A rayas": "Listrado",
+  "A rayas transversales": "Listras transversais",
+  "En círculos": "Em círculos",
+  "En diagonal": "Em diagonal",
+  "En rombos": "Em losangos",
+  "En espiga": "Espinha de peixe",
+  "En abanico": "Em leque"
  },
  "patrones": [
   [
@@ -33407,7 +33429,18 @@
   "Mentalidad, presión, ritmo y línea.": "Mentalité, pressing, rythme et ligne.",
   "Preparando las caras del plan…": "Préparation des visages du plan…",
   "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB onglet · B retour",
-  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E onglet · Échap retour"
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E onglet · Échap retour",
+  "No se confunde con el rival.": "Pas de confusion avec l'adversaire.",
+  "⚠ Se confunde con el rival: usa «%s».": "⚠ Se confond avec l'adversaire : utilise «%s».",
+  "⚠ Se confunde con el rival.": "⚠ Se confond avec l'adversaire.",
+  "Hora": "Heure",
+  "A rayas": "Rayé",
+  "A rayas transversales": "Bandes transversales",
+  "En círculos": "En cercles",
+  "En diagonal": "En diagonale",
+  "En rombos": "En losanges",
+  "En espiga": "En chevrons",
+  "En abanico": "En éventail"
  },
  "it": {
   "Historia": "Storia",
@@ -42453,7 +42486,18 @@
   "Mentalidad, presión, ritmo y línea.": "Mentalità, pressing, ritmo e linea.",
   "Preparando las caras del plan…": "Preparazione dei volti del piano…",
   "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB scheda · B indietro",
-  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E scheda · Esc indietro"
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E scheda · Esc indietro",
+  "No se confunde con el rival.": "Non si confonde con l'avversario.",
+  "⚠ Se confunde con el rival: usa «%s».": "⚠ Si confonde con l'avversario: usa «%s».",
+  "⚠ Se confunde con el rival.": "⚠ Si confonde con l'avversario.",
+  "Hora": "Orario",
+  "A rayas": "A strisce",
+  "A rayas transversales": "A strisce trasversali",
+  "En círculos": "A cerchi",
+  "En diagonal": "In diagonale",
+  "En rombos": "A rombi",
+  "En espiga": "A spina di pesce",
+  "En abanico": "A ventaglio"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51499,7 +51543,18 @@
   "Mentalidad, presión, ritmo y línea.": "Mentalität, Pressing, Tempo und Linie.",
   "Preparando las caras del plan…": "Gesichter für den Plan werden vorbereitet…",
   "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB Reiter · B zurück",
-  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E Reiter · Esc zurück"
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E Reiter · Esc zurück",
+  "No se confunde con el rival.": "Keine Verwechslung mit dem Gegner.",
+  "⚠ Se confunde con el rival: usa «%s».": "⚠ Verwechslungsgefahr mit dem Gegner: nimm «%s».",
+  "⚠ Se confunde con el rival.": "⚠ Verwechslungsgefahr mit dem Gegner.",
+  "Hora": "Anstoßzeit",
+  "A rayas": "Gestreift",
+  "A rayas transversales": "Querstreifen",
+  "En círculos": "Kreise",
+  "En diagonal": "Diagonal",
+  "En rombos": "Rauten",
+  "En espiga": "Fischgrät",
+  "En abanico": "Fächer"
  },
  "ca": {
   "Historia": "Història",
@@ -60545,7 +60600,18 @@
   "Mentalidad, presión, ritmo y línea.": "Mentalitat, pressió, ritme i línia.",
   "Preparando las caras del plan…": "Preparant les cares del pla…",
   "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB pestanya · B torna",
-  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E pestanya · Esc torna"
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E pestanya · Esc torna",
+  "No se confunde con el rival.": "No es confon amb el rival.",
+  "⚠ Se confunde con el rival: usa «%s».": "⚠ Es confon amb el rival: fes servir «%s».",
+  "⚠ Se confunde con el rival.": "⚠ Es confon amb el rival.",
+  "Hora": "Hora",
+  "A rayas": "A ratlles",
+  "A rayas transversales": "A ratlles transversals",
+  "En círculos": "En cercles",
+  "En diagonal": "En diagonal",
+  "En rombos": "En rombes",
+  "En espiga": "En espiga",
+  "En abanico": "En ventall"
  },
  "pl": {
   "Club": "Klub",
@@ -69591,7 +69657,18 @@
   "Mentalidad, presión, ritmo y línea.": "Nastawienie, pressing, tempo i linia.",
   "Preparando las caras del plan…": "Przygotowywanie twarzy do planu…",
   "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB karta · B wróć",
-  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E karta · Esc wróć"
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E karta · Esc wróć",
+  "No se confunde con el rival.": "Nie myli się z rywalem.",
+  "⚠ Se confunde con el rival: usa «%s».": "⚠ Myli się z rywalem: użyj «%s».",
+  "⚠ Se confunde con el rival.": "⚠ Myli się z rywalem.",
+  "Hora": "Godzina",
+  "A rayas": "W pasy",
+  "A rayas transversales": "W poprzeczne pasy",
+  "En círculos": "W koła",
+  "En diagonal": "Po przekątnej",
+  "En rombos": "W romby",
+  "En espiga": "W jodełkę",
+  "En abanico": "Wachlarz"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78637,6 +78714,17 @@
   "Mentalidad, presión, ritmo y línea.": "Zihniyet, pres, tempo ve hat.",
   "Preparando las caras del plan…": "Plan için yüzler hazırlanıyor…",
   "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB sekme · B geri",
-  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E sekme · Esc geri"
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E sekme · Esc geri",
+  "No se confunde con el rival.": "Rakiple karışmıyor.",
+  "⚠ Se confunde con el rival: usa «%s».": "⚠ Rakiple karışıyor: «%s» kullan.",
+  "⚠ Se confunde con el rival.": "⚠ Rakiple karışıyor.",
+  "Hora": "Saat",
+  "A rayas": "Çizgili",
+  "A rayas transversales": "Enine çizgili",
+  "En círculos": "Daireler",
+  "En diagonal": "Çapraz",
+  "En rombos": "Baklava",
+  "En espiga": "Balıksırtı",
+  "En abanico": "Yelpaze"
  }
 }

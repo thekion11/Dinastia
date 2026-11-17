@@ -8,10 +8,23 @@ var tipo: Tipo = Tipo.ESTADIO
 var zoom := 0.5                 ## CAMARA: el tamaño del cuadro de lo que se ve (0-1)
 var formacion: Array = []       ## CAMPO: [[pos, x, y], …] (porcentajes, el arco propio abajo)
 var acento := Color("c8102e")
+## (17-11) La foto real del estadio (`FotosEstadioMenu`), cuando llega: pisa al dibujo (ESTADIO y CAMARA).
+var foto: Texture2D:
+	set(t):
+		foto = t
+		queue_redraw()
 
 const VERDE := Color("1f8a4a")
 
 func _draw() -> void:
+	if foto != null and tipo in [Tipo.ESTADIO, Tipo.CAMARA]:
+		var r := Rect2(Vector2.ZERO, size)
+		var ts := foto.get_size()
+		var esc := maxf(size.x / ts.x, size.y / ts.y)   ## recorte centrado, sin deformar
+		var src := Rect2((ts - size / esc) * 0.5, size / esc)
+		draw_texture_rect_region(foto, r, src)
+		draw_rect(r, Color(1, 1, 1, 0.12), false, 1.0)
+		return
 	match tipo:
 		Tipo.ESTADIO: _estadio()
 		Tipo.CAMARA: _camara()
