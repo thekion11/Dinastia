@@ -63,5 +63,4 @@ func _emblema() -> void:
 		var a := -PI / 2.0 + i * PI / 5.0
 		pts.append(c + Vector2(cos(a), sin(a)) * r * (0.5 if i % 2 == 0 else 0.22))
 	draw_colored_polygon(pts, Color("f5c542"))
-	var f := EstiloAvanzar.fuente_titulo()
-	draw_string(f, Vector2(c.x - r * 0.34, c.y + r * 0.9), "LIGA", HORIZONTAL_ALIGNMENT_LEFT, -1, int(r * 0.3), Color("2a3f78"))
+	## (17-11, Auditoría) sin el «LIGA» minúsculo: el nombre de la competición y la jornada van debajo, en una línea clara.

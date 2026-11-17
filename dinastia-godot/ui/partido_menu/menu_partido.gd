@@ -60,9 +60,9 @@ func _ready() -> void:
 	fondo.color = _color_club(l)
 	fondo.color_b = _color_club(v)
 	add_child(fondo)
-	_montar_cabecera(l, v)
+	PreviaMenuPartido.cabecera(self, l, v)
 	_montar_figuras(l, v)
-	_montar_alineaciones(l, v)
+	PreviaMenuPartido.alineaciones(self, l, v)
 	_montar_barra()
 	_montar_modal()
 	_montar_pie()
@@ -77,33 +77,6 @@ func _caja(izq: float, der: float, arr: float, aba: float) -> Control:
 	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(c)
 	return c
-
-func _escudo(c: Club, px: int) -> TextureRect:
-	var t := TextureRect.new()
-	t.texture = Escudo.textura(c, px)
-	t.custom_minimum_size = Vector2(px, px)
-	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	return t
-
-func _montar_cabecera(l: Club, v: Club) -> void:
-	var chip := EstiloAvanzar.etiqueta(Idiomas.t(competicion), 15, Color.WHITE, false, true)
-	chip.add_theme_stylebox_override("normal", PanelesMenuPartido._estilo(Color("1d2d55")))
-	chip.position = Vector2(30, 26)
-	add_child(chip)
-	var c := _caja(0.25, 0.75, 0.03, 0.27)
-	var f := HBoxContainer.new()
-	f.set_anchors_preset(Control.PRESET_FULL_RECT)
-	f.alignment = BoxContainer.ALIGNMENT_CENTER
-	f.add_theme_constant_override("separation", 56)
-	c.add_child(f)
-	f.add_child(_escudo(l, 140))
-	var em := MiniaturaMenu.new()
-	em.tipo = MiniaturaMenu.Tipo.EMBLEMA
-	em.custom_minimum_size = Vector2(76, 76)
-	em.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	f.add_child(em)
-	f.add_child(_escudo(v, 140))
 
 ## El jugador mejor del once (el que sale grande), con su dorsal.
 func dorsal_estrella(c: Club) -> int:
@@ -124,7 +97,7 @@ func _montar_figuras(l: Club, v: Club) -> void:
 	var uni := String(OpcionesPartido.leer("uniforme_partido", "titular"))
 	for lado in 2:
 		var c: Club = l if lado == 0 else v
-		var caja := _caja(0.0, 0.29, 0.035, 0.86) if lado == 0 else _caja(0.71, 1.0, 0.035, 0.86)
+		var caja := _caja(0.0, 0.3, 0.03, 0.85) if lado == 0 else _caja(0.7, 1.0, 0.03, 0.85)
 		var cols := PanelesMenuPartido.colores_uniforme(c, uni if c == mio else "titular")
 		## El futbolista 3D real con su equipación (sin pantalla, la figura plana).
 		var fig: Control = load("res://ui/partido_menu/retrato_jugador3d.gd").crear(c, estrella(c), [] if c != mio or uni == "titular" else cols, 0.38 if lado == 0 else -0.38)
@@ -178,28 +151,6 @@ static func linea_jugador(j: Jugador) -> String:
 		txt += " (C)"
 	return txt
 
-func _montar_alineaciones(l: Club, v: Club) -> void:
-	var c := _caja(0.27, 0.73, 0.28, 0.81)
-	var f := HBoxContainer.new()
-	f.set_anchors_preset(Control.PRESET_FULL_RECT)
-	f.alignment = BoxContainer.ALIGNMENT_CENTER
-	f.add_theme_constant_override("separation", 60)
-	c.add_child(f)
-	for club: Club in [l, v]:
-		var col := VBoxContainer.new()
-		col.add_theme_constant_override("separation", 0)
-		col.add_child(_nombre(club.nombre.to_upper(), 44))
-		for j: Jugador in club.once():
-			var e := EstiloAvanzar.etiqueta(linea_jugador(j), 19, Color(1, 1, 1, 0.92), true)
-			e.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			col.add_child(e)
-		f.add_child(col)
-
-func _nombre(txt: String, tam: int) -> Label:
-	var e := EstiloAvanzar.etiqueta(txt, tam, Color.WHITE, true)
-	e.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	return e
-
 func _montar_barra() -> void:
 	var barra := _caja(0.03, 0.97, 0.855, 0.92)
 	var f := HBoxContainer.new()
@@ -207,27 +158,7 @@ func _montar_barra() -> void:
 	f.add_theme_constant_override("separation", 12)
 	barra.add_child(f)
 	for par: Array in PESTANAS:
-		var b := Button.new()
-		b.text = Idiomas.t(String(par[1]))
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.toggle_mode = true
-		b.add_theme_font_override("font", EstiloAvanzar.fuente_titulo())
-		b.add_theme_font_size_override("font_size", Tema.letra(20))
-		var n := PanelesMenuPartido._estilo(Color(0.86, 0.88, 0.94, 0.9))
-		b.add_theme_stylebox_override("normal", n)
-		b.add_theme_stylebox_override("hover", PanelesMenuPartido._estilo(Color(0.93, 0.94, 0.98, 0.95)))
-		## La elegida, como en el PES: blanca y encendida, con el texto del color de acento y una raya abajo.
-		var sel := PanelesMenuPartido._estilo(Color.WHITE)
-		sel.border_color = PanelesMenuPartido.ROJO
-		sel.border_width_bottom = 4
-		sel.shadow_color = Color(1, 1, 1, 0.35)
-		sel.shadow_size = 10
-		for k in ["pressed", "hover_pressed", "focus"]:
-			b.add_theme_stylebox_override(k, sel)
-		for k in ["font_color", "font_hover_color"]:
-			b.add_theme_color_override(k, Color("26304f"))
-		for k in ["font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
-			b.add_theme_color_override(k, PanelesMenuPartido.ROJO)
+		var b := PreviaMenuPartido.pestana(String(par[0]), String(par[1]))
 		var clave := String(par[0])
 		b.pressed.connect(_abrir.bind(clave))
 		f.add_child(b)
@@ -285,11 +216,11 @@ func _montar_modal() -> void:
 func _montar_pie() -> void:
 	_pie = EstiloAvanzar.etiqueta(Idiomas.t("Pulsa Confirmar para empezar el partido"), 18, Color(1, 1, 1, 0.85))
 	_pie.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_pie.anchor_left = 0.2; _pie.anchor_right = 0.8; _pie.anchor_top = 0.822; _pie.anchor_bottom = 0.852
+	_pie.anchor_left = 0.3; _pie.anchor_right = 0.7; _pie.anchor_top = 0.795; _pie.anchor_bottom = 0.83
 	add_child(_pie)
 	var ayuda := HBoxContainer.new()
 	ayuda.add_theme_constant_override("separation", 22)
-	for par: Array in [["A", "Confirmar", Color("27a35a")], ["B", "Volver", Color("e0592a")]]:
+	for par: Array in [["B", "Volver", Color("e0592a")]]:   ## el «Confirmar» es solo el botón rojo (Auditoría: no dos)
 		var g := HBoxContainer.new()
 		g.add_theme_constant_override("separation", 8)
 		var c := Label.new()

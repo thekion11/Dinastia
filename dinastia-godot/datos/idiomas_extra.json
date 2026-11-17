@@ -9019,7 +9019,9 @@
   "No hay rival fácil en esta liga: vamos partido a partido.": "There is no easy opponent in this league: we go match by match.",
   "Nos preparamos a fondo para %s.": "We are preparing thoroughly for %s.",
   "Pretemporada: %s ya prepara la jornada 1": "Pre-season: %s is already preparing for matchday 1",
-  "Todos los menús": "All menus"
+  "Todos los menús": "All menus",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirm · Square / B back",
+  "Enter confirma · Esc vuelve": "Enter confirm · Esc back"
  },
  "pt": {
   "Historia": "História",
@@ -18041,7 +18043,9 @@
   "No hay rival fácil en esta liga: vamos partido a partido.": "Não há rival fácil nesta liga: vamos jogo a jogo.",
   "Nos preparamos a fondo para %s.": "Estamos nos preparando a fundo para o %s.",
   "Pretemporada: %s ya prepara la jornada 1": "Pré-temporada: o %s já prepara a rodada 1",
-  "Todos los menús": "Todos os menus"
+  "Todos los menús": "Todos os menus",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirma · Quadrado / B volta",
+  "Enter confirma · Esc vuelve": "Enter confirma · Esc volta"
  },
  "patrones": [
   [
@@ -33335,7 +33339,9 @@
   "No hay rival fácil en esta liga: vamos partido a partido.": "Il n'y a pas d'adversaire facile dans ce championnat : on y va match après match.",
   "Nos preparamos a fondo para %s.": "Nous nous préparons à fond pour %s.",
   "Pretemporada: %s ya prepara la jornada 1": "Présaison : %s prépare déjà la journée 1",
-  "Todos los menús": "Tous les menus"
+  "Todos los menús": "Tous les menus",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirme · Carré / B retour",
+  "Enter confirma · Esc vuelve": "Entrée confirme · Échap retour"
  },
  "it": {
   "Historia": "Storia",
@@ -42357,7 +42363,9 @@
   "No hay rival fácil en esta liga: vamos partido a partido.": "Non ci sono avversari facili in questo campionato: andiamo partita per partita.",
   "Nos preparamos a fondo para %s.": "Ci prepariamo a fondo per il %s.",
   "Pretemporada: %s ya prepara la jornada 1": "Pre-campionato: il %s prepara già la prima giornata",
-  "Todos los menús": "Tutti i menu"
+  "Todos los menús": "Tutti i menu",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A conferma · Quadrato / B indietro",
+  "Enter confirma · Esc vuelve": "Invio conferma · Esc indietro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51379,7 +51387,9 @@
   "No hay rival fácil en esta liga: vamos partido a partido.": "In dieser Liga gibt es keinen leichten Gegner: wir gehen Spiel für Spiel.",
   "Nos preparamos a fondo para %s.": "Wir bereiten uns gründlich auf %s vor.",
   "Pretemporada: %s ya prepara la jornada 1": "Vorbereitung: %s bereitet sich schon auf den 1. Spieltag vor",
-  "Todos los menús": "Alle Menüs"
+  "Todos los menús": "Alle Menüs",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A bestätigt · Quadrat / B zurück",
+  "Enter confirma · Esc vuelve": "Enter bestätigt · Esc zurück"
  },
  "ca": {
   "Historia": "Història",
@@ -60401,7 +60411,9 @@
   "No hay rival fácil en esta liga: vamos partido a partido.": "No hi ha rival fàcil en aquesta lliga: anem partit a partit.",
   "Nos preparamos a fondo para %s.": "Ens preparem a fons per al %s.",
   "Pretemporada: %s ya prepara la jornada 1": "Pretemporada: el %s ja prepara la jornada 1",
-  "Todos los menús": "Tots els menús"
+  "Todos los menús": "Tots els menús",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirma · Quadrat / B torna",
+  "Enter confirma · Esc vuelve": "Enter confirma · Esc torna"
  },
  "pl": {
   "Club": "Klub",
@@ -69423,7 +69435,9 @@
   "No hay rival fácil en esta liga: vamos partido a partido.": "W tej lidze nie ma łatwych rywali: gramy mecz po meczu.",
   "Nos preparamos a fondo para %s.": "Przygotowujemy się solidnie na %s.",
   "Pretemporada: %s ya prepara la jornada 1": "Przedsezonowo: %s już przygotowuje się do 1. kolejki",
-  "Todos los menús": "Wszystkie menu"
+  "Todos los menús": "Wszystkie menu",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A potwierdza · Kwadrat / B wraca",
+  "Enter confirma · Esc vuelve": "Enter potwierdza · Esc wraca"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78445,6 +78459,8 @@
   "No hay rival fácil en esta liga: vamos partido a partido.": "Bu ligde kolay rakip yok: maç maç ilerliyoruz.",
   "Nos preparamos a fondo para %s.": "%s maçı için iyice hazırlanıyoruz.",
   "Pretemporada: %s ya prepara la jornada 1": "Hazırlık dönemi: %s 1. haftaya hazırlanıyor",
-  "Todos los menús": "Tüm menüler"
+  "Todos los menús": "Tüm menüler",
+  "R2 / A confirma · Cuadrado / B vuelve": "R2 / A onaylar · Kare / B geri",
+  "Enter confirma · Esc vuelve": "Enter onaylar · Esc geri"
  }
 }
