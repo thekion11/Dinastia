@@ -23,7 +23,7 @@ Mirassol||||||#1b1f26|#ffd100|liso|#1b1f26|#ffffff
 Mallorca|||||#000000|#ffffff|#d50032|liso|#000000|#000000
 Niza|||||#000000|||||
 Napoli||||||#1b1f26|#199fda|liso|#1b1f26|#ffffff
-Parma|||||#000000|#0057b8|#ffd100|liso|#0057b8|#ffcf00
+Parma|cruz|#ffffff|#ffd100|#ffffff|#ffffff|#0057b8|#ffd100|liso|#0057b8|#ffcf00
 Platense|||||#ffffff|#f4f4f4|#5c3a21|liso|#f4f4f4|#3e2315
 Rosario Central||||||#ffd100|#003f8a|liso|#ffd100|#ffffff
 Real Sociedad||||||#f4f4f4|#0067b1|liso|#f4f4f4|#000000
@@ -32,3 +32,4 @@ Sarmiento|||||#004000|||||
 St. Pauli||||#65423a||||||
 Sunderland||||||#f4f4f4|#eb172b|liso|#f4f4f4|#ff9fbf
 Wolfsburgo||||||#1b1f26|#65b32e|liso|#1b1f26|#c6d1ce
+Hamburgo|liso|#ffffff|#0057b8|#0057b8|#ffffff||||||

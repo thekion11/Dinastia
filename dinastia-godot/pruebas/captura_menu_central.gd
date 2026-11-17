@@ -15,6 +15,8 @@ func _ready() -> void:
 	var ps: Array[String] = [pais]
 	m.generar(ps, 88 + idx)
 	m.tomar_el_mando(m.ligas[0].clubes[idx % m.ligas[0].clubes.size()].id)
+	for _i in (int(OS.get_environment("JORNADAS")) if OS.get_environment("JORNADAS") != "" else 0):   ## con partidos jugados, para ver el último resultado
+		m.avanzar_semana()
 	PedidoPartida.mundo_pregenerado = m
 	PedidoPartida.modo_elegido = "dt"
 	PedidoPartida.dt_nombre_elegido = "Prueba"
@@ -29,10 +31,14 @@ func _ready() -> void:
 	for t in get_tree().root.find_children("*", "", true, false):
 		if t is Tutorial:
 			(t as Tutorial)._terminar(false)
-	if OS.get_environment("PESTANA") != "":
-		TableroInicio.pestana = int(OS.get_environment("PESTANA"))
-		pr._refrescar()
+	if OS.get_environment("PESTANA") != "" and int(OS.get_environment("PESTANA")) != TableroInicio.pestana:
+		var barra: Node = (pr.get_meta("escaparate") as Node).find_child("Botones", true, false)   ## se pulsa la pestaña como el jugador
+		((barra.get_meta("tabs") as Array)[int(OS.get_environment("PESTANA"))] as Button).pressed.emit()
 	await _frames(12)
+	if pr.get("_rueda_pop") != null:   ## la rueda de prensa que sale tras los partidos tapa el menú: fuera, para ver el escaparate
+		(pr.get("_rueda_pop") as Node).queue_free()
+		pr.set("_rueda_pop", null)
+		await _frames(8)
 	print("APERTURA_MS ", Time.get_ticks_msec() - t0)
 	get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://pruebas/capturas/menu_central_%s.png" % OS.get_environment("NOMBRE")))
 	get_tree().quit()

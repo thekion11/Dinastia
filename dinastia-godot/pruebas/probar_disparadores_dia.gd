@@ -120,7 +120,7 @@ func _segunda(m: Mundo, e: String) -> void:
 	m.cantera.exigencia = {}
 	m.eventos_cantera.pendiente = {"tipo": "abandono", "id": "c1", "nombre": "Chico", "tema": "Quiere dejar el fútbol."}
 	var b := DisparadoresDia.de_cantera(m, est)
-	_ok(b.size() == 1 and String(b[0]["zona"]) == "cantera" and String(b[0]["clase"]) == EventosDia.AVISO, "%s: asunto de cantera = AVISO de cantera" % e)
+	_ok(b.size() == 1 and String(b[0]["clase"]) == EventosDia.PANTALLA and DecisionesDia.opciones(m, b[0]).size() == 2, "%s: asunto de cantera = decisión con 2 opciones (PANTALLA)" % e)
 	_ok(DisparadoresDia.de_cantera(m, est).is_empty(), "%s: el asunto de cantera sale una vez" % e)
 	m.eventos_cantera.pendiente = {}
 	m.ojeadores.hallazgos.append({"pid": m.mi_club().plantilla[0].id, "nombre": "Pepe", "anio": m.anio, "semana": m.semana})

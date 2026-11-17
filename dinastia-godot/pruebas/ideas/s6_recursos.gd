@@ -98,7 +98,8 @@ func _lineas() -> void:
 	add_child(rp)
 	rp.setup([], null)
 	rp.size = Vector2(210, 136)
-	_comprobar(TrazoSuave.cuantas(rp) == 6 and _suaves_con_textura(rp), "radar del partido: fondo + 5 líneas fijas (%d)" % TrazoSuave.cuantas(rp))
+	## (17-11) El radar del partido dejó las líneas suaves: su campo se pinta una vez en una textura (una llamada en vez de ocho).
+	_comprobar(TrazoSuave.cuantas(rp) == 0 and rp.campo != null and rp.campo.get_size() == Vector2(210, 136), "radar del partido: el campo en una textura (%s)" % str(rp.campo.get_size() if rp.campo != null else Vector2.ZERO))
 	var campo := PizarraTactica.CampoDibujado.new()
 	add_child(campo)
 	campo.size = Vector2(300, 420)

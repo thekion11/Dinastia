@@ -12,7 +12,11 @@ func _ready() -> void:
 	j.goles = 5
 	j.asistencias = 3
 	j.notas = [7.9, 8.0, 7.8] as Array[float]
+	m.cantera.exigencia = {"tipo": "canterano", "agente": "Agencia Norte", "pid": j.id, "ids": [j.id], "perfil": "tiburon", "txt": "x", "opcion_a": "Fichar a su canterano", "opcion_b": "Que se olvide"}
+	m.eventos_cantera.pendiente = {"tipo": "abandono", "id": "c1", "nombre": "Marco", "tema": "Marco (16 años) quiere dejar el fútbol para centrarse en los estudios.", "a": "Hablar con él y con su familia", "b": "Respetar su decisión"}
 	var lista := [
+		{"tipo": "guerra_agentes", "clase": "pantalla", "texto": "Agencia Norte controla a varios de tus jugadores y exige que fiches a un canterano de su agencia.", "causa": {"id": "guerra_agentes", "datos": {}}},
+		{"tipo": "evento_cantera", "clase": "pantalla", "texto": "Marco (16 años) quiere dejar el fútbol para centrarse en los estudios.", "causa": {"id": "evento_cantera", "datos": {}}},
 		{"tipo": "ultimatum", "clase": "pantalla", "causa": {"id": "ultimatum", "datos": {"confianza": 18}}},
 		{"tipo": "jugador_del_mes", "clase": "pantalla", "es_mio": true, "nombre": Nombres.visible(j.nombre), "jugador_id": j.id, "club": m.mi_club().nombre, "causa": {"id": "jugador_del_mes", "datos": {}}},
 		{"tipo": "golpe_caja", "clase": "aviso", "titulo": "Multa de la federación", "texto": "La federación te multa por incidentes en la grada.", "causa": {"id": "golpe_caja", "datos": {"importe": 500000, "semanas": 2}}},
