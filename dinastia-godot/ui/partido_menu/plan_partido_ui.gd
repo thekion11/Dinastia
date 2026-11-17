@@ -32,3 +32,41 @@ static func abrir(p: Principal) -> PantallaMenu:
 		if is_instance_valid(riel):
 			riel.visible = se_veia)
 	return pm
+
+## (17-11, Auditoría: «al abrir el plan los retratos tienen que estar ya») Mientras se ve la previa, encarga los retratos 3D del plantel propio
+## (primero el once) y del once rival a la cola de `Cara`/`Retrato3D`, que los hace de uno en uno en segundo plano. Son las MISMAS claves que piden
+## la pizarra (42 px) y la lista del once (30 px): al abrir el plan salen de la caché, sin siluetas.
+static func precargar_retratos(mio: Club, rival: Club) -> int:
+	var lista: Array = []
+	for j: Jugador in mio.once():
+		lista.append([j, mio])
+	for j: Jugador in mio.plantilla:
+		if not mio.once().has(j):
+			lista.append([j, mio])
+	if rival != null:
+		for j: Jugador in rival.once():
+			lista.append([j, rival])
+	var antes := Retrato3D._cola.size()
+	for par: Array in lista:
+		var c: Club = par[1]
+		Cara.textura(par[0], c.color1, c.color2, 42)
+	## Delante de la cola: detrás de la previa está el menú principal, que ya encargó decenas de caras de otras pantallas.
+	if Retrato3D._cola.size() > antes:
+		var nuevos := Retrato3D._cola.slice(antes)
+		Retrato3D._cola.resize(antes)
+		Retrato3D._cola = nuevos + Retrato3D._cola
+	return lista.size()
+
+## Cuántos titulares de `c` siguen esperando su retrato en la cola.
+static func faltan_del_once(c: Club) -> int:
+	var n := 0
+	for job: Dictionary in Retrato3D._cola:
+		if job.has("j") and c.once().has(job["j"]):
+			n += 1
+	return n
+
+## Si la cola de retratos 3D ya terminó (para las pruebas y las medidas).
+static func retratos_listos() -> bool:
+	if not Retrato3D.disponible():
+		return true
+	return Retrato3D._cola.is_empty() and (Retrato3D._inst == null or not is_instance_valid(Retrato3D._inst) or not Retrato3D._inst._ocupado)

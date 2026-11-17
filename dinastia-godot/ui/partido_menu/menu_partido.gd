@@ -28,6 +28,7 @@ var _pie: Label
 var _abierta := ""
 var _fig_mio: Control
 var _por_montar: Array[Control] = []
+var precargar := true          ## los retratos del plan de juego se encargan mientras se ve la previa
 
 static func mostrar(padre: Node, p: Partido, mi_club: Club, liga: Liga, info_clima: Dictionary, comp := "Liga") -> MenuPartido:
 	var m := MenuPartido.new()
@@ -120,6 +121,8 @@ func _montar_retratos() -> void:
 		if is_instance_valid(f):
 			f.call("montar")
 	_por_montar.clear()
+	if precargar:
+		PlanPartidoUI.precargar_retratos(mio, partido.visita if partido.local == mio else partido.local)
 
 ## El jugador que sale grande: el mejor del once.
 func estrella(c: Club) -> Jugador:
@@ -276,9 +279,24 @@ func _abrir_tactica_del_juego() -> bool:
 	var pr := get_parent()
 	if not (pr is Principal) or (pr as Principal)._menu_lateral == null:
 		return false
-	var pm := PlanPartidoUI.abrir(pr as Principal)
+	_abrir_plan_cuando_listo(pr as Principal)
+	return true
+
+## (17-11, Auditoría: nada de siluetas al abrir el plan) Si aún faltan caras del once (la precarga va de una en una), la previa avisa
+## «Preparando las caras del plan…» y espera a que estén, como mucho `ESPERA_CARAS` segundos; con GPU suele ser al instante.
+const ESPERA_CARAS := 4.0
+func _abrir_plan_cuando_listo(pr: Principal) -> void:
+	PlanPartidoUI.precargar_retratos(mio, partido.visita if partido.local == mio else partido.local)   ## lo que ya esté hecho sale de la caché
+	if PlanPartidoUI.faltan_del_once(mio) > 0:
+		_pie.text = Idiomas.t("Preparando las caras del plan…")
+		var t0 := Time.get_ticks_msec()
+		while PlanPartidoUI.faltan_del_once(mio) > 0 and Time.get_ticks_msec() - t0 < int(ESPERA_CARAS * 1000.0):
+			await get_tree().process_frame
+		for i in 3:   ## la última cara se copia a su textura un par de cuadros después
+			await get_tree().process_frame
+	var pm := PlanPartidoUI.abrir(pr)
 	if pm == null:
-		return false
+		return
 	visible = false
 	pm.cerrada.connect(func() -> void:
 		visible = true
@@ -286,7 +304,6 @@ func _abrir_tactica_del_juego() -> bool:
 		_abierta = "plan"
 		_resumen()
 		_abierta = "")
-	return true
 
 func cerrar_panel() -> void:
 	_modal.visible = false
