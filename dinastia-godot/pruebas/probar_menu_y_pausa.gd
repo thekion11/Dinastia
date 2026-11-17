@@ -39,6 +39,10 @@ func correr(padre: Node) -> int:
 		for tab: Array in MenuPartido.PESTANAS:
 			menu._abrir(String(tab[0]))
 			_ok(menu._cuerpo.get_child_count() > 0, "%s: la pestaña %s tiene contenido" % [cfg[0], tab[0]])
+		_ok(PreviaMenuPartido.vecina("uniforme", -1) == "camara" and PreviaMenuPartido.vecina("saque", 1) == "opciones" and PreviaMenuPartido.vecina("", 1) == "uniforme",
+			"%s: LB/RB pasan de pestaña en círculo y saltan «Plan de juego»" % cfg[0])
+		menu._abrir("estadio")
+		_ok(menu._titulo_modal.text != "" and menu._icono_modal.texture != null and menu._modal.visible, "%s: la pestaña a pantalla completa tiene su icono y su título" % cfg[0])
 		menu._abrir("saque")
 		var rotulo := menu._cuerpo.find_child("SacaClub", true, false) as Label
 		var quien: Club = p.local if menu.saca_local else p.visita

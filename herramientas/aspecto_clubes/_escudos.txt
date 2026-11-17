@@ -193,12 +193,12 @@ Fulham|circulo|liso||FFC/#111111|#ffffff|#111111|
 Brentford|circulo|franjas|abeja||#d50032|#ffffff|
 Nottingham F.|ovalo|liso||NFFC|#d50032|#ffffff|
 Atalanta|escudo|liso||ABC/#ffffff|#1e71b8|#111111|
-Torino|escudo|liso|cuernos||#7a1f2b|#ffffff|
+Torino|escudo|liso|toro||#7a1f2b|#ffffff|
 Bologna|circulo|franjas||BFC/#ffffff|#d50032|#0a2240|
 Udinese|ovalo|franjas||UDI/#ffffff|#111111|#ffffff|
-Genoa|escudo|mitad|leon||#d50032|#0a2240|
+Genoa|escudo|cruz||G|#ffffff|#d50032|
 Sassuolo|circulo|franjas||US/#ffffff|#00954c|#111111|
-Lecce|escudo|franjas|ave||#ffd100|#d50032|
+Lecce|escudo|franjas|lobo||#ffd100|#d50032|
 Bayern Múnich|circulo|rombos_bav||FCB/#0066b2|#0066b2|#ffffff|
 Frankfurt|circulo|liso|aguila||#111111|#d50032|#ffffff
 Wolfsburgo|circulo|liso|lobo||#65b32e|#ffffff|

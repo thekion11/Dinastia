@@ -185,3 +185,75 @@ static func pestana(clave: String, texto: String) -> Button:
 	for k in ["font_pressed_color", "font_hover_pressed_color"]:
 		b.add_theme_color_override(k, PanelesMenuPartido.ROJO)
 	return b
+
+## La cabecera de cada pestaña a pantalla completa, como el PES: su icono, el nombre grande, a la derecha cómo pasar de pestaña y volver (con el aparato
+## que se usa) y un «Volver» que se puede tocar. Nodos con nombre: «Icono» y «Titulo» (los rellena `MenuPartido._abrir`).
+static func cabecera_panel(m: MenuPartido) -> HBoxContainer:
+	var cab := HBoxContainer.new()
+	cab.add_theme_constant_override("separation", 16)
+	var ic := TextureRect.new()
+	ic.name = "Icono"
+	ic.custom_minimum_size = Vector2(Tema.letra(40), Tema.letra(40))
+	ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	ic.self_modulate = Color("e0309a")
+	ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	cab.add_child(ic)
+	var t := EstiloAvanzar.etiqueta("", 38, Color.WHITE, true, true)
+	t.name = "Titulo"
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cab.add_child(t)
+	var guia := EstiloAvanzar.etiqueta(guia_pestanas(), 15, SUAVE)
+	guia.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	cab.add_child(guia)
+	var volver := Button.new()
+	volver.text = "◂  " + Idiomas.t("Volver")
+	volver.focus_mode = Control.FOCUS_NONE   ## con mando se vuelve con B: el foco se queda en el panel
+	volver.add_theme_font_override("font", EstiloAvanzar.fuente_titulo())
+	volver.add_theme_font_size_override("font_size", Tema.letra(18))
+	volver.add_theme_stylebox_override("normal", PanelesMenuPartido._estilo(Color("243656")))
+	volver.add_theme_stylebox_override("hover", PanelesMenuPartido._estilo(Color("34497a")))
+	volver.pressed.connect(m.cerrar_panel)
+	cab.add_child(volver)
+	return cab
+
+## «LB ◂ ▸ RB pestaña · B volver» con mando; «Q ◂ ▸ E pestaña · Esc volver» con teclado; nada en táctil (se tocan las pestañas).
+static func guia_pestanas() -> String:
+	if Mando.hay_mando():
+		return Idiomas.t("LB ◂ ▸ RB pestaña · B volver")
+	if DisplayServer.is_touchscreen_available():
+		return ""
+	return Idiomas.t("Q ◂ ▸ E pestaña · Esc volver")
+
+## −1 / +1 si el evento pasa de pestaña (LB / RB del mando, Q / E del teclado); 0 si no.
+static func paso_pestana(e: InputEvent) -> int:
+	if e is InputEventJoypadButton and (e as InputEventJoypadButton).pressed:
+		match (e as InputEventJoypadButton).button_index:
+			JOY_BUTTON_LEFT_SHOULDER: return -1
+			JOY_BUTTON_RIGHT_SHOULDER: return 1
+	if e is InputEventKey and (e as InputEventKey).pressed and not (e as InputEventKey).echo:
+		match (e as InputEventKey).keycode:
+			KEY_Q: return -1
+			KEY_E: return 1
+	return 0
+
+## La pestaña de al lado (en círculo). «Plan de juego» abre otra pantalla: al pasar con LB/RB se salta (se entra pulsándola).
+static func vecina(actual: String, paso: int) -> String:
+	var claves: Array = []
+	for par: Array in MenuPartido.PESTANAS:
+		if String(par[0]) != "plan":
+			claves.append(String(par[0]))
+	var i := claves.find(actual)
+	if i < 0:
+		return String(claves[0] if paso > 0 else claves[-1])
+	return String(claves[posmod(i + paso, claves.size())])
+
+## Con mando, el foco entra en el primer control del panel (si no hay ninguno, se queda en su pestaña).
+static func enfocar_panel(cuerpo: Control, pestana: Control) -> void:
+	for n in cuerpo.find_children("*", "Control", true, false):
+		var c := n as Control
+		if c.focus_mode == Control.FOCUS_ALL and c.is_visible_in_tree():
+			c.grab_focus()
+			return
+	if is_instance_valid(pestana):
+		pestana.grab_focus()

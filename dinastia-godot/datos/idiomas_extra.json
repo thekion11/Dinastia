@@ -9033,7 +9033,18 @@
   "Pretemporada: %s ya prepara la jornada 1": "Pre-season: %s is already preparing for matchday 1",
   "Todos los menús": "All menus",
   "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirm · Square / B back",
-  "Enter confirma · Esc vuelve": "Enter confirm · Esc back"
+  "Enter confirma · Esc vuelve": "Enter confirm · Esc back",
+  "Volver a la previa": "Back to the preview",
+  "Pizarra y formación": "Board and formation",
+  "El once y el banquillo": "The XI and the bench",
+  "La formación, el once, el banquillo y las órdenes de este partido.": "The formation, XI, bench and instructions for this match.",
+  "El dibujo y la formación.": "The shape and the formation.",
+  "Quién sale y quién espera.": "Who starts and who waits.",
+  "Mentalidad, presión, ritmo y línea.": "Mentality, pressing, tempo and line.",
+  "Preparando las caras del plan…": "Preparing the plan faces…",
+  "Abrir Ligas y clubes": "Open Leagues and clubs",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB tab · B back",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E tab · Esc back"
  },
  "pt": {
   "Historia": "História",
@@ -18069,7 +18080,18 @@
   "Pretemporada: %s ya prepara la jornada 1": "Pré-temporada: o %s já prepara a rodada 1",
   "Todos los menús": "Todos os menus",
   "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirma · Quadrado / B volta",
-  "Enter confirma · Esc vuelve": "Enter confirma · Esc volta"
+  "Enter confirma · Esc vuelve": "Enter confirma · Esc volta",
+  "Volver a la previa": "Voltar à prévia",
+  "Pizarra y formación": "Prancheta e formação",
+  "El once y el banquillo": "O onze e o banco",
+  "La formación, el once, el banquillo y las órdenes de este partido.": "A formação, o onze, o banco e as ordens desta partida.",
+  "El dibujo y la formación.": "O desenho e a formação.",
+  "Quién sale y quién espera.": "Quem joga e quem espera.",
+  "Mentalidad, presión, ritmo y línea.": "Mentalidade, pressão, ritmo e linha.",
+  "Preparando las caras del plan…": "Preparando os rostos do plano…",
+  "Abrir Ligas y clubes": "Abrir Ligas e clubes",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB aba · B voltar",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E aba · Esc voltar"
  },
  "patrones": [
   [
@@ -33377,7 +33399,18 @@
   "Pretemporada: %s ya prepara la jornada 1": "Présaison : %s prépare déjà la journée 1",
   "Todos los menús": "Tous les menus",
   "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirme · Carré / B retour",
-  "Enter confirma · Esc vuelve": "Entrée confirme · Échap retour"
+  "Enter confirma · Esc vuelve": "Entrée confirme · Échap retour",
+  "Volver a la previa": "Retour à l'avant-match",
+  "Pizarra y formación": "Tableau et formation",
+  "El once y el banquillo": "Le onze et le banc",
+  "La formación, el once, el banquillo y las órdenes de este partido.": "La formation, le onze, le banc et les consignes de ce match.",
+  "El dibujo y la formación.": "Le schéma et la formation.",
+  "Quién sale y quién espera.": "Qui joue et qui attend.",
+  "Mentalidad, presión, ritmo y línea.": "Mentalité, pressing, rythme et ligne.",
+  "Preparando las caras del plan…": "Préparation des visages du plan…",
+  "Abrir Ligas y clubes": "Ouvrir Championnats et clubs",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB onglet · B retour",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E onglet · Échap retour"
  },
  "it": {
   "Historia": "Storia",
@@ -42413,7 +42446,18 @@
   "Pretemporada: %s ya prepara la jornada 1": "Pre-campionato: il %s prepara già la prima giornata",
   "Todos los menús": "Tutti i menu",
   "R2 / A confirma · Cuadrado / B vuelve": "R2 / A conferma · Quadrato / B indietro",
-  "Enter confirma · Esc vuelve": "Invio conferma · Esc indietro"
+  "Enter confirma · Esc vuelve": "Invio conferma · Esc indietro",
+  "Volver a la previa": "Torna al pre-partita",
+  "Pizarra y formación": "Lavagna e modulo",
+  "El once y el banquillo": "L'undici e la panchina",
+  "La formación, el once, el banquillo y las órdenes de este partido.": "Il modulo, l'undici, la panchina e le istruzioni di questa partita.",
+  "El dibujo y la formación.": "Lo schema e il modulo.",
+  "Quién sale y quién espera.": "Chi gioca e chi aspetta.",
+  "Mentalidad, presión, ritmo y línea.": "Mentalità, pressing, ritmo e linea.",
+  "Preparando las caras del plan…": "Preparazione dei volti del piano…",
+  "Abrir Ligas y clubes": "Apri Campionati e club",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB scheda · B indietro",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E scheda · Esc indietro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51449,7 +51493,18 @@
   "Pretemporada: %s ya prepara la jornada 1": "Vorbereitung: %s bereitet sich schon auf den 1. Spieltag vor",
   "Todos los menús": "Alle Menüs",
   "R2 / A confirma · Cuadrado / B vuelve": "R2 / A bestätigt · Quadrat / B zurück",
-  "Enter confirma · Esc vuelve": "Enter bestätigt · Esc zurück"
+  "Enter confirma · Esc vuelve": "Enter bestätigt · Esc zurück",
+  "Volver a la previa": "Zurück zur Vorschau",
+  "Pizarra y formación": "Taktiktafel und Formation",
+  "El once y el banquillo": "Die Elf und die Bank",
+  "La formación, el once, el banquillo y las órdenes de este partido.": "Formation, Startelf, Bank und Anweisungen für dieses Spiel.",
+  "El dibujo y la formación.": "Die Grundordnung und die Formation.",
+  "Quién sale y quién espera.": "Wer spielt und wer wartet.",
+  "Mentalidad, presión, ritmo y línea.": "Mentalität, Pressing, Tempo und Linie.",
+  "Preparando las caras del plan…": "Gesichter für den Plan werden vorbereitet…",
+  "Abrir Ligas y clubes": "Ligen und Vereine öffnen",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB Reiter · B zurück",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E Reiter · Esc zurück"
  },
  "ca": {
   "Historia": "Història",
@@ -60485,7 +60540,18 @@
   "Pretemporada: %s ya prepara la jornada 1": "Pretemporada: el %s ja prepara la jornada 1",
   "Todos los menús": "Tots els menús",
   "R2 / A confirma · Cuadrado / B vuelve": "R2 / A confirma · Quadrat / B torna",
-  "Enter confirma · Esc vuelve": "Enter confirma · Esc torna"
+  "Enter confirma · Esc vuelve": "Enter confirma · Esc torna",
+  "Volver a la previa": "Tornar a la prèvia",
+  "Pizarra y formación": "Pissarra i formació",
+  "El once y el banquillo": "L'onze i la banqueta",
+  "La formación, el once, el banquillo y las órdenes de este partido.": "La formació, l'onze, la banqueta i les ordres d'aquest partit.",
+  "El dibujo y la formación.": "El dibuix i la formació.",
+  "Quién sale y quién espera.": "Qui surt i qui espera.",
+  "Mentalidad, presión, ritmo y línea.": "Mentalitat, pressió, ritme i línia.",
+  "Preparando las caras del plan…": "Preparant les cares del pla…",
+  "Abrir Ligas y clubes": "Obrir Lligues i clubs",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB pestanya · B torna",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E pestanya · Esc torna"
  },
  "pl": {
   "Club": "Klub",
@@ -69521,7 +69587,18 @@
   "Pretemporada: %s ya prepara la jornada 1": "Przedsezonowo: %s już przygotowuje się do 1. kolejki",
   "Todos los menús": "Wszystkie menu",
   "R2 / A confirma · Cuadrado / B vuelve": "R2 / A potwierdza · Kwadrat / B wraca",
-  "Enter confirma · Esc vuelve": "Enter potwierdza · Esc wraca"
+  "Enter confirma · Esc vuelve": "Enter potwierdza · Esc wraca",
+  "Volver a la previa": "Wróć do zapowiedzi",
+  "Pizarra y formación": "Tablica i ustawienie",
+  "El once y el banquillo": "Jedenastka i ławka",
+  "La formación, el once, el banquillo y las órdenes de este partido.": "Ustawienie, jedenastka, ławka i polecenia na ten mecz.",
+  "El dibujo y la formación.": "Układ i ustawienie.",
+  "Quién sale y quién espera.": "Kto gra, a kto czeka.",
+  "Mentalidad, presión, ritmo y línea.": "Nastawienie, pressing, tempo i linia.",
+  "Preparando las caras del plan…": "Przygotowywanie twarzy do planu…",
+  "Abrir Ligas y clubes": "Otwórz Ligi i kluby",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB karta · B wróć",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E karta · Esc wróć"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78557,6 +78634,17 @@
   "Pretemporada: %s ya prepara la jornada 1": "Hazırlık dönemi: %s 1. haftaya hazırlanıyor",
   "Todos los menús": "Tüm menüler",
   "R2 / A confirma · Cuadrado / B vuelve": "R2 / A onaylar · Kare / B geri",
-  "Enter confirma · Esc vuelve": "Enter onaylar · Esc geri"
+  "Enter confirma · Esc vuelve": "Enter onaylar · Esc geri",
+  "Volver a la previa": "Maç önüne dön",
+  "Pizarra y formación": "Tahta ve diziliş",
+  "El once y el banquillo": "İlk 11 ve yedekler",
+  "La formación, el once, el banquillo y las órdenes de este partido.": "Bu maçın dizilişi, ilk 11'i, yedekleri ve talimatları.",
+  "El dibujo y la formación.": "Şema ve diziliş.",
+  "Quién sale y quién espera.": "Kim oynar, kim bekler.",
+  "Mentalidad, presión, ritmo y línea.": "Zihniyet, pres, tempo ve hat.",
+  "Preparando las caras del plan…": "Plan için yüzler hazırlanıyor…",
+  "Abrir Ligas y clubes": "Ligler ve kulüpleri aç",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB sekme · B geri",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E sekme · Esc geri"
  }
 }

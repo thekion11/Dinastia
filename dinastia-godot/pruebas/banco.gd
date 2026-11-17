@@ -31,7 +31,7 @@ extends "res://pruebas/banco/nucleo.gd"
 
 const SECCIONES := [
 	"_probar_avance_eventos_y_disparadores", "_probar_avance_nucleo_y_saque", "_probar_menu_y_pausa_partido", "_probar_carga_de_ui", "_probar_finanzas_por_pantallas", "_probar_agentes_confianza", "_probar_cantera_por_pantallas", "_probar_informe_abre_su_pantalla", "_probar_paginador_submenu", "_probar_casilla_clara", "_probar_atajos_tras_partir", "_probar_estado_vacio", "_probar_dominio_del_club", "_probar_cara_a_cara_simulado", "_probar_multa_plantel_heredado",   ## grupo «menus» (pruebas/banco/menus.gd)
-	"_probar_datos", "_probar_repetibilidad", "_probar_mundo",
+	"_probar_datos", "_probar_repetibilidad", "_probar_mundo", "_probar_rasgos_conocidos",
 	"_probar_reales", "_probar_base_ficticia", "_probar_cubierta_nombres",
 	"_probar_calendario", "_probar_segundas_divisiones", "_probar_segundas_reglas", "_probar_segundas_cinco_grandes", "_probar_segundas_latinoamerica", "_probar_segundas_pbt", "_probar_paises_csv", "_probar_selecciones_nuevas", "_probar_pais_sin_liga_tanda1", "_probar_pais_sin_liga_tanda2", "_probar_pais_sin_liga_tanda3", "_probar_pais_sin_liga_tanda4", "_probar_pais_sin_liga_tanda5", "_probar_ligas_activas", "_probar_ligas_activas_todos", "_probar_ligas_activas_pantalla", "_probar_ligas_activas_agregar_pantalla", "_probar_ligas_programadas", "_probar_fases_finales_egipto", "_probar_fases_finales_argentina", "_probar_fases_finales_mls", "_probar_fases_finales_europa", "_probar_fases_finales_grecia",
 	"_probar_partidos", "_probar_previa", "_probar_arbitros",
