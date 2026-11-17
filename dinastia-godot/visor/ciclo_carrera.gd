@@ -33,28 +33,3 @@ static func escala(anim: String, sp: float) -> float:
 static func patina(anim: String, sp: float) -> float:
 	var c: Array = CICLO.get(anim, [])
 	return 0.0 if c.is_empty() else absf(sp - float(c[0]) * escala(anim, sp))
-
-## ── CON EL TROTE DE CADA UNO (17-11, `TroteCmu`) ─────────────────────────────────────────────────────────────────────────────────
-## Igual que `ciclo`, pero con los umbrales del trote CMU del jugador (si lo lleva).
-static func ciclo_jugador(p: Dictionary, sp: float, actual: String) -> String:
-	var tc: Array = p.get("trote_cmu", [])
-	if tc.is_empty():
-		return ciclo(sp, actual)
-	if sp < PARADO:
-		return "parado"
-	return "correr" if sp >= (TroteCmu.A_TROTAR if actual == "correr" else float(tc[2])) else "trotar"
-
-## Igual que `escala`, pero el «trotar» de quien lleva un trote CMU va sobre la velocidad de SU clip (y su margen).
-static func escala_jugador(p: Dictionary, anim: String, sp: float) -> float:
-	var tc: Array = p.get("trote_cmu", []) if anim == "trotar" else []
-	if tc.is_empty():
-		return escala(anim, sp)
-	var v := float(tc[1])
-	return clampf(sp / v, TroteCmu.V_MIN / v, float(tc[2]) / v)
-
-## Lo que patina el pie con el ciclo del jugador (para las pruebas).
-static func patina_jugador(p: Dictionary, anim: String, sp: float) -> float:
-	var tc: Array = p.get("trote_cmu", []) if anim == "trotar" else []
-	if tc.is_empty():
-		return patina(anim, sp)
-	return absf(sp - float(tc[1]) * escala_jugador(p, anim, sp))

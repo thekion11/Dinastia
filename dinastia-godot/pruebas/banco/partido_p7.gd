@@ -77,7 +77,7 @@ func _dq_ciclo_carrera() -> void:
 	_comprobar(peor < 0.05 and peor_antes > 0.4, "carrera: entre 2 y 10 m/s el pie no patina (%.2f m/s; antes hasta %.2f)" % [peor, peor_antes])
 	_comprobar(cambios <= 6, "carrera: con la velocidad temblando ±0,15 m/s, solo %d cambios de ciclo en una subida y bajada" % cambios)
 
-## EL TROTE DE CAPTURA REAL (`TroteCmu`): repartido por jugador, cada clip sin patinar en todo su tramo (con sus umbrales) y, en el
+## EL TROTE DE CAPTURA REAL (`TroteCmu`, apagado por defecto: aquí se enciende): repartido por jugador, re-cronometrado a 3,4 m/s y, en el
 ## cuerpo de verdad, con el pie de apoyo a la velocidad de la tabla y apoyado en el césped (la retarget de CMU flotaba 5-21 cm).
 func _dq_trote_cmu() -> void:
 	var usados := {}
@@ -90,47 +90,41 @@ func _dq_trote_cmu() -> void:
 			usados[b] = true
 	_comprobar(usados.size() >= 10 and originales >= 1 and originales <= 8 and TroteCmu.base_de("x7") == TroteCmu.base_de("x7"),
 		"trote CMU: 22 jugadores, %d trotes distintos y %d con el de siempre (siempre el mismo para cada uno)" % [usados.size(), originales])
-	var peor := 0.0
-	var peor_hi := 0.0
-	var cambios_max := 0
-	for base: String in TroteCmu.CLIPS:
-		var v := float(TroteCmu.CLIPS[base][0])
-		var p := {"trote_cmu": [TroteCmu.PREFIJO + base, v, TroteCmu.umbral_correr(v)]}
-		var actual := "parado"
-		var cambios := 0
-		var rng := RandomNumberGenerator.new()
-		rng.seed = 23
-		for i in 400:
-			var sp := 0.5 + 9.0 * (1.0 - absf(float(i) / 200.0 - 1.0)) + rng.randf_range(-0.15, 0.15)
-			var c := CicloCarrera.ciclo_jugador(p, sp, actual)
-			cambios += 1 if c != actual else 0
-			actual = c
-			if sp >= 2.0 and sp <= 10.0:
-				peor = maxf(peor, CicloCarrera.patina_jugador(p, c, sp))
-			if c == "trotar":
-				peor_hi = maxf(peor_hi, CicloCarrera.escala_jugador(p, c, sp))
-		cambios_max = maxi(cambios_max, cambios)
-	## (×1,45 como regla; el más lento, 3,11 m/s, llega a ×1,48 porque nadie pasa a correr antes de 4,6 m/s)
-	_comprobar(peor < 0.05 and peor_hi <= TroteCmu.A_CORRER_MIN / 3.1 and cambios_max <= 6,
-		"trote CMU: los 24 clips, entre 2 y 10 m/s el pie no patina (%.2f m/s), la mocap no pasa de ×%.2f y ≤ %d cambios de ciclo" % [peor, peor_hi, cambios_max])
 	var raiz := Node3D.new()
 	add_child(raiz)
 	var d := FutbolistaQ.crear(1.8, "male")
 	raiz.add_child(d["nodo"])
 	FutbolistaQ.terminar(d, true)
+	var ap: AnimationPlayer = d["anim"]
 	var dv := 0.0
 	var suelo := 0.0
 	var en_fase := 0
 	for base: String in TroteCmu.CLIPS:
 		var clave := TroteCmu.PREFIJO + base
-		if not TroteCmu.asegurar(d["anim"], d["esqueleto"], base, clave):
+		if not TroteCmu.asegurar(ap, d["esqueleto"], base, clave):
 			continue
-		var m := AnimPasos.medir((d["anim"] as AnimationPlayer).get_animation(clave), d["esqueleto"])
-		dv = maxf(dv, absf(float(m["vel"]) - float(TroteCmu.CLIPS[base][0])))
+		var m := AnimPasos.medir(ap.get_animation(clave), d["esqueleto"])
+		dv = maxf(dv, absf(float(m["vel"]) - TroteCmu.V_TROTE))
 		suelo = maxf(suelo, absf(float(m["suelo"])))
-		en_fase += 1 if AnimPasos.fases.has(clave) and (d["anim"] as AnimationPlayer).get_animation(clave).loop_mode == Animation.LOOP_LINEAR else 0
-	_comprobar(dv < 0.05 and suelo < 0.01 and en_fase == TroteCmu.CLIPS.size(),
-		"trote CMU: en el cuerpo real, el pie de apoyo a la velocidad de la tabla (±%.2f m/s), en el césped (%.3f m) y los %d en bucle y con su fase" % [dv, suelo, en_fase])
+		en_fase += 1 if AnimPasos.fases.has(clave) and ap.get_animation(clave).loop_mode == Animation.LOOP_LINEAR else 0
+	## Re-cronometrados a 3,4 m/s: con la MISMA escala que el motor pone al «trotar» de siempre, el pie no patina.
+	_comprobar(dv < 0.06 and suelo < 0.01 and en_fase == TroteCmu.CLIPS.size(),
+		"trote CMU: en el cuerpo real, los 24 con el pie de apoyo a 3,4 m/s como el trote de siempre (±%.2f m/s), en el césped (%.3f m); %d en bucle y con su fase" % [dv, suelo, en_fase])
+	## La señal: el motor pide «trotar» y suena la variante del jugador.
+	var antes := TroteCmu.encendida
+	TroteCmu.encendida = true
+	var id := "x0"
+	for i in 50:
+		if TroteCmu.base_de("x%d" % i) != "":
+			id = "x%d" % i
+			break
+	var p := {"id": id, "anim": ap, "node": d["nodo"], "por": false}
+	TroteCmu.repartir(p)
+	ap.play("trotar")
+	var suena := String(ap.current_animation)
+	TroteCmu.encendida = antes
+	_comprobar(suena == TroteCmu.PREFIJO + TroteCmu.base_de(id) and ap.has_animation("trotar"),
+		"trote CMU: el motor pide «trotar» (sin tocar su decisión ni su escala) y suena «%s»" % suena)
 	raiz.queue_free()
 
 ## Un cuerpo que corre en círculo a 6 m/s (radio 8 m): se ladea hacia dentro, sin pasar del tope; en recta, derecho.

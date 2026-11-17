@@ -150,7 +150,7 @@ func _mover_jugadores(delta: float) -> void:
 			_anim(p, String(p.get("levantar_con", "levantarse_suelo")), true, 1.8)
 		if float(p.get("gesto_hasta", 0.0)) > t:
 			continue
-		var anim := CicloCarrera.ciclo_jugador(p, sp, String(p.get("anim_actual", "")))   ## (17-11) con histéresis (y los umbrales de su trote CMU)
+		var anim := CicloCarrera.ciclo(sp, String(p.get("anim_actual", "")))   ## (17-11) con histéresis: sin tartamudeo a 5 m/s
 		## Con el balón en los pies se conduce (no se trota); el portero espera
 		## en guardia; el que está fundido se nota parado.
 		if poseedor == p and sp >= 0.5 and sp < 6.5:
@@ -175,7 +175,7 @@ func _mover_jugadores(delta: float) -> void:
 		_anim(p, anim, false)
 		var ap: AnimationPlayer = p.get("anim")
 		if is_instance_valid(ap):
-			ap.speed_scale = CicloCarrera.escala_jugador(p, anim, sp)   ## (17-11) margen por ciclo (y su trote CMU): sin patinar
+			ap.speed_scale = CicloCarrera.escala(anim, sp)   ## (17-11) margen por ciclo: la zancada va con el cuerpo, sin patinar
 
 func _actualizar_balon_visual(_delta: float) -> void:
 	if balon == null:
