@@ -101,5 +101,30 @@ func _process(_d: float) -> void:
 		if _n in [200, 226, 262, 290]:
 			_fotos += 1
 			_foto(("espalda%d" if _n < 230 else "lado%d") % _fotos)
-	if _n > 292:
+	## (17-11, 2.ª pasada) De lado, uno que TROTA sin el balón (el trote de captura real de `TroteCmu`; con TROTE_CMU=0, el de siempre:
+	## el motor es el mismo, así que es el mismo jugador en el mismo momento).
+	if _n == 293 or _n == 336:
+		_sigue = _trotador(motor)
+	if _n >= 293 and _cam_cerca != null and not _sigue.is_empty():
+		var n2: Node3D = _sigue["node"]
+		var fr2 := Vector3(sin(n2.global_rotation.y), 0.0, cos(n2.global_rotation.y))
+		_cam_cerca.global_position = n2.global_position + Vector3(fr2.z, 0.0, -fr2.x) * 6.5 + Vector3(0, 1.3, 0)
+		_cam_cerca.look_at(n2.global_position + Vector3(0, 0.9, 0), Vector3.UP)
+		if _n == 322 or _n == 360:
+			_foto("trote%d" % (1 if _n == 322 else 2))
+	if _n > 362:
 		get_tree().quit()
+
+## El que trota más cerca del balón (sin llevarlo); si nadie trota, el de campo más cercano.
+func _trotador(motor: MotorJugable) -> Dictionary:
+	var mejor: Dictionary = {}
+	var dm := INF
+	for p: Dictionary in motor.jugadores:
+		if bool(p.get("por", false)) or p == motor.poseedor:
+			continue
+		var d := (p["node"] as Node3D).global_position.distance_squared_to(motor.balon.global_position)
+		d += 0.0 if String(p.get("anim_actual", "")) == "trotar" else 1.0e6
+		if d < dm:
+			dm = d
+			mejor = p
+	return mejor
