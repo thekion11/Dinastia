@@ -229,3 +229,22 @@ func _probar_segundas_pbt() -> void:
 		var suben := (resumen["suben"] as Array).filter(func(c: Club) -> bool: return c.pais == pais).size()
 		var bajan := (resumen["bajan"] as Array).filter(func(c: Club) -> bool: return c.pais == pais).size()
 		_comprobar(suben == bajan and suben == int(esperado[pais][2]), "%s: suben %d y bajan %d" % [pais, suben, bajan])
+
+## (17-11) Ligas POR ZONAS con número impar por zona (ARG y USA: 30 clubes en 2 zonas de 15): cada jornada descansa uno por zona.
+## Quien descansa no tiene `proximo_partido`, pero sí el siguiente (`siguiente_de`); medir_partido elegía un club sin partido y fallaba.
+func _probar_zonas_descanso() -> void:
+	_titulo("LIGAS POR ZONAS: QUIÉN DESCANSA Y SU SIGUIENTE PARTIDO")
+	for pais: String in ["ARG", "USA"]:
+		var m := Mundo.new()
+		m.generar([pais] as Array[String], 4711)
+		var l: Liga = m.ligas[0]
+		var descansan := 0
+		var con_siguiente := 0
+		for c: Club in l.clubes:
+			m.mi_club_id = c.id
+			if m.proximo_partido().is_empty():
+				descansan += 1
+				if not l.siguiente_de(c).is_empty():
+					con_siguiente += 1
+		_comprobar(l.clubes.size() == 30 and descansan == 2 and con_siguiente == descansan,
+			"%s: 30 clubes, descansan %d en la 1.ª jornada y todos tienen su siguiente partido (%d)" % [pais, descansan, con_siguiente])
