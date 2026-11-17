@@ -238,6 +238,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
 .ctrl .chip{font-size:13px;padding:5px 12px}
 /* ---------- ANIMACIONES de los eventos a pantalla completa ---------- */
 .arte.suave{-webkit-mask-image:radial-gradient(ellipse 54% 58% at 50% 55%,#000 40%,transparent 100%);mask-image:radial-gradient(ellipse 54% 58% at 50% 55%,#000 40%,transparent 100%)}
+.ico svg.bdg,.ico.sm svg.bdg{width:100%;height:100%;display:block}
 .dia .n em{float:right;font-style:normal;font-weight:500;color:#8b9bb8;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-left:6px}
 .dia.fuera{opacity:.35}
 .cal.desl{animation:desl .5s ease-out}
@@ -284,6 +285,28 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
 .jdesc .caja small{font:700 12px var(--fb);letter-spacing:.16em;text-transform:uppercase;color:#6c789a}
 .jdesc .caja b{font-size:64px;line-height:1}
 .jdesc .st{display:flex;justify-content:space-between;font:600 16px var(--fb)}.jdesc .st em{font-style:normal;font-weight:700}
+.pp{position:absolute;left:250px;top:126px;width:700px;min-height:296px;background:rgba(6,10,20,.94);border:1px solid rgba(255,255,255,.22);padding:18px 24px 20px;display:none;z-index:4;color:#eaf0fb}
+.pp.on{display:block;animation:entra .25s ease-out}
+.pp h3{margin:0 0 12px;font:700 28px var(--fd);letter-spacing:.06em;text-transform:uppercase}
+.pp .x{position:absolute;right:12px;top:10px;border:0;background:#243656;color:#fff;width:30px;height:28px;cursor:pointer}
+.pp .et{display:block;margin:10px 0 5px;font:700 11px var(--fb);letter-spacing:.16em;text-transform:uppercase;color:#8b9bb8}
+.sgs{display:flex;flex-wrap:wrap;gap:5px}
+.sg{border:0;background:#1d2a47;color:#cfd7ee;font:600 14px var(--fb);padding:8px 14px;cursor:pointer}.sg.on{background:var(--acc);color:#fff}
+.kits{display:flex;gap:16px;justify-content:center}
+.kit{background:rgba(255,255,255,.06);border:2px solid transparent;padding:8px 18px 10px;color:#fff;cursor:pointer;display:grid;justify-items:center;gap:4px;font:600 15px var(--fb)}.kit.on{border-color:var(--acc);background:rgba(255,255,255,.12)}
+.nota2{margin:8px 0 0;font:500 13px var(--fb);color:#8b9bb8}
+.est2,.plan,.opc2{display:flex;gap:26px;align-items:flex-start}.est2>div:first-child,.plan>div:first-child,.opc2>div{flex:1}
+.est2 b{font:700 26px var(--fd);letter-spacing:.03em}
+.saque{display:grid;justify-items:center;gap:10px;padding-top:6px}
+.saque b{font:700 38px var(--fd);text-transform:uppercase}
+.moneda{width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#fff3b0,#d9ab3c 55%,#8f6313);display:grid;place-items:center;font:700 44px var(--fd);color:#6b4608;box-shadow:0 8px 20px rgba(0,0,0,.5);animation:voltea 1.5s cubic-bezier(.2,.7,.3,1)}
+@keyframes voltea{0%{transform:translateY(-90px) rotateX(0)}70%{transform:translateY(0) rotateX(1260deg)}100%{transform:translateY(0) rotateX(1440deg)}}
+.step{display:flex;align-items:center;gap:10px}.step b{font:700 24px var(--fd);min-width:190px;text-align:center}.step button{border:0;background:#243656;color:#fff;width:36px;height:36px;cursor:pointer}
+.tg{display:flex;align-items:center;gap:10px;width:100%;border:0;background:#1d2a47;color:#cfd7ee;font:600 15px var(--fb);padding:9px 12px;margin-bottom:6px;cursor:pointer;text-align:left}
+.tg i{width:34px;height:18px;border-radius:9px;background:#3a4668;position:relative;flex:none}.tg i::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s}
+.tg.on i{background:var(--acc)}.tg.on i::after{left:18px}
+.cams{display:flex;gap:16px;justify-content:center}
+.camc{background:rgba(255,255,255,.06);border:2px solid transparent;padding:8px;color:#fff;cursor:pointer;display:grid;gap:6px;font:600 15px var(--fb)}.camc.on{border-color:var(--acc)}
 .cine{position:absolute;inset:0;width:100%;height:100%}
 .an-flota{animation:flota 10s ease-in-out infinite alternate}
 @keyframes flota{to{transform:translate(16px,-20px)}}
@@ -333,6 +356,8 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
 .pre .figl{animation:izq .8s .2s cubic-bezier(.2,.9,.3,1) both}
 .pre .figr{animation:der .8s .2s cubic-bezier(.2,.9,.3,1) both}
 /* ---------- TEMPORADA ---------- */
+.giro{display:none;color:var(--mute);font-size:13px;margin:0}
+@media (orientation:portrait) and (max-width:700px){.giro{display:block}.pagina{grid-template-columns:minmax(0,1fr)}.marco{order:-1}}
 .ctrl2{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .ctrl2 .chip{font-size:13px;padding:5px 12px}
 .ctrl2 .sep{width:1px;height:20px;background:var(--line)}
@@ -399,6 +424,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fb);padding-block:1
     <div class="pc" id="pc"></div>
   </div></div>
 
+  <p class="giro">Gira el teléfono en horizontal para ver la pantalla más grande.</p>
   <div class="leyenda" id="ley"></div>
   <div class="notas">
     <div><b>Importante o menor</b><p>Los eventos con animación propia (fichaje, premio, decisión, lesión, balance) ocupan la pantalla completa y al cerrarlos vuelves al menú. Los menores (convocatoria, cantera, patrocinio, mercado) no: aparece una campana roja en su tarjeta y el avance queda parado hasta que vuelvas a pulsar Avanzar.</p></div>
@@ -794,12 +820,22 @@ let S=null;
 const rng=a=>{const x=Math.sin(a*9301+49297)*233280;return x-Math.floor(x);};
 const $=id=>document.getElementById(id);
 const fmt=n=>n.toFixed(1).replace(".",",")+" M€";
+const FORMS={
+ "4-4-2":[[.04,.5],[.2,.15],[.2,.38],[.2,.62],[.2,.85],[.45,.15],[.42,.38],[.42,.62],[.45,.85],[.68,.38],[.68,.62]],
+ "4-2-3-1":[[.04,.5],[.2,.15],[.2,.38],[.2,.62],[.2,.85],[.36,.38],[.36,.62],[.5,.18],[.5,.5],[.5,.82],[.64,.5]],
+ "3-5-2":[[.04,.5],[.2,.25],[.2,.5],[.2,.75],[.4,.1],[.38,.35],[.34,.5],[.38,.65],[.4,.9],[.68,.38],[.68,.62]],
+ "5-3-2":[[.04,.5],[.18,.08],[.2,.3],[.2,.5],[.2,.7],[.18,.92],[.42,.3],[.4,.5],[.42,.7],[.68,.38],[.68,.62]],
+ "4-3-3":[[.04,.5],[.2,.15],[.2,.38],[.2,.62],[.2,.85],[.4,.3],[.38,.5],[.4,.7],[.62,.18],[.7,.5],[.62,.82]]
+};
+const DIFS=["Practicante","Cadete","Debutante","Semiprofesional","Profesional","Experto","Maestro","Ultimate"];
+const kitDe=(c,k)=>k===1?Object.assign({},c,{c1:c.c2,c2:c.c1}):(k===2?Object.assign({},c,{c1:"#141a2c",c2:c.c1}):c);
+function cfgPorDefecto(){return {kit:0,hora:"noche",clima:"despejado",form:"4-2-3-1",estilo:2,pres:1,linea:1,dif:2,dur:10,cam:0,ref:{fuera:true,faltas:true,lesiones:true,cansancio:true}};}
 function nuevoEstado(c){
   const F={f1:c.fich,f2:fichGen(c,2),f3:fichGen(c,3)};
   const tabla={};tabla[c.n]=0;piscina(c).forEach(x=>tabla[x.n]=0);
   return {club:c,F,ev:construir(c,F),hoy:0,sel:0,ven:0,run:false,fast:false,flags:{},done:{},log:[],cola:[],minors:[],match:null,abierto:false,espera:false,t:null,fin:false,
     rec:{pj:0,g:0,e:0,p:0,gf:0,gc:0},pts:0,tabla,contPts:0,trofeos:[],nFich:0,nPrem:0,
-    fase:"normal",pend:null,ultimo:null,notifs:{},tile:0,pres:54.9,resMap:{},variante:0,timers:[],auto:false,vel:2,huboMajor:false,ultDec:null};
+    fase:"normal",pend:null,ultimo:null,notifs:{},tile:0,pres:54.9,resMap:{},variante:0,timers:[],auto:false,vel:2,huboMajor:false,ultDec:null,cfg:cfgPorDefecto()};
 }
 const visible=e=>{
   if(e.kind==="gala"&&posicion()>3)return false;
@@ -814,9 +850,40 @@ const delDia=i=>S.ev.filter(e=>e.d===i&&visible(e));
 const tcol=t=>`var(${TIPOS[t].c})`;
 const HEX={partido:"#c8102e",premio:"#e2b84a",oferta:"#27a9b8",nego:"#27a9b8",pres:"#27a9b8",noticia:"#4f8ff7",decision:"#f08a3c",cons:"#f08a3c",lesion:"#e5484d",dinero:"#3fb27f",cantera:"#9acd32",mercado:"#8b95a8",hito:"#9b7bf0",libre:"#8b95a8",plantilla:"#27a9b8",sorteo:"#4f8ff7",fiesta:"#e2b84a",tarjeta:"#e5484d",memoria:"#5a6275"};
 const hexT=t=>HEX[t]||"#8b95a8";
+const SIMB={
+ premio:'<path d="M15 9h18v9c0 6-4 10-9 10s-9-4-9-10z"/><path d="M15 12H9v3c0 4 3 7 7 8v-3c-2-1-4-3-4-5v-1h3zM33 12h6v3c0 4-3 7-7 8v-3c2-1 4-3 4-5v-1h-3z"/><rect x="21" y="28" width="6" height="6"/><rect x="16" y="35" width="16" height="4" rx="1"/><path d="M20 13c0 5 1 9 4 11" stroke="#000" stroke-opacity=".18" stroke-width="2" fill="none"/>',
+ oferta:'<path d="M13 7h16l7 7v27H13z"/><path d="M29 7v7h7z" fill="#000" fill-opacity=".25"/><rect x="17" y="21" width="15" height="2.4" fill="#000" fill-opacity=".35"/><rect x="17" y="26" width="15" height="2.4" fill="#000" fill-opacity=".35"/><rect x="17" y="31" width="9" height="2.4" fill="#000" fill-opacity=".35"/><circle cx="32" cy="34" r="4.5" fill="#000" fill-opacity=".4"/>',
+ nego:'<path d="M3 19l9-3 4 11-9 3z"/><path d="M45 19l-9-3-4 11 9 3z"/><path d="M15 17c4-3 14-3 18 0l3 7c1 3-1 6-4 7H20c-3-1-5-4-4-7z"/><path d="M20 30l2-6M25 31l2-7M30 30l2-6" stroke="#000" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>',
+ pres:'<path d="M17 8l-11 5 4 9 5-2v20h18V20l5 2 4-9-11-5c-1 3-4 4-7 4s-6-1-7-4z"/><text x="24" y="35" text-anchor="middle" font-size="15" font-weight="700" fill="#000" fill-opacity=".35" font-family="Barlow Condensed,sans-serif">9</text>',
+ noticia:'<circle cx="24" cy="24" r="15"/><path d="M9 24h30M24 9c7 5 7 25 0 30M24 9c-7 5-7 25 0 30M12 16h24M12 32h24" stroke="#000" stroke-opacity=".35" stroke-width="1.8" fill="none"/>',
+ decision:'<path d="M8 10h32v22H20l-8 8v-8H8z"/><rect x="22" y="15" width="4" height="10" rx="1" fill="#000" fill-opacity=".4"/><rect x="22" y="27" width="4" height="4" rx="1" fill="#000" fill-opacity=".4"/>',
+ cons:'<path d="M8 10h32v22H20l-8 8v-8H8z"/><path d="M15 21h14M25 16l5 5-5 5" stroke="#000" stroke-opacity=".4" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+ lesion:'<path d="M19 8h10v11h11v10H29v11H19V29H8V19h11z"/><path d="M22 14h4v8h8v4h-8v8h-4v-8h-8v-4h8z" fill="#000" fill-opacity=".18"/>',
+ dinero:'<circle cx="24" cy="24" r="15"/><circle cx="24" cy="24" r="11.5" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="1.6"/><text x="24" y="31" text-anchor="middle" font-size="19" font-weight="700" fill="#000" fill-opacity=".4" font-family="Barlow Condensed,sans-serif">€</text>',
+ cantera:'<path d="M22 40V26h4v14z"/><path d="M24 26c0-8-6-12-14-12 0 8 5 12 14 12zM24 30c0-6 4-10 12-10 0 6-4 10-12 10z"/>',
+ mercado:'<rect x="11" y="21" width="26" height="19" rx="3"/><path d="M16 21v-5a8 8 0 0 1 16 0v5" stroke="#fff" stroke-width="4" fill="none"/><circle cx="24" cy="29" r="3" fill="#000" fill-opacity=".4"/><rect x="22.5" y="30" width="3" height="6" rx="1" fill="#000" fill-opacity=".4"/>',
+ hito:'<rect x="18" y="20" width="12" height="20"/><rect x="5" y="27" width="12" height="13"/><rect x="31" y="31" width="12" height="9"/><path d="M24 6l2.3 4.8 5.2.7-3.8 3.6.9 5.2-4.6-2.5-4.6 2.5.9-5.2-3.8-3.6 5.2-.7z"/>',
+ plantilla:'<circle cx="24" cy="15" r="6"/><path d="M13 38c0-8 5-13 11-13s11 5 11 13z"/><circle cx="10" cy="21" r="4" fill-opacity=".75"/><circle cx="38" cy="21" r="4" fill-opacity=".75"/><path d="M4 38c0-5 2-9 6-9M44 38c0-5-2-9-6-9" stroke="#fff" stroke-opacity=".75" stroke-width="4" fill="none"/>',
+ sorteo:'<circle cx="15" cy="17" r="8"/><circle cx="33" cy="19" r="8" fill-opacity=".85"/><circle cx="23" cy="33" r="8" fill-opacity=".7"/><text x="15" y="21" text-anchor="middle" font-size="11" font-weight="700" fill="#000" fill-opacity=".4" font-family="Barlow Condensed,sans-serif">7</text><text x="33" y="23" text-anchor="middle" font-size="11" font-weight="700" fill="#000" fill-opacity=".4" font-family="Barlow Condensed,sans-serif">12</text><text x="23" y="37" text-anchor="middle" font-size="11" font-weight="700" fill="#000" fill-opacity=".4" font-family="Barlow Condensed,sans-serif">3</text>',
+ fiesta:'<path d="M24 24L24 7M24 24L36 12M24 24L41 24M24 24L36 36M24 24L24 41M24 24L12 36M24 24L7 24M24 24L12 12" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="24" r="4"/><circle cx="24" cy="5" r="2"/><circle cx="43" cy="24" r="2"/><circle cx="24" cy="43" r="2"/><circle cx="5" cy="24" r="2"/>',
+ tarjeta:'<rect x="15" y="8" width="18" height="28" rx="2.5" transform="rotate(-10 24 22)"/><path d="M30 32l8 3-3 5-8-3z" fill-opacity=".8"/>',
+ memoria:'<path d="M24 6c-6 0-9 5-6 9l6 8 6-8c3-4 0-9-6-9zM18 24l-6 17 8-4 4 6 4-6 8 4-6-17-6 7z"/>',
+ libre:'<circle cx="24" cy="24" r="15"/><path d="M24 15l8 6-3 9H19l-3-9z" fill="#000" fill-opacity=".4"/>',
+ partido:'<circle cx="24" cy="24" r="15"/><path d="M24 15l8 6-3 9H19l-3-9z" fill="#000" fill-opacity=".4"/>'
+};
+function mezcla(hex,m,k){const n=parseInt(hex.replace("#",""),16),r=n>>16,g=(n>>8)&255,b=n&255,x=m==="b"?255:0;return `rgb(${Math.round(r+(x-r)*k)},${Math.round(g+(x-g)*k)},${Math.round(b+(x-b)*k)})`;}
+function badge(tp){
+  const k=SIMB[tp]?tp:"libre";
+  return `<svg class="bdg" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="url(#bg-${k})"/><circle cx="24" cy="24" r="22.2" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="1.4"/><g fill="#fff" filter="url(#bgsh)">${SIMB[k]}</g><path d="M7 21C9 11 18 6 26 6c8 0 14 4 16 11-8-5-21-5-35 4z" fill="#fff" fill-opacity=".2"/></svg>`;
+}
+function defsInsignias(){
+  const d=document.createElement("div");
+  d.innerHTML=`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>${Object.keys(HEX).map(k=>`<radialGradient id="bg-${k}" cx=".3" cy=".25" r=".95"><stop offset="0" stop-color="${mezcla(HEX[k],"b",.3)}"/><stop offset=".55" stop-color="${HEX[k]}"/><stop offset="1" stop-color="${mezcla(HEX[k],"n",.4)}"/></radialGradient>`).join("")}<filter id="bgsh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="1.2" stdDeviation="1" flood-color="#000" flood-opacity=".45"/></filter></defs></svg>`;
+  document.body.prepend(d);
+}
 const icono=(e,sm,res)=>e.t==="partido"
   ?`<span class="ico${sm?" sm":""}${res?" resuelto":""}" style="background:none">${crest(e.riv,sm?34:46)}</span>`
-  :`<span class="ico${sm?" sm":""}${res?" resuelto":""}" style="background:${tcol(e.t)}">${svgIc(TIPOS[e.t].ic)}</span>`;
+  :`<span class="ico${sm?" sm":""}${res?" resuelto":""}" style="background:none">${badge(e.t)}</span>`;
 function posicion(){
   const m=S.tabla[S.club.n];return 1+Object.keys(S.tabla).filter(k=>k!==S.club.n&&S.tabla[k]>m).length;
 }
@@ -901,7 +968,7 @@ $("tiles").addEventListener("click",ev=>{
   const z=b.getAttribute("data-z"),n=S.notifs[z]||[];
   if(n.length){
     const x=n.shift(),Z=ZONAS[z];sonido("notif");
-    $("modal").innerHTML=`<div class="caja"><div class="ci"><span class="ico" style="background:${tcol(x.t0)}">${svgIc(TIPOS[x.t0].ic)}</span><div><small>Notificación · ${Z.n}${n.length?` · quedan ${n.length}`:""}</small><b>${x.t}</b></div></div><p>${x.s}.</p><button class="btn pri" id="mOk">Entendido</button></div>`;
+    $("modal").innerHTML=`<div class="caja"><div class="ci"><span class="ico" style="background:none">${badge(x.t0)}</span><div><small>Notificación · ${Z.n}${n.length?` · quedan ${n.length}`:""}</small><b>${x.t}</b></div></div><p>${x.s}.</p><button class="btn pri" id="mOk">Entendido</button></div>`;
     $("modal").classList.add("on");
     $("mOk").onclick=()=>{$("modal").classList.remove("on");pintaHub();};
     $("mOk").focus();
@@ -1150,7 +1217,7 @@ function registra(e,r){
 }
 const nombreTab=i=>["Uniforme","Estadio","Saque inicial","Plan de juego","Opciones generales","Cámara"][i];
 function abrePrevia(modo){
-  S.modo=modo;S.tab=2;
+  S.modo=modo;S.tab=2;S.panel=false;
   const e=S.pend||S.ultimo,c=S.club,riv=e.riv;
   const L=e.loc?[c,riv]:[riv,c];
   const pl=L.map(plantilla);
@@ -1159,22 +1226,74 @@ function abrePrevia(modo){
    <div class="cabz">${crest(L[0],112)}${emblemaLiga(60)}${crest(L[1],112)}</div>
    ${modo!=="completo"?`<div class="modo">${modo==="revancha"?"Partido de práctica":"Momentos"}</div>`:`<div class="modo" style="background:#243656">${e.comp||"Liga"}</div>`}
    ${col(0,330)}${col(1,570)}
-   <div class="figl" style="position:absolute;left:-6px;bottom:40px">${figura(L[0],L[0]===c?c.fich.num:7,PIEL[3],"#2a1d17",440)}</div>
-   <div class="figr" style="position:absolute;right:-6px;bottom:40px">${figura(L[1],L[1]===c?c.fich.num:10,PIEL[0],"#d8c39a",440)}</div>
+   <div class="figl" id="preFigL" style="position:absolute;left:-6px;bottom:40px"></div>
+   <div class="figr" id="preFigR" style="position:absolute;right:-6px;bottom:40px"></div>
+   <div class="pp" id="prePanel"></div>
    <div class="det" id="preDet"></div><div class="tabs" id="preTabs"></div>
    <div class="hint"><span><i class="bt a">A</i>Confirmar</span><span><i class="bt b">B</i>Volver</span></div>`;
-  pintaPreTabs();ir("pre");sonido("silbato");
+  pintaFigPrevia();pintaPreTabs();ir("pre");sonido("silbato");
+}
+function pintaFigPrevia(){
+  const e=S.pend||S.ultimo,c=S.club,L=e.loc?[c,e.riv]:[e.riv,c];
+  const K=L.map(x=>x===c?kitDe(c,S.cfg.kit):x);
+  $("preFigL").innerHTML=figura(K[0],L[0]===c?c.fich.num:7,PIEL[3],"#2a1d17",440);
+  $("preFigR").innerHTML=figura(K[1],L[1]===c?c.fich.num:10,PIEL[0],"#d8c39a",440);
 }
 function pintaPreTabs(){
-  const det=["Titular · camiseta de local","Estadio: "+S.club.estadio+" · noche · césped natural","Pulsa Confirmar para empezar el partido"+(S.modo==="completo"?"":" de práctica"),"4-2-3-1 · estilo ofensivo · presión alta","Dificultad Debutante · partido de 10 minutos","Cámara de TV · distancia media"];
+  const cf=S.cfg,e=S.pend||S.ultimo,c=S.club;
+  const est=e.loc?c.estadio:(e.riv.estadio||"Estadio de "+e.riv.n);
+  const det=["Uniforme: "+["titular","alternativo","tercero"][cf.kit],"Estadio: "+est+" · "+cf.hora+" · "+cf.clima,"Pulsa «Saque inicial» para empezar el partido"+(S.modo==="completo"?"":" de práctica"),"Plan de juego: "+cf.form+" · "+["defensivo","equilibrado","ofensivo"][cf.estilo]+" · presión "+["baja","media","alta"][cf.pres],"Dificultad "+DIFS[cf.dif]+" · partido de "+cf.dur+" minutos","Cámara: "+["TV (lateral)","Cerca","Alejada"][cf.cam]];
   $("preTabs").innerHTML=[0,1,2,3,4,5].map(i=>`<button class="${i===S.tab?"on":""}" data-t="${i}">${nombreTab(i)}</button>`).join("");
   $("preDet").textContent=det[S.tab];
+  pintaPanel();
+}
+function pintaPanel(){
+  const pn=$("prePanel"),cf=S.cfg,e=S.pend||S.ultimo,c=S.club;
+  if(!S.panel){pn.classList.remove("on");pn.innerHTML="";return;}
+  pn.classList.add("on");
+  const seg=(k,vals,act)=>`<div class="sgs">${vals.map(v=>`<button class="sg${String(v[0])===String(act)?" on":""}" data-p="${k}" data-v="${v[0]}">${v[1]}</button>`).join("")}</div>`;
+  const tg=(k,txt,on)=>`<button class="tg${on?" on":""}" data-p="ref" data-v="${k}"><i></i>${txt}</button>`;
+  let h=`<button class="x" data-p="cerrar" aria-label="Cerrar">✕</button><h3>${nombreTab(S.tab)}</h3>`;
+  if(S.tab===0){
+    h+=`<div class="kits">${[0,1,2].map(k=>`<button class="kit${cf.kit===k?" on":""}" data-p="kit" data-v="${k}">${figura(kitDe(c,k),c.fich.num,PIEL[1],"#2a1d17",170)}<span>${["Titular","Alternativa","Tercera"][k]}</span></button>`).join("")}</div><p class="nota2">El rival usa su uniforme titular; si chocan los colores, cambia solo.</p>`;
+  }else if(S.tab===1){
+    const est=e.loc?c.estadio:(e.riv.estadio||"Estadio de "+e.riv.n);
+    const sk={noche:["#05070f","#1b2850"],tarde:["#ff9d5c","#4a3270"],dia:["#6fb4ff","#d7ecff"]}[cf.hora];
+    let lluvia="";if(cf.clima==="lluvia")for(let i=0;i<46;i++){const x=rs(4,i,2.3)*280,y=rs(4,i,5.1)*140;lluvia+=`<path d="M${x.toFixed(0)} ${y.toFixed(0)}l-3 9" stroke="#cfe0ff" stroke-opacity=".6"/>`;}
+    h+=`<div class="est2"><div><b>${est}</b><p class="nota2">${(30000+hash(est)%40000).toLocaleString("es")} espectadores · césped natural</p><span class="et">Hora</span>${seg("hora",[["dia","Día"],["tarde","Tarde"],["noche","Noche"]],cf.hora)}<span class="et">Clima</span>${seg("clima",[["despejado","Despejado"],["lluvia","Lluvia"],["niebla","Niebla"]],cf.clima)}</div>
+      <svg viewBox="0 0 280 150" width="280" height="150"><defs><linearGradient id="pvs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sk[0]}"/><stop offset="1" stop-color="${sk[1]}"/></linearGradient></defs><rect width="280" height="150" fill="url(#pvs)"/><path d="M0 70C60 38 220 38 280 70V92H0z" fill="#1a2038"/>${Array.from({length:60},(_,i)=>`<circle cx="${(10+rs(5,i,1.9)*260).toFixed(0)}" cy="${(52+rs(5,i,3.1)*30).toFixed(0)}" r="1.5" fill="${i%3?"#ffe9a8":"#fff"}" opacity=".8"/>`).join("")}<path d="M0 92H280V150H0z" fill="#1f7d46"/><path d="M0 92L60 150M280 92L220 150M140 92V150" stroke="#fff" stroke-opacity=".25"/>${cf.hora==="noche"?`<circle cx="30" cy="40" r="20" fill="#fff" opacity=".3"/><circle cx="250" cy="40" r="20" fill="#fff" opacity=".3"/>`:""}${lluvia}${cf.clima==="niebla"?`<rect width="280" height="150" fill="#e6ecf5" opacity=".45"/>`:""}</svg></div>`;
+  }else if(S.tab===2){
+    const mon=rng(hash(e.id||"x"))>.5;
+    h+=`<div class="saque"><div class="moneda"><span>${mon?"C":"X"}</span></div><b>${mon?"Saca "+c.n:"Saca "+e.riv.n}</b><p class="nota2">Sorteo de campo: gana el sorteo ${mon?"tu club":"el rival"}.</p><button class="btn pri" data-p="empezar" style="height:54px;font-size:22px">Empezar partido</button></div>`;
+  }else if(S.tab===3){
+    const F=FORMS[cf.form];
+    h+=`<div class="plan"><div><span class="et">Formación</span>${seg("form",Object.keys(FORMS).map(k=>[k,k]),cf.form)}<span class="et">Estilo de juego</span>${seg("estilo",[[0,"Defensivo"],[1,"Equilibrado"],[2,"Ofensivo"]],cf.estilo)}<span class="et">Presión</span>${seg("pres",[[0,"Baja"],[1,"Media"],[2,"Alta"]],cf.pres)}<span class="et">Línea defensiva</span>${seg("linea",[[0,"Baja"],[1,"Media"],[2,"Alta"]],cf.linea)}</div>
+      <svg viewBox="0 0 200 130" width="230" height="150"><rect width="200" height="130" rx="4" fill="#1f7d46"/><path d="M100 0V130M2 2h196v126H2z" stroke="#fff" stroke-opacity=".6" fill="none"/><circle cx="100" cy="65" r="14" stroke="#fff" stroke-opacity=".6" fill="none"/>${F.map(q=>`<circle cx="${(q[0]*196+2).toFixed(0)}" cy="${(q[1]*126+2).toFixed(0)}" r="5.5" fill="${c.c1}" stroke="#fff" stroke-width="1.5"/>`).join("")}</svg></div>`;
+  }else if(S.tab===4){
+    h+=`<div class="opc2"><div><span class="et">Dificultad de la CPU</span><div class="step"><button data-p="dif" data-v="-1">◀</button><b>${DIFS[cf.dif]}</b><button data-p="dif" data-v="1">▶</button></div><span class="et">Duración</span>${seg("dur",[[5,"5 min"],[10,"10 min"],[15,"15 min"],[20,"20 min"]],cf.dur)}</div><div><span class="et">Reglas</span>${tg("fuera","Fueras de juego",cf.ref.fuera)}${tg("faltas","Faltas y tarjetas",cf.ref.faltas)}${tg("lesiones","Lesiones",cf.ref.lesiones)}${tg("cansancio","Cansancio",cf.ref.cansancio)}</div></div>`;
+  }else{
+    const cam=(k,tit,w)=>`<button class="camc${cf.cam===k?" on":""}" data-p="cam" data-v="${k}"><svg viewBox="0 0 160 90" width="160" height="90"><rect width="160" height="90" fill="#1b2338"/><path d="M10 28L150 28L158 86L2 86Z" fill="#1f7d46"/><path d="M80 28V86" stroke="#fff" stroke-opacity=".5"/><rect x="${80-w/2}" y="22" width="${w}" height="64" fill="none" stroke="#ffd24a" stroke-width="2.4"/></svg><span>${tit}</span></button>`;
+    h+=`<div class="cams">${cam(0,"TV (lateral)",70)}${cam(1,"Cerca",46)}${cam(2,"Alejada",110)}</div><p class="nota2">La cámara con la que se mide el rendimiento es la de TV.</p>`;
+  }
+  pn.innerHTML=h;
 }
 $("pre").addEventListener("click",ev=>{
+  const bp=ev.target.closest("button[data-p]");
+  if(bp){
+    sonido("clic");const k=bp.dataset.p,v=bp.dataset.v,cf=S.cfg;
+    if(k==="cerrar")S.panel=false;
+    else if(k==="empezar"){jugarPartido(S.pend||S.ultimo,S.modo||"completo");return;}
+    else if(k==="kit"){cf.kit=+v;pintaFigPrevia();}
+    else if(k==="hora"||k==="clima"||k==="form")cf[k]=v;
+    else if(k==="estilo"||k==="pres"||k==="linea"||k==="dur"||k==="cam")cf[k]=+v;
+    else if(k==="dif")cf.dif=Math.max(0,Math.min(7,cf.dif+(+v)));
+    else if(k==="ref")cf.ref[v]=!cf.ref[v];
+    pintaPreTabs();return;
+  }
   const b=ev.target.closest("button[data-t]");if(!b)return;
   const t=+b.getAttribute("data-t");sonido("clic");
-  if(t===S.tab&&t===2){jugarPartido(S.pend||S.ultimo,S.modo||"completo");return;}
-  S.tab=t;pintaPreTabs();
+  if(t===S.tab&&S.panel)S.panel=false;else{S.tab=t;S.panel=true;}
+  pintaPreTabs();
 });
 function simulacion(salta){
   const e=S.pend||S.ultimo;
@@ -1248,6 +1367,7 @@ function jugarPartido(e,modo,mom){
   const r=modo==="ver"?S.ultimo.r:resultadoPartido(e,v);
   const nm=n=>n.replace(/ \(.+\)/,"");
   const P=L.map(x=>plantilla(x).map(nm));
+  const cf=S.cfg,KC=L.map(x=>x===c?kitDe(c,cf.kit):x),CAMH=[.2,.14,.3][cf.cam];
   const ini=modo==="momento"?Math.max(0,mom.min-2):0,fin=modo==="momento"?Math.min(90,mom.min+2):90;
   const GP=r.gol.map(g=>({min:g.min,eq:g.mio?mio:1-mio,n:g.n,ok:g.min<=ini&&modo==="momento"}));
   const marc=[0,0];GP.forEach(g=>{if(g.ok)marc[g.eq]++;});
@@ -1276,7 +1396,7 @@ function jugarPartido(e,modo,mom){
   cg.globalAlpha=1;const gr=cg.createLinearGradient(0,0,0,130);gr.addColorStop(0,"rgba(0,0,0,.55)");gr.addColorStop(1,"rgba(0,0,0,0)");cg.fillStyle=gr;cg.fillRect(0,0,1200,130);
   /* proyección: x,y del campo (0..1) a la pantalla */
   const Y0=196,Y1=500;
-  const pr=(x,y)=>{const s=.62+.62*y;return [600+((x-M.cam)/.2)*520*s,Y0+y*(Y1-Y0)];};
+  const pr=(x,y)=>{const s=.62+.62*y;return [600+((x-M.cam)/CAMH)*520*s,Y0+y*(Y1-Y0)];};
   /* botones del mando */
   const pintaPad=()=>{
     if(sin)return;const con=M.pos===mio&&!M.pase||M.pos===mio;
@@ -1286,7 +1406,7 @@ function jugarPartido(e,modo,mom){
   };
   /* jugadores */
   const posJ=(eq,i)=>{
-    const f=FORM[i],bx=eq===0?f[0]:1-f[0],by=eq===0?f[1]:1-f[1];
+    const f=(eq===mio?(FORMS[cf.form]||FORMS["4-2-3-1"]):FORMS["4-2-3-1"])[i],bx=eq===0?f[0]:1-f[0],by=eq===0?f[1]:1-f[1];
     let x=bx+(M.bola.x-bx)*.3+Math.sin(M.t*1.3+i*2.1+eq*5)*.012,y=by+(M.bola.y-by)*.2+Math.cos(M.t*1.1+i*3.3+eq*2)*.014;
     if(M.fase==="gol"&&M.g&&M.tGol>1&&M.g.eq===eq){const k=Math.min(1,(M.tGol-1)/1.4),gx=eq===0?.97:.03;x=x+(gx-x)*k*(i>3?1:.4);y=y+(.18-y)*k*(i>3?1:.3);}
     if(M.port.eq===eq&&M.port.i===i&&M.fase==="juego"){x=M.bola.x-(eq===0?.008:-.008);y=M.bola.y;}
@@ -1364,9 +1484,9 @@ function jugarPartido(e,modo,mom){
   /* dibujo */
   const dibuja=()=>{
     g.clearRect(0,0,W,H);
-    const sk=g.createLinearGradient(0,0,0,Y0);sk.addColorStop(0,"#05070f");sk.addColorStop(1,"#0d1428");g.fillStyle=sk;g.fillRect(0,0,W,Y0);
+    const SK={noche:["#05070f","#0d1428"],tarde:["#ff9d5c","#3a2a5a"],dia:["#7fb8ff","#d7ecff"]}[cf.hora];const sk=g.createLinearGradient(0,0,0,Y0);sk.addColorStop(0,SK[0]);sk.addColorStop(1,SK[1]);g.fillStyle=sk;g.fillRect(0,0,W,Y0);
     g.drawImage(cr,-((M.cam-.5)*90)-20,64,1240,130);
-    [[80,40],[1120,40]].forEach(f=>{const rg=g.createRadialGradient(f[0],f[1],0,f[0],f[1],230);rg.addColorStop(0,"rgba(255,244,214,.55)");rg.addColorStop(1,"rgba(255,244,214,0)");g.fillStyle=rg;g.fillRect(f[0]-230,0,460,300);});
+    if(cf.hora!=="dia")[[80,40],[1120,40]].forEach(f=>{const rg=g.createRadialGradient(f[0],f[1],0,f[0],f[1],230);rg.addColorStop(0,"rgba(255,244,214,.55)");rg.addColorStop(1,"rgba(255,244,214,0)");g.fillStyle=rg;g.fillRect(f[0]-230,0,460,300);});
     /* vallas */
     const off=-M.cam*800;g.fillStyle="#0a0f1e";g.fillRect(0,Y0-24,W,22);
     g.font="700 13px Barlow Condensed,sans-serif";g.textBaseline="middle";
@@ -1392,7 +1512,7 @@ function jugarPartido(e,modo,mom){
     let bolaHecha=false;
     draw.forEach(q=>{
       if(!bolaHecha&&q.y>M.bola.y){dibujaBola();bolaHecha=true;}
-      const s=pr(q.x,q.y),k=.8+1.0*q.y,cl=L[q.eq],ph=M.t*9+q.i*1.7+q.eq*3;
+      const s=pr(q.x,q.y),k=.8+1.0*q.y,cl=KC[q.eq],ph=M.t*9+q.i*1.7+q.eq*3;
       g.fillStyle="rgba(0,0,0,.35)";g.beginPath();g.ellipse(s[0],s[1],16*k,5*k,0,0,7);g.fill();
       const sw=Math.sin(ph)*7*k;
       g.strokeStyle="#e2b08a";g.lineWidth=5*k;g.lineCap="round";
@@ -1412,10 +1532,14 @@ function jugarPartido(e,modo,mom){
     });
     if(!bolaHecha)dibujaBola();
     const vg=g.createRadialGradient(600,300,260,600,300,760);vg.addColorStop(0,"rgba(0,0,0,0)");vg.addColorStop(1,"rgba(0,0,0,.55)");g.fillStyle=vg;g.fillRect(0,0,W,H);
+    if(cf.hora==="tarde"){g.fillStyle="rgba(255,140,60,.10)";g.fillRect(0,0,W,H);}
+    if(cf.hora==="dia"){g.fillStyle="rgba(255,255,230,.07)";g.fillRect(0,0,W,H);}
+    if(cf.clima==="lluvia"){g.fillStyle="rgba(10,20,40,.22)";g.fillRect(0,0,W,H);g.strokeStyle="rgba(200,220,255,.45)";g.lineWidth=1.2;for(let i=0;i<140;i++){const x=(rs(9,i,2.3)*1300+M.t*240)%1300-50,y=((rs(9,i,4.1)*600+M.t*900)%600)-30;g.beginPath();g.moveTo(x,y);g.lineTo(x-6,y+18);g.stroke();}}
+    if(cf.clima==="niebla"){const fg=g.createLinearGradient(0,Y0-40,0,Y1);fg.addColorStop(0,"rgba(230,236,245,.5)");fg.addColorStop(1,"rgba(230,236,245,.08)");g.fillStyle=fg;g.fillRect(0,0,W,H);}
     /* minimapa */
     const mm=$("jmm").getContext("2d");mm.clearRect(0,0,168,104);mm.fillStyle="rgba(8,13,24,.82)";mm.fillRect(0,0,168,104);mm.fillStyle="#1f7a44";mm.fillRect(6,6,156,92);mm.strokeStyle="rgba(255,255,255,.7)";mm.lineWidth=1;mm.strokeRect(6,6,156,92);mm.beginPath();mm.moveTo(84,6);mm.lineTo(84,98);mm.stroke();
-    mm.strokeStyle="#ffd24a";mm.strokeRect(6+(M.cam-.2)*156,6,.4*156,92);
-    draw.forEach(q=>{mm.fillStyle=L[q.eq].c1;mm.beginPath();mm.arc(6+q.x*156,6+q.y*92,3,0,7);mm.fill();});
+    mm.strokeStyle="#ffd24a";mm.strokeRect(6+(M.cam-CAMH)*156,6,CAMH*2*156,92);
+    draw.forEach(q=>{mm.fillStyle=KC[q.eq].c1;mm.beginPath();mm.arc(6+q.x*156,6+q.y*92,3,0,7);mm.fill();});
     mm.fillStyle="#fff";mm.beginPath();mm.arc(6+M.bola.x*156,6+M.bola.y*92,2.4,0,7);mm.fill();
   };
   const hud=()=>{
@@ -1508,9 +1632,9 @@ function controles(){
   b("Final de temporada",()=>{saltaA(298);S.hoy=299;S.sel=299;S.ven=ventana(299);ir("av");const e=S.ev.find(x=>x.id==="H1");abrir(e);});
 }
 function leyenda(){
-  const k=["premio","oferta","nego","pres","noticia","decision","lesion","dinero","cantera","mercado","hito"];
+  const k=["premio","oferta","nego","pres","plantilla","noticia","sorteo","decision","lesion","tarjeta","dinero","cantera","mercado","fiesta","memoria","hito"];
   let h=`<span><span class="ico sm" style="background:none">${crest(CLUBES[0],30)}</span>Partido (escudo del rival)</span>`;
-  k.forEach(t=>{h+=`<span><span class="ico sm" style="background:${tcol(t)}">${svgIc(TIPOS[t].ic)}</span>${TIPOS[t].e}</span>`;});
+  k.forEach(t=>{h+=`<span><span class="ico sm" style="background:none">${badge(t)}</span>${TIPOS[t].e}</span>`;});
   $("ley").innerHTML=h;
 }
 function escala(){const m=$("marco"),s=m.clientWidth/1200;$("escena").style.transform=`scale(${s})`;m.style.height=Math.round(540*s)+"px";}
@@ -1528,7 +1652,10 @@ document.addEventListener("keydown",ev=>{
     const d=ev.key==="ArrowLeft"?-14:14;S.ven=Math.max(0,Math.min(ventana(TOTAL-1),S.ven+d));pintaCal();
   }
 });
-chips();controles();leyenda();reiniciar();escala();
+defsInsignias();chips();controles();leyenda();reiniciar();escala();
+if(window.ResizeObserver)new ResizeObserver(escala).observe($("marco"));
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(escala);
+window.addEventListener("load",escala);
 window.__m={S:()=>S,ir,abrir,pintaAv,saltaA,auto,posicion,AU,SND};
 })();
 </script>
