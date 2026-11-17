@@ -47,7 +47,7 @@ func _ready() -> void:
 		if t is Tutorial:
 			(t as Tutorial)._terminar(false)
 	await _frames(6)
-	_ok(not mundo3d.visible and explorador.process_mode == Node.PROCESS_MODE_DISABLED, "con el PC encendido el mundo 3D está escondido y el explorador congelado")
+	_ok(mundo3d.process_mode == Node.PROCESS_MODE_DISABLED and explorador.process_mode == Node.PROCESS_MODE_DISABLED, "con el PC encendido el mundo 3D y el explorador están congelados")
 	var pant := pr.get_meta("escaparate") as EscaparatePantalla
 	var barra: Node = pant.find_child("Botones", true, false)
 	_ok(EscaparateBarra.pc_de(pr) == pc, "el menú sabe que es la capa del PC")
@@ -84,7 +84,7 @@ func _ready() -> void:
 	Input.parse_input_event(ev)
 	await _frames(4)
 	_ok(not pc.abierto, "Esc levanta del PC")
-	_ok(mundo3d.visible and explorador.process_mode == Node.PROCESS_MODE_INHERIT, "al levantarse el mundo 3D se descongela y el explorador vuelve a moverse")
+	_ok(mundo3d.process_mode == Node.PROCESS_MODE_INHERIT and explorador.process_mode == Node.PROCESS_MODE_INHERIT, "al levantarse el mundo 3D se descongela y el explorador vuelve a moverse")
 	var espera := 0
 	while not FileAccess.file_exists(ruta) and espera < 120:
 		await _frames(5)

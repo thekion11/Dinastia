@@ -79,30 +79,10 @@ func _una(cfg: Array) -> void:
 	await _frames(6)
 	var e: String = cfg[0]
 	var pant := pr.get_meta("escaparate") as EscaparatePantalla
-	## 1. La barra lateral, siempre visible, y todos sus submenús
-	var abiertos := 0
-	var total := 0
+	## 0. La barra lateral se ve en el Inicio con sus 14 menús
 	for mn: Dictionary in MenusLaterales.MENUS:
-		var id := String(mn["id"])
-		var bb: Button = pr._menu_lateral.boton_de(id)
-		_ok(bb != null and bb.is_visible_in_tree() and bb.get_global_rect().position.x < MenuLateral.ANCHO_RIEL, "%s: el riel enseña el menú «%s» con el Inicio a la vista" % [e, id])
-		if bb != null:
-			bb.pressed.emit()
-			await _frames(3)
-			var pm := _abierto(pr)
-			_ok(pm != null and String(pm.get_meta("id", "")) == id, "%s: el botón del riel abre «%s»" % [e, id])
-		var subs: Array = mn["subs"]
-		for i in subs.size():
-			total += 1
-			if (subs[i] as Dictionary).has("accion"):
-				continue
-			var pm2: PantallaMenu = pr._menu_lateral.abrir_menu(id, i)
-			await _frames(2)
-			var bien := pm2 != null and pm2.submenu_activo() == i
-			_ok(bien, "%s: «%s» abre el submenú %d de «%s»" % [e, (subs[i] as Dictionary).get("label", ""), i, id])
-			abiertos += 1 if bien else 0
-		await _cerrar_menu(pr)
-	print("   %s: %d submenús, %d abiertos de verdad (los de acción no se abren)" % [e, total, abiertos])
+		var bb0: Button = pr._menu_lateral.boton_de(String(mn["id"]))
+		_ok(bb0 != null and bb0.is_visible_in_tree() and bb0.get_global_rect().position.x < MenuLateral.ANCHO_RIEL and bb0.get_global_rect().size.y >= 36.0, "%s: el riel enseña el menú «%s» con el Inicio a la vista" % [e, mn["id"]])
 	## 2. La barra de arriba y las tarjetas del Inicio
 	var barra: Node = pant.find_child("Botones", true, false)
 	for nombre: String in ["BotonDespacho", "BotonMensajes"]:
@@ -164,6 +144,29 @@ func _una(cfg: Array) -> void:
 		if not visto.has(c):
 			sin.append(String(c.name))
 	_ok(sin.is_empty(), "%s: el D-pad llega a todos los controles del Inicio (sin llegar: %s)" % [e, str(sin.slice(0, 6))])
+	## 4. La barra lateral, siempre visible, y todos sus submenús (al final: algunas pantallas, como el diseñador de equipaciones, dejan cosas abiertas)
+	var abiertos := 0
+	var total := 0
+	for mn: Dictionary in MenusLaterales.MENUS:
+		var id := String(mn["id"])
+		var bb: Button = pr._menu_lateral.boton_de(id)
+		if bb != null and bb.is_visible_in_tree():
+			bb.pressed.emit()
+			await _frames(3)
+			var pm := _abierto(pr)
+			_ok(pm != null and String(pm.get_meta("id", "")) == id, "%s: el botón del riel abre «%s»" % [e, id])
+		var subs: Array = mn["subs"]
+		for i in subs.size():
+			total += 1
+			if (subs[i] as Dictionary).has("accion"):
+				continue
+			var pm2: PantallaMenu = pr._menu_lateral.abrir_menu(id, i)
+			await _frames(2)
+			var bien := pm2 != null and pm2.submenu_activo() == i
+			_ok(bien, "%s: «%s» abre el submenú %d de «%s»" % [e, (subs[i] as Dictionary).get("label", ""), i, id])
+			abiertos += 1 if bien else 0
+		await _cerrar_menu(pr)
+	print("   %s: %d submenús, %d abiertos de verdad (los de acción no se abren)" % [e, total, abiertos])
 	TableroInicio.pestana = 0
 	pr.queue_free()
 	await _frames(3)

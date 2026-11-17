@@ -65,7 +65,7 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 
 ## L1/R1 en el Inicio: la pestaña de al lado del mosaico (pulsa su botón: repinta y marca). Falso si no hay mosaico a la vista.
 static func saltar(p: Principal, d: int) -> bool:
-	var esc: Variant = p.get_meta("escaparate", null)   ## (17-11) en el escaparate, el mosaico es el de su capa
+	var esc: Variant = (p.get_meta("escaparate") if p.has_meta("escaparate") else null)   ## (17-11) en el escaparate, el mosaico es el de su capa
 	var mos: Node = (esc as Node).get_node_or_null("Mosaico") if is_instance_valid(esc) and (esc as Control).visible else (p._lista_inicio.get_node_or_null("Mosaico") if p._lista_inicio != null else null)
 	if mos == null or not (mos as Control).is_visible_in_tree():
 		return false
