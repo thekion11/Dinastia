@@ -390,6 +390,13 @@ func _simular_resto_motor() -> void:
 	## (17-11, Auditoría) En la 1.ª parte se simula HASTA EL DESCANSO: allí el resumen deja seguir simulando, volver a jugar o hacer cambios.
 	var hasta_descanso := parar_en_descanso and not _descanso_hecho and partido.minuto < 45
 	partido.set_meta("simulando_resto", hasta_descanso)
+	if not SimularResto.usar_c4():   ## (17-11, Auditoría) lo que falta lo juega el simulador calibrado (`SimularResto`), no C4 en piloto automático
+		parar_en_descanso = false
+		_sincronizar_partido()
+		_descanso_hecho = true
+		partido.set_meta(SimularResto.META, true)
+		cerrado.emit()
+		return
 	_descanso_hecho = _descanso_hecho or not hasta_descanso
 	var pasos := 0
 	while _motor.estado != "fin" and pasos < 60 * 3600:

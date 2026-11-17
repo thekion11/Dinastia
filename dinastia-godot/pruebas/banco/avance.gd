@@ -35,6 +35,13 @@ func _probar_mando_pantallas_partido() -> void:
 	_comprobar(f == 0, "previa, pausa, descanso, final y momentos responden al mando (3 países, %d fallos)" % f)
 	t.free()
 
+func _probar_simular_resto_calibrado() -> void:
+	_titulo("«SIMULAR EL RESTO» CON EL SIMULADOR CALIBRADO: GOLES DEL TRAMO Y ACTA COHERENTE")
+	var t: Node = (load("res://pruebas/probar_simular_resto.gd") as GDScript).new()
+	var f: int = t.correr(self)
+	_comprobar(f == 0, "30 simulaciones desde el 60' (ESP, ARG, JPN): media de goles 0,5-1,5, ninguna con más de 4, el acta coherente (%d fallos)" % f)
+	t.free()
+
 func _probar_resumen_descanso_y_final() -> void:
 	_titulo("RESUMEN DEL DESCANSO Y DEL FINAL: CIFRAS REALES, PASES SOLO SI SE JUGÓ EN EL CÉSPED, GOLEADORES Y MARCADOR")
 	var t: Node = (load("res://pruebas/probar_resumen_partido.gd") as GDScript).new()
