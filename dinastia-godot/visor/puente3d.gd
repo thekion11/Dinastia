@@ -105,8 +105,10 @@ static func distancia_color(a: Color, b: Color) -> float:
 static func chocan(k1: Dictionary, k2: Dictionary) -> bool:
 	return distancia_color(Color(String(k1.get("c1", "#ffffff"))), Color(String(k2.get("c1", "#ffffff")))) < 0.45
 
-static func kit_visita(local: Club, visita: Club) -> Dictionary:
-	var kl := kit(local)
+## `kl`: la camiseta con la que juega de verdad el local (si eligió otra en la previa); vacío = su titular.
+static func kit_visita(local: Club, visita: Club, kl: Dictionary = {}) -> Dictionary:
+	if kl.is_empty():
+		kl = kit(local)
 	var kv := kit(visita)
 	if not chocan(kl, kv):
 		return kv
@@ -126,6 +128,32 @@ static func kit_visita(local: Club, visita: Club) -> Dictionary:
 		return invertido
 	var claro := Color(String(kl.get("c1", "#ffffff"))).get_luminance() > 0.55
 	return {"c1": "#1b1f26" if claro else "#f2f2f2", "c2": String(kv["c1"]), "estilo": "liso", "img": "", "x": {}}
+
+## EL UNIFORME ELEGIDO EN LA PREVIA (17-11, prueba de extremo a extremo: lo elegido en «Uniforme» no llegaba al 3D). Una sola fuente para la vista
+## previa del menú y para el partido: «titular» = `kit`; «alternativa» = su segundo uniforme de verdad (`VisitaGenerada`); «tercera» = azul noche con
+## el color del club de adorno.
+static func kit_elegido(c: Club, cual: String) -> Dictionary:
+	match cual:
+		"alternativa":
+			var v2 := VisitaGenerada.para(c)
+			if not v2.is_empty():
+				return {"c1": String(v2["c1"]), "c2": String(v2["c2"]), "estilo": String(v2.get("camiseta", "liso")), "img": "",
+					"x": load("res://ui/disenos_kit.gd").kit_de_club_visita(c, v2)}
+			var k := kit(c)
+			return {"c1": k["c2"], "c2": k["c1"], "estilo": String(k.get("estilo", "liso")), "img": "", "x": {}}
+		"tercera":
+			return {"c1": "#151c33", "c2": c.color_kit1(), "estilo": "liso", "img": "", "x": {}}
+	return kit(c)
+
+## Las dos camisetas del partido [local, visita]: la de mi club, la que elegí en la previa (`uniforme_partido`); la del rival, su titular o, si choca
+## con la mía, la que `kit_visita` le busque. `mio_id` vacío = ningún club es el mío (como antes).
+static func kits_partido(local: Club, visita: Club, mio_id: String, cual: String) -> Array:
+	if mio_id == local.id and cual != "titular":
+		var kl := kit_elegido(local, cual)
+		return [kl, kit_visita(local, visita, kl)]
+	if mio_id == visita.id and cual != "titular":
+		return [kit(local), kit_elegido(visita, cual)]
+	return [kit(local), kit_visita(local, visita)]
 
 static func kit(c: Club) -> Dictionary:
 	var estilo := Jersey.kit_de(c, c.kit_estilo)

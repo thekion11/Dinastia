@@ -131,6 +131,7 @@ func _dirigir() -> void:
 	if pr.mundo.necesidades.preparacion_cambio():   ## §2.5: tu cansancio y tu hambre, en ESTE partido
 		pr.mundo.aplicar_bonificadores()
 	var p := Partido.new(par[0], par[1])
+	Partido.ctx_club_id = pr.mundo.mi_club_id   ## (17-11) el partido que se dirige es el de mi club, siempre (el estadio decide con esto mi lado, mi pizarra y mi uniforme)
 	MomentosPartido.registrar(p)   ## (17-11) anota los momentos (goles, palos, atajadas, rojas) para «Jugar momentos específicos»
 	## EL TIEMPO DE LA CIUDAD (plan maestro C1): el mismo que se juega y el
 	## mismo cielo que se ve. Sale del país del local y la época del año.
