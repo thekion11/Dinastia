@@ -9041,7 +9041,9 @@
   "El dibujo y la formación.": "The shape and the formation.",
   "Quién sale y quién espera.": "Who starts and who waits.",
   "Mentalidad, presión, ritmo y línea.": "Mentality, pressing, tempo and line.",
-  "Preparando las caras del plan…": "Preparing the plan faces…"
+  "Preparando las caras del plan…": "Preparing the plan faces…",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB tab · B back",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E tab · Esc back"
  },
  "pt": {
   "Historia": "História",
@@ -18085,7 +18087,9 @@
   "El dibujo y la formación.": "O desenho e a formação.",
   "Quién sale y quién espera.": "Quem joga e quem espera.",
   "Mentalidad, presión, ritmo y línea.": "Mentalidade, pressão, ritmo e linha.",
-  "Preparando las caras del plan…": "Preparando os rostos do plano…"
+  "Preparando las caras del plan…": "Preparando os rostos do plano…",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB aba · B voltar",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E aba · Esc voltar"
  },
  "patrones": [
   [
@@ -33401,7 +33405,9 @@
   "El dibujo y la formación.": "Le schéma et la formation.",
   "Quién sale y quién espera.": "Qui joue et qui attend.",
   "Mentalidad, presión, ritmo y línea.": "Mentalité, pressing, rythme et ligne.",
-  "Preparando las caras del plan…": "Préparation des visages du plan…"
+  "Preparando las caras del plan…": "Préparation des visages du plan…",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB onglet · B retour",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E onglet · Échap retour"
  },
  "it": {
   "Historia": "Storia",
@@ -42445,7 +42451,9 @@
   "El dibujo y la formación.": "Lo schema e il modulo.",
   "Quién sale y quién espera.": "Chi gioca e chi aspetta.",
   "Mentalidad, presión, ritmo y línea.": "Mentalità, pressing, ritmo e linea.",
-  "Preparando las caras del plan…": "Preparazione dei volti del piano…"
+  "Preparando las caras del plan…": "Preparazione dei volti del piano…",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB scheda · B indietro",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E scheda · Esc indietro"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51489,7 +51497,9 @@
   "El dibujo y la formación.": "Die Grundordnung und die Formation.",
   "Quién sale y quién espera.": "Wer spielt und wer wartet.",
   "Mentalidad, presión, ritmo y línea.": "Mentalität, Pressing, Tempo und Linie.",
-  "Preparando las caras del plan…": "Gesichter für den Plan werden vorbereitet…"
+  "Preparando las caras del plan…": "Gesichter für den Plan werden vorbereitet…",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB Reiter · B zurück",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E Reiter · Esc zurück"
  },
  "ca": {
   "Historia": "Història",
@@ -60533,7 +60543,9 @@
   "El dibujo y la formación.": "El dibuix i la formació.",
   "Quién sale y quién espera.": "Qui surt i qui espera.",
   "Mentalidad, presión, ritmo y línea.": "Mentalitat, pressió, ritme i línia.",
-  "Preparando las caras del plan…": "Preparant les cares del pla…"
+  "Preparando las caras del plan…": "Preparant les cares del pla…",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB pestanya · B torna",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E pestanya · Esc torna"
  },
  "pl": {
   "Club": "Klub",
@@ -69577,7 +69589,9 @@
   "El dibujo y la formación.": "Układ i ustawienie.",
   "Quién sale y quién espera.": "Kto gra, a kto czeka.",
   "Mentalidad, presión, ritmo y línea.": "Nastawienie, pressing, tempo i linia.",
-  "Preparando las caras del plan…": "Przygotowywanie twarzy do planu…"
+  "Preparando las caras del plan…": "Przygotowywanie twarzy do planu…",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB karta · B wróć",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E karta · Esc wróć"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78621,6 +78635,8 @@
   "El dibujo y la formación.": "Şema ve diziliş.",
   "Quién sale y quién espera.": "Kim oynar, kim bekler.",
   "Mentalidad, presión, ritmo y línea.": "Zihniyet, pres, tempo ve hat.",
-  "Preparando las caras del plan…": "Plan için yüzler hazırlanıyor…"
+  "Preparando las caras del plan…": "Plan için yüzler hazırlanıyor…",
+  "LB ◂ ▸ RB pestaña · B volver": "LB ◂ ▸ RB sekme · B geri",
+  "Q ◂ ▸ E pestaña · Esc volver": "Q ◂ ▸ E sekme · Esc geri"
  }
 }
