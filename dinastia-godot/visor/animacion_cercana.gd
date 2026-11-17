@@ -11,7 +11,9 @@ extends Node
 ## `pruebas/igualdad_motor.gd` no cambia (lo comprueba `banco/partido` → «H1: IK sin tocar el motor»).
 ## CALIDAD: encendido de MEDIA hacia arriba. En ULTRA BAJA, BAJA y MEDIA BAJA y con «Partido ligero» no se monta nada y la mirada
 ## de M-098 (que antes iba en los 22 en todas las calidades) queda APAGADA: menos coste en las calidades bajas, nunca más.
-## `H1_IK=0` (o `encendida = false`) lo deja todo como antes del 16-11 (para capturas «antes»).
+##  · LA INERCIA (`InerciaCuerpo`, 17-11): ladeo en las curvas, cabeceo al arrancar y frenar, el torso que se adelanta al giro y el
+##    control orientado, en los que están a menos de `MIRA_CAMARA` m de la cámara (peso suave, `RITMO_INERCIA`).
+## `H1_IK=0` (o `encendida = false`) lo deja todo como antes del 16-11 (para capturas «antes»); `INERCIA=0`, solo la inercia.
 
 static var encendida: bool = OS.get_environment("H1_IK") != "0"
 const MIRA_CAMARA := 33.0      ## m: más lejos, el cuerpo es la silueta de `ImpostorLejano` (30 m) y su animación va a saltos (`AnimLejana`)
@@ -24,15 +26,23 @@ const PIE_MAX := 0.85
 const PIE_MAX_GESTO := 0.45    ## durante un golpeo el clip ya lleva el pie: el IK solo corrige un poco
 const PIE_ALTO := 0.45         ## m: con el balón más alto, nada (lo resuelven las animaciones de cabeza/pecho/volea)
 const RITMO_PIE := 6.0         ## 1/s
+const RITMO_INERCIA := 3.0     ## 1/s
+## Ciclos en los que el pecho no se tuerce hacia la marcha (va de espaldas, de lado o en guardia).
+const SIN_TORSO := ["trotar_atras", "marcar", "portero_listo", "portero_lateral_der", "portero_lateral_izq"]
 
 var motor: Node
 var balon: Node3D
-## Por nodo de jugador (id de instancia): [nodo, LookAtModifier3D o null, PieBalonIK o null]. Se llena al vuelo: los que entran
+## Por nodo de jugador (id de instancia): [nodo, LookAtModifier3D o null, PieBalonIK o null, InerciaCuerpo o null]. Se llena al vuelo: los que entran
 ## de cambio también miran (antes no llevaban la mirada); los que salen o son expulsados se apagan.
 var _por_nodo: Dictionary = {}
 ## Medida del coste (`pruebas/medir_h1_animacion.gd`): microsegundos acumulados en `actualizar` y llamadas.
 var us_total := 0
 var llamadas := 0
+## El control orientado: quién se hizo con el balón y cuándo (tiempo del motor), y la velocidad del balón medida aquí.
+var _control_id: Variant = null
+var _control_t := -10.0
+var _bp_ant := Vector3.INF
+var _bvel := Vector3.ZERO
 
 ## ¿Van los retoques en esta calidad? (sin coste en las bajas).
 static func activa_en(calidad: int, ligero: bool) -> bool:
@@ -90,7 +100,19 @@ func _entrada(nodo: Variant) -> Array:
 			pie.cuerpo = nodo
 			pie.active = false
 			esq.add_child(pie)   ## el último: después de la postura y de la mirada
-	var e := [nodo, mira, pie]
+	var iner: InerciaCuerpo = esq.get_node_or_null("InerciaCuerpo") if esq != null else null
+	if esq != null and iner == null and InerciaCuerpo.encendida and esq.find_bone("pelvis") >= 0:
+		iner = InerciaCuerpo.new()
+		iner.name = "InerciaCuerpo"
+		iner.cuerpo = nodo
+		iner.active = false
+		esq.add_child(iner)
+		## El primero de los modificadores: justo después de la animación (antes de la postura, la mirada y el pie).
+		for h in esq.get_children():
+			if h is SkeletonModifier3D and h != iner:
+				esq.move_child(iner, h.get_index())
+				break
+	var e := [nodo, mira, pie, iner]
 	_por_nodo[clave] = e
 	return e
 
@@ -130,6 +152,8 @@ func actualizar(delta: float, cam: Vector3) -> void:
 	var k_mira := maxf(clampf(delta * RITMO_MIRA, 0.0, 1.0) * MIRA_FUERZA, 0.002)
 	var k_pie := maxf(clampf(delta * RITMO_PIE, 0.0, 1.0), 0.01)
 	var t_motor := float(motor.get("t"))
+	_seguir_control(delta, bp, t_motor)
+	var k_iner := clampf(delta * RITMO_INERCIA, 0.0, 1.0)
 	var vistos := {}
 	for i in jugadores.size():
 		var p: Dictionary = jugadores[i]
@@ -146,10 +170,12 @@ func actualizar(delta: float, cam: Vector3) -> void:
 			var tope := PIE_MAX_GESTO if float(p.get("gesto_hasta", 0.0)) > t_motor else PIE_MAX
 			meta_p = tope * clampf((PIE_LEJOS - d_pie) / (PIE_LEJOS - PIE_CERCA), 0.0, 1.0)
 		_llevar(e, meta, k_mira, meta_p, k_pie)
+		_inercia(e[3], p, delta, 1.0 if cerca_cam else 0.0, k_iner, bp, t_motor)
 	## Los que ya no juegan (cambio, expulsión): todo apagado.
 	for clave: int in _por_nodo:
 		if not vistos.has(clave):
 			_llevar(_por_nodo[clave], 0.0, 1.0, 0.0, 1.0)
+			_inercia(_por_nodo[clave][3], {}, delta, 0.0, 1.0, bp, t_motor)
 	us_total += Time.get_ticks_usec() - t0
 	llamadas += 1
 
@@ -165,3 +191,32 @@ static func _llevar(e: Array, meta: float, k_mira: float, meta_p: float, k_pie: 
 		if pie.peso < 0.001:
 			pie.peso = 0.0
 		pie.active = pie.peso > 0.0
+
+## Quién acaba de hacerse con el balón (para el control orientado) y hacia dónde va el balón.
+func _seguir_control(delta: float, bp: Vector3, t_motor: float) -> void:
+	if _bp_ant != Vector3.INF and delta > 0.0 and bp.distance_to(_bp_ant) < InerciaCuerpo.SALTO:
+		_bvel = _bvel.lerp((bp - _bp_ant) / delta, clampf(delta * 10.0, 0.0, 1.0))
+	_bp_ant = bp
+	var pos_d: Dictionary = motor.get("poseedor")
+	var id_pos: Variant = pos_d.get("id") if not pos_d.is_empty() else null
+	if id_pos != _control_id:
+		_control_id = id_pos
+		_control_t = t_motor
+
+## La inercia de un jugador: peso suave hacia su meta; con peso, mide y se aplica; sin él, apagada (no cuesta).
+func _inercia(iner: InerciaCuerpo, p: Dictionary, delta: float, meta: float, k: float, bp: Vector3, t_motor: float) -> void:
+	if not is_instance_valid(iner):
+		return
+	iner.peso = move_toward(iner.peso, meta, k)
+	if iner.peso < 0.001:
+		if iner.active:
+			iner.peso = 0.0
+			iner.active = false
+			iner.olvidar()
+		return
+	iner.active = true
+	var hacia := Vector3.INF
+	if _control_id != null and p.get("id") == _control_id and t_motor - _control_t < InerciaCuerpo.CONTROL:
+		hacia = bp + _bvel * 0.3
+	var girar := not bool(p.get("por", false)) and not (String(p.get("anim_actual", "")) in SIN_TORSO)
+	iner.seguir(delta, hacia, girar)

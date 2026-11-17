@@ -10,7 +10,7 @@ extends "res://visor/vestidor_q_p1.gd"
 ## pantalón negro).
 static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: String,
 		piel: Color, pelo: Color, pantalon: Color = Color(0, 0, 0, 0),
-		medias: Color = Color(0, 0, 0, 0), largo: bool = false, kit_x: Dictionary = {}, dorsal: int = 0) -> bool:
+		medias: Color = Color(0, 0, 0, 0), largo: bool = false, kit_x: Dictionary = {}, dorsal: int = 0, nombre: String = "") -> bool:
 	var modelo: Node = d.get("modelo")
 	if modelo == null or not ResourceLoader.exists(SHADER_EQUIPACION) \
 			or not ResourceLoader.exists(MASCARA) or not ResourceLoader.exists(COORDS):
@@ -69,8 +69,9 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 			"pant": {"dis": "liso", "c1": pantalon.to_html(false), "c2": c1.to_html(false)},
 			"med": {"dis": "lisas", "c1": medias.to_html(false), "c2": c2.to_html(false)},
 			"bot": {"mod": _botin_de(dorsal, c1)}, "acc": {}}
-	var clave := "%s|%s|%d|%s|%s|%s|%s|%d|%d" % [c1.to_html(false), c2.to_html(false), i_estilo,
-		pantalon.to_html(false), medias.to_html(false), _piel_cuantizada(piel), largo, hash(kit), dorsal]
+	## (17-11) El apellido de la espalda: cada jugador ya tenía su material por el dorsal, así que no suma materiales ni llamadas.
+	var clave := "%s|%s|%d|%s|%s|%s|%s|%d|%d|%s" % [c1.to_html(false), c2.to_html(false), i_estilo,
+		pantalon.to_html(false), medias.to_html(false), _piel_cuantizada(piel), largo, hash(kit), dorsal, nombre]
 	## Cuerpo de mujer y de hombre NO comparten material (13-10-2026): su
 	## textura de piel y sus medidas son otras.
 	if es_mujer:
@@ -107,7 +108,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		mat.set_shader_parameter("piel_obj", Vector3(pl.r, pl.g, pl.b))
 		mat.set_shader_parameter("largo", largo)
 		mat.set_shader_parameter("usa_reposo", (cuerpo.mesh as ArrayMesh) != null and cuerpo.mesh.has_meta("con_reposo"))
-		var un := DisenosKit.uniforms(kit, dorsal)
+		var un := DisenosKit.uniforms(kit, dorsal, nombre)
 		for k: String in un:
 			mat.set_shader_parameter(k, un[k])
 		_cache_equipacion[clave] = mat

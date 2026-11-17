@@ -89,7 +89,7 @@ func _duelos() -> void:
 
 # ---------------------------------------------------------------- movimiento
 
-const CICLO_ANIM := {"trotar": 3.4, "correr": 7.0, "conducir": 3.6, "trotar_atras": 2.6, "portero_lateral_der": 2.0, "portero_lateral_izq": 2.0}   ## (13-11, rendimiento) antes un Dictionary nuevo por jugador y paso
+## (17-11) Las velocidades de cada ciclo (antes `CICLO_ANIM` aquí) y su margen de escala viven en `CicloCarrera.CICLO`.
 func _mover_fisica(delta: float, bpos: Vector3) -> PackedFloat64Array:
 	var nat := Nativo.obj()
 	if nat != null and nat.has_method("mover_jugadores_fisica"):
@@ -150,7 +150,7 @@ func _mover_jugadores(delta: float) -> void:
 			_anim(p, String(p.get("levantar_con", "levantarse_suelo")), true, 1.8)
 		if float(p.get("gesto_hasta", 0.0)) > t:
 			continue
-		var anim := "parado" if sp < 0.5 else ("trotar" if sp < 5.2 else "correr")
+		var anim := CicloCarrera.ciclo(sp, String(p.get("anim_actual", "")))   ## (17-11) con histéresis: sin tartamudeo a 5 m/s
 		## Con el balón en los pies se conduce (no se trota); el portero espera
 		## en guardia; el que está fundido se nota parado.
 		if poseedor == p and sp >= 0.5 and sp < 6.5:
@@ -175,7 +175,7 @@ func _mover_jugadores(delta: float) -> void:
 		_anim(p, anim, false)
 		var ap: AnimationPlayer = p.get("anim")
 		if is_instance_valid(ap):
-			ap.speed_scale = clampf(sp / float(CICLO_ANIM[anim]), 0.7, 1.4) if CICLO_ANIM.has(anim) else 1.0
+			ap.speed_scale = CicloCarrera.escala(anim, sp)   ## (17-11) margen por ciclo: la zancada va con el cuerpo, sin patinar
 
 func _actualizar_balon_visual(_delta: float) -> void:
 	if balon == null:

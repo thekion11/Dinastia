@@ -1,5 +1,5 @@
 extends "res://pruebas/banco/partido_p5.gd"
-## [Capa 6/7 de `partido.gd`] _probar_frontera_mitad, _probar_entrada_por_pasos, _probar_arreglos_motor_c6, _probar_perfil_manejo_c4
+## [Capa 6/8 de `partido.gd`] _probar_frontera_mitad, _probar_entrada_por_pasos, _probar_arreglos_motor_c6, _probar_perfil_manejo_c4
 ## (16-11) Las pruebas de los arreglos del capítulo 6 del informe AAA (fallos del motor del partido) y de su revisión
 ## independiente (anexo A): el cambio de mitad con el MISMO motor, la entrada a 30 y 120 FPS y el reglamento.
 

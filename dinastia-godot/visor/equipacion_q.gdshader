@@ -43,9 +43,14 @@ uniform vec4 med_c2 : source_color = vec4(0.0, 0.0, 0.0, 1.0);
 uniform int bot_dis = 0;
 uniform vec4 bot_c2 : source_color = vec4(1.0);
 uniform vec4 bot_c3 : source_color = vec4(0.13, 0.13, 0.13, 1.0);
-// El dorsal en la espalda, en siete segmentos (0 = sin número).
+// El dorsal en la espalda (0 = sin número), con su tipografía y su ribete (`dorsal_q.gdshaderinc`, 17-11).
 uniform int dorsal = 0;
 uniform vec4 color_num : source_color = vec4(1.0);
+// El ribete del número: color de contraste y, en alfa, su grosor en unidades de la caja del dígito (0 = sin ribete).
+uniform vec4 color_num_borde = vec4(0.0);
+// El nombre (apellido) sobre el número: letras de `DisenosKit.letras_nombre` (1-29; 0 = espacio). nombre_n = 0: sin nombre.
+uniform int nombre_c[12];
+uniform int nombre_n = 0;
 // Accesorios: alfa 0 = no lo lleva.
 uniform vec4 acc_cintillo : source_color = vec4(0.0);
 uniform vec4 acc_manguitos : source_color = vec4(0.0);
@@ -534,22 +539,8 @@ vec3 disenio(float u, float v, float x, float y) {
 	return C(0);
 }
 
-// Un dígito de siete segmentos en (px, py) de 0 a 1.
-float digito(int n, vec2 p) {
-	if (p.x < 0.0 || p.x > 1.0 || p.y < 0.0 || p.y > 1.0) return 0.0;
-	int bits = n == 0 ? 63 : n == 1 ? 6 : n == 2 ? 91 : n == 3 ? 79 : n == 4 ? 102 : n == 5 ? 109 : n == 6 ? 125 : n == 7 ? 7 : n == 8 ? 127 : 111;
-	float g = 0.24;
-	float on = 0.0;
-	// a arriba, b arriba-der, c abajo-der, d abajo, e abajo-izq, f arriba-izq, g medio
-	if ((bits & 1) != 0 && p.y > 1.0 - g) on = 1.0;
-	if ((bits & 2) != 0 && p.x > 1.0 - g && p.y > 0.5) on = 1.0;
-	if ((bits & 4) != 0 && p.x > 1.0 - g && p.y < 0.5) on = 1.0;
-	if ((bits & 8) != 0 && p.y < g) on = 1.0;
-	if ((bits & 16) != 0 && p.x < g && p.y < 0.5) on = 1.0;
-	if ((bits & 32) != 0 && p.x < g && p.y > 0.5) on = 1.0;
-	if ((bits & 64) != 0 && abs(p.y - 0.5) < g * 0.5) on = 1.0;
-	return on;
-}
+// El dorsal y el nombre de la espalda (17-11: sustituye a los dígitos de siete segmentos de antes).
+#include "res://visor/dorsal_q.gdshaderinc"
 
 // PLIEGUES DE TELA (17-10-2026): altura de una arruga suave (-1..1) en la
 // pose de reposo. Torso: caída vertical bajo el pecho, más en los costados, y
@@ -612,6 +603,8 @@ void fragment() {
 	if (prenda == 1) { m = vec4(1.0, 0.0, 0.0, 0.0); cubierta = true; }
 	else if (prenda == 2) { m = vec4(0.0, 1.0, 0.0, 0.0); cubierta = true; }
 	else if (prenda == 3) { m = vec4(0.0, 0.0, 1.0, 0.0); cubierta = true; }
+	// Lo que mide un píxel sobre la tela (m), fuera de cualquier rama: el borde suave del dorsal y del nombre (17-11).
+	float px_tela = max(length(vec2(dFdx(x), dFdx(y))), length(vec2(dFdy(x), dFdy(y))));
 
 	float lum = dot(piel, vec3(0.299, 0.587, 0.114));
 	float pliegue = clamp(0.78 + lum * 0.45, 0.8, 1.12);
@@ -785,8 +778,10 @@ void fragment() {
 			vec4 sp = sp_encajado(sp_pecho, vec2((x + 0.13) / 0.26, 1.0 - (y - 1.2) / 0.17), 0.26 / 0.17, sp_asp_pecho);
 			camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
 		}
-		if (hay_sp_espalda && z < 0.45 && abs(x) < 0.12 && y > 1.415 && y < 1.48) {
-			vec4 sp = sp_encajado(sp_espalda, vec2((-x + 0.12) / 0.24, 1.0 - (y - 1.415) / 0.065), 0.24 / 0.065, sp_asp_espalda);
+		// Con el nombre arriba (17-11), el patrocinador de la espalda baja bajo el número, como en la Premier League.
+		float sp_y0 = nombre_n > 0 ? 1.035 : 1.415;
+		if (hay_sp_espalda && z < 0.45 && abs(x) < 0.12 && y > sp_y0 && y < sp_y0 + 0.065) {
+			vec4 sp = sp_encajado(sp_espalda, vec2((-x + 0.12) / 0.24, 1.0 - (y - sp_y0) / 0.065), 0.24 / 0.065, sp_asp_espalda);
 			camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
 		}
 	}
@@ -795,15 +790,36 @@ void fragment() {
 		camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
 	}
 	// El dorsal, en la espalda (z < 0,5), entre los omóplatos y la cintura.
-	if (dorsal > 0 && !civil && !manga && z < 0.45 && y > 1.11 && y < 1.41 && abs(x) < 0.13) {
+	// (17-11) Tipografía deportiva con borde suave y ribete de contraste; 27 cm de alto (antes 30, para que quepan dos cifras
+	// anchas con su ribete en la espalda).
+	if (dorsal > 0 && !civil && !manga && z < 0.45 && y > 1.112 && y < 1.418 && abs(x) < 0.152) {
 		// Vista desde atrás: la x va al revés (si no, el 12 se lee 21 y en espejo).
-		float xn = -x;
-		float dy = (y - 1.11) / 0.30;
+		const float U_NUM = 1.6 / 0.27;
+		float dn = dq_numero(dorsal, vec2(-x, y - 1.13) * U_NUM);
+		float fw = max(px_tela * U_NUM, 0.004);
+		float ribete = color_num_borde.a;
+		float lleno = 1.0 - smoothstep(DQ_TRAZO - fw * 0.5, DQ_TRAZO + fw * 0.5, dn);
+		if (ribete > 0.0) {
+			float borde_n = 1.0 - smoothstep(DQ_TRAZO + ribete - fw * 0.5, DQ_TRAZO + ribete + fw * 0.5, dn);
+			camiseta = mix(camiseta, color_num_borde.rgb, borde_n);
+		}
+		camiseta = mix(camiseta, color_num.rgb, lleno);
+	}
+	// El nombre sobre el número: 4 cm de alto, 27 cm de ancho como mucho (los largos se estrechan).
+	if (nombre_n > 0 && !civil && !manga && z < 0.45 && y > 1.418 && y < 1.466 && abs(x) < 0.14) {
+		const float ALTO_N = 0.04;
+		float celda = ALTO_N / 7.0;
+		float n_col = float(nombre_n) * 6.0 - 1.0;
+		float cw = min(celda * 0.9, 0.27 / n_col);
+		float fx = (-x + n_col * cw * 0.5) / cw;
+		float fy = (1.462 - y) / celda;
 		float on = 0.0;
-		if (dorsal < 10) {
-			on = digito(dorsal, vec2((xn + 0.055) / 0.11, dy));
-		} else {
-			on = max(digito(dorsal / 10, vec2((xn + 0.12) / 0.105, dy)), digito(dorsal % 10, vec2((xn - 0.015) / 0.105, dy)));
+		if (fx >= 0.0 && fx < n_col && fy >= 0.0 && fy < 7.0) {
+			int col = int(floor(fx));
+			int i = col / 6;
+			on = dq_letra(nombre_c[min(i, 11)], col - i * 6, int(floor(fy)));
+			// De lejos (la celda ya no llega al píxel) las letras se funden en un tono medio en vez de chisporrotear.
+			on = mix(0.35, on, 1.0 - smoothstep(0.55, 1.1, px_tela / cw));
 		}
 		camiseta = mix(camiseta, color_num.rgb, on);
 	}
