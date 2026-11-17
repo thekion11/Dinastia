@@ -141,6 +141,7 @@ static func de_segunda_tanda(m: Mundo, est: Dictionary) -> Array:
 	out.append_array(de_cambio_dt(m, est))
 	out.append_array(de_seleccion(m, est))
 	out.append_array(de_sancion_dt(m, est))
+	out.append_array(de_tercera_tanda(m, est))
 	return out
 
 ## Un hecho que sale una sola vez: devuelve true la primera vez que se pide `id`.
@@ -247,4 +248,69 @@ static func de_sancion_dt(m: Mundo, est: Dictionary) -> Array:
 	if not _nuevo(est, "sancion:%d" % m.federacion.dt_suspension):
 		return out
 	out.append(_ev(id, "sancion_dt", EventosDia.AVISO, "prensa", "sancion_dt", {"fechas": m.federacion.dt_suspension}))
+	return out
+
+## TERCERA TANDA (17-11): contratos por vencer, precontratos firmados, jugadores sancionados y caja en negativo. También solo OBSERVAN. (Las cesiones y las charlas no
+## dejan estado que observar sin relanzar su sistema: `Cesiones.presion_de_fondo` SORTEA y `Charlas.semana` solo emite noticias.)
+static func de_tercera_tanda(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	out.append_array(de_contratos(m, est))
+	out.append_array(de_precontratos(m, est))
+	out.append_array(de_sancionados(m, est))
+	out.append_array(de_caja_negativa(m, est))
+	return out
+
+const SEMANA_CONTRATOS := 20   ## desde esta semana, en la segunda mitad de la temporada, se avisa de los contratos que terminan
+
+## Los jugadores tuyos con el contrato en su último año: un aviso por temporada (zona «equipo»).
+static func de_contratos(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	if m.semana < SEMANA_CONTRATOS or not _nuevo(est, "contratos:%d" % m.anio):
+		return out
+	var n := 0
+	for j: Jugador in m.mi_club().plantilla:
+		if j.anios_contrato <= 1:
+			n += 1
+	if n > 0:
+		out.append(_ev("contratos:%d" % m.anio, "contratos_vencen", EventosDia.AVISO, "equipo", "contratos_vencen", {"n": n}))
+	return out
+
+## Cada precontrato firmado con un jugador de otro club (`Mercado.precontratos`): aviso en «mercado» con el jugador.
+static func de_precontratos(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	if m.mercado == null:
+		return out
+	for e: Dictionary in m.mercado.precontratos:
+		var id := "precontrato:%s:%d" % [String(e.get("id", "")), m.anio]
+		if not _nuevo(est, id):
+			continue
+		var j := m.jugador_por_id(String(e.get("id", "")))
+		var ev := _ev(id, "precontrato", EventosDia.AVISO, "mercado", "precontrato", {"jugador": String(e.get("id", "")), "anios": int(e.get("anios", 0))})
+		ev["nombre"] = Nombres.visible(j.nombre) if j != null else ""
+		out.append(ev)
+	return out
+
+## Un jugador tuyo que acaba de quedar sancionado (`Jugador.suspension`): aviso en «vestuario» una vez por sanción.
+static func de_sancionados(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	for j: Jugador in m.mi_club().plantilla:
+		if j.suspension <= 0:
+			continue
+		var id := "sancionado:%s:%d" % [j.id, j.susp_semana]   ## `Disciplina.sanciona` anota la semana: una sanción nueva = un hecho nuevo
+		if not _nuevo(est, id):
+			continue
+		var ev := _ev(id, "jugador_sancionado", EventosDia.AVISO, "vestuario", "jugador_sancionado", {"jugador": j.id, "fechas": j.suspension})
+		ev["nombre"] = Nombres.visible(j.nombre)
+		out.append(ev)
+	return out
+
+## La caja del club en negativo: un aviso cada 8 semanas mientras siga así (zona «finanzas»).
+static func de_caja_negativa(m: Mundo, est: Dictionary) -> Array:
+	var out: Array = []
+	var c := m.mi_club()
+	if c.saldo >= 0:
+		return out
+	var id := "caja_negativa:%d" % int(_abs(m) / 8)
+	if _nuevo(est, id):
+		out.append(_ev(id, "caja_negativa", EventosDia.AVISO, "finanzas", "caja_negativa", {"saldo": c.saldo}))
 	return out

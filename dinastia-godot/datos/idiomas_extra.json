@@ -9094,7 +9094,15 @@
   "Cambios": "Substitutions",
   "Con táctica %s, %s juega: %s.": "With a %s tactic, %s plays: %s.",
   "garra y carácter": "grit and character",
-  "bloque bajo y contragolpe": "a deep block and counters"
+  "bloque bajo y contragolpe": "a deep block and counters",
+  "Contratos por vencer": "Contracts expiring",
+  "Precontrato firmado": "Pre-contract signed",
+  "Jugador sancionado": "Player suspended",
+  "Caja en negativo": "Cash in the red",
+  "A %d de tus jugadores les queda un año de contrato.": "%d of your players have one year left on their contract.",
+  "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "You agreed a pre-contract with %s: he will arrive for free when his contract ends.",
+  "%s queda sancionado: se pierde %d partido(s).": "%s is suspended: he misses %d match(es).",
+  "La caja del club está en negativo: %d.": "The club's cash is in the red: %d."
  },
  "pt": {
   "Historia": "História",
@@ -18191,7 +18199,15 @@
   "Cambios": "Substituições",
   "Con táctica %s, %s juega: %s.": "Com tática %s, %s joga: %s.",
   "garra y carácter": "garra e caráter",
-  "bloque bajo y contragolpe": "bloco baixo e contra-ataque"
+  "bloque bajo y contragolpe": "bloco baixo e contra-ataque",
+  "Contratos por vencer": "Contratos a vencer",
+  "Precontrato firmado": "Pré-contrato assinado",
+  "Jugador sancionado": "Jogador suspenso",
+  "Caja en negativo": "Caixa no negativo",
+  "A %d de tus jugadores les queda un año de contrato.": "%d dos seus jogadores têm um ano de contrato restante.",
+  "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Você fechou um pré-contrato com %s: ele chegará de graça quando o contrato terminar.",
+  "%s queda sancionado: se pierde %d partido(s).": "%s está suspenso: perde %d jogo(s).",
+  "La caja del club está en negativo: %d.": "O caixa do clube está no negativo: %d."
  },
  "patrones": [
   [
@@ -33560,7 +33576,15 @@
   "Cambios": "Remplacements",
   "Con táctica %s, %s juega: %s.": "En tactique %s, %s joue : %s.",
   "garra y carácter": "du cran et du caractère",
-  "bloque bajo y contragolpe": "un bloc bas et la contre-attaque"
+  "bloque bajo y contragolpe": "un bloc bas et la contre-attaque",
+  "Contratos por vencer": "Contrats arrivant à terme",
+  "Precontrato firmado": "Précontrat signé",
+  "Jugador sancionado": "Joueur suspendu",
+  "Caja en negativo": "Caisse dans le rouge",
+  "A %d de tus jugadores les queda un año de contrato.": "%d de vos joueurs ont encore un an de contrat.",
+  "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Vous avez signé un précontrat avec %s : il arrivera gratuitement à la fin de son contrat.",
+  "%s queda sancionado: se pierde %d partido(s).": "%s est suspendu : il manque %d match(s).",
+  "La caja del club está en negativo: %d.": "La caisse du club est dans le rouge : %d."
  },
  "it": {
   "Historia": "Storia",
@@ -42657,7 +42681,15 @@
   "Cambios": "Sostituzioni",
   "Con táctica %s, %s juega: %s.": "Con tattica %s, %s gioca: %s.",
   "garra y carácter": "grinta e carattere",
-  "bloque bajo y contragolpe": "blocco basso e contropiede"
+  "bloque bajo y contragolpe": "blocco basso e contropiede",
+  "Contratos por vencer": "Contratti in scadenza",
+  "Precontrato firmado": "Precontratto firmato",
+  "Jugador sancionado": "Giocatore squalificato",
+  "Caja en negativo": "Cassa in rosso",
+  "A %d de tus jugadores les queda un año de contrato.": "A %d dei tuoi giocatori resta un anno di contratto.",
+  "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Hai firmato un precontratto con %s: arriverà a zero alla scadenza del contratto.",
+  "%s queda sancionado: se pierde %d partido(s).": "%s è squalificato: salta %d partita/e.",
+  "La caja del club está en negativo: %d.": "La cassa del club è in rosso: %d."
  },
  "de": {
   "Historia": "Geschichte",
@@ -51754,7 +51786,15 @@
   "Cambios": "Wechsel",
   "Con táctica %s, %s juega: %s.": "Mit %s Taktik spielt %s: %s.",
   "garra y carácter": "Kampfgeist und Charakter",
-  "bloque bajo y contragolpe": "tiefem Block und Kontern"
+  "bloque bajo y contragolpe": "tiefem Block und Kontern",
+  "Contratos por vencer": "Auslaufende Verträge",
+  "Precontrato firmado": "Vorvertrag unterschrieben",
+  "Jugador sancionado": "Spieler gesperrt",
+  "Caja en negativo": "Kasse im Minus",
+  "A %d de tus jugadores les queda un año de contrato.": "Bei %d deiner Spieler läuft der Vertrag in einem Jahr aus.",
+  "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Du hast einen Vorvertrag mit %s geschlossen: er kommt ablösefrei, wenn sein Vertrag endet.",
+  "%s queda sancionado: se pierde %d partido(s).": "%s ist gesperrt: er fehlt %d Spiel(e).",
+  "La caja del club está en negativo: %d.": "Die Vereinskasse ist im Minus: %d."
  },
  "ca": {
   "Historia": "Història",
@@ -60851,7 +60891,15 @@
   "Cambios": "Canvis",
   "Con táctica %s, %s juega: %s.": "Amb tàctica %s, %s juga: %s.",
   "garra y carácter": "garra i caràcter",
-  "bloque bajo y contragolpe": "bloc baix i contraatac"
+  "bloque bajo y contragolpe": "bloc baix i contraatac",
+  "Contratos por vencer": "Contractes a punt de vèncer",
+  "Precontrato firmado": "Precontracte signat",
+  "Jugador sancionado": "Jugador sancionat",
+  "Caja en negativo": "Caixa en negatiu",
+  "A %d de tus jugadores les queda un año de contrato.": "A %d dels teus jugadors els queda un any de contracte.",
+  "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Has tancat un precontracte amb %s: arribarà gratis quan acabi el contracte.",
+  "%s queda sancionado: se pierde %d partido(s).": "%s queda sancionat: es perd %d partit(s).",
+  "La caja del club está en negativo: %d.": "La caixa del club està en negatiu: %d."
  },
  "pl": {
   "Club": "Klub",
@@ -69948,7 +69996,15 @@
   "Cambios": "Zmiany",
   "Con táctica %s, %s juega: %s.": "Z taktyką %s %s gra: %s.",
   "garra y carácter": "walkę i charakter",
-  "bloque bajo y contragolpe": "niski blok i kontry"
+  "bloque bajo y contragolpe": "niski blok i kontry",
+  "Contratos por vencer": "Wygasające kontrakty",
+  "Precontrato firmado": "Podpisano przedkontrakt",
+  "Jugador sancionado": "Zawodnik zawieszony",
+  "Caja en negativo": "Kasa na minusie",
+  "A %d de tus jugadores les queda un año de contrato.": "%d twoich zawodników ma jeszcze rok kontraktu.",
+  "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "Podpisałeś przedkontrakt z %s: przyjdzie za darmo po wygaśnięciu kontraktu.",
+  "%s queda sancionado: se pierde %d partido(s).": "%s jest zawieszony: opuści %d mecz(e).",
+  "La caja del club está en negativo: %d.": "Kasa klubu jest na minusie: %d."
  },
  "tr": {
   "Club": "Kulüp",
@@ -79045,6 +79101,14 @@
   "Cambios": "Oyuncu değişikliği",
   "Con táctica %s, %s juega: %s.": "%s taktikle %s şöyle oynar: %s.",
   "garra y carácter": "mücadele ve karakter",
-  "bloque bajo y contragolpe": "derin blok ve kontra"
+  "bloque bajo y contragolpe": "derin blok ve kontra",
+  "Contratos por vencer": "Süresi dolan sözleşmeler",
+  "Precontrato firmado": "Ön sözleşme imzalandı",
+  "Jugador sancionado": "Oyuncu cezalı",
+  "Caja en negativo": "Kasa eksi bakiyede",
+  "A %d de tus jugadores les queda un año de contrato.": "%d oyuncunun sözleşmesinin bitmesine bir yıl kaldı.",
+  "Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.": "%s ile ön sözleşme yaptın: sözleşmesi bitince bedelsiz gelecek.",
+  "%s queda sancionado: se pierde %d partido(s).": "%s cezalı: %d maç kaçıracak.",
+  "La caja del club está en negativo: %d.": "Kulübün kasası eksi bakiyede: %d."
  }
 }

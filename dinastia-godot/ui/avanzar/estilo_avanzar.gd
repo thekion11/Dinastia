@@ -20,7 +20,9 @@ const DE_TIPO := {"liga": ["", "partido", "Partido"], "copa": ["", "partido", "C
 const DE_CAUSA := {"despido": ["decision", "decision", "Directiva"], "ultimatum": ["decision", "decision", "Directiva"], "golpe_caja": ["dinero", "dinero", "Finanzas"],
 	"imprevisto": ["decision", "decision", "Imprevisto"], "jugador_del_mes": ["premio", "premio", "Premio individual"], "guerra_agentes": ["nego", "fichaje", "Agentes"],
 	"evento_cantera": ["cantera", "cantera", "Cantera"], "hallazgo": ["sorteo", "noticia", "Ojeadores"], "retos_semana": ["sorteo", "noticia", "Vestuario"],
-	"cambio_dt": ["noticia", "noticia", "Prensa"], "oferta_seleccion": ["noticia", "noticia", "Selección"], "sancion_dt": ["tarjeta", "decision", "Federación"]}
+	"cambio_dt": ["noticia", "noticia", "Prensa"], "oferta_seleccion": ["noticia", "noticia", "Selección"], "sancion_dt": ["tarjeta", "decision", "Federación"],
+	"contratos_vencen": ["oferta", "fichaje", "Contratos"], "precontrato": ["oferta", "fichaje", "Mercado"], "jugador_sancionado": ["tarjeta", "decision", "Disciplina"],
+	"caja_negativa": ["dinero", "dinero", "Finanzas"]}
 
 ## {arte, color (clave de COLOR), kicker} del evento.
 static func ficha(ev: Dictionary) -> Array:
