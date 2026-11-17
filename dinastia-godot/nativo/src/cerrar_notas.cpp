@@ -12,7 +12,7 @@ using namespace godot;
 
 void DinastiaNativo::cerrar_notas(Object *p, const Ref<RandomNumberGenerator> &rng) const {
 	static const StringName k_todos("_todos"), k_ol("once_local"), k_ov("once_visita"), k_local("local"), k_plantilla("plantilla"), k_notas("_notas"), k_gl("goles_local"), k_gv("goles_visita");
-	static const StringName k_id("id"), k_forma("forma"), k_partidos("partidos"), k_cerradas("_notas_cerradas"), k_lista("notas");
+	static const StringName k_id("id"), k_forma("forma"), k_partidos("partidos"), k_cerradas("_notas_cerradas"), k_lista("notas"), k_nota_temp("nota_temp");
 	p->set(k_cerradas, true);
 	const int64_t gl = p->get(k_gl);
 	const int64_t gv = p->get(k_gv);
@@ -52,6 +52,8 @@ void DinastiaNativo::cerrar_notas(Object *p, const Ref<RandomNumberGenerator> &r
 			if (lista.size() > 8) {
 				lista.remove_at(0);
 			}
+			const Vector2 nt = j->get(k_nota_temp); // (16-11, informe R-03) suma y partidos con nota de la temporada
+			j->set(k_nota_temp, nt + Vector2(real_t(n), 1.0));
 		}
 		const double forma = double(int64_t(j->get(k_forma)));
 		int64_t f = int64_t(std::round(forma * 0.7 + n * 10.0 * 0.3));
