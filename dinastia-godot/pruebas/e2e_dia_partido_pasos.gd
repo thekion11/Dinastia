@@ -150,6 +150,10 @@ func _boton_con(raiz: Node, texto: String, exacto := false) -> BaseButton:
 		if b.is_queued_for_deletion() or not (b as Control).is_visible_in_tree():
 			continue
 		var tx := String(b.get("text")).strip_edges()
+		if tx == "":   ## botones con el texto en una etiqueta hija (las fotos de la cámara)
+			for l in b.find_children("*", "Label", true, false):
+				tx += String((l as Label).text) + " "
+			tx = tx.strip_edges()
 		if (exacto and tx == texto) or (not exacto and tx.to_lower().contains(texto.to_lower())):
 			return b
 	return null
