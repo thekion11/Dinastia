@@ -50,6 +50,7 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 		var b := _boton_pestana(Idiomas.t(String(PESTANAS[i])).to_upper(), color_mundo)
 		barra.add_child(b)
 		botones.append(b)
+		CampanasMenu.marcar_pestana(b, i)   ## (17-11) punto rojo si hay una campana en una tarjeta de esa pestaña
 		b.pressed.connect(func() -> void:
 			pestana = i
 			_marcar(botones)

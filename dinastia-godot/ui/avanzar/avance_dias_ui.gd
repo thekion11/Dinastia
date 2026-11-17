@@ -114,7 +114,7 @@ func _pantalla_de(ev: Dictionary) -> void:
 		return
 	if String(ev.get("tipo", "")) == "fin":
 		return   ## el cierre de temporada lo abre `AvanceSemana` (despedida y resumen) al refrescar
-	var t: Variant = load("res://ui/avanzar/evento_dia_pantalla.gd").mostrar(p, ev)
+	var t: Variant = load("res://ui/avanzar/evento_dia_pantalla.gd").mostrar(p, ev, p.mundo)
 	await t.elegido
 	t.queue_free()
 

@@ -56,3 +56,25 @@ static func texto(ev: Dictionary) -> String:
 		"oferta_seleccion": return Idiomas.t("La selección de %s quiere que la dirijas.") % String(d.get("seleccion", ""))
 		"sancion_dt": return Idiomas.t("El tribunal te sanciona con %d partido(s).") % int(d.get("fechas", 0))
 	return ""
+
+## Las cifras de la fila de abajo de la pantalla de evento: [[valor, rótulo], …] (hasta 3). Salen de los datos del evento y del mundo.
+static func cifras(ev: Dictionary, m: Mundo) -> Array:
+	var d: Dictionary = (ev.get("causa", {}) as Dictionary).get("datos", {})
+	match String((ev.get("causa", {}) as Dictionary).get("id", "")):
+		"jugador_del_mes":
+			var j := m.jugador_por_id(String(ev.get("jugador_id", ""))) if m != null else null
+			if j != null:
+				var media := 0.0
+				for n: float in j.notas:
+					media += n
+				media = media / maxf(float(j.notas.size()), 1.0)
+				return [[str(j.goles), Idiomas.t("goles")], [str(j.asistencias), Idiomas.t("asistencias")], ["%.1f" % media, Idiomas.t("nota media")]]
+		"ultimatum":
+			return [[str(int(d.get("confianza", 0))), Idiomas.t("confianza de la directiva")]]
+		"golpe_caja":
+			return [[str(int(d.get("importe", 0))), Idiomas.t("importe")], [str(int(d.get("semanas", 0))), Idiomas.t("semanas para pagar")]]
+		"sancion_dt":
+			return [[str(int(d.get("fechas", 0))), Idiomas.t("partidos de sanción")]]
+		"oferta_seleccion":
+			return [[str(int(d.get("fuerza", 0))), Idiomas.t("fuerza de la selección")], [str(int(d.get("sueldo", 0))), Idiomas.t("sueldo por semana")]]
+	return []
