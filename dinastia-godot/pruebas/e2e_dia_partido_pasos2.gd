@@ -204,6 +204,15 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 			cuenta[k] = int(cuenta.get(k, 0)) + 1
 		print("    huérfanos nuevos: %s" % str(cuenta))
 	t.memorias.append(mem1)
+	var med: Dictionary = load("res://pruebas/e2e_caches_lista.gd").medir()
+	var prev: Dictionary = t.get_meta("caches_prev", {})
+	var crecen: Array = []
+	for k: String in med:
+		if prev.has(k) and int(med[k]) > int(prev[k]):
+			crecen.append("%s %d→%d" % [k, int(prev[k]), int(med[k])])
+	t.set_meta("caches_prev", med)
+	if not prev.is_empty():
+		print("    cachés que crecen: %s" % (", ".join(crecen) if not crecen.is_empty() else "ninguna"))
 	print("    cachés: objetos %d · recursos %d · fotos de estadio %d · retratos 3D %d · caras %d · camisetas %d · texturas de vídeo %.0f MB" % [
 		int(Performance.get_monitor(Performance.OBJECT_COUNT)), int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT)), FotosEstadioMenu._hechas.size(),
 		Retrato3D._cache.size(), Cara._cache.size(), Jersey._cache_svg.size() + Jersey._cache_real.size(), Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1048576.0])
