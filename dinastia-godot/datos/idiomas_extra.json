@@ -8964,7 +8964,15 @@
   "partidos de sanción": "match ban",
   "presión %s": "pressing %s",
   "semanas para pagar": "weeks to pay",
-  "sueldo por semana": "weekly salary"
+  "sueldo por semana": "weekly salary",
+  "Jugar desde el minuto %d": "Play from minute %d",
+  "Último día del periodo de transferencias": "Last day of the transfer window",
+  "El mercado cierra en %d horas": "The market closes in %d hours",
+  "Lo que no fiches ahora, no se ficha hasta la próxima ventana.": "Whoever you don't sign now won't be signed until the next window.",
+  "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "You will move to the next day. The transfer market will close. Do you want to continue?",
+  "Avanzar 1 día": "Advance 1 day",
+  "No": "No",
+  "Sí": "Yes"
  },
  "pt": {
   "Historia": "História",
@@ -17931,7 +17939,15 @@
   "partidos de sanción": "jogos de suspensão",
   "presión %s": "pressão %s",
   "semanas para pagar": "semanas para pagar",
-  "sueldo por semana": "salário por semana"
+  "sueldo por semana": "salário por semana",
+  "Jugar desde el minuto %d": "Jogar a partir do minuto %d",
+  "Último día del periodo de transferencias": "Último dia do período de transferências",
+  "El mercado cierra en %d horas": "O mercado fecha em %d horas",
+  "Lo que no fiches ahora, no se ficha hasta la próxima ventana.": "Quem você não contratar agora, só na próxima janela.",
+  "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Você avançará para o dia seguinte. O mercado de transferências fechará. Deseja continuar?",
+  "Avanzar 1 día": "Avançar 1 dia",
+  "No": "Não",
+  "Sí": "Sim"
  },
  "patrones": [
   [
@@ -33170,7 +33186,15 @@
   "partidos de sanción": "matchs de suspension",
   "presión %s": "pressing %s",
   "semanas para pagar": "semaines pour payer",
-  "sueldo por semana": "salaire par semaine"
+  "sueldo por semana": "salaire par semaine",
+  "Jugar desde el minuto %d": "Jouer à partir de la minute %d",
+  "Último día del periodo de transferencias": "Dernier jour de la période des transferts",
+  "El mercado cierra en %d horas": "Le marché ferme dans %d heures",
+  "Lo que no fiches ahora, no se ficha hasta la próxima ventana.": "Ce que vous ne recrutez pas maintenant attendra la prochaine fenêtre.",
+  "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Vous passerez au jour suivant. Le marché des transferts fermera. Voulez-vous continuer ?",
+  "Avanzar 1 día": "Avancer d'un jour",
+  "No": "Non",
+  "Sí": "Oui"
  },
  "it": {
   "Historia": "Storia",
@@ -42137,7 +42161,15 @@
   "partidos de sanción": "giornate di squalifica",
   "presión %s": "pressing %s",
   "semanas para pagar": "settimane per pagare",
-  "sueldo por semana": "stipendio settimanale"
+  "sueldo por semana": "stipendio settimanale",
+  "Jugar desde el minuto %d": "Gioca dal minuto %d",
+  "Último día del periodo de transferencias": "Ultimo giorno della finestra di mercato",
+  "El mercado cierra en %d horas": "Il mercato chiude tra %d ore",
+  "Lo que no fiches ahora, no se ficha hasta la próxima ventana.": "Chi non ingaggi ora, lo ingaggerai solo alla prossima finestra.",
+  "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Passerai al giorno successivo. Il mercato chiuderà. Vuoi continuare?",
+  "Avanzar 1 día": "Avanza di 1 giorno",
+  "No": "No",
+  "Sí": "Sì"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51104,7 +51136,15 @@
   "partidos de sanción": "Spiele Sperre",
   "presión %s": "Pressing %s",
   "semanas para pagar": "Wochen bis zur Zahlung",
-  "sueldo por semana": "Wochengehalt"
+  "sueldo por semana": "Wochengehalt",
+  "Jugar desde el minuto %d": "Ab Minute %d spielen",
+  "Último día del periodo de transferencias": "Letzter Tag der Transferperiode",
+  "El mercado cierra en %d horas": "Der Markt schließt in %d Stunden",
+  "Lo que no fiches ahora, no se ficha hasta la próxima ventana.": "Wen du jetzt nicht verpflichtest, holst du erst im nächsten Fenster.",
+  "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Du gehst zum nächsten Tag. Der Transfermarkt schließt. Möchtest du fortfahren?",
+  "Avanzar 1 día": "1 Tag weiter",
+  "No": "Nein",
+  "Sí": "Ja"
  },
  "ca": {
   "Historia": "Història",
@@ -60071,7 +60111,15 @@
   "partidos de sanción": "partits de sanció",
   "presión %s": "pressió %s",
   "semanas para pagar": "setmanes per pagar",
-  "sueldo por semana": "sou per setmana"
+  "sueldo por semana": "sou per setmana",
+  "Jugar desde el minuto %d": "Jugar des del minut %d",
+  "Último día del periodo de transferencias": "Últim dia del període de fitxatges",
+  "El mercado cierra en %d horas": "El mercat tanca d'aquí a %d hores",
+  "Lo que no fiches ahora, no se ficha hasta la próxima ventana.": "Qui no fitxis ara, no es fitxa fins a la propera finestra.",
+  "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Passaràs al dia següent. El mercat de fitxatges tancarà. Vols continuar?",
+  "Avanzar 1 día": "Avançar 1 dia",
+  "No": "No",
+  "Sí": "Sí"
  },
  "pl": {
   "Club": "Klub",
@@ -69038,7 +69086,15 @@
   "partidos de sanción": "mecze kary",
   "presión %s": "pressing %s",
   "semanas para pagar": "tygodni na zapłatę",
-  "sueldo por semana": "pensja tygodniowa"
+  "sueldo por semana": "pensja tygodniowa",
+  "Jugar desde el minuto %d": "Graj od minuty %d",
+  "Último día del periodo de transferencias": "Ostatni dzień okienka transferowego",
+  "El mercado cierra en %d horas": "Rynek zamyka się za %d godz.",
+  "Lo que no fiches ahora, no se ficha hasta la próxima ventana.": "Kogo nie kupisz teraz, kupisz dopiero w następnym okienku.",
+  "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Przejdziesz do następnego dnia. Rynek transferowy się zamknie. Chcesz kontynuować?",
+  "Avanzar 1 día": "Przejdź o 1 dzień",
+  "No": "Nie",
+  "Sí": "Tak"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78005,6 +78061,14 @@
   "partidos de sanción": "ceza maçı",
   "presión %s": "pres %s",
   "semanas para pagar": "ödeme için hafta",
-  "sueldo por semana": "haftalık maaş"
+  "sueldo por semana": "haftalık maaş",
+  "Jugar desde el minuto %d": "%d. dakikadan oyna",
+  "Último día del periodo de transferencias": "Transfer döneminin son günü",
+  "El mercado cierra en %d horas": "Piyasa %d saat içinde kapanıyor",
+  "Lo que no fiches ahora, no se ficha hasta la próxima ventana.": "Şimdi almadığın oyuncuyu bir sonraki döneme kadar alamazsın.",
+  "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Ertesi güne geçeceksin. Transfer piyasası kapanacak. Devam etmek istiyor musun?",
+  "Avanzar 1 día": "1 gün ilerle",
+  "No": "Hayır",
+  "Sí": "Evet"
  }
 }

@@ -84,8 +84,23 @@ func _al_elegir_jugado(op: String) -> void:
 		if minuto >= 0:
 			ReplicaPartido.abrir(p, ult, minuto)   ## desde un minuto antes de la jugada y con el marcador de entonces
 
+## ¿Hoy es el último día del mercado (y estás sobre ese día)? Entonces pasar al día siguiente lo cierra: se pregunta antes.
+func _hito_pendiente() -> bool:
+	if _abs() != _abs_vista:
+		return false
+	for ev: Dictionary in EventosDia.del_dia(p.mundo, 0, p._dia_semana):
+		if String(ev.get("tipo", "")) == "mercado_cierra":
+			return true
+	return false
+
+func _confirmar_hito() -> bool:
+	var d := ConfirmarHito.mostrar(p, Idiomas.t("Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?"))
+	var r: String = await d.elegido
+	d.queue_free()
+	return r == "si"
+
 ## EL BOTÓN «AVANZAR».
-func pulsar() -> void:
+func pulsar(un_dia := false) -> void:
 	if p.mundo == null or en_curso:
 		return
 	var m := p.mundo
@@ -94,6 +109,8 @@ func pulsar() -> void:
 		return
 	if partido_hoy():
 		actualizar_botones()
+		return
+	if _con_pantalla() and await _hito_pendiente() and not await _confirmar_hito():
 		return
 	en_curso = true
 	AvanceSemana.dias_en_curso = true
@@ -113,7 +130,7 @@ func pulsar() -> void:
 			AvanceSemana.partido_obliga = false
 			p._avance._avanzar_semana()
 			AvanceSemana.partido_obliga = antes
-		res = AvanceDias.avanzar(m, est, dia, rodar)
+		res = AvanceDias.avanzar(m, est, dia, rodar, un_dia)
 	p._dia_semana = int(res["dia"])
 	_abs_vista = _abs()
 	if _con_pantalla():
@@ -143,6 +160,11 @@ func _pantalla_de(ev: Dictionary) -> void:
 		return
 	if String((ev.get("causa", {}) as Dictionary).get("id", "")) == "oferta_seleccion":
 		await load("res://ui/principal/jornada_seleccion.gd").ofrecer_cargo(p)
+		return
+	if String(ev.get("tipo", "")) == "mercado_cierra":
+		var h: Variant = load("res://ui/avanzar/mercado_hito_pantalla.gd").mostrar(p, p.mundo.mi_club())
+		await h.elegido
+		h.queue_free()
 		return
 	if String(ev.get("tipo", "")) == "fin":
 		return   ## el cierre de temporada lo abre `AvanceSemana` (despedida y resumen) al refrescar

@@ -143,7 +143,7 @@ func _tarjeta(padre: Control, m: Dictionary, i: int) -> Button:
 	var t := EstiloAvanzar.etiqueta(String(m["txt"]), 17, Color("1b2340"))
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(t)
-	var b := boton(Idiomas.t("Jugar momento"), true, 16)
+	var b := boton(Idiomas.t("Jugar desde el minuto %d") % int(m["min"]), true, 16)
 	b.custom_minimum_size = Vector2(170, 40)
 	b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	b.pressed.connect(func() -> void: elegido.emit("momento:%d" % i))

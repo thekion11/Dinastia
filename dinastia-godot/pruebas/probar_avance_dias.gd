@@ -30,6 +30,9 @@ func _temporada(m: Mundo, e: String) -> void:
 	var est := DisparadoresDia.nuevo_estado()
 	var rodar := func() -> void: m.avanzar_semana()
 	var dia := 0
+	var uno := AvanceDias.avanzar(m, est, 0, rodar, true)   ## «Avanzar 1 día» del desplegable: se detiene tras UN día, haya o no eventos
+	_ok((uno["pasados"] as Array).size() == 1 and int(uno["dia"]) == 1 and not bool(uno["fin"]), "%s: «Avanzar 1 día» avanza exactamente un día" % e)
+	dia = int(uno["dia"])
 	var paradas := 0
 	var partidos := 0
 	var jornada0 := m.liga_de(m.mi_club()).jornada_actual
