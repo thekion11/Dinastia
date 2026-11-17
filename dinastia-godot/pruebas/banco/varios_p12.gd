@@ -37,6 +37,26 @@ func _probar_eventos_club() -> void:
 	_comprobar(m.directiva.confianza == conf0 + int(r["confianza"]) and int(r["confianza"]) > 0, "«a por más» sube la confianza (%d → %d)" % [conf0, m.directiva.confianza])
 	_comprobar(EventosClub.pendiente(m).get("id", "") != "directiva", "ya vista: no vuelve a salir")
 	_comprobar(m.prensa.eventos_vistos.has("directiva:%d" % m.anio), "queda anotada para el guardado")
+	var sin_frase: Array = []; var n_memoria := 0
+	for pais: String in Calendario.FIJAS.keys() + CalendarioMemorias.FILAS.keys():
+		for f: Dictionary in Calendario.del_anio(pais, m.anio):
+			n_memoria += 1 if String(f["tipo"]) == "memoria" else 0
+			if String(f["tipo"]) == "memoria" and not DiasMemoria.REFLEXIONES.has(String(f["nombre"])) and not DiasMemoria.CATEGORIAS.has(String(f.get("cat", ""))):
+				sin_frase.append("%s/%s" % [pais, f["nombre"]])
+	_comprobar(sin_frase.is_empty(), "todo día de memoria tiene su frase de reflexión (faltan: %s)" % str(sin_frase))
+	var holo := Calendario.del_anio("UKR", m.anio).filter(func(f: Dictionary) -> bool: return String(f["nombre"]) == "Día de Recuerdo del Holodomor")
+	_comprobar(n_memoria >= 80 and holo.size() == 1 and int(holo[0]["dia"]) in range(22, 29), "más de 80 días de memoria y el Holodomor cae el cuarto sábado de noviembre (%d)" % n_memoria)
+	var sem_11 := -1
+	for sm in range(1, 53):
+		if Calendario.de_la_semana("CHI", m.anio, sm).any(func(f: Dictionary) -> bool: return String(f["tipo"]) == "memoria"):
+			sem_11 = sm
+			break
+	m.semana = sem_11
+	var dia := DiasMemoria.pendiente(m)
+	_comprobar(sem_11 > 0 and String(dia.get("nombre", "")) == "Conmemoración del golpe de Estado" and String(dia.get("pais", "")) == "CHI", "Chile: la semana del 11 de septiembre toca su día de memoria")
+	var moral_antes := m.mi_club().plantilla[0].moral
+	DiasMemoria.marcar(m, dia)
+	_comprobar(DiasMemoria.pendiente(m).is_empty() and m.mi_club().plantilla[0].moral == moral_antes, "ya visto: no vuelve a salir ese año y no mueve la moral")
 	m.semana = 10
 	var liga := m.liga_de(m.mi_club())
 	liga.jornada_actual = 3   ## lejos de la mitad

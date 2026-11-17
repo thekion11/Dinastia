@@ -92,6 +92,7 @@ pasa "La Ruta: la entrega en 3D de cada premio (con pantalla)" "xvfb-run -a godo
 pasa "La Ruta: todas las pantallas en los 8 idiomas (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/prueba_ruta_idiomas.tscn" "FIN. 0 fallos"
 pasa "partido de despedida (UI, con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_despedida_ui.tscn" "0 fallos"
 pasa "rueda de prensa en cruz y eventos con diálogo (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_rueda_eventos.tscn" "FIN. 0 fallos"
+pasa "pantalla de reflexión de los días de memoria en 5 países (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_reflexion.tscn" "FIN. 0 fallos"
 pasa "festejos por tipo de título, 3 clubes (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_festejos.tscn" "FIN. 0 fallos"
 pasa "evento de despedida solo en su fecha y a pantalla completa (con pantalla)" "XDG_DATA_HOME=/tmp/xdg_despedida_fecha xvfb-run -a godot --path . --resolution 1920x1080 --rendering-driver opengl3 res://pruebas/prueba_despedida_fecha.tscn" "0 fallos"
 pasa "final de temporada: pantalla única de resumen a pantalla completa (con pantalla)" "XDG_DATA_HOME=/tmp/xdg_resumen_temporada xvfb-run -a godot --path . --resolution 1920x1080 --rendering-driver opengl3 res://pruebas/prueba_resumen_temporada.tscn" "0 fallos"

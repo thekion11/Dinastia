@@ -46,7 +46,7 @@ const FIJAS := {
 		[9, 7, "Dia da Independência", "fiesta", "El 7 de septiembre de 1822 Brasil se separó de Portugal."],
 		[11, 15, "Proclamação da República", "fiesta", "En 1889 cayó la monarquía y nació la república."]],
 	"CHI": [[5, 21, "Día de las Glorias Navales", "fiesta", "Recuerda el combate naval de Iquique de 1879."],
-		[9, 11, "11 de septiembre", "memoria", "El 11 de septiembre de 1973 hubo un golpe de Estado en Chile. Es una fecha de memoria y de respeto por las víctimas: minuto de silencio y nada de celebraciones."],
+		[9, 11, "Conmemoración del golpe de Estado", "memoria", "El 11 de septiembre de 1973 hubo un golpe de Estado en Chile. Es una fecha de memoria y de respeto por las víctimas: minuto de silencio y nada de celebraciones."],
 		[9, 18, "Fiestas Patrias", "fiesta", "Primera Junta Nacional de Gobierno, 1810. Es la gran fiesta de Chile: fondas, cueca y estadios llenos."],
 		[9, 19, "Día de las Glorias del Ejército", "fiesta", "Segundo día de las Fiestas Patrias."]],
 	"COL": [[7, 20, "Día de la Independencia", "fiesta", "El grito de independencia del 20 de julio de 1810."],
@@ -88,7 +88,7 @@ const FIJAS := {
 	"URU": [[7, 18, "Jura de la Constitución", "fiesta", "La primera constitución, 1830."],
 		[8, 25, "Declaratoria de la Independencia", "fiesta", "Florida, 25 de agosto de 1825."]],
 	"USA": [[7, 4, "Independence Day", "fiesta", "La Declaración de Independencia de 1776: fuegos artificiales y barbacoas."],
-		[9, 11, "11 de septiembre", "memoria", "Aniversario de los atentados de 2001. Es un día de memoria: minuto de silencio antes de los partidos."]],
+		[9, 11, "Conmemoración de las Torres Gemelas", "memoria", "Aniversario de los atentados del 11 de septiembre de 2001. Es un día de memoria: minuto de silencio antes de los partidos."]],
 	"VEN": [[4, 19, "Declaración de Independencia", "fiesta", "El 19 de abril de 1810."],
 		[6, 24, "Batalla de Carabobo", "fiesta", "La batalla de 1821."],
 		[7, 5, "Día de la Independencia", "fiesta", "El acta de independencia de 1811."]],
@@ -286,6 +286,13 @@ static func del_anio(pais: String, anio: int) -> Array:
 	var r: Array = []
 	for f: Array in FIJAS.get(pais, []):
 		r.append({"mes": int(f[0]), "dia": int(f[1]), "nombre": String(f[2]), "tipo": String(f[3]), "texto": String(f[4])})
+	for f: Array in CalendarioMemorias.de(pais):   ## (17-11) más días de memoria por país; día negativo = n-ésimo día de la semana
+		var dia := int(f[1])
+		if dia < 0:
+			dia = _enesimo(anio, int(f[0]), int(floori(-dia / 10.0)), (-dia) % 10)
+		r.append({"mes": int(f[0]), "dia": dia, "nombre": String(f[2]), "tipo": "memoria", "texto": String(f[3]), "cat": String(f[4])})
+	for f: Array in CalendarioMemorias.independencias(pais):   ## (17-11) días de independencia que faltaban
+		r.append({"mes": int(f[0]), "dia": int(f[1]), "nombre": String(f[2]), "tipo": "fiesta", "texto": String(f[3]), "indep": true})
 	if not SIN_PRIMERO_DE_MAYO.has(pais):
 		r.append({"mes": 5, "dia": 1, "nombre": "Día del Trabajador", "tipo": "trabajo",
 			"texto": "El 1 de mayo recuerda las luchas por la jornada de 8 horas. En el club, el personal libra y los jugadores suelen dedicarle el partido."})
