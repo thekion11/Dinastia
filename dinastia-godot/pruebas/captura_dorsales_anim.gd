@@ -116,6 +116,7 @@ func _process(_d: float) -> void:
 		if _n == 322 or _n == 360:
 			_foto("trote%d" % (1 if _n == 322 else 2))
 	if _n > 362:
+		print("CAPTURA TERMINADA trote_cmu=%s" % str(TroteCmu.encendida))   ## (17-11) la prueba especial del trote mira esta línea
 		get_tree().quit()
 
 ## El que trota más cerca del balón (sin llevarlo); si nadie trota, el de campo más cercano.
