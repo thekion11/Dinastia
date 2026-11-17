@@ -14,6 +14,8 @@ var _sigue: Dictionary = {}
 
 func _ready() -> void:
 	Calidad.elegida = Calidad.nivel_de_argumentos(Calidad.ALTA)
+	if OS.get_environment("CALIDAD") == "minima":
+		Calidad.elegida = Calidad.ULTRA_BAJA   ## (17-11) CALIDAD=minima: la MÍNIMA del juego (las fotos llevan «_minima»)
 	var paises: Array[String] = []
 	for q in (OS.get_environment("PAIS") if OS.get_environment("PAIS") != "" else "ARG,ESP").split(",", false):
 		paises.append(String(q))
@@ -37,7 +39,8 @@ func _ready() -> void:
 
 func _foto(nombre: String) -> void:
 	var dir := OS.get_environment("SALIDA") if OS.get_environment("SALIDA") != "" else "user://"
-	var ruta := "%s/%s_%s_%s.jpg" % [dir, nombre, _pais.to_lower(), OS.get_environment("ETIQUETA") if OS.get_environment("ETIQUETA") != "" else "x"]
+	var cal := "_minima" if OS.get_environment("CALIDAD") == "minima" else ""
+	var ruta := "%s/%s%s_%s_%s.jpg" % [dir, nombre, cal, _pais.to_lower(), OS.get_environment("ETIQUETA") if OS.get_environment("ETIQUETA") != "" else "x"]
 	get_viewport().get_texture().get_image().save_jpg(ruta, 0.92)
 	print("FOTO ", ruta)
 
