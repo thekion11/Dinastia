@@ -133,6 +133,7 @@ pasa "avance por días: menú del partido y sus ajustes" "godot --headless --pat
 pasa "sorteo del saque inicial en el motor" "godot --headless --path . res://pruebas/probar_saque_inicial.tscn" "FIN. 0 fallos"
 # 5j. «Jugar de nuevo» y «Jugar momento» de verdad: réplica con clubes clonados (17-11)
 pasa "réplica del partido (jugar de nuevo y momentos)" "godot --headless --path . res://pruebas/probar_replica_partido.tscn" "FIN. 0 fallos"
+pasa "decisiones con opciones del avance (efecto real)" "godot --headless --path . res://pruebas/probar_decisiones_dia.tscn" "FIN. 0 fallos"
 # 5h. Las pantallas de después del partido: resultado, todos los momentos y el popup «Partido jugado» (17-11)
 pasa "avance por días: resultado, momentos y popup del partido jugado" "godot --headless --path . res://pruebas/probar_resultado_partido.tscn" "FIN. 0 fallos"
 pasa "textura del césped" "godot --headless --path . res://pruebas/probar_cesped_textura.tscn" "FIN. 0 fallos"
