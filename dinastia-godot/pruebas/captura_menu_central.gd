@@ -34,6 +34,8 @@ func _ready() -> void:
 	if OS.get_environment("PESTANA") != "" and int(OS.get_environment("PESTANA")) != TableroInicio.pestana:
 		var barra: Node = (pr.get_meta("escaparate") as Node).find_child("Botones", true, false)   ## se pulsa la pestaña como el jugador
 		((barra.get_meta("tabs") as Array)[int(OS.get_environment("PESTANA"))] as Button).pressed.emit()
+	if OS.get_environment("INFORME") == "1":   ## la pantalla completa del informe de la semana
+		(pr.get_meta("escaparate") as EscaparatePantalla).abrir_informe(pr)
 	await _frames(12)
 	if pr.get("_rueda_pop") != null:   ## la rueda de prensa que sale tras los partidos tapa el menú: fuera, para ver el escaparate
 		(pr.get("_rueda_pop") as Node).queue_free()

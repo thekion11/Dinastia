@@ -5,10 +5,10 @@ extends RefCounted
 ## informe de la semana debajo. Cada tarjeta es `TableroInicio.tarjeta` (foco de mando, campana roja de `CampanasMenu`) y abre su submenú como siempre.
 
 ## La sala de fondo de cada tarjeta (`assets/ui/mosaico/*.jpg`).
-const SALA := {"*plantel": "vestuario", "Pizarra y dibujo": "video", "Entrenamiento": "estadio", "Mercado de fichajes": "oficina", "Academia": "tunel",
-	"Enfermería": "vestuario", "Contratos": "oficina", "Personal del club": "despacho", "Camarín": "vestuario",
-	"*cuentas": "despacho", "Patrocinadores": "oficina", "Hinchada y socios": "estadio", "Diseño del estadio": "estadio", "Historia del club": "museo",
-	"Ligas y clubes": "video", "Correo": "oficina", "*informe": "despacho", "Récords": "museo", "*sistema": "despacho"}
+const SALA := {"*plantel": "vestuario", "Pizarra y dibujo": "video", "Entrenamiento": "estadio", "Mercado de fichajes": "mercado", "Academia": "tunel",
+	"Enfermería": "enfermeria", "Contratos": "oficina", "Personal del club": "despacho", "Camarín": "camarin",
+	"*cuentas": "oficina", "Patrocinadores": "mercado", "Hinchada y socios": "estadio", "Diseño del estadio": "tunel", "Historia del club": "museo",
+	"Ligas y clubes": "video", "Correo": "camarin", "*informe": "despacho", "Récords": "museo", "*sistema": "despacho"}
 
 static func _sub_de(rot: String) -> Dictionary:
 	var sitio := TableroInicio.buscar(rot)
