@@ -3,11 +3,12 @@ extends Control
 ## LA PANTALLA ENTERA DEL ESCAPARATE (17-11-2026, segunda ronda de Auditoría): el menú central del Inicio ya no va dentro del marco con esquinas y la barra de desplazamiento de
 ## siempre: es una capa a PANTALLA COMPLETA (encima del menú de siempre, que se esconde mientras está) con la barra del club pegada ARRIBA, el cuerpo que ocupa todo el alto
 ## (las tarjetas se reparten el espacio: nada se corta ni se desplaza) y el pie con las ayudas del aparato activo, los botones de Avanzar / Jugar / Saltar / Partido jugado,
-## Mensajes y Ayuda. Las pestañas «Dirección del equipo» e «Información del club» siguen con sus tarjetas de siempre (con el informe de la semana debajo, deslizable).
+## Mensajes y Ayuda. Las pestañas «Dirección del equipo» e «Información del club» son el mismo mosaico con imagen (`EscaparateSubs`); el informe de la semana es una tarjeta de «Información del club» que abre su pantalla completa (`EscaparateInforme`).
 ## `TableroInicio.pintar` la repinta; `EscaparateInicio.sincronizar` la muestra solo en la pestaña Inicio.
 
 var _cuerpo: VBoxContainer
 var _busqueda: PopupPanel
+var informe: EscaparateInforme   ## la pantalla completa del informe de la semana, si está abierta
 
 ## La pantalla de esta partida (se crea la primera vez, justo encima del menú de siempre y debajo de los menús laterales y de todo lo que se abre después).
 static func de(p: Principal) -> EscaparatePantalla:
@@ -34,7 +35,7 @@ func _soltar(p: Principal) -> void:
 func repintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 	_soltar(p)
 	for h in get_children():
-		if h != _busqueda:
+		if h != _busqueda and h != informe:
 			remove_child(h)
 			h.queue_free()
 	var fondo := ColorRect.new()
@@ -116,3 +117,15 @@ func abrir_busqueda(ancla: Control) -> void:
 	var r := ancla.get_global_rect()
 	_busqueda.popup(Rect2i(Vector2i(int(r.position.x), int(r.position.y + r.size.y)), Vector2i(280, 0)))
 	p._buscador.grab_focus.call_deferred()
+
+## La pantalla completa del «Informe de la semana» (la abre su tarjeta de «Información del club»).
+func abrir_informe(p: Principal) -> void:
+	if is_instance_valid(informe):
+		return
+	informe = EscaparateInforme.abrir(p, self)
+	informe.cerrada.connect(func() -> void: repintar_ya(p))
+
+## Repinta con el mismo club y liga (al cerrar el informe, para que el contador del pie y la tarjeta se pongan al día).
+func repintar_ya(p: Principal) -> void:
+	var c: Club = p.mundo.mi_club()
+	repintar(p, c, p._liga_de(c), 5 - int(p._dia_semana))

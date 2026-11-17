@@ -8,7 +8,7 @@ extends RefCounted
 const SALA := {"*plantel": "vestuario", "Pizarra y dibujo": "video", "Entrenamiento": "estadio", "Mercado de fichajes": "oficina", "Academia": "tunel",
 	"Enfermería": "vestuario", "Contratos": "oficina", "Personal del club": "despacho", "Camarín": "vestuario",
 	"*cuentas": "despacho", "Patrocinadores": "oficina", "Hinchada y socios": "estadio", "Diseño del estadio": "estadio", "Historia del club": "museo",
-	"Ligas y clubes": "video", "Correo": "oficina", "Récords": "museo", "*sistema": "despacho"}
+	"Ligas y clubes": "video", "Correo": "oficina", "*informe": "despacho", "Récords": "museo", "*sistema": "despacho"}
 
 static func _sub_de(rot: String) -> Dictionary:
 	var sitio := TableroInicio.buscar(rot)
@@ -16,11 +16,36 @@ static func _sub_de(rot: String) -> Dictionary:
 		return (MenusLaterales.menu_por_id(String(sitio[0]))["subs"] as Array)[int(sitio[1])]
 	return {"label": "Sistema", "icono": "⚙️", "desc": "Guardar, cargar, pantalla, sonido y controles."}
 
+## La tarjeta «Informe de la semana»: el aviso más urgente como titular y el contador de avisos; abre la pantalla completa del informe.
+static func _informe(p: Principal, acento: Color) -> Control:
+	var res := InformeSemana.resumen(p)
+	var tc := TableroInicio.tarjeta(Idiomas.t("Informe de la semana"), acento, func() -> void: EscaparatePantalla.de(p).abrir_informe(p), Color(0.05, 0.07, 0.09, 1.0))
+	var v: VBoxContainer = tc[1]
+	var fila := HBoxContainer.new()
+	fila.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	fila.add_theme_constant_override("separation", 12)
+	v.add_child(fila)
+	var cont := EstiloAvanzar.etiqueta("%d" % int(res["graves"]), 44, Tema.mal() if int(res["graves"]) > 0 else Tema.bien(), true)
+	cont.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	fila.add_child(cont)
+	var t := EstiloAvanzar.etiqueta(String(res["titular"]), 18, Color.WHITE)
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	t.max_lines_visible = 3
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	t.size_flags_vertical = Control.SIZE_SHRINK_END
+	t.add_theme_constant_override("outline_size", 4)
+	t.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
+	fila.add_child(t)
+	TableroInicio.cerrar(tc[0])
+	return tc[0]
+
 ## Una tarjeta del mosaico: sala de fondo, velo oscuro abajo, icono grande y dato en grande.
 static func _tarjeta(p: Principal, c: Club, rot: String, acento: Color) -> Control:
 	var tinte := Color(EscaparateBarra.color_de(c))
 	var b: Control
-	if rot == "*plantel":
+	if rot == "*informe":
+		b = _informe(p, acento)
+	elif rot == "*plantel":
 		b = MosaicoTarjetas.plantel(p, c, acento)
 	elif rot == "*cuentas":
 		b = MosaicoTarjetas.cuentas(p, c, acento)
@@ -54,7 +79,10 @@ static func _tarjeta(p: Principal, c: Club, rot: String, acento: Color) -> Contr
 ## Reparte las nueve tarjetas: arriba la grande (2) y dos columnas de dos (1,5 del alto); abajo cuatro (1). Todo por proporciones: nada se sale ni se desliza.
 static func pintar(p: Principal, cuerpo: VBoxContainer, c: Club, lista: Array, acento: Color) -> void:
 	var t: Array[Control] = []
-	for rot: String in lista:
+	var rots := lista.duplicate()
+	if rots.has("*cuentas"):   ## (17-11) «Información del club» lleva además el informe de la semana, junto a Correo
+		rots.insert(rots.find("Correo") + 1, "*informe")
+	for rot: String in rots:
 		t.append(_tarjeta(p, c, rot, acento))
 	var arriba := HBoxContainer.new()
 	arriba.size_flags_vertical = Control.SIZE_EXPAND_FILL

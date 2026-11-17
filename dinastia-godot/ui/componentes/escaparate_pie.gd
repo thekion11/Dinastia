@@ -58,6 +58,7 @@ static func crear(p: Principal) -> Control:
 		for x: Dictionary in bandeja:
 			if not bool(x.get("leida", false)):
 				sin_leer += 1
+	sin_leer += int(InformeSemana.resumen(p)["graves"])   ## (17-11) los avisos urgentes del informe de la semana (contratos, puntos sin gastar…) cuentan en Mensajes
 	var msg := _boton("✉ " + Idiomas.t("Mensajes") + ("  (%d)" % sin_leer if sin_leer > 0 else ""), func() -> void: TableroInicio.abrir(p, "Correo"))
 	if sin_leer > 0:
 		msg.add_theme_color_override("font_color", Tema.oro())

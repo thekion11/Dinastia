@@ -89,6 +89,7 @@ pasa "plantilla a la PES" "godot --headless --path . res://pruebas/prueba_planti
 # (antes fallaban en 0 s y bloqueaban la exportación). En local, con xvfb, corren como siempre.
 if command -v xvfb-run >/dev/null; then
 pasa "menú central: Inicio y las otras dos pestañas caben en 1600x900 y 1280x720, sin desplazamiento (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/probar_menu_central_cabe.tscn" "FIN. 0 fallos"
+pasa "menú central: el informe de la semana se alcanza con foco y Intro, y Esc lo cierra (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x900 res://pruebas/probar_informe_alcanzable.tscn" "FIN. 0 fallos"
 pasa "La Ruta: con mando se llega a todos los botones (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/prueba_ruta_foco.tscn" "FIN. 0 fallos"
 pasa "La Ruta: el foco en el teléfono de pie (con pantalla)" "MOVIL=1 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 608x1080 res://pruebas/prueba_ruta_foco.tscn" "FIN. 0 fallos"
 ## (16-11) A calidad máxima las 19 entregas tardan ~30 min sin GPU: en 6 tandas para caber en los 600 s de cada prueba.
