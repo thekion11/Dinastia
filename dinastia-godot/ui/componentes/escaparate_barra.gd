@@ -102,6 +102,7 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	esc.z_index = 3   ## por encima de las tarjetas que tiene debajo
 	esc.position = Vector2(8, 2)   ## pegado al borde de arriba y colgando por debajo de la barra, como en el PES
 	esc.size = Vector2(112, 112)
 	hueco.add_child(esc)

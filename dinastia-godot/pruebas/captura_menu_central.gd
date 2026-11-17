@@ -35,6 +35,10 @@ func _ready() -> void:
 		TableroInicio.pestana = int(OS.get_environment("PESTANA"))
 		pr._refrescar()
 	await _frames(12)
+	if pr.get("_rueda_pop") != null:   ## la rueda de prensa que sale tras los partidos tapa el menú: fuera, para ver el escaparate
+		(pr.get("_rueda_pop") as Node).queue_free()
+		pr.set("_rueda_pop", null)
+		await _frames(8)
 	print("APERTURA_MS ", Time.get_ticks_msec() - t0)
 	get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://pruebas/capturas/menu_central_%s.png" % OS.get_environment("NOMBRE")))
 	get_tree().quit()
