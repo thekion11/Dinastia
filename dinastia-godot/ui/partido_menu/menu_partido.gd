@@ -274,20 +274,9 @@ func _abrir(clave: String) -> void:
 ## el plan nuevo en su pie. Sin menú lateral (pruebas), queda el panel propio.
 func _abrir_tactica_del_juego() -> bool:
 	var pr := get_parent()
-	var ml = pr.get("_menu_lateral") if pr != null else null
-	if ml == null or not (ml as Node).is_inside_tree():
+	if not (pr is Principal) or (pr as Principal)._menu_lateral == null:
 		return false
-	var sub := -1
-	for m: Dictionary in MenusLaterales.MENUS:
-		if String(m["id"]) != "partido":
-			continue
-		var subs: Array = m["subs"]
-		for i in subs.size():
-			if String((subs[i] as Dictionary).get("tab", "")) == "Táctica" and sub < 0:
-				sub = i
-	if sub < 0:
-		return false
-	var pm = ml.abrir_menu("partido", sub)
+	var pm := PlanPartidoUI.abrir(pr as Principal)
 	if pm == null:
 		return false
 	visible = false
