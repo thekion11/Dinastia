@@ -123,6 +123,7 @@ func _empezar_saque(tipo: String, saca_local: bool, lugar: Vector3) -> void:
 	balon.position = lugar
 	var lanzador := _elegir_lanzador(tipo, saca_local, lugar)
 	saque = {"tipo": tipo, "local": saca_local, "lugar": lugar, "lanzador": lanzador}
+	_offside = {}   ## (16-11, M6-04) la jugada se reinicia: el adelantado de un pase que salió no cuenta en el saque
 	_receptor_i = -1
 	_receptor_marcado = {}
 	if tipo == "corner":
@@ -239,8 +240,7 @@ func _cambiar(sale: Dictionary, entra: Dictionary, entra_es_usuario: bool) -> vo
 	ultimo_cambio = {"sale": sale, "entra": entra, "pos": ns.position}
 	ns.position = Vector3(ANCHO + 2.5, 0, 4.0)
 	ns.visible = false
-	if poseedor == sale:
-		poseedor = {}
+	MotorReglas.limpiar_sale(self as Object as MotorJugable, sale, entra)   ## (16-11, M6-13) ni pases ni toques hacia el que sale
 	if entra_es_usuario:
 		usuario = entra
 	elif sale == usuario:

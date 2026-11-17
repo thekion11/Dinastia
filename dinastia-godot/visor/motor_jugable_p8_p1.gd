@@ -121,7 +121,7 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 func _gatillo_presion(dueno: Dictionary) -> bool:
 	var q := pos(dueno)
 	## Tras perder el balón (fila 18): con contrapresión se muerde más rato; replegando, menos.
-	if t - float(_eq_tomo_en[0 if bool(dueno["es_local"]) else 1]) < [0.3, 0.6, 1.5][clampi(_tac(not bool(dueno["es_local"]), "tras_perdida"), 0, 2)]:
+	if t - float(_eq_tomo_en[0 if bool(dueno["es_local"]) else 1]) < [0.3, 0.6, MotorContrapresion.VENTANA][clampi(_tac(not bool(dueno["es_local"]), "tras_perdida"), 0, 2)]:
 		return true
 	if absf(q.x) > 28.0:
 		return true
@@ -150,7 +150,7 @@ func _linea_defensiva(local: bool) -> float:
 	var trampa := int((tacticas[eq] as Dictionary).get("trampa", 0)) == 1
 	## El portador rival: ¿libre y de cara, o apretado?
 	if not poseedor.is_empty() and bool(poseedor["es_local"]) != local:
-		var libre := _presion(poseedor) > 4.0
+		var libre := _presion(poseedor) > 4.0 and not MotorContrapresion.activa(self as Object as MotorJugable, local)   ## contrapresión: no se recula
 		if libre:
 			z -= d * 4.0
 		elif trampa:
@@ -199,17 +199,15 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 			var ba := b + _plano(poseedor["vel"] as Vector3) * clampf(pos(p).distance_to(b) / 8.0, 0.0, 0.5)
 			return ba + (arco - ba).normalized() * 0.8
 		return b + (arco - b).normalized() * 0.8
+	## CONTRAPRESIÓN («tras la pérdida» ALTO, F-01 16-11): el segundo al portador y los cercanos a las líneas de pase (`MotorContrapresion`).
+	var ocp := MotorContrapresion.objetivo(self as Object as MotorJugable, p, pp)
+	if ocp != Vector3.INF:
+		return ocp
 	if yo != "" and pp[1] == yo:
 		if pres == 2 or (pres == 1 and gatillo):
 			p["correr"] = true
 			return b + (arco - b).normalized() * 2.5
 		return b + (arco - b).normalized() * 7.0
-	## CONTRAPRESIÓN (10-11, «tras la pérdida» ALTO): en la ventana en que el equipo acaba de perder el balón, los que están cerca de él lo aprietan todos
-	## (hasta entonces solo cambiaba al segundo presionador y no se notaba en el juego). Sin la línea defensiva ni el portero, a menos de 9 m.
-	if gatillo and _tac(bool(p["es_local"]), "tras_perdida") >= 2 and not bool(p["por"]) and not (_rol(p) in ["DFC", "LD", "LI"]) and pos(p).distance_to(b) < 9.0 \
-			and t - float(_eq_tomo_en[0 if bool(poseedor["es_local"]) else 1]) < 1.5:
-		p["correr"] = true
-		return b + (arco - b).normalized() * 3.0
 	## MARCAJE A LOS PELIGROSOS (F4, 03-11): un marcador por cada uno de los 3 más peligrosos, con ancla a su puesto.
 	var om := MotorMarcaje.objetivo(self as Object as MotorJugable, p, arco)
 	if om != Vector3.INF:
@@ -329,21 +327,21 @@ func _tacticas_rapidas() -> void:
 		tc["presion"] = int(_tac_base[eq].get("presion", 1))
 		cambio = "presion"
 		aviso.emit("Presión de equipo: se acaba")
-	if Input.is_action_just_pressed("jugar_tac_arriba"):
+	if Mando.pulsado("jugar_tac_arriba"):
 		tc["mentalidad"] = mini(int(tc.get("mentalidad", 1)) + 1, 2)
 		cambio = "mentalidad"
 		aviso.emit("⚔ Mentalidad: %s" % ["defensiva", "equilibrada", "ofensiva"][int(tc["mentalidad"])])
-	elif Input.is_action_just_pressed("jugar_tac_abajo"):
+	elif Mando.pulsado("jugar_tac_abajo"):
 		tc["mentalidad"] = maxi(int(tc.get("mentalidad", 1)) - 1, 0)
 		cambio = "mentalidad"
 		aviso.emit("🛡 Mentalidad: %s" % ["defensiva", "equilibrada", "ofensiva"][int(tc["mentalidad"])])
-	elif Input.is_action_just_pressed("jugar_tac_izquierda"):
+	elif Mando.pulsado("jugar_tac_izquierda"):
 		_tac_base[eq] = tc.duplicate()
 		tc["presion"] = 2
 		cambio = "presion"
 		_presion_equipo_hasta = t + 45.0
 		aviso.emit("🔥 ¡Presión de equipo!")
-	elif Input.is_action_just_pressed("jugar_tac_derecha"):
+	elif Mando.pulsado("jugar_tac_derecha"):
 		tc["amplitud"] = 2 if int(tc.get("amplitud", 1)) < 2 else 1
 		cambio = "amplitud"
 		aviso.emit("↗ Laterales al ataque" if int(tc["amplitud"]) == 2 else "Laterales en su sitio")

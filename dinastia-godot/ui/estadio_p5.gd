@@ -16,8 +16,9 @@ func _montar_motor() -> void:
 	GestoTecnico.fijar_clima(_motor, String(_perfil.get("clima", "")))   ## lluvia, nieve...: pesan en el juego (27-10)
 	_motor.saca_primero_local = partido.saca_local   ## (17-11) el sorteo del menú del partido
 	_motor.preparar(_en_campo, _balon, "", hash(partido.local.id + partido.visita.id) + partido.minuto)
+	_motor.sembrar_del_acta(partido)   ## (16-11, informe M6-05/M6-11) lo del primer tiempo sigue valiendo
 	## La cabeza de cada jugador sigue al balón (M-098).
-	MiradaBalon.poner(_motor.jugadores, _balon)
+	MiradaBalon.poner(_motor.jugadores, _balon, _motor)
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
@@ -136,7 +137,7 @@ func _montar_motor() -> void:
 	## pantalla limpia (sin nombres sobre los 22 ni la pantalla gigante en la
 	## esquina; se pueden encender en ⚙).
 	if _rig != null:
-		var it := _rig.camera_names.find("Transmisión")
+		var it := _rig.camera_names.find("TV lejana" if _pref("tv_lejana", false) else "Transmisión")   ## (16-11) la TV cercana por defecto; la lejana si se eligió
 		if it >= 0 and not (PersonajeDT.sancionado and _rig.current_name().begins_with("Desde la grada")):
 			_rig.switch_to(it)
 			if _btn_camara != null:

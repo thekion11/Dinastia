@@ -265,6 +265,8 @@ func _anotar(c: Club, once: Array[Jugador], es_local: bool) -> void:
 		autor.anotar()
 		_notas[autor.id] = minf(float(_notas.get(autor.id, 6.0)) + 1.1, 10.0)
 	var asistente := _elegir_asistente(once, autor, minuto) if autor != null else null
+	if asistente != null:
+		asistente.asistencias += 1   ## (16-11, informe G-02) el simulado elegía al asistente pero no se lo apuntaba
 	cronica.append({"min": minuto, "tipo": "gol", "club": c.id, "autor": autor.nombre if autor else "?"})
 	_momentum_push(2, es_local)
 	gol.emit(c, autor, minuto, asistente)

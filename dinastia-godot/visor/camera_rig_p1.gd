@@ -1,5 +1,5 @@
 extends Node3D
-## [Capa 1/2 de `camera_rig.gd`] _add, build_for, current_name, _efectos, altura_segura, amortiguar … (+6)
+## [Capa 1/2 de `camera_rig.gd`] _add, build_for, current_name, _efectos, altura_segura, _tv_x … (+6)
 
 ## Sistema multicámara profesional para el estadio y partido 3D.
 ## Soporta 9 tipos de cámara (incluyendo Primera Persona POV, Pro Tercera Persona,
@@ -26,8 +26,15 @@ var _cara_z: float = 62.5
 var _y_principal: float = 11.5
 var _foco_tele: Vector3 = Vector3.ZERO
 const FOV_TELE := 21.0
-const FOV_TRANSMISION := 33.0
-const ALTURA_TRANSMISION := 17.0
+## LA TV CERCANA (16-11, referencia de FC Mobile): el jugador ocupaba ~1/15 del alto de la pantalla («muñequitos»); ahora ~1/8.
+## La cámara se adelanta del raíl hacia el campo (`ACERCA_TRANSMISION`, sin pasar de x=38), baja un poco y cierra la apertura. La de
+## antes (33°, 17 m, en el raíl) sigue como «TV lejana» (última del ciclo; `tv_lejana` en Ajustes la deja por defecto).
+const FOV_TRANSMISION := 21.0
+const ALTURA_TRANSMISION := 15.5
+const ACERCA_TRANSMISION := 4.0
+const FOV_TV_LEJANA := 33.0
+const ALTURA_TV_LEJANA := 17.0
+var _tv_lejana := false
 var _trans_foco := Vector3.ZERO
 var _trans_z := 0.0
 var _trans_fov := FOV_TRANSMISION
@@ -101,8 +108,8 @@ const ALTURA_VMAX := 2.5
 ## La zona muerta (m): dentro de ella el balón se mueve y el plano no.
 const ZONA_MUERTA_X := 1.6
 const ZONA_MUERTA_Z := 2.6
-const FOV_CERCA := 7.5   ## grados que cierra en el área / ocasión
-const FOV_ABRE := 6.0    ## grados que abre en el contraataque
+const FOV_CERCA := 4.0   ## grados que cierra en el área / ocasión (7,5 en la TV lejana: la cercana ya va cerrada)
+const FOV_ABRE := 5.0    ## grados que abre en el contraataque (6 en la TV lejana)
 const CARRO_Z_MAX := 38.0
 ## La cámara «Pro» ajustable (semana 4, 27-10-2026): metros detrás del jugador (la altura va con ella).
 const PRO_DISTANCIAS := {"cerca": 3.0, "normal": 4.2, "lejos": 6.5}
@@ -136,7 +143,7 @@ func build_for(dx: float, dz: float, alto: float) -> void:
 	# 0. TRANSMISIÓN (13-10-2026, comparada con el vídeo de FC 26): alta, desde
 	# la tribuna principal, siguiendo el balón a lo largo del campo y cerrando
 	# el plano cerca del área. Es la cámara del partido con el motor real.
-	_add("Transmisión", Vector3(_dist_tele, ALTURA_TRANSMISION, 0.0), Vector3(0, 0, 0), FOV_TRANSMISION)
+	_add("Transmisión", Vector3(_tv_x(), ALTURA_TRANSMISION, 0.0), Vector3(0, 0, 0), FOV_TRANSMISION)
 
 	# 1. Principal (TV Broadcast clásico)
 	_add("Principal (TV)", Vector3(_cara_x - 2.0, _y_principal, 7.0), centro, 46)
@@ -182,6 +189,9 @@ func build_for(dx: float, dz: float, alto: float) -> void:
 	# quien corre.
 	_add("Árbitro (POV)", Vector3(6.0, 1.75, 8.0), Vector3(0, 1.2, 0), 70)
 
+	# 11. TV LEJANA (16-11): la transmisión de antes de la TV cercana, como opción (al final: no mueve los índices de las demás).
+	_add("TV lejana", Vector3(_dist_tele, ALTURA_TV_LEJANA, 0.0), Vector3(0, 0, 0), FOV_TV_LEJANA)
+
 func current_name() -> String:
 	if camera_names.size() > current_index:
 		return camera_names[current_index]
@@ -197,7 +207,7 @@ func _efectos(delta: float) -> void:
 		var k := _zoom_t / _zoom_dur
 		cam.fov = maxf(cam.fov - _zoom_fuerza * k * k, 10.0)
 	## Solo en los planos que reencuadran cada fotograma (el temblor no se acumula).
-	var reencuadra := current_name() in ["Transmisión", "Tele Dinámica", "Pro (Tercera Persona)", "Primera Persona (POV)", "Desde la grada (sancionado)"]
+	var reencuadra := current_name() in ["Transmisión", "TV lejana", "Tele Dinámica", "Pro (Tercera Persona)", "Primera Persona (POV)", "Desde la grada (sancionado)"]
 	if _sacudida > 0.001 and reencuadra:
 		var a := _sacudida * 0.012
 		var t := Time.get_ticks_msec() * 0.001
@@ -214,24 +224,17 @@ func altura_segura(y: float) -> float:
 		y = losa - 1.2
 	return clampf(y, 9.0, 24.0)
 
-## SmoothDamp (amortiguador crítico de Game Programming Gems 4): llega sin pasarse
-## y con la velocidad acotada. Devuelve (valor, velocidad).
-static func amortiguar(actual: float, objetivo: float, vel: float, tiempo: float, vmax: float, delta: float) -> Vector2:
-	if delta <= 0.0:
-		return Vector2(actual, vel)
-	tiempo = maxf(tiempo, 0.0001)
-	var omega := 2.0 / tiempo
-	var x := omega * delta
-	var e := 1.0 / (1.0 + x + 0.48 * x * x + 0.235 * x * x * x)
-	var cambio := clampf(actual - objetivo, -vmax * tiempo, vmax * tiempo)
-	var meta := actual - cambio
-	var temp := (vel + omega * cambio) * delta
-	var nv := (vel - omega * temp) * e
-	var res := meta + (cambio + temp) * e
-	if (objetivo - actual > 0.0) == (res > objetivo):
-		res = objetivo
-		nv = 0.0
-	return Vector2(res, nv)
+## (`amortiguar`, el SmoothDamp de la cámara, vive en la capa de arriba: `CameraRig.amortiguar`.)
+
+## La TV cercana por defecto o la lejana de antes (16-11): x del raíl, apertura y altura de cada una.
+func _tv_x() -> float:
+	return _dist_tele if _tv_lejana else minf(_dist_tele, maxf(_dist_tele - ACERCA_TRANSMISION, 38.0))
+
+func _tv_fov() -> float:
+	return FOV_TV_LEJANA if _tv_lejana else FOV_TRANSMISION
+
+func _tv_altura() -> float:
+	return ALTURA_TV_LEJANA if _tv_lejana else ALTURA_TRANSMISION
 
 func _transmision(cam: Camera3D, b: Vector3, delta: float) -> void:
 	if delta <= 0.0:
@@ -270,23 +273,23 @@ func _transmision(cam: Camera3D, b: Vector3, delta: float) -> void:
 	## Por la banda de la cámara el foco no pasa de x=4 (si no, plano cenital
 	## encima de los jugadores); con el plano cerrado se deja llegar a x=10
 	## para que un córner o un centro desde esa banda no quede en el borde.
-	foco.x = clampf(foco.x, -18.0, lerpf(4.0, 10.0, trans_cerca))
+	foco.x = clampf(foco.x, -18.0, lerpf(4.0, 10.0, trans_cerca) + (0.0 if _tv_lejana else 4.0))   ## (16-11) la cercana deja llegar 4 m más (si no, el balón de esa banda iba al borde de abajo)
 	foco.z = clampf(foco.z, -47.0, 47.0)
 	## EL BALÓN SIEMPRE EN CUADRO (25-10-2026): con esos topes, una jugada pegada a la banda
 	## de la cámara (x > 22) quedaba por DEBAJO del cuadro y un despeje alto por encima. Si
 	## el balón fuera a salir del margen, el foco se desliza hacia él lo justo (la cámara
 	## baja o sube la cabeza, como el operador).
 	var asp := _aspecto(cam)
-	var desde := Vector3(_dist_tele, _trans_alt, _trans_z) if _trans_ini else \
-		Vector3(_dist_tele, altura_segura(ALTURA_TRANSMISION), clampf(foco.z * 0.78, -CARRO_Z_MAX, CARRO_Z_MAX))
-	foco = CameraRig.foco_con_balon(desde, foco, _trans_fov if _trans_ini else FOV_TRANSMISION, asp, b, MARGEN_SUAVE)
+	var desde := Vector3(_tv_x(), _trans_alt, _trans_z) if _trans_ini else \
+		Vector3(_tv_x(), altura_segura(_tv_altura()), clampf(foco.z * 0.78, -CARRO_Z_MAX, CARRO_Z_MAX))
+	foco = CameraRig.foco_con_balon(desde, foco, _trans_fov if _trans_ini else CameraRig.fov_para_aspecto(_tv_fov(), asp), asp, b, MARGEN_SUAVE)
 	if not _trans_ini:
 		_trans_ini = true
 		_ancla = foco
 		_trans_foco = foco
 		_trans_z = clampf(foco.z * 0.78, -CARRO_Z_MAX, CARRO_Z_MAX)
-		_trans_fov = FOV_TRANSMISION
-		_trans_alt = altura_segura(ALTURA_TRANSMISION)
+		_trans_fov = CameraRig.fov_para_aspecto(_tv_fov(), asp)
+		_trans_alt = altura_segura(_tv_altura())
 	## ZONA MUERTA (más estrecha con el plano cerrado: ahí cada metro cuenta).
 	var zm := 1.0 - 0.6 * trans_cerca
 	var ddx := foco.x - _ancla.x
@@ -297,28 +300,30 @@ func _transmision(cam: Camera3D, b: Vector3, delta: float) -> void:
 		_ancla.z = foco.z - signf(ddz) * ZONA_MUERTA_Z * zm
 	var t_foco := lerpf(0.5, 0.32, trans_cerca)
 	var vmax := lerpf(FOCO_VMAX, FOCO_VMAX_ABIERTO, trans_abre)
-	var rx := amortiguar(_trans_foco.x, _ancla.x, _foco_vx, t_foco, vmax, delta)
-	var rz := amortiguar(_trans_foco.z, _ancla.z, _foco_vz, t_foco, vmax, delta)
+	var rx := CameraRig.amortiguar(_trans_foco.x, _ancla.x, _foco_vx, t_foco, vmax, delta)
+	var rz := CameraRig.amortiguar(_trans_foco.z, _ancla.z, _foco_vz, t_foco, vmax, delta)
 	## La altura del foco (solo se levanta con los balones altos), sin zona muerta.
-	var ry := amortiguar(_trans_foco.y, foco.y, _foco_vy, 0.35, 30.0, delta)
+	var ry := CameraRig.amortiguar(_trans_foco.y, foco.y, _foco_vy, 0.35, 30.0, delta)
 	_trans_foco = Vector3(rx.x, ry.x, rz.x)
 	_foco_vx = rx.y
 	_foco_vy = ry.y
 	_foco_vz = rz.y
 	## El carro de la cámara por la tribuna (algo menos que el foco).
-	var rc := amortiguar(_trans_z, clampf(_trans_foco.z * 0.78, -CARRO_Z_MAX, CARRO_Z_MAX), _cam_vz, 0.9, CARRO_VMAX, delta)
+	var rc := CameraRig.amortiguar(_trans_z, clampf(_trans_foco.z * 0.78, -CARRO_Z_MAX, CARRO_Z_MAX), _cam_vz, 0.9, CARRO_VMAX, delta)
 	_trans_z = rc.x
 	_cam_vz = rc.y
 	## Zoom y altura: cerrar en el área, abrir en la contra.
-	var fov_obj := clampf(FOV_TRANSMISION - FOV_CERCA * trans_cerca + FOV_ABRE * trans_abre + _zoom_usuario, 18.0, 60.0)
-	var rf := amortiguar(_trans_fov, fov_obj, _fov_v, 0.8, ZOOM_VMAX, delta)
+	## En pantallas más estrechas que 16:9 se abre lo justo para ver el mismo ancho de campo (`fov_para_aspecto`).
+	var fov_obj := CameraRig.fov_para_aspecto(clampf(_tv_fov() - (7.5 if _tv_lejana else FOV_CERCA) * trans_cerca \
+		+ (6.0 if _tv_lejana else FOV_ABRE) * trans_abre + _zoom_usuario, 12.0, 60.0), asp)
+	var rf := CameraRig.amortiguar(_trans_fov, fov_obj, _fov_v, 0.8, ZOOM_VMAX, delta)
 	_trans_fov = rf.x
 	_fov_v = rf.y
-	var alt_obj := altura_segura(ALTURA_TRANSMISION - 2.5 * trans_cerca + 2.0 * trans_abre)
-	var ra := amortiguar(_trans_alt, alt_obj, _alt_v, 1.2, ALTURA_VMAX, delta)
+	var alt_obj := altura_segura(_tv_altura() - 2.5 * trans_cerca + 2.0 * trans_abre)
+	var ra := CameraRig.amortiguar(_trans_alt, alt_obj, _alt_v, 1.2, ALTURA_VMAX, delta)
 	_trans_alt = ra.x
 	_alt_v = ra.y
-	cam.global_position = Vector3(_dist_tele, _trans_alt, _trans_z)
+	cam.global_position = Vector3(_tv_x(), _trans_alt, _trans_z)
 	cam.fov = _trans_fov
 	## Garantía dura: con el plano ya movido, el balón nunca pasa del 86 % del cuadro (salvo
 	## justo tras un salto del balón, donde la cámara barre en vez de dar un latigazo).
@@ -381,11 +386,12 @@ func _process(delta: float) -> void:
 	## Al VOLVER a la transmisión desde otra cámara (realización del gol, repetición,
 	## ceremonia, inserto) es un corte: el plano arranca encuadrado donde está el balón ahora,
 	## sin barrer desde donde lo dejó (25-10-2026).
-	if c_name == "Transmisión" and cam.current and not _en_pantalla_antes:
+	_tv_lejana = c_name == "TV lejana"
+	if c_name in ["Transmisión", "TV lejana"] and cam.current and not _en_pantalla_antes:
 		_trans_ini = false
 	_en_pantalla_antes = cam.current
 	match c_name:
-		"Transmisión":
+		"Transmisión", "TV lejana":
 			## Sigue al BALÓN aunque haya un jugador elegido (como en FC: el plano
 			## es de la jugada, no del que manejas).
 			_transmision(cam, balon_ref.global_position if is_instance_valid(balon_ref) else t_pos, delta)
@@ -434,7 +440,7 @@ func switch_to(idx: int) -> void:
 	current_index = idx
 	## Al volver a la transmisión el plano arranca donde está la jugada (sin
 	## un barrido largo desde donde se quedó).
-	if camera_names[idx] == "Transmisión":
+	if camera_names[idx] in ["Transmisión", "TV lejana"]:
 		_trans_ini = false
 	for i in range(cameras.size()):
 		cameras[i].current = (i == idx)

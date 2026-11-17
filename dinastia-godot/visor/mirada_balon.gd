@@ -6,11 +6,13 @@ extends RefCounted
 ## suavizado) DESPUÉS de la animación, así corre, patea o celebra igual pero
 ## mirando la jugada. El modificador lo pone Godot: no cuesta script por
 ## fotograma. Se puede mover el eje con `eje` si un modelo nuevo mira a otro lado.
-##   MiradaBalon.poner(jugadores_del_motor, balon)
+##   MiradaBalon.poner(jugadores_del_motor, balon, motor)
+## (H1, 16-11) Con `motor`, además monta `AnimacionCercana`: la mirada solo en los cercanos a la cámara y al balón, con el pie al
+## balón del que lo toca, de MEDIA hacia arriba; en las calidades bajas y con «Partido ligero» la mirada queda apagada.
 
 static var eje := SkeletonModifier3D.BONE_AXIS_PLUS_Z
 
-static func poner(jugadores: Array, balon: Node3D) -> int:
+static func poner(jugadores: Array, balon: Node3D, motor: Node = null) -> int:
 	if balon == null:
 		return 0
 	var n := 0
@@ -18,6 +20,8 @@ static func poner(jugadores: Array, balon: Node3D) -> int:
 		var nodo: Node = p.get("node")
 		if is_instance_valid(nodo) and poner_en(nodo, balon):
 			n += 1
+	if motor != null:
+		AnimacionCercana.poner(motor, balon)
 	return n
 
 static func poner_en(nodo: Node, objetivo: Node3D) -> bool:

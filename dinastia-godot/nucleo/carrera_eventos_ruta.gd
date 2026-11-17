@@ -4,6 +4,13 @@ extends RefCounted
 ## nuevo del modo (la racha, tu rival, la energía, la fama, tu nivel y tus
 ## ahorros). Mismo formato que los demás eventos de la carrera.
 
+## (16-11, informe R-12) El texto de un evento (o de una decisión del historial) en tu idioma: se traduce la plantilla
+## y DESPUÉS se ponen los nombres y cifras (`<clave>_datos`). Los guardados de antes traen la frase ya armada.
+static func texto(e: Dictionary, clave: String) -> String:
+	var t := Idiomas.t(String(e.get(clave, "")))
+	var d: Variant = e.get(clave + "_datos", [])
+	return t % d if d is Array and not (d as Array).is_empty() and t.count("%") == (d as Array).size() else t
+
 static func eventos(c: CarreraJugador, m: Mundo) -> Array:
 	var p: Array = []
 	var r := CarreraRuta.asegurar(c)

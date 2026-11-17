@@ -97,7 +97,7 @@ func _siguiente_penal() -> void:
 	var eq := tanda_turno()
 	## El orden se rehace cada vez: un cambio de última hora deja fuera al que
 	## salió (su nodo ya no existe) y mete al que entró en su sitio por tiro.
-	tanda["orden"] = [_orden_tanda(true), _orden_tanda(false)]
+	tanda["orden"] = MotorReglas.igualar_tanda([_orden_tanda(true), _orden_tanda(false)])   ## (16-11, M6-17) los mismos lanzadores por equipo
 	var orden: Array = tanda["orden"][eq]
 	var hechos: int = (tanda["tiros"][eq] as Array).size()
 	var lz: Dictionary = orden[hechos % orden.size()] if not orden.is_empty() else {}
@@ -105,6 +105,7 @@ func _siguiente_penal() -> void:
 	for q: Dictionary in jugadores:
 		if bool(q["por"]) and bool(q["es_local"]) != (eq == 0):
 			gk = q
+	if gk.is_empty(): gk = MotorReglas.portero_de_urgencia(tanda["orden"][1 - eq])   ## (M6-17) sin portero, ataja uno de campo
 	## El lanzador anterior vuelve al círculo y el portero que deja de
 	## defender, a su sitio de espera.
 	for antes: Dictionary in [tanda["lanzador"], tanda["portero"]]:

@@ -25,7 +25,7 @@ def abrir(url):
     if not RUTA_VALIDA.fullmatch(ruta) or any(seg in ("..", ".") for seg in ruta.split("/")) or u.query or u.fragment or u.params:
         raise ValueError("ruta no permitida: %r" % url)
     segura = "https://%s%s" % (u.hostname, urllib.parse.quote(ruta, safe="/"))
-    return urllib.request.urlopen(urllib.request.Request(segura, headers={"User-Agent": "Mozilla/5.0"}))
+    return urllib.request.urlopen(urllib.request.Request(segura, headers={"User-Agent": "dinastia-bajar-cc0-modelos"}))  # términos de la API de Poly Haven: identificador propio
 
 def dentro(base, ruta):
     destino = os.path.realpath(os.path.join(base, ruta))

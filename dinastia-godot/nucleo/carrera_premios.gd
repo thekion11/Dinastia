@@ -33,13 +33,24 @@ const MEJORES_CAPITAN := 3
 const PROB_CAPITAN := 0.30           ## por temporada, siendo apto
 const PROB_CAPITAN_TALENTO := 0.45   ## lo que suma el talento «Brazalete»
 
-static func _nota_de(o: Jugador) -> float:
-	if o.notas.size() < 10:
-		return 0.0
-	var s := 0.0
-	for n: float in o.notas:
-		s += n
-	return s / float(o.notas.size())
+## (16-11, informe R-03, en su causa) Los rivales compiten con la nota media de TODA su temporada (`Jugador.nota_temp`,
+## que se reinicia en `nueva_temporada`), no con las 8 últimas de `Jugador.notas`; y se les pide lo mismo que a ti:
+## los partidos que pide el premio (10 en el club, 15 en la liga, 25 en el mundo).
+const PJ_CLUB := 10
+const PJ_LIGA := 15
+const PJ_MUNDIAL := 25
+
+static func _nota_de(o: Jugador, minimo: int) -> float:
+	return o.media_temporada(minimo)
+
+## (16-11, informe R-07) Fama que se queda ENTERA (premios, trofeos, duelo, selección): el freno semanal de
+## `CarreraRuta.semana` frena lo que subió desde `fama_ref`, así que la referencia se corre con lo sumado.
+static func fama_entera(c: CarreraJugador, n: int) -> void:
+	var antes := c.fama
+	c.fama = clampi(c.fama + n, 0, 100)
+	var r := CarreraRuta.asegurar(c)
+	if int(r["fama_ref"]) >= 0:
+		r["fama_ref"] = int(r["fama_ref"]) + c.fama - antes
 
 ## Los premios que te tocan esta temporada (ids). No cambia nada.
 static func ganados(c: CarreraJugador, m: Mundo, gano_duelo: bool) -> Array:
@@ -54,13 +65,13 @@ static func ganados(c: CarreraJugador, m: Mundo, gano_duelo: bool) -> Array:
 	if c.temporadas.is_empty() and pj >= 15 and nota >= 6.6:
 		out.append("revelacion")
 	var mas_goles := true
-	var mejor_nota := pj >= 10 and nota >= 6.8
+	var mejor_nota := pj >= PJ_CLUB and nota >= 6.8
 	for o: Jugador in club.plantilla:
 		if o == j:
 			continue
 		if o.goles >= int(s["goles"]):
 			mas_goles = false
-		if _nota_de(o) >= nota:
+		if _nota_de(o, PJ_CLUB) >= nota:
 			mejor_nota = false
 	if mas_goles and int(s["goles"]) >= 5:
 		out.append("goleador_club")
@@ -68,7 +79,7 @@ static func ganados(c: CarreraJugador, m: Mundo, gano_duelo: bool) -> Array:
 		out.append("mejor_club")
 	if pj >= 20 and nota >= 7.3:
 		out.append("once_ideal")
-	if j.es_portero() and c.vallas_invictas >= 10:
+	if j.es_portero() and int(s.get("vallas", 0)) >= 10:   ## (16-11, informe R-04) las de ESTA temporada, no las de la carrera
 		out.append("muro")
 	if pj >= 30:
 		out.append("hierro")
@@ -86,7 +97,7 @@ static func _de_la_liga(c: CarreraJugador, m: Mundo, j: Jugador, club: Club, mej
 	var pj := int(s["pj"])
 	var nota := c.nota_media()
 	var liga := CarreraRuta._liga_de(m, club)
-	if liga != null and pj >= 15:
+	if liga != null and pj >= PJ_LIGA:
 		var mas_goles := int(s["goles"]) >= 8
 		var mas_asist := int(s["asist"]) >= 6
 		var mejor_nota := nota >= 7.0
@@ -97,8 +108,8 @@ static func _de_la_liga(c: CarreraJugador, m: Mundo, j: Jugador, club: Club, mej
 					continue
 				mas_goles = mas_goles and o.goles < int(s["goles"])
 				mas_asist = mas_asist and o.asistencias < int(s["asist"])
-				mejor_nota = mejor_nota and _nota_de(o) < nota
-				mejor_portero = mejor_portero and not (o.es_portero() and _nota_de(o) >= nota)
+				mejor_nota = mejor_nota and _nota_de(o, PJ_LIGA) < nota
+				mejor_portero = mejor_portero and not (o.es_portero() and _nota_de(o, PJ_LIGA) >= nota)
 		for par: Array in [["goleador_liga", mas_goles], ["asistidor_liga", mas_asist], ["portero_liga", mejor_portero], ["mvp_liga", mejor_nota]]:
 			if bool(par[1]):
 				out.append(String(par[0]))
@@ -109,7 +120,7 @@ static func _de_la_liga(c: CarreraJugador, m: Mundo, j: Jugador, club: Club, mej
 		out.append("mvp_copa")
 	if mejor_del_club and clases.has("continental"):
 		out.append("mvp_continental")
-	if pj >= 25 and nota >= 7.5 and j.ovr >= 84 and _mejor_del_mundo(m, j, _puntos_mundial(nota, int(s["goles"]), int(s["asist"]), clases.size())):
+	if pj >= PJ_MUNDIAL and nota >= 7.5 and j.ovr >= 84 and _mejor_del_mundo(m, j, _puntos_mundial(nota, int(s["goles"]), int(s["asist"]), clases.size())):
 		out.append("mundial")
 	return out
 
@@ -119,7 +130,7 @@ static func _puntos_mundial(nota: float, goles: int, asist: int, titulos: int) -
 static func _mejor_del_mundo(m: Mundo, j: Jugador, mios: float) -> bool:
 	for cl: Club in m.clubes.values():
 		for o: Jugador in cl.plantilla:
-			if o != j and o.notas.size() >= 20 and _puntos_mundial(_nota_de(o), o.goles, o.asistencias, 0) >= mios:
+			if o != j and o.nota_temp.y >= PJ_MUNDIAL and _puntos_mundial(_nota_de(o, PJ_MUNDIAL), o.goles, o.asistencias, 0) >= mios:
 				return false
 	return true
 
@@ -199,13 +210,13 @@ static func cerrar(c: CarreraJugador, m: Mundo) -> Dictionary:
 	var nivel_antes := CarreraRuta.nivel(c)
 	for id: String in ids:
 		CarreraRuta.sumar_xp(c, int(PREMIOS[id][2]))
-		c.fama = mini(100, c.fama + int(PREMIOS[id][3]))
+		fama_entera(c, int(PREMIOS[id][3]))
 	## Los trofeos del club dan experiencia y fama si jugaste al menos cinco partidos.
 	var copas: Array = trofeos(m, club) if int(c.stats_temp["pj"]) >= 5 else []
 	for t: Dictionary in copas:
 		t["xp"] = int(XP_TROFEO[String(t["clase"])][0])
 		CarreraRuta.sumar_xp(c, int(t["xp"]))
-		c.fama = mini(100, c.fama + int(XP_TROFEO[String(t["clase"])][1]))
+		fama_entera(c, int(XP_TROFEO[String(t["clase"])][1]))
 	## El brazalete: cumpliendo lo que pide el club, cada fin de temporada hay una posibilidad; el talento la sube mucho.
 	if not c.capitan and apto_capitan(c, m) and c._rng.randf() < prob_capitan(c):
 		c.capitan = true

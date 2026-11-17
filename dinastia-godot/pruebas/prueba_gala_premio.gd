@@ -23,6 +23,14 @@ func _ready() -> void:
 	## SOLO=trofeo: solo las entregas cuyo id contenga ese texto (a calidad máxima, las 19 tardan ~30 min sin GPU).
 	if OS.get_environment("SOLO") != "":
 		ids = ids.filter(func(x: String) -> bool: return x.contains(OS.get_environment("SOLO")))
+	## (16-11) PARTE=i/n: solo la tanda i de n (las especiales las corren por tandas para caber en sus 600 s).
+	var parte := OS.get_environment("PARTE").split("/")
+	if parte.size() == 2 and int(parte[1]) > 0:
+		var todos := ids.duplicate()
+		ids = []
+		for n: int in todos.size():
+			if n % int(parte[1]) == int(parte[0]) - 1:
+				ids.append(todos[n])
 	for id: String in ids:
 		var liga: Liga = m.ligas[(k * 3) % m.ligas.size()]
 		var club: Club = liga.clubes[(k * 5 + 2) % liga.clubes.size()]

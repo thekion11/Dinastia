@@ -210,8 +210,9 @@ static func textura_botin(clave: String, c1: Color, c2: Color, c3: Color, ancho_
 	_cache[k] = t
 	return t
 
-## Uniforms del shader para esta equipación (los usa `VestidorQ`).
-static func uniforms(kit: Dictionary, dorsal: int) -> Dictionary:
+## Uniforms del shader para esta equipación (los usa `VestidorQ`). `nombre`: el apellido que va en la espalda sobre el dorsal
+## (17-11; "" = sin nombre).
+static func uniforms(kit: Dictionary, dorsal: int, nombre: String = "") -> Dictionary:
 	var cols := colores(kit)
 	var d := diseno(String(kit.get("dis", "liso")))
 	var pant: Dictionary = kit.get("pant", {})
@@ -230,6 +231,8 @@ static func uniforms(kit: Dictionary, dorsal: int) -> Dictionary:
 		"color_botines": _col(bot.get("c1", bm[3])), "bot_c2": _col(bot.get("c2", bm[4])), "bot_c3": _col(bot.get("c3", bm[5])),
 		"bot_dis": int(bm[2]),
 		"dorsal": dorsal, "color_num": _col(kit.get("num", "ffffff")),
+		"color_num_borde": ribete_numero(_col(kit.get("num", "ffffff")), cols.slice(0, clampi(int(d[7]), 1, 5))),
+		"nombre_c": letras_nombre(nombre), "nombre_n": largo_nombre(letras_nombre(nombre)) if dorsal > 0 else 0,
 		"cuello": int(kit.get("cuello", 0)),
 		"civil": bool(kit.get("civil", false)),
 		## La ropa de calle tapa casi todo el relieve; la camiseta de juego,
@@ -263,3 +266,67 @@ static func uniforms(kit: Dictionary, dorsal: int) -> Dictionary:
 			u["sp_" + z] = SponsorKit.textura(String(info.get("marca", "")), hx, SponsorKit.color_letras(hx, fondo), solo)
 			u["sp_asp_" + z] = SponsorKit.aspecto(String(info.get("marca", "")), hx, SponsorKit.color_letras(hx, fondo), solo)
 	return u
+
+## ------------------------------------------------ EL DORSAL Y EL NOMBRE DE LA ESPALDA (17-11, `visor/dorsal_q.gdshaderinc`)
+
+const NOMBRE_MAX := 12
+const _SIN_TILDE := {"Á": "A", "À": "A", "Â": "A", "Ä": "A", "Ã": "A", "Å": "A", "É": "E", "È": "E", "Ê": "E", "Ë": "E", "Í": "I", "Ì": "I",
+	"Î": "I", "Ï": "I", "Ó": "O", "Ò": "O", "Ô": "O", "Ö": "O", "Õ": "O", "Ø": "O", "Ú": "U", "Ù": "U", "Û": "U", "Ü": "U", "Ñ": "N",
+	"Ç": "C", "Ý": "Y", "Ÿ": "Y", "Š": "S", "Ž": "Z", "Ć": "C", "Č": "C", "Ł": "L", "Ś": "S", "Ź": "Z", "Ż": "Z", "Ő": "O", "Ű": "U",
+	"Ğ": "G", "Ş": "S", "İ": "I", "Ę": "E", "Ą": "A", "Ń": "N", "Ř": "R", "Ě": "E", "Ů": "U", "Ď": "D", "Ť": "T", "Ň": "N", "’": "'"}
+
+## Las letras del apellido para el shader: 12 enteros (A-Z = 1-26, «.» 27, «-» 28, «'» 29, 0 = espacio); las tildes y la Ñ pasan a
+## su letra base y lo que no se puede escribir se quita. Más de 12 letras: se corta.
+static func letras_nombre(nombre: String) -> PackedInt32Array:
+	var r := PackedInt32Array()
+	r.resize(NOMBRE_MAX)
+	r.fill(0)
+	var i := 0
+	for ch in nombre.strip_edges().to_upper():
+		if i >= NOMBRE_MAX:
+			break
+		var c := String(_SIN_TILDE.get(ch, ch))
+		var u := c.unicode_at(0)
+		if u >= 65 and u <= 90:
+			r[i] = u - 64
+		elif c == ".":
+			r[i] = 27
+		elif c == "-":
+			r[i] = 28
+		elif c == "'":
+			r[i] = 29
+		elif c != " ":
+			continue
+		i += 1
+	return r
+
+## Cuántas letras ocupa (hasta la última escrita).
+static func largo_nombre(letras: PackedInt32Array) -> int:
+	for i in range(letras.size() - 1, -1, -1):
+		if letras[i] != 0:
+			return i + 1
+	return 0
+
+## El apellido que va a la espalda (la última palabra del nombre visible, como el rótulo del partido).
+static func apellido_espalda(nombre: String) -> String:
+	var partes := nombre.strip_edges().split(" ", false)
+	return String(partes[partes.size() - 1]) if partes.size() > 0 else ""
+
+## Contraste WCAG entre dos colores (1 = igual, 21 = blanco sobre negro).
+static func contraste(a: Color, b: Color) -> float:
+	var la := a.srgb_to_linear().get_luminance()
+	var lb := b.srgb_to_linear().get_luminance()
+	return (maxf(la, lb) + 0.05) / (minf(la, lb) + 0.05)
+
+## El ribete del dorsal: si el número se pierde sobre alguno de los colores de la camiseta (rayas incluidas), un borde del tono
+## opuesto al número; alfa = grosor en unidades de la caja del dígito (0 = sin ribete: el número ya se lee solo).
+static func ribete_numero(num: Color, fondos: Array) -> Color:
+	var peor := 21.0
+	for f: Color in fondos:
+		peor = minf(peor, contraste(num, f))
+	if peor >= 4.5:
+		return Color(0, 0, 0, 0)
+	var oscuro := num.srgb_to_linear().get_luminance() > 0.25
+	var tono := Color(0.06, 0.06, 0.09) if oscuro else Color(0.97, 0.97, 0.97)
+	tono.a = 0.075 if peor < 2.5 else 0.05
+	return tono

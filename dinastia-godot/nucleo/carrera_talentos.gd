@@ -27,8 +27,9 @@ static func aprender(c: CarreraJugador, m: Mundo, talento: String) -> bool:
 			j.moral = 70
 	return true
 
-## PULIR: un punto de talento también vale por +2 en un atributo (cuando ya
-## aprendiste lo que querías, los puntos siguen sirviendo).
+## PULIR: un punto de talento también vale, cuando ya aprendiste lo que querías, por los puntos de habilidad de un
+## nivel gastados en esa zona (a su precio de hoy; lo que sobre queda como puntos de habilidad). (16-11, informe R-08)
+## Antes daba +2 a la zona sin coste creciente: a nivel alto valía diez niveles de puntos de habilidad.
 static func puede_pulir(c: CarreraJugador, m: Mundo, attr: String) -> bool:
 	var j := c.jugador(m)
 	return j != null and int(CarreraRuta.asegurar(c)["puntos"]) > 0 and j.atributos.has(attr) and int(j.atributos[attr]) < 99
@@ -37,15 +38,18 @@ static func pulir(c: CarreraJugador, m: Mundo, attr: String) -> bool:
 	if not puede_pulir(c, m, attr):
 		return false
 	var r := CarreraRuta.asegurar(c)
-	var j := c.jugador(m)
 	r["puntos"] = int(r["puntos"]) - 1
-	var antes_attr := int(j.atributos[attr])
-	j.atributos[attr] = mini(99, antes_attr + 2)
-	if not r.get("pulidos") is Dictionary:
-		r["pulidos"] = {}   ## cuánto llevas repartido en cada atributo (lo enseña «Tu juego»)
-	(r["pulidos"] as Dictionary)[attr] = int((r["pulidos"] as Dictionary).get(attr, 0)) + int(j.atributos[attr]) - antes_attr
-	var antes := j.ovr
-	j.ovr = maxi(j.ovr, j.media_en(j.pos_e))
-	if j.ovr != antes:
-		j.tasar()
+	r["hab"] = CarreraHabilidad.puntos(c) + CarreraHabilidad.PUNTOS_POR_NIVEL
+	var j := c.jugador(m)
+	var presupuesto := CarreraHabilidad.PUNTOS_POR_NIVEL
+	while presupuesto > 0:
+		var mejor := ""
+		for par: Array in CarreraHabilidad.de_zona(attr):
+			var h := String(par[0])
+			if CarreraHabilidad.valor(c, j, h) < 99 and (mejor == "" or CarreraHabilidad.coste(c, j, h) < CarreraHabilidad.coste(c, j, mejor)):
+				mejor = h
+		if mejor == "" or CarreraHabilidad.coste(c, j, mejor) > presupuesto:
+			break
+		presupuesto -= CarreraHabilidad.coste(c, j, mejor)
+		CarreraHabilidad.subir(c, m, mejor)
 	return true

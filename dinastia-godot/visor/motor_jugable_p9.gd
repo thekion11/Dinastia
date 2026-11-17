@@ -83,7 +83,7 @@ func _pase_manual(p: Dictionary, dir: Vector3, dist: float, por_arriba: bool) ->
 	if por_arriba:
 		_patear(p, destino, clampf(dist * 0.45 + 6.0, 10.0, 19.0), 2.0, 0.0, "pase")
 	else:
-		_patear(p, destino, clampf(velocidad_para(dist, 4.0), 7.0, 24.0), 0.0, 0.0, "pase")
+		_patear(p, destino, clampf(_velocidad_pase_manual(dist), 7.0, 24.0), 0.0, 0.0, "pase")
 	pase_a = _companero_cerca(p, destino)
 	_pase_eq = 0 if bool(p["es_local"]) else 1
 	pases[_pase_eq] += 1
@@ -96,6 +96,7 @@ func _centro_usuario(p: Dictionary, arco: Vector3, d: float, lb: bool, rb: bool)
 	var destino := Vector3(_rng.randf_range(-3, 3), 1.6, arco.z - d * 7.0)
 	var vh := 17.0
 	var efecto := -signf(pos(p).x) * 6.0 * -d
+	_ctx_golpeo = "centro"   ## (16-11, M6-14) ANTES de patear: el gesto es el del centro (y no se queda pendiente para el siguiente golpeo)
 	if lb:
 		destino.y = 2.2
 		destino.z = arco.z - d * 9.0
@@ -106,11 +107,8 @@ func _centro_usuario(p: Dictionary, arco: Vector3, d: float, lb: bool, rb: bool)
 		_patear(p, destino, 23.0, 0.0, efecto * 0.4, "pase")
 	else:
 		_patear(p, destino, vh, 0.0, efecto, "pase")
-	_ctx_golpeo = "centro"
 	pase_a = _companero_cerca(p, destino)
-	stats["pases"] += 1
-	_pase_usuario_vivo = true
-	_pase_usuario_de = usuario
+	_pase_usuario_vivo = false   ## (16-11, M6-25) el centro no es un pase, ni en el equipo (`pases[]`) ni en tus cifras (`stats`)
 
 ## El compañero que sale a presionar con RB: el más cercano al rival.
 func _segundo_presionador(p: Dictionary, menos: Dictionary = {}) -> Dictionary:
@@ -193,12 +191,12 @@ func _control_balon_inicio(p: Dictionary, d: float, mv: Vector2, mundo: Vector3,
 	## EL PORTERO CON EL BALÓN EN LAS MANOS: X saque largo (de volea),
 	## A pase corto con la mano.
 	if bool(p["por"]):
-		if Input.is_action_just_pressed("jugar_centro"):
+		if Mando.pulsado("jugar_centro"):
 			var lejos := pos(p) + Vector3(-mv.x * d * 12.0, 0, d * 46.0)
 			lejos.x = clampf(lejos.x, -ANCHO + 4.0, ANCHO - 4.0)
 			_patear(p, lejos, 22.0, 6.0, 0.0, "patear")
 			return true
-		if Input.is_action_just_pressed("jugar_pase"):
+		if Mando.pulsado("jugar_pase"):
 			var qm := _companero_en_direccion(p, dir_mira)
 			if not qm.is_empty():
 				_pasar_a(p, qm)
@@ -206,8 +204,8 @@ func _control_balon_inicio(p: Dictionary, d: float, mv: Vector2, mundo: Vector3,
 			return true
 	## PASE ELEGANTE (LT + A o X): de tacón, rabona o exterior. Bonito y
 	## algo menos preciso.
-	if lt and (Input.is_action_just_pressed("jugar_pase") or Input.is_action_just_pressed("jugar_centro")):
-		var largo_e := Input.is_action_just_pressed("jugar_centro")
+	if lt and (Mando.pulsado("jugar_pase") or Mando.pulsado("jugar_centro")):
+		var largo_e := Mando.pulsado("jugar_centro")
 		var qe := _companero_en_direccion(p, dir_mira)
 		if not qe.is_empty():
 			_error_extra = 1.35
@@ -230,7 +228,7 @@ func _control_balon_inicio(p: Dictionary, d: float, mv: Vector2, mundo: Vector3,
 		p["freno"] = 0.8 if rb else 0.9
 	## Filigranas del stick derecho (y R3, y LB+RB atrás).
 	var fil := _gestos.leer(rel, t, lb, lt, rb, sprint) if float(p.get("gesto_hasta", 0.0)) < t else {}
-	if Input.is_action_just_pressed("jugar_sombrero"):
+	if Mando.pulsado("jugar_sombrero"):
 		fil = {"id": "sombrero_corto", "lado": 1.0}
 	if lb and rb and mundo.length() > 0.5 and mundo.normalized().dot(fwd) < -0.6 and float(p.get("gesto_hasta", 0.0)) < t:
 		fil = {"id": "arrastre", "lado": 1.0}
@@ -257,7 +255,7 @@ func _control_tiro(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, lb: boo
 		elif lt and _mods_carga == "":
 			_mods_carga = "raso"
 		## AMAGO DE TIRO: con la carga en marcha, Pase o Centro lo cancela.
-		if Input.is_action_just_pressed("jugar_pase") or Input.is_action_just_pressed("jugar_centro"):
+		if Mando.pulsado("jugar_pase") or Mando.pulsado("jugar_centro"):
 			cargando = false
 			carga = 0.0
 			_filigrana(p, "amago_rabona" if lt else "amago_tiro", 1.0)
@@ -284,7 +282,7 @@ func _control_tiro(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, lb: boo
 
 ## Con el balón: pase, filtrado, pase largo y centro (un botón por turno).
 func _control_pases(p: Dictionary, d: float, mundo: Vector3, lb: bool, rb: bool, dir_mira: Vector3) -> void:
-	if Input.is_action_just_pressed("jugar_pase"):
+	if Mando.pulsado("jugar_pase"):
 		## La devolución de la pared: el que la pidió corre al hueco.
 		if not _pared.is_empty() and t < float(_pared["hasta"]) and _pared["de"] != p and not lb:
 			var de: Dictionary = _pared["de"]
@@ -303,18 +301,18 @@ func _control_pases(p: Dictionary, d: float, mundo: Vector3, lb: bool, rb: bool,
 					## LB + A: PARED. El que la da arranca al espacio y la
 					## pide de vuelta (3,5 s para devolverla con Pase).
 					_pared = {"de": p, "hasta": t + 3.5}
-	elif Input.is_action_just_pressed("jugar_filtrado"):
+	elif Mando.pulsado("jugar_filtrado"):
 		var q2 := _companero_en_direccion(p, mundo if mundo.length() > 0.1 else Vector3(0, 0, d))
 		if not q2.is_empty():
 			## LB + Y bombeado por encima de la defensa; RB + Y tenso.
 			_pasar_a(p, q2, lb, true, rb)
-	elif Input.is_action_just_pressed("jugar_pase_largo") and Mando.ayuda("pase") == "manual":
+	elif Mando.pulsado("jugar_pase_largo") and Mando.ayuda("pase") == "manual":
 		_pase_manual(p, dir_mira, 28.0, true)
-	elif Input.is_action_just_pressed("jugar_pase_largo"):
+	elif Mando.pulsado("jugar_pase_largo"):
 		var q3 := _companero_en_direccion(p, mundo if mundo.length() > 0.1 else Vector3(0, 0, d))
 		if not q3.is_empty():
 			_pasar_a(p, q3, true)
-	elif Input.is_action_just_pressed("jugar_centro"):
+	elif Mando.pulsado("jugar_centro"):
 		var arco := _arco_rival(p)
 		## En tres cuartos de cancha rival es un centro; antes, un pase largo.
 		if absf(arco.z - pos(p).z) < 38.0:
@@ -346,7 +344,7 @@ func _control_sin_balon(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, rb
 			_manual_hasta = t + 1.5
 			return
 	## RB + A: falta táctica (agarrón): corta la contra con amarilla segura.
-	if rb and Input.is_action_just_pressed("jugar_pase") and rival_con_balon and pos(poseedor).distance_to(pos(p)) < 2.4:
+	if rb and Mando.pulsado("jugar_pase") and rival_con_balon and pos(poseedor).distance_to(pos(p)) < 2.4:
 		_anim(p, "falta_empujon", true)
 		_falta_tactica = true
 		_falta(p, poseedor, 0.25, "", "agarron")
@@ -363,7 +361,7 @@ func _control_sin_balon(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, rb
 	## RB mantenido: el compañero más cercano va a presionar al que la lleva.
 	## Doble toque y mantener: van DOS (el segundo tapa al receptor más
 	## cercano).
-	if Input.is_action_just_pressed("jugar_mod"):
+	if Mando.pulsado("jugar_mod"):
 		_presion_doble = t - _rb_ultimo < 0.3
 		_rb_ultimo = t
 	if rb and rival_con_balon:
@@ -389,7 +387,7 @@ func _control_sin_balon(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, rb
 			p["manual"] = Vector3.ZERO
 		return
 	## Y: mantener = sale el portero; doble toque = se va al palo largo.
-	if Input.is_action_just_pressed("jugar_filtrado"):
+	if Mando.pulsado("jugar_filtrado"):
 		if t - _y_ultimo < 0.3:
 			_palo_largo_hasta = t + 3.0
 			aviso.emit("🧤 Portero al palo largo")
@@ -399,10 +397,10 @@ func _control_sin_balon(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, rb
 			if bool(gk["por"]) and bool(gk["es_local"]) == bool(p["es_local"]) and gk != p:
 				gk["objetivo"] = balon.position
 				gk["correr"] = true
-	if Input.is_action_just_pressed("jugar_tiro") and float(p["enfriar"]) <= 0.0:
+	if Mando.pulsado("jugar_tiro") and float(p["enfriar"]) <= 0.0:
 		if rival_con_balon and pos(poseedor).distance_to(pos(p)) < 1.8:
 			_entrada(p, false)
-		elif poseedor.is_empty() and balon.position.distance_to(pos(p)) < 1.6:
+		elif poseedor.is_empty() and balon.position.distance_to(pos(p)) < 1.6 and not _pitar_offside(p):   ## (16-11, M6-04)
 			## Despeje / remate de primera.
 			var arco2 := _arco_rival(p)
 			if absf(arco2.z - pos(p).z) < 25.0:
@@ -412,7 +410,7 @@ func _control_sin_balon(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, rb
 				_tirar(p, Vector2(clampf(largo2 * 0.75 - mv.x * d * 0.35, -1.0, 1.0), -0.35), 0.8)
 			else:
 				_patear(p, pos(p) + Vector3(0, 0, d * 25.0), 22.0, 4.0, 0.0, "patear")
-	if Input.is_action_just_pressed("jugar_centro") and float(p["enfriar"]) <= 0.0:
+	if Mando.pulsado("jugar_centro") and float(p["enfriar"]) <= 0.0:
 		## Barrida: más alcance, más riesgo. Se lanza al suelo hacia donde va
 		## el rival y la entrada se decide al llegar (`_seguir_barrida`); antes
 		## saltaba 1,6 m en un fotograma y la entrada se resolvía a distancia.
@@ -421,7 +419,7 @@ func _control_sin_balon(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, rb
 		else:
 			_anim(p, "falta_barrida", true)
 			p["enfriar"] = 1.2
-	if Input.is_action_just_pressed("jugar_pedir"):
+	if Mando.pulsado("jugar_pedir"):
 		pedido_hasta = t + 2.5
 		aviso.emit("🙋 ¡Pide el balón!")
 		_anim(p, "pedir_balon", true)

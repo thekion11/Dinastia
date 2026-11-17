@@ -2,15 +2,12 @@ class_name Jugador
 extends RefCounted
 ## Un futbolista.
 ##
-## En el HTML esto era un diccionario suelto y unas quince funciones globales
-## que lo recibian por parametro (`genAtributos(j)`, `calcEco(j)`, `factorEdad(j)`,
-## `aptitud(j,pos)`...). Aqui es una clase: el dato y lo que se puede hacer con
-## el viajan juntos, no hay forma de llamar a `calcEco` con medio jugador, y el
-## autocompletado del editor dice que existe y que no.
+## En el HTML esto era un diccionario suelto y unas quince funciones globales que lo recibian por parametro
+## (`genAtributos(j)`, `calcEco(j)`, `factorEdad(j)`, `aptitud(j,pos)`...). Aqui es una clase: el dato y lo que
+## se puede hacer con el viajan juntos, y no hay forma de llamar a `calcEco` con medio jugador.
 ##
-## Las FORMULAS son las mismas del HTML, no una version nueva. Portar, no
-## reescribir: el equilibrio economico del juego costo una depuracion entera y
-## no se toca al mudar de motor.
+## Las FORMULAS son las mismas del HTML, no una version nueva. Portar, no reescribir: el equilibrio
+## economico del juego costo una depuracion entera y no se toca al mudar de motor.
 
 ## Se emite cuando el jugador se lesiona, para que se entere quien quiera
 ## (la interfaz, el parte medico, el DT) sin que el simulador conozca a nadie.
@@ -119,10 +116,10 @@ var goles: int = 0
 var asistencias: int = 0
 var partidos: int = 0
 
-## Las notas de los ultimos partidos. Se guardan las ocho ultimas, como en el
-## HTML: con mas, un mal mes queda enterrado bajo el buen ano anterior y la
-## media deja de decir como esta el jugador AHORA.
+## Las notas de los ultimos partidos. Se guardan las ocho ultimas, como en el HTML: con mas, un mal mes queda
+## enterrado bajo el buen ano anterior y la media deja de decir como esta el jugador AHORA.
 var notas: Array[float] = []
+var nota_temp := Vector2.ZERO   ## (16-11, informe R-03) suma (x) y partidos (y) con nota de ESTA temporada: los premios de La Ruta
 
 var valor: int = 0
 var sueldo: int = 0
@@ -304,12 +301,15 @@ func _to_string() -> String:
 
 func anotar_nota(n: float) -> void:
 	notas.append(n)
+	nota_temp += Vector2(n, 1.0)
 	if notas.size() > 8:
 		notas.remove_at(0)
 
-## La media de las ultimas notas, o 0 si todavia no ha jugado lo suficiente para
-## que signifique algo. Devolver 6 por defecto seria peor: pondria a los que no
-## juegan por delante de los que juegan mal.
+## La nota media de la temporada (0 con menos de `minimo` partidos con nota), la que compara La Ruta.
+func media_temporada(minimo: int = 1) -> float:
+	return nota_temp.x / nota_temp.y if nota_temp.y >= maxf(1.0, float(minimo)) else 0.0
+
+## La media de las ultimas notas, o 0 si todavia no ha jugado lo suficiente (6 por defecto pondria a los que no juegan por delante de los que juegan mal).
 func media_notas(minimo: int = 3) -> float:
 	if notas.size() < minimo:
 		return 0.0

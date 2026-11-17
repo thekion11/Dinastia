@@ -388,7 +388,7 @@ func _mover_balon(delta: float) -> void:
 	var c: Dictionary = poseedor
 	var toques := int(c.get("toques", 0)) if not c.is_empty() else -1
 	super(delta)
-	if not fase3 or c.is_empty() or poseedor != c or int(c.get("toques", 0)) == toques or estado != "juego":
+	if not fase3 or _sin_toque_league() or c.is_empty() or poseedor != c or int(c.get("toques", 0)) == toques or estado != "juego":
 		return
 	var yo := ls(pos(c))
 	var cerca := INF

@@ -212,6 +212,7 @@ static func sombras(nodo: Node3D, x0: float, z_centro: float) -> void:
 			mejor = l
 	if mejor != null:
 		mejor.shadow_enabled = Calidad.sombra_solar(Calidad.elegida)   ## (10-11) en ULTRA BAJA y BAJA las luces no proyectan sombra (vigilante p6_calidad_minima)
+		mejor.add_to_group(Calidad.GRUPO_SOMBRA_ALTA)   ## (16-11) y si la calidad baja con el túnel abierto, la pierde (`Calidad.aplicar_viewport`)
 		mejor.shadow_bias = 0.05
 		mejor.shadow_blur = 1.5
 

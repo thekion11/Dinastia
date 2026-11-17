@@ -176,7 +176,7 @@ static func _decisiones(c: CarreraJugador) -> Control:
 		v.add_child(E.lbl(14, E.SUAVE, "Aún no has decidido nada."))
 	for i in range(c.historial.size() - 1, maxi(-1, c.historial.size() - 9), -1):
 		var h: Dictionary = c.historial[i]
-		var l := E.lbl(12, E.SUAVE, "%d/%d · %s → %s" % [int(h["anio"]), int(h["semana"]), Idiomas.t(String(h["titulo"])), Idiomas.t(String(h["eleccion"]))])
+		var l := E.lbl(12, E.SUAVE, "%d/%d · %s → %s" % [int(h["anio"]), int(h["semana"]), CarreraEventosRuta.texto(h, "titulo"), CarreraEventosRuta.texto(h, "eleccion")])
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		v.add_child(l)
 	return p
