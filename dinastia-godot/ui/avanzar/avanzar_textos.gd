@@ -69,8 +69,6 @@ static func cifras(ev: Dictionary, m: Mundo) -> Array:
 					media += n
 				media = media / maxf(float(j.notas.size()), 1.0)
 				return [[str(j.goles), Idiomas.t("goles")], [str(j.asistencias), Idiomas.t("asistencias")], ["%.1f" % media, Idiomas.t("nota media")]]
-		"ultimatum":
-			return [[str(int(d.get("confianza", 0))), Idiomas.t("confianza de la directiva")]]
 		"golpe_caja":
 			return [[str(int(d.get("importe", 0))), Idiomas.t("importe")], [str(int(d.get("semanas", 0))), Idiomas.t("semanas para pagar")]]
 		"sancion_dt":

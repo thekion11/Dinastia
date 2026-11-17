@@ -21,11 +21,18 @@ func _armar(pr: Node, club: Club) -> void:
 	banda.color = Color(col.darkened(0.55), 0.92)
 	banda.anchor_right = 1.0; banda.anchor_bottom = 0.17
 	_raiz.add_child(banda)
+	var tit := VBoxContainer.new()   ## la franja oscura con el color del evento: rótulo pequeño de categoría arriba y el título debajo (como la maqueta)
+	tit.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tit.alignment = BoxContainer.ALIGNMENT_CENTER
+	tit.add_theme_constant_override("separation", 0)
+	var cat := EstiloAvanzar.etiqueta(Idiomas.t("Mercado"), 15, Color(1, 1, 1, 0.7), false, true)
+	cat.add_theme_font_override("font", EstiloAvanzar.fuente_rotulo())
+	cat.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	tit.add_child(cat)
 	var t := EstiloAvanzar.etiqueta(Idiomas.t("Último día del periodo de transferencias"), 46, Color.WHITE, true, true)
-	t.set_anchors_preset(Control.PRESET_FULL_RECT)
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	t.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	banda.add_child(t)
+	tit.add_child(t)
+	banda.add_child(tit)
 	var centro := VBoxContainer.new()
 	centro.anchor_left = 0.0; centro.anchor_right = 1.0; centro.anchor_top = 0.2; centro.anchor_bottom = 0.95
 	centro.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -48,10 +55,13 @@ func _armar(pr: Node, club: Club) -> void:
 	centro.add_child(n)
 	var esc := TextureRect.new()
 	esc.texture = Escudo.textura(club, 96)
-	esc.custom_minimum_size = Vector2(0, 84)
+	esc.custom_minimum_size = Vector2(0, 72)
 	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	centro.add_child(esc)
+	var nombre := EstiloAvanzar.etiqueta(club.nombre, 24, Color.WHITE, true, true)
+	nombre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	centro.add_child(nombre)
 	var seguir := boton(Idiomas.t("Continuar"), true)
 	seguir.anchor_left = 0.5; seguir.anchor_right = 0.5; seguir.anchor_top = 1.0; seguir.anchor_bottom = 1.0
 	seguir.offset_left = 360.0; seguir.offset_right = 600.0; seguir.offset_top = -86.0; seguir.offset_bottom = -26.0
