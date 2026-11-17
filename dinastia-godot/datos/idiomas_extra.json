@@ -8972,7 +8972,9 @@
   "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "You will move to the next day. The transfer market will close. Do you want to continue?",
   "Avanzar 1 día": "Advance 1 day",
   "No": "No",
-  "Sí": "Yes"
+  "Sí": "Yes",
+  "Calendario de la temporada": "Season calendar",
+  "Calendario nacional": "National calendar"
  },
  "pt": {
   "Historia": "História",
@@ -17947,7 +17949,9 @@
   "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Você avançará para o dia seguinte. O mercado de transferências fechará. Deseja continuar?",
   "Avanzar 1 día": "Avançar 1 dia",
   "No": "Não",
-  "Sí": "Sim"
+  "Sí": "Sim",
+  "Calendario de la temporada": "Calendário da temporada",
+  "Calendario nacional": "Calendário nacional"
  },
  "patrones": [
   [
@@ -33194,7 +33198,9 @@
   "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Vous passerez au jour suivant. Le marché des transferts fermera. Voulez-vous continuer ?",
   "Avanzar 1 día": "Avancer d'un jour",
   "No": "Non",
-  "Sí": "Oui"
+  "Sí": "Oui",
+  "Calendario de la temporada": "Calendrier de la saison",
+  "Calendario nacional": "Calendrier national"
  },
  "it": {
   "Historia": "Storia",
@@ -42169,7 +42175,9 @@
   "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Passerai al giorno successivo. Il mercato chiuderà. Vuoi continuare?",
   "Avanzar 1 día": "Avanza di 1 giorno",
   "No": "No",
-  "Sí": "Sì"
+  "Sí": "Sì",
+  "Calendario de la temporada": "Calendario della stagione",
+  "Calendario nacional": "Calendario nazionale"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51144,7 +51152,9 @@
   "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Du gehst zum nächsten Tag. Der Transfermarkt schließt. Möchtest du fortfahren?",
   "Avanzar 1 día": "1 Tag weiter",
   "No": "Nein",
-  "Sí": "Ja"
+  "Sí": "Ja",
+  "Calendario de la temporada": "Saisonkalender",
+  "Calendario nacional": "Nationaler Kalender"
  },
  "ca": {
   "Historia": "Història",
@@ -60119,7 +60129,9 @@
   "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Passaràs al dia següent. El mercat de fitxatges tancarà. Vols continuar?",
   "Avanzar 1 día": "Avançar 1 dia",
   "No": "No",
-  "Sí": "Sí"
+  "Sí": "Sí",
+  "Calendario de la temporada": "Calendari de la temporada",
+  "Calendario nacional": "Calendari nacional"
  },
  "pl": {
   "Club": "Klub",
@@ -69094,7 +69106,9 @@
   "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Przejdziesz do następnego dnia. Rynek transferowy się zamknie. Chcesz kontynuować?",
   "Avanzar 1 día": "Przejdź o 1 dzień",
   "No": "Nie",
-  "Sí": "Tak"
+  "Sí": "Tak",
+  "Calendario de la temporada": "Kalendarz sezonu",
+  "Calendario nacional": "Kalendarz krajowy"
  },
  "tr": {
   "Club": "Kulüp",
@@ -78069,6 +78083,8 @@
   "Avanzarás al día siguiente. El mercado de fichajes cerrará. ¿Quieres continuar?": "Ertesi güne geçeceksin. Transfer piyasası kapanacak. Devam etmek istiyor musun?",
   "Avanzar 1 día": "1 gün ilerle",
   "No": "Hayır",
-  "Sí": "Evet"
+  "Sí": "Evet",
+  "Calendario de la temporada": "Sezon takvimi",
+  "Calendario nacional": "Ulusal takvim"
  }
 }
