@@ -22,7 +22,7 @@ var saca_local := true         ## el sorteo del saque inicial (se decide al abri
 var sorteo_visto := false      ## la moneda gira solo la primera vez
 var _cuerpo: VBoxContainer     ## el contenido del panel abierto
 var _botones: Dictionary = {}
-var _modal: PanelContainer
+var _modal: Control             ## la pantalla completa de la pestaña abierta (fondo de la previa + su tarjeta)
 var _titulo_modal: Label
 var _pie: Label
 var _abierta := ""
@@ -234,8 +234,18 @@ func _montar_barra() -> void:
 		_botones[clave] = b
 
 func _montar_modal() -> void:
-	_modal = PanelContainer.new()
-	_modal.anchor_left = 0.21; _modal.anchor_right = 0.79; _modal.anchor_top = 0.235; _modal.anchor_bottom = 0.825
+	## (17-11, dueño) Cada pestaña es una PANTALLA COMPLETA: tapa la previa (fondo propio con los colores de los dos clubes) y deja abajo la barra de
+	## pestañas para saltar de una a otra; B / Esc vuelve a la previa.
+	_modal = Control.new()
+	_modal.anchor_right = 1.0; _modal.anchor_bottom = 0.845
+	_modal.mouse_filter = Control.MOUSE_FILTER_STOP
+	var fondo := FondoPrevia.new()
+	fondo.color = _color_club(partido.local)
+	fondo.color_b = _color_club(partido.visita)
+	_modal.add_child(fondo)
+	var tarjeta := PanelContainer.new()
+	tarjeta.anchor_left = 0.05; tarjeta.anchor_right = 0.95; tarjeta.anchor_top = 0.05; tarjeta.anchor_bottom = 0.97
+	_modal.add_child(tarjeta)
 	var sb := PanelesMenuPartido._estilo(Color("0a0e1b"))
 	sb.border_color = Color("1f2a47")
 	sb.set_border_width_all(1)
@@ -243,12 +253,13 @@ func _montar_modal() -> void:
 	sb.content_margin_right = 26
 	sb.content_margin_top = 22
 	sb.content_margin_bottom = 18
-	_modal.add_theme_stylebox_override("panel", sb)
+	sb.bg_color = Color(sb.bg_color, 0.9)
+	tarjeta.add_theme_stylebox_override("panel", sb)
 	_modal.visible = false
 	add_child(_modal)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 12)
-	_modal.add_child(v)
+	tarjeta.add_child(v)
 	var cab := HBoxContainer.new()
 	v.add_child(cab)
 	_titulo_modal = EstiloAvanzar.etiqueta("", 38, Color.WHITE, true, true)
@@ -304,6 +315,8 @@ func _abrir(clave: String) -> void:
 	if clave == _abierta and _modal.visible:
 		cerrar_panel()
 		return
+	if clave == "plan" and _abrir_tactica_del_juego():
+		return
 	_abierta = clave
 	for h in _cuerpo.get_children():
 		h.queue_free()
@@ -324,6 +337,36 @@ func _abrir(clave: String) -> void:
 		"camara": PanelesMenuPartido.camara(self, _cuerpo)
 	_modal.visible = true
 	_resumen()
+
+## (17-11, dueño: «el plan de juego es la alineación; ya tenemos una pantalla de eso») «Plan de juego» abre la pantalla de TÁCTICA del juego, a pantalla
+## completa (menú lateral «Partido» → Táctica: pizarra, formación, órdenes y el once). La previa se esconde mientras tanto y vuelve al cerrarla, con
+## el plan nuevo en su pie. Sin menú lateral (pruebas), queda el panel propio.
+func _abrir_tactica_del_juego() -> bool:
+	var pr := get_parent()
+	var ml = pr.get("_menu_lateral") if pr != null else null
+	if ml == null or not (ml as Node).is_inside_tree():
+		return false
+	var sub := -1
+	for m: Dictionary in MenusLaterales.MENUS:
+		if String(m["id"]) != "partido":
+			continue
+		var subs: Array = m["subs"]
+		for i in subs.size():
+			if String((subs[i] as Dictionary).get("tab", "")) == "Táctica" and sub < 0:
+				sub = i
+	if sub < 0:
+		return false
+	var pm = ml.abrir_menu("partido", sub)
+	if pm == null:
+		return false
+	visible = false
+	pm.cerrada.connect(func() -> void:
+		visible = true
+		cerrar_panel()
+		_abierta = "plan"
+		_resumen()
+		_abierta = "")
+	return true
 
 func cerrar_panel() -> void:
 	_modal.visible = false
