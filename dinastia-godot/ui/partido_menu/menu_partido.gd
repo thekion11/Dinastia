@@ -24,6 +24,7 @@ var _cuerpo: VBoxContainer     ## el contenido del panel abierto
 var _botones: Dictionary = {}
 var _modal: Control             ## la pantalla completa de la pestaña abierta (fondo de la previa + su tarjeta)
 var _titulo_modal: Label
+var _icono_modal: TextureRect
 var _pie: Label
 var _abierta := ""
 var _fig_mio: Control
@@ -171,7 +172,7 @@ func _montar_modal() -> void:
 	## (17-11, dueño) Cada pestaña es una PANTALLA COMPLETA: tapa la previa (fondo propio con los colores de los dos clubes) y deja abajo la barra de
 	## pestañas para saltar de una a otra; B / Esc vuelve a la previa.
 	_modal = Control.new()
-	_modal.anchor_right = 1.0; _modal.anchor_bottom = 0.845
+	_modal.anchor_right = 1.0; _modal.anchor_bottom = 0.858   ## hasta la barra: tapa del todo a los jugadores de la previa
 	_modal.mouse_filter = Control.MOUSE_FILTER_STOP
 	var fondo := FondoPrevia.new()
 	fondo.color = _color_club(partido.local)
@@ -194,18 +195,10 @@ func _montar_modal() -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 12)
 	tarjeta.add_child(v)
-	var cab := HBoxContainer.new()
+	var cab := PreviaMenuPartido.cabecera_panel(self)
 	v.add_child(cab)
-	_titulo_modal = EstiloAvanzar.etiqueta("", 38, Color.WHITE, true, true)
-	_titulo_modal.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cab.add_child(_titulo_modal)
-	var x := Button.new()
-	x.text = "×"
-	x.custom_minimum_size = Vector2(36, 36)
-	x.add_theme_stylebox_override("normal", PanelesMenuPartido._estilo(Color("243656")))
-	x.add_theme_stylebox_override("hover", PanelesMenuPartido._estilo(Color("34497a")))
-	x.pressed.connect(cerrar_panel)
-	cab.add_child(x)
+	_titulo_modal = cab.get_node("Titulo")
+	_icono_modal = cab.get_node("Icono")
 	var desliza := ScrollContainer.new()
 	desliza.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	desliza.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -261,6 +254,7 @@ func _abrir(clave: String) -> void:
 		if String(par[0]) == clave:
 			nombre = String(par[1])
 	_titulo_modal.text = Idiomas.t(nombre).to_upper()
+	_icono_modal.texture = PreviaMenuPartido.icono(clave)
 	_cuerpo.alignment = BoxContainer.ALIGNMENT_BEGIN
 	match clave:
 		"uniforme": PanelesMenuPartido.uniforme(self, _cuerpo)
@@ -271,6 +265,7 @@ func _abrir(clave: String) -> void:
 		"camara": PanelesMenuPartido.camara(self, _cuerpo)
 	_modal.visible = true
 	_resumen()
+	PreviaMenuPartido.enfocar_panel.call_deferred(_cuerpo, _botones[clave])
 
 ## (17-11, dueño: «el plan de juego es la alineación; ya tenemos una pantalla de eso») «Plan de juego» abre la pantalla de TÁCTICA del juego, a pantalla
 ## completa (menú lateral «Partido» → Táctica: pizarra, formación, órdenes y el once). La previa se esconde mientras tanto y vuelve al cerrarla, con
@@ -334,6 +329,11 @@ func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel") and _modal.visible:
 		get_viewport().set_input_as_handled()
 		cerrar_panel()
+		return
+	var paso := PreviaMenuPartido.paso_pestana(e)   ## (PES) LB / RB, o Q / E, pasan de pestaña
+	if paso != 0 and visible:
+		get_viewport().set_input_as_handled()
+		_abrir(PreviaMenuPartido.vecina(_abierta, paso))
 
 func confirmar() -> void:
 	_elegir(opcion)
