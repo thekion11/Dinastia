@@ -113,6 +113,8 @@ pasa "ruidos en segundo plano" "godot --headless --path . res://pruebas/probar_r
 pasa "textura del balón" "godot --headless --path . --script res://pruebas/probar_balon_textura.gd" "FIN. 0 fallos"
 # 5c. El avance por días, paso 1: el modelo de eventos del día (clases, zonas y paradas; 4 mundos distintos) (17-11)
 pasa "avance por días: modelo de eventos del día" "godot --headless --path . res://pruebas/probar_eventos_dia.tscn" "FIN. 0 fallos"
+# 5d. El avance por días, paso 2: los disparadores (directiva, crisis de caja, imprevistos, jugador del mes): solo observan (17-11)
+pasa "avance por días: disparadores (directiva, caja, imprevistos, jugador del mes)" "godot --headless --path . res://pruebas/probar_disparadores_dia.tscn" "FIN. 0 fallos"
 pasa "textura del césped" "godot --headless --path . res://pruebas/probar_cesped_textura.tscn" "FIN. 0 fallos"
 pasa "texturas en disco (asfalto)" "godot --headless --path . res://pruebas/probar_imagen_en_disco.tscn" "FIN. 0 fallos"
 pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"

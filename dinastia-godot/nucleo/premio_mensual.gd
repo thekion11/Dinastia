@@ -34,7 +34,7 @@ static func revisar(m: Mundo) -> Jugador:
 	var j := elegir(m)
 	if j == null:
 		return null
-	j.premios.append({"anio": m.anio, "premio": "Jugador del mes"})
+	j.premios.append({"anio": m.anio, "premio": "Jugador del mes", "semana": m.semana})   ## (17-11) la semana: el avance por días sabe cuándo se premió
 	var mio := m.mi_club()
 	var es_mio := mio != null and j.club_id == mio.id
 	if es_mio:
