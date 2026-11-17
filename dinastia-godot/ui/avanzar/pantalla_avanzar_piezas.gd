@@ -69,8 +69,12 @@ static func _tilde() -> Texture2D:
 static func pintar(c: Dictionary, fecha: Dictionary, estado: String, eventos: Array, acento: Color, primera: bool) -> void:
 	var panel: Panel = c["panel"]
 	var hoy := estado == "hoy"
-	panel.add_theme_stylebox_override("panel", _caja(Color.WHITE if hoy else Color(0.886, 0.902, 0.957, 0.94), acento if hoy else Color("0a1120"), 3 if hoy else 1))
-	(c["franja"] as Panel).add_theme_stylebox_override("panel", _caja(acento if hoy else Color(0.039, 0.055, 0.118, 0.94)))
+	var borde := acento
+	if hoy and not eventos.is_empty():
+		borde = EstiloAvanzar.color_de(String(EstiloAvanzar.ficha(eventos[0])[1]))
+	## Pizarra oscura translúcida como la maqueta; la del día actual, apenas más clara y con el borde del color del tipo (sin cambiar de tamaño).
+	panel.add_theme_stylebox_override("panel", _caja(Color(0.63, 0.68, 0.84, 0.46) if hoy else Color(0.5, 0.56, 0.74, 0.34), borde if hoy else Color("0a1120"), 3 if hoy else 1))
+	(c["franja"] as Panel).add_theme_stylebox_override("panel", _caja(borde if hoy else Color(0.039, 0.055, 0.118, 0.94)))
 	var dia := int(fecha["day"])
 	var txt := str(dia)
 	if primera or dia == 1:
@@ -84,7 +88,7 @@ static func pintar(c: Dictionary, fecha: Dictionary, estado: String, eventos: Ar
 	v.visible = estado == "pasado"
 	panel.modulate.a = 0.55 if estado == "pasado" else 1.0
 	panel.z_index = 2 if hoy else 0
-	panel.scale = Vector2(1.05, 1.05) if hoy else Vector2.ONE
+	panel.scale = Vector2.ONE
 	(c["ficha"] as TextureRect).visible = hoy
 	var sim: HBoxContainer = c["simbolos"]
 	for h in sim.get_children():

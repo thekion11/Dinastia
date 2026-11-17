@@ -160,7 +160,7 @@ func _linea_de_tiempo() -> void:
 	var l := _Tiempo.new()
 	l.goles = partido.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol")
 	l.mi_id = mi_club.id
-	_raiz.add_child(_ancla(l, 0.04, 0.83, 0.78, 0.97))
+	_raiz.add_child(_ancla(l, 0.04, 0.83, 0.74, 0.97))
 
 ## La barra de dos colores de las estadísticas (local en rojo, visitante en claro).
 class _Barra extends Control:

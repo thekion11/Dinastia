@@ -44,12 +44,14 @@ func _apuntar_partido_en_curso(p: Partido) -> void:
 
 func _seguir_tras_partido(p: Partido) -> void:
 	PartidoPendiente.cerrar()
+	var caja_antes := AvisosSemana.antes(pr)   ## (17-11) el cierre del mercado y el de mes también al jugar o saltar el partido
 	pr.mundo.avanzar_semana(p)
 	pr._escribir("[color=#3fa06a]J%d  %s %d-%d %s[/color]" % [
 		pr.mundo.liga_de(pr.mundo.mi_club()).jornada_actual,
 		p.local.nombre, p.goles_local, p.goles_visita, p.visita.nombre])
 	## (17-10: tras un partido dirigido no se autoguardaba; ahora sí, como al
 	## avanzar la semana sin jugarlo.)
+	AvisosSemana.despues(pr, caja_antes)
 	pr._partida.autoguardar_si_toca()
 	pr._refrescar()
 	## Seis partidos seguidos con el mismo cambio del plan: se pregunta.

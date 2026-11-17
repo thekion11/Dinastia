@@ -49,6 +49,8 @@ func _una(cfg: Array) -> void:
 	var jornada0 := m.liga_de(m.mi_club()).jornada_actual
 	var visto_partido := false
 	var campana := false
+	var cierre_mes := false
+	AvisosSemana._mercado_avisado = -1
 	for i in 200:
 		if not m.temporada_en_curso():
 			break
@@ -60,6 +62,8 @@ func _una(cfg: Array) -> void:
 			var j0 := m.liga_de(m.mi_club()).jornada_actual
 			dias.saltar()
 			await _frames(2)
+			if pr._registro.get_parsed_text().contains("Cierre de mes"):
+				cierre_mes = true
 			_ok(m.liga_de(m.mi_club()).jornada_actual > j0 or not m.temporada_en_curso(), "%s: «Saltar partido» corre la jornada" % e)
 			_ok(not dias.partido_hoy(), "%s: tras saltar ya no hay partido pendiente hoy" % e)
 		else:
@@ -67,6 +71,8 @@ func _una(cfg: Array) -> void:
 			await _frames(1)
 		if CampanasMenu.hay():
 			campana = true
+	_ok(cierre_mes, "%s: al SALTAR el partido también sale el cierre de mes (regresión de la orden de Auditoría)" % e)
+	_ok(AvisosSemana._mercado_avisado != -1, "%s: al SALTAR el partido también se avisa del cierre del mercado" % e)
 	_ok(visto_partido, "%s: el avance se detuvo en día de partido" % e)
 	_ok(m.liga_de(m.mi_club()).jornada_actual > jornada0 + 10, "%s: la temporada avanzó con el botón nuevo (de la J%d a la J%d)" % [e, jornada0, m.liga_de(m.mi_club()).jornada_actual])
 	_ok(campana or true, "%s: (los avisos con campana son opcionales según la semilla)" % e)

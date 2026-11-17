@@ -13,7 +13,7 @@ static func abrir(padre: Node, ancla: Control) -> PopupPartidoJugado:
 	padre.add_child(p)
 	p.top_level = true
 	p._armar()
-	p.reset_size()
+	p.size = p.get_combined_minimum_size()
 	p.position = Vector2(ancla.global_position.x + ancla.size.x - p.size.x, ancla.global_position.y - p.size.y - 8.0)
 	p.position.x = maxf(p.position.x, 8.0)
 	return p
@@ -45,7 +45,11 @@ func _armar() -> void:
 		s.pressed.connect(func() -> void: _elegir("momentos:" + clave))
 		_sub.add_child(s)
 	_sub.visible = false
-	b.pressed.connect(func() -> void: _sub.visible = not _sub.visible; reset_size())
+	b.pressed.connect(func() -> void:
+		var base := position.y + size.y
+		_sub.visible = not _sub.visible
+		size = get_combined_minimum_size()
+		position.y = base - size.y)
 	(v.get_child(0) as Control).call_deferred("grab_focus")
 
 func _texto_boton(texto: String, tam: int) -> Button:

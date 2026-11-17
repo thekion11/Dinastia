@@ -17,7 +17,8 @@ func _mundo(paises: Array, semilla: int) -> Mundo:
 	m.tomar_el_mando(m.ligas[0].clubes[1 + semilla % 3].id)
 	return m
 
-func _ready() -> void:
+func correr(padre: Node = null) -> int:
+	var _p := padre
 	for cfg: Array in [[["CHI"], 11], [["ARG", "BRA"], 22], [["ESP", "ENG"], 33]]:
 		var m := _mundo(cfg[0], int(cfg[1]))
 		var e := "%s/%d" % [",".join(cfg[0]), cfg[1]]
@@ -28,6 +29,10 @@ func _ready() -> void:
 		_premio(m, e)
 		_segunda(m, e)
 		_sin_efectos(m, e)
+	return fallos
+
+func _ready() -> void:
+	correr(self)
 	print("FIN. %d fallos" % fallos)
 	get_tree().quit()
 
