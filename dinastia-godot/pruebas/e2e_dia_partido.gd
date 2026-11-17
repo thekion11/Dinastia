@@ -12,6 +12,7 @@ var p: Principal
 var fallos := 0
 var _prefs_antes: Variant = null
 var resumen: Array = []
+var memorias: Array = []   ## memoria al volver al menú tras cada partido (lo que crece del 2.º al 3.º es fuga, no caché)
 
 func ok(cond: bool, texto: String) -> bool:
 	print(("  ok     " if cond else "  FALLO  ") + texto)
@@ -66,6 +67,8 @@ func _ready() -> void:
 		if solo != "" and int(solo) != i:
 			continue
 		await pasos.dia_de_partido(clubes[i])
+	if memorias.size() >= 3:
+		ok(float(memorias[2]) - float(memorias[1]) < 40.0, "la memoria no crece de un partido al siguiente (%.0f → %.0f MB tras el 2.º y el 3.º)" % [memorias[1], memorias[2]])
 	print("RESUMEN")
 	for r: String in resumen:
 		print("  " + r)

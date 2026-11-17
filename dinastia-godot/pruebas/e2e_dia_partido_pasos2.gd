@@ -162,6 +162,19 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 	var mem1 := Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0
 	var huerf1 := int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
 	t.ok(t.buscar(p, "VistaEstadio") == null and t.buscar(p, "PartidoVivo") == null, "[%s] no queda ningún estadio ni partido abierto" % pais)
-	t.ok(huerf1 - huerf0 <= 5, "[%s] no quedan nodos huérfanos (%d → %d)" % [pais, huerf0, huerf1])
+	if not t.ok(huerf1 - huerf0 <= 5, "[%s] no quedan nodos huérfanos (%d → %d)" % [pais, huerf0, huerf1]):
+		var antes: Array = t.get_meta("huerfanos0", [])
+		var cuenta := {}
+		for id: int in Node.get_orphan_node_ids():
+			if antes.has(id):
+				continue
+			var n := instance_from_id(id) as Node
+			if n == null:
+				continue
+			var s: Script = n.get_script()
+			var k := "%s/%s" % [n.get_class(), s.get_global_name() if s != null and s.get_global_name() != "" else (s.resource_path.get_file() if s != null else "-")]
+			cuenta[k] = int(cuenta.get(k, 0)) + 1
+		print("    huérfanos nuevos: %s" % str(cuenta))
+	t.memorias.append(mem1)
 	t.resumen.append("%s %-22s %d-%d · tarjetas %d · memoria %.0f → %.0f MB (%+.0f) · huérfanos %d → %d" % [pais, Nombres.visible(c.nombre), partido.goles_local,
 		partido.goles_visita, tarjetas, mem0, mem1, mem1 - mem0, huerf0, huerf1])
