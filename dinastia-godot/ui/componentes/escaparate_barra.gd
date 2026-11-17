@@ -155,3 +155,29 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 		(h as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cb.add_child(caja)
 	hb.add_child(cb)
+	salida(p, hb)
+
+## El PC de la oficina (`visor/pc_oficina.gd`): si el menú es su capa, su padre es el CanvasLayer del PC y el abuelo tiene `apagar` («🚪 Levantarse del PC»). Null si el menú va solo.
+static func pc_de(p: Principal) -> Node:
+	var capa := p.get_parent()
+	if capa is CanvasLayer and capa.get_parent() != null and capa.get_parent().has_method("apagar"):
+		return capa.get_parent()
+	return null
+
+## El sitio FIJO del extremo derecho de la barra: dentro del PC lo ocupa el botón «Levantarse del PC» (lo pone `pc_oficina.gd` encima, con su icono dibujado; aquí se le deja el hueco
+## para que la caja no quede tapada); fuera del PC, «Entrar al club» (antes solo estaba en el cajón lateral).
+static func salida(p: Principal, hb: HBoxContainer) -> void:
+	if pc_de(p) != null:
+		var hueco := Control.new()
+		hueco.name = "HuecoLevantarse"
+		hueco.custom_minimum_size = Vector2(196, 0)
+		hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hb.add_child(hueco)
+		return
+	var b := _accion(Idiomas.t("Entrar al club"), func() -> void: MenuLateral.ejecutar(p, "ciudad_pie" if InterruptorCiudad.activa else "ver_estadio"))
+	b.name = "BotonEntrarClub"
+	b.icon = IconosUI.textura("🏟️", 24)   ## icono dibujado
+	b.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	b.custom_minimum_size.x = 170
+	b.size_flags_stretch_ratio = 0.01
+	hb.add_child(b)

@@ -38,7 +38,6 @@ static func sincronizar(p: Principal) -> void:
 
 ## La pestaña «Avanzar en el tiempo»: arriba DT, noticia y tabla; abajo los partidos y los seguidores. Las dos filas se REPARTEN el alto que hay (1,5 a 1).
 static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, acento: Color) -> void:
-	cuerpo.add_child(_franja(p, c))
 	var arriba := HBoxContainer.new()
 	arriba.add_theme_constant_override("separation", TableroInicio.SEP)
 	arriba.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -61,6 +60,7 @@ static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, ac
 		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		t.size_flags_stretch_ratio = float(par[1])
 		abajo.add_child(t)
+	cuerpo.add_child(_franja(p, c))   ## abajo, para que el escudo que cuelga de la barra no tape la línea de estado
 
 ## (17-11) La franja de arriba del Inicio, con los accesorios que vuelven: la LÍNEA DE ESTADO (jornada, sueldos, media, objetivo, confianza: `p._sub`), los ACCESOS RÁPIDOS que se marcan en Ajustes
 ## (uno por favorito) y la FORMA (últimos 5 partidos). Una sola fila baja, para que las tarjetas conserven el alto.

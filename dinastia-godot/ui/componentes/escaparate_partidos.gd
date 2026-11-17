@@ -88,7 +88,7 @@ static func proximos(p: Principal, c: Club, liga: Liga, acento: Color) -> Contro
 	for e: Dictionary in EventosFecha.proximos(p.mundo, p._dia_semana, 12):
 		if EventosFecha.es_partido(e) and e.get("rival") is Club:
 			lista.append(e)
-	var cuantos := 3 if not ultimo.is_empty() else 4   ## sin partido jugado aún, los cuatro próximos (nunca un hueco vacío)
+	var cuantos := 2 if not ultimo.is_empty() else 3   ## sin partido jugado aún, los cuatro próximos (nunca un hueco vacío)
 	if not ultimo.is_empty():
 		var l: Club = ultimo["local"]
 		cols.append(_columna(l, ultimo["visita"], "%d - %d" % [int(ultimo["gl"]), int(ultimo["gv"])], "liga", liga.nombre if liga != null else "", l.estadio_nombre if l.estadio_nombre != "" else l.nombre, Idiomas.t("Jornada %d") % int(ultimo["jornada"]), false, c))

@@ -146,10 +146,11 @@ func encender() -> void:
 	_principal.set_anchors_preset(Control.PRESET_FULL_RECT)
 	## El botón para levantarse, arriba a la derecha, por encima del menú.
 	var b := Button.new()
-	b.text = Idiomas.t("🚪 Levantarse del PC")
+	b.text = Idiomas.t("Levantarse del PC")
+	b.icon = IconosUI.textura("🚪", 20)   ## (17-11) icono dibujado, no emoji
 	b.add_theme_font_size_override("font_size", 12)
 	b.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	b.offset_left = -190
+	b.offset_left = -196
 	b.offset_right = -10
 	b.offset_top = 6
 	b.offset_bottom = 34
@@ -166,6 +167,8 @@ func apagar() -> void:
 		return
 	abierto = false
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
+	if is_instance_valid(_principal) and _principal.get("_partida") != null:
+		_principal.get("_partida").autoguardar_si_toca()   ## (17-11) al levantarse del PC se guarda (guion, filas 9 y 250)
 	## Si dentro se cargó otra partida, al levantarte sigues con esa.
 	if is_instance_valid(_principal) and _principal.get("mundo") is Mundo:
 		mundo = _principal.get("mundo")
@@ -184,3 +187,8 @@ func apagar() -> void:
 ## pedirle algo (p. ej. guardar antes de salir del juego).
 func principal() -> Control:
 	return _principal if abierto and is_instance_valid(_principal) else null
+
+## (17-11) Si se cierra el juego con el PC encendido, también se guarda.
+func _notification(que: int) -> void:
+	if que == NOTIFICATION_WM_CLOSE_REQUEST and abierto and is_instance_valid(_principal) and _principal.get("_partida") != null:
+		_principal.get("_partida").autoguardar_si_toca()
