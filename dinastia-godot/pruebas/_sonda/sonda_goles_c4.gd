@@ -4,7 +4,7 @@ extends Node
 ## SEIS ligas distintas (orden 34: nunca un solo equipo) y da, por partido: goles, tiros, a puerta, paradas, postes, fuera, cabezazos, tiros desde dentro
 ## del área (a menos de 16,5 m del arco) y su acierto, y la distancia media del tiro. Cifras reales de referencia: ~2,6-2,8 goles y ~25 tiros por partido,
 ## ~8,5 a puerta, ~30 % de lo que va a puerta acaba en gol.
-##   N=24 BANDERAS="C4_X=1" godot --headless --path . res://pruebas/_sonda/sonda_goles_c4.tscn      (las banderas se leen del entorno del proceso)
+##   VARIANTE=combinado_c4 (por defecto; la de `MotorFabrica`) N=24 BANDERAS="C4_X=1" godot --headless --path . res://pruebas/_sonda/sonda_goles_c4.tscn      (las banderas se leen del entorno del proceso)
 const DT := 1.0 / 30.0
 const LIGAS: Array[String] = ["ESP", "ENG", "ITA", "GER", "ARG", "BRA"]
 
@@ -51,7 +51,7 @@ func _jugar(a: Club, b: Club, mitad: float, semilla: int) -> Dictionary:
 	lista.append_array(sp.spawn_team(raiz, l["xi"], l["jugadores"], Puente3D.formacion(a.tactica.formacion), true, Puente3D.kit(a), Puente3D.kit_portero(a)))
 	lista.append_array(sp.spawn_team(raiz, v["xi"], v["jugadores"], Puente3D.formacion(b.tactica.formacion), false, Puente3D.kit(b), Puente3D.kit_portero(b)))
 	var ball := StadiumBuilder.spawn_ball(raiz, Vector3(0, 0.11, 0))
-	var motor := MotorCombinado.new()
+	var motor: MotorJugable = MotorFabrica.crear(OS.get_environment("VARIANTE") if OS.get_environment("VARIANTE") != "" else "combinado_c4")   ## la del juego (C4 por defecto, orden 39)
 	raiz.add_child(motor)
 	motor.set_physics_process(false)
 	motor.autopiloto = true
