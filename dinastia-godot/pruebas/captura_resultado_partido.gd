@@ -48,6 +48,7 @@ func _ready() -> void:
 				if (x as Button).text == Idiomas.t("Jugar momentos específicos"):
 					(x as Button).pressed.emit()   ## abre la sublista como al pulsar
 			await get_tree().create_timer(0.4).timeout
+			print("DBG pop ", pop.position, pop.size, " b ", b.global_position, b.size, b.visible, " base ", base.get_parent())
 			await _foto("popup")
 			base.queue_free()
 			fondo.queue_free()
