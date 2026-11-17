@@ -151,7 +151,7 @@ func _mover_cursor() -> void:
 			return
 		var jd: Dictionary = u.get("jugador", {})
 		var nom := Nombres.visible(String(jd.get("nombre", "")))
-		_indicador.colocar(cam.unproject_position(cabeza), nom.get_slice(" ", nom.get_slice_count(" ") - 1).to_upper(),
+		_indicador.colocar(cam.unproject_position(cabeza), " " if has_node("NombresTV") else nom.get_slice(" ", nom.get_slice_count(" ") - 1).to_upper(),   ## (17-11) con el HUD de TV el nombre va DEBAJO (`NombresTV`); arriba quedan el dorsal y la energía
 			int(jd.get("dorsal", 0)), _motor.forma_fisica(u))
 
 func _hud_juego() -> void:

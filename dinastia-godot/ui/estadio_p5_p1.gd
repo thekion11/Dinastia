@@ -253,8 +253,7 @@ func _arrancar_partido() -> void:
 	_repe.dz = float(g_rep["dz"])
 	_repe.ui_barrido = self
 	_repe.terminada.connect(func() -> void:
-		if _rotulo_repe != null:
-			_rotulo_repe.visible = false)
+		RotuloRepeticion.salir(_rotulo_repe))
 	_juego.jugada_ambiente.connect(_al_jugada_ambiente)
 	if _btn_velocidad != null:
 		_btn_velocidad.text = "⏱ " + _juego.etiqueta_velocidad()
@@ -331,40 +330,12 @@ func _arrancar_partido() -> void:
 		var es_local_user: bool = (partido.local == club)
 		_control.setup(_en_campo, _balon, _rig, es_local_user, _juego, _radar)
 
-	var caja := PanelContainer.new()
-	var e := StyleBoxFlat.new()
-	e.bg_color = Color(0, 0, 0, 0.55)
-	e.set_corner_radius_all(8)
-	e.content_margin_left = 14; e.content_margin_right = 14
-	e.content_margin_top = 6; e.content_margin_bottom = 6
-	caja.add_theme_stylebox_override("panel", e)
-	## Anclas a mano, sin preset.
-	##
-	## Con `position` el marcador se iba al borde izquierdo, y con
-	## `set_anchors_preset(..., keep_offsets)` tampoco: ese `keep_offsets`
-	## RECALCULA los offsets para conservar el rectángulo actual, así que pisa lo
-	## que se le ponga justo después. Puestas las cuatro anclas y los cuatro
-	## offsets a mano no hay ambigüedad. Desde el 25-9 va arriba a la izquierda
-	## (la barra de botones pasó a la derecha), con 380 px de ancho.
-	caja.anchor_left = 0.0
-	caja.anchor_right = 0.0
-	caja.anchor_top = 0.0
-	caja.anchor_bottom = 0.0
-	caja.offset_left = 18
-	caja.offset_right = 398
-	caja.offset_top = 12
-	caja.offset_bottom = 54
-	add_child(caja)
-	_caja_marcador = caja
-	## El pivote tiene que quedar al centro del panel para que el "salto" del
-	## gol (escalar en `_animar_marcador_gol()`) crezca parejo a los dos lados,
-	## no que se vaya de bruces hacia una esquina.
-	caja.pivot_offset = Vector2(190, 21)
-	_marcador = Label.new()
-	_marcador.add_theme_font_size_override("font_size", 20)
-	_marcador.add_theme_color_override("font_color", Color("e9eeea"))
-	_marcador.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	caja.add_child(_marcador)
+	## (17-11) EL HUD DE TV (`HudTV`): el marcador de televisión arriba a la izquierda (escudos, siglas, goles, reloj en su caja y la
+	## franja de cada club), los nombres y aros sobre el campo y el radar con el campo dibujado. Antes: una caja oscura con una línea
+	## de texto. `_marcador` sigue siendo ese texto (oculto, dentro del marcador nuevo) para quien lo lea.
+	var mtv := HudTV.montar(self, partido, _motor, _balon, _radar)
+	_caja_marcador = mtv
+	_marcador = mtv.etiqueta
 	_refrescar_marcador()
 
 	_crear_banner_gol()

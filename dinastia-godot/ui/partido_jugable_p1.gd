@@ -62,7 +62,9 @@ var _btn_saltar: Button
 var _cine: CineGol
 var _interp: InterpolacionPartido
 var _repe: Repeticion
-var _rotulo_repe: PanelContainer
+var _rotulo_repe: RotuloRepeticion
+var _mtv: MarcadorTV
+var _fila_num: FilaNumeros
 var _hud: Array[Control] = []
 ## Tu ficha y la ayuda de abajo: fuera en la realización del gol (ahí sale la
 ## carta del goleador) y en la repetición.
@@ -220,7 +222,7 @@ func _ver_rotulos(si: bool) -> void:
 	for f: Dictionary in filas:
 		var n: Node3D = f.get("node")
 		if is_instance_valid(n) and n.has_node(PlayerSpawner.ROTULO):
-			(n.get_node(PlayerSpawner.ROTULO) as Node3D).visible = si and PlayerSpawner.mostrar_nombres
+			(n.get_node(PlayerSpawner.ROTULO) as Node3D).visible = si and PlayerSpawner.mostrar_nombres and not has_node("NombresTV")   ## (17-11) los nombres van en 2D (`NombresTV`)
 
 func _ver_hud_abajo(si: bool) -> void:
 	for c: Control in _hud_abajo:
@@ -268,18 +270,8 @@ func _fin_cine() -> void:
 		return
 	## Mientras se repite, el partido espera.
 	motor.set_physics_process(false)
-	if _rotulo_repe == null:
-		_rotulo_repe = PanelContainer.new()
-		_rotulo_repe.add_theme_stylebox_override("panel", _panel(LIMA))
-		var l := _etiqueta(18, FUCSIA)
-		l.text = Idiomas.t("⟲  REPETICIÓN")
-		_rotulo_repe.add_child(l)
-		add_child(_rotulo_repe)
-		_rotulo_repe.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-		_rotulo_repe.grow_horizontal = Control.GROW_DIRECTION_BOTH
-		_rotulo_repe.offset_top = 70
-	_rotulo_repe.visible = true
-	Animar.aparecer(_rotulo_repe)
+	## (17-11) Pequeño, arriba a la derecha bajo tus números y con cortinilla (`RotuloRepeticion`); antes, un rótulo grande arriba al centro.
+	_rotulo_repe = RotuloRepeticion.entrar(self, _rotulo_repe, ((_fila_num.get_parent() as Control).get_rect().end.y + 8.0) if _fila_num != null else -1.0)
 
 ## LA REALIZACIÓN DEL GOL, la del modo entrenador (`CineGol`): el motor alarga
 ## la celebración (`duracion_gol`) y al final se repite la jugada.
@@ -336,8 +328,7 @@ func _al_gol(de_local: bool, autor: String, _asist: String) -> void:
 
 func _fin_repeticion() -> void:
 	_repe.congelar = false
-	if _rotulo_repe != null:
-		_rotulo_repe.visible = false
+	RotuloRepeticion.salir(_rotulo_repe)
 	if is_instance_valid(_cam):
 		_cam.current = true
 	_ver_rotulos(true)
