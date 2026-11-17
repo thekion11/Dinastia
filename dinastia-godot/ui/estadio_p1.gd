@@ -76,7 +76,7 @@ var _banner: Label
 var _banner_caja: PanelContainer
 var _tween_banner: Tween
 var _tween_marcador: Tween
-var _caja_marcador: PanelContainer
+var _caja_marcador: Control   ## (17-11) el marcador de TV (`MarcadorTV`, `HudTV.montar`)
 
 ## VARIEDAD DE GRADA (21-9-2026): hasta ahora este visor solo ponia "murmullo"
 ## una vez al abrir y lo dejaba en bucle todo el partido -sonido de fondo fijo,
@@ -107,6 +107,7 @@ var _tiros_de := {}
 var _goles_de := {}
 var _ayuda_control: Label
 var _panel_dt: PanelDTPartido
+var _pausa_menu: MenuPausaPartido   ## la pausa corta (17-11): Reanudar, Táctica y cambios, Estadísticas, Controles, Simular el resto, Salir
 var _panel_controles: PanelControles
 ## Estadísticas a pedido y rótulos de la tele (16-10-2026).
 var _stats: EstadisticasVivo
@@ -180,7 +181,7 @@ var _repe: Repeticion
 var _intro: IntroPartido
 var _ceremonia: CeremoniaPartido
 var _ceremonia_pendiente := ""
-var _rotulo_repe: PanelContainer
+var _rotulo_repe: RotuloRepeticion
 
 var _goles_autor := {}
 

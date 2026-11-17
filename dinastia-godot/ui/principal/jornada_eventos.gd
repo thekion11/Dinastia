@@ -6,13 +6,13 @@ extends RefCounted
 static var _abierto := false
 
 static func ofrecer(pr: Principal) -> void:
-	if _abierto or JornadaCelebracion._abierto or DisplayServer.get_name() == "headless" or pr.mundo == null or pr._rueda_pop != null:   ## (10-11) nunca encima de un festejo
+	if _abierto or JornadaCelebracion._abierto or DisplayServer.get_name() == "headless" or pr.mundo == null or pr._rueda_pop != null or AvanceSemana.dias_en_curso:   ## (10-11) nunca encima de un festejo
 		return
 	if await JornadaSeleccion.ofrecer_cargo(pr):   ## (10-11) primero, si te llama una selección
 		return
 	if await JornadaSeleccion.ofrecer_fecha(pr):   ## (10-11) el partido de la fecha FIFA de la selección que diriges
 		return
-	var dia := DiasMemoria.pendiente(pr.mundo)   ## (16-11) el día de memoria del país: pantalla de reflexión, sin efectos; después sigue el evento del club
+	var dia := {} if AvanceSemana.dias_activo else DiasMemoria.pendiente(pr.mundo)   ## (17-11) con el avance por días la abre la pantalla Avanzar   ## (16-11) el día de memoria del país: pantalla de reflexión, sin efectos; después sigue el evento del club
 	if not dia.is_empty():
 		_abierto = true
 		DiasMemoria.marcar(pr.mundo, dia)   ## antes de mostrarla: si se cierra la app a medias no se repite

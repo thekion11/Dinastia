@@ -322,6 +322,23 @@ func _suceso(ev: Dictionary) -> void:
 		return
 	_juego.suceso(ev)
 
+## Los nombres largos no caben en un marcador de televisión, y recortar por
+## caracteres deja cosas como "Deportes Antofa". Se usa la primera palabra larga.
+func _corto(n: String) -> String:
+	if n.length() <= 14:
+		return n
+	for parte in n.split(" "):
+		if parte.length() >= 5:
+			return parte
+	return n.substr(0, 14)
+
+## El texto de siempre (oculto) y el marcador de TV (`MarcadorTV.fijar`, que solo repinta si algo cambió).
+func _poner_marcador(reloj: String) -> void:
+	_marcador.text = "%s  %d - %d  %s      %s" % [_corto(partido.local.nombre), partido.goles_local,
+		partido.goles_visita, _corto(partido.visita.nombre), reloj]
+	if _caja_marcador is MarcadorTV:
+		(_caja_marcador as MarcadorTV).fijar(partido.goles_local, partido.goles_visita, reloj)
+
 ## El "salto" del marcador: un golpe de escala corto -crece y vuelve, como el
 ## marcador de un estadio de verdad al subir el número-, no una animación larga
 ## que tape el juego. Se corta y se reinicia si llega un segundo gol encima.
@@ -384,3 +401,17 @@ func _seguir_jugada_gol(autor: Jugador) -> void:
 			_rig.objetivo_seguimiento = null
 		if _rig.current_index == idx_tele:
 			_rig.switch_to(idx_antes))
+
+## LA PAUSA CORTA (17-11-2026, dueño): el botón de pausa abre `MenuPausaPartido` (Reanudar, Táctica y cambios, Estadísticas, Controles,
+## Simular el resto, Salir); la pizarra de táctica y cambios es una de sus opciones. El motor no avanza mientras está abierta.
+func abrir_pausa() -> void:
+	if _motor == null or _pausa_menu != null or partido == null or partido.terminado_ya:
+		return
+	if _cajon != null and _cajon.abierto:
+		_cajon.cerrar()
+	_pausa_menu = MenuPausaPartido.abrir(self, partido)
+	_pausa_menu.cerrado.connect(func() -> void: _pausa_menu = null)
+
+## «Salir del partido» de la pausa: lo mismo que el botón «Volver» (el partido sigue en la pantalla 2D).
+func salir() -> void:
+	cerrado.emit()

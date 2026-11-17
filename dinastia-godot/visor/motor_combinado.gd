@@ -350,6 +350,10 @@ func _error_tiro_extra(p: Dictionary, lejos: float, error: float, clase: String)
 func _prob_parada_extra(gk: Dictionary, desde: Vector3, prob: float) -> float:
 	return MejorasC4Avance.parada(self, gk, desde, prob) if _mejoras_c4 else prob
 
+## (17-11, alarma de goles de C4) el portero para lo que le llega al cuerpo, solo en C4 (`MejorasC4Avance.parada_cuerpo`, `C4_PARADA_CUERPO=f`).
+func _prob_parada_cuerpo(lat: float, alcance: float, prob: float) -> float:
+	return MejorasC4Avance.parada_cuerpo(self, lat, alcance, prob) if _mejoras_c4 else prob
+
 ## (16-11, informe AAA H1, A1.3/A1.5) el alcance del portero según el tiempo que tarda el remate (`C4_ALCANCE_TIEMPO`) y ante el remate
 ## desde dentro del área (`C4_ALCANCE_AREA`), solo en C4 (`MejorasC4Avance.alcance`).
 func _alcance_extra(gk: Dictionary, desde: Vector3, alcance: float, tz: float) -> float:

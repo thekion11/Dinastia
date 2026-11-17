@@ -121,6 +121,22 @@ pasa "nombres de países y selecciones en francés" "IDIOMA=fr godot --headless 
 # 5b. Las texturas de ruido en segundo plano son las de NoiseTexture2D, byte a byte (30-10)
 pasa "ruidos en segundo plano" "godot --headless --path . res://pruebas/probar_ruidos_fondo.tscn" "FIN. 0 fallos"
 pasa "textura del balón" "godot --headless --path . --script res://pruebas/probar_balon_textura.gd" "FIN. 0 fallos"
+# 5c. El avance por días, paso 1: el modelo de eventos del día (clases, zonas y paradas; 4 mundos distintos) (17-11)
+pasa "avance por días: modelo de eventos del día" "godot --headless --path . res://pruebas/probar_eventos_dia.tscn" "FIN. 0 fallos"
+# 5d. El avance por días, paso 2: los disparadores (directiva, crisis de caja, imprevistos, jugador del mes): solo observan (17-11)
+pasa "avance por días: disparadores (directiva, caja, imprevistos, jugador del mes)" "godot --headless --path . res://pruebas/probar_disparadores_dia.tscn" "FIN. 0 fallos"
+# 5e. El avance por días, paso 3 (núcleo): se detiene en el primer día con eventos y recorre una temporada entera (17-11)
+pasa "avance por días: núcleo (paradas)" "godot --headless --path . res://pruebas/probar_avance_dias.tscn" "FIN. 0 fallos"
+# 5f. El avance por días, pasos 3, 5 y 6: el botón «Avanzar» nuevo en el menú central, campanas, «Jugar/Saltar partido» y las pantallas (17-11)
+pasa "avance por días: botón Avanzar en el menú central" "godot --headless --path . res://pruebas/probar_avance_ui.tscn" "FIN. 0 fallos"
+# 5g. El menú del partido nuevo (previa, uniforme, estadio, plan, opciones, cámara) y sus ajustes (17-11)
+pasa "avance por días: menú del partido y sus ajustes" "godot --headless --path . res://pruebas/probar_menu_partido.tscn" "FIN. 0 fallos"
+# 5i. El sorteo del saque inicial (el motor respeta quién saca; la segunda parte, el otro) (17-11)
+pasa "sorteo del saque inicial en el motor" "godot --headless --path . res://pruebas/probar_saque_inicial.tscn" "FIN. 0 fallos"
+# 5j. «Jugar de nuevo» y «Jugar momento» de verdad: réplica con clubes clonados (17-11)
+pasa "réplica del partido (jugar de nuevo y momentos)" "godot --headless --path . res://pruebas/probar_replica_partido.tscn" "FIN. 0 fallos"
+# 5h. Las pantallas de después del partido: resultado, todos los momentos y el popup «Partido jugado» (17-11)
+pasa "avance por días: resultado, momentos y popup del partido jugado" "godot --headless --path . res://pruebas/probar_resultado_partido.tscn" "FIN. 0 fallos"
 pasa "textura del césped" "godot --headless --path . res://pruebas/probar_cesped_textura.tscn" "FIN. 0 fallos"
 pasa "texturas en disco (asfalto)" "godot --headless --path . res://pruebas/probar_imagen_en_disco.tscn" "FIN. 0 fallos"
 pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"

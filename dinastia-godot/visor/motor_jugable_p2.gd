@@ -150,6 +150,7 @@ func _saque_de_centro(saca_local: bool) -> void:
 
 ## El id del jugador que manejas (para la tanda: tu portero elige el lado).
 var id_usuario := ""
+var saca_primero_local := true   ## (17-11) quién saca al empezar (sorteo del menú del partido); la 2.ª parte saca el otro
 
 func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: int = 1) -> void:
 	_rng.seed = semilla
@@ -172,7 +173,7 @@ func preparar(lista: Array, ball: Node3D, jugador_usuario_id: String, semilla: i
 		cuerpos_activos = false
 	_orientar_formaciones()
 	Mando.registrar()
-	_saque_de_centro(true)
+	_saque_de_centro(saca_primero_local)
 
 ## Lo jugado en segundos reales (sin añadidos), contando la prórroga.
 func tiempo_jugado() -> float:
@@ -418,7 +419,7 @@ func empezar_en(minuto_: int, gl: int, gv: int) -> void:
 	if minuto_ >= 45:
 		mitad = 2
 		t = clampf(float(minuto_ - 45) / 45.0 * duracion_mitad, 0.0, duracion_mitad - 1.0)
-		_saque_de_centro(false)
+		_saque_de_centro(not saca_primero_local)
 	else:
 		t = clampf(float(minuto_) / 45.0 * duracion_mitad, 0.0, duracion_mitad - 1.0)
 

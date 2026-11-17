@@ -151,7 +151,7 @@ func _mover_cursor() -> void:
 			return
 		var jd: Dictionary = u.get("jugador", {})
 		var nom := Nombres.visible(String(jd.get("nombre", "")))
-		_indicador.colocar(cam.unproject_position(cabeza), nom.get_slice(" ", nom.get_slice_count(" ") - 1).to_upper(),
+		_indicador.colocar(cam.unproject_position(cabeza), " " if has_node("NombresTV") else nom.get_slice(" ", nom.get_slice_count(" ") - 1).to_upper(),   ## (17-11) con el HUD de TV el nombre va DEBAJO (`NombresTV`); arriba quedan el dorsal y la energía
 			int(jd.get("dorsal", 0)), _motor.forma_fisica(u))
 
 func _hud_juego() -> void:
@@ -211,7 +211,7 @@ func _hud_juego() -> void:
 		_flecha_apunte.rotation.y = atan2(dir.x, dir.z)
 
 func _paso_motor(delta: float) -> void:
-	if _panel_dt != null or _panel_controles != null or _sala_var != null or _panel_stats != null:
+	if _panel_dt != null or _panel_controles != null or _sala_var != null or _panel_stats != null or _pausa_menu != null:
 		Mando.pasos_consumir()
 		return
 	Mando.pasos_fotograma()
@@ -345,11 +345,11 @@ func _unhandled_input(e: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		repetir_jugada()
 		return
-	if _motor != null and _panel_dt == null and _panel_controles == null and _panel_stats == null and e.is_action_pressed("jugar_pausa"):
+	if _motor != null and _panel_dt == null and _panel_controles == null and _panel_stats == null and _pausa_menu == null and e.is_action_pressed("jugar_pausa"):
 		if _cajon != null and _cajon.abierto:
 			return
 		get_viewport().set_input_as_handled()
-		_abrir_panel_dt()
+		abrir_pausa()
 
 ## Al salir del 3D el partido puede seguir en la pantalla 2D: ahí vuelve a
 ## jugarlo el `Partido` por su cuenta (si no, no habría goles).
@@ -390,8 +390,26 @@ static func abrir_practica(padre: Node, m: Mundo) -> VistaEstadio:
 	v.abrir(c, 0.15, rival, Partido.new(c, rival), m.perfil_estadio_de(c))
 	return v
 
+## Los ajustes del partido en la arena de pruebas (sin menú previo): lo que en un partido normal vive en `OpcionesPartido`.
+func _ajustes_de_practica() -> void:
+	_cajon.interruptor("⚽ Motor real: el resultado se juega en el césped", _pref("motor_real", true), func(si: bool) -> void:
+		_guardar_pref("motor_real", si))
+	_cajon.fila([["⏩ Partido corto", func() -> void: _fijar_ritmo("rapido")],
+		["⏯ Normal", func() -> void: _fijar_ritmo("normal")],
+		["🐢 Largo (FC)", func() -> void: _fijar_ritmo("largo")]])
+	_btn_dificultad = _cajon.boton(_texto_dificultad(), _ciclar_dificultad_cpu)
+	var b_preset: Button = _cajon.boton(_texto_preset(), func() -> void: pass)
+	b_preset.pressed.connect(func() -> void: _ciclar_preset(b_preset))
+	_cajon.interruptor("🎯 Indicador de pase (a quién va el balón)", _pref("indicador_pase", true), func(si: bool) -> void:
+		_guardar_pref("indicador_pase", si)
+		if _motor != null:
+			_motor.indicador_pase = si)
+	_cajon.fila([["🎥 Pro: cerca", func() -> void: _fijar_pro_camara("cerca")], ["Normal", func() -> void: _fijar_pro_camara("normal")], ["Lejos", func() -> void: _fijar_pro_camara("lejos")]])
+
 ## Segunda mitad del cajón de ajustes (En pantalla y Sonido): ver `_llenar_cajon` en `estadio_p4.gd`.
 func _llenar_cajon_2() -> void:
+	if partido != null and not practica:
+		return   ## (17-11) En un partido, «En pantalla» y «Sonido» se eligen en el menú de antes del partido (`OpcionesPartido`)
 	_cajon.seccion("En pantalla")
 	_cajon.interruptor("🏷 Nombres de los jugadores", PlayerSpawner.mostrar_nombres, _mostrar_nombres)
 	_cajon.interruptor("📺 Pantalla del estadio en la esquina", _pref("pantalla_esquina", true), func(si: bool) -> void:

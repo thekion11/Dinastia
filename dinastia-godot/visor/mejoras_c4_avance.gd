@@ -126,6 +126,23 @@ static func parada(m: Object, gk: Dictionary, desde: Vector3, prob: float) -> fl
 		(m.diag as Dictionary)["c4_parada_area"] = int((m.diag as Dictionary).get("c4_parada_area", 0)) + 1
 	return prob * PARADA_AREA
 
+## EL PORTERO PARA LO PARABLE (17-11-2026, alarma de goles de C4: 4,1 goles por partido y 46 % de gol de lo que va a puerta, real ~30 %). La
+## sonda `pruebas/_sonda/sonda_goles_c4.tscn` mostró que, con el balón a su alcance, el portero fallaba la tirada en ~1 de cada 3: la fuerza del
+## tiro recortaba la probabilidad igual al cuerpo que a la escuadra (un tiro de 30 m/s al cuerpo se paraba ~81 %). Con `C4_PARADA_CUERPO=f`
+## (0 = apagada) la probabilidad no baja de `f·(1 − lat/alcance)`: al cuerpo, casi siempre; al límite de su estirada, como antes. Contador
+## `c4_parada_cuerpo` (las veces que sube).
+static var PARADA_CUERPO := float(OS.get_environment("C4_PARADA_CUERPO")) if OS.get_environment("C4_PARADA_CUERPO") != "" else 0.0
+
+static func parada_cuerpo(m: Object, lat: float, alcance: float, prob: float) -> float:
+	if PARADA_CUERPO <= 0.0 or alcance <= 0.0 or lat >= alcance:
+		return prob
+	var piso := PARADA_CUERPO * (1.0 - lat / alcance)
+	if piso <= prob:
+		return prob
+	if m.get("diag") is Dictionary:
+		(m.diag as Dictionary)["c4_parada_cuerpo"] = int((m.diag as Dictionary).get("c4_parada_cuerpo", 0)) + 1
+	return piso
+
 ## EL ALCANCE DEL PORTERO (16-11, informe AAA H1). La sonda `futbol_plausible` medía en C4 ~6 goles por partido, 1,5 goles por gol
 ## esperado (xG propio) y un 11-27 % de gol en los remates de fuera del área (real ≈ 3-5 %). En `_reaccion_portero` el alcance crece con
 ## el tiempo que tarda el remate en llegar (`tz`) solo hasta 0,52 s y ahí se queda: un tiro de 25 m que tarda 1 s tenía el mismo alcance

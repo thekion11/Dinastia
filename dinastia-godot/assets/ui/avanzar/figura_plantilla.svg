@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="460" viewBox="0 0 200 460"><defs>
+  <clipPath id="fg"><path d="M52 110L30 130 18 205l26 8 14-42v100h84V171l14 42 26-8-12-75-22-20c-16 10-80 10-96 0z"/></clipPath>
+  <linearGradient id="fgh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></linearGradient>
+  <linearGradient id="fgk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></linearGradient>
+  <radialGradient id="fgf" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>
+  </defs>
+  <ellipse cx="100" cy="455" rx="72" ry="6" fill="#000" opacity=".4"/>
+  <rect x="68" y="330" width="26" height="70" fill="@SKIN@"/><rect x="106" y="330" width="26" height="70" fill="@SKIN@"/><rect x="68" y="330" width="26" height="70" fill="url(#fgk)"/><rect x="106" y="330" width="26" height="70" fill="url(#fgk)"/>
+  <rect x="66" y="396" width="30" height="46" fill="@C1@"/><rect x="104" y="396" width="30" height="46" fill="@C1@"/><rect x="66" y="410" width="30" height="7" fill="@C2@"/><rect x="104" y="410" width="30" height="7" fill="@C2@"/><rect x="66" y="396" width="30" height="46" fill="url(#fgk)"/><rect x="104" y="396" width="30" height="46" fill="url(#fgk)"/>
+  <path d="M62 442h38v14H58zM100 442h38l4 14h-42z" fill="#080a12"/><path d="M62 444h34" stroke="#fff" stroke-opacity=".3" stroke-width="2"/><path d="M104 444h34" stroke="#fff" stroke-opacity=".3" stroke-width="2"/>
+  <rect x="86" y="92" width="28" height="26" fill="@SKIN@"/><rect x="86" y="92" width="28" height="12" fill="#000" opacity=".25"/>
+  <path d="M52 110L30 130 18 205l26 8 14-42v100h84V171l14 42 26-8-12-75-22-20c-16 10-80 10-96 0z" fill="@C1@"/>
+  <g clip-path="url(#fg)"><rect x="88" y="100" width="24" height="180" fill="@C2@" opacity=".9"/><rect x="0" y="195" width="60" height="30" fill="@C2@" opacity=".9"/><rect x="140" y="195" width="60" height="30" fill="@C2@" opacity=".9"/>
+  <path d="M60 150C80 170 78 220 64 270M140 150C122 172 124 222 138 270M96 190C100 215 96 245 90 270" stroke="#000" stroke-opacity=".16" stroke-width="5" fill="none"/>
+  <rect width="200" height="290" fill="url(#fgh)"/></g>
+  <path d="M82 108c10 14 26 14 36 0l-6-8H88z" fill="@C2@"/><path d="M82 108c10 14 26 14 36 0" stroke="#000" stroke-opacity=".3" fill="none"/>
+  <path d="M18 205l26 8-4 42-24-4zM182 205l-26 8 4 42 24-4z" fill="@SKIN@"/><path d="M18 205l26 8-4 42-24-4zM182 205l-26 8 4 42 24-4z" fill="url(#fgk)"/>
+  <rect x="58" y="268" width="84" height="64" fill="@C1@"/><rect x="58" y="268" width="84" height="64" fill="url(#fgh)"/><rect x="58" y="268" width="84" height="8" fill="@C2@"/>
+  
+  <ellipse cx="74" cy="60" rx="5" ry="9" fill="@SKIN@"/><ellipse cx="126" cy="60" rx="5" ry="9" fill="@SKIN@"/>
+  <ellipse cx="100" cy="60" rx="25" ry="32" fill="@SKIN@"/><ellipse cx="100" cy="60" rx="25" ry="32" fill="url(#fgf)"/>
+  <path d="M74 56c-2-30 48-38 52 0-8-10-40-14-52 0z" fill="@HAIR@"/><path d="M80 40c12-8 28-8 40 0" stroke="#fff" stroke-opacity=".25" stroke-width="3" fill="none"/>
+  <path d="M84 66h10M106 66h10" stroke="#241610" stroke-width="3" stroke-linecap="round" opacity=".75"/><path d="M100 68c-2 8-3 10 0 11" stroke="#000" stroke-opacity=".25" stroke-width="2" fill="none"/><path d="M92 86c5 3 11 3 16 0" stroke="#4a2218" stroke-opacity=".6" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>

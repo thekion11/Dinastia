@@ -246,16 +246,6 @@ func _mostrar_rotulo_suceso(texto: String) -> void:
 	_tween_jugada.tween_interval(2.2)
 	_tween_jugada.tween_property(_rotulo_jugada, "modulate:a", 0.0, 0.5)
 
-## Los nombres largos no caben en un marcador de televisión, y recortar por
-## caracteres deja cosas como "Deportes Antofa". Se usa la primera palabra larga.
-func _corto(n: String) -> String:
-	if n.length() <= 14:
-		return n
-	for parte in n.split(" "):
-		if parte.length() >= 5:
-			return parte
-	return n.substr(0, 14)
-
 func _refrescar_marcador() -> void:
 	if _marcador == null:
 		return
@@ -281,13 +271,9 @@ func _refrescar_marcador() -> void:
 				get_tree().create_timer(0.7).timeout.connect(func() -> void:
 					if is_instance_valid(cuarto) and _puede_insertar(true):
 						_rig.inserto_cartel(cuarto))
-		_marcador.text = "%s  %d - %d  %s      %s" % [_corto(partido.local.nombre), partido.goles_local,
-			partido.goles_visita, _corto(partido.visita.nombre), reloj]
+		_poner_marcador(reloj)
 		return
-	_marcador.text = "%s  %d - %d  %s      %d'" % [
-		_corto(partido.local.nombre), partido.goles_local,
-		partido.goles_visita, _corto(partido.visita.nombre),
-		partido.minuto]
+	_poner_marcador("%d'" % partido.minuto)
 
 ## El gol que el VAR anula: acta, motor y marcador, con aviso y reacción.
 func _anular_gol_motor(de_local: bool, autor: String) -> void:
@@ -421,19 +407,11 @@ func _llenar_cajon(c: CajonAjustes) -> void:
 		_cajon.boton("📋 Táctica y cambios (Esc)", _abrir_panel_dt)
 		_cajon.boton("📊 Estadísticas del partido", abrir_estadisticas)
 		_cajon.boton("🎮 Controles: teclas, mando y ayudas", abrir_controles)
-		_cajon.interruptor("⚽ Motor real: el resultado se juega en el césped", _pref("motor_real", true), func(si: bool) -> void:
-			_guardar_pref("motor_real", si))
-		_cajon.fila([["⏩ Partido corto", func() -> void: _fijar_ritmo("rapido")],
-			["⏯ Normal", func() -> void: _fijar_ritmo("normal")],
-			["🐢 Largo (FC)", func() -> void: _fijar_ritmo("largo")]])
-		_btn_dificultad = _cajon.boton(_texto_dificultad(), _ciclar_dificultad_cpu)
-		var b_preset: Button = _cajon.boton(_texto_preset(), func() -> void: pass)
-		b_preset.pressed.connect(func() -> void: _ciclar_preset(b_preset))
-		_cajon.interruptor("🎯 Indicador de pase (a quién va el balón)", _pref("indicador_pase", true), func(si: bool) -> void:
-			_guardar_pref("indicador_pase", si)
-			if _motor != null:
-				_motor.indicador_pase = si)
-		_cajon.fila([["🎥 Pro: cerca", func() -> void: _fijar_pro_camara("cerca")], ["Normal", func() -> void: _fijar_pro_camara("normal")], ["Lejos", func() -> void: _fijar_pro_camara("lejos")]])
+		## (17-11, orden del dueño) Los AJUSTES del partido se cambian SOLO en el menú de antes del partido (`OpcionesPartido`); aquí quedan las acciones.
+		if practica:
+			call("_ajustes_de_practica")   ## la arena de pruebas no tiene menú previo: sus ajustes siguen aquí (en `estadio.gd`)
+		else:
+			_cajon.boton("⚙ " + Idiomas.t("Ajustes del partido: en el menú de antes del partido"), func() -> void: pass)
 		_btn_velocidad = _cajon.boton("⏱", _ciclar_velocidad)
 		## SIMULAR EL RESTO (28-9-2026, informe externo: "falta el botón de
 		## simular el partido entero"). Existía en la pantalla de texto, que

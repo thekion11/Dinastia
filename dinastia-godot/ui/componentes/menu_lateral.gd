@@ -231,7 +231,22 @@ func _montar() -> void:
 ## botón guarda su texto original y se vuelve a traducir al desplegar, por si
 ## se cambió de idioma con el panel ya montado.
 func _x_cajon() -> float:
-	return 0.0 if abajo() else ANCHO_RIEL
+	return 0.0 if abajo() or _riel_oculto else ANCHO_RIEL
+
+## (17-11) El escaparate del menú central esconde la tira de iconos (se abre con ☰ de su barra): el cajón sale desde el borde y el contenido recupera el margen.
+var _riel_oculto := false
+func esconder_riel(si: bool) -> void:
+	if abajo() or _riel == null or _riel_oculto == si:
+		return
+	_riel_oculto = si
+	var tira: Node = _riel.get_parent()
+	while tira != null and tira.get_parent() != self:
+		tira = tira.get_parent()
+	if tira is Control:
+		(tira as Control).visible = not si
+	var raiz := _p._despacho.get_parent() if _p._despacho != null else null
+	if raiz is Control:
+		(raiz as Control).offset_left = 18.0 + (0.0 if si else reserva().x)
 
 func _traducir() -> void:
 	for b: Node in _lista.get_children():
