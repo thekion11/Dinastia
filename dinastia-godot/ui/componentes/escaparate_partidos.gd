@@ -107,6 +107,11 @@ static func proximos(p: Principal, c: Club, liga: Liga, acento: Color) -> Contro
 			fila.add_child(sep)
 		fila.add_child(cols[i])
 	TableroInicio.cerrar(b)
+	var forma := EscaparateSubs._forma(p, c)   ## (17-11) la forma (últimos 5) arriba a la derecha de la tarjeta del calendario
+	if forma != null:
+		forma.anchor_left = 1.0; forma.anchor_right = 1.0
+		forma.offset_left = -190; forma.offset_right = -10; forma.offset_top = 8; forma.offset_bottom = 40
+		b.add_child(forma)
 	return b
 
 static func hinchada(p: Principal, c: Club, acento: Color) -> Control:
@@ -129,22 +134,24 @@ static func hinchada(p: Principal, c: Club, acento: Color) -> Control:
 	logos.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(logos)
 	for m: Dictionary in EscaparateMarcas.de_club(p, c):   ## las marcas del club o, si faltan, las de su país (logotipo dibujado)
-		var celda := HBoxContainer.new()
-		celda.add_theme_constant_override("separation", 6)
+		var celda := VBoxContainer.new()   ## (17-11) el logotipo arriba y el nombre debajo, centrado y en dos líneas: ningún nombre se corta
+		celda.add_theme_constant_override("separation", 2)
 		celda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		celda.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		celda.alignment = BoxContainer.ALIGNMENT_CENTER
 		var logo := EscaparateMarcas.Logo.new()
 		logo.color = m["color"]
 		logo.forma = int(m["forma"])
 		logo.texto = EscaparateMarcas.monograma(String(m["nombre"]))
 		logo.custom_minimum_size = Vector2(34, 34)
-		logo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		logo.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		celda.add_child(logo)
-		var l := EstiloAvanzar.etiqueta(String(m["nombre"]), 12, Color(1, 1, 1, 0.9), true)
+		var l := EstiloAvanzar.etiqueta(String(m["nombre"]), 11, Color(1, 1, 1, 0.9), true)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.max_lines_visible = 2
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		l.custom_minimum_size.x = 40
 		celda.add_child(l)
 		logos.add_child(celda)
 	TableroInicio.cerrar(b)

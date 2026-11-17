@@ -9119,7 +9119,11 @@
   "Guardar y cargar partida": "Save and load game",
   "Ayuda y glosario": "Help and glossary",
   "Créditos y novedades": "Credits and news",
-  "Salir al menú inicial": "Back to the start menu"
+  "Salir al menú inicial": "Back to the start menu",
+  "%s · sueldos %s/sem": "%s · wages %s/wk",
+  "Objetivo: %s · confianza %d": "Goal: %s · trust %d",
+  "%d.º de %d · jornada %d": "%dth of %d · matchday %d",
+  "%d.º de %d · pretemporada": "%dth of %d · pre-season"
  },
  "pt": {
   "Historia": "História",
@@ -18241,7 +18245,11 @@
   "Guardar y cargar partida": "Salvar e carregar partida",
   "Ayuda y glosario": "Ajuda e glossário",
   "Créditos y novedades": "Créditos e novidades",
-  "Salir al menú inicial": "Voltar ao menu inicial"
+  "Salir al menú inicial": "Voltar ao menu inicial",
+  "%s · sueldos %s/sem": "%s · salários %s/sem",
+  "Objetivo: %s · confianza %d": "Objetivo: %s · confiança %d",
+  "%d.º de %d · jornada %d": "%dº de %d · rodada %d",
+  "%d.º de %d · pretemporada": "%dº de %d · pré-temporada"
  },
  "patrones": [
   [
@@ -33635,7 +33643,11 @@
   "Guardar y cargar partida": "Sauvegarder et charger",
   "Ayuda y glosario": "Aide et glossaire",
   "Créditos y novedades": "Crédits et nouveautés",
-  "Salir al menú inicial": "Retour au menu initial"
+  "Salir al menú inicial": "Retour au menu initial",
+  "%s · sueldos %s/sem": "%s · salaires %s/sem",
+  "Objetivo: %s · confianza %d": "Objectif : %s · confiance %d",
+  "%d.º de %d · jornada %d": "%de sur %d · journée %d",
+  "%d.º de %d · pretemporada": "%de sur %d · pré-saison"
  },
  "it": {
   "Historia": "Storia",
@@ -42757,7 +42769,11 @@
   "Guardar y cargar partida": "Salva e carica partita",
   "Ayuda y glosario": "Aiuto e glossario",
   "Créditos y novedades": "Crediti e novità",
-  "Salir al menú inicial": "Torna al menu iniziale"
+  "Salir al menú inicial": "Torna al menu iniziale",
+  "%s · sueldos %s/sem": "%s · stipendi %s/sett",
+  "Objetivo: %s · confianza %d": "Obiettivo: %s · fiducia %d",
+  "%d.º de %d · jornada %d": "%dº su %d · giornata %d",
+  "%d.º de %d · pretemporada": "%dº su %d · pre-campionato"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51879,7 +51895,11 @@
   "Guardar y cargar partida": "Spiel speichern und laden",
   "Ayuda y glosario": "Hilfe und Glossar",
   "Créditos y novedades": "Credits und Neuigkeiten",
-  "Salir al menú inicial": "Zurück zum Startmenü"
+  "Salir al menú inicial": "Zurück zum Startmenü",
+  "%s · sueldos %s/sem": "%s · Gehälter %s/Wo",
+  "Objetivo: %s · confianza %d": "Ziel: %s · Vertrauen %d",
+  "%d.º de %d · jornada %d": "%d. von %d · Spieltag %d",
+  "%d.º de %d · pretemporada": "%d. von %d · Vorbereitung"
  },
  "ca": {
   "Historia": "Història",
@@ -61001,7 +61021,11 @@
   "Guardar y cargar partida": "Desar i carregar partida",
   "Ayuda y glosario": "Ajuda i glossari",
   "Créditos y novedades": "Crèdits i novetats",
-  "Salir al menú inicial": "Tornar al menú inicial"
+  "Salir al menú inicial": "Tornar al menú inicial",
+  "%s · sueldos %s/sem": "%s · sous %s/set",
+  "Objetivo: %s · confianza %d": "Objectiu: %s · confiança %d",
+  "%d.º de %d · jornada %d": "%dè de %d · jornada %d",
+  "%d.º de %d · pretemporada": "%dè de %d · pretemporada"
  },
  "pl": {
   "Club": "Klub",
@@ -70123,7 +70147,11 @@
   "Guardar y cargar partida": "Zapisz i wczytaj grę",
   "Ayuda y glosario": "Pomoc i słowniczek",
   "Créditos y novedades": "Autorzy i nowości",
-  "Salir al menú inicial": "Powrót do menu głównego"
+  "Salir al menú inicial": "Powrót do menu głównego",
+  "%s · sueldos %s/sem": "%s · pensje %s/tydz.",
+  "Objetivo: %s · confianza %d": "Cel: %s · zaufanie %d",
+  "%d.º de %d · jornada %d": "%d. z %d · kolejka %d",
+  "%d.º de %d · pretemporada": "%d. z %d · przedsezonowy okres"
  },
  "tr": {
   "Club": "Kulüp",
@@ -79245,6 +79273,10 @@
   "Guardar y cargar partida": "Oyunu kaydet ve yükle",
   "Ayuda y glosario": "Yardım ve sözlük",
   "Créditos y novedades": "Emekçiler ve yenilikler",
-  "Salir al menú inicial": "Başlangıç menüsüne dön"
+  "Salir al menú inicial": "Başlangıç menüsüne dön",
+  "%s · sueldos %s/sem": "%s · maaşlar %s/hf",
+  "Objetivo: %s · confianza %d": "Hedef: %s · güven %d",
+  "%d.º de %d · jornada %d": "%d. / %d · hafta %d",
+  "%d.º de %d · pretemporada": "%d. / %d · sezon öncesi"
  }
 }

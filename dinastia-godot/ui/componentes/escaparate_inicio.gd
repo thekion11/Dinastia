@@ -63,7 +63,8 @@ static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, ac
 		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		t.size_flags_stretch_ratio = float(par[1])
 		abajo.add_child(t)
-	cuerpo.add_child(_franja(p, c))   ## abajo, para que el escudo que cuelga de la barra no tape la línea de estado
+	if not p._favoritos.is_empty():   ## la franja de accesos rápidos solo ocupa sitio si hay favoritos marcados
+		cuerpo.add_child(_franja(p, c))
 
 ## (17-11) La franja de abajo del Inicio, con los accesorios que vuelven: los ACCESOS RÁPIDOS que se marcan en Ajustes (uno por favorito) y la FORMA (últimos 5 partidos). Una sola fila baja, para que las tarjetas conserven el alto.
 static func _ficha(valor: String, rotulo: String, col := Color.WHITE) -> Control:
@@ -93,7 +94,4 @@ static func _franja(p: Principal, c: Club) -> Control:
 		b.add_theme_font_size_override("font_size", Tema.letra(13))
 		b.pressed.connect(func() -> void: p._ir_a_pestana(tab))
 		f.add_child(b)
-	var forma := EscaparateSubs._forma(p, c)
-	if forma != null:
-		f.add_child(forma)
 	return f

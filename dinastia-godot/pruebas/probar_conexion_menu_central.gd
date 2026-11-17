@@ -111,6 +111,30 @@ func _una(cfg: Array) -> void:
 				pn_s.queue_free()
 				await _frames(3)
 			await _cerrar_menu(pr)
+	## «Sistema»: su panel (guardar y cargar, ayuda, créditos, salir) y sus entradas abren algo
+	for b in _barra(pant).get_children():
+		if b is Button and String(b.get_meta("rotulo", "")) == Idiomas.t("Sistema"):
+			(b as Button).pressed.emit()
+			await _frames(4)
+			var pn := pant.find_child("Panel", true, false)
+			_ok(pn != null, "%s: «Sistema» abre su panel" % e)
+			if pn != null:
+				var botones_s := pn.find_children("*", "Button", true, false).filter(func(x: Node) -> bool: return (x as Button).text != Idiomas.t("Volver"))
+				_ok(botones_s.size() >= 5, "%s: el panel Sistema ofrece guardar/cargar, ayuda, créditos y las dos salidas (%d)" % [e, botones_s.size()])
+				for bs in botones_s:
+					if (bs as Button).text == Idiomas.t("Guardar y cargar partida") or (bs as Button).text == Idiomas.t("Ayuda y glosario"):
+						(bs as Button).pressed.emit()
+						await _frames(5)
+						_ok(_abierto(pr) != null, "%s: «%s» abre su pantalla" % [e, (bs as Button).text])
+						await _cerrar_menu(pr)
+						(b as Button).pressed.emit()
+						await _frames(4)
+						pn = pant.find_child("Panel", true, false)
+						if pn == null:
+							break
+				if pn != null:
+					pn.queue_free()
+					await _frames(3)
 	_ok(pant.find_child("BotonEntrarClub", true, false) != null or pant.find_child("BotonLevantarse", true, false) != null, "%s: el pie tiene «Entrar al club» (o «Levantarse del PC»)" % e)
 	for rotulo: String in ["Oficina del DT", "Noticias y correo", "Tabla de posiciones", "Hinchada y socios"]:
 		var t2 := _tarjeta_con_nombre(pant, Idiomas.t(rotulo))

@@ -152,8 +152,7 @@ const MENUS := [
 		{"tab": "Ajustes", "secc": "audio", "label": "Sonido", "icono": "🔊", "desc": "Música, efectos y el ruido del estadio."},
 		{"tab": "Ajustes", "secc": "aspecto", "label": "Interfaz", "icono": "🖌️", "desc": "Paletas, fondos y estilo del menú."},
 		{"tab": "Ajustes", "secc": "juego", "label": "Juego", "icono": "🎮", "desc": "Idioma, moneda, velocidad del partido, comodidades y vida del DT."},
-		{"tab": "Ajustes", "secc": "acceso", "label": "Accesibilidad", "icono": "♿", "desc": "Texto, colores, contraste, avisos de sonido y teclas."},
-		{"tab": "Ajustes", "secc": "partida", "label": "Partida y guardado", "icono": "💾", "desc": "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos."}]},
+		{"tab": "Ajustes", "secc": "acceso", "label": "Accesibilidad", "icono": "♿", "desc": "Texto, colores, contraste, avisos de sonido y teclas."}]},
 ]
 
 ## (9-11, «solo club») Entradas al mundo abierto, fuera del menú mientras `InterruptorCiudad.activa` sea falso.
