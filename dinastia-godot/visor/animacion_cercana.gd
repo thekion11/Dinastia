@@ -13,6 +13,7 @@ extends Node
 ## de M-098 (que antes iba en los 22 en todas las calidades) queda APAGADA: menos coste en las calidades bajas, nunca más.
 ##  · LA INERCIA (`InerciaCuerpo`, 17-11): ladeo en las curvas, cabeceo al arrancar y frenar, el torso que se adelanta al giro y el
 ##    control orientado, en los que están a menos de `MIRA_CAMARA` m de la cámara (peso suave, `RITMO_INERCIA`).
+##  · EL TROTE DE CADA UNO (`TroteCmu`, 17-11): los ciclos de carrera reales de CMU repartidos por jugador (se cargan al montar esto).
 ## `H1_IK=0` (o `encendida = false`) lo deja todo como antes del 16-11 (para capturas «antes»); `INERCIA=0`, solo la inercia.
 
 static var encendida: bool = OS.get_environment("H1_IK") != "0"
@@ -63,6 +64,7 @@ static func poner(m: Node, b: Node3D) -> AnimacionCercana:
 	o.balon = b
 	for p: Dictionary in m.get("jugadores"):
 		o._entrada(p.get("node"))
+		TroteCmu.repartir(p)   ## (17-11) el trote de captura real de cada uno: solo donde se monta lo cercano
 	m.add_child(o)
 	return o
 
@@ -160,6 +162,8 @@ func actualizar(delta: float, cam: Vector3) -> void:
 		var e := _entrada(p.get("node"))
 		if e.is_empty():
 			continue
+		if not p.has("trote_cmu"):
+			TroteCmu.repartir(p)   ## el que entra de cambio
 		var n: Node3D = e[0]
 		vistos[n.get_instance_id()] = true
 		var gp := n.global_position
