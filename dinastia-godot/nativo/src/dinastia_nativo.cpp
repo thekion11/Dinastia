@@ -25,6 +25,7 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("duelos_parejas", "jugadores"), &DinastiaNativo::duelos_parejas);
 	ClassDB::bind_method(D_METHOD("disputas_inicio", "jugadores", "delta", "suelto", "b", "t", "pase_a_id", "arco_z", "area_x", "area_z"), &DinastiaNativo::disputas_inicio);
 	ClassDB::bind_method(D_METHOD("colocacion_cerca", "jugadores", "b"), &DinastiaNativo::colocacion_cerca);
+	ClassDB::bind_method(D_METHOD("roles_base", "m", "p", "t", "jugadores"), &DinastiaNativo::roles_base);
 	ClassDB::bind_method(D_METHOD("animar_jugadores", "jugadores", "res", "t", "poseedor_id", "cansancio_real", "league", "aplicar"), &DinastiaNativo::animar_jugadores);
 	ClassDB::bind_method(D_METHOD("loco_paso", "jugadores", "t", "delta", "poseedor", "recolocar"), &DinastiaNativo::loco_paso);
 	ClassDB::bind_method(D_METHOD("leyes_ya_cumple", "once", "pais", "tope", "juveniles", "criterio", "ue", "clubes"), &DinastiaNativo::leyes_ya_cumple);
