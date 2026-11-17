@@ -56,7 +56,8 @@
    "es": "Club Atlético Central Córdoba (Santiago del Estero)"
   },
   "instituto": {
-   "es": "Instituto Atlético Central Córdoba"
+   "es": "Instituto Atlético Central Córdoba",
+   "minimo": 12
   },
   "tigre": {
    "es": "Club Atlético Tigre"

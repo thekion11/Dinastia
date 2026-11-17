@@ -201,6 +201,7 @@ def datos_wikidata(titulos, sitio="enwiki"):
                     d["altura"] = int(round(cm))
             except (KeyError, IndexError, ValueError):
                 pass
+            d["fama"] = len(e.get("sitelinks") or {})   ## señal objetiva de notoriedad: en cuántas Wikipedias tiene artículo
             if tit:
                 salida[tit] = d
     return salida
@@ -223,7 +224,7 @@ def _semilla(texto):
     return int(hashlib.sha1(texto.encode("utf-8")).hexdigest()[:8], 16) / 0xFFFFFFFF
 
 
-def media_estimada(j, edad, rep, club):
+def media_estimada(j, edad, rep, club, bono=0):
     """Media del jugador DENTRO del club: reputación − 9, y por puesto, edad (pico 25-29), dorsal y una variación estable.
     Los titulares (dorsal 1-11, portero 1) salen +2/+3 por encima de los suplentes y los juveniles bajan. Es una ESTIMACIÓN."""
     n = int(j["no"]) if str(j["no"]).isdigit() else 99
@@ -249,10 +250,10 @@ def media_estimada(j, edad, rep, club):
     else:
         base -= 6
     base += round((_semilla(limpiar(j["nombre"]) + "|" + club) - 0.5) * 6)
-    return max(45, min(rep + 3, min(90, base)))
+    return max(45, min(rep + 3 + bono, min(90, base + bono)))
 
 
-def fila(j, wd, rep, club_pais, club):
+def fila(j, wd, rep, club_pais, club, bono=0):
     marcas = "m"
     pos = puesto_de(j["pos"], j["no"])
     if j["pos"] in ("DF", "MF", "FW"):
@@ -270,8 +271,23 @@ def fila(j, wd, rep, club_pais, club):
     pais = PAIS.get(j["nat"], j["nat"]) or club_pais
     if not j["nat"]:
         marcas += "e"
-    media = media_estimada(j, edad, rep, club)
+    media = media_estimada(j, edad, rep, club, bono)
     return "|".join([j["nombre"], pos, str(edad), str(media), pais, "", j["no"], altura, marcas])
+
+
+FAMA_MINIMA = 12            ## artículos en otras Wikipedias para contar como «destacado»
+BONOS_FAMA = (8, 6, 5, 4, 4)  ## sobre la regla general, de más a menos conocido del club
+
+
+def bonos_por_fama(jugadores, wd):
+    """{nombre: bono}: los 3-5 más conocidos del club (Wikidata: artículos en otros idiomas) suben de +4 a +8 sobre la regla;
+    sin señal (menos de FAMA_MINIMA) no se toca nada. El más conocido queda además como el mejor del club (ver `main`)."""
+    ranking = sorted(jugadores, key=lambda j: -wd.get(j["titulo"], {}).get("fama", 0))
+    bonos = {}
+    for j, b in zip(ranking, BONOS_FAMA):
+        if wd.get(j["titulo"], {}).get("fama", 0) >= FAMA_MINIMA:
+            bonos[j["nombre"]] = b
+    return bonos
 
 
 def es_generada(fila_txt):
@@ -280,10 +296,10 @@ def es_generada(fila_txt):
     return len(p) >= 9 and "m" in p[8]
 
 
-def validar(jugadores):
+def validar(jugadores, minimo=18):
     """Problemas de una plantilla: lista de textos (vacía = buena)."""
     p = []
-    if not 18 <= len(jugadores) <= 45:
+    if not minimo <= len(jugadores) <= 45:
         p.append(f"tamaño {len(jugadores)}")
     if sum(1 for j in jugadores if j["pos"] == "GK") < 2:
         p.append("menos de 2 porteros")
@@ -309,6 +325,27 @@ def recortar(jugadores, maximo=MAXIMO):
 
 def _dorsal(j):
     return int(j["no"]) if str(j["no"]).isdigit() else 99
+
+
+def _el_mas_conocido_es_el_mejor(filas, jugadores, wd):
+    """Si el más conocido del club no es ya el de mayor media, su media pasa a ser la mayor +1 (tope 90)."""
+    if len(filas) < 2:
+        return filas
+    top = max(jugadores, key=lambda j: wd.get(j["titulo"], {}).get("fama", 0))
+    if wd.get(top["titulo"], {}).get("fama", 0) < FAMA_MINIMA:
+        return filas
+    partes = [f.split("|") for f in filas]
+    medias = [int(p[3]) for p in partes]
+    for p in partes:
+        if p[0] == top["nombre"]:
+            otros = max(m for q, m in zip(partes, medias) if q[0] != top["nombre"])
+            p[3] = str(min(90, max(int(p[3]), otros + 1)))
+    return ["|".join(p) for p in partes]
+
+
+def minimo_de(mapa, liga, nom):
+    v = (mapa.get(liga) or {}).get(nom)
+    return int(v.get("minimo", 18)) if isinstance(v, dict) else 18
 
 
 def fuente_de(mapa, liga, nom):
@@ -352,13 +389,15 @@ def main():
                     continue
                 vistos[clave] = nom
                 unicos.append(j)
-            problemas = validar(unicos) if unicos else ["sin plantilla en el artículo"]
+            problemas = validar(unicos, minimo_de(mapa, liga, nom)) if unicos else ["sin plantilla en el artículo"]
             unicos = recortar(unicos) if not problemas else unicos
             wd = datos_wikidata([j["titulo"] for j in unicos if j["titulo"]], "eswiki" if idioma == "es" else "enwiki") if unicos else {}
             clave_pack = claves_reales.get(nom, club[0])
             propias = [a for a in t["REALES"].get(clave_pack, []) if not es_generada(a)]
             ya = {limpiar(a.split("|")[0]).lower() for a in propias}
-            nuevos = [fila(j, wd, int(club[3]), liga, nom) for j in unicos if limpiar(j["nombre"]).lower() not in ya]
+            bonos = bonos_por_fama(unicos, wd)
+            nuevos = [fila(j, wd, int(club[3]), liga, nom, bonos.get(j["nombre"], 0)) for j in unicos if limpiar(j["nombre"]).lower() not in ya]
+            nuevos = _el_mas_conocido_es_el_mejor(nuevos, unicos, wd)
             informe.append((liga, nom, len(jug), len(propias), len(nuevos), problemas))
             print(f"{liga} {nom:22} {idioma} wiki={len(jug):2} propias={len(propias):2} nuevos={len(nuevos):2} dup={duplicados} {'; '.join(problemas)}")
             if aplicar and not problemas and nuevos:
