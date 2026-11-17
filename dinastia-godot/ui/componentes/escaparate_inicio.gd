@@ -63,8 +63,7 @@ static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, ac
 		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		t.size_flags_stretch_ratio = float(par[1])
 		abajo.add_child(t)
-	if not p._favoritos.is_empty():   ## la franja de accesos rápidos solo ocupa sitio si hay favoritos marcados
-		cuerpo.add_child(_franja(p, c))
+	cuerpo.add_child(_franja(p, c))
 
 ## (17-11) La franja de abajo del Inicio, con los accesorios que vuelven: los ACCESOS RÁPIDOS que se marcan en Ajustes (uno por favorito) y la FORMA (últimos 5 partidos). Una sola fila baja, para que las tarjetas conserven el alto.
 static func _ficha(valor: String, rotulo: String, col := Color.WHITE) -> Control:
@@ -87,7 +86,8 @@ static func _franja(p: Principal, c: Club) -> Control:
 	relleno.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	relleno.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	f.add_child(relleno)
-	for tab: String in p._favoritos:
+	var accesos: Array = p._favoritos if not p._favoritos.is_empty() else ["Mi plantel", "Táctica", "Partido", "Calendario"]   ## sin favoritos marcados en Ajustes, los cuatro más usados
+	for tab: String in accesos:
 		var b := Button.new()
 		b.text = "⭐ " + Idiomas.t(tab)
 		b.focus_mode = Control.FOCUS_ALL

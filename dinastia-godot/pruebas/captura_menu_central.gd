@@ -44,6 +44,13 @@ func _ready() -> void:
 		(pr.get("_rueda_pop") as Node).queue_free()
 		pr.set("_rueda_pop", null)
 		await _frames(8)
+	if OS.get_environment("ESPERA_FOTO") == "1":   ## la foto 3D del estadio de la noticia (la primera vez se monta el estadio: en software tarda)
+		var fotos := load("res://ui/partido_menu/fotos_estadio_menu.gd")
+		for _k in 240:
+			if not fotos._hechas.is_empty():
+				break
+			await get_tree().create_timer(0.5).timeout
+		await _frames(30)
 	print("APERTURA_MS ", Time.get_ticks_msec() - t0)
 	get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://pruebas/capturas/menu_central_%s.png" % OS.get_environment("NOMBRE")))
 	get_tree().quit()

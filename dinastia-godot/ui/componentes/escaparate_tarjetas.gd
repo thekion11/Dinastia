@@ -114,22 +114,40 @@ static func dt(p: Principal, c: Club, acento: Color) -> Control:
 	TableroInicio.cerrar(b)
 	return b
 
+static func create_fade(n: CanvasItem) -> void:
+	n.create_tween().tween_property(n, "modulate:a", 1.0, 0.35)
+
 static func noticia(p: Principal, c: Club, liga: Liga, acento: Color) -> Control:
 	var tc := TableroInicio.tarjeta(Idiomas.t("Noticias y correo"), acento, func() -> void: TableroInicio.abrir(p, "Correo"), Color(c.color1).darkened(0.7))
 	var b: Button = tc[0]
 	var v: VBoxContainer = tc[1]
 	var n := EscaparateNoticia.de(p, c, liga)
-	## (17-11, veredicto del dueño) Sin futbolistas en primer plano con la cara grande: el estadio dibujado en los colores del club y su escudo grande.
-	EscaparateArte.poner(b, "estadio", c)
+	## (17-11, veredicto del dueño) Sin futbolistas en primer plano: la VISTA REAL del estadio del club (`FotosEstadioMenu`: su forma, tribunas con sus colores, techo y focos; una foto 3D hecha una vez
+	## y guardada en disco) con el escudo pequeño encima. Mientras llega (o sin pantalla) se ve un fondo de estudio con el color del club.
+	_escena(b, "", Color(EscaparateBarra.color_de(c)))
+	var foto := TextureRect.new()
+	foto.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	foto.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	foto.set_anchors_preset(Control.PRESET_FULL_RECT)
+	foto.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	foto.modulate = Color(1, 1, 1, 0)
+	b.add_child(foto)
+	b.move_child(foto, 1)
+	var perfil: Dictionary = p.mundo.perfil_estadio_de(c) if p.mundo.has_method("perfil_estadio_de") else c.perfil_estadio()
+	var fotos := load("res://ui/partido_menu/fotos_estadio_menu.gd")   ## por load: la memoria del menú no nombra clases del estadio 3D
+	fotos.pedir(p, c, perfil, "tarde", func(f: Dictionary) -> void:
+		if is_instance_valid(foto) and f.get("estadio") is Texture2D:
+			foto.texture = f["estadio"]
+			create_fade(foto))
 	var esc := TextureRect.new()
-	esc.texture = Escudo.textura(c, 200)
+	esc.texture = Escudo.textura(c, 120)
 	esc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	esc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	esc.anchor_left = 0.62; esc.anchor_right = 0.96; esc.anchor_top = 0.04; esc.anchor_bottom = 0.64
+	esc.anchor_left = 0.80; esc.anchor_right = 0.97; esc.anchor_top = 0.05; esc.anchor_bottom = 0.34
 	esc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(esc)
-	b.move_child(esc, 1)
-	_velo(b, 2, 0.45)
+	b.move_child(esc, 2)
+	_velo(b, 3, 0.5)
 	_al_fondo(v)
 	var t := EstiloAvanzar.etiqueta(String(n["titulo"]), 24, Color.WHITE, true)
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -158,7 +176,7 @@ static func noticia(p: Principal, c: Club, liga: Liga, acento: Color) -> Control
 ## La tabla de diez filas: posición, escudo, club y puntos, en letra grande y con aire. Si vas por debajo del 10.º, tu fila sustituye a la última.
 static func tabla(p: Principal, c: Club, liga: Liga, acento: Color) -> Control:
 	var base := EscaparateZonas.color_liga(liga)
-	var tc := TableroInicio.tarjeta(Idiomas.t("Tabla de posiciones"), acento, func() -> void: TableroInicio.abrir(p, "Ligas y clubes"), base.darkened(0.35))
+	var tc := TableroInicio.tarjeta(Idiomas.t("Tabla de posiciones"), acento, func() -> void: TableroInicio.abrir(p, "Ligas y clubes"), base)   ## el fondo lleva el color propio de la liga
 	var b: Button = tc[0]
 	var v: VBoxContainer = tc[1]
 	v.add_theme_constant_override("separation", 0)
@@ -190,17 +208,28 @@ static func tabla(p: Principal, c: Club, liga: Liga, acento: Color) -> Control:
 	for i in t.size():
 		if t[i]["club"] == c:
 			mio = i
-	var filas: Array = range(mini(9, t.size()))
-	for i: int in filas:
+	## (17-11) Caben ~11 filas: con muchos clubes, los primeros, un corte «⋮», los del DESCENSO (franja roja) y siempre la fila propia.
+	var n := t.size()
+	var arriba := mini(n, 5 if n > 12 else n)
+	var abajo := mini(maxi(liga.plazas_descenso, 1), maxi(n - arriba, 0)) if n > 12 else 0
+	var visibles: Array = []
+	for i in arriba:
+		visibles.append(i)
+	for i in range(n - abajo, n):
+		if not visibles.has(i):
+			visibles.append(i)
+	if n > 12 and not visibles.has(mio):
+		visibles.insert(arriba, mio)
+	visibles.sort()
+	var previo := -1
+	for i: int in visibles:
+		if previo >= 0 and i > previo + 1:
+			var corte := EstiloAvanzar.etiqueta("⋮", 12, Color(1, 1, 1, 0.55))
+			corte.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			corte.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			v.add_child(corte)
 		_fila(v, t, i, c, acento, zonas[i])
-	if mio >= 9:   ## fuera de las primeras: una línea fina y tu fila, resaltada
-		var linea := ColorRect.new()
-		linea.color = Color(1, 1, 1, 0.3)
-		linea.custom_minimum_size = Vector2(0, 1)
-		v.add_child(linea)
-		_fila(v, t, mio, c, acento, zonas[mio])
-	elif t.size() > 9:
-		_fila(v, t, 9, c, acento, zonas[9])
+		previo = i
 	TableroInicio.cerrar(b)
 	return b
 
@@ -258,16 +287,22 @@ static func despacho(p: Principal, c: Club, acento: Color) -> Control:
 	EscaparateArte.poner(b, "despacho_%d" % (0 if n == 0 else (1 if n <= 2 else 2)), c)   ## tres estados del escritorio
 	_velo(b, 1, 0.3)
 	_al_fondo(v)
-	var cont := EstiloAvanzar.etiqueta(("● %d" % n) if n > 0 else "0", 44, Color("ffc857") if n > 0 else Color.WHITE, true)
+	var linea := HBoxContainer.new()   ## el número y su texto, en la misma línea base
+	linea.add_theme_constant_override("separation", 8)
+	var cont := EstiloAvanzar.etiqueta(("● %d" % n) if n > 0 else "0", 40, Color("ffc857") if n > 0 else Color.WHITE, true)
 	cont.add_theme_constant_override("outline_size", 6)
 	cont.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
-	v.add_child(cont)
+	cont.size_flags_vertical = Control.SIZE_SHRINK_END
+	linea.add_child(cont)
 	var t := EstiloAvanzar.etiqueta(Idiomas.t("asuntos por decidir") if n > 0 else Idiomas.t("Sin asuntos pendientes"), 15, Color.WHITE)
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	t.max_lines_visible = 2
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	t.size_flags_vertical = Control.SIZE_SHRINK_END
 	t.add_theme_constant_override("outline_size", 4)
 	t.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
-	v.add_child(t)
+	linea.add_child(t)
+	v.add_child(linea)
 	if n == 0:   ## sin asuntos, la tarjeta sirve: el próximo hito del calendario y los accesos rápidos (favoritos de Ajustes)
 		var hito := EventosFecha.hito(p.mundo, p._dia_semana)
 		var h := EstiloAvanzar.etiqueta("▸ " + String(hito.get("texto", "")), 13, Color(1, 1, 1, 0.85))

@@ -65,30 +65,20 @@ static func leyenda(zonas: Array) -> Array:
 ## El color de fondo propio de la liga (un tono estable por su nombre, oscuro: sirve de fondo de la tarjeta).
 static func color_liga(liga: Liga) -> Color:
 	var h := float(absi(hash("liga|" + (liga.nombre if liga != null else "")) % 360)) / 360.0
-	return Color.from_hsv(h, 0.55, 0.30)
+	return Color.from_hsv(h, 0.62, 0.42)
 
-## El símbolo recreado de la liga: un círculo del color de la liga con un aro y las iniciales de su nombre (no es el escudo real de ninguna competición).
-class Simbolo extends Control:
-	var texto := ""
-	var color := Color.WHITE
-	func _draw() -> void:
-		var c := size * 0.5
-		var r := minf(size.x, size.y) * 0.5
-		draw_circle(c, r, color.lightened(0.15))
-		draw_arc(c, r - 1.5, 0, TAU, 28, Color(1, 1, 1, 0.9), 2.0)
-		draw_circle(c, r * 0.66, color.darkened(0.25))
-		var f := ThemeDB.fallback_font
-		var s := f.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, int(r * 0.9))
-		draw_string(f, Vector2(c.x - s.x * 0.5, c.y + r * 0.3), texto, HORIZONTAL_ALIGNMENT_LEFT, -1, int(r * 0.9), Color.WHITE)
-
+## El símbolo recreado de la liga: una forma propia (escudo, círculo, hexágono, rombo o cuadrado, según el nombre de la liga), su color y sus iniciales (no es el escudo real de ninguna competición).
 static func simbolo(liga: Liga, lado: float) -> Control:
-	var s := Simbolo.new()
+	var s := EscaparateMarcas.Logo.new()
 	var ini := ""
 	for w in (liga.nombre if liga != null else "").split(" ", false):
-		if ini.length() < 2 and not ["de", "del", "la", "el"].has(String(w).to_lower()):
+		if ini.length() < 2 and not ["de", "del", "la", "el", "liga", "primera", "división"].has(String(w).to_lower()):
 			ini += String(w).substr(0, 1).to_upper()
+	if ini == "":
+		ini = (liga.nombre if liga != null else "L").substr(0, 2).to_upper()
 	s.texto = ini
-	s.color = color_liga(liga).lightened(0.25)
+	s.color = color_liga(liga).lightened(0.35)
+	s.forma = absi(hash("forma|" + (liga.nombre if liga != null else ""))) % 5
 	s.custom_minimum_size = Vector2(lado, lado)
 	s.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	return s

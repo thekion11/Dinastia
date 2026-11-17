@@ -64,20 +64,12 @@ static func crear(p: Principal) -> Control:
 			ba.focus_mode = Control.FOCUS_NONE
 			ba.add_theme_font_size_override("font_size", 1)
 			ba.text = ""
-	## (17-11) El sitio FIJO de salida, junto a Ayuda: dentro del PC de la oficina, «Levantarse del PC» (con la tecla Esc); fuera, «Entrar al club».
-	var pc := EscaparateBarra.pc_de(p)
-	var salir := _boton(Idiomas.t("Levantarse del PC") if pc != null else Idiomas.t("Entrar al club"),
-		(func() -> void: pc.apagar()) if pc != null else (func() -> void: MenuLateral.ejecutar(p, "ciudad_pie" if InterruptorCiudad.activa else "ver_estadio")))
-	salir.name = "BotonLevantarse" if pc != null else "BotonEntrarClub"
-	salir.icon = IconosUI.textura("🚪" if pc != null else "🏟️", 20)   ## icono dibujado, no emoji
-	salir.add_theme_color_override("font_color", Color.WHITE)
-	fila.add_child(salir)
 	fila.add_child(_boton("? " + Idiomas.t("Ayuda"), func() -> void: TableroInicio.abrir(p, "Glosario")))
 	for po in p.find_children("*", "PanelObjetivos", true, false):   ## la caja flotante de objetivos pasa a un chip del pie
 		var obj := po as PanelObjetivos
 		var pend := int(obj.get("_pendientes"))
 		if pend > 0:
-			fila.add_child(_boton("🎯 %d" % pend, func() -> void:
+			fila.add_child(_boton("🎯 " + Idiomas.t("Objetivos") + " %d" % pend, func() -> void:
 				obj.visible = true
 				obj._plegado = false
 				obj._aplicar_plegado()

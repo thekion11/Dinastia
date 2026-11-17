@@ -107,11 +107,6 @@ static func proximos(p: Principal, c: Club, liga: Liga, acento: Color) -> Contro
 			fila.add_child(sep)
 		fila.add_child(cols[i])
 	TableroInicio.cerrar(b)
-	var forma := EscaparateSubs._forma(p, c)   ## (17-11) la forma (últimos 5) arriba a la derecha de la tarjeta del calendario
-	if forma != null:
-		forma.anchor_left = 1.0; forma.anchor_right = 1.0
-		forma.offset_left = -190; forma.offset_right = -10; forma.offset_top = 8; forma.offset_bottom = 40
-		b.add_child(forma)
 	return b
 
 static func hinchada(p: Principal, c: Club, acento: Color) -> Control:
@@ -133,7 +128,7 @@ static func hinchada(p: Principal, c: Club, acento: Color) -> Control:
 	logos.add_theme_constant_override("separation", 6)
 	logos.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(logos)
-	for m: Dictionary in EscaparateMarcas.de_club(p, c):   ## las marcas del club o, si faltan, las de su país (logotipo dibujado)
+	for m: Dictionary in EscaparateMarcas.de_club(p, c).slice(0, 2):   ## las marcas del club o, si faltan, las de su país (logotipo dibujado)
 		var celda := VBoxContainer.new()   ## (17-11) el logotipo arriba y el nombre debajo, centrado y en dos líneas: ningún nombre se corta
 		celda.add_theme_constant_override("separation", 2)
 		celda.size_flags_horizontal = Control.SIZE_EXPAND_FILL

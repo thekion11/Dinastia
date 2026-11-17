@@ -44,18 +44,18 @@ static func crear(mos: VBoxContainer, c: Club) -> HBoxContainer:
 	return hb
 
 ## Una pestaña de la barra: texto grande, plano, blanco; la activa lleva la raya blanca de abajo.
-static func boton_pestana(texto: String, ancho := 1.35) -> Button:
+static func boton_pestana(texto: String, ancho := 150.0) -> Button:   ## `ancho`: ancho mínimo (los tres de la izquierda miden igual, los de la derecha también)
 	var b := Button.new()
 	b.toggle_mode = true
 	b.focus_mode = Control.FOCUS_ALL
 	b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN   ## (17-11) cada botón mide lo que su rótulo: el escudo queda centrado y nada se recorta
-	var ancho_txt := ThemeDB.fallback_font.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, 19).x
-	b.custom_minimum_size = Vector2(maxf(70.0, ancho_txt + 22.0), ALTO - 8)
+	var ancho_txt := ThemeDB.fallback_font.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, 17).x
+	b.custom_minimum_size = Vector2(maxf(ancho, ancho_txt + 14.0), ALTO - 8)
 	b.clip_contents = true
 	b.tooltip_text = texto
 	b.set_meta("rotulo", texto)
 	## El rótulo es una Label propia (no el texto del botón): así la escala tipográfica de los menús no le cambia el tamaño.
-	var l := EstiloAvanzar.etiqueta(texto, 19, Color(1, 1, 1, 0.8), true)
+	var l := EstiloAvanzar.etiqueta(texto, 17, Color(1, 1, 1, 0.8), true)
 	l.name = "Rotulo"
 	l.set_anchors_preset(Control.PRESET_FULL_RECT)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -83,7 +83,7 @@ static func boton_pestana(texto: String, ancho := 1.35) -> Button:
 
 ## Un botón de la barra que NO es una pestaña (Despacho, Mensajes, los atajos de la derecha): plano, blanco, con su contador si hay.
 static func _accion(texto: String, al_pulsar: Callable, alerta := false) -> Button:
-	var b := boton_pestana(texto, 1.0)
+	var b := boton_pestana(texto, 150.0)
 	b.toggle_mode = false
 	if alerta:
 		b.get_node("Rotulo").add_theme_color_override("font_color", Color("ffc857"))
@@ -104,13 +104,14 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	hb.add_child(m)
 	var separador := Control.new()   ## empuja los atajos de la derecha: entre los dos grupos queda sitio de sobra para el escudo
 	separador.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	separador.custom_minimum_size.x = 70   ## el hueco del escudo (que va centrado en el área útil, fuera de esta fila)
 	separador.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hb.add_child(separador)
 	var pant: Control = EscaparatePantalla.de(p)
 	var corona := Control.new()   ## (17-11) el escudo, centrado en el área útil (sin la barra lateral), colgando de la barra como en el PES
 	corona.name = "Corona"
 	corona.anchor_left = 0.5; corona.anchor_right = 0.5
-	corona.offset_left = -30.0; corona.offset_right = 30.0; corona.offset_top = 4.0; corona.offset_bottom = 60.0   ## (17-11) el escudo DENTRO de la altura de la barra: no tapa ninguna tarjeta
+	corona.offset_left = -26.0; corona.offset_right = 26.0; corona.offset_top = 4.0; corona.offset_bottom = 56.0   ## (17-11) el escudo DENTRO de la altura de la barra: no tapa ninguna tarjeta
 	corona.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var esc := TextureRect.new()
 	esc.texture = Escudo.textura(c, 64)
@@ -128,7 +129,7 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	corona.add_child(tocar_esc)
 	pant.add_child(corona)
 	for par: Array in [["Oficina del DT", "Mi carrera"], ["Base de datos", "Ligas y clubes"], ["Sistema", "*sistema"]]:
-		var b := boton_pestana(Idiomas.t(String(par[0])))
+		var b := boton_pestana(Idiomas.t(String(par[0])), 100.0)
 		b.toggle_mode = false
 		var destino := String(par[1])
 		if destino == "Ligas y clubes":   ## «Base de datos»: abre un cuadro con el BUSCADOR y la puerta a «Ligas y clubes»
@@ -138,28 +139,20 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 		else:
 			b.pressed.connect(func() -> void: TableroInicio.abrir(p, destino))
 		hb.add_child(b)
-	var caja := VBoxContainer.new()
-	caja.alignment = BoxContainer.ALIGNMENT_CENTER
-	caja.add_theme_constant_override("separation", -4)
-	caja.custom_minimum_size.x = 130
-	var dinero := EstiloAvanzar.etiqueta(p._dinero(c.saldo), 20, Color.WHITE, true)
-	dinero.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	caja.add_child(dinero)
-	var fecha := EstiloAvanzar.etiqueta(p.fecha_larga(), 11, Color(1, 1, 1, 0.8))
-	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	caja.add_child(fecha)
-	var cb := Button.new()   ## (17-11) la caja se pulsa: lleva a las cuentas del club
-	cb.flat = true
-	cb.focus_mode = Control.FOCUS_ALL
-	cb.custom_minimum_size = Vector2(140, ALTO - 8)
-	cb.tooltip_text = Idiomas.t("Cuentas del club")
-	cb.pressed.connect(func() -> void: TableroInicio.abrir(p, "Cuentas del club"))
-	caja.set_anchors_preset(Control.PRESET_FULL_RECT)
-	caja.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	for h in caja.get_children():
-		(h as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
-	cb.add_child(caja)
-	hb.add_child(cb)
+	var fecha := EstiloAvanzar.etiqueta("%d/%d/%d" % _fecha_corta(p), 14, Color(1, 1, 1, 0.9))   ## (17-11, dueño) el saldo ya no sale en el menú central (solo en Finanzas): en la barra queda la fecha
+	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	fecha.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	fecha.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hb.add_child(fecha)
+	## ARRIBA A LA DERECHA, el sitio fijo de salida: dentro del PC de la oficina «Levantarse del PC» (también Esc; autoguarda); fuera, «Entrar al club».
+	var pc := pc_de(p)
+	var salir := _accion(Idiomas.t("Levantarse del PC") if pc != null else Idiomas.t("Entrar al club"),
+		(func() -> void: pc.apagar()) if pc != null else (func() -> void: MenuLateral.ejecutar(p, "ciudad_pie" if InterruptorCiudad.activa else "ver_estadio")))
+	salir.name = "BotonLevantarse" if pc != null else "BotonEntrarClub"
+	salir.icon = IconosUI.textura("🚪" if pc != null else "🏟️", 22)   ## icono dibujado, no emoji
+	salir.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	salir.custom_minimum_size.x = 130
+	hb.add_child(salir)
 
 ## El PC de la oficina (`visor/pc_oficina.gd`): si el menú es su capa, su padre es el CanvasLayer del PC y el abuelo tiene `apagar` («🚪 Levantarse del PC»). Null si el menú va solo.
 static func pc_de(p: Principal) -> Node:
@@ -167,3 +160,8 @@ static func pc_de(p: Principal) -> Node:
 	if capa is CanvasLayer and capa.get_parent() != null and capa.get_parent().has_method("apagar"):
 		return capa.get_parent()
 	return null
+
+## La fecha en corto (d/m/aaaa): la larga no cabe en la barra.
+static func _fecha_corta(p: Principal) -> Array:
+	var f := Calendario.fecha(p.mundo.anio, p.mundo.semana, p._dia_semana)
+	return [int(f["day"]), int(f["month"]), int(f["year"])]

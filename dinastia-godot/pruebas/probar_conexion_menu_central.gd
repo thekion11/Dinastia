@@ -127,7 +127,9 @@ func _una(cfg: Array) -> void:
 						await _frames(5)
 						_ok(_abierto(pr) != null, "%s: «%s» abre su pantalla" % [e, (bs as Button).text])
 						await _cerrar_menu(pr)
-						(b as Button).pressed.emit()
+						for b2 in _barra(pant).get_children():   ## la barra se repinta al cerrar el menú: se vuelve a buscar «Sistema»
+							if b2 is Button and String(b2.get_meta("rotulo", "")) == Idiomas.t("Sistema"):
+								(b2 as Button).pressed.emit()
 						await _frames(4)
 						pn = pant.find_child("Panel", true, false)
 						if pn == null:

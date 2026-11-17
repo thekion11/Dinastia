@@ -9123,7 +9123,9 @@
   "%s · sueldos %s/sem": "%s · wages %s/wk",
   "Objetivo: %s · confianza %d": "Goal: %s · trust %d",
   "%d.º de %d · jornada %d": "%dth of %d · matchday %d",
-  "%d.º de %d · pretemporada": "%dth of %d · pre-season"
+  "%d.º de %d · pretemporada": "%dth of %d · pre-season",
+  "Objetivos": "Goals",
+  "Con táctica %s, %s apuesta por %s.": "With a %s tactic, %s goes for %s."
  },
  "pt": {
   "Historia": "História",
@@ -18249,7 +18251,9 @@
   "%s · sueldos %s/sem": "%s · salários %s/sem",
   "Objetivo: %s · confianza %d": "Objetivo: %s · confiança %d",
   "%d.º de %d · jornada %d": "%dº de %d · rodada %d",
-  "%d.º de %d · pretemporada": "%dº de %d · pré-temporada"
+  "%d.º de %d · pretemporada": "%dº de %d · pré-temporada",
+  "Objetivos": "Objetivos",
+  "Con táctica %s, %s apuesta por %s.": "Com tática %s, %s aposta em %s."
  },
  "patrones": [
   [
@@ -33647,7 +33651,9 @@
   "%s · sueldos %s/sem": "%s · salaires %s/sem",
   "Objetivo: %s · confianza %d": "Objectif : %s · confiance %d",
   "%d.º de %d · jornada %d": "%de sur %d · journée %d",
-  "%d.º de %d · pretemporada": "%de sur %d · pré-saison"
+  "%d.º de %d · pretemporada": "%de sur %d · pré-saison",
+  "Objetivos": "Objectifs",
+  "Con táctica %s, %s apuesta por %s.": "En tactique %s, %s mise sur %s."
  },
  "it": {
   "Historia": "Storia",
@@ -42773,7 +42779,9 @@
   "%s · sueldos %s/sem": "%s · stipendi %s/sett",
   "Objetivo: %s · confianza %d": "Obiettivo: %s · fiducia %d",
   "%d.º de %d · jornada %d": "%dº su %d · giornata %d",
-  "%d.º de %d · pretemporada": "%dº su %d · pre-campionato"
+  "%d.º de %d · pretemporada": "%dº su %d · pre-campionato",
+  "Objetivos": "Obiettivi",
+  "Con táctica %s, %s apuesta por %s.": "Con tattica %s, %s punta su %s."
  },
  "de": {
   "Historia": "Geschichte",
@@ -51899,7 +51907,9 @@
   "%s · sueldos %s/sem": "%s · Gehälter %s/Wo",
   "Objetivo: %s · confianza %d": "Ziel: %s · Vertrauen %d",
   "%d.º de %d · jornada %d": "%d. von %d · Spieltag %d",
-  "%d.º de %d · pretemporada": "%d. von %d · Vorbereitung"
+  "%d.º de %d · pretemporada": "%d. von %d · Vorbereitung",
+  "Objetivos": "Ziele",
+  "Con táctica %s, %s apuesta por %s.": "Mit %s Taktik setzt %s auf %s."
  },
  "ca": {
   "Historia": "Història",
@@ -61025,7 +61035,9 @@
   "%s · sueldos %s/sem": "%s · sous %s/set",
   "Objetivo: %s · confianza %d": "Objectiu: %s · confiança %d",
   "%d.º de %d · jornada %d": "%dè de %d · jornada %d",
-  "%d.º de %d · pretemporada": "%dè de %d · pretemporada"
+  "%d.º de %d · pretemporada": "%dè de %d · pretemporada",
+  "Objetivos": "Objectius",
+  "Con táctica %s, %s apuesta por %s.": "Amb tàctica %s, %s aposta per %s."
  },
  "pl": {
   "Club": "Klub",
@@ -70151,7 +70163,9 @@
   "%s · sueldos %s/sem": "%s · pensje %s/tydz.",
   "Objetivo: %s · confianza %d": "Cel: %s · zaufanie %d",
   "%d.º de %d · jornada %d": "%d. z %d · kolejka %d",
-  "%d.º de %d · pretemporada": "%d. z %d · przedsezonowy okres"
+  "%d.º de %d · pretemporada": "%d. z %d · przedsezonowy okres",
+  "Objetivos": "Cele",
+  "Con táctica %s, %s apuesta por %s.": "Z taktyką %s %s stawia na %s."
  },
  "tr": {
   "Club": "Kulüp",
@@ -79277,6 +79291,8 @@
   "%s · sueldos %s/sem": "%s · maaşlar %s/hf",
   "Objetivo: %s · confianza %d": "Hedef: %s · güven %d",
   "%d.º de %d · jornada %d": "%d. / %d · hafta %d",
-  "%d.º de %d · pretemporada": "%d. / %d · sezon öncesi"
+  "%d.º de %d · pretemporada": "%d. / %d · sezon öncesi",
+  "Objetivos": "Hedefler",
+  "Con táctica %s, %s apuesta por %s.": "%s taktikle %s, %s üzerine oynar."
  }
 }

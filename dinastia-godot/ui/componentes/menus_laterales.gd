@@ -11,7 +11,6 @@ const MENUS := [
 		"lema": "Tus jugadores: el once, la pizarra y cómo llegan al partido.",
 		"colores": ["#07130c", "#113a22", "#9be7b4"], "subs": [
 		{"tab": "Mi plantel", "label": "Mi plantel", "icono": "👥", "desc": "Fichas, forma, moral y el once."},
-		{"accion": "plantilla_pes", "label": "Plantilla detallada", "icono": "📊", "desc": "Lista por líneas, atributos en barras y comparar dos jugadores."},
 		## (12-11) Táctica era una página larga: ahora cuatro pantallas (`TacticaSecciones`).
 		{"tab": "Táctica", "secc": "pizarra", "label": "Pizarra y dibujo", "icono": "📋", "desc": "El pizarrón, tus presets y la formación."},
 		{"tab": "Táctica", "secc": "ordenes", "label": "Órdenes de juego", "icono": "🎯", "desc": "Mentalidad, presión, ritmo, línea, roles y lo que se lleva en esta era."},
@@ -26,7 +25,8 @@ const MENUS := [
 		{"tab": "Cantera", "secc": "academia", "label": "Academia", "icono": "🌱", "desc": "Los chicos de 10 a 16 años: cómo entrenan, comen y estudian."},
 		{"tab": "Cantera", "secc": "juveniles", "label": "Juveniles", "icono": "🎖️", "desc": "La camada del año, los listos para debutar y cada categoría."},
 		{"tab": "Cantera", "secc": "linaje", "label": "Leyendas y linaje", "icono": "🏛️", "desc": "Las figuras retiradas del club y las dinastías de padres e hijos."},
-		{"tab": "Contratos", "label": "Contratos", "icono": "📝", "desc": "Renovaciones, cláusulas y salidas."}]},
+		{"tab": "Contratos", "label": "Contratos", "icono": "📝", "desc": "Renovaciones, cláusulas y salidas."},
+		{"accion": "plantilla_pes", "label": "Plantilla detallada", "icono": "📊", "desc": "Lista por líneas, atributos en barras y comparar dos jugadores."}]},
 	## 3-11 (rediseño del menú central, pedido del dueño): el ⚽ de la barra de arriba pasa a su propio menú.
 	{"id": "partido", "icono": "⚽", "nombre": "Partido", "estilo": 8,
 		"lema": "El próximo partido, el rival y el calendario.",
