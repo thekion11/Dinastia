@@ -433,3 +433,28 @@ func _probar_rasgos_conocidos() -> void:
 				mal += 1
 	_comprobar(con_rasgos >= 10, "hay conocidos con rasgos en ENG, ESP y BRA (%d)" % con_rasgos)
 	_comprobar(mal == 0, "su cara toma exactamente los rasgos de la tabla (%d distintos)" % mal)
+
+## CANDADO DE LA VARIANTE DEL MOTOR (17-11-2026, pedido de la sesión de auditoría): el juego crea el motor con `MotorFabrica.crear()` (C4 por defecto, orden 39).
+## Un `MotorCombinado.new()` sin variante es C1 (colocación y locomoción de League, sin MejorasC4): un perfil o una sonda así mide OTRO motor (pasó con
+## `perfil_colocacion`, y el «50 % del partido en C++» salió de C1). Toda prueba, sonda o perfil que cree `MotorCombinado` o una subclase suya tiene que aplicar
+## la variante (`aplicar_variante`), usar `MotorFabrica.crear` o declarar «## C1 A PROPÓSITO» (las que comprueban a propósito el código de League).
+func _probar_variante_motor() -> void:
+	_titulo("CANDADO: LAS PRUEBAS DEL PARTIDO USAN LA VARIANTE DEL JUEGO")
+	var malos: Array[String] = []
+	var vistos := 0
+	var re := RegEx.create_from_string("(MotorCombinado|PerfC)\\.new\\(\\)")
+	for dir: String in ["res://pruebas", "res://pruebas/_sonda", "res://pruebas/banco"]:
+		for f: String in DirAccess.get_files_at(dir):
+			if not f.ends_with(".gd"):
+				continue
+			var ruta := dir.path_join(f)
+			var lineas := FileAccess.get_file_as_string(ruta).split("\n")
+			for i in lineas.size():
+				if re.search(lineas[i]) == null or lineas[i].strip_edges().begins_with("##"):
+					continue
+				vistos += 1
+				var cerca := "\n".join(lineas.slice(i, mini(i + 3, lineas.size())))
+				if not ("aplicar_variante(" in cerca or "C1 A PROPÓSITO" in lineas[i]):
+					malos.append("%s:%d" % [ruta, i + 1])
+	_comprobar(vistos >= 3, "se encuentran las pruebas que crean el motor combinado (%d)" % vistos)
+	_comprobar(malos.is_empty(), "cada una aplica la variante del juego o declara C1 a propósito en esa línea%s" % ("" if malos.is_empty() else (": faltan " + ", ".join(malos))))

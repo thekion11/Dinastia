@@ -1,7 +1,7 @@
 class_name ProbarNativoSinBalon
 extends RefCounted
 ## La colocación sin balón de League en C++ (`league_calcular_sin_balon`) = su gemela `MotorLeague._calcular_sin_balon_gd` (16-11-2026, paso a C++, opción B
-## del dueño; lo llama `probar_nativo.gd`): en partidos reales (motor combinado C4, jugadores 3D) se calculan las dos en CADA llamada sobre el mismo estado
+## del dueño; lo llama `probar_nativo.gd`). ## C1 A PROPÓSITO: comprueba el código de League (colocación y locomoción de League), que en C4 no corre: en partidos reales (motor combinado C1, jugadores 3D) se calculan las dos en CADA llamada sobre el mismo estado
 ## (`MotorLeague.comparar_sb`) y se comparan byte a byte. También las parejas de duelo (`duelos_parejas` frente a `_parejas_gd`, `MotorJugable.comparar_duelos`). Tres cruces con clubes de países distintos. Devuelve {fallos, textos}.
 
 const DT := 1.0 / 30.0
@@ -17,7 +17,7 @@ static func _jugar(raiz: Node3D, a: Club, b: Club, semilla: int) -> void:
 	lista.append_array(sp.spawn_team(r, l["xi"], l["jugadores"], Puente3D.formacion(a.tactica.formacion), true, Puente3D.kit(a), Puente3D.kit_portero(a)))
 	lista.append_array(sp.spawn_team(r, v["xi"], v["jugadores"], Puente3D.formacion(b.tactica.formacion), false, Puente3D.kit(b), Puente3D.kit_portero(b)))
 	var ball := StadiumBuilder.spawn_ball(r, Vector3(0, 0.11, 0))
-	var motor := MotorCombinado.new()
+	var motor := MotorCombinado.new()   ## C1 A PROPÓSITO: la colocación y la locomoción de League solo corren en C1
 	r.add_child(motor)
 	motor.set_physics_process(false)
 	motor.autopiloto = true

@@ -6,6 +6,11 @@ extends RefCounted
 ## `pr` es la pantalla principal (no `p`: aquí `p` es el partido, como en el código original).
 
 var pr: Principal
+## (17-11) Si es true, tras un partido jugado se muestra la pantalla de RESULTADO de la maqueta (`ResultadoPartido`) antes de seguir. Las pruebas viejas la apagan.
+static var resultado_nuevo := true
+## (17-11) «Saltar partido» del avance por días: «saltar» simula el partido de hoy sin menú ni resumen y deja solo el resultado. Lo pone `AvanceDiasUI` y se vacía solo.
+static var modo_forzado := ""
+static var _saltado := false   ## el partido que se está cerrando fue «saltado»: sin pregunta a pie de campo
 
 func _init(principal: Principal) -> void:
 	pr = principal
@@ -39,12 +44,14 @@ func _apuntar_partido_en_curso(p: Partido) -> void:
 
 func _seguir_tras_partido(p: Partido) -> void:
 	PartidoPendiente.cerrar()
+	var caja_antes := AvisosSemana.antes(pr)   ## (17-11) el cierre del mercado y el de mes también al jugar o saltar el partido
 	pr.mundo.avanzar_semana(p)
 	pr._escribir("[color=#3fa06a]J%d  %s %d-%d %s[/color]" % [
 		pr.mundo.liga_de(pr.mundo.mi_club()).jornada_actual,
 		p.local.nombre, p.goles_local, p.goles_visita, p.visita.nombre])
 	## (17-10: tras un partido dirigido no se autoguardaba; ahora sí, como al
 	## avanzar la semana sin jugarlo.)
+	AvisosSemana.despues(pr, caja_antes)
 	pr._partida.autoguardar_si_toca()
 	pr._refrescar()
 	## Seis partidos seguidos con el mismo cambio del plan: se pregunta.
@@ -55,10 +62,17 @@ func _seguir_tras_partido(p: Partido) -> void:
 ## marcador distinto del que se acaba de ver. Lo usan todos los modos.
 func _cerrar_partido_dirigido(p: Partido) -> void:
 	PartidoPendiente.actualizar(pr.mundo, p)
+	MomentosPartido.recordar(p, pr.mundo)   ## (17-11) para el botón «Partido jugado» del menú
+	if resultado_nuevo and DisplayServer.get_name() != "headless":
+		var rp := ResultadoPartido.mostrar(pr, p, pr.mundo.mi_club())
+		await rp.elegido
+		rp.queue_free()
 	## A PIE DE CAMPO (B5): antes de volver al despacho, una pregunta con el
 	## partido todavía caliente. No en "instantáneo": quien lo eligió quiere el
 	## resultado y nada más.
-	if pr.mundo.prensa != null and _modo_simulacion(_competicion_de_la_semana()) != "instantaneo":
+	var salto := _saltado
+	_saltado = false
+	if not salto and pr.mundo.prensa != null and _modo_simulacion(_competicion_de_la_semana()) != "instantaneo":
 		var mio := pr.mundo.mi_club()
 		var local := p.local == mio
 		var gf := p.goles_local if local else p.goles_visita
@@ -117,6 +131,7 @@ func _dirigir() -> void:
 	if pr.mundo.necesidades.preparacion_cambio():   ## §2.5: tu cansancio y tu hambre, en ESTE partido
 		pr.mundo.aplicar_bonificadores()
 	var p := Partido.new(par[0], par[1])
+	MomentosPartido.registrar(p)   ## (17-11) anota los momentos (goles, palos, atajadas, rojas) para «Jugar momentos específicos»
 	## EL TIEMPO DE LA CIUDAD (plan maestro C1): el mismo que se juega y el
 	## mismo cielo que se ve. Sale del país del local y la época del año.
 	var info_clima := Clima.del_partido(p.local.pais, pr.mundo.semana, pr.mundo.anio, p.local.id + p.visita.id)
@@ -146,20 +161,33 @@ func _dirigir() -> void:
 	## MISMO `Partido` con los mismos `simular_minuto()`: solo cambia la vista.
 	var modo := _modo_simulacion(_competicion_de_la_semana())
 	## (3-11, orden 22) Antes de cada partido, a pantalla completa: jugar, solo las jugadas importantes o simular.
-	if DisplayServer.get_name() != "headless" and OS.get_environment("SIN_ELECCION_PARTIDO") == "":
+	var vio_previa := false
+	var forzado := modo_forzado
+	modo_forzado = ""
+	if forzado == "saltar":
+		modo = "instantaneo"
+		_saltado = true
+	elif DisplayServer.get_name() != "headless" and OS.get_environment("SIN_ELECCION_PARTIDO") == "":
 		if EleccionPartido.preguntar():
-			var el := EleccionPartido.new()
-			el.titulo = "%s  vs  %s" % [p.local.nombre, p.visita.nombre]
-			pr.add_child(el)
+			## (17-11) EL MENÚ DEL PARTIDO reemplaza a «¿Cómo quieres este partido?»: previa, uniforme, estadio, plan, opciones y cámara; abajo, jugar / importantes / simular.
+			var el: Control = load("res://ui/partido_menu/menu_partido.gd").mostrar(pr, p, pr.mundo.mi_club(), pr.mundo.liga_de(p.visita if p.local == pr.mundo.mi_club() else p.local), info_clima)
 			var e: Dictionary = await el.elegido
 			el.queue_free()
 			modo = String(e["modo"])
+			vio_previa = true
 		elif not EleccionPartido.ultima().is_empty():
 			modo = String(EleccionPartido.ultima().get("modo", modo))
 	if modo == "instantaneo" or modo == "resumen":
 		p.preparar()
 		p.fijar_hinchada(pr.mundo.mi_club(), pr.mundo.prensa.animo if pr.mundo.prensa != null else 60)
 		_apuntar_partido_en_curso(p)
+		if forzado == "saltar":   ## sin resumen: se juega todo de golpe y sale directo el resultado
+			while not p.terminado_ya:
+				p.simular_minuto()
+			if es_eliminatoria and p.goles_local == p.goles_visita:
+				p.penales()
+			_cerrar_partido_dirigido(p)
+			return
 		var res := ResumenPartido.mostrar(pr, p, pr.mundo.mi_club(), es_eliminatoria, modo == "resumen")
 		res.cerrado.connect(func() -> void:
 			res.queue_free()
@@ -167,7 +195,7 @@ func _dirigir() -> void:
 		return
 	## EL INFORME DEL RIVAL (17-10-2026) antes de salir a jugar, como en FM/FC.
 	## Sin pantalla (banco) o con SIN_INFORME_RIVAL no se enseña.
-	if InformeRival.activo and DisplayServer.get_name() != "headless" and OS.get_environment("SIN_INFORME_RIVAL") == "":
+	if not vio_previa and InformeRival.activo and DisplayServer.get_name() != "headless" and OS.get_environment("SIN_INFORME_RIVAL") == "":
 		var inf := InformeRival.mostrar(pr, p, pr.mundo.mi_club(), pr.mundo.liga_de(p.visita if p.local == pr.mundo.mi_club() else p.local), pr.mundo)
 		await inf.cerrado
 		inf.queue_free()

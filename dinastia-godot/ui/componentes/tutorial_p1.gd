@@ -220,9 +220,9 @@ static func _pasos_comunes(dirige: bool) -> Array[Dictionary]:
 	p.append(_paso("El club entero", "Todo el club está en los botones del [b]riel de la izquierda[/b]: Plantel, Partido, Dinero, Gente, Estadio, Ajustes... Cada uno abre su menú a pantalla completa.", "Abre cualquier menú del riel", "riel", "menu", "menu"))
 	p.append(_paso("Lo que va pasando", "Resultados, lesiones, ofertas, la prensa... todo llega aquí. Lo urgente, además, salta como aviso.", "", "registro"))
 	if dirige:
-		p.append(_paso("El tiempo", "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar semana[/b]: el día de partido se abre el menú del partido y ahí eliges jugarlo o simularlo.", "", "calendario"))
+		p.append(_paso("El tiempo", "Cuando esté listo: [b]Dirigir el partido[/b] para jugarlo en directo -cambios, órdenes, charla en el descanso-, o [b]Avanzar[/b]: el tiempo corre día a día y se detiene en cada partido y en cada novedad; el día de partido eliges jugarlo o saltarlo.", "", "avanzar"))
 	else:
-		p.append(_paso("El tiempo", "El calendario avanza desde aquí: [b]Avanzar semana[/b], o día a día con [b]Un día[/b].", "", "calendario"))
+		p.append(_paso("El tiempo", "El tiempo avanza desde aquí: [b]Avanzar[/b] corre los días y se detiene en cada partido y en cada novedad.", "", "avanzar"))
 	p.append(_paso("Guardar", "El juego [b]guarda solo[/b]: cada día, cada semana y al acabar cada partido; y al salir te pregunta si quieres guardar. Guardar y cargar a mano está en [b]Ajustes → Partida y guardado[/b] (el botón ⚙️).", "", "guardar"))
 	return p
 
@@ -288,7 +288,7 @@ static func guion(modo: String, ctx: Dictionary) -> Dictionary:
 			p.append(_paso("El vestuario", "El problema no son las piernas, es la cabeza. Están hundidos. Si alguien puede levantarlos es usted, en el camarín.", "Entra al camarín", "menu:gente", "tab:Camarín", "tab:Camarín"))
 			p.append(_paso("La táctica", "Y ordénelos. Un equipo que no sabe a qué juega pierde por tres. Uno ordenado, por uno. Y a veces empata.", "Ajusta la táctica", "menu:plantel", "tab:Táctica", "tab:Táctica"))
 			p.append(_paso("El primero", "El primero de los cinco es contra [b]%s[/b]. Mire quién viene, quién llega tocado y cómo juegan." % _rival(ctx), "Estudia al rival", "menu:partido", "tab:Partido", "tab:Partido"))
-			p.append(_paso("A la cancha", "Cuando esté listo, [b]Dirigir el partido[/b] y a la cancha. Y no se olvide de [b]guardar[/b]. Suerte. La vamos a necesitar.", "", "calendario"))
+			p.append(_paso("A la cancha", "Cuando esté listo, [b]Dirigir el partido[/b] y a la cancha. Y no se olvide de [b]guardar[/b]. Suerte. La vamos a necesitar.", "", "avanzar"))
 			p.append(_final("Cinco fechas. Si nos salva, en este club no se le olvida nunca."))
 		"cantera":
 			g["lugar"] = "Campo anexo · sábado por la mañana"

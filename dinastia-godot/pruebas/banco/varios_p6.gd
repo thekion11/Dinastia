@@ -297,7 +297,7 @@ func _probar_aspecto_y_audio() -> void:
 func _probar_tutorial() -> void:
 	_titulo("TUTORIAL INMERSIVO")
 	const OBJETIVOS := ["estado", "grupos", "chips", "plantel", "ficha", "dinero", "partido",
-		"tabla", "registro", "calendario", "un_dia", "guardar"]
+		"tabla", "registro", "avanzar", "guardar"]
 	const SIMPLES := ["grupo", "ficha", "grupo_club", "plantel", "dinero", "partido", "menu"]
 	var modos := ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "creador"]
 	## Con una partida de verdad: el mentor tiene que hablar de ELLA.

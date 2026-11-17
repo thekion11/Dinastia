@@ -4,7 +4,8 @@ Regla: **un tema = un documento. Lo pendiente vive en UN solo sitio: [`PLAN_GENE
 
 | Ruta | Qué contiene |
 |---|---|
-| `PLAN_GENERAL.md` | Todo lo que falta: dueño, fases 0–6, ruta de lanzamiento, mejoras de código, 356 mejoras, tus ideas sin cerrar |
+| `PLAN_GENERAL.md` | Lo VIVO: órdenes del dueño, decisiones que esperan respuesta, frentes activos, modo jugador y club, fallos abiertos, ideas nuevas |
+| `05_referencia/CATALOGO_IDEAS_Y_MEJORAS.md` | Catálogo viejo: guion de las fases 0–6, ruta de lanzamiento, mejoras de código, 356 mejoras, ideas 1–1100 y propuestas de lanzamiento |
 | `01_metodo/METODO.md` | Cascada + Modelo V, compuertas, trazabilidad |
 | `01_metodo/SONAR.md` | Cómo se interpretan los resultados de SonarCloud: qué cuenta como «bien», qué hacer con cada tipo de aviso, `NOSONAR`, CI rojo y cómo repetir el ciclo |
 | `02_vision/ideas_del_dueno/` | Instrucciones y notas originales del dueño (las listas de 300 y 750 ideas pasaron al plan) |

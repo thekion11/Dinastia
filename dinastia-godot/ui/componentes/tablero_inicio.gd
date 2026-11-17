@@ -30,12 +30,16 @@ const CLUB := ["*cuentas", "Patrocinadores", "Hinchada y socios", "Diseño del e
 	"Ligas y clubes", "Correo", "Récords", "*sistema"]
 
 static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_al_partido: int = 0) -> void:
+	if EscaparateInicio.usa():   ## (17-11) el escaparate: pantalla completa con su barra, sus tarjetas y su pie (en el teléfono, el mosaico de siempre)
+		EscaparateInicio.pintar(p, c, liga, dias_al_partido)
+		return
 	ocultar_columnas(p)
 	var mos := VBoxContainer.new()
 	mos.name = "Mosaico"
 	mos.add_theme_constant_override("separation", SEP)
 	raiz.add_child(mos)
 	var barra := HBoxContainer.new()
+	barra.name = "Botones"
 	barra.add_theme_constant_override("separation", 4)
 	mos.add_child(barra)
 	var cuerpo := VBoxContainer.new()
@@ -50,6 +54,7 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 		var b := _boton_pestana(Idiomas.t(String(PESTANAS[i])).to_upper(), color_mundo)
 		barra.add_child(b)
 		botones.append(b)
+		CampanasMenu.marcar_pestana(b, i)   ## (17-11) punto rojo si hay una campana en una tarjeta de esa pestaña
 		b.pressed.connect(func() -> void:
 			pestana = i
 			_marcar(botones)
@@ -60,12 +65,13 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 
 ## L1/R1 en el Inicio: la pestaña de al lado del mosaico (pulsa su botón: repinta y marca). Falso si no hay mosaico a la vista.
 static func saltar(p: Principal, d: int) -> bool:
-	var mos := p._lista_inicio.get_node_or_null("Mosaico") if p._lista_inicio != null else null
+	var esc: Variant = p.get_meta("escaparate", null)   ## (17-11) en el escaparate, el mosaico es el de su capa
+	var mos: Node = (esc as Node).get_node_or_null("Mosaico") if is_instance_valid(esc) and (esc as Control).visible else (p._lista_inicio.get_node_or_null("Mosaico") if p._lista_inicio != null else null)
 	if mos == null or not (mos as Control).is_visible_in_tree():
 		return false
-	var barra := mos.get_child(0)
+	var barra := mos.find_child("Botones", true, false)
 	var i := (pestana + d + PESTANAS.size()) % PESTANAS.size()
-	var b := barra.get_child(i) as Button
+	var b := (barra.get_meta("tabs") as Array)[i] as Button if barra.has_meta("tabs") else barra.get_child(i) as Button
 	b.button_pressed = true
 	b.pressed.emit()
 	return true
@@ -253,6 +259,7 @@ static func tarjeta(nombre: String, acento: Color, al_pulsar: Callable, fondo :=
 			b.grab_focus())
 	if al_pulsar.is_valid():
 		b.pressed.connect(al_pulsar)
+	CampanasMenu.poner(b, nombre)   ## (17-11) la campana roja de los avisos del avance por días
 	return [b, v]
 
 ## (16-11) EL ARTE DE LA TARJETA: un render propio de una sala del club (`herramientas/hornear_arte_mosaico.gd`, 192x108 en grises,

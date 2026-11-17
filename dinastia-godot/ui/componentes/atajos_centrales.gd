@@ -108,7 +108,8 @@ static func manejar(p: Principal, ev: InputEvent) -> bool:
 		return false
 	## Escribiendo en un campo (buscador, móvil, nombres), las teclas son letras.
 	var foco := p.get_viewport().gui_get_focus_owner()
-	if foco is LineEdit or foco is TextEdit:
+	var buscador: LineEdit = p.get("_buscador")
+	if foco is LineEdit or foco is TextEdit or (buscador != null and buscador.has_focus()):   ## (17-11) el buscador del menú central vive en una ventana propia: su foco no lo ve el viewport de la pantalla
 		return false
 	for e: Dictionary in catalogo():
 		var accion := String(e["accion"])
@@ -120,10 +121,13 @@ static func manejar(p: Principal, ev: InputEvent) -> bool:
 				return false
 			p._menu_lateral.abrir_menu(String(destino["menu"]), int(destino["sub"]))
 		elif destino == "dia":
-			p._avanzar_dia()
+			p._avance.dias().pulsar(true)   ## (17-11) «N: pasa un día» = «Avanzar 1 día» del avance por días
 		elif destino == "buscar":
 			var b: LineEdit = p.get("_buscador")
-			if b != null:
+			var esc: Array = p.find_children("*", "EscaparatePantalla", false, false)   ## (17-11) en el menú central nuevo el buscador vive en «Base de datos»
+			if not esc.is_empty() and (esc[0] as Control).is_visible_in_tree():
+				esc[0].abrir_busqueda(esc[0] as Control)
+			elif b != null:
 				b.grab_focus()
 		elif destino == "guardar":
 			p._guardar()
