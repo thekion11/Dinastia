@@ -4,10 +4,13 @@ extends RefCounted
 ## 0 = ordenado (teclado, taza y una pila pequeña), 1 = pendientes (papeles sueltos y una carpeta abierta), 2 = desbordado (pilas altas y papeles por todas partes, nota roja). Se renderiza UNA vez por estado
 ## y color de club (SubViewport persistente con `UPDATE_ONCE`) y la tarjeta solo enseña su textura. Sin pantalla (`--headless`) devuelve null y la tarjeta usa el dibujo plano.
 
+## (17-11, cierre) APAGADO detrás de esta bandera: en la captura de software el render salió negro y no se pudo verificar en una GPU real; mientras tanto la tarjeta usa el dibujo plano de siempre. Se enciende con `true` cuando se compruebe en el equipo del dueño.
+const ACTIVO := false
+
 static var _vistas := {}
 
 static func textura(padre: Node, estado: int, color: Color) -> Texture2D:
-	if DisplayServer.get_name() == "headless" or padre == null or not padre.is_inside_tree():
+	if not ACTIVO or DisplayServer.get_name() == "headless" or padre == null or not padre.is_inside_tree():
 		return null
 	var k := "%d|%s" % [estado, color.to_html(false)]
 	if _vistas.has(k):
