@@ -21,6 +21,12 @@ const CACHES := [
 	["res://visor/pelo_q.gd", "_mats", 60],
 	["res://visor/impostor_lejano.gd", "_mats", 40],
 	["res://visor/retrato3d.gd", "_cache", 150],
+	## Lo que cambia con cada ESTADIO o club nuevo (tope: unos cuantos estadios y escudos recientes).
+	["res://visor/stadium_builder_p1.gd", "_cache_tex", 6],
+	["res://visor/piezas_obra.gd", "_cache_mat", 90],
+	["res://visor/respaldo_curvo.gd", "_cache", 12],
+	["res://visor/telones_pintados.gd", "_cache", 24],
+	["res://ui/escudo_p1.gd", "_cache", 160],
 ]
 
 ## Recorta todas; devuelve cuántas entradas soltó (para las pruebas).
