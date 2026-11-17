@@ -38,6 +38,7 @@ func dia_de_partido(c: Club) -> void:
 	var mem0 := Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0
 	var huerf0 := int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
 	t.set_meta("huerfanos0", Node.get_orphan_node_ids())
+	t.set_meta("guardados0", load("res://pruebas/e2e_dia_partido_pasos2.gd").nodos_guardados())
 	var liga := m.liga_de(c)
 	var jugados0 := _jugados(liga, c)
 	## 1) MENÚ CENTRAL → AVANZAR hasta el día de partido (sin las pantallas del avance: no son lo que se prueba aquí)

@@ -10,6 +10,14 @@ func _init(prueba: Node, pasos: RefCounted) -> void:
 	p = prueba.p
 	a = pasos
 
+## Los nodos de las pantallas que `MenuGuardado` guarda armadas fuera del árbol (a propósito: volver a abrirlas es instantáneo).
+static func nodos_guardados() -> int:
+	var n := 0
+	for g: Variant in MenuGuardado._guardados.values():
+		if g is Node and is_instance_valid(g) and not (g as Node).is_inside_tree():
+			n += 1 + (g as Node).find_children("*", "", true, false).size()
+	return n
+
 func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga, jugados0: int, mem0: float, huerf0: int) -> void:
 	var pais := c.pais
 	var dias = p._avance.dias()
@@ -161,8 +169,11 @@ func despues_de_jugar(c: Club, vista: VistaEstadio, partido: Partido, liga: Liga
 		await t.get_tree().process_frame
 	var mem1 := Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0
 	var huerf1 := int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
+	## Las pantallas que `MenuGuardado` conserva armadas fuera del árbol (a propósito: abrir la Táctica de nuevo es instantáneo) no son una fuga.
+	var guardados := nodos_guardados() - int(t.get_meta("guardados0", 0))
+	huerf1 -= guardados
 	t.ok(t.buscar(p, "VistaEstadio") == null and t.buscar(p, "PartidoVivo") == null, "[%s] no queda ningún estadio ni partido abierto" % pais)
-	if not t.ok(huerf1 - huerf0 <= 5, "[%s] no quedan nodos huérfanos (%d → %d)" % [pais, huerf0, huerf1]):
+	if not t.ok(huerf1 - huerf0 <= 5, "[%s] no quedan nodos huérfanos (%d → %d, sin los %d de las pantallas que guarda MenuGuardado)" % [pais, huerf0, huerf1, guardados]):
 		var antes: Array = t.get_meta("huerfanos0", [])
 		var cuenta := {}
 		for id: int in Node.get_orphan_node_ids():
