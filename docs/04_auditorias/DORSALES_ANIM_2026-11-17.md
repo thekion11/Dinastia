@@ -154,10 +154,27 @@ dibujo nueva (tabla de llamadas abajo). Banco: `_dq_espalda_medidas` lee las med
 ### Capturas de la 2.ª pasada
 
 `capturas_cmu_apellido_2026-11-17/` (Forward+ sin GPU, ALTA, cámara real de TV y de cerca; tres cruces nuevos de países distintos:
-GER-URU, POR-JPN y FRA-COL; GER-URU también en MÍNIMA). «Antes»: copia del árbol en 9231fd63. El trote CMU queda apagado: las fotos
+GER-URU y NED-CHI en ALTA, GER-URU también en MÍNIMA). «Antes»: copia del árbol en 9231fd63. El trote CMU queda apagado: las fotos
 muestran el apellido y el dorsal (de espalda y en la TV) y que la carrera de lado no cambia.
 
-CAPTURAS_PENDIENTES
+Pares (≤ 1280 px, en el repo solo los `*_antes_despues.jpg`; las sueltas, fuera):
+- De espalda: `espalda1_ger_uru_antes_despues.jpg` (MEYER 4: el apellido se lee de lejos), `espalda2_ger_uru_…`, `espalda1_ned_chi_…`,
+  `espalda2_ned_chi_…` (MIERDING 21), `espalda1_minima_ger_uru_…` (MÍNIMA: el apellido, a menos de un píxel por celda, se funde en
+  una franja de tono medio, como antes, sin chisporroteo).
+- Cámara de TV: `tv_ger_uru_…`, `tv_ned_chi_…`, `tv_minima_ger_uru_…`. De lado (carrera, sin cambios con el trote apagado): `lado3_ger_uru_…`.
+- POR-JPN y FRA-COL: la foto «después» no salió (el proceso de captura murió por memoria en este contenedor sin GPU con 15 GB
+  compartidos; POR-JPN dibuja 2,2 M de triángulos) y se cambió por NED-CHI. Tercer cruce: pendiente.
+
+Llamadas de dibujo y triángulos (vista de TV, fotograma 90, mismo motor):
+
+| Cruce | Calidad | Llamadas antes → después | Triángulos antes → después |
+|---|---|---|---|
+| GER-URU (Wupper FC - Belvedere FC) | ALTA | 677 → 672 | 1.537.610 → 1.536.820 |
+| NED-CHI (Kaasstad FC - Levantino SC) | ALTA | 499 → 494 | 1.507.547 → 1.511.757 |
+| GER-URU | MÍNIMA | 157 → 152 | 185.778 → 202.883 |
+
+Ningún material, textura ni llamada nueva: las diferencias son del instante (el público y la animación lejana dependen del reloj
+real de la captura, y en MÍNIMA la foto «antes» y «después» no cayeron en el mismo momento de juego).
 
 ## Pendiente
 
