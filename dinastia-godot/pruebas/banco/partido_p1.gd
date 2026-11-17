@@ -40,7 +40,12 @@ func _probar_partidos() -> void:
 	p2.tarjeta.connect(func(_j: Jugador, _r: bool, _min: int) -> void: oidos["tarjeta"] += 1)
 	p2.terminado.connect(func(_a: int, _b: int) -> void: oidos["fin"] += 1)
 	var r2 := p2.simular()
-	_comprobar(oidos["gol"] == r2["local"] + r2["visita"], "la senal de gol se emite una vez por gol")
+	## (17-11) El VAR puede anular un gol ya emitido (`anular_gol_externo` lo resta del marcador y lo deja como «gol_anulado» en la crónica): cada gol del marcador salió una vez y cada anulado también.
+	var anulados := 0
+	for e: Dictionary in p2.cronica:
+		if String(e.get("tipo", "")) == "gol_anulado":
+			anulados += 1
+	_comprobar(oidos["gol"] == r2["local"] + r2["visita"] + anulados, "la senal de gol se emite una vez por gol")
 	_comprobar(oidos["fin"] == 1, "la senal de fin de partido se emite una vez")
 
 	## "remate": la llegada que no fue gol. Hasta esta sesion `_atacar()` la
