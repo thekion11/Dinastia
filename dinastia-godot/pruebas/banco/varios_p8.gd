@@ -249,6 +249,12 @@ func _probar_calendario_c13() -> void:
 	_comprobar(once_chi.size() == 1 and String(once_chi[0]["tipo"]) == "memoria" and once_usa.size() == 1 and String(once_usa[0]["tipo"]) == "memoria",
 		"el 11 de septiembre es fecha de memoria en Chile y en EE. UU.")
 	_comprobar(chi.any(func(f: Dictionary) -> bool: return int(f["mes"]) == 5 and int(f["dia"]) == 1), "el 1 de mayo está en Chile")
+	## (17-11) Días de la independencia: los que faltaban se suman con la marca «indep» y se reconocen los de siempre.
+	var con_indep := 0
+	for pais: String in Calendario.FIJAS.keys():
+		con_indep += 1 if Calendario.del_anio(pais, 2026).any(func(f: Dictionary) -> bool: return CalendarioMemorias.es_independencia(f)) else 0
+	_comprobar(con_indep >= 75 and CalendarioMemorias.INDEPENDENCIAS.keys().all(func(p2: String) -> bool: return Calendario.del_anio(p2, 2026).any(func(f: Dictionary) -> bool: return f.has("indep"))),
+		"%d países con día de independencia y los 11 añadidos están en su calendario" % con_indep)
 	var usa := Calendario.del_anio("USA", 2026)
 	_comprobar(not usa.any(func(f: Dictionary) -> bool: return int(f["mes"]) == 5 and int(f["dia"]) == 1)
 		and usa.any(func(f: Dictionary) -> bool: return String(f["nombre"]) == "Labor Day" and int(f["dia"]) == 7),
@@ -262,7 +268,7 @@ func _probar_calendario_c13() -> void:
 		for f: Dictionary in Calendario.de_la_semana("CHI", 2026, s):
 			if String(f["nombre"]) == "Fiestas Patrias":
 				sem_fiesta = s
-			if String(f["nombre"]) == "11 de septiembre":
+			if String(f["nombre"]) == "Conmemoración del golpe de Estado":
 				sem_memoria = s
 	_comprobar(sem_fiesta > 0 and sem_memoria > 0 and sem_fiesta != sem_memoria, "Fiestas Patrias y el 11 caen en semanas distintas (%d y %d)" % [sem_fiesta, sem_memoria])
 	_comprobar(Calendario.factor_publico("CHI", 2026, sem_fiesta) > 1.0, "la semana de Fiestas Patrias llena más el estadio")
@@ -281,7 +287,7 @@ func _probar_calendario_c13() -> void:
 	m.calendario.mentor.connect(func(t: String, _b: String) -> void: mentor.append(t))
 	var moral0 := c.plantilla[0].moral
 	m.calendario.semana(c, 2026, sem_memoria)
-	_comprobar(noticias.any(func(t: String) -> bool: return t.contains("11 de septiembre")) and mentor.has("11 de septiembre"), "el 11 sale en las noticias y el mentor lo explica")
+	_comprobar(noticias.any(func(t: String) -> bool: return t.contains("Conmemoración del golpe de Estado")) and mentor.has("Conmemoración del golpe de Estado"), "el 11 sale en las noticias y el mentor lo explica")
 	_comprobar(c.plantilla[0].moral == moral0, "la memoria no sube la moral como una fiesta")
 	m.calendario.semana(c, 2026, sem_fiesta)
 	_comprobar(c.plantilla[0].moral == mini(moral0 + 1, 99), "la semana de fiesta sube la moral")
@@ -292,7 +298,7 @@ func _probar_calendario_c13() -> void:
 	var dic := m.calendario.a_dic()
 	var cal2 := Calendario.new()
 	cal2.desde_dic(dic)
-	_comprobar(cal2.explicadas.has("11 de septiembre"), "se guarda lo que el mentor ya explicó")
+	_comprobar(cal2.explicadas.has("Conmemoración del golpe de Estado"), "se guarda lo que el mentor ya explicó")
 	_comprobar(Calendario.proximas("CHI", 2026, 1, 5).size() == 5, "hay próximas fechas para el calendario")
 
 func _probar_marcas_y_escudos() -> void:

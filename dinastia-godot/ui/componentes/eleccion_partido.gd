@@ -67,9 +67,9 @@ func _ready() -> void:
 	centro.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(centro)
 	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 16)
+	col.add_theme_constant_override("separation", 8 if EscalaMovil.es_tactil() else 16)
 	centro.add_child(col)
-	var t := Tema.etiqueta(Tema.TAM_TITULO + 6, Tema.ORO, Idiomas.t("¿Cómo quieres este partido?"))
+	var t := Tema.etiqueta(Tema.TAM_TITULO + (0 if EscalaMovil.es_tactil() else 6), Tema.ORO, Idiomas.t("¿Cómo quieres este partido?"))
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col.add_child(t)
 	if titulo != "":
@@ -96,6 +96,7 @@ func _ready() -> void:
 		var clave := String(par[0])
 		b.pressed.connect(func() -> void: _sim = clave)
 		sub.add_child(b)
+	_ajustar_tarjetas.call_deferred(fila)
 	_recordar = CheckBox.new()
 	_recordar.text = Idiomas.t("No volver a preguntar (se cambia en Ajustes)")
 	_recordar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -103,13 +104,19 @@ func _ready() -> void:
 	Animar.entrar(col)
 	_primera.grab_focus.call_deferred()
 
+## Cada tarjeta mide lo que pide su contenido (con letra grande o un idioma largo no cabía en los 230 px fijos).
+func _ajustar_tarjetas(fila: HBoxContainer) -> void:
+	for b in fila.get_children():
+		var v := (b as Control).get_child(0) as Control
+		(b as Control).custom_minimum_size.y = maxf(230.0 if not EscalaMovil.es_tactil() else 200.0, v.get_combined_minimum_size().y + 28.0)
+
 func _ajustar() -> void:
 	position = Vector2.ZERO
 	size = get_viewport_rect().size
 
 func _tarjeta(padre: Node, icono: String, nombre: String, texto: String, opcion: String) -> Button:
 	var b := Button.new()
-	b.custom_minimum_size = Vector2(260, 230)
+	b.custom_minimum_size = Vector2(260, 200 if EscalaMovil.es_tactil() else 230)
 	b.name = "Opcion_" + opcion
 	var v := VBoxContainer.new()
 	v.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -118,9 +125,10 @@ func _tarjeta(padre: Node, icono: String, nombre: String, texto: String, opcion:
 	v.offset_top = 14
 	v.offset_bottom = -14
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	v.add_theme_constant_override("separation", 8)
+	var tactil := EscalaMovil.es_tactil()   ## (16-11) en el teléfono, en alemán, la tarjeta de Simular se salía 11 px por abajo
+	v.add_theme_constant_override("separation", 3 if tactil else 8)
 	b.add_child(v)
-	for par: Array in [[icono, 48, Tema.TEXTO], [nombre, Tema.TAM_DESTACADO + 2, Tema.ORO], [texto, Tema.TAM_CUERPO, Tema.SUAVE]]:
+	for par: Array in [[icono, 32 if tactil else 48, Tema.TEXTO], [nombre, Tema.TAM_DESTACADO + 2, Tema.ORO], [texto, Tema.TAM_CUERPO, Tema.SUAVE]]:
 		var l := Tema.etiqueta(int(par[1]), par[2], String(par[0]))
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

@@ -32,6 +32,16 @@ func _ready() -> void:
 	var clubes: Array = mundo.ligas[0].clubes
 	mundo.mi_club_id = clubes[clampi(OS.get_environment("CLUB").to_int(), 0, clubes.size() - 1)].id
 	var par := mundo.proximo_partido()
+	## (16-11) Si el club descansa esa fecha (ligas impares o con calendario partido), se avanza hasta su primer partido.
+	var vueltas := 0
+	while par.size() < 2 and vueltas < 12:
+		mundo.avanzar_semana()
+		par = mundo.proximo_partido()
+		vueltas += 1
+	if par.size() < 2:
+		push_error("perfilar_gpu: %s sin partido en 12 semanas" % pais)
+		get_tree().quit(1)
+		return
 	_vista = VistaEstadio.new()
 	add_child(_vista)
 	_vista.abrir(par[0], 0.85, par[1], Partido.new(par[0], par[1]), {})

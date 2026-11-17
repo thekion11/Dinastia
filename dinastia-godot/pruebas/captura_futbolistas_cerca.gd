@@ -19,6 +19,9 @@ const PLANOS := [
 	["torso1", Vector3(-1.4, 1.2, 1.7), Vector3(-1.4, 1.02, 0), 32.0],
 	["torso2", Vector3(0.0, 1.2, 1.7), Vector3(0.0, 1.02, 0), 32.0],
 	["torso3", Vector3(1.4, 1.2, 1.7), Vector3(1.4, 1.02, 0), 32.0],
+	# Frente 2 (16-11): plano de torso y short de dos jugadores, para los parches claros de la tela.
+	["torso", Vector3(0.35, 1.2, 1.5), Vector3(0.35, 1.15, 0), 30.0],
+	["espalda", Vector3(-0.35, 1.2, -1.5), Vector3(-0.35, 1.1, 0), 30.0],
 ]
 ## SOLO=torso1,cuerpo saca solo esos planos (vacío = todos).
 var _planos: Array = []
@@ -111,7 +114,13 @@ func _process(_d: float) -> void:
 	var k := (_n - 12) / 6
 	if _n >= 12 and (_n - 12) % 6 == 5:
 		var suf := OS.get_environment("SUFIJO")
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/cerca_%s_%s.png" % [_planos[k][0], suf])
+		var img := get_viewport().get_texture().get_image()
+		## SALIDA=carpeta: JPG fuera del repo (frente 2); sin ella, el PNG de siempre en pruebas/capturas.
+		var sal := OS.get_environment("SALIDA")
+		if sal != "":
+			img.save_jpg(sal.path_join("cerca_%s_%s.jpg" % [_planos[k][0], suf]), 0.9)
+		else:
+			img.save_png("res://pruebas/capturas/cerca_%s_%s.png" % [_planos[k][0], suf])
 		if k + 1 >= _planos.size():
 			get_tree().quit()
 			return

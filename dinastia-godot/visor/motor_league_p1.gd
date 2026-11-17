@@ -158,6 +158,9 @@ func _regate_palancas(local: bool) -> Vector2:
 
 # ------------------------------------------------------------------ colocación
 
+func _anim_league() -> bool:   ## (16-11) `_anim` de este motor pasa por LeagueAcciones y LeagueLocomocion (`animar_jugadores` lo copia)
+	return true
+
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	if equipos.is_empty() or not p.has("ls_forma") or estado != "juego":
 		return super(p, en_posesion)
@@ -430,3 +433,7 @@ func _linea_penultimo_gd(local: bool, con_vel: bool, lado_: float, balon_x: floa
 		if bool(q["es_local"]) == local:
 			xs.append(ls(pos(q)).x + ls(q["vel"]).x * 0.24 if con_vel else ls(pos(q)).x)
 	return LeagueEquipo.linea_penultimo(xs, lado_, balon_x)
+
+## (16-11, informe M6-24) El combinado con nuestra locomoción no usa el toque de conducción de League (antes apagaba `fase3`, estática, mientras se emitían señales).
+func _sin_toque_league() -> bool:
+	return false

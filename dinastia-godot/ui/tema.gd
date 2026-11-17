@@ -52,6 +52,19 @@ static var escala_texto := 1.0
 ## Contraste alto (s3): el texto suave pasa a casi blanco, el principal a blanco y los
 ## bordes y paneles de `caja()` se marcan. Lo vuelca Principal con la paleta «contraste».
 static var contraste := false
+## (16-11, frente 1) EL COLOR DEL MUNDO DE JUEGO, en VARIABLES (las constantes de arriba siguen siendo la paleta base: hay ~70 `const X :=
+## Tema.ORO` en otras clases y una constante no puede leer una variable). `ColorMundo.aplicar` las fija al abrir la partida; las leen el
+## mosaico central, la barra de ayudas y la portada y la cabecera de los menús a pantalla completa (`PantallaMenu._color`).
+## «dirigir» deja los menús como siempre; «mandar» (negro y oro) y «retos» (naranja) tiñen fondo y acento.
+static var mundo := "dirigir"
+static var acento_mundo := Color("4fae7b")
+static var fondo_mundo := FONDO
+
+## Un color de menú (`MenusLaterales.colores`) llevado hacia el mundo: el acento (i = 2) casi entero, los fondos (0, 1) casi enteros.
+static func al_mundo(c: Color, i: int) -> Color:
+	if mundo == "dirigir":
+		return c
+	return c.lerp(acento_mundo, 0.7) if i == 2 else c.lerp(fondo_mundo, 0.8)
 const SUAVE_CONTRASTE := Color("d8e0dc")
 const BORDE_CONTRASTE := Color("ffffffb0")
 

@@ -611,6 +611,11 @@ void fragment() {
 	// Relieve de los pliegues (etapa 2): la pendiente del ruido de arrugas,
 	// que se suma al mapa de normales para que la LUZ los marque, no solo el
 	// color.
+	// PARCHES CLAROS (frente 2, 16-11): el relieve se sumaba al mapa de normales en espacio TANGENTE, pero
+	// se calcula en las coordenadas de reposo (x, y): en cada isla de UV de Quaternius la tangente apunta a
+	// otro lado, y la misma arruga inclinaba la luz en sentidos distintos a cada lado de una costura de UV
+	// (bloques rectangulares claros en camiseta y short). Ahora es la PENDIENTE de una altura en metros
+	// (por metro de x e y de reposo) y se aplica abajo como relieve de superficie, sin pasar por la tangente.
 	vec2 relieve_tela = vec2(0.0);
 	if (usa_reposo) {
 		// La tela no se pega al músculo como la piel: menos relieve del cuerpo
@@ -619,10 +624,10 @@ void fragment() {
 		float arruga = ruido(vec2(x * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2(x * 34.0, y * 11.0 + 7.0)) * 0.4;
 		float arr_x = ruido(vec2((x + 0.006) * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2((x + 0.006) * 34.0, y * 11.0 + 7.0)) * 0.4;
 		float arr_y = ruido(vec2(x * 16.0 + 3.0, (y + 0.012) * 5.0)) * 0.6 + ruido(vec2(x * 34.0, (y + 0.012) * 11.0 + 7.0)) * 0.4;
-		relieve_tela = vec2(arr_x - arruga, arr_y - arruga) * (civil ? 5.0 : 2.0);
+		relieve_tela = vec2((arr_x - arruga) / 0.006, (arr_y - arruga) / 0.012) * (civil ? 0.008 : 0.0025);
 		if (!civil && !largo) {
 			float h0 = pliegues(x, y);
-			relieve_tela += vec2(pliegues(x + 0.004, y) - h0, pliegues(x, y + 0.004) - h0) * 1.6;
+			relieve_tela += vec2(pliegues(x + 0.004, y) - h0, pliegues(x, y + 0.004) - h0) / 0.004 * 0.0045;
 			arruga += h0 * 0.18;
 		}
 		float lado_t = smoothstep(0.1, 0.2, abs(x)) * step(abs(x), 0.215);
@@ -821,6 +826,12 @@ void fragment() {
 			// De lejos (la celda ya no llega al píxel) las letras se funden en un tono medio en vez de chisporrotear.
 			on = mix(0.35, on, 1.0 - smoothstep(0.55, 1.1, px_tela / cw));
 		}
+		// Acotado: en el borde de la caja de cada cifra la distancia salta y, sin tope, dibujaba un marco fino.
+		float fw_d = clamp(fwidth(dd), 1e-4, 0.02) * 0.75;
+		float on = 1.0 - smoothstep(DIG_T - fw_d, DIG_T + fw_d, dd);
+		// Filete de ~5 mm más oscuro alrededor (como el borde termosellado de los dorsales); se apaga de lejos.
+		float filete = (1.0 - smoothstep(DIG_T + 0.018 - fw_d, DIG_T + 0.018 + fw_d, dd)) * (1.0 - smoothstep(0.01, 0.03, fw_d));
+		camiseta = mix(camiseta, camiseta * 0.55, filete * (1.0 - on));
 		camiseta = mix(camiseta, color_num.rgb, on);
 	}
 
@@ -927,7 +938,8 @@ void fragment() {
 		vec3 matiz = (piel / l) / (REF / l_ref);
 		albedo = piel_obj * rel * mix(vec3(1.0), clamp(matiz, vec3(0.6), vec3(1.6)), 0.3);
 		// Sin saturar (el usuario lo pidió el 30-9: pieles limpias, no naranjas).
-		albedo = mix(vec3(dot(albedo, vec3(0.2126, 0.7152, 0.0722))), albedo, 0.78);
+		// (16-11, frente 2) 0,78 → 0,9: con 0,78 más el borde de luz y la subsuperficie la piel salía cerosa, casi gris.
+		albedo = mix(vec3(dot(albedo, vec3(0.2126, 0.7152, 0.0722))), albedo, 0.9);
 	}
 	float tope = max(max(albedo.r, albedo.g), albedo.b);
 	albedo *= tope > 0.72 ? (0.72 + (tope - 0.72) * 0.25) / tope : 1.0;
@@ -1121,19 +1133,8 @@ void fragment() {
 	}
 	vec3 nm = usa_normal ? texture(normal_tex, UV).rgb : vec3(0.5, 0.5, 1.0);
 	vec2 nm_cuerpo = nm.xy - 0.5;
-	// Micro relieve del tejido sobre el relieve del cuerpo: el punto de verdad (`tela_nor`) si está encendido;
-	// si no, el de siempre (dos cosenos). La textura se muestrea con sus derivadas (fuera de la rama) y solo
-	// cuando una repetición ocupa más de ~8 píxeles: de lejos no se ve y no cuesta.
-	vec2 uv_t = UV * tela_escala;
-	vec2 duv_x = dFdx(uv_t);
-	vec2 duv_y = dFdy(uv_t);
-	float cerca_t = tela_detalle * (1.0 - smoothstep(0.06, 0.12, max(length(duv_x), length(duv_y))));
-	if (cerca_t > 0.0 && tela > 0.0) {
-		nm.xy += (textureGrad(tela_nor, uv_t, duv_x, duv_y).rg - 0.5) * cerca_t * tela;
-	} else if (tela_detalle <= 0.0) {
-		nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * (usa_reposo && !civil ? 0.018 : 0.045) * tela * nitidez;
-	}
-	nm.xy += (relieve_tela.x * v_ejes.xy + relieve_tela.y * v_ejes.zw) * tela;
+	// Micro relieve del tejido sobre el relieve del cuerpo.
+	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * (usa_reposo && !civil ? 0.018 : 0.045) * tela * nitidez;
 	// Equipación de juego (17-10-2026): el músculo se atenúa ANTES de sumar el
 	// relieve propio de la tela (arrugas, pliegues, canalé), y así la tela se
 	// puede marcar más sin que vuelvan los abdominales pintados.
@@ -1159,22 +1160,33 @@ void fragment() {
 	// 7 m: de lejos el borde de un píxel parpadearía).
 	vec3 dpx = dFdx(VERTEX);
 	vec3 dpy = dFdy(VERTEX);
-	float dhx = dFdx(h_escudo) * 0.0007;
-	float dhy = dFdy(h_escudo) * 0.0007;
 	float k_esc = 1.0 - smoothstep(3.0, 7.0, length(VERTEX));
-	if ((dhx != 0.0 || dhy != 0.0) && k_esc > 0.0) {
+	float dhx = dFdx(h_escudo) * 0.0007 * k_esc;
+	float dhy = dFdy(h_escudo) * 0.0007 * k_esc;
+	// Arrugas y pliegues de la tela (frente 2): la pendiente analítica en reposo por la derivada en pantalla
+	// de x e y de reposo (exacta dentro de cada triángulo), así no hay escalones de 2x2 píxeles. Se apaga
+	// entre 6 y 14 m (con la cámara de TV el jugador mide ~30 px y no se ve).
+	float k_tela = (1.0 - smoothstep(6.0, 14.0, length(VERTEX))) * tela;
+	if (k_tela > 0.0 && usa_reposo) {
+		vec2 gx = vec2(dFdx(v_reposo.x), dFdx(v_reposo.y));
+		vec2 gy = vec2(dFdy(v_reposo.x), dFdy(v_reposo.y));
+		dhx += dot(relieve_tela, gx) * k_tela;
+		dhy += dot(relieve_tela, gy) * k_tela;
+	}
+	if (dhx != 0.0 || dhy != 0.0) {
 		vec3 r1 = cross(dpy, NORMAL);
 		vec3 r2 = cross(NORMAL, dpx);
 		float det = dot(dpx, r1);
 		vec3 n_esc = abs(det) * NORMAL - sign(det) * (dhx * r1 + dhy * r2);
 		if (dot(n_esc, n_esc) > 1e-20) {
-			NORMAL = normalize(mix(NORMAL, normalize(n_esc), k_esc));
+			NORMAL = normalize(n_esc);
 		}
 	}
 	// Ropa de calle: casi nada del relieve muscular de la piel atraviesa la tela.
 	// El zapato de calle tampoco deja ver el relieve de los dedos (26-10-2026).
 	float tapa_n = civil ? max(tela, m.a) : tela;
 	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.4 : 0.6) : 0.45, tapa_n) : 0.6 * tela;
-	RIM = borde;
+	// (16-11, frente 2) La piel desnuda con menos borde de luz: el halo claro en brazos y cuello era lo que la volvía de cera.
+	RIM = borde * mix(0.45, 1.0, max(tela, m.a));
 	RIM_TINT = 0.35;
 }

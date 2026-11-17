@@ -63,9 +63,7 @@ static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dic
 	## cámara de TV pasa cerca del borde del césped**, o sea de la bandeja de
 	## abajo. Las de arriba se ven a 30 m o más, donde la textura de grada +
 	## los hinchas 3D ya cuentan la misma historia.
-	##   bandeja 0 -> las 5 filas de siempre
-	##   bandeja 1 -> 2 filas
-	##   bandeja 2+ -> ninguna (textura + hinchas, que sí siguen en todas)
+	##   bandeja 0 -> las 5 filas de siempre; bandeja 1 -> 2 filas; bandeja 2+ -> ninguna (textura + hinchas, que sí siguen en todas)
 	## Total: ~2,4 millones de vértices, MENOS que antes de esta tanda.
 	## Etapa 3 (8-10-2026): en calidad MEDIO -la de un equipo modesto- solo las
 	## 2 filas pegadas al césped llevan el modelo real (1.944 triángulos por
@@ -147,9 +145,13 @@ static func _paleta_grada(est: Dictionary, bandeja: int, largo: float, lateral: 
 	## no los de las butacas); el resto, ropa de calle.
 	var h1 := Color(str(est.get("hincha1", est.get("asiento1", "#1f5f3d"))))
 	var h2 := Color(str(est.get("hincha2", est.get("asiento2", "#e8e8e8"))))
-	var colores_hincha := [h1, h1, h1, h1, h1, h1, h2, h2, h2, h2,
+	## (16-11, frente 2) Desde la cámara de TV la grada se leía como un mosaico de un solo color: al lado de PES 2020 y FC
+	## el público lleva mucha ropa de calle (blanco, negro, gris, vaquero, beige, abrigo). Ahora ~4 de cada 10 con los
+	## colores del club y el resto de calle; el mismo número de llamadas al azar, así que la grada sigue saliendo igual de estable.
+	var colores_hincha := [h1, h1, h1, h1, h2, h2, h2,
 		Color(0.85, 0.85, 0.88), Color(0.15, 0.16, 0.2), Color(0.45, 0.5, 0.55), Color(0.78, 0.7, 0.45),
-		Color(0.2, 0.3, 0.7), Color(0.55, 0.35, 0.25), Color(0.25, 0.5, 0.35)]
+		Color(0.2, 0.3, 0.7), Color(0.55, 0.35, 0.25), Color(0.25, 0.5, 0.35), Color(0.08, 0.08, 0.09),
+		Color(0.27, 0.36, 0.52), Color(0.62, 0.6, 0.57), Color(0.4, 0.13, 0.12), Color(0.93, 0.92, 0.9)]
 	var visita := bool(est.get("sector_visita", false))
 	var v1 := Color(str(est.get("visita1", "#ffffff")))
 	var v2 := Color(str(est.get("visita2", "#222222")))
@@ -418,7 +420,6 @@ static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMe
 	mih.name = "Hinchada"
 	mih.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	deck.add_child(mih)
-
 
 ## LAS BOCAS DE ACCESO (23-9-2026). En `ea_fc25_referencia.mp4` la grada del
 ## fondo está picada de huecos oscuros: son los vomitorios por donde sale la

@@ -17,7 +17,7 @@ func _rellenar(m: Mundo, dia_hoy: int) -> void:
 	var ancho := ANCHO_DE_PIE if de_pie else minf(1500.0, float(get_viewport().get_visible_rect().size.x) - 80.0)
 	_centro.custom_minimum_size = Vector2(ancho, 0)
 	_centro.add_child(etiqueta("%s · %d" % [Idiomas.t("Calendario").to_upper(), m.anio], 15, Tema.SUAVE))
-	_centro.add_child(etiqueta("📅 " + Idiomas.t("Próximas semanas"), 28 if de_pie else 40, Tema.ORO, true, false))
+	_centro.add_child(etiqueta("📅 " + Idiomas.t("Próximas semanas"), 28 if de_pie else 40, Tema.al_mundo(Tema.ORO, 2), true, false))
 	var tira: BoxContainer = VBoxContainer.new() if de_pie else HBoxContainer.new()
 	tira.add_theme_constant_override("separation", 10)
 	_centro.add_child(tira)
@@ -38,7 +38,7 @@ func _columna(s: Dictionary, dia_hoy: int, es_esta: bool, ancho_col: int) -> Con
 	var panel := PanelContainer.new()
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	panel.custom_minimum_size = Vector2(maxi(150, ancho_col), 0)
-	var est := Tema.caja(Color(1, 1, 1, 0.05), Tema.RADIO_GRANDE, Tema.ORO if es_esta else Color(1, 1, 1, 0.14))
+	var est := Tema.caja(Color(1, 1, 1, 0.05), Tema.RADIO_GRANDE, Tema.al_mundo(Tema.ORO, 2) if es_esta else Color(1, 1, 1, 0.14))
 	est.set_border_width_all(2 if es_esta else 1)
 	est.set_content_margin_all(8)
 	panel.add_theme_stylebox_override("panel", est)
@@ -46,8 +46,8 @@ func _columna(s: Dictionary, dia_hoy: int, es_esta: bool, ancho_col: int) -> Con
 	col.add_theme_constant_override("separation", 6)
 	panel.add_child(col)
 	var k := int(s["k"])
-	col.add_child(etiqueta("%s %d" % [Idiomas.t("Semana"), int(s["semana"])], 20, Tema.ORO if es_esta else Tema.TEXTO))
-	col.add_child(etiqueta(Idiomas.t("Hoy") if es_esta else "+%d" % k, 13, Tema.ORO if es_esta else Tema.SUAVE))
+	col.add_child(etiqueta("%s %d" % [Idiomas.t("Semana"), int(s["semana"])], 20, Tema.al_mundo(Tema.ORO, 2) if es_esta else Tema.TEXTO))
+	col.add_child(etiqueta(Idiomas.t("Hoy") if es_esta else "+%d" % k, 13, Tema.al_mundo(Tema.ORO, 2) if es_esta else Tema.SUAVE))
 	var eventos: Array = s["eventos"]
 	if eventos.is_empty():
 		col.add_child(etiqueta(Idiomas.t("Semana sin partido"), 14, Tema.SUAVE))

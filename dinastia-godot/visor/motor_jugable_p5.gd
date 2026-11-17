@@ -1,301 +1,5 @@
-extends "res://visor/motor_jugable_p4.gd"
-## [Capa 5/12 de `motor_jugable.gd`] _duelo_agarron, _duelos, _mover_jugadores, _actualizar_balon_visual, _rol, _pitar_offside … (+3)
-
-## AGARRÓN: el defensor llega por detrás (o pegado al costado de atrás) del
-## que lleva el balón o va a recibirlo, a menos de 1 m. Una tirada por
-## encuentro según su agresividad; si agarra, forcejean.
-func _duelo_agarron(a: Dictionary, c: Dictionary, d: float) -> bool:
-	if d > 1.0:
-		return false
-	var obj: Dictionary = {}
-	var ag: Dictionary = {}
-	if poseedor == a or pase_a == a:
-		obj = a
-		ag = c
-	elif poseedor == c or pase_a == c:
-		obj = c
-		ag = a
-	else:
-		return false
-	if ag == usuario and not autopiloto:
-		return false
-	var vo := _plano(obj["vel"])
-	var so := vo.length()
-	if so < 2.0:
-		return false
-	var rel := _plano(pos(ag) - pos(obj))
-	if rel.dot(vo / so) > -0.15:
-		return false
-	obj["contacto_hasta"] = t + 1.6
-	ag["contacto_hasta"] = t + 1.6
-	var agr := float(ag["agresividad"])
-	if _rng.randf() >= 0.12 + agr * 0.5:
-		return false
-	duelos["agarron"] += 1
-	_anim(ag, "duelo_agarron", true, 0.8)
-	_anim(obj, "duelo_forcejeo", true, 0.7)
-	var no := _fuerza(obj) * 0.45 + float(obj["equilibrio"]) * 0.3 + _rng.randf_range(-0.25, 0.25)
-	var ng := _fuerza(ag) * 0.55 + agr * 0.15 + _rng.randf_range(-0.25, 0.25)
-	if no >= ng:
-		_ganador(obj, ag)
-	else:
-		_ganador(ag, obj)
-	var frena := clampf(0.6 + (no - ng) * 0.9, 0.35, 0.95)
-	_empujar(obj, -rel, 0.0, frena, 0.7)
-	_empujar(ag, rel, 0.0, 0.8, 0.7)
-	ag["enfriar"] = maxf(float(ag["enfriar"]), 0.5)
-	## Cuanto más lo retiene, más fácil que pite.
-	if _rng.randf() < (0.06 + agr * 0.16 + (1.0 - frena) * 0.35) * _escala_falta():
-		if _rng.randf() < 0.35:
-			_caer(obj)
-		_falta(ag, obj, 0.08 + agr * 0.2, "agarron", "agarron")
-		return true
-	## Sin falta, si lo frena del todo le roba la cartera.
-	if poseedor == obj and ng > no + 0.2:
-		duelos["balon_perdido"] += 1
-		obj["enfriar"] = maxf(float(obj["enfriar"]), 0.6)
-		poseedor = {}
-		_jugada = {}
-		ultimo_toque = obj
-		vel_balon = vo.normalized() * 2.5
-		ag["enfriar"] = 0.0
-	return true
-
-## Busca y resuelve los duelos del fotograma (antes de `_disputas`, para que
-## el balón dividido se decida antes de que «el más cercano» lo controle).
-func _duelos() -> void:
-	if not duelos_activos or estado != "juego" or balon == null:
-		return
-	_duelo_dividido()
-	if estado != "juego":
-		return
-	var n := jugadores.size()
-	for i in n:
-		var a: Dictionary = jugadores[i]
-		if not _libre_para_duelo(a):
-			continue
-		for j in range(i + 1, n):
-			var c: Dictionary = jugadores[j]
-			if bool(a["es_local"]) == bool(c["es_local"]) or not _libre_para_duelo(c):
-				continue
-			var rel := _plano(pos(c) - pos(a))
-			var d := rel.length()
-			if d > 1.3:
-				continue
-			if _duelo_hombro(a, c, rel, d) or _duelo_agarron(a, c, d):
-				if estado != "juego":
-					return
-				break
-
-# ---------------------------------------------------------------- movimiento
-
-## (17-11) Las velocidades de cada ciclo (antes `CICLO_ANIM` aquí) y su margen de escala viven en `CicloCarrera.CICLO`.
-func _mover_fisica(delta: float, bpos: Vector3) -> PackedFloat64Array:
-	var nat := Nativo.obj()
-	if nat != null and nat.has_method("mover_jugadores_fisica"):
-		var cl := _coste_aguante(true)
-		var cv := _coste_aguante(false)
-		return nat.mover_jugadores_fisica(jugadores, bpos, delta, t, not poseedor.is_empty(), poseedor.get("id", ""), bool(poseedor.get("es_local", false)),
-			A_MAX, ANCHO, LARGO, GIRO_RAPIDO, PackedFloat64Array([cl, cv]))
-	return _mover_fisica_gd(delta, bpos)
-
-func _coste_aguante(local: bool) -> float:
-	return 1.0 + 0.35 * float(_tac(local, "presion") - 1) + 0.15 * float(_tac(local, "ritmo") - 1)
-
-func _mover_fisica_gd(delta: float, bpos: Vector3) -> PackedFloat64Array:
-	return MovimientoMotor.mover_gd(self, delta, bpos, PackedFloat64Array([A_MAX, ANCHO, LARGO, GIRO_RAPIDO]))   ## (16-11, M6-12) en `visor/movimiento_motor.gd`
-
-## (16-11, informe M6-06) La ley con que rueda el balón suelto, para quien lo PREDICE: aquí la de siempre; `MotorLeague` las cambia
-## por la de League cuando es su física la que mueve el balón (C4). Ver `visor/ley_balon.gd`.
-func _velocidad_pase(dist: float, sobra: float) -> float:
-	return LeyBalon.velocidad_siempre(dist, sobra)
-
-## (16-11, H1 A1.2) El PASE MANUAL raso (`_pase_manual`), con la ley que mueve el balón: aquí la de siempre y su sobra de 4 m
-## de antes (el motor de siempre no cambia); `MotorLeague` usa la de League (antes C4 lo pedía con esta y un 12 m rodaba 8,3).
-func _velocidad_pase_manual(dist: float) -> float:
-	return LeyBalon.velocidad_siempre(dist, 4.0)
-
-## El raso más largo que llega con la fuerza máxima de un pase; más lejos, por arriba.
-func _raso_max() -> float:
-	return 36.0
-
-## Cuánto más rápido hay que lanzar para que el aire no lo deje corto (ver `compensa_arrastre`).
-func _compensa_aire(vh: float, tv: float) -> float:
-	return 1.0 / (1.0 - minf(ARRASTRE_CUAD * vh * tv, 0.2))
-
-## (16-11, informe M6-10) El portero solo es intocable y lleva el balón «en la mano» dentro de su área; fuera, conduce como uno más.
-func _portero_intocable(p: Dictionary) -> bool:
-	return bool(p["por"]) and _en_su_area(p, pos(p))
-
-## (15-11, paso a C++) El movimiento de los 22 corre en `mover_jugadores_fisica` (extensión nativa, misma aritmética; `igualdad` en `pruebas/probar_nativo.tscn`);
-## sin ella, `_mover_fisica_gd`. Las dos devuelven [válido, velocidad, va_atrás, distancia_al_balón] por jugador para el bucle de animación de abajo.
-func _mover_jugadores(delta: float) -> void:
-	var bpos := balon.position   ## (13-11, rendimiento) el balón no se mueve dentro de este bucle
-	var res := _mover_fisica(delta, bpos)
-	var idx := -1
-	for p: Dictionary in jugadores:
-		idx += 1
-		if res[idx * 4] == 0.0:
-			continue
-		var n: Node3D = p["node"]
-		var sp := res[idx * 4 + 1]
-		var atras := res[idx * 4 + 2] > 0.5
-		var hacia_b_len := res[idx * 4 + 3]
-		var vel: Vector3 = p["vel"]
-		## La animación según la velocidad (salvo que haya un gesto en curso).
-		if float(p.get("levantar_en", 0.0)) > 0.0:
-			if t < float(p["levantar_en"]):
-				continue   ## en el suelo: se queda en la última pose de la caída
-			p["levantar_en"] = 0.0
-			_anim(p, String(p.get("levantar_con", "levantarse_suelo")), true, 1.8)
-		if float(p.get("gesto_hasta", 0.0)) > t:
-			continue
-		var anim := CicloCarrera.ciclo(sp, String(p.get("anim_actual", "")))   ## (17-11) con histéresis: sin tartamudeo a 5 m/s
-		## Con el balón en los pies se conduce (no se trota); el portero espera
-		## en guardia; el que está fundido se nota parado.
-		if poseedor == p and sp >= 0.5 and sp < 6.5:
-			anim = "conducir"
-		elif atras:
-			anim = "trotar_atras"
-		elif bool(p.get("jockey", false)) and poseedor != p and sp < 4.5:
-			anim = "marcar"
-		elif sp < 0.5 and bool(p["por"]) and hacia_b_len < 32.0:
-			anim = "portero_listo"
-		elif bool(p["por"]) and poseedor != p and sp >= 0.5 and sp < 6.0:
-			var fr := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
-			var der := Vector3(-fr.z, 0, fr.x)
-			var lat := vel.dot(der)
-			var fon := vel.dot(fr)
-			if absf(lat) >= absf(fon) * 0.8:
-				anim = "portero_lateral_der" if lat > 0.0 else "portero_lateral_izq"
-			elif fon < 0.0:
-				anim = "trotar_atras"
-		elif sp < 0.5 and cansancio_real and forma_fisica(p) < 0.6:
-			anim = "cansado"
-		_anim(p, anim, false)
-		var ap: AnimationPlayer = p.get("anim")
-		if is_instance_valid(ap):
-			ap.speed_scale = CicloCarrera.escala(anim, sp)   ## (17-11) margen por ciclo: la zancada va con el cuerpo, sin patinar
-
-func _actualizar_balon_visual(_delta: float) -> void:
-	if balon == null:
-		return
-	var p := balon.position
-	var despl := Vector2(p.x - _ultima_pos_balon.x, p.z - _ultima_pos_balon.z)
-	if despl.length_squared() > 0.000001 and despl.length() < 3.0:
-		var eje := Vector3(despl.y, 0.0, -despl.x).normalized()
-		balon.global_rotate(eje, despl.length() / R)
-	_ultima_pos_balon = p
-
-func _rol(p: Dictionary) -> String:
-	var s := String(p.get("slot_code", ""))
-	match s:
-		"DC", "SD", "DEL": return "DC"
-		"ED", "MD": return "ED"
-		"EI", "MI": return "EI"
-		"MC", "MCO", "MCD": return "MC"
-		"LD", "CAD": return "LD"
-		"LI", "CAI": return "LI"
-		"DFC": return "DFC"
-	return s
-
-## ¿El que recibe estaba adelantado en el pase? Pita y saca el rival.
-func _pitar_offside(p: Dictionary) -> bool:
-	if _offside.is_empty():
-		return false
-	var mismo := bool(p["es_local"]) == bool(_offside["local"])
-	var adelantado := mismo and (_offside["ids"] as Dictionary).has(String(p.get("id", "")))
-	_offside_previo = _offside
-	_offside = {}
-	if not adelantado:
-		return false
-	if OS.get_environment("DEPURAR_OFF") != "":
-		Registro.depurar("OFFSIDE", "de %s(%s) tras %s de %s (por=%s z=%.1f) hace %.1fs, recibe en z=%.1f" % [String(p.get("slot_code","")), _rol(p),
-			String(_offside_previo.get("anim", "")), String(_offside_previo.get("de", "")), str(_offside_previo.get("por", false)),
-			float(_offside_previo.get("z", 0.0)), t - float(_offside_previo.get("t", 0.0)), pos(p).z * dir_ataque(bool(p["es_local"]))])
-	fueras_de_juego[0 if bool(p["es_local"]) else 1] += 1
-	if p == usuario:
-		stats["fueras_de_juego"] += 1
-	var nombre := String((p.get("jugador", {}) as Dictionary).get("nombre", "un atacante"))
-	## Que se note la pizarra (20-10-2026): si la defensa juega con la trampa,
-	## el aviso lo dice y se cuenta para el resumen.
-	var defiende := 1 if bool(p["es_local"]) else 0
-	if int((tacticas[defiende] as Dictionary).get("trampa", 0)) == 1:
-		trampa_cazados[defiende] += 1
-		aviso.emit("🚩 Fuera de juego de %s: ¡la trampa funciona!" % nombre)
-	else:
-		aviso.emit("🚩 Fuera de juego de %s" % nombre)
-	var lugar := pos(p)
-	_gesto_arbitro("arbitro_silbato", 0.0, 0.9, {"mira": lugar})
-	_gesto_arbitro("senalar_falta", 0.9, 1.6, {"mira": lugar - Vector3(0, 0, dir_ataque(bool(p["es_local"])) * 10.0)})
-	_empezar_saque("falta", not bool(p["es_local"]), Vector3(clampf(lugar.x, -ANCHO + 1.0, ANCHO - 1.0), R,
-		clampf(lugar.z, -LARGO + 1.0, LARGO - 1.0)))
-	return true
-
-## (16-11, M6-23) Un futbolista con modelo sin clips trae `anim` nulo: comprobarlo como en el resto del motor.
-func _tiene_clip(p: Dictionary, clip: String) -> bool:
-	var ap: AnimationPlayer = p.get("anim")
-	return is_instance_valid(ap) and ap.has_animation(clip)
-
-func _tomar(p: Dictionary) -> void:
-	if poseedor == p or MotorReglas.doble_toque(self as Object as MotorJugable, p):   ## (16-11, M6-20) doble toque del que sacó
-		return
-	MotorTraza.tomar(self as Object as MotorJugable, p)   ## traza de posesiones (ciclo 9, solo cuenta)
-	if not _tiro_vivo.is_empty() and _tiro_vivo["p"] != p:
-		## Un tiro fuerte que se topa con un defensor no se controla: se
-		## desvía (muchas veces a córner), como un bloqueo de verdad.
-		var tirador: Dictionary = _tiro_vivo["p"]
-		_cerrar_tiro("fallo")
-		if bool(tirador["es_local"]) != bool(p["es_local"]) and not bool(p["por"]) and vel_balon.length() > 14.0:
-			_anim(p, LeagueAnim.bloqueo(balon.position.y), true, 0.9)   ## el cuerpo que bloquea (01-11, League-Soccer)
-			vel_balon = Vector3(-vel_balon.x * 0.3 + _rng.randf_range(-6, 6), _rng.randf_range(0.5, 3.0), vel_balon.z * _rng.randf_range(0.2, 0.5))
-			penultimo_toque = ultimo_toque
-			ultimo_toque = p
-			p["enfriar"] = 0.5
-			return
-	if _pase_eq >= 0:
-		if (0 if bool(p["es_local"]) else 1) == _pase_eq:
-			pases_ok[_pase_eq] += 1
-		elif OS.get_environment("DEPURAR_PASES") != "":   ## (3-11) también los cortes sin receptor (`pase_a` vacío): receptor -1 m
-			Registro.depurar("PASE PERDIDO", "recibía %s a %.1f m del balón; lo cortó %s a %.1f m; balón a %.1f m/s, alto %.1f" % [String(pase_a.get("slot_code", "NINGUNO")),
-				pos(pase_a).distance_to(balon.position) if not pase_a.is_empty() else -1.0, String(p.get("slot_code", "")), pos(p).distance_to(balon.position), vel_balon.length(), balon.position.y])
-		_pase_eq = -1
-	if _pitar_offside(p):
-		return
-	if not _margenes_pase.is_empty() and bool(_margenes_pase["local"]) == bool(p["es_local"]):
-		var mid := String(p.get("id", ""))
-		if (_margenes_pase["m"] as Dictionary).has(mid):
-			_margen_recepcion = {"id": mid, "m": float(_margenes_pase["m"][mid]), "t": t,
-				"linea": float(_margenes_pase.get("linea", 0.0)), "z": float((_margenes_pase.get("z", {}) as Dictionary).get(mid, 0.0))}
-	_margenes_pase = {}
-	## Tu pase llegó si lo controla uno de los tuyos.
-	if _pase_usuario_vivo and not _pase_usuario_de.is_empty() and p != _pase_usuario_de and bool(p["es_local"]) == bool(_pase_usuario_de["es_local"]):
-		stats["pases_ok"] += 1
-	_pase_usuario_vivo = false
-	if poseedor.is_empty() or bool(poseedor["es_local"]) != bool(p["es_local"]):
-		_jugada = {}
-	penultimo_toque = ultimo_toque if ultimo_toque != p else penultimo_toque
-	if ultimo_toque.is_empty() or bool(ultimo_toque["es_local"]) != bool(p["es_local"]): _eq_tomo_en[0 if bool(p["es_local"]) else 1] = t   ## (10-11) el EQUIPO acaba de recuperar: ventana de la contrapresión (antes por jugador: con tantos cambios de posesión siempre estaba abierta)
-	ultimo_toque = p
-	## El control: con el pecho si viene alto, orientado con el pie si viene
-	## fuerte y él casi parado; el portero blocando.
-	var alto := balon.position.y
-	var fuerte := vel_balon.length()
-	p["tomo_en"] = t
-	if bool(p["por"]) and _en_su_area(p, balon.position):   ## (16-11, M6-10) fuera del área no se bloca con las manos
-		_anim(p, "blocaje_alto" if alto > 1.4 else ("blocaje_rasante" if fuerte > 6.0 else "recoger_balon"), true, 0.8)
-	elif alto > 0.9:
-		_anim(p, "control_pecho" if _tiene_clip(p, "control_pecho") else "golpe_pecho", true, 0.6)   ## (01-11: League-Soccer)
-	elif fuerte > 7.0 and (p["vel"] as Vector3).length() < 2.0:
-		_anim(p, "control_pie" if _tiene_clip(p, "control_pie") else "parada_pie", true, 0.6)
-	if MotorControl.se_le_va(self as Object as MotorJugable, p):   ## el primer toque se escapa (U5, 01-11)
-		return
-	poseedor = p
-	pase_a = {}
-	vel_balon = Vector3.ZERO
-	_decision_en = t + 0.35 + _rng.randf() * 0.4
-	if p == usuario:
-		stats["toques"] += 1
+extends "res://visor/motor_jugable_p5_p1.gd"
+## (Parte 2 de 2 de `motor_jugable_p5.gd`.)
 
 ## La foto del fuera de juego al patear `p`. En saque de banda, córner y saque
 ## de puerta no hay fuera de juego (regla 11).
@@ -399,3 +103,125 @@ func _golpeo_anim(p: Dictionary, ap: AnimationPlayer, anim: String, destino: Vec
 	if AnimExtra.es_zurdo(String(p.get("id", ""))) and ap.has_animation(nombre + "_espejo"):
 		nombre += "_espejo"
 	return nombre
+
+## (16-11, informe M6-06) La ley con que rueda el balón suelto, para quien lo PREDICE: aquí la de siempre; `MotorLeague` las cambia
+## por la de League cuando es su física la que mueve el balón (C4). Ver `visor/ley_balon.gd`.
+func _velocidad_pase(dist: float, sobra: float) -> float:
+	return LeyBalon.velocidad_siempre(dist, sobra)
+
+## (16-11, H1 A1.2) El PASE MANUAL raso (`_pase_manual`), con la ley que mueve el balón: aquí la de siempre y su sobra de 4 m
+## de antes (el motor de siempre no cambia); `MotorLeague` usa la de League (antes C4 lo pedía con esta y un 12 m rodaba 8,3).
+func _velocidad_pase_manual(dist: float) -> float:
+	return LeyBalon.velocidad_siempre(dist, 4.0)
+
+## El raso más largo que llega con la fuerza máxima de un pase; más lejos, por arriba.
+func _raso_max() -> float:
+	return 36.0
+
+## Cuánto más rápido hay que lanzar para que el aire no lo deje corto (ver `compensa_arrastre`).
+func _compensa_aire(vh: float, tv: float) -> float:
+	return 1.0 / (1.0 - minf(ARRASTRE_CUAD * vh * tv, 0.2))
+
+## (16-11, informe M6-10) El portero solo es intocable y lleva el balón «en la mano» dentro de su área; fuera, conduce como uno más.
+func _portero_intocable(p: Dictionary) -> bool:
+	return bool(p["por"]) and _en_su_area(p, pos(p))
+
+# ---------------------------------------------------------------- animación de los 22 en C++
+
+## (16-11, paso a C++, orden del dueño «50/60 % del tiempo de CPU en C++») `animar_jugadores` decide y pone la animación de los 22 en una llamada; los casos raros
+## (el que se levanta y el parado que quizá está fundido) los hace `_animar_uno` como siempre. Equivale al bucle de `super` porque cada jugador solo toca lo suyo.
+## Con `comparar_anim` (pruebas) se comparan las decisiones con `_anim_decidir_gd` y el estado que deja con `_anim_esperado_gd`.
+const ANIMS_NAT := ["parado", "trotar", "correr", "conducir", "trotar_atras", "marcar", "portero_listo", "portero_lateral_der", "portero_lateral_izq", "cansado"]
+static var anim_gd := false
+static var comparar_anim := false
+static var anim_comparados := 0
+static var anim_distintos := 0
+
+## ¿Pasa `_anim` por las capas de League (`LeagueAcciones.ocupado`, `LeagueLocomocion.bloquea`, `igualar`)? Lo sobrescribe `MotorLeague`.
+func _anim_league() -> bool:
+	return false
+
+func _mover_jugadores(delta: float) -> void:
+	var nat := Nativo.obj()
+	if nat == null or anim_gd or not nat.has_method("animar_jugadores"):
+		super(delta)
+		return
+	var res := _mover_fisica(delta, balon.position)
+	var pid: Variant = poseedor.get("id") if not poseedor.is_empty() else null
+	var esperado: Array = []
+	if comparar_anim:
+		anim_comparados += 1
+		var dec_c: PackedFloat64Array = nat.animar_jugadores(jugadores, res, t, pid, cansancio_real, _anim_league(), false)
+		var dec_g := _anim_decidir_gd(res)
+		if var_to_bytes(dec_c) != var_to_bytes(dec_g):
+			anim_distintos += 1
+		for i in jugadores.size():
+			esperado.append(_anim_esperado_gd(jugadores[i], int(dec_g[i * 2])))
+	var d: PackedFloat64Array = nat.animar_jugadores(jugadores, res, t, pid, cansancio_real, _anim_league(), true)
+	for i in jugadores.size():
+		if d[i * 2] == -2.0:
+			_animar_uno(i, res)
+		elif comparar_anim and d[i * 2] >= 0.0:
+			var p: Dictionary = jugadores[i]
+			if esperado[i] != [String(p.get("anim_actual", "")), String(p.get("ls_pedido", "")), p.has("ls_tiempo_de")]:
+				anim_distintos += 1
+
+## Gemela de las decisiones de `animar_jugadores`: [código, escala] por jugador (−1 = no se toca, −2 = `_animar_uno`).
+func _anim_decidir_gd(res: PackedFloat64Array) -> PackedFloat64Array:
+	var out := PackedFloat64Array()
+	out.resize(jugadores.size() * 2)
+	for idx in jugadores.size():
+		out[idx * 2] = -1.0
+		out[idx * 2 + 1] = -1.0
+		var p: Dictionary = jugadores[idx]
+		if res[idx * 4] == 0.0:
+			continue
+		if float(p.get("levantar_en", 0.0)) > 0.0:
+			out[idx * 2] = -2.0
+			continue
+		if float(p.get("gesto_hasta", 0.0)) > t:
+			continue
+		var sp := res[idx * 4 + 1]
+		var anim := CicloCarrera.ciclo(sp, String(p.get("anim_actual", "")))   ## (17-11) igual que `animar_jugadores` (C++)
+		if poseedor == p and sp >= 0.5 and sp < 6.5:
+			anim = "conducir"
+		elif res[idx * 4 + 2] > 0.5:
+			anim = "trotar_atras"
+		elif bool(p.get("jockey", false)) and poseedor != p and sp < 4.5:
+			anim = "marcar"
+		elif sp < 0.5 and bool(p["por"]) and res[idx * 4 + 3] < 32.0:
+			anim = "portero_listo"
+		elif bool(p["por"]) and poseedor != p and sp >= 0.5 and sp < 6.0:
+			var n: Node3D = p["node"]
+			var vel: Vector3 = p["vel"]
+			var fr := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
+			var lat := vel.dot(Vector3(-fr.z, 0, fr.x))
+			var fon := vel.dot(fr)
+			if absf(lat) >= absf(fon) * 0.8:
+				anim = "portero_lateral_der" if lat > 0.0 else "portero_lateral_izq"
+			elif fon < 0.0:
+				anim = "trotar_atras"
+		elif sp < 0.5 and cansancio_real:
+			out[idx * 2] = -2.0
+			continue
+		out[idx * 2] = float(ANIMS_NAT.find(anim))
+		out[idx * 2 + 1] = CicloCarrera.escala(anim, sp)
+	return out
+
+## Lo que dejaría `_anim(p, nombre, false)` en el jugador: [anim_actual, ls_pedido, ¿sigue ls_tiempo_de?].
+func _anim_esperado_gd(p: Dictionary, codigo: int) -> Array:
+	var r := [String(p.get("anim_actual", "")), String(p.get("ls_pedido", "")), p.has("ls_tiempo_de")]
+	if codigo < 0:
+		return r
+	var nombre: String = ANIMS_NAT[codigo]
+	if _anim_league():
+		if p.has("ls_propio_hasta"):
+			return r
+		if not (float(p.get("ls_trans_hasta", 0.0)) <= t and float(p.get("ls_cuerpo", 0.0)) == 0.0):
+			r[1] = nombre
+			return r
+		r[2] = false
+	var ap: AnimationPlayer = p.get("anim")
+	if r[0] != nombre and is_instance_valid(ap) and ap.has_animation(nombre):
+		r[0] = nombre
+	return r

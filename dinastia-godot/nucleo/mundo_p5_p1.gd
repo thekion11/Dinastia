@@ -268,7 +268,16 @@ func _nomina_y_rentas_del_mes(c: Club) -> void:
 
 ## La semana del plantel de un club: bajas y sanciones que se descuentan, la forma
 ## que se mueve y los suplentes que se hartan.
+## (17-11, paso a C++) Con la extensión, `plantel_semana` (mismas cuentas y mismas tiradas de `Azar` en el mismo orden); esta es la gemela.
+## Juez: la huella de `pruebas/igualdad_mundo.tscn`.
 func _semana_del_plantel(c: Club) -> void:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("plantel_semana"):
+		nat.plantel_semana(c.plantilla, Jugador.semana_global, -3 + ((staff.aguante() + obras.aguante()) if c.id == mi_club_id else 0), semana, anio, Azar._rng)
+		return
+	_semana_del_plantel_gd(c)
+
+func _semana_del_plantel_gd(c: Club) -> void:
 	for j in c.plantilla:
 		if j.lesion > 0:
 			j.lesion -= 1

@@ -43,6 +43,9 @@ const CLIMA_PARTIDO := {
 ## la ciudad.
 static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Calidad.ALTO) -> void:
 	var amb_key := str(est.get("clima", "dia"))
+	## AMBIENTE=noche (o dia, tarde…): fuerza el ambiente del estadio, solo para capturas y comparaciones (16-11, frente 2).
+	if OS.get_environment("AMBIENTE") != "":
+		amb_key = OS.get_environment("AMBIENTE")
 	var amb: Dictionary = AMBIENTES.get(amb_key, AMBIENTES["dia"])
 
 	var clima_key := "despejado"
@@ -91,6 +94,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env.tonemap_exposure = lerpf(1.05, 1.35, oscuro)
 	env.tonemap_white = 6.0
+	_tono_de_prueba(env)
 	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY if nivel > Calidad.MINIMO else Environment.REFLECTION_SOURCE_DISABLED   ## (4-11) MÍNIMO: sin reflejos del cielo también aquí (se los devolvía el ambiente)
 	if nivel >= Calidad.ALTO:
 		env.ssao_enabled = true
@@ -107,10 +111,10 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 
 	# Luz principal: sol de dia, luna floja de noche.
 	var key := DirectionalLight3D.new()
-	## (16-11) El sol más alto (antes -58°): sombras cortas bajo los pies y la de la tribuna no cruza medio campo. Un poco menos
-	## fuerte (antes 1,35) porque sube la luz del cielo. La noche no cambia (-40° y 0,25).
-	key.rotation_degrees = Vector3(lerpf(-67.0, -40.0, oscuro), -35, 0)
-	key.light_energy = lerpf(1.2, 0.25, oscuro)
+	## (16-11, frente 2) De día el sol de tarde de la tele: más bajo (36°) y casi de costado al campo, así la tribuna
+	## de enfrente echa su sombra sobre una franja del césped como en PES 2020/FC. De noche, la luna de siempre.
+	key.rotation_degrees = Vector3(lerpf(-36.0, -40.0, oscuro), lerpf(-75.0, -35.0, oscuro), 0)
+	key.light_energy = lerpf(1.35, 0.25, oscuro)
 	key.light_color = Color(1.0, 0.97, 0.90).lerp(Color(0.65, 0.72, 0.95), oscuro)
 	key.shadow_enabled = Calidad.sombra_solar(nivel)   ## MÍNIMO: sin la pasada de sombras (~1/4 de las llamadas del partido)
 	## Sombras suaves de verdad: el tamano aparente del sol hace que la sombra se
@@ -142,3 +146,14 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 		## "columna misteriosa" (ver `StadiumBuilder.build_pitch()`).
 		fill.light_specular = 0.0
 		root.add_child(fill)
+
+## MAPEO DE TONOS A ELEGIR (16-11, frente 2): el juego sigue con ACES; `TONO=agx` o `TONO=aces_bajo` (ACES con 15 %
+## menos de exposición) solo existen para que el dueño compare capturas y decida (ACES lava las pieles claras muy
+## iluminadas y satura los medios). No es una opción del juego todavía.
+static func _tono_de_prueba(env: Environment) -> void:
+	match OS.get_environment("TONO"):
+		"agx":
+			env.tonemap_mode = Environment.TONE_MAPPER_AGX
+			env.tonemap_white = 16.0
+		"aces_bajo":
+			env.tonemap_exposure *= 0.85

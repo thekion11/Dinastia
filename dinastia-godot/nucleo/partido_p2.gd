@@ -67,8 +67,16 @@ func mejor_del_partido() -> Dictionary:
 	return v[0] if not v.is_empty() else {}
 
 func preparar() -> void:
-	if clima_info.is_empty():
-		fijar_clima(Clima.del_partido(local.pais, ctx_semana, ctx_anio, local.id + visita.id))
+	if clima_info.is_empty():   ## (17-11, paso a C++) `clima_partido` = `fijar_clima(Clima.del_partido(…))` en una llamada (igualdad en `probar_nativo`)
+		var nat := Nativo.obj()
+		var globo: Variant = Datos.tabla("GLOBO_PAIS")
+		if nat != null and nat.has_method("clima_partido") and globo is Dictionary:
+			var c: Array = nat.clima_partido(local.pais, visita.pais, ctx_semana, ctx_anio, local.id + visita.id, neutral, globo)
+			clima_info = c[0]
+			clima = c[1]
+			_f_clima_visita = c[2]
+		else:
+			fijar_clima(Clima.del_partido(local.pais, ctx_semana, ctx_anio, local.id + visita.id))
 	once_local = local.once()
 	once_visita = visita.once()
 	## `Previa.arbitro_de(rival_id, semana)` -la MISMA que ya usa `vPrevia()`
@@ -362,3 +370,26 @@ func _deshacer_remate_gol(es_local: bool) -> void:
 		if String(e.get("tipo", "")) == "gol":
 			d += 1 if String(e.get("club", "")) == local.id else -1
 			peor_diferencia_local = mini(peor_diferencia_local, d); peor_diferencia_visita = mini(peor_diferencia_visita, -d)
+
+## (17-11, paso a C++) `fuerza()` de los dos onces en una llamada (`fuerza_dos`: medias, táctica, bonus, moda, videoanálisis y rasgos); la gemela es `super()`
+## (la de siempre en `partido_p1.gd`). Con `comparar_fuerza` (pruebas) se calculan las dos y se cuentan las diferencias.
+static var comparar_fuerza := false
+static var fuerza_comparadas := 0
+static var fuerza_distintas := 0
+
+func invalidar_fuerza() -> void:
+	var nat := Nativo.obj()
+	if nat == null or local == null or visita == null or not nat.has_method("fuerza_dos"):
+		super()
+		return
+	var arenga := ARENGA_BOOST
+	if _factor_arenga > 1.0:
+		arenga = 1.0 + (ARENGA_BOOST - 1.0) * _factor_arenga
+	var r: Array = nat.fuerza_dos(once_local, once_visita, local, visita, [Datos.mapa_grupos(), Datos.mapa_lateral(), Datos.mapa_banda(), impulsos, minuto, arenga,
+		LEY_DEL_EX, ex_de_mi_club, ctx_moda, ctx_club_id, ctx_analisis])
+	if comparar_fuerza:
+		fuerza_comparadas += 1
+		if var_to_bytes(r[0]) != var_to_bytes(fuerza(once_local, local)) or var_to_bytes(r[1]) != var_to_bytes(fuerza(once_visita, visita)):
+			fuerza_distintas += 1
+	_fza_local = r[0]
+	_fza_visita = r[1]

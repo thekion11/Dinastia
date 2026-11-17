@@ -1,0 +1,111 @@
+class_name CalendarioMemorias
+extends RefCounted
+## MÁS DÍAS DE MEMORIA POR PAÍS (17-11, orden del dueño: «busca en Wikipedia los importantes de todos los países»). Fuente: las páginas «Public holidays in…» y
+## «Remembrance days» de Wikipedia, cruzadas con la ley o la costumbre de cada país; solo fechas FIJAS (o «n-ésimo día de la semana»), nada contestado ni religioso.
+## `Calendario.del_anio` los suma a `FIJAS`. Fila: [mes, día, nombre, explicación del mentor, categoría]. Día NEGATIVO = n-ésimo día de la semana:
+## -(dow*10+n) con dow 0 = lunes … 5 = sábado (ZIM: -2 = segundo lunes de agosto; UKR: -54 = cuarto sábado de noviembre).
+## La categoría elige la frase de reflexión (`DiasMemoria.CATEGORIAS`). Día nuevo = su nombre y texto en las 9 lenguas (`sumar_traducciones.py`).
+## Quedan FUERA a propósito: fechas móviles del calendario hebreo o islámico y las muy disputadas políticamente (se hablan con el dueño).
+
+const FILAS := {
+	"ARM": [[4, 24, "Conmemoración del Genocidio Armenio", "Recuerda a las víctimas del genocidio de 1915. Se guarda silencio y se rinde homenaje en todo el país.", "genocidio"],
+		[12, 7, "Recuerdo de las víctimas del terremoto de 1988", "Recuerda a las víctimas del terremoto de Spitak de 1988.", "desastre"]],
+	"AUT": [[5, 5, "Día contra la Violencia y el Racismo", "Recuerda a las víctimas del nazismo. El 5 de mayo de 1945 fue liberado el campo de Mauthausen.", "genocidio"]],
+	"AZE": [[1, 20, "Día de Duelo Nacional (Enero Negro)", "Recuerda a los civiles muertos en Bakú en enero de 1990, cuando entraron las tropas soviéticas.", "represion"]],
+	"BEL": [[11, 11, "Armisticio", "El armisticio de 1918 puso fin a la Primera Guerra Mundial. Bélgica recuerda a sus caídos.", "guerra"]],
+	"BIH": [[7, 11, "Recuerdo del genocidio de Srebrenica", "Recuerda a los más de 8.000 hombres y niños asesinados en Srebrenica en julio de 1995.", "genocidio"]],
+	"BLR": [[4, 26, "Día de recuerdo de la catástrofe de Chernóbil", "Aniversario del accidente nuclear de Chernóbil de 1986, que afectó gravemente a Bielorrusia.", "desastre"]],
+	"BUL": [[6, 2, "Día de Hristo Botev y de los caídos por la libertad", "Honra a Hristo Botev y a todos los que murieron por la libertad de Bulgaria. Al mediodía suenan las sirenas.", "guerra"]],
+	"CAN": [[11, 11, "Remembrance Day", "Recuerda a los canadienses que murieron en guerras y misiones. Amapolas y minuto de silencio a las 11:00.", "guerra"]],
+	"CHN": [[12, 13, "Día de Recuerdo de las víctimas de la masacre de Nankín", "Recuerda a las víctimas de la masacre de Nankín de 1937. Es día nacional de conmemoración desde 2014.", "guerra"]],
+	"COL": [[4, 9, "Día de la Memoria y Solidaridad con las Víctimas", "Recuerda a las víctimas del conflicto armado colombiano. Coincide con el aniversario del asesinato de Jorge Eliécer Gaitán en 1948.", "represion"]],
+	"CPV": [[1, 20, "Día de los Héroes Nacionales", "Aniversario del asesinato de Amílcar Cabral, líder de la independencia de Cabo Verde y Guinea-Bisáu, en 1973.", "martires"]],
+	"CRO": [[11, 18, "Día de Recuerdo de las víctimas de la Guerra de Independencia", "Recuerda a las víctimas de la guerra de 1991-1995, en especial las de Vukovar y Škabrnja.", "guerra"]],
+	"CZE": [[11, 17, "Día de la Lucha por la Libertad y la Democracia", "Recuerda a los estudiantes reprimidos por los nazis en 1939 y las protestas de 1989 que llevaron a la Revolución de Terciopelo.", "represion"]],
+	"DEN": [[4, 9, "Invasión alemana de 1940", "Recuerda la ocupación de Dinamarca en 1940. Las banderas ondean a media asta hasta el mediodía.", "guerra"]],
+	"EST": [[6, 14, "Día de Luto y Recuerdo", "Recuerda a las víctimas de las deportaciones soviéticas de 1941 y 1949.", "represion"]],
+	"GEO": [[4, 9, "Tragedia del 9 de abril de 1989", "Recuerda a los manifestantes muertos en Tiflis cuando el ejército soviético dispersó una protesta en 1989.", "represion"]],
+	"GRE": [[11, 17, "Aniversario de la revuelta del Politécnico", "Recuerda el levantamiento estudiantil de 1973 contra la dictadura de los coroneles, reprimido por el ejército.", "represion"]],
+	"GUA": [[2, 25, "Día de la Dignificación de las Víctimas del Conflicto Armado", "Recuerda a las víctimas de los 36 años de conflicto armado interno en Guatemala.", "represion"]],
+	"HUN": [[2, 25, "Día de Recuerdo de las víctimas de las dictaduras comunistas", "Recuerda a quienes sufrieron la represión comunista en Hungría.", "represion"]],
+	"IDN": [[11, 10, "Día de los Héroes", "Recuerda la batalla de Surabaya de 1945 y a quienes lucharon por la independencia de Indonesia.", "martires"]],
+	"IND": [[1, 30, "Día de los Mártires", "Aniversario del asesinato de Mahatma Gandhi en 1948. A las 11:00 se guardan dos minutos de silencio.", "martires"]],
+	"ITA": [[1, 27, "Día de la Memoria", "Aniversario de la liberación de Auschwitz: Italia recuerda a las víctimas del Holocausto y de las persecuciones.", "genocidio"]],
+	"JPN": [[8, 15, "Día de Recuerdo de los caídos en la guerra", "Recuerda a las víctimas de la Segunda Guerra Mundial y reza por la paz. Minuto de silencio al mediodía.", "guerra"],
+		[3, 11, "Memorial del Gran Terremoto del Este de Japón", "Aniversario del terremoto y tsunami de 2011. A las 14:46 se guarda un minuto de silencio.", "desastre"]],
+	"KAZ": [[5, 31, "Día de Recuerdo de las víctimas de la represión política", "Recuerda a los kazajos reprimidos durante la época soviética.", "represion"]],
+	"KOR": [[4, 3, "Día de Recuerdo del 3 de abril de Jeju", "Recuerda a las víctimas del levantamiento y la represión en la isla de Jeju entre 1948 y 1954.", "represion"],
+		[5, 18, "Movimiento democrático de Gwangju", "Recuerda el levantamiento de Gwangju de 1980 y a quienes murieron por la democracia.", "represion"]],
+	"LBN": [[5, 6, "Día de los Mártires", "Recuerda a los nacionalistas sirios y libaneses ejecutados en 1916.", "martires"]],
+	"LBY": [[9, 16, "Día de los Mártires", "Recuerda a los libios muertos o exiliados durante el dominio italiano y la revolución.", "martires"]],
+	"LTU": [[1, 13, "Día de los Defensores de la Libertad", "Recuerda a los 14 civiles muertos en Vilna en enero de 1991, cuando las tropas soviéticas atacaron la torre de televisión.", "represion"]],
+	"LVA": [[3, 25, "Día de Recuerdo de las víctimas del comunismo", "Recuerda las deportaciones soviéticas de marzo de 1949.", "represion"]],
+	"MAD": [[3, 29, "Día de los Mártires", "Recuerda a los muertos de la revuelta de 1947 contra el dominio francés.", "martires"]],
+	"MEX": [[9, 13, "Niños Héroes", "Recuerda a los cadetes que murieron defendiendo el Castillo de Chapultepec en 1847.", "guerra"],
+		[10, 2, "Conmemoración de Tlatelolco", "Recuerda a los estudiantes muertos en la masacre de Tlatelolco de 1968.", "represion"]],
+	"MLI": [[3, 26, "Día de los Mártires", "Honra a quienes murieron en 1991 por la democracia en Malí.", "martires"]],
+	"MLT": [[6, 7, "Sette Giugno", "Recuerda los disturbios de 1919 en La Valeta, en los que murieron cuatro malteses.", "martires"]],
+	"MOZ": [[2, 3, "Día de los Héroes", "Honra a los combatientes de la independencia y recuerda el asesinato de Eduardo Mondlane en 1969.", "martires"]],
+	"NAM": [[5, 28, "Día de Recuerdo del genocidio", "Recuerda a las víctimas del genocidio de los pueblos herero y nama (1904-1908).", "genocidio"]],
+	"NED": [[5, 4, "Día de los Caídos (Dodenherdenking)", "Los Países Bajos recuerdan a las víctimas de la Segunda Guerra Mundial y de otros conflictos. Silencio nacional a las 20:00.", "guerra"]],
+	"NGA": [[1, 15, "Día de Recuerdo de las Fuerzas Armadas", "Recuerda a los militares caídos; coincide con el fin de la guerra de Biafra en 1970.", "guerra"]],
+	"NIR": [[11, 11, "Remembrance Day", "Recuerda a los caídos en guerra: amapolas en las camisetas y minuto de silencio.", "guerra"]],
+	"NOR": [[7, 22, "Recuerdo de los atentados de 2011", "Recuerda a las 77 víctimas de los atentados de Oslo y Utøya del 22 de julio de 2011.", "terror"]],
+	"NZL": [[4, 25, "ANZAC Day", "Recuerda a los neozelandeses y australianos caídos en guerra, desde Galípoli en 1915. Alba, desfiles y minuto de silencio.", "guerra"]],
+	"PAN": [[1, 9, "Día de los Mártires", "Recuerda a los panameños muertos en enero de 1964 reclamando la soberanía sobre el Canal.", "martires"],
+		[12, 20, "Día de Duelo Nacional", "Recuerda a las víctimas de la invasión estadounidense de 1989.", "guerra"]],
+	"PHI": [[4, 9, "Día del Valor", "Recuerda la caída de Bataán en 1942 y a los soldados filipinos y estadounidenses que lucharon.", "guerra"]],
+	"POL": [[8, 1, "Recuerdo del Alzamiento de Varsovia", "Recuerda el alzamiento de 1944. A las 17:00 suenan las sirenas y la ciudad se detiene un minuto.", "guerra"],
+		[4, 13, "Día de Recuerdo de Katyn", "Recuerda la masacre de Katyn de 1940, en la que fueron asesinados miles de oficiales polacos.", "represion"]],
+	"ROU": [[12, 21, "Día de Recuerdo de las víctimas del comunismo", "Recuerda a las víctimas de la dictadura y de la revolución de 1989.", "represion"]],
+	"RUS": [[6, 22, "Día del Recuerdo y el Dolor", "Aniversario de la invasión alemana de 1941. Recuerda a los millones de soviéticos muertos en la guerra.", "guerra"]],
+	"SCO": [[11, 11, "Remembrance Day", "Recuerda a los caídos en guerra: amapolas en las camisetas y minuto de silencio.", "guerra"]],
+	"SGP": [[2, 15, "Día de la Defensa Total", "Recuerda la caída de Singapur en 1942 y a las víctimas de la ocupación japonesa.", "guerra"]],
+	"SRB": [[4, 22, "Día de Recuerdo de las víctimas del Holocausto y otros crímenes fascistas", "Recuerda a las víctimas del Holocausto, del genocidio y de otros crímenes fascistas de la Segunda Guerra Mundial.", "genocidio"]],
+	"SVK": [[9, 9, "Día de Recuerdo de las víctimas del Holocausto", "Recuerda a las víctimas del Holocausto y de la violencia racial en Eslovaquia.", "genocidio"]],
+	"SYR": [[5, 6, "Día de los Mártires", "Recuerda a los nacionalistas sirios y libaneses ejecutados en 1916.", "martires"]],
+	"TUN": [[4, 9, "Día de los Mártires", "Recuerda a quienes murieron en la represión de 1938 y en la lucha por la independencia.", "martires"]],
+	"TUR": [[3, 18, "Día de los Mártires de Çanakkale", "Recuerda a los caídos de la batalla de Galípoli (Çanakkale) de 1915.", "guerra"],
+		[11, 10, "Aniversario de la muerte de Atatürk", "Recuerda la muerte de Atatürk en 1938. A las 9:05 suenan las sirenas y el país guarda silencio.", "martires"]],
+	"UAE": [[11, 30, "Día de la Conmemoración", "Honra a los caídos de los Emiratos y a sus familias.", "guerra"]],
+	"UKR": [[2, 20, "Día de los Héroes de la Centena Celestial", "Recuerda a los manifestantes muertos en el Euromaidán en febrero de 2014.", "represion"],
+		[11, -54, "Día de Recuerdo del Holodomor", "Recuerda a los millones de ucranianos muertos de hambre en la hambruna de 1932-1933. El cuarto sábado de noviembre.", "genocidio"]],
+	"URU": [[5, 20, "Marcha del Silencio", "Recuerda a los detenidos desaparecidos de la dictadura uruguaya.", "represion"]],
+	"UZB": [[5, 9, "Día de Recuerdo y Honor", "Recuerda a los uzbekos caídos en la Segunda Guerra Mundial.", "guerra"]],
+	"VIE": [[7, 27, "Día de los Inválidos de Guerra y los Mártires", "Honra a los combatientes caídos y heridos y a sus familias.", "guerra"]],
+	"WAL": [[11, 11, "Remembrance Day", "Recuerda a los caídos en guerra: amapolas en las camisetas y minuto de silencio.", "guerra"]],
+	"ZIM": [[8, -2, "Día de los Héroes", "Honra a quienes lucharon por la independencia de Zimbabue. El segundo lunes de agosto.", "martires"]]
+}
+
+static func de(pais: String) -> Array:
+	return FILAS.get(pais, [])
+
+## DÍAS DE LA INDEPENDENCIA QUE FALTABAN (17-11): se suman como FIESTA y con la marca «indep». Fila: [mes, día, nombre, explicación del mentor].
+const INDEPENDENCIAS := {
+	"ALG": [[7, 5, "Día de la Independencia", "El 5 de julio de 1962 Argelia se independizó de Francia tras ocho años de guerra."]],
+	"BHR": [[8, 15, "Día de la Independencia", "Bahréin se independizó del Reino Unido el 15 de agosto de 1971."]],
+	"CRO": [[10, 8, "Día de la Independencia", "El 8 de octubre de 1991 Croacia cortó los últimos lazos con Yugoslavia."]],
+	"KUW": [[6, 19, "Día de la Independencia", "Kuwait se independizó del Reino Unido el 19 de junio de 1961."]],
+	"LTU": [[3, 11, "Restauración de la Independencia", "El 11 de marzo de 1990 Lituania fue la primera república soviética en declarar su independencia."]],
+	"LVA": [[5, 4, "Restauración de la Independencia", "El 4 de mayo de 1990 Letonia declaró la restauración de su independencia."]],
+	"PAN": [[11, 28, "Independencia de España", "El 28 de noviembre de 1821 Panamá proclamó su independencia de España."]],
+	"POR": [[12, 1, "Restauración de la Independencia", "El 1 de diciembre de 1640 Portugal recuperó su independencia de España."]],
+	"QAT": [[9, 3, "Día de la Independencia", "Catar se independizó del Reino Unido el 3 de septiembre de 1971."]],
+	"ROU": [[5, 9, "Día de la Independencia", "El 9 de mayo de 1877 Rumanía proclamó su independencia del Imperio otomano."]],
+	"SVN": [[12, 26, "Día de la Independencia y la Unidad", "Recuerda el plebiscito de 1990 en el que los eslovenos votaron por la independencia."]]
+}
+
+static func independencias(pais: String) -> Array:
+	return INDEPENDENCIAS.get(pais, [])
+
+## ¿Es esta fecha (de `Calendario.del_anio`) el día de la independencia o de la liberación del país? Abre la pantalla festiva de `DiasMemoria`.
+static func es_independencia(f: Dictionary) -> bool:
+	if String(f.get("tipo", "")) != "fiesta":
+		return false
+	if f.has("indep"):
+		return true
+	var n := String(f["nombre"])
+	for clave: String in ["ndepend", "Patrias", "Grito", "Declaratoria", "Jamhuri", "Liberación", "Evacuación", "Restablecimiento"]:
+		if n.contains(clave):
+			return true
+	return false
