@@ -2,6 +2,8 @@ extends "res://nucleo/partido_p1.gd"
 ## [Capa 2/3 de `partido.gd`] _contar_penal, _aporte_tarjeta, _init, valoraciones, mejor_del_partido, preparar … (+13)
 
 ## Lo que pasó y cómo llegaban (ver `RastroPartido`).
+var arranque_minuto := 0                 ## (17-11) minuto con el que arranca `preparar` (0 = el partido entero)
+var arranque_goles: Array[int] = [0, 0]   ## y el marcador de entonces [local, visita]
 var saca_local := true   ## (17-11) el sorteo del saque inicial (menú del partido): quién saca al empezar; la 2.ª parte saca el otro
 var rastro: RastroPartido
 
@@ -109,6 +111,9 @@ func preparar() -> void:
 	cambios_local = 0
 	cambios_visita = 0
 	minuto = 0
+	goles_local = arranque_goles[0]   ## (17-11) la réplica de un momento (`ReplicaPartido`) arranca con el marcador y el minuto de entonces
+	goles_visita = arranque_goles[1]
+	minuto = arranque_minuto
 	minutos_fin = MINUTOS
 	cambios_extra = 0
 	terminado_ya = false

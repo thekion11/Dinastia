@@ -75,13 +75,14 @@ func _al_elegir_jugado(op: String) -> void:
 		await rp.elegido
 		rp.queue_free()
 	elif op == "repetir":
-		VistaEstadio.abrir_practica(p, p.mundo)
+		ReplicaPartido.abrir(p, ult, 0)   ## el partido entero otra vez, con clubes clonados: no toca la liga ni a los jugadores
 	elif op.begins_with("momentos:"):
 		var mo := MomentosPartido.mostrar(p, ult, p.mundo.mi_club(), op.substr(9))
 		var r: String = await mo.elegido
+		var minuto := int(mo._lista[int(r.substr(8))]["min"]) if r.begins_with("momento:") else -1
 		mo.queue_free()
-		if r.begins_with("momento:"):
-			VistaEstadio.abrir_practica(p, p.mundo)   ## aproximación: el partido ya se cerró; se juega a mano en la arena de pruebas
+		if minuto >= 0:
+			ReplicaPartido.abrir(p, ult, minuto)   ## desde un minuto antes de la jugada y con el marcador de entonces
 
 ## EL BOTÓN «AVANZAR».
 func pulsar() -> void:
