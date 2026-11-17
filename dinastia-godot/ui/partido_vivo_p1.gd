@@ -328,6 +328,7 @@ func _ver_estadio() -> void:
 	if is_instance_valid(carga): carga.cerrar()
 	vista.cerrado.connect(func() -> void:
 		vista.queue_free()
+		SimularResto.tras_3d(self)   ## (17-11) «Simular el resto»: lo que falta, con el simulador calibrado
 		for h in ocultados:
 			if is_instance_valid(h):
 				(h as Control).visible = true

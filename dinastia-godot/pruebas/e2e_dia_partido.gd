@@ -63,12 +63,16 @@ func _ready() -> void:
 	var pasos = load("res://pruebas/e2e_dia_partido_pasos.gd").new(self)
 	var clubes: Array = pasos.elegir_clubes()
 	var solo := OS.get_environment("SOLO")
-	for i in clubes.size():
-		if solo != "" and int(solo) != i:
-			continue
-		await pasos.dia_de_partido(clubes[i])
-	if memorias.size() >= 3:
-		ok(float(memorias[2]) - float(memorias[1]) < 40.0, "la memoria no crece de un partido al siguiente (%.0f → %.0f MB tras el 2.º y el 3.º)" % [memorias[1], memorias[2]])
+	## RONDAS=2 (por defecto): seis partidos seguidos (los tres clubes dos veces) para ver si la memoria se aplana o crece partido a partido.
+	var rondas := int(OS.get_environment("RONDAS")) if OS.get_environment("RONDAS") != "" else (1 if solo != "" else 2)
+	for r in rondas:
+		for i in clubes.size():
+			if solo != "" and int(solo) != i:
+				continue
+			await pasos.dia_de_partido(clubes[i])
+	print("MEMORIA al volver al menú tras cada partido: %s MB" % ", ".join(memorias.map(func(x: float) -> String: return "%.0f" % x)))
+	if memorias.size() >= 6:
+		ok(float(memorias[5]) - float(memorias[2]) <= 5.0, "la memoria se aplana: el 6.º partido no sube más de 5 MB respecto al 3.º (%.0f → %.0f MB)" % [memorias[2], memorias[5]])
 	print("RESUMEN")
 	for r: String in resumen:
 		print("  " + r)

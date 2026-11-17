@@ -351,8 +351,13 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		if (az.randf() < e.pl) {
 			atacar(true);
 		}
-		if (az.randf() < e.pv) {
+		e.terminado = bool(p->get(k_term)); // el árbitro (tarjetero, penal…) pudo dejar a alguien con menos de 7 dentro de `atacar`
+		if (az.randf() < e.pv && !e.terminado) { // (17-11) una roja que deja a uno con menos de 7 suspende el partido DENTRO del minuto: ya no se juega más
 			atacar(false);
+		}
+		e.terminado = bool(p->get(k_term));
+		if (e.terminado) {
+			break;
 		}
 		// _incidencias
 		if (az.randf() < p_amarilla) {

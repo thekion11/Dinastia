@@ -24,7 +24,8 @@ const JUGADOR := Vector3(-6.0, 0.0, -14.0)
 const TAM := Vector2i(960, 540)
 const DIR := "user://fotos_estadio"
 
-static var _hechas := {}   ## clave -> {pose: ImageTexture}
+static var _hechas := {}   ## clave -> {pose: ImageTexture}; solo los últimos `EN_MEMORIA` estadios (el resto sigue en disco)
+const EN_MEMORIA := 2      ## (17-11, Auditoría: la memoria subía ~8 MB por partido, una tanda de fotos por estadio nuevo, sin límite)
 static var _en_curso := {}  ## clave -> el que las está haciendo (si se piden dos veces, no se monta otro estadio)
 static var medida := {}     ## memoria (MB) antes, durante y después del último montaje (para las pruebas y las capturas)
 
@@ -54,7 +55,7 @@ static func pedir(padre: Node, local: Club, perfil: Dictionary, clima_clave: Str
 	if not _hechas.has(clave):
 		var de_disco := _leer_disco(clave)
 		if not de_disco.is_empty():
-			_hechas[clave] = de_disco
+			_guardar(clave, de_disco)
 	if _hechas.has(clave):
 		al_terminar.call(_hechas[clave])
 		return null
@@ -79,6 +80,13 @@ static func luz_de(clima: Dictionary) -> String:
 	if k in ["dia", "tarde", "noche"]:
 		return k
 	return "noche" if k in ["tormenta"] else "tarde"
+
+## Guarda las fotos de un estadio en memoria y suelta las del más antiguo si ya hay `EN_MEMORIA` (orden de llegada; el diccionario lo conserva).
+static func _guardar(clave: String, fotos: Dictionary) -> void:
+	_hechas.erase(clave)
+	_hechas[clave] = fotos
+	while _hechas.size() > EN_MEMORIA:
+		_hechas.erase(_hechas.keys()[0])
 
 static func _ruta(clave: String, pose: String) -> String:
 	return "%s/%s_%s.png" % [DIR, clave, pose]
@@ -139,7 +147,7 @@ func _ready() -> void:
 		DirAccess.make_dir_recursive_absolute(DIR)
 		img.save_png(_ruta(_clave, clave))
 	medida["durante"] = _mb()
-	_hechas[_clave] = fotos
+	_guardar(_clave, fotos)
 	_en_curso.erase(_clave)
 	_vp.queue_free()   ## fuera la escena 3D: quedan solo las fotos
 	listo.emit(fotos)

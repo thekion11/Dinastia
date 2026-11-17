@@ -9126,7 +9126,11 @@
   "%d.º de %d · pretemporada": "%dth of %d · pre-season",
   "Objetivos": "Goals",
   "Con táctica %s, %s apuesta por %s.": "With a %s tactic, %s goes for %s.",
-  "Accesos rápidos": "Quick access"
+  "Accesos rápidos": "Quick access",
+  "Continuar simulando": "Keep simulating",
+  "Volver a jugar": "Play again",
+  "Crónica": "Match report",
+  "Crónica del partido": "Match report"
  },
  "pt": {
   "Historia": "História",
@@ -18255,7 +18259,11 @@
   "%d.º de %d · pretemporada": "%dº de %d · pré-temporada",
   "Objetivos": "Objetivos",
   "Con táctica %s, %s apuesta por %s.": "Com tática %s, %s aposta em %s.",
-  "Accesos rápidos": "Acessos rápidos"
+  "Accesos rápidos": "Acessos rápidos",
+  "Continuar simulando": "Continuar simulando",
+  "Volver a jugar": "Voltar a jogar",
+  "Crónica": "Crónica",
+  "Crónica del partido": "Crónica da partida"
  },
  "patrones": [
   [
@@ -33656,7 +33664,11 @@
   "%d.º de %d · pretemporada": "%de sur %d · pré-saison",
   "Objetivos": "Objectifs",
   "Con táctica %s, %s apuesta por %s.": "En tactique %s, %s mise sur %s.",
-  "Accesos rápidos": "Accès rapides"
+  "Accesos rápidos": "Accès rapides",
+  "Continuar simulando": "Continuer la simulation",
+  "Volver a jugar": "Rejouer",
+  "Crónica": "Chronique",
+  "Crónica del partido": "Chronique du match"
  },
  "it": {
   "Historia": "Storia",
@@ -42785,7 +42797,11 @@
   "%d.º de %d · pretemporada": "%dº su %d · pre-campionato",
   "Objetivos": "Obiettivi",
   "Con táctica %s, %s apuesta por %s.": "Con tattica %s, %s punta su %s.",
-  "Accesos rápidos": "Accessi rapidi"
+  "Accesos rápidos": "Accessi rapidi",
+  "Continuar simulando": "Continua a simulare",
+  "Volver a jugar": "Torna a giocare",
+  "Crónica": "Cronaca",
+  "Crónica del partido": "Cronaca della partita"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51914,7 +51930,11 @@
   "%d.º de %d · pretemporada": "%d. von %d · Vorbereitung",
   "Objetivos": "Ziele",
   "Con táctica %s, %s apuesta por %s.": "Mit %s Taktik setzt %s auf %s.",
-  "Accesos rápidos": "Schnellzugriff"
+  "Accesos rápidos": "Schnellzugriff",
+  "Continuar simulando": "Weiter simulieren",
+  "Volver a jugar": "Wieder spielen",
+  "Crónica": "Spielbericht",
+  "Crónica del partido": "Spielbericht"
  },
  "ca": {
   "Historia": "Història",
@@ -61043,7 +61063,11 @@
   "%d.º de %d · pretemporada": "%dè de %d · pretemporada",
   "Objetivos": "Objectius",
   "Con táctica %s, %s apuesta por %s.": "Amb tàctica %s, %s aposta per %s.",
-  "Accesos rápidos": "Accessos ràpids"
+  "Accesos rápidos": "Accessos ràpids",
+  "Continuar simulando": "Continuar simulant",
+  "Volver a jugar": "Tornar a jugar",
+  "Crónica": "Crònica",
+  "Crónica del partido": "Crònica del partit"
  },
  "pl": {
   "Club": "Klub",
@@ -70172,7 +70196,11 @@
   "%d.º de %d · pretemporada": "%d. z %d · przedsezonowy okres",
   "Objetivos": "Cele",
   "Con táctica %s, %s apuesta por %s.": "Z taktyką %s %s stawia na %s.",
-  "Accesos rápidos": "Szybki dostęp"
+  "Accesos rápidos": "Szybki dostęp",
+  "Continuar simulando": "Symuluj dalej",
+  "Volver a jugar": "Wróć do gry",
+  "Crónica": "Relacja",
+  "Crónica del partido": "Relacja z meczu"
  },
  "tr": {
   "Club": "Kulüp",
@@ -79301,6 +79329,10 @@
   "%d.º de %d · pretemporada": "%d. / %d · sezon öncesi",
   "Objetivos": "Hedefler",
   "Con táctica %s, %s apuesta por %s.": "%s taktikle %s, %s üzerine oynar.",
-  "Accesos rápidos": "Hızlı erişim"
+  "Accesos rápidos": "Hızlı erişim",
+  "Continuar simulando": "Simülasyona devam et",
+  "Volver a jugar": "Tekrar oyna",
+  "Crónica": "Maç raporu",
+  "Crónica del partido": "Maç raporu"
  }
 }

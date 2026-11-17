@@ -124,6 +124,10 @@ func _al_final(gl: int, gv: int) -> void:
 	_escribir_notas()
 	_btn_volver.visible = true
 	_refrescar()
+	## (17-11, Auditoría) Tras el 3D sale el resumen nuevo: la crónica no se enseña aquí (eran dos finales seguidos), se guarda para su botón «Crónica».
+	if con_3d and JornadaPartido.resultado_nuevo and DisplayServer.get_name() != "headless":
+		partido.set_meta("cronica_texto", _cronica.get_parsed_text())
+		cerrado.emit.call_deferred()
 
 func _hasta_el_proximo_gol() -> void:
 	var goles_antes := partido.goles_local + partido.goles_visita
