@@ -23,6 +23,8 @@ func _ready() -> void:
 		_ok(not semanas.is_empty(), "%s: hay semanas por delante" % etiqueta)
 		for s: Dictionary in semanas:
 			var total := (s["eventos"] as Array).size()
+			for d in 7:
+				total += EventosDia.del_calendario(m, int(s["k"]), d).size()
 			var contados := 0
 			for d in 7:
 				var dia := EventosDia.del_dia(m, int(s["k"]), d)
@@ -37,7 +39,7 @@ func _ready() -> void:
 						_ok(String(e["zona"]) == "", "%s: solo los avisos tienen zona" % etiqueta)
 					if EventosFecha.es_partido(e):
 						_ok(clase == EventosDia.PARTIDO, "%s: un partido es PARTIDO" % etiqueta)
-			_ok(contados == total, "%s: semana %d: los eventos por día suman los de la semana (%d/%d)" % [etiqueta, int(s["k"]), contados, total])
+			_ok(contados == total, "%s: semana %d: los eventos por día (competición + calendario nacional) suman los de la semana (%d/%d)" % [etiqueta, int(s["k"]), contados, total])
 		var p := EventosDia.proxima_parada(m)
 		_ok(not p.is_empty(), "%s: hay una próxima parada" % etiqueta)
 		if not p.is_empty():
@@ -45,6 +47,9 @@ func _ready() -> void:
 			for s: Dictionary in semanas:
 				for e: Dictionary in s["eventos"]:
 					mejor = mini(mejor, int(s["k"]) * 7 + int(e["dia"]))
+				for d in 7:
+					if not EventosDia.del_calendario(m, int(s["k"]), d).is_empty():
+						mejor = mini(mejor, int(s["k"]) * 7 + d)
 			_ok(int(p["k"]) * 7 + int(p["dia"]) == mejor, "%s: la parada es el primer día con eventos" % etiqueta)
 			for e: Dictionary in p["eventos"]:
 				_ok(int(e["dia"]) == int(p["dia"]), "%s: los eventos de la parada son del mismo día" % etiqueta)
@@ -55,6 +60,21 @@ func _ready() -> void:
 			_ok(bool(plan["vuelve_al_menu"]), "%s: toda parada vuelve al menú" % etiqueta)
 			_ok(bool(plan["dia_de_partido"]) == not (plan["partidos"] as Array).is_empty(), "%s: día de partido = hay partidos" % etiqueta)
 		_ok(EventosDia.proxima_parada(m, 99, 0).is_empty(), "%s: sin eventos más allá del horizonte" % etiqueta)
+		# Calendario nacional del país del club: memoria e independencia son PANTALLA; el resto, AVISO; nada escrito a mano aquí
+		var hay_fechas := 0
+		for k in 52:
+			for d in 7:
+				for f: Dictionary in EventosDia.del_calendario(m, k, d):
+					hay_fechas += 1
+					var sub := String(f["subtipo"])
+					if sub == "memoria" or sub == "independencia":
+						_ok(String(f["clase"]) == EventosDia.PANTALLA, "%s: %s es PANTALLA (%s)" % [etiqueta, sub, f["nombre"]])
+						_ok(String(f["reflexion"]) != "", "%s: %s trae su frase de reflexión (%s)" % [etiqueta, sub, f["nombre"]])
+					else:
+						_ok(String(f["clase"]) == EventosDia.AVISO and EventosDia.ZONAS.has(String(f["zona"])), "%s: %s es un AVISO con zona (%s)" % [etiqueta, sub, f["nombre"]])
+					_ok(bool(f["sobrio"]) == (sub == "memoria"), "%s: solo la memoria es sobria (%s)" % [etiqueta, f["nombre"]])
+		_ok(hay_fechas > 0, "%s: el calendario nacional trae fechas" % etiqueta)
+		vistos["fechas"] = int(vistos.get("fechas", 0)) + hay_fechas
 	# Clasificación directa (no depende del mundo)
 	_ok(EventosDia.clase_de({"tipo": "liga"}) == EventosDia.PARTIDO, "liga es PARTIDO")
 	_ok(EventosDia.clase_de({"tipo": "conti"}) == EventosDia.PARTIDO, "conti es PARTIDO")

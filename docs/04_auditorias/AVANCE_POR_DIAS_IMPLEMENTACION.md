@@ -8,9 +8,16 @@ Diseño aprobado por el dueño (16 y 17-11): `docs/04_auditorias/maqueta_avanzar
 - Menú de inicio: `TableroInicio` + `MosaicoTarjetas` (el mosaico REAL; las tarjetas de la maqueta son solo un ejemplo).
 - Calendario por país (`nucleo/calendario.gd`, `Calendario.del_anio`): lo trabaja OTRA sesión (rama `ccr-bd198c7b-7akaeg`). Aquí NO se escribe ninguna fecha ni texto de memoria.
 
+## Los eventos NACEN DE UNA CAUSA (decisión del dueño, 17-11)
+Los eventos son detonables: pasan POR ALGO, no por un día fijo, y no importa que sean muchos. Tres orígenes (`EventosDia.ORIGEN_*`):
+1. **Calendario** (fecha fija de verdad): partidos, sorteos, ventanas de mercado, cobros y sueldos, ventanas internacionales, gala y balances (`EventosFecha`).
+2. **Calendario nacional del país** (`Calendario.del_dia`): memoria e independencia = PANTALLA de reflexión (`EventoReflexion`, la memoria sobria y sin efectos), trabajo / fiesta / festividad = AVISO. HECHO en `EventosDia.del_calendario`; todo el texto viene de `Calendario` y `DiasMemoria` (otra sesión, ya en `main`).
+3. **Disparadores** (sin día fijo): cada día se evalúa una condición sobre el estado del club o el azar; si se cumple sale el evento CON SU MOTIVO. Los sistemas del juego ya se evalúan así (`semana()`, `sortear()`, `revisar()`): `directiva` (confianza, ultimátum, despido), `crisis_caja`/`insolvencia` (caja), `imprevistos` y `lesiones_absurdas` (azar), `premio_mensual` (media del mes), `eventos_cantera`, `precontratos`, `mesa_agente`, `cesiones`, `disciplina`/`federacion`, `retos_semana`, `ojeadores`, `charlas`. Cada uno aporta su disparador a un registro común; el avance los consulta día a día. Lo que programa otra causa (negociación y presentación tras aceptar una propuesta; lesión tras un partido) sí queda con fecha, pero porque tiene causa.
+La maqueta (v8) ya funciona así: estado del club (moral, confianza de la directiva, prestigio, caja, racha, tarjetas), 20+ disparadores y el motivo visible; ver `docs/04_auditorias/EVENTOS_FALTANTES_2026-11-17.md` para los que faltan.
+
 ## Pasos (cada uno con su prueba, `banco.sh` en 0 fallos y ningún script de más de 450 líneas)
-1. **Modelo de eventos del día** — HECHO en esta rama: `nucleo/eventos_dia.gd` (`EventosDia`: clase PARTIDO / PANTALLA / AVISO, zona de la campana, `del_dia`, `proxima_parada`, `plan_de_parada`) y `pruebas/probar_eventos_dia.tscn` (en `especiales.sh`, porque `banco.gd` está en 450 líneas y no admite secciones nuevas sin partirlo).
-2. **Eventos nuevos como datos**: sorteos, fechas internacionales, objetivos de la directiva, renovación, ventas, sanciones, aniversario, gala, derbis (la maqueta los tiene; en el juego deben salir de `Mundo`/`Club`, no de una lista fija).
+1. **Modelo de eventos del día** — HECHO en esta rama: `nucleo/eventos_dia.gd` (`EventosDia`: clase PARTIDO / PANTALLA / AVISO, zona de la campana, `del_dia`, `proxima_parada`, `plan_de_parada` y, desde el 17-11, `del_calendario` con el calendario nacional por país) y `pruebas/probar_eventos_dia.tscn` (en `especiales.sh`, porque `banco.gd` está en 450 líneas y no admite secciones nuevas sin partirlo).
+2. **Registro de DISPARADORES**: `EventosDia` consulta cada día las condiciones de cada sistema (ver arriba) y devuelve el evento con su `causa`. Primero los de la lista de la maqueta; luego los que `EVENTOS_FALTANTES` marca como imprescindibles.
 3. **Pantalla «Avanzar»**: calendario de dos semanas (lunes a domingo) que se desliza y cambia de mes solo, cursor con el escudo del club, parada en cada evento, decoración solo con el día encima (~2,4 s).
 4. **Pantallas de evento a pantalla completa** con su animación (premio, propuesta, negociación, presentación, decisión, parte médico, balance); tras cerrar, vuelta al menú.
 5. **Avisos con campana** en la tarjeta de su zona del `MosaicoTarjetas` y avance parado.
@@ -18,7 +25,7 @@ Diseño aprobado por el dueño (16 y 17-11): `docs/04_auditorias/maqueta_avanzar
 7. **Previa del partido** con sus seis pestañas (uniforme, estadio, saque inicial, plan de juego, opciones, cámara) y **HUD del partido** (marcador, minimapa, mando táctil con y sin balón; el partido en sí ya existe: `VistaEstadio`/motor C4).
 8. **Sonido** por evento (muestras CC0 o generador) y símbolos (insignias) como recursos.
 9. **C++**: pasar la lógica de `EventosDia` a `nativo/src` con esta versión GDScript como gemela exacta (`probar_nativo` debe dar «FIN. 0 fallos»).
-10. **Enganche del calendario por país** cuando la otra sesión lo termine: MEMORIA = pantalla sobria (sin música ni animaciones), el resto = aviso.
+10. ~~Enganche del calendario por país~~ — HECHO en el paso 1 (`del_calendario`); falta que la pantalla «Avanzar» abra `EventoReflexion` para esas fechas y no la semanal de `DiasMemoria.pendiente`.
 
 ## Diferencias maqueta ↔ juego a resolver
 - La temporada del juego arranca el 1 de febrero y se cuenta por semanas (mercado de verano semanas 1-6, invierno 18-24, `Mundo.VENTANA_*`); la maqueta usa 300 días y 38 jornadas fijas.
