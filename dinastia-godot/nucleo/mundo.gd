@@ -36,6 +36,7 @@ func tomar_el_mando(club_id: String) -> Directiva:
 	if tiene_desafio("leyenda30") and mi_club_id != "" and club_id != mi_club_id:
 		desafios.erase("leyenda30")   ## te fuiste (te echaron): ya no es una leyenda de un solo club
 	var d := super(club_id)
+	Partido.ctx_club_id = mi_club_id   ## (17-11, prueba de extremo a extremo) si no, hasta correr la semana el partido seguía siendo «del club de antes»: sin pizarra ni uniforme propio
 	Finanzas.fijar_medias_tv(ligas)
 	if valor_ia_ref <= 0.0:
 		valor_ia_ref = valor_medio_ia()
