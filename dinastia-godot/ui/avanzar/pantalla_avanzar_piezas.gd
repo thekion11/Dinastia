@@ -100,6 +100,8 @@ static func simbolo(ev: Dictionary, px: int, tenue := false) -> Control:
 	var col := EstiloAvanzar.color_de(clave)
 	var p := Panel.new()
 	p.custom_minimum_size = Vector2(px, px)
+	p.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	p.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	var s := StyleBoxFlat.new()
 	s.bg_color = Color(col, 0.55 if tenue else 1.0)
 	s.set_corner_radius_all(px / 2)

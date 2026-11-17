@@ -34,7 +34,7 @@ static func registrar(p: Partido) -> void:
 
 static func _anotar(p: Partido, m: int, tipo: String, c: Club, autor: Jugador) -> void:
 	var l: Array = p.get_meta(META)
-	if l.size() < MAX * 3:
+	if tipo != "atajada" or l.size() < MAX * 5:   ## los goles, palos y rojas siempre; las atajadas, con tope
 		l.append({"min": m, "tipo": tipo, "club_id": c.id, "autor": autor.nombre if autor != null else "", "gl": p.goles_local, "gv": p.goles_visita})
 
 ## Deja el partido como el último de tu club (para «Partido jugado» del menú).
@@ -54,6 +54,10 @@ static func lista_de(p: Partido, club: Club) -> Array:
 		for e: Dictionary in p.cronica:
 			if String(e.get("tipo", "")) == "gol":
 				crudo.append({"min": int(e["min"]), "tipo": "gol", "club_id": String(e["club"]), "autor": String(e.get("autor", ""))})
+	## Mandan los goles, los palos y las rojas; las atajadas solo rellenan hasta `MAX`.
+	var fuertes := crudo.filter(func(e: Dictionary) -> bool: return String(e["tipo"]) != "atajada")
+	var atajadas := crudo.filter(func(e: Dictionary) -> bool: return String(e["tipo"]) == "atajada")
+	crudo = fuertes + atajadas.slice(0, maxi(MAX - fuertes.size(), 0))
 	crudo.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["min"]) < int(b["min"]))
 	var out: Array = []
 	for e: Dictionary in crudo:

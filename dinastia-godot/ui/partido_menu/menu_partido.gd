@@ -153,7 +153,7 @@ static func linea_jugador(j: Jugador) -> String:
 	return txt
 
 func _montar_alineaciones(l: Club, v: Club) -> void:
-	var c := _caja(0.27, 0.73, 0.28, 0.82)
+	var c := _caja(0.27, 0.73, 0.28, 0.81)
 	var f := HBoxContainer.new()
 	f.set_anchors_preset(Control.PRESET_FULL_RECT)
 	f.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -162,7 +162,7 @@ func _montar_alineaciones(l: Club, v: Club) -> void:
 	for club: Club in [l, v]:
 		var col := VBoxContainer.new()
 		col.add_theme_constant_override("separation", 0)
-		col.add_child(_nombre(club.nombre.to_upper(), 54))
+		col.add_child(_nombre(club.nombre.to_upper(), 44))
 		for j: Jugador in club.once():
 			var e := EstiloAvanzar.etiqueta(linea_jugador(j), 19, Color(1, 1, 1, 0.92), true)
 			e.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -175,7 +175,7 @@ func _nombre(txt: String, tam: int) -> Label:
 	return e
 
 func _montar_barra() -> void:
-	var barra := _caja(0.03, 0.97, 0.865, 0.935)
+	var barra := _caja(0.03, 0.97, 0.855, 0.92)
 	var f := HBoxContainer.new()
 	f.set_anchors_preset(Control.PRESET_FULL_RECT)
 	f.add_theme_constant_override("separation", 12)
@@ -206,7 +206,7 @@ func _montar_barra() -> void:
 
 func _montar_modal() -> void:
 	_modal = PanelContainer.new()
-	_modal.anchor_left = 0.21; _modal.anchor_right = 0.79; _modal.anchor_top = 0.235; _modal.anchor_bottom = 0.84
+	_modal.anchor_left = 0.21; _modal.anchor_right = 0.79; _modal.anchor_top = 0.235; _modal.anchor_bottom = 0.825
 	var sb := PanelesMenuPartido._estilo(Color("0a0e1b"))
 	sb.border_color = Color("1f2a47")
 	sb.set_border_width_all(1)
@@ -245,7 +245,7 @@ func _montar_modal() -> void:
 func _montar_pie() -> void:
 	_pie = EstiloAvanzar.etiqueta(Idiomas.t("Pulsa Confirmar para empezar el partido"), 18, Color(1, 1, 1, 0.85))
 	_pie.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_pie.anchor_left = 0.2; _pie.anchor_right = 0.8; _pie.anchor_top = 0.835; _pie.anchor_bottom = 0.865
+	_pie.anchor_left = 0.2; _pie.anchor_right = 0.8; _pie.anchor_top = 0.822; _pie.anchor_bottom = 0.852
 	add_child(_pie)
 	var ayuda := HBoxContainer.new()
 	ayuda.add_theme_constant_override("separation", 22)
@@ -266,7 +266,7 @@ func _montar_pie() -> void:
 	var b := PantallaMaqueta.boton(Idiomas.t("Confirmar"), true, 22)
 	b.name = "Confirmar"
 	b.anchor_left = 1.0; b.anchor_right = 1.0; b.anchor_top = 1.0; b.anchor_bottom = 1.0
-	b.offset_left = -240; b.offset_right = -40; b.offset_top = -64; b.offset_bottom = -12
+	b.offset_left = -240; b.offset_right = -40; b.offset_top = -52; b.offset_bottom = -8
 	b.pressed.connect(confirmar)
 	add_child(b)
 	b.grab_focus.call_deferred()

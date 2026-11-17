@@ -23,8 +23,8 @@ static func _estilo(col: Color) -> StyleBoxFlat:
 	s.bg_color = col
 	s.content_margin_left = 18
 	s.content_margin_right = 18
-	s.content_margin_top = 8
-	s.content_margin_bottom = 8
+	s.content_margin_top = 5
+	s.content_margin_bottom = 5
 	return s
 
 ## Una fila de botones de la que se elige uno (el activo en rojo, el resto azul marino). `al_elegir(clave)`.
@@ -37,7 +37,7 @@ static func chips(padre: Control, opciones: Array, actual: String, al_elegir: Ca
 		var b := Button.new()
 		b.text = Idiomas.t(String(par[1]))
 		b.add_theme_font_override("font", EstiloAvanzar.fuente_titulo())
-		b.add_theme_font_size_override("font_size", Tema.letra(19))
+		b.add_theme_font_size_override("font_size", Tema.letra(17))
 		b.add_theme_color_override("font_color", Color.WHITE)
 		b.add_theme_color_override("font_hover_color", Color.WHITE)
 		b.add_theme_color_override("font_pressed_color", Color.WHITE)
@@ -62,7 +62,7 @@ static func chips(padre: Control, opciones: Array, actual: String, al_elegir: Ca
 	padre.add_child(fila)
 	return fila
 
-static func _interruptor(padre: Control, clave: String, texto: String, defecto: bool) -> void:
+static func _interruptor(padre: Control, clave: String, texto: String, defecto: bool, extra := Callable()) -> void:
 	var c := CheckButton.new()
 	c.text = Idiomas.t(texto)
 	c.button_pressed = bool(OpcionesPartido.leer(clave, defecto))
@@ -72,7 +72,10 @@ static func _interruptor(padre: Control, clave: String, texto: String, defecto: 
 	c.add_theme_stylebox_override("hover", _estilo(NAVY.lightened(0.1)))
 	c.add_theme_stylebox_override("pressed", _estilo(NAVY))
 	c.add_theme_stylebox_override("hover_pressed", _estilo(NAVY.lightened(0.1)))
-	c.toggled.connect(func(si: bool) -> void: OpcionesPartido.guardar(clave, si))
+	c.toggled.connect(func(si: bool) -> void:
+		OpcionesPartido.guardar(clave, si)
+		if extra.is_valid():
+			extra.call(si))
 	padre.add_child(c)
 
 # ---------------------------------------------------------------- UNIFORME
@@ -196,7 +199,7 @@ static func plan(m: MenuPartido, v: VBoxContainer) -> void:
 	var forms: Dictionary = Datos.tabla("FORMS")
 	var campo := MiniaturaMenu.new()
 	campo.tipo = MiniaturaMenu.Tipo.CAMPO
-	campo.custom_minimum_size = Vector2(300, 190)
+	campo.custom_minimum_size = Vector2(300, 170)
 	campo.acento = ROJO
 	campo.formacion = (forms.get(t.formacion, {}) as Dictionary).get("s", [])
 	var por_formacion: Array = []
@@ -225,46 +228,53 @@ static func plan(m: MenuPartido, v: VBoxContainer) -> void:
 # ---------------------------------------------------------------- OPCIONES GENERALES
 const MODOS := [["jugar", "Jugar"], ["importantes", "Solo las importantes"], ["simular", "Simular"]]
 
-static func opciones(m: MenuPartido, v: VBoxContainer) -> void:
-	var fila := HBoxContainer.new()
-	fila.add_theme_constant_override("separation", 30)
-	v.add_child(fila)
-	var izq := VBoxContainer.new()
-	izq.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	izq.add_theme_constant_override("separation", 6)
-	fila.add_child(izq)
-	cap(izq, "Cómo quieres este partido")
-	chips(izq, MODOS, m.opcion, func(c: String) -> void: m.opcion = c)
-	cap(izq, "Si lo simulas")
-	chips(izq, [["instantaneo", "Al instante"], ["resumen", "Resumen"], ["vivo", "En vivo"]], m.sim, func(c: String) -> void: m.sim = c)
-	cap(izq, "Dificultad de la CPU")
-	var dif: Array = []
-	for k: String in MotorJugable.ORDEN_DIFICULTAD:
-		dif.append([k, String(MotorJugable.DIFICULTADES[k]["nombre"])])
-	chips(izq, dif, VistaEstadio.dificultad_cpu_guardada(), func(c: String) -> void: OpcionesPartido.guardar("dificultad_cpu8", c))
-	cap(izq, "Duración")
-	chips(izq, OpcionesPartido.RITMOS, String(OpcionesPartido.leer("ritmo_partido", "normal")), func(c: String) -> void: OpcionesPartido.guardar("ritmo_partido", c))
-	cap(izq, "Estilo de juego (jugabilidad)")
-	var pre: Array = []
-	for k: String in MotorJugable.ORDEN_PRESETS:
-		pre.append([k, String(MotorJugable.PRESETS[k]["nombre"])])
-	chips(izq, pre, VistaEstadio.preset_guardado(), func(c: String) -> void: OpcionesPartido.guardar("preset_juego", c))
-	var der := VBoxContainer.new()
-	der.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	der.add_theme_constant_override("separation", 6)
-	fila.add_child(der)
-	cap(der, "Ajustes")
-	for g: Array in OpcionesPartido.GENERALES + OpcionesPartido.PANTALLA:
-		_interruptor(der, String(g[0]), String(g[1]), bool(g[2]))
-	_interruptor(der, "nombres", "🏷 Nombres de los jugadores", PlayerSpawner.mostrar_nombres)
-	var sonido := VBoxContainer.new()
-	OpcionesPartido.construir_sonido(sonido)
-	der.add_child(sonido)
-	var rec := CheckBox.new()
-	rec.text = Idiomas.t("No volver a preguntar (se cambia en Ajustes)")
-	rec.button_pressed = m.recordar
-	rec.toggled.connect(func(si: bool) -> void: m.recordar = si)
-	der.add_child(rec)
+const SECCIONES := [["modo", "Cómo jugarlo"], ["partido", "Partido"], ["pantalla", "En pantalla"], ["sonido", "Sonido"]]
+
+## Opciones generales: cuatro secciones (cómo jugarlo, partido, en pantalla, sonido) con sus botones arriba; cada una enseña solo lo suyo.
+static func opciones(m: MenuPartido, v: VBoxContainer, seccion := "modo") -> void:
+	var cont := VBoxContainer.new()
+	cont.add_theme_constant_override("separation", 6)
+	var barra := chips(v, SECCIONES, seccion, func(c: String) -> void:
+		for h in v.get_children():
+			h.queue_free()
+		opciones(m, v, c))
+	barra.name = "Secciones"
+	v.add_child(cont)
+	match seccion:
+		"modo":
+			cap(cont, "Cómo quieres este partido")
+			chips(cont, MODOS, m.opcion, func(c: String) -> void: m.opcion = c)
+			cap(cont, "Si lo simulas")
+			chips(cont, [["instantaneo", "Al instante"], ["resumen", "Resumen"], ["vivo", "En vivo"]], m.sim, func(c: String) -> void: m.sim = c)
+			var rec := CheckBox.new()
+			rec.text = Idiomas.t("No volver a preguntar (se cambia en Ajustes)")
+			rec.button_pressed = m.recordar
+			rec.toggled.connect(func(si: bool) -> void: m.recordar = si)
+			cont.add_child(rec)
+		"partido":
+			cap(cont, "Dificultad de la CPU")
+			var dif: Array = []
+			for k: String in MotorJugable.ORDEN_DIFICULTAD:
+				dif.append([k, String(MotorJugable.DIFICULTADES[k]["nombre"])])
+			chips(cont, dif, VistaEstadio.dificultad_cpu_guardada(), func(c: String) -> void: OpcionesPartido.guardar("dificultad_cpu8", c))
+			cap(cont, "Duración")
+			chips(cont, OpcionesPartido.RITMOS, String(OpcionesPartido.leer("ritmo_partido", "normal")), func(c: String) -> void: OpcionesPartido.guardar("ritmo_partido", c))
+			cap(cont, "Estilo de juego (jugabilidad)")
+			var pre: Array = []
+			for k: String in MotorJugable.ORDEN_PRESETS:
+				pre.append([k, String(MotorJugable.PRESETS[k]["nombre"])])
+			chips(cont, pre, VistaEstadio.preset_guardado(), func(c: String) -> void: OpcionesPartido.guardar("preset_juego", c))
+			cap(cont, "Reglas y ayudas")
+			for g: Array in OpcionesPartido.GENERALES:
+				_interruptor(cont, String(g[0]), String(g[1]), bool(g[2]))
+			_interruptor(cont, "control_equipo", "🎮 Controlar a mi equipo desde el inicio", false)
+		"pantalla":
+			_interruptor(cont, "nombres", "🏷 Nombres de los jugadores", PlayerSpawner.mostrar_nombres, func(si: bool) -> void: PlayerSpawner.mostrar_nombres = si)
+			for g: Array in OpcionesPartido.PANTALLA:
+				_interruptor(cont, String(g[0]), String(g[1]), bool(g[2]))
+			_interruptor(cont, "calidad_auto", "⚡ Calidad automática", Calidad.adaptativa, func(si: bool) -> void: Calidad.adaptativa = si)
+		"sonido":
+			OpcionesPartido.construir_sonido(cont)
 
 # ---------------------------------------------------------------- CÁMARA
 const CAMARAS := [["cerca", "Cerca", 0.1], ["normal", "Normal", 0.45], ["lejos", "Alejada", 0.9]]

@@ -128,7 +128,7 @@ func _pie() -> void:
 	var ayuda := HBoxContainer.new()
 	ayuda.add_theme_constant_override("separation", 5)
 	for par: Array in [["Espacio", "avanzar"], ["N", "siguiente evento"], ["Esc", "menú"]]:
-		ayuda.add_child(PantallaAvanzarPiezas.tecla(String(par[0])))
+		ayuda.add_child(PantallaAvanzarPiezas.tecla(Idiomas.t(String(par[0]))))
 		ayuda.add_child(EstiloAvanzar.etiqueta(Idiomas.t(String(par[1])) + "   ", 11, EstiloAvanzar.SUAVE))
 	fila.add_child(ayuda)
 

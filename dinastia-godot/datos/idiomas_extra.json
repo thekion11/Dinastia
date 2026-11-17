@@ -8920,7 +8920,15 @@
   "📺 Rótulos de las jugadas": "📺 Play captions",
   "🔁 Repetición de los goles": "🔁 Goal replays",
   "🗺 Radar táctico": "🗺 Tactical radar",
-  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Full ceremony (kids, mascot, line-ups)"
+  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Full ceremony (kids, mascot, line-ups)",
+  "Avanzar": "Advance",
+  "Decisión importante": "Important decision",
+  "Hasta el próximo evento": "Until the next event",
+  "avanzar": "advance",
+  "de visitante": "away",
+  "día": "day",
+  "menú": "menu",
+  "siguiente evento": "next event"
  },
  "pt": {
   "Historia": "História",
@@ -17843,7 +17851,15 @@
   "📺 Rótulos de las jugadas": "📺 Legendas das jogadas",
   "🔁 Repetición de los goles": "🔁 Replay dos gols",
   "🗺 Radar táctico": "🗺 Radar tático",
-  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Cerimônia completa (crianças, mascote, escalações)"
+  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Cerimônia completa (crianças, mascote, escalações)",
+  "Avanzar": "Avançar",
+  "Decisión importante": "Decisão importante",
+  "Hasta el próximo evento": "Até o próximo evento",
+  "avanzar": "avançar",
+  "de visitante": "fora",
+  "día": "dia",
+  "menú": "menu",
+  "siguiente evento": "próximo evento"
  },
  "patrones": [
   [
@@ -33038,7 +33054,15 @@
   "📺 Rótulos de las jugadas": "📺 Légendes des actions",
   "🔁 Repetición de los goles": "🔁 Rediffusion des buts",
   "🗺 Radar táctico": "🗺 Radar tactique",
-  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Cérémonie complète (enfants, mascotte, compositions)"
+  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Cérémonie complète (enfants, mascotte, compositions)",
+  "Avanzar": "Avancer",
+  "Decisión importante": "Décision importante",
+  "Hasta el próximo evento": "Jusqu'au prochain événement",
+  "avanzar": "avancer",
+  "de visitante": "à l'extérieur",
+  "día": "jour",
+  "menú": "menu",
+  "siguiente evento": "prochain événement"
  },
  "it": {
   "Historia": "Storia",
@@ -41961,7 +41985,15 @@
   "📺 Rótulos de las jugadas": "📺 Didascalie delle azioni",
   "🔁 Repetición de los goles": "🔁 Replay dei gol",
   "🗺 Radar táctico": "🗺 Radar tattico",
-  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Cerimonia completa (bambini, mascotte, formazioni)"
+  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Cerimonia completa (bambini, mascotte, formazioni)",
+  "Avanzar": "Avanza",
+  "Decisión importante": "Decisione importante",
+  "Hasta el próximo evento": "Fino al prossimo evento",
+  "avanzar": "avanza",
+  "de visitante": "in trasferta",
+  "día": "giorno",
+  "menú": "menu",
+  "siguiente evento": "prossimo evento"
  },
  "de": {
   "Historia": "Geschichte",
@@ -50884,7 +50916,15 @@
   "📺 Rótulos de las jugadas": "📺 Spielzug-Einblendungen",
   "🔁 Repetición de los goles": "🔁 Tor-Wiederholungen",
   "🗺 Radar táctico": "🗺 Taktikradar",
-  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Komplette Zeremonie (Kinder, Maskottchen, Aufstellungen)"
+  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Komplette Zeremonie (Kinder, Maskottchen, Aufstellungen)",
+  "Avanzar": "Weiter",
+  "Decisión importante": "Wichtige Entscheidung",
+  "Hasta el próximo evento": "Bis zum nächsten Ereignis",
+  "avanzar": "weiter",
+  "de visitante": "auswärts",
+  "día": "Tag",
+  "menú": "Menü",
+  "siguiente evento": "nächstes Ereignis"
  },
  "ca": {
   "Historia": "Història",
@@ -59807,7 +59847,15 @@
   "📺 Rótulos de las jugadas": "📺 Rètols de les jugades",
   "🔁 Repetición de los goles": "🔁 Repetició dels gols",
   "🗺 Radar táctico": "🗺 Radar tàctic",
-  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Cerimònia completa (nens, mascota, alineacions)"
+  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Cerimònia completa (nens, mascota, alineacions)",
+  "Avanzar": "Avançar",
+  "Decisión importante": "Decisió important",
+  "Hasta el próximo evento": "Fins al proper esdeveniment",
+  "avanzar": "avançar",
+  "de visitante": "de visitant",
+  "día": "dia",
+  "menú": "menú",
+  "siguiente evento": "proper esdeveniment"
  },
  "pl": {
   "Club": "Klub",
@@ -68730,7 +68778,15 @@
   "📺 Rótulos de las jugadas": "📺 Napisy akcji",
   "🔁 Repetición de los goles": "🔁 Powtórki goli",
   "🗺 Radar táctico": "🗺 Radar taktyczny",
-  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Pełna ceremonia (dzieci, maskotka, składy)"
+  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Pełna ceremonia (dzieci, maskotka, składy)",
+  "Avanzar": "Dalej",
+  "Decisión importante": "Ważna decyzja",
+  "Hasta el próximo evento": "Do następnego wydarzenia",
+  "avanzar": "dalej",
+  "de visitante": "na wyjeździe",
+  "día": "dzień",
+  "menú": "menu",
+  "siguiente evento": "następne wydarzenie"
  },
  "tr": {
   "Club": "Kulüp",
@@ -77653,6 +77709,14 @@
   "📺 Rótulos de las jugadas": "📺 Oyun yazıları",
   "🔁 Repetición de los goles": "🔁 Gol tekrarları",
   "🗺 Radar táctico": "🗺 Taktik radar",
-  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Tam tören (çocuklar, maskot, kadrolar)"
+  "🧒 Ceremonia completa (niños, mascota, alineaciones)": "🧒 Tam tören (çocuklar, maskot, kadrolar)",
+  "Avanzar": "İlerle",
+  "Decisión importante": "Önemli karar",
+  "Hasta el próximo evento": "Sonraki olaya kadar",
+  "avanzar": "ilerle",
+  "de visitante": "deplasmanda",
+  "día": "gün",
+  "menú": "menü",
+  "siguiente evento": "sonraki olay"
  }
 }

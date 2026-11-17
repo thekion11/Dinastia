@@ -57,7 +57,9 @@ func _armar(pr: Node) -> void:
 	var seguir := boton(Idiomas.t("Continuar"), true)
 	seguir.custom_minimum_size = Vector2(240, 58)
 	seguir.pressed.connect(func() -> void: elegido.emit("0"))
-	_raiz.add_child(_ancla(seguir, 0.83, 0.88, 0.97, 0.96))
+	seguir.anchor_left = 1.0; seguir.anchor_right = 1.0; seguir.anchor_top = 1.0; seguir.anchor_bottom = 1.0
+	seguir.offset_left = -300; seguir.offset_right = -40; seguir.offset_top = -100; seguir.offset_bottom = -40
+	_raiz.add_child(seguir)
 	seguir.grab_focus.call_deferred()
 
 func _equipo(c: Club, x0: float, x1: float) -> void:
@@ -111,7 +113,9 @@ func _goles() -> void:
 		var f := HBoxContainer.new()
 		f.add_theme_constant_override("separation", 10)
 		f.add_child(EstiloAvanzar.etiqueta("%d'" % int(e["min"]), 18, EstiloAvanzar.SUAVE))
-		f.add_child(EstiloAvanzar.icono("ball", Color.WHITE, 22))
+		var ic := TextureRect.new()
+		ic.texture = EstiloAvanzar.icono("ball", Color.WHITE, 22)
+		f.add_child(ic)
 		f.add_child(EstiloAvanzar.etiqueta(abreviar(String(e.get("autor", "?"))), 20, Color.WHITE))
 		f.add_child(EstiloAvanzar.etiqueta("(%s)" % _sigla(club), 16, EstiloAvanzar.SUAVE))
 		caja.add_child(f)
@@ -156,7 +160,7 @@ func _linea_de_tiempo() -> void:
 	var l := _Tiempo.new()
 	l.goles = partido.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol")
 	l.mi_id = mi_club.id
-	_raiz.add_child(_ancla(l, 0.04, 0.83, 0.80, 0.97))
+	_raiz.add_child(_ancla(l, 0.04, 0.83, 0.78, 0.97))
 
 ## La barra de dos colores de las estadísticas (local en rojo, visitante en claro).
 class _Barra extends Control:
