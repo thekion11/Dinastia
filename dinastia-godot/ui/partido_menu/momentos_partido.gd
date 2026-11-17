@@ -106,7 +106,7 @@ func _armar(pr: Node) -> void:
 	desliza.add_child(rej)
 	_lista = []
 	for m: Dictionary in lista_de(partido, mi_club):
-		if (filtro == "ofensivas" and not bool(m["ataque"])) or (filtro == "defensivas" and bool(m["ataque"])):
+		if (filtro == "ofensivas" and not bool(m["ataque"])) or (filtro == "defensivas" and bool(m["ataque"])) or (filtro == "goles" and String(m.get("tipo", "")) != "gol"):
 			continue
 		_lista.append(m)
 	var primero: Button = null

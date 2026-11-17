@@ -50,18 +50,76 @@ func _armar(pr: Node, ev: Dictionary, m: Mundo) -> void:
 	var margen := Control.new()
 	margen.custom_minimum_size = Vector2(0, 14)
 	izq.add_child(margen)
+	var ops: Array = DecisionesDia.opciones(m, ev) if m != null else []
+	if ops.is_empty():
+		var seguir := _boton_seguir()
+		izq.add_child(seguir)
+		piezas.append(seguir)
+		seguir.grab_focus.call_deferred()
+	else:
+		izq.anchor_right = 0.5   ## las tarjetas no pisan el arte de la derecha
+		## UNA DECISIÓN: tarjetas con cada opción (como la negociación y la decisión de la maqueta); al elegir se aplica el efecto real y se enseña lo que pasó.
+		var caja := VBoxContainer.new()
+		caja.add_theme_constant_override("separation", 8)
+		izq.add_child(caja)
+		piezas.append(caja)
+		var primera: Button = null
+		for o: Dictionary in ops:
+			var b := _tarjeta_opcion(String(o["titulo"]))
+			b.pressed.connect(_decidir.bind(ev, m, String(o["id"]), caja, titulo, texto))
+			caja.add_child(b)
+			if primera == null:
+				primera = b
+		primera.grab_focus.call_deferred()
+	_cascada(piezas)
+	if arte_tex != null:
+		_arte(arte_tex, ev, String(ficha[0]))
+
+func _boton_seguir() -> Button:
 	var seguir := boton(Idiomas.t("Continuar"), false)
 	seguir.custom_minimum_size = Vector2(240, 58)
 	seguir.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	for estado: String in ["normal", "hover", "pressed"]:
 		seguir.add_theme_stylebox_override(estado, _azul())
 	seguir.pressed.connect(func() -> void: elegido.emit("0"))
-	izq.add_child(seguir)
-	piezas.append(seguir)
+	return seguir
+
+## Una opción de la decisión: panel oscuro translúcido con su título, como las de la maqueta.
+func _tarjeta_opcion(texto: String) -> Button:
+	var b := Button.new()
+	b.text = Idiomas.t(texto)
+	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	b.custom_minimum_size = Vector2(0, 62)
+	b.add_theme_font_size_override("font_size", Tema.letra(22))
+	b.add_theme_color_override("font_color", Color.WHITE)
+	var n := StyleBoxFlat.new()
+	n.bg_color = Color(0, 0, 0, 0.38)
+	n.border_color = Color(1, 1, 1, 0.22)
+	n.set_border_width_all(1)
+	n.content_margin_left = 22
+	n.content_margin_right = 22
+	var h := n.duplicate() as StyleBoxFlat
+	h.bg_color = Color(1, 1, 1, 0.16)
+	h.border_color = Color.WHITE
+	h.set_border_width_all(2)
+	b.add_theme_stylebox_override("normal", n)
+	for est: String in ["hover", "pressed", "focus"]:
+		b.add_theme_stylebox_override(est, h)
+	b.focus_mode = Control.FOCUS_ALL
+	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	return b
+
+## Se eligió una opción: efecto real en el club (`DecisionesDia.resolver`) y, en su lugar, lo que pasó con un «Continuar».
+func _decidir(ev: Dictionary, m: Mundo, op: String, caja: VBoxContainer, titulo: Label, texto: Label) -> void:
+	var r := DecisionesDia.resolver(m, ev, op)
+	for h in caja.get_children():
+		h.queue_free()
+	titulo.text = Idiomas.t(String(r.get("titulo", ""))).to_upper() if not r.is_empty() else titulo.text
+	texto.text = Idiomas.t(String(r.get("cuerpo", ""))) if not r.is_empty() else texto.text
+	var seguir := _boton_seguir()
+	caja.add_child(seguir)
 	seguir.grab_focus.call_deferred()
-	_cascada(piezas)
-	if arte_tex != null:
-		_arte(arte_tex, ev, String(ficha[0]))
+	Sonido.toca("menu_aceptar")
 
 static func _azul() -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()

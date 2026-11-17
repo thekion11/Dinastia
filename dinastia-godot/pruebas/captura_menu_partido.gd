@@ -8,6 +8,24 @@ func _foto(nombre: String) -> void:
 	get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://pruebas/capturas/menu_partido_%s.png" % nombre))
 	print("captura ", nombre, " ", Time.get_ticks_msec())
 
+## Uniforme: hasta que los dos futbolistas 3D estén dibujados; Estadio y Cámara: hasta que llegue la foto del estadio (tope 3 min sin GPU).
+func _esperar_vistas(menu: MenuPartido, tab: String) -> void:
+	var t0 := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - t0 < 180000:
+		var falta := false
+		if tab == "uniforme":
+			for r in menu._cuerpo.find_children("*", "SubViewportContainer", true, false):
+				falta = falta or (r.get("hecho") == false)
+		elif tab in ["estadio", "camara"]:
+			for mi in menu._cuerpo.find_children("*", "MiniaturaMenu", true, false):
+				falta = falta or (mi.get("foto") == null and not mi.is_queued_for_deletion())
+		if not falta:
+			break
+		await get_tree().process_frame
+	if tab in ["uniforme", "estadio", "camara"]:
+		print("MEDIDA %s: vistas 3D listas en %d ms · memoria del montaje %s" % [tab, Time.get_ticks_msec() - t0, str(FotosEstadioMenu.medida)])
+	await get_tree().create_timer(0.3).timeout
+
 func _ready() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://pruebas/capturas"))
 	var paises := ["ARG", "ENG", "JPN"]
@@ -32,12 +50,13 @@ func _ready() -> void:
 				await get_tree().process_frame
 		print("MEDIDA %s: retratos 3D listos a los %.0f ms · memoria +%.1f MB" % [paises[k], (Time.get_ticks_usec() - t0) / 1000.0, (Performance.get_monitor(Performance.MEMORY_STATIC) - mem0) / 1048576.0])
 		await get_tree().create_timer(0.5).timeout
-		for tab in (["previa", "uniforme", "estadio", "saque", "plan", "opciones", "camara"] if k == 0 else ["previa", "plan"]):
+		for tab in (["previa", "uniforme", "estadio", "saque", "plan", "opciones", "camara"] if k == 0 else ["previa", "uniforme", "estadio", "camara"]):
 			if tab == "previa":
 				menu.cerrar_panel()
 			else:
 				menu._abrir(tab)
 			await get_tree().create_timer(1.3 if tab == "saque" else 0.3).timeout
+			await _esperar_vistas(menu, tab)
 			await _foto("%s_%s" % [paises[k], tab])
 		menu.queue_free()
 		if k == 1:

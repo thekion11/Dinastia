@@ -13,6 +13,7 @@ func _probar_avance_eventos_y_disparadores() -> void:
 	_titulo("AVANCE POR DÍAS: EVENTOS DEL DÍA Y DISPARADORES")
 	_correr("res://pruebas/probar_eventos_dia.gd", "el modelo de eventos del día (clases, zonas, paradas; 4 mundos)")
 	_correr("res://pruebas/probar_disparadores_dia.gd", "los disparadores solo observan y salen una vez (3 mundos)")
+	_correr("res://pruebas/probar_decisiones_dia.gd", "las decisiones con opciones tienen el efecto real de siempre (agentes y academia; 3 mundos)")
 
 func _probar_avance_nucleo_y_saque() -> void:
 	_titulo("AVANCE POR DÍAS: NÚCLEO DE PARADAS, SAQUE INICIAL Y RÉPLICA")
@@ -25,4 +26,11 @@ func _probar_menu_y_pausa_partido() -> void:
 	var t: Node = (load("res://pruebas/probar_menu_y_pausa.gd") as GDScript).new()
 	var f: int = t.correr(self)
 	_comprobar(f == 0, "el menú (3 países) guarda el sorteo mostrado y la pausa llama a lo suyo, con confirmación al simular (%d fallos)" % f)
+	t.free()
+
+func _probar_resumen_descanso_y_final() -> void:
+	_titulo("RESUMEN DEL DESCANSO Y DEL FINAL: CIFRAS REALES, PASES SOLO SI SE JUGÓ EN EL CÉSPED, GOLEADORES Y MARCADOR")
+	var t: Node = (load("res://pruebas/probar_resumen_partido.gd") as GDScript).new()
+	var f: int = t.correr(self)
+	_comprobar(f == 0, "el resumen (3 países) usa las cifras del partido y se monta en el descanso y en el final (%d fallos)" % f)
 	t.free()

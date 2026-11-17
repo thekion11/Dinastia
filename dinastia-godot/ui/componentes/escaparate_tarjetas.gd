@@ -94,11 +94,10 @@ static func dt(p: Principal, c: Club, acento: Color) -> Control:
 	_velo(b, 2, 0.5)
 	_al_fondo(v)
 	var estilo: Dictionary = Previa.dt_de(c)
-	var frase := String(estilo.get("descripcion", ""))
 	var nombre := p.mundo.roles.dt_nombre() if p.mundo.roles != null else ""
 	if nombre.length() <= 1:
 		nombre = String(estilo.get("nombre", ""))
-	var l := EstiloAvanzar.etiqueta(Idiomas.t("%s: %s") % [nombre, frase] if frase != "" else nombre, 16, Color.WHITE)
+	var l := EstiloAvanzar.etiqueta(EscaparateFrase.de(p, c, nombre), 16, Color.WHITE)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.max_lines_visible = 2
 	l.add_theme_constant_override("outline_size", 4)

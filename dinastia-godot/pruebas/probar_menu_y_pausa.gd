@@ -74,4 +74,36 @@ func correr(padre: Node) -> int:
 			(pz.find_child(String(par[0]), true, false) as Button).pressed.emit()
 			_ok(v.llamado == String(par[1]) and pz.is_queued_for_deletion(), "%s: «%s» llama a lo suyo y cierra la pausa" % [cfg[0], par[0]])
 		v.free()
+	_montar_y_desmontar(padre)
 	return fallos
+
+## (17-11, Auditoría) Las fotos del estadio montan el estadio real y lo desmontan: no puede quedar ni un nodo (ni huérfano) de más.
+func _montar_y_desmontar(padre: Node) -> void:
+	for pais: String in ["ARG", "ESP"]:
+		var m := Mundo.new()
+		var ps: Array[String] = [pais]
+		m.generar(ps, 640)
+		var c: Club = m.ligas[0].clubes[1]
+		var nodos := Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
+		var huerfanos := _huerfanos_vivos()
+		var vp := SubViewport.new()
+		vp.own_world_3d = true
+		padre.add_child(vp)
+		var raiz := Node3D.new()
+		vp.add_child(raiz)
+		FotosEstadioMenu.montar_estadio(raiz, c, c.perfil_estadio(), pais == "ESP", null)
+		var montado := Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
+		vp.free()
+		_ok(montado > nodos + 50, "%s: se montó el estadio (%d nodos)" % [pais, int(montado - nodos)])
+		_ok(Performance.get_monitor(Performance.OBJECT_NODE_COUNT) == nodos and _huerfanos_vivos() == huerfanos,
+			"%s: al desmontar no queda ningún nodo de más (%d) ni huérfano vivo (%d)" % [pais, int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT) - nodos),
+			_huerfanos_vivos() - huerfanos])
+
+## Los nodos fuera del árbol que NO están ya en cola de borrado (las piezas que la mascota funde se quitan con `queue_free`: se van al acabar el cuadro).
+func _huerfanos_vivos() -> int:
+	var n := 0
+	for id in Node.get_orphan_node_ids():
+		var o = instance_from_id(id)
+		if o is Node and not (o as Node).is_queued_for_deletion():
+			n += 1
+	return n

@@ -89,19 +89,7 @@ func _pintar_cuerpo(p: Principal, c: Club, liga: Liga, dias: int, acento: Color)
 	if TableroInicio.pestana == 0:
 		EscaparateInicio.avanzar(p, _cuerpo, c, liga, acento)
 		return
-	var desliza := ScrollContainer.new()   ## las otras dos pestañas (más tarjetas y el informe de la semana) pueden pasar del alto: se desliza solo ahí
-	desliza.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	desliza.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_cuerpo.add_child(desliza)
-	var interior := VBoxContainer.new()
-	interior.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	interior.add_theme_constant_override("separation", TableroInicio.SEP)
-	desliza.add_child(interior)
-	TableroInicio._cuerpo(p, interior, c, liga, dias, acento)
-	var viejo: VBoxContainer = p._lista_inicio
-	p._lista_inicio = interior   ## el informe de la semana pinta en `_lista_inicio`: se le presta esta
-	InformeSemana.pintar(p)
-	p._lista_inicio = viejo
+	EscaparateSubs.pintar(p, _cuerpo, c, TableroInicio.EQUIPO if TableroInicio.pestana == 1 else TableroInicio.CLUB, acento)   ## sin desplazamiento y sin el informe de la semana
 
 ## «Base de datos»: un cuadro con el buscador global (jugadores y clubes) y la puerta a «Ligas y clubes».
 func abrir_busqueda(ancla: Control) -> void:

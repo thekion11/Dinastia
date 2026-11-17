@@ -8,15 +8,43 @@ var tipo: Tipo = Tipo.ESTADIO
 var zoom := 0.5                 ## CAMARA: el tamaño del cuadro de lo que se ve (0-1)
 var formacion: Array = []       ## CAMPO: [[pos, x, y], …] (porcentajes, el arco propio abajo)
 var acento := Color("c8102e")
+## (17-11) La foto real del estadio (`FotosEstadioMenu`), cuando llega: pisa al dibujo (ESTADIO y CAMARA).
+var foto: Texture2D:
+	set(t):
+		var nueva := foto == null and t != null
+		foto = t
+		if nueva and is_inside_tree() and not Animar.reducidas():   ## entra con un fundido sobre el dibujo
+			_mezcla = 0.0
+			create_tween().tween_property(self, "_mezcla", 1.0, 0.35)
+		queue_redraw()
+var _mezcla := 1.0:
+	set(v):
+		_mezcla = v
+		queue_redraw()
 
 const VERDE := Color("1f8a4a")
 
 func _draw() -> void:
+	var con_foto := foto != null and tipo in [Tipo.ESTADIO, Tipo.CAMARA]
+	if con_foto and _mezcla >= 1.0:
+		_foto()
+		return
 	match tipo:
 		Tipo.ESTADIO: _estadio()
 		Tipo.CAMARA: _camara()
 		Tipo.CAMPO: _campo()
 		Tipo.EMBLEMA: _emblema()
+	if con_foto:
+		_foto()
+
+## La foto, recortada al centro sin deformar, con la opacidad del fundido.
+func _foto() -> void:
+	var r := Rect2(Vector2.ZERO, size)
+	var ts := foto.get_size()
+	var esc := maxf(size.x / ts.x, size.y / ts.y)
+	var src := Rect2((ts - size / esc) * 0.5, size / esc)
+	draw_texture_rect_region(foto, r, src, Color(1, 1, 1, _mezcla))
+	draw_rect(r, Color(1, 1, 1, 0.12 * _mezcla), false, 1.0)
 
 func _estadio() -> void:
 	var s := size
