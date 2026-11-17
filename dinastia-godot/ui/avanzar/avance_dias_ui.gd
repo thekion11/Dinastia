@@ -25,7 +25,7 @@ func _estado() -> Dictionary:
 	if p.mundo.get_instance_id() != _mundo_id:
 		_mundo_id = p.mundo.get_instance_id()
 		_est = DisparadoresDia.nuevo_estado()
-		_abs_vista = -999
+		_abs_vista = _abs()   ## una partida nueva o cargada parte «de hoy»: el primer avance pasa al día siguiente (no se queda en el lunes ya vivido)
 		_arrastre = []
 		CampanasMenu.limpiar()
 	return _est
@@ -75,14 +75,14 @@ func _al_elegir_jugado(op: String) -> void:
 		await rp.elegido
 		rp.queue_free()
 	elif op == "repetir":
-		ReplicaPartido.abrir(p, ult, 0)   ## el partido entero otra vez, con clubes clonados: no toca la liga ni a los jugadores
+		load("res://ui/partido_menu/replica_partido.gd").abrir(p, ult, 0)   ## el partido entero otra vez, con clubes clonados: no toca la liga ni a los jugadores
 	elif op.begins_with("momentos:"):
 		var mo := MomentosPartido.mostrar(p, ult, p.mundo.mi_club(), op.substr(9))
 		var r: String = await mo.elegido
 		var minuto := int(mo._lista[int(r.substr(8))]["min"]) if r.begins_with("momento:") else -1
 		mo.queue_free()
 		if minuto >= 0:
-			ReplicaPartido.abrir(p, ult, minuto)   ## desde un minuto antes de la jugada y con el marcador de entonces
+			load("res://ui/partido_menu/replica_partido.gd").abrir(p, ult, minuto)   ## desde un minuto antes de la jugada y con el marcador de entonces
 
 ## ¿Hoy es el último día del mercado (y estás sobre ese día)? Entonces pasar al día siguiente lo cierra: se pregunta antes.
 func _hito_pendiente() -> bool:
@@ -183,7 +183,7 @@ func saltar() -> void:
 	if not partido_hoy():
 		return
 	_guardar_domingo()
-	JornadaPartido.modo_forzado = "saltar"   ## (17-11) se simula el partido de hoy (con su resultado en pantalla) y la semana corre con él
+	load("res://ui/principal/jornada_partido.gd").modo_forzado = "saltar"   ## (17-11) se simula el partido de hoy (con su resultado en pantalla) y la semana corre con él
 	p._dirigir()
 
 ## Lo que pasa el domingo (mercado que cierra, fechas del país) no se pierde porque el partido ya hizo correr la semana.

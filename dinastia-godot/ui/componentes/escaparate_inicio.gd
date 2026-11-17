@@ -22,8 +22,9 @@ static func preparar(p: Principal) -> void:
 	var raiz: Node = p._despacho.get_parent() if p._despacho != null else null
 	if raiz != null and p._botones != null and p._botones.get_parent() == raiz:
 		var ayuda := raiz.get_node_or_null("BarraAyudas")
-		var destino := raiz.get_child_count() - 1 if ayuda == null else ayuda.get_index()
-		raiz.move_child(p._botones, destino)   ## Avanzar / Jugar / Saltar abajo, encima de la barra de ayudas
+		raiz.move_child(p._botones, raiz.get_child_count() - 1)   ## Avanzar / Jugar / Saltar abajo a la derecha...
+		if ayuda != null:
+			raiz.move_child(ayuda, raiz.get_child_count() - 1)   ## ...justo encima de la barra de ayudas, que va la última
 	_botones_grandes(p)
 	p._botones.alignment = BoxContainer.ALIGNMENT_END   ## abajo a la derecha, como en la maqueta
 	_riel(p)

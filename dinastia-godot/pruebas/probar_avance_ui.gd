@@ -15,6 +15,7 @@ func _frames(n := 3) -> void:
 
 func _ready() -> void:
 	AvanceDiasUI.sin_pantalla = true
+	JornadaPartido.resultado_nuevo = false   ## con ventana real (xvfb) el resultado nuevo espera un clic: la prueba lo salta
 	AvanceSemana.partido_obliga = true
 	for cfg: Array in [[["CHI", "ARG"], 1, 20261104], [["ESP", "ENG"], 2, 20261117]]:
 		await _una(cfg)

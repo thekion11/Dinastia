@@ -56,7 +56,7 @@ static func pintar(p: Principal, raiz: VBoxContainer, c: Club, liga: Liga, dias_
 	fondo_mundo = ColorMundo.fondo_tarjeta(p.mundo)
 	var botones: Array[Button] = []
 	for i in PESTANAS.size():
-		var b := EscaparateBarra.boton_pestana(Idiomas.t(String(PESTANAS[i])), 1.9) if escaparate else _boton_pestana(Idiomas.t(String(PESTANAS[i])).to_upper(), color_mundo)
+		var b := EscaparateBarra.boton_pestana(Idiomas.t(String(PESTANAS[i])), 1.6) if escaparate else _boton_pestana(Idiomas.t(String(PESTANAS[i])).to_upper(), color_mundo)
 		barra.add_child(b)
 		botones.append(b)
 		CampanasMenu.marcar_pestana(b, i)   ## (17-11) punto rojo si hay una campana en una tarjeta de esa pestaña

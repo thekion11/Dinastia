@@ -44,7 +44,7 @@ static func crear(mos: VBoxContainer, c: Club) -> HBoxContainer:
 	return hb
 
 ## Una pestaña de la barra: texto grande, plano, blanco; la activa lleva la raya blanca de abajo.
-static func boton_pestana(texto: String, ancho := 1.0) -> Button:
+static func boton_pestana(texto: String, ancho := 1.35) -> Button:
 	var b := Button.new()
 	b.toggle_mode = true
 	b.focus_mode = Control.FOCUS_ALL
@@ -55,7 +55,7 @@ static func boton_pestana(texto: String, ancho := 1.0) -> Button:
 	b.tooltip_text = texto
 	b.set_meta("rotulo", texto)
 	## El rótulo es una Label propia (no el texto del botón): así la escala tipográfica de los menús no le cambia el tamaño.
-	var l := EstiloAvanzar.etiqueta(texto, 20, Color(1, 1, 1, 0.8), true)
+	var l := EstiloAvanzar.etiqueta(texto, 19, Color(1, 1, 1, 0.8), true)
 	l.name = "Rotulo"
 	l.set_anchors_preset(Control.PRESET_FULL_RECT)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

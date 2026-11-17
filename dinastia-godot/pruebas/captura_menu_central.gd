@@ -33,11 +33,6 @@ func _ready() -> void:
 		TableroInicio.pestana = int(OS.get_environment("PESTANA"))
 		pr._refrescar()
 	await _frames(12)
-	var hb: Node = pr.find_child("Botones", true, false)
-	if hb != null:
-		for h in hb.get_children():
-			if h is Button:
-				print("BTN ", (h as Button).text, " fs=", (h as Button).get_theme_font_size("font_size"), " w=", (h as Control).size.x, " tog=", (h as Button).toggle_mode)
 	print("APERTURA_MS ", Time.get_ticks_msec() - t0)
 	get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://pruebas/capturas/menu_central_%s.png" % OS.get_environment("NOMBRE")))
 	get_tree().quit()

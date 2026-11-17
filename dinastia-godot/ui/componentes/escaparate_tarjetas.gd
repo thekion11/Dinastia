@@ -51,7 +51,7 @@ static func _cara_dt(p: Principal, c: Club) -> Texture2D:
 		if not r.dt_empleado.is_empty():
 			var rng := RandomNumberGenerator.new()
 			rng.seed = hash(r.dt_nombre())
-			asp = PersonajeDT.aleatorio(rng)
+			asp = load("res://visor/personaje_dt.gd").aleatorio(rng)   ## por ruta: el menú no nombra clases del 3D (memoria del menú)
 		return Retrato3D.textura_dt(asp, c.color1, c.color2, 256)
 	var look: Dictionary = CaraDT.look_de_nombre(r.dt_nombre()) if not r.dt_empleado.is_empty() else r.look_efectivo()
 	return CaraDT.textura(look, 256)
