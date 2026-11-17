@@ -45,7 +45,9 @@ func _probar_partidos() -> void:
 	for e: Dictionary in p2.cronica:
 		if String(e.get("tipo", "")) == "gol_anulado":
 			anulados += 1
-	_comprobar(oidos["gol"] == r2["local"] + r2["visita"] + anulados, "la senal de gol se emite una vez por gol")
+	## (17-11) Un partido suspendido por quedarse un equipo con menos de siete (`suspendido`) tiene marcador de MESA: no se jugaron goles y no hay señales. Según el azar de la temporada simulada antes, los dos clubes de esta prueba pueden llegar así.
+	var esperados: int = 0 if p2.suspendido else int(r2["local"]) + int(r2["visita"]) + anulados
+	_comprobar(oidos["gol"] == esperados, "la senal de gol se emite una vez por gol")
 	_comprobar(oidos["fin"] == 1, "la senal de fin de partido se emite una vez")
 
 	## "remate": la llegada que no fue gol. Hasta esta sesion `_atacar()` la
