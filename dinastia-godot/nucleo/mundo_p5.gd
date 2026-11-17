@@ -18,6 +18,7 @@ var _entreno_mundo: Entrenamiento = null   ## (16-11, informe G-04) el entrenami
 ## `ya_jugado` es el partido que el entrenador acaba de dirigir en directo: se anota su
 ## resultado en vez de volver a simularlo (liga, continental o copa, el que sea).
 func avanzar_semana(ya_jugado: Partido = null) -> void:
+	Jugador.semana_global = anio * 100 + semana   ## (17-11) la semana de ESTE mundo desde el primer paso (antes quedaba la de otro mundo anterior y el mundo no se repetía igual con la misma semilla)
 	## El partido mirado no pasó por `simular()`: sus notas y la forma se
 	## cierran aquí (antes ese partido no contaba en `Jugador.notas`).
 	if ya_jugado != null:
