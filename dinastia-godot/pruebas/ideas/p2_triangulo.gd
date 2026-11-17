@@ -23,17 +23,17 @@ func _ready() -> void:
 	_comprobar(pj.find_child("TrianguloControlado", true, false) == null, "y ya no el triángulo 3D grande")
 	if nt != null:
 		var yo: Dictionary = pj.motor.usuario
-		var cam := get_viewport().get_camera_3d()
+		var cam := nt._camara()   ## la misma que usa el HUD para proyectar
 		_comprobar(not yo.is_empty() and _marca_yo(nt) != null, "con un jugador controlado, el triángulo se ve")
 		if not yo.is_empty() and cam != null and _marca_yo(nt) != null:
-			var m: Dictionary = _marca_yo(nt)
-			var pie := cam.unproject_position((yo["node"] as Node3D).global_position)
-			var cabeza: Vector2 = m["cabeza"]
-			_comprobar((m["pie"] as Vector2).distance_to(pie) < 2.0 and cabeza.y < (m["pie"] as Vector2).y,
-				"sobre su cabeza: pies a %.1f px de los del jugador, cabeza %.0f px más arriba" % [(m["pie"] as Vector2).distance_to(pie), (m["pie"] as Vector2).y - cabeza.y])
+			var mk: Dictionary = _marca_yo(nt)
+			var pie := nt._a_pantalla(cam, (yo["node"] as Node3D).global_position)
+			var cabeza: Vector2 = mk["cabeza"]
+			_comprobar((mk["pie"] as Vector2).distance_to(pie) < 2.0 and cabeza.y < (mk["pie"] as Vector2).y,
+				"sobre su cabeza: pies a %.1f px de los del jugador, cabeza %.0f px más arriba" % [(mk["pie"] as Vector2).distance_to(pie), (mk["pie"] as Vector2).y - cabeza.y])
 			var otro: Dictionary = {}
-			for p: Dictionary in pj.motor.jugadores:
-				if p != yo and bool(p["es_local"]) == bool(yo["es_local"]) and not bool(p["por"]):
+			for p: Dictionary in pj.motor.jugadores:   ## un compañero de campo que esté delante de la cámara (el HUD no pinta a los de detrás)
+				if p != yo and bool(p["es_local"]) == bool(yo["es_local"]) and not bool(p["por"]) and not cam.is_position_behind((p["node"] as Node3D).global_position):
 					otro = p
 					break
 			pj.motor.usuario = otro
@@ -41,8 +41,10 @@ func _ready() -> void:
 				await get_tree().physics_frame
 				await get_tree().process_frame
 			var m2: Variant = _marca_yo(nt)
-			var pie2 := cam.unproject_position((otro["node"] as Node3D).global_position)
-			_comprobar(m2 != null and ((m2 as Dictionary)["pie"] as Vector2).distance_to(pie2) < 2.0, "al cambiar de jugador, el triángulo lo sigue")
+			## Comparado con los dos (el antiguo y el nuevo) en el mismo instante: la cámara y los jugadores se mueven entre cuadros.
+			var a_otro := 9999.0 if m2 == null else ((m2 as Dictionary)["pie"] as Vector2).distance_to(nt._a_pantalla(cam, (otro["node"] as Node3D).global_position))
+			var a_yo := 9999.0 if m2 == null else ((m2 as Dictionary)["pie"] as Vector2).distance_to(nt._a_pantalla(cam, (yo["node"] as Node3D).global_position))
+			_comprobar(m2 != null and a_otro < 80.0 and a_otro < a_yo, "al cambiar de jugador, el triángulo lo sigue (a %.0f px del nuevo y %.0f px del anterior)" % [a_otro, a_yo])
 			pj.motor.usuario = {}
 			for i in 3:
 				await get_tree().physics_frame
