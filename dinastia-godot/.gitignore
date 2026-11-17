@@ -1,3 +1,6 @@
 .godot/
 pruebas/pantalla.png
 pruebas/ultimo_resultado.txt
+
+## Extensión saneada (ASan/UBSan, herramientas/sanear_nativo.sh): solo local
+bin_nativo_saneada/

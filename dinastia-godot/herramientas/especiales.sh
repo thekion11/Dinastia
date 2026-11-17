@@ -536,6 +536,11 @@ if [[ "$1" = "todo" ]]; then
   # (10-11) Navegación con mando por todas las pestañas, los 9 menús, dos eventos y el teclado (orden 33): ~10 min
   pasa "navegación con mando (foco, trampas, alcance, Cuadrado/R2)" "godot --headless --path . res://pruebas/auditoria_foco_mando.tscn" "FIN. 0 fallos"
   pasa "navegación con mando: eventos, temporada y editor de formación" "godot --headless --path . res://pruebas/auditoria_foco_eventos.tscn" "FIN. 0 fallos"
+  # (17-11) La extensión C++ con AddressSanitizer + UBSan: probar_nativo, igualdad_motor y un partido C4 enteros, 0 avisos en nativo/src (~15 min;
+  # necesita godot-cpp descargado por compilar_nativo.sh y la libasan de gcc).
+  if [[ -d nativo/godot-cpp ]] && [[ -f "$(gcc -print-file-name=libasan.so 2>/dev/null)" ]]; then
+    pasa "extensión C++ saneada (ASan + UBSan)" "bash herramientas/sanear_nativo.sh" "SANEADA: 0 líneas de aviso"
+  fi
 # 6a. Presupuesto de triángulos y llamadas de dibujo del partido (M-338): con pantalla virtual; ~5 min
 if command -v xvfb-run >/dev/null; then
 pasa "troceo de la grada sin butacas perdidas" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_troceo_grada.tscn" "FIN. 0 fallos"
