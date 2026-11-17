@@ -12,7 +12,7 @@ func _mover_balon(delta: float) -> void:
 		var fwd := Vector3(sin(n.rotation.y), 0, cos(n.rotation.y))
 		var sp := (poseedor["vel"] as Vector3).length()
 		var previa := balon.position
-		if sp < 2.2 or bool(poseedor["por"]) or estado != "juego" or bool(poseedor.get("protege", false)):
+		if sp < 2.2 or (bool(poseedor["por"]) and _en_su_area(poseedor, n.position)) or estado != "juego" or bool(poseedor.get("protege", false)):   ## (M6-10) el portero, pegado solo en su área
 			## Parado o al paso: el balón pegado al pie, protegido.
 			var destino := n.position + fwd * (0.45 + minf(sp, 7.0) * 0.07)
 			destino.y = R
@@ -107,7 +107,7 @@ func _plano(v: Vector3) -> Vector3:
 	return Vector3(v.x, 0.0, v.z)
 
 func _libre_para_duelo(p: Dictionary) -> bool:
-	return not bool(p["por"]) and float(p.get("contacto_hasta", 0.0)) <= t and float(p.get("gesto_hasta", 0.0)) <= t + 0.15
+	return not (bool(p["por"]) and not (is_same(p, poseedor) and not _en_su_area(p, pos(p)))) and float(p.get("contacto_hasta", 0.0)) <= t and float(p.get("gesto_hasta", 0.0)) <= t + 0.15
 
 ## La fuerza que pone en el choque ahora (el cansado empuja menos).
 func _fuerza(p: Dictionary) -> float:

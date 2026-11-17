@@ -299,10 +299,12 @@ func _probar_transmision_y_estadisticas() -> void:
 	for i in 60:
 		rig2._transmision(c2, Vector3(0, 0.1, -5.0), dt)
 	var fov_medio := c2.fov
-	_comprobar(rig2.trans_plano == "normal" and absf(fov_medio - CameraRig.FOV_TRANSMISION) < 1.0, "en el medio del campo, plano normal (%s, %.1f°)" % [rig2.trans_plano, fov_medio])
+	## (16-11) La apertura de referencia es la de la TV cercana ajustada al aspecto de la ventana (sin pantalla es 1:1, más estrecha que 16:9).
+	var fov_ref := CameraRig.fov_para_aspecto(CameraRig.FOV_TRANSMISION, rig2._aspecto(c2))
+	_comprobar(rig2.trans_plano == "normal" and absf(fov_medio - fov_ref) < 1.0, "en el medio del campo, plano normal (%s, %.1f°)" % [rig2.trans_plano, fov_medio])
 	for i in 240:
 		rig2._transmision(c2, Vector3(5.0, 0.1, 40.0), dt)
-	_comprobar(rig2.trans_plano == "area" and c2.fov < CameraRig.FOV_TRANSMISION - 4.0, "con la jugada en el área el plano se cierra (%s, %.1f°)" % [rig2.trans_plano, c2.fov])
+	_comprobar(rig2.trans_plano == "area" and c2.fov < fov_ref - 4.0, "con la jugada en el área el plano se cierra (%s, %.1f°)" % [rig2.trans_plano, c2.fov])
 	rig2.pista_ocasion = 1.4
 	rig2._transmision(c2, Vector3(5.0, 0.1, 40.0), dt)
 	_comprobar(rig2.trans_plano == "ocasion", "un tiro en el aire es «ocasión» (%s)" % rig2.trans_plano)
@@ -342,7 +344,7 @@ func _probar_transmision_y_estadisticas() -> void:
 		fov_max = maxf(fov_max, c4.fov)
 		if i == 120:
 			adelanta = r4._trans_foco.z > bz
-	_comprobar(abierto and fov_max > CameraRig.FOV_TRANSMISION + 2.5, "en el contraataque el plano se abre (%.1f°)" % fov_max)
+	_comprobar(abierto and fov_max > fov_ref + 2.5, "en el contraataque el plano se abre (%.1f°)" % fov_max)
 	_comprobar(adelanta, "el plano se adelanta hacia donde va el balón")
 	_comprobar(CameraRig.lectura_jugada(Vector3(0, 0, 40), Vector3.ZERO, 1.0, false, "puerta", "saque").x == 0.0, "en un saque de puerta no se cierra el plano")
 	_comprobar(CameraRig.lectura_jugada(Vector3(30, 0, 52), Vector3.ZERO, 1.0, false, "corner", "saque").x == 1.0, "en un córner se cierra el plano")

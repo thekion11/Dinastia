@@ -264,7 +264,7 @@ func _probar_adaptacion() -> void:
 	motor.clima = "lluvia"
 	var lluvia := MotorAdaptacion.escala_radio(motor, p)
 	motor.clima = ""
-	_comprobar(absf(lluvia / seco - 0.9) < 0.01, "con lluvia el radio baja un 10 % (%.2f)" % (lluvia / seco))
+	_comprobar(absf(lluvia / seco - 0.9) < 0.01, "con lluvia el radio baja un 10 %% (%.2f)" % (lluvia / seco))
 	(r[1] as Node3D).queue_free()
 
 ## LA DEFENSA NO VE UN BALÓN VIEJO (03-11-2026, `MotorColocacion`): con el rival atacando el balón «lento» va casi en directo y el sesgo cae rápido.

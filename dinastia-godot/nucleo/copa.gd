@@ -161,6 +161,32 @@ func jugar_hasta_el_final() -> Club:
 		jugar_ronda()
 	return campeon
 
+## (16-11, informe G-05) El historial de rondas va al guardado con ids en vez de clubes;
+## sin él, tras cargar el cuadro de rondas jugadas quedaba vacío.
+func historial_a_ids() -> Array:
+	var sal: Array = []
+	for h: Dictionary in historial:
+		var res: Array = []
+		for r: Dictionary in h.get("resultados", []):
+			var x := r.duplicate()
+			for k in ["local", "visita", "pasa"]:
+				x[k] = (r[k] as Club).id if r.get(k) is Club else ""
+			res.append(x)
+		sal.append({"ronda": h.get("ronda", ""), "resultados": res})
+	return sal
+
+func historial_desde_ids(arr: Array, clubes: Dictionary) -> void:
+	historial.clear()
+	for h: Dictionary in arr:
+		var res: Array = []
+		for r: Dictionary in h.get("resultados", []):
+			var x := r.duplicate()
+			for k in ["local", "visita", "pasa"]:
+				x[k] = clubes.get(String(r.get(k, "")))
+			if x["local"] != null and x["visita"] != null:
+				res.append(x)
+		historial.append({"ronda": String(h.get("ronda", "")), "resultados": res})
+
 # ---------------------------------------------------------------------------
 #  LAS COPAS DE CADA PAÍS
 # ---------------------------------------------------------------------------

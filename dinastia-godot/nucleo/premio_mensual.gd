@@ -15,9 +15,12 @@ static func elegir(m: Mundo) -> Jugador:
 	var mejor_media := -1.0
 	for c: Club in liga.clubes:
 		for j: Jugador in c.plantilla:
-			if j.notas.size() < MINIMO_NOTAS:
+			## (16-11, informe G-08) solo cuentan las notas de ESTA temporada: `notas` no se vacía al cambiar de año,
+			## pero `partidos` sí (`Mundo.nueva_temporada`), así que no gana quien solo jugó en mayo.
+			var de_esta := mini(j.notas.size(), j.partidos)
+			if de_esta < MINIMO_NOTAS:
 				continue
-			var ult := j.notas.slice(-4)
+			var ult := j.notas.slice(-mini(4, de_esta))
 			var media := 0.0
 			for n: float in ult:
 				media += n

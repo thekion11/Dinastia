@@ -129,8 +129,10 @@ PackedFloat64Array DinastiaNativo::colocacion_cerca(const Array &jugadores, cons
 // siempre) y pone `speed_scale`. Gemela de las decisiones: `_anim_decidir_gd`.
 namespace {
 const char *ANIMS[] = { "parado", "trotar", "correr", "conducir", "trotar_atras", "marcar", "portero_listo", "portero_lateral_der", "portero_lateral_izq", "cansado" };
-// `CICLO_ANIM` (0 = no está).
+// `CicloCarrera.CICLO` (visor/ciclo_carrera.gd, 17-11): velocidad con escala 1 (0 = no es ciclo) y margen de escala de cada ciclo.
 const double CICLOS[] = { 0.0, 3.4, 7.0, 3.6, 2.6, 0.0, 0.0, 2.0, 2.0, 0.0 };
+const double ESC_MIN[] = { 1.0, 0.55, 0.6, 0.7, 0.7, 1.0, 1.0, 0.7, 0.7, 1.0 };
+const double ESC_MAX[] = { 1.0, 1.55, 1.45, 1.4, 1.4, 1.0, 1.0, 1.4, 1.4, 1.0 };
 } // namespace
 
 PackedFloat64Array DinastiaNativo::animar_jugadores(const Array &jugadores, const PackedFloat64Array &res, double t, const Variant &poseedor_id, bool cansancio_real, bool league,
@@ -161,7 +163,9 @@ PackedFloat64Array DinastiaNativo::animar_jugadores(const Array &jugadores, cons
 		const double hacia_b = res[i * 4 + 3];
 		const bool es_pos = hay_pos && p.get(k_id, Variant()) == poseedor_id;
 		const bool por = bool(p.get(k_por, false));
-		int a = sp < 0.5 ? 0 : (sp < 5.2 ? 1 : 2);
+		// `CicloCarrera.ciclo`: con histéresis (a correr a 5,2 m/s; de vuelta a trotar por debajo de 4,5).
+		static const String c_correr_h("correr");
+		int a = sp < 0.5 ? 0 : (sp >= (String(p.get(k_actual, "")) == c_correr_h ? 4.5 : 5.2) ? 2 : 1);
 		if (es_pos && sp >= 0.5 && sp < 6.5) {
 			a = 3;
 		} else if (atras) {
@@ -188,7 +192,7 @@ PackedFloat64Array DinastiaNativo::animar_jugadores(const Array &jugadores, cons
 			continue;
 		}
 		const double c = CICLOS[a];
-		const double escala = c > 0.0 ? std::fmin(std::fmax(sp / c, 0.7), 1.4) : 1.0;
+		const double escala = c > 0.0 ? std::fmin(std::fmax(sp / c, ESC_MIN[a]), ESC_MAX[a]) : 1.0; // `CicloCarrera.escala`
 		out[i * 2] = double(a);
 		out[i * 2 + 1] = escala;
 		if (!aplicar) {

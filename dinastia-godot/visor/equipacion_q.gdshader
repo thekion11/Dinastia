@@ -43,9 +43,14 @@ uniform vec4 med_c2 : source_color = vec4(0.0, 0.0, 0.0, 1.0);
 uniform int bot_dis = 0;
 uniform vec4 bot_c2 : source_color = vec4(1.0);
 uniform vec4 bot_c3 : source_color = vec4(0.13, 0.13, 0.13, 1.0);
-// El dorsal en la espalda, en siete segmentos (0 = sin número).
+// El dorsal en la espalda (0 = sin número), con su tipografía y su ribete (`dorsal_q.gdshaderinc`, 17-11).
 uniform int dorsal = 0;
 uniform vec4 color_num : source_color = vec4(1.0);
+// El ribete del número: color de contraste y, en alfa, su grosor en unidades de la caja del dígito (0 = sin ribete).
+uniform vec4 color_num_borde = vec4(0.0);
+// El nombre (apellido) sobre el número: letras de `DisenosKit.letras_nombre` (1-29; 0 = espacio). nombre_n = 0: sin nombre.
+uniform int nombre_c[12];
+uniform int nombre_n = 0;
 // Accesorios: alfa 0 = no lo lleva.
 uniform vec4 acc_cintillo : source_color = vec4(0.0);
 uniform vec4 acc_manguitos : source_color = vec4(0.0);
@@ -137,6 +142,22 @@ uniform float escala_holgura = 0.3;
 // alisada del todo). Ropa de calle más; camisetas de juego menos.
 uniform float alisar = 0.0;
 varying vec3 v_reposo;
+// TELA DE PUNTO (16-11, Frente 2): el normal del tejido `cotton_jersey` de Poly Haven (CC0; ver LICENCIAS.md),
+// repetido en las UV, como detalle de baja intensidad: no cambia el color del uniforme. `tela_detalle` = 0 lo
+// apaga (MÍNIMA y «Partido ligero», `VestidorQ`); de lejos (la cámara de TV) no se lee y no se muestrea.
+uniform sampler2D tela_nor : hint_normal, filter_linear_mipmap, repeat_enable;
+uniform float tela_detalle = 0.0;
+uniform float tela_escala = 6.0;   // repeticiones por unidad de UV (~40 cm por repetición en el torso)
+// LOS EJES DE REPOSO EN EL ESPACIO TANGENTE (16-11, «parches claros»): el relieve de arrugas y pliegues
+// (`relieve_tela`) se calcula en las coordenadas de reposo (x a la derecha, y arriba), pero el mapa de normales
+// se lee en el espacio tangente de las UV del atlas, y cada isla del atlas de Quaternius tiene su propio giro
+// (y algunas, espejo). Sumarlo tal cual inclinaba la normal hacia otro lado en cada isla y salían bloques
+// rectangulares más claros u oscuros con el borde de la isla. Aquí van x e y de reposo, llevados a la pose
+// actual, medidos sobre la tangente y la binormal de cada vértice: (x·T, x·B, y·T, y·B).
+varying vec4 v_ejes;
+// (16-11, H1) Y el eje z de reposo (hacia delante), igual medido: (z·T, z·B). Lo usa el canalé de las medias, cuyo relieve
+// va alrededor de la pierna (en x y z de reposo); antes se sumaba a `nm.x` del atlas y cada isla lo inclinaba a su manera.
+varying vec2 v_ejez;
 
 // EL ESCOTE DE VERDAD (17-10-2026). Antes la camiseta acababa en un plano
 // horizontal (y = 1,535) y el cuello era «todo lo que queda por encima de
@@ -180,6 +201,20 @@ vec3 girar(vec3 a, vec3 b, vec3 x) {
 
 void vertex() {
 	v_reposo = vec3(UV2.x, UV2.y, COLOR.r);
+	{
+		vec3 ex = vec3(1.0, 0.0, 0.0);
+		vec3 ey = vec3(0.0, 1.0, 0.0);
+		vec3 ez = vec3(0.0, 0.0, 1.0);
+		if (dot(CUSTOM1.xyz, CUSTOM1.xyz) > 0.25) {
+			vec3 a = normalize(CUSTOM1.xyz);
+			vec3 b = normalize(NORMAL);
+			ex = girar(a, b, ex);
+			ey = girar(a, b, ey);
+			ez = girar(a, b, ez);
+		}
+		v_ejes = vec4(dot(ex, TANGENT), dot(ex, BINORMAL), dot(ey, TANGENT), dot(ey, BINORMAL));
+		v_ejez = vec2(dot(ez, TANGENT), dot(ez, BINORMAL));
+	}
 	// LA ROPA SUELTA (26-9-2026, pedido: "están muy pegadas al cuerpo"): los
 	// vértices de la camiseta y el pantalón se separan del cuerpo por su
 	// normal -la tela no se pega a cada músculo-, y la manga y el pantalón se
@@ -504,60 +539,8 @@ vec3 disenio(float u, float v, float x, float y) {
 	return C(0);
 }
 
-// EL DORSAL CON TIPOGRAFÍA DE CAMISETA (frente 2, 16-11): antes eran siete segmentos rectangulares (se leía como un
-// reloj digital). Ahora cada cifra es un trazo redondeado de ~3,6 cm (rectas y óvalos, como las letras de dorsal de
-// las ligas), medido en DISTANCIA: el borde sale suave a cualquier tamaño y deja un filete oscuro alrededor.
-// Caja de la cifra: x de 0 a DIG_W (en alturas de cifra, 0,11/0,30), y de 0 a 1.
-const float DIG_W = 0.36;
-const float DIG_T = 0.06;   // media anchura del trazo
-float sd_seg(vec2 p, vec2 a, vec2 b) {
-	vec2 pa = p - a;
-	vec2 ba = b - a;
-	return length(pa - ba * clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0));
-}
-// Contorno de un rectángulo de esquinas redondas (centro c, semitamaño h, radio r): con r = h.x es un óvalo alargado.
-float sd_anillo(vec2 p, vec2 c, vec2 h, float r) {
-	vec2 q = abs(p - c) - (h - vec2(r));
-	return abs(length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r);
-}
-float dist_seis(vec2 q) {
-	float d = sd_anillo(q, vec2(0.18, 0.29), vec2(0.12, 0.23), 0.12);
-	d = min(d, sd_seg(q, vec2(0.06, 0.29), vec2(0.06, 0.6)));
-	if (q.y > 0.6 && q.x < 0.27) d = min(d, sd_anillo(q, vec2(0.21, 0.6), vec2(0.15, 0.34), 0.15));
-	return d;
-}
-// Distancia al trazo de la cifra `n` en `p` (de 0 a 1 en x e y de la caja).
-float dist_digito(int n, vec2 p) {
-	if (p.x < -0.2 || p.x > 1.2 || p.y < -0.1 || p.y > 1.1) return 1.0;
-	vec2 q = vec2(p.x * DIG_W, p.y);
-	float d = 1.0;
-	if (n == 0) {
-		d = sd_anillo(q, vec2(0.18, 0.5), vec2(0.12, 0.44), 0.12);
-	} else if (n == 1) {
-		d = min(sd_seg(q, vec2(0.21, 0.06), vec2(0.21, 0.94)), sd_seg(q, vec2(0.21, 0.94), vec2(0.08, 0.8)));
-	} else if (n == 2) {
-		if (q.y > 0.72 || (q.x > 0.18 && q.y > 0.6)) d = sd_anillo(q, vec2(0.18, 0.72), vec2(0.12, 0.22), 0.12);
-		d = min(d, min(sd_seg(q, vec2(0.29, 0.58), vec2(0.06, 0.06)), sd_seg(q, vec2(0.06, 0.06), vec2(0.30, 0.06))));
-	} else if (n == 3) {
-		if (q.x > 0.14 || q.y > 0.8) d = sd_anillo(q, vec2(0.18, 0.73), vec2(0.12, 0.21), 0.12);
-		if (q.x > 0.14 || q.y < 0.2) d = min(d, sd_anillo(q, vec2(0.18, 0.28), vec2(0.12, 0.22), 0.12));
-	} else if (n == 4) {
-		d = min(sd_seg(q, vec2(0.25, 0.94), vec2(0.06, 0.32)), sd_seg(q, vec2(0.06, 0.32), vec2(0.31, 0.32)));
-		d = min(d, sd_seg(q, vec2(0.25, 0.94), vec2(0.25, 0.06)));
-	} else if (n == 5) {
-		d = min(sd_seg(q, vec2(0.30, 0.94), vec2(0.07, 0.94)), sd_seg(q, vec2(0.07, 0.94), vec2(0.07, 0.55)));
-		if (!(q.x < 0.14 && q.y > 0.2 && q.y < 0.5)) d = min(d, sd_anillo(q, vec2(0.18, 0.31), vec2(0.12, 0.25), 0.12));
-	} else if (n == 6) {
-		d = dist_seis(q);
-	} else if (n == 7) {
-		d = min(sd_seg(q, vec2(0.06, 0.94), vec2(0.30, 0.94)), sd_seg(q, vec2(0.30, 0.94), vec2(0.12, 0.06)));
-	} else if (n == 8) {
-		d = min(sd_anillo(q, vec2(0.18, 0.735), vec2(0.105, 0.205), 0.105), sd_anillo(q, vec2(0.18, 0.28), vec2(0.12, 0.22), 0.12));
-	} else {
-		d = dist_seis(vec2(DIG_W - q.x, 1.0 - q.y));
-	}
-	return d;
-}
+// El dorsal y el nombre de la espalda (17-11: sustituye a los dígitos de siete segmentos de antes).
+#include "res://visor/dorsal_q.gdshaderinc"
 
 // PLIEGUES DE TELA (17-10-2026): altura de una arruga suave (-1..1) en la
 // pose de reposo. Torso: caída vertical bajo el pecho, más en los costados, y
@@ -620,6 +603,8 @@ void fragment() {
 	if (prenda == 1) { m = vec4(1.0, 0.0, 0.0, 0.0); cubierta = true; }
 	else if (prenda == 2) { m = vec4(0.0, 1.0, 0.0, 0.0); cubierta = true; }
 	else if (prenda == 3) { m = vec4(0.0, 0.0, 1.0, 0.0); cubierta = true; }
+	// Lo que mide un píxel sobre la tela (m), fuera de cualquier rama: el borde suave del dorsal y del nombre (17-11).
+	float px_tela = max(length(vec2(dFdx(x), dFdx(y))), length(vec2(dFdy(x), dFdy(y))));
 
 	float lum = dot(piel, vec3(0.299, 0.587, 0.114));
 	float pliegue = clamp(0.78 + lum * 0.45, 0.8, 1.12);
@@ -798,8 +783,10 @@ void fragment() {
 			vec4 sp = sp_encajado(sp_pecho, vec2((x + 0.13) / 0.26, 1.0 - (y - 1.2) / 0.17), 0.26 / 0.17, sp_asp_pecho);
 			camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
 		}
-		if (hay_sp_espalda && z < 0.45 && abs(x) < 0.12 && y > 1.415 && y < 1.48) {
-			vec4 sp = sp_encajado(sp_espalda, vec2((-x + 0.12) / 0.24, 1.0 - (y - 1.415) / 0.065), 0.24 / 0.065, sp_asp_espalda);
+		// Con el nombre arriba (17-11), el patrocinador de la espalda baja bajo el número, como en la Premier League.
+		float sp_y0 = nombre_n > 0 ? 1.035 : 1.415;
+		if (hay_sp_espalda && z < 0.45 && abs(x) < 0.12 && y > sp_y0 && y < sp_y0 + 0.065) {
+			vec4 sp = sp_encajado(sp_espalda, vec2((-x + 0.12) / 0.24, 1.0 - (y - sp_y0) / 0.065), 0.24 / 0.065, sp_asp_espalda);
 			camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
 		}
 	}
@@ -808,23 +795,46 @@ void fragment() {
 		camiseta = mix(camiseta, sp.rgb, sp.a * 0.96);
 	}
 	// El dorsal, en la espalda (z < 0,5), entre los omóplatos y la cintura.
-	if (dorsal > 0 && !civil && !manga && z < 0.45 && y > 1.11 && y < 1.41 && abs(x) < 0.13) {
+	// (17-11) Tipografía deportiva con borde suave y ribete de contraste; 25 cm de alto (antes 30, luego 27: dos cifras anchas
+	// con su ribete en la espalda y, encima, el apellido de 6,5 cm sin subir hasta el cuello).
+	if (dorsal > 0 && !civil && !manga && z < 0.45 && y > 1.097 && y < 1.384 && abs(x) < 0.152) {
 		// Vista desde atrás: la x va al revés (si no, el 12 se lee 21 y en espejo).
-		float xn = -x;
-		float dy = (y - 1.11) / 0.30;
-		float dd = 1.0;
-		if (dorsal < 10) {
-			dd = dist_digito(dorsal, vec2((xn + 0.055) / 0.11, dy));
-		} else {
-			dd = min(dist_digito(dorsal / 10, vec2((xn + 0.12) / 0.105, dy)), dist_digito(dorsal % 10, vec2((xn - 0.015) / 0.105, dy)));
+		const float U_NUM = 1.6 / 0.25;
+		float dn = dq_numero(dorsal, vec2(-x, y - 1.115) * U_NUM);
+		float fw = max(px_tela * U_NUM, 0.004);
+		float ribete = color_num_borde.a;
+		float lleno = 1.0 - smoothstep(DQ_TRAZO - fw * 0.5, DQ_TRAZO + fw * 0.5, dn);
+		if (ribete > 0.0) {
+			float borde_n = 1.0 - smoothstep(DQ_TRAZO + ribete - fw * 0.5, DQ_TRAZO + ribete + fw * 0.5, dn);
+			camiseta = mix(camiseta, color_num_borde.rgb, borde_n);
 		}
-		// Acotado: en el borde de la caja de cada cifra la distancia salta y, sin tope, dibujaba un marco fino.
-		float fw_d = clamp(fwidth(dd), 1e-4, 0.02) * 0.75;
-		float on = 1.0 - smoothstep(DIG_T - fw_d, DIG_T + fw_d, dd);
-		// Filete de ~5 mm más oscuro alrededor (como el borde termosellado de los dorsales); se apaga de lejos.
-		float filete = (1.0 - smoothstep(DIG_T + 0.018 - fw_d, DIG_T + 0.018 + fw_d, dd)) * (1.0 - smoothstep(0.01, 0.03, fw_d));
-		camiseta = mix(camiseta, camiseta * 0.55, filete * (1.0 - on));
-		camiseta = mix(camiseta, color_num.rgb, on);
+		camiseta = mix(camiseta, color_num.rgb, lleno);
+	}
+	// El nombre sobre el número. (17-11, 2.ª pasada) 6,5 cm de alto (antes 4: lo tapaban el pelo largo y la cabeza inclinada) y
+	// 2,2 cm más abajo (de 1,422-1,462 a 1,375-1,440), 30 cm de ancho como mucho (los largos se estrechan), con el MISMO ribete
+	// que el número cuando el color no contrasta (una celda alrededor de cada letra).
+	if (nombre_n > 0 && !civil && !manga && z < 0.45 && y > 1.364 && y < 1.451 && abs(x) < 0.162) {
+		const float ALTO_N = 0.065;
+		const float TOPE_N = 1.44;
+		float celda = ALTO_N / 7.0;
+		float n_col = float(nombre_n) * 6.0 - 1.0;
+		float cw = min(celda * 0.9, 0.30 / n_col);
+		float fx = (-x + n_col * cw * 0.5) / cw;
+		float fy = (TOPE_N - y) / celda;
+		if (fx >= -1.0 && fx < n_col + 1.0 && fy >= -1.0 && fy < 8.0) {
+			int col = int(floor(fx));
+			int fila = int(floor(fy));
+			float on = dq_nombre(col, fila);
+			float ribete_n = 0.0;
+			if (color_num_borde.a > 0.0 && on == 0.0) {
+				ribete_n = max(max(dq_nombre(col - 1, fila), dq_nombre(col + 1, fila)), max(dq_nombre(col, fila - 1), dq_nombre(col, fila + 1)));
+			}
+			// De lejos (la celda ya no llega al píxel) las letras se funden en un tono medio en vez de chisporrotear.
+			float cerca = 1.0 - smoothstep(0.55, 1.1, px_tela / cw);
+			bool caja = fx >= 0.0 && fx < n_col && fy >= 0.0 && fy < 7.0;
+			camiseta = mix(camiseta, color_num_borde.rgb, ribete_n * cerca);
+			camiseta = mix(camiseta, color_num.rgb, caja ? mix(0.35, on, cerca) : on * cerca);
+		}
 	}
 
 	if (largo) {
@@ -879,6 +889,7 @@ void fragment() {
 	// vuelta de arriba más oscura con su canto.
 	float ang_m = 0.0;
 	float fade_m = 0.0;
+	vec2 dir_m = vec2(0.0);   // hacia dónde sube el canalé, en el espacio tangente (alrededor de la pierna)
 	if (usa_reposo && !civil && !largo) {
 		float hp = y - 0.62;
 		pant *= 1.0 - 0.2 * (1.0 - smoothstep(0.0, 0.005, hp));
@@ -887,6 +898,10 @@ void fragment() {
 		pant *= 1.0 - 0.28 * (1.0 - smoothstep(0.0, 0.03, 1.0 - y));
 		ang_m = atan(z * 0.5 - 0.25 + 0.06, abs(x) - 0.122) * 22.0;
 		fade_m = 1.0 - smoothstep(0.35, 1.0, fwidth(ang_m));
+		// La pendiente de `ang_m` en x y z de reposo (alrededor del eje de la pierna), llevada al espacio tangente.
+		vec2 g_m = vec2(-(z * 0.5 - 0.25 + 0.06) * sign(x), abs(x) - 0.122);
+		g_m /= max(length(g_m), 1e-4);
+		dir_m = g_m.x * v_ejes.xy + g_m.y * v_ejez;
 		med *= 1.0 + 0.07 * sin(ang_m * 6.2832) * fade_m;
 		float vuelta = smoothstep(0.425, 0.432, y);
 		med *= 1.0 - 0.1 * vuelta;
@@ -1128,7 +1143,7 @@ void fragment() {
 	bool juego = usa_reposo && !civil && usa_normal;
 	if (juego) {
 		nm.xy -= nm_cuerpo * 1.0 * tela;
-		nm.x += cos(ang_m * 6.2832) * fade_m * 0.07 * m.b;
+		nm.xy += dir_m * (cos(ang_m * 6.2832) * fade_m * 0.07 * m.b);
 	}
 	// Ropa de calle (27-10-2026, plan §2.2e P4): el músculo se quita igual que en la de juego y la
 	// profundidad del relieve vuelve a ser visible (abajo, 0,4 en vez de 0,06): antes, para tapar los

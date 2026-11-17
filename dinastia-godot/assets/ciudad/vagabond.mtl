@@ -45,7 +45,7 @@ Ks 0.251000 0.251000 0.251000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd wood-textures-high-quality-1.jpg
+map_Kd vagabond_madera.jpg
 
 newmtl WhiteBase.001
 Ns 19.607843
@@ -64,7 +64,7 @@ Ks 0.600736 0.600736 0.600736
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd wood-textures-high-quality-1.jpg
+map_Kd vagabond_madera.jpg
 
 newmtl Wood_NONE
 Ns 815.686275
@@ -74,7 +74,7 @@ Ks 0.600736 0.600736 0.600736
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd wood-textures-high-quality-1.jpg
+map_Kd vagabond_madera.jpg
 
 newmtl chrome
 Ns 598.039216

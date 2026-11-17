@@ -251,7 +251,16 @@ func _probar_calidad_minima() -> void:
 	for nivel_l: int in [Calidad.BAJA, Calidad.MEDIA_BAJA]:
 		Calidad.aplicar_viewport(vp, nivel_l)
 		_comprobar(vp.msaa_3d == Viewport.MSAA_DISABLED and not Calidad.msaa_activo(nivel_l), "BAJA y MEDIA BAJA: sin MSAA (medido: −57 a −67 % de fotograma relativo)")
+	## (16-11, informe E-05) La luz con sombra «solo en ALTA» (la del túnel) la pierde si el nivel baja con la escena abierta, y la recupera al volver.
+	var luz_a := OmniLight3D.new()
+	vp.add_child(luz_a)
+	luz_a.shadow_enabled = true
+	luz_a.add_to_group(Calidad.GRUPO_SOMBRA_ALTA)
+	Calidad.aplicar_viewport(vp, Calidad.MINIMO)
+	var sin_sombra := not luz_a.shadow_enabled
 	Calidad.aplicar_viewport(vp, Calidad.ALTO)
+	_comprobar(sin_sombra and luz_a.shadow_enabled, "la luz del túnel (grupo «sombra solo en ALTA») sigue al nivel al cambiarlo con la escena abierta")
+	luz_a.free()
 	_comprobar(vp.msaa_3d == Viewport.MSAA_2X, "ALTA conserva el MSAA x2")
 	Calidad.aplicar_viewport(vp, Calidad.MEDIO)
 	var elegida_antes_msaa := Calidad.elegida

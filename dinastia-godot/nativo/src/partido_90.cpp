@@ -100,7 +100,7 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 	// tirada de `Azar` (`az`) que daba `PartidoPonderado.goleador`; el asistente, de su generador propio sembrado con «id_minuto», como `asistente`. Las señales
 	// (`marco_gol`, `gol`) se emiten con el azar del motor al día (`az.salir`), por si quien escucha tira dados.
 	const Dictionary bases_asist = cfg["bases_asist"];
-	static const StringName k_gl("goles_local"), k_gv("goles_visita"), k_pdl("peor_diferencia_local"), k_pdv("peor_diferencia_visita"), k_goles("goles"), k_notas("_notas"),
+	static const StringName k_gl("goles_local"), k_gv("goles_visita"), k_pdl("peor_diferencia_local"), k_pdv("peor_diferencia_visita"), k_goles("goles"), k_asistencias("asistencias"), k_notas("_notas"),
 			k_cronica("cronica"), k_momentum("momentum_eventos"), k_nombre("nombre"), k_marco("marco_gol"), k_gol("gol");
 	auto anotar_gol = [&](Object *club, const Array &once, bool es_local) {
 		Object *autor = nullptr;
@@ -136,6 +136,7 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 			const int64_t ia = elegir_ponderado(once, grupo_de, bases_asist, 0.05, "pas", PackedFloat64Array(), r2->randf(), autor);
 			if (ia >= 0) {
 				asistente = once[ia];
+				asistente->set(k_asistencias, int64_t(asistente->get(k_asistencias)) + 1); // (16-11, informe G-02) como `Partido._anotar`
 			}
 		}
 		Array cronica = p->get(k_cronica);
