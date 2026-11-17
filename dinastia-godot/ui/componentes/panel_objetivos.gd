@@ -201,8 +201,14 @@ func _aplicar_plegado() -> void:
 		grow_horizontal = Control.GROW_DIRECTION_BEGIN
 		grow_vertical = Control.GROW_DIRECTION_BEGIN if _plegado else Control.GROW_DIRECTION_BOTH
 		if _plegado:
-			offset_top -= 48.0 + MenuLateral.reserva().y   ## (vertical) por encima de la barra de abajo
-			offset_bottom -= 48.0 + MenuLateral.reserva().y
+			var sube := 48.0 + MenuLateral.reserva().y + _alto_barra_ayudas()   ## (vertical) por encima de la barra de abajo
+			offset_top -= sube
+			offset_bottom -= sube
+
+## (16-11) La barra de ayudas del Inicio (`BarraAyudas`, abajo del todo) quedaba DEBAJO de la chapa plegada: le tapaba el reloj.
+func _alto_barra_ayudas() -> float:
+	var b: Control = _principal.find_child("BarraAyudas", true, false) as Control if _principal != null else null
+	return maxf(b.size.y, BarraAyudas.ALTO) + 8.0 if b != null and b.is_visible_in_tree() else 0.0
 
 func refrescar() -> void:
 	if _lista == null or _principal == null:

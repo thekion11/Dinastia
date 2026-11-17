@@ -370,7 +370,7 @@ static func aplicar_viewport(vp: Viewport, nivel: int) -> void:
 	if sin_msaa:
 		vp.msaa_3d = Viewport.MSAA_DISABLED
 	## Por debajo de 100 % en Forward+/Mobile, FSR (más nítido que el bilineal); en Compatibilidad no existe y queda el bilineal.
-	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR if (nivel == MEDIO and not es_compatibilidad() and escala_3d(nivel) < 0.99) else Viewport.SCALING_3D_MODE_BILINEAR
+	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR if ((nivel == MEDIO or nivel >= ULTRA) and not es_compatibilidad() and escala_3d(nivel) < 0.99) else Viewport.SCALING_3D_MODE_BILINEAR   ## (16-11, frente 2) ULTRA al 60 %: FSR 1 en vez de bilineal (imagen menos blanda)
 	vp.scaling_3d_scale = escala_3d(nivel)
 	vp.mesh_lod_threshold = 6.0 if nivel <= MINIMO else 1.0   ## (3-11, R2) MÍNIMO: las mallas con LOD (jugadores) cambian a detalle bajo antes; el resto de niveles, el valor de siempre
 	vp.use_debanding = nivel > MINIMO

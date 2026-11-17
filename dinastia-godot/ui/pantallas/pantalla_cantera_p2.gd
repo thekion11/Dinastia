@@ -5,7 +5,7 @@ extends "res://ui/pantallas/pantalla_cantera_p1.gd"
 ## debutar y categorías) y linaje (leyendas y dinastías). Otra sección = la página entera, en su orden.
 const SECC_CANTERA := ["academia", "juveniles", "linaje"]
 func _pintar_cantera(c: Club) -> void:
-	p._limpiar(p._lista_cantera)
+	p._limpiar(p._lista_cantera); p._lista_cantera.add_child(FichaCifras.banda_cantera(c))   ## (16-11) cifras grandes arriba
 	var ct := p.mundo.cantera
 	if ct == null:
 		return

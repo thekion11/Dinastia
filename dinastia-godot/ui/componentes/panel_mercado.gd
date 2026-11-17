@@ -327,6 +327,7 @@ func pintar() -> void:
 	var mio := _mundo.mi_club()
 
 	_pintar_estado_ventana()
+	add_child(FichaCifras.banda_mercado(_mundo, mio))   ## (16-11, frente 1) cifras grandes por columna
 
 	# ── Negociación activa (va antes de la lista de objetivos) ────────────
 	if _mundo.mercado.negociacion != null:

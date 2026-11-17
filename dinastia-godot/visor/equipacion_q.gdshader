@@ -504,21 +504,59 @@ vec3 disenio(float u, float v, float x, float y) {
 	return C(0);
 }
 
-// Un dígito de siete segmentos en (px, py) de 0 a 1.
-float digito(int n, vec2 p) {
-	if (p.x < 0.0 || p.x > 1.0 || p.y < 0.0 || p.y > 1.0) return 0.0;
-	int bits = n == 0 ? 63 : n == 1 ? 6 : n == 2 ? 91 : n == 3 ? 79 : n == 4 ? 102 : n == 5 ? 109 : n == 6 ? 125 : n == 7 ? 7 : n == 8 ? 127 : 111;
-	float g = 0.24;
-	float on = 0.0;
-	// a arriba, b arriba-der, c abajo-der, d abajo, e abajo-izq, f arriba-izq, g medio
-	if ((bits & 1) != 0 && p.y > 1.0 - g) on = 1.0;
-	if ((bits & 2) != 0 && p.x > 1.0 - g && p.y > 0.5) on = 1.0;
-	if ((bits & 4) != 0 && p.x > 1.0 - g && p.y < 0.5) on = 1.0;
-	if ((bits & 8) != 0 && p.y < g) on = 1.0;
-	if ((bits & 16) != 0 && p.x < g && p.y < 0.5) on = 1.0;
-	if ((bits & 32) != 0 && p.x < g && p.y > 0.5) on = 1.0;
-	if ((bits & 64) != 0 && abs(p.y - 0.5) < g * 0.5) on = 1.0;
-	return on;
+// EL DORSAL CON TIPOGRAFÍA DE CAMISETA (frente 2, 16-11): antes eran siete segmentos rectangulares (se leía como un
+// reloj digital). Ahora cada cifra es un trazo redondeado de ~3,6 cm (rectas y óvalos, como las letras de dorsal de
+// las ligas), medido en DISTANCIA: el borde sale suave a cualquier tamaño y deja un filete oscuro alrededor.
+// Caja de la cifra: x de 0 a DIG_W (en alturas de cifra, 0,11/0,30), y de 0 a 1.
+const float DIG_W = 0.36;
+const float DIG_T = 0.06;   // media anchura del trazo
+float sd_seg(vec2 p, vec2 a, vec2 b) {
+	vec2 pa = p - a;
+	vec2 ba = b - a;
+	return length(pa - ba * clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0));
+}
+// Contorno de un rectángulo de esquinas redondas (centro c, semitamaño h, radio r): con r = h.x es un óvalo alargado.
+float sd_anillo(vec2 p, vec2 c, vec2 h, float r) {
+	vec2 q = abs(p - c) - (h - vec2(r));
+	return abs(length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r);
+}
+float dist_seis(vec2 q) {
+	float d = sd_anillo(q, vec2(0.18, 0.29), vec2(0.12, 0.23), 0.12);
+	d = min(d, sd_seg(q, vec2(0.06, 0.29), vec2(0.06, 0.6)));
+	if (q.y > 0.6 && q.x < 0.27) d = min(d, sd_anillo(q, vec2(0.21, 0.6), vec2(0.15, 0.34), 0.15));
+	return d;
+}
+// Distancia al trazo de la cifra `n` en `p` (de 0 a 1 en x e y de la caja).
+float dist_digito(int n, vec2 p) {
+	if (p.x < -0.2 || p.x > 1.2 || p.y < -0.1 || p.y > 1.1) return 1.0;
+	vec2 q = vec2(p.x * DIG_W, p.y);
+	float d = 1.0;
+	if (n == 0) {
+		d = sd_anillo(q, vec2(0.18, 0.5), vec2(0.12, 0.44), 0.12);
+	} else if (n == 1) {
+		d = min(sd_seg(q, vec2(0.21, 0.06), vec2(0.21, 0.94)), sd_seg(q, vec2(0.21, 0.94), vec2(0.08, 0.8)));
+	} else if (n == 2) {
+		if (q.y > 0.72 || (q.x > 0.18 && q.y > 0.6)) d = sd_anillo(q, vec2(0.18, 0.72), vec2(0.12, 0.22), 0.12);
+		d = min(d, min(sd_seg(q, vec2(0.29, 0.58), vec2(0.06, 0.06)), sd_seg(q, vec2(0.06, 0.06), vec2(0.30, 0.06))));
+	} else if (n == 3) {
+		if (q.x > 0.14 || q.y > 0.8) d = sd_anillo(q, vec2(0.18, 0.73), vec2(0.12, 0.21), 0.12);
+		if (q.x > 0.14 || q.y < 0.2) d = min(d, sd_anillo(q, vec2(0.18, 0.28), vec2(0.12, 0.22), 0.12));
+	} else if (n == 4) {
+		d = min(sd_seg(q, vec2(0.25, 0.94), vec2(0.06, 0.32)), sd_seg(q, vec2(0.06, 0.32), vec2(0.31, 0.32)));
+		d = min(d, sd_seg(q, vec2(0.25, 0.94), vec2(0.25, 0.06)));
+	} else if (n == 5) {
+		d = min(sd_seg(q, vec2(0.30, 0.94), vec2(0.07, 0.94)), sd_seg(q, vec2(0.07, 0.94), vec2(0.07, 0.55)));
+		if (!(q.x < 0.14 && q.y > 0.2 && q.y < 0.5)) d = min(d, sd_anillo(q, vec2(0.18, 0.31), vec2(0.12, 0.25), 0.12));
+	} else if (n == 6) {
+		d = dist_seis(q);
+	} else if (n == 7) {
+		d = min(sd_seg(q, vec2(0.06, 0.94), vec2(0.30, 0.94)), sd_seg(q, vec2(0.30, 0.94), vec2(0.12, 0.06)));
+	} else if (n == 8) {
+		d = min(sd_anillo(q, vec2(0.18, 0.735), vec2(0.105, 0.205), 0.105), sd_anillo(q, vec2(0.18, 0.28), vec2(0.12, 0.22), 0.12));
+	} else {
+		d = dist_seis(vec2(DIG_W - q.x, 1.0 - q.y));
+	}
+	return d;
 }
 
 // PLIEGUES DE TELA (17-10-2026): altura de una arruga suave (-1..1) en la
@@ -588,6 +626,11 @@ void fragment() {
 	// Relieve de los pliegues (etapa 2): la pendiente del ruido de arrugas,
 	// que se suma al mapa de normales para que la LUZ los marque, no solo el
 	// color.
+	// PARCHES CLAROS (frente 2, 16-11): el relieve se sumaba al mapa de normales en espacio TANGENTE, pero
+	// se calcula en las coordenadas de reposo (x, y): en cada isla de UV de Quaternius la tangente apunta a
+	// otro lado, y la misma arruga inclinaba la luz en sentidos distintos a cada lado de una costura de UV
+	// (bloques rectangulares claros en camiseta y short). Ahora es la PENDIENTE de una altura en metros
+	// (por metro de x e y de reposo) y se aplica abajo como relieve de superficie, sin pasar por la tangente.
 	vec2 relieve_tela = vec2(0.0);
 	if (usa_reposo) {
 		// La tela no se pega al músculo como la piel: menos relieve del cuerpo
@@ -596,10 +639,10 @@ void fragment() {
 		float arruga = ruido(vec2(x * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2(x * 34.0, y * 11.0 + 7.0)) * 0.4;
 		float arr_x = ruido(vec2((x + 0.006) * 16.0 + 3.0, y * 5.0)) * 0.6 + ruido(vec2((x + 0.006) * 34.0, y * 11.0 + 7.0)) * 0.4;
 		float arr_y = ruido(vec2(x * 16.0 + 3.0, (y + 0.012) * 5.0)) * 0.6 + ruido(vec2(x * 34.0, (y + 0.012) * 11.0 + 7.0)) * 0.4;
-		relieve_tela = vec2(arr_x - arruga, arr_y - arruga) * (civil ? 5.0 : 2.0);
+		relieve_tela = vec2((arr_x - arruga) / 0.006, (arr_y - arruga) / 0.012) * (civil ? 0.008 : 0.0025);
 		if (!civil && !largo) {
 			float h0 = pliegues(x, y);
-			relieve_tela += vec2(pliegues(x + 0.004, y) - h0, pliegues(x, y + 0.004) - h0) * 1.6;
+			relieve_tela += vec2(pliegues(x + 0.004, y) - h0, pliegues(x, y + 0.004) - h0) / 0.004 * 0.0045;
 			arruga += h0 * 0.18;
 		}
 		float lado_t = smoothstep(0.1, 0.2, abs(x)) * step(abs(x), 0.215);
@@ -769,12 +812,18 @@ void fragment() {
 		// Vista desde atrás: la x va al revés (si no, el 12 se lee 21 y en espejo).
 		float xn = -x;
 		float dy = (y - 1.11) / 0.30;
-		float on = 0.0;
+		float dd = 1.0;
 		if (dorsal < 10) {
-			on = digito(dorsal, vec2((xn + 0.055) / 0.11, dy));
+			dd = dist_digito(dorsal, vec2((xn + 0.055) / 0.11, dy));
 		} else {
-			on = max(digito(dorsal / 10, vec2((xn + 0.12) / 0.105, dy)), digito(dorsal % 10, vec2((xn - 0.015) / 0.105, dy)));
+			dd = min(dist_digito(dorsal / 10, vec2((xn + 0.12) / 0.105, dy)), dist_digito(dorsal % 10, vec2((xn - 0.015) / 0.105, dy)));
 		}
+		// Acotado: en el borde de la caja de cada cifra la distancia salta y, sin tope, dibujaba un marco fino.
+		float fw_d = clamp(fwidth(dd), 1e-4, 0.02) * 0.75;
+		float on = 1.0 - smoothstep(DIG_T - fw_d, DIG_T + fw_d, dd);
+		// Filete de ~5 mm más oscuro alrededor (como el borde termosellado de los dorsales); se apaga de lejos.
+		float filete = (1.0 - smoothstep(DIG_T + 0.018 - fw_d, DIG_T + 0.018 + fw_d, dd)) * (1.0 - smoothstep(0.01, 0.03, fw_d));
+		camiseta = mix(camiseta, camiseta * 0.55, filete * (1.0 - on));
 		camiseta = mix(camiseta, color_num.rgb, on);
 	}
 
@@ -876,7 +925,8 @@ void fragment() {
 		vec3 matiz = (piel / l) / (REF / l_ref);
 		albedo = piel_obj * rel * mix(vec3(1.0), clamp(matiz, vec3(0.6), vec3(1.6)), 0.3);
 		// Sin saturar (el usuario lo pidió el 30-9: pieles limpias, no naranjas).
-		albedo = mix(vec3(dot(albedo, vec3(0.2126, 0.7152, 0.0722))), albedo, 0.78);
+		// (16-11, frente 2) 0,78 → 0,9: con 0,78 más el borde de luz y la subsuperficie la piel salía cerosa, casi gris.
+		albedo = mix(vec3(dot(albedo, vec3(0.2126, 0.7152, 0.0722))), albedo, 0.9);
 	}
 	float tope = max(max(albedo.r, albedo.g), albedo.b);
 	albedo *= tope > 0.72 ? (0.72 + (tope - 0.72) * 0.25) / tope : 1.0;
@@ -1072,7 +1122,6 @@ void fragment() {
 	vec2 nm_cuerpo = nm.xy - 0.5;
 	// Micro relieve del tejido sobre el relieve del cuerpo.
 	nm.xy += vec2(cos(UV.x * 2600.0), cos(UV.y * 2600.0)) * (usa_reposo && !civil ? 0.018 : 0.045) * tela * nitidez;
-	nm.xy += relieve_tela * tela;
 	// Equipación de juego (17-10-2026): el músculo se atenúa ANTES de sumar el
 	// relieve propio de la tela (arrugas, pliegues, canalé), y así la tela se
 	// puede marcar más sin que vuelvan los abdominales pintados.
@@ -1098,22 +1147,33 @@ void fragment() {
 	// 7 m: de lejos el borde de un píxel parpadearía).
 	vec3 dpx = dFdx(VERTEX);
 	vec3 dpy = dFdy(VERTEX);
-	float dhx = dFdx(h_escudo) * 0.0007;
-	float dhy = dFdy(h_escudo) * 0.0007;
 	float k_esc = 1.0 - smoothstep(3.0, 7.0, length(VERTEX));
-	if ((dhx != 0.0 || dhy != 0.0) && k_esc > 0.0) {
+	float dhx = dFdx(h_escudo) * 0.0007 * k_esc;
+	float dhy = dFdy(h_escudo) * 0.0007 * k_esc;
+	// Arrugas y pliegues de la tela (frente 2): la pendiente analítica en reposo por la derivada en pantalla
+	// de x e y de reposo (exacta dentro de cada triángulo), así no hay escalones de 2x2 píxeles. Se apaga
+	// entre 6 y 14 m (con la cámara de TV el jugador mide ~30 px y no se ve).
+	float k_tela = (1.0 - smoothstep(6.0, 14.0, length(VERTEX))) * tela;
+	if (k_tela > 0.0 && usa_reposo) {
+		vec2 gx = vec2(dFdx(v_reposo.x), dFdx(v_reposo.y));
+		vec2 gy = vec2(dFdy(v_reposo.x), dFdy(v_reposo.y));
+		dhx += dot(relieve_tela, gx) * k_tela;
+		dhy += dot(relieve_tela, gy) * k_tela;
+	}
+	if (dhx != 0.0 || dhy != 0.0) {
 		vec3 r1 = cross(dpy, NORMAL);
 		vec3 r2 = cross(NORMAL, dpx);
 		float det = dot(dpx, r1);
 		vec3 n_esc = abs(det) * NORMAL - sign(det) * (dhx * r1 + dhy * r2);
 		if (dot(n_esc, n_esc) > 1e-20) {
-			NORMAL = normalize(mix(NORMAL, normalize(n_esc), k_esc));
+			NORMAL = normalize(n_esc);
 		}
 	}
 	// Ropa de calle: casi nada del relieve muscular de la piel atraviesa la tela.
 	// El zapato de calle tampoco deja ver el relieve de los dedos (26-10-2026).
 	float tapa_n = civil ? max(tela, m.a) : tela;
 	NORMAL_MAP_DEPTH = usa_normal ? mix(1.0, usa_reposo ? (civil ? 0.4 : 0.6) : 0.45, tapa_n) : 0.6 * tela;
-	RIM = borde;
+	// (16-11, frente 2) La piel desnuda con menos borde de luz: el halo claro en brazos y cuello era lo que la volvía de cera.
+	RIM = borde * mix(0.45, 1.0, max(tela, m.a));
 	RIM_TINT = 0.35;
 }

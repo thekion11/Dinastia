@@ -49,17 +49,18 @@ func _ready() -> void:
 	_reloj_portada.wait_time = SEG_PORTADA
 	_reloj_portada.timeout.connect(_rotar_portada)
 	add_child(_reloj_portada)
-	_reloj_portada.start()
-	## El fondo de la página cambia a destiempo de la portada (15 s después):
-	## cada 15 s se mueve algo, nunca las dos cosas a la vez.
+	## El fondo de la página cambiaba a destiempo de la portada (15 s después).
 	_reloj_pagina = Timer.new()
 	_reloj_pagina.wait_time = SEG_PORTADA
 	_reloj_pagina.timeout.connect(_rotar_pagina)
 	add_child(_reloj_pagina)
-	get_tree().create_timer(SEG_PORTADA * 0.5).timeout.connect(func() -> void:
-		if is_instance_valid(_reloj_pagina):
-			_rotar_pagina()
-			_reloj_pagina.start())
+	## (16-11, frente 1) CARRUSEL QUIETO (plan «Mundo suave, fase 2»): portada y fondo ya NO cambian solos cada 30 s (los relojes
+	## existen pero no se arrancan); se cambian a mano con las flechas ◂ ▸ y los puntos del banner, o con la fila «Portada del juego».
+	CarruselQuieto.poner(_banner, func(d: int) -> void:
+		var lista := rotacion()
+		_elegir(String(lista[(lista.find(_clave) + d + lista.size()) % lista.size()]))
+		_rotar_pagina())
+	CarruselQuieto.marcar(_banner, rotacion().size(), rotacion().find(_clave))
 	_tenir_particulas()
 	_banner.resized.connect(func() -> void:
 		if is_instance_valid(_bokeh_banner):

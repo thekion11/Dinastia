@@ -172,7 +172,8 @@ func _fin_cuentas(c: Club, proy: Dictionary, pal: Dictionary) -> void:
 	for k: String in proy["ingresos"]:
 		p._dato(k, p._dinero(int(proy["ingresos"][k])), p.COL_VERDE, p._lista_finanzas)
 	for k2: String in proy["gastos"]:
-		p._dato(k2, "−%s" % p._dinero(int(proy["gastos"][k2])), p.COL_ROJO, p._lista_finanzas)
+		var gasto := int(proy["gastos"][k2])   ## (16-11) un gasto en cero salía «−0 EUR»: sin signo y en gris
+		p._dato(k2, ("−%s" % p._dinero(gasto)) if gasto != 0 else p._dinero(0), p.COL_ROJO if gasto != 0 else p.COL_SUAVE, p._lista_finanzas)
 		if k2.begins_with("Viajes a domicilio"):   ## U6 (3-11): de dónde sale esa cifra
 			var tv := p._texto(10, p.COL_SUAVE)
 			tv.text = Viajes.linea_finanzas(Viajes.viaje_euros(c.pais, c.pais, c.rep))

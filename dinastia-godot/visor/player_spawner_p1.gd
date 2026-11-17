@@ -287,7 +287,13 @@ func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
 				apq.play("parado")
 			## Cambios de paso en fase y la respiración de cada uno a su ritmo.
 			AnimTransiciones.poner(apq, jid)
-			ImpostorLejano.aplicar(dq["nodo"], float(dq["altura"]), color_liso if puesto == "ARB" else c1, Calidad.elegida, apq)   ## (14-11) a más de 30 m, silueta simple
+			## (16-11, frente 2) SOMBRA DE CONTACTO bajo los pies, la de los peatones (una malla y un material para todos): con la cámara de
+			## TV el jugador «flotaba» sobre el césped donde la sombra del sol es fina o no llega. Solo de MEDIA hacia arriba (abajo van siluetas).
+			if not ImpostorLejano.activo(Calidad.elegida):
+				var sc := PeatonQ.sombra_contacto(dq["nodo"])
+				sc.scale = Vector3(0.8, 1.0, 0.8)
+				sc.visibility_range_end = 0.0
+			ImpostorLejano.aplicar(dq["nodo"], float(dq["altura"]), color_liso if puesto == "ARB" else c1, Calidad.elegida, apq, piel)   ## (14-11) a más de 30 m, silueta simple (16-11: con su equipación)
 			return {"nodo": dq["nodo"], "anim": apq, "realista": true}
 		push_error("PlayerSpawner: no cargo el modelo Quaternius (el muñeco de Kenney, no realista, se quitó el 11-11)")
 	return {}

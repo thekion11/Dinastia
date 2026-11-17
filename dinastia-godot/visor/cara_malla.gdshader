@@ -25,7 +25,7 @@ uniform float quitar_luz = 0.7;
 // `VestidorQ.SATURACION_PIEL`).
 uniform float saturacion = 1.0;
 // Ver `VestidorQ.COMPENSAR_PIEL` (el mismo número para el cuerpo).
-uniform float compensar = 1.6;
+uniform float compensar = 1.35;   // (16-11, frente 2) antes 1,6: piel gris rosada, «cerosa»; igual que `VestidorQ.COMPENSAR_PIEL`
 uniform float relleno = 0.3;
 // La cámara de la foto expone para la cara; la luz del estadio no. Sin esto la
 // piel salía mucho más oscura que en la foto (sobre todo la piel oscura).
