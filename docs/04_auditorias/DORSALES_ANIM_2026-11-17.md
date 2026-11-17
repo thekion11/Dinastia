@@ -114,26 +114,28 @@ el dueño los baje en su equipo (tabla de arriba). Mientras, se usa lo que ya te
 movimiento de **Carnegie Mellon (CMU)**, libre también para uso comercial citando la fuente (ya en los créditos y en `LICENCIAS.md`;
 mismo archivo `anims_cmu/cmu_uso.res`, ningún recurso nuevo).
 
-### A) El trote de cada uno (`visor/trote_cmu.gd`, `TroteCmu`)
+### A) El trote de cada uno (`visor/trote_cmu.gd`, `TroteCmu`) — HECHO, APAGADO POR DEFECTO (`TROTE_CMU=1`)
 
-- Los **12 ciclos de carrera reales** de CMU (+ sus espejos = 24) pasan a ser el «trotar» del partido, **repartidos por jugador**
-  con su id (siempre el mismo para cada uno; 1 de cada 6 conserva el trote de siempre; los porteros, sus desplazamientos). En un
-  partido del banco: 17 jugadores con 10 trotes distintos.
-- **Sin patinar**: la velocidad del pie de apoyo de cada clip con escala 1 se midió con `AnimPasos.medir` en el cuerpo de 1,80 m
-  (3,11-4,33 m/s) y `CicloCarrera.escala_jugador` escala sobre ESA velocidad. La mocap tiene más cadencia que nuestro trote: para no
-  acelerarla más de ×1,45 (×1,48 el más lento), quien lleva un clip lento pasa a correr un poco antes (4,6-5,2 m/s según el clip,
-  `TroteCmu.umbral_correr`) y vuelve a trotar por debajo de 4,25 m/s (lo que «correr» cubre sin patinar). Banco: los 24 clips, entre
-  2 y 10 m/s, el pie patina **0,00 m/s** y ≤ 5 cambios de ciclo con la velocidad temblando ±0,15 m/s.
+El dueño dejó el realismo de los jugadores para después (orden recibida a mitad del bloque): queda listo y probado en el banco, pero
+apagado. Encenderlo es cambiar el valor por defecto de `TroteCmu.encendida` (o `TROTE_CMU=1`).
+
+- Los **12 ciclos de carrera reales** de CMU (+ sus espejos = 24) como «trotar» del partido, **repartidos por jugador** con su id
+  (siempre el mismo para cada uno; 1 de cada 6 conserva el trote de siempre; los porteros, sus desplazamientos). En un partido del
+  banco: 17 jugadores con 10 trotes distintos, y trotan con el suyo.
+- **Sin tocar el motor**: la decisión de qué ciclo y a qué escala (que en `main` hace C++, `animar_jugadores`) no cambia: el motor pide
+  «trotar» y pone su escala de siempre (velocidad / 3,4 m/s). La variedad entra al montar al jugador: una señal de su AnimationPlayer
+  (`current_animation_changed`) cambia «trotar» por su variante en el mismo fotograma. Una primera versión con umbrales propios por
+  clip en `CicloCarrera` y `motor_jugable_p3/p5` se deshizo para no chocar con el paso a C++.
+- **Sin patinar**: la velocidad del pie de apoyo de cada clip se midió con `AnimPasos.medir` en el cuerpo de 1,80 m (3,11-4,33 m/s) y
+  cada clip se **re-cronometra en el propio recurso** a 3,4 m/s (la del trote de siempre): con la misma escala que pone el motor, el
+  pie no patina (banco: los 24 a 3,4 m/s ±0,00; el barrido de 2 a 10 m/s de `CicloCarrera` sigue en 0,00).
 - **Pies en el césped**: la retarget de CMU dejaba los pies flotando **5-21 cm** (el sujeto de la captura es más alto); la pelvis baja
   lo justo (en el espacio del hueso raíz) y el pie apoya a 0,000 m (banco). La biblioteca guarda las pistas comprimidas: el clip se
   rehace una vez por biblioteca (23 pistas de ~20 claves).
-- **Paso en fase**: la fase del pie izquierdo de cada clip va a `AnimPasos.fases` (al pasar a correr la pierna en el aire sigue en el
-  aire, como con los de siempre).
-- **Coste**: se monta solo donde ya se monta lo cercano (`AnimacionCercana`: de MEDIA hacia arriba y sin «Partido ligero»; en el
-  móvil por defecto no existe). Por fotograma no añade nada (el mismo `play` y la misma escala, con otro nombre de clip). Al montar:
-  ~15 clips copiados una vez.
-- **Motor intacto**: el motor sigue leyendo «trotar» en `anim_actual`; `igualdad_motor` sigue en **4068298361** y el banco compara la
-  huella de un partido KOR-FRA con y sin (`TROTE_CMU=0` lo apaga, para capturas «antes»).
+- **Paso en fase**: la fase del pie izquierdo de cada clip va a `AnimPasos.fases`.
+- **Coste**: se monta solo donde ya se monta lo cercano (`AnimacionCercana`: de MEDIA hacia arriba y sin «Partido ligero»; en el móvil
+  por defecto no existe). Por fotograma, nada (el mismo `play`). Al montar: ~15 clips copiados una vez.
+- **Motor intacto**: `igualdad_motor` sigue en **4068298361** y el banco compara la huella de un partido KOR-FRA con y sin.
 - Patadas y controles de CMU para tiro y control: **no** se enchufan. Las 6 patadas son grabaciones de 3-7 s desde PARADO (entran a
   0,01-0,84 m/s) con dos golpeos cada una, y CMU no tiene controles de balón; nuestros tiros y pases salen casi siempre en carrera
   (los de League, contacto a 0,17-0,27 s). Encajarían solo en el balón parado (falta, penal): queda en «Pendiente».
@@ -152,8 +154,8 @@ dibujo nueva (tabla de llamadas abajo). Banco: `_dq_espalda_medidas` lee las med
 ### Capturas de la 2.ª pasada
 
 `capturas_cmu_apellido_2026-11-17/` (Forward+ sin GPU, ALTA, cámara real de TV y de cerca; tres cruces nuevos de países distintos:
-GER-URU, POR-JPN y FRA-COL). «Antes» del apellido: copia del árbol en 9231fd63; «antes» del trote: el árbol nuevo con `TROTE_CMU=0`
-(mismo motor, así que el mismo jugador en el mismo instante).
+GER-URU, POR-JPN y FRA-COL; GER-URU también en MÍNIMA). «Antes»: copia del árbol en 9231fd63. El trote CMU queda apagado: las fotos
+muestran el apellido y el dorsal (de espalda y en la TV) y que la carrera de lado no cambia.
 
 CAPTURAS_PENDIENTES
 

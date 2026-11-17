@@ -122,7 +122,7 @@ entrada y salida, el giro y el desplazamiento medidos van en las fichas. Descart
 
 **Uso en el partido (17-11): el TROTE de cada jugador.** Los 12 ciclos de carrera (+ espejos) son el «trotar» del partido repartido por jugador
 (`visor/trote_cmu.gd`, `TroteCmu`): velocidad del pie de apoyo medida en nuestro cuerpo (3,11-4,33 m/s), escala sin patinar, pelvis bajada 5-21 cm
-(la retarget dejaba los pies flotando) y fase de paso en `AnimPasos.fases`; de MEDIA hacia arriba. Detalle: `DORSALES_ANIM_2026-11-17.md`.
+(la retarget dejaba los pies flotando), re-cronometrado a 3,4 m/s y fase de paso en `AnimPasos.fases`; de MEDIA hacia arriba y APAGADO por defecto (`TROTE_CMU=1`; el dueño dejó el realismo para después). Detalle: `DORSALES_ANIM_2026-11-17.md`.
 - Origen: Carnegie Mellon University Graphics Lab Motion Capture Database, http://mocap.cs.cmu.edu (conversión BVH de Bruce Hahne).
 - Licencia: libre para todo uso, incluido el comercial («This data is free for use in research and commercial projects worldwide»); se pide el
   agradecimiento, que está en los créditos del juego (`nucleo/creditos.gd`) y en `dinastia-godot/LICENCIAS.md`.
