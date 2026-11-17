@@ -256,8 +256,12 @@ func _probar_cara_a_cara_simulado() -> void:
 		_comprobar(goles_v <= int(lg.carrera.get("gf", 0)) and (goles_v > 0 or int(lg.carrera.get("gf", 0)) == 0), "%s: y sus goles (%d de %d del equipo)" % [caso[0], goles_v, int(lg.carrera.get("gf", 0))])
 		## Copa y continental simulados también entran en el cara a cara (17-11: la mayor goleada puede ser de otra competición si ya había una de 3 o más goles de diferencia).
 		var antes_c := int(lg.carrera.get("pj", 0))
+		var dif_antes := int(lg.rec["mayor_goleada"]["dif"]) if lg.rec.has("mayor_goleada") else 0
 		m._memoria_simulada([{"local": m.mi_club(), "visita": m.ligas[0].clubes[0 if int(caso[1]) != 0 else 1], "gl": 3, "gv": 0}], "Copa")
-		_comprobar(int(lg.carrera.get("pj", 0)) == antes_c + 1 and (String(lg.rec["mayor_goleada"]["competicion"]) in ["Copa", "Liga"] or int(lg.rec["mayor_goleada"].get("dif", 0)) >= 3), "%s: un cruce de copa simulado cuenta como partido de tu club" % caso[0])
+		_comprobar(int(lg.carrera.get("pj", 0)) == antes_c + 1, "%s: un cruce de copa simulado cuenta como partido de tu club" % caso[0])
+		## (17-11) El récord solo se pisa con MÁS diferencia: tras un 3-0, la mayor goleada es la de antes si era de 3 o más (de cualquier competición que cuente el cara a cara) y, si no, este 3-0 de «Copa».
+		var mg: Dictionary = lg.rec["mayor_goleada"]
+		_comprobar(int(mg["dif"]) == maxi(dif_antes, 3) and (dif_antes >= 3 or String(mg["competicion"]) == "Copa"), "%s: la mayor goleada es de verdad la mayor (antes %d, ahora %d en %s)" % [caso[0], dif_antes, int(mg["dif"]), String(mg["competicion"])])
 	Partido.limpiar_contexto()
 
 ## (13-11) El plantel heredado no se multa (solo lo que se pase de él) y el tope votado da de plazo hasta el cierre de la próxima ventana.

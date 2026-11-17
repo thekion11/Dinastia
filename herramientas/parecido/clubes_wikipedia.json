@@ -1,9 +1,91 @@
 {
- "ENG": {"bournemouth": "AFC Bournemouth", "burnley": "Burnley F.C.", "leeds": "Leeds United F.C.", "sunderland": "Sunderland A.F.C."},
- "ESP": {"alavés": "Deportivo Alavés", "elche": "Elche CF", "levante": "Levante UD", "real oviedo": "Real Oviedo"},
- "ITA": {"como": "Como 1907", "parma": "Parma Calcio 1913", "cagliari": "Cagliari Calcio", "hellas verona": "Hellas Verona FC", "cremonese": "US Cremonese", "pisa": "Pisa SC"},
- "GER": {"hamburgo": "Hamburger SV", "st. pauli": "FC St. Pauli", "heidenheim": "1. FC Heidenheim"},
- "FRA": {"paris fc": "Paris FC", "angers": "Angers SCO", "le havre": "Le Havre AC", "metz": "FC Metz"},
- "ARG": {"argentinos jrs": "Argentinos Juniors", "belgrano": "Club Atlético Belgrano", "gimnasia lp": "Gimnasia y Esgrima La Plata", "atl. tucuman": "Atlético Tucumán", "ind. rivadavia": "Independiente Rivadavia", "defensa y j.": "Defensa y Justicia", "platense": "Club Atlético Platense", "central córdoba": "Central Córdoba de Santiago del Estero", "instituto": "Instituto Atlético Central Córdoba", "tigre": "Club Atlético Tigre", "sarmiento": "Club Atlético Sarmiento", "aldosivi": "Club Atlético Aldosivi", "barracas central": "Barracas Central", "riestra": "Deportivo Riestra", "gimnasia mza": "Gimnasia y Esgrima de Mendoza", "estudiantes rc": "Estudiantes de Río Cuarto"},
- "BRA": {"bragantino": "Red Bull Bragantino", "mirassol": "Mirassol Futebol Clube", "vitória": "Esporte Clube Vitória", "coritiba": "Coritiba Foot Ball Club", "chapecoense": "Associação Chapecoense de Futebol", "remo": "Clube do Remo"}
+ "ENG": {
+  "bournemouth": "AFC Bournemouth",
+  "burnley": "Burnley F.C.",
+  "leeds": "Leeds United F.C.",
+  "sunderland": "Sunderland A.F.C."
+ },
+ "ESP": {
+  "alavés": "Deportivo Alavés",
+  "elche": "Elche CF",
+  "levante": "Levante UD",
+  "real oviedo": "Real Oviedo"
+ },
+ "ITA": {
+  "como": "Como 1907",
+  "parma": "Parma Calcio 1913",
+  "cagliari": "Cagliari Calcio",
+  "hellas verona": "Hellas Verona FC",
+  "cremonese": "US Cremonese",
+  "pisa": "Pisa SC"
+ },
+ "GER": {
+  "hamburgo": "Hamburger SV",
+  "st. pauli": "FC St. Pauli",
+  "heidenheim": "1. FC Heidenheim"
+ },
+ "FRA": {
+  "paris fc": "Paris FC",
+  "angers": "Angers SCO",
+  "le havre": "Le Havre AC",
+  "metz": "FC Metz"
+ },
+ "ARG": {
+  "argentinos jrs": {
+   "es": "Asociación Atlética Argentinos Juniors"
+  },
+  "belgrano": {
+   "es": "Club Atlético Belgrano"
+  },
+  "gimnasia lp": {
+   "es": "Club de Gimnasia y Esgrima La Plata"
+  },
+  "atl. tucuman": {
+   "es": "Club Atlético Tucumán"
+  },
+  "ind. rivadavia": {
+   "es": "Club Sportivo Independiente Rivadavia"
+  },
+  "defensa y j.": {
+   "es": "Club Social y Deportivo Defensa y Justicia"
+  },
+  "platense": {
+   "es": "Club Atlético Platense"
+  },
+  "central córdoba": {
+   "es": "Club Atlético Central Córdoba (Santiago del Estero)"
+  },
+  "instituto": {
+   "es": "Instituto Atlético Central Córdoba"
+  },
+  "tigre": {
+   "es": "Club Atlético Tigre"
+  },
+  "sarmiento": {
+   "es": "Club Atlético Sarmiento (Junín)"
+  },
+  "aldosivi": {
+   "es": "Club Atlético Aldosivi"
+  },
+  "barracas central": {
+   "es": "Club Atlético Barracas Central"
+  },
+  "riestra": {
+   "es": "Deportivo Riestra"
+  },
+  "gimnasia mza": {
+   "es": "Club Gimnasia y Esgrima de Mendoza"
+  },
+  "estudiantes rc": {
+   "es": "Asociación Atlética Estudiantes"
+  }
+ },
+ "BRA": {
+  "bragantino": "Red Bull Bragantino",
+  "mirassol": "Mirassol Futebol Clube",
+  "vitória": "Esporte Clube Vitória",
+  "coritiba": "Coritiba Foot Ball Club",
+  "chapecoense": "Associação Chapecoense de Futebol",
+  "remo": "Clube do Remo"
+ }
 }

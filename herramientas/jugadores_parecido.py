@@ -17,7 +17,7 @@ Formato de fila (campos 1-6 igual que antes; los nuevos van detrás y el juego l
 El pie no tiene fuente abierta: lo estima el juego.
 
 Respeta la fuente: pausa entre peticiones, caché FUERA del repo (DINASTIA_CACHE o el directorio temporal),
-nombre de cliente genérico. Valida cada plantilla (18-40 jugadores, ≥2 porteros, sin duplicados entre clubes) y
+nombre de cliente genérico. Valida cada plantilla (18-45 jugadores, ≥2 porteros, sin duplicados entre clubes) y
 saca los casos dudosos a un informe en vez de meterlos a ciegas.
 """
 import hashlib
@@ -54,7 +54,7 @@ def _cache_ruta(clave):
     return os.path.join(CACHE, hashlib.sha1(clave.encode("utf-8")).hexdigest() + ".txt")
 
 
-HOSTS_PERMITIDOS = ("en.wikipedia.org", "www.wikidata.org")
+HOSTS_PERMITIDOS = ("en.wikipedia.org", "es.wikipedia.org", "www.wikidata.org")
 
 
 def validar_url(url):
@@ -94,52 +94,87 @@ def pedir(url, reintentos=4):
     return None
 
 
-def wikitexto(titulo):
+RE_REDIR = re.compile(r"^\s*#(?:REDIRECT|REDIRECCI[ÓO]N)\s*:?\s*\[\[([^\]|#]+)", re.I)
+
+
+def wikitexto(titulo, idioma="en", saltos=2):
+    """Wikitexto crudo del artículo; sigue hasta `saltos` redirecciones (action=raw no las sigue)."""
     q = urllib.parse.urlencode({"title": titulo, "action": "raw"})
-    return pedir("https://en.wikipedia.org/w/index.php?" + q)
+    txt = pedir(f"https://{idioma}.wikipedia.org/w/index.php?" + q)
+    m = RE_REDIR.match(txt) if txt else None
+    if m and saltos > 0:
+        return wikitexto(m.group(1).strip(), idioma, saltos - 1)
+    return txt
 
 
 RE_FS = re.compile(r"\{\{\s*[Ff]s player\s*\|(.*?)\}\}", re.S)
 RE_ENL = re.compile(r"\[\[([^\]|]+)(?:\|([^\]]+))?\]\]")
 
 
+RE_ES = re.compile(r"\{\{\s*Jugador de fútbol\s*\|(.*?)\}\}(?=\s*\n)", re.S)
+RE_EDAD = re.compile(r"\{\{\s*edad\s*\|\s*\d+\s*\|\s*\d+\s*\|\s*(\d{4})", re.I)
+POS_ES = {"ARQ": "GK", "POR": "GK", "DEF": "DF", "MED": "MF", "DEL": "FW"}
+
+
+def _campos(txt):
+    campos = {}
+    for trozo in re.split(r"\|(?=\s*\w+\s*=)", txt):
+        if "=" in trozo:
+            k, v = trozo.split("=", 1)
+            campos[k.strip()] = v.strip()
+    return campos
+
+
+def _jugador(campos):
+    nom = campos.get("name") or campos.get("nombre", "")
+    e = RE_ENL.search(nom)
+    titulo = e.group(1).strip() if e else ""
+    visible = (e.group(2) or e.group(1)).strip() if e else re.sub(r"[\[\]]", "", nom)
+    visible = re.sub(r"\s*\(.*?\)$", "", visible).strip()
+    if not visible:
+        return None
+    pos = campos.get("pos", "").upper()
+    j = {"no": campos.get("no", ""), "nat": campos.get("nat", "").upper(), "pos": POS_ES.get(pos, pos), "nombre": visible, "titulo": titulo}
+    m = RE_EDAD.search(campos.get("edad", ""))
+    if m:
+        j["anio"] = int(m.group(1))
+    return j
+
+
 def parsear_plantilla(txt):
-    """Primer bloque `fs start ... fs end` tras «First-team squad»; devuelve [{no,nat,pos,nombre,titulo}]."""
+    """Plantilla de primer equipo: `{{Fs player}}` (inglesa) o `{{Jugador de fútbol}}` (española, con año de nacimiento)."""
     i = txt.find("First-team squad")
     if i < 0:
-        i = txt.find("{{fs start")
-    if i < 0:
-        i = txt.find("{{Fs start")
-    if i < 0:
-        return []
-    fin = re.search(r"\{\{\s*[Ff]s end\s*\}\}", txt[i:])
-    bloque = txt[i:i + fin.end()] if fin else txt[i:i + 6000]
+        m0 = re.search(r"\{\{\s*[Ff]s start", txt)
+        i = m0.start() if m0 else -1
     res = []
-    for m in RE_FS.finditer(bloque):
-        campos = {}
-        for trozo in re.split(r"\|(?=\s*\w+\s*=)", m.group(1)):
-            if "=" in trozo:
-                k, v = trozo.split("=", 1)
-                campos[k.strip()] = v.strip()
-        nom = campos.get("name", "")
-        e = RE_ENL.search(nom)
-        titulo = e.group(1).strip() if e else ""
-        visible = (e.group(2) or e.group(1)).strip() if e else re.sub(r"[\[\]]", "", nom)
-        visible = re.sub(r"\s*\(.*?\)$", "", visible).strip()
-        if not visible:
-            continue
-        res.append({"no": campos.get("no", ""), "nat": campos.get("nat", "").upper(), "pos": campos.get("pos", "").upper(),
-                    "nombre": visible, "titulo": titulo})
+    if i >= 0:
+        fin = re.search(r"\{\{\s*[Ff]s end\s*\}\}", txt[i:])
+        bloque = txt[i:i + fin.end()] if fin else txt[i:i + 6000]
+        for m in RE_FS.finditer(bloque):
+            j = _jugador(_campos(m.group(1)))
+            if j:
+                res.append(j)
+        return res
+    i = txt.find("{{Jugador de fútbol")
+    if i < 0:
+        return res
+    fin = re.search(r"\{\{\s*Equipo de fútbol fin", txt[i:])
+    bloque = txt[i:i + fin.start()] if fin else txt[i:i + 12000]
+    for m in RE_ES.finditer(bloque):
+        j = _jugador(_campos(m.group(1)))
+        if j:
+            res.append(j)
     return res
 
 
-def datos_wikidata(titulos):
+def datos_wikidata(titulos, sitio="enwiki"):
     """{titulo: {anio, altura_cm}} en lotes de 40 por enlace al artículo de la Wikipedia inglesa."""
     salida = {}
     lista = [t for t in titulos if t]
     for k in range(0, len(lista), 40):
         lote = lista[k:k + 40]
-        q = urllib.parse.urlencode({"action": "wbgetentities", "sites": "enwiki", "titles": "|".join(lote), "props": "claims|sitelinks",
+        q = urllib.parse.urlencode({"action": "wbgetentities", "sites": sitio, "titles": "|".join(lote), "props": "claims|sitelinks",
                                     "format": "json"})
         txt = pedir("https://www.wikidata.org/w/api.php?" + q)
         if not txt:
@@ -149,7 +184,7 @@ def datos_wikidata(titulos):
         except ValueError:
             continue
         for e in ents.values():
-            tit = ((e.get("sitelinks") or {}).get("enwiki") or {}).get("title")
+            tit = ((e.get("sitelinks") or {}).get(sitio) or {}).get("title")
             cl = e.get("claims") or {}
             d = {}
             try:
@@ -183,18 +218,49 @@ def puesto_de(pos, no):
     return POSD.get(pos, "MC")
 
 
-def fila(j, wd, rep, club_pais):
-    marcas = ""
+def _semilla(texto):
+    """Número estable (0-1) a partir de un texto: la misma fila sale igual en cada ejecución."""
+    return int(hashlib.sha1(texto.encode("utf-8")).hexdigest()[:8], 16) / 0xFFFFFFFF
+
+
+def media_estimada(j, edad, rep, club):
+    """Media del jugador DENTRO del club: reputación − 9, y por puesto, edad (pico 25-29), dorsal y una variación estable.
+    Los titulares (dorsal 1-11, portero 1) salen +2/+3 por encima de los suplentes y los juveniles bajan. Es una ESTIMACIÓN."""
+    n = int(j["no"]) if str(j["no"]).isdigit() else 99
+    base = rep - DESCUENTO_MEDIA
+    if n <= 11:
+        base += 3 if j["pos"] == "GK" else 2
+    elif n <= 20:
+        base -= 1
+    else:
+        base -= 4
+    if edad <= 19:
+        base -= 6
+    elif edad <= 21:
+        base -= 3
+    elif edad <= 24:
+        base -= 1
+    elif edad <= 29:
+        base += 2
+    elif edad <= 32:
+        base += 0
+    elif edad <= 35:
+        base -= 3
+    else:
+        base -= 6
+    base += round((_semilla(limpiar(j["nombre"]) + "|" + club) - 0.5) * 6)
+    return max(45, min(rep + 3, min(90, base)))
+
+
+def fila(j, wd, rep, club_pais, club):
+    marcas = "m"
     pos = puesto_de(j["pos"], j["no"])
     if j["pos"] in ("DF", "MF", "FW"):
         marcas += "p"
-    n = int(j["no"]) if str(j["no"]).isdigit() else 99
-    media = rep - DESCUENTO_MEDIA + (2 if n <= 11 else -3)
-    media = max(48, min(90, media))
-    marcas += "m"
     d = wd.get(j["titulo"], {})
-    if "anio" in d:
-        edad = ANIO_AHORA - d["anio"]
+    anio = j.get("anio") or d.get("anio")
+    if anio:
+        edad = ANIO_AHORA - anio
     else:
         edad, marcas = 25, marcas + "a"
     if "altura" in d:
@@ -204,17 +270,53 @@ def fila(j, wd, rep, club_pais):
     pais = PAIS.get(j["nat"], j["nat"]) or club_pais
     if not j["nat"]:
         marcas += "e"
-    return f"{j['nombre']}|{pos}|{edad}|{media}||{''}|{j['no']}|{altura}|{marcas}".replace("||", "|" + pais + "|", 1)
+    media = media_estimada(j, edad, rep, club)
+    return "|".join([j["nombre"], pos, str(edad), str(media), pais, "", j["no"], altura, marcas])
+
+
+def es_generada(fila_txt):
+    """Fila creada por esta herramienta (9 campos y marca «m» de media estimada)."""
+    p = fila_txt.split("|")
+    return len(p) >= 9 and "m" in p[8]
 
 
 def validar(jugadores):
     """Problemas de una plantilla: lista de textos (vacía = buena)."""
     p = []
-    if not 18 <= len(jugadores) <= 40:
+    if not 18 <= len(jugadores) <= 45:
         p.append(f"tamaño {len(jugadores)}")
     if sum(1 for j in jugadores if j["pos"] == "GK") < 2:
         p.append("menos de 2 porteros")
     return p
+
+
+CUPO = {"GK": 3, "DF": 8, "MF": 8, "FW": 6}
+MAXIMO = 26
+
+
+def recortar(jugadores, maximo=MAXIMO):
+    """Plantilla equilibrada de hasta `maximo`: el plantel del juego tiene ~25 plazas y `Reales` rellena EN ORDEN (el sobrante se pierde),
+    así que una lista de 40 con los delanteros al final dejaría al club sin delanteros. Se conserva un cupo por línea (por dorsal) y se completa por dorsal."""
+    if len(jugadores) <= maximo:
+        return sorted(jugadores, key=_dorsal)
+    elegidos = []
+    for pos, cupo in CUPO.items():
+        elegidos += sorted([j for j in jugadores if j["pos"] == pos], key=_dorsal)[:cupo]
+    resto = sorted([j for j in jugadores if j not in elegidos], key=_dorsal)
+    elegidos += resto[:max(0, maximo - len(elegidos))]
+    return sorted(elegidos, key=_dorsal)
+
+
+def _dorsal(j):
+    return int(j["no"]) if str(j["no"]).isdigit() else 99
+
+
+def fuente_de(mapa, liga, nom):
+    """(título, idioma) del club en `clubes_wikipedia.json`: cadena = inglesa; {"es": título} = española."""
+    v = (mapa.get(liga) or {}).get(nom)
+    if isinstance(v, dict):
+        return v.get("es"), "es"
+    return v, "en"
 
 
 def main():
@@ -235,28 +337,32 @@ def main():
     for liga in args:
         for club in ligas[liga]["clubes"]:
             nom = limpiar(club[0])
-            titulo = (mapa.get(liga) or {}).get(nom)
+            titulo, idioma = fuente_de(mapa, liga, nom)
             if not titulo:
                 continue
-            txt = wikitexto(titulo)
+            txt = wikitexto(titulo, idioma)
             jug = parsear_plantilla(txt) if txt else []
-            problemas = validar(jug) if jug else ["sin plantilla en el artículo"]
-            wd = datos_wikidata([j["titulo"] for j in jug]) if jug else {}
-            actuales = t["REALES"].get(claves_reales.get(nom, club[0]), [])
-            ya = {limpiar(a.split("|")[0]).lower() for a in actuales}
-            nuevos = []
+            problemas = []
+            duplicados = 0
+            unicos = []
             for j in jug:
                 clave = limpiar(j["nombre"]).lower()
-                if " " in clave and clave in vistos and vistos[clave] != nom:   ## los apodos de una palabra (Gabriel, Marcos) se repiten de verdad
-                    problemas.append("duplicado con " + vistos[clave])
+                if " " in clave and clave in vistos and vistos[clave] != nom:
+                    duplicados += 1   ## el primer club que lo lista se lo queda
                     continue
                 vistos[clave] = nom
-                if clave not in ya:
-                    nuevos.append(fila(j, wd, int(club[3]), liga))
-            informe.append((liga, nom, len(jug), len(actuales), len(nuevos), problemas))
-            print(f"{liga} {nom:22} wiki={len(jug):2} antes={len(actuales):2} nuevos={len(nuevos):2} {'; '.join(problemas)}")
+                unicos.append(j)
+            problemas = validar(unicos) if unicos else ["sin plantilla en el artículo"]
+            unicos = recortar(unicos) if not problemas else unicos
+            wd = datos_wikidata([j["titulo"] for j in unicos if j["titulo"]], "eswiki" if idioma == "es" else "enwiki") if unicos else {}
+            clave_pack = claves_reales.get(nom, club[0])
+            propias = [a for a in t["REALES"].get(clave_pack, []) if not es_generada(a)]
+            ya = {limpiar(a.split("|")[0]).lower() for a in propias}
+            nuevos = [fila(j, wd, int(club[3]), liga, nom) for j in unicos if limpiar(j["nombre"]).lower() not in ya]
+            informe.append((liga, nom, len(jug), len(propias), len(nuevos), problemas))
+            print(f"{liga} {nom:22} {idioma} wiki={len(jug):2} propias={len(propias):2} nuevos={len(nuevos):2} dup={duplicados} {'; '.join(problemas)}")
             if aplicar and not problemas and nuevos:
-                t["REALES"][claves_reales.get(nom, club[0])] = list(actuales) + nuevos
+                t["REALES"][clave_pack] = propias + nuevos
                 nuevos_total += len(nuevos)
     if aplicar:
         with open(ruta_segura(PACK), "w", encoding="utf-8") as f:
