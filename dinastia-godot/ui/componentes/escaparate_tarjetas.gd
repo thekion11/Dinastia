@@ -61,17 +61,21 @@ static func _cara(j: Jugador, c: Club) -> Texture2D:
 	return Cara.textura(j, String(r[0]), String(r[1]), 512)
 
 ## El DT en 3D como cualquier cara del juego (lo mismo que la portada del periódico); sin pantalla, el retrato de siempre.
+## Con `true` la tarjeta enseña el avatar del jugador cuando él es el DT (por defecto, el DT propio de cada club: no repetir la misma cara en todos).
+static var dt_propio := false
+
 static func _cara_dt(p: Principal, c: Club) -> Texture2D:
 	var r := p.mundo.roles
 	if r == null:
 		return Escudo.textura(c, 256)
 	var col := _ropa(c)
 	if Retrato3D.disponible():
-		var asp: Dictionary = r.aspecto_3d()
-		if not r.dt_empleado.is_empty():
-			var rng := RandomNumberGenerator.new()
-			rng.seed = hash(r.dt_nombre())
-			asp = load("res://visor/personaje_dt.gd").aleatorio(rng)   ## por ruta: el menú no nombra clases del 3D (memoria del menú)
+		## CADA CLUB TIENE SU DT (cara, barba, edad y aspecto propios, estables por club: la semilla es el club). El avatar propio del jugador (`dt_propio`) vive en su ficha.
+		var rng := RandomNumberGenerator.new()
+		rng.seed = hash("dt|" + c.id)
+		var asp: Dictionary = load("res://visor/personaje_dt.gd").aleatorio(rng)   ## por ruta: el menú no nombra clases del 3D (memoria del menú)
+		if dt_propio and r.dt_empleado.is_empty():
+			asp = r.aspecto_3d()
 		return Retrato3D.textura_dt(asp, String(col[0]), String(col[1]), 512)
 	var look: Dictionary = CaraDT.look_de_nombre(r.dt_nombre()) if not r.dt_empleado.is_empty() else r.look_efectivo()
 	return CaraDT.textura(look, 256)
