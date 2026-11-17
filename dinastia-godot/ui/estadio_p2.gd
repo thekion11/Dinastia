@@ -157,22 +157,8 @@ func _lanzar_repeticion(segundos: float, con_barrido := false) -> void:
 	if _rig != null:
 		_rig.quitar_inserto()
 	if _repe.reproducir(segundos, con_barrido):
-		if _rotulo_repe == null:
-			_rotulo_repe = PanelContainer.new()
-			var st := Tema.caja(Color(0.55, 0.08, 0.08, 0.9), Tema.RADIO_CHICO, Color(1, 1, 1, 0.2))
-			_rotulo_repe.add_theme_stylebox_override("panel", st)
-			var fila := HBoxContainer.new()
-			fila.add_theme_constant_override("separation", 14)
-			fila.add_child(Tema.etiqueta(16, Color.WHITE, Idiomas.t("⟲  REPETICIÓN")))
-			## Cómo saltarla (la misma tecla que la pide, o un clic).
-			fila.add_child(Tema.etiqueta(12, Color(1, 1, 1, 0.7), "%s · %s" % [Mando.corto_de("jugar_repeticion"), Idiomas.t("Saltar")]))
-			_rotulo_repe.add_child(fila)
-			add_child(_rotulo_repe)
-			_rotulo_repe.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-			_rotulo_repe.offset_top = 70
-			_rotulo_repe.grow_horizontal = Control.GROW_DIRECTION_BOTH
-		_rotulo_repe.visible = true
-		Animar.aparecer(_rotulo_repe)
+		## (17-11) Pequeño, arriba a la derecha y con cortinilla (`RotuloRepeticion`); antes, un rótulo rojo grande arriba al centro.
+		_rotulo_repe = RotuloRepeticion.entrar(self, _rotulo_repe)
 
 ## REPETICIÓN A PEDIDO (20-10-2026, M-132): los últimos 10 s, con su botón
 ## (`jugar_repeticion`) o desde la pausa. No en plena ceremonia ni con un panel

@@ -31,7 +31,7 @@ extends "res://pruebas/banco/nucleo.gd"
 
 const SECCIONES := [
 	"_probar_avance_eventos_y_disparadores", "_probar_avance_nucleo_y_saque", "_probar_menu_y_pausa_partido", "_probar_carga_de_ui", "_probar_finanzas_por_pantallas", "_probar_agentes_confianza", "_probar_cantera_por_pantallas", "_probar_informe_abre_su_pantalla", "_probar_paginador_submenu", "_probar_casilla_clara", "_probar_atajos_tras_partir", "_probar_estado_vacio", "_probar_dominio_del_club", "_probar_cara_a_cara_simulado", "_probar_multa_plantel_heredado",   ## grupo «menus» (pruebas/banco/menus.gd)
-	"_probar_datos", "_probar_repetibilidad", "_probar_mundo",
+	"_probar_datos", "_probar_repetibilidad", "_probar_mundo", "_probar_rasgos_conocidos",
 	"_probar_reales", "_probar_base_ficticia", "_probar_cubierta_nombres",
 	"_probar_calendario", "_probar_segundas_divisiones", "_probar_segundas_reglas", "_probar_segundas_cinco_grandes", "_probar_segundas_latinoamerica", "_probar_segundas_pbt", "_probar_paises_csv", "_probar_selecciones_nuevas", "_probar_pais_sin_liga_tanda1", "_probar_pais_sin_liga_tanda2", "_probar_pais_sin_liga_tanda3", "_probar_pais_sin_liga_tanda4", "_probar_pais_sin_liga_tanda5", "_probar_ligas_activas", "_probar_ligas_activas_todos", "_probar_ligas_activas_pantalla", "_probar_ligas_activas_agregar_pantalla", "_probar_ligas_programadas", "_probar_fases_finales_egipto", "_probar_fases_finales_argentina", "_probar_fases_finales_mls", "_probar_fases_finales_europa", "_probar_fases_finales_grecia",
 	"_probar_partidos", "_probar_previa", "_probar_arbitros",
@@ -187,7 +187,7 @@ const SECCIONES := [
 	"_probar_precarga_menu", "_probar_cajon_perezoso",
 	"_probar_edificio_club",
 	"_probar_personal_estadio", "_probar_avatares_realistas", "_probar_futbolista_visual", "_probar_acciones_visuales",
-	"_probar_paseo_optimizado", "_probar_rotulos_cercanos", "_probar_celdas_agrupado", "_probar_a_buffer", "_probar_pasto_distancia", "_probar_cara_bytes", "_probar_banca_ligera", "_probar_fundir_pequenas", "_probar_fundir_ciudad", "_probar_subsistemas_quietos", "_probar_recorte_a_pie", "_probar_media_firma", "_probar_precalentado_por_calidad",
+	"_probar_paseo_optimizado", "_probar_rotulos_cercanos", "_probar_hud_tv", "_probar_celdas_agrupado", "_probar_a_buffer", "_probar_pasto_distancia", "_probar_cara_bytes", "_probar_banca_ligera", "_probar_fundir_pequenas", "_probar_fundir_ciudad", "_probar_subsistemas_quietos", "_probar_recorte_a_pie", "_probar_media_firma", "_probar_precalentado_por_calidad",
 	"_probar_peaton_fuera_del_arbol",
 	"_probar_sancion_dt",
 	"_probar_peluches",
@@ -251,7 +251,7 @@ const GRUPOS := {"avance": ["_probar_avance_eventos_y_disparadores", "_probar_av
 	"ciudad": ["_probar_modulos", "_probar_faros_coches", "_probar_ciudad", "_probar_ciudad_b7", "_probar_ciudad_animo", "_probar_ciudad_grande",
 		"_probar_redes_ciudad", "_probar_cartera_dt", "_probar_cajero", "_probar_expendedora_balon", "_probar_parque_lleno", "_probar_cancha_patos", "_probar_comercio_lleno", "_probar_no_atravesar_paredes", "_probar_minijuegos", "_probar_optimizacion"],
 	"estadio": ["_probar_ocultar_estadio_dentro", "_probar_cajon_perezoso", "_probar_precarga_menu", "_probar_fundir_piezas", "_probar_fundir_r2", "_probar_vomitorios", "_probar_visor_efectos", "_probar_visor_pequenos", "_probar_nucleo_sueltos", "_probar_filtros_plantel", "_probar_compara_clubes", "_probar_modo_streamer", "_probar_perfiles_mando", "_probar_teclado_pantalla", "_probar_entrada_comun", "_probar_lector_avisos", "_probar_foco_mando", "_probar_calidad_minima", "_probar_lods_cuero", "_probar_eleccion_partido", "_probar_carrera_salidas", "_probar_grada_fondo", "_probar_publico_cesped", "_probar_pantalla_ampliada", "_probar_funciones_escondidas", "_probar_rellenos_ciudad", "_probar_estadio", "_probar_estadio_b6", "_probar_b6_formas_led", "_probar_tunel_navegable",
-		"_probar_edificio_club", "_probar_personal_estadio", "_probar_avatares_realistas", "_probar_futbolista_visual", "_probar_acciones_visuales", "_probar_paseo_optimizado", "_probar_rotulos_cercanos", "_probar_celdas_agrupado", "_probar_a_buffer", "_probar_pasto_distancia", "_probar_cara_bytes", "_probar_banca_ligera", "_probar_fundir_pequenas", "_probar_fundir_ciudad", "_probar_subsistemas_quietos", "_probar_recorte_a_pie", "_probar_media_firma", "_probar_precalentado_por_calidad", "_probar_peaton_fuera_del_arbol", "_probar_interiores_club", "_probar_galeria_club",
+		"_probar_edificio_club", "_probar_personal_estadio", "_probar_avatares_realistas", "_probar_futbolista_visual", "_probar_acciones_visuales", "_probar_paseo_optimizado", "_probar_rotulos_cercanos", "_probar_hud_tv", "_probar_celdas_agrupado", "_probar_a_buffer", "_probar_pasto_distancia", "_probar_cara_bytes", "_probar_banca_ligera", "_probar_fundir_pequenas", "_probar_fundir_ciudad", "_probar_subsistemas_quietos", "_probar_recorte_a_pie", "_probar_media_firma", "_probar_precalentado_por_calidad", "_probar_peaton_fuera_del_arbol", "_probar_interiores_club", "_probar_galeria_club",
 		"_probar_reforma_con_obra", "_probar_guinos_estadio", "_probar_vallas_led", "_probar_ola_grada",
 		"_probar_rendimiento_adaptativo", "_probar_calidad_auto"],
 	"gestion": ["_probar_piel_por_pais", "_probar_capitan_votado", "_probar_finanzas", "_probar_mercado", "_probar_directiva", "_probar_staff", "_probar_obras",

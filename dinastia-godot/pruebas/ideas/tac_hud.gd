@@ -71,7 +71,7 @@ func _process(_d: float) -> void:
 		## Nada del HUD tapa el stick en reposo ni los botones.
 		var piezas: Array[Rect2] = []
 		for c: Control in _pj._hud:
-			if c is PanelContainer:
+			if c is PanelContainer or c is MarcadorTV:   ## (17-11) el marcador es el de TV
 				piezas.append(_rect_de(c))
 		_comprobar(piezas.size() == 3, "el HUD tiene tres cajas (marcador, estadísticas, ficha): %d" % piezas.size())
 		var libre := true

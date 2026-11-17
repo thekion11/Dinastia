@@ -20,6 +20,7 @@ extends Node
 
 const TAM_CHICO := 128
 const TAM_GRANDE := 256
+const TAM_ESCAPARATE := 512   ## (17-11) las tarjetas del escaparate del menú central: 512 px, antialias 4x, FONDO TRANSPARENTE (se pone sobre una escena) y contraluz del color del club
 ## Hasta este alto en pantalla (filas de listas: 22-30 px) el busto de pecho para
 ## arriba dejaba la cara en 6 píxeles casi negros (s3, 26-10-2026, defecto que
 ## anotó la sesión 2): ahí se encuadra la cabeza con el cuello de la camiseta.
@@ -35,6 +36,7 @@ static var _cola: Array = []
 
 var _vp: SubViewport
 var _cam: Camera3D
+var _rim: DirectionalLight3D
 var _ocupado := false
 var _spawner = load("res://visor/player_spawner.gd").new()
 
@@ -44,12 +46,12 @@ static func disponible() -> bool:
 ## La textura del retrato 3D de `j`. `k1`/`k2`: colores de la camiseta; `alto_px`
 ## decide la resolución (de 120 para arriba, la grande).
 static func textura(j: Jugador, k1: String, k2: String, alto_px: int = 64) -> Texture2D:
-	var tam := TAM_GRANDE if alto_px >= 120 else TAM_CHICO
+	var tam := TAM_ESCAPARATE if alto_px >= 400 else (TAM_GRANDE if alto_px >= 120 else TAM_CHICO)
 	var cabeza := alto_px <= ALTO_CABEZA
 	var clave := "%s_%d_%s_%s%s" % [j.id, tam, k1, k2, "_c" if cabeza else ""]
 	if _cache.has(clave):
 		return _cache[clave]
-	var t := ImageTexture.create_from_image(_marcador(tam, fondo_de(k1)))
+	var t := ImageTexture.create_from_image(_vacio(tam) if tam == TAM_ESCAPARATE else _marcador(tam, fondo_de(k1)))
 	_cache[clave] = t
 	_cola.append({"j": j, "k1": k1, "k2": k2, "tam": tam, "tex": t, "cabeza": cabeza})
 	_arrancar()
@@ -68,11 +70,11 @@ static func _arrancar() -> void:
 ## (`PersonajeDT.crear`, la figura que sale en la banda): `aspecto` es el aspecto 3D
 ## guardado (`Roles.aspecto_3d()`). Mismo marcador, misma cola, misma caché.
 static func textura_dt(aspecto: Dictionary, k1: String, k2: String, alto_px: int = 64) -> Texture2D:
-	var tam := TAM_GRANDE if alto_px >= 120 else TAM_CHICO
+	var tam := TAM_ESCAPARATE if alto_px >= 400 else (TAM_GRANDE if alto_px >= 120 else TAM_CHICO)
 	var clave := "dt_%s_%d_%s_%s" % [str(hash(aspecto)), tam, k1, k2]
 	if _cache.has(clave):
 		return _cache[clave]
-	var t := ImageTexture.create_from_image(_marcador(tam, fondo_de(k1)))
+	var t := ImageTexture.create_from_image(_vacio(tam) if tam == TAM_ESCAPARATE else _marcador(tam, fondo_de(k1)))
 	_cache[clave] = t
 	_cola.append({"dt": aspecto, "k1": k1, "k2": k2, "tam": tam, "tex": t, "cabeza": alto_px <= ALTO_CABEZA})
 	_arrancar()
@@ -109,6 +111,21 @@ static func _marcador(tam: int, fondo: Color) -> Image:
 	img.blend_rect(_siluetas[tam], Rect2i(0, 0, tam, tam), Vector2i.ZERO)
 	return img
 
+static func _vacio(tam: int) -> Image:
+	var img := Image.create(tam, tam, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0, 0, 0, 0))
+	return img
+
+## Los ajustes de un encargo grande (escaparate): fondo transparente, antialias 4x y el contraluz del color del club; los chicos, como siempre.
+func _modo(tam: int, k1: String, env: Environment) -> bool:
+	var escap := tam >= TAM_ESCAPARATE
+	_vp.transparent_bg = escap
+	_vp.msaa_3d = Viewport.MSAA_4X if escap else Viewport.MSAA_2X
+	env.background_mode = Environment.BG_CLEAR_COLOR if escap else Environment.BG_COLOR
+	_rim.light_energy = 1.1 if escap else 0.0
+	_rim.light_color = Color(k1).lightened(0.35)
+	return escap
+
 static func limpiar_cache() -> void:
 	_cache.clear()
 	_cola.clear()
@@ -138,6 +155,10 @@ func _ready() -> void:
 	relleno.rotation_degrees = Vector3(-10, -140, 0)
 	relleno.light_energy = 0.45
 	_vp.add_child(relleno)
+	_rim = DirectionalLight3D.new()   ## el contraluz de borde (solo en los retratos del escaparate)
+	_rim.rotation_degrees = Vector3(-14, 152, 0)
+	_rim.light_energy = 0.0
+	_vp.add_child(_rim)
 	_cam = Camera3D.new()
 	_cam.fov = 21.0
 	_vp.add_child(_cam)
@@ -161,6 +182,7 @@ func _servir() -> void:
 	var env: Environment = (_vp.get_child(0) as WorldEnvironment).environment
 	## Fondo: el color del club, nunca negro (las camisetas oscuras se perdían).
 	env.background_color = fondo_de(String(job["k1"]))
+	var escap := _modo(tam, String(job["k1"]), env)
 	var raiz := Node3D.new()
 	_vp.add_child(raiz)
 	var datos := Puente3D.jugador(j)
@@ -185,6 +207,9 @@ func _servir() -> void:
 		if bool(job.get("cabeza", false)):
 			_cam.position = Vector3(0.0, alto * 0.93, 1.1)   ## (10-11) algo más abierto: entran el pelo y la barbilla enteros
 			_cam.look_at(Vector3(0.0, alto * 0.912, 0.0), Vector3.UP)
+		elif escap:   ## (17-11) de la cintura para arriba y un poco más abierto: cabeza, hombros y la chaqueta del club
+			_cam.position = Vector3(0.0, alto * 0.86, 2.05)
+			_cam.look_at(Vector3(0.0, alto * 0.82, 0.0), Vector3.UP)
 		else:
 			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
 			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)
@@ -207,6 +232,7 @@ func _servir_dt(job: Dictionary) -> void:
 	_vp.size = Vector2i(tam, tam)
 	var env: Environment = (_vp.get_child(0) as WorldEnvironment).environment
 	env.background_color = fondo_de(String(job["k1"]))
+	var escap := _modo(tam, String(job["k1"]), env)
 	var raiz := Node3D.new()
 	_vp.add_child(raiz)
 	var d = load("res://visor/personaje_dt.gd").crear(raiz, job["dt"], Color(job["k1"]), Color(job["k2"]))
@@ -215,6 +241,9 @@ func _servir_dt(job: Dictionary) -> void:
 		if bool(job.get("cabeza", false)):
 			_cam.position = Vector3(0.0, alto * 0.93, 1.1)   ## (10-11) algo más abierto: entran el pelo y la barbilla enteros
 			_cam.look_at(Vector3(0.0, alto * 0.912, 0.0), Vector3.UP)
+		elif escap:
+			_cam.position = Vector3(0.0, alto * 0.86, 2.05)
+			_cam.look_at(Vector3(0.0, alto * 0.82, 0.0), Vector3.UP)
 		else:
 			_cam.position = Vector3(0.0, alto * 0.915, 1.62)
 			_cam.look_at(Vector3(0.0, alto * 0.885, 0.0), Vector3.UP)

@@ -9,9 +9,13 @@ const DE_EMOJI := {"⚖️": "balanza", "🛋️": "sofa", "📐": "escuadra", "
 	"🕯️": "vela", "🔊": "altavoz", "🔁": "repetir", "📺": "tele", "📲": "movil_flecha", "📱": "movil", "📣": "megafono", "📝": "nota",
 	"📚": "libros", "📒": "libreta", "📈": "sube", "📅": "calendario", "💾": "disquete", "💵": "billete", "👨‍👩‍👧": "familia", "👁️": "ojo",
 	"🏢": "edificio", "🏡": "casa", "🏛️": "institucion", "🏗️": "grua", "🏋️": "pesas", "🎯": "diana", "🎬": "claqueta", "🎩": "sombrero",
-	"🎙️": "microfono", "🎖️": "condecoracion", "🎌": "banderas", "🌳": "arbol", "🆓": "etiqueta", "✉️": "sobre", "⚔️": "espadas", "♿": "acceso"}
+	"🎙️": "microfono", "🎖️": "condecoracion", "🎌": "banderas", "🌳": "arbol", "🆓": "etiqueta", "✉️": "sobre", "⚔️": "espadas", "♿": "acceso",
+	"🅰": "asistencia", "✔": "visto", "⭐": "estrella"}   ## (17-11) los de la línea de tus números en el partido de La Ruta
 
 const TRAZOS := {
+	"asistencia": "M4 4h16v16H4zM8 17l4-10 4 10M9.6 13h4.8",
+	"visto": "M4.5 12.5l4.5 4.5 10.5-10.5",
+	"estrella": "M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z",
 	"balanza": "M12 4v16M8 20h8M5 7h14M7 7l-3 6a3 3 0 0 0 6 0zM17 7l-3 6a3 3 0 0 0 6 0z",
 	"sofa": "M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3M3 13a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v4H3zM5 17v2M19 17v2",
 	"escuadra": "M4 20V4l16 16zM8 16v-4l4 4z",

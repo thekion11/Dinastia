@@ -44,7 +44,7 @@ static func _columna(local: Club, visita: Club, centro: String, comp_tipo: Strin
 	fila.alignment = BoxContainer.ALIGNMENT_CENTER
 	fila.add_theme_constant_override("separation", 12)
 	fila.add_child(_escudo(local, 44))
-	var c := EstiloAvanzar.etiqueta(centro, 28, NARANJA if siguiente else Color.WHITE, true)
+	var c := EstiloAvanzar.etiqueta(centro, 34, NARANJA if siguiente else Color.WHITE, true)
 	c.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	fila.add_child(c)
 	fila.add_child(_escudo(visita, 44))
@@ -109,13 +109,6 @@ static func proximos(p: Principal, c: Club, liga: Liga, acento: Color) -> Contro
 	TableroInicio.cerrar(b)
 	return b
 
-static func _marca_de(c: Club, i: int) -> Array:
-	var marcas := Auspicio.marcas()
-	if marcas.is_empty():
-		return ["", "#2d4a8a"]
-	var m: Array = marcas[absi(hash("%s|%d" % [c.id, i])) % marcas.size()]
-	return [Nombres.limpiar(String(m[0])), String(m[1]) if m.size() > 1 else "#2d4a8a"]
-
 static func hinchada(p: Principal, c: Club, acento: Color) -> Control:
 	var tc := TableroInicio.tarjeta(Idiomas.t("Hinchada y socios"), acento, func() -> void: TableroInicio.abrir(p, "Hinchada y socios"))
 	var b: Button = tc[0]
@@ -135,21 +128,24 @@ static func hinchada(p: Principal, c: Club, acento: Color) -> Control:
 	logos.add_theme_constant_override("separation", 6)
 	logos.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(logos)
-	var contrato: Dictionary = p.mundo.auspicio.contrato if p.mundo.auspicio != null else {}
-	for i in 3:
-		var par: Array = [Nombres.limpiar(String(contrato["marca"])), String(contrato.get("color", "#2d4a8a"))] if i == 0 and not contrato.is_empty() else _marca_de(c, i)
-		var pc := PanelContainer.new()
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = Color(par[1])
-		sb.set_corner_radius_all(4)
-		pc.add_theme_stylebox_override("panel", sb)
-		pc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var l := EstiloAvanzar.etiqueta(String(par[0]), 14, Color.WHITE if Color(par[1]).get_luminance() < 0.5 else Color("101820"), true)
-		l.custom_minimum_size.y = 22
-		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	for m: Dictionary in EscaparateMarcas.de_club(p, c):   ## las marcas del club o, si faltan, las de su país (logotipo dibujado)
+		var celda := HBoxContainer.new()
+		celda.add_theme_constant_override("separation", 6)
+		celda.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		celda.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		var logo := EscaparateMarcas.Logo.new()
+		logo.color = m["color"]
+		logo.forma = int(m["forma"])
+		logo.texto = EscaparateMarcas.monograma(String(m["nombre"]))
+		logo.custom_minimum_size = Vector2(34, 34)
+		logo.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		celda.add_child(logo)
+		var l := EstiloAvanzar.etiqueta(String(m["nombre"]), 12, Color(1, 1, 1, 0.9), true)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		pc.add_child(l)
-		logos.add_child(pc)
+		l.max_lines_visible = 2
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		celda.add_child(l)
+		logos.add_child(celda)
 	TableroInicio.cerrar(b)
 	return b

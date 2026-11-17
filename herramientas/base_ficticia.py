@@ -37,6 +37,7 @@ Reglas de los nombres ficticios (comprobadas al final, el script falla si no):
 import hashlib
 import historia_clubes
 import jugadores_guino
+import rasgos_jugadores
 import estadios_reales
 import estadios_variedad
 import aspecto_clubes
@@ -58,7 +59,7 @@ PACK = os.path.join(DATOS, "pack_real.json")
 # Tablas que el pack reemplaza enteras cuando se activa la base real.
 TABLAS_DEL_PACK = [
     "DATA_P1", "DATA_P2", "PAISES_LIGAS", "CONFED", "COPA_NOM",
-    "ARBITROS", "REALES", "EQUIP_REAL", "PROVEEDORES",
+    "ARBITROS", "REALES", "EQUIP_REAL", "PROVEEDORES", "RASGOS_JUG",
     # Historia de cada club con guino al real y clasicos con nombre propio
     # (`historia_clubes.py`): en la base con los nombres ficticios, en el pack
     # con los reales.
@@ -609,6 +610,7 @@ def main():
         real = leer(PACK)["tablas"]
     else:
         real = {k: base[k] for k in TABLAS_DEL_PACK if k in base}
+    real.setdefault("RASGOS_JUG", {})
     liga_paises_bajos.asegurar(real)
     ligas_completas.asegurar(real)
     segundas_divisiones.asegurar(real)
@@ -705,6 +707,8 @@ def main():
     # países, así los jugadores son fijos de una partida a otra y se reconoce a
     # quién representan sin llevar su nombre.
     fic["REALES"] = jugadores_guino.tabla_base(real["REALES"], CLUBES, limpiar)
+    ## (17-11) Rasgos de aspecto de los jugadores conocidos (`rasgos_jugadores.py`): en la base pública, con la clave del GUIÑO.
+    fic["RASGOS_JUG"] = rasgos_jugadores.publicos(real.get("RASGOS_JUG", {}), real["REALES"], fic["REALES"], lambda c: CLUBES.get(limpiar(c)))
     fic["EQUIP_REAL"] = {}
     ## Variedad generada (10-11): los estadios sin arquitectura escrita a mano salían casi todos «rect»/«ingles»; ver `estadios_variedad.py`.
     _aforos = {limpiar(f[0]): (f[4], f[1], f[2]) for d in real["PAISES_LIGAS"].values() for f in d["clubes"] + d.get("segunda", {}).get("clubes", [])}
