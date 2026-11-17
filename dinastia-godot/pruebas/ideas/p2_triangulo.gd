@@ -16,15 +16,21 @@ func _ready() -> void:
 	var pj := PartidoJugable.abrir(ui, m, ui.carrera, par[0], par[1], 240.0)
 	for i in 12:
 		await get_tree().physics_frame
-	var marca := pj.find_child("TrianguloControlado", true, false) as MeshInstance3D
-	_comprobar(marca != null, "el partido monta el triángulo")
-	if marca != null:
+	## (17-11) El triángulo 3D (`MarcadorJugador`, «TrianguloControlado») se cambió por uno 2D pequeño que pinta `NombresTV` (HUD de TV):
+	## el 3D salía pixelado en el móvil y tapaba el centro. Se comprueba lo mismo que antes sobre el indicador nuevo.
+	var nt := pj.find_child("NombresTV", true, false) as NombresTV
+	_comprobar(nt != null and nt.triangulo, "el partido monta el triángulo (2D, en `NombresTV`)")
+	_comprobar(pj.find_child("TrianguloControlado", true, false) == null, "y ya no el triángulo 3D grande")
+	if nt != null:
 		var yo: Dictionary = pj.motor.usuario
-		_comprobar(not yo.is_empty() and marca.visible, "con un jugador controlado, el triángulo se ve")
-		if not yo.is_empty():
-			var cabeza := (yo["node"] as Node3D).position + Vector3(0, 0, 0)
-			var d := marca.position - cabeza
-			_comprobar(d.y > 2.6 and d.y < 4.2 and Vector2(d.x, d.z).length() < 0.05, "flota sobre su cabeza (la punta a %.2f m de sus pies)" % d.y)
+		var cam := get_viewport().get_camera_3d()
+		_comprobar(not yo.is_empty() and _marca_yo(nt) != null, "con un jugador controlado, el triángulo se ve")
+		if not yo.is_empty() and cam != null and _marca_yo(nt) != null:
+			var m: Dictionary = _marca_yo(nt)
+			var pie := cam.unproject_position((yo["node"] as Node3D).global_position)
+			var cabeza: Vector2 = m["cabeza"]
+			_comprobar((m["pie"] as Vector2).distance_to(pie) < 2.0 and cabeza.y < (m["pie"] as Vector2).y,
+				"sobre su cabeza: pies a %.1f px de los del jugador, cabeza %.0f px más arriba" % [(m["pie"] as Vector2).distance_to(pie), (m["pie"] as Vector2).y - cabeza.y])
 			var otro: Dictionary = {}
 			for p: Dictionary in pj.motor.jugadores:
 				if p != yo and bool(p["es_local"]) == bool(yo["es_local"]) and not bool(p["por"]):
@@ -33,12 +39,15 @@ func _ready() -> void:
 			pj.motor.usuario = otro
 			for i in 4:
 				await get_tree().physics_frame
-			var c2 := (otro["node"] as Node3D).position + Vector3(0, 0, 0)
-			_comprobar(Vector2(marca.position.x - c2.x, marca.position.z - c2.z).length() < 0.05, "al cambiar de jugador, el triángulo lo sigue")
+				await get_tree().process_frame
+			var m2: Variant = _marca_yo(nt)
+			var pie2 := cam.unproject_position((otro["node"] as Node3D).global_position)
+			_comprobar(m2 != null and ((m2 as Dictionary)["pie"] as Vector2).distance_to(pie2) < 2.0, "al cambiar de jugador, el triángulo lo sigue")
 			pj.motor.usuario = {}
 			for i in 3:
 				await get_tree().physics_frame
-			_comprobar(not marca.visible, "sin jugador controlado, se esconde")
+				await get_tree().process_frame
+			_comprobar(_marca_yo(nt) == null, "sin jugador controlado, se esconde")
 			pj.motor.usuario = yo
 			for i in 3:
 				await get_tree().physics_frame
@@ -50,3 +59,10 @@ func _ready() -> void:
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)
+
+## La marca del jugador que manejas (la que lleva el triángulo) en lo que pinta `NombresTV`, o null.
+func _marca_yo(nt: NombresTV) -> Variant:
+	for m: Dictionary in nt._marcas:
+		if bool(m.get("yo", false)):
+			return m
+	return null
