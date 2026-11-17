@@ -54,8 +54,20 @@ def _cache_ruta(clave):
     return os.path.join(CACHE, hashlib.sha1(clave.encode("utf-8")).hexdigest() + ".txt")
 
 
+HOSTS_PERMITIDOS = ("en.wikipedia.org", "www.wikidata.org")
+
+
+def validar_url(url):
+    """Solo https y hosts fijos de Wikimedia; si no, ValueError (Sonar: descargas validadas por causa)."""
+    u = urllib.parse.urlparse(url)
+    if u.scheme != "https" or u.hostname not in HOSTS_PERMITIDOS:
+        raise ValueError(f"URL no permitida: {url!r}")
+    return url
+
+
 def pedir(url, reintentos=4):
     """GET con caché y pausa; reintenta ante 429 con espera creciente. Devuelve texto o None."""
+    validar_url(url)
     ruta = _cache_ruta(url)
     if os.path.exists(ruta):
         with open(ruta, encoding="utf-8") as f:
@@ -65,7 +77,7 @@ def pedir(url, reintentos=4):
         time.sleep(PAUSA)
         try:
             peticion = urllib.request.Request(url, headers={"User-Agent": CLIENTE})
-            with urllib.request.urlopen(peticion, timeout=40) as r:  # NOSONAR(S5332): solo HTTPS, URL fija de Wikimedia
+            with urllib.request.urlopen(peticion, timeout=40) as r:
                 txt = r.read().decode("utf-8")
             if '"error"' not in txt[:80]:
                 with open(ruta, "w", encoding="utf-8") as f:
