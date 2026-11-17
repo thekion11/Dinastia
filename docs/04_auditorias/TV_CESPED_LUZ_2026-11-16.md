@@ -42,6 +42,9 @@ cámara de TV, césped natural y luz suave. Solo VISUAL: `pruebas/igualdad_motor
 - **Más luz del cielo de día**: `ambient_light_energy` 1,0 → **1,35** (de noche igual, 1,0).
 - **Sol más alto**: −58° → **−67°** (de noche igual, −40°): sombras cortas bajo los pies y la de la tribuna llega menos al césped. Su
   energía baja de 1,35 a **1,2** porque sube la del cielo (la prueba `f0m_visor_estadio` se actualizó a 1,2: cambio intencionado).
+  **(17-11) Sustituido al unir main**: se quedó el sol de TARDE del frente 2 (36°, casi de costado, energía **1,35**; la sombra de la
+  tribuna cruza una franja del césped como en PES 2020/FC). De esta pasada siguen la sombra más clara (`shadow_opacity`) y la penumbra
+  abierta (`light_angular_distance` 1,2). `f0m_visor_estadio` vuelve a esperar 1,35.
 - **Sombras menos negras**: `shadow_opacity` 0,72 de día (1,0 de noche). La sombra de la tribuna sobre el césped **se queda** (no se
   apagó), pero más clara y con la penumbra más abierta: `light_angular_distance` 0,5 → **1,2** (el borde duro de medio campo se suaviza).
   Ninguna de las tres cosas añade pasadas ni muestras de sombra.
