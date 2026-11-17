@@ -1,5 +1,5 @@
 // `Partido._cerrar_notas()` en C++ (10-11-2026, paso a C++, orden 35): la nota final de cada jugador del cruce (la de la IA que nadie mira) con las MISMAS cuentas y el MISMO orden de tiradas de azar
-// (una `randf()` por jugador, en el orden de `_todos`, sobre el mismo generador `Azar._rng`). Solo lee y escribe propiedades; `Jugador.anotar_nota` se llama tal cual (es de GDScript).
+// (una `randf()` por jugador, en el orden de `_todos`, sobre el mismo generador `Azar._rng`). Solo lee y escribe propiedades (también lo de `Jugador.anotar_nota`: añadir a `notas` y quedarse con las 8 últimas).
 #include "dinastia_nativo.h"
 
 #include <godot_cpp/classes/random_number_generator.hpp>
@@ -11,7 +11,7 @@ using namespace godot;
 
 void DinastiaNativo::cerrar_notas(Object *p, const Ref<RandomNumberGenerator> &rng) const {
 	static const StringName k_todos("_todos"), k_ol("once_local"), k_ov("once_visita"), k_local("local"), k_plantilla("plantilla"), k_notas("_notas"), k_gl("goles_local"), k_gv("goles_visita");
-	static const StringName k_id("id"), k_forma("forma"), k_partidos("partidos"), k_anotar("anotar_nota"), k_cerradas("_notas_cerradas");
+	static const StringName k_id("id"), k_forma("forma"), k_partidos("partidos"), k_cerradas("_notas_cerradas"), k_lista("notas");
 	p->set(k_cerradas, true);
 	const int64_t gl = p->get(k_gl);
 	const int64_t gv = p->get(k_gv);
@@ -45,7 +45,13 @@ void DinastiaNativo::cerrar_notas(Object *p, const Ref<RandomNumberGenerator> &r
 		double n = base + bono + azar * 1.4 - 0.7;
 		n = n < 3.0 ? 3.0 : (n > 10.0 ? 10.0 : n);
 		n = std::round(n * 10.0) / 10.0;
-		j->call(k_anotar, n);
+		{ // `Jugador.anotar_nota(n)` (16-11: aquí mismo, sin volver a GDScript por cada jugador)
+			Array lista = j->get(k_lista);
+			lista.push_back(n);
+			if (lista.size() > 8) {
+				lista.remove_at(0);
+			}
+		}
 		const double forma = double(int64_t(j->get(k_forma)));
 		int64_t f = int64_t(std::round(forma * 0.7 + n * 10.0 * 0.3));
 		f = f < 20 ? 20 : (f > 99 ? 99 : f);
