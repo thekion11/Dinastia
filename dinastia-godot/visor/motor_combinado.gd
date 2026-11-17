@@ -183,11 +183,59 @@ func _finta_ia(p: Dictionary, rival: Dictionary, fwd: Vector3, lado: float, sp: 
 func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	if not _nuestra("coloca_sin_balon"):
 		return super(p, en_posesion)
+	var r := Vector3.INF
+	var nat := Nativo.obj()
+	if nat != null and not MotorColocacion._sin and nat.has_method("forma_c4"):
+		var v: Variant = nat.forma_c4(_ctx_forma(), p, en_posesion)
+		if v != null:
+			r = v
+			if comparar_forma:
+				formas_comparadas += 1
+				if r != _forma_gd(p, en_posesion):
+					formas_distintas += 1
+	if r == Vector3.INF:
+		r = _forma_gd(p, en_posesion)
+	return r if en_posesion or not _mejoras_c4 else MejorasC4Bloque.retrasar(self, p, r)   ## (16-11, frente 3) `C4_BLOQUE`
+
+## (17-11, paso a C++) `_forma` con nuestra colocación: `forma_c4` en la extensión (una llamada con `_ctx_forma`); esta es su gemela, la de siempre
+## (sin `equipos`: así no mira la colocación de League). Igualdad: `probar_nativo_sin_balon` (con `comparar_forma`).
+static var comparar_forma := false
+static var formas_comparadas := 0
+static var formas_distintas := 0
+
+func _forma_gd(p: Dictionary, en_posesion: bool) -> Vector3:
 	var guardado := equipos
 	equipos = []
-	var r := super(p, en_posesion)
+	var r := super._forma(p, en_posesion)
 	equipos = guardado
-	return r if en_posesion or not _mejoras_c4 else MejorasC4Bloque.retrasar(self, p, r)   ## (16-11, frente 3) `C4_BLOQUE`
+	return r
+
+## Lo de `_forma` que no cambia dentro de un paso, armado una vez (se rehace si cambia el reloj, el marcador o quién maneja a quién).
+var _ctx_f: Array = []
+var _ctx_f_clave := Vector4.INF
+
+func paso(delta: float) -> void:
+	_ctx_f_clave = Vector4.INF   ## el ctx de `_forma` vale como mucho un paso (un cambio de táctica en una pausa lo rehace)
+	super(delta)
+
+func _ctx_forma() -> Array:
+	var clave := Vector4(t, float(goles[0]), float(goles[1]), float(control_equipo))
+	if clave == _ctx_f_clave:
+		return _ctx_f
+	_ctx_f_clave = clave
+	var me := self as Object as MotorJugable
+	var c: Array = [self, t, jugadores, MotorColocacion._est(me, true), MotorColocacion._est(me, false)]
+	for k: String in ["linea", "mentalidad", "amplitud"]:
+		for loc: bool in [true, false]:
+			var v := float(_tac(loc, k) - 1)
+			v += MotorTacticaViva.urgencia(me, loc) if k == "mentalidad" else MotorTacticaViva.f(me, loc, k)
+			c.append(v)
+	c.append(null if MotorAdaptacion._sin else MotorAdaptacion._est(me))
+	c.append(MotorRoles._sin)
+	c.append(LARGO)
+	c.append(ANCHO)
+	_ctx_f = c
+	return c
 
 ## HÍBRIDO (11-11, sesión 9, orden 39): las ablaciones de C4 mostraron que NUESTRA colocación sin balón es lo que baja el acierto de pase (84 → 67 %) y
 ## las cadenas de 5+ (2,3 → 0,5), pero también lo que da el roce (duelos 7,7 → 29, regates 9,7 → 18). Con `C_ATAQUE_LEAGUE=1` el equipo que tiene el balón se

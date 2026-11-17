@@ -24,7 +24,7 @@ func _ready() -> void:
 	mo.preparar(lista, ball, "", 5)
 	var t_paso := 0
 	var n_paso := 0
-	var tt := {"forma": 0, "base": 0, "lento": 0, "pesos": 0, "tv": 0, "desvio": 0, "base_cpp": 0}
+	var tt := {"forma": 0, "base": 0, "lento": 0, "pesos": 0, "tv": 0, "desvio": 0, "base_cpp": 0, "forma_gd": 0}
 	var nat := Nativo.obj()
 	var distintos := 0
 	var nulos := 0
@@ -40,6 +40,7 @@ func _ready() -> void:
 			var pos_ := i % 20 == 0
 			var loc := bool(p["es_local"])
 			var s := Time.get_ticks_usec(); mo._forma(p, pos_); tt["forma"] += Time.get_ticks_usec() - s
+			s = Time.get_ticks_usec(); (mo as MotorCombinado)._forma_gd(p, pos_); tt["forma_gd"] += Time.get_ticks_usec() - s
 			s = Time.get_ticks_usec(); MotorRoles.base(mo, p); tt["base"] += Time.get_ticks_usec() - s
 			s = Time.get_ticks_usec(); MotorColocacion.balon_lento(mo, loc); tt["lento"] += Time.get_ticks_usec() - s
 			s = Time.get_ticks_usec(); MotorColocacion.pesos(mo, loc, pos_); tt["pesos"] += Time.get_ticks_usec() - s

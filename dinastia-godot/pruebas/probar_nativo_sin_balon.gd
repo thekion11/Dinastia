@@ -7,7 +7,7 @@ extends RefCounted
 const DT := 1.0 / 30.0
 const PASOS := 2400
 
-static func _jugar(raiz: Node3D, a: Club, b: Club, semilla: int) -> void:
+static func _jugar(raiz: Node3D, a: Club, b: Club, semilla: int, variante := "") -> void:
 	var r := Node3D.new()
 	raiz.add_child(r)
 	var sp := PlayerSpawner.new()
@@ -18,6 +18,8 @@ static func _jugar(raiz: Node3D, a: Club, b: Club, semilla: int) -> void:
 	lista.append_array(sp.spawn_team(r, v["xi"], v["jugadores"], Puente3D.formacion(b.tactica.formacion), false, Puente3D.kit(b), Puente3D.kit_portero(b)))
 	var ball := StadiumBuilder.spawn_ball(r, Vector3(0, 0.11, 0))
 	var motor := MotorCombinado.new()   ## C1 A PROPÓSITO: la colocación y la locomoción de League solo corren en C1
+	if variante != "":
+		motor.aplicar_variante(variante)   ## (17-11) `_forma` de C4 en C++: solo corre con nuestra colocación
 	r.add_child(motor)
 	motor.set_physics_process(false)
 	motor.autopiloto = true
@@ -89,4 +91,16 @@ static func probar(nat: Object, raiz: Node3D) -> Dictionary:
 		if MotorLeague.sb_distintos > 0 or MotorLeague.sb_comparados < 1000:
 			fallos.append("sin balón %s - %s: distinta en %d de %d llamadas" % [a.nombre, b.nombre, MotorLeague.sb_distintos, MotorLeague.sb_comparados])
 		textos.append("sin balón %s - %s: C++ = GDScript en %d llamadas (distintas: %d)" % [a.nombre, b.nombre, MotorLeague.sb_comparados, MotorLeague.sb_distintos])
+	## (17-11) `_forma` con nuestra colocación (C4): `forma_c4` frente a `_forma_gd`, en dos cruces.
+	for k in 2:
+		var a: Club = cruces[k][1]
+		var b: Club = cruces[k][0]
+		MotorCombinado.comparar_forma = true
+		MotorCombinado.formas_comparadas = 0
+		MotorCombinado.formas_distintas = 0
+		_jugar(raiz, a, b, 700 + k, "combinado_c4")
+		MotorCombinado.comparar_forma = false
+		if MotorCombinado.formas_distintas > 0 or MotorCombinado.formas_comparadas < 1000:
+			fallos.append("_forma C4 %s - %s: distinta en %d de %d llamadas" % [a.nombre, b.nombre, MotorCombinado.formas_distintas, MotorCombinado.formas_comparadas])
+		textos.append("_forma C4 %s - %s: C++ = GDScript en %d llamadas" % [a.nombre, b.nombre, MotorCombinado.formas_comparadas])
 	return {"fallos": fallos, "textos": textos}
