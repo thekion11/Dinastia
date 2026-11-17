@@ -206,7 +206,7 @@ func _anim(p: Dictionary, nombre: String, gesto: bool, dur_max := 1.4) -> void:
 		p["gesto_hasta"] = t + minf(ap.get_animation(nombre).length, dur_max)
 		p["anim_actual"] = nombre
 	elif String(p.get("anim_actual", "")) != nombre:
-		ap.play(nombre, 0.2)
+		ap.play(TroteCmu.clip(p, nombre), 0.2)   ## (17-11) el «trotar» de cada uno (`TroteCmu`); el motor sigue leyendo «trotar»
 		p["anim_actual"] = nombre
 
 func _mover_arbitros(delta: float) -> void:
