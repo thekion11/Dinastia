@@ -22,7 +22,7 @@ python3 -I herramientas/cobertura_lineas.py instrumentar "${DIRS[@]}" || exit 1
 sed -i 's|^\tget_tree().quit(0 if _fallos.is_empty() else 1)|\tCobLineas.volcar()\n&|' pruebas/banco.gd
 grep -q "CobLineas.volcar" pruebas/banco.gd || { echo "No se pudo enganchar banco.gd"; exit 1; }
 timeout 900 godot --headless --import --path . > "$COB_TMP/import.txt" 2>&1
-if grep -a "SCRIPT ERROR\|Parse Error" "$COB_TMP/import.txt" | head -5; then echo "El código instrumentado no compila: ver $COB_TMP/import.txt"; fi
+if grep -aq "SCRIPT ERROR\|Parse Error" "$COB_TMP/import.txt"; then grep -a "SCRIPT ERROR\|Parse Error" "$COB_TMP/import.txt" | head -5; echo "El código instrumentado no compila: ver $COB_TMP/import.txt"; fi
 NUCLEOS=$(nproc 2> /dev/null || echo 1)
 N="${BANCO_PARTES:-$(( NUCLEOS < 6 ? NUCLEOS : 6 ))}"
 export COB_SALIDA="$COB_TMP/volcado"
