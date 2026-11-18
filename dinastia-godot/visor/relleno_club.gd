@@ -93,9 +93,23 @@ static func _oficina_dt(nodo: Node3D, caja: Rect2, y0: float, c1: Color) -> void
 	var color := PiezasObra._mat(c1, 0.7)
 	for k in 3:
 		var z := cz + 0.1 + k * 0.62
+		## Con los marcos reales de Poly Haven (CC0, MEDIA/ALTA) en los dos primeros; sin ellos (o el tercero), el cuadro de cajas con los colores del club.
+		if k < 2 and ModeloCC0.poner(nodo, "hanging_picture_frame_0%d" % (k + 1), Vector3(x_pared - 0.02, y0 + 1.45, z), -PI * 0.5, 0.55, false, false) != null:
+			continue
 		PiezasObra._caja(nodo, Vector3(x_pared - 0.02, y0 + 1.7, z), Vector3(0.04, 0.5, 0.46), marco, false)
 		PiezasObra._caja(nodo, Vector3(x_pared - 0.045, y0 + 1.7, z), Vector3(0.02, 0.4, 0.36), papel, false)
 		PiezasObra._caja(nodo, Vector3(x_pared - 0.06, y0 + 1.62 + 0.05 * k, z), Vector3(0.01, 0.2 + 0.08 * k, 0.24 - 0.02 * k), color, false)
+	## Más piezas reales de Poly Haven (CC0): marco de sobremesa, lámpara de brazo, papelería, papelera, estantería gastada, enciclopedias, busto y copas
+	## sobre el aparador, lámpara de techo. Cada una solo se pone si existe el recurso (MEDIA/ALTA).
+	ModeloCC0.poner(nodo, "standing_picture_frame_01", Vector3(cx + 0.78, sobre, cz - 0.42), PI + 0.3, 0.2, false, false)
+	ModeloCC0.poner(nodo, "desk_lamp_arm_01", Vector3(cx - 0.95, sobre, cz - 0.72), 0.5, 0.42, false, false)
+	ModeloCC0.poner(nodo, "stationery_supplies", Vector3(cx + 0.55, sobre, cz - 0.72), -0.3, 0.1, false, false)
+	ModeloCC0.poner(nodo, "metal_trash_can", Vector3(cx - 1.05, y0, cz + 0.15), 0.0, 0.4, false, false)
+	ModeloCC0.poner(nodo, "wooden_bookshelf_worn", Vector3(caja.position.x + 0.3, y0, cz + 1.15), PI * 0.5, 1.9, true, false)
+	ModeloCC0.poner(nodo, "book_encyclopedia_set_01", Vector3(caja.position.x + 0.45, y0 + 0.74, cz - 0.1), PI * 0.5, 0.26, false, false)
+	ModeloCC0.poner(nodo, "marble_bust_01", Vector3(caja.position.x + 0.45, y0 + 0.74, cz - 0.7), PI * 0.5, 0.36, false, false)
+	ModeloCC0.poner(nodo, "brass_goblets", Vector3(caja.position.x + 0.45, y0 + 0.74, cz - 0.4), PI * 0.5, 0.2, false, false)
+	ModeloCC0.poner(nodo, "modern_ceiling_lamp_01", Vector3(cx, y0 + EdificioClub.ALTO_LIBRE - 0.3, cz), 0.0, 0.3, false, false)
 
 ## (18-11, «mejorar el mundo 3D», prólogo) PAREDES MENOS LISAS: un zócalo oscuro al pie y una cenefa con el color del club a 1,05 m en las tres paredes
 ## cerradas de cada sala (la cuarta es el tabique del pasillo, con sus puertas). Cuatro cajas finas por sala, sin colisión ni sombra.

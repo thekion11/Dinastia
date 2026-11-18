@@ -6,7 +6,8 @@ LISTA = ["modern_arm_chair_01", "modern_wooden_cabinet", "modern_coffee_table_01
          ## (12-11, sesión 16) prensa, enfermería, utilería y pasillos
          "wall_clock", "korean_fire_extinguisher_01", "WetFloorSign_01", "metal_stool_02", "steel_frame_shelves_03", "worn_metal_rack"]
 ## Lado de las texturas: 512 px; las piezas pequeñas (se ven a menos de medio metro de pantalla) y la estantería de 5 materiales, 256 px (¼ de memoria).
-PEQUENAS = {"wall_clock", "korean_fire_extinguisher_01", "WetFloorSign_01", "metal_stool_02", "steel_frame_shelves_03", "worn_metal_rack"}
+PEQUENAS = {"hanging_picture_frame_01", "hanging_picture_frame_02", "standing_picture_frame_01", "desk_lamp_arm_01", "classic_laptop",
+            "stationery_supplies", "book_encyclopedia_set_01", "marble_bust_01", "brass_goblets", "metal_trash_can", "wall_clock", "korean_fire_extinguisher_01", "WetFloorSign_01", "metal_stool_02", "steel_frame_shelves_03", "worn_metal_rack"}
 RAIZ = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets", "cc0_modelos")
 
 ## (12-11, SonarCloud S5144) Solo HTTPS y solo los servidores de Poly Haven: las direcciones salen de la respuesta de su API
