@@ -66,7 +66,9 @@ func _clausula() -> void:
 	Contratos.levantar_descenso(yo)
 	var max_dif := 0.0
 	for j in yo.plantilla:
-		max_dif = maxf(max_dif, absf(float(j.sueldo) / float(antes[j.id]) - 1.0))
+		## Los sueldos se redondean a 10: en uno pequeño (320) un paso de redondeo ya es más del 3 %, así que cuenta como cero.
+		if absi(j.sueldo - int(antes[j.id])) > 10:
+			max_dif = maxf(max_dif, absf(float(j.sueldo) / float(antes[j.id]) - 1.0))
 	_comprobar(max_dif <= 0.03 and yo.plantilla.all(func(j: Jugador) -> bool: return j.rebaja_descenso == 0.0),
 		"al ascender cada sueldo vuelve a su nivel (desvío máx %.1f %%)" % (max_dif * 100.0))
 	## Y en el cierre real: el último de Primera baja con la cláusula puesta (IA o humano).
