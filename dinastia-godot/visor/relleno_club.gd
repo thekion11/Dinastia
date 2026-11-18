@@ -38,6 +38,8 @@ static func sala(nodo: Node3D, nombre: String, caja: Rect2, y0: float, c1: Color
 			EdificioClub._mod(nodo, "cardboardBoxOpen", Vector3(caja.end.x - 0.45, y0, caja.end.y - 0.45), 0.4, true)
 		"Oficina del DT":
 			_oficina_dt(nodo, caja, y0, c1)
+		"Despacho del presidente":
+			_despacho(nodo, caja, y0)
 	_cc0(nodo, nombre, caja, y0)
 
 ## (12-11, sesión 16) MUEBLES CC0 DE POLY HAVEN (`ModeloCC0`: solo MEDIA y ALTA; en el resto no se pone nada y la sala queda como estaba)
@@ -47,6 +49,7 @@ static func _cc0(nodo: Node3D, nombre: String, caja: Rect2, y0: float) -> void:
 	var cx := caja.get_center().x
 	match nombre:
 		"Enfermería":
+			ModeloCC0.poner(nodo, "wheelchair_01", Vector3(caja.end.x - 1.0, y0, caja.end.y - 1.0), PI * 0.8, 1.0, false, false)   ## (18-11) silla de ruedas de Poly Haven (CC0)
 			ModeloCC0.poner(nodo, "steel_frame_shelves_03", Vector3(caja.end.x - 0.32, y0, caja.position.y + 2.6), -PI * 0.5, 1.8, true, false)
 			ModeloCC0.poner(nodo, "metal_stool_02", Vector3(caja.position.x + 1.0, y0, caja.position.y + 2.75), 0.4, 0.5, true, false)
 			ModeloCC0.poner(nodo, "wall_clock", Vector3(cx + 1.3, y0 + 2.05, caja.position.y + 0.0), 0.0, 0.32, false, false)
@@ -126,3 +129,15 @@ static func _zocalo(nodo: Node3D, caja: Rect2, y0: float, c1: Color) -> void:
 		PiezasObra._caja(nodo, Vector3(x, y0 + 1.05, zc), Vector3(0.03, 0.07, largo), cen, false)
 	PiezasObra._caja(nodo, Vector3((x0 + x1) / 2.0, y0 + 0.07, zf), Vector3(x1 - x0, 0.14, 0.03), zoc, false)
 	PiezasObra._caja(nodo, Vector3((x0 + x1) / 2.0, y0 + 1.05, zf), Vector3(x1 - x0, 0.07, 0.03), cen, false)
+
+## (18-11) EL DESPACHO DEL PRESIDENTE con piezas reales de Poly Haven (CC0; MEDIA/ALTA): reloj de chimenea y jarrón de latón sobre la mesa (sobre = 0,83 m),
+## reloj de pie y espejo en la pared izquierda, y un marco grande sobre el sofá. Sin el recurso, no se pone nada.
+static func _despacho(nodo: Node3D, caja: Rect2, y0: float) -> void:
+	var cx := caja.get_center().x
+	var cz := caja.get_center().y
+	var mesa := y0 + 0.83
+	ModeloCC0.poner(nodo, "mantel_clock_01", Vector3(cx + 0.85, mesa, cz - 0.3), PI, 0.2, false, false)
+	ModeloCC0.poner(nodo, "brass_vase_01", Vector3(cx - 0.9, mesa, cz - 0.3), 0.0, 0.3, false, false)
+	ModeloCC0.poner(nodo, "vintage_grandfather_clock_01", Vector3(caja.position.x + 0.3, y0, cz + 0.2), PI * 0.5, 1.9, true, false)
+	ModeloCC0.poner(nodo, "ornate_mirror_01", Vector3(caja.position.x + 0.05, y0 + 1.15, cz + 1.0), PI * 0.5, 0.9, false, false)
+	ModeloCC0.poner(nodo, "fancy_picture_frame_01", Vector3(caja.end.x - 0.05, y0 + 1.5, cz + 0.4), -PI * 0.5, 0.7, false, false)
