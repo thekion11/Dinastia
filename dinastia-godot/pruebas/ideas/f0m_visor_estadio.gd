@@ -43,8 +43,8 @@ func _probar_ambience() -> void:
 	if we != null and luces.size() == 1:
 		var sol: DirectionalLight3D = luces[0]
 		_comprobar(not we.environment.fog_enabled and not we.environment.ssao_enabled and we.environment.glow_hdr_threshold > 1.0, "calidad media y despejado: sin niebla ni SSAO; el bloom con umbral")
-		_comprobar(is_equal_approx(sol.light_energy, 1.2) and sol.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS and sol.shadow_enabled,
-			"el sol a pleno (1,2 desde el 16-11: más luz del cielo) y sombras en 2 cascadas (Medio alivia el partido)")
+		_comprobar(is_equal_approx(sol.light_energy, 1.35) and sol.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS and sol.shadow_enabled,
+			"el sol a pleno (1,35 desde el 17-11: TV cercana y luz suave) y sombras en 2 cascadas (Medio alivia el partido)")
 	var noche := Node3D.new()
 	Ambience.apply(noche, {"clima": "noche", "focos": "torres", "luzFocos": "calida"}, ["lluvia"], Calidad.ALTO)
 	var we2: WorldEnvironment = _de_tipo(noche, "WorldEnvironment")[0]
