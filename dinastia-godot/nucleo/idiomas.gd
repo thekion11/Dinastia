@@ -80,7 +80,7 @@ func _directa(frase: String) -> String:
 	## TÍTULOS EN MAYÚSCULAS (29-9-2026): muchas cabeceras se pintan con
 	## `to_upper()` antes de traducir ("PLANTEL", "PRÓXIMO PARTIDO"). Se busca
 	## la forma normal ("Plantel", "Próximo partido") y se devuelve en mayúsculas.
-	if frase.length() > 1 and frase == frase.to_upper() and frase != frase.to_lower():
+	if frase.length() > 1 and frase == frase.to_upper() and frase != frase.to_lower() and not (frase.length() == 3 and Paises.conocido(frase)):   ## un código de país (MAR, DOM) no es un título: «MAR» salía «TUE»
 		var baja := frase.to_lower()
 		var normal := baja.substr(0, 1).to_upper() + baja.substr(1)
 		for cand: String in [normal, baja]:
