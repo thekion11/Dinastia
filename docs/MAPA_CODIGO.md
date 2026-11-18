@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2507 archivos (.gd, .cpp, .h), 359469 líneas, 991 clases con nombre.
+Total: 2508 archivos (.gd, .cpp, .h), 359930 líneas, 991 clases con nombre.
 
 ## Extensión C++
 
@@ -79,7 +79,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Club` | `nucleo/club.gd` | 416 | 816 |  |
+| `Club` | `nucleo/club.gd` | 416 | 817 |  |
 | `StadiumBuilder` | `visor/stadium_builder.gd` | 13 | 135 | stadium_builder_p10.gd ← stadium_builder_p10_p1.gd ← estadio_partes_tribuna.gd ← stadium_builder_p9.gd ← stadium_builder_p8.gd ← stadium_builder_p7.gd ← stadium_builder_p6.gd ← stadium_builder_p5.gd ← stadium_builder_p4.gd ← stadium_builder_p3.gd ← stadium_builder_p2.gd |
 | `EstadioExtras` | `visor/estadio_extras.gd` | 310 | 9 |  |
 | `ClubDentro` | `nucleo/club_dentro.gd` | 285 | 8 |  |
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1226 archivos, 117705 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1227 archivos, 118166 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
@@ -147,20 +147,20 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Mundo` | `nucleo/mundo.gd` | 158 | 905 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
-| `Jugador` | `nucleo/jugador.gd` | 450 | 469 |  |
-| `Liga` | `nucleo/liga.gd` | 235 | 193 |  |
+| `Mundo` | `nucleo/mundo.gd` | 158 | 906 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
+| `Jugador` | `nucleo/jugador.gd` | 450 | 470 |  |
+| `Liga` | `nucleo/liga.gd` | 235 | 194 |  |
 | `Nombres` | `nucleo/nombres.gd` | 169 | 168 |  |
 | `Partida` | `nucleo/partida.gd` | 450 | 117 | partida_p1.gd |
-| `Copa` | `nucleo/copa.gd` | 348 | 93 |  |
-| `Mercado` | `nucleo/mercado.gd` | 64 | 91 | mercado_p1.gd |
+| `Copa` | `nucleo/copa.gd` | 348 | 94 |  |
+| `Mercado` | `nucleo/mercado.gd` | 64 | 92 | mercado_p1.gd |
 | `Finanzas` | `nucleo/finanzas.gd` | 384 | 89 |  |
-| `Roles` | `nucleo/roles.gd` | 357 | 77 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
+| `Roles` | `nucleo/roles.gd` | 357 | 78 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
 | `Prensa` | `nucleo/prensa.gd` | 445 | 74 | prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
 | `Calendario` | `nucleo/calendario.gd` | 78 | 70 | calendario_p1.gd |
 | `CargaCiudad` | `nucleo/carga_ciudad.gd` | 14 | 67 |  |
-| `Cantera` | `nucleo/cantera.gd` | 209 | 65 | cantera_p3.gd ← cantera_p2.gd ← cantera_p1.gd |
-| `Banco` | `nucleo/banco.gd` | 241 | 62 |  |
+| `Cantera` | `nucleo/cantera.gd` | 209 | 66 | cantera_p3.gd ← cantera_p2.gd ← cantera_p1.gd |
+| `Banco` | `nucleo/banco.gd` | 241 | 63 |  |
 
 Cerca del tope (≥ 400 líneas): `idiomas.gd` (450), `jugador.gd` (450), `mercado_p1.gd` (450), `partida.gd` (450), `roles_p4.gd` (450), `mundo_p1.gd` (449), `partida_p1.gd` (449), `musica.gd` (446), `selecciones_p2.gd` (446), `prensa.gd` (445).
 
