@@ -32,6 +32,9 @@ func _porteros(lista: Array) -> Array[Jugador]:
 			out.append(j)
 	return out
 
+func _valia(j: Jugador) -> float:
+	return float(j.ovr) * (0.7 + 0.003 * float(j.forma)) * (0.9 + 0.002 * float(j.moral))
+
 func _alineaciones(m: Mundo) -> void:
 	var malos: Array[String] = []
 	var n := 0
@@ -45,13 +48,14 @@ func _alineaciones(m: Mundo) -> void:
 		if en_once.size() != 1:
 			malos.append("%s sale con %d porteros (%d sanos)" % [c.nombre, en_once.size(), sanos.size()])
 			continue
+		## El once automático elige por media, FORMA y moral (`OnceAuto`: media × (0,7 + 0,003·forma) × (0,9 + 0,002·moral)), no por media a secas.
 		var mejor: Jugador = sanos[0]
 		for j: Jugador in sanos:
-			if j.ovr > mejor.ovr:
+			if _valia(j) > _valia(mejor):
 				mejor = j
-		if en_once[0].ovr < mejor.ovr - 3:
-			malos.append("%s pone a %s (%d) con %s (%d) sano" % [c.nombre, en_once[0].nombre, en_once[0].ovr, mejor.nombre, mejor.ovr])
-	_comprobar(malos.is_empty(), "en los %d clubes con portero sano el once lleva UNO, y es el mejor (± 3 de media)%s" % [n, "" if malos.is_empty() else " — " + str(malos.slice(0, 5))])
+		if _valia(en_once[0]) < _valia(mejor) - 3.0:
+			malos.append("%s pone a %s (%d, valía %.1f) con %s (%d, valía %.1f) sano" % [c.nombre, en_once[0].nombre, en_once[0].ovr, _valia(en_once[0]), mejor.nombre, mejor.ovr, _valia(mejor)])
+	_comprobar(malos.is_empty(), "en los %d clubes con portero sano el once lleva UNO, y es el mejor por media, forma y moral (± 3)%s" % [n, "" if malos.is_empty() else " — " + str(malos.slice(0, 5))])
 
 func _sin_porteros(m: Mundo) -> void:
 	var c: Club = m.ligas[1].clubes[3]
@@ -111,10 +115,16 @@ func _notas(m: Mundo) -> void:
 	var a: Club = m.ligas[0].clubes[2]
 	var b: Club = m.ligas[0].clubes[3]
 	var notas := []
+	## Los 150 partidos de `_cifras` dejan lesionados y sancionados: se sanan para que el once lleve su portero (el caso sin portero ya lo prueba `_sin_porteros`).
+	for c: Club in [a, b]:
+		for j: Jugador in c.plantilla:
+			j.lesion = 0
+			j.suspension = 0
 	for encaja in [0, 4]:
 		Azar.sembrar(77)
 		var p := Partido.new(a, b)
 		p.preparar()
+		var arquero: Jugador = _porteros(p.once_local)[0]   ## el titular; al final del partido podría estar expulsado o cambiado
 		while not p.terminado_ya:
 			p.simular_minuto()
 		p.goles_local = 1
@@ -122,7 +132,7 @@ func _notas(m: Mundo) -> void:
 		var nota := -1.0
 		for v: Dictionary in p.valoraciones():
 			var j: Jugador = v["jugador"]
-			if j.pos == "POR" and p.once_local.has(j):
+			if j == arquero:
 				nota = float(v["nota"])
 		notas.append(nota)
 	_comprobar(notas[0] > 0.0 and notas[0] > notas[1], "el portero sale mejor con la portería a cero (%.1f) que encajando 4 (%.1f)" % [notas[0], notas[1]])
