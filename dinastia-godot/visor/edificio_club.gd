@@ -264,6 +264,9 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			o.position = Vector3(c, y0 + ALTO_LIBRE - 0.4, (z_out + z_tabique) / 2.0)
 			o.omni_range = maxf(6.0, (b - a) * 0.9)
 			o.light_energy = 0.9
+			if OS.get_environment("SIN_LUZ_FRIA") == "":   ## (18-11) luz de sala más neutra y algo más fuerte: con la blanca de antes y las paredes pardas todo (y la piel) salía rojizo. SIN_LUZ_FRIA=1 = el «antes»
+				o.light_color = Color(0.9, 0.95, 1.0)
+				o.light_energy = 1.25
 			np.add_child(o)
 			PiezasObra._caja(np, Vector3(c, y0 + ALTO_LIBRE - 0.03, (z_out + z_tabique) / 2.0), Vector3(1.8, 0.05, 0.6), luz, false)
 			## Suelo y techo propios de la sala.
