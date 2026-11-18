@@ -10,11 +10,11 @@
 |---|---|---:|---|
 | lint | `gdlint`: reglas de estilo, orden de clases, nombres, retornos, argumentos sin uso… | 33,483 | idénticas (`e6a19686b85f`) |
 | forma | `gdparse` (sintaxis) + `gdformat --diff` (bloques que cambiarían de formato) | 16,700 | idénticas (`cfd4070be9ad`) |
-| ast | Analizador propio sobre el árbol sintáctico: tamaño, complejidad, anidamiento, parámetros, duplicados, depuración, igualdad de flotantes… | 4,010 | idénticas (`002f9aff5644`) |
+| ast | Analizador propio sobre el árbol sintáctico: tamaño, complejidad, anidamiento, parámetros, duplicados, depuración, igualdad de flotantes… | 3,980 | idénticas (`00dd3fd578ae`) |
 
 Las 9 pasadas dieron resultados byte a byte iguales (tras normalizar un mensaje de error no determinista de gdparse en la primera ronda; esa ronda se descartó y se repitió completa).
 
-**Total: 54,193 hallazgos** (215 en `terceros/`, que Sonar excluye).
+**Total: 54,163 hallazgos** (215 en `terceros/`, que Sonar excluye).
 
 ## Método `lint` por regla
 
@@ -61,7 +61,7 @@ Las 9 pasadas dieron resultados byte a byte iguales (tras normalizar un mensaje 
 | `ast:muchos-parametros` | 220 |
 | `ast:anidamiento` | 149 |
 | `ast:variable-sin-uso` | 61 |
-| `ast:archivo-largo` | 31 |
+| `ast:archivo-largo` | 1 |
 | `ast:pendiente` | 6 |
 | `ast:no-parsea` | 6 |
 | `ast:await-doble` | 3 |
@@ -123,7 +123,7 @@ Pueden ser sintaxis de Godot 4.7 que gdtoolkit 4.5 aún no soporta, o errores re
 ## Lectura
 
 - 30,042 de 33,483 avisos de `gdlint` son líneas de más de 100 caracteres (límite por defecto de gdlint; el proyecto no define otro). Es ruido de estilo, no de fallos.
-- Lo que más importa: 553 funciones con complejidad ciclomática > 15, 437 funciones de más de 80 líneas, 31 archivos > 450 líneas (**incumplen la norma del proyecto**), 233 comparaciones `==`/`!=` con flotantes (misma regla que Sonar S1244 en otros lenguajes) y 61 variables locales sin uso.
+- Lo que más importa: 553 funciones con complejidad ciclomática > 15, 437 funciones de más de 80 líneas, 1 archivo > 450 líneas (`addons/debug_menu/debug_menu.gd`, 480, complemento de terceros), 233 comparaciones `==`/`!=` con flotantes (misma regla que Sonar S1244 en otros lenguajes) y 61 variables locales sin uso.
 - `ast:depuracion` (2,311) son llamadas `print(...)` al inicio de línea; en pruebas y herramientas son normales, en código del juego conviene revisarlas.
-- Los métodos son heurísticos: pueden dar falsos positivos (p. ej. variables 'sin uso' que se usan solo en una cadena, o duplicados legítimos). Nada se ha corregido ni cambiado.
+- Los métodos son heurísticos: pueden dar falsos positivos (p. ej. variables 'sin uso' que se usan solo en una cadena, o duplicados legítimos). Nada se ha corregido ni cambiado. (Corrección: una primera versión contaba mal las líneas, 451 en vez de 450, y marcó 31 archivos; la pasada corregida deja 1.)
 - Datos completos, una línea JSON por hallazgo (`archivo`, `linea`, `regla`, `mensaje`, `sev`): `lint.jsonl`, `forma.jsonl`, `ast.jsonl` en esta misma carpeta.

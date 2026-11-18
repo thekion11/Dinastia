@@ -1,5 +1,5 @@
 {"archivo": "dinastia-godot/addons/cache_horneada/exportar.gd", "linea": 26, "mensaje": "print(\"Caché horneada: %d archivos al paquete\" % DirAccess.get_files_at(tmp).size())", "regla": "ast:depuracion", "sev": "menor"}
-{"archivo": "dinastia-godot/addons/debug_menu/debug_menu.gd", "linea": 1, "mensaje": "481 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
+{"archivo": "dinastia-godot/addons/debug_menu/debug_menu.gd", "linea": 1, "mensaje": "480 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/addons/debug_menu/debug_menu.gd", "linea": 152, "mensaje": "update_settings_label: 25", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/addons/debug_menu/debug_menu.gd", "linea": 152, "mensaje": "update_settings_label: 90 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/addons/debug_menu/debug_menu.gd", "linea": 241, "mensaje": "update_information_label: 16", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -82,7 +82,6 @@
 {"archivo": "dinastia-godot/nucleo/carrera_momentos.gd", "linea": 101, "mensaje": "resultado: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/nucleo/carrera_premios.gd", "linea": 56, "mensaje": "ganados: 20", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/carrera_premios.gd", "linea": 94, "mensaje": "_de_la_liga: 17", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
-{"archivo": "dinastia-godot/nucleo/carrera_ruta.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/nucleo/carrera_ruta.gd", "linea": 196, "mensaje": "_cumple: 19", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/causas_partido.gd", "linea": 51, "mensaje": "candidatas: 30", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/causas_partido.gd", "linea": 51, "mensaje": "candidatas: 132 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
@@ -110,11 +109,9 @@
 {"archivo": "dinastia-godot/nucleo/fase_final_liga.gd", "linea": 268, "mensaje": "_registrar: profundidad 6", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/fondo_inversion.gd", "linea": 90, "mensaje": "semana: profundidad 6", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/gente.gd", "linea": 95, "mensaje": "charlar: 22", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
-{"archivo": "dinastia-godot/nucleo/idiomas.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/nucleo/idiomas.gd", "linea": 203, "mensaje": "_t: 36", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
 {"archivo": "dinastia-godot/nucleo/idiomas.gd", "linea": 203, "mensaje": "_t: 83 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/nucleo/imprevistos.gd", "linea": 197, "mensaje": "_cumple_jugador: 17", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
-{"archivo": "dinastia-godot/nucleo/jugador.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/nucleo/junta.gd", "linea": 95, "mensaje": "resolver: profundidad 6", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/junta.gd", "linea": 95, "mensaje": "resolver: 19", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/lector_pantalla.gd", "linea": 37, "mensaje": "texto_de: 23", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -133,7 +130,6 @@
 {"archivo": "dinastia-godot/nucleo/mercado_avanzado.gd", "linea": 174, "mensaje": "resolver: profundidad 7", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/mercado_avanzado.gd", "linea": 174, "mensaje": "resolver: 40", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
 {"archivo": "dinastia-godot/nucleo/mercado_avanzado.gd", "linea": 174, "mensaje": "resolver: 107 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
-{"archivo": "dinastia-godot/nucleo/mercado_p1.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/nucleo/mercado_p1.gd", "linea": 90, "mensaje": "deseo_de_venir: profundidad 6", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/mercado_p1.gd", "linea": 90, "mensaje": "deseo_de_venir: 17", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/mercado_p1.gd", "linea": 330, "mensaje": "buscar_oferta_por_mi_jugador: 16", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -167,7 +163,6 @@
 {"archivo": "dinastia-godot/nucleo/ojeadores_p1.gd", "linea": 249, "mensaje": "## TODO el mundo, no solo en los países cubiertos -por eso se suma al final", "regla": "ast:pendiente", "sev": "menor"}
 {"archivo": "dinastia-godot/nucleo/paquete_real.gd", "linea": 17, "mensaje": "print(\"Paquete real montado: \", ruta)", "regla": "ast:depuracion", "sev": "menor"}
 {"archivo": "dinastia-godot/nucleo/parches.gd", "linea": 22, "mensaje": "print(\"Parche montado: \", ruta)", "regla": "ast:depuracion", "sev": "menor"}
-{"archivo": "dinastia-godot/nucleo/partida.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/nucleo/partida.gd", "linea": 100, "mensaje": "_restaurar_lo_tuyo: 45", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
 {"archivo": "dinastia-godot/nucleo/partida.gd", "linea": 100, "mensaje": "_restaurar_lo_tuyo: 157 lineas", "regla": "ast:funcion-larga", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/partida.gd", "linea": 299, "mensaje": "desde_instantanea: 129 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
@@ -175,7 +170,6 @@
 {"archivo": "dinastia-godot/nucleo/partido.gd", "linea": 5, "mensaje": "simular_minuto: 25", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/partido.gd", "linea": 5, "mensaje": "simular_minuto: 96 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/nucleo/partido_despedida.gd", "linea": 88, "mensaje": "equipo_de: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
-{"archivo": "dinastia-godot/nucleo/partido_p1.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/nucleo/planificador_plantilla.gd", "linea": 44, "mensaje": "analizar: 18", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/politica.gd", "linea": 272, "mensaje": "semana: 17", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/precontratos.gd", "linea": 19, "mensaje": "motivo: 16", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -195,7 +189,6 @@
 {"archivo": "dinastia-godot/nucleo/retos.gd", "linea": 26, "mensaje": "montar: 8", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/nucleo/retos.gd", "linea": 70, "mensaje": "juzgar: 18", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/roles_p3.gd", "linea": 66, "mensaje": "motivo_bloqueo: 19", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
-{"archivo": "dinastia-godot/nucleo/roles_p4.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/nucleo/seleccion_equipo.gd", "linea": 76, "mensaje": "club_de: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/nucleo/selecciones_p2.gd", "linea": 130, "mensaje": "_fecha_fifa: 21", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/nucleo/texto_que_cabe.gd", "linea": 43, "mensaje": "ajustar: 17", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -472,7 +465,6 @@
 {"archivo": "dinastia-godot/pruebas/auditoria_vida_global_limite.gd", "linea": 59, "mensaje": "print(\"  SEMILLA del mundo: %d (hay club propio: %s)\" % [int(_p.get(\"mundo\").semilla) if _p.get(\"mundo\") != null else -1", "regla": "ast:depuracion", "sev": "menor"}
 {"archivo": "dinastia-godot/pruebas/auditoria_vida_global_limite.gd", "linea": 113, "mensaje": "print(\"  INFO  la pregunta de salir ya estaba abierta antes del paso 4 (un «atrás» sobrante del bucle): se cierra y se s", "regla": "ast:depuracion", "sev": "menor"}
 {"archivo": "dinastia-godot/pruebas/ayuda_movil.gd", "linea": 18, "mensaje": "problemas: 25", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
-{"archivo": "dinastia-godot/pruebas/banco.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/pruebas/banco/ciudad.gd", "linea": 96, "mensaje": "_probar_redes_ciudad: 34", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
 {"archivo": "dinastia-godot/pruebas/banco/ciudad.gd", "linea": 96, "mensaje": "_probar_redes_ciudad: 145 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/pruebas/banco/ciudad.gd", "linea": 100, "mensaje": "_comprobar(r.sectores().size() == 25 and r.fraccion_luz() == 1.0, \"25 sectores y todos con luz al empezar\")", "regla": "ast:igualdad-flotante", "sev": "media"}
@@ -551,7 +543,6 @@
 {"archivo": "dinastia-godot/pruebas/banco/nucleo.gd", "linea": 13, "mensaje": "print(t)", "regla": "ast:depuracion", "sev": "menor"}
 {"archivo": "dinastia-godot/pruebas/banco/paises_csv.gd", "linea": 6, "mensaje": "_probar_paises_csv: 20", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/paises_csv.gd", "linea": 83, "mensaje": "_probar_selecciones_nuevas: 8", "regla": "ast:muchos-parametros", "sev": "menor"}
-{"archivo": "dinastia-godot/pruebas/banco/partido.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/pruebas/banco/partido.gd", "linea": 167, "mensaje": "_comprobar(MotorEntrada.radio(motor, def_, victima, 1.25) == 1.25, \"apagado devuelve el radio base\")", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/partido.gd", "linea": 170, "mensaje": "_comprobar(MotorEntrada.radio(motor, def_, victima, 1.25) == 1.25, \"de frente, con el balón en los pies y en el centro: ", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/partido.gd", "linea": 204, "mensaje": "_probar_motor_ciego: 89 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
@@ -567,7 +558,6 @@
 {"archivo": "dinastia-godot/pruebas/banco/partido_p2.gd", "linea": 247, "mensaje": "_probar_dificultad_cpu: profundidad 6", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/partido_p2.gd", "linea": 247, "mensaje": "_probar_dificultad_cpu: 25", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/partido_p2.gd", "linea": 392, "mensaje": "_probar_paciencia_c4: 18", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
-{"archivo": "dinastia-godot/pruebas/banco/partido_p3.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/pruebas/banco/partido_p3.gd", "linea": 74, "mensaje": "_comprobar(MotorMente.retardo(motor, local) == 0.0 and MotorMente.pos_vista(motor, local, cpu) == motor.pos(cpu), \"el eq", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/partido_p3.gd", "linea": 76, "mensaje": "_comprobar(MotorMente.retardo(motor, cpu) == 0.0 and absf(MotorMente.pos_vista(motor, cpu, local).x - 10.0) < 0.01, \"el ", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/partido_p3.gd", "linea": 82, "mensaje": "_comprobar(MotorMente.retardo(motor, cpu) == 0.0, \"Semiprofesional ve el presente\")", "regla": "ast:igualdad-flotante", "sev": "media"}
@@ -591,7 +581,6 @@
 {"archivo": "dinastia-godot/pruebas/banco/partido_p3_p1.gd", "linea": 227, "mensaje": "_comprobar(MotorTacticaViva.urgencia(motor, true) == 0.0, \"al empezar, perder 0-1 no cambia nada\")", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/partido_p3_p1.gd", "linea": 236, "mensaje": "_comprobar(MotorTacticaViva.urgencia(motor, true) == 0.0, \"el equipo del usuario no se toca\")", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/partido_p3_p1.gd", "linea": 264, "mensaje": "_comprobar(float(apagada[1]) == 0.0, \"apagada: el rival a 3 m de la línea no cuenta (%.2f)\" % float(apagada[1]))", "regla": "ast:igualdad-flotante", "sev": "media"}
-{"archivo": "dinastia-godot/pruebas/banco/partido_p4.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/pruebas/banco/partido_p4.gd", "linea": 11, "mensaje": "_probar_tanda_c_1: 77", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
 {"archivo": "dinastia-godot/pruebas/banco/partido_p4.gd", "linea": 11, "mensaje": "_probar_tanda_c_1: 386 lineas", "regla": "ast:funcion-larga", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/partido_p5.gd", "linea": 6, "mensaje": "_probar_tanda_c_2: 28", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -663,7 +652,6 @@
 {"archivo": "dinastia-godot/pruebas/banco/varios_p5.gd", "linea": 210, "mensaje": "_probar_editor: 121 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/pruebas/banco/varios_p5.gd", "linea": 353, "mensaje": "c0 en _probar_marca", "regla": "ast:variable-sin-uso", "sev": "menor"}
 {"archivo": "dinastia-godot/pruebas/banco/varios_p5.gd", "linea": 385, "mensaje": "posts en _probar_tribuna_real", "regla": "ast:variable-sin-uso", "sev": "menor"}
-{"archivo": "dinastia-godot/pruebas/banco/varios_p6.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/pruebas/banco/varios_p6.gd", "linea": 195, "mensaje": "_probar_aspecto_y_audio: 103 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/pruebas/banco/varios_p6.gd", "linea": 297, "mensaje": "_probar_tutorial: profundidad 7", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/pruebas/banco/varios_p6.gd", "linea": 297, "mensaje": "_probar_tutorial: 22", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -3335,7 +3323,6 @@
 {"archivo": "dinastia-godot/ui/componentes/interior_instalacion_p3.gd", "linea": 198, "mensaje": "_estacion: 235 lineas", "regla": "ast:funcion-larga", "sev": "media"}
 {"archivo": "dinastia-godot/ui/componentes/interior_instalacion_p5.gd", "linea": 13, "mensaje": "_gimnasio: 20", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/ui/componentes/interior_instalacion_p5.gd", "linea": 13, "mensaje": "_gimnasio: 167 lineas", "regla": "ast:funcion-larga", "sev": "media"}
-{"archivo": "dinastia-godot/ui/componentes/interior_instalacion_p6.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/ui/componentes/lista_logros_largo.gd", "linea": 10, "mensaje": "pintar: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/componentes/mando_fc.gd", "linea": 77, "mensaje": "al_deslizar: profundidad 7", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/ui/componentes/mando_fc.gd", "linea": 77, "mensaje": "al_deslizar: 21", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -3394,7 +3381,6 @@
 {"archivo": "dinastia-godot/ui/componentes/pantalla_carga.gd", "linea": 52, "mensaje": "mostrar: 112 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/componentes/pantalla_menu.gd", "linea": 0, "mensaje": "Unexpected token Token('RPAR', ')') at line 175, column 79.", "regla": "ast:no-parsea", "sev": "alta"}
 {"archivo": "dinastia-godot/ui/componentes/pizarra_tactica.gd", "linea": 87, "mensaje": "_ficha_jugador: 85 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
-{"archivo": "dinastia-godot/ui/componentes/plantilla_pes.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/ui/componentes/plantilla_pes.gd", "linea": 90, "mensaje": "_montar: 103 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/componentes/portada_periodico.gd", "linea": 69, "mensaje": "_montar: 191 lineas", "regla": "ast:funcion-larga", "sev": "media"}
 {"archivo": "dinastia-godot/ui/componentes/resumen_partido.gd", "linea": 56, "mensaje": "_jugar: 11", "regla": "ast:muchos-parametros", "sev": "menor"}
@@ -3477,7 +3463,6 @@
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_cantera.gd", "linea": 15, "mensaje": "_pintar_comparar: 130 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_cantera.gd", "linea": 15, "mensaje": "_pintar_comparar: 13", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_cantera_p1.gd", "linea": 65, "mensaje": "_pintar_seleccion: 158 lineas", "regla": "ast:funcion-larga", "sev": "media"}
-{"archivo": "dinastia-godot/ui/pantallas/pantalla_cantera_p2.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_cantera_p2.gd", "linea": 220, "mensaje": "_pintar_contratos: 122 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_cantera_p2.gd", "linea": 220, "mensaje": "_pintar_contratos: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_club_estadio.gd", "linea": 9, "mensaje": "_pintar_estadio: 190 lineas", "regla": "ast:funcion-larga", "sev": "media"}
@@ -3508,7 +3493,6 @@
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_legado_p2.gd", "linea": 214, "mensaje": "_legado_carrera: 91 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_opciones.gd", "linea": 187, "mensaje": "_disp_calidad: 81 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_opciones.gd", "linea": 290, "mensaje": "_pintar_qol: 156 lineas", "regla": "ast:funcion-larga", "sev": "media"}
-{"archivo": "dinastia-godot/ui/pantallas/pantalla_opciones_p1.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_opciones_p1.gd", "linea": 98, "mensaje": "_pintar_musica: 118 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_plantel_p1.gd", "linea": 18, "mensaje": "_pintar_plantel: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/ui/pantallas/pantalla_plantel_p1.gd", "linea": 57, "mensaje": "_pintar_libres: 113 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
@@ -3576,7 +3560,6 @@
 {"archivo": "dinastia-godot/visor/ambience.gd", "linea": 44, "mensaje": "apply: 110 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/ancla_suelo.gd", "linea": 87, "mensaje": "if offset < 0.002 and objetivo == 0.0:", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/visor/anim_extra_p1.gd", "linea": 175, "mensaje": "espejar: 95 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
-{"archivo": "dinastia-godot/visor/anim_quaternius.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/anim_quaternius.gd", "linea": 74, "mensaje": "_pierna: 10", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/anim_quaternius.gd", "linea": 184, "mensaje": "if anim.track_get_type(t) == Animation.TYPE_POSITION_3D and alza != 0.0 and esq.find_bone(hueso) >= 0 \\", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/visor/anim_quaternius.gd", "linea": 204, "mensaje": "if alza != 0.0 and not subida and esq.get_bone_count() > 0:", "regla": "ast:igualdad-flotante", "sev": "media"}
@@ -3613,7 +3596,6 @@
 {"archivo": "dinastia-godot/visor/city_builder.gd", "linea": 5, "mensaje": "_distritos: profundidad 6", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/visor/city_builder.gd", "linea": 5, "mensaje": "_distritos: 20", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/city_builder.gd", "linea": 5, "mensaje": "_distritos: 82 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
-{"archivo": "dinastia-godot/visor/city_builder_p1.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/city_builder_p1.gd", "linea": 344, "mensaje": "## TODO ESTO SE APRETÓ (12-9-2026, segunda pasada): con el anillo a 235 m y las", "regla": "ast:pendiente", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/city_builder_p10.gd", "linea": 117, "mensaje": "_trafico: 21", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/city_builder_p10.gd", "linea": 117, "mensaje": "_trafico: 143 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
@@ -3633,7 +3615,6 @@
 {"archivo": "dinastia-godot/visor/city_builder_p5.gd", "linea": 89, "mensaje": "_rasgo_instalacion: 31", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/city_builder_p5.gd", "linea": 89, "mensaje": "_rasgo_instalacion: 132 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/city_builder_p8.gd", "linea": 158, "mensaje": "_finca_enredadera: 126 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
-{"archivo": "dinastia-godot/visor/city_builder_p9.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/city_builder_p9.gd", "linea": 27, "mensaje": "_fila_urbana: 9", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/city_builder_p9.gd", "linea": 147, "mensaje": "_karting: 83 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/city_builder_p9.gd", "linea": 247, "mensaje": "_arbolado: 36", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
@@ -3673,7 +3654,6 @@
 {"archivo": "dinastia-godot/visor/edificio_club.gd", "linea": 123, "mensaje": "_decorar: 10", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/edificio_club.gd", "linea": 161, "mensaje": "montar: 128 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/edificio_club.gd", "linea": 161, "mensaje": "montar: 9", "regla": "ast:muchos-parametros", "sev": "menor"}
-{"archivo": "dinastia-godot/visor/edificio_club_p1.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/edificio_club_p1.gd", "linea": 198, "mensaje": "_pared_galeria: 8", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/edificio_club_p1.gd", "linea": 245, "mensaje": "_mod: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/edificio_club_p1.gd", "linea": 272, "mensaje": "_amueblar: profundidad 6", "regla": "ast:anidamiento", "sev": "media"}
@@ -3693,9 +3673,7 @@
 {"archivo": "dinastia-godot/visor/estadio_partes_tribuna.gd", "linea": 130, "mensaje": "_rampa: 8", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/estadio_partes_tribuna_detalle.gd", "linea": 118, "mensaje": "vestir_escaleras: 16", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/estadio_partes_tribuna_detalle.gd", "linea": 250, "mensaje": "if rake != 0.0:", "regla": "ast:igualdad-flotante", "sev": "media"}
-{"archivo": "dinastia-godot/visor/explorador_ciudad_p1.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/explorador_ciudad_p2.gd", "linea": 141, "mensaje": "_hablar_con_vecino: 19", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
-{"archivo": "dinastia-godot/visor/explorador_ciudad_p3.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/explorador_ciudad_p3.gd", "linea": 4, "mensaje": "_colocar_camara: 27", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/explorador_ciudad_p3.gd", "linea": 4, "mensaje": "_colocar_camara: 113 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/explorador_ciudad_p3.gd", "linea": 297, "mensaje": "_mover_en_interior: 18", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -3704,7 +3682,6 @@
 {"archivo": "dinastia-godot/visor/explorador_ciudad_p4.gd", "linea": 115, "mensaje": "_usar: 42", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/explorador_ciudad_p4.gd", "linea": 115, "mensaje": "_usar: 98 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/explorador_ciudad_p5.gd", "linea": 4, "mensaje": "_unhandled_input: 24", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
-{"archivo": "dinastia-godot/visor/explorador_ciudad_p5_p1.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/explorador_ciudad_p5_p1.gd", "linea": 210, "mensaje": "rumbo -= _volante * delta * giro * cierre * signf(vel if vel != 0.0 else 1.0)", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/visor/explorador_ciudad_p5_p1.gd", "linea": 232, "mensaje": "_buscar_cerca: 27", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/explorador_ciudad_p5_p1.gd", "linea": 304, "mensaje": "_physics_process: 42", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
@@ -3758,7 +3735,6 @@
 {"archivo": "dinastia-godot/visor/league_locomocion.gd", "linea": 382, "mensaje": "if c.has(\"ls_cuerpo\") and (float(c[\"ls_cuerpo\"]) != 0.0 or float(c.get(\"ls_trans_hasta\", 0.0)) > 0.0):", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/visor/league_movimiento.gd", "linea": 40, "mensaje": "clips: profundidad 6", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/visor/league_movimiento.gd", "linea": 224, "mensaje": "elegir_gd: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
-{"archivo": "dinastia-godot/visor/league_nucleo.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/league_nucleo.gd", "linea": 142, "mensaje": "odds_pase_a: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/league_nucleo.gd", "linea": 158, "mensaje": "decidir: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/league_nucleo.gd", "linea": 168, "mensaje": "decidir_gd: 19", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -3818,7 +3794,6 @@
 {"archivo": "dinastia-godot/visor/motor_jugable_p11.gd", "linea": 244, "mensaje": "_paso_tanda: 83 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/motor_jugable_p11.gd", "linea": 326, "mensaje": "_ia_celebracion: 16", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/motor_jugable_p3.gd", "linea": 22, "mensaje": "_control_de_equipo: 18", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
-{"archivo": "dinastia-godot/visor/motor_jugable_p4.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/motor_jugable_p4.gd", "linea": 9, "mensaje": "_mover_balon: 22", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/motor_jugable_p4.gd", "linea": 9, "mensaje": "_mover_balon: 98 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/motor_jugable_p4.gd", "linea": 217, "mensaje": "_falta: 22", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -3863,7 +3838,6 @@
 {"archivo": "dinastia-godot/visor/motor_jugable_p9.gd", "linea": 326, "mensaje": "_control_sin_balon: 41", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/motor_jugable_p9.gd", "linea": 326, "mensaje": "_control_sin_balon: 102 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/motor_jugable_p9.gd", "linea": 326, "mensaje": "_control_sin_balon: 8", "regla": "ast:muchos-parametros", "sev": "menor"}
-{"archivo": "dinastia-godot/visor/motor_league.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/motor_league.gd", "linea": 289, "mensaje": "_calcular_sin_balon_gd: 16", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/motor_league_p1.gd", "linea": 383, "mensaje": "_mas_cercano_varios_gd: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/motor_marcaje.gd", "linea": 53, "mensaje": "reparto: 17", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -3895,7 +3869,6 @@
 {"archivo": "dinastia-godot/visor/pelo_q.gd", "linea": 138, "mensaje": "poner: 17", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/pelo_q.gd", "linea": 185, "mensaje": "if k != 1.0:", "regla": "ast:igualdad-flotante", "sev": "media"}
 {"archivo": "dinastia-godot/visor/personaje_dt.gd", "linea": 9, "mensaje": "_accesorios: 150 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
-{"archivo": "dinastia-godot/visor/personaje_dt_p1_p1.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/personaje_dt_p1_p1.gd", "linea": 316, "mensaje": "_vestir: 17", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/personaje_dt_p1_p1.gd", "linea": 316, "mensaje": "_vestir: 108 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/personaje_dt_vida.gd", "linea": 27, "mensaje": "piernas_de_persona: 26", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
@@ -3936,7 +3909,6 @@
 {"archivo": "dinastia-godot/visor/stadium_builder_p3.gd", "linea": 9, "mensaje": "_banquillos_detalle: 98 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/stadium_builder_p3.gd", "linea": 106, "mensaje": "_tunel: 119 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/stadium_builder_p3.gd", "linea": 374, "mensaje": "_piezas_baranda: 7", "regla": "ast:muchos-parametros", "sev": "menor"}
-{"archivo": "dinastia-godot/visor/stadium_builder_p4.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/stadium_builder_p4.gd", "linea": 8, "mensaje": "build_pitch: 188 lineas", "regla": "ast:funcion-larga", "sev": "media"}
 {"archivo": "dinastia-godot/visor/stadium_builder_p4.gd", "linea": 195, "mensaje": "_pintar_publico: profundidad 6", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/visor/stadium_builder_p4.gd", "linea": 195, "mensaje": "_pintar_publico: 81 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
@@ -3970,8 +3942,6 @@
 {"archivo": "dinastia-godot/visor/tejado_tipo.gd", "linea": 21, "mensaje": "montar: 8", "regla": "ast:muchos-parametros", "sev": "menor"}
 {"archivo": "dinastia-godot/visor/teleferico_flora.gd", "linea": 89, "mensaje": "montar: 18", "regla": "ast:complejidad-ciclomatica", "sev": "media"}
 {"archivo": "dinastia-godot/visor/teleferico_flora.gd", "linea": 89, "mensaje": "montar: 104 lineas", "regla": "ast:funcion-larga", "sev": "menor"}
-{"archivo": "dinastia-godot/visor/texturas_p1.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
-{"archivo": "dinastia-godot/visor/trafico_ciudad.gd", "linea": 1, "mensaje": "451 lineas (norma del proyecto: <=450)", "regla": "ast:archivo-largo", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/trafico_ciudad.gd", "linea": 5, "mensaje": "_process: profundidad 7", "regla": "ast:anidamiento", "sev": "media"}
 {"archivo": "dinastia-godot/visor/trafico_ciudad.gd", "linea": 5, "mensaje": "_process: 75", "regla": "ast:complejidad-ciclomatica", "sev": "alta"}
 {"archivo": "dinastia-godot/visor/trafico_ciudad.gd", "linea": 5, "mensaje": "_process: 207 lineas", "regla": "ast:funcion-larga", "sev": "media"}

@@ -51,7 +51,7 @@ def m_ast(f):
     out = []
     src = open(os.path.join(RAIZ, f), encoding="utf-8", errors="replace").read()
     lines = src.split("\n")
-    n = len(lines)
+    n = len(lines) - (1 if lines and lines[-1] == "" else 0)
     if n > 450:
         out.append(hallazgo(f, 1, "ast:archivo-largo", f"{n} lineas (norma del proyecto: <=450)", "alta"))
     for i, ln in enumerate(lines, 1):
