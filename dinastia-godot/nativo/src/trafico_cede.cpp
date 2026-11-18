@@ -14,9 +14,12 @@ void Paso::rejilla_paso(bool hay_cam, const Vector3 &ojo) {
 	rejilla.clear();
 	const int64_t n = vehiculos.size();
 	for (int64_t idx = 0; idx < n; idx++) {
+		const double alto = est->alto[size_t(idx)];
+		if (alto >= 0.3 || est->lod[size_t(idx)] > 0) {
+			continue;
+		}
 		Dictionary v = vehiculos[idx];
-		const double alto = double(v[k.alto]);
-		if (alto >= 0.3 || bool(v.get(k.oculto, false)) || int64_t(v.get(k.lod, 0)) > 0) {
+		if (bool(v.get(k.oculto, false))) {
 			continue;
 		}
 		Node3D *nodo = nodo_de(v, k);

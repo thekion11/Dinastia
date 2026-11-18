@@ -45,6 +45,24 @@ const std::vector<Ctl> *Paso::controles_de(int64_t ruta) {
 	return it == c.por_ruta.end() ? nullptr : &it->second;
 }
 
+void Paso::cargar_estado() {
+	static std::unordered_map<uint64_t, Est> cache;
+	est = &cache[uint64_t(tr->get_instance_id())];
+	if (est->ver != ver_estado) {
+		*est = Est();
+		est->ver = ver_estado;
+	}
+	const int64_t n = vehiculos.size();
+	for (int64_t i = int64_t(est->alto.size()); i < n; i++) {
+		const Dictionary v = vehiculos[i];
+		est->dt.push_back(double(v.get(k.dt, 0.0)));
+		est->alto.push_back(double(v[k.alto]));
+		est->lod.push_back(int8_t(int64_t(v.get(k.lod, 0))));
+		est->tdt.push_back(v.has(k.dt) ? 1 : 0);
+		est->tlod.push_back(v.has(k.lod) ? 1 : 0);
+	}
+}
+
 void Paso::paso(double delta_real, bool hay_cam, const Vector3 &ojo, const Vector3 &adelante, bool hay_jugador, const Vector3 &pj, int64_t cuadro) {
 	rejilla_paso(hay_cam, ojo);
 	const int64_t n = vehiculos.size();
@@ -53,13 +71,15 @@ void Paso::paso(double delta_real, bool hay_cam, const Vector3 &ojo, const Vecto
 		if (bool(v.get(k.oculto, false))) {
 			continue;
 		}
-		const int64_t nivel = int64_t(v.get(k.lod, 0));
+		const int64_t nivel = est->lod[size_t(idx)];
 		if (nivel > 0 && (idx + cuadro) % (nivel == 1 ? 3 : 12) != 0) {
-			v[k.dt] = gf(v, k.dt, 0.0) + delta_real;
+			est->dt[size_t(idx)] += delta_real;
+			est->tdt[size_t(idx)] = 1;
 			continue;
 		}
-		const double delta = delta_real + gf(v, k.dt, 0.0);
-		v[k.dt] = 0.0;
+		const double delta = delta_real + est->dt[size_t(idx)];
+		est->dt[size_t(idx)] = 0.0;
+		est->tdt[size_t(idx)] = 1;
 		if (hay_cam) {
 			Node3D *nv = nodo_de(v, k);
 			if (nv != nullptr) {
@@ -69,7 +89,8 @@ void Paso::paso(double delta_real, bool hay_cam, const Vector3 &ojo, const Vecto
 				const double lejos = ax > az ? ax : az;
 				const int64_t nl = lejos < 150.0 ? 0 : (lejos < 260.0 ? 1 : 2);
 				pausar_anim(v, nl == 2 || double(adelante.dot(q - ojo)) < -3.0);
-				v[k.lod] = nl;
+				est->lod[size_t(idx)] = int8_t(nl);
+				est->tlod[size_t(idx)] = 1;
 			}
 		}
 		if (gf(v, k.espera, 0.0) > 0.0) {
@@ -307,6 +328,7 @@ void DinastiaNativo::trafico_paso(Object *tr, double delta_real, bool hay_cam, c
 	p.rutas.resize(size_t(p.rutas_v.size()));
 	p.controles = tr->get("_controles");
 	p.ver_controles = int64_t(tr->get("_ver_controles"));
+	p.ver_estado = int64_t(tr->get("_ver_estado"));
 	p.en_cola = tr->get("_en_cola");
 	p.peatones_ruta = tr->get("_peatones_ruta");
 	p.semaforos = static_cast<Object *>(tr->get("semaforos"));
@@ -329,6 +351,27 @@ void DinastiaNativo::trafico_paso(Object *tr, double delta_real, bool hay_cam, c
 	p.sirenas = sirenas;
 	const int64_t cuadro = int64_t(tr->get("_cuadro")) + 1;
 	tr->set("_cuadro", cuadro);
+	p.cargar_estado();
 	p.paso(delta_real, hay_cam, ojo, adelante, hay_jugador && p.jugador != nullptr, pj, cuadro);
 }
 
+
+// `TraficoCiudad.volcar_estado_nativo`: escribe `lod` y `dt` de cada móvil en su diccionario (solo los que GDScript ya habría creado).
+void DinastiaNativo::trafico_volcar(Object *tr) const {
+	if (tr == nullptr) {
+		return;
+	}
+	Paso p(tr);
+	p.vehiculos = tr->get("_vehiculos");
+	p.ver_estado = int64_t(tr->get("_ver_estado"));
+	p.cargar_estado();
+	for (int64_t i = 0; i < p.vehiculos.size(); i++) {
+		Dictionary v = p.vehiculos[i];
+		if (p.est->tdt[size_t(i)] != 0) {
+			v[p.k.dt] = p.est->dt[size_t(i)];
+		}
+		if (p.est->tlod[size_t(i)] != 0) {
+			v[p.k.lod] = int64_t(p.est->lod[size_t(i)]);
+		}
+	}
+}

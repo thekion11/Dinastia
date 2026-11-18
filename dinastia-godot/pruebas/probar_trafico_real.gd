@@ -31,6 +31,7 @@ func _ready() -> void:
 		get_tree().quit(1)
 		return
 	var sem: Semaforos = t.semaforos
+	t.volcar_estado_nativo()   ## el tráfico corrió con la extensión mientras se abría la ciudad: sus `lod` y `dt` aún no están en los diccionarios
 	var guardado := _guardar(t)
 	var t_sem := sem.t
 	var ini := _correr(t, sem, false)
@@ -41,6 +42,17 @@ func _ready() -> void:
 	for i in PASOS:
 		if ini["h"][i] != fin["h"][i]:
 			print("FALLO el estado difiere desde el paso %d" % i)
+			if i == 0:
+				var a: Array = _p0[0]
+				var b: Array = _p0[1]
+				var cuenta := 0
+				for q in a.size():
+					if a[q] != b[q] and cuenta < 3:
+						cuenta += 1
+						for z in mini(a[q].size(), b[q].size()):
+							if a[q][z] != b[q][z]:
+								print("  móvil %d: GDScript %s | C++ %s" % [q, str(a[q][z]), str(b[q][z])])
+								break
 			fallos += 1
 			break
 	if ini["azar"] != fin["azar"]:
@@ -56,6 +68,25 @@ func _ready() -> void:
 	print("tráfico real: %d móviles, %d pasos, %d recorren más de 1 m, controles %d" % [t._vehiculos.size(), PASOS, movidos, t._controles.size()])
 	print("FIN. %d fallos" % fallos)
 	get_tree().quit(fallos)
+
+static var _p0: Array = []
+
+func _huella_filas(t: TraficoCiudad) -> Array:
+	var hs: Array = []
+	for v: Dictionary in t._vehiculos:
+		var ks := v.keys()
+		ks.sort()
+		var fila: Array = []
+		for k in ks:
+			var x: Variant = v[k]
+			if x is Object:
+				continue
+			fila.append([k, typeof(x), x])
+		var n: Node3D = v["nodo"]
+		fila.append(n.position)
+		fila.append(n.rotation)
+		hs.append(fila)
+	return hs
 
 func _huella(t: TraficoCiudad) -> int:
 	var hs: Array = []
@@ -82,6 +113,10 @@ func _correr(t: TraficoCiudad, sem: Semaforos, nativo: bool) -> Dictionary:
 		sem.t = fposmod(sem.t + DT, Semaforos.CICLO)
 		sem._t_npc = -1000000
 		t._process(DT)
+		if nativo:
+			t.volcar_estado_nativo()   ## `lod` y `dt` viven en la extensión: se escriben en los diccionarios para compararlos
+		if i == 0:
+			_p0.append(_huella_filas(t))
 		hs.append(_huella(t))
 	return {"h": hs, "azar": randf()}
 
@@ -98,6 +133,7 @@ func _guardar(t: TraficoCiudad) -> Array:
 	return g
 
 func _restaurar(t: TraficoCiudad, g: Array) -> void:
+	t._ver_estado += 1   ## la extensión relee `lod`, `dt` y `alto` de los diccionarios restaurados
 	for i in t._vehiculos.size():
 		var v: Dictionary = t._vehiculos[i]
 		for k in v.keys():

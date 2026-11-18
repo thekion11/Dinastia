@@ -128,7 +128,7 @@ static func _huella(t: TraficoCiudad) -> Array:
 		hs.append(fila)
 	return hs
 
-static func _correr(raiz: Node3D, nativo: bool) -> Dictionary:
+static func _correr(raiz: Node3D, nativo: bool, mixto := false) -> Dictionary:
 	var m := _armar(raiz, 1811)
 	var t: TraficoCiudad = m["t"]
 	var sem: Semaforos = m["sem"]
@@ -145,7 +145,12 @@ static func _correr(raiz: Node3D, nativo: bool) -> Dictionary:
 		sem._t_npc = -1000000
 		jug.position += Vector3(0.02 * sin(float(i) * 0.05), 0.0, 0.015)
 		amb.position.x += 0.05
+		if mixto and i == PASOS / 2:
+			t.usar_nativo = false   ## a mitad de la prueba vuelve a la versión GDScript: `lod` y `dt` tienen que pasar de la extensión a los diccionarios
+			nativo = false
 		t._process(DT)
+		if nativo:
+			t.volcar_estado_nativo()   ## `lod` y `dt` viven en la extensión: se escriben en los diccionarios para compararlos
 		var h := _huella(t)
 		hashes.append(hash(h))
 		if i % 30 == 0:
@@ -171,6 +176,7 @@ static func probar(nat: Object, raiz: Node3D) -> Dictionary:
 		return {"fallos": fallos, "textos": textos}
 	var a := _correr(raiz, false)
 	var b := _correr(raiz, true)
+	var c := _correr(raiz, true, true)
 	var primero := -1
 	for i in PASOS:
 		if a["hashes"][i] != b["hashes"][i]:
@@ -190,6 +196,12 @@ static func probar(nat: Object, raiz: Node3D) -> Dictionary:
 					if sa[q][z] != sb[q][z]:
 						fallos.append("instantánea %d, móvil %d: GDScript %s | C++ %s" % [j, q, str(sa[q][z]), str(sb[q][z])])
 						break
+	for i in PASOS:
+		if a["hashes"][i] != c["hashes"][i]:
+			fallos.append("al volver de la extensión a GDScript a mitad de camino el estado difiere desde el paso %d" % i)
+			break
+	if a["azar"] != c["azar"]:
+		fallos.append("al volver de la extensión a GDScript el azar global llegó distinto")
 	if a["azar"] != b["azar"]:
 		fallos.append("el azar global llegó distinto (%s frente a %s): distinto número de llamadas a randf" % [str(a["azar"]), str(b["azar"])])
 	if int(a["movidos"]) < 40:

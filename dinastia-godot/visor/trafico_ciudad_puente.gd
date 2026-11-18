@@ -9,6 +9,15 @@ static var sirenas: Array[Node3D] = []
 var usar_nativo := true
 ## Lo que la extensión necesita para hacer sola la comprobación de `libre_fn` (lo rellena el explorador; vacío = usa `libre_fn`).
 var libre_ctx := {}
+## (18-11, estado de los móviles en C++) `lod`, `dt` y `alto` de cada móvil viven en la extensión mientras corre `trafico_paso`; los diccionarios de `_vehiculos` no
+## los llevan al día. `volcar_estado_nativo()` los escribe en ellos (pruebas, o al volver a la versión GDScript); subir `_ver_estado` obliga a la extensión a releerlos.
+var _ver_estado := 0
+var _nativo_sucio := false
+
+func volcar_estado_nativo() -> void:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("trafico_volcar"):
+		nat.trafico_volcar(self)
 
 func _paso_gd(_delta_real: float) -> void:
 	pass   ## lo implementa `trafico_ciudad.gd`
@@ -16,8 +25,13 @@ func _paso_gd(_delta_real: float) -> void:
 func _process(delta_real: float) -> void:
 	var nat := Nativo.obj() if usar_nativo else null
 	if nat == null or not nat.has_method("trafico_paso"):
+		if _nativo_sucio:   ## venía de la extensión: los diccionarios aún no tienen su `lod` y `dt`
+			volcar_estado_nativo()
+			_ver_estado += 1
+			_nativo_sucio = false
 		_paso_gd(delta_real)
 		return
+	_nativo_sucio = true
 	var cam := get_viewport().get_camera_3d() if is_inside_tree() else null
 	var hay_jugador := jugador != null and is_instance_valid(jugador)
 	nat.trafico_paso(self, delta_real, cam != null, cam.global_position if cam != null else Vector3.ZERO,

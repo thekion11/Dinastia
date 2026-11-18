@@ -109,6 +109,16 @@ struct Ctl {
 	int64_t eje;
 };
 
+// ESTADO EN C++ de cada móvil (18-11): lo que solo usa el tráfico (`lod`, `dt`) y el `alto` (no cambia) viven aquí, por índice de `_vehiculos`, en vez de en el
+// diccionario (cada acceso a un `Dictionary` desde C++ cuesta ~60 ns y el bucle recorre los ~380 móviles cada fotograma). `tdt`/`tlod` dicen si el diccionario
+// tendría ya esa clave (GDScript la crea al primer uso). `trafico_volcar` escribe este estado en los diccionarios (pruebas, o al volver a la versión GDScript).
+struct Est {
+	int64_t ver = -1;
+	std::vector<double> dt, alto;
+	std::vector<int8_t> lod;
+	std::vector<uint8_t> tdt, tlod;
+};
+
 struct Paso {
 	Object *tr;
 	const K &k;
@@ -129,6 +139,9 @@ struct Paso {
 	Array sirenas;
 	const std::vector<Ctl> *controles_de(int64_t ruta); // copia en caché de `controles[ruta]` (nullptr si no tiene)
 	int64_t ver_controles = 0;
+	int64_t ver_estado = 0;
+	Est *est = nullptr;
+	void cargar_estado(); // pone `est` al día con `_vehiculos` (completo si cambió `_ver_estado`, solo los nuevos si no)
 	std::unordered_map<int64_t, std::vector<Ent>> rejilla;
 
 	explicit Paso(Object *t) : tr(t), k(kk()) {}
