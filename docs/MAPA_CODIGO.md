@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2507 archivos (.gd, .cpp, .h), 359469 líneas, 991 clases con nombre.
+Total: 2507 archivos (.gd, .cpp, .h), 359541 líneas, 991 clases con nombre.
 
 ## Extensión C++
 
