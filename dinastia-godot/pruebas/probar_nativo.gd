@@ -387,6 +387,12 @@ func _probar() -> void:
 	_comprobar((gu["fallos"] as Array).is_empty(), "guía de clips de League: C++ = GDScript (600 pasos de 22 jugadores)")
 	for t: String in gu["textos"]:
 		print(t)
+	var ci := ProbarNativoCiudad.probar(nat, raiz_gu)
+	for f: String in ci["fallos"]:
+		_comprobar(false, "tráfico de la ciudad en C++: " + f)
+	_comprobar((ci["fallos"] as Array).is_empty(), "tráfico de la ciudad: C++ = GDScript (900 pasos de un cruce lleno)")
+	for t: String in ci["textos"]:
+		print(t)
 	var sb := ProbarNativoSinBalon.probar(nat, raiz_gu)
 	for f: String in sb["fallos"]:
 		_comprobar(false, "colocación sin balón de League en C++: " + f)

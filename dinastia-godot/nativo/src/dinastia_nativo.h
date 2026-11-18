@@ -54,6 +54,8 @@ public:
 	// `MotorJugable._cuerpos` (visor/motor_jugable_p11.gd, M-391): separa de dos en dos a los jugadores que se pisan (reparto por masa) y frena la velocidad con que se acercan. `jugadores` = los
 	// diccionarios del motor ({node, vel, fuerza, aguante, ...}); mueve `node.position` y reescribe `vel`, igual que el GDScript. `minimo` = 2 × radio del cuerpo.
 	void cuerpos_motor(const Array &jugadores, double minimo) const;
+	// `TraficoCiudad._process` entero (18-11, nativo/src/trafico_nativo.cpp): el paso del tráfico y los peatones de la ciudad. `tr` = el TraficoCiudad; lo que sigue en GDScript (animación, gestos, mirada) se llama de vuelta (`_cb_*`).
+	void trafico_paso(Object *tr, double delta_real, bool hay_cam, const Vector3 &ojo, const Vector3 &adelante, bool hay_jugador, const Vector3 &pj, const Array &sirenas) const;
 	// `MotorJugable._mover_fisica_gd` (visor/motor_jugable_p5.gd, 15-11): el movimiento de los 22 (velocidad, giro, empujón, posición, rumbo, inclinación y aguante). Devuelve 4 valores por jugador
 	// [válido, velocidad, va_atrás, distancia_al_balón] para el bucle de animación, que sigue en GDScript. `coste_aguante` = [local, visitante] (el coste táctico del sprint).
 	// `LeagueGuia._paso_gd`, en dos pasadas: índices de los que deciden clip este paso, y luego guía o marcha de todos ([cortes, guiados]).

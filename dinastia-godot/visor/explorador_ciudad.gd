@@ -7,6 +7,7 @@ func _exit_tree() -> void:
 	if trafico != null and is_instance_valid(trafico):
 		trafico.jugador = null
 		trafico.libre_fn = Callable()
+		trafico.libre_ctx = {}
 	_bajo_tierra(false)
 	OptimizarGrada.niebla_a_pie(self, false)
 	_rotulos_de_paseo(false)
