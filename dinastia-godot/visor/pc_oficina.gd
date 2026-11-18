@@ -130,12 +130,14 @@ func encender() -> void:
 		_anim = PcAnimacion.new()
 		add_child(_anim)
 		await _anim.sentarse(explorador as Node3D, punto)
-		_animando = false
 	_mostrar_menu()
 	if _anim != null and is_instance_valid(_anim):
-		_anim.revelar()
+		await _anim.revelar()   ## sin soltar `_animando`: levantarse a medio retirar el negro pisaría el fundido
+	_animando = false
 
 func _mostrar_menu() -> void:
+	if Input.mouse_mode != Input.MOUSE_MODE_VISIBLE:   ## el explorador lo deja capturado (primera persona) y con él en pausa nadie lo suelta
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if mundo_3d != null and is_instance_valid(mundo_3d):
 		mundo_3d.process_mode = Node.PROCESS_MODE_DISABLED
 		if mundo_3d is CanvasItem:
