@@ -100,7 +100,7 @@ def especiales():
     for l in open(os.path.join(RAIZ, "herramientas", "especiales.sh"), encoding="utf-8"):
         m = re.match(r'\s*pasa "((?:[^"\\]|\\.)*)" "((?:[^"\\]|\\.)*)" "((?:[^"\\]|\\.)*)"', l)
         if m and "$" not in m.group(1):
-            out.append((m.group(1), m.group(2).replace('\\"', '"'), m.group(3)))
+            out.append((m.group(1), re.sub(r'\\([\\"$`])', r'\1', m.group(2)), m.group(3)))   ## como lo ve bash dentro de comillas dobles: `\$` → `$` (si no, `XDG_DATA_HOME=\$(mktemp -d)` era una carpeta literal compartida y `banco_inicio` fallaba con restos de otras pruebas)
     return out
 
 
