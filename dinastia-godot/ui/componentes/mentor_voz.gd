@@ -28,10 +28,11 @@ static func _siguiente() -> void:
 		_mostrando = false
 		return
 	var d: Dictionary = _cola.pop_front()
-	var padre: Control = d["padre"]
-	if padre == null or not is_instance_valid(padre) or not padre.is_inside_tree():
+	var pv: Variant = d["padre"]   ## Variant: si la pantalla ya se liberó, asignarla a un Control tipado daba error
+	if pv == null or not is_instance_valid(pv) or not (pv as Control).is_inside_tree():
 		_siguiente()
 		return
+	var padre: Control = pv
 	_mostrando = true
 	## No por encima de una pantalla que pide atención (21-10-2026, vídeo de
 	## gameplay: el consejo del presidente tapaba las respuestas de la rueda de

@@ -11,7 +11,7 @@ var _busqueda: PopupPanel
 
 ## La pantalla de esta partida (se crea la primera vez, justo encima del menú de siempre y debajo de los menús laterales y de todo lo que se abre después).
 static func de(p: Principal) -> EscaparatePantalla:
-	var e: Variant = p.get_meta("escaparate", null)
+	var e: Variant = (p.get_meta("escaparate") if p.has_meta("escaparate") else null)
 	if is_instance_valid(e):
 		return e as EscaparatePantalla
 	var n := EscaparatePantalla.new()
