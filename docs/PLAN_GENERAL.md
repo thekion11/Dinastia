@@ -366,8 +366,8 @@ Reglas de siempre: banco en «FIN. 0 fallos» antes de subir, capturas con la c�
 
 ## ANIMACIONES GRATUITAS (sesión 10, 11-11) — PENDIENTE (lo hecho está en `docs/04_auditorias/animaciones_gratuitas_2026-11-11.md`)
 - **Rohr** (`anims_futbol/`, 21 clips de fútbol): licencia sin texto en el zip. El dueño debe confirmarla y guardar la captura de la página de Gumroad; hasta entonces NO va en builds públicos.
-- **Faltan clips libres de**: cabezazo, entrada de pie y portero (CMU no trae paradas). Solo existen en League-Soccer (Apache 2.0) y en Rohr.
-- (18-11) Mixamo NO hace falta: 13 de los 15 huecos de la tabla de `DORSALES_ANIM_2026-11-17.md` ya están cubiertos con clips libres (`docs/04_auditorias/cobertura_mixamo_vs_libres_2026-11-18.md`). Lo que falta de verdad: portero (licencia de Rohr), cabezazo (revisar `ls_deflect`) y control de pecho (revisar `ls_trap`).
+- **Faltan clips libres de**: más variedad de cabezazo (League solo trae 2; la entrada de pie y el portero SÍ están en League: `ls_sliding`, `ls_deflect`).
+- (18-11) Mixamo NO hace falta: 14 de los 15 huecos de la tabla de `DORSALES_ANIM_2026-11-17.md` ya están cubiertos con clips libres (`docs/04_auditorias/cobertura_mixamo_vs_libres_2026-11-18.md`; el portero SÍ lo cubre League con `ls_deflect`, 28 clips). Falta solo: más variedad de cabezazos (hoy 2) y el pico de esprint de 8-9 m/s.
 - **Acciones de la UAL** (33 clips: sprint, saltos, caídas, slide, baile…) completas en `terceros/ual/ual_extra.res`; en los builds solo viajan las de `anims_ual/ual_uso.res`. Si la sesión 9 pide otra, se añade a `herramientas/ual_a_anims_extra.py` y se regenera con `anims_uso_a_res.gd`.
 - **Estilos de 100STYLE y bailes/acciones de CMU** completos en `terceros/estilo100/` (2.522) y `terceros/cmu/` (144 + espejos); en los builds solo los 143 ciclos de `anims_extra` y los 155 de `cmu_uso.res`. Más volumen = tocar los scripts de `herramientas/estilo100_*` y `cmu_*` y regenerar.
 - **Sin probar dentro del partido real**: las velocidades de los ciclos (100STYLE ~1,8 m/s, CMU 3,2-4,3 m/s, UAL sprint 7,35 m/s) pueden pedir ajustes con el motor de la sesión 9.

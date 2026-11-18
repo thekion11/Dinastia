@@ -18,17 +18,23 @@ El motor lee `datos/league_movimiento.json` (49 clips con entrada/salida/ángulo
 | Quiebro 45-90° izq./der. | Sí | League giros 45° (9) y 90° (3) con espejo | cubierto |
 | Giro parado 90° | Sí | `ls_movement__idle__090_accel`, `ls_ballcontrol__idle__090/135/180` | cubierto |
 | Control con el pie | Sí | `ls_trap` (80) | cubierto |
-| Control de pecho | Por comprobar | `ls_trap` / `ual1_Hit_Chest` no es control | dudoso: revisar los nombres de `ls_trap` |
+| Control de pecho | Sí | `ls_trap__*highballs__*_chest*` (11: parado, andando, esprintando, con salto, desde arriba) | cubierto |
 | Control orientado | Sí | `ls_ballcontrol__idle__*` y `ls_trap__*_135` | cubierto |
 | Conducir | Sí | `ls_templates__dribble*` y Rohr dribbles | cubierto |
 | Reposo | Sí | `ual1_Idle_Loop`, `ls_templates__idleD000`, 100STYLE ID (79) | cubierto |
 
-**Conclusión: 13 de los 15 huecos están cubiertos con lo libre y ya incluido; Mixamo aportaría poco.** Bajarlo exige cuenta de Adobe y no se pueden publicar los archivos sueltos. No se recomienda.
+**Conclusión: 14 de los 15 huecos están cubiertos con lo libre y ya incluido (el esprint de 8-9 m/s queda a medias); Mixamo aportaría poco.** Bajarlo exige cuenta de Adobe y no se pueden publicar los archivos sueltos. No se recomienda.
 
-## Lo que SÍ falta (y Mixamo tampoco lo resuelve bien)
-1. **Portero** (estirada, atajada, despeje): League no trae categoría de portero; CMU 33/34 solo lanzar y atrapar; Rohr trae 3 paradas (`15_` a `17_Goalkeeper_Save`) pero su licencia no está confirmada. Es el mayor hueco real.
-2. **Cabezazo**: League tiene `ls_deflect` (56) que podría servir; CMU, saltos (`16_03`, `13_10`). Por comprobar pose a pose.
-3. Pico de esprint 8-9 m/s y control de pecho: menores.
+## Revisión de `ls_trap` y `ls_deflect` (18-11, misma tarde)
+- **`ls_trap` (40 clips sin espejo)**: control de pecho (11: `highballs__*_chest`, con salto y desde arriba), de rodilla y de empeine, controles a ras con balón de entrada a 0°, 90° y 135°, y «último recurso» (`lastditch`, estirados). Cubre control de pie, de pecho y orientado.
+- **`ls_deflect` (28 sin espejo) NO es cabezazo: es PORTERO.** `holdball` = atrapada (a ras, rodilla, tronco, alta) y `deflect` = despeje/palmeo (`ground`, `midheight`, `high`, de cerca y de lejos, con estirada lateral a 90°). Cubre atajadas y estiradas. (Mi primera versión de este informe decía que League no traía portero: era un error.)
+- **Cabezazo**: `ls_interfere__idle__000_header_jump` y `ls_interfere__sprint__000_header_jump` (balón a 1,8 m, 93 y 66 cuadros), más `ls_deflect`/UAL de salto para la disputa. Son pocos (2 con espejo) pero existen; CMU `16_03`, `13_10` dan saltos.
+- `datos/league_toques.json` trae para cada clip el cuadro del toque y la posición del balón y del cuerpo: sirve para sincronizar balón y animación.
+
+## Lo que falta de verdad
+1. Variedad de **cabezazos** (solo 2 clips): cabezazo en plancha, de remate picado, de despeje defensivo.
+2. **Pico de esprint 8-9 m/s** (el mejor son 7,35 m/s).
+3. **Rohr (licencia pendiente)** ya no es necesario para el portero: League lo cubre; sirve como extra.
 
 ## Recomendación
-No bajar Mixamo. Prioridad: (a) que el dueño confirme la licencia de Rohr (desbloquea las 3 paradas); (b) revisar `ls_deflect` y `ls_trap` para cabezazo y control de pecho. No se tocó ningún código de animación: no hizo falta.
+No bajar Mixamo. Si se quiere más variedad, lo único que justifica un clip nuevo son los cabezazos; se suma con una entrada de datos en `datos/anims_extra/`. No se tocó ningún código de animación.
