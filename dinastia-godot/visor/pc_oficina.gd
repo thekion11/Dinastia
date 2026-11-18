@@ -31,6 +31,8 @@ var _principal: Control
 var _aro: MeshInstance3D
 var _t := 0.0
 var _aviso_puesto := false
+var _animando := false        ## sentándose o levantándose (18-11): `PcAnimacion`; el PC no responde a nada hasta acabar
+var _anim: PcAnimacion
 
 ## `padre3d`: dónde colgar el aro (el mismo padre que el explorador).
 func montar(padre3d: Node3D, punto_uso: Vector3, planta_: int) -> void:
@@ -62,7 +64,7 @@ static func crear_aro(padre3d: Node3D, color: Color) -> MeshInstance3D:
 
 ## ¿Estás sobre el punto de uso (y en la planta de la oficina)?
 func cerca() -> bool:
-	if explorador == null or not is_instance_valid(explorador) or abierto:
+	if explorador == null or not is_instance_valid(explorador) or abierto or _animando:
 		return false
 	var cuerpo: Node3D = explorador.get("cuerpo")
 	if cuerpo == null or int(explorador.get("_planta")) != planta or String(explorador.get("estado")) != "estadio":
@@ -92,6 +94,8 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(ev: InputEvent) -> void:
+	if _animando:
+		return
 	if abierto:
 		## Esc apaga el PC solo si el menú central no tiene una capa modal encima
 		## (el móvil, un diálogo…): esas se cierran con su propio Esc.
@@ -114,12 +118,24 @@ func _unhandled_input(ev: InputEvent) -> void:
 ## pestaña en la que estabas y no vuelve a «adoptar» la partida (las noticias del
 ## mundo se conectan una sola vez; una segunda Principal las duplicaría).
 func encender() -> void:
-	if abierto:
+	if abierto or _animando:
 		return
 	abierto = true
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
 	if explorador != null and is_instance_valid(explorador):
 		explorador.process_mode = Node.PROCESS_MODE_DISABLED
+	## (18-11) Te sientas y entras en la pantalla (primera persona); sin explorador con cámara, enciende de golpe como siempre.
+	if PcAnimacion.puede(explorador):
+		_animando = true
+		_anim = PcAnimacion.new()
+		add_child(_anim)
+		await _anim.sentarse(explorador as Node3D, punto)
+		_animando = false
+	_mostrar_menu()
+	if _anim != null and is_instance_valid(_anim):
+		_anim.revelar()
+
+func _mostrar_menu() -> void:
 	if mundo_3d != null and is_instance_valid(mundo_3d):
 		mundo_3d.process_mode = Node.PROCESS_MODE_DISABLED
 		if mundo_3d is CanvasItem:
@@ -162,7 +178,7 @@ func encender() -> void:
 ## guarda con las reglas de siempre, autoguardado al avanzar la semana) y
 ## vuelves a la oficina.
 func apagar() -> void:
-	if not abierto:
+	if not abierto or _animando:
 		return
 	abierto = false
 	Sonido.toca("clic", Sonido.Bus.EFECTOS)
@@ -176,6 +192,13 @@ func apagar() -> void:
 		mundo_3d.process_mode = Node.PROCESS_MODE_INHERIT
 		if mundo_3d is CanvasItem:
 			(mundo_3d as CanvasItem).visible = true
+	## (18-11) Te levantas del sillón: la cámara vuelve del fundido y se pone de pie antes de devolverte el control.
+	if _anim != null and is_instance_valid(_anim):
+		_animando = true
+		await _anim.levantarse()
+		_animando = false
+		_anim.queue_free()
+		_anim = null
 	if explorador != null and is_instance_valid(explorador):
 		explorador.process_mode = Node.PROCESS_MODE_INHERIT
 	apagado.emit()

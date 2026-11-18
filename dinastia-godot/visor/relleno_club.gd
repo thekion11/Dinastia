@@ -35,6 +35,8 @@ static func sala(nodo: Node3D, nombre: String, caja: Rect2, y0: float, c1: Color
 			EdificioClub._mod(nodo, "cardboardBoxClosed", Vector3(caja.position.x + 0.45, y0 + EdificioClub._alto_mod("cardboardBoxClosed"), caja.end.y - 0.45), 0.5)
 		"Utilería":
 			EdificioClub._mod(nodo, "cardboardBoxOpen", Vector3(caja.end.x - 0.45, y0, caja.end.y - 0.45), 0.4, true)
+		"Oficina del DT":
+			_oficina_dt(nodo, caja, y0, c1)
 	_cc0(nodo, nombre, caja, y0)
 
 ## (12-11, sesión 16) MUEBLES CC0 DE POLY HAVEN (`ModeloCC0`: solo MEDIA y ALTA; en el resto no se pone nada y la sala queda como estaba)
@@ -72,3 +74,24 @@ static func pasillo(nodo: Node3D, x0: float, z_fin: float, y0: float) -> void:
 	## (12-11) CC0 (MEDIA y ALTA): reloj sobre el banco y extintor al otro extremo, contra la pared del fondo.
 	ModeloCC0.poner(nodo, "wall_clock", Vector3(x0 + 5.2, y0 + 2.15, z_fin - 0.08), PI, 0.34, false, false)
 	ModeloCC0.poner(nodo, "korean_fire_extinguisher_01", Vector3(x0 - 5.6, y0, z_fin - 0.25), PI, 0.6, true, false)
+
+## (18-11, «mejorar el mundo 3D») LA OFICINA DEL DT, la sala donde te sientas al PC: sobre la mesa el ratón, una taza y una pila de libros (donde
+## apoyan las manos de `PcAnimacion`), y en la pared del sofá un reloj y tres cuadros enmarcados con los colores del club. Mismas coordenadas que
+## el escritorio de `EdificioClub` (mesa en cz − 0,6, teclado en cz − 0,45). Sin la pieza, no se pone.
+static func _oficina_dt(nodo: Node3D, caja: Rect2, y0: float, c1: Color) -> void:
+	var cx := caja.get_center().x
+	var cz := caja.get_center().y
+	var sobre := y0 + EdificioClub._alto_mod("desk")
+	EdificioClub._mod(nodo, "computerMouse", Vector3(cx + 0.42, sobre, cz - 0.45), 0.0)
+	EdificioClub._mod(nodo, "comida/mug", Vector3(cx - 0.7, sobre, cz - 0.5), 0.6)
+	EdificioClub._mod(nodo, "books", Vector3(cx - 0.62, sobre, cz - 0.78), 0.2)
+	var x_pared := caja.end.x - 0.05
+	ModeloCC0.poner(nodo, "wall_clock", Vector3(x_pared, y0 + 2.15, cz - 0.7), -PI * 0.5, 0.34, false, false)
+	var marco := PiezasObra._mat(Color(0.14, 0.1, 0.07), 0.5)
+	var papel := PiezasObra._mat(Color(0.93, 0.92, 0.88), 0.9)
+	var color := PiezasObra._mat(c1, 0.7)
+	for k in 3:
+		var z := cz + 0.1 + k * 0.62
+		PiezasObra._caja(nodo, Vector3(x_pared - 0.02, y0 + 1.7, z), Vector3(0.04, 0.5, 0.46), marco, false)
+		PiezasObra._caja(nodo, Vector3(x_pared - 0.045, y0 + 1.7, z), Vector3(0.02, 0.4, 0.36), papel, false)
+		PiezasObra._caja(nodo, Vector3(x_pared - 0.06, y0 + 1.62 + 0.05 * k, z), Vector3(0.01, 0.2 + 0.08 * k, 0.24 - 0.02 * k), color, false)
