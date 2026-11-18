@@ -27,8 +27,13 @@ func _probar() -> void:
 func _calendario(l: Liga) -> void:
 	var n := l.clubes.size()
 	var malos: Array[String] = []
-	var esperadas := (n - 1 if n % 2 == 0 else n) * 2
-	if l.jornadas() != esperadas:
+	## Tres formas de calendario: de siempre (ida y vuelta), a UNA vuelta (más de `Liga.UNA_VUELTA_DESDE` clubes: la de plata argentina, 36) y con
+	## fase final propia (`FaseFinalLiga`: zonas de Argentina, grupos de Egipto, conferencias de la MLS; ahí solo se mira que nadie juegue dos veces en una fecha).
+	var con_formato := l.formato != null
+	var una_vuelta := not con_formato and n > Liga.UNA_VUELTA_DESDE
+	var vueltas := 1 if una_vuelta else 2
+	var esperadas := (n - 1 if n % 2 == 0 else n) * vueltas
+	if not con_formato and l.jornadas() != esperadas:
 		malos.append("%d jornadas (esperadas %d)" % [l.jornadas(), esperadas])
 	var cruces := {}
 	var locales := {}
@@ -55,13 +60,20 @@ func _calendario(l: Liga) -> void:
 				seguidas[c.id] = s
 				racha_max = maxi(racha_max, int(s[1]))
 	for a: Club in l.clubes:
-		if int(locales.get(a.id, 0)) != n - 1:
+		if con_formato:
+			break
+		if not una_vuelta and int(locales.get(a.id, 0)) != n - 1:
 			malos.append("%s juega %d de local (esperados %d)" % [a.nombre, int(locales.get(a.id, 0)), n - 1])
 		for b: Club in l.clubes:
-			if a != b and int(cruces.get("%s>%s" % [a.id, b.id], 0)) != 1:
-				malos.append("%s recibe a %s %d veces" % [a.nombre, b.nombre, int(cruces.get("%s>%s" % [a.id, b.id], 0))])
+			if a == b:
+				continue
+			var veces := int(cruces.get("%s>%s" % [a.id, b.id], 0)) + (int(cruces.get("%s>%s" % [b.id, a.id], 0)) if una_vuelta else 0)
+			if veces != 1:
+				malos.append("%s y %s se cruzan %d veces en ese campo" % [a.nombre, b.nombre, veces])
 	_comprobar(malos.is_empty(), "%s (%d clubes): ida y vuelta completa, una vez en cada campo, nadie dos veces por jornada%s" % [l.nombre, n, "" if malos.is_empty() else " — " + str(malos.slice(0, 5))])
-	if n % 2 == 0:
+	if con_formato or una_vuelta:
+		pass   ## la racha en el mismo campo solo se exige al ida y vuelta de siempre (la zona argentina y la vuelta única no la alternan)
+	elif n % 2 == 0:
 		_comprobar(racha_max <= 3, "  %s: racha más larga en el mismo campo %d (≤ 3)" % [l.nombre, racha_max])
 	else:
 		## Con número impar el descanso corta la alternancia (método del círculo): hoy ninguna liga real es impar (solo el editor).
@@ -177,11 +189,13 @@ func _temporada(m: Mundo) -> void:
 	var pj_mal: Array[String] = []
 	for l: Liga in m.ligas:
 		var n := l.clubes.size()
-		var esperado := (n - 1) * 2   ## también con n impar: cada club descansa una jornada por vuelta
+		var esperado := (n - 1) * (1 if n > Liga.UNA_VUELTA_DESDE else 2)   ## también con n impar: cada club descansa una jornada por vuelta
+		if l.formato != null:
+			continue   ## fase final propia: sus partidos por club los mide la prueba de su formato
 		for f: Dictionary in l.tabla():
 			if int(f["pj"]) != esperado:
 				pj_mal.append("%s: %d PJ (esperados %d)" % [(f["club"] as Club).nombre, int(f["pj"]), esperado])
-	_comprobar(pj_mal.is_empty(), "cada club jugó (n−1)·2 partidos de liga%s" % ("" if pj_mal.is_empty() else " — " + str(pj_mal.slice(0, 4))))
+	_comprobar(pj_mal.is_empty(), "cada club jugó (n−1)·2 partidos de liga (a una vuelta si hay más de 20 clubes)%s" % ("" if pj_mal.is_empty() else " — " + str(pj_mal.slice(0, 4))))
 	m.cerrar_temporada_simulada()
 	var res: Dictionary = m.nueva_temporada()
 	var bajan: Array = res.get("bajan", [])
