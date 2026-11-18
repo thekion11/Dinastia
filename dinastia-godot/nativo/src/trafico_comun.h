@@ -103,6 +103,12 @@ inline Node3D *nodo_de(const Dictionary &v, const K &k) {
 inline Node3D *nodo_de_v(const Dictionary &v, const K &k) { return nodo_de(v, k); }
 inline double gf(const Dictionary &v, const Variant &k, double def) { return double(v.get(k, def)); }
 
+// Un control de ruta (la línea de detención de un cruce y el eje que la gobierna) copiado de `_controles[ruta]` mientras `_ver_controles` no cambie.
+struct Ctl {
+	double s;
+	int64_t eje;
+};
+
 struct Paso {
 	Object *tr;
 	const K &k;
@@ -121,6 +127,8 @@ struct Paso {
 	Dictionary rej_obst, rej_circ;
 	double c_radio = 0.3, c_limite = 1480.0, c_celda_obst = 32.0, c_celda_circ = 8.0, c_rio_x = -470.0, c_celda_av = 110.0, c_ancho_av = 24.0;
 	Array sirenas;
+	const std::vector<Ctl> *controles_de(int64_t ruta); // copia en caché de `controles[ruta]` (nullptr si no tiene)
+	int64_t ver_controles = 0;
 	std::unordered_map<int64_t, std::vector<Ent>> rejilla;
 
 	explicit Paso(Object *t) : tr(t), k(kk()) {}

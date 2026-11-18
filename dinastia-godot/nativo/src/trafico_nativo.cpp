@@ -16,6 +16,35 @@
 using namespace godot;
 using namespace godot::trafico;
 
+// Copia en caché de `_controles` por instancia de TraficoCiudad: se rehace si cambia `_ver_controles` o el número de rutas con controles.
+const std::vector<Ctl> *Paso::controles_de(int64_t ruta) {
+	struct Cache {
+		int64_t ver = -1;
+		int64_t n = -1;
+		std::unordered_map<int64_t, std::vector<Ctl>> por_ruta;
+	};
+	static std::unordered_map<uint64_t, Cache> cache;
+	Cache &c = cache[uint64_t(tr->get_instance_id())];
+	if (c.ver != ver_controles || c.n != int64_t(controles.size())) {
+		c.por_ruta.clear();
+		const Array claves = controles.keys();
+		for (int64_t i = 0; i < claves.size(); i++) {
+			const Array lista = controles[claves[i]];
+			std::vector<Ctl> v;
+			v.reserve(size_t(lista.size()));
+			for (int64_t j = 0; j < lista.size(); j++) {
+				const Dictionary d = lista[j];
+				v.push_back({ double(d["s"]), int64_t(d["eje"]) });
+			}
+			c.por_ruta[int64_t(claves[i])] = v;
+		}
+		c.ver = ver_controles;
+		c.n = int64_t(controles.size());
+	}
+	auto it = c.por_ruta.find(ruta);
+	return it == c.por_ruta.end() ? nullptr : &it->second;
+}
+
 void Paso::paso(double delta_real, bool hay_cam, const Vector3 &ojo, const Vector3 &adelante, bool hay_jugador, const Vector3 &pj, int64_t cuadro) {
 	rejilla_paso(hay_cam, ojo);
 	const int64_t n = vehiculos.size();
@@ -76,13 +105,12 @@ void Paso::paso(double delta_real, bool hay_cam, const Vector3 &ojo, const Vecto
 			const double m2 = vact * vact / (2.0 * PLAN) + 2.0;
 			mira = 12.0 > m2 ? 12.0 : m2;
 		}
-		if (semaforos != nullptr && controles.has(ruta_i)) {
-			const Array cs = controles[ruta_i];
-			for (int64_t ci = 0; ci < cs.size(); ci++) {
-				const Dictionary c = cs[ci];
-				const double d = Math::fposmod(double(c[k.s]) - s0, largo);
+		const std::vector<Ctl> *cs = semaforos != nullptr ? controles_de(ruta_i) : nullptr;
+		if (cs != nullptr) {
+			for (const Ctl &c : *cs) {
+				const double d = Math::fposmod(c.s - s0, largo);
 				const bool visto = suave ? d < mira : (d < avance + 0.5 && d < 12.0);
-				const int64_t eje = int64_t(c["eje"]);
+				const int64_t eje = c.eje;
 				// `peatonal` y `verde` no tienen efectos: solo se consultan si el control está a la vista (el resultado es el mismo).
 				bool libre = true;
 				if (visto) {
@@ -278,6 +306,7 @@ void DinastiaNativo::trafico_paso(Object *tr, double delta_real, bool hay_cam, c
 	p.rutas_v = tr->get("_rutas");
 	p.rutas.resize(size_t(p.rutas_v.size()));
 	p.controles = tr->get("_controles");
+	p.ver_controles = int64_t(tr->get("_ver_controles"));
 	p.en_cola = tr->get("_en_cola");
 	p.peatones_ruta = tr->get("_peatones_ruta");
 	p.semaforos = static_cast<Object *>(tr->get("semaforos"));
