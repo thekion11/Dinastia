@@ -56,6 +56,23 @@ static func _cc0(nodo: Node3D, nombre: String, caja: Rect2, y0: float) -> void:
 		"Sala de prensa":
 			ModeloCC0.poner(nodo, "wall_clock", Vector3(caja.position.x + 0.0, y0 + 2.1, caja.get_center().y + 0.5), PI * 0.5, 0.36, false, false)
 			ModeloCC0.poner(nodo, "korean_fire_extinguisher_01", Vector3(caja.end.x - 0.25, y0, caja.end.y - 0.25), -PI * 0.5, 0.6, true, false)
+		"Comedor del plantel":
+			## (18-11) Paredes del comedor (estaban desnudas): reloj, dos cuadros, extintor, papelera y un jarrón sobre la barra. Poly Haven, CC0.
+			var cz := caja.get_center().y
+			ModeloCC0.poner(nodo, "wall_clock", Vector3(caja.position.x + 0.0, y0 + 2.1, cz), PI * 0.5, 0.36, false, false)
+			ModeloCC0.poner(nodo, "fancy_picture_frame_01", Vector3(caja.end.x - 0.02, y0 + 1.4, cz - 0.9), -PI * 0.5, 0.6, false, false)
+			ModeloCC0.poner(nodo, "fancy_picture_frame_01", Vector3(caja.end.x - 0.02, y0 + 1.35, cz + 0.6), -PI * 0.5, 0.65, false, false)
+			ModeloCC0.poner(nodo, "korean_fire_extinguisher_01", Vector3(caja.end.x - 0.25, y0, caja.end.y - 0.25), -PI * 0.5, 0.6, true, false)
+			ModeloCC0.poner(nodo, "metal_trash_can", Vector3(caja.end.x - 0.4, y0, caja.position.y + 1.0), 0.0, 0.45, false, false)
+			ModeloCC0.poner(nodo, "brass_vase_01", Vector3(caja.end.x - 0.6, y0 + 1.0, caja.position.y + 0.4), 0.0, 0.3, false, false)
+		"Sala de vídeo":
+			## (18-11) Paredes laterales de la sala de vídeo: reloj, dos marcos, extintor y papelera. Poly Haven, CC0.
+			var cz2 := caja.get_center().y
+			ModeloCC0.poner(nodo, "wall_clock", Vector3(caja.end.x - 0.0, y0 + 2.1, cz2), -PI * 0.5, 0.36, false, false)
+			ModeloCC0.poner(nodo, "fancy_picture_frame_01", Vector3(caja.position.x + 0.02, y0 + 1.5, cz2 - 0.5), PI * 0.5, 0.55, false, false)
+			ModeloCC0.poner(nodo, "fancy_picture_frame_01", Vector3(caja.position.x + 0.02, y0 + 1.5, cz2 + 0.5), PI * 0.5, 0.6, false, false)
+			ModeloCC0.poner(nodo, "korean_fire_extinguisher_01", Vector3(caja.end.x - 0.25, y0, caja.end.y - 0.25), -PI * 0.5, 0.6, true, false)
+			ModeloCC0.poner(nodo, "metal_trash_can", Vector3(caja.position.x + 0.35, y0, caja.end.y - 0.35), 0.0, 0.45, false, false)
 		"Utilería":
 			ModeloCC0.poner(nodo, "worn_metal_rack", Vector3(cx - 0.9, y0, caja.position.y + 0.35), 0.0, 1.8, true, false)   ## entre la estantería de la izquierda y la jaula de balones
 			ModeloCC0.poner(nodo, "WetFloorSign_01", Vector3(cx - 0.6, y0, caja.end.y - 1.3), 0.5, 0.62, true, false)
@@ -97,7 +114,7 @@ static func _oficina_dt(nodo: Node3D, caja: Rect2, y0: float, c1: Color) -> void
 	for k in 3:
 		var z := cz + 0.1 + k * 0.62
 		## Con los marcos reales de Poly Haven (CC0, MEDIA/ALTA) en los dos primeros; sin ellos (o el tercero), el cuadro de cajas con los colores del club.
-		if k < 2 and ModeloCC0.poner(nodo, "hanging_picture_frame_0%d" % (k + 1), Vector3(x_pared - 0.02, y0 + 1.45, z), -PI * 0.5, 0.55, false, false) != null:
+		if k < 2 and ModeloCC0.poner(nodo, "fancy_picture_frame_01", Vector3(x_pared - 0.02, y0 + 1.45, z), -PI * 0.5, 0.55, false, false) != null:
 			continue
 		PiezasObra._caja(nodo, Vector3(x_pared - 0.02, y0 + 1.7, z), Vector3(0.04, 0.5, 0.46), marco, false)
 		PiezasObra._caja(nodo, Vector3(x_pared - 0.045, y0 + 1.7, z), Vector3(0.02, 0.4, 0.36), papel, false)
