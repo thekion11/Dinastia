@@ -24,10 +24,53 @@ func _probar() -> void:
 
 # --- 1. CALENDARIO --------------------------------------------------------------------------------------------------------------
 
+## Cuántas vueltas juega una liga (regla del 10-11 en `Liga._armar_calendario`): con más de `UNA_VUELTA_DESDE` clubes, una sola.
+func _vueltas(l: Liga) -> int:
+	return 1 if l.clubes.size() > Liga.UNA_VUELTA_DESDE else 2
+
+## Partidos de liga que juega un club: ida y vuelta, una vuelta (liga grande) o, en formato de zonas (ARG),
+## los de su zona más el interzonal (15 PJ con dos zonas de 15).
+func _pj_esperados(l: Liga, c: Club) -> int:
+	if l.formato != null and l.formato.tipo == "zonas":
+		var m: Array = l.formato._mitades(l)
+		var zona: Array = m[0] if (m[0] as Array).has(c) else m[1]
+		var otra: Array = m[1] if zona == m[0] else m[0]
+		return zona.size() - 1 + (1 if zona.find(c) < otra.size() else 0)
+	return (l.clubes.size() - 1) * _vueltas(l)
+
+func _calendario_zonas(l: Liga) -> void:
+	var malos: Array[String] = []
+	var m: Array = l.formato._mitades(l)
+	var cruces := {}
+	for jor: Array in l.calendario:
+		var en_jornada := {}
+		for par: Array in jor:
+			var a: Club = par[0]
+			var b: Club = par[1]
+			if a == b:
+				malos.append("%s contra sí mismo" % a.nombre)
+			for c: Club in [a, b]:
+				if en_jornada.has(c.id):
+					malos.append("%s juega dos veces en una jornada" % c.nombre)
+				en_jornada[c.id] = true
+			var k := "%s|%s" % [mini(int(a.id.trim_prefix("c")), int(b.id.trim_prefix("c"))), maxi(int(a.id.trim_prefix("c")), int(b.id.trim_prefix("c")))]
+			cruces[k] = int(cruces.get(k, 0)) + 1
+	for k: String in cruces:
+		if int(cruces[k]) != 1:
+			malos.append("el cruce %s se juega %d veces" % [k, int(cruces[k])])
+	var dentro := 0
+	for z: Array in m:
+		dentro += z.size() * (z.size() - 1) / 2
+	_comprobar(cruces.size() >= dentro and l.jornadas() == l.formato.f1 + l.formato.extra, "%s (zonas %d+%d): todos contra todos dentro de su zona y la fecha interzonal; %d jornadas = %d de fase regular + %d de eliminatorias" % [l.nombre, (m[0] as Array).size(), (m[1] as Array).size(), l.jornadas(), l.formato.f1, l.formato.extra])
+	_comprobar(malos.is_empty(), "  %s: ningún cruce repetido ni club doble en una jornada%s" % [l.nombre, "" if malos.is_empty() else " — " + str(malos.slice(0, 5))])
+
 func _calendario(l: Liga) -> void:
+	if l.formato != null and l.formato.tipo == "zonas":
+		_calendario_zonas(l)
+		return
 	var n := l.clubes.size()
 	var malos: Array[String] = []
-	var esperadas := (n - 1 if n % 2 == 0 else n) * 2
+	var esperadas := (n - 1 if n % 2 == 0 else n) * _vueltas(l)
 	if l.jornadas() != esperadas:
 		malos.append("%d jornadas (esperadas %d)" % [l.jornadas(), esperadas])
 	var cruces := {}
@@ -55,12 +98,17 @@ func _calendario(l: Liga) -> void:
 				seguidas[c.id] = s
 				racha_max = maxi(racha_max, int(s[1]))
 	for a: Club in l.clubes:
-		if int(locales.get(a.id, 0)) != n - 1:
-			malos.append("%s juega %d de local (esperados %d)" % [a.nombre, int(locales.get(a.id, 0)), n - 1])
+		var local_esp := n - 1 if _vueltas(l) == 2 else (n - 1) / 2
+		if absi(int(locales.get(a.id, 0)) - local_esp) > (0 if _vueltas(l) == 2 else 1):
+			malos.append("%s juega %d de local (esperados %d)" % [a.nombre, int(locales.get(a.id, 0)), local_esp])
 		for b: Club in l.clubes:
-			if a != b and int(cruces.get("%s>%s" % [a.id, b.id], 0)) != 1:
-				malos.append("%s recibe a %s %d veces" % [a.nombre, b.nombre, int(cruces.get("%s>%s" % [a.id, b.id], 0))])
-	_comprobar(malos.is_empty(), "%s (%d clubes): ida y vuelta completa, una vez en cada campo, nadie dos veces por jornada%s" % [l.nombre, n, "" if malos.is_empty() else " — " + str(malos.slice(0, 5))])
+			if a == b:
+				continue
+			var veces := int(cruces.get("%s>%s" % [a.id, b.id], 0))
+			var inversa := int(cruces.get("%s>%s" % [b.id, a.id], 0))
+			if (_vueltas(l) == 2 and veces != 1) or (_vueltas(l) == 1 and veces + inversa != 1):
+				malos.append("%s recibe a %s %d veces" % [a.nombre, b.nombre, veces])
+	_comprobar(malos.is_empty(), "%s (%d clubes): %s, nadie dos veces por jornada%s" % [l.nombre, n, "ida y vuelta completa, una vez en cada campo" if _vueltas(l) == 2 else "una sola vuelta (liga de más de 20 clubes): cada pareja una vez", "" if malos.is_empty() else " — " + str(malos.slice(0, 5))])
 	if n % 2 == 0:
 		_comprobar(racha_max <= 3, "  %s: racha más larga en el mismo campo %d (≤ 3)" % [l.nombre, racha_max])
 	else:
@@ -176,12 +224,11 @@ func _temporada(m: Mundo) -> void:
 	_comprobar(sin_jugar.is_empty(), "la temporada juega todas las jornadas de todas las ligas%s" % ("" if sin_jugar.is_empty() else ": " + str(sin_jugar)))
 	var pj_mal: Array[String] = []
 	for l: Liga in m.ligas:
-		var n := l.clubes.size()
-		var esperado := (n - 1) * 2   ## también con n impar: cada club descansa una jornada por vuelta
 		for f: Dictionary in l.tabla():
+			var esperado := _pj_esperados(l, f["club"])   ## también con n impar: cada club descansa una jornada por vuelta
 			if int(f["pj"]) != esperado:
 				pj_mal.append("%s: %d PJ (esperados %d)" % [(f["club"] as Club).nombre, int(f["pj"]), esperado])
-	_comprobar(pj_mal.is_empty(), "cada club jugó (n−1)·2 partidos de liga%s" % ("" if pj_mal.is_empty() else " — " + str(pj_mal.slice(0, 4))))
+	_comprobar(pj_mal.is_empty(), "cada club jugó los partidos de liga que tocan (ida y vuelta, una vuelta o zonas)%s" % ("" if pj_mal.is_empty() else " — " + str(pj_mal.slice(0, 4))))
 	m.cerrar_temporada_simulada()
 	var res: Dictionary = m.nueva_temporada()
 	var bajan: Array = res.get("bajan", [])
