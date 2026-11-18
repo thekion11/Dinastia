@@ -2,7 +2,7 @@
 
 Aquí está lo VIVO: las órdenes del dueño, lo pendiente de cada frente, los fallos abiertos y las ideas nuevas. El catálogo viejo (guion de las fases 0-6, ruta de lanzamiento, 356 mejoras, ideas 1-1100, propuestas) está en `docs/05_referencia/CATALOGO_IDEAS_Y_MEJORAS.md`. **Lo ya hecho se borra** (queda en el historial de git). Reglas de trabajo: `CLAUDE.md`; método: `docs/01_metodo/METODO.md`; auditoría con cifras: `docs/04_auditorias/MEGA_AUDITORIA_3.md`.
 
-**Última verificación real (16-11):** cada punto de este plan se comprobó contra el código (no se jugó ni se midieron FPS); lo hecho se quitó y las cifras y rutas se corrigieron. Banco completo con Godot 4.7.2: «FIN. 0 fallos», 5.463 comprobaciones en 191 s. Scripts de más de 450 líneas: 3.
+**Última verificación real (16-11):** cada punto de este plan se comprobó contra el código (no se jugó ni se midieron FPS); lo hecho se quitó y las cifras y rutas se corrigieron. Banco completo con Godot 4.7.2: «FIN. 0 fallos», 5.463 comprobaciones en 191 s. Scripts de más de 450 líneas: 0 (18-11).
 
 Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (banco / especiales / captura con la cámara real).
 
@@ -233,7 +233,7 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 
 ## PEDIDOS DEL DUEÑO (15-11): MUNDO CLÁSICO / MUNDO SUAVE, LIGAS Y GLOBO — rama `ccr-6155f41a-wlcd6v`
 - FALTA (Mundo suave, fase 2, inspirada en la maqueta https://claude.ai/artifact/YaN8MzHPwbQFM7cgYbhBMz): más submenús a pantalla completa. (Color por mundo y carruseles quietos: ver «Frente 1, FALTA» arriba.)
-- FALTA (países nuevos): monumentos y nombre oficial de los 85 de `PaisDatosExtra`, y traducir sus capitales (78 sin traducir).
+- FALTA (países nuevos): monumentos y nombre oficial de los 85 de `PaisDatosExtra`. (Las capitales ya están traducidas a los 8 idiomas, 18-11.)
 - META del dueño (menús): máximo 2 dibujados con la pantalla quieta y abrir en menos de 1 s (cifras en `04_auditorias/rendimiento_120fps.md`).
 - FALTA (menús, pedido del dueño 15-11, en este orden): (1) listas que solo crean las filas visibles y las reciclan al desplazarse (Plantel, Tablas, Goleadores, Cuentas, Mercado); (2) filas de una pieza: la fila de jugador como un solo control dibujado (hoy 6-8 controles por fila), para bajar colocar y dibujar; (3) `PorPartes` en más listas largas (Tablas, Mercado, Contratos). El primer dibujado de un submenú grande sigue en 150-300 ms en el contenedor (software): medir en el teléfono. Letras calentadas en reposo (`CalentarLetras`): sin ganancia demostrada aquí. Medida: `pruebas/zz_medir_submenus.tscn` (`REPOSO=1`).
 
