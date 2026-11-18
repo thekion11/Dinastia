@@ -13,14 +13,14 @@ extends RefCounted
 ## japonés y uno argentino no se vean iguales. «ing»: suelo de tablón oscuro y ladrillo visto (Reino Unido); «jap»: tablón claro de hinoki y paredes lisas (Japón y Asia oriental);
 ## «lat»: baldosa de barro cocido y yeso de arcilla (España, Italia, Portugal y toda América Latina); «ale»: parqué en espiga y pared beige (centroeuropa); «nor»: laminado claro y hormigón visto (nórdico); «ara»: granito y yeso con relieve geométrico (golfo y Oriente Próximo); «afr»: suelo de arcilla y pared de arcilla con motivos (África); el resto, goma deportiva y yeso beige. El azulejo del tercio bajo es el mismo en todos.
 const ESTILOS := {
-	"ing": {"suelo": "dark_wooden_planks", "pared": "brick_wall_005", "madera": "dark_wooden_planks", "m_suelo": 1.2, "m_pared": 1.6},
-	"jap": {"suelo": "hinoki_planks", "pared": "beige_wall_001", "madera": "hinoki_planks", "m_suelo": 1.2, "m_pared": 2.0},
-	"lat": {"suelo": "patterned_terracotta_tiling", "pared": "clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
-	"ale": {"suelo": "herringbone_parquet", "pared": "beige_wall_002", "madera": "dark_wooden_planks", "m_suelo": 1.0, "m_pared": 2.0},
-	"nor": {"suelo": "laminate_floor_02", "pared": "brushed_concrete_03", "madera": "laminate_floor_02", "m_suelo": 1.2, "m_pared": 2.0},
-	"ara": {"suelo": "granite_tile", "pared": "patterned_clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6},
-	"afr": {"suelo": "clay_floor_001", "pared": "patterned_clay_wall", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6},
-	"def": {"suelo": "rubber_tiles", "pared": "beige_wall_001", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
+	"ing": {"suelo": "dark_wooden_planks", "pared": "brick_wall_005", "madera": "dark_wooden_planks", "m_suelo": 1.2, "m_pared": 1.6, "t_pared": Vector3(1.2, 1.3, 1.5)},
+	"jap": {"suelo": "hinoki_planks", "pared": "beige_wall_001", "madera": "hinoki_planks", "m_suelo": 1.2, "m_pared": 2.0, "t_pared": Vector3(1.15, 1.15, 1.2)},
+	"lat": {"suelo": "patterned_terracotta_tiling", "pared": "clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0, "t_pared": Vector3(1.25, 1.3, 1.4)},
+	"ale": {"suelo": "herringbone_parquet", "pared": "beige_wall_002", "madera": "dark_wooden_planks", "m_suelo": 1.0, "m_pared": 2.0, "t_pared": Vector3(1.35, 1.4, 1.5)},
+	"nor": {"suelo": "laminate_floor_02", "pared": "brushed_concrete_03", "madera": "laminate_floor_02", "m_suelo": 1.2, "m_pared": 2.0, "t_pared": Vector3(1.2, 1.2, 1.25)},
+	"ara": {"suelo": "granite_tile", "pared": "patterned_clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6, "t_pared": Vector3(1.25, 1.3, 1.4)},
+	"afr": {"suelo": "clay_floor_001", "pared": "patterned_clay_wall", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6, "t_pared": Vector3(1.25, 1.3, 1.4)},
+	"def": {"suelo": "rubber_tiles", "pared": "beige_wall_001", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0, "t_pared": Vector3(1.15, 1.15, 1.2)},
 }
 const GRUPOS := {
 	"ing": ["ENG", "SCO", "WAL", "NIR", "IRL"],
@@ -161,7 +161,10 @@ static func sala(tipo: String, pais := "") -> StandardMaterial3D:
 		"resina":
 			m = _pbr(String(e["suelo"]), float(e["m_suelo"]))
 		"pared":
-			m = _pbr(String(e["pared"]), float(e["m_pared"]))
+			## (18-11) Las paredes pardas y de ladrillo bañaban de rojo la sala (y la piel de quien estuviera en ella): se aclaran y se les resta
+			## rojo con un tinte por estilo (la textura sigue siendo la del país). SIN_TINTE_PARED=1 da el «antes».
+			var tp: Vector3 = e.get("t_pared", Vector3.ONE) if OS.get_environment("SIN_TINTE_PARED") == "" else Vector3.ONE
+			m = _pbr(String(e["pared"]), float(e["m_pared"]), Color(tp.x, tp.y, tp.z))
 	_cache_sala[clave] = m
 	return m
 
