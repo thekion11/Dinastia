@@ -39,7 +39,7 @@ const ISO := {
 	## (12-11) los 29 países nuevos con liga (flag-icons 7.2.1, MIT)
 	"CYP": "cy", "IRQ": "iq", "BLR": "by", "EST": "ee", "KAZ": "kz", "LTU": "lt", "LVA": "lv", "NIR": "gb-nir", "BHR": "bh", "ESA": "sv", "GUA": "gt", "IND": "in", "MAS": "my", "OMA": "om", "THA": "th", "VIE": "vn", "AND": "ad", "FRO": "fo", "GIB": "gi", "HKG": "hk", "KGZ": "kg", "KUW": "kw", "LBN": "lb", "LBY": "ly", "NCA": "ni", "SGP": "sg", "SMR": "sm", "TAN": "tz", "TJK": "tj",
 	## (18-11) alias que usan los datos reales (códigos no FIFA o el nombre del país): misma bandera que el código normal.
-	"ARGENTINA": "ar", "URUGUAY": "uy", "PARAGUAY": "py", "COLOMBIA": "co", "CHILE": "cl", "SPA": "es", "SER": "rs", "ROM": "ro", "CTA": "cf", "DRC": "cd",
+	"ARGENTINA": "ar", "URUGUAY": "uy", "PARAGUAY": "py", "COLOMBIA": "co", "CHILE": "cl", "SPA": "es", "SER": "rs", "ROM": "ro", "CTA": "cf", "DRC": "cd", "DOM": "do", "MTN": "mr", "PUR": "pr",
 }
 
 static func textura(codigo: String) -> ImageTexture:
