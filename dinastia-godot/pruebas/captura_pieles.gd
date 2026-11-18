@@ -17,7 +17,10 @@ func _ready() -> void:
 	raiz.add_child(we)
 	var n := PersonajeDT.PIELES.size()
 	var paso := 0.9
+	var cerca := OS.get_environment("CERCA") == "1"   ## CERCA=1: retratos de las caras (cámara a la altura de la cabeza)
 	for i in n:
+		if cerca and i % 3 != 1:
+			continue
 		var rng := RandomNumberGenerator.new()
 		rng.seed = 7 + i
 		var asp := PersonajeDT.aleatorio(rng)
@@ -27,13 +30,18 @@ func _ready() -> void:
 		var nodo := Node3D.new()
 		raiz.add_child(nodo)
 		nodo.position = Vector3((i - (n - 1) / 2.0) * paso, 0, 0)
+		if cerca:
+			nodo.position.x = (i / 3 - 1.5) * 0.45 * 1.0
 		nodo.rotation.y = PI
 		PersonajeDT.crear(nodo, asp, Color(0.8, 0.1, 0.1), Color.WHITE)
 	var cam := Camera3D.new()
 	raiz.add_child(cam)
 	cam.position = Vector3(0, 1.62, -5.2)
 	cam.fov = 38
-	cam.look_at(Vector3(0, 1.58, 0), Vector3.UP)
+	if cerca:
+		cam.fov = 9.0
+		cam.position = Vector3(0, 1.66, -5.2)
+	cam.look_at(Vector3(0, 1.66 if cerca else 1.58, 0), Vector3.UP)
 	cam.rotation.y = PI if false else cam.rotation.y
 	cam.current = true
 	await get_tree().create_timer(2.0).timeout
