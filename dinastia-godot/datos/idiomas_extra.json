@@ -9172,7 +9172,9 @@
   "Lomé": "Lomé",
   "Kampala": "Kampala",
   "Harare": "Harare",
-  "Wellington": "Wellington"
+  "Wellington": "Wellington",
+  "Las plantillas estaban igualadas (media del once %d frente a %d).": "The squads were evenly matched (starting XI average %d against %d).",
+  "Los dos llegaban con una forma parecida (media %d frente a %d).": "Both sides arrived in similar form (average %d against %d)."
  },
  "pt": {
   "Historia": "História",
@@ -18347,7 +18349,9 @@
   "Lomé": "Lomé",
   "Kampala": "Kampala",
   "Harare": "Harare",
-  "Wellington": "Wellington"
+  "Wellington": "Wellington",
+  "Las plantillas estaban igualadas (media del once %d frente a %d).": "Os plantéis estavam equilibrados (média do onze %d contra %d).",
+  "Los dos llegaban con una forma parecida (media %d frente a %d).": "As duas equipas chegavam com uma forma parecida (média %d contra %d)."
  },
  "patrones": [
   [
@@ -33794,7 +33798,9 @@
   "Lomé": "Lomé",
   "Kampala": "Kampala",
   "Harare": "Harare",
-  "Wellington": "Wellington"
+  "Wellington": "Wellington",
+  "Las plantillas estaban igualadas (media del once %d frente a %d).": "Les effectifs étaient équilibrés (moyenne du onze %d contre %d).",
+  "Los dos llegaban con una forma parecida (media %d frente a %d).": "Les deux équipes arrivaient dans une forme similaire (moyenne %d contre %d)."
  },
  "it": {
   "Historia": "Storia",
@@ -42969,7 +42975,9 @@
   "Lomé": "Lomé",
   "Kampala": "Kampala",
   "Harare": "Harare",
-  "Wellington": "Wellington"
+  "Wellington": "Wellington",
+  "Las plantillas estaban igualadas (media del once %d frente a %d).": "Le rose erano equilibrate (media dell'undici %d contro %d).",
+  "Los dos llegaban con una forma parecida (media %d frente a %d).": "Le due squadre arrivavano con una forma simile (media %d contro %d)."
  },
  "de": {
   "Historia": "Geschichte",
@@ -52144,7 +52152,9 @@
   "Lomé": "Lomé",
   "Kampala": "Kampala",
   "Harare": "Harare",
-  "Wellington": "Wellington"
+  "Wellington": "Wellington",
+  "Las plantillas estaban igualadas (media del once %d frente a %d).": "Die Kader waren ausgeglichen (Durchschnitt der Startelf %d gegen %d).",
+  "Los dos llegaban con una forma parecida (media %d frente a %d).": "Beide Teams kamen in ähnlicher Form (Durchschnitt %d gegen %d)."
  },
  "ca": {
   "Historia": "Història",
@@ -61319,7 +61329,9 @@
   "Lomé": "Lomé",
   "Kampala": "Kampala",
   "Harare": "Harare",
-  "Wellington": "Wellington"
+  "Wellington": "Wellington",
+  "Las plantillas estaban igualadas (media del once %d frente a %d).": "Les plantilles estaven igualades (mitjana de l'onze %d davant de %d).",
+  "Los dos llegaban con una forma parecida (media %d frente a %d).": "Els dos equips arribaven amb una forma semblant (mitjana %d davant de %d)."
  },
  "pl": {
   "Club": "Klub",
@@ -70494,7 +70506,9 @@
   "Lomé": "Lomé",
   "Kampala": "Kampala",
   "Harare": "Harare",
-  "Wellington": "Wellington"
+  "Wellington": "Wellington",
+  "Las plantillas estaban igualadas (media del once %d frente a %d).": "Kadry były wyrównane (średnia jedenastki %d wobec %d).",
+  "Los dos llegaban con una forma parecida (media %d frente a %d).": "Obie drużyny miały podobną formę (średnia %d wobec %d)."
  },
  "tr": {
   "Club": "Kulüp",
@@ -79669,6 +79683,8 @@
   "Lomé": "Lomé",
   "Kampala": "Kampala",
   "Harare": "Harare",
-  "Wellington": "Wellington"
+  "Wellington": "Wellington",
+  "Las plantillas estaban igualadas (media del once %d frente a %d).": "Kadrolar dengeliydi (ilk on birin ortalaması %d, rakip %d).",
+  "Los dos llegaban con una forma parecida (media %d frente a %d).": "İki takım da benzer bir formla geldi (ortalama %d, rakip %d)."
  }
 }

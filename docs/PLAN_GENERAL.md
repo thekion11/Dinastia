@@ -122,7 +122,6 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 - FALLOS ABIERTOS EN `main` (los encontró `bancos_especiales.py`; el banco general no los ve; se corrieron 16 de los 36 bancos: faltan los otros 20). Cada uno tiene dueño y arreglo en curso en su rama; al unirse, se BORRA de aquí:
   - LEGAL: un nombre real («Francisco González») en `datos/tablas.json` público (`datos_mundo`: «builds públicos sin datos reales») → Parecido real. NO publicar ningún build desde `main` hasta que esté en 0.
   - `r2: cant_estabilidad`: demasiados juveniles de élite (85+ con menos de 22 años: 3, tope 2) → Parecido real.
-  - `r2: s5_causas`: «siempre tres causas (59 de 60)»; primer commit malo 5b698801 → Parecido real.
   - `partido_porteros`: un once con el portero peor de titular (plantillas nuevas de ARG) y «el portero sale mejor encajando 4 que con la portería a cero» → AAA / Parecido real.
   - `calendario_competiciones`: Liga Argentina y Liga de Plata (jornadas y partidos por club distintos de los esperados; racha de 4 en el mismo campo) → AAA lo investiga (¿la prueba espera el formato viejo o el calendario por zonas está mal?).
   - `determinismo`: el mundo no se repetía con la misma semilla (`Jugador.semana_global` estático) → ARREGLADO en `avance-por-dias` (5adfec1a), pendiente de unir; y «fecha de voto» con el reloj del sistema (`motor_eleccion.gd:143`).
