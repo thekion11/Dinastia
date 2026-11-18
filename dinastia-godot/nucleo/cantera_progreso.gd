@@ -17,7 +17,7 @@ extends RefCounted
 static func freno(j: Jugador) -> float:
 	if j.ovr >= j.pot or j.edad >= 24:
 		return 0.0
-	var por_edad := 0.8 if j.edad <= 20 else (0.5 if j.edad <= 22 else 0.3)
+	var por_edad := 0.8 if j.edad <= 20 else (0.4 if j.edad <= 22 else 0.25)
 	return por_edad * clampf(float(j.pot - j.ovr) / 8.0, 0.35, 1.0)
 
 ## Prob. semanal de +1 para quien NO es tuyo (unas 30 semanas de liga al año). Tu plantel va por su plan.
