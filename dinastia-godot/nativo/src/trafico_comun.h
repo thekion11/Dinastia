@@ -93,7 +93,7 @@ struct Ent {
 	float y;
 };
 
-inline int64_t clave(int64_t x, int64_t z) { return (x << 32) ^ (z & 0xffffffffLL); }
+inline int64_t clave(int64_t x, int64_t z) { return int64_t((uint64_t(x) << 32) ^ (uint64_t(z) & 0xffffffffULL)); } // sin desplazar un negativo (UBSan)
 
 inline Node3D *nodo_de(const Dictionary &v, const K &k) {
 	const Variant n = v[k.nodo];
