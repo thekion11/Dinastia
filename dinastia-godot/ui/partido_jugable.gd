@@ -399,7 +399,7 @@ func _alternar_pausa() -> void:
 	DificultadPartido.boton_en_pausa(self, _pausa)   ## 🤖 dificultad de la CPU (4-11)
 
 func _process(delta: float) -> void:
-	delta = minf(delta, 0.25); load("res://visor/stadium_builder.gd").ocultar_techo_ante(get_viewport().get_camera_3d())
+	delta = minf(delta, 0.25); _sb_script = _sb_script if _sb_script != null else load("res://visor/stadium_builder.gd"); _sb_script.ocultar_techo_ante(get_viewport().get_camera_3d())
 	## La grada sigue el balón con la cabeza (M-049), como en el modo DT.
 	if Engine.get_process_frames() % 4 == 0 and motor != null and motor.balon != null:
 		OlaGrada.mirar(_raiz, motor.balon.global_position)
@@ -414,12 +414,16 @@ func _process(delta: float) -> void:
 	if _interp == null or not _interp.activa:   ## con la interpolación, la cámara se mueve en el paso de física (`InterpolacionPartido`)
 		_actualizar_camara(delta)
 	var yo = motor.usuario
-	_marcador.text = "%s  %d - %d  %s" % [_abrev(local.nombre), motor.goles[0], motor.goles[1], _abrev(visita.nombre)]
-	_reloj.text = "%d'" % motor.minuto()
-	_mtv.fijar(motor.goles[0], motor.goles[1], _reloj.text)
 	var s = motor.stats
-	_mis_stats.text = Idiomas.t("⚽ %d   🅰 %d   🎯 %d/%d   ✔ %d/%d pases   ⭐ %.1f") % [s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], motor.nota_usuario()]
-	_fila_num.poner(s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], motor.nota_usuario())
+	var nota: float = motor.nota_usuario()
+	var clave := [motor.goles[0], motor.goles[1], motor.minuto(), s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], nota]
+	if clave != _hud_clave:   ## (18-11) mismas cifras = mismo texto: no se reformatea ni se traduce 60 veces por segundo
+		_hud_clave = clave
+		_marcador.text = "%s  %d - %d  %s" % [_abrev(local.nombre), motor.goles[0], motor.goles[1], _abrev(visita.nombre)]
+		_reloj.text = "%d'" % motor.minuto()
+		_mtv.fijar(motor.goles[0], motor.goles[1], _reloj.text)
+		_mis_stats.text = Idiomas.t("⚽ %d   🅰 %d   🎯 %d/%d   ✔ %d/%d pases   ⭐ %.1f") % [s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], nota]
+		_fila_num.poner(s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], nota)
 	if not yo.is_empty():
 		_aguante.value = motor.forma_fisica(yo)
 		if motor.estado == "juego":

@@ -89,12 +89,13 @@ static func _mats_de(raiz: Node) -> Array:
 	var clave := raiz.get_instance_id()
 	var ahora := Time.get_ticks_msec()
 	var c: Array = _cache.get(clave, [])
-	if c.is_empty() or ahora - int(c[0]) > 5000:
+	## (18-11) la búsqueda recorre TODO el árbol del estadio (un tirón cada 5 s): ahora solo si cambió el número de hijos de la raíz o pasaron 30 s.
+	if c.is_empty() or ahora - int(c[0]) > 30000 or int(c[2]) != raiz.get_child_count():
 		## Los estadios ya liberados no se guardan (M-386): cada entrada retenía los materiales de una grada entera.
 		for k: int in _cache.keys():
 			if not is_instance_id_valid(k):
 				_cache.erase(k)
-		c = [ahora, materiales(raiz)]
+		c = [ahora, materiales(raiz), raiz.get_child_count()]
 		_cache[clave] = c
 	return c[1]
 

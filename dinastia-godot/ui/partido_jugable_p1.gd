@@ -86,6 +86,8 @@ var _kit_arb: Dictionary = {}
 
 var _banner_pendiente := ""
 var _t_rotulos := 0.0
+var _sb_script: GDScript = null   ## (18-11) el script del estadio, cargado una vez (antes `load()` en cada fotograma)
+var _hud_clave: Array = []   ## (18-11) datos con los que se pintó el HUD por última vez: sin cambios no se reformatea
 
 # ---------------------------------------------------------------- pausa y final
 
