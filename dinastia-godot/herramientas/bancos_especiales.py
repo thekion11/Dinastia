@@ -100,7 +100,8 @@ def especiales():
     for l in open(os.path.join(RAIZ, "herramientas", "especiales.sh"), encoding="utf-8"):
         m = re.match(r'\s*pasa "((?:[^"\\]|\\.)*)" "((?:[^"\\]|\\.)*)" "((?:[^"\\]|\\.)*)"', l)
         if m and "$" not in m.group(1):
-            out.append((m.group(1), m.group(2).replace('\\"', '"'), m.group(3)))
+            ## En especiales.sh el comando va entre comillas dobles: \" y \$ son escapes de bash que hay que deshacer aquí.
+            out.append((m.group(1), m.group(2).replace('\\"', '"').replace('\\$', '$'), m.group(3)))
     return out
 
 
