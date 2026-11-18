@@ -37,7 +37,7 @@ func _pintar_inicio(c: Club) -> void:
 		for tab: String in p._favoritos:
 			var b := Button.new()
 			b.text = tab
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.clip_text = true
 			b.custom_minimum_size = Vector2(70, 0)
 			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -90,7 +90,7 @@ func _pintar_inicio(c: Club) -> void:
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			b.clip_text = true
 			b.custom_minimum_size = Vector2(120, 0)
-			b.add_theme_font_size_override("font_size", 12)
+			b.add_theme_font_size_override("font_size", Tema.letra(12))
 			b.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_TEXTO if not bool(m.get("leida", false)) else Principal.COL_SUAVE))
 			b.pressed.connect(func() -> void: p._ir_a_pestana("Correo"))
 			p._lista_inicio.add_child(b)
@@ -229,7 +229,7 @@ func _pintar_leyenda_viva(r: Roles) -> void:
 		fila.add_child(l)
 		var b := Button.new()
 		b.text = Idiomas.t("Nombrar")
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.custom_minimum_size = Vector2(90, 0)
 		b.pressed.connect(func() -> void:
 			var msg := r.nombrar_leyenda_viva(quien)
@@ -282,7 +282,7 @@ func _pintar_patrimonio_dt(r: Roles) -> void:
 		fila.add_child(n)
 		var b := Button.new()
 		b.text = Idiomas.t("Puesto") if tengo else p._dinero(int(f[2]))
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = tengo or r.patrimonio < int(f[2])
 		b.custom_minimum_size = Vector2(96, 0)
 		b.pressed.connect(func() -> void: _comprar_dt(clave))
@@ -346,7 +346,7 @@ func _pintar_filiales(r: Roles) -> void:
 		fila.add_child(l2)
 		var b2 := Button.new()
 		b2.text = p._dinero(precio)
-		b2.add_theme_font_size_override("font_size", 11)
+		b2.add_theme_font_size_override("font_size", Tema.letra(11))
 		b2.disabled = r.patrimonio < precio
 		b2.custom_minimum_size = Vector2(110, 0)
 		b2.pressed.connect(func() -> void:
@@ -415,7 +415,7 @@ func _pintar_homenajes(r: Roles) -> void:
 			fila.add_child(nom)
 			var b := Button.new()
 			b.text = Idiomas.t("Homenajear  %s") % p._dinero(coste)
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.disabled = c.saldo < coste
 			var quien := String(l2.get("nombre", ""))
 			b.pressed.connect(func() -> void: _homenajear(quien))

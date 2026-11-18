@@ -145,10 +145,13 @@ func _escala_de_texto() -> void:
 		_comprobar(Tema.letra(tam) == int(round(tam * 1.6)), "escala 1,6: la letra de %d px sube a %d" % [tam, Tema.letra(tam)])
 		Tema.escala_texto = 2.5
 		_comprobar(Tema.letra(tam) == int(round(tam * 1.6)), "una escala fuera de rango (2,5) se acota a 1,6")
+	Tema.escala_texto = 1.0   ## el bucle de arriba la deja en 2,5 (acotada a 1,6): el escaparate se pintaba con esa letra
 	var cortados: Dictionary = {}
 	var medias: Dictionary = {}
 	for esc: float in [0.85, 1.0, 1.15, 1.3, 1.6]:
 		_p._escala_texto = esc
+		_p._refrescar()   ## como al cambiar la escala en Ajustes: se repintan las pantallas ya construidas (el escaparate y las pestañas), que si no conservan la letra anterior
+		await _frames(4)
 		var n_cort := 0
 		var n_sale := 0
 		var ejemplos: Array[String] = []

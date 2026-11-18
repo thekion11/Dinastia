@@ -358,7 +358,7 @@ func _caja_centro(titulo: String, botones: Array) -> Control:
 		var bt := Button.new()
 		bt.text = Idiomas.t(String(b[0]))
 		bt.custom_minimum_size = Vector2(360, 44)
-		bt.add_theme_font_size_override("font_size", 17)
+		bt.add_theme_font_size_override("font_size", Tema.letra(17))
 		bt.pressed.connect(b[1])
 		v.add_child(bt)
 	return capa

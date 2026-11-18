@@ -27,7 +27,7 @@ static func pintar(p: Principal) -> void:
 		var b := Button.new()
 		b.name = "Vida_" + modo
 		b.text = Idiomas.t(String(ETIQUETAS[modo]))
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.toggle_mode = true
 		b.button_pressed = n.modo == modo
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL

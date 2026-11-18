@@ -241,7 +241,7 @@ func _pintar_campo() -> void:
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.clip_text = true
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.add_theme_font_size_override("font_size", 12)
+		b.add_theme_font_size_override("font_size", Tema.letra(12))
 		b.add_theme_color_override("font_color",
 			COL_ORO if encendido else (COL_ACENTO if j == _saliendo else COL_TEXTO))
 		b.disabled = partido.terminado_ya
@@ -252,7 +252,7 @@ func _pintar_campo() -> void:
 		var ba := Button.new()
 		ba.text = "📣"
 		ba.tooltip_text = Idiomas.t("Arengarle: le sube la moral y rinde un 12% más durante 18 minutos.")
-		ba.add_theme_font_size_override("font_size", 11)
+		ba.add_theme_font_size_override("font_size", Tema.letra(11))
 		ba.custom_minimum_size = Vector2(34, 0)
 		ba.disabled = partido.terminado_ya or _arengas <= 0 or encendido
 		ba.pressed.connect(func() -> void: _arengar(j))
@@ -412,7 +412,7 @@ func _pintar_camarin() -> void:
 			var fila: Array = Vestuario.TONOS[clave]
 			var b := Button.new()
 			b.text = "%s %s" % [String(fila[1]), String(fila[0])]
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.tooltip_text = Idiomas.t("Efecto en la moral: de %d a %d. Ansiedad: %+d.") % [int(fila[2]), int(fila[3]), int(fila[4])]
 			var k := clave
 			b.pressed.connect(func() -> void: _dar_charla(k))
@@ -422,7 +422,7 @@ func _pintar_camarin() -> void:
 		## señores" y ver que el equipo lo acusa vale más que elegir de una lista.
 		_texto_charla = LineEdit.new()
 		_texto_charla.placeholder_text = Idiomas.t("…o díselo con tus palabras y pulsa Enter")
-		_texto_charla.add_theme_font_size_override("font_size", 12)
+		_texto_charla.add_theme_font_size_override("font_size", Tema.letra(12))
 		_texto_charla.text_submitted.connect(_charla_libre)
 		_banquillo.add_child(_texto_charla)
 	var salir := Button.new()

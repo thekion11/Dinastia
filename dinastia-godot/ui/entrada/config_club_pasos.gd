@@ -159,7 +159,7 @@ func _paso_escudo() -> void:
 		var b := _opcion(sim if sim != "" else Escudo.iniciales(c), c.esc_simbolo == sim, func() -> void:
 			c.esc_simbolo = sim
 			_cambio(), Vector2(46, 40), Idiomas.t("Las iniciales del club") if sim == "" else "")
-		b.add_theme_font_size_override("font_size", 18)
+		b.add_theme_font_size_override("font_size", Tema.letra(18))
 		fs.add_child(b)
 		bs.append(b)
 	_grupo(bs)
@@ -169,7 +169,7 @@ func _paso_escudo() -> void:
 	var be: Array = [_opcion(Idiomas.t("Ninguno\n(procedural)"), c.esc_especial == "", func() -> void:
 		c.esc_especial = ""
 		_cambio(), Vector2(70, 70))]
-	be[0].add_theme_font_size_override("font_size", 10)
+	be[0].add_theme_font_size_override("font_size", Tema.letra(10))
 	fe.add_child(be[0])
 	for id: String in esp:
 		var idl := id

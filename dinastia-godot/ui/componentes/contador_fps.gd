@@ -40,7 +40,7 @@ func _ready() -> void:
 	_l = Label.new()
 	_l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_l.position = Vector2(8, 4)
-	_l.add_theme_font_size_override("font_size", 12)
+	_l.add_theme_font_size_override("font_size", Tema.letra(12))
 	_l.add_theme_color_override("font_color", Color(0.6, 1.0, 0.6))
 	_l.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
 	_l.add_theme_constant_override("outline_size", 4)

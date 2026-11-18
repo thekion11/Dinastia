@@ -59,7 +59,7 @@ static func pintar(tel: Telefono) -> void:
 	var atras := Button.new()
 	atras.flat = true
 	atras.text = "‹"
-	atras.add_theme_font_size_override("font_size", 22)
+	atras.add_theme_font_size_override("font_size", Tema.letra(22))
 	atras.pressed.connect(func() -> void: tel.abrir_app("inicio"))
 	fila.add_child(atras)
 	var marca := PanelContainer.new()

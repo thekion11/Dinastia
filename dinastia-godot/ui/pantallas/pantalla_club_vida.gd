@@ -86,7 +86,7 @@ func _pintar_hinchada(c: Club, con_fair_play := true) -> void:   ## (12-11) en s
 			var ba := Button.new()
 			ba.text = Idiomas.t("Elegido") if elegido else Idiomas.t("Elegir")
 			ba.disabled = elegido
-			ba.add_theme_font_size_override("font_size", 11)
+			ba.add_theme_font_size_override("font_size", Tema.letra(11))
 			ba.pressed.connect(func() -> void:
 				h.fijar_abono(clave2)
 				p._refrescar())
@@ -110,7 +110,7 @@ func _pintar_hinchada(c: Club, con_fair_play := true) -> void:   ## (12-11) en s
 	fila_pd.add_child(lpd)
 	var bpd := Button.new()
 	bpd.text = "SÍ" if h.precio_dinamico else "NO"
-	bpd.add_theme_font_size_override("font_size", 11)
+	bpd.add_theme_font_size_override("font_size", Tema.letra(11))
 	bpd.pressed.connect(func() -> void:
 		var msg := h.alternar_precio_dinamico()
 		p._escribir("[color=#c9a227]%s[/color]" % msg)

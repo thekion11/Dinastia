@@ -134,7 +134,7 @@ func _empezar_ceremonia() -> void:
 	_btn_saltar = Button.new()
 	_btn_saltar.text = Idiomas.t("Saltar  ▸")
 	_btn_saltar.focus_mode = Control.FOCUS_NONE
-	_btn_saltar.add_theme_font_size_override("font_size", 18)
+	_btn_saltar.add_theme_font_size_override("font_size", Tema.letra(18))
 	_btn_saltar.add_theme_color_override("font_color", NEGRO)
 	_btn_saltar.add_theme_color_override("font_hover_color", NEGRO)
 	_btn_saltar.add_theme_color_override("font_pressed_color", NEGRO)

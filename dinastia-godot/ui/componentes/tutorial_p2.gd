@@ -15,7 +15,7 @@ func _pintar_panel_aspecto(ctx: Dictionary) -> void:
 		var l := Label.new()
 		l.text = String(fila[1])
 		l.custom_minimum_size = Vector2(70, 0)
-		l.add_theme_font_size_override("font_size", 12)
+		l.add_theme_font_size_override("font_size", Tema.letra(12))
 		l.add_theme_color_override("font_color", COL_SUAVE)
 		h.add_child(l)
 		var actual := String(_aspecto.get(clave, opciones[0]))
@@ -24,7 +24,7 @@ func _pintar_panel_aspecto(ctx: Dictionary) -> void:
 			b.text = op
 			b.toggle_mode = true
 			b.button_pressed = op == actual
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.pressed.connect(func() -> void: cambiar_aspecto(clave, op, ctx))
 			h.add_child(b)
 
@@ -282,12 +282,12 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	cab.add_child(quien)
 	_lbl_nombre = Label.new()
 	_lbl_nombre.text = String(_guion["mentor"]["nombre"])
-	_lbl_nombre.add_theme_font_size_override("font_size", 17)
+	_lbl_nombre.add_theme_font_size_override("font_size", Tema.letra(17))
 	_lbl_nombre.add_theme_color_override("font_color", COL_ORO)
 	quien.add_child(_lbl_nombre)
 	_lbl_cargo = Label.new()
 	_lbl_cargo.text = Idiomas.t(String(_guion["mentor"]["cargo"]))
-	_lbl_cargo.add_theme_font_size_override("font_size", 12)
+	_lbl_cargo.add_theme_font_size_override("font_size", Tema.letra(12))
 	_lbl_cargo.add_theme_color_override("font_color", COL_SUAVE)
 	quien.add_child(_lbl_cargo)
 	if load("res://visor/persona_realista.gd").disponible():
@@ -299,7 +299,7 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 		editar.pressed.connect(func() -> void: _panel_aspecto.visible = not _panel_aspecto.visible)
 		cab.add_child(editar)
 	_lbl_progreso = Label.new()
-	_lbl_progreso.add_theme_font_size_override("font_size", 12)
+	_lbl_progreso.add_theme_font_size_override("font_size", Tema.letra(12))
 	_lbl_progreso.add_theme_color_override("font_color", COL_SUAVE)
 	_lbl_progreso.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	cab.add_child(_lbl_progreso)
@@ -335,7 +335,7 @@ func _construir_tarjeta(ctx: Dictionary) -> void:
 	_caja_mision.add_theme_stylebox_override("panel", ms)
 	v.add_child(_caja_mision)
 	_lbl_mision = Label.new()
-	_lbl_mision.add_theme_font_size_override("font_size", 13)
+	_lbl_mision.add_theme_font_size_override("font_size", Tema.letra(13))
 	_lbl_mision.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_caja_mision.add_child(_lbl_mision)
 	var botones := HBoxContainer.new()

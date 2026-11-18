@@ -30,7 +30,7 @@ func _club_staff(c: Club) -> void:
 		var coste_bono := p.mundo.staff.coste_bono(c.rep)
 		var bb := Button.new()
 		bb.text = Idiomas.t("Repartir  %s") % p._dinero(coste_bono)
-		bb.add_theme_font_size_override("font_size", 11)
+		bb.add_theme_font_size_override("font_size", Tema.letra(11))
 		bb.disabled = ya or coste_bono > c.saldo
 		bb.pressed.connect(func() -> void: p._ui_club_vida._bono_staff(c))
 		fila_bono.add_child(bb)
@@ -53,7 +53,7 @@ func _club_staff(c: Club) -> void:
 			var coste := p.mundo.staff.coste_subir(puesto, c.rep)
 			var b := Button.new()
 			b.text = Idiomas.t("Contratar  %s") % p._dinero(coste)
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.disabled = coste > c.saldo or (p.mundo.roles != null and not p.mundo.roles.puede_contratar_staff())
 			b.pressed.connect(func() -> void: _contratar(puesto))
 			fila.add_child(b)

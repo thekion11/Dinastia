@@ -46,13 +46,13 @@ static func _ficha(rotulo: String, cifra: String, color: Color, suave: Color) ->
 	caja.add_child(v)
 	var r := Label.new()
 	r.text = rotulo.to_upper()
-	r.add_theme_font_size_override("font_size", 11)
+	r.add_theme_font_size_override("font_size", Tema.letra(11))
 	r.add_theme_color_override("font_color", suave)
 	r.clip_text = true
 	v.add_child(r)
 	var c := Label.new()
 	c.text = cifra
-	c.add_theme_font_size_override("font_size", 26)
+	c.add_theme_font_size_override("font_size", Tema.letra(26))
 	c.add_theme_color_override("font_color", color)
 	c.clip_text = true
 	v.add_child(c)

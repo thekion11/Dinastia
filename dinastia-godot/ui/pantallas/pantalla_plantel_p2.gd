@@ -242,7 +242,7 @@ func _pintar_goleadores(pais: String) -> void:
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.add_theme_font_size_override("font_size", 12)
+		b.add_theme_font_size_override("font_size", Tema.letra(12))
 		if suyo != null and suyo == mio:   ## los tuyos, con el acento del club
 			b.add_theme_color_override("font_color", p._con_contraste(p.COL_ACENTO))
 		b.pressed.connect(func() -> void: p._ver_ficha(j))

@@ -213,7 +213,7 @@ func _montar_cabecera() -> VBoxContainer:
 	p._buscador.tooltip_text = Idiomas.t("Buscar un jugador o un club por nombre (Enter para abrir su ficha)")
 	## 150 px y no más: cada píxel de esta fila sale del ancho de las columnas de abajo.
 	p._buscador.custom_minimum_size = Vector2(150, 32)
-	p._buscador.add_theme_font_size_override("font_size", 12)
+	p._buscador.add_theme_font_size_override("font_size", Tema.letra(12))
 	p._buscador.text_submitted.connect(p._buscar_global)
 	p._botones.add_child(p._buscador)
 

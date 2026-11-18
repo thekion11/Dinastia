@@ -76,7 +76,7 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 	if int(ctx["anio"]) > 0:
 		lugar.text += Idiomas.t("  ·  TEMPORADA %d") % int(ctx["anio"])
 	lugar.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lugar.add_theme_font_size_override("font_size", 13)
+	lugar.add_theme_font_size_override("font_size", Tema.letra(13))
 	lugar.add_theme_color_override("font_color", COL_ORO)
 	v.add_child(lugar)
 	_lbl_prologo = RichTextLabel.new()
@@ -103,10 +103,10 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 	_btn_prologo = Button.new()
 	_btn_prologo.text = Idiomas.t("Entrar ▸")
 	_btn_prologo.custom_minimum_size = Vector2(150, 40)
-	_btn_prologo.add_theme_font_size_override("font_size", 16)
+	_btn_prologo.add_theme_font_size_override("font_size", Tema.letra(16))
 	_btn_prologo.pressed.connect(pulsar_prologo)
 	CuadroDialogo.respuesta(_btn_prologo)
-	_btn_prologo.add_theme_font_size_override("font_size", 16)
+	_btn_prologo.add_theme_font_size_override("font_size", Tema.letra(16))
 	fila.add_child(_btn_prologo)
 	## Un clic en cualquier parte acaba de escribir la escena.
 	_prologo.gui_input.connect(func(ev: InputEvent) -> void:
