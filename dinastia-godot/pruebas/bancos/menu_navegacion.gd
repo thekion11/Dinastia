@@ -152,7 +152,7 @@ func _riel() -> void:
 		_comprobar(_volver() != null, "riel «%s»: se ve el botón «Volver»" % id)
 		var tarjetas := 0
 		for c in pm.find_children("*", "Button", true, false):
-			if (c as Button).is_visible_in_tree() and (c as Button).custom_minimum_size.x >= 250.0:
+			if (c as Button).is_visible_in_tree() and ((c as Button).custom_minimum_size.x >= 250.0 or (c as Button).custom_minimum_size.y >= 100.0):   ## la rejilla de siempre (ancho) o el mosaico (`PortadaMosaico`, ancho 0 y alto ≥ 118)
 				tarjetas += 1
 		var esperadas := (mn["subs"] as Array).size()
 		_comprobar(tarjetas == esperadas, "riel «%s»: la portada enseña sus %d tarjetas (%d)" % [id, esperadas, tarjetas])
