@@ -415,7 +415,7 @@ func _process(delta: float) -> void:
 		_actualizar_camara(delta)
 	var yo = motor.usuario
 	var s = motor.stats
-	var nota := motor.nota_usuario()
+	var nota: float = motor.nota_usuario()
 	var clave := [motor.goles[0], motor.goles[1], motor.minuto(), s["goles"], s["asist"], s["a_puerta"], s["tiros"], s["pases_ok"], s["pases"], nota]
 	if clave != _hud_clave:   ## (18-11) mismas cifras = mismo texto: no se reformatea ni se traduce 60 veces por segundo
 		_hud_clave = clave
