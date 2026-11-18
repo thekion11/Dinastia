@@ -11,6 +11,7 @@ static func sala(nodo: Node3D, nombre: String, caja: Rect2, y0: float, c1: Color
 	if Calidad.elegida <= Calidad.MINIMO:
 		return
 	var cx := caja.get_center().x
+	_zocalo(nodo, caja, y0, c1)
 	match nombre:
 		"Enfermería":
 			## Lavabo y botiquín junto a la puerta (contra el tabique del pasillo, de cara a la sala) y una caja de material.
@@ -95,3 +96,19 @@ static func _oficina_dt(nodo: Node3D, caja: Rect2, y0: float, c1: Color) -> void
 		PiezasObra._caja(nodo, Vector3(x_pared - 0.02, y0 + 1.7, z), Vector3(0.04, 0.5, 0.46), marco, false)
 		PiezasObra._caja(nodo, Vector3(x_pared - 0.045, y0 + 1.7, z), Vector3(0.02, 0.4, 0.36), papel, false)
 		PiezasObra._caja(nodo, Vector3(x_pared - 0.06, y0 + 1.62 + 0.05 * k, z), Vector3(0.01, 0.2 + 0.08 * k, 0.24 - 0.02 * k), color, false)
+
+## (18-11, «mejorar el mundo 3D», prólogo) PAREDES MENOS LISAS: un zócalo oscuro al pie y una cenefa con el color del club a 1,05 m en las tres paredes
+## cerradas de cada sala (la cuarta es el tabique del pasillo, con sus puertas). Cuatro cajas finas por sala, sin colisión ni sombra.
+static func _zocalo(nodo: Node3D, caja: Rect2, y0: float, c1: Color) -> void:
+	var zoc := PiezasObra._mat(Color(0.16, 0.13, 0.1), 0.6)
+	var cen := PiezasObra._mat(c1, 0.6)
+	var x0 := caja.position.x - 0.1 + 0.015
+	var x1 := caja.end.x + 0.1 - 0.015
+	var zf := caja.position.y - 0.16 + 0.015
+	var largo := caja.size.y + 0.1
+	var zc := caja.position.y - 0.16 + largo / 2.0
+	for x in [x0, x1]:
+		PiezasObra._caja(nodo, Vector3(x, y0 + 0.07, zc), Vector3(0.03, 0.14, largo), zoc, false)
+		PiezasObra._caja(nodo, Vector3(x, y0 + 1.05, zc), Vector3(0.03, 0.07, largo), cen, false)
+	PiezasObra._caja(nodo, Vector3((x0 + x1) / 2.0, y0 + 0.07, zf), Vector3(x1 - x0, 0.14, 0.03), zoc, false)
+	PiezasObra._caja(nodo, Vector3((x0 + x1) / 2.0, y0 + 1.05, zf), Vector3(x1 - x0, 0.07, 0.03), cen, false)
