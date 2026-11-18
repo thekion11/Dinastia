@@ -18,6 +18,7 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 # PARTE 1. IDEAS NUEVAS DEL DUEÑO (sin construir)
 
 ## IDEA DEL DUEÑO (16-11): «UNA VIDA ENTERA» — jugador → DT → accionista → jeque (SOLO DISEÑO; va después de terminar el modo jugador)
+- ACLARACIÓN DEL DUEÑO (18-11): el jugador puede pasar por los modos (jugador → DT → accionista → jeque) pero NO se le obliga a retirarse; sirve para construir una historia. Foundry/Azure: se decide cuando todo esté casi al 100 % (afinar físicas y realismo finales).
 - Idea: al terminar La Ruta (modo jugador) el personaje no se acaba: pasa a ser DT (técnico) y de DT a ACCIONISTA, y después a JEQUE (dueño con fortuna). Así una sola partida puede ser una vida completa, con el mismo personaje, su historia y su dinero.
 - Cuándo: NO se empieza hasta cerrar el modo jugador (`CarreraRuta`, `nucleo/carrera_*.gd`, `ui/carrera/`). Hasta entonces solo se prepara el diseño.
 - Ya existe y se ENLAZA (no se duplica): los roles de partida (`Roles`, cadena `roles_p1.gd`..`roles_p4.gd`, con el rol `DT` y el rol `DUENO`; «jeque» es una tarjeta/modo del menú, no un rol), la `Junta` con presidente y accionistas (`junta.gd`, `resolver(op, c, directiva, prensa)`), `cartera_dt.gd`, `VitrinaTrofeos`/la historia del club y los premios de `CarreraPremios`.
@@ -42,11 +43,8 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - SIGUIENTE (propuesto por el dueño): revisar si falta algo en la maqueta y después ver cómo quedaría EN EL JUEGO en una RAMA APARTE (sin tocar la rama de trabajo actual ni `main`).
 - Falta para llevarlo al juego (NO está en el código todavía): el modelo de eventos por día (C++ con gemelo GDScript), la pantalla de avance, las pantallas de evento con animación, las notificaciones por zona, la previa y el resultado del partido, y el sonido. Primer paso propuesto: el modelo de eventos del día con prueba y la pantalla «Avanzar» sin arte; luego un evento a la vez.
 
-## IDEA DEL DUEÑO (16-11): MAPA DEL CÓDIGO GENERADO (para que Claude trabaje más rápido)
-- Archivo `docs/MAPA_CODIGO.md`, generado por un script en `herramientas/` (sin edición a mano, como los diálogos y la narración), por zonas: partido C4 y motor de respaldo, La Ruta, club e instalaciones, menú, datos, pruebas y banco, extensión C++.
-- Por zona: carpeta y punto de entrada; clases con su archivo y cadena de herencia (`extends`, también las capas de `partir_gd.py`); quién las usa (`preload`/`load`); tamaño en líneas (para ver lo cercano al tope de 450).
-- Que quepa en pocas pantallas. El banco lo regenera y FALLA si el archivo subido difiere del generado (para que no envejezca). Una línea en `CLAUDE.md` que lo señale.
-- Versión visual para el dueño: después, con el mismo script (no ahora).
+## MAPA DEL CÓDIGO (hecho 18-11)
+- `docs/MAPA_CODIGO.md` lo genera `dinastia-godot/herramientas/mapa_codigo.py`; `banco.sh` falla si está desactualizado (correr el script y subir el archivo). Falta, para después: la versión visual para el dueño.
 
 # PARTE 2. LO QUE ESPERA UNA DECISIÓN O RESPUESTA DEL DUEÑO
 
