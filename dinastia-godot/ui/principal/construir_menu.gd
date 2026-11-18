@@ -110,6 +110,8 @@ func _montar_cabecera() -> VBoxContainer:
 	cab.add_child(p._escudo_cabecera)
 	p._cabecera = p._texto(26, p.COL_TEXTO)
 	p._cabecera.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	p._cabecera.clip_text = true   ## con la letra grande el nombre del club se recorta (…) en vez de empujar el dinero fuera de la pantalla
+	p._cabecera.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	cab.add_child(p._cabecera)
 	## LA DERECHA DE LA CABECERA, como en el HTML del usuario: la plata en
 	## grande y la fecha debajo, separadas del nombre del club por todo el

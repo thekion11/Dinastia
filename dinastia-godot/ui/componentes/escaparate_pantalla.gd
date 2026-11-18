@@ -17,6 +17,7 @@ static func de(p: Principal) -> EscaparatePantalla:
 	var n := EscaparatePantalla.new()
 	n.name = "Escaparate"
 	n.set_anchors_preset(Control.PRESET_FULL_RECT)
+	n.offset_left = MenuLateral.reserva().x   ## el escaparate empieza a la derecha del riel (que ya no se esconde): el toque llega a sus 14 botones
 	n.mouse_filter = Control.MOUSE_FILTER_STOP
 	p.add_child(n)
 	var raiz: Node = p._despacho.get_parent() if p._despacho != null else null
