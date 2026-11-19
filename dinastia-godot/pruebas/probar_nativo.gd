@@ -437,6 +437,12 @@ func _probar() -> void:
 	_comprobar((pe["fallos"] as Array).is_empty(), "pelo por capas: C++ = GDScript (normales, densidades, máximo y suavizado, byte a byte)")
 	for t: String in pe["textos"]:
 		print(t)
+	var es2 := ProbarNativoEspejo.probar(nat)   ## (19-11) el espejo de las animaciones
+	for f: String in es2["fallos"]:
+		_comprobar(false, "espejo en C++: " + f)
+	_comprobar((es2["fallos"] as Array).is_empty(), "espejo de animaciones: C++ = GDScript (pistas, tiempos y valores, byte a byte)")
+	for t: String in es2["textos"]:
+		print(t)
 	var so := ProbarNativoSonido.probar(nat)   ## (19-11) la síntesis del sonido
 	for f: String in so["fallos"]:
 		_comprobar(false, "síntesis del sonido en C++: " + f)

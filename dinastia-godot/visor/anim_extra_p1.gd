@@ -176,6 +176,17 @@ static func espejar(original: Animation, esq: Skeleton3D, prefijo: String, clave
 	var cc := "%s|%s" % [clave, prefijo]
 	if clave != "" and _cache_espejo.has(cc):
 		return _cache_espejo[cc]
+	var nat := Nativo.obj()
+	var out: Animation
+	if nat != null and nat.has_method("anim_espejar"):   ## (19-11) en C++ (`nativo/src/espejo_nativo.cpp`); gemela: `_espejar_gd`
+		out = nat.anim_espejar(original, esq, prefijo)
+	else:
+		out = _espejar_gd(original, esq, prefijo)
+	if out != null and clave != "":
+		_cache_espejo[cc] = out
+	return out
+
+static func _espejar_gd(original: Animation, esq: Skeleton3D, prefijo: String) -> Animation:
 	var n := esq.get_bone_count()
 	## Qué pistas hay por hueso.
 	var pista_rot := {}
@@ -261,9 +272,8 @@ static func espejar(original: Animation, esq: Skeleton3D, prefijo: String, clave
 			var local2: Transform3D = (ge[i] as Transform3D) if pa3 < 0 else (ge[pa3] as Transform3D).affine_inverse() * (ge[i] as Transform3D)
 			out.position_track_insert_key(pos_out[i], tiempo, local2.origin)
 		tiempo += paso
-	if clave != "":
-		_cache_espejo[cc] = out
 	return out
+
 
 ## Añade todo a la librería de un jugador. `lib` ya trae los clips de siempre.
 static func extender(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) -> void:

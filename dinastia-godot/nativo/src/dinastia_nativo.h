@@ -6,6 +6,7 @@
 #pragma once
 
 #include <godot_cpp/classes/animation.hpp>
+#include <godot_cpp/classes/skeleton3d.hpp>
 #include <godot_cpp/classes/fast_noise_lite.hpp>
 #include <godot_cpp/classes/image.hpp>
 #include <godot_cpp/classes/random_number_generator.hpp>
@@ -154,6 +155,8 @@ public:
 	PackedFloat32Array pelo_densidades(const PackedByteArray &bytes, int64_t n) const;
 	double pelo_max(const PackedFloat32Array &a) const;
 	PackedFloat32Array pelo_suavizar(const PackedFloat32Array &a, const PackedInt32Array &tri, double f) const;
+	// (19-11) `AnimExtra.espejar` (visor/anim_extra_p1.gd, nativo/src/espejo_nativo.cpp): el clip reflejado izquierda <-> derecha (null si no tiene rotaciones); gemela `_espejar_gd`.
+	Ref<Animation> anim_espejar(const Ref<Animation> &original, Skeleton3D *esq, const String &prefijo) const;
 	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
 	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
 	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;
