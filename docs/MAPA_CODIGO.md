@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2507 archivos (.gd, .cpp, .h), 359541 líneas, 991 clases con nombre.
+Total: 2508 archivos (.gd, .cpp, .h), 359651 líneas, 991 clases con nombre.
 
 ## Extensión C++
 
@@ -52,7 +52,7 @@ Cerca del tope (≥ 400 líneas): `carrera_ruta.gd` (450), `carrera_jugador_p1.g
 
 ## Partido: motor C4 y respaldo
 
-89 archivos, 15758 líneas. Carpetas: `nucleo`, `visor`.
+89 archivos, 15787 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -63,8 +63,8 @@ Cerca del tope (≥ 400 líneas): `carrera_ruta.gd` (450), `carrera_jugador_p1.g
 | `MotorTraza` | `visor/motor_traza.gd` | 260 | 14 |  |
 | `LeagueNucleo` | `visor/league_nucleo.gd` | 450 | 13 |  |
 | `MotorFabrica` | `visor/motor_fabrica.gd` | 21 | 13 |  |
+| `LeagueAcciones` | `visor/league_acciones.gd` | 320 | 10 |  |
 | `MejorasC4` | `visor/mejoras_c4.gd` | 33 | 10 | mejoras_c4_p1.gd |
-| `LeagueAcciones` | `visor/league_acciones.gd` | 291 | 9 |  |
 | `LeagueLocomocion` | `visor/league_locomocion.gd` | 394 | 9 |  |
 | `MotorReglas` | `visor/motor_reglas.gd` | 127 | 9 |  |
 | `LeagueAnim` | `visor/league_anim.gd` | 127 | 8 |  |
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1226 archivos, 117705 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1226 archivos, 117727 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
@@ -172,7 +172,7 @@ Cerca del tope (≥ 400 líneas): `idiomas.gd` (450), `jugador.gd` (450), `merca
 |---|---|---|---|---|
 | `Calidad` | `visor/calidad.gd` | 22 | 267 | calidad_p1.gd |
 | `CityBuilder` | `visor/city_builder.gd` | 185 | 165 | city_builder_p11.gd ← city_builder_p10.gd ← city_builder_p9.gd ← city_builder_p8.gd ← city_builder_p7.gd ← city_builder_p6.gd ← city_builder_p5.gd ← city_builder_p4.gd ← city_builder_p3.gd ← city_builder_p2.gd ← city_builder_p1.gd |
-| `FutbolistaQ` | `visor/futbolista_q.gd` | 203 | 127 |  |
+| `FutbolistaQ` | `visor/futbolista_q.gd` | 203 | 128 |  |
 | `ExploradorCiudad` | `visor/explorador_ciudad.gd` | 12 | 115 | explorador_ciudad_p5.gd ← explorador_ciudad_p5_p1.gd ← explorador_ciudad_p4.gd ← explorador_ciudad_p3.gd ← explorador_ciudad_p2.gd ← explorador_ciudad_p1.gd |
 | `PlayerSpawner` | `visor/player_spawner.gd` | 230 | 95 | player_spawner_p1.gd |
 | `Puente3D` | `visor/puente3d.gd` | 223 | 91 |  |
