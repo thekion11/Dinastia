@@ -149,6 +149,11 @@ public:
 	// (19-11) `visor/cara_malla.gd` (nativo/src/cara_nativo.cpp): el borde de la cara pegado al cráneo; gemelas `_pegar_borde_gd` y `_rejilla_piel_gd`.
 	Array cara_pegar_borde(const PackedVector3Array &pos, const PackedFloat32Array &alfa, const Dictionary &rejilla) const;
 	Dictionary cara_rejilla_piel(const PackedVector3Array &cv, const PackedVector3Array &nn) const;
+	// (19-11) `visor/pelo_capas_p1.gd` y `pelo_capas.gd` (nativo/src/pelo_nativo.cpp): cuentas del pelo por capas; gemelas `_normales_gd`, `_densidades_gd`, `_max_gd`, `_suavizar_gd`.
+	PackedVector3Array pelo_normales(const PackedVector3Array &pos, const PackedInt32Array &tri) const;
+	PackedFloat32Array pelo_densidades(const PackedByteArray &bytes, int64_t n) const;
+	double pelo_max(const PackedFloat32Array &a) const;
+	PackedFloat32Array pelo_suavizar(const PackedFloat32Array &a, const PackedInt32Array &tri, double f) const;
 	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
 	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
 	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;

@@ -57,6 +57,10 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("ropa_subconjunto", "src", "orden", "ancho"), &DinastiaNativo::ropa_subconjunto);
 	ClassDB::bind_method(D_METHOD("cara_pegar_borde", "pos", "alfa", "rejilla"), &DinastiaNativo::cara_pegar_borde);
 	ClassDB::bind_method(D_METHOD("cara_rejilla_piel", "cv", "nn"), &DinastiaNativo::cara_rejilla_piel);
+	ClassDB::bind_method(D_METHOD("pelo_normales", "pos", "tri"), &DinastiaNativo::pelo_normales);
+	ClassDB::bind_method(D_METHOD("pelo_densidades", "bytes", "n"), &DinastiaNativo::pelo_densidades);
+	ClassDB::bind_method(D_METHOD("pelo_max", "a"), &DinastiaNativo::pelo_max);
+	ClassDB::bind_method(D_METHOD("pelo_suavizar", "a", "tri", "f"), &DinastiaNativo::pelo_suavizar);
 	ClassDB::bind_method(D_METHOD("son_tono", "hz", "dur", "vol", "forma", "frecuencia"), &DinastiaNativo::son_tono);
 	ClassDB::bind_method(D_METHOD("son_ruido", "dur", "f0", "f1", "vol", "frecuencia"), &DinastiaNativo::son_ruido);
 	ClassDB::bind_method(D_METHOD("son_mezclar", "destino", "fuente", "retraso", "frecuencia"), &DinastiaNativo::son_mezclar);

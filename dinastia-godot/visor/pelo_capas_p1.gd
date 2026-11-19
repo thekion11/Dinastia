@@ -48,6 +48,12 @@ static var _cache_cuero := {}
 static var _cache_pestanas := {}
 
 static func _normales(pos: PackedVector3Array, tri: PackedInt32Array) -> PackedVector3Array:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("pelo_normales"):   ## (19-11) en C++ (`nativo/src/pelo_nativo.cpp`); gemela: `_normales_gd`
+		return nat.pelo_normales(pos, tri)
+	return _normales_gd(pos, tri)
+
+static func _normales_gd(pos: PackedVector3Array, tri: PackedInt32Array) -> PackedVector3Array:
 	var n := PackedVector3Array()
 	n.resize(pos.size())
 	for t in range(0, tri.size() - 2, 3):
@@ -67,6 +73,14 @@ static func _densidades(b64: String, n: int) -> PackedFloat32Array:
 	if b64 == "":
 		return out
 	var bytes := Marshalls.base64_to_raw(b64)
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("pelo_densidades"):   ## (19-11) en C++; gemela: `_densidades_gd`
+		return nat.pelo_densidades(bytes, n)
+	return _densidades_gd(bytes, n)
+
+static func _densidades_gd(bytes: PackedByteArray, n: int) -> PackedFloat32Array:
+	var out := PackedFloat32Array()
+	out.resize(n)
 	for i in mini(bytes.size(), n):
 		out[i] = bytes[i] / 255.0
 	return out
@@ -87,6 +101,12 @@ static func _anillo(base: Array, tri: PackedInt32Array, anillos: int) -> Diction
 	return dentro
 
 static func _max(a: PackedFloat32Array) -> float:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("pelo_max"):   ## (19-11) en C++; gemela: `_max_gd`
+		return nat.pelo_max(a)
+	return _max_gd(a)
+
+static func _max_gd(a: PackedFloat32Array) -> float:
 	var m := 0.0
 	for v in a:
 		m = maxf(m, v)
