@@ -142,6 +142,7 @@ pasa "avance por días: resultado, momentos y popup del partido jugado" "godot -
 pasa "textura del césped" "godot --headless --path . res://pruebas/probar_cesped_textura.tscn" "FIN. 0 fallos"
 pasa "texturas en disco (asfalto)" "godot --headless --path . res://pruebas/probar_imagen_en_disco.tscn" "FIN. 0 fallos"
 pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"
+pasa "tráfico de la ciudad real: C++ = GDScript" "godot --headless --path . res://pruebas/probar_trafico_real.tscn" "FIN. 0 fallos"
 pasa "caché horneada del build" "godot --headless --path . --script res://pruebas/probar_cache_horneada.gd" "FIN. 0 fallos"
 pasa "estadio y ciudad por partes" "godot --headless --path . res://pruebas/probar_por_partes.tscn" "FIN. 0 fallos"
 # 5a. CAPTURAS DE UI (10-11, sesión 6): las pantallas nuevas no las compila el banco (solo ve el núcleo y los scripts que toca); un error de argumentos en la ficha

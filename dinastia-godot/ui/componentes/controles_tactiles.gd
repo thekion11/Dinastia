@@ -65,16 +65,21 @@ func _ready() -> void:
 	z_index = 20
 
 ## La línea de ayuda de teclado y mando del partido sobra con los botones en pantalla y tapa su borde: se mantiene oculta aunque el partido la vuelva a mostrar.
+var _cuadro_dist := 0
+
 func _process(d: float) -> void:
 	var ayuda: Variant = get_parent().get("_ayuda") if get_parent() != null else null
 	if ayuda is CanvasItem and (ayuda as CanvasItem).visible:
 		(ayuda as CanvasItem).visible = false
-	var e := _calcular_elev()
-	var bs := _calcular_bajo_stats()
-	if absf(e - _elev) > 0.5 or absf(bs - _bajo_stats) > 0.5:
-		_elev = e
-		_bajo_stats = bs
-		queue_redraw()
+	## (18-11) La distribución (elevación del arco y borde de las estadísticas) solo cambia al girar o redimensionar: se mira 1 de cada 5 cuadros (antes cada uno, con consultas a pantalla y rectángulos globales).
+	if _cuadro_dist % 5 == 0:
+		var e := _calcular_elev()
+		var bs := _calcular_bajo_stats()
+		if absf(e - _elev) > 0.5 or absf(bs - _bajo_stats) > 0.5:
+			_elev = e
+			_bajo_stats = bs
+			queue_redraw()
+	_cuadro_dist += 1
 	var cb := _tengo_balon() if contexto_forzado == "" else contexto_forzado != "sin"
 	var eb := _estoy_en_banda() if contexto_forzado == "" else contexto_forzado == "banda"
 	var sp := _suelto_en_mi_mitad() if contexto_forzado == "" else false
