@@ -67,7 +67,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 					_penal_en_juego(p, cruce)
 					return true
 				## Alcance: hasta ~3 m con un gran portero, menos con menos tiempo; a la escuadra cuesta más.
-				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, MotorParada.SUELO, 1.0)
+				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, MotorParada.suelo, 1.0)
 				if cruce.y > 1.8:
 					alcance *= 0.85
 				alcance = _alcance_extra(p, b, alcance, tz)   ## gancho (16-11, H1): aquí no cambia nada
@@ -88,7 +88,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 						return true
 					else:
 						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
-				if TIRO_PULIDO: prob *= (1.0 - parada_lejos * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
+				if tiro_pulido: prob *= (1.0 - parada_lejos * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
 				prob = _prob_parada_extra(p, b, prob)   ## gancho (sesión 15): aquí no cambia nada
 				prob = _prob_parada_cuerpo(lat, alcance, prob)   ## gancho (17-11): aquí no cambia nada
 				if lat < alcance and _rng.randf() < prob:
@@ -259,7 +259,7 @@ func _tirar(p: Dictionary, apunte_arg: Vector2, fuerza: float) -> void:
 	## los palos (en el fútbol, 1 de cada 3; en FC, la mitad) y el portero los
 	## paraba casi todos (84 %). Ahora hasta el bueno se desvía algo más desde
 	## lejos y con un rival encima; el penal, quieto y a 11 m, no.
-	if TIRO_PULIDO and clase != "penal":
+	if tiro_pulido and clase != "penal":
 		error += (0.45 + lejos * punteria) * (1.15 - tec * 0.5) * (1.3 if _presion(p) < 1.8 else 1.0)
 	error = _error_tiro_extra(p, lejos, error, clase)   ## gancho (sesión 15): aquí no cambia nada
 	var x := clampf(apunte_arg.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error)
@@ -316,7 +316,7 @@ func _ultima_linea(local: bool) -> float:
 	for q: Dictionary in jugadores:
 		if bool(q["es_local"]) != local or bool(q["por"]):
 			continue
-		var z := pos(q).z + (q["vel"] as Vector3).z * MotorPresion.PREVE_LINEA   ## donde ESTARÁ (U3, 01-11)
+		var z := pos(q).z + (q["vel"] as Vector3).z * MotorPresion.preve_linea   ## donde ESTARÁ (U3, 01-11)
 		if not hay or (z - linea) * d < 0.0:
 			linea = z
 			hay = true

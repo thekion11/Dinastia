@@ -60,7 +60,7 @@ func _ia_portador(p: Dictionary) -> void:
 		## A un palo, abajo o arriba (antes se apuntaba al azar por el centro
 		## y el portero lo paraba casi todo: 27 de 29 en la sonda).
 		## (Pulido: más pegado al palo, lejos del portero, a riesgo de irse fuera.)
-		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * (_rng.randf_range(PALO_TIRO, 1.0) if TIRO_PULIDO else _rng.randf_range(0.55, 0.95))
+		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * (_rng.randf_range(palo_tiro, 1.0) if tiro_pulido else _rng.randf_range(0.55, 0.95))
 		if float(linea_limpia[1]) >= 0.0:
 			palo = clampf(float(linea_limpia[0]) + _rng.randf_range(-0.08, 0.08), -1.0, 1.0)   ## al punto más limpio (F6)
 		var alto := -0.45 if _rng.randf() < 0.6 else 0.55

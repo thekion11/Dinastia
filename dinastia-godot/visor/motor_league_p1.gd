@@ -291,7 +291,7 @@ func _velocidad_pase_manual(dist: float) -> float:
 
 ## El raso más largo que llega con la fuerza máxima del pase de la IA (≈ 23 m con el césped seco); más lejos, a media altura.
 func _raso_max() -> float:
-	return LeyBalon.rodando_league(26.0 * MotorPaseMejora.VEL_K, cfg_balon) - 2.0 if _ley_league() else super()
+	return LeyBalon.rodando_league(26.0 * MotorPaseMejora.vel_k, cfg_balon) - 2.0 if _ley_league() else super()
 
 ## En el aire, el arrastre de League (0,017·|v|·v, el doble del de siempre) frena también la subida y el balón cae antes: integrado
 ## con su paso de 10 ms, el envío cae donde se apunta lanzándolo e^{0,78·K·x} veces más rápido (x = vh·tv; error < 4 % entre

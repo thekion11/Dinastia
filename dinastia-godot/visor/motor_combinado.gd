@@ -129,7 +129,7 @@ func _gol(en_arco_visita: bool) -> void:
 
 ## (12-11, sesión 13) pase tenso cuando la línea está limpia, solo en C4 (`MejorasC4Pared.tenso`).
 func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, tenso := false) -> void:
-	if _mejoras_c4 and not largo and MejorasC4Adelanto.OTRO and p != usuario:
+	if _mejoras_c4 and not largo and MejorasC4Adelanto.otro and p != usuario:
 		q = MejorasC4Adelanto.otro_receptor(self, p, q, al_hueco)   ## (12-11, sesión 15) C4_ADELANTO=4
 	if _mejoras_c4 and not tenso and not largo and MejorasC4Pared.tenso(self, p, q):
 		tenso = true
@@ -154,7 +154,7 @@ func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 
 ## (16-11, frente 3) el pase por dirección del mando estilo PES (`MejorasC4Mando`, `C4_PASE_DIR=1`, apagado: cambia la sensación).
 func _companero_en_direccion(p: Dictionary, dir: Vector3, para_cambio := false) -> Dictionary:
-	if _mejoras_c4 and MejorasC4Mando.PASE_DIR and not para_cambio:
+	if _mejoras_c4 and MejorasC4Mando.pase_dir and not para_cambio:
 		var q := MejorasC4Mando.companero(self, p, dir)
 		if not q.is_empty():
 			return q
@@ -167,7 +167,7 @@ func _control_usuario(delta: float) -> void:
 		MejorasC4Mando.carrera(self, usuario, delta)
 
 func _radio_cabezazo(p: Dictionary) -> float:
-	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)
+	return MejorasC4.radio_cabeza if _mejoras_c4 else super(p)
 
 ## (12-11, sesión 13) paciencia ante el tiro lejano, solo en C4.
 func _ganas_tiro_extra(p: Dictionary, dist_arco: float, ganas: float, presion: float) -> float:
@@ -281,7 +281,7 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		r = MejorasC4Pared.ancho(self, p, r)
 		var sigue := MejorasC4.seguir_tiro(self, p)
 		if sigue != Vector3.INF:
-			p["correr"] = MejorasC4.SEGUIR_SPRINT or pos(p).distance_to(sigue) > 6.0   ## v2: sin esprintar si ya está cerca
+			p["correr"] = MejorasC4.seguir_sprint or pos(p).distance_to(sigue) > 6.0   ## v2: sin esprintar si ya está cerca
 			return sigue
 		MejorasC4.sprint(self, p, r)
 	return r
@@ -383,8 +383,8 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 ## (12-11, sesión 15) más 1 contra 1 en la frontal (`MejorasC4Avance.REGATE_AREA`): sube las ganas de encarar solo dentro de este intento.
 var _k_regate := 1.0
 func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> bool:
-	if _mejoras_c4 and MejorasC4Avance.REGATE_AREA > 0.0 and dist_arco < 32.0:
-		_k_regate = MejorasC4Avance.REGATE_AREA
+	if _mejoras_c4 and MejorasC4Avance.regate_area > 0.0 and dist_arco < 32.0:
+		_k_regate = MejorasC4Avance.regate_area
 	var r := super(p, rival, dist_arco)
 	_k_regate = 1.0
 	return r
@@ -406,12 +406,12 @@ func _prob_parada_extra(gk: Dictionary, desde: Vector3, prob: float) -> float:
 
 ## (17-11, alarma de goles de C4) el portero para lo que le llega al cuerpo, solo en C4 (`MejorasC4Avance.parada_cuerpo`, `C4_PARADA_CUERPO=f`).
 func _agarra(p: Dictionary, estirada: bool, fuerza: float) -> bool:
-	if not (_mejoras_c4 and MejorasC4Avance.PARADA_REAL):
+	if not (_mejoras_c4 and MejorasC4Avance.parada_real_v):
 		return super(p, estirada, fuerza)
 	return MejorasC4Avance.agarra(self, p, estirada, fuerza, _rng)
 
 func _prob_rechace_fuera() -> float:
-	return MejorasC4Avance.PR_FUERA if _mejoras_c4 and MejorasC4Avance.PARADA_REAL else 0.5
+	return MejorasC4Avance.pr_fuera if _mejoras_c4 and MejorasC4Avance.parada_real_v else 0.5
 
 ## (17-11) C4_BLOQUEO_REMATE: el que marca al rematador tapa la línea y el cuerpo puede bloquear el tiro.
 func _ia_equipos(delta: float) -> void:
@@ -440,4 +440,4 @@ func _puede_tomar_tiro(p: Dictionary) -> bool:
 	return MejorasC4Area.puede_tomar_tiro(self, p) if _mejoras_c4 else true
 
 func _gancho_tiro() -> bool:
-	return _mejoras_c4 and MejorasC4Area.TIRO_COMPANERO
+	return _mejoras_c4 and MejorasC4Area.tiro_companero

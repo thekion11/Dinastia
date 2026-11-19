@@ -244,14 +244,14 @@ const UMBRAL_ROJA := Balance.UMBRAL_ROJA   ## (valor en `nucleo/balance.gd`)
 ## antes/después con las mismas semillas.
 static var pulido := OS.get_environment("PMOT") != "0"
 ## Puntería, cabezazos y paradas más realistas (PMOT_TIRO=0 lo apaga). PARADA_LEJOS: cuánto cuesta parar lo ajustado.
-static var TIRO_PULIDO := pulido and OS.get_environment("PMOT_TIRO") != "0"   ## encendido por decisión del dueño (27-10)
+static var tiro_pulido := pulido and OS.get_environment("PMOT_TIRO") != "0"   ## encendido por decisión del dueño (27-10)
 static var parada_lejos := float(OS.get_environment("PMOT_PLEJOS")) if OS.get_environment("PMOT_PLEJOS") != "" else 0.5
 ## Error extra por metro de distancia del tiro y desde dónde apunta la IA (fracción del palo).
 static var punteria := float(OS.get_environment("PMOT_PUNT")) if OS.get_environment("PMOT_PUNT") != "" else 0.045
 const PENAL_IA_X := Balance.PENAL_IA_X
 const PENAL_ERROR := Balance.PENAL_ERROR
 const PENAL_PARA := Balance.PENAL_PARA
-static var PALO_TIRO := float(OS.get_environment("PMOT_PALO")) if OS.get_environment("PMOT_PALO") != "" else 0.7
+static var palo_tiro := float(OS.get_environment("PMOT_PALO")) if OS.get_environment("PMOT_PALO") != "" else 0.7
 ## La última falta pitada: {"puntos", "factores": [claves de PESO_FALTA], "sancion"}.
 var ultima_falta := {}
 ## Tarjetas por partido: [amarillas, rojas directas] de cada equipo (para las sondas).
@@ -293,13 +293,13 @@ const NOMBRE_FACTOR := {"agarron": "agarrón", "por_detras": "por detrás", "emp
 ## Adónde va `p` cuando su equipo ataca el último tercio: primer palo, punto
 ## de penal, segundo palo o frontal según su puesto y el lado del balón.
 ## Vector3.INF = sigue con su forma (o no toca llegar).
-static var LLEGADA := OS.get_environment("SIN_LLEGADA") == ""
+static var llegada := OS.get_environment("SIN_LLEGADA") == ""
 
 const GIRO_RAPIDO := Balance.GIRO_RAPIDO   ## (valor en `nucleo/balance.gd`)
 ## El margen aleatorio del sorteo de tiro (menos = se tira más). Ver `_ia_portador`.
 static var chispa_tiro := float(OS.get_environment("CHISPA_TIRO")) if OS.get_environment("CHISPA_TIRO") != "" else (0.16 if OS.get_environment("TIRO_REAL") == "0" else 0.0)   ## con TIRO_REAL (por defecto) se tira sin el ruido extra (ciclo 7)
 ## Cuánto vale cada metro que avanza un pase al elegirlo (más = más vertical).
-static var CHISPA_AVANCE := float(OS.get_environment("CHISPA_AVANCE")) if OS.get_environment("CHISPA_AVANCE") != "" else 0.08
+static var chispa_avance := float(OS.get_environment("CHISPA_AVANCE")) if OS.get_environment("CHISPA_AVANCE") != "" else 0.08
 ## Multiplica lo que piensa el portador antes de decidir (menos = juego más rápido).
 static var chispa_pausa := float(OS.get_environment("CHISPA_PAUSA")) if OS.get_environment("CHISPA_PAUSA") != "" else 1.0
 ## LA PRISA (21-10-2026, vídeo de gameplay: el partido a ritmo «normal» acabó
@@ -314,7 +314,7 @@ static var chispa_pausa := float(OS.get_environment("CHISPA_PAUSA")) if OS.get_e
 ## PRISA_REF=segundos de referencia (0 = sin compensar).
 static var prisa_ref := float(OS.get_environment("PRISA_REF")) if OS.get_environment("PRISA_REF") != "" else 240.0
 ## Tope de aceleración total de un jugador (m/s²), ver `_mover_jugadores`.
-static var A_MAX := float(OS.get_environment("A_MAX")) if OS.get_environment("A_MAX") != "" else 18.0
+static var a_max_v := float(OS.get_environment("A_MAX")) if OS.get_environment("A_MAX") != "" else 18.0
 
 ## LA LÍNEA DEFENSIVA COMÚN (M-123, 19-10-2026). Antes cada defensor marcaba a
 ## su delantero por separado y la línea se rompía: uno habilitaba a todos. Ahora

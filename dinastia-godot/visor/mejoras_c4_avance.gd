@@ -6,14 +6,14 @@ extends RefCounted
 ## m, el pase que va más de `ATRAS` m hacia atrás no se da: sigue conduciendo hacia el área (o elige otra cosa). Solo en C4
 ## (`MotorCombinado._mejor_pase`); contador `c4_no_atras`.
 
-static var ACTIVO := OS.get_environment("C4_NO_ATRAS") == "1"
+static var activo := OS.get_environment("C4_NO_ATRAS") == "1"
 static var DIST := float(OS.get_environment("C4_NO_ATRAS_D")) if OS.get_environment("C4_NO_ATRAS_D") != "" else 35.0
 const PRESION := 3.0
 const ATRAS := 3.0
 
 ## El pase que propone la decisión de siempre (`q`), o {} si en C4 sería un pase atrás evitable.
 static func filtrar(m: Object, p: Dictionary, q: Dictionary) -> Dictionary:
-	if not ACTIVO or q.is_empty() or String(m.estado) != "juego" or m.poseedor != p or bool(p["por"]):
+	if not activo or q.is_empty() or String(m.estado) != "juego" or m.poseedor != p or bool(p["por"]):
 		return q
 	var arco: Vector3 = m._arco_rival(p)
 	var yo: Vector3 = m.pos(p)
@@ -28,7 +28,7 @@ static func filtrar(m: Object, p: Dictionary, q: Dictionary) -> Dictionary:
 
 ## MÁS 1 CONTRA 1 EN LA FRONTAL (sesión 15): con `C4_REGATE_AREA=k` (0 = apagada) las ganas de encarar al defensor a menos de 32 m del
 ## arco rival se multiplican por `k` (el de siempre ya les da ×1,25 ahí). Lo usa `MotorCombinado._intentar_regate`.
-static var REGATE_AREA := float(OS.get_environment("C4_REGATE_AREA")) if OS.get_environment("C4_REGATE_AREA") != "" else 0.0
+static var regate_area := float(OS.get_environment("C4_REGATE_AREA")) if OS.get_environment("C4_REGATE_AREA") != "" else 0.0
 
 ## RUPTURA DEL 9 (sesión 15): el pase al hueco (`_companero_al_hueco`, `MejorasC4Hueco`) solo encuentra receptor si alguien está a
 ## pocos metros de la última línea y habilitado. Con `C4_RUPTURA=1`, mientras un compañero (no el portero) tiene el balón a 25-55 m del
@@ -170,7 +170,7 @@ static func alcance(m: Object, gk: Dictionary, desde: Vector3, a: float, tz: flo
 ## va de 1 a bocajarro (< 6 m: queda como estaba, el portero no es un superhéroe) a `PR_MED` desde 16 m; un tiro flojo (< 22 m/s) fuera del área
 ## chica se multiplica además hasta `PR_FLOJO`. Y desde 16 m el alcance crece hasta `PR_ALC` (un tiro de lejos da tiempo a estirarse).
 ## Contadores `c4_parada_real` y `c4_alcance_real`. Ajustes: `C4_PR_MED`, `C4_PR_FLOJO`, `C4_PR_ALC`.
-static var PARADA_REAL := OS.get_environment("C4_PARADA_REAL") == "1"
+static var parada_real_v := OS.get_environment("C4_PARADA_REAL") == "1"
 static var pr_med := float(OS.get_environment("C4_PR_MED")) if OS.get_environment("C4_PR_MED") != "" else 0.55
 static var pr_flojo := float(OS.get_environment("C4_PR_FLOJO")) if OS.get_environment("C4_PR_FLOJO") != "" else 0.6
 static var pr_alc := float(OS.get_environment("C4_PR_ALC")) if OS.get_environment("C4_PR_ALC") != "" else 1.2
@@ -181,7 +181,7 @@ static func _tramo(m: Object, gk: Dictionary, desde: Vector3) -> float:
 	return clampf((Vector2(desde.x - arco.x, desde.z - arco.z).length() - 6.0) / 10.0, 0.0, 1.0)
 
 static func parada_real(m: Object, gk: Dictionary, desde: Vector3, prob: float) -> float:
-	if not PARADA_REAL:
+	if not parada_real_v:
 		return prob
 	var w := _tramo(m, gk, desde)
 	var f := lerpf(1.0, pr_med, w)
@@ -192,7 +192,7 @@ static func parada_real(m: Object, gk: Dictionary, desde: Vector3, prob: float) 
 	return 1.0 - (1.0 - clampf(prob, 0.0, 1.0)) * f
 
 static func alcance_real(m: Object, gk: Dictionary, desde: Vector3, a: float) -> float:
-	if not PARADA_REAL:
+	if not parada_real_v:
 		return a
 	_contar(m, "c4_alcance_real")
 	return a * lerpf(1.0, pr_alc, _tramo(m, gk, desde))
@@ -201,7 +201,7 @@ static func alcance_real(m: Object, gk: Dictionary, desde: Vector3, a: float) ->
 ## de hasta `PR_AGARRE_V` m/s (antes 22) y, estirado, también los flojos (con la mitad de probabilidad); y el rechace va hacia fuera
 ## (a córner) con probabilidad `PR_FUERA` (antes 0,5). Ajustes: `C4_PR_AGARRE_V`, `C4_PR_FUERA`.
 static var pr_agarre_v := float(OS.get_environment("C4_PR_AGARRE_V")) if OS.get_environment("C4_PR_AGARRE_V") != "" else 28.0
-static var PR_FUERA := float(OS.get_environment("C4_PR_FUERA")) if OS.get_environment("C4_PR_FUERA") != "" else 0.8
+static var pr_fuera := float(OS.get_environment("C4_PR_FUERA")) if OS.get_environment("C4_PR_FUERA") != "" else 0.8
 
 static func agarra(m: Object, gk: Dictionary, estirada: bool, fuerza: float, rng: RandomNumberGenerator) -> bool:
 	if fuerza >= (22.0 if estirada else pr_agarre_v):
@@ -259,10 +259,10 @@ static func pase_atras(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> 
 ## está vacía: el pase atrás (`C4_PASE_ATRAS`) no encuentra a nadie y el centro va al aire. Con `C4_LLEGADA=1`, si un compañero tiene el
 ## balón abierto (|x| > 9) a menos de 25 m de la línea de fondo, atacan el área: el DC el primer palo, el extremo del otro lado el
 ## segundo palo y el MC el punto de penal (cada uno si está a < 35 m de su sitio). Contador `c4_llegada`.
-static var LLEGADA := OS.get_environment("C4_LLEGADA") == "1"
+static var llegada_v := OS.get_environment("C4_LLEGADA") == "1"
 
 static func llegada(m: Object, p: Dictionary) -> Vector3:
-	if not LLEGADA:
+	if not llegada_v:
 		return Vector3.INF
 	var b: Dictionary = m.poseedor
 	if b.is_empty() or b == p or bool(b["por"]) or bool(b["es_local"]) != bool(p["es_local"]):

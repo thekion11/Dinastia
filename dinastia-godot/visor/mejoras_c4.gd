@@ -30,4 +30,4 @@ static func contener_colocacion(m: Object, p: Dictionary) -> Vector3:
 	p["correr"] = mi_d > cont2_dist + 2.0
 	return Vector3(pc.x, 0.0, pc.z) + hacia * cont2_dist
 
-static var SEGUIR_SPRINT := OS.get_environment("C4_SEGUIR_SPRINT") == "1"   ## `=1`: seguir el tiro esprintando siempre (v1); por defecto solo si está a más de 6 m (v2)
+static var seguir_sprint := OS.get_environment("C4_SEGUIR_SPRINT") == "1"   ## `=1`: seguir el tiro esprintando siempre (v1); por defecto solo si está a más de 6 m (v2)

@@ -10,7 +10,7 @@ extends RefCounted
 ##     `ALCANCE` m), que se pone a `MARCA` m entre él y el arco, esprintando.
 ## APAGADA (`C4_CIERRE_AREA=1` la enciende): medida sin efecto en los goles (ver `docs/04_auditorias/H1_perfil_manejo_2026-11-16.md`).
 ## Contador `c4_cierre_area` (pasos en que alguien cierra).
-static var ACTIVO := OS.get_environment("C4_CIERRE_AREA") == "1"
+static var activo := OS.get_environment("C4_CIERRE_AREA") == "1"
 const DIST := 24.0
 const CIERRE := 1.8
 const AREA := 18.0
@@ -22,7 +22,7 @@ static func _plano(a: Vector3, b: Vector3) -> float:
 
 ## Destino del defensor `p` (o `Vector3.INF` si no le toca).
 static func objetivo(m: MotorJugable, p: Dictionary) -> Vector3:
-	if not ACTIVO or bool(p["por"]):
+	if not activo or bool(p["por"]):
 		return Vector3.INF
 	var c: Dictionary = m.poseedor
 	var local := bool(p["es_local"])
@@ -80,11 +80,11 @@ static func _contar(m: MotorJugable) -> void:
 ## regate (≈ 85 %); el compañero quedaba solo a pocos metros del portero, que ya se había vencido, y remataba a quemarropa.
 ## Con `C4_TIRO_COMPANERO=1` (APAGADA: en 12+12 partidos no bajó los goles de forma medible) un compañero del que remató no puede hacerse con el remate mientras va a más de
 ## `VEL_TIRO` m/s: el tiro sigue su camino (si se frena o rebota, sí puede). Contador `c4_tiro_companero` (remates en que pasó).
-static var TIRO_COMPANERO := OS.get_environment("C4_TIRO_COMPANERO") == "1"
+static var tiro_companero := OS.get_environment("C4_TIRO_COMPANERO") == "1"
 const VEL_TIRO := 12.0
 
 static func puede_tomar_tiro(m: MotorJugable, p: Dictionary) -> bool:
-	if not TIRO_COMPANERO:
+	if not tiro_companero:
 		return true
 	var tv: Dictionary = m._tiro_vivo
 	var tirador: Dictionary = tv.get("p", {})

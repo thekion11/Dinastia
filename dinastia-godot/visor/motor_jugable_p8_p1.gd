@@ -25,11 +25,11 @@ func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	return Vector3(clampf(x, -ANCHO + 2.0, ANCHO - 2.0), 0, z)
 
 func _zona_de_llegada(p: Dictionary) -> Vector3:
-	if not LLEGADA or poseedor.is_empty() or poseedor == p or bool(poseedor["es_local"]) != bool(p["es_local"]):
+	if not llegada or poseedor.is_empty() or poseedor == p or bool(poseedor["es_local"]) != bool(p["es_local"]):
 		return Vector3.INF
 	var arco := _arco_rival(p)
 	var pb := pos(poseedor)
-	if pb.distance_to(arco) > MotorApoyo.LLEGADA_R:
+	if pb.distance_to(arco) > MotorApoyo.llegada_r:
 		return Vector3.INF
 	## Los dos apoyos cercanos siguen ofreciéndose al portador.
 	if pos(p).distance_to(pb) < 9.0:

@@ -439,12 +439,12 @@ func _probar_mando_c4() -> void:
 	_comprobar(MejorasC4Mando.companero(motor, yo, Vector3(0, 0, -d)).is_empty(), "nadie en el cono: decide el de siempre")
 	yo["manual"] = Vector3(0, 0, d)
 	yo["objetivo"] = Vector3(0, 0, 3.0 * d)
-	var antes := [MejorasC4Mando.PUNTA, MejorasC4Mando.GIRO_SECO, MejorasC4Mando.INERCIA]
-	MejorasC4Mando.PUNTA = false; MejorasC4Mando.GIRO_SECO = false; MejorasC4Mando.INERCIA = false
+	var antes := [MejorasC4Mando.punta, MejorasC4Mando.giro_seco, MejorasC4Mando.INERCIA]
+	MejorasC4Mando.punta = false; MejorasC4Mando.giro_seco = false; MejorasC4Mando.INERCIA = false
 	MejorasC4Mando.carrera(motor, yo, 1.0 / 30.0)
 	_comprobar((yo["objetivo"] as Vector3).is_equal_approx(Vector3(0, 0, 3.0 * d)), "con las banderas apagadas no toca la carrera")
-	MejorasC4Mando.PUNTA = true
+	MejorasC4Mando.punta = true
 	MejorasC4Mando.carrera(motor, yo, 1.0 / 30.0)
 	_comprobar(absf((yo["objetivo"] as Vector3).length() - 4.0) < 0.01, "punta sin tope: objetivo a 4 m")
-	MejorasC4Mando.PUNTA = bool(antes[0]); MejorasC4Mando.GIRO_SECO = bool(antes[1]); MejorasC4Mando.INERCIA = bool(antes[2])
+	MejorasC4Mando.punta = bool(antes[0]); MejorasC4Mando.giro_seco = bool(antes[1]); MejorasC4Mando.INERCIA = bool(antes[2])
 	(r[1] as Node3D).queue_free()

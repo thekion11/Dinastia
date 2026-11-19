@@ -256,10 +256,10 @@ func _probar_pase_mejora() -> void:
 	## Un rival a 3 m de la línea del pase, corriendo hacia ella a 7 m/s.
 	(vis[0]["node"] as Node3D).position = Vector3(3.0, 0, 8.0)
 	vis[0]["vel"] = Vector3(-7.0, 0, 0)
-	var antes := MotorPaseMejora.ACTIVO
-	MotorPaseMejora.ACTIVO = false
+	var antes := MotorPaseMejora.activo
+	MotorPaseMejora.activo = false
 	var apagada: Array = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))
-	MotorPaseMejora.ACTIVO = true
+	MotorPaseMejora.activo = true
 	var encendida: Array = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))
 	_comprobar(is_zero_approx(float(apagada[1])), "apagada: el rival a 3 m de la línea no cuenta (%.2f)" % float(apagada[1]))
 	_comprobar(float(encendida[1]) > 1.0, "encendida: el que llega corriendo, sí (%.2f)" % float(encendida[1]))
@@ -268,7 +268,7 @@ func _probar_pase_mejora() -> void:
 	(q["node"] as Node3D).position = Vector3(0, 0, -16.0)
 	var atras: float = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, -16.0))[1]
 	_comprobar(atras > adelante + 1.0, "encendida: pasar a la espalda cuesta (%.2f frente a %.2f)" % [atras, adelante])
-	MotorPaseMejora.ACTIVO = antes
+	MotorPaseMejora.activo = antes
 	(r[1] as Node3D).queue_free()
 
 ## EL ESTILO PROPIO DE CADA CLUB (01-11-2026, IA U8, `MotorTacticaViva.estilo_club`).
@@ -424,10 +424,10 @@ func _probar_carreras() -> void:
 func _probar_mejoras_c4() -> void:
 	_titulo("MEJORAS DE C4: DOS DESMARQUES A LA VEZ")
 	var c4 := MotorFabrica.crear("combinado_c4")
-	_comprobar(int(c4.get_meta("carreras_n", 1)) == (2 if MejorasC4.DESMARQUES else 1) and not MotorJugable.new().has_meta("carreras_n"), "C4 abre dos plazas de carrera; el motor de siempre, una")
+	_comprobar(int(c4.get_meta("carreras_n", 1)) == (2 if MejorasC4.desmarques else 1) and not MotorJugable.new().has_meta("carreras_n"), "C4 abre dos plazas de carrera; el motor de siempre, una")
 	var r := _motor_de_prueba()
 	var motor: MotorJugable = r[0]
-	MejorasC4.DESMARQUES = true
+	MejorasC4.desmarques = true
 	MejorasC4.preparar(motor)
 	var del: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]) and motor._rol(p) in MejorasC4.ROLES_CARRERA)
 	var otro: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]) and not (motor._rol(p) in MejorasC4.ROLES_CARRERA))

@@ -7,7 +7,7 @@ extends RefCounted
 ##  - CUERPO: al salir el tiro, un rival de campo a menos de `CERCA` m del rematador y a menos de `ANCHO_CUERPO` m de la línea del tiro lo
 ##    bloquea con probabilidad `BLOQUEO_P`·(1 − distancia a la línea / `ANCHO_CUERPO`) (contador `tiro_bloqueado`, como el bloqueo de siempre).
 ## La precisión bajo presión ya la cubre `C4_PRESION_AREA` (AAA): se combina con ella, no se repite.
-static var ACTIVO := OS.get_environment("C4_BLOQUEO_REMATE") == "1"
+static var activo := OS.get_environment("C4_BLOQUEO_REMATE") == "1"
 static var bloqueo_p := float(OS.get_environment("C4_BLOQUEO_P")) if OS.get_environment("C4_BLOQUEO_P") != "" else 0.5
 const ZONA := 22.0
 const DELANTE := 1.4
@@ -16,7 +16,7 @@ const ANCHO_CUERPO := 0.9
 
 ## Tras la IA de los equipos: el defensor más cercano al rematador tapa la línea del tiro.
 static func tapar_linea(m: Object) -> void:
-	if not ACTIVO:
+	if not activo:
 		return
 	var pr: Dictionary = m.poseedor
 	if pr.is_empty() or bool(pr["por"]):
@@ -43,7 +43,7 @@ static func tapar_linea(m: Object) -> void:
 
 ## Justo después de `_tirar`: ¿un cuerpo en la línea bloquea el remate?
 static func bloqueo_cuerpo(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> void:
-	if not ACTIVO or (m._tiro_vivo as Dictionary).is_empty() or String(m._tiro_vivo.get("clase", "")) == "penal":
+	if not activo or (m._tiro_vivo as Dictionary).is_empty() or String(m._tiro_vivo.get("clase", "")) == "penal":
 		return
 	var yo: Vector3 = m.pos(p)
 	var v: Vector3 = m.vel_balon

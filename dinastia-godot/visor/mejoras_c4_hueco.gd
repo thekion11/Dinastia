@@ -6,11 +6,11 @@ extends RefCounted
 ## manga: también el lateral que se incorpora, a < `LINEA` m de la última línea, con 3 m de ventaja hacia delante. La línea de pase
 ## tiene que seguir limpia (`C4_HUECO=0` la apaga). Solo en C4 (`MotorCombinado._companero_al_hueco`); contador `c4_hueco_extra`.
 
-static var ACTIVO := OS.get_environment("C4_HUECO") != "0"   ## ENCENDIDA (12-11, 4 tandas de 12: tiros en el área +0,5, goles de jugada +0,1)
+static var activo := OS.get_environment("C4_HUECO") != "0"   ## ENCENDIDA (12-11, 4 tandas de 12: tiros en el área +0,5, goles de jugada +0,1)
 static var linea_v := float(OS.get_environment("C4_HUECO_L")) if OS.get_environment("C4_HUECO_L") != "" else 10.0
 
 static func buscar(m: Object, p: Dictionary) -> Dictionary:
-	if not ACTIVO:
+	if not activo:
 		return {}
 	var local := bool(p["es_local"])
 	var d: float = m.dir_ataque(local)

@@ -331,12 +331,12 @@ func _probar_tiro_fallido() -> void:
 	_comprobar(MotorTiroLimpio.fallar(motor, tirador, destino, 14.0, 5.0) == destino, "con la bandera apagada el destino no cambia")
 	_comprobar(is_equal_approx(MotorTiroLimpio.alcance(30.0), 30.0), "con la bandera apagada el alcance de tiro no cambia")
 	_comprobar(is_zero_approx(MotorTiroLimpio.bono_area(10.0)), "con la bandera apagada no hay bono de área")
-	_comprobar(is_equal_approx(MotorPaseMejora.RIESGO_K, 1.0) or OS.get_environment("PMOT_RIESGO") != "", "el peso del riesgo del pase es 1,0 por defecto")
-	_comprobar(is_equal_approx(MotorPaseMejora.VEL_K, 1.2) or OS.get_environment("PMOT_VEL") != "", "la velocidad del pase raso es 1,2 por defecto")
-	_comprobar(is_equal_approx(MotorPaseMejora.DIST_K, 0.02) or OS.get_environment("PMOT_DIST") != "", "la penalización por distancia del pase es 0,02 por defecto")
-	_comprobar((is_equal_approx(MotorDuelo.K, 1.0) and is_equal_approx(MotorDuelo.ENF, 1.0)) or OS.get_environment("ENTRADA_K") != "" or OS.get_environment("ENTRADA_ENF") != "", "las perillas de la entrada son neutras (1,0) por defecto")
+	_comprobar(is_equal_approx(MotorPaseMejora.riesgo_k, 1.0) or OS.get_environment("PMOT_RIESGO") != "", "el peso del riesgo del pase es 1,0 por defecto")
+	_comprobar(is_equal_approx(MotorPaseMejora.vel_k, 1.2) or OS.get_environment("PMOT_VEL") != "", "la velocidad del pase raso es 1,2 por defecto")
+	_comprobar(is_equal_approx(MotorPaseMejora.dist_k, 0.02) or OS.get_environment("PMOT_DIST") != "", "la penalización por distancia del pase es 0,02 por defecto")
+	_comprobar((is_equal_approx(MotorDuelo.K, 1.0) and is_equal_approx(MotorDuelo.enf, 1.0)) or OS.get_environment("ENTRADA_K") != "" or OS.get_environment("ENTRADA_ENF") != "", "las perillas de la entrada son neutras (1,0) por defecto")
 	MotorTiroLimpio._real = true
-	_comprobar(absf(MotorTiroLimpio.alcance(30.0) - 30.0 * MotorTiroLimpio.ALCANCE_K) < 0.001 and MotorTiroLimpio.ALCANCE_K > 1.0, "con la bandera encendida el alcance de tiro crece")
+	_comprobar(absf(MotorTiroLimpio.alcance(30.0) - 30.0 * MotorTiroLimpio.alcance_k) < 0.001 and MotorTiroLimpio.alcance_k > 1.0, "con la bandera encendida el alcance de tiro crece")
 	_comprobar(MotorTiroLimpio.bono_area(10.0) > 0.0 and is_zero_approx(MotorTiroLimpio.bono_area(30.0)), "encendida, el bono solo vale dentro del área")
 	var cerca := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 8.0, 5.0)
 	var lejos := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 28.0, 5.0)
@@ -438,13 +438,13 @@ func _probar_adelanto_c4() -> void:
 		(p["node"] as Node3D).position = Vector3(40.0, 0, 0) if bool(p["es_local"]) != bool(q["es_local"]) else Vector3(-30.0, 0, 0)
 	(q["node"] as Node3D).position = Vector3(0, 0, 10.0)
 	motor.balon.position = Vector3(0, 0, -5.0); var base := Vector3(0, 0, 6.0)
-	var antes := MejorasC4Adelanto.ACTIVO; MejorasC4Adelanto.ACTIVO = false
+	var antes := MejorasC4Adelanto.activo; MejorasC4Adelanto.activo = false
 	_comprobar(MejorasC4Adelanto.guia(motor, q, base) == base, "con la bandera apagada no cambia nada")
-	MejorasC4Adelanto.ACTIVO = true; _comprobar(MejorasC4Adelanto.guia(motor, q, base) == base, "sin rival cerca del punto se adelanta entero")
+	MejorasC4Adelanto.activo = true; _comprobar(MejorasC4Adelanto.guia(motor, q, base) == base, "sin rival cerca del punto se adelanta entero")
 	var rival: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) != bool(q["es_local"]))[0]
 	(rival["node"] as Node3D).position = Vector3(0, 0, 23.0)   ## llega antes a 16 m, no a 13 m
 	_comprobar(MejorasC4Adelanto.guia(motor, q, base) == base * 0.5, "con un rival en el punto, la mitad del adelanto")
 	(rival["node"] as Node3D).position = Vector3(0.5, 0, 12.5)
 	_comprobar(MejorasC4Adelanto.guia(motor, q, base) == Vector3.ZERO, "con el rival también a mitad de camino, al pie")
-	MejorasC4Adelanto.ACTIVO = antes
+	MejorasC4Adelanto.activo = antes
 	(r[1] as Node3D).queue_free()

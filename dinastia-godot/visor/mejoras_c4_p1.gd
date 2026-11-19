@@ -12,13 +12,13 @@ extends RefCounted
 ##                      y córneres por desvío (los remates bloqueados que salen por el fondo son córner: 4,5 → ~9 por partido)
 ## Los valores por defecto son los que ganaron en la medición (ver `docs/04_auditorias/MOTOR_LEAGUE_SOCCER_PLAN.md`, «Mejoras de C4»).
 
-static var DESMARQUES := _bandera("C4_DESMARQUES", true)
+static var desmarques := _bandera("C4_DESMARQUES", true)
 static var sprints := _bandera("C4_SPRINTS", true)
 static var largos := _bandera("C4_LARGOS", true)
 static var balon_parado := _bandera("C4_BALON_PARADO", true)
 static var centros := _bandera("C4_CENTROS", true)   ## solo la parte de los centros (para medirla aparte de los córneres)
 static var paciencia := _bandera("C4_PACIENCIA", true)   ## (12-11, sesión 13) menos tiros lejanos: se pasa o se conduce
-static var BANDA := _bandera("C4_BANDA", true)   ## (12-11, sesión 13) el de banda con espacio encara hacia el fondo para centrar
+static var banda := _bandera("C4_BANDA", true)   ## (12-11, sesión 13) el de banda con espacio encara hacia el fondo para centrar
 ## Paciencia ante el tiro (perillas para barrer; valores por defecto = los que ganaron la medición).
 static var pac_d := _num("C4_PAC_D", 22.0)           ## desde aquí (m al arco) se pide paciencia
 static var pac_base := _num("C4_PAC_BASE", 0.55)     ## probabilidad de tirar a PAC_D m...
@@ -47,7 +47,7 @@ static var pase_mejor := _bandera("C4_PASE_MEJOR", false)   ## medido el 12-11: 
 static var aereo := _bandera("C4_AEREO", false)   ## medido el 12-11 (12+12 partidos): más cabezazos pero −1 gol de pie por partido; DESCARTADO, apagado
 static var solo_area := _bandera("C4_AEREO_AREA", true)
 static var solo_centro := _bandera("C4_AEREO_CENTRO", true)   ## solo en los 3 s tras un centro   ## solo balones que caen cerca de un área
-static var RADIO_CABEZA := _num("C4_RADIO_CABEZA", 0.8)   ## alcance del cabezazo en C4 (0,8 = el de siempre)
+static var radio_cabeza := _num("C4_RADIO_CABEZA", 0.8)   ## alcance del cabezazo en C4 (0,8 = el de siempre)
 const AEREO_ALTO := 1.9
 const AEREO_PECHO := 0.6
 
@@ -82,7 +82,7 @@ const CONTENER_D := 32.0
 ## SEGUIR EL TIRO (12-11-2026, sesión 13; objetivo 6, portero y rechaces). Tras un remate, los `SEGUIR_N` compañeros más cerca de la zona
 ## del rechace (delante del área chica) corren a ella durante `SEGUIR_T` s: el rechace del portero tiene quien lo empuje.
 ## Devuelve el destino o Vector3.INF si `p` no sigue el tiro.
-static var SEGUIR := _bandera("C4_SEGUIR", true)   ## v2 (12-11): zona a 9 m y sin esprintar de cerca; la v1 destapó las tarjetas de más de C4 (arregladas con C4_NO_DETRAS)
+static var seguir := _bandera("C4_SEGUIR", true)   ## v2 (12-11): zona a 9 m y sin esprintar de cerca; la v1 destapó las tarjetas de más de C4 (arregladas con C4_NO_DETRAS)
 const SEGUIR_N := 2
 const SEGUIR_T := 2.0
 static var seguir_z := _num("C4_SEGUIR_Z", 9.0)   ## distancia de la zona del rechace a la línea de gol
@@ -114,7 +114,7 @@ static func _bandera(nombre: String, defecto: bool) -> bool:
 static func preparar(m: Object) -> void:
 	if balon_parado:
 		m.set_meta("corner_desvio", CORNER_DESVIO)
-	if DESMARQUES:
+	if desmarques:
 		m.set_meta("carreras_n", CARRERAS_A_LA_VEZ)
 		m.set_meta("carreras_descanso", DESCANSO_CARRERA)
 		m.set_meta("carreras_roles", ROLES_CARRERA)
@@ -249,7 +249,7 @@ static func _companero_mejor(m: Object, p: Dictionary, dist: float) -> Dictionar
 ## portador abierto (|x| > 13 m), a 8-40 m del fondo y sin un rival delante en su carril, conduce pegado a la banda hacia el fondo en vez
 ## de ir al centro: así llega a la zona del centro (`centro`, < 30 m del fondo). Se llama después de la decisión de siempre.
 static func encarar_banda(m: Object, p: Dictionary) -> void:
-	if not BANDA or String((m.poseedor as Dictionary).get("id", "")) != String(p["id"]):
+	if not banda or String((m.poseedor as Dictionary).get("id", "")) != String(p["id"]):
 		return
 	var yo: Vector3 = m.pos(p)
 	var arco: Vector3 = m._arco_rival(p)
@@ -379,7 +379,7 @@ static func _de_espaldas(m: Object, p: Dictionary, victima: Dictionary) -> bool:
 		return false
 	return Vector3(sin(n.rotation.y), 0.0, cos(n.rotation.y)).dot(hacia.normalized()) < -0.2
 static func seguir_tiro(m: Object, p: Dictionary) -> Vector3:
-	if not SEGUIR:
+	if not seguir:
 		return Vector3.INF
 	var tv: Dictionary = m._tiro_vivo
 	if tv.is_empty() or float(m.t) - float(tv["t"]) > SEGUIR_T:

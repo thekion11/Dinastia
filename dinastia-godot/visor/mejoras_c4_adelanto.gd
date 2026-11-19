@@ -7,14 +7,14 @@ extends RefCounted
 ## Solo en C4 (gancho `_guia_pase` de la capa 1; el motor de siempre no cambia). Contadores: `c4_adelanto_medio`, `c4_adelanto_pie`.
 
 static var MODO := OS.get_environment("C4_ADELANTO")
-static var ACTIVO := MODO in ["1", "2", "3"]
+static var activo := MODO in ["1", "2", "3"]
 ## Con `C4_ADELANTO=2` (variante de medida) no toca los pases al hueco: el riesgo del pase al espacio se queda.
 static var respeta_hueco := MODO == "2"
 ## (12-11, sesión 15) `C4_ADELANTO=3`: solo en campo propio o con el marcador a favor, NUNCA en el último tercio (el riesgo que crea
 ## el peligro se queda). `C4_ADELANTO=4`: el adelanto no cambia; si el punto lo gana el rival, el pasador ELIGE OTRO compañero cuyo
 ## punto gane el nuestro (si no hay ninguno, el pase de siempre).
 static var por_zona := MODO == "3"
-static var OTRO := MODO == "4"
+static var otro := MODO == "4"
 const V_BALON := 15.0       ## m/s medio del pase raso
 const V_RECEPTOR := 6.0     ## m/s del receptor yendo al punto
 const V_RIVAL := 6.5        ## m/s del rival
@@ -23,7 +23,7 @@ const MARGEN := 0.15        ## s de ventaja que tiene que sacar el nuestro
 
 ## El adelanto que usa C4: el de siempre (`base`) si nuestro receptor llega antes; si no, la mitad o al pie.
 static func guia(m: Object, q: Dictionary, base: Vector3, al_hueco := false) -> Vector3:
-	if not ACTIVO or base == Vector3.ZERO or (al_hueco and respeta_hueco):
+	if not activo or base == Vector3.ZERO or (al_hueco and respeta_hueco):
 		return base
 	var desde: Vector3 = (m.balon as Node3D).position
 	if por_zona and not _zona_segura(m, q, desde):
@@ -53,7 +53,7 @@ static func _zona_segura(m: Object, q: Dictionary, desde: Vector3) -> bool:
 ## `C4_ADELANTO=4`: si el punto adelantado de `q` lo gana un rival, otro compañero (8-32 m, línea limpia, no más atrás de 10 m que `q`)
 ## cuyo punto gane el nuestro; el más adelantado. Si no hay, `q`.
 static func otro_receptor(m: Object, p: Dictionary, q: Dictionary, al_hueco: bool) -> Dictionary:
-	if not OTRO:
+	if not otro:
 		return q
 	var desde: Vector3 = (m.balon as Node3D).position
 	var dq: float = m.pos(q).distance_to(m.pos(p))

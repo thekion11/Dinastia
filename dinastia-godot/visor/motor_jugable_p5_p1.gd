@@ -145,7 +145,7 @@ func _mover_fisica(delta: float, bpos: Vector3) -> PackedFloat64Array:
 		var cl := _coste_aguante(true)
 		var cv := _coste_aguante(false)
 		return nat.mover_jugadores_fisica(jugadores, bpos, delta, t, not poseedor.is_empty(), poseedor.get("id", ""), bool(poseedor.get("es_local", false)),
-			A_MAX, ANCHO, LARGO, GIRO_RAPIDO, PackedFloat64Array([cl, cv]))
+			a_max_v, ANCHO, LARGO, GIRO_RAPIDO, PackedFloat64Array([cl, cv]))
 	return _mover_fisica_gd(delta, bpos)
 
 func _coste_aguante(local: bool) -> float:
@@ -207,7 +207,7 @@ func _mover_fisica_gd(delta: float, bpos: Vector3) -> PackedFloat64Array:
 		## vez no pasa de A_MAX m/s² (más con giro firme), lo que aguanta un
 		## cuerpo en un recorte. Antes la suma llegaba a 25-30 (tirones en la
 		## sonda). Con 14 el juego se quedaba sin chispa (la mitad de goles).
-		var a_max := (A_MAX * 1.35 if bool(p.get("giro_firme", false)) else A_MAX) * delta
+		var a_max := (a_max_v * 1.35 if bool(p.get("giro_firme", false)) else a_max_v) * delta
 		var dv: Vector3 = vel - (p["vel"] as Vector3)
 		if dv.length() > a_max:
 			vel = (p["vel"] as Vector3) + dv.normalized() * a_max

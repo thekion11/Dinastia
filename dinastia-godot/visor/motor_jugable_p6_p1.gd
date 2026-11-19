@@ -104,7 +104,7 @@ func _cabezazo(p: Dictionary) -> void:
 		## EL CABEZAZO NO ES UN DISPARO TELEDIRIGIDO (25-10-2026): iba siempre entre
 		## los palos y entraba más de la mitad (en el fútbol, ~1 de cada 8). Ahora
 		## se busca un palo, abajo, y se desvía según el remate y la distancia.
-		if TIRO_PULIDO:
+		if tiro_pulido:
 			var err := (0.5 + (1.0 - GestoTecnico.tiro(p, "cabeza")) * 1.4) * (0.4 + absf(pos(p).z - arco.z) / 11.0) * GestoTecnico.factor(self, p, true)
 			destino = Vector3((1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.8, PALO - 0.3) + _rng.randf_range(-err, err),
 				clampf(_rng.randf_range(0.3, 1.4) + _rng.randf_range(-err, err) * 0.6, 0.15, 3.5), arco.z)
@@ -128,7 +128,7 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	if poseedor.is_empty():
 		return
 	var victima := poseedor
-	p["enfriar"] = (1.0 if not barrida else 1.6) * MotorDuelo.ENF   ## ciclo 10: menos intentos de entrada (1,0 = como antes)
+	p["enfriar"] = (1.0 if not barrida else 1.6) * MotorDuelo.enf   ## ciclo 10: menos intentos de entrada (1,0 = como antes)
 	var def_loc := float(p["attr"]["def"])
 	var reg := float(victima["attr"]["reg"])
 	if t < float(victima["regate_hasta"]):
@@ -402,9 +402,9 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 		var lr := MotorPaseMejora.libre_y_riesgo(self as Object as MotorJugable, p, q, yo, qp)   ## (R2, 01-11: con PMOT_PASE=1, previsto)
 		var libre: float = lr[0]
 		var riesgo: float = lr[1]
-		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
+		var nota := progreso * (chispa_avance * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
 				+ 0.03 * float(_tac(bool(p["es_local"]), "verticalidad") - 1)) \
-			+ minf(libre, 10.0) * 0.18 - riesgo * MotorPaseMejora.RIESGO_K - dist * MotorPaseMejora.DIST_K + MotorPaseMejora.bono_tercio(self as Object as MotorJugable, p, qp)
+			+ minf(libre, 10.0) * 0.18 - riesgo * MotorPaseMejora.riesgo_k - dist * MotorPaseMejora.dist_k + MotorPaseMejora.bono_tercio(self as Object as MotorJugable, p, qp)
 		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
 		## nunca se la da a un compañero adelantado.
 		if _adelantado(q, p) and _rng.randf() < 0.55 + float(p["attr"]["pas"]) * 0.4:

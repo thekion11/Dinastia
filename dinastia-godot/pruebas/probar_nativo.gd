@@ -289,7 +289,7 @@ func _probar() -> void:
 		var res_g := motor._mover_fisica_gd(1.0 / 60.0, bp)
 		var m1 := Time.get_ticks_usec()
 		motor.poseedor = gm[1][posq]
-		var res_c: PackedFloat64Array = nat.mover_jugadores_fisica(gm[1], bp, 1.0 / 60.0, motor.t, true, gm[1][posq]["id"], bool(gm[1][posq]["es_local"]), MotorJugable.A_MAX, MotorJugable.ANCHO,
+		var res_c: PackedFloat64Array = nat.mover_jugadores_fisica(gm[1], bp, 1.0 / 60.0, motor.t, true, gm[1][posq]["id"], bool(gm[1][posq]["es_local"]), MotorJugable.a_max_v, MotorJugable.ANCHO,
 			MotorJugable.LARGO, Balance.GIRO_RAPIDO, PackedFloat64Array([motor._coste_aguante(true), motor._coste_aguante(false)]))
 		var m2 := Time.get_ticks_usec()
 		tmg += m1 - m0

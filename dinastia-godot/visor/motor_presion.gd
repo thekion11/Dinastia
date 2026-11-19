@@ -80,4 +80,4 @@ static func zona(m: MotorJugable, dueno: Dictionary) -> bool:
 ## DESMARQUES (`_ultima_linea`: `_companero_al_hueco` y el ataque sin balón) la última línea rival se mira donde estará dentro
 ## de 0,24 s, no donde está: el delantero se adelanta a la defensa que sube y no se queda en fuera de juego. El fuera de juego
 ## que pita el árbitro (`_foto_offside`) no cambia. `SIN_LINEA_PREVISTA=1` = antes.
-static var PREVE_LINEA := 0.0 if OS.has_environment("SIN_LINEA_PREVISTA") else 0.24
+static var preve_linea := 0.0 if OS.has_environment("SIN_LINEA_PREVISTA") else 0.24

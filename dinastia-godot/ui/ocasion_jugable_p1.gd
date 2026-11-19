@@ -281,7 +281,7 @@ func elegir(clave: String, auto := false) -> void:
 			## (sonda del 26-10): las ocasiones habrían sido goles de regalo y el
 			## partido ya no sería el que se simula.
 			var r := motor._rng
-			var palo := (1.0 if r.randf() < 0.5 else -1.0) * (r.randf_range(MotorJugable.PALO_TIRO, 1.0) if MotorJugable.TIRO_PULIDO else r.randf_range(0.55, 0.95))
+			var palo := (1.0 if r.randf() < 0.5 else -1.0) * (r.randf_range(MotorJugable.palo_tiro, 1.0) if MotorJugable.tiro_pulido else r.randf_range(0.55, 0.95))
 			var alto := -0.45 if r.randf() < 0.6 else 0.55
 			motor._tirar(p, Vector2(palo, alto), clampf(0.55 + r.randf() * 0.4, 0.0, 1.0))
 			if rig != null and is_instance_valid(motor.balon):
