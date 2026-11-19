@@ -52,7 +52,7 @@ static func probar(nat: Object) -> Dictionary:
 			var q := Jugador.new()
 			q.id = "prueba-%s-%d" % [pe, nivel]
 			q.pos_e = pe
-			q.pos_sec = ["MC"] if pe != "MC" else ["DFC"]
+			q.pos_sec.append("MC" if pe != "MC" else "DFC")
 			var claves: Array = ["div", "par", "saq", "ref", "vel", "pos"] if pe == "POR" else ["rit", "tir", "pas", "reg", "def", "fis"]
 			for k: String in claves:
 				q.atributos[k] = rng.randi_range(22, 99)

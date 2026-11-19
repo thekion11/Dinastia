@@ -53,6 +53,8 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("hab_coste_puesto", "misma_linea", "conocido", "factor_nivel"), &DinastiaNativo::hab_coste_puesto);
 	ClassDB::bind_method(D_METHOD("hab_reparto", "id_jugador", "ids", "meta"), &DinastiaNativo::hab_reparto);
 	ClassDB::bind_method(D_METHOD("premio_mejor", "clubes", "minimo_notas"), &DinastiaNativo::premio_mejor);
+	ClassDB::bind_method(D_METHOD("ropa_prenda", "pos", "nor", "idx", "cual"), &DinastiaNativo::ropa_prenda);
+	ClassDB::bind_method(D_METHOD("ropa_subconjunto", "src", "orden", "ancho"), &DinastiaNativo::ropa_subconjunto);
 	ClassDB::bind_method(D_METHOD("son_tono", "hz", "dur", "vol", "forma", "frecuencia"), &DinastiaNativo::son_tono);
 	ClassDB::bind_method(D_METHOD("son_ruido", "dur", "f0", "f1", "vol", "frecuencia"), &DinastiaNativo::son_ruido);
 	ClassDB::bind_method(D_METHOD("son_mezclar", "destino", "fuente", "retraso", "frecuencia"), &DinastiaNativo::son_mezclar);

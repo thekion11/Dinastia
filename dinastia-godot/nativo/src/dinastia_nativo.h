@@ -143,6 +143,9 @@ public:
 	int64_t hab_coste_puesto(bool misma_linea, bool conocido, double factor_nivel) const;
 	PackedInt32Array hab_reparto(const String &id_jugador, const PackedStringArray &ids, int64_t meta) const;
 	Variant premio_mejor(const Array &clubes, int64_t minimo_notas) const;
+	// (19-11) `visor/ropa_separada.gd` (nativo/src/ropa_nativo.cpp): la ropa aparte de los futbolistas; gemelas `_prenda_gd` y `_subconjunto_gd`.
+	Array ropa_prenda(const PackedVector3Array &pos, const PackedVector3Array &nor, const PackedInt32Array &idx, int64_t cual) const;
+	Variant ropa_subconjunto(const Variant &src, const PackedInt32Array &orden, int64_t ancho) const;
 	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
 	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
 	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;
