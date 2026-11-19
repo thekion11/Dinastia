@@ -287,6 +287,25 @@ static func enredadera(semilla: int = 71) -> StandardMaterial3D:
 	if _cache.has(clave):
 		return _cache[clave]
 	var n := 256
+	var nat := Nativo.obj()
+	var img: Image
+	if nat != null and nat.has_method("enredadera_imagen"):   ## (19-11) la imagen, en C++ (`nativo/src/enredadera_nativo.cpp`); gemela: `_imagen_enredadera_gd`
+		img = nat.enredadera_imagen(semilla, n)
+	else:
+		img = _imagen_enredadera_gd(semilla, n)
+	img.generate_mipmaps()
+	var m := StandardMaterial3D.new()
+	m.albedo_texture = ImageTexture.create_from_image(img)
+	m.roughness = 0.85
+	m.uv1_triplanar = true
+	m.uv1_world_triplanar = true
+	m.uv1_scale = Vector3(0.5, 0.5, 0.5)
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	_cache[clave] = m
+	return m
+
+## La gemela GDScript de `enredadera_imagen`: la imagen RGB8 (sin mipmaps) de n×n.
+static func _imagen_enredadera_gd(semilla: int, n: int) -> Image:
 	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
 	img.fill(Color(0.07, 0.15, 0.05))
 	var rng := RandomNumberGenerator.new()
@@ -313,16 +332,7 @@ static func enredadera(semilla: int = 71) -> StandardMaterial3D:
 		var flor := Color(0.95, 0.95, 0.9) if k % 3 != 0 else Color(0.7, 0.45, 0.85)
 		for d: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]:
 			img.set_pixel(posmod(fx + d.x, n), posmod(fy + d.y, n), flor)
-	img.generate_mipmaps()
-	var m := StandardMaterial3D.new()
-	m.albedo_texture = ImageTexture.create_from_image(img)
-	m.roughness = 0.85
-	m.uv1_triplanar = true
-	m.uv1_world_triplanar = true
-	m.uv1_scale = Vector3(0.5, 0.5, 0.5)
-	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-	_cache[clave] = m
-	return m
+	return img
 
 ## Cesped: verde con manchas grandes (zonas mas secas) y grano fino encima.
 ## `tinte` (17-9-2026): igual que `asfalto()`, esta funcion no tenia ni un

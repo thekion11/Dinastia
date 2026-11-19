@@ -40,5 +40,19 @@ static func probar(nat: Object) -> Dictionary:
 	var rgb := Image.create(64, 64, false, Image.FORMAT_RGB8)
 	if nat.asfalto_imagen(rgb, rgb, rgb, Color.WHITE, 1, 64) != null:
 		fallos.append("un ruido que no es L8 debía dar null")
-	textos.append("asfalto: %d imágenes comparadas; GDScript %d ms, C++ %d ms" % [comparados, t_gd / 1000, t_c / 1000])
+	## La enredadera (`Texturas._imagen_enredadera_gd`): varias semillas y tamaños.
+	for caso2 in [[71, 256], [29, 256], [1, 128], [4242, 256], [0, 64]]:
+		var e_gd: Image = Texturas._imagen_enredadera_gd(caso2[0], caso2[1])
+		var e_c: Image = nat.enredadera_imagen(caso2[0], caso2[1])
+		comparados += 1
+		if e_c == null or e_gd.get_data() != e_c.get_data():
+			var malos := 0
+			if e_c != null and e_gd.get_data().size() == e_c.get_data().size():
+				var da2 := e_gd.get_data()
+				var db2 := e_c.get_data()
+				for i in da2.size():
+					if da2[i] != db2[i]:
+						malos += 1
+			fallos.append("enredadera (semilla %d, %d px) distinta (%d bytes)" % [caso2[0], caso2[1], malos])
+	textos.append("asfalto y enredadera: %d imágenes comparadas; GDScript %d ms, C++ %d ms" % [comparados, t_gd / 1000, t_c / 1000])
 	return {"fallos": fallos, "textos": textos}
