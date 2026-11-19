@@ -255,9 +255,19 @@ static func aplicar_descenso(c: Club, anio: int, nuevos: bool = false) -> int:
 		var h := absi(hash("%s|%d|descenso" % [j.id, anio]))
 		var escala := 1.0 - float(i) / float(maxi(1, n - 1))
 		var r := REBAJA_MIN + (REBAJA_MAX - REBAJA_MIN) * escala + (float(h % 61) - 30.0) / 1000.0
-		j.rebaja_descenso = clampf(r, REBAJA_MIN, REBAJA_MAX)
+		r = clampf(r, REBAJA_MIN, REBAJA_MAX)
+		## (18-11) Sin redondear a 10 y guardando la rebaja REAL (la del sueldo que queda): al ascender, `levantar_descenso`
+		## devuelve el sueldo exacto (antes, el doble redondeo a 10 lo movía hasta un 3 %, más en las ligas de sueldos bajos).
+		var viejo := j.sueldo
+		var nuevo := int(floor(float(viejo) * (1.0 - r)))
+		if viejo > 0 and 1.0 - float(nuevo) / float(viejo) > REBAJA_MAX:
+			nuevo += 1
+		nuevo = mini(viejo, maxi(30, nuevo))   ## el sueldo mínimo no se rebaja
+		if viejo <= 0 or nuevo >= viejo:
+			continue   ## ya cobra el mínimo: no hay cláusula que aplicar
+		j.rebaja_descenso = 1.0 - float(nuevo) / float(viejo)
 		j.descenso_club = c.id
-		j.sueldo = int(max(30.0, round(float(j.sueldo) * (1.0 - j.rebaja_descenso) / 10.0) * 10.0))
+		j.sueldo = nuevo
 		if not nuevos and i < n / 3 and j.rebaja_descenso >= 0.44 and (h / 61) % 2 == 0:
 			j.pide_salir = true
 			piden += 1
@@ -267,7 +277,7 @@ static func aplicar_descenso(c: Club, anio: int, nuevos: bool = false) -> int:
 static func levantar_descenso(c: Club) -> void:
 	for j in c.plantilla:
 		if j.descenso_club == c.id and j.rebaja_descenso > 0.0:
-			j.sueldo = int(round(float(j.sueldo) / (1.0 - j.rebaja_descenso) / 10.0) * 10.0)
+			j.sueldo = int(round(float(j.sueldo) / (1.0 - j.rebaja_descenso)))
 		j.rebaja_descenso = 0.0
 		j.descenso_club = ""
 
