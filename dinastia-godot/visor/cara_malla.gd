@@ -386,6 +386,25 @@ static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) ->
 		_cache_mallas[clave] = malla
 	return _vestir_cara(d, esq, hueso, nombre, tex, piel, malla)
 
+## Las normales por vértice (suma de las de sus caras, normalizada; hacia atrás si es nula). En C++ (`nativo/src/cara_nativo.cpp`); gemela: `_normales_cara_gd`.
+static func _normales_cara(pos: PackedVector3Array, tri: PackedInt32Array, n: int) -> PackedVector3Array:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("cara_normales"):
+		return nat.cara_normales(pos, tri, n)
+	return _normales_cara_gd(pos, tri, n)
+
+static func _normales_cara_gd(pos: PackedVector3Array, tri: PackedInt32Array, n: int) -> PackedVector3Array:
+	var normales := PackedVector3Array()
+	normales.resize(n)
+	for t in range(0, tri.size() - 2, 3):
+		var a := pos[tri[t]]
+		var fn := (pos[tri[t + 1]] - a).cross(pos[tri[t + 2]] - a)
+		for k in 3:
+			normales[tri[t + k]] += fn
+	for i in n:
+		normales[i] = normales[i].normalized() if normales[i].length_squared() > 0.0 else Vector3.BACK
+	return normales
+
 static var _cache_mallas := {}
 
 static func _armar(nombre: String, datos: Array, cuerpo: Dictionary) -> ArrayMesh:
@@ -398,15 +417,9 @@ static func _armar(nombre: String, datos: Array, cuerpo: Dictionary) -> ArrayMes
 	var tapado := PeloCapas._densidades(String(entrada(nombre).get("t", "")), _n)
 	## Las normales, de la forma SIN pegar: con el anillo doblado hacia el
 	## cráneo, la fila del borde se sombreaba oscura (una línea en la frente).
-	var normales := PackedVector3Array()
-	normales.resize(_n)
-	for t in range(0, _tri.size() - 2, 3):
-		var a := pos[_tri[t]]
-		var fn := (pos[_tri[t + 1]] - a).cross(pos[_tri[t + 2]] - a)
-		for k in 3:
-			normales[_tri[t + k]] += fn
+	var normales := _normales_cara(pos, _tri, _n)
 	for i in _n:
-		st.set_normal(normales[i].normalized() if normales[i].length_squared() > 0.0 else Vector3.BACK)
+		st.set_normal(normales[i])
 		st.set_uv(uv[i])
 		var alfa := _alfa[i] if i < _alfa.size() else 1.0
 		if alfa < 1.0 and i < _lejos.size():

@@ -97,3 +97,22 @@ Dictionary DinastiaNativo::cara_rejilla_piel(const PackedVector3Array &cv, const
 	}
 	return r;
 }
+
+// `CaraMalla._armar` (las normales): la suma de las normales de cada cara en sus vértices, normalizada (o hacia atrás, Vector3.BACK, si es nula). `n` = vértices.
+PackedVector3Array DinastiaNativo::cara_normales(const PackedVector3Array &pos, const PackedInt32Array &tri, int64_t n) const {
+	PackedVector3Array normales;
+	normales.resize(n);
+	for (int64_t t = 0; t < tri.size() - 2; t += 3) {
+		const Vector3 a = pos[tri[t]];
+		const Vector3 fn = (pos[tri[t + 1]] - a).cross(pos[tri[t + 2]] - a);
+		for (int k = 0; k < 3; k++) {
+			const int32_t v = tri[t + k];
+			normales.set(v, normales[v] + fn);
+		}
+	}
+	for (int64_t i = 0; i < n; i++) {
+		const Vector3 q = normales[i];
+		normales.set(i, double(q.length_squared()) > 0.0 ? q.normalized() : Vector3(0, 0, 1));
+	}
+	return normales;
+}

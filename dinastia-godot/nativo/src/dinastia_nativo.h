@@ -150,11 +150,15 @@ public:
 	Variant ropa_subconjunto(const Variant &src, const PackedInt32Array &orden, int64_t ancho) const;
 	// (19-11) `visor/cara_malla.gd` (nativo/src/cara_nativo.cpp): el borde de la cara pegado al cráneo; gemelas `_pegar_borde_gd` y `_rejilla_piel_gd`.
 	Array cara_pegar_borde(const PackedVector3Array &pos, const PackedFloat32Array &alfa, const Dictionary &rejilla) const;
+	PackedVector3Array cara_normales(const PackedVector3Array &pos, const PackedInt32Array &tri, int64_t n) const;
 	Dictionary cara_rejilla_piel(const PackedVector3Array &cv, const PackedVector3Array &nn) const;
 	// (19-11) `visor/pelo_capas_p1.gd` y `pelo_capas.gd` (nativo/src/pelo_nativo.cpp): cuentas del pelo por capas; gemelas `_normales_gd`, `_densidades_gd`, `_max_gd`, `_suavizar_gd`.
 	PackedVector3Array pelo_normales(const PackedVector3Array &pos, const PackedInt32Array &tri) const;
 	PackedFloat32Array pelo_densidades(const PackedByteArray &bytes, int64_t n) const;
 	double pelo_max(const PackedFloat32Array &a) const;
+	PackedInt32Array pelo_solo_con(const PackedInt32Array &tri, const PackedFloat32Array &dens, int64_t minimo) const;
+	Dictionary pelo_anillo(const PackedInt32Array &base, const PackedInt32Array &tri, int64_t anillos) const;
+	Array pelo_candidatos(const PackedVector3Array &v, const PackedInt32Array &ind) const;
 	PackedFloat32Array pelo_suavizar(const PackedFloat32Array &a, const PackedInt32Array &tri, double f) const;
 	// (19-11) `AnimExtra.espejar` (visor/anim_extra_p1.gd, nativo/src/espejo_nativo.cpp): el clip reflejado izquierda <-> derecha (null si no tiene rotaciones); gemela `_espejar_gd`.
 	Ref<Animation> anim_espejar(const Ref<Animation> &original, Skeleton3D *esq, const String &prefijo) const;
@@ -176,6 +180,10 @@ public:
 	// (19-11) texturas de grada (nativo/src/grada_nativo.cpp): `StadiumBuilder._make_stand_texture_calc` y `_make_stand_texture_tramos` (la imagen RGB8 de 96×320, sin mipmaps); gemelas `*_gd`.
 	Ref<Image> grada_imagen(const String &patron, const Color &a1, const Color &a2, const Color &a3, int64_t semilla, double lleno) const;
 	Ref<Image> grada_tramos(const Array &patrones, const Array &colores, int64_t semilla, double lleno) const;
+	// (19-11) `PersonajeDtVida._mapa` (visor/personaje_dt_vida.gd, nativo/src/dtmapa_nativo.cpp): el mapa UV de la cabeza del DT (imagen RGBAF 256×256, null si no hay triángulos); gemela `_mapa_gd`.
+	Ref<Image> dt_mapa(const Array &superficies) const;
+	// (19-11) `TrofeoModelo._textura` (visor/trofeo_modelo.gd, nativo/src/kit_nativo.cpp): la paleta del trofeo recoloreada (null si la imagen no es RGBA8/RGB8); gemela `_textura_img_gd`.
+	Ref<Image> trofeo_textura(const Ref<Image> &src, const Color &metal, const Color &piedra) const;
 	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
 	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
 	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;

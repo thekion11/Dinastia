@@ -39,5 +39,16 @@ static func probar(nat: Object) -> Dictionary:
 			fallos.append("posiciones pegadas distintas con %d puntos de piel" % n_piel)
 		if var_to_bytes(l_gd) != var_to_bytes(res[1]):
 			fallos.append("distancias a la piel distintas con %d puntos de piel" % n_piel)
+	## Las normales de `_armar`: mallas con vértices sueltos (normal nula → hacia atrás).
+	for n3: int in [3, 50, 468, 2000]:
+		var pos3 := PackedVector3Array()
+		for i in n3:
+			pos3.append(Vector3(rng.randf_range(-0.1, 0.1), rng.randf_range(1.5, 1.8), rng.randf_range(-0.1, 0.1)))
+		var tri3 := PackedInt32Array()
+		for t in range((n3 - 2) * 3 if n3 > 4 else 3):
+			tri3.append(rng.randi() % (n3 - 2))   ## los dos últimos vértices quedan sueltos
+		comparados += 1
+		if var_to_bytes(CaraMalla._normales_cara_gd(pos3, tri3, n3)) != var_to_bytes(nat.cara_normales(pos3, tri3, n3)):
+			fallos.append("normales distintas con %d vértices" % n3)
 	CaraMalla._alfa = PackedFloat32Array()
 	return {"fallos": fallos, "textos": ["cara: %d comparaciones (rejilla y borde, 5 cráneos de 0 a 9000 puntos)" % comparados]}

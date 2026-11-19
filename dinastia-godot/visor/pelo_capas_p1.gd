@@ -87,6 +87,12 @@ static func _densidades_gd(bytes: PackedByteArray, n: int) -> PackedFloat32Array
 
 ## Los vértices a `anillos` pasos (por triángulos) de los de `base`.
 static func _anillo(base: Array, tri: PackedInt32Array, anillos: int) -> Dictionary:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("pelo_anillo"):   ## (19-11) en C++ (`nativo/src/pelo_nativo.cpp`); gemela: `_anillo_gd`
+		return nat.pelo_anillo(PackedInt32Array(base), tri, anillos)
+	return _anillo_gd(base, tri, anillos)
+
+static func _anillo_gd(base: Array, tri: PackedInt32Array, anillos: int) -> Dictionary:
 	var dentro := {}
 	for i: int in base:
 		dentro[i] = true
@@ -204,6 +210,12 @@ static func _capas_sobre(pos: PackedVector3Array, nor: PackedVector3Array, uv: P
 
 ## Los triángulos con al menos `minimo` vértices de densidad > 0.
 static func _solo_con(tri: PackedInt32Array, dens: PackedFloat32Array, minimo: int) -> PackedInt32Array:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("pelo_solo_con"):   ## (19-11) en C++; gemela: `_solo_con_gd`
+		return nat.pelo_solo_con(tri, dens, minimo)
+	return _solo_con_gd(tri, dens, minimo)
+
+static func _solo_con_gd(tri: PackedInt32Array, dens: PackedFloat32Array, minimo: int) -> PackedInt32Array:
 	var out := PackedInt32Array()
 	for t in range(0, tri.size() - 2, 3):
 		var n := 0
@@ -339,6 +351,14 @@ static func _candidatos_cuero(cuerpo: Dictionary) -> Array:
 	var clave := "%s|%d|%d" % [String(cuerpo.get("id", "")), v.size(), ind.size()]
 	if _cand_cuero.has(clave):
 		return _cand_cuero[clave]
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("pelo_candidatos"):   ## (19-11) en C++; gemela: `_candidatos_cuero_gd`
+		_cand_cuero[clave] = nat.pelo_candidatos(v, ind)
+		return _cand_cuero[clave]
+	_cand_cuero[clave] = _candidatos_cuero_gd(v, ind)
+	return _cand_cuero[clave]
+
+static func _candidatos_cuero_gd(v: PackedVector3Array, ind: PackedInt32Array) -> Array:
 	var verts := PackedInt32Array()
 	var marca := PackedByteArray()
 	marca.resize(v.size())
@@ -352,8 +372,7 @@ static func _candidatos_cuero(cuerpo: Dictionary) -> Array:
 	for t in range(0, ind.size() - 2, 3):
 		if marca[ind[t]] == 1 or marca[ind[t + 1]] == 1 or marca[ind[t + 2]] == 1:
 			tri.append_array([ind[t], ind[t + 1], ind[t + 2]])
-	_cand_cuero[clave] = [verts, tri]
-	return _cand_cuero[clave]
+	return [verts, tri]
 
 static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictionary, h: Dictionary,
 		capas: int) -> ArrayMesh:

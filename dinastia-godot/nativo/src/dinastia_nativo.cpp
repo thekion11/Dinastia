@@ -56,10 +56,14 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("ropa_prenda", "pos", "nor", "idx", "cual"), &DinastiaNativo::ropa_prenda);
 	ClassDB::bind_method(D_METHOD("ropa_subconjunto", "src", "orden", "ancho"), &DinastiaNativo::ropa_subconjunto);
 	ClassDB::bind_method(D_METHOD("cara_pegar_borde", "pos", "alfa", "rejilla"), &DinastiaNativo::cara_pegar_borde);
+	ClassDB::bind_method(D_METHOD("cara_normales", "pos", "tri", "n"), &DinastiaNativo::cara_normales);
 	ClassDB::bind_method(D_METHOD("cara_rejilla_piel", "cv", "nn"), &DinastiaNativo::cara_rejilla_piel);
 	ClassDB::bind_method(D_METHOD("pelo_normales", "pos", "tri"), &DinastiaNativo::pelo_normales);
 	ClassDB::bind_method(D_METHOD("pelo_densidades", "bytes", "n"), &DinastiaNativo::pelo_densidades);
 	ClassDB::bind_method(D_METHOD("pelo_max", "a"), &DinastiaNativo::pelo_max);
+	ClassDB::bind_method(D_METHOD("pelo_solo_con", "tri", "dens", "minimo"), &DinastiaNativo::pelo_solo_con);
+	ClassDB::bind_method(D_METHOD("pelo_anillo", "base", "tri", "anillos"), &DinastiaNativo::pelo_anillo);
+	ClassDB::bind_method(D_METHOD("pelo_candidatos", "v", "ind"), &DinastiaNativo::pelo_candidatos);
 	ClassDB::bind_method(D_METHOD("pelo_suavizar", "a", "tri", "f"), &DinastiaNativo::pelo_suavizar);
 	ClassDB::bind_method(D_METHOD("anim_espejar", "original", "esq", "prefijo"), &DinastiaNativo::anim_espejar);
 	ClassDB::bind_method(D_METHOD("asfalto_imagen", "grande", "medio", "grieta", "tinte", "semilla", "n"), &DinastiaNativo::asfalto_imagen);
@@ -74,6 +78,8 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("publico_pintar", "img", "w", "h", "a1", "a2", "lleno", "rng"), &DinastiaNativo::publico_pintar);
 	ClassDB::bind_method(D_METHOD("grada_imagen", "patron", "a1", "a2", "a3", "semilla", "lleno"), &DinastiaNativo::grada_imagen);
 	ClassDB::bind_method(D_METHOD("grada_tramos", "patrones", "colores", "semilla", "lleno"), &DinastiaNativo::grada_tramos);
+	ClassDB::bind_method(D_METHOD("dt_mapa", "superficies"), &DinastiaNativo::dt_mapa);
+	ClassDB::bind_method(D_METHOD("trofeo_textura", "src", "metal", "piedra"), &DinastiaNativo::trofeo_textura);
 	ClassDB::bind_method(D_METHOD("son_tono", "hz", "dur", "vol", "forma", "frecuencia"), &DinastiaNativo::son_tono);
 	ClassDB::bind_method(D_METHOD("son_ruido", "dur", "f0", "f1", "vol", "frecuencia"), &DinastiaNativo::son_ruido);
 	ClassDB::bind_method(D_METHOD("son_mezclar", "destino", "fuente", "retraso", "frecuencia"), &DinastiaNativo::son_mezclar);

@@ -195,3 +195,35 @@ Ref<Image> DinastiaNativo::kit_barba(const Ref<Image> &img, const Color &pelo, i
 	}
 	return Image::create_from_data(w, img->get_height(), false, Image::FORMAT_RGBA8, datos);
 }
+
+// `TrofeoModelo._textura` (visor/trofeo_modelo.gd): la paleta del modelo recoloreada (lo oscuro y gris, con el color de la peana; lo demás, con el del metal). Devuelve la imagen del mismo formato
+// (RGBA8 o RGB8), o null si es otro. Gemela GDScript: `_textura_img_gd`.
+Ref<Image> DinastiaNativo::trofeo_textura(const Ref<Image> &src, const Color &metal, const Color &piedra) const {
+	Ref<Image> nada;
+	const Vista v(src);
+	if (!v.ok) {
+		return nada;
+	}
+	PackedByteArray sal = v.datos.duplicate();
+	uint8_t *d = sal.ptrw();
+	for (int64_t y = 0; y < v.h; y++) {
+		for (int64_t x = 0; x < v.w; x++) {
+			const Color c = v.px(x, y);
+			const double l = double(c.get_luminance());
+			const bool oscuro = l < 0.6 && double(c.get_s()) < 0.25;
+			const Color cb = oscuro ? piedra : metal;
+			const double f = l / (oscuro ? 0.45 : 0.8);
+			uint8_t *q = d + (y * v.w + x) * v.bpp;
+			const double cs[3] = { double(cb.r), double(cb.g), double(cb.b) };
+			for (int k = 0; k < 3; k++) {
+				double t = cs[k] * f;
+				t = t < 0.0 ? 0.0 : (t > 1.0 ? 1.0 : t);
+				q[k] = LienzoRGB::a_byte(float(t));
+			}
+			if (v.bpp == 4) {
+				q[3] = 255;
+			}
+		}
+	}
+	return Image::create_from_data(v.w, v.h, false, v.bpp == 4 ? Image::FORMAT_RGBA8 : Image::FORMAT_RGB8, sal);
+}

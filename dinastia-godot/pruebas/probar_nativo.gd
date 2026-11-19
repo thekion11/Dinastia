@@ -467,6 +467,12 @@ func _probar() -> void:
 	_comprobar((pu["fallos"] as Array).is_empty(), "público y texturas de grada: C++ = GDScript (bytes y estado del azar)")
 	for t: String in pu["textos"]:
 		print(t)
+	var dm := ProbarNativoDtMapa.probar(nat)   ## (19-11) el mapa UV de la cabeza del DT
+	for f: String in dm["fallos"]:
+		_comprobar(false, "mapa del DT en C++: " + f)
+	_comprobar((dm["fallos"] as Array).is_empty(), "mapa UV de la cabeza del DT: C++ = GDScript (bytes RGBAF)")
+	for t: String in dm["textos"]:
+		print(t)
 	var so := ProbarNativoSonido.probar(nat)   ## (19-11) la síntesis del sonido
 	for f: String in so["fallos"]:
 		_comprobar(false, "síntesis del sonido en C++: " + f)

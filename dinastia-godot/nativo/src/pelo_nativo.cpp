@@ -5,6 +5,7 @@
 
 #include <godot_cpp/variant/vector3.hpp>
 
+#include <cmath>
 #include <vector>
 
 using namespace godot;
@@ -66,4 +67,95 @@ PackedFloat32Array DinastiaNativo::pelo_suavizar(const PackedFloat32Array &a, co
 		}
 	}
 	return out;
+}
+
+// `PeloCapas._solo_con`: los triángulos con al menos `minimo` vértices de densidad mayor que 0,02.
+PackedInt32Array DinastiaNativo::pelo_solo_con(const PackedInt32Array &tri, const PackedFloat32Array &dens, int64_t minimo) const {
+	PackedInt32Array out;
+	for (int64_t t = 0; t < tri.size() - 2; t += 3) {
+		int64_t n = 0;
+		for (int j = 0; j < 3; j++) {
+			const int64_t v = tri[t + j];
+			if (v < dens.size() && double(dens[v]) > 0.02) {
+				n++;
+			}
+		}
+		if (n >= minimo) {
+			out.append(tri[t]);
+			out.append(tri[t + 1]);
+			out.append(tri[t + 2]);
+		}
+	}
+	return out;
+}
+
+// `PeloCapas._anillo`: los vértices a `anillos` pasos (por triángulos) de los de `base`, como Dictionary {vértice: true} en el MISMO orden de inserción.
+Dictionary DinastiaNativo::pelo_anillo(const PackedInt32Array &base, const PackedInt32Array &tri, int64_t anillos) const {
+	int32_t mayor = -1;
+	for (int64_t i = 0; i < base.size(); i++) {
+		mayor = base[i] > mayor ? base[i] : mayor;
+	}
+	for (int64_t i = 0; i < tri.size(); i++) {
+		mayor = tri[i] > mayor ? tri[i] : mayor;
+	}
+	std::vector<char> dentro(size_t(mayor + 1), 0);
+	std::vector<int32_t> orden;
+	auto meter = [&](int32_t v) {
+		if (v >= 0 && !dentro[v]) {
+			dentro[v] = 1;
+			orden.push_back(v);
+		}
+	};
+	for (int64_t i = 0; i < base.size(); i++) {
+		meter(base[i]);
+	}
+	for (int64_t k = 0; k < anillos; k++) {
+		std::vector<char> visto(size_t(mayor + 1), 0);
+		std::vector<int32_t> nuevos;
+		for (int64_t t = 0; t < tri.size() - 2; t += 3) {
+			const int32_t a = tri[t], b = tri[t + 1], c = tri[t + 2];
+			if ((a >= 0 && dentro[a]) || (b >= 0 && dentro[b]) || (c >= 0 && dentro[c])) {
+				const int32_t tv[3] = { a, b, c };
+				for (int j = 0; j < 3; j++) {
+					if (tv[j] >= 0 && !visto[tv[j]]) {
+						visto[tv[j]] = 1;
+						nuevos.push_back(tv[j]);
+					}
+				}
+			}
+		}
+		for (int32_t v : nuevos) {
+			meter(v);
+		}
+	}
+	Dictionary d;
+	for (int32_t v : orden) {
+		d[int64_t(v)] = true;
+	}
+	return d;
+}
+
+// `PeloCapas._candidatos_cuero` (la cuenta): [vértices por encima de 1,52 m y dentro de ±14 cm, triángulos que tocan alguno, en su orden].
+Array DinastiaNativo::pelo_candidatos(const PackedVector3Array &v, const PackedInt32Array &ind) const {
+	PackedInt32Array verts, tri;
+	std::vector<char> marca(size_t(v.size()), 0);
+	for (int64_t i = 0; i < v.size(); i++) {
+		const Vector3 p = v[i];
+		if (double(p.y) < 1.52 || std::fabs(double(p.x)) > 0.14) {
+			continue;
+		}
+		verts.append(int32_t(i));
+		marca[size_t(i)] = 1;
+	}
+	for (int64_t t = 0; t < ind.size() - 2; t += 3) {
+		if (marca[size_t(ind[t])] || marca[size_t(ind[t + 1])] || marca[size_t(ind[t + 2])]) {
+			tri.append(ind[t]);
+			tri.append(ind[t + 1]);
+			tri.append(ind[t + 2]);
+		}
+	}
+	Array res;
+	res.push_back(verts);
+	res.push_back(tri);
+	return res;
 }
