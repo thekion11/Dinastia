@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2508 archivos (.gd, .cpp, .h), 359930 líneas, 991 clases con nombre.
+Total: 2510 archivos (.gd, .cpp, .h), 360489 líneas, 991 clases con nombre.
 
 ## Extensión C++
 
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1227 archivos, 118166 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1229 archivos, 118725 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
@@ -147,12 +147,12 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Mundo` | `nucleo/mundo.gd` | 158 | 906 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
-| `Jugador` | `nucleo/jugador.gd` | 450 | 470 |  |
+| `Mundo` | `nucleo/mundo.gd` | 158 | 908 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
+| `Jugador` | `nucleo/jugador.gd` | 450 | 472 |  |
 | `Liga` | `nucleo/liga.gd` | 235 | 194 |  |
 | `Nombres` | `nucleo/nombres.gd` | 169 | 168 |  |
 | `Partida` | `nucleo/partida.gd` | 450 | 117 | partida_p1.gd |
-| `Copa` | `nucleo/copa.gd` | 348 | 94 |  |
+| `Copa` | `nucleo/copa.gd` | 348 | 95 |  |
 | `Mercado` | `nucleo/mercado.gd` | 64 | 92 | mercado_p1.gd |
 | `Finanzas` | `nucleo/finanzas.gd` | 384 | 89 |  |
 | `Roles` | `nucleo/roles.gd` | 357 | 78 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
@@ -160,7 +160,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | `Calendario` | `nucleo/calendario.gd` | 78 | 70 | calendario_p1.gd |
 | `CargaCiudad` | `nucleo/carga_ciudad.gd` | 14 | 67 |  |
 | `Cantera` | `nucleo/cantera.gd` | 209 | 66 | cantera_p3.gd ← cantera_p2.gd ← cantera_p1.gd |
-| `Banco` | `nucleo/banco.gd` | 241 | 63 |  |
+| `Banco` | `nucleo/banco.gd` | 241 | 64 |  |
 
 Cerca del tope (≥ 400 líneas): `idiomas.gd` (450), `jugador.gd` (450), `mercado_p1.gd` (450), `partida.gd` (450), `roles_p4.gd` (450), `mundo_p1.gd` (449), `partida_p1.gd` (449), `musica.gd` (446), `selecciones_p2.gd` (446), `prensa.gd` (445).
 
