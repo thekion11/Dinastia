@@ -140,10 +140,18 @@ static func exposicion_piel(lum: float) -> float:
 	## salían hundidas por el pie del mapeo de tonos -medido de día: Ayoze al
 	## 74 %, Kondogbia casi negro-. Las claras no cambian; el orden se mantiene.)
 	return clampf(pow(0.39 / maxf(lum, 0.001), 0.53), 1.0, 3.0)
+## (19-11) Albedo físico de la piel: la paleta es el color «que se ve»; usada tal cual, la piel clara salía casi blanca.
+## Compresión por encima de 0,15 de luminancia media ya expuesta (las oscuras, ya calibradas, no cambian); la clara
+## (#f0c39b, 0,60) queda en ~0,35, la de la piel clara real. La misma cuenta en `cara_malla.gdshader` y `equipacion_q.gdshader`.
+static func albedo_piel(lum_expuesta: float) -> float:
+	return 1.0 / (1.0 + 1.6 * maxf(lum_expuesta - 0.15, 0.0))
+## (19-11) El relleno de luz de la cara (`cara_malla.gdshader`): a la mitad en las pieles claras, entero en las oscuras.
+static func relleno_piel(lum: float) -> float:
+	return 0.3 * lerpf(0.5, 1.0, clampf((0.32 - lum) / 0.22, 0.0, 1.0))
 ## La compensación de saturación, mayor en pieles oscuras (salían naranjas).
 ## La misma cuenta que `cara_malla.gdshader`.
 static func compensar_piel(lum: float) -> float:
-	return COMPENSAR_PIEL + 0.8 * clampf((0.25 - lum) / 0.2, 0.0, 1.0)
+	return COMPENSAR_PIEL + 1.03 * clampf((0.25 - lum) / 0.2, 0.0, 1.0)   ## (19-11) 0,8 → 1,03: las oscuras siguen en 2,15
 
 ## La transformación afín que lleva los ojos y la boca del retrato (espacio
 ## 0-64 de `Cara.svg_rasgos`) a los de la foto (0-1). [] si no hay puntos o

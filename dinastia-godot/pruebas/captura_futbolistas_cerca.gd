@@ -22,6 +22,10 @@ const PLANOS := [
 	# Frente 2 (16-11): plano de torso y short de dos jugadores, para los parches claros de la tela.
 	["torso", Vector3(0.35, 1.2, 1.5), Vector3(0.35, 1.15, 0), 30.0],
 	["espalda", Vector3(-0.35, 1.2, -1.5), Vector3(-0.35, 1.1, 0), 30.0],
+	## (19-11) Rostro a lo repetición de PES 2020: ojos, párpados, sombreado de la cara y nacimiento del pelo.
+	["rostro", Vector3(-0.35, 1.66, 0.75), Vector3(-0.35, 1.64, 0), 24.0],
+	["rostro_lado", Vector3(0.25, 1.66, 0.65), Vector3(-0.35, 1.64, 0), 24.0],
+	["manos", Vector3(-0.35, 0.95, 1.3), Vector3(-0.35, 0.92, 0), 34.0],
 ]
 ## SOLO=torso1,cuerpo saca solo esos planos (vacío = todos).
 var _planos: Array = []
