@@ -146,6 +146,9 @@ public:
 	// (19-11) `visor/ropa_separada.gd` (nativo/src/ropa_nativo.cpp): la ropa aparte de los futbolistas; gemelas `_prenda_gd` y `_subconjunto_gd`.
 	Array ropa_prenda(const PackedVector3Array &pos, const PackedVector3Array &nor, const PackedInt32Array &idx, int64_t cual) const;
 	Variant ropa_subconjunto(const Variant &src, const PackedInt32Array &orden, int64_t ancho) const;
+	// (19-11) `visor/cara_malla.gd` (nativo/src/cara_nativo.cpp): el borde de la cara pegado al cráneo; gemelas `_pegar_borde_gd` y `_rejilla_piel_gd`.
+	Array cara_pegar_borde(const PackedVector3Array &pos, const PackedFloat32Array &alfa, const Dictionary &rejilla) const;
+	Dictionary cara_rejilla_piel(const PackedVector3Array &cv, const PackedVector3Array &nn) const;
 	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
 	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
 	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;

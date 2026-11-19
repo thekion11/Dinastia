@@ -233,6 +233,14 @@ static func _pegar_borde(pos: PackedVector3Array, cuerpo: Dictionary) -> PackedV
 	var rejilla := _rejilla_piel(cuerpo)
 	if rejilla.is_empty():
 		return pos
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("cara_pegar_borde"):   ## (19-11) el bucle por vértice, en C++ (`nativo/src/cara_nativo.cpp`); gemela: `_pegar_borde_gd`
+		var res: Array = nat.cara_pegar_borde(pos, _alfa, rejilla)
+		_lejos = res[1]
+		return res[0]
+	return _pegar_borde_gd(pos, rejilla)
+
+static func _pegar_borde_gd(pos: PackedVector3Array, rejilla: Dictionary) -> PackedVector3Array:
 	var salida := pos.duplicate()
 	_lejos.resize(salida.size())
 	_lejos.fill(0.0)
@@ -282,21 +290,28 @@ static func _rejilla_piel(cuerpo: Dictionary) -> Dictionary:
 		return _rejillas3[clave]
 	var cn: Variant = cuerpo.get("n")
 	var r := {}
-	if cn is PackedVector3Array and (cn as PackedVector3Array).size() == cv.size():
-		var nn: PackedVector3Array = cn
-		for i in cv.size():
-			var p := cv[i]
-			if p.y > 1.52 and p.z > -0.002 and absf(p.x) < 0.11 and nn[i].length_squared() > 0.5:
-				var k := Vector3i((p / CELDA).floor())
-				if not r.has(k):
-					r[k] = [PackedVector3Array(), PackedVector3Array()]
-				## (Los Packed*Array se copian al sacarlos: se vuelven a guardar.)
-				var pv: PackedVector3Array = r[k][0]
-				var nv: PackedVector3Array = r[k][1]
-				pv.append(p)
-				nv.append(nn[i].normalized())
-				r[k] = [pv, nv]
+	var nat := Nativo.obj()
+	if cn is PackedVector3Array and (cn as PackedVector3Array).size() == cv.size() and nat != null and nat.has_method("cara_rejilla_piel"):
+		r = nat.cara_rejilla_piel(cv, cn)   ## (19-11) en C++ (`nativo/src/cara_nativo.cpp`); gemela: `_rejilla_piel_gd`
+	elif cn is PackedVector3Array and (cn as PackedVector3Array).size() == cv.size():
+		r = _rejilla_piel_gd(cv, cn)
 	_rejillas3[clave] = r
+	return r
+
+static func _rejilla_piel_gd(cv: PackedVector3Array, nn: PackedVector3Array) -> Dictionary:
+	var r := {}
+	for i in cv.size():
+		var p := cv[i]
+		if p.y > 1.52 and p.z > -0.002 and absf(p.x) < 0.11 and nn[i].length_squared() > 0.5:
+			var k := Vector3i((p / CELDA).floor())
+			if not r.has(k):
+				r[k] = [PackedVector3Array(), PackedVector3Array()]
+			## (Los Packed*Array se copian al sacarlos: se vuelven a guardar.)
+			var pv: PackedVector3Array = r[k][0]
+			var nv: PackedVector3Array = r[k][1]
+			pv.append(p)
+			nv.append(nn[i].normalized())
+			r[k] = [pv, nv]
 	return r
 
 ## El método de antes (solo en z), de respaldo para comparar.
