@@ -25,7 +25,7 @@ static func pintar(m: Mundo, club: Club, j: Jugador, caja: Container, al_cambiar
 	var actual: String = v.rol_tactico(j)
 	var t := Label.new()
 	t.text = Idiomas.t("ESTILO DE JUEGO")
-	t.add_theme_font_size_override("font_size", 12)
+	t.add_theme_font_size_override("font_size", Tema.letra(12))
 	t.add_theme_color_override("font_color", Tema.ORO)
 	caja.add_child(t)
 	var claves: Array = v.roles_de_grupo(Datos.grupo(j.pos_e))
@@ -37,7 +37,7 @@ static func pintar(m: Mundo, club: Club, j: Jugador, caja: Container, al_cambiar
 		var es_actual := clave == actual
 		var n := estrellas(v.aptitud_rol(j, clave))
 		b.text = "%s  %s%s" % [texto_estrellas(n), Idiomas.t(String((tabla[clave] as Array)[0])), "  ✔" if es_actual else ""]
-		b.add_theme_font_size_override("font_size", 13)
+		b.add_theme_font_size_override("font_size", Tema.letra(13))
 		b.add_theme_color_override("font_color", Tema.ORO if es_actual else Tema.TEXTO)
 		b.tooltip_text = "%s: %.2f" % [Idiomas.t("Aptitud"), v.aptitud_rol(j, clave)]
 		b.pressed.connect(func() -> void:

@@ -125,7 +125,7 @@ func _pintar_kits(co: Comercial, c: Club) -> void:
 		var clave := String(f[0])
 		var b2 := Button.new()
 		b2.text = String(f[1])
-		b2.add_theme_font_size_override("font_size", 10)
+		b2.add_theme_font_size_override("font_size", Tema.letra(10))
 		b2.toggle_mode = true
 		b2.button_pressed = co.tipografia == clave
 		b2.custom_minimum_size = Vector2(72, 22)
@@ -142,7 +142,7 @@ func _pintar_identidad(c: Club) -> void:
 	var bd := Button.new()
 	bd.text = Idiomas.t("🎽  Abrir el diseñador de equipación")
 	bd.custom_minimum_size = Vector2(0, 44)
-	bd.add_theme_font_size_override("font_size", 16)
+	bd.add_theme_font_size_override("font_size", Tema.letra(16))
 	bd.pressed.connect(func() -> void:
 		var dz := DisenadorKit.abrir(p, p.mundo)
 		dz.cerrado.connect(p._refrescar))
@@ -233,7 +233,7 @@ func _pintar_identidad(c: Club) -> void:
 
 	var b_todo := Button.new()
 	b_todo.text = Idiomas.t("🎨 Igualar todo a los colores del club")
-	b_todo.add_theme_font_size_override("font_size", 11)
+	b_todo.add_theme_font_size_override("font_size", Tema.letra(11))
 	b_todo.pressed.connect(func() -> void:
 		c.igualar_identidad()
 		Escudo.limpiar_cache()

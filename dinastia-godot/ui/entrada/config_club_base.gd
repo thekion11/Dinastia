@@ -123,7 +123,7 @@ func _barra_pasos() -> Control:
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.custom_minimum_size = Vector2(0, 40)
 		b.clip_text = true
-		b.add_theme_font_size_override("font_size", 13)
+		b.add_theme_font_size_override("font_size", Tema.letra(13))
 		var idx := i
 		b.pressed.connect(func() -> void: ir_a_chip(idx))
 		fila.add_child(b)
@@ -360,7 +360,7 @@ func _boton_grande(texto: String, fondo: Color) -> Button:
 	var b := Button.new()
 	b.text = texto
 	b.custom_minimum_size = Vector2(190, 46)
-	b.add_theme_font_size_override("font_size", 17)
+	b.add_theme_font_size_override("font_size", Tema.letra(17))
 	b.add_theme_stylebox_override("normal", _caja(fondo, Tema.RADIO, Color(1, 1, 1, 0.12)))
 	b.add_theme_stylebox_override("hover", _caja(fondo.lightened(0.12), Tema.RADIO, Color(1, 1, 1, 0.2)))
 	b.add_theme_stylebox_override("pressed", _caja(fondo.darkened(0.15), Tema.RADIO, Color(1, 1, 1, 0.2)))
@@ -402,7 +402,7 @@ func _opcion(texto: String, elegido: bool, al_pulsar: Callable, tam := Vector2(0
 	b.button_pressed = elegido
 	b.custom_minimum_size = tam
 	b.tooltip_text = tip
-	b.add_theme_font_size_override("font_size", 13)
+	b.add_theme_font_size_override("font_size", Tema.letra(13))
 	b.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_estilo_opcion(b)
 	b.pressed.connect(al_pulsar)

@@ -119,7 +119,7 @@ func _pintar_medico(c: Club) -> void:
 			var coste := p.mundo.medico.costo_terapia(j, c.rep)
 			var b := Button.new()
 			b.text = Idiomas.t("Terapia  %s") % p._dinero(coste)
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.disabled = coste > c.saldo
 			b.pressed.connect(func() -> void: _terapia(j))
 			fila.add_child(b)
@@ -130,7 +130,7 @@ func _pintar_medico(c: Club) -> void:
 			var coste_op := p.mundo.medico.coste_segunda_opinion(j, c)
 			var b2 := Button.new()
 			b2.text = Idiomas.t("2.ª opinión  %s") % p._dinero(coste_op)
-			b2.add_theme_font_size_override("font_size", 11)
+			b2.add_theme_font_size_override("font_size", Tema.letra(11))
 			b2.disabled = coste_op > c.saldo
 			b2.pressed.connect(func() -> void: _segunda_opinion(j))
 			fila.add_child(b2)

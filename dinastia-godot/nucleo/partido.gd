@@ -81,14 +81,15 @@ func simular_minuto() -> void:
 	if not motor_externo:
 		if rng.randf() < p_l:
 			_atacar(local, once_local, true)
-		if rng.randf() < p_v:
+		## Si el ataque local acabó en suspensión (menos de siete), el partido ya terminó: el rival no puede marcar después del final.
+		if rng.randf() < p_v and not terminado_ya:
 			_atacar(visita, once_visita, false)
 
 	_incidencias()
 	minuto_jugado.emit(minuto)
 	if prorroga_si_empate and minuto >= minutos_fin and minutos_fin == MINUTOS and goles_local == goles_visita:
 		prorroga_externa()
-	if minuto >= minutos_fin:
+	if minuto >= minutos_fin and not terminado_ya:
 		terminado_ya = true
 		_devolver_tactica()
 		terminado.emit(goles_local, goles_visita)

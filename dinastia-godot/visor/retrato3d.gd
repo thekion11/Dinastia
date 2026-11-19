@@ -122,7 +122,7 @@ static func _vacio(tam: int) -> Image:
 func _modo(tam: int, k1: String, env: Environment) -> bool:
 	var escap := tam >= TAM_ESCAPARATE
 	_vp.transparent_bg = escap
-	_vp.msaa_3d = Viewport.MSAA_4X if escap else Viewport.MSAA_2X
+	_vp.msaa_3d = Viewport.MSAA_DISABLED if Calidad.elegida <= Calidad.MINIMO else (Viewport.MSAA_4X if escap else Viewport.MSAA_2X)   ## en ULTRA BAJA sin MSAA (orden R01)
 	env.background_mode = Environment.BG_CLEAR_COLOR if escap else Environment.BG_COLOR
 	_rim.light_energy = 1.1 if escap else 0.0
 	## (17-11) luz más baja en el escaparate (igual que la previa del partido): las caras no se queman

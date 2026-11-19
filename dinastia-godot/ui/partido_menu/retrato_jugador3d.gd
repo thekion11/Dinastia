@@ -44,7 +44,7 @@ static func crear(c: Club, j: Jugador, cols: Array, giro: float) -> RetratoJugad
 	r._vp = SubViewport.new()
 	r._vp.own_world_3d = true
 	r._vp.transparent_bg = true
-	r._vp.msaa_3d = Viewport.MSAA_4X   ## (Auditoría) sin dientes de sierra en los brazos: se dibuja una vez (o a 30 Hz), el coste es pequeño
+	r._vp.msaa_3d = Viewport.MSAA_DISABLED if Calidad.elegida <= Calidad.MINIMO else Viewport.MSAA_4X   ## en ULTRA BAJA sin MSAA (R01); (Auditoría) sin dientes de sierra en los brazos: se dibuja una vez (o a 30 Hz), el coste es pequeño
 	r._vp.mesh_lod_threshold = 0.0
 	r._vp.render_target_update_mode = SubViewport.UPDATE_DISABLED   ## nada que dibujar hasta que el modelo esté montado
 	r.add_child(r._vp)
@@ -81,7 +81,7 @@ func _luces() -> void:
 	var key := DirectionalLight3D.new()
 	key.light_color = Color(1.0, 0.95, 0.88)
 	key.light_energy = float(luz["key"])
-	key.shadow_enabled = true
+	key.shadow_enabled = Calidad.elegida > Calidad.MINIMO   ## en ULTRA BAJA sin sombra
 	key.shadow_blur = 2.0
 	key.rotation_degrees = Vector3(-28, 32 * lado, 0)
 	_raiz.add_child(key)

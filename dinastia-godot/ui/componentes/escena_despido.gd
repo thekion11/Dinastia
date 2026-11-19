@@ -110,7 +110,7 @@ void fragment() {
 	_boton = Button.new()
 	_boton.text = Idiomas.t("Ver ofertas de otros clubes ▶")
 	_boton.custom_minimum_size = Vector2(320, 46)
-	_boton.add_theme_font_size_override("font_size", 18)
+	_boton.add_theme_font_size_override("font_size", Tema.letra(18))
 	_boton.visible = false
 	_boton.pressed.connect(_cerrar)
 	add_child(_boton)

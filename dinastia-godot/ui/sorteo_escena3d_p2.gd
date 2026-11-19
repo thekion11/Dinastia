@@ -287,7 +287,7 @@ func _montar_pantalla_gigante(fondo: Color) -> void:
 
 	_pantalla_grupo = Label.new()
 	_pantalla_grupo.text = ""
-	_pantalla_grupo.add_theme_font_size_override("font_size", 46)
+	_pantalla_grupo.add_theme_font_size_override("font_size", Tema.letra(46))
 	_pantalla_grupo.add_theme_color_override("font_color", _acento)
 	_pantalla_grupo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caja.add_child(_pantalla_grupo)
@@ -301,7 +301,7 @@ func _montar_pantalla_gigante(fondo: Color) -> void:
 
 	_pantalla_nombre = Label.new()
 	_pantalla_nombre.text = ""
-	_pantalla_nombre.add_theme_font_size_override("font_size", 62)
+	_pantalla_nombre.add_theme_font_size_override("font_size", Tema.letra(62))
 	_pantalla_nombre.add_theme_color_override("font_color", Color("f2f6f3"))
 	_pantalla_nombre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caja.add_child(_pantalla_nombre)

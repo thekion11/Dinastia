@@ -385,7 +385,7 @@ func _fila_texto_libre() -> VBoxContainer:
 	abre.text = Idiomas.t("✍️ Con tus palabras")
 	abre.flat = true
 	abre.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	abre.add_theme_font_size_override("font_size", 12)
+	abre.add_theme_font_size_override("font_size", Tema.letra(12))
 	bloque.add_child(abre)
 	var fila := HBoxContainer.new()
 	fila.name = "TextoLibre"
@@ -434,7 +434,7 @@ func _fila_posturas() -> VBoxContainer:
 		b.text = Idiomas.t("%s %s" % [String(datos[0]), String(datos[1])])
 		b.toggle_mode = true
 		b.button_pressed = (k == p.mundo.prensa.cuerpo)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.pressed.connect(func() -> void:
 			p.mundo.prensa.fijar_cuerpo(k)
 			repintar_posturas())

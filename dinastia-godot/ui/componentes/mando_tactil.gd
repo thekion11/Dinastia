@@ -38,7 +38,7 @@ static func boton_camara(tam: float, visible_: bool) -> Button:
 	var bc := Button.new()
 	bc.text = "◉"
 	bc.custom_minimum_size = Vector2(tam, tam)
-	bc.add_theme_font_size_override("font_size", 28)
+	bc.add_theme_font_size_override("font_size", Tema.letra(28))
 	bc.modulate = Color(1, 1, 1, 0.75)
 	bc.visible = visible_
 	bc.pressed.connect(func() -> void:

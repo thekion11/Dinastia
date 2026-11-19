@@ -126,6 +126,7 @@ pasa "textura del balón" "godot --headless --path . --script res://pruebas/prob
 pasa "avance por días: modelo de eventos del día" "godot --headless --path . res://pruebas/probar_eventos_dia.tscn" "FIN. 0 fallos"
 # 5d. El avance por días, paso 2: los disparadores (directiva, crisis de caja, imprevistos, jugador del mes): solo observan (17-11)
 pasa "avance por días: disparadores (directiva, caja, imprevistos, jugador del mes)" "godot --headless --path . res://pruebas/probar_disparadores_dia.tscn" "FIN. 0 fallos"
+pasa "mentor: el consejo sigue tras cerrar la pantalla y salta pantallas liberadas" "godot --headless --path . res://pruebas/probar_mentor_voz.tscn" "FIN. 0 fallos"
 # 5e. El avance por días, paso 3 (núcleo): se detiene en el primer día con eventos y recorre una temporada entera (17-11)
 pasa "avance por días: núcleo (paradas)" "godot --headless --path . res://pruebas/probar_avance_dias.tscn" "FIN. 0 fallos"
 # 5f. El avance por días, pasos 3, 5 y 6: el botón «Avanzar» nuevo en el menú central, campanas, «Jugar/Saltar partido» y las pantallas (17-11)
@@ -142,6 +143,7 @@ pasa "avance por días: resultado, momentos y popup del partido jugado" "godot -
 pasa "textura del césped" "godot --headless --path . res://pruebas/probar_cesped_textura.tscn" "FIN. 0 fallos"
 pasa "texturas en disco (asfalto)" "godot --headless --path . res://pruebas/probar_imagen_en_disco.tscn" "FIN. 0 fallos"
 pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"
+pasa "tráfico de la ciudad real: C++ = GDScript" "godot --headless --path . res://pruebas/probar_trafico_real.tscn" "FIN. 0 fallos"
 pasa "caché horneada del build" "godot --headless --path . --script res://pruebas/probar_cache_horneada.gd" "FIN. 0 fallos"
 pasa "estadio y ciudad por partes" "godot --headless --path . res://pruebas/probar_por_partes.tscn" "FIN. 0 fallos"
 # 5a. CAPTURAS DE UI (10-11, sesión 6): las pantallas nuevas no las compila el banco (solo ve el núcleo y los scripts que toca); un error de argumentos en la ficha

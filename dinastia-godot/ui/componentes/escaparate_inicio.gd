@@ -22,7 +22,7 @@ static func pintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 
 ## La capa del escaparate solo se ve en el Inicio (el menú de siempre se esconde entonces; en las demás pestañas, al revés). El riel de iconos también.
 static func sincronizar(p: Principal) -> void:
-	var pant: Variant = p.get_meta("escaparate", null)
+	var pant: Variant = (p.get_meta("escaparate") if p.has_meta("escaparate") else null)
 	if not is_instance_valid(pant) or p._pestanas == null:
 		return
 	var en_inicio := p._pestanas.get_tab_title(p._pestanas.current_tab) == "Inicio" and usa()
@@ -31,7 +31,7 @@ static func sincronizar(p: Principal) -> void:
 	if raiz is Control:
 		(raiz as Control).visible = not en_inicio
 	if p._menu_lateral != null:
-		p._menu_lateral.esconder_riel(en_inicio)
+		p._menu_lateral.esconder_riel(false)   ## (18-11, orden del dueño del 17-11) la barra lateral SIEMPRE visible, también en el escaparate del Inicio
 	for po in p.find_children("*", "PanelObjetivos", true, false):   ## su chapa plegada pasa al pie mientras se ve el escaparate
 		(po as Control).visible = not (en_inicio and bool(po.get("_plegado")))
 

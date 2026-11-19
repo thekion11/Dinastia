@@ -213,7 +213,7 @@ func _pintar_balon_parado(c: Club) -> void:
 			b.text = String(f[1])
 			b.toggle_mode = true
 			b.button_pressed = clave == actual
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.clip_text = true
 			b.custom_minimum_size = Vector2(160, 0)
 			b.tooltip_text = String(f[2])
@@ -257,7 +257,7 @@ func _pintar_balon_parado(c: Club) -> void:
 			b2.text = String(f2[1])
 			b2.toggle_mode = true
 			b2.button_pressed = String(c.tactica.get(prop2)) == clave2
-			b2.add_theme_font_size_override("font_size", 11)
+			b2.add_theme_font_size_override("font_size", Tema.letra(11))
 			b2.clip_text = true
 			b2.tooltip_text = String(f2[2])
 			b2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -291,7 +291,7 @@ func _pintar_roles_tacticos(c: Club) -> void:
 		## Solo los roles de SU línea: ofrecer "pivote" a un portero no es una
 		## opción, es ruido que alarga el desplegable a dieciséis entradas.
 		var op := OptionButton.new()
-		op.add_theme_font_size_override("font_size", 11)
+		op.add_theme_font_size_override("font_size", Tema.letra(11))
 		op.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		op.fit_to_longest_item = false   ## (12-11) en el teléfono de pie el rol más largo ensanchaba la página y cortaba los SÍ/NO de arriba
 		op.clip_text = true

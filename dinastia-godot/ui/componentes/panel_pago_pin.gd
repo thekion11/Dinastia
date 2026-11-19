@@ -53,7 +53,7 @@ func _pintar() -> void:
 		var av := Label.new()
 		av.text = _aviso
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		av.add_theme_font_size_override("font_size", 17)
+		av.add_theme_font_size_override("font_size", Tema.letra(17))
 		av.add_theme_color_override("font_color", Color(1.0, 0.8, 0.35))
 		_caja.add_child(av)
 	if cartera.bloqueada:

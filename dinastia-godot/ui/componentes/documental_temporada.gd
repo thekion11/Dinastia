@@ -166,7 +166,7 @@ func _montar() -> void:
 	_titulo.offset_top = -168
 	_titulo.offset_bottom = -128
 	_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_titulo.add_theme_font_size_override("font_size", 30)
+	_titulo.add_theme_font_size_override("font_size", Tema.letra(30))
 	_titulo.add_theme_color_override("font_color", Color(1, 0.88, 0.55))
 	add_child(_titulo)
 	_texto = Label.new()
@@ -177,12 +177,12 @@ func _montar() -> void:
 	_texto.offset_right = -80
 	_texto.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_texto.add_theme_font_size_override("font_size", 19)
+	_texto.add_theme_font_size_override("font_size", Tema.letra(19))
 	_texto.add_theme_color_override("font_color", Color(0.92, 0.92, 0.9))
 	add_child(_texto)
 	_puntos = Label.new()
 	_puntos.position = Vector2(20, 16)
-	_puntos.add_theme_font_size_override("font_size", 14)
+	_puntos.add_theme_font_size_override("font_size", Tema.letra(14))
 	_puntos.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
 	add_child(_puntos)
 	var fila := HBoxContainer.new()

@@ -72,7 +72,7 @@ static func _chica(t: Control) -> Control:
 			t.tooltip_text = lb.text
 			lb.visible = false
 		elif lb.get_theme_font_size("font_size") >= 20:
-			lb.add_theme_font_size_override("font_size", 17)
+			lb.add_theme_font_size_override("font_size", Tema.letra(17))
 			lb.clip_text = true
 	var hueco := Control.new()   ## empuja el dato hacia abajo, donde estaba la descripción
 	hueco.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -92,8 +92,8 @@ static func _agrandar(t: Control) -> void:
 		var lb := l as Label
 		var tam := lb.get_theme_font_size("font_size")
 		if lb.autowrap_mode == TextServer.AUTOWRAP_OFF and tam >= 20:
-			lb.add_theme_font_size_override("font_size", 30)
+			lb.add_theme_font_size_override("font_size", Tema.letra(30))
 		elif lb.autowrap_mode != TextServer.AUTOWRAP_OFF:
-			lb.add_theme_font_size_override("font_size", 16)
+			lb.add_theme_font_size_override("font_size", Tema.letra(16))
 		elif tam == 14:
-			lb.add_theme_font_size_override("font_size", 22)
+			lb.add_theme_font_size_override("font_size", Tema.letra(22))

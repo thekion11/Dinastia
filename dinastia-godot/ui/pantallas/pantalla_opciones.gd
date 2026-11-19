@@ -207,7 +207,7 @@ func _disp_calidad() -> void:
 		var clave: int = nivel[0]
 		var b_c := Button.new()
 		b_c.text = Idiomas.t(String(nivel[1]))
-		b_c.add_theme_font_size_override("font_size", 11)
+		b_c.add_theme_font_size_override("font_size", Tema.letra(11))
 		b_c.toggle_mode = true
 		b_c.button_pressed = Calidad.elegida == clave
 		b_c.tooltip_text = Idiomas.t(String(nivel[2]))
@@ -228,7 +228,7 @@ func _disp_calidad() -> void:
 	ad.text = Idiomas.t("Ajustar sola para mantener 40 FPS en el partido")
 	ad.tooltip_text = Idiomas.t("Si tu equipo no llega a 40 FPS, el partido apaga por escalones la oclusión ambiental, acorta las sombras y baja la resolución del 3D.")
 	ad.button_pressed = Calidad.adaptativa
-	ad.add_theme_font_size_override("font_size", 11)
+	ad.add_theme_font_size_override("font_size", Tema.letra(11))
 	ad.toggled.connect(func(si: bool) -> void:
 		Calidad.adaptativa = si
 		Calidad.guardar())
@@ -240,7 +240,7 @@ func _disp_calidad() -> void:
 	ml.tooltip_text = Idiomas.t("Usa el renderizador de compatibilidad (OpenGL). En gráficas integradas antiguas va más fluido; se pierden algunos efectos de luz.")
 	ml.button_pressed = Calidad.motor_ligero
 	ml.disabled = not Calidad.puede_relanzar()
-	ml.add_theme_font_size_override("font_size", 11)
+	ml.add_theme_font_size_override("font_size", Tema.letra(11))
 	ml.toggled.connect(func(si: bool) -> void:
 		Calidad.motor_ligero = si
 		Calidad.guardar()
@@ -323,12 +323,12 @@ func _pintar_qol() -> void:
 	capas.text = Idiomas.t("Ayudas al estrenar cada pantalla")
 	capas.tooltip_text = Idiomas.t("La primera vez que abres Táctica, Entrenar, Finanzas, Mercado… sale una tarjeta con lo esencial.")
 	capas.button_pressed = CapasTutorial.activas()
-	capas.add_theme_font_size_override("font_size", 11)
+	capas.add_theme_font_size_override("font_size", Tema.letra(11))
 	capas.toggled.connect(func(si: bool) -> void: CapasTutorial.poner_activas(si))
 	p._lista_ajustes.add_child(capas)
 	var otra_vez := Button.new()
 	otra_vez.text = Idiomas.t("Volver a ver todas las ayudas")
-	otra_vez.add_theme_font_size_override("font_size", 11)
+	otra_vez.add_theme_font_size_override("font_size", Tema.letra(11))
 	otra_vez.pressed.connect(func() -> void:
 		CapasTutorial.reiniciar()
 		p._escribir("[color=#c9a227]%s[/color]" % Idiomas.t("Las ayudas por pantalla vuelven a salir desde cero."))
@@ -432,7 +432,7 @@ func _pintar_qol() -> void:
 			bt.text = ("★ " if fav else "") + tab
 			bt.toggle_mode = true
 			bt.button_pressed = fav
-			bt.add_theme_font_size_override("font_size", 11)
+			bt.add_theme_font_size_override("font_size", Tema.letra(11))
 			bt.clip_text = true
 			bt.custom_minimum_size = Vector2(90, 0)
 			bt.size_flags_horizontal = Control.SIZE_EXPAND_FILL

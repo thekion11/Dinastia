@@ -75,7 +75,7 @@ func _cantera_juveniles(c: Club, ct: Cantera) -> void:
 		for j: Jugador in listos:
 			var bl := Button.new()
 			bl.text = "%s  %d/%d" % [j.nombre, j.ovr, j.pot]
-			bl.add_theme_font_size_override("font_size", 11)
+			bl.add_theme_font_size_override("font_size", Tema.letra(11))
 			bl.tooltip_text = Idiomas.t("Ver su ficha")
 			bl.pressed.connect(p._ver_ficha.bind(j))
 			flujo.add_child(bl)
@@ -150,7 +150,7 @@ func _pintar_roles_prometidos(c: Club) -> void:
 		nom.custom_minimum_size = Vector2(170, 0)
 		fila.add_child(nom)
 		var op := OptionButton.new()
-		op.add_theme_font_size_override("font_size", 11)
+		op.add_theme_font_size_override("font_size", Tema.letra(11))
 		op.size_flags_horizontal = Control.SIZE_EXPAND_FILL; op.fit_to_longest_item = false   ## (12-11) de pie, el rol más largo sacaba la fila de la pantalla
 		var elegido := 0
 		for n in tabla.size():
@@ -334,7 +334,7 @@ func _pintar_contratos(c: Club) -> void:
 		fila4.add_child(nom3)
 		var b := Button.new()
 		b.text = Idiomas.t("Blindar") if clau > 0 else Idiomas.t("Pactar cláusula")
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.pressed.connect(func() -> void: p._ui_finanzas._pactar_clausula_propia(j))
 		fila4.add_child(b)
 
@@ -426,7 +426,7 @@ func _fila_canterano(j: Jugador, ct: Cantera, c: Club) -> HBoxContainer:
 	if r != null and r.es_cantera() and j.edad <= 21 and not (r.cantera.get("subidos", []) as Array).has(j.id):
 		var bs := Button.new()
 		bs.text = Idiomas.t("⬆ Subir al primer equipo")
-		bs.add_theme_font_size_override("font_size", 11)
+		bs.add_theme_font_size_override("font_size", Tema.letra(11))
 		bs.tooltip_text = Idiomas.t("Cuenta para la meta de debutantes. Si aún no está listo, le queda grande y se le nota.")
 		bs.pressed.connect(func() -> void:
 			var err := r.subir_al_primer_equipo(j)
@@ -442,7 +442,7 @@ func _fila_canterano(j: Jugador, ct: Cantera, c: Club) -> HBoxContainer:
 		var costo := ct.coste_beca()
 		var b := Button.new()
 		b.text = Idiomas.t("Becar  %s") % p._dinero(costo)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = costo > c.saldo
 		b.tooltip_text = Idiomas.t("No te alcanza la caja") if b.disabled else Idiomas.t("La beca baja el riesgo de que se lo lleven gratis.")
 		b.pressed.connect(func() -> void: _becar(j))

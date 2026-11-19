@@ -122,7 +122,7 @@ static func _rejilla(lista: VBoxContainer, fijos: Dictionary, orden: String, ord
 			## Los números se alinean a la derecha en sus celdas: la cabecera también,
 			## o «EDAD» queda a un lado y las edades al otro.
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT if i < 2 else HORIZONTAL_ALIGNMENT_RIGHT
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.pressed.connect(func() -> void: (lista.get_meta(META_COL) as Callable).call(clave))
 			g.add_child(b)
 	for i in COLUMNAS.size():
@@ -289,7 +289,7 @@ static func _filtros(lista: VBoxContainer, c: Club, linea: String, fijos: Dictio
 		if nuevo:
 			b = Button.new()
 			b.toggle_mode = true
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.pressed.connect(func() -> void:
 				lista.set_meta(META_LINEA, clave)
 				(lista.get_meta(META_REPINTAR) as Callable).call())
@@ -316,7 +316,7 @@ static func _filtros_estado(lista: VBoxContainer, c: Club, mundo: Mundo, estado:
 		if nuevo:
 			b = Button.new()
 			b.toggle_mode = true
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.pressed.connect(func() -> void:
 				lista.set_meta(META_ESTADO, clave)
 				(lista.get_meta(META_REPINTAR) as Callable).call())
