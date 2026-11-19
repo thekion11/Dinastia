@@ -40,6 +40,10 @@ void DinastiaNativo::_bind_methods() {
 			&DinastiaNativo::mover_jugadores_fisica);
 	ClassDB::bind_method(D_METHOD("cerrar_notas", "p", "rng"), &DinastiaNativo::cerrar_notas);
 	ClassDB::bind_method(D_METHOD("pcg_coincide"), &DinastiaNativo::pcg_coincide);
+	ClassDB::bind_method(D_METHOD("son_tono", "hz", "dur", "vol", "forma", "frecuencia"), &DinastiaNativo::son_tono);
+	ClassDB::bind_method(D_METHOD("son_ruido", "dur", "f0", "f1", "vol", "frecuencia"), &DinastiaNativo::son_ruido);
+	ClassDB::bind_method(D_METHOD("son_mezclar", "destino", "fuente", "retraso", "frecuencia"), &DinastiaNativo::son_mezclar);
+	ClassDB::bind_method(D_METHOD("son_a_16", "m"), &DinastiaNativo::son_a_16);
 	ClassDB::bind_method(D_METHOD("simular_90", "p", "ayuda", "cfg", "rng", "azar_propio"), &DinastiaNativo::simular_90);
 	ClassDB::bind_method(D_METHOD("medias_linea", "once", "grupo_de", "lateral_de", "banda_de", "impulsos", "minuto", "arenga_mult", "ley_ex", "ex_de_mi_club", "ex_id"), &DinastiaNativo::medias_linea);
 	ClassDB::bind_method(D_METHOD("balon_prediccion", "bp0", "bv0", "cfg", "hay_poseedor", "vel_poseedor", "total", "dt", "radio"), &DinastiaNativo::balon_prediccion);

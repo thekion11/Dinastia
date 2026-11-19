@@ -125,6 +125,11 @@ public:
 	void cerrar_notas(Object *p, const Ref<RandomNumberGenerator> &rng) const;
 	// ¿El generador de azar del motor es el PCG32 que reproduce `simular_90`? (autocomprobación; si no, `simular_90` usa el del motor)
 	bool pcg_coincide() const;
+	// La síntesis del sonido (`nucleo/sonido_p1.gd`, nativo/src/sonido_nativo.cpp): `_tono`, `_ruido`, `_mezclar` y el paso a 16 bits de `_a_wav`.
+	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
+	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
+	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;
+	PackedByteArray son_a_16(const PackedFloat32Array &m) const;
 	// `Partido._media_linea` x 4 líneas ([POR, DEF, MED, DEL]) de un once (nucleo/partido_p1.gd, `fuerza`).
 	PackedFloat64Array medias_linea(const Array &once, const Dictionary &grupo_de, const Dictionary &lateral_de, const Dictionary &banda_de, const Dictionary &impulsos, int64_t minuto, double arenga_mult,
 			double ley_ex, const Dictionary &ex_de_mi_club, const String &ex_id) const;
