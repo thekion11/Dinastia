@@ -9095,7 +9095,8 @@
   "Con táctica %s, %s juega: %s.": "With a %s tactic, %s plays: %s.",
   "garra y carácter": "grit and character",
   "bloque bajo y contragolpe": "a deep block and counters",
-  "Entrada del club": "Club entrance"
+  "Entrada del club": "Club entrance",
+  "Cocinero del plantel": "Squad cook"
  },
  "pt": {
   "Historia": "História",
@@ -18193,7 +18194,8 @@
   "Con táctica %s, %s juega: %s.": "Com tática %s, %s joga: %s.",
   "garra y carácter": "garra e caráter",
   "bloque bajo y contragolpe": "bloco baixo e contra-ataque",
-  "Entrada del club": "Entrada do clube"
+  "Entrada del club": "Entrada do clube",
+  "Cocinero del plantel": "Cozinheiro do elenco"
  },
  "patrones": [
   [
@@ -33563,7 +33565,8 @@
   "Con táctica %s, %s juega: %s.": "En tactique %s, %s joue : %s.",
   "garra y carácter": "du cran et du caractère",
   "bloque bajo y contragolpe": "un bloc bas et la contre-attaque",
-  "Entrada del club": "Entrée du club"
+  "Entrada del club": "Entrée du club",
+  "Cocinero del plantel": "Cuisinier de l'équipe"
  },
  "it": {
   "Historia": "Storia",
@@ -42661,7 +42664,8 @@
   "Con táctica %s, %s juega: %s.": "Con tattica %s, %s gioca: %s.",
   "garra y carácter": "grinta e carattere",
   "bloque bajo y contragolpe": "blocco basso e contropiede",
-  "Entrada del club": "Ingresso del club"
+  "Entrada del club": "Ingresso del club",
+  "Cocinero del plantel": "Cuoco della squadra"
  },
  "de": {
   "Historia": "Geschichte",
@@ -51759,7 +51763,8 @@
   "Con táctica %s, %s juega: %s.": "Mit %s Taktik spielt %s: %s.",
   "garra y carácter": "Kampfgeist und Charakter",
   "bloque bajo y contragolpe": "tiefem Block und Kontern",
-  "Entrada del club": "Vereinseingang"
+  "Entrada del club": "Vereinseingang",
+  "Cocinero del plantel": "Koch der Mannschaft"
  },
  "ca": {
   "Historia": "Història",
@@ -60857,7 +60862,8 @@
   "Con táctica %s, %s juega: %s.": "Amb tàctica %s, %s juga: %s.",
   "garra y carácter": "garra i caràcter",
   "bloque bajo y contragolpe": "bloc baix i contraatac",
-  "Entrada del club": "Entrada del club"
+  "Entrada del club": "Entrada del club",
+  "Cocinero del plantel": "Cuiner de la plantilla"
  },
  "pl": {
   "Club": "Klub",
@@ -69955,7 +69961,8 @@
   "Con táctica %s, %s juega: %s.": "Z taktyką %s %s gra: %s.",
   "garra y carácter": "walkę i charakter",
   "bloque bajo y contragolpe": "niski blok i kontry",
-  "Entrada del club": "Wejście do klubu"
+  "Entrada del club": "Wejście do klubu",
+  "Cocinero del plantel": "Kucharz drużyny"
  },
  "tr": {
   "Club": "Kulüp",
@@ -79053,6 +79060,7 @@
   "Con táctica %s, %s juega: %s.": "%s taktikle %s şöyle oynar: %s.",
   "garra y carácter": "mücadele ve karakter",
   "bloque bajo y contragolpe": "derin blok ve kontra",
-  "Entrada del club": "Kulüp girişi"
+  "Entrada del club": "Kulüp girişi",
+  "Cocinero del plantel": "Takım aşçısı"
  }
 }

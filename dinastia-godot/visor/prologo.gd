@@ -66,3 +66,28 @@ func _rect_zona(zona: String, planta: int) -> Rect2:
 		if String(z["nombre"]) == zona and int(z.get("planta", 0)) == planta and (z["r"] as Rect2).get_area() > mejor.get_area():
 			mejor = z["r"]
 	return Rect2(mejor.position + Vector2(CityBuilder.ESTADIO_EN.x, CityBuilder.ESTADIO_EN.z), mejor.size)
+
+## (18-11) DÓNDE ESPERA EL MENTOR en cada sala. Antes siempre en el centro exacto: dentro del escritorio y el sillón de la oficina y del despacho, y entre las
+## mesas del comedor (visto en las capturas del prólogo). Ahora a un lado, en suelo libre (medidas con el mobiliario de `EdificioClub._amueblar`):
+## oficina entre el sillón y el sofá, despacho en el rincón de la izquierda, comedor junto a la pared derecha y sala de vídeo entre la pantalla y la
+## primera fila. El resto de las salas siguen en el centro. Todo se recorta a la sala (`_rect_zona`).
+func _sitio_mentor(clave: String, centro: Vector3) -> Vector3:
+	var p: Dictionary = PrologoPasos.PASOS[paso_i]
+	var r := _rect_zona(String(p.get("zona", "")), int(p.get("planta", 0)))
+	if r.get_area() < 1.0:
+		return centro
+	var c := r.get_center()
+	var x := centro.x
+	var z := centro.z
+	match clave:
+		"oficina":
+			x = minf(c.x + 1.0, r.end.x - 1.9)
+			z = c.y + 0.4
+		"presidente":
+			x = maxf(c.x - 1.7, r.position.x + 1.0)
+			z = c.y + 0.9
+		"comedor":
+			x = minf(c.x + 1.8, r.end.x - 0.9)
+		"video":
+			z = r.position.y + 1.2
+	return Vector3(x, centro.y, z)

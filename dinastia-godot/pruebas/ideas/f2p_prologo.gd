@@ -208,7 +208,8 @@ func _llegar_y_escuchar(clave: String, cerrar: bool = true) -> bool:
 	_e._planta = int(paso["planta"])
 	_e.cuerpo.position = _p.destino
 	await _frames(3)
-	var mentor_alli := _p.mentor.visible and _p.mentor.position.distance_to(_p.destino) < 0.6
+	## (18-11) El mentor espera en su sitio (`_sitio_mentor`: a un lado, no dentro de los muebles del centro) y a menos de 3 m del centro de la sala.
+	var mentor_alli := _p.mentor.visible and _p.mentor.position.distance_to(_p._sitio_mentor(clave, _p.destino)) < 0.6 and _p.mentor.position.distance_to(_p.destino) < 3.0
 	var habla := _p.dialogo.visible
 	if _p.frase_i == 0 and not _p.hablantes.is_empty() and _p.hablantes[0] != "":
 		_saludos.append(_p.hablantes[0])

@@ -234,13 +234,13 @@ func _ir_al_paso(i: int) -> void:
 			destino_planta = int(p["planta"])
 			esperando_llegada = true
 			if rapido:
-				mentor.colocar(destino, PI)
+				mentor.colocar((self as PrologoDT)._sitio_mentor(String(p["clave"]), destino), PI)
 			else:
 				## Se adelanta desde donde estaba y aparece esperando en la sala.
-				mentor.adelantarse(destino)
+				mentor.adelantarse((self as PrologoDT)._sitio_mentor(String(p["clave"]), destino))
 				get_tree().create_timer(2.2).timeout.connect(func() -> void:
 					if is_instance_valid(mentor) and paso_i == i:
-						mentor.colocar(destino, PI))
+						mentor.colocar((self as PrologoDT)._sitio_mentor(String(p["clave"]), destino), PI))
 	_aro.position = destino + Vector3(0, 0.04, 0)
 
 ## El centro de la sala `zona` en la planta dada (la zona más grande con ese

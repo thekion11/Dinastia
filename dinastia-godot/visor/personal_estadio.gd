@@ -103,6 +103,8 @@ func _ready() -> void:
 		## El cargo en femenino si es una mujer.
 		if bool(mujeres[clave]):
 			puesto = FEMENINO.get(puesto, puesto)
+		else:
+			puesto = MASCULINO.get(puesto, puesto)
 		var raiz := Node3D.new()
 		raiz.position = ruta[0]
 		add_child(raiz)
@@ -131,6 +133,8 @@ func _ready() -> void:
 		gente.append({"clave": clave, "nombre": nombre, "puesto": puesto, "planta": int(p[0]), "nodo": raiz,
 			"anim": d.get("anim"), "ruta": ruta, "i": 0, "dir": 1, "espera": 4.0 + float(semilla % 13), "quieto": false})
 
+## (18-11) El cargo en masculino cuando el nombre es de hombre y el puesto está escrito en femenino («Lucas Ortiz · Cocinera del plantel»).
+const MASCULINO := {"Cocinera del plantel": "Cocinero del plantel"}
 const FEMENINO := {"Médico veterano": "Médica veterana", "Utilero": "Utilera", "Jefe de cancha": "Jefa de cancha",
 	"Conserje del estadio": "Conserje del estadio", "Chófer del bus": "Chófer del bus",
 	"Encargado de prensa": "Encargada de prensa", "Ojeador jubilado": "Ojeadora jubilada",
