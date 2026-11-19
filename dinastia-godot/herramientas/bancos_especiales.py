@@ -139,7 +139,7 @@ def correr_banco(nombre, r):
     for n, cmd, pat in r["especiales"]:
         p = subprocess.run(["bash", "-c", "timeout 600 bash -c '%s'" % cmd.replace("'", "'\\''")], cwd=RAIZ, capture_output=True, text=True)
         out = p.stdout + p.stderr
-        ok = re.search(pat, out) is not None and "SCRIPT ERROR" not in out
+        ok = re.search(pat, out, re.M) is not None and "SCRIPT ERROR" not in out   ## re.M: los patrones «^OK nombre » son de LÍNEA (grep), no del principio de toda la salida
         fallos += 0 if ok else 1
         print("  %-5s %s" % ("ok" if ok else "FALLO", n))
         if not ok:
