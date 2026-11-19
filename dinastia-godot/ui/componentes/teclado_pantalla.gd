@@ -59,7 +59,7 @@ func _ready() -> void:
 	panel.add_child(col)
 	var vista := Label.new()
 	vista.name = "Vista"
-	vista.add_theme_font_size_override("font_size", 20)
+	vista.add_theme_font_size_override("font_size", Tema.letra(20))
 	col.add_child(vista)
 	for fila: String in FILAS:
 		var h := HBoxContainer.new()
@@ -85,7 +85,7 @@ func _tecla(padre: Node, texto: String, ancho: int) -> Button:
 	var b := Button.new()
 	b.text = texto
 	b.custom_minimum_size = Vector2(ancho, 44)
-	b.add_theme_font_size_override("font_size", 18)
+	b.add_theme_font_size_override("font_size", Tema.letra(18))
 	padre.add_child(b)
 	return b
 

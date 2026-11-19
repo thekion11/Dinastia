@@ -74,7 +74,7 @@ func _pintar_precontrato(j: Jugador) -> void:
 	var no := Precontratos.motivo(_mundo, j)
 	var b := Button.new()
 	b.text = Idiomas.t("📝 Precontrato (llega gratis al acabar su contrato)")
-	b.add_theme_font_size_override("font_size", 11)
+	b.add_theme_font_size_override("font_size", Tema.letra(11))
 	b.disabled = no != ""
 	b.tooltip_text = no if no != "" else Idiomas.t("Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.")
 	b.pressed.connect(func() -> void:
@@ -354,7 +354,7 @@ func _pintar_lista(mio: Club) -> void:
 		nom_b.custom_minimum_size = Vector2(70, 0)
 		nom_b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nom_b.size_flags_stretch_ratio = 1.6
-		nom_b.add_theme_font_size_override("font_size", 12)
+		nom_b.add_theme_font_size_override("font_size", Tema.letra(12))
 		nom_b.add_theme_color_override("font_color", alcance)
 		nom_b.tooltip_text = Idiomas.t("%s · abrir la mesa de negociación") % j.nombre
 		nom_b.pressed.connect(func() -> void: fichar_pedido.emit(j))

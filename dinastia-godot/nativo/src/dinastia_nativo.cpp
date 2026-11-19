@@ -21,6 +21,8 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("once_armar", "plantilla", "ranuras", "grupo_de", "orden"), &DinastiaNativo::once_armar);
 	ClassDB::bind_method(D_METHOD("obstaculos_multimalla", "nodo_t", "buf", "paso", "n", "base", "raiz_y", "min_alto", "max_base", "rej", "celda_rej"), &DinastiaNativo::obstaculos_multimalla);
 	ClassDB::bind_method(D_METHOD("cuerpos_motor", "jugadores", "minimo"), &DinastiaNativo::cuerpos_motor);
+	ClassDB::bind_method(D_METHOD("trafico_volcar", "tr"), &DinastiaNativo::trafico_volcar);
+	ClassDB::bind_method(D_METHOD("trafico_paso", "tr", "delta_real", "hay_cam", "ojo", "adelante", "hay_jugador", "pj", "sirenas"), &DinastiaNativo::trafico_paso);
 	ClassDB::bind_method(D_METHOD("league_calcular_sin_balon", "ctx", "p", "designado_disputa"), &DinastiaNativo::league_calcular_sin_balon);
 	ClassDB::bind_method(D_METHOD("duelos_parejas", "jugadores"), &DinastiaNativo::duelos_parejas);
 	ClassDB::bind_method(D_METHOD("disputas_inicio", "jugadores", "delta", "suelto", "b", "t", "pase_a_id", "arco_z", "area_x", "area_z"), &DinastiaNativo::disputas_inicio);
@@ -40,6 +42,10 @@ void DinastiaNativo::_bind_methods() {
 			&DinastiaNativo::mover_jugadores_fisica);
 	ClassDB::bind_method(D_METHOD("cerrar_notas", "p", "rng"), &DinastiaNativo::cerrar_notas);
 	ClassDB::bind_method(D_METHOD("pcg_coincide"), &DinastiaNativo::pcg_coincide);
+	ClassDB::bind_method(D_METHOD("son_tono", "hz", "dur", "vol", "forma", "frecuencia"), &DinastiaNativo::son_tono);
+	ClassDB::bind_method(D_METHOD("son_ruido", "dur", "f0", "f1", "vol", "frecuencia"), &DinastiaNativo::son_ruido);
+	ClassDB::bind_method(D_METHOD("son_mezclar", "destino", "fuente", "retraso", "frecuencia"), &DinastiaNativo::son_mezclar);
+	ClassDB::bind_method(D_METHOD("son_a_16", "m"), &DinastiaNativo::son_a_16);
 	ClassDB::bind_method(D_METHOD("simular_90", "p", "ayuda", "cfg", "rng", "azar_propio"), &DinastiaNativo::simular_90);
 	ClassDB::bind_method(D_METHOD("medias_linea", "once", "grupo_de", "lateral_de", "banda_de", "impulsos", "minuto", "arenga_mult", "ley_ex", "ex_de_mi_club", "ex_id"), &DinastiaNativo::medias_linea);
 	ClassDB::bind_method(D_METHOD("balon_prediccion", "bp0", "bv0", "cfg", "hay_poseedor", "vel_poseedor", "total", "dt", "radio"), &DinastiaNativo::balon_prediccion);

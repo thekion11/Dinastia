@@ -60,7 +60,7 @@ func _montar() -> void:
 	v.add_child(cab)
 	var t := Label.new()
 	t.text = "⚙ " + Idiomas.t("Ajustes de la ciudad")
-	t.add_theme_font_size_override("font_size", 22)
+	t.add_theme_font_size_override("font_size", Tema.letra(22))
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cab.add_child(t)
 	var x := CuadroDialogo.respuesta(Button.new())
@@ -134,13 +134,13 @@ class TutorialCiudad extends PanelContainer:
 		v.add_theme_constant_override("separation", 6)
 		add_child(v)
 		_titulo = Label.new()
-		_titulo.add_theme_font_size_override("font_size", 20)
+		_titulo.add_theme_font_size_override("font_size", Tema.letra(20))
 		_titulo.add_theme_color_override("font_color", Color(1, 0.85, 0.4))
 		v.add_child(_titulo)
 		_texto = Label.new()
 		_texto.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_texto.custom_minimum_size = Vector2(630, 0)
-		_texto.add_theme_font_size_override("font_size", 17)
+		_texto.add_theme_font_size_override("font_size", Tema.letra(17))
 		v.add_child(_texto)
 		var fila := HBoxContainer.new()
 		fila.alignment = BoxContainer.ALIGNMENT_END

@@ -25,6 +25,9 @@ func _probar() -> void:
 	_cifras(m)
 	_notas(m)
 
+func _valor(j: Jugador) -> float:
+	return float(j.ovr) * (0.7 + 0.003 * j.forma) * (0.9 + 0.002 * j.moral) / 0.85
+
 func _porteros(lista: Array) -> Array[Jugador]:
 	var out: Array[Jugador] = []
 	for j: Jugador in lista:
@@ -45,11 +48,12 @@ func _alineaciones(m: Mundo) -> void:
 		if en_once.size() != 1:
 			malos.append("%s sale con %d porteros (%d sanos)" % [c.nombre, en_once.size(), sanos.size()])
 			continue
+		## El once automático pondera la media con la forma y la moral (`OnceAuto`): el mejor es el de más valor así, no el de más media a secas.
 		var mejor: Jugador = sanos[0]
 		for j: Jugador in sanos:
-			if j.ovr > mejor.ovr:
+			if _valor(j) > _valor(mejor):
 				mejor = j
-		if en_once[0].ovr < mejor.ovr - 3:
+		if _valor(en_once[0]) < _valor(mejor) - 3.0:
 			malos.append("%s pone a %s (%d) con %s (%d) sano" % [c.nombre, en_once[0].nombre, en_once[0].ovr, mejor.nombre, mejor.ovr])
 	_comprobar(malos.is_empty(), "en los %d clubes con portero sano el once lleva UNO, y es el mejor (± 3 de media)%s" % [n, "" if malos.is_empty() else " — " + str(malos.slice(0, 5))])
 
@@ -111,8 +115,17 @@ func _notas(m: Mundo) -> void:
 	var a: Club = m.ligas[0].clubes[2]
 	var b: Club = m.ligas[0].clubes[3]
 	var notas := []
+	## La misma semilla para los dos partidos; si en ese partido el portero salió del campo (lesión) y no hay nota que comparar, se prueba la siguiente.
+	for semilla in range(77, 97):
+		notas = _notas_con(a, b, semilla)
+		if float(notas[0]) > 0.0:
+			break
+	_comprobar(notas[0] > 0.0 and notas[0] > notas[1], "el portero sale mejor con la portería a cero (%.1f) que encajando 4 (%.1f)" % [notas[0], notas[1]])
+
+func _notas_con(a: Club, b: Club, semilla: int) -> Array:
+	var notas := []
 	for encaja in [0, 4]:
-		Azar.sembrar(77)
+		Azar.sembrar(semilla)
 		var p := Partido.new(a, b)
 		p.preparar()
 		while not p.terminado_ya:
@@ -125,4 +138,4 @@ func _notas(m: Mundo) -> void:
 			if j.pos == "POR" and p.once_local.has(j):
 				nota = float(v["nota"])
 		notas.append(nota)
-	_comprobar(notas[0] > 0.0 and notas[0] > notas[1], "el portero sale mejor con la portería a cero (%.1f) que encajando 4 (%.1f)" % [notas[0], notas[1]])
+	return notas

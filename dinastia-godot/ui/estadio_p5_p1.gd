@@ -190,7 +190,7 @@ func _crear_banner_gol() -> void:
 	_banner_caja.modulate = Color(1, 1, 1, 0)
 	add_child(_banner_caja)
 	_banner = Label.new()
-	_banner.add_theme_font_size_override("font_size", 24)
+	_banner.add_theme_font_size_override("font_size", Tema.letra(24))
 	_banner.add_theme_color_override("font_color", Color.WHITE)
 	_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_banner.text = ""
@@ -214,7 +214,7 @@ func _crear_rotulo_jugada() -> void:
 	_rotulo_jugada.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_rotulo_jugada)
 	_lbl_jugada = Label.new()
-	_lbl_jugada.add_theme_font_size_override("font_size", 14)
+	_lbl_jugada.add_theme_font_size_override("font_size", Tema.letra(14))
 	_lbl_jugada.add_theme_color_override("font_color", Color("e9eeea"))
 	_rotulo_jugada.add_child(_lbl_jugada)
 

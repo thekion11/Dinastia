@@ -130,7 +130,7 @@ func _montar() -> void:
 		var club := Label.new()
 		club.text = Nombres.visible(_p.mundo.mi_club().nombre) if cmp else "%s  ·  %s" % [Nombres.visible(_p.mundo.mi_club().nombre), _p.fecha_larga()]
 		club.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		club.add_theme_font_size_override("font_size", 13)
+		club.add_theme_font_size_override("font_size", Tema.letra(13))
 		club.add_theme_color_override("font_color", Color(1, 1, 1, 0.65))
 		cab.add_child(club)
 

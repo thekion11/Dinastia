@@ -40,7 +40,7 @@ func _pintar_sucesion(r: Roles) -> void:
 		fila.add_child(l)
 		var b := Button.new()
 		b.text = Idiomas.t("Elegir")
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.custom_minimum_size = Vector2(80, 0)
 		b.pressed.connect(func() -> void:
 			r.elegir_sucesor(idx)
@@ -272,7 +272,7 @@ func _legado_carrera(r: Roles) -> void:
 			var si_o: bool = par_o[0]
 			var bo := Button.new()
 			bo.text = String(par_o[1])
-			bo.add_theme_font_size_override("font_size", 11)
+			bo.add_theme_font_size_override("font_size", Tema.letra(11))
 			bo.clip_text = true
 			bo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			bo.pressed.connect(func() -> void:

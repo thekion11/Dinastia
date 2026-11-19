@@ -1,8 +1,8 @@
 class_name TraficoCiudad
-extends "res://visor/trafico_ciudad_p1.gd"
+extends "res://visor/trafico_ciudad_puente.gd"
 ## [Capa 2/2 de `trafico_ciudad.gd`] _process, _lateral, _esquivar, tapa_al_jugador, _rejilla_paso, _hueco … (+3)
 
-func _process(delta_real: float) -> void:
+func _paso_gd(delta_real: float) -> void:
 	## RENDIMIENTO (15-10-2026, medido con pruebas/sonda_explorador: 3,4 ms por
 	## fotograma con ~310 coches y vecinos, y solo ~25 cerca). Los lejanos se
 	## mueven menos a menudo con el tiempo acumulado (niveles abajo); la
@@ -240,7 +240,6 @@ func _lateral(v: Dictionary, delta: float, vel := VEL_LATERAL) -> void:
 ## delante en su carril; si hay un banco, una papelera o una farola (`libre_fn`), se abre a un lado
 ## libre como al adelantar. Sin `libre_fn` (pruebas, mapa de lejos) no mira nada.
 ## Sirenas encendidas (las registra `ServiciosVida`) y a qué distancia hacen parar al tráfico: a 55 m, frenando a FRENADA, da tiempo de parar a 14 m/s.
-static var sirenas: Array[Node3D] = []
 const RADIO_SIRENA := 55.0
 ## `dir` (la marcha de quien mira): una sirena que viene POR DETRÁS en su carril no le hace parar (A4: si no, el coche se quedaba plantado en el carril y la ambulancia lo atravesaba o se quedaba parada tras él para siempre).
 static func sirena_cerca(p: Vector3, dir := Vector3.ZERO, vel := 0.0) -> bool:

@@ -98,7 +98,7 @@ func _pintar_tipografia() -> void:
 		var clave := k
 		var b := Button.new()
 		b.text = String((TIPOGRAFIAS[k] as Array)[0])
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		b.toggle_mode = true
 		b.button_pressed = tipografia == clave
 		b.clip_text = true
@@ -145,12 +145,12 @@ func _pintar_ranuras() -> void:
 		fila.add_child(desc)
 		var bg := Button.new()
 		bg.text = Idiomas.t("Guardar")
-		bg.add_theme_font_size_override("font_size", 11)
+		bg.add_theme_font_size_override("font_size", Tema.letra(11))
 		bg.pressed.connect(func() -> void: p._partida.guardar_en(nombre))
 		fila.add_child(bg)
 		var bc := Button.new()
 		bc.text = Idiomas.t("Cargar")
-		bc.add_theme_font_size_override("font_size", 11)
+		bc.add_theme_font_size_override("font_size", Tema.letra(11))
 		bc.disabled = hay.is_empty()
 		bc.pressed.connect(func() -> void: p._partida.cargar_de(nombre))
 		fila.add_child(bc)
@@ -167,7 +167,7 @@ func _pintar_fondos_ajustes() -> void:
 	ef.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p._lista_ajustes.add_child(ef)
 	var op := OptionButton.new()
-	op.add_theme_font_size_override("font_size", 11)
+	op.add_theme_font_size_override("font_size", Tema.letra(11))
 	op.clip_text = true
 	## Sin esto el desplegable pide el ancho de su entrada más larga -386 px- y
 	## empuja la raíz fuera de la ventana. Trampa ya pagada en este proyecto.
@@ -184,7 +184,7 @@ func _pintar_fondos_ajustes() -> void:
 		var clave := String(e[0])
 		var be := Button.new()
 		be.text = String(e[1])
-		be.add_theme_font_size_override("font_size", 11)
+		be.add_theme_font_size_override("font_size", Tema.letra(11))
 		be.toggle_mode = true
 		be.button_pressed = p._estilo_menu == clave
 		be.custom_minimum_size = Vector2(160, 26)
@@ -245,7 +245,7 @@ func _pintar_ajustes() -> void:
 		var b := Button.new()
 		var partes := Idiomas.t(String(s[1])).split(" ", true, 1)   ## (13-11) icono y palabra juntos (espacio no separable): en alemán el ♿ quedaba solo arriba
 		b.text = partes[0] + "\u00a0" + partes[1] if partes.size() == 2 else partes[0]
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.toggle_mode = true
 		b.button_pressed = seccion == clave
 		b.clip_text = false   ## (13-11) crece con su texto (las pestañas saltan de línea): con el recorte, «♿ Barrierefreiheit» salía cortado

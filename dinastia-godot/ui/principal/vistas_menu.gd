@@ -145,7 +145,7 @@ func _pintar_clubes() -> void:
 		bp.text = pais
 		bp.toggle_mode = true
 		bp.button_pressed = pais == _clubes_pais
-		bp.add_theme_font_size_override("font_size", 11)
+		bp.add_theme_font_size_override("font_size", Tema.letra(11))
 		bp.pressed.connect(func() -> void:
 			_clubes_pais = pais
 			p._clubes_ficha = null
@@ -194,7 +194,7 @@ func _pintar_clubes() -> void:
 			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			b.icon = Escudo.textura(club, 20)
 			b.add_theme_constant_override("icon_max_width", 22)
-			b.add_theme_font_size_override("font_size", 12)
+			b.add_theme_font_size_override("font_size", Tema.letra(12))
 			## (12-11) El club propio, con el acento ACLARADO hasta leerse sobre el panel (un verde o un azul oscuro de club casi no se veía), y toda su fila con él.
 			var mio := club == p.mundo.mi_club()
 			var col_mio: Color = p._con_contraste(p.COL_ACENTO)

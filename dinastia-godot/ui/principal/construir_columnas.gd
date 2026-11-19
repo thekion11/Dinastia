@@ -19,7 +19,7 @@ static func montar(p: Principal, raiz: VBoxContainer) -> void:
 	var abrir_comp := Button.new()
 	abrir_comp.flat = true
 	abrir_comp.text = Idiomas.t("Ver la competición  ▸")
-	abrir_comp.add_theme_font_size_override("font_size", 11)
+	abrir_comp.add_theme_font_size_override("font_size", Tema.letra(11))
 	abrir_comp.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ACENTO))
 	abrir_comp.pressed.connect(p._abrir_competicion)
 	p._ultima_caja_columna.add_child(abrir_comp)
@@ -30,7 +30,7 @@ static func montar(p: Principal, raiz: VBoxContainer) -> void:
 	var abrir_hub_comp := Button.new()
 	abrir_hub_comp.flat = true
 	abrir_hub_comp.text = Idiomas.t("🏆 Todas las competiciones  ▸")
-	abrir_hub_comp.add_theme_font_size_override("font_size", 11)
+	abrir_hub_comp.add_theme_font_size_override("font_size", Tema.letra(11))
 	abrir_hub_comp.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ORO))
 	abrir_hub_comp.pressed.connect(func() -> void: p._abrir_hub("competiciones"))
 	p._ultima_caja_columna.add_child(abrir_hub_comp)
@@ -161,7 +161,7 @@ static func montar(p: Principal, raiz: VBoxContainer) -> void:
 	## (10-11) táctil: el rótulo corto; con la letra legible del móvil, el largo cortaba el título de la columna («ERSTE LI»)
 	b_plantel.text = ("👔 " + Idiomas.t("Plantel") + "  ▸") if EscalaMovil.es_tactil() else Idiomas.t("👔 Plantel y cuerpo del equipo  ▸")
 	b_plantel.flat = true
-	b_plantel.add_theme_font_size_override("font_size", 11)
+	b_plantel.add_theme_font_size_override("font_size", Tema.letra(11))
 	b_plantel.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ACENTO))
 	b_plantel.pressed.connect(func() -> void: p._abrir_hub("plantel"))
 	## (10-11) En la fila del TÍTULO de su columna (junto a «⤢»), no al pie: en el móvil (2400x1080 = 480 px lógicos de alto) cada botón del pie sube

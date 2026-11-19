@@ -201,7 +201,7 @@ func _siguiente() -> void:
 		var b := Button.new()
 		b.text = String(pr["opciones"][k])
 		b.custom_minimum_size = Vector2(0, 46)
-		b.add_theme_font_size_override("font_size", 17)
+		b.add_theme_font_size_override("font_size", Tema.letra(17))
 		b.pressed.connect(func() -> void: _responder(k))
 		_opciones.add_child(b)
 	_tiempo = SEGUNDOS

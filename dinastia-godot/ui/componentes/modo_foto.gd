@@ -88,7 +88,7 @@ func _montar() -> void:
 	_aviso.offset_left = -300
 	_aviso.offset_right = 300
 	_aviso.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_aviso.add_theme_font_size_override("font_size", 18)
+	_aviso.add_theme_font_size_override("font_size", Tema.letra(18))
 	_aviso.add_theme_color_override("font_color", Color(1, 0.95, 0.7))
 	_aviso.add_theme_color_override("font_outline_color", Color.BLACK)
 	_aviso.add_theme_constant_override("outline_size", 6)
@@ -144,7 +144,7 @@ func _crear_marco() -> Control:
 	pie.offset_left = 100
 	pie.offset_top = -62
 	pie.offset_bottom = -30
-	pie.add_theme_font_size_override("font_size", 22)
+	pie.add_theme_font_size_override("font_size", Tema.letra(22))
 	pie.add_theme_color_override("font_color", Color(0.15, 0.15, 0.17))
 	c.add_child(pie)
 	return c

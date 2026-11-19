@@ -89,7 +89,7 @@ func _pintar_directrices(r: Roles) -> void:
 		be.text = String(est[1])
 		be.toggle_mode = true
 		be.button_pressed = String(r.directrices.get("estilo", "equilibrio")) == clave
-		be.add_theme_font_size_override("font_size", 11)
+		be.add_theme_font_size_override("font_size", Tema.letra(11))
 		be.pressed.connect(func() -> void: _fijar_directriz("estilo", clave))
 		fila_e.add_child(be)
 
@@ -105,7 +105,7 @@ func _pintar_directrices(r: Roles) -> void:
 		fila_d.add_child(ld)
 		var bd := Button.new()
 		bd.text = "SÍ" if activa else "NO"
-		bd.add_theme_font_size_override("font_size", 11)
+		bd.add_theme_font_size_override("font_size", Tema.letra(11))
 		bd.pressed.connect(func() -> void: _fijar_directriz(clave2, not activa))
 		fila_d.add_child(bd)
 		var dsc := p._texto(10, Principal.COL_SUAVE)
@@ -218,7 +218,7 @@ func _pintar_carrera(r: Roles) -> void:
 		if r.puede_contratar_dt():
 			var b := Button.new()
 			b.text = Idiomas.t("Cambiar  %s") % p._dinero(int(Roles.COSTE_CAMBIAR_DT))
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.pressed.connect(_cambiar_dt)
 			fila.add_child(b)
 

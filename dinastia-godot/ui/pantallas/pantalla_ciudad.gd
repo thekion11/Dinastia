@@ -45,7 +45,7 @@ func _pintar_luces_ciudad(ci: Ciudad) -> void:
 		var hex := String(par[0])
 		var b := Button.new()
 		b.text = ("● " if ci.luces == hex else "") + String(par[1])
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.add_theme_color_override("font_color", Color(hex))
 		b.pressed.connect(func() -> void:
 			ci.luces = hex
@@ -86,7 +86,7 @@ func _pintar_terrenos(ci: Ciudad, c: Club) -> void:
 		var b := Button.new()
 		var precio := ci.precio_terreno(clave, c)
 		b.text = Idiomas.t("Tuyo") if mio else p._dinero(precio)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = mio or c.saldo < precio
 		b.custom_minimum_size = Vector2(110, 0)
 		b.pressed.connect(func() -> void:
@@ -132,7 +132,7 @@ func _pintar_negocios(ci: Ciudad, c: Club) -> void:
 		var b := Button.new()
 		var coste := Eco.escalar(float(f[2]), float(c.rep))
 		b.text = Idiomas.t("Operando") if hecho else p._dinero(coste)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = hecho or falta or c.saldo < coste
 		b.custom_minimum_size = Vector2(110, 0)
 		b.pressed.connect(func() -> void:
@@ -167,7 +167,7 @@ func _pintar_conciertos(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(fila)
 	var b := Button.new()
 	b.text = Idiomas.t("🎤 Arrendar para un concierto")
-	b.add_theme_font_size_override("font_size", 11)
+	b.add_theme_font_size_override("font_size", Tema.letra(11))
 	b.clip_text = true
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	b.disabled = ci.cesped < Ciudad.CESPED_MINIMO_CONCIERTO
@@ -179,7 +179,7 @@ func _pintar_conciertos(ci: Ciudad, c: Club) -> void:
 	fila.add_child(b)
 	var br := Button.new()
 	br.text = Idiomas.t("🌱 Resembrar  ·  %s") % p._dinero(ci.coste_resiembra(c))
-	br.add_theme_font_size_override("font_size", 11)
+	br.add_theme_font_size_override("font_size", Tema.letra(11))
 	br.clip_text = true
 	br.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	br.disabled = ci.cesped >= 100
@@ -214,7 +214,7 @@ func _pintar_municipalidad(ci: Ciudad, c: Club) -> void:
 		var que := String(op[0])
 		var b := Button.new()
 		b.text = String(op[1])
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		b.clip_text = true
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.pressed.connect(func() -> void:
@@ -241,7 +241,7 @@ func _pintar_municipalidad(ci: Ciudad, c: Club) -> void:
 		p._lista_ciudad.add_child(ex)
 		var b := Button.new()
 		b.text = Idiomas.t("🏛️ Solicitar permiso  ·  %s") % p._dinero(Eco.escalar(Ciudad.COSTE_PERMISO, float(c.rep)))
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = not ci.permiso.is_empty()
 		b.pressed.connect(func() -> void:
 			var p_local := ci.pedir_permiso(p.mundo.mi_club())
@@ -268,7 +268,7 @@ func _pintar_sostenibilidad(ci: Ciudad, c: Club) -> void:
 	var bp := Button.new()
 	bp.text = Idiomas.t("☀️ Paneles solares") if ci.paneles >= Ciudad.PANELES_MAX else \
 		"☀️ Paneles  ·  %s" % p._dinero(Eco.escalar(Ciudad.COSTE_PANELES, float(c.rep)) * (ci.paneles + 1))
-	bp.add_theme_font_size_override("font_size", 11)
+	bp.add_theme_font_size_override("font_size", Tema.letra(11))
 	bp.clip_text = true
 	bp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bp.disabled = ci.paneles >= Ciudad.PANELES_MAX
@@ -280,7 +280,7 @@ func _pintar_sostenibilidad(ci: Ciudad, c: Club) -> void:
 	fila.add_child(bp)
 	var bc := Button.new()
 	bc.text = Idiomas.t("🌿 Certificar  ·  %s") % p._dinero(Eco.escalar(Ciudad.COSTE_CERTIFICACION, float(c.rep)))
-	bc.add_theme_font_size_override("font_size", 11)
+	bc.add_theme_font_size_override("font_size", Tema.letra(11))
 	bc.clip_text = true
 	bc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bc.disabled = ci.certificado or ci.paneles < 2
@@ -311,7 +311,7 @@ func _pintar_seguridad(ci: Ciudad, c: Club) -> void:
 		var b := Button.new()
 		var coste := Eco.escalar(200000.0 if que == "privada" else 260000.0, float(c.rep)) * (niv + 1)
 		b.text = Idiomas.t("MÁX") if niv >= Ciudad.SEGURIDAD_MAX else p._dinero(coste)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = niv >= Ciudad.SEGURIDAD_MAX or c.saldo < coste
 		b.custom_minimum_size = Vector2(110, 0)
 		b.pressed.connect(func() -> void:
@@ -350,7 +350,7 @@ func _pintar_ciudad(c: Club) -> void:
 	## el proyecto viejo, nunca portado. Mismo patrón que el botón de estadio.
 	var ver3d := Button.new()
 	ver3d.text = Idiomas.t("🚪 Levantarse del PC") if p._vistas.pc_oficina() != null else Idiomas.t("🏙️ Ver la ciudad en 3D")
-	ver3d.add_theme_font_size_override("font_size", 11)
+	ver3d.add_theme_font_size_override("font_size", Tema.letra(11))
 	ver3d.pressed.connect(func() -> void: p._ver_ciudad_explorando("pie"))   ## (6-11) sin vista aérea para el jugador: entra a pie
 	p._lista_ciudad.add_child(ver3d)
 	_pintar_luces_ciudad(ci)

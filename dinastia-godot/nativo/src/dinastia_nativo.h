@@ -54,6 +54,10 @@ public:
 	// `MotorJugable._cuerpos` (visor/motor_jugable_p11.gd, M-391): separa de dos en dos a los jugadores que se pisan (reparto por masa) y frena la velocidad con que se acercan. `jugadores` = los
 	// diccionarios del motor ({node, vel, fuerza, aguante, ...}); mueve `node.position` y reescribe `vel`, igual que el GDScript. `minimo` = 2 × radio del cuerpo.
 	void cuerpos_motor(const Array &jugadores, double minimo) const;
+	// `TraficoCiudad._process` entero (18-11, nativo/src/trafico_nativo.cpp): el paso del tráfico y los peatones de la ciudad. `tr` = el TraficoCiudad; lo que sigue en GDScript (animación, gestos, mirada) se llama de vuelta (`_cb_*`).
+	// Escribe en los diccionarios el estado propio del tráfico que vive en C++ (`lod`, `dt`): pruebas y vuelta a la versión GDScript.
+	void trafico_volcar(Object *tr) const;
+	void trafico_paso(Object *tr, double delta_real, bool hay_cam, const Vector3 &ojo, const Vector3 &adelante, bool hay_jugador, const Vector3 &pj, const Array &sirenas) const;
 	// `MotorJugable._mover_fisica_gd` (visor/motor_jugable_p5.gd, 15-11): el movimiento de los 22 (velocidad, giro, empujón, posición, rumbo, inclinación y aguante). Devuelve 4 valores por jugador
 	// [válido, velocidad, va_atrás, distancia_al_balón] para el bucle de animación, que sigue en GDScript. `coste_aguante` = [local, visitante] (el coste táctico del sprint).
 	// `LeagueGuia._paso_gd`, en dos pasadas: índices de los que deciden clip este paso, y luego guía o marcha de todos ([cortes, guiados]).
@@ -125,6 +129,11 @@ public:
 	void cerrar_notas(Object *p, const Ref<RandomNumberGenerator> &rng) const;
 	// ¿El generador de azar del motor es el PCG32 que reproduce `simular_90`? (autocomprobación; si no, `simular_90` usa el del motor)
 	bool pcg_coincide() const;
+	// La síntesis del sonido (`nucleo/sonido_p1.gd`, nativo/src/sonido_nativo.cpp): `_tono`, `_ruido`, `_mezclar` y el paso a 16 bits de `_a_wav`.
+	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
+	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
+	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;
+	PackedByteArray son_a_16(const PackedFloat32Array &m) const;
 	// `Partido._media_linea` x 4 líneas ([POR, DEF, MED, DEL]) de un once (nucleo/partido_p1.gd, `fuerza`).
 	PackedFloat64Array medias_linea(const Array &once, const Dictionary &grupo_de, const Dictionary &lateral_de, const Dictionary &banda_de, const Dictionary &impulsos, int64_t minuto, double arenga_mult,
 			double ley_ex, const Dictionary &ex_de_mi_club, const String &ex_id) const;

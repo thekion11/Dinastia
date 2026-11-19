@@ -100,7 +100,7 @@ func _init() -> void:
 	## Fuera del recorrido del foco: con teclado o mando se elige desde la
 	## lista (Intro / A); este botón es para el ratón y el dedo.
 	_btn_elegir.focus_mode = Control.FOCUS_NONE
-	_btn_elegir.add_theme_font_size_override("font_size", 16)
+	_btn_elegir.add_theme_font_size_override("font_size", Tema.letra(16))
 	_btn_elegir.set_meta("sin_sonido", true)
 	_btn_elegir.pressed.connect(func() -> void: elegir_pulsado.emit())
 	fila.add_child(_btn_elegir)

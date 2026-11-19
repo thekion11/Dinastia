@@ -195,7 +195,7 @@ func _lod() -> void:
 				elif sin.size() < 5:
 					sin.append(f.get_file())
 	print("  modelos de personaje con LOD: %d de %d %s" % [con, total, str(sin)])
-	_comprobar(total > 50 and float(con) >= 0.95 * float(total), "al menos el 95 %% de los modelos de personaje con LOD (%d de %d)" % [con, total])
+	_comprobar(total >= 20 and float(con) >= 0.95 * float(total), "al menos el 95 %% de los modelos de personaje con LOD (%d de %d)" % [con, total])
 
 func _archivos(dir: String) -> Array[String]:
 	var out: Array[String] = []

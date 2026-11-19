@@ -11,12 +11,13 @@ var _busqueda: PopupPanel
 
 ## La pantalla de esta partida (se crea la primera vez, justo encima del menú de siempre y debajo de los menús laterales y de todo lo que se abre después).
 static func de(p: Principal) -> EscaparatePantalla:
-	var e: Variant = p.get_meta("escaparate", null)
+	var e: Variant = (p.get_meta("escaparate") if p.has_meta("escaparate") else null)
 	if is_instance_valid(e):
 		return e as EscaparatePantalla
 	var n := EscaparatePantalla.new()
 	n.name = "Escaparate"
 	n.set_anchors_preset(Control.PRESET_FULL_RECT)
+	n.offset_left = MenuLateral.reserva().x   ## el escaparate empieza a la derecha del riel (que ya no se esconde): el toque llega a sus 14 botones
 	n.mouse_filter = Control.MOUSE_FILTER_STOP
 	p.add_child(n)
 	var raiz: Node = p._despacho.get_parent() if p._despacho != null else null
