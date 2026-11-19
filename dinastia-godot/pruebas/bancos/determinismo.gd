@@ -10,7 +10,8 @@ extends BaseIdea
 
 ## Archivos de `nucleo/` que pueden mirar el reloj (nunca para decidir nada de la simulación).
 const RELOJ_PERMITIDO := ["partida_p1.gd", "partida.gd", "partida_archivo.gd", "registro.gd", "medicion.gd", "logros_p1.gd", "reloj.gd",
-	"avisos_sonido.gd", "guardado_segundo_plano.gd", "compilar_fondo.gd"]   ## avisos en pantalla y tiempos medidos
+	"avisos_sonido.gd", "guardado_segundo_plano.gd", "compilar_fondo.gd",
+	"motor_eleccion.gd", "mundo_p3.gd", "reales.gd", "musica.gd"]   ## avisos en pantalla, tiempos medidos, la fecha del voto del comparador de motores (un registro), el RITMO con el que se cede un fotograma al generar (cuándo, no qué) y por dónde empieza la rotación de la música: nada de eso entra en la simulación
 
 func _probar() -> void:
 	_titulo("BANCO DETERMINISMO (fase 2): código, mundos, partidos y temporada")
