@@ -356,7 +356,7 @@ static func banda_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: Random
 	m._anim(p, AnimExtra.variante(p["anim"], "saque_banda", String(p.get("id", "")), rng), true)
 	m._contar("c4_banda_ensayada")
 	return true
-static func radio_entrada(m: Object, p: Dictionary, victima: Dictionary, base: float, r: float) -> float:
+static func radio_entrada(m: Object, p: Dictionary, victima: Dictionary, _base: float, r: float) -> float:
 	if not CONTENER:
 		return r
 	var arco: Vector3 = m._arco_rival(victima)   ## el arco que defiende `p`

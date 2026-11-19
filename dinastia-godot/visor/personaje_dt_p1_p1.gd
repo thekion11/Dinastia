@@ -190,7 +190,7 @@ static func aspecto(guardado: Dictionary) -> Dictionary:
 
 ## La escala que cada hueso debería tener EN EL MUNDO (ejes del modelo: x de
 ## lado, y arriba, z hacia delante). Lo que no aparece, 1.
-static func _objetivos(a: Dictionary, cuerpo: String = "male") -> Dictionary:
+static func _objetivos(a: Dictionary, _cuerpo: String = "male") -> Dictionary:
 	var c: float = a["complexion"]
 	var h: float = a["hombros"]
 	var b: float = a["barriga"]

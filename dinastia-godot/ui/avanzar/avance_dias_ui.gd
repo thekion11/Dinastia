@@ -1,5 +1,8 @@
 class_name AvanceDiasUI
 extends RefCounted
+
+const _RUTA_REPLICA_PARTIDO := "res://ui/partido_menu/replica_partido.gd"
+
 ## EL BOTÓN «AVANZAR» NUEVO (paso 3, 17-11-2026). Reemplaza al avance por semanas del menú central: lleva el avance DÍA A DÍA con `AvanceDias`, abre la pantalla
 ## `PantallaAvanzar`, atiende lo que hay en la parada (eventos importantes a pantalla completa, avisos con campana roja en el mosaico) y, en un día de partido,
 ## deja «Jugar partido» y «Saltar partido» donde estaba Avanzar. Todo lo de arriba conserva el menú central tal cual: solo cambian los botones de la fila.
@@ -75,14 +78,14 @@ func _al_elegir_jugado(op: String) -> void:
 		await rp.elegido
 		rp.queue_free()
 	elif op == "repetir":
-		load("res://ui/partido_menu/replica_partido.gd").abrir(p, ult, 0)   ## el partido entero otra vez, con clubes clonados: no toca la liga ni a los jugadores
+		load(_RUTA_REPLICA_PARTIDO).abrir(p, ult, 0)   ## el partido entero otra vez, con clubes clonados: no toca la liga ni a los jugadores
 	elif op.begins_with("momentos:"):
 		var mo := MomentosPartido.mostrar(p, ult, p.mundo.mi_club(), op.substr(9))
 		var r: String = await mo.elegido
 		var minuto := int(mo._lista[int(r.substr(8))]["min"]) if r.begins_with("momento:") else -1
 		mo.queue_free()
 		if minuto >= 0:
-			load("res://ui/partido_menu/replica_partido.gd").abrir(p, ult, minuto)   ## desde un minuto antes de la jugada y con el marcador de entonces
+			load(_RUTA_REPLICA_PARTIDO).abrir(p, ult, minuto)   ## desde un minuto antes de la jugada y con el marcador de entonces
 
 ## ¿Hoy es el último día del mercado (y estás sobre ese día)? Entonces pasar al día siguiente lo cierra: se pregunta antes.
 func _hito_pendiente() -> bool:

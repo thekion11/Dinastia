@@ -1,5 +1,8 @@
 class_name EscudoTexto
 extends RefCounted
+
+const _RUTA_ESCUDO_EMBLEMAS := "res://ui/escudo_emblemas.gd"
+
 ## EL ESCUDO CON SU SÍMBOLO O SUS INICIALES YA PINTADOS (2-11-2026, queja del dueño: «los símbolos del
 ## escudo no aparecen»). El rasterizador de SVG de Godot no dibuja `<text>`, así que `Escudo.textura`
 ## sale sin símbolo ni letras y las pantallas lo ponen con una etiqueta encima. Donde no se puede poner
@@ -25,10 +28,10 @@ static func textura(c: Club, alto_px: int = 64) -> Texture2D:
 		return _cache[clave]
 	## El símbolo REEMPLAZA a la figura: se rasteriza el escudo sin ella y el símbolo va en el centro.
 	var img := Image.new()
-	var antes = load("res://ui/escudo_emblemas.gd").activo
-	load("res://ui/escudo_emblemas.gd").activo = false
+	var antes = load(_RUTA_ESCUDO_EMBLEMAS).activo
+	load(_RUTA_ESCUDO_EMBLEMAS).activo = false
 	var ok := img.load_svg_from_string(Escudo.svg_de(c), float(alto_px) * 4.0 / 70.0)
-	load("res://ui/escudo_emblemas.gd").activo = antes
+	load(_RUTA_ESCUDO_EMBLEMAS).activo = antes
 	if ok != OK:
 		return Escudo.textura(c, alto_px)
 	img.convert(Image.FORMAT_RGBA8)

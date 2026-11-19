@@ -1,5 +1,9 @@
 class_name PantallaOpciones
 extends "res://ui/pantallas/pantalla_opciones_p1.gd"
+
+const _RUTA_ELECCION_PARTIDO := "res://ui/componentes/eleccion_partido.gd"
+const _RUTA_VESTIDOR_Q := "res://visor/vestidor_q.gd"
+
 ## [Capa 2/2 de `pantalla_opciones.gd`] _pintar_dispositivo, _pintar_velocidad_partido, _pintar_qol
 
 func _pintar_dispositivo() -> void:
@@ -121,9 +125,9 @@ func _disp_ropa() -> void:
 	et_ra.tooltip_text = Idiomas.t("La equipación con volumen propio (más realista). Cuesta tres mallas más por jugador en el partido.")
 	fila_ra.add_child(et_ra)
 	var b_ra := Button.new()
-	b_ra.text = "SÍ" if load("res://visor/vestidor_q.gd").ropa_aparte else "NO"
+	b_ra.text = "SÍ" if load(_RUTA_VESTIDOR_Q).ropa_aparte else "NO"
 	b_ra.pressed.connect(func() -> void:
-		load("res://visor/vestidor_q.gd").ropa_aparte = not load("res://visor/vestidor_q.gd").ropa_aparte
+		load(_RUTA_VESTIDOR_Q).ropa_aparte = not load(_RUTA_VESTIDOR_Q).ropa_aparte
 		p._guardar_preferencias()
 		p._refrescar())
 	fila_ra.add_child(b_ra)
@@ -299,9 +303,9 @@ func _pintar_qol() -> void:
 	ep.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fp.add_child(ep)
 	var bp := Button.new()
-	bp.text = Idiomas.t("SÍ") if load("res://ui/componentes/eleccion_partido.gd").preguntar() else Idiomas.t("NO")
+	bp.text = Idiomas.t("SÍ") if load(_RUTA_ELECCION_PARTIDO).preguntar() else Idiomas.t("NO")
 	bp.pressed.connect(func() -> void:
-		load("res://ui/componentes/eleccion_partido.gd").fijar_preguntar(not load("res://ui/componentes/eleccion_partido.gd").preguntar())
+		load(_RUTA_ELECCION_PARTIDO).fijar_preguntar(not load(_RUTA_ELECCION_PARTIDO).preguntar())
 		p._refrescar())
 	fp.add_child(bp)
 	var fila := HBoxContainer.new()

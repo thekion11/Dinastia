@@ -108,6 +108,7 @@ func _ver_ciudad_con_carga() -> void:
 ## No hace falta ni un dato nuevo: todo sale de `mundo.ligas` y de las
 ## plantillas que ya existen.
 const SECC_CLUBES := ["tablas", "goleadores", "rivales"]
+const _RUTA_ESTADIO := "res://ui/estadio.gd"
 func _pintar_clubes() -> void:
 	p._limpiar(p._lista_clubes)
 	if _clubes_pais == "":
@@ -373,7 +374,7 @@ func _ver_estadio_propio(por_partes := false) -> void:
 		if h is CanvasItem and (h as CanvasItem).visible and not h is PantallaCarga:   ## la carga sigue encima
 			(h as CanvasItem).visible = false
 			ocultados.append(h)
-	var vista = load("res://ui/estadio.gd").new()
+	var vista = load(_RUTA_ESTADIO).new()
 	vista.por_partes = por_partes   ## con carga: se arma entre fotogramas y la carga sigue viva
 	vista.arrancar_a_pie = true   ## (9-11, «solo club») «Entrar al estadio» te deja caminando el club (sin vista exterior del estadio)
 	## Sin partido la pantalla gigante enseña bienvenida + tabla + goleadores,
@@ -416,7 +417,7 @@ func _ver_vuelta_olimpica(titulo: String) -> void:
 		if h is CanvasItem and (h as CanvasItem).visible and not h is PantallaCarga:   ## la carga sigue encima
 			(h as CanvasItem).visible = false
 			ocultados.append(h)
-	var vista = load("res://ui/estadio.gd").new()
+	var vista = load(_RUTA_ESTADIO).new()
 	vista.datos_pantalla = p._datos_pantalla_estadio(c)
 	p.add_child(vista)
 	vista.abrir(c, 1.0, null, null, p.mundo.perfil_estadio_de(c), Comercial.color_balon(p.mundo.comercial.balon, c))

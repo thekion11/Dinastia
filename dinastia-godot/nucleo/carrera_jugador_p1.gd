@@ -440,7 +440,7 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 			_op("Juegas infiltrado.", {"energia": -5, "lesion_riesgo": true})]))
 	return p
 
-func _club_interesado(m: Mundo, j: Jugador) -> Club:
+func _club_interesado(m: Mundo, _j: Jugador) -> Club:
 	var mio := club(m)
 	var mejores: Array = []
 	for c: Club in m.clubes.values():

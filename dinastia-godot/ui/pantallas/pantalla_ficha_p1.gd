@@ -207,7 +207,7 @@ func _alternar_pais_ojeo(pais: String) -> void:
 ## `toggleRed()` del HTML: qué países cubre tu red de ojeadores, con nombre y
 ## sesgo de cada uno. Cuántos puedes cubrir a la vez sale del nivel de
 ## "ojeador" en el cuerpo técnico, justo arriba de esta sección.
-func _pintar_ojeadores(c: Club) -> void:
+func _pintar_ojeadores(_c: Club) -> void:
 	var oj := p.mundo.ojeadores
 	if oj == null:
 		return

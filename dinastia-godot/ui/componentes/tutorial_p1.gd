@@ -93,6 +93,7 @@ const _APELLIDOS := ["Valdivia", "Arancibia", "Montalvo", "Echenique", "Sotomayo
 ## mismo para el mismo club) y encima va lo que el jugador haya elegido con ✎,
 ## guardado por modo en `user://ajustes.cfg`.
 const SECCION_ASPECTO := "mentor_aspecto"
+const _RUTA_PERSONA_REALISTA := "res://visor/persona_realista.gd"
 
 ## Negrita de verdad (la sintética del texto enriquecido montaba letras).
 static func _negrita() -> Font:
@@ -384,7 +385,7 @@ static func aspecto_mentor(modo: String, m: Dictionary) -> Dictionary:
 		if guardado is Dictionary:
 			for k: String in guardado:
 				pedido[k] = guardado[k]
-	return load("res://visor/persona_realista.gd").aspecto(String(m.get("semilla", modo)), pedido)
+	return load(_RUTA_PERSONA_REALISTA).aspecto(String(m.get("semilla", modo)), pedido)
 
 static func _cara_mentor(m: Dictionary, ctx: Dictionary) -> Texture2D:
 	var j := Jugador.new()
@@ -398,8 +399,8 @@ static func _cara_mentor(m: Dictionary, ctx: Dictionary) -> Texture2D:
 func _pintar_retrato(ctx: Dictionary) -> void:
 	for h in _marco_cara.get_children():
 		h.queue_free()
-	if load("res://visor/persona_realista.gd").disponible():
-		_marco_cara.add_child(load("res://visor/persona_realista.gd").retrato(_aspecto, Vector2i(100, 120), _fondo_retrato, "cara"))
+	if load(_RUTA_PERSONA_REALISTA).disponible():
+		_marco_cara.add_child(load(_RUTA_PERSONA_REALISTA).retrato(_aspecto, Vector2i(100, 120), _fondo_retrato, "cara"))
 	else:
 		var r := TextureRect.new()
 		r.custom_minimum_size = Vector2(84, 84)

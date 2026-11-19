@@ -1,5 +1,8 @@
 class_name Principal
 extends "res://ui/principal_p17.gd"
+
+const _RUTA_PORTADA_PERIODICO := "res://ui/componentes/portada_periodico.gd"
+
 ## [Capa 17/17 de `principal.gd`] _ready, _capa_modal_encima, _input, _pintar_identidad, _al_paso_nuevo, _portada_nueva
 
 ## Los hijos que ya estaban al terminar `_ready()` (el menú, el riel, el reloj…).
@@ -50,6 +53,6 @@ func _portada_nueva() -> void:
 	var nueva := bool(d.get("nueva", false))
 	for x: Dictionary in mundo.prensa.portadas:
 		x.erase("nueva")
-	if nueva and load("res://ui/componentes/portada_periodico.gd").auto():
-		load("res://ui/componentes/portada_periodico.gd").mostrar(self, mundo, d)
+	if nueva and load(_RUTA_PORTADA_PERIODICO).auto():
+		load(_RUTA_PORTADA_PERIODICO).mostrar(self, mundo, d)
 	_al_paso_nuevo()

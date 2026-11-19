@@ -1,6 +1,5 @@
 extends RefCounted
 ## [Capa 1/2 de `edificio_club.gd`] nombre_planta, plantas, nivel, zonas, _ascensor, _pared_galeria … (+7)
-
 ## EL EDIFICIO DEL CLUB, POR PLANTAS (estadio interactivo 2.0, fase 2).
 ##
 ## Pedido: «todos esos lugares que creamos en el estadio deben estar
@@ -27,6 +26,7 @@ const PUERTA := 1.6
 ## El hueco del ascensor, el mismo en todas las plantas (x relativo al eje).
 const ASC_X0 := -4.4
 const ASC_X1 := -2.2
+const _RUTA_STADIUM_BUILDER := "res://visor/stadium_builder.gd"
 
 ## {inst: {clave: nivel}, dentro: {vestuario, sala_prensa, palco},
 ##  plantilla: [[dorsal, nombre]], titulos: int, presidente: String}
@@ -200,9 +200,9 @@ static func _pared_galeria(nodo: Node3D, x0: float, z_fin: float, y0: float, anc
 	var xp := x0 + TunelMedidas.PUERTA_X
 	var h0 := xp - GaleriaClub.MEDIO
 	var h1 := xp + GaleriaClub.MEDIO
-	for tr: Vector2 in load("res://visor/stadium_builder.gd")._tramos_sin_hueco(x0, ancho + 0.6, h0, h1):
+	for tr: Vector2 in load(_RUTA_STADIUM_BUILDER)._tramos_sin_hueco(x0, ancho + 0.6, h0, h1):
 		PiezasObra._caja(nodo, Vector3(tr.x, y0 + ALTO_LIBRE / 2.0, z_fin + 0.15), Vector3(tr.y, ALTO_LIBRE, 0.3), horm, true)
-	for tr2: Vector2 in load("res://visor/stadium_builder.gd")._tramos_sin_hueco(x0, ancho, h0, h1):
+	for tr2: Vector2 in load(_RUTA_STADIUM_BUILDER)._tramos_sin_hueco(x0, ancho, h0, h1):
 		PiezasObra._caja(nodo, Vector3(tr2.x, y0 + ALTO_LIBRE / 2.0, z_fin - 0.02), Vector3(tr2.y, ALTO_LIBRE, 0.04), pared, false)
 	## Dintel y marco con el color del club.
 	var marco := PiezasObra._mat(c1, 0.5)

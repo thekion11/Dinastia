@@ -27,6 +27,8 @@ const CENTRO_Y := 1.33
 const ALTURA := 1.84           ## los dos a la MISMA escala (y la misma línea de base), sea cual sea su altura real
 const GIRO_TORSO := 0.35       ## ~20° hacia el centro de la pantalla; la cabeza vuelve a mirar a cámara
 const DISTANCIA := 6.0
+const _RUTA_PLAYER_SPAWNER := "res://visor/player_spawner.gd"
+const _RUTA_PUENTE3D := "res://visor/puente3d.gd"
 ## La luz del estudio (las pruebas la varían para comparar).
 static var luz := {"key": 0.65, "relleno": 0.2, "rim": 0.7, "exp": 0.72, "amb": 0.2}   ## (Auditoría) más suave sobre la piel: con 0,9/1,3/0,85 las pieles claras salían blancas
 
@@ -114,8 +116,8 @@ func vestir(cols: Array) -> void:
 	for h in _raiz.get_children():
 		if h is Node3D and not (h is Light3D):
 			h.queue_free()
-	var spawner = load("res://visor/player_spawner.gd").new()
-	var kit: Dictionary = load("res://visor/puente3d.gd").kit(club)
+	var spawner = load(_RUTA_PLAYER_SPAWNER).new()
+	var kit: Dictionary = load(_RUTA_PUENTE3D).kit(club)
 	var c1 := Color(String(kit.get("c1", club.color1)))
 	var c2 := Color(String(kit.get("c2", club.color2)))
 	var titular := cols.is_empty() or (cols[0] as Color).is_equal_approx(c1)
@@ -126,8 +128,8 @@ func vestir(cols: Array) -> void:
 	var nodo := Node3D.new()
 	nodo.rotation.y = GIRO_TORSO * signf(gira)
 	_raiz.add_child(nodo)
-	var datos: Dictionary = load("res://visor/puente3d.gd").jugador(jugador)
-	var look: Array = load("res://visor/player_spawner.gd")._look_de(datos)
+	var datos: Dictionary = load(_RUTA_PUENTE3D).jugador(jugador)
+	var look: Array = load(_RUTA_PLAYER_SPAWNER)._look_de(datos)
 	var d: Dictionary = spawner._crear_jugador(nodo, jugador.id, "DEL", "", c1, c2, String(kit.get("estilo", "liso")) if titular else "liso",
 		maxi(jugador.dorsal, 1), look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
 	if spawner is Node:

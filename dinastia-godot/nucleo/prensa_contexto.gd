@@ -103,7 +103,7 @@ static func _op(txt: String, moral: int, conf: int, socios: int, tono: String) -
 	return {"txt": txt, "moral": moral, "confianza": conf, "socios": socios, "tono": tono}
 
 ## EL PORQUÉ: la causa que más pesó en el partido de esta semana, hecha pregunta.
-static func _del_porque(m: Mundo, gane: bool, empate: bool) -> Dictionary:
+static func _del_porque(m: Mundo, gane: bool, _empate: bool) -> Dictionary:
 	var u: Dictionary = Partido.ultimas_causas
 	if u.is_empty() or int(u.get("anio", -1)) != m.anio or int(u.get("semana", -1)) != m.semana:
 		return {}

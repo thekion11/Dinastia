@@ -11,7 +11,7 @@ const ROLES_MEDIO: Array[String] = ["MC", "MCD", "MCO", "MD", "MI"]   ## puesto 
 const ROLES_DELANTE: Array[String] = ["DC", "SD", "DEL", "ED", "EI"]
 
 ## La posición de la formación `r` del jugador `p` cuando su equipo no tiene el balón.
-static func retrasar(m: MotorJugable, p: Dictionary, r: Vector3) -> Vector3:
+static func retrasar(_m: MotorJugable, p: Dictionary, r: Vector3) -> Vector3:
 	if not ACTIVO:
 		return r
 	var rol := String(p.get("slot_code", ""))

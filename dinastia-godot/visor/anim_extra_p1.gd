@@ -141,7 +141,7 @@ static func _brazo(lado: String, adelante: float, costado: float) -> Vector3:
 	## "adelante" (aplaudir con una mano delante y otra a la espalda).
 	return Vector3(0, -adelante * s, costado * s)
 
-static func _codo(lado: String, flex: float) -> Vector3:
+static func _codo(_lado: String, flex: float) -> Vector3:
 	## CORREGIDO (26-9-2026, `pruebas/sonda_lados.gd`): la Y del antebrazo solo
 	## lo gira sobre su eje -la mano no se movía un milímetro-; el codo se dobla
 	## con X positivo, igual en los dos lados.

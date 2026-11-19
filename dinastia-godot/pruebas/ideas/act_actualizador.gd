@@ -200,7 +200,7 @@ func _bajar(a: Actualizador, info: Dictionary, seg: float = 10.0) -> Dictionary:
 	a.progreso.disconnect(fp)
 	return resultado
 
-func _red(base: String) -> void:
+func _red(_base: String) -> void:
 	var a := Actualizador.new()
 	add_child(a)
 	var limpiar := func() -> void:

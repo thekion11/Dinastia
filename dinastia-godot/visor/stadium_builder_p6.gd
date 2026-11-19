@@ -3,6 +3,7 @@ extends "res://visor/stadium_builder_p5.gd"
 
 ## Ocupación máxima de una grada (un estadio «lleno» tiene siempre alguna butaca libre).
 const TOPE_OCUPACION := 0.86
+const _RUTA_HINCHADA := "res://visor/hinchada.gdshader"
 ## Cuántas filas de la bandeja de abajo llevan la butaca con respaldo curvo (1.944 triángulos); 99 o más = como antes de la rebaja #1 (las capturas «antes»).
 static var butaca_detalle_filas := 2
 static var llenado_aforo := 1.0   ## (4-11) fracción de filas con butaca según el AFORO (aforo/22 000 por nivel, 0,5-1)
@@ -31,7 +32,7 @@ static func colores_de_nivel(c1: Color, c2: Color, nivel: int) -> Array[Color]:
 			return [v, v.lerp(c1, 0.3)]
 
 static func _butacas(deck: MeshInstance3D, tam: Vector3, lateral: bool, est: Dictionary,
-		ocupacion: float, alto: float = 6.5, rake: float = 0.0, bandeja: int = 0) -> void:
+		ocupacion: float, _alto: float = 6.5, rake: float = 0.0, bandeja: int = 0) -> void:
 	var esc := load(RUTA_BUTACAS)
 	if esc == null:
 		return
@@ -386,7 +387,7 @@ static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMe
 			mmd.set_instance_transform(k, gt.det_xf[k])
 			mmd.set_instance_color(k, gt.det_col[k])
 		var mat_d := ShaderMaterial.new()
-		mat_d.shader = load("res://visor/hinchada.gdshader")
+		mat_d.shader = load(_RUTA_HINCHADA)
 		## La malla de detalle tiene el cuello más arriba y pelo.
 		mat_d.set_shader_parameter("cuello_desde", 0.535)
 		mat_d.set_shader_parameter("cuello_hasta", 0.55)
@@ -413,7 +414,7 @@ static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMe
 	## camiseta. Cero coste por instancia -sigue siendo UN `MultiMesh` por
 	## tribuna- y cero vértices nuevos.
 	var mat_h := ShaderMaterial.new()
-	mat_h.shader = load("res://visor/hinchada.gdshader")
+	mat_h.shader = load(_RUTA_HINCHADA)
 	var mih := MultiMeshInstance3D.new()
 	mih.multimesh = mmh
 	mih.material_override = mat_h

@@ -205,7 +205,7 @@ func _llamadas() -> float:
 		await get_tree().process_frame
 	return Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 
-func _grupos_nombre(ciudad: Node, base: Vector2) -> void:
+func _grupos_nombre(ciudad: Node, _base: Vector2) -> void:
 	if OS.get_environment("MMHIST") != "":
 		var nodos := ciudad.find_children("*", "MultiMeshInstance3D", true, false)
 		var por := {}

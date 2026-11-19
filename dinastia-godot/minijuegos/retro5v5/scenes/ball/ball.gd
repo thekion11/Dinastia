@@ -56,7 +56,7 @@ func tumble(tumble_velocity: Vector2) -> void:
 	height_velocity = TUMBLE_HEIGHT_VELOCITY
 	switch_state(Ball.State.FREEFORM, BallStateData.build().set_lock_duration(DURATION_TUMBLE_LOCK))
 
-func pass_to(destination: Vector2, lock_duration: int = DURATION_PASS_LOCK) -> void:
+func pass_to(destination: Vector2, _lock_duration: int = DURATION_PASS_LOCK) -> void:
 	var direction := position.direction_to(destination)
 	var distance := position.distance_to(destination)
 	var intensity := sqrt(2 * distance * friction_ground)

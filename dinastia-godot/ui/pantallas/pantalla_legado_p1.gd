@@ -389,7 +389,7 @@ func _homenajear(nombre: String) -> void:
 
 ## Las leyendas de TU club, con el botón de homenaje. Se filtran por club a
 ## propósito: homenajear en el Madrid a una leyenda del Boca no significa nada.
-func _pintar_homenajes(r: Roles) -> void:
+func _pintar_homenajes(_r: Roles) -> void:
 	var th := p._texto(11, Principal.COL_SUAVE)
 	th.text = Idiomas.t("🎖️ HOMENAJES")
 	p._lista_legado.add_child(th)

@@ -193,7 +193,7 @@ func _pintar_proveedor(co: Comercial, c: Club) -> void:
 
 ## LAS CINCO ZONAS. Son contratos INDEPENDIENTES y todos ingresan a la vez, que
 ## es exactamente por qué las camisetas modernas están como están.
-func _pintar_zonas(co: Comercial, c: Club) -> void:
+func _pintar_zonas(co: Comercial, _c: Club) -> void:
 	var t := p._texto(11, p.COL_ACENTO)
 	t.text = Idiomas.t("💸 PATROCINIOS POR ZONA")
 	p._lista_gente.add_child(t)
@@ -261,7 +261,7 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 
 ## EL NAMING. Lo más rentable que existe y lo que más duele: la hinchada lo paga
 ## en ánimo el día que se firma.
-func _pintar_naming(co: Comercial, c: Club) -> void:
+func _pintar_naming(co: Comercial, _c: Club) -> void:
 	var t := p._texto(11, p.COL_ACENTO)
 	t.text = Idiomas.t("🏟️ NOMBRE DEL ESTADIO")
 	p._lista_gente.add_child(t)

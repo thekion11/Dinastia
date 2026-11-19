@@ -9,7 +9,7 @@ const ALTO := 2.8
 const SITIOS := [-14.0, -11.5, 14.0]
 
 ## Pone las máquinas ante la fachada del solar `c` (`w` × `f`). Devuelve cuántas puso (0 si falta el archivo).
-static func montar(b: Node3D, c: Vector3, w: float, f: float) -> int:
+static func montar(b: Node3D, c: Vector3, _w: float, f: float) -> int:
 	var ps := load(RUTA) as PackedScene
 	if ps == null:
 		return 0

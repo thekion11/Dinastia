@@ -233,7 +233,7 @@ static func poner_brazalete(nodo: Node, color: Color) -> void:
 				g.set_surface_override_material(k, _con_brazalete(g.get_surface_override_material(k), color))
 
 ## Un jugador con el modelo realista (cuerpo Quaternius vestido con su equipación).
-func _crear_jugador(root: Node3D, jid: String, puesto: String, img_kit: String,
+func _crear_jugador(root: Node3D, jid: String, puesto: String, _img_kit: String,
 		c1: Color, c2: Color, estilo: String, dorsal: int, piel: Color, pelo: Color,
 		barba: int, color_liso: Color = Color(0, 0, 0, 0), jug: Dictionary = {}) -> Dictionary:
 	if USAR_MODELO_Q:

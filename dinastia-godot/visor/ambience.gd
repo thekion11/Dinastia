@@ -31,6 +31,9 @@ const CLIMA_PARTIDO := {
 	"niebla":    {"oscuro": 0.30, "niebla": 0.75},
 }
 
+const _RUTA_STADIUM_BUILDER := "res://visor/stadium_builder.gd"
+
+
 ## `nivel`: el mismo `Calidad.MINIMO/MEDIO/ALTO/ULTRA` que ya respeta `ciudad_vista.gd`.
 ## HASTA AHORA EL PARTIDO IGNORABA POR COMPLETO EL AJUSTE DE CALIDAD -a
 ## diferencia de la ciudad, que sí lo mira (`ciudad_vista.gd:78`)-: la oclusión
@@ -54,7 +57,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 	var cp: Dictionary = CLIMA_PARTIDO.get(clima_key, CLIMA_PARTIDO["despejado"])
 
 	var oscuro: float = clampf(float(amb["oscuro"]) + float(cp["oscuro"]) * 0.6, 0.0, 1.0)
-	load("res://visor/stadium_builder.gd").encender_conos(oscuro)
+	load(_RUTA_STADIUM_BUILDER).encender_conos(oscuro)
 	var niebla: float = float(cp["niebla"])
 
 	var top := Color(str(amb["top"])).darkened(float(cp["oscuro"]) * 0.5)
@@ -139,7 +142,7 @@ static func apply(root: Node3D, est: Dictionary, clima_partido, nivel: int = Cal
 		fill.rotation_degrees = Vector3(-78, 130, 0)
 		fill.light_energy = 0.40 + oscuro * 0.35
 		## B6.1: del color que se eligió para los focos.
-		fill.light_color = load("res://visor/stadium_builder.gd").color_luz(est)
+		fill.light_color = load(_RUTA_STADIUM_BUILDER).color_luz(est)
 		fill.shadow_enabled = false
 		## Sin brillo especular: es una luz de RELLENO. Casi vertical, su
 		## reflejo caía en el centro del campo y era media causa de la

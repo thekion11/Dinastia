@@ -130,7 +130,7 @@ static func _cercano(nat: Object, f: Array[String], n: Array) -> void:
 	motor.free()
 	raiz.free()
 
-static func _toques(nat: Object, f: Array[String], n: Array) -> void:
+static func _toques(_nat: Object, f: Array[String], n: Array) -> void:
 	var guardado: Dictionary = LeagueToques.catalogo().duplicate(true)
 	var quieta := PackedVector3Array()
 	quieta.resize(71)

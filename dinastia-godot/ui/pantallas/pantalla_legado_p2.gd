@@ -128,13 +128,15 @@ func _pintar_epilogo(r: Roles) -> void:
 		vit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(vit)
 		## La vitrina 3D con la forma de cada trofeo (26-10).
-		var v3: Control = load("res://ui/competiciones/vitrina_trofeos.gd").crear(ult)   ## (A4 memoria) por ruta
+		var v3: Control = load(_RUTA_VITRINA_TROFEOS).crear(ult)   ## (A4 memoria) por ruta
 		if v3 != null:
 			p._lista_legado.add_child(v3)
 
 ## (12-11, menús a pantalla completa) Tres pantallas (`p._secc_extra["Legado"]`): el CLUB (su historia, tu legado y el palmarés), tu CARRERA
 ## (cargo, licencia, ofertas, desgaste, patrimonio, filiales) y el RETIRO (homenajes, sucesión, fin de carrera). Otra sección = todo seguido.
 const SECC_LEGADO := ["club", "carrera", "retiro"]
+const _RUTA_VITRINA_TROFEOS := "res://ui/competiciones/vitrina_trofeos.gd"
+const _RUTA_ARBOL_HABILIDADES := "res://ui/componentes/arbol_habilidades.gd"
 
 func _pintar_legado() -> void:
 	p._limpiar(p._lista_legado)
@@ -180,7 +182,7 @@ func _legado_club(r: Roles) -> void:
 	p._lista_legado.add_child(CifrasClave.banda([[Idiomas.t("Temporadas"), str(maxi(1, p.mundo.anio - inicio + 1)), txt], [Idiomas.t("Títulos"), str(r.trofeos.size()), oro],
 		[Idiomas.t("Prestigio"), str(r.prestigio), txt], [Idiomas.t("Puntaje"), p._miles(int(p_local["total"])), oro]], p._color_de_paleta(Principal.COL_SUAVE)))
 	## Tu vitrina en 3D (26-10): los últimos títulos con su trofeo.
-	var vit3: Control = load("res://ui/competiciones/vitrina_trofeos.gd").crear(r.trofeos)
+	var vit3: Control = load(_RUTA_VITRINA_TROFEOS).crear(r.trofeos)
 	if vit3 != null:
 		p._lista_legado.add_child(vit3)
 	var camisetas := CamisetasRetiradas.crear(p.mundo)   ## (9-11) los dorsales retirados en el partido de despedida
@@ -331,9 +333,9 @@ func _pintar_habilidades() -> void:
 		(func() -> void: Animar.pulso(pts, 1.15)).call_deferred()
 	var grande := Button.new()
 	grande.text = Idiomas.t("⛶ En grande")
-	grande.pressed.connect(func() -> void: load("res://ui/componentes/arbol_habilidades.gd").abrir_en_grande(p, e, p._refrescar))
+	grande.pressed.connect(func() -> void: load(_RUTA_ARBOL_HABILIDADES).abrir_en_grande(p, e, p._refrescar))
 	cab.add_child(grande)
-	var arbol: Control = load("res://ui/componentes/arbol_habilidades.gd").crear(e)
+	var arbol: Control = load(_RUTA_ARBOL_HABILIDADES).crear(e)
 	p._lista_habilidades.add_child(arbol)
 	p._lista_habilidades.add_child(arbol.ficha())
 	## Las 15 maestrías de 30 niveles, debajo del árbol.

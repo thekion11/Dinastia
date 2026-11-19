@@ -121,14 +121,14 @@ func _fin_ceremonia() -> void:
 # ---------------------------------------------------------------- ceremonia
 
 func _empezar_ceremonia() -> void:
-	var gc = load("res://visor/stadium_builder.gd").geom_de_forma(String(_perfil.get("forma", "oval")))
+	var gc = load(_RUTA_STADIUM_BUILDER).geom_de_forma(String(_perfil.get("forma", "oval")))
 	var nombre := String(_perfil.get("nombre", ""))
 	if nombre == "":
 		nombre = local.estadio_nombre if local.estadio_nombre != "" else "Estadio de %s" % Nombres.visible(local.nombre)
 	## El motor espera: la ceremonia mueve a los 22 y los devuelve a su sitio.
 	motor.set_physics_process(false)
 	_ceremonia = load("res://visor/ceremonia_partido.gd").iniciar(self, _raiz, _en_campo, local, visita, nombre,
-		float(gc["dx"]), float(gc["dz"]), load("res://visor/stadium_builder.gd").tunel_x(_perfil),
+		float(gc["dx"]), float(gc["dz"]), load(_RUTA_STADIUM_BUILDER).tunel_x(_perfil),
 		{"fondo": NEGRO, "acento": LIMA, "borde": FUCSIA})
 	_ver_hud(false)
 	_btn_saltar = Button.new()
@@ -171,17 +171,17 @@ func _montar(duracion_mitad: float) -> void:
 	var perfil := mundo.perfil_estadio_de(local).duplicate() if mundo != null and equipo_usuario == null else local.perfil_estadio()
 	_perfil = perfil
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
-	load("res://visor/stadium_builder.gd").build_pitch(_raiz, perfil, local)
-	load("res://visor/stadium_builder.gd").build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, local._hash_id(), local)
-	load("res://visor/entorno_estadio.gd").montar(_raiz, perfil, load("res://visor/stadium_builder.gd").niveles_de(perfil, int(perfil.get("aforo", 20000))), true)
+	load(_RUTA_STADIUM_BUILDER).build_pitch(_raiz, perfil, local)
+	load(_RUTA_STADIUM_BUILDER).build(_raiz, perfil, int(perfil.get("aforo", 20000)), 0.8, local._hash_id(), local)
+	load("res://visor/entorno_estadio.gd").montar(_raiz, perfil, load(_RUTA_STADIUM_BUILDER).niveles_de(perfil, int(perfil.get("aforo", 20000))), true)
 	OlaGrada.piel_de_pais(_raiz, local.pais)
 	OlaGrada.colores_club(_raiz, Color(local.color1), Color(local.color2))
 	## Como el modo entrenador: lluvia o nieve, pantalla gigante y camarógrafos/guardias de verdad.
-	var gp = load("res://visor/stadium_builder.gd").geom_de_forma(String(perfil.get("forma", "oval")))
+	var gp = load(_RUTA_STADIUM_BUILDER).geom_de_forma(String(perfil.get("forma", "oval")))
 	if String(perfil.get("techo", "")) != "retractil":
 		Precipitacion.montar(_raiz, String(perfil.get("clima", "noche")), float(gp["dx"]), float(gp["dz"]), Calidad.elegida)
 	_montar_pantalla(perfil)
-	_camarografos = load("res://ui/estadio.gd").poner_personal(_raiz)
+	_camarografos = load(_RUTA_ESTADIO).poner_personal(_raiz)
 	## Los 22.
 	var yo := carrera.jugador(mundo) if carrera != null else null
 	_es_local_usuario = yo != null and yo.club_id == local.id
@@ -211,12 +211,12 @@ func _montar(duracion_mitad: float) -> void:
 	_kit_arb = Puente3D.kit_arbitro(kit_l, kit_v, hash(local.id + "|" + visita.id), [por_l, por_v])
 	_sp = sp
 	lista.append_array(sp.spawn_arbitros(_raiz, _kit_arb))
-	load("res://ui/estadio.gd").poner_banca_de(_raiz, sp, local, once_l, true)
-	load("res://ui/estadio.gd").poner_banca_de(_raiz, sp, visita, once_v, false)
+	load(_RUTA_ESTADIO).poner_banca_de(_raiz, sp, local, once_l, true)
+	load(_RUTA_ESTADIO).poner_banca_de(_raiz, sp, visita, once_v, false)
 	var cb := Comercial.color_balon(mundo.comercial.balon, local) if mundo != null and mundo.comercial != null else []
 	if String(perfil.get("clima", "")) == "nieve":
 		cb = [Color("#ff7a1a"), Color("#1a1a1a"), "moderno"]
-	var balon = load("res://visor/stadium_builder.gd").spawn_ball(_raiz, Vector3(0, 0.11, 0), cb)
+	var balon = load(_RUTA_STADIUM_BUILDER).spawn_ball(_raiz, Vector3(0, 0.11, 0), cb)
 	if _camarografos != null:
 		_camarografos.balon = balon
 	motor = load("res://visor/motor_fabrica.gd").crear()   ## (11-11) fábrica: el de siempre, League o el combinado según el selector a ciegas de Ajustes
@@ -269,7 +269,7 @@ func _montar(duracion_mitad: float) -> void:
 ## La cámara va detrás de tu jugador, mirando al arco rival; en los lanzamientos, detrás del balón.
 func _actualizar_camara(delta: float) -> void:
 	var foco: Vector3
-	var d = 1.0 if not motor.tanda.is_empty() else load("res://visor/motor_jugable.gd").dir_ataque(_es_local_usuario)
+	var d = 1.0 if not motor.tanda.is_empty() else load(_RUTA_MOTOR_JUGABLE).dir_ataque(_es_local_usuario)
 	if motor.apuntando or motor.estado == "saque" and not motor.usuario.is_empty() and motor.saque.get("lanzador") == motor.usuario:
 		foco = motor.balon.position
 	elif not motor.usuario.is_empty():
@@ -348,9 +348,9 @@ func _actualizar_apunte() -> void:
 	var tipo := String(motor.saque.get("tipo", ""))
 	var lugar: Vector3 = motor.saque["lugar"]
 	if tipo == "penal":
-		var da = 1.0 if motor.estado == "tanda" else load("res://visor/motor_jugable.gd").dir_ataque(_es_local_usuario)
-		var arco_z = load("res://visor/motor_jugable.gd").LARGO * da
-		var x = -float(motor.apunte["x"]) * da * (load("res://visor/motor_jugable.gd").PALO - 0.35)
+		var da = 1.0 if motor.estado == "tanda" else load(_RUTA_MOTOR_JUGABLE).dir_ataque(_es_local_usuario)
+		var arco_z = load(_RUTA_MOTOR_JUGABLE).LARGO * da
+		var x = -float(motor.apunte["x"]) * da * (load(_RUTA_MOTOR_JUGABLE).PALO - 0.35)
 		var y := 0.35 + float(motor.apunte["y"]) * 1.8
 		var p3 := Vector3(x, y, arco_z)
 		if not _cam.is_position_behind(p3):
@@ -399,7 +399,7 @@ func _alternar_pausa() -> void:
 	DificultadPartido.boton_en_pausa(self, _pausa)   ## 🤖 dificultad de la CPU (4-11)
 
 func _process(delta: float) -> void:
-	delta = minf(delta, 0.25); _sb_script = _sb_script if _sb_script != null else load("res://visor/stadium_builder.gd"); _sb_script.ocultar_techo_ante(get_viewport().get_camera_3d())
+	delta = minf(delta, 0.25); _sb_script = _sb_script if _sb_script != null else load(_RUTA_STADIUM_BUILDER); _sb_script.ocultar_techo_ante(get_viewport().get_camera_3d())
 	## La grada sigue el balón con la cabeza (M-049), como en el modo DT.
 	if Engine.get_process_frames() % 4 == 0 and motor != null and motor.balon != null:
 		OlaGrada.mirar(_raiz, motor.balon.global_position)

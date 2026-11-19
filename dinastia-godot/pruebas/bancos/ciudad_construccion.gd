@@ -109,7 +109,7 @@ func _calles(ex: Object) -> void:
 	_comprobar(sin_nodo == 0, "cada cruce con semáforo está sobre un nodo de la red (%d sueltos)" % sin_nodo)
 
 ## ---- 2. manzanas
-func _manzanas(ex: Object, cb: Node) -> void:
+func _manzanas(ex: Object, _cb: Node) -> void:
 	var bloques: Array = ex.get("bloques")
 	var tramos: Array = ex.get("tramos")
 	_comprobar(bloques.size() >= 30, "hay manzanas (%d)" % bloques.size())
