@@ -293,6 +293,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		## 28-10: el ESTADO del azar, no solo la semilla: cargar y seguir da la misma línea que seguir sin cargar.
 		"azar": str(Azar._rng.state),   ## como texto: es de 64 bits y el JSON lo redondearía
 		"ex_mio": Partido.ex_de_mi_club,
+		"bonos_mio": PartidaArchivo.bonos_texto(m.mi_club()),   ## (19-11) los bonos exactos de tu club (`PartidaArchivo.bonos_texto`)
 		"anio": m.anio,
 		"semana": m.semana,
 		"horario": m.horario,

@@ -145,3 +145,16 @@ static func migrar(d: Dictionary, actual: int) -> Dictionary:
 		v = 2
 	d["version"] = v
 	return d
+
+## (19-11) LOS BONOS DE TU CLUB, TAL CUAL. `Mundo.aplicar_bonificadores()` corre a mitad de la semana y después aún cambian forma y
+## plantilla; al cargar se recalculaban con el estado del final de semana y el primer partido salía con otro bono: cargar y seguir ya
+## no era lo mismo que seguir sin cargar (banco `guardado`). Se guardan los dos números exactos (bytes, sin redondeo del JSON).
+static func bonos_texto(c: Club) -> String:
+	return PackedFloat64Array([c.bonus_ataque, c.bonus_defensa]).to_byte_array().hex_encode() if c != null else ""
+
+static func bonos_restaurar(c: Club, texto: String) -> void:
+	var v := texto.hex_decode().to_float64_array() if texto != "" else PackedFloat64Array()
+	if c != null and v.size() == 2:
+		c.bonus_ataque = v[0]
+		c.bonus_defensa = v[1]
+

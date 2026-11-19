@@ -232,7 +232,7 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 		m.cesiones.desde_dic(datos.get("cesiones_datos", {}))
 	## Y se recalculan los bonificadores del motor con el staff, el arbol del DT
 	## y el vestuario ya cargados: los niveles solos no mueven nada.
-	m.aplicar_bonificadores()
+	m.aplicar_bonificadores(); PartidaArchivo.bonos_restaurar(m.mi_club(), String(datos.get("bonos_mio", "")))   ## (19-11) y luego los guardados mandan
 
 	var dp: Dictionary = datos.get("prensa", {})
 	if not dp.is_empty() and m.prensa != null:
