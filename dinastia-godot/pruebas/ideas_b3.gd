@@ -40,7 +40,6 @@ func ejecutar() -> void:
 	_comprobar(mios_conv >= 3 and cansados == mios_conv, "los convocados del club vuelven con 12 puntos menos de físico (844, 872): %d/%d" % [cansados, mios_conv])
 	_comprobar(tres[0].moral > 50 and sel.caps_de(tres[0]) == 1, "y con la moral arriba y una internacionalidad más (844)")
 	## Con muchas fechas, alguien vuelve lesionado y la FIFA compensa al club (846, 872).
-	var saldo0 := c.saldo
 	for i in 120:
 		Azar.sembrar(500 + i)
 		for j in tres:
@@ -83,7 +82,6 @@ func ejecutar() -> void:
 	m.amistoso_hecho = false
 	var s_g := c.saldo
 	var so_g := c.socios
-	var mov_g := 0
 	m.jugar_amistosos("gira")
 	_comprobar(c.socios >= so_g + 300, "la gira internacional trae socios y taquilla (881): socios +%d, caja %s" % [c.socios - so_g, _dinero(c.saldo - s_g)])
 	## Playoff de descenso (850) y supercopa (893).

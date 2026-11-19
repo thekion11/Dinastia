@@ -207,7 +207,7 @@ func _ideas_a_regens() -> void:
 	var cn: Cantera = m.cantera
 	## Regens (476): al cerrar la temporada hay retiros y llega una camada de juveniles.
 	var antes := c.plantilla.size()
-	var res := m.nueva_temporada()
+	m.nueva_temporada()
 	var nuevos := 0
 	for id: String in cn.ultima_camada:
 		if m.jugador_por_id(id) != null:

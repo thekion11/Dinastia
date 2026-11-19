@@ -17,7 +17,7 @@ func setup(context_player: Player, context_ball: Ball, context_opponent_detectio
 	ball = context_ball
 	opponent_detection_area = context_opponent_detection_area
 	teammate_detection_area = context_teammate_detection_area
-	
+
 func process_ai() -> void:
 	if Time.get_ticks_msec() - time_since_last_ai_tick > DURATION_AI_TICK_FREQUENCY	:
 		time_since_last_ai_tick = Time.get_ticks_msec()

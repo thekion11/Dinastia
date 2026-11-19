@@ -34,7 +34,6 @@ func _ready() -> void:
 	var mal_despues := 0
 	var peor_despues := 0.0
 	var no_catalogados: Array = []
-	var movidos_sin_necesidad: Array = []
 	var catalogo := AnclaSuelo.CLIPS
 	for c: String in clips:
 		var largo := ap.get_animation(c).length

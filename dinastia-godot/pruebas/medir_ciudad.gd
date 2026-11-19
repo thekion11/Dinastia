@@ -126,7 +126,6 @@ func _process(_d: float) -> void:
 ## el nombre del nodo padre. Sirve para elegir dónde atacar.
 func _detalle() -> void:
 	var grupos := {}
-	var ejemplos := {}
 	for n in _v.find_children("*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
 		if not g.is_visible_in_tree() or g.visibility_range_end > 0.0:

@@ -96,7 +96,6 @@ func _descanso_y_saltos() -> void:
 	var r := _abrir(31)
 	var p: Partido = r[1]
 	var v: PartidoVivo = r[2]
-	var m: Mundo = r[0]
 	v.call("_charla_libre", "")   ## una charla vacía fuera de tiempo
 	var vueltas := 0
 	while p.minuto < 45 and vueltas < 3000:

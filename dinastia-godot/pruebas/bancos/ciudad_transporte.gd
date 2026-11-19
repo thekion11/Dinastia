@@ -94,7 +94,6 @@ func _metro(m: Object) -> void:
 		var paso := 1.0 / 60.0   ## el paso real del juego
 		var pasos := int(1500.0 / paso)   ## 25 minutos
 		var min_sep := INF
-		var a_ant := 0.0
 		for i in pasos:
 			for k in copias.size():
 				var tr = copias[k]

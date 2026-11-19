@@ -47,7 +47,7 @@ func _ideas_a_fichajes_y_cesiones() -> void:
 	_comprobar(out.size() == 1 and bool(out[0]["comprado"]) and dest.plantilla.has(j) and c.saldo == casa_saldo + int(ces["opcion"]) and dest.saldo == dest_saldo - int(ces["opcion"]), "al terminar la cesión con obligación el destino compra y paga %s (584)" % str(ces["opcion"]))
 	var j2: Jugador = c.plantilla[6]
 	j2.edad = 25
-	var cd2 := m.cesiones.ceder_con_opcion(j2, Cesiones.CESION_OPCION)
+	m.cesiones.ceder_con_opcion(j2, Cesiones.CESION_OPCION)
 	var ces2 := m.cesiones.cesion_de(j2.id)
 	_comprobar(String(ces2["tipo"]) == "opcion" and int(ces2["opcion"]) == int(round(float(j2.valor) * 1.1)) and float(ces2["sueldo_pct"]) < 1.0 and float(ces2["sueldo_pct"]) >= 0.4, "la cesión con opción pide el 110%% del valor y el destino paga solo una parte del sueldo (%.0f%%) (584, 585)" % (float(ces2["sueldo_pct"]) * 100.0))
 	var out2 := m.cesiones.resolver(m.anio + 1)
@@ -265,7 +265,6 @@ func _ideas_a_reglas_y_asuntos() -> void:
 	var r_chi := LeyesPais.reglas("CHI")
 	var r_esp := LeyesPais.reglas("ESP")
 	_comprobar(int(r_chi["plantel"]) == 6 and int(r_chi["cancha"]) == 5 and String(r_esp["criterio"]) == "no_ue" and int(r_esp["plantel"]) == 3, "cada liga tiene su cupo: Chile 6 extranjeros (5 en cancha), España 3 extracomunitarios (602)")
-	var extra := 0
 	for x: Jugador in c.plantilla:
 		x.pais = c.pais
 	for i in 8:
@@ -319,7 +318,6 @@ func _ideas_a_reglas_y_asuntos() -> void:
 		m.libres[0].edad = 33
 		m.libres[0].ovr = 99
 		av._montar(m, "impuesto")
-		var pid := String(av.pendiente["jugador"])
 		var antes := c.plantilla.size()
 		var cf := directiva.confianza
 		var rr := av.resolver(m, "a")

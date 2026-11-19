@@ -12,7 +12,7 @@ func _enter_tree() -> void:
 	player.height = HEIGHT_START
 	player.height_velocity = HEIGHT_VELOCITY
 	ball_detection_area.body_entered.connect(on_ball_entered.bind())
-	
+
 func on_ball_entered(contact_ball: Ball) -> void:
 	if contact_ball.can_air_connect(BALL_HEIGHT_MIN, BALL_HEIGHT_MAX):
 		contact_ball.shoot(player.velocity.normalized() * player.power * BONUS_POWER)

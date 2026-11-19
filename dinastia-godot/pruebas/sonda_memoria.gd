@@ -26,7 +26,6 @@ func _ready() -> void:
 	var m := Mundo.new()
 	m.generar(["CHI", "ARG"], 4242)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
-	var antes := {}
 	for t in temporadas + 1:
 		if t > 0:
 			m.jugar_temporada()

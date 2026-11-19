@@ -22,7 +22,6 @@ static func aplicar(vista: Node) -> void:
 		## (el mismo simplificador que el importador) y se sustituyen; el motor elige el LOD por distancia (`mesh_lod_threshold` del viewport).
 		var n_l := 0
 		var antes_t := 0
-		var despues_t := 0
 		var hechas := {}
 		for g in vista.find_children("*", "MeshInstance3D", true, false):
 			var mi := g as MeshInstance3D

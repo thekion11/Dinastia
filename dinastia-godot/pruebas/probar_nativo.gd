@@ -206,7 +206,6 @@ func _probar() -> void:
 					var w3 := Time.get_ticks_usec()
 					var b2 := PartidoPonderado.asistente_gd(p, once, b1, 10 + q)
 					var s2 := Azar.f()
-					var w4 := Time.get_ticks_usec()
 					tc0 += (w1 - w0)
 					tg0 += (w3 - w2b)
 					jc += 1
