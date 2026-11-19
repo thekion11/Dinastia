@@ -260,7 +260,7 @@ func _control_tiro(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, lb: boo
 			carga = 0.0
 			_filigrana(p, "amago_rabona" if lt else "amago_tiro", 1.0)
 		return true
-	elif cargando:
+	if cargando:
 		cargando = false
 		var ap_tiro := Vector2(-mv.x * d, -mv.y * 0.5)
 		if Mando.ayuda("tiro") == "asistido" and _mods_carga != "potente":

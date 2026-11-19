@@ -27,7 +27,7 @@ var _franja: PanelContainer
 var _posturas: Control
 var _objetivos_ocultos := false
 var _escena: RuedaPrensaEscena3D
-const _PrincipalRuedaResumen := preload("res://ui/principal/rueda_prensa_resumen.gd")
+const _PRINCIPAL_RUEDA_RESUMEN := preload("res://ui/principal/rueda_prensa_resumen.gd")
 ## Quién hizo la última pregunta (la entrevista ya se vacía al cerrar).
 var _ult_reloj := -99   ## (28-10) último estado escrito en `_reloj_txt` (-1 leyendo, 0 dudando, n segundos)
 var _ultimo_periodista := ""

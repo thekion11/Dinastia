@@ -279,8 +279,8 @@ func _detalle_a_pie(pref := "A_PIE") -> void:
 			a = a.get_parent()
 		grupos[clave] = int(grupos.get(clave, 0)) + 1
 		## (7-11) Por QUÉ malla (o la del agrupado) y a qué distancia: para elegir qué agrupar o recortar.
-		var mm_ := g as MultiMeshInstance3D
-		var ml: Mesh = mm_.multimesh.mesh if mm_ != null and mm_.multimesh != null else (g.get("mesh") as Mesh)
+		var mm := g as MultiMeshInstance3D
+		var ml: Mesh = mm.multimesh.mesh if mm != null and mm.multimesh != null else (g.get("mesh") as Mesh)
 		var kn := "%s %s %s" % [g.get_class().replace("Instance3D", ""), ml.resource_name if ml != null and ml.resource_name != "" else (str(ml.get_class()) if ml != null else "-"), "cerca" if d < 60.0 else ("medio" if d < 200.0 else "lejos")]
 		nombres_a_pie[kn] = int(nombres_a_pie.get(kn, 0)) + 1
 		if not ejemplos.has(clave):

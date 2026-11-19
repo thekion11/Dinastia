@@ -253,17 +253,17 @@ func _revisar_siete() -> void:
 		return
 
 ## Posesión, córners y faltas medidos en el césped.
-func fijar_estadisticas(pos_local: float, corners: Array, faltas_: Array, fueras_: Array = []) -> void:
+func fijar_estadisticas(pos_local: float, corners: Array, faltas: Array, fueras: Array = []) -> void:
 	posesion_local = clampf(pos_local, 0.0, 100.0)
 	corners_local = int(corners[0])
 	corners_visita = int(corners[1])
-	faltas_local = int(faltas_[0])
-	faltas_visita = int(faltas_[1])
+	faltas_local = int(faltas[0])
+	faltas_visita = int(faltas[1])
 	## Los fueras de juego del césped (20-10-2026): antes el resumen mostraba
 	## los que sorteaba la simulación, no los que pitó el árbitro del 3D.
-	if fueras_.size() == 2:
-		fueras_local = int(fueras_[0])
-		fueras_visita = int(fueras_[1])
+	if fueras.size() == 2:
+		fueras_local = int(fueras[0])
+		fueras_visita = int(fueras[1])
 
 ## Mete a `entra` por `sale`. Devuelve por qué no se pudo ("" si se hizo). Después de tocar el once se vuelve a medir
 ## (`invalidar_fuerza()`): sin eso el equipo seguiría jugando con la fuerza del once que ya no está en el campo.

@@ -83,11 +83,11 @@ static func guardar(si: bool) -> void:
 	cfg.set_value(CajonAjustes.SECCION, PREF, si)
 	cfg.save(CajonAjustes.RUTA)
 
-func configurar(m: MotorJugable, p: Partido, lado: int, rig_: CameraRig = null) -> void:
+func configurar(m: MotorJugable, p: Partido, lado: int, rig_arg: CameraRig = null) -> void:
 	motor = m
 	partido = p
 	mi_lado = lado
-	rig = rig_
+	rig = rig_arg
 	var semilla := hash(p.local.id + "|" + p.visita.id + "|ocasiones")
 	_rng.seed = semilla
 	cupo = OcasionesDT.cupo(semilla, p.minuto, p.minutos_fin)

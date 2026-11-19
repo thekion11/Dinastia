@@ -18,9 +18,9 @@ func _init(principal: Principal) -> void:
 func _idolo_del_club(c: Club) -> String:
 	if p.mundo.cantera != null:
 		for k in range(p.mundo.cantera.leyendas.size() - 1, -1, -1):
-			var L: Dictionary = p.mundo.cantera.leyendas[k]
-			if String(L.get("club_id", "")) == c.id:
-				return String(L.get("nombre", ""))
+			var l_loc: Dictionary = p.mundo.cantera.leyendas[k]
+			if String(l_loc.get("club_id", "")) == c.id:
+				return String(l_loc.get("nombre", ""))
 	var mejor: Jugador = null
 	for j: Jugador in c.plantilla:
 		if j.capitan:

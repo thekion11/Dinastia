@@ -177,13 +177,13 @@ func _construir() -> void:
 # --- arrancar partida ---------------------------------------------------------
 
 func _hay_partida() -> bool:
-	return _P().hay_partida()
+	return _cargar_pesado().hay_partida()
 
 func _dinero(n: int) -> String:
 	return Eco.dinero(n)
 
 func _continuar() -> void:
-	var m = _mundo_guardado if _mundo_guardado != null else _P().cargar("partida")
+	var m = _mundo_guardado if _mundo_guardado != null else _cargar_pesado().cargar("partida")
 	if m == null:
 		_no_se_pudo_abrir()
 		return
@@ -198,10 +198,10 @@ func _no_se_pudo_abrir() -> void:
 ## Entra a una partida cargada (fase 3, bloque 7): con el prólogo visto y la vida encendida,
 ## en 3D (la oficina, o tu casa el lunes a las 08:00); si no, el menú central de siempre.
 func _entrar_en(m) -> void:
-	_P().entrar_en(get_tree(), m)
+	_cargar_pesado().entrar_en(get_tree(), m)
 
 func _borrar_partida() -> void:
-	_P().borrar("partida")
+	_cargar_pesado().borrar("partida")
 	_mundo_guardado = null
 	_actualizar_continuar()
 
@@ -211,7 +211,7 @@ var _archivo_ui: Node   ## un `PartidaArchivoUI` (sin nombrar la clase)
 
 func _poner_botones_archivo() -> void:
 	if _archivo_ui == null:
-		_archivo_ui = _P().archivo_ui()
+		_archivo_ui = _cargar_pesado().archivo_ui()
 		add_child(_archivo_ui)
 		_archivo_ui.connect("lista_cambiada", _actualizar_continuar)
 		_archivo_ui.connect("abrir_pedido", _abrir_partida)
@@ -221,7 +221,7 @@ func _poner_botones_archivo() -> void:
 	fila.move_to_front.call_deferred()
 
 func _abrir_partida(nombre: String) -> void:
-	var m = _P().cargar(nombre)
+	var m = _cargar_pesado().cargar(nombre)
 	if m == null:
 		_no_se_pudo_abrir()
 		return
@@ -243,7 +243,7 @@ func _actualizar_continuar_ya() -> void:
 	_poner_botones_archivo()
 	if not _hay_partida():
 		return
-	_mundo_guardado = _P().cargar("partida")
+	_mundo_guardado = _cargar_pesado().cargar("partida")
 	if _mundo_guardado == null:
 		return
 	var c = _mundo_guardado.mi_club()
@@ -258,7 +258,7 @@ func _actualizar_continuar_ya() -> void:
 	caja.add_child(fila)
 
 	var escudo := TextureRect.new()
-	escudo.texture = _P().escudo(c, 40)
+	escudo.texture = _cargar_pesado().escudo(c, 40)
 	escudo.custom_minimum_size = Vector2(40, 44)
 	## Sin esto el escudo sale a su tamaño real de rasterizado -4x, para que
 	## las curvas no salgan dentadas al escalar- en vez de los 40 px pedidos.

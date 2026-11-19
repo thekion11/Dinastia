@@ -30,12 +30,12 @@ func tapado(p: Vector3) -> bool:
 	return absf(l.x) < mx and absf(l.z) < mz and l.y < ALTO
 
 ## Muestra u oculta lo ocultable (el horizonte se queda siempre).
-func fijar(visible_: bool) -> void:
+func fijar(visible_arg: bool) -> void:
 	## (6-11) Se recorren los hijos de AHORA, no la lista de `montar`: `Optimizar.agrupar` crea los MultiMesh «Agrupado» y los suyos (95 en el
 	## estadio de prueba) DESPUÉS de montar la oclusión, y quedaban siempre visibles (medido: ocultarlos quita ~66 llamadas de dibujo en ULTRA BAJA).
 	for c in entorno.get_children():
 		if c is Node3D and not c.is_in_group("sin_agrupar"):
-			(c as Node3D).visible = visible_
+			(c as Node3D).visible = visible_arg
 
 func _process(delta: float) -> void:
 	_t += delta

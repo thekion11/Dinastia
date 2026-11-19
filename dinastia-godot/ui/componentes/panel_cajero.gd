@@ -23,17 +23,17 @@ var _pin_valido := ""             ## el PIN que acaba de validarse (para las ope
 var _aviso := ""
 var _caja := VBoxContainer.new()
 
-static func abrir(capa: CanvasLayer, c: CarteraDT, r: Roles, dia_: int, banco_: String, comision_: int, pos: Vector3, quien: Node3D, ventanilla_ := false) -> PanelCajero:
+static func abrir(capa: CanvasLayer, c: CarteraDT, r: Roles, dia_arg: int, banco_arg: String, comision_arg: int, pos: Vector3, quien: Node3D, ventanilla_arg := false) -> PanelCajero:
 	var p := PanelCajero.new()
 	p.cartera = c
 	p.roles = r
-	p.dia = dia_
-	p.banco = banco_
-	p.comision = comision_
+	p.dia = dia_arg
+	p.banco = banco_arg
+	p.comision = comision_arg
 	p.cajero_pos = pos
 	p.jugador = quien
-	p.ventanilla = ventanilla_
-	if ventanilla_:
+	p.ventanilla = ventanilla_arg
+	if ventanilla_arg:
 		p._estado = "menu"
 	p.set_anchors_preset(Control.PRESET_CENTER)
 	p.offset_left = -230

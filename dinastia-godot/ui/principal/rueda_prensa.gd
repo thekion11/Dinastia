@@ -371,7 +371,7 @@ func tras_responder(r: Dictionary) -> void:
 	var per := String(p.mundo.prensa.entrevista.get("periodista", _ultimo_periodista))
 	cerrar()
 	p._refrescar()
-	_PrincipalRuedaResumen.mostrar(p, _suma, p.mundo.prensa.titular_pendiente, _ultimo_medio, per)
+	_PRINCIPAL_RUEDA_RESUMEN.mostrar(p, _suma, p.mundo.prensa.titular_pendiente, _ultimo_medio, per)
 
 ## Responder con tus palabras. El tono lo decide `Prensa.clasificar_respuesta()`
 ## por palabras clave, en local: nada sale del ordenador.

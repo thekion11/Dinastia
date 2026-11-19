@@ -132,11 +132,11 @@ func _lanzar_encuesta() -> void:
 func responder_encuesta(indice: int) -> Dictionary:
 	if encuesta.is_empty():
 		return {"error": "no hay ninguna encuesta abierta"}
-	var acertó := indice == int(encuesta["mejor"])
-	var d_animo := Azar.ent(5, 11) if acertó else -Azar.ent(3, 8)
-	_mover("socios", 10 if acertó else -8)
+	var acerto := indice == int(encuesta["mejor"])
+	var d_animo := Azar.ent(5, 11) if acerto else -Azar.ent(3, 8)
+	_mover("socios", 10 if acerto else -8)
 	encuesta = {}
-	return {"ok": true, "acerto": acertó, "animo": d_animo}
+	return {"ok": true, "acerto": acerto, "animo": d_animo}
 
 ## El fair play de la hinchada, que mira la federación. Del HTML se porta lo que
 ## tiene equivalente: la funa y el ánimo. Las cámaras y la seguridad privada

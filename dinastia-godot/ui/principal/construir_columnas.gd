@@ -69,11 +69,11 @@ static func montar(p: Principal, raiz: VBoxContainer) -> void:
 	## El componente se instancia aquí y se engancha por señales. Principal no
 	## vuelve a llamar a ninguna función interna del mercado: todo el pintado
 	## lo hace PanelMercado, y lo que afecta al mundo lo recibe Principal.
-	var _hoja_mercado := p._hoja(p._pestanas, "Mercado")
+	var hoja_mercado := p._hoja(p._pestanas, "Mercado")
 	p._panel_mercado = PanelMercado.new()
 	p._panel_mercado.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p._panel_mercado.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_hoja_mercado.add_child(p._panel_mercado)
+	hoja_mercado.add_child(p._panel_mercado)
 	p._panel_mercado.fichar_pedido.connect(func(j: Jugador) -> void: p._ui_plantel._abrir_negociacion(j))   ## (A4 memoria) el plantel se crea al usarlo
 	p._panel_mercado.oferta_respondida.connect(p._responder_oferta_mercado)
 	p._panel_mercado.oferta_enviada.connect(p._enviar_oferta_negociacion)

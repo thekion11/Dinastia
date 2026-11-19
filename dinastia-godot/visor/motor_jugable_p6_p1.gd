@@ -129,13 +129,13 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		return
 	var victima := poseedor
 	p["enfriar"] = (1.0 if not barrida else 1.6) * MotorDuelo.ENF   ## ciclo 10: menos intentos de entrada (1,0 = como antes)
-	var def_ := float(p["attr"]["def"])
+	var def_loc := float(p["attr"]["def"])
 	var reg := float(victima["attr"]["reg"])
 	if t < float(victima["regate_hasta"]):
 		reg += 0.35
 	## Defensa contra regate al cuadrado: el buen defensor roba bastante más
 	## que el malo (antes la proporción lineal igualaba a todos).
-	var exito := def_ * def_ / (def_ * def_ + reg * reg) * (0.55 if barrida else 0.32) * MotorDuelo.K
+	var exito := def_loc * def_loc / (def_loc * def_loc + reg * reg) * (0.55 if barrida else 0.32) * MotorDuelo.K
 	## La entrada de pie también es cuerpo: el fuerte se impone al débil (y
 	## el que tiene equilibrio aguanta). De media no cambia nada.
 	if not barrida:
@@ -170,7 +170,7 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		victima["enfriar"] = 0.6
 		## ROBO LIMPIO (semana 3, 27-10-2026: «menos rebotes al defender»): de pie, el buen defensor se
 		## queda el balón; antes siempre quedaba suelto rebotando, y el rechace lo recogía cualquiera.
-		if not barrida and _rng.randf() < 0.25 + def_ * 0.45:
+		if not barrida and _rng.randf() < 0.25 + def_loc * 0.45:
 			_tomar(p)
 		else:
 			vel_balon = (pos(p) - pos(victima)).normalized() * 3.0 + Vector3(_rng.randf_range(-2, 2), 0, 0)

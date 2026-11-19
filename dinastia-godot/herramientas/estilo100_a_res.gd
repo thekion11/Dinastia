@@ -104,7 +104,7 @@ func _ficha(c: Dictionary, nombre: String, espejo: bool) -> Dictionary:
 
 func _convertir(clip: Dictionary, espejo: bool) -> Animation:
 	var n := int(clip["cuadros"])
-	var J := juntas.size()
+	var j := juntas.size()
 	var q: Array = clip["q"]
 	var alto: Array = clip["alto_cadera_cm"]
 	var largo := float(n) / FPS
@@ -122,10 +122,10 @@ func _convertir(clip: Dictionary, espejo: bool) -> Animation:
 		var f := k % n
 		var t := float(k) / FPS
 		var g := {}
-		for i in J:
+		for i in j:
 			var nom := String(juntas[i]["nombre"])
 			var fuente := _espejo_nombre(nom) if espejo else nom
-			var o: int = (f * J + int(idx[fuente])) * 4
+			var o: int = (f * j + int(idx[fuente])) * 4
 			var ql := Quaternion(float(q[o]), float(q[o + 1]), float(q[o + 2]), float(q[o + 3]))
 			if espejo:
 				ql = Quaternion(ql.x, -ql.y, -ql.z, ql.w)

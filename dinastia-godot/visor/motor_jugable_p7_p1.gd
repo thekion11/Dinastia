@@ -244,7 +244,7 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 
 ## Un tiro al arco rival. `apunte.x` ∈ [-1, 1] mueve el objetivo de palo a
 ## palo; `fuerza` ∈ [0, 1] es la carga. Mucha fuerza sin técnica se va alta.
-func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
+func _tirar(p: Dictionary, apunte_arg: Vector2, fuerza: float) -> void:
 	if MotorReglas.doble_toque(self as Object as MotorJugable, p): return   ## (16-11, M6-20) el lanzador no remata su propio rechace
 	var arco := _arco_rival(p)
 	var tec := GestoTecnico.tiro(p, _mod_tiro)   ## cada tiro pesa sus atributos (27-10)
@@ -262,8 +262,8 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	if TIRO_PULIDO and clase != "penal":
 		error += (0.45 + lejos * PUNTERIA) * (1.15 - tec * 0.5) * (1.3 if _presion(p) < 1.8 else 1.0)
 	error = _error_tiro_extra(p, lejos, error, clase)   ## gancho (sesión 15): aquí no cambia nada
-	var x := clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error)
-	var y := clampf(0.35 + fuerza * 1.2 + apunte_.y * 0.6 + _rng.randf_range(-error, error) * 0.6, 0.15, 3.4)
+	var x := clampf(apunte_arg.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error)
+	var y := clampf(0.35 + fuerza * 1.2 + apunte_arg.y * 0.6 + _rng.randf_range(-error, error) * 0.6, 0.15, 3.4)
 	var destino := Vector3(x, y, arco.z + signf(arco.z) * 0.3)
 	var vh := 16.0 + fuerza * 14.0 + tec * 4.0
 	var loft := 0.0
@@ -271,8 +271,8 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	match _mod_tiro:
 		"rosca":
 			## RB + B: con el interior, curvado hacia dentro, más colocado y flojo.
-			destino.x = clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.5) + _rng.randf_range(-error, error) * 0.75
-			destino.y = clampf(0.6 + apunte_.y * 0.5 + _rng.randf_range(-error, error) * 0.4, 0.2, 2.3)
+			destino.x = clampf(apunte_arg.x, -1.0, 1.0) * (PALO - 0.5) + _rng.randf_range(-error, error) * 0.75
+			destino.y = clampf(0.6 + apunte_arg.y * 0.5 + _rng.randf_range(-error, error) * 0.4, 0.2, 2.3)
 			vh *= 0.82
 			efecto = -signf(destino.x - pos(p).x + 0.01) * 7.0 * signf(arco.z)
 		"vaselina":
@@ -287,7 +287,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 		"potente":
 			## LB + RB + B: el cañonazo; apuntado a mano, castiga el mal apunte.
 			vh += 9.0
-			destino.x = clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error) * (0.7 if tec > 0.75 else 1.3)
+			destino.x = clampf(apunte_arg.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error) * (0.7 if tec > 0.75 else 1.3)
 			aviso.emit("💥 ¡Tiro potente!")
 	if clase != "penal":   ## (4-11) el penal ya tiene su error propio (PENAL_ERROR): sin esto se fallaban 27 de 120 y la sonda daba 61 % marcados
 		destino = MotorTiroLimpio.fallar(self as Object as MotorJugable, p, destino, lejos, _presion(p))   ## tiro fallido / bloqueado (TIRO_REAL, ciclo 7)

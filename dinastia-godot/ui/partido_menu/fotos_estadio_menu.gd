@@ -98,13 +98,13 @@ static func _mb() -> float:
 	return Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0
 
 ## Monta el estadio dentro de `raiz` (lo usa también la prueba del banco, sin pantalla, para comprobar que montar y desmontar no deja nodos).
-static func montar_estadio(raiz: Node3D, local: Club, perfil: Dictionary, ligera_: bool, quien_cede: Object) -> void:
+static func montar_estadio(raiz: Node3D, local: Club, perfil: Dictionary, ligera_arg: bool, quien_cede: Object) -> void:
 	var builder = load("res://visor/stadium_builder.gd")
 	var antes = builder.ceder
 	builder.ceder = quien_cede
 	Ambience.apply(raiz, perfil, null, Calidad.elegida)
 	builder.build_pitch(raiz, perfil, local)
-	await builder.build(raiz, perfil, int(perfil.get("aforo", 20000)), 0.0 if ligera_ else 0.85, local._hash_id(), local)
+	await builder.build(raiz, perfil, int(perfil.get("aforo", 20000)), 0.0 if ligera_arg else 0.85, local._hash_id(), local)
 	builder.ceder = antes
 
 func _ready() -> void:

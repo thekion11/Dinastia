@@ -17,13 +17,13 @@ var _tecleado := ""
 var _aviso := ""
 var _caja := VBoxContainer.new()
 
-static func abrir(capa: CanvasLayer, c: CarteraDT, importe_: int, concepto_: String, al_validar_: Callable, pos_: Vector3, quien: Node3D) -> PanelPagoPin:
+static func abrir(capa: CanvasLayer, c: CarteraDT, importe_arg: int, concepto_arg: String, al_validar_arg: Callable, pos_arg: Vector3, quien: Node3D) -> PanelPagoPin:
 	var p := PanelPagoPin.new()
 	p.cartera = c
-	p.importe = importe_
-	p.concepto = concepto_
-	p.al_validar = al_validar_
-	p.pos = pos_
+	p.importe = importe_arg
+	p.concepto = concepto_arg
+	p.al_validar = al_validar_arg
+	p.pos = pos_arg
 	p.jugador = quien
 	p.set_anchors_preset(Control.PRESET_CENTER)
 	p.offset_left = -230

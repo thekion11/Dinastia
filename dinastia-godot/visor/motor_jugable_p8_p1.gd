@@ -168,10 +168,10 @@ func _linea_defensiva(local: bool) -> float:
 		z = fondo
 	## Movimiento suave: sube despacio, recula rápido (como una defensa de verdad).
 	if _linea_def_t[eq] >= 0.0 and _linea_def[eq] != INF:
-		var dt_ := clampf(t - float(_linea_def_t[eq]), 0.0, 0.5)
+		var dt := clampf(t - float(_linea_def_t[eq]), 0.0, 0.5)
 		var sube := (z - float(_linea_def[eq])) * d > 0.0
 		var vel := (6.0 if trampa else 4.0) if sube else 7.5
-		z = move_toward(float(_linea_def[eq]), z, vel * dt_)
+		z = move_toward(float(_linea_def[eq]), z, vel * dt)
 	_linea_def[eq] = z
 	_linea_def_t[eq] = t
 	return z

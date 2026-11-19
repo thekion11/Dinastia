@@ -101,11 +101,11 @@ static func delegacion(rep: int) -> int:
 ## {km, medio, noches, personas, transporte, hotel, dietas, total}
 static func viaje_euros(origen: String, destino: String, rep: int) -> Dictionary:
 	var km := distancia_km(origen, destino)
-	var medio_ := medio(km)
+	var medio_loc := medio(km)
 	var n := noches(km)
 	var personas := delegacion(rep)
 	var transporte := 0.0
-	match medio_:
+	match medio_loc:
 		"bus":
 			transporte = 2.0 * km * BUS_EUR_KM * ceilf(float(personas) / float(PLAZAS_BUS))
 		"avion":
@@ -117,7 +117,7 @@ static func viaje_euros(origen: String, destino: String, rep: int) -> Dictionary
 	var clase := pow(Eco.factor_club(float(rep)), 0.1)
 	var hotel := float(n) * float(personas) * HOTEL_NOCHE_EUR * _precio(destino) * clase
 	var dietas := float(personas) * DIETA_DIA_EUR * float(n + 1) * _precio(destino)
-	return {"km": km, "medio": medio_, "noches": n, "personas": personas, "transporte": transporte,
+	return {"km": km, "medio": medio_loc, "noches": n, "personas": personas, "transporte": transporte,
 		"hotel": hotel, "dietas": dietas, "total": transporte + hotel + dietas}
 
 ## El viaje en PUNTOS INTERNOS del juego (lo que se descuenta de la caja).

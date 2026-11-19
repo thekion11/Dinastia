@@ -118,14 +118,14 @@ func _probar_tanda_c_2(m: Mundo, c, o, mf: Mundo, cj, yo, cj3):
 	_comprobar(Partida._dic_a_jugador(Partida._jugador_a_dic(j0)).premios.size() == 1, "los premios se guardan")
 
 func _probar_tanda_c() -> void:
-	var _r1 = _probar_tanda_c_1()
-	var m: Mundo = _r1[0]
-	var c = _r1[1]
-	var o = _r1[2]
-	var mf: Mundo = _r1[3]
-	var cj = _r1[4]
-	var yo = _r1[5]
-	var cj3 = _r1[6]
+	var r1 = _probar_tanda_c_1()
+	var m: Mundo = r1[0]
+	var c = r1[1]
+	var o = r1[2]
+	var mf: Mundo = r1[3]
+	var cj = r1[4]
+	var yo = r1[5]
+	var cj3 = r1[6]
 	_probar_tanda_c_2(m, c, o, mf, cj, yo, cj3)
 
 ## LA TRANSMISIÓN INTELIGENTE Y LAS ESTADÍSTICAS A PEDIDO (16-10-2026).

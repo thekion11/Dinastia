@@ -67,8 +67,8 @@ var c2 := Color.BLACK
 ## Una por persona: {clave, nombre, puesto, planta, nodo, anim, ruta, i, dir, espera, quieto}
 var gente: Array = []
 
-func preparar(datos_: Dictionary, col1: Color, col2: Color) -> void:
-	datos = datos_
+func preparar(datos_arg: Dictionary, col1: Color, col2: Color) -> void:
+	datos = datos_arg
 	c1 = col1
 	c2 = col2
 	name = "PersonalEstadio"

@@ -255,7 +255,7 @@ func _personal_en(k: String, pos: Vector3, fondo: float, niv: int) -> void:
 		for mi in raiz.find_children("*", "MeshInstance3D", true, false):
 			(mi as MeshInstance3D).visibility_range_end = 260.0
 
-func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
+func _edificio(e: Dictionary, niv: int, en_obra: bool, pos: Vector3) -> void:
 	## La ALTURA sale del nivel: 4 metros por planta. Es la senal visual mas barata
 	## y mas clara de "aqui he invertido".
 	var plantas: int = maxi(1, niv)
@@ -267,7 +267,7 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 	var fondo: float = float(e["fondo"]) * (1.0 + 0.06 * (plantas - 1))
 
 	var mat: StandardMaterial3D
-	if enObra and niv <= 0:
+	if en_obra and niv <= 0:
 		## En obra y sin nivel todavia: se ve el esqueleto, no un edificio acabado.
 		mat = StandardMaterial3D.new()
 		mat.albedo_color = Color(0.55, 0.45, 0.25)
@@ -293,7 +293,7 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 	## forma dice qué es: nave con bóveda, pabellón de cristal con el agua
 	## dentro, torre de habitaciones, clínica escalonada, templo con columnas,
 	## escuela en L, pabellón con terraza, caja de medios con cristal oscuro.
-	var forma := String(FORMAS.get(String(e["k"]), "caja")) if not (enObra and niv <= 0) else "caja"
+	var forma := String(FORMAS.get(String(e["k"]), "caja")) if not (en_obra and niv <= 0) else "caja"
 	huellas.append(Rect2(pos.x - ancho * 0.5, pos.z - fondo * 0.5, ancho, fondo))
 	_cuerpo_instalacion(forma, pos, ancho, fondo, alto, plantas, mat)
 
@@ -317,12 +317,12 @@ func _edificio(e: Dictionary, niv: int, enObra: bool, pos: Vector3) -> void:
 
 	_detalle_edificio(pos, ancho, fondo, alto, e, plano, not (forma in ["templo", "pabellon"]))
 	_rasgo_instalacion(String(e["k"]), pos, ancho, fondo, alto, niv)
-	if not enObra or niv > 0:
+	if not en_obra or niv > 0:
 		_personal_en(String(e["k"]), pos, fondo, niv)
 
 	etiquetas.append({
 		"pos": pos + Vector3(0, alto + 3.0, 0),
-		"texto": str(e["n"]) + ("  (en obra)" if enObra else ""),
+		"texto": str(e["n"]) + ("  (en obra)" if en_obra else ""),
 		"nivel": niv,
 	})
 

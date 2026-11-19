@@ -71,15 +71,15 @@ static func hueco(minuto: int, minuto_fin: int, restantes: int) -> int:
 
 ## Cuánto se rebaja el listón: 0 normal, 1 si quedan pocos minutos para las que
 ## faltan, 2 si peligra el mínimo de tres.
-static func nivel(minuto: int, minuto_fin: int, hechas: int, cupo_: int) -> int:
+static func nivel(minuto: int, minuto_fin: int, hechas: int, cupo_arg: int) -> int:
 	var quedan := float(minuto_fin - minuto)
-	if hechas < mini(CUPO_MIN, cupo_) and quedan < float(mini(CUPO_MIN, cupo_) - hechas) * 6.0:
+	if hechas < mini(CUPO_MIN, cupo_arg) and quedan < float(mini(CUPO_MIN, cupo_arg) - hechas) * 6.0:
 		return 2
-	return 1 if quedan < float(cupo_ - hechas) * 12.0 else 0
+	return 1 if quedan < float(cupo_arg - hechas) * 12.0 else 0
 
 ## ¿Esta llegada es clara para el listón `nivel` (ver `nivel()`)?
-static func es_clara(dist_arco: float, lateral: float, espacio: float, nivel_: int = 0) -> bool:
-	match nivel_:
+static func es_clara(dist_arco: float, lateral: float, espacio: float, nivel_arg: int = 0) -> bool:
+	match nivel_arg:
 		2: return dist_arco <= DIST_MINIMO and absf(lateral) <= LATERAL_MINIMO and espacio >= ESPACIO_MINIMO
 		1: return dist_arco <= DIST_APURADA and absf(lateral) <= LATERAL_CLARA and espacio >= ESPACIO_APURADA
 	return dist_arco <= DIST_CLARA and absf(lateral) <= LATERAL_CLARA and espacio >= ESPACIO_CLARA

@@ -419,8 +419,8 @@ func _ia_equipos(delta: float) -> void:
 	if _mejoras_c4:
 		MejorasC4Bloqueo.tapar_linea(self)
 
-func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
-	super(p, apunte_, fuerza)
+func _tirar(p: Dictionary, apunte: Vector2, fuerza: float) -> void:
+	super(p, apunte, fuerza)
 	if _mejoras_c4:
 		MejorasC4Bloqueo.bloqueo_cuerpo(self, p, _rng)
 

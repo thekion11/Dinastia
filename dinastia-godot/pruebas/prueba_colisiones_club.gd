@@ -174,23 +174,23 @@ func _correr() -> void:
 
 ## Lo que se alcanza andando desde `ini` (rejilla de 0,25 m, cuerpo entero).
 func _inundar(zonas: Array, ini: Vector3, planta: int) -> Array:
-	var PASO := 0.25
+	var paso := 0.25
 	var visto := {}
-	var cola: Array = [Vector2i(roundi(ini.x / PASO), roundi(ini.z / PASO))]
+	var cola: Array = [Vector2i(roundi(ini.x / paso), roundi(ini.z / paso))]
 	var lista: Array = []
 	visto[cola[0]] = true
 	var i := 0
 	while i < cola.size() and cola.size() < 200000:
 		var c: Vector2i = cola[i]
 		i += 1
-		var p := Vector3(c.x * PASO, _y(planta), c.y * PASO)
+		var p := Vector3(c.x * paso, _y(planta), c.y * paso)
 		lista.append(Vector2(p.x, p.z))
 		for v in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 			var q: Vector2i = c + v
 			if visto.has(q):
 				continue
 			visto[q] = true
-			var pq := Vector3(q.x * PASO, _y(planta), q.y * PASO)
+			var pq := Vector3(q.x * paso, _y(planta), q.y * paso)
 			if ColisionClub.cabe(zonas, pq, planta) and not ColisionClub.toca_mueble(_ex.cuerpo, pq):
 				cola.append(q)
 	return lista

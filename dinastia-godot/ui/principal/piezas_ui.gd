@@ -38,9 +38,9 @@ func _traducir_bbcode(bb: String) -> String:
 		var limpio := tramo.strip_edges()
 		if limpio == "":
 			continue
-		var tr_ := Idiomas.t(limpio)
-		if tr_ != limpio:
-			salida = salida.replace(tramo, tramo.replace(limpio, tr_))
+		var tr := Idiomas.t(limpio)
+		if tr != limpio:
+			salida = salida.replace(tramo, tramo.replace(limpio, tr))
 	return salida
 func _acento_de(c: Club) -> Color:
 	if c == null:

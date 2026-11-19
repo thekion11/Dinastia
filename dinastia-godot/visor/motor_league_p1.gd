@@ -112,8 +112,8 @@ func _cercanos_equipos(punto: Vector2) -> PackedInt32Array:
 	return PackedInt32Array()
 
 ## Línea del fuera de juego del rival del equipo `i` a 240 ms (`_linea_penultimo(not local, true, -lado, b0.x)`).
-func _linea_rival(i: int, local: bool, lado_: float, b0: Vector2) -> float:
-	return float(_base_liga[5 + i]) if not _base_liga.is_empty() else _linea_penultimo(not local, true, -lado_, b0.x)
+func _linea_rival(i: int, local: bool, lado: float, b0: Vector2) -> float:
+	return float(_base_liga[5 + i]) if not _base_liga.is_empty() else _linea_penultimo(not local, true, -lado, b0.x)
 
 ## Gemela GDScript de `league_cortar_candidatos`: los del otro equipo que `local_pasa` (no porteros, no el usuario con el mando, sin orden de cortar vigente) a 10 m del balón previsto.
 func _candidatos_cortar_gd(local_pasa: bool, bola: Vector2) -> PackedInt32Array:
@@ -421,18 +421,18 @@ func _mas_cercano_a_todos_gd(punto: Vector2) -> Dictionary:
 	return sel
 
 ## `LeagueEquipo.linea_penultimo` de los jugadores con `es_local == local` (con su velocidad por 0,24 s si `con_vel`).
-func _linea_penultimo(local: bool, con_vel: bool, lado_: float, balon_x: float) -> float:
+func _linea_penultimo(local: bool, con_vel: bool, lado: float, balon_x: float) -> float:
 	var nat := Nativo.obj()
 	if nat != null and nat.has_method("league_linea_penultimo"):
-		return nat.league_linea_penultimo(jugadores, local, con_vel, lado_, balon_x)
-	return _linea_penultimo_gd(local, con_vel, lado_, balon_x)
+		return nat.league_linea_penultimo(jugadores, local, con_vel, lado, balon_x)
+	return _linea_penultimo_gd(local, con_vel, lado, balon_x)
 
-func _linea_penultimo_gd(local: bool, con_vel: bool, lado_: float, balon_x: float) -> float:
+func _linea_penultimo_gd(local: bool, con_vel: bool, lado: float, balon_x: float) -> float:
 	var xs := PackedFloat32Array()
 	for q: Dictionary in jugadores:
 		if bool(q["es_local"]) == local:
 			xs.append(ls(pos(q)).x + ls(q["vel"]).x * 0.24 if con_vel else ls(pos(q)).x)
-	return LeagueEquipo.linea_penultimo(xs, lado_, balon_x)
+	return LeagueEquipo.linea_penultimo(xs, lado, balon_x)
 
 ## (16-11, informe M6-24) El combinado con nuestra locomoción no usa el toque de conducción de League (antes apagaba `fase3`, estática, mientras se emitían señales).
 func _sin_toque_league() -> bool:
