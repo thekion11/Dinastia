@@ -3,8 +3,19 @@
 metodo: lint (gdlint) | forma (gdparse+gdformat) | ast (analizador propio)"""
 import sys, re, json, subprocess, os, difflib
 from multiprocessing import Pool
-RAIZ = "/home/user/Dinastia"
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "herramientas"))
+from ruta_segura import ruta_segura  # noqa: E402  (rutas por argumento: SonarCloud S8707)
+RAIZ = os.path.realpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 LISTA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lista.txt")
+
+
+def lista_gd():
+    """Los .gd a analizar: lista.txt si existe; si no, todos los del repositorio (rutas relativas a RAIZ)."""
+    if os.path.exists(LISTA):
+        with open(LISTA, encoding="utf-8") as f:
+            return [l.strip() for l in f if l.strip()]
+    r = subprocess.run(["git", "ls-files", "*.gd"], cwd=RAIZ, capture_output=True, text=True, check=True)
+    return [l for l in r.stdout.splitlines() if l]
 
 def hallazgo(f, l, regla, msg, sev="menor"):
     return {"archivo": f, "linea": l, "regla": regla, "mensaje": msg, "sev": sev}
@@ -28,7 +39,7 @@ def m_lint(f):
 
 def m_forma(f):
     out = []
-    src = open(os.path.join(RAIZ, f), encoding="utf-8", errors="replace").read()
+    src = open(ruta_segura(os.path.join(RAIZ, f)), encoding="utf-8", errors="replace").read()
     r = subprocess.run(["gdparse", f], cwd=RAIZ, capture_output=True, text=True)
     if r.returncode != 0:
         out.append(hallazgo(f, 0, "gdparse:sintaxis", msg_sintaxis(r.stdout + r.stderr), "alta"))
@@ -49,7 +60,7 @@ def m_forma(f):
 def m_ast(f):
     from gdtoolkit.parser import parser
     out = []
-    src = open(os.path.join(RAIZ, f), encoding="utf-8", errors="replace").read()
+    src = open(ruta_segura(os.path.join(RAIZ, f)), encoding="utf-8", errors="replace").read()
     lines = src.split("\n")
     n = len(lines) - (1 if lines and lines[-1] == "" else 0)
     if n > 450:
@@ -132,11 +143,11 @@ def seguro(args):
 
 if __name__ == "__main__":
     met, salida = sys.argv[1], sys.argv[2]
-    fs = [l.strip() for l in open(LISTA) if l.strip()]
+    fs = lista_gd()
     with Pool(4) as p:
         res = p.map(seguro, [(met, f) for f in fs], chunksize=8)
     todos = sorted((h for r in res for h in r), key=lambda h: (h["archivo"], h["linea"], h["regla"], h["mensaje"]))
-    with open(salida, "w") as o:
+    with open(ruta_segura(salida), "w", encoding="utf-8") as o:
         for h in todos:
             o.write(json.dumps(h, ensure_ascii=False, sort_keys=True) + "\n")
     print(met, len(fs), "archivos,", len(todos), "hallazgos")
