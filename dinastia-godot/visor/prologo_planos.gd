@@ -4,13 +4,13 @@ extends Node
 ## Al llegar a cada sala del recorrido, ANTES de que hable el mentor, un plano de establecimiento: franjas de cine, el nombre de la sala con el
 ## color del club y la cámara recorriendo la sala de una esquina alta a la otra; al final vuelve, suave, a tus ojos (primera persona, orden 45).
 ## Qué esquina, qué altura y hacia dónde se mueve salen de la semilla club + paso: cada club ve su edificio desde otro sitio.
-## Se salta con E / Intro / Espacio / X / A o un clic. Es la base de la cinemática pregrabada (mismos planos, grabados con `--write-movie`).
+## (La banda no tiene plano: su suelo queda dentro de la red de la portería y haría falta una cámara a medida.) Se salta con E / Intro / Espacio / X / A o un clic. Es la base de la cinemática pregrabada (mismos planos, grabados con `--write-movie`).
 
 signal terminado
 
 const SEG_RECORRIDO := 3.0
 const SEG_VUELTA := 0.7
-const SALAS := ["puerta", "vestuario", "utileria", "enfermeria", "presidente", "video", "prensa", "comedor", "oficina"]
+const SALAS := ["puerta", "vestuario", "tunel", "utileria", "enfermeria", "presidente", "video", "prensa", "comedor", "oficina"]
 const ALTO_FRANJA := 0.11   ## fracción de la pantalla que tapa cada franja de cine
 
 var _cam: Camera3D
