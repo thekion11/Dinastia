@@ -431,6 +431,7 @@ func _entregar_oficina() -> void:
 	pc.mundo = mundo
 	pc.mundo_3d = vista
 	pc.explorador = explorador
+	pc.animar = not rapido   ## (18-11) las pruebas encienden el PC sin la animación de sentarse
 	## El punto de uso: delante del escritorio (la mesa está 0,6 m al fondo de la sala).
 	pc.montar(vista._raiz3d, destino + Vector3(0, 0, 0.9), destino_planta)
 	destino = pc.punto

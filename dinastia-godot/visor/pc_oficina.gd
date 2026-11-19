@@ -33,6 +33,7 @@ var _t := 0.0
 var _aviso_puesto := false
 var _animando := false        ## sentándose o levantándose (18-11): `PcAnimacion`; el PC no responde a nada hasta acabar
 var _anim: PcAnimacion
+var animar := true            ## false: enciende de golpe (el prólogo en modo rápido, el de las pruebas)
 
 ## `padre3d`: dónde colgar el aro (el mismo padre que el explorador).
 func montar(padre3d: Node3D, punto_uso: Vector3, planta_: int) -> void:
@@ -125,7 +126,7 @@ func encender() -> void:
 	if explorador != null and is_instance_valid(explorador):
 		explorador.process_mode = Node.PROCESS_MODE_DISABLED
 	## (18-11) Te sientas y entras en la pantalla (primera persona); sin explorador con cámara, enciende de golpe como siempre.
-	if PcAnimacion.puede(explorador):
+	if animar and PcAnimacion.puede(explorador):
 		_animando = true
 		_anim = PcAnimacion.new()
 		add_child(_anim)
