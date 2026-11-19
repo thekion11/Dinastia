@@ -341,7 +341,7 @@ const EX_S := 262.0
 ## Dónde cae cada terreno comprable. "periferia" no tiene parcela propia: ES el
 ## recinto del club, así que solo lleva cartel.
 ##
-## TODO ESTO SE APRETÓ (12-9-2026, segunda pasada): con el anillo a 235 m y las
+## Todo ESTO SE APRETÓ (12-9-2026, segunda pasada): con el anillo a 235 m y las
 ## parcelas a 360, el estadio -que ahora es el de verdad y mide 110x150 m
 ## REALES- quedaba como un sello en mitad de un prado y el mapa no se leía de
 ## una vez. La regla aquí es que la referencia de tamaño la pone el estadio, no

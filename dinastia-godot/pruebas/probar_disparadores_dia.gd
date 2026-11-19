@@ -18,7 +18,6 @@ func _mundo(paises: Array, semilla: int) -> Mundo:
 	return m
 
 func correr(padre: Node = null) -> int:
-	var p := padre
 	for cfg: Array in [[["CHI"], 11], [["ARG", "BRA"], 22], [["ESP", "ENG"], 33]]:
 		var m := _mundo(cfg[0], int(cfg[1]))
 		var e := "%s/%d" % [",".join(cfg[0]), cfg[1]]

@@ -154,7 +154,7 @@ func _montar_cabecera() -> VBoxContainer:
 	## derecho. Se veía en captura: la ficha del jugador cortada por la mitad.
 	## 208 y no 250: el boton del mapa que se añadio al lado ocupa 34 mas 8 de
 	## separacion, y esta fila vive en la RAIZ -lo que se pase de ancho empuja
-	## TODO lo de abajo fuera del borde derecho y corta la ficha del jugador por
+	## Todo lo de abajo fuera del borde derecho y corta la ficha del jugador por
 	## la mitad-. Se descuentan exactamente esos 42 pixeles.
 	p._selector.custom_minimum_size = Vector2(208, 34)
 	p._selector.clip_text = true

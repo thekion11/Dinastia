@@ -49,7 +49,6 @@ func _probar() -> void:
 	ParaguasVida.abrir(n2, 0)
 	var sigue := n2.find_child("Eje", true, false)
 	_comprobar(sigue != null and sigue.get_script() != null and sigue.top_level, "el eje del paraguas es independiente de la rotación de la mano")
-	var mano2 := sigue.get_parent() as Node3D
 	var ap := d2["anim"] as AnimationPlayer
 	ap.advance(0.3)
 	sigue._process(0.0)
