@@ -80,7 +80,7 @@ func _directa(frase: String) -> String:
 	## TÍTULOS EN MAYÚSCULAS (29-9-2026): muchas cabeceras se pintan con
 	## `to_upper()` antes de traducir ("PLANTEL", "PRÓXIMO PARTIDO"). Se busca
 	## la forma normal ("Plantel", "Próximo partido") y se devuelve en mayúsculas.
-	if frase.length() > 1 and frase == frase.to_upper() and frase != frase.to_lower():
+	if frase.length() > 1 and frase != "MAR" and frase == frase.to_upper() and frase != frase.to_lower():
 		var baja := frase.to_lower()
 		var normal := baja.substr(0, 1).to_upper() + baja.substr(1)
 		for cand: String in [normal, baja]:
@@ -423,14 +423,14 @@ func _inverso_de(cual: String) -> Dictionary:
 	if cual == "es":
 		return inv
 	var ex: Dictionary = _extra.get(cual, {})
-	for k: String in ex:
-		inv[String(ex[k])] = k
+	for k: String in ex:   ## misma traducción para dos frases («Calendario», «Plan de juego»): gana la más corta
+		inv[String(ex[k])] = k if k.length() < String(inv.get(String(ex[k]), k + "x")).length() else inv[String(ex[k])]
 	var i := ORDEN.find(cual)
 	if i >= 0:
 		for k: String in TABLA:
 			var fila: Array = TABLA[k]
 			if i < fila.size() and String(fila[i]) != "":
-				inv[String(fila[i])] = k
+				inv[String(fila[i])] = k if k.length() < String(inv.get(String(fila[i]), k + "x")).length() else inv[String(fila[i])]
 	return inv
 
 ## El castellano de un texto pintado en `antes`, o "" si no se reconoce. Mira
