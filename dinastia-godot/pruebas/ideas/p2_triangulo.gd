@@ -16,15 +16,17 @@ func _ready() -> void:
 	var pj := PartidoJugable.abrir(ui, m, ui.carrera, par[0], par[1], 240.0)
 	for i in 12:
 		await get_tree().physics_frame
-	var marca := pj.find_child("TrianguloControlado", true, false) as MeshInstance3D
-	_comprobar(marca != null, "el partido monta el triángulo")
-	if marca != null:
+		await get_tree().process_frame
+	## (18-11) Desde el HUD de TV en 2D (`0b9f2a5f`) el triángulo ya no es un nodo 3D: lo dibuja `NombresTV` (con `triangulo = true`)
+	## sobre la cabeza del que manejas. Aquí se mira ese HUD: sus marcas (`_marcas`) y que el 3D ya no se monta.
+	_comprobar(pj.find_child("TrianguloControlado", true, false) == null, "el triángulo 3D ya no se monta (lo dibuja el HUD en 2D)")
+	var nombres := pj.get_node_or_null("NombresTV") as NombresTV
+	_comprobar(nombres != null and nombres.triangulo, "el partido monta los nombres 2D con el triángulo")
+	if nombres != null:
 		var yo: Dictionary = pj.motor.usuario
-		_comprobar(not yo.is_empty() and marca.visible, "con un jugador controlado, el triángulo se ve")
+		_comprobar(not yo.is_empty() and _yo(nombres) != {}, "con un jugador controlado, el triángulo se dibuja")
+		var pie0: Vector2 = _yo(nombres).get("pie", Vector2.ZERO)
 		if not yo.is_empty():
-			var cabeza := (yo["node"] as Node3D).position + Vector3(0, 0, 0)
-			var d := marca.position - cabeza
-			_comprobar(d.y > 2.6 and d.y < 4.2 and Vector2(d.x, d.z).length() < 0.05, "flota sobre su cabeza (la punta a %.2f m de sus pies)" % d.y)
 			var otro: Dictionary = {}
 			for p: Dictionary in pj.motor.jugadores:
 				if p != yo and bool(p["es_local"]) == bool(yo["es_local"]) and not bool(p["por"]):
@@ -33,12 +35,14 @@ func _ready() -> void:
 			pj.motor.usuario = otro
 			for i in 4:
 				await get_tree().physics_frame
-			var c2 := (otro["node"] as Node3D).position + Vector3(0, 0, 0)
-			_comprobar(Vector2(marca.position.x - c2.x, marca.position.z - c2.z).length() < 0.05, "al cambiar de jugador, el triángulo lo sigue")
+				await get_tree().process_frame
+			var m2: Dictionary = _yo(nombres)
+			_comprobar(m2 != {} and (m2["pie"] as Vector2).distance_to(pie0) > 1.0, "al cambiar de jugador, el triángulo lo sigue")
 			pj.motor.usuario = {}
 			for i in 3:
 				await get_tree().physics_frame
-			_comprobar(not marca.visible, "sin jugador controlado, se esconde")
+				await get_tree().process_frame
+			_comprobar(_yo(nombres) == {}, "sin jugador controlado, se esconde")
 			pj.motor.usuario = yo
 			for i in 3:
 				await get_tree().physics_frame
@@ -50,3 +54,10 @@ func _ready() -> void:
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)
+
+## La marca del que manejas en el HUD 2D (vacía si no hay).
+func _yo(n: NombresTV) -> Dictionary:
+	for m: Dictionary in n._marcas:
+		if bool(m["yo"]):
+			return m
+	return {}
