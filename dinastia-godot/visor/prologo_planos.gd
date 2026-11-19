@@ -10,7 +10,7 @@ signal terminado
 
 const SEG_RECORRIDO := 3.0
 const SEG_VUELTA := 0.7
-const SALAS := ["vestuario", "utileria", "enfermeria", "presidente", "video", "prensa", "comedor", "oficina"]
+const SALAS := ["puerta", "vestuario", "utileria", "enfermeria", "presidente", "video", "prensa", "comedor", "oficina"]
 const ALTO_FRANJA := 0.11   ## fracción de la pantalla que tapa cada franja de cine
 
 var _cam: Camera3D
@@ -29,6 +29,13 @@ static func tiene(clave: String) -> bool:
 	return clave in SALAS
 
 ## Las dos poses (desde, hasta) del recorrido por la sala `r` (suelo x-z en el mundo; la puerta da a +Z, la pared del fondo es `r.position.y`).
+## Tres tipos según la semilla: BARRIDO (de una esquina alta a la otra), FRONTAL (desde la puerta, bajo, avanzando hacia el fondo) y DETALLE (de cerca
+## de la pared del fondo, donde van el escudo y la pizarra, alejándose hasta abrir la sala).
+const TIPOS := ["barrido", "frontal", "detalle"]
+
+static func tipo_de(semilla: int) -> String:
+	return TIPOS[absi(semilla) % TIPOS.size()]
+
 static func poses(r: Rect2, y0: float, semilla: int) -> Array[Transform3D]:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = semilla
@@ -39,14 +46,64 @@ static func poses(r: Rect2, y0: float, semilla: int) -> Array[Transform3D]:
 	var x_b := r.end.x - m if izq else r.position.x + m
 	var c := r.get_center()
 	var fondo := r.position.y + minf(0.9, r.size.y * 0.25)
-	var a := Vector3(x_a, y0 + alto, r.end.y - m)
-	var b := Vector3(lerpf(x_b, c.x, 0.35), y0 + alto - 0.45, lerpf(r.end.y - m, c.y, rng.randf_range(0.15, 0.4)))
-	var mira_a := Vector3(lerpf(c.x, x_b, 0.25), y0 + 1.0, fondo)
-	var mira_b := Vector3(lerpf(c.x, x_a, 0.3), y0 + 1.15, fondo)
+	var a: Vector3
+	var b: Vector3
+	var mira_a: Vector3
+	var mira_b: Vector3
+	match tipo_de(semilla):
+		"frontal":
+			a = Vector3(c.x + (0.3 if izq else -0.3), y0 + 1.25, r.end.y - m)
+			b = Vector3(c.x + (-0.2 if izq else 0.2), y0 + 1.45, lerpf(r.end.y, c.y, 0.55))
+			mira_a = Vector3(c.x, y0 + 1.1, r.position.y)
+			mira_b = Vector3(c.x, y0 + 1.3, r.position.y)
+		"detalle":
+			a = Vector3(c.x + (0.5 if izq else -0.5), y0 + 1.7, r.position.y + 1.3)
+			b = Vector3(x_a, y0 + alto, r.end.y - m)
+			mira_a = Vector3(c.x, y0 + 1.75, r.position.y)
+			mira_b = Vector3(lerpf(c.x, x_b, 0.2), y0 + 1.0, fondo)
+		_:
+			a = Vector3(x_a, y0 + alto, r.end.y - m)
+			b = Vector3(lerpf(x_b, c.x, 0.35), y0 + alto - 0.45, lerpf(r.end.y - m, c.y, rng.randf_range(0.15, 0.4)))
+			mira_a = Vector3(lerpf(c.x, x_b, 0.25), y0 + 1.0, fondo)
+			mira_b = Vector3(lerpf(c.x, x_a, 0.3), y0 + 1.15, fondo)
 	return [Transform3D(Basis.IDENTITY, a).looking_at(mira_a, Vector3.UP), Transform3D(Basis.IDENTITY, b).looking_at(mira_b, Vector3.UP)]
 
+## La fachada del club vista desde la calle (paso «puerta»): de lejos y alto, a la altura de la marquesina, acercándose a la puerta.
+## `obstaculos`: cajas de setos, jardineras y árboles (`PrologoMentor.obstaculos`): se elige el primer punto de partida desde el que se ve la puerta.
+static func poses_fachada(puerta: Vector3, semilla: int, obstaculos: Array[AABB] = []) -> Array[Transform3D]:
+	var lado := 1.0 if absi(semilla) % 2 == 0 else -1.0
+	var a := puerta + Vector3(7.0 * lado, 4.2, 15.0)
+	for cand: Vector3 in [Vector3(7.0 * lado, 4.2, 15.0), Vector3(-7.0 * lado, 4.2, 15.0), Vector3(0.0, 5.0, 13.0), Vector3(3.0 * lado, 3.2, 10.0)]:
+		var libre := true
+		for o: AABB in obstaculos:
+			if o.grow(0.3).intersects_segment(puerta + cand, puerta + Vector3(0, 2.0, 0)):
+				libre = false
+				break
+		if libre:
+			a = puerta + cand
+			lado = signf(cand.x) if cand.x != 0.0 else lado
+			break
+	var b := puerta + Vector3(2.5 * lado, 2.2, 7.5)
+	return [Transform3D(Basis.IDENTITY, a).looking_at(puerta + Vector3(0, 3.0, 0), Vector3.UP),
+		Transform3D(Basis.IDENTITY, b).looking_at(puerta + Vector3(0, 2.0, 0), Vector3.UP)]
+
+## Las copas de los árboles (MultiMesh con el shader de follaje) a menos de `radio` m de `centro`, en cajas del mundo: lo que puede tapar la fachada.
+static func copas_cerca(raiz: Node, centro: Vector3, radio := 30.0) -> Array[AABB]:
+	var r: Array[AABB] = []
+	for n in raiz.find_children("*", "MultiMeshInstance3D", true, false):
+		var mm := n as MultiMeshInstance3D
+		var sm := mm.material_override as ShaderMaterial
+		if mm.multimesh == null or mm.multimesh.mesh == null or sm == null or sm.shader == null or not sm.shader.resource_path.contains("follaje"):
+			continue
+		var caja := mm.multimesh.mesh.get_aabb()
+		for i in mm.multimesh.instance_count:
+			var t := mm.global_transform * mm.multimesh.get_instance_transform(i)
+			if t.origin.distance_to(centro) < radio:
+				r.append(t * caja)
+	return r
+
 ## Rueda el plano y vuelve a los ojos del explorador. `sala`: el nombre (se traduce); `club`: el nombre visible; `color`: el del club.
-func rodar(explorador: Node, r: Rect2, y0: float, semilla: int, sala: String, club: String, color: Color) -> void:
+func rodar(explorador: Node, r: Rect2, y0: float, semilla: int, sala: String, club: String, color: Color, fijas: Array[Transform3D] = []) -> void:
 	_expl = explorador
 	_cam = explorador.get("camara") as Camera3D
 	if _cam == null or not _cam.is_inside_tree():
@@ -57,7 +114,7 @@ func rodar(explorador: Node, r: Rect2, y0: float, semilla: int, sala: String, cl
 	_modo_antes = explorador.process_mode
 	explorador.process_mode = Node.PROCESS_MODE_DISABLED
 	_montar_capa(Idiomas.t(sala), club, color)
-	var p := poses(r, y0, semilla)
+	var p := fijas if fijas.size() == 2 else poses(r, y0, semilla)
 	_cam.global_transform = p[0]
 	_entrar_capa(true)
 	_tw = create_tween()
@@ -133,7 +190,7 @@ func _montar_capa(sala: String, club: String, color: Color) -> void:
 	var s := Label.new()
 	s.text = club
 	s.add_theme_font_size_override("font_size", 18)
-	s.add_theme_color_override("font_color", color.lerp(Color.WHITE, 0.45))
+	s.add_theme_color_override("font_color", Color(1, 1, 1, 0.85))   ## el color del club va en la raya: en letra, los oscuros no se leían sobre paredes claras
 	s.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
 	s.add_theme_constant_override("outline_size", 5)
 	_rotulo.add_child(s)

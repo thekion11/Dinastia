@@ -32,7 +32,8 @@ func _al_llegar() -> void:
 	var p: Dictionary = PrologoPasos.PASOS[paso_i]
 	var clave := String(p["clave"])
 	if not rapido and PrologoPlanos.tiene(clave) and OS.get_environment("SIN_PLANOS") == "":
-		var r := _rect_zona(String(p["zona"]), int(p["planta"]))
+		var fuera := clave == "puerta"   ## la fachada: plano desde la calle hacia la puerta del club
+		var r := Rect2(Vector2(puerta.x, puerta.z), Vector2.ONE * 2.0) if fuera else _rect_zona(String(p["zona"]), int(p["planta"]))
 		if r.get_area() > 1.0:
 			if dialogo.visible:
 				dialogo.cerrar()   ## el plano va limpio: ni el cuadro de diálogo de antes ni la flecha (`_plano` la esconde)
@@ -40,9 +41,15 @@ func _al_llegar() -> void:
 			_plano = pl
 			add_child(pl)
 			var y0 := CityBuilder.ESTADIO_EN.y + RecorridoClub.y_de(int(p["planta"]))
-			await pl.rodar(explorador, r, y0, hash(Nombres.visible(club.nombre) + clave), String(p["zona"]), Nombres.visible(club.nombre), Color(club.color1))
+			var semilla := hash(Nombres.visible(club.nombre) + clave)
+			var fijas: Array[Transform3D] = []
+			if fuera:
+				fijas = PrologoPlanos.poses_fachada(puerta, semilla, PrologoMentor.obstaculos + PrologoPlanos.copas_cerca(vista._raiz3d, puerta))
+			hud.visible = false   ## sin la tarjeta de controles ni la flecha durante el plano
+			await pl.rodar(explorador, r, y0, semilla, "Entrada del club" if fuera else String(p["zona"]), Nombres.visible(club.nombre), Color(club.color1), fijas)
 			pl.queue_free()
 			_plano = null
+			hud.visible = true
 	if not is_inside_tree():
 		return
 	_meter_saludo()

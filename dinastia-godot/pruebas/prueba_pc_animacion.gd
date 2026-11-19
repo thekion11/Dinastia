@@ -85,5 +85,45 @@ func _ready() -> void:
 	_comprobar(cam.global_position.distance_to(pie.origin) < 0.01, "al levantarse la cámara vuelve a su sitio")
 	_comprobar(absf(cam.fov - fov0) < 0.01, "y recupera su campo de visión")
 	_comprobar(exp.find_child("PcSentado", true, false) == null or exp.find_child("PcSentado", true, false).is_queued_for_deletion(), "no quedan manos ni luz")
+	await _planos(exp, cam)
 	print("FIN. %d fallos" % _fallos)
 	get_tree().quit(_fallos)
+
+## (18-11) LOS PLANOS DEL PRÓLOGO (`PrologoPlanos`): los tres tipos caen dentro de la sala y miran hacia el fondo, la fachada mira a la puerta,
+## el plano se rueda entero (y saltado) devolviendo la cámara a los ojos y al explorador su modo. En el juego, un fallo aquí congelaba el prólogo
+## en cada sala (las pruebas rápidas del prólogo no ruedan planos), por eso se prueba aparte.
+func _planos(exp: Node3D, cam: Camera3D) -> void:
+	var r := Rect2(-3.0, -2.0, 6.0, 4.0)
+	var tipos := {}
+	for semilla in [11, 12, 13, 14, 15, 16]:
+		var p := PrologoPlanos.poses(r, 0.0, semilla)
+		tipos[PrologoPlanos.tipo_de(semilla)] = true
+		var dentro := true
+		for t: Transform3D in p:
+			dentro = dentro and r.grow(0.01).has_point(Vector2(t.origin.x, t.origin.z)) and t.origin.y > 0.8 and t.origin.y < 3.0 and (-t.basis.z).z < 0.0
+		_comprobar(p.size() == 2 and dentro, "plano %s (semilla %d): dos poses dentro de la sala, mirando al fondo" % [PrologoPlanos.tipo_de(semilla), semilla])
+	_comprobar(tipos.size() == 3, "salen los tres tipos de plano (%s)" % str(tipos.keys()))
+	var f := PrologoPlanos.poses_fachada(Vector3(10, 0, 5), 3)
+	_comprobar((-f[1].basis.z).z < 0.0 and f[0].origin.z > f[1].origin.z, "la fachada se acerca a la puerta mirándola")
+	_comprobar(PrologoPlanos.tiene("puerta") and PrologoPlanos.tiene("oficina") and not PrologoPlanos.tiene("llegada"), "qué pasos tienen plano")
+	var ojos := cam.global_transform
+	for saltar in [false, true]:
+		var pl := PrologoPlanos.new()
+		add_child(pl)
+		var t0 := Time.get_ticks_msec()
+		var coro := func() -> void:
+			await pl.rodar(exp, r, 0.0, 12, "Oficina del DT", "Club Prueba", Color(0.8, 0.1, 0.1))
+		coro.call()
+		if saltar:
+			await get_tree().process_frame
+			var ev := InputEventKey.new()
+			ev.keycode = KEY_E
+			ev.pressed = true
+			pl._unhandled_input(ev)
+		while pl._activo:
+			await get_tree().process_frame
+		var seg := (Time.get_ticks_msec() - t0) / 1000.0
+		_comprobar(cam.global_transform.origin.distance_to(ojos.origin) < 0.01 and exp.process_mode == Node.PROCESS_MODE_INHERIT,
+			"%s: la cámara vuelve a los ojos y el explorador a moverse (%.1f s)" % ["saltado" if saltar else "entero", seg])
+		_comprobar(seg < (1.0 if saltar else 5.0), "y dura lo que debe")
+		pl.queue_free()
