@@ -175,6 +175,17 @@ static func _imagen_asfalto(tinte: Color, semilla: int) -> ImageTexture:
 	var img_g := grande.get_seamless_image(n, n)
 	var img_m := medio.get_seamless_image(n, n)
 	var img_c := grieta.get_seamless_image(n, n)
+	var nat := Nativo.obj()
+	var img: Image = null
+	if nat != null and nat.has_method("asfalto_imagen"):   ## (19-11) los 262.144 píxeles, en C++ (`nativo/src/asfalto_nativo.cpp`); gemela: `_imagen_asfalto_gd`
+		img = nat.asfalto_imagen(img_g, img_m, img_c, tinte, semilla, n)
+	if img == null:
+		img = _pixeles_asfalto_gd(img_g, img_m, img_c, tinte, semilla, n)
+	img.generate_mipmaps()
+	return ImageTexture.create_from_image(img)
+
+## La gemela GDScript de `asfalto_imagen`: la imagen RGB8 (sin mipmaps) a partir de los tres ruidos.
+static func _pixeles_asfalto_gd(img_g: Image, img_m: Image, img_c: Image, tinte: Color, semilla: int, n: int) -> Image:
 	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = semilla
@@ -197,8 +208,7 @@ static func _imagen_asfalto(tinte: Color, semilla: int) -> ImageTexture:
 				v -= 0.2 * clampf((g - 0.6) / 0.08, 0.0, 1.0)
 			var c := Color(tinte.r * v, tinte.g * v, tinte.b * v)
 			img.set_pixel(x, y, c)
-	img.generate_mipmaps()
-	return ImageTexture.create_from_image(img)
+	return img
 
 ## Asfalto: mas oscuro, mas grano y algo pulido por el paso de los coches.
 ## `tinte` (17-9-2026): esta funcion existia desde antes de esta sesion sin

@@ -157,6 +157,8 @@ public:
 	PackedFloat32Array pelo_suavizar(const PackedFloat32Array &a, const PackedInt32Array &tri, double f) const;
 	// (19-11) `AnimExtra.espejar` (visor/anim_extra_p1.gd, nativo/src/espejo_nativo.cpp): el clip reflejado izquierda <-> derecha (null si no tiene rotaciones); gemela `_espejar_gd`.
 	Ref<Animation> anim_espejar(const Ref<Animation> &original, Skeleton3D *esq, const String &prefijo) const;
+	// (19-11) `Texturas._imagen_asfalto` (visor/texturas_p1.gd, nativo/src/asfalto_nativo.cpp): la imagen RGB8 del asfalto (null si los ruidos no son L8 de n×n); gemela `_imagen_asfalto_gd`.
+	Ref<Image> asfalto_imagen(const Ref<Image> &grande, const Ref<Image> &medio, const Ref<Image> &grieta, const Color &tinte, int64_t semilla, int64_t n) const;
 	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
 	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
 	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;

@@ -443,6 +443,12 @@ func _probar() -> void:
 	_comprobar((es2["fallos"] as Array).is_empty(), "espejo de animaciones: C++ = GDScript (pistas, tiempos y valores, byte a byte)")
 	for t: String in es2["textos"]:
 		print(t)
+	var asf := ProbarNativoAsfalto.probar(nat)   ## (19-11) la imagen del asfalto
+	for f: String in asf["fallos"]:
+		_comprobar(false, "asfalto en C++: " + f)
+	_comprobar((asf["fallos"] as Array).is_empty(), "imagen del asfalto: C++ = GDScript (bytes RGB8)")
+	for t: String in asf["textos"]:
+		print(t)
 	var so := ProbarNativoSonido.probar(nat)   ## (19-11) la síntesis del sonido
 	for f: String in so["fallos"]:
 		_comprobar(false, "síntesis del sonido en C++: " + f)
