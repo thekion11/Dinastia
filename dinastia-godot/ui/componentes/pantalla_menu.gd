@@ -172,7 +172,9 @@ func _entrar() -> void:
 	## (10-11, estética; PES 2020/eFootball pasan de pantalla en ~0,2 s) 0,25/0,3 → 0,18/0,22 s: la entrada se siente ágil, no lenta
 	tw.tween_property(self, "modulate:a", 1.0, 0.18)
 	tw.tween_property(_raiz, "offset_left", base, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tw.finished.connect(func() -> void: if not _cerrando: TaparDetras.tapar(self))   ## (15-11) ya opaca: lo de debajo deja de dibujarse
+	tw.finished.connect(func() -> void:   ## (15-11) ya opaca: lo de debajo deja de dibujarse
+		if not _cerrando:
+			TaparDetras.tapar(self))
 	Sonido.toca("abrir" if Sonido.NOMBRES.has("abrir") else "clic", Sonido.Bus.INTERFAZ)
 	_al_redimensionar()
 

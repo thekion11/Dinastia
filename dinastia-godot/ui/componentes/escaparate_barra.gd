@@ -91,7 +91,9 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	menu.custom_minimum_size = Vector2(52, ALTO - 8)
 	menu.add_theme_font_size_override("font_size", Tema.letra(28))
 	menu.tooltip_text = Idiomas.t("Todos los menús")
-	menu.pressed.connect(func() -> void: if p._menu_lateral != null: p._menu_lateral.alternar())
+	menu.pressed.connect(func() -> void:
+		if p._menu_lateral != null:
+			p._menu_lateral.alternar())
 	hb.add_child(menu)
 	hb.move_child(menu, 0)
 	var hueco := Control.new()   ## el escudo asoma por encima de la barra: no empuja a nadie
