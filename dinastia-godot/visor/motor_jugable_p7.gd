@@ -36,7 +36,7 @@ func _ia_portador(p: Dictionary) -> void:
 	## En su propio campo y apretado: despeje, lejos y hacia fuera si hace falta.
 	var en_su_tercio := (arco.z - yo.z) * d > 70.0
 	if en_su_tercio and presion < 2.2 and _rng.randf() < 0.55:
-		var lado := signf(yo.x) if yo.x != 0.0 else 1.0
+		var lado := signf(yo.x) if not is_zero_approx(yo.x) else 1.0
 		var despeje := Vector3(lado * _rng.randf_range(18, 36), 0, yo.z + d * _rng.randf_range(20, 40))
 		_ctx_golpeo = "despeje"
 		_patear(p, despeje, 18.0, 4.0, 0.0, "patear")
@@ -84,7 +84,7 @@ func _ia_portador(p: Dictionary) -> void:
 		var n_f: Node3D = p["node"]
 		var fwd_f := Vector3(sin(n_f.rotation.y), 0, cos(n_f.rotation.y))
 		var lado_f := -signf(Vector3(fwd_f.z, 0, -fwd_f.x).dot(pos(rival) - yo)) if not rival.is_empty() else 1.0
-		if lado_f == 0.0:
+		if is_zero_approx(lado_f):
 			lado_f = 1.0
 		_finta_ia(p, rival, fwd_f, lado_f, maxf((p["vel"] as Vector3).length(), 2.0))
 		return

@@ -150,7 +150,7 @@ func _teleferico(t: Object) -> void:
 	var espera: float = t.ESPERA
 	var ciclo: float = t.CICLO
 	_comprobar(absf(ciclo - (viaje + espera) * 2.0) < 0.001, "el ciclo es (viaje + espera) × 2 (%.0f s)" % ciclo)
-	_comprobar(t.avance(0.0) == 0.0 and absf(t.avance(viaje) - 1.0) < 1e-6 and t.avance(viaje + espera * 0.5) == 1.0 and t.avance(ciclo - 1.0) < 0.001, "avance: 0 al salir, 1 arriba, 1 en la espera, vuelve a 0")
+	_comprobar(is_zero_approx(t.avance(0.0)) and absf(t.avance(viaje) - 1.0) < 1e-6 and is_equal_approx(t.avance(viaje + espera * 0.5), 1.0) and t.avance(ciclo - 1.0) < 0.001, "avance: 0 al salir, 1 arriba, 1 en la espera, vuelve a 0")
 	var mono_sube := true
 	var mono_baja := true
 	var periodico := true

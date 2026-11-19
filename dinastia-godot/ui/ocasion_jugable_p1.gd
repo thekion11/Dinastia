@@ -364,7 +364,7 @@ func _input(e: InputEvent) -> void:
 
 func _exit_tree() -> void:
 	## Nunca dejar el mundo a cámara lenta si se cierra el estadio a mitad.
-	if _fase != "" or Engine.time_scale != 1.0:
+	if _fase != "" or not is_equal_approx(Engine.time_scale, 1.0):
 		Engine.time_scale = 1.0
 
 # ---------------------------------------------------------------------------

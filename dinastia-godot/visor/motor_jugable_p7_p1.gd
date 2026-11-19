@@ -235,7 +235,7 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 	## va pegado a la banda).
 	var der := Vector3(fwd.z, 0, -fwd.x)
 	var lado := -signf(der.dot(hacia_r))
-	if lado == 0.0:
+	if is_zero_approx(lado):
 		lado = 1.0 if _rng.randf() < 0.5 else -1.0
 	if absf(yo.x) > ANCHO - 6.0 and (der * lado).x * signf(yo.x) > 0.0 and _rng.randf() < 0.7:
 		lado = -lado

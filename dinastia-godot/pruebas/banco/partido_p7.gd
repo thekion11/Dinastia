@@ -25,7 +25,7 @@ func _dq_letras_y_ribete() -> void:
 	var solo := DisenosKit.ribete_numero(Color.WHITE, [Color("0b1f4d")])
 	var blanco := DisenosKit.ribete_numero(Color.WHITE, [Color("f4f4f4")])
 	var rayas := DisenosKit.ribete_numero(Color("c8102e"), [Color.WHITE, Color("c8102e")])
-	_comprobar(solo.a == 0.0 and blanco.a > 0.06 and blanco.get_luminance() < 0.2 and rayas.a > 0.06 and rayas.get_luminance() > 0.8,
+	_comprobar(is_zero_approx(solo.a) and blanco.a > 0.06 and blanco.get_luminance() < 0.2 and rayas.a > 0.06 and rayas.get_luminance() > 0.8,
 		"dorsal: ribete solo cuando hace falta (marino %.3f, blanco sobre blanco %.3f oscuro, rojo sobre rayas rojas %.3f claro)" % [solo.a, blanco.a, rayas.a])
 	var u := DisenosKit.uniforms({"dis": "liso", "cols": ["ffd600", "0b1f4d"], "num": "0b1f4d"}, 9, "Gómez")
 	var u0 := DisenosKit.uniforms({"dis": "liso", "cols": ["ffd600", "0b1f4d"], "num": "0b1f4d"}, 0, "Gómez")

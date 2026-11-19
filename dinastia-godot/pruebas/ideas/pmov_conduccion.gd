@@ -41,7 +41,7 @@ func _acelerar_y_tope() -> void:
 	_comprobar(v2 - v1 < v1, "el segundo segundo gana menos que el primero (%.1f frente a %.1f): la potencia cae con la velocidad" % [v2 - v1, v1])
 	_durante(e, Vector2(0, 1), 20.0)
 	_comprobar(e.vel <= ExploradorCiudad.VEL_COCHE + 0.001 and e.vel > ExploradorCiudad.VEL_COCHE - 0.5, "a fondo mucho rato llega al tope y no lo pasa (%.2f de %.1f m/s)" % [e.vel, ExploradorCiudad.VEL_COCHE])
-	_comprobar(e.rumbo == 0.0, "con el volante recto, el rumbo no se mueve")
+	_comprobar(is_zero_approx(e.rumbo), "con el volante recto, el rumbo no se mueve")
 	_soltar(e)
 
 func _frenar_y_marcha_atras() -> void:

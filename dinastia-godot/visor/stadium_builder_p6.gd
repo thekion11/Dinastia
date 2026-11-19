@@ -205,7 +205,7 @@ static func _poblar_grada(mm: MultiMesh, mm_lejos: MultiMesh, g: Dictionary) -> 
 			## La contrarrotacion que las deja DE PIE: primero el giro y despues
 			## la contrarrotacion del rake (`rotated()` premultiplica).
 			var base := Basis().rotated(Vector3.UP, giro)
-			if rake != 0.0:
+			if not is_zero_approx(rake):
 				base = base.rotated(eje_rake, -rake)
 			## Franjas de color del club, con alguna butaca desparejada: una grada
 			## de un solo tono se lee como una alfombra pintada.
@@ -226,7 +226,7 @@ static func _poblar_grada(mm: MultiMesh, mm_lejos: MultiMesh, g: Dictionary) -> 
 				else:
 					mm_lejos.set_instance_transform(j, cero)
 					j += 1
-				gt.escalones.append(Transform3D(Basis().rotated(Vector3.UP, giro).rotated(eje_rake, -rake) if rake != 0.0 else Basis().rotated(Vector3.UP, giro), p + Vector3(0, -0.13, 0)))
+				gt.escalones.append(Transform3D(Basis().rotated(Vector3.UP, giro).rotated(eje_rake, -rake) if not is_zero_approx(rake) else Basis().rotated(Vector3.UP, giro), p + Vector3(0, -0.13, 0)))
 				if f == 0:
 					gt.pasillos.append(l)
 				continue
@@ -279,7 +279,7 @@ static func _hinchas_del_asiento(g: Dictionary, gt: _Gente, rng: RandomNumberGen
 		## hash del sitio (no del `rng`: el resto de la grada sale igual).
 		var ancho := 0.78 + 0.2 * fposmod(sin(p.x * 12.9898 + p.z * 78.233 + float(k) * 3.1) * 43758.5453, 1.0)
 		var base_h := Basis().rotated(Vector3.UP, giro + rng.randf_range(-0.15, 0.15)).scaled(Vector3(talla * ancho, talla, talla * ancho))
-		if rake != 0.0:
+		if not is_zero_approx(rake):
 			base_h = base_h.rotated(eje_rake, -rake)
 		var xf := Transform3D(base_h, p + eje_largo * desp + jit + Vector3(0, 0.15, 0))
 		var col_h: Color = colores_hincha[rng.randi_range(0, colores_hincha.size() - 1)]

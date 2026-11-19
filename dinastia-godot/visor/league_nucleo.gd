@@ -301,7 +301,7 @@ static func movimiento_campo_gd(campo: Array, actual: Vector2, amortigua: float)
 		var intensidad := 1.0
 		if not bool(f[2]):
 			intensidad = clampf(1.0 - dist / float(f[4]), 0.0, 1.0)
-			if float(f[5]) != 1.0:
+			if not is_equal_approx(float(f[5]), 1.0):
 				intensidad = pow(intensidad, float(f[5]))
 		if intensidad <= 0.0:
 			continue

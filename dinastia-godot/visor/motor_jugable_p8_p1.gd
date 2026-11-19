@@ -86,7 +86,7 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 			obj = MotorApoyo.punto(self as Object as MotorJugable, p, poseedor, obj)   ## campo de fuerzas (F3, 03-11)
 		elif d < 14.0:
 			var lado := signf(pos(p).x - pos(poseedor).x)
-			if lado == 0.0:
+			if is_zero_approx(lado):
 				lado = 1.0
 			obj = pos(poseedor) + Vector3(lado * 9.0, 0, dir_ataque(bool(p["es_local"])) * 5.0)
 	## LLEGADA AL ÁREA (20-10-2026, más chispa): con el balón de un compañero
@@ -219,7 +219,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	var md := 16.0 if al_hombre else 11.0
 	var r_vista := MotorMente.retardo(self as Object as MotorJugable, p)   ## (13-11, rendimiento) una vez por jugador, no por rival
 	var es_local_p := bool(p["es_local"])
-	if r_vista == 0.0:   ## (15-11, rendimiento) sin retardo `pos_vista_con` devuelve `pos(q)`: se lee directo, sin la llamada estática por rival
+	if is_zero_approx(r_vista):   ## (15-11, rendimiento) sin retardo `pos_vista_con` devuelve `pos(q)`: se lee directo, sin la llamada estática por rival
 		for q: Dictionary in jugadores:
 			if bool(q["es_local"]) != es_local_p and not bool(q["por"]):
 				var d := (q["node"] as Node3D).position.distance_to(obj)

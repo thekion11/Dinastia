@@ -54,9 +54,9 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 	_con_reposo(cuerpo, superficie)
 	var estilos: Variant = Datos.tabla("KITS")
 	var i_estilo: int = maxi(0, (estilos as Array).find(estilo)) if estilos is Array else 0
-	if pantalon.a == 0.0:
+	if is_zero_approx(pantalon.a):
 		pantalon = c2 if i_estilo == 0 else c1
-	if medias.a == 0.0:
+	if is_zero_approx(medias.a):
 		medias = c1
 	## EL DISEÑADOR (26-9-2026): sin equipación completa, se arma una con lo de
 	## siempre (colores, estilo, pantalón y medias) para que TODO pase por el

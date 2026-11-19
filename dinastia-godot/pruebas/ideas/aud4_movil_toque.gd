@@ -29,6 +29,6 @@ func _probar() -> void:
 	_comprobar(sb.content_margin_top < 0.0, "sin móvil (alto 0) el tema no cambia")
 	PantallaMovil.dpi_forzado = 0.0
 	PantallaMovil.ventana_forzada = Vector2i.ZERO
-	_comprobar(EscalaMovil.alto_toque(p) == 0.0, "en PC no hay alto de toque")
+	_comprobar(is_zero_approx(EscalaMovil.alto_toque(p)), "en PC no hay alto de toque")
 	get_window().content_scale_factor = 1.0
 	p.queue_free()

@@ -346,8 +346,8 @@ func _probar_transmision_y_estadisticas() -> void:
 			adelanta = r4._trans_foco.z > bz
 	_comprobar(abierto and fov_max > fov_ref + 2.5, "en el contraataque el plano se abre (%.1f°)" % fov_max)
 	_comprobar(adelanta, "el plano se adelanta hacia donde va el balón")
-	_comprobar(CameraRig.lectura_jugada(Vector3(0, 0, 40), Vector3.ZERO, 1.0, false, "puerta", "saque").x == 0.0, "en un saque de puerta no se cierra el plano")
-	_comprobar(CameraRig.lectura_jugada(Vector3(30, 0, 52), Vector3.ZERO, 1.0, false, "corner", "saque").x == 1.0, "en un córner se cierra el plano")
+	_comprobar(is_zero_approx(CameraRig.lectura_jugada(Vector3(0, 0, 40), Vector3.ZERO, 1.0, false, "puerta", "saque").x), "en un saque de puerta no se cierra el plano")
+	_comprobar(is_equal_approx(CameraRig.lectura_jugada(Vector3(30, 0, 52), Vector3.ZERO, 1.0, false, "corner", "saque").x, 1.0), "en un córner se cierra el plano")
 	var z0 := CameraRig.amortiguar(0.0, 10.0, 0.0, 0.5, 100.0, 1.0)
 	_comprobar(z0.x <= 10.0 and z0.x > 5.0, "el amortiguador no se pasa del objetivo con un fotograma largo (%.2f)" % z0.x)
 	rig2.free()
@@ -376,7 +376,7 @@ func _probar_transmision_y_estadisticas() -> void:
 	_comprobar(ev.amarillas == [1, 0] and ev.rojas == [0, 1], "tarjetas por equipo")
 	## M-137: xA = el xG de los remates que salieron de un pase.
 	(ev.tiros[0] as Dictionary)["asist"] = "pasador"
-	_comprobar(is_equal_approx(ev.xa(true), float(ev.tiros[0]["xg"])) and ev.xa(false) == 0.0
+	_comprobar(is_equal_approx(ev.xa(true), float(ev.tiros[0]["xg"])) and is_zero_approx(ev.xa(false))
 		and is_equal_approx(float(ev.xa_por_jugador().get("pasador", 0.0)), float(ev.tiros[0]["xg"])), "xA: el pase previo se lleva el xG del remate")
 	## M-162: la tabla y los remates, a CSV.
 	var ruta_csv := ev.a_csv(null, null)

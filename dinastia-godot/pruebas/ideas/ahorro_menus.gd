@@ -24,7 +24,7 @@ func _ready() -> void:
 	var m := ShaderMaterial.new()
 	m.shader = q
 	m.set_shader_parameter("velocidad", 0.2)
-	_comprobar(float(m.get_shader_parameter("velocidad")) == 0.2 and q.get_shader_uniform_list().size() == original.get_shader_uniform_list().size(), "los parámetros siguen funcionando")
+	_comprobar(is_equal_approx(float(m.get_shader_parameter("velocidad")), 0.2) and q.get_shader_uniform_list().size() == original.get_shader_uniform_list().size(), "los parámetros siguen funcionando")
 	## Los de verdad: todos los shaders de fondo con TIME del menú se congelan sin perder uniformes.
 	for ruta: String in ["res://ui/fondo_menu.gdshader", "res://ui/entrada/idioma_fondo.gdshader", "res://ui/entrada/idioma_bandera.gdshader", "res://ui/entrada/pais_bandera.gdshader",
 			"res://ui/entrada/config_club_fondo.gdshader", "res://ui/entrada/menu_modos_logo.gdshader"]:

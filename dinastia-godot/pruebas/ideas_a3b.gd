@@ -38,7 +38,7 @@ func _ideas_a_fichajes_y_cesiones() -> void:
 	var cd := m.cesiones.ceder_con_opcion(j, Cesiones.CESION_OBLIGA)
 	_comprobar(not cd.has("error") and m.cesiones.esta_cedido(j.id) and j.club_id == (cd["destino"] as Club).id, "se cede con obligación de compra al club de destino (584)")
 	var ces := m.cesiones.cesion_de(j.id)
-	_comprobar(String(ces["tipo"]) == "obliga" and int(ces["opcion"]) == int(round(float(j.valor) * 0.85)) and float(ces["sueldo_pct"]) == 1.0, "la obligación fija el 85%% del valor y el destino paga todo el sueldo (584, 585)")
+	_comprobar(String(ces["tipo"]) == "obliga" and int(ces["opcion"]) == int(round(float(j.valor) * 0.85)) and is_equal_approx(float(ces["sueldo_pct"]), 1.0), "la obligación fija el 85%% del valor y el destino paga todo el sueldo (584, 585)")
 	_comprobar(m.cesiones.ahorro_salarial(c.id) == int(round(float(j.sueldo) * float(ces["sueldo_pct"]))), "el ahorro salarial del club cedente es el sueldo pagado por el destino (%d) (585)" % m.cesiones.ahorro_salarial(c.id))
 	var casa_saldo := c.saldo
 	var dest: Club = cd["destino"]

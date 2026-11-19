@@ -155,7 +155,7 @@ func _dist_seg_rect(a: Vector2, b: Vector2, r: Rect2) -> float:
 		var dx := maxf(maxf(r.position.x - p.x, 0.0), p.x - r.end.x)
 		var dz := maxf(maxf(r.position.y - p.y, 0.0), p.y - r.end.y)
 		mejor = minf(mejor, sqrt(dx * dx + dz * dz))
-		if mejor == 0.0:
+		if is_zero_approx(mejor):
 			break
 	return mejor
 

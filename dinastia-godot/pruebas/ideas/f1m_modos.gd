@@ -86,7 +86,7 @@ func _probar() -> void:
 	# --- logo a los 20 s ----------------------------------------------------------
 	_comprobar(not p.logo().visible and p.reloj_logo().one_shot and is_equal_approx(p.reloj_logo().wait_time, 20.0)
 		and not p.reloj_logo().is_stopped(), "el logo no está al abrir: un reloj de 20 s lo espera")
-	_comprobar(p.logo().anchor_left == 1.0 and p.logo().anchor_right == 1.0 and p.logo().offset_top < 60.0,
+	_comprobar(is_equal_approx(p.logo().anchor_left, 1.0) and is_equal_approx(p.logo().anchor_right, 1.0) and p.logo().offset_top < 60.0,
 		"el logo va arriba a la derecha")
 	p.reloj_logo().timeout.emit()
 	_comprobar(p.logo().visible, "a los 20 s aparece el logo")

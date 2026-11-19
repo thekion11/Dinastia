@@ -52,8 +52,8 @@ func _probar() -> void:
 
 	_titulo("ÁRBOL DEL DT: lo que le hace al juego")
 	var v := Entrenamiento.new()
-	_comprobar(v.bonus_dt() == 1.0 and v.techo_cantera_dt() == 0 and v.factor_instrucciones() == 1.0 and not v.ve_tactica_rival(), "sin nada abierto, todo neutro")
-	_comprobar(v.factor_sueldo_dt() == 1.0 and v.factor_sueldo_staff() == 1.0 and v.factor_calma() == 1.0 and v.bono_mediacion() == 0.0 and v.bono_fichajes() == 0.0, "y los factores de sueldo, calma y fichajes también")
+	_comprobar(is_equal_approx(v.bonus_dt(), 1.0) and v.techo_cantera_dt() == 0 and is_equal_approx(v.factor_instrucciones(), 1.0) and not v.ve_tactica_rival(), "sin nada abierto, todo neutro")
+	_comprobar(is_equal_approx(v.factor_sueldo_dt(), 1.0) and is_equal_approx(v.factor_sueldo_staff(), 1.0) and is_equal_approx(v.factor_calma(), 1.0) and is_zero_approx(v.bono_mediacion()) and is_zero_approx(v.bono_fichajes()), "y los factores de sueldo, calma y fichajes también")
 	v.dt_nodos["pizarra"] = true
 	_comprobar(is_equal_approx(v.bonus_dt(), 1.03), "Pizarra fina: +3 %% (%.2f)" % v.bonus_dt())
 	v.dt_nodos["genio"] = true
@@ -68,8 +68,8 @@ func _probar() -> void:
 	v.dt_nodos["mediador"] = true
 	v.dt_nodos["bloque"] = true
 	v.dt_nodos["lectura"] = true
-	_comprobar(is_equal_approx(v.factor_sueldo_dt(), 1.15) and is_equal_approx(v.factor_sueldo_staff(), 0.85) and v.factor_calma() == 2.0, "carisma, contable y psicólogo")
-	_comprobar(is_equal_approx(v.bono_mediacion(), 0.18) and v.factor_instrucciones() == 1.5 and v.ve_tactica_rival(), "mediador, bloque y lectura")
+	_comprobar(is_equal_approx(v.factor_sueldo_dt(), 1.15) and is_equal_approx(v.factor_sueldo_staff(), 0.85) and is_equal_approx(v.factor_calma(), 2.0), "carisma, contable y psicólogo")
+	_comprobar(is_equal_approx(v.bono_mediacion(), 0.18) and is_equal_approx(v.factor_instrucciones(), 1.5) and v.ve_tactica_rival(), "mediador, bloque y lectura")
 	v.dt_nodos["icono"] = true
 	v.dt_nodos["negociador"] = true
 	_comprobar(is_equal_approx(v.bono_fichajes(), 0.16), "fichajes: icono 10 %% + negociador 6 %% = %.2f" % v.bono_fichajes())

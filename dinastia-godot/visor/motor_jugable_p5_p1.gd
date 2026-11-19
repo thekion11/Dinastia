@@ -278,7 +278,7 @@ func _mover_jugadores(delta: float) -> void:
 ## La animación de un jugador según su movimiento (el cuerpo del bucle de `_mover_jugadores`; `res` = [válido, velocidad, va_atrás, distancia_al_balón] por jugador).
 func _animar_uno(idx: int, res: PackedFloat64Array) -> void:
 	var p: Dictionary = jugadores[idx]
-	if res[idx * 4] == 0.0:
+	if is_zero_approx(res[idx * 4]):
 		return
 	var n: Node3D = p["node"]
 	var sp := res[idx * 4 + 1]

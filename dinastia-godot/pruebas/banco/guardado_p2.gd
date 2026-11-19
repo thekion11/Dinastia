@@ -213,7 +213,7 @@ func _probar_guardado_1() -> Array:
 		## el minimo de la formula es 0,82.
 		var sin_nadie := Tactica.efectividad(once_bp, ["habilidad_que_no_existe"], ent_bp)
 		_comprobar(sin_nadie < 1.0, "una jugada sin especialistas rinde por debajo de 1 (%.2f)" % sin_nadie)
-		_comprobar(Tactica.efectividad([], ["cabezazo"], ent_bp) == 1.0,
+		_comprobar(is_equal_approx(Tactica.efectividad([], ["cabezazo"], ent_bp), 1.0),
 			"sin once no se inventa un factor: devuelve 1")
 	## El plan: perdiendo, ofensivo; ganando, cerrojo; empatando, nada.
 	var t_bp := Tactica.new()

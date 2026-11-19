@@ -81,7 +81,7 @@ func vigilar_buses() -> void:
 		var id := (v["nodo"] as Node3D).get_instance_id()
 		if float(v.get("espera", 0.0)) > 0.0:
 			_parados[id] = float(_parados.get(id, 0.0)) + 1.0
-			if float(_parados[id]) == 3.0:
+			if is_equal_approx(float(_parados[id]), 3.0):
 				_eventos.append((v["nodo"] as Node3D).global_position)
 				embarque(v["nodo"])
 				if _eventos.size() > 40:

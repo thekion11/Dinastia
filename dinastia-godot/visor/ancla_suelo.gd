@@ -84,6 +84,6 @@ func _process(delta: float) -> void:
 	var objetivo := necesario() if activo else 0.0
 	## Sube rápido (que el pie no se vea hundido ni un fotograma), baja más despacio.
 	offset = lerpf(offset, objetivo, clampf(delta * (30.0 if objetivo > offset else 8.0), 0.0, 1.0))
-	if offset < 0.002 and objetivo == 0.0:
+	if offset < 0.002 and is_zero_approx(objetivo):
 		offset = 0.0
 	_modelo.position.y = _base_y + offset

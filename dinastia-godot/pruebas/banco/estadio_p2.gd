@@ -434,7 +434,7 @@ func _probar_hud_tv() -> void:
 	## Los dos escudos en una textura, y el aviso de repetición pequeño arriba a la derecha.
 	var ej := MarcadorTV.escudos_juntos(negro, rojo, 28)
 	var rr := RotuloRepeticion.entrar(host, null)
-	_comprobar(ej.get_width() == 56 and ej.get_height() == 28 and rr.visible and rr.anchor_left == 1.0 and rr.offset_top >= 60.0
+	_comprobar(ej.get_width() == 56 and ej.get_height() == 28 and rr.visible and is_equal_approx(rr.anchor_left, 1.0) and rr.offset_top >= 60.0
 		and rr.custom_minimum_size.y <= 40.0 and rr.texto != "" and not rr.texto.begins_with("⟲"),
 		"escudos juntos (%dx%d) y «%s» pequeño (%.0f px de alto) arriba a la derecha" % [ej.get_width(), ej.get_height(), rr.texto, rr.custom_minimum_size.y])
 	host.free()

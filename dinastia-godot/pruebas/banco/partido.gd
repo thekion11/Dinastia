@@ -164,10 +164,10 @@ func _probar_entrada_momento() -> void:
 	motor.balon.position = Vector3(0, 0.11, 0.3)
 	var antes := MotorEntrada._on
 	MotorEntrada._on = false
-	_comprobar(MotorEntrada.radio(motor, def_, victima, 1.25) == 1.25, "apagado devuelve el radio base")
+	_comprobar(is_equal_approx(MotorEntrada.radio(motor, def_, victima, 1.25), 1.25), "apagado devuelve el radio base")
 	MotorEntrada._on = true
 	nv.rotation.y = 0.0   ## mira a +z: DE FRENTE al defensa
-	_comprobar(MotorEntrada.radio(motor, def_, victima, 1.25) == 1.25, "de frente, con el balón en los pies y en el centro: radio base")
+	_comprobar(is_equal_approx(MotorEntrada.radio(motor, def_, victima, 1.25), 1.25), "de frente, con el balón en los pies y en el centro: radio base")
 	nv.rotation.y = PI    ## mira a -z: DE ESPALDAS al defensa
 	_comprobar(absf(MotorEntrada.radio(motor, def_, victima, 1.25) - (1.25 + MotorEntrada.ESPALDAS)) < 0.001, "de espaldas: radio + %.1f" % MotorEntrada.ESPALDAS)
 	motor.balon.position = Vector3(0, 0.11, -1.5)   ## el balón se le ha ido
@@ -236,7 +236,7 @@ func _probar_motor_ciego() -> void:
 	var c2 := MotorFabrica.crear("combinado_c2") as MotorCombinado
 	var c3 := MotorFabrica.crear("combinado_c3") as MotorCombinado
 	_comprobar(c2.piezas["locomocion"] == "siempre" and c2.piezas["decide_con_balon"] == "siempre" and c2.piezas["coloca_sin_balon"] == "league" and c3.piezas["coloca_sin_balon"] == "siempre" and c3.piezas["locomocion"] == "league", "C2 = C1 + locomoción nuestra y C3 = C1 + colocación nuestra")
-	_comprobar(c3.cadencia_coloca == 0.1 and c3._cache_col.is_empty(), "C3 recalcula la colocación cada 0,1 s por jugador (caché vacía al empezar)")
+	_comprobar(is_equal_approx(c3.cadencia_coloca, 0.1) and c3._cache_col.is_empty(), "C3 recalcula la colocación cada 0,1 s por jugador (caché vacía al empezar)")
 	var c4 := MotorFabrica.crear("combinado_c4") as MotorCombinado
 	_comprobar(c4.piezas["locomocion"] == "siempre" and c4.piezas["coloca_sin_balon"] == "siempre" and c4.piezas["decide_con_balon"] == "siempre" and c4.piezas["fisica_balon"] == "league" and MotorEleccion.MOTORES.size() == 4 and not MotorEleccion.MOTORES.has("combinado_c2"), "C4 = decide + colocación + locomoción nuestras; el selector de Ajustes solo ofrece 4 letras (sin C2 ni C3)")
 	c4.free()

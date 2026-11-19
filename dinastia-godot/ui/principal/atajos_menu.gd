@@ -107,7 +107,7 @@ func _capa_modal_encima(sin_lateral := false) -> bool:
 		var c := h as Control
 		if c.visible and not c.is_queued_for_deletion() \
 				and c.mouse_filter == Control.MOUSE_FILTER_STOP \
-				and c.anchor_left == 0.0 and c.anchor_top == 0.0 \
-				and c.anchor_right == 1.0 and c.anchor_bottom == 1.0:
+				and is_zero_approx(c.anchor_left) and is_zero_approx(c.anchor_top) \
+				and is_equal_approx(c.anchor_right, 1.0) and is_equal_approx(c.anchor_bottom, 1.0):
 			return true
 	return false

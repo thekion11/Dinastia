@@ -203,7 +203,7 @@ func _probar_primer_toque() -> void:
 	(p["node"] as Node3D).rotation.y = 0.0
 	motor.balon.position = Vector3(0, 0.11, 0.5)
 	motor.vel_balon = Vector3(0, 0, -6.0)
-	_comprobar(MotorControl.riesgo(motor, p) == 0.0, "balón suave y nadie cerca: control seguro")
+	_comprobar(is_zero_approx(MotorControl.riesgo(motor, p)), "balón suave y nadie cerca: control seguro")
 	(vis[0]["node"] as Node3D).position = Vector3(0.6, 0, 0)
 	var con_rival := MotorControl.riesgo(motor, p)
 	_comprobar(con_rival > 0.0, "con un rival a 0,6 m el control puede irse (%.3f)" % con_rival)
@@ -213,7 +213,7 @@ func _probar_primer_toque() -> void:
 	var frente := MotorControl.riesgo(motor, p)
 	_comprobar(detras > frente and frente > con_rival, "rápido cuesta más, y por la espalda más aún (%.3f > %.3f)" % [detras, frente])
 	_comprobar(detras <= MotorControl.TOPE, "nunca pasa del tope (%.3f)" % detras)
-	_comprobar(gk.is_empty() or MotorControl.riesgo(motor, gk[0]) == 0.0, "el portero no se ve afectado")
+	_comprobar(gk.is_empty() or is_zero_approx(MotorControl.riesgo(motor, gk[0])), "el portero no se ve afectado")
 	(r[1] as Node3D).queue_free()
 
 ## LA TÁCTICA SEGÚN EL MARCADOR Y EL RELOJ (01-11-2026, IA U2, `MotorTacticaViva`).
@@ -224,7 +224,7 @@ func _probar_tactica_viva() -> void:
 	motor.goles = [0, 1]
 	motor.mitad = 1
 	motor.t = 0.0
-	_comprobar(MotorTacticaViva.urgencia(motor, true) == 0.0, "al empezar, perder 0-1 no cambia nada")
+	_comprobar(is_zero_approx(MotorTacticaViva.urgencia(motor, true)), "al empezar, perder 0-1 no cambia nada")
 	motor.mitad = 2
 	motor.t = motor.duracion_mitad * 0.9
 	var pierde := MotorTacticaViva.urgencia(motor, true)
@@ -233,7 +233,7 @@ func _probar_tactica_viva() -> void:
 	motor.goles = [0, 4]
 	_comprobar(MotorTacticaViva.urgencia(motor, true) <= MotorTacticaViva.TOPE, "con tope (%.2f)" % MotorTacticaViva.urgencia(motor, true))
 	motor.control_equipo = 0
-	_comprobar(MotorTacticaViva.urgencia(motor, true) == 0.0, "el equipo del usuario no se toca")
+	_comprobar(is_zero_approx(MotorTacticaViva.urgencia(motor, true)), "el equipo del usuario no se toca")
 	(r[1] as Node3D).queue_free()
 
 ## EL PASE POR CUÁNTO MEJORA (01-11-2026, IA R2, `MotorPaseMejora`, bandera PMOT_PASE): apagada, la cuenta de siempre; encendida,
@@ -261,7 +261,7 @@ func _probar_pase_mejora() -> void:
 	var apagada: Array = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))
 	MotorPaseMejora.ACTIVO = true
 	var encendida: Array = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))
-	_comprobar(float(apagada[1]) == 0.0, "apagada: el rival a 3 m de la línea no cuenta (%.2f)" % float(apagada[1]))
+	_comprobar(is_zero_approx(float(apagada[1])), "apagada: el rival a 3 m de la línea no cuenta (%.2f)" % float(apagada[1]))
 	_comprobar(float(encendida[1]) > 1.0, "encendida: el que llega corriendo, sí (%.2f)" % float(encendida[1]))
 	(vis[0]["node"] as Node3D).position = Vector3(-30.0, 0, 45.0)
 	var adelante: float = MotorPaseMejora.libre_y_riesgo(motor, p, q, Vector3.ZERO, Vector3(0, 0, 16.0))[1]

@@ -296,8 +296,8 @@ func _probar_objetivos_por_club() -> void:
 ## original en casos que se pueden calcular a mano, y la variante `MotorLeague` juega un rato sin romperse (dos clubes de países distintos).
 func _probar_league_nucleo() -> void:
 	_titulo("PARTIDO: NÚCLEO DE LEAGUE-SOCCER")
-	_comprobar(LeagueNucleo.rango_velocidad(1.0) == 0.0 and LeagueNucleo.rango_velocidad(3.0) == 3.5 and LeagueNucleo.rango_velocidad(5.0) == 5.0 and LeagueNucleo.rango_velocidad(7.0) == 8.0, "velocidades cuantizadas como `velocitystate.hpp` (0 · 3,5 · 5 · 8)")
-	_comprobar(LeagueNucleo.mentalidad("DFC") == 0.0 and LeagueNucleo.mentalidad("LD") == 0.25 and LeagueNucleo.mentalidad("MC") == 0.5 and LeagueNucleo.mentalidad("DC") == 1.0, "mentalidad por puesto (AI_GetMindSet)")
+	_comprobar(is_zero_approx(LeagueNucleo.rango_velocidad(1.0)) and is_equal_approx(LeagueNucleo.rango_velocidad(3.0), 3.5) and is_equal_approx(LeagueNucleo.rango_velocidad(5.0), 5.0) and is_equal_approx(LeagueNucleo.rango_velocidad(7.0), 8.0), "velocidades cuantizadas como `velocitystate.hpp` (0 · 3,5 · 5 · 8)")
+	_comprobar(is_zero_approx(LeagueNucleo.mentalidad("DFC")) and is_equal_approx(LeagueNucleo.mentalidad("LD"), 0.25) and is_equal_approx(LeagueNucleo.mentalidad("MC"), 0.5) and is_equal_approx(LeagueNucleo.mentalidad("DC"), 1.0), "mentalidad por puesto (AI_GetMindSet)")
 	var libre := LeagueNucleo.odds_pase(Vector2.ZERO, Vector2(20, 0), LeagueNucleo.CORTO, [])
 	var tapado := LeagueNucleo.odds_pase(Vector2.ZERO, Vector2(20, 0), LeagueNucleo.CORTO, [[Vector2(10, 0.5), Vector2.ZERO, false]])
 	_comprobar(is_equal_approx(libre, 1.0) and tapado < 0.2, "pase sin rivales = 1; con un rival en la línea casi 0 (%.2f)" % tapado)
@@ -312,17 +312,17 @@ func _probar_league_nucleo() -> void:
 	var dec := LeagueNucleo.decidir({"pos": Vector2(-40, 0), "mov": Vector2.ZERO, "lado": 1.0, "puesto": "DC", "tec_pase": 0.7, "tec_tiro": 0.8, "posee_ms": 500.0,
 		"sit": LeagueNucleo.situacion(Vector2(-40, 0), Vector2.ZERO, 1.0, [])}, [], [], Vector2.ZERO, 1.0, RandomNumberGenerator.new())
 	_comprobar(String(dec["accion"]) == "tiro", "solo y a 12 m del arco rival, el delantero tira (%s)" % dec["accion"])
-	_comprobar(is_equal_approx(LeagueNucleo.trampa_offside(-49.0, -1.0, -40.0), -40.0) and absf(LeagueNucleo.trampa_offside(-39.0, -1.0, -40.0) - -38.5) < 0.01 and LeagueNucleo.trampa_offside(-20.0, -1.0, -40.0) == -20.0, "la trampa del fuera de juego sube a los de atrás hasta la línea y comprime los 2 m de delante")
+	_comprobar(is_equal_approx(LeagueNucleo.trampa_offside(-49.0, -1.0, -40.0), -40.0) and absf(LeagueNucleo.trampa_offside(-39.0, -1.0, -40.0) - -38.5) < 0.01 and is_equal_approx(LeagueNucleo.trampa_offside(-20.0, -1.0, -40.0), -20.0), "la trampa del fuera de juego sube a los de atrás hasta la línea y comprime los 2 m de delante")
 	## Fase 3 (IA sin balón): fórmulas de las estrategias por puesto contra el original.
 	_comprobar(LeagueSinBalon.grupo("DFC") == "def" and LeagueSinBalon.grupo("MC") == "med" and LeagueSinBalon.grupo("DC") == "ata", "estrategia por puesto (defensa, medio, ataque)")
-	_comprobar(LeagueSinBalon.sesgo_estatico("def", 5.0) == 0.0 and LeagueSinBalon.sesgo_estatico("def", 40.0) > 0.95, "con la acción cerca se intercambian puestos; lejos, cada uno a su casilla")
-	_comprobar(LeagueSinBalon.sesgo_ataque("ata", 0.5, 1.0) == 0.0 and LeagueSinBalon.sesgo_ataque("ata", 1.5, 1.0) == 1.0, "el apoyo ofensivo crece con la posesión que se desvanece")
+	_comprobar(is_zero_approx(LeagueSinBalon.sesgo_estatico("def", 5.0)) and LeagueSinBalon.sesgo_estatico("def", 40.0) > 0.95, "con la acción cerca se intercambian puestos; lejos, cada uno a su casilla")
+	_comprobar(is_zero_approx(LeagueSinBalon.sesgo_ataque("ata", 0.5, 1.0)) and is_equal_approx(LeagueSinBalon.sesgo_ataque("ata", 1.5, 1.0), 1.0), "el apoyo ofensivo crece con la posesión que se desvanece")
 	var dp := LeagueSinBalon.posicion_defensa(Vector2(-20, 0), Vector2.ZERO, Vector2(-30, 0), -1.0)
 	_comprobar(dp.x < -20.0 and dp.x > -30.0 and absf(dp.y) < 0.01, "el defensor intercepta al rival en su línea hacia el arco (%.1f, %.1f)" % [dp.x, dp.y])
 	_comprobar(LeagueSinBalon.necesita_defender(-1.0, Vector2(-30, 0), Vector2(-30, 5)) and not LeagueSinBalon.necesita_defender(-1.0, Vector2(-30, 0), Vector2(-20, 1)), "solo se mueve si el rival le gana el lado (NeedDefendingMovement)")
 	var mc := LeagueSinBalon.marcajes([["a", Vector2(-40, 0), Vector2.ZERO, false], ["b", Vector2(-10, 20), Vector2.ZERO, false], ["g", Vector2(-50, 0), Vector2.ZERO, true]], [["x", Vector2(-38, 1), Vector2.ZERO, false, false]], -1.0, Vector2.ZERO)
 	_comprobar(mc.get("a", "") == "x" and not mc.has("g"), "marca al hombre el más cercano y bien colocado, nunca el portero")
-	_comprobar(LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 5.0, 0.5, 0.5, 0.0, 0.5) == 8.0 and LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 60.0, 0.5, 0.5, 0.0, 0.5) < 8.0, "pereza: cerca de la acción corre a tope; lejos, afloja")
+	_comprobar(is_equal_approx(LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 5.0, 0.5, 0.5, 0.0, 0.5), 8.0) and LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 60.0, 0.5, 0.5, 0.0, 0.5) < 8.0, "pereza: cerca de la acción corre a tope; lejos, afloja")
 	_comprobar(LeagueReglas.empezar_presion_zona(1.0, 0.2, 8.0) and not LeagueReglas.empezar_presion_zona(0.0, 1.0, 1.0), "presión de zona al perder el balón según la palanca")
 	## Fase 4a: el catálogo de toques (de las animaciones originales) y el filtro de alcance.
 	var cat := LeagueToques.catalogo()

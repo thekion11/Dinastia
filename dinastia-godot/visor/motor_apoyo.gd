@@ -55,7 +55,7 @@ static func fuerza(m: MotorJugable, p: Dictionary, c: Dictionary) -> Vector3:
 				if t > 0.1 and t < 0.9:
 					var perp := w.dot(lado)
 					if absf(perp) < 1.6:
-						f += -lado * signf(perp if perp != 0.0 else 1.0) * (1.6 - absf(perp)) * 2.5
+						f += -lado * signf(perp if not is_zero_approx(perp) else 1.0) * (1.6 - absf(perp)) * 2.5
 	## Avance según el puesto.
 	match m._rol(p):
 		"DC", "ED", "EI":

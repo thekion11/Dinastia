@@ -188,7 +188,7 @@ class MirarCamara extends SkeletonModifier3D:
 		if esq == null:
 			return
 		var g := float(RetratoJugador3D.brazos["grados"])
-		if g != 0.0 and cruzados:
+		if not is_zero_approx(g) and cruzados:
 			for par: Array in [["upperarm_l", 1.0], ["upperarm_r", -1.0]]:
 				var k := esq.find_bone(String(par[0]))
 				if k >= 0:
