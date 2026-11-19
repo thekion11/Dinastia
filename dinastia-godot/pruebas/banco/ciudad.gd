@@ -354,7 +354,8 @@ func _probar_cajero() -> void:
 	_comprobar(r3.cartera.bloqueada and p3._estado == "pin", "tres PIN malos bloquean la tarjeta y no se abre el menú")
 	p3._tecla("✕")
 	_comprobar(not is_instance_valid(p3) or p3.is_queued_for_deletion(), "la tecla ✕ cierra el cajero")
-	_comprobar(CajeroCiudad.banco_de("cajero_1") == CajeroCiudad.banco_de("cajero_1") and not CajeroCiudad.servicio(null, "surtidor_0"), "cada cajero tiene un banco fijo y el gancho ignora lo que no es cajero")
+	var _r1a = CajeroCiudad.banco_de("cajero_1"); var _r1b = CajeroCiudad.banco_de("cajero_1")
+	_comprobar(_r1a == _r1b and not CajeroCiudad.servicio(null, "surtidor_0"), "cada cajero tiene un banco fijo y el gancho ignora lo que no es cajero")
 	## La ventanilla del banco: sin PIN, restablece el PIN y quita el bloqueo.
 	var r4 := Roles.new(m)
 	r4.patrimonio = 10

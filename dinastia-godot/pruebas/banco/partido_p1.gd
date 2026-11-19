@@ -1,7 +1,6 @@
 extends "res://pruebas/banco/base.gd"
 ## [Capa 1/6 de `partido.gd`] _probar_partidos, _probar_previa, _probar_arbitros, _probar_puente3d, _probar_notas
 
-
 func _probar_partidos() -> void:
 	_titulo("PARTIDOS: LA CURVA DE GOLES")
 	var m := Mundo.new()
@@ -358,7 +357,8 @@ func _probar_puente3d() -> void:
 
 	## El aspecto tiene que ser ESTABLE: el mismo jugador, la misma cara siempre.
 	var j: Jugador = a.once()[3]
-	_comprobar(Puente3D.jugador(j)["look"]["piel"] == Puente3D.jugador(j)["look"]["piel"],
+	var _r1a = Puente3D.jugador(j)["look"]["piel"]; var _r1b = Puente3D.jugador(j)["look"]["piel"]
+	_comprobar(_r1a == _r1b,
 		"el mismo jugador tiene siempre el mismo aspecto")
 
 	## Y el portero tiene que CONTRASTAR con sus companeros, o desde la camara

@@ -126,7 +126,9 @@ func _probar_ropa_separada() -> void:
 		var cual := int((h.mesh as ArrayMesh).get_meta("prenda"))
 		mats_ok = mats_ok and int((h.material_override as ShaderMaterial).get_shader_parameter("prenda")) == cual and h.material_override != mat
 	_comprobar(RopaSeparada.vestido(cuerpo) and mats_ok, "vestir(): 3 prendas, cada una con su material (prenda 1, 2, 3)")
-	_comprobar(RopaSeparada.material_de(mat, 2) == RopaSeparada.material_de(mat, 2), "material_de() en caché")
+	var _r1a = RopaSeparada.material_de(mat, 2)
+	var _r1b = RopaSeparada.material_de(mat, 2)
+	_comprobar(_r1a == _r1b, "material_de() en caché")
 	RopaSeparada.vestir(cuerpo, 0, mat)
 	var vivas := padre.get_children().filter(func(h: Node) -> bool: return h.has_meta("prenda_aparte") and not h.is_queued_for_deletion())
 	_comprobar(vivas.size() == 3, "vestir dos veces no duplica: las de antes se van")

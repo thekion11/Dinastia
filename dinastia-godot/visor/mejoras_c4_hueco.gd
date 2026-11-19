@@ -7,7 +7,7 @@ extends RefCounted
 ## tiene que seguir limpia (`C4_HUECO=0` la apaga). Solo en C4 (`MotorCombinado._companero_al_hueco`); contador `c4_hueco_extra`.
 
 static var ACTIVO := OS.get_environment("C4_HUECO") != "0"   ## ENCENDIDA (12-11, 4 tandas de 12: tiros en el área +0,5, goles de jugada +0,1)
-static var LINEA := float(OS.get_environment("C4_HUECO_L")) if OS.get_environment("C4_HUECO_L") != "" else 10.0
+static var linea_v := float(OS.get_environment("C4_HUECO_L")) if OS.get_environment("C4_HUECO_L") != "" else 10.0
 
 static func buscar(m: Object, p: Dictionary) -> Dictionary:
 	if not ACTIVO:
@@ -26,7 +26,7 @@ static func buscar(m: Object, p: Dictionary) -> Dictionary:
 			continue
 		var qp: Vector3 = m.pos(q)
 		var adelante := (qp.z - yo.z) * d
-		if adelante < 3.0 or absf(qp.z - linea) > LINEA or m._adelantado(q, p):
+		if adelante < 3.0 or absf(qp.z - linea) > linea_v or m._adelantado(q, p):
 			continue
 		var espacio := qp + Vector3(0, 0, d * 7.0)
 		espacio.z = clampf(espacio.z, -largo + 4.0, largo - 4.0)

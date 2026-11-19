@@ -69,8 +69,8 @@ static func factor_ganas(limpia: float) -> float:
 ## EL TIRO NO SIEMPRE SALE BIEN (03-11-2026, ciclo 7 de la sesión líder: en el motor el 68 % de los tiros iban a puerta; en el fútbol real, ≈33 %).
 ## Con la bandera `TIRO_REAL=1` cada remate puede fallar por mala ejecución, con probabilidad creciente con la DISTANCIA y la PRESIÓN, y por BLOQUEO si un
 ## defensa tapa la línea de tiro. Un tiro fallido se va fuera de los palos o por encima del larguero; cuenta como tiro pero no va a puerta. ENCENDIDO por defecto (`TIRO_REAL=0` lo apaga). Fuente de las cifras objetivo: ≈25 tiros entre los dos equipos y ≈10 % de acierto (Premier League, estadística publicada).
-static var FALLO_BASE := float(OS.get_environment("TIRO_FALLO_BASE")) if OS.get_environment("TIRO_FALLO_BASE") != "" else 0.07      ## perillas para barrer (3-11)
-static var FALLO_POR_METRO := float(OS.get_environment("TIRO_FALLO_METRO")) if OS.get_environment("TIRO_FALLO_METRO") != "" else 0.010
+static var fallo_base := float(OS.get_environment("TIRO_FALLO_BASE")) if OS.get_environment("TIRO_FALLO_BASE") != "" else 0.07      ## perillas para barrer (3-11)
+static var fallo_por_metro := float(OS.get_environment("TIRO_FALLO_METRO")) if OS.get_environment("TIRO_FALLO_METRO") != "" else 0.010
 const FALLO_PRESION := 0.15
 const BLOQUEO_MAX := 0.7
 static var _real := OS.get_environment("TIRO_REAL") != "0"   ## ENCENDIDO por defecto desde el 3-11 (ciclo 7, medido en 32 partidos); `TIRO_REAL=0` = el motor de antes
@@ -78,7 +78,7 @@ static var _real := OS.get_environment("TIRO_REAL") != "0"   ## ENCENDIDO por de
 static func probabilidad_fallo(m: MotorJugable, p: Dictionary, destino: Vector3, lejos: float, presion: float) -> float:
 	var f := clampf(destino.x / maxf(m.PALO - 0.35, 0.1), -1.0, 1.0)
 	var bloqueo := (1.0 - limpieza(m, p, f, false)) * BLOQUEO_MAX
-	var ejecucion := FALLO_BASE + FALLO_POR_METRO * lejos + (FALLO_PRESION if presion < 1.8 else 0.0)
+	var ejecucion := fallo_base + fallo_por_metro * lejos + (FALLO_PRESION if presion < 1.8 else 0.0)
 	return clampf(1.0 - (1.0 - bloqueo) * (1.0 - ejecucion), 0.0, 0.95)
 
 ## Devuelve el destino del remate, desviado fuera o por encima si falla (con la bandera apagada, el mismo).
@@ -106,15 +106,15 @@ static func alcance(x: float) -> float:
 ## BONO DE AREA (ciclo 7): con `TIRO_REAL=1`, dentro de `AREA_BONO` m del arco las ganas de tirar suben `TIRO_BONO` (0,25 por defecto), para que el reparto de tiros se
 ## parezca al real (≈60 % desde dentro del área; el motor tiraba sobre todo de lejos). Apagado suma 0,0.
 const AREA_BONO := 18.0
-static var BONO_K := float(OS.get_environment("TIRO_BONO")) if OS.get_environment("TIRO_BONO") != "" else 0.4   ## 3-11 ciclo 22: 0,25 → 0,4
+static var bono_k := float(OS.get_environment("TIRO_BONO")) if OS.get_environment("TIRO_BONO") != "" else 0.4   ## 3-11 ciclo 22: 0,25 → 0,4
 
 static func bono_area(dist_arco: float) -> float:
-	return BONO_K if (_real and dist_arco < AREA_BONO) else 0.0
+	return bono_k if (_real and dist_arco < AREA_BONO) else 0.0
 
 ## PACIENCIA (ciclo 23): desde más de `PACIENCIA_D` m del arco las ganas de tirar se multiplican por `TIRO_PACIENCIA` (1,0 = como antes; <1 = el atacante prefiere seguir la jugada hasta el área). Objetivo: más tiros desde dentro (real ≈60 %).
 const PACIENCIA_D := 24.0
-static var PACIENCIA_K := float(OS.get_environment("TIRO_PACIENCIA")) if OS.get_environment("TIRO_PACIENCIA") != "" else 1.0
+static var paciencia_k := float(OS.get_environment("TIRO_PACIENCIA")) if OS.get_environment("TIRO_PACIENCIA") != "" else 1.0
 
 static func paciencia(dist_arco: float) -> float:
-	return PACIENCIA_K if dist_arco > PACIENCIA_D else 1.0
+	return paciencia_k if dist_arco > PACIENCIA_D else 1.0
 

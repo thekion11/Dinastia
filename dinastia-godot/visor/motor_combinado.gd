@@ -242,23 +242,23 @@ func _ctx_forma() -> Array:
 ## HÍBRIDO (11-11, sesión 9, orden 39): las ablaciones de C4 mostraron que NUESTRA colocación sin balón es lo que baja el acierto de pase (84 → 67 %) y
 ## las cadenas de 5+ (2,3 → 0,5), pero también lo que da el roce (duelos 7,7 → 29, regates 9,7 → 18). Con `C_ATAQUE_LEAGUE=1` el equipo que tiene el balón se
 ## apoya con el campo de fuerzas de League (triángulos de pase) y el que defiende sigue con la colocación nuestra (marcaje, presión, duelos).
-static var ATAQUE_LEAGUE := OS.get_environment("C_ATAQUE_LEAGUE") == "1"
+static var ataque_league := OS.get_environment("C_ATAQUE_LEAGUE") == "1"
 
 ## El apoyo de League se usa hasta el ÚLTIMO TERCIO (fracción del campo, `C_TERCIO`; SIN MEDIR: 0 por defecto = la versión medida): allí vuelve nuestra colocación de ataque (desmarques al área, más
 ## remates y ocasiones claras). `C_TERCIO=0` = apoyo de League en todo el campo (la primera versión del híbrido).
-static var TERCIO := float(OS.get_environment("C_TERCIO")) if OS.get_environment("C_TERCIO") != "" else 0.0
+static var tercio := float(OS.get_environment("C_TERCIO")) if OS.get_environment("C_TERCIO") != "" else 0.0
 ## El estado de League (balón previsto, marcajes, presión) se recalcula cada `CADENCIA_ESTADO` s en el híbrido (SIN MEDIR: 0 por defecto = cada paso, la versión medida; 0,1 es lo que hace League).
-static var CADENCIA_ESTADO := float(OS.get_environment("C_CADENCIA_ESTADO")) if OS.get_environment("C_CADENCIA_ESTADO") != "" else 0.0
+static var cadencia_estado := float(OS.get_environment("C_CADENCIA_ESTADO")) if OS.get_environment("C_CADENCIA_ESTADO") != "" else 0.0
 var _t_estado_liga := 0.0
 
 func _en_ultimo_tercio(p: Dictionary) -> bool:
 	var c: Dictionary = poseedor
-	if TERCIO <= 0.0 or c.is_empty() or bool(c["es_local"]) != bool(p["es_local"]):
+	if tercio <= 0.0 or c.is_empty() or bool(c["es_local"]) != bool(p["es_local"]):
 		return false
-	return dir_ataque(bool(p["es_local"])) * pos(c).z > LARGO * (1.0 - 2.0 * TERCIO)
+	return dir_ataque(bool(p["es_local"])) * pos(c).z > LARGO * (1.0 - 2.0 * tercio)
 
 func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
-	if ATAQUE_LEAGUE and _nuestra("coloca_sin_balon") and not _en_ultimo_tercio(p):
+	if ataque_league and _nuestra("coloca_sin_balon") and not _en_ultimo_tercio(p):
 		return super._ia_ataque_sin_balon(p)
 	var r := _sin_flag3(p, true)
 	if _mejoras_c4:
@@ -306,8 +306,8 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 ## en CADA paso (~750 µs/paso de los 1 350 del motor). League lo recalcula cada 0,1 s por jugador (`CADENCIA`); aquí igual: el destino de cada jugador se guarda
 ## `cadencia_coloca` s (escalonado por jugador, para no concentrar el coste en un solo paso) y se recalcula antes si cambia de «ataca/defiende».
 ## `C_CADENCIA_COLOCA=0` lo apaga (el cálculo de siempre en cada paso). Solo vale para el combinado: el motor de siempre no se toca.
-static var CADENCIA_COLOCA := float(OS.get_environment("C_CADENCIA_COLOCA")) if OS.get_environment("C_CADENCIA_COLOCA") != "" else 0.1
-var cadencia_coloca := CADENCIA_COLOCA
+static var cadencia_coloca_v := float(OS.get_environment("C_CADENCIA_COLOCA")) if OS.get_environment("C_CADENCIA_COLOCA") != "" else 0.1
+var cadencia_coloca := cadencia_coloca_v
 var _cache_col: Dictionary = {}   ## id del jugador → {t: caduca, ataque, obj, correr}
 
 func _sin_flag3(p: Dictionary, ataque: bool) -> Vector3:
@@ -331,17 +331,17 @@ func _sin_flag3(p: Dictionary, ataque: bool) -> Vector3:
 ## La predicción y los marcajes de League solo hacen falta si juega alguna pieza de League que los usa.
 func _estado_sin_balon(delta: float) -> void:
 	if _nuestra("coloca_sin_balon") and _nuestra("locomocion"):
-		if not ATAQUE_LEAGUE:
+		if not ataque_league:
 			return
-		if CADENCIA_ESTADO > 0.0:
+		if cadencia_estado > 0.0:
 			if t < _t_estado_liga:
 				return
-			_t_estado_liga = t + CADENCIA_ESTADO
+			_t_estado_liga = t + cadencia_estado
 	super(delta)
 
 func _estado_league(delta: float) -> void:
 	var f3 := MotorLeague.fase3
-	if _nuestra("locomocion") and _nuestra("coloca_sin_balon") and not ATAQUE_LEAGUE:
+	if _nuestra("locomocion") and _nuestra("coloca_sin_balon") and not ataque_league:
 		MotorLeague.fase3 = false   ## sin robos por alcance ni estrategias
 	super(delta)
 	MotorLeague.fase3 = f3

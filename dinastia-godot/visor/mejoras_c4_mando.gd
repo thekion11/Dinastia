@@ -8,8 +8,8 @@ extends RefCounted
 ## el coseno casi no cambia (apuntar 25° de lado cuesta lo mismo que 9 m) y una línea tapada pesa como desviarse ~50°, así que a menudo
 ## sale al que NO apuntabas. Aquí: primero el cono de 30°; si no hay nadie, el de 55°; si tampoco, el de siempre.
 static var PASE_DIR := OS.get_environment("C4_PASE_DIR") == "1"
-static var PASE_DIR_ANG := float(OS.get_environment("C4_PASE_DIR_ANG")) if OS.get_environment("C4_PASE_DIR_ANG") != "" else 0.05   ## nota por grado
-static var PASE_DIR_TAPADA := float(OS.get_environment("C4_PASE_DIR_TAPADA")) if OS.get_environment("C4_PASE_DIR_TAPADA") != "" else 0.6   ## = 12° de desvío
+static var pase_dir_ang := float(OS.get_environment("C4_PASE_DIR_ANG")) if OS.get_environment("C4_PASE_DIR_ANG") != "" else 0.05   ## nota por grado
+static var pase_dir_tapada := float(OS.get_environment("C4_PASE_DIR_TAPADA")) if OS.get_environment("C4_PASE_DIR_TAPADA") != "" else 0.6   ## = 12° de desvío
 
 ## El compañero en la dirección `dir` (vacío = que decida el de siempre).
 static func companero(m: MotorJugable, p: Dictionary, dir: Vector3) -> Dictionary:
@@ -31,9 +31,9 @@ static func companero(m: MotorJugable, p: Dictionary, dir: Vector3) -> Dictionar
 		var ang := rad_to_deg(v.angle_to(d))
 		if ang > 55.0:
 			continue
-		var nota := -ang * PASE_DIR_ANG - dist * 0.02
+		var nota := -ang * pase_dir_ang - dist * 0.02
 		if m._linea_tapada(yo, m.pos(q), local):
-			nota -= PASE_DIR_TAPADA
+			nota -= pase_dir_tapada
 		if ang <= 30.0:
 			if nota > nota30:
 				nota30 = nota
@@ -57,7 +57,7 @@ const GIRO_SECO_V := 0.6   ## por debajo de esta velocidad la física ya no curv
 ## ~1,8-1,9 s y el 90 % de la punta a los ~2 s. Aquí el objetivo del que manejas se acerca para pedir esa curva (también quita el tope de 7,5 m/s).
 ## Medido (sonda, parte A): τ = 0,9 → 10 m en 1,97-2,33 s (algo lento); τ = 0,8 por defecto.
 static var INERCIA := OS.get_environment("C4_INERCIA") == "1"
-static var INERCIA_TAU := float(OS.get_environment("C4_INERCIA_TAU")) if OS.get_environment("C4_INERCIA_TAU") != "" else 0.8
+static var inercia_tau := float(OS.get_environment("C4_INERCIA_TAU")) if OS.get_environment("C4_INERCIA_TAU") != "" else 0.8
 
 ## Retoca el objetivo que puso `_control_usuario` (solo si es el de la palanca: a 3 m en la dirección `manual`).
 static func carrera(m: MotorJugable, p: Dictionary, delta: float) -> void:
@@ -78,7 +78,7 @@ static func carrera(m: MotorJugable, p: Dictionary, delta: float) -> void:
 	if INERCIA and delta > 0.0:
 		var tope := tope_de(m, p)
 		var sp := vel.length()
-		var quiere := sp + (tope - sp) * clampf(delta / INERCIA_TAU, 0.0, 1.0)
+		var quiere := sp + (tope - sp) * clampf(delta / inercia_tau, 0.0, 1.0)
 		p["objetivo"] = yo + man.normalized() * maxf(quiere / 2.5, 0.3)
 	elif PUNTA:
 		p["objetivo"] = yo + man.normalized() * 4.0

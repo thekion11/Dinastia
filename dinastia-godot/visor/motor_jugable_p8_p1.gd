@@ -1,7 +1,7 @@
 extends "res://visor/motor_jugable_p7.gd"
 ## (Parte 1 de 2 de `motor_jugable_p8.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `motor_jugable_p8.gd`, conserva la clase.)
 
-static var ANTICIPA := OS.get_environment("PMOT_ANT") != "0"   ## encendido el 3-11 (vídeo del dueño: persecución en vez de intercepción); PMOT_ANT=0 = antes
+static var anticipa := OS.get_environment("PMOT_ANT") != "0"   ## encendido el 3-11 (vídeo del dueño: persecución en vez de intercepción); PMOT_ANT=0 = antes
 ## [Capa 8/12 de `motor_jugable.gd`] _forma, _zona_de_llegada, _ia_ataque_sin_balon, _gatillo_presion, _linea_defensiva, _ia_defensa … (+10)
 
 ## La forma del equipo: la posición de la formación, movida con el balón.
@@ -195,7 +195,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 			return b + (arco - b).normalized() * 5.0
 		p["correr"] = true
 		## (Sondas, PMOT_ANT=1: el que presiona va adonde VA a estar el portador.)
-		if ANTICIPA and not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
+		if anticipa and not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
 			var ba := b + _plano(poseedor["vel"] as Vector3) * clampf(pos(p).distance_to(b) / 8.0, 0.0, 0.5)
 			return ba + (arco - ba).normalized() * 0.8
 		return b + (arco - b).normalized() * 0.8

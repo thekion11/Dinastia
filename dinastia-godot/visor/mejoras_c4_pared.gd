@@ -7,7 +7,7 @@ extends RefCounted
 ##   · DESMARQUE: el que la soltó arranca al espacio que tenía delante (8 m hacia el arco, corrido hacia el centro);
 ##   · VUELTA: el compañero, al recibir, se la devuelve DE PRIMERA al hueco, si el que corre sigue habilitado.
 ## Contadores: `c4_pared_ida`, `c4_pared_vuelta`, `c4_pared_ok` (el de la ida recibe la vuelta).
-static var ACTIVA := OS.get_environment("C4_PARED") == "1"
+static var activa := OS.get_environment("C4_PARED") == "1"
 const PARED_T := 2.5
 const IDA_MIN := 4.0
 const IDA_MAX := 12.0
@@ -19,7 +19,7 @@ static func _estado(m: Object) -> Dictionary:
 	return e
 
 static func ida(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
-	if not ACTIVA:
+	if not activa:
 		return false
 	var local := bool(p["es_local"])
 	var yo: Vector3 = m.pos(p)
@@ -93,13 +93,13 @@ static func _rival_cerca(m: Object, punto: Vector3, local: bool, r: float) -> bo
 ## (rival a < `APOYO_PRESION` m) no tenía a quién darla. El compañero de campo más cercano (a < 15 m) se ofrece de cara: a `APOYO_D` m del
 ## portador, del lado contrario al rival que aprieta y algo por detrás, probando tres ángulos hasta tener la línea de pase limpia.
 ## Destino o Vector3.INF. Contador: `c4_apoyo` (pasos en que alguien se ofrece, por cada 10).
-static var APOYO := OS.get_environment("C4_APOYO") != "0"   ## ENCENDIDO (12-11, medido 12+12): pases por posesión, acierto y regates ganados suben y las pérdidas por entrada bajan en las dos tandas
+static var apoyo_v := OS.get_environment("C4_APOYO") != "0"   ## ENCENDIDO (12-11, medido 12+12): pases por posesión, acierto y regates ganados suben y las pérdidas por entrada bajan en las dos tandas
 const APOYO_PRESION := 3.0
 const APOYO_D := 7.0
-static var APOYO2 := OS.get_environment("C4_APOYO2") == "1"   ## el tercer hombre (12-11, en medición)
+static var apoyo2 := OS.get_environment("C4_APOYO2") == "1"   ## el tercer hombre (12-11, en medición)
 const APOYO2_D := 12.0
 static func apoyo(m: Object, p: Dictionary) -> Vector3:
-	if not APOYO or bool(p["por"]):
+	if not apoyo_v or bool(p["por"]):
 		return Vector3.INF
 	var c: Dictionary = m.poseedor
 	if c.is_empty() or bool(c["es_local"]) != bool(p["es_local"]) or bool(c["por"]):
@@ -117,7 +117,7 @@ static func apoyo(m: Object, p: Dictionary) -> Vector3:
 		if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and String(q["id"]) != String(p["id"]) and String(q["id"]) != String(c["id"]):
 			if pc.distance_to(m.pos(q)) < mi_d:
 				antes += 1
-	if antes > (1 if APOYO2 else 0) or (antes == 0 and mi_d > 15.0):
+	if antes > (1 if apoyo2 else 0) or (antes == 0 and mi_d > 15.0):
 		return Vector3.INF
 	var local := bool(p["es_local"])
 	var d: float = m.dir_ataque(local)
@@ -146,11 +146,11 @@ static func apoyo(m: Object, p: Dictionary) -> Vector3:
 ##   · el LATERAL del lado contrario al balón se incorpora `ANCHO_LATERAL` m;
 ##   · PROFUNDIDAD: el 9 se planta a la altura del último defensa rival (fija a los centrales, habilitado).
 ## Variante 2 (`C4_ANCHO=2`): además, los mediocentros lejos del balón se reparten los carriles interiores (±40 % del ancho).
-static var ANCHO_MODO := int(OS.get_environment("C4_ANCHO")) if OS.get_environment("C4_ANCHO") != "" else 0
+static var ancho_modo := int(OS.get_environment("C4_ANCHO")) if OS.get_environment("C4_ANCHO") != "" else 0
 const ANCHO_LEJOS := 15.0
 const ANCHO_LATERAL := 8.0
 static func ancho(m: Object, p: Dictionary, r: Vector3) -> Vector3:
-	if ANCHO_MODO <= 0 or r == Vector3.INF:
+	if ancho_modo <= 0 or r == Vector3.INF:
 		return r
 	var b: Vector3 = (m.balon as Node3D).position
 	var yo: Vector3 = m.pos(p)
@@ -176,7 +176,7 @@ static func ancho(m: Object, p: Dictionary, r: Vector3) -> Vector3:
 			if ultimo > -INF and ultimo * d * d > r.z * d:
 				r.z = d * (ultimo - 0.6)
 		"MC":
-			if ANCHO_MODO >= 2:
+			if ancho_modo >= 2:
 				r.x = lado * maxf(absf(r.x), float(m.ANCHO) * 0.4)
 	return r
 
@@ -184,11 +184,11 @@ static func ancho(m: Object, p: Dictionary, r: Vector3) -> Vector3:
 ## pases perdidos por partido, 19 salían con la línea LIMPIA y 18 los cortó un rival que estaba a más de 3 m de la línea y llegó en más
 ## de 1 s: el pase raso iba lento (llegaba a 4 + 1,5·d m/s) y daba tiempo a correr a cortarlo. En C4 (`C4_PASE_TENSO`), el pase raso a
 ## 10-`TENSO_MAX` m con la línea limpia sale tenso (llega a 9 + 1,5·d m/s, ×1,15; el que ya existía). `=2`: hasta 40 m.
-static var PASE_TENSO := int(OS.get_environment("C4_PASE_TENSO")) if OS.get_environment("C4_PASE_TENSO") != "" else 0
+static var pase_tenso := int(OS.get_environment("C4_PASE_TENSO")) if OS.get_environment("C4_PASE_TENSO") != "" else 0
 static func tenso(m: Object, p: Dictionary, q: Dictionary) -> bool:
-	if PASE_TENSO <= 0:
+	if pase_tenso <= 0:
 		return false
 	var dist: float = m.pos(p).distance_to(m.pos(q))
-	if dist < 10.0 or dist > (40.0 if PASE_TENSO >= 2 else 32.0):
+	if dist < 10.0 or dist > (40.0 if pase_tenso >= 2 else 32.0):
 		return false
 	return not m._linea_tapada(m.pos(p), m.pos(q), bool(p["es_local"]))

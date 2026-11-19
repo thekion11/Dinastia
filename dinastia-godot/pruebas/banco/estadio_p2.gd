@@ -48,7 +48,9 @@ func _probar_fundir_r2() -> void:
 		mt.albedo_color = colores[i]
 		mi.material_override = mt
 		r3.add_child(mi)
-	_comprobar(FundirPiezas._firma_material(StandardMaterial3D.new()) == FundirPiezas._firma_material(StandardMaterial3D.new()), "R2: dos materiales iguales tienen la misma firma")
+	var _r1a = FundirPiezas._firma_material(StandardMaterial3D.new())
+	var _r1b = FundirPiezas._firma_material(StandardMaterial3D.new())
+	_comprobar(_r1a == _r1b, "R2: dos materiales iguales tienen la misma firma")
 	FundirPiezas.fundir_profundo(r3, "Fundido", [], true)
 	_comprobar((r3.get_node("Fundido") as MeshInstance3D).mesh.get_surface_count() == 2, "R2: 3 materiales (2 iguales) → 2 superficies con `por_firma`")
 	r3.queue_free()

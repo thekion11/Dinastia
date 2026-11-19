@@ -8,7 +8,7 @@ extends RefCounted
 ##    bloquea con probabilidad `BLOQUEO_P`·(1 − distancia a la línea / `ANCHO_CUERPO`) (contador `tiro_bloqueado`, como el bloqueo de siempre).
 ## La precisión bajo presión ya la cubre `C4_PRESION_AREA` (AAA): se combina con ella, no se repite.
 static var ACTIVO := OS.get_environment("C4_BLOQUEO_REMATE") == "1"
-static var BLOQUEO_P := float(OS.get_environment("C4_BLOQUEO_P")) if OS.get_environment("C4_BLOQUEO_P") != "" else 0.5
+static var bloqueo_p := float(OS.get_environment("C4_BLOQUEO_P")) if OS.get_environment("C4_BLOQUEO_P") != "" else 0.5
 const ZONA := 22.0
 const DELANTE := 1.4
 const CERCA := 2.5
@@ -64,7 +64,7 @@ static func bloqueo_cuerpo(m: Object, p: Dictionary, rng: RandomNumberGenerator)
 		if lat < mejor_lat:
 			mejor_lat = lat
 			mejor = q
-	if mejor.is_empty() or rng.randf() >= BLOQUEO_P * (1.0 - mejor_lat / ANCHO_CUERPO):
+	if mejor.is_empty() or rng.randf() >= bloqueo_p * (1.0 - mejor_lat / ANCHO_CUERPO):
 		return
 	m._contar("tiro_bloqueado")
 	m._cerrar_tiro("fallo")

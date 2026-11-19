@@ -44,7 +44,9 @@ func _probar() -> void:
 				con_e += 1
 	_comprobar(mal == 0 and propios * 2 > total, "%d recorridos en los paraderos con la forma de la Red; %d del propio sector" % [total, propios])
 	_comprobar(con_c > con_e * 3 and con_e > 0 and alim > 0, "hay «c» (%d), «e» muy rara (%d) y locales (%d)" % [con_c, con_e, alim])
-	_comprobar(ParaderoRed.codigo(1234) == ParaderoRed.codigo(1234) and ParaderoRed.codigo(1) != ParaderoRed.codigo(2) and ParaderoRed.codigo(7).begins_with("PA"), "el código «PA####» es estable por paradero")
+	var _r1a = ParaderoRed.codigo(1234)
+	var _r1b = ParaderoRed.codigo(1234)
+	_comprobar(_r1a == _r1b and ParaderoRed.codigo(1) != ParaderoRed.codigo(2) and ParaderoRed.codigo(7).begins_with("PA"), "el código «PA####» es estable por paradero")
 	_comprobar(RecorridosRed.sector_del_codigo(ParaderoRed.codigo(1234, 300)) == 300 and RecorridosRed.existe(ParaderoRed.codigo(1234, 300)), "el código es de un paradero real del mapa y lleva su sector delante")
 	_comprobar(ParaderoRed.registro.size() == 1 and String(ParaderoRed.registro[0]["codigo"]) == ParaderoRed.codigo(1234, 200), "queda en el registro (para la app del móvil)")
 	## Con el código del mapa, el cartel lleva el nombre de su calle y sus recorridos.

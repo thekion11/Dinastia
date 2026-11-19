@@ -28,7 +28,7 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 		if _rng.randf() < _prob_rechace_fuera():
 			## A córner: hacia FUERA del palo más cercano (antes, con el tiro entre
 			## el portero y el centro del arco, la manopla lo metía en su red).
-			if PULIDO:
+			if pulido:
 				lado_r = signf(cruce.x + 0.01)
 			vel_balon = Vector3(lado_r * _rng.randf_range(6, 11), _rng.randf_range(1, 4), vel_balon.z * 0.3)
 		else:
@@ -63,7 +63,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 				if manual and absf(guia) < 0.3 and tz > 0.55:
 					return false
 				p["_patada_vista"] = _n_patada
-				if PULIDO and String(_tiro_vivo.get("clase", "")) == "penal":
+				if pulido and String(_tiro_vivo.get("clase", "")) == "penal":
 					_penal_en_juego(p, cruce)
 					return true
 				## Alcance: hasta ~3 m con un gran portero, menos con menos tiempo; a la escuadra cuesta más.
@@ -88,7 +88,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 						return true
 					else:
 						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
-				if TIRO_PULIDO: prob *= (1.0 - PARADA_LEJOS * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
+				if TIRO_PULIDO: prob *= (1.0 - parada_lejos * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
 				prob = _prob_parada_extra(p, b, prob)   ## gancho (sesión 15): aquí no cambia nada
 				prob = _prob_parada_cuerpo(lat, alcance, prob)   ## gancho (17-11): aquí no cambia nada
 				if lat < alcance and _rng.randf() < prob:
@@ -260,7 +260,7 @@ func _tirar(p: Dictionary, apunte_arg: Vector2, fuerza: float) -> void:
 	## paraba casi todos (84 %). Ahora hasta el bueno se desvía algo más desde
 	## lejos y con un rival encima; el penal, quieto y a 11 m, no.
 	if TIRO_PULIDO and clase != "penal":
-		error += (0.45 + lejos * PUNTERIA) * (1.15 - tec * 0.5) * (1.3 if _presion(p) < 1.8 else 1.0)
+		error += (0.45 + lejos * punteria) * (1.15 - tec * 0.5) * (1.3 if _presion(p) < 1.8 else 1.0)
 	error = _error_tiro_extra(p, lejos, error, clase)   ## gancho (sesión 15): aquí no cambia nada
 	var x := clampf(apunte_arg.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error)
 	var y := clampf(0.35 + fuerza * 1.2 + apunte_arg.y * 0.6 + _rng.randf_range(-error, error) * 0.6, 0.15, 3.4)

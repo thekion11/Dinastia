@@ -365,9 +365,9 @@ func _guiar_jugada(delta: float) -> void:
 			return
 		_aplicar_fase()
 func prisa() -> float:
-	if PRISA_REF <= 0.0 or duracion_mitad <= 0.0:
+	if prisa_ref <= 0.0 or duracion_mitad <= 0.0:
 		return 1.0
-	return clampf(PRISA_REF / duracion_mitad, 1.0, 2.0)
+	return clampf(prisa_ref / duracion_mitad, 1.0, 2.0)
 
 ## ¿`q` está ahora en posición adelantada respecto de un pase de `p`?
 func _adelantado(q: Dictionary, p: Dictionary) -> bool:

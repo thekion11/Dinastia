@@ -10,7 +10,7 @@ extends RefCounted
 ##  · AVANCE: delanteros y extremos empujan hacia el arco rival; defensas, un poco hacia atrás.
 ## La fuerza total se limita a `TOPE` m para que el compañero no se vaya de su zona. `SIN_APOYO=1` = el ofrecimiento fijo de antes.
 static var ALCANCE := float(OS.get_environment("APOYO_ALCANCE")) if OS.get_environment("APOYO_ALCANCE") != "" else 18.0   ## perilla ciclo 19 (3-11)
-static var ANILLO := float(OS.get_environment("APOYO_ANILLO")) if OS.get_environment("APOYO_ANILLO") != "" else 12.0   ## perilla del ciclo 15 (3-11)
+static var anillo := float(OS.get_environment("APOYO_ANILLO")) if OS.get_environment("APOYO_ANILLO") != "" else 12.0   ## perilla del ciclo 15 (3-11)
 const SEPARA := 9.0
 const LEJOS_RIVAL := 6.0
 const TOPE := 12.0
@@ -31,7 +31,7 @@ static func fuerza(m: MotorJugable, p: Dictionary, c: Dictionary) -> Vector3:
 	if d < 0.01:
 		a = Vector3(1, 0, 0)
 		d = 0.01
-	f += -a / d * clampf(d - ANILLO, -6.0, 6.0) * 0.8
+	f += -a / d * clampf(d - anillo, -6.0, 6.0) * 0.8
 	## Repulsión de compañeros y de rivales.
 	for q: Dictionary in m.jugadores:
 		if q == p or q == c or bool(q["por"]):

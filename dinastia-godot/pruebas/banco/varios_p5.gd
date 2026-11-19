@@ -350,7 +350,11 @@ func _probar_marca() -> void:
 	if not tabla.is_empty():
 		var f0: Array = tabla[0]
 		var n0 := String(f0[0])
-		_comprobar(Marca.forma_de(n0) == Marca.forma_de(n0) and Marca.patron_de(n0) == Marca.patron_de(n0),
+		var _r1a = Marca.forma_de(n0)
+		var _r1b = Marca.forma_de(n0)
+		var _r2a = Marca.patron_de(n0)
+		var _r2b = Marca.patron_de(n0)
+		_comprobar(_r1a == _r1b and _r2a == _r2b,
 			"la forma y el patron de una marca no cambian entre llamadas")
 		_comprobar(Marca.iniciales(n0) != "", "las iniciales nunca salen vacias (\"%s\" -> \"%s\")" % [n0, Marca.iniciales(n0)])
 	## Y DOS MARCAS DISTINTAS NO COMPARTEN SIEMPRE EL MISMO LOGO -si compartieran
