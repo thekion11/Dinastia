@@ -3,6 +3,8 @@ extends "res://nucleo/partido_p2.gd"
 ## [Capa 3/3 de `partido.gd`] simular_minuto, _por_id, gol_externo, anular_gol_externo, remate_externo, tarjeta_externa … (+16)
 
 func simular_minuto() -> void:
+	if minuto == 0 and not motor_externo and not terminado_ya:   ## (19-11) «menos de siete» también en el saque (sin azar; igual en `PartidoRapido`; el 3D no)
+		_revisar_siete()
 	if terminado_ya:
 		return
 	## LA INVASIÓN, DENTRO DEL MINUTO (25-9-2026, plan maestro B2). Antes solo
@@ -81,9 +83,7 @@ func simular_minuto() -> void:
 	if not motor_externo:
 		if rng.randf() < p_l:
 			_atacar(local, once_local, true)
-		## (19-11) Si el ataque del local SUSPENDE el partido (una roja deja a alguien con menos de siete, `_revisar_siete`), el
-		## minuto se acaba ahí: antes el visitante atacaba igual y podía marcar con el partido ya terminado (un 3-0 de mesa quedaba
-		## 3-1, y la crónica no cuadraba: `ideas/s5_auditoria_partidos`). Igual en la gemela C++ (`nativo/src/partido_90.cpp`).
+		## (19-11) Si el ataque del local suspende el partido (menos de siete), el minuto acaba ahí (antes el visitante marcaba igual; gemela en `partido_90.cpp`).
 		if not terminado_ya and rng.randf() < p_v:
 			_atacar(visita, once_visita, false)
 	if terminado_ya:

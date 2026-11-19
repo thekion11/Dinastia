@@ -222,6 +222,12 @@ func _probar_habilidades_en_resultados() -> void:
 		var r := {"g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "bono": yo.bonus_ataque}
 		seed(4242)
 		for i in 300:
+			## (19-11) Sin pasar semanas, sanciones y lesiones se acumulan: con «menos de siete» también en el saque, el rival acababa
+			## perdiendo 3-0 de mesa todos los partidos. Como en `_probar_partidos` (4-11), cada uno sale sano: se mide la habilidad, no el desgaste.
+			for c: Club in [yo, rival]:
+				for j: Jugador in c.plantilla:
+					j.suspension = 0
+					j.lesion = 0
 			var pa := Partido.new(yo, rival, true)
 			var res: Dictionary = pa.simular()
 			r["gf"] += int(res["local"])
