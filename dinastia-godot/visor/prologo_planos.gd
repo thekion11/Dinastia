@@ -4,13 +4,13 @@ extends Node
 ## Al llegar a cada sala del recorrido, ANTES de que hable el mentor, un plano de establecimiento: franjas de cine, el nombre de la sala con el
 ## color del club y la cámara recorriendo la sala de una esquina alta a la otra; al final vuelve, suave, a tus ojos (primera persona, orden 45).
 ## Qué esquina, qué altura y hacia dónde se mueve salen de la semilla club + paso: cada club ve su edificio desde otro sitio.
-## (La banda no tiene plano: su suelo queda dentro de la red de la portería y haría falta una cámara a medida.) Se salta con E / Intro / Espacio / X / A o un clic. Es la base de la cinemática pregrabada (mismos planos, grabados con `--write-movie`).
+## Se salta con E / Intro / Espacio / X / A o un clic. Es la base de la cinemática pregrabada (mismos planos, grabados con `--write-movie`).
 
 signal terminado
 
 const SEG_RECORRIDO := 3.0
 const SEG_VUELTA := 0.7
-const SALAS := ["puerta", "vestuario", "tunel", "utileria", "enfermeria", "presidente", "video", "prensa", "comedor", "oficina"]
+const SALAS := ["puerta", "vestuario", "tunel", "campo", "utileria", "enfermeria", "presidente", "video", "prensa", "comedor", "oficina"]
 const ALTO_FRANJA := 0.11   ## fracción de la pantalla que tapa cada franja de cine
 
 var _cam: Camera3D
@@ -20,6 +20,7 @@ var _vuelta := Transform3D.IDENTITY
 var _capa: CanvasLayer
 var _franjas: Array[ColorRect] = []
 var _rotulo: VBoxContainer
+var _filtro: ColorRect
 var _tw: Tween
 var _saltar := false
 var _activo := false
@@ -69,6 +70,18 @@ static func poses(r: Rect2, y0: float, semilla: int) -> Array[Transform3D]:
 	return [Transform3D(Basis.IDENTITY, a).looking_at(mira_a, Vector3.UP), Transform3D(Basis.IDENTITY, b).looking_at(mira_b, Vector3.UP)]
 
 ## La fachada del club vista desde la calle (paso «puerta»): de lejos y alto, a la altura de la marquesina, acercándose a la puerta.
+## La banda (paso «campo»): a ras de la línea de banda, de un lado a otro del banquillo, mirando al césped y al otro lado del estadio; `banda` es su suelo
+## en el mundo y `centro` el centro del campo (`CityBuilder.ESTADIO_EN`). Desde el centro de la zona la cámara quedaba dentro de la red de la portería.
+static func poses_banda(banda: Rect2, y0: float, centro: Vector3, semilla: int) -> Array[Transform3D]:
+	var c := Vector3(banda.get_center().x, y0, banda.get_center().y)
+	var d := Vector3(centro.x - c.x, 0.0, centro.z - c.z).normalized()
+	var perp := d.cross(Vector3.UP)
+	var lado := 1.0 if absi(semilla) % 2 == 0 else -1.0
+	var a := c + perp * 9.0 * lado + Vector3(0, 1.7, 0)
+	var b := c + perp * -5.0 * lado + d * 1.5 + Vector3(0, 2.8, 0)
+	return [Transform3D(Basis.IDENTITY, a).looking_at(centro + perp * -6.0 * lado + Vector3(0, 1.2, 0), Vector3.UP),
+		Transform3D(Basis.IDENTITY, b).looking_at(centro + perp * 8.0 * lado + Vector3(0, 2.0, 0), Vector3.UP)]
+
 ## `obstaculos`: cajas de setos, jardineras y árboles (`PrologoMentor.obstaculos`): se elige el primer punto de partida desde el que se ve la puerta.
 static func poses_fachada(puerta: Vector3, semilla: int, obstaculos: Array[AABB] = []) -> Array[Transform3D]:
 	var lado := 1.0 if absi(semilla) % 2 == 0 else -1.0
@@ -168,6 +181,9 @@ func _montar_capa(sala: String, club: String, color: Color) -> void:
 		f.anchor_bottom = 0.0 if arriba else 1.0
 		_capa.add_child(f)
 		_franjas.append(f)
+	_filtro = _crear_filtro()
+	_capa.add_child(_filtro)
+	_capa.move_child(_filtro, 0)   ## debajo de las franjas y del rótulo
 	_rotulo = VBoxContainer.new()
 	_rotulo.anchor_top = 1.0 - ALTO_FRANJA - 0.17
 	_rotulo.anchor_bottom = 1.0 - ALTO_FRANJA - 0.02
@@ -202,4 +218,46 @@ func _entrar_capa(entra: bool) -> void:
 		var f := _franjas[i]
 		var arriba := i == 0
 		tw.tween_property(f, "offset_bottom" if arriba else "offset_top", (alto if arriba else -alto) if entra else 0.0, 0.4).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(_filtro.material, "shader_parameter/fuerza", 1.0 if entra else 0.0, 0.5)
 	tw.tween_property(_rotulo, "modulate:a", 1.0 if entra else 0.0, 0.5 if entra else 0.25).set_delay(0.35 if entra else 0.0)
+
+## EL FILTRO DE REALISMO (solo mientras dura el plano; 18-11, idea del dueño): un retoque de «cine» sobre lo que ya se ve, en un solo pase de pantalla
+## (sirve igual en Compatibility que en Forward+): curva de contraste con hombros suaves, saturación algo contenida, luces cálidas y sombras frías,
+## halo suave en las luces fuertes, viñeta, aberración cromática en los bordes y grano de película. `fuerza` (0-1) lo enciende y lo apaga con el fundido.
+## SIN_FILTRO_CINE=1 lo apaga (el «antes»).
+const SHADER_FILTRO := """
+shader_type canvas_item;
+uniform sampler2D pantalla : hint_screen_texture, filter_linear_mipmap, repeat_disable;
+uniform float fuerza = 0.0;
+float ruido(vec2 p) { vec3 q = fract(vec3(p.xyx) * 0.1031); q += dot(q, q.yzx + 33.33); return fract((q.x + q.y) * q.z); }   // sin `sin`: sin rayas con coordenadas grandes
+void fragment() {
+	vec2 uv = SCREEN_UV;
+	vec2 c = uv - 0.5;
+	float borde = dot(c, c);
+	vec2 ab = c * borde * 0.012 * fuerza;   // aberración cromática: más en los bordes
+	vec3 col = vec3(texture(pantalla, uv + ab).r, texture(pantalla, uv).g, texture(pantalla, uv - ab).b);
+	vec3 halo = textureLod(pantalla, uv, 3.0).rgb;   // halo: lo claro de alrededor sangra un poco
+	col += max(halo - 0.85, 0.0) * 0.18 * fuerza;
+	float lum = dot(col, vec3(0.299, 0.587, 0.114));
+	col = mix(vec3(lum), col, 1.0 - 0.1 * fuerza);   // saturación -10 %
+	col = mix(col, col * col * (3.0 - 2.0 * col), 0.4 * fuerza);   // curva S: contraste con hombros suaves
+	col = mix(col, col * vec3(1.03, 1.0, 0.95), smoothstep(0.5, 1.0, lum) * fuerza);   // luces cálidas
+	col = mix(col, col * vec3(0.93, 0.98, 1.06), (1.0 - smoothstep(0.0, 0.45, lum)) * fuerza);   // sombras frías
+	col *= 1.0 - smoothstep(0.06, 0.4, borde) * 0.5 * fuerza;   // viñeta
+	col += (ruido(uv * vec2(1280.0, 720.0) + fract(TIME) * 100.0) - 0.5) * 0.03 * fuerza;   // grano
+	COLOR = vec4(col, 1.0);
+}
+"""
+
+static func _crear_filtro() -> ColorRect:
+	var f := ColorRect.new()
+	f.set_anchors_preset(Control.PRESET_FULL_RECT)
+	f.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sh := Shader.new()
+	sh.code = SHADER_FILTRO
+	var m := ShaderMaterial.new()
+	m.shader = sh
+	m.set_shader_parameter("fuerza", 0.0)
+	f.material = m
+	f.visible = OS.get_environment("SIN_FILTRO_CINE") == ""
+	return f

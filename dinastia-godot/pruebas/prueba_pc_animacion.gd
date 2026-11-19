@@ -106,6 +106,14 @@ func _planos(exp: Node3D, cam: Camera3D) -> void:
 	var f := PrologoPlanos.poses_fachada(Vector3(10, 0, 5), 3)
 	_comprobar((-f[1].basis.z).z < 0.0 and f[0].origin.z > f[1].origin.z, "la fachada se acerca a la puerta mirándola")
 	_comprobar(PrologoPlanos.tiene("puerta") and PrologoPlanos.tiene("oficina") and not PrologoPlanos.tiene("llegada"), "qué pasos tienen plano")
+	var b := PrologoPlanos.poses_banda(Rect2(-12.0, 52.0, 24.0, 8.0), 0.0, Vector3.ZERO, 5)
+	_comprobar(b.size() == 2 and (-b[0].basis.z).z < 0.0 and b[0].origin.y > 1.0 and b[0].origin.y < 3.0, "la banda: dos poses a ras de línea de banda mirando al campo")
+	var filtro := PrologoPlanos._crear_filtro()
+	add_child(filtro)
+	await get_tree().process_frame
+	_comprobar(filtro.material is ShaderMaterial and (filtro.material as ShaderMaterial).shader.code.contains("fuerza") and float((filtro.material as ShaderMaterial).get_shader_parameter("fuerza")) == 0.0 \
+		and filtro.mouse_filter == Control.MOUSE_FILTER_IGNORE, "el filtro de realismo del plano compila, empieza apagado y no se come el ratón")
+	filtro.queue_free()
 	var ojos := cam.global_transform
 	for saltar in [false, true]:
 		var pl := PrologoPlanos.new()
