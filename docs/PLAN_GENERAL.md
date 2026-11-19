@@ -48,6 +48,12 @@ Cuando algo se termine: se borra de aquí (no se tacha) tras pasar su prueba (ba
 - Que quepa en pocas pantallas. El banco lo regenera y FALLA si el archivo subido difiere del generado (para que no envejezca). Una línea en `CLAUDE.md` que lo señale.
 - Versión visual para el dueño: después, con el mismo script (no ahora).
 
+## PRÓLOGO Y CLUB 3D (18-11, rama `claude/admiring-goldberg-mkesmv`) — decisión del dueño y lo que falta
+- DECIDIDO por el dueño: prólogo MIXTO (cinemáticas pregrabadas con planos pensados + lo interactivo en tiempo real) que VARÍE según el club; criterio = su veredicto sobre capturas de 3 clubes de 3 países. Orden: 1) luz y materiales de las salas (hecho: paredes y suelos con `t_pared`/`t_suelo` en `VestuarioRealista.ESTILOS`, zócalo y cenefa del club, piezas CC0 de Poly Haven en oficina, despacho, enfermería, comedor y sala de vídeo; prólogo ya en primera persona), 2) planos de cámara por paso del guion (base del pregrabado), 3) personajes.
+- Falta: los tonos de piel OSCUROS salen aplastados (casi negro o pardo rojizo) — viene de la biblioteca de caras (`BibliotecaCaras.cara_de_tono`) y del shader de equipación, no de `PIELES` (probado: cambiar la lista no cambia nada); captura `pruebas/captura_pieles.tscn` con `CERCA=1`. Toca el realismo de los personajes (orden 60: «para después»).
+- Falta: las sillas de la sala de prensa son las del kit (muy de juguete); las CC0 de Poly Haven pesan ~9 000 triángulos cada una y son 16-30: buscar una más ligera o un impostor. El espejo del despacho se ve como un arco blanco liso (sin reflejo). Sin usar: `dining_table`, `dining_chair_02`, `clipboard`, `sofa_03` (bajados).
+- Medir en el PC del dueño el coste de las piezas CC0 nuevas (solo MEDIA/ALTA).
+
 # PARTE 2. LO QUE ESPERA UNA DECISIÓN O RESPUESTA DEL DUEÑO
 
 ## PREGUNTAS PARA EL DUEÑO (sesiones Opus) — se acumulan aquí y se envían juntas por Calendar al llegar a 5 (orden 44); se borran al responderse
