@@ -4,6 +4,12 @@ extends RefCounted
 ## `StadiumBuilder._make_grass_texture` (30-10-2026), que ahora la guarda en caché.
 
 static func nueva(patron: String, claro: Color, oscuro: Color) -> Image:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("cesped_imagen"):   ## (19-11) en C++ (`nativo/src/texturas_nativo.cpp`); gemela: `nueva_gd`
+		return nat.cesped_imagen(patron, claro, oscuro)
+	return nueva_gd(patron, claro, oscuro)
+
+static func nueva_gd(patron: String, claro: Color, oscuro: Color) -> Image:
 	var n := 256
 	var img := Image.create(n, n, false, Image.FORMAT_RGB8)
 	for y in range(n):

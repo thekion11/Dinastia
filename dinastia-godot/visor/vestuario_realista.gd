@@ -94,13 +94,8 @@ static func pared(pais := "") -> StandardMaterial3D:
 	m.normal_scale = 0.05
 	return m
 
-static var _azulejo: StandardMaterial3D = null
-
-## Azulejo blanco de 30 cm con juntas hundidas (albedo con la junta más oscura + normal con la ranura), barnizado.
-static func azulejo() -> StandardMaterial3D:
-	if _azulejo != null:
-		return _azulejo
-	var n := 256
+## La gemela GDScript de `azulejo_imagenes`: [albedo, normal] de n×n (sin mipmaps).
+static func _azulejo_gd(n: int) -> Array:
 	var alb := Image.create(n, n, false, Image.FORMAT_RGB8)
 	var nor := Image.create(n, n, false, Image.FORMAT_RGB8)
 	var rng := RandomNumberGenerator.new()
@@ -123,6 +118,23 @@ static func azulejo() -> StandardMaterial3D:
 			if gy < 3:
 				ny = 0.5 + (0.28 if gy < 1 else -0.0)
 			nor.set_pixel(x, y, Color(nx, ny, 1.0))
+	return [alb, nor]
+
+static var _azulejo: StandardMaterial3D = null
+
+## Azulejo blanco de 30 cm con juntas hundidas (albedo con la junta más oscura + normal con la ranura), barnizado.
+static func azulejo() -> StandardMaterial3D:
+	if _azulejo != null:
+		return _azulejo
+	var n := 256
+	var nat := Nativo.obj()
+	var par: Array
+	if nat != null and nat.has_method("azulejo_imagenes"):   ## (19-11) las dos imágenes, en C++ (`nativo/src/texturas_nativo.cpp`); gemela: `_azulejo_gd`
+		par = nat.azulejo_imagenes(n)
+	else:
+		par = _azulejo_gd(n)
+	var alb: Image = par[0]
+	var nor: Image = par[1]
 	alb.generate_mipmaps()
 	nor.generate_mipmaps()
 	var m := StandardMaterial3D.new()

@@ -109,6 +109,14 @@ static func _torso_de_camiseta(fichero: String) -> Image:
 ## Caja del dibujo: se descarta el fondo tomando como fondo el color de la
 ## esquina (los packs usan blanco o transparente, segun de donde venga cada uno).
 static func _caja_util(img: Image) -> Rect2i:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("kit_caja_util"):   ## (19-11) en C++ (`nativo/src/kit_nativo.cpp`); gemela: `_caja_util_gd`
+		var caja: Rect2i = nat.kit_caja_util(img)
+		if caja.size.x >= 0:
+			return caja
+	return _caja_util_gd(img)
+
+static func _caja_util_gd(img: Image) -> Rect2i:
 	var w := img.get_width()
 	var h := img.get_height()
 	var fondo := img.get_pixel(1, 1)
@@ -223,6 +231,18 @@ const PELAMBRE_RECT := Rect2i(60, 40, 120, 80)
 const BARBA_RECT := Rect2i(232, 232, 190, 78)
 
 func _retenir(img: Image, piel: Color, pelo: Color) -> void:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("kit_retener") and img.get_format() == Image.FORMAT_RGBA8:   ## (19-11) el bucle por píxel, en C++ (`nativo/src/kit_nativo.cpp`); gemela: `_retenir_gd`
+		var w0 := img.get_width()
+		var lp: float = maxf(_color_dominante(img, CACHETE_RECT).get_luminance(), 0.12)
+		var lq: float = maxf(_color_dominante(img, PELAMBRE_RECT).get_luminance(), 0.05)
+		var datos0: PackedByteArray = nat.kit_retener(img.get_data(), w0, img.get_height(), piel, pelo, lp, lq, CABEZA_RECT, MANOS_RECT)
+		var nueva0 := Image.create_from_data(w0, img.get_height(), false, Image.FORMAT_RGBA8, datos0)
+		img.blit_rect(nueva0, Rect2i(0, 0, w0, img.get_height()), Vector2i.ZERO)
+		return
+	_retenir_gd(img, piel, pelo)
+
+func _retenir_gd(img: Image, piel: Color, pelo: Color) -> void:
 	var w := img.get_width()
 	var datos := img.get_data()
 	var lum_piel: float = maxf(_color_dominante(img, CACHETE_RECT).get_luminance(), 0.12)
@@ -273,6 +293,17 @@ func _retenir(img: Image, piel: Color, pelo: Color) -> void:
 ## para eso — pero distingue de un vistazo al que la lleva del que no, que es lo
 ## que el juego ya cuenta en la ficha.
 func _paint_barba(img: Image, pelo: Color, barba: int) -> void:
+	if barba <= 0:
+		return
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("kit_barba"):   ## (19-11) en C++ (`nativo/src/kit_nativo.cpp`); gemela: `_paint_barba_gd`
+		var hecha: Image = nat.kit_barba(img, pelo, barba, BARBA_RECT)
+		if hecha != null:
+			img.blit_rect(hecha, Rect2i(0, 0, img.get_width(), img.get_height()), Vector2i.ZERO)
+			return
+	_paint_barba_gd(img, pelo, barba)
+
+func _paint_barba_gd(img: Image, pelo: Color, barba: int) -> void:
 	if barba <= 0:
 		return
 	var fuerza: float = clampf(0.22 + barba * 0.09, 0.22, 0.72)
@@ -390,6 +421,14 @@ func get_material(c1: Color, c2: Color, estilo: String, dorsal: int, variant: in
 ## jugador terminaba con medias grises que no son de ningun equipo. Los tonos se
 ## agrupan en cubos para que dos azules casi iguales cuenten como el mismo color.
 static func _color_dominante(img: Image, r: Rect2i) -> Color:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("kit_color_dominante"):   ## (19-11) en C++; gemela: `_color_dominante_gd`
+		var col: Color = nat.kit_color_dominante(img, r)
+		if col.r >= 0.0:
+			return col
+	return _color_dominante_gd(img, r)
+
+static func _color_dominante_gd(img: Image, r: Rect2i) -> Color:
 	var cubos := {}
 	var mejor := 0
 	var mejor_k := -1

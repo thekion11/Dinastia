@@ -12,6 +12,7 @@
 #include <godot_cpp/classes/random_number_generator.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/aabb.hpp>
+#include <godot_cpp/variant/rect2i.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/transform3d.hpp>
@@ -161,6 +162,15 @@ public:
 	Ref<Image> asfalto_imagen(const Ref<Image> &grande, const Ref<Image> &medio, const Ref<Image> &grieta, const Color &tinte, int64_t semilla, int64_t n) const;
 	// (19-11) `Texturas.enredadera` (visor/texturas_p1.gd, nativo/src/enredadera_nativo.cpp): la imagen RGB8 de n×n; gemela `_imagen_enredadera_gd`.
 	Ref<Image> enredadera_imagen(int64_t semilla, int64_t n) const;
+	// (19-11) texturas procedimentales (nativo/src/texturas_nativo.cpp): `TelonesPintados._imagen`, `VestuarioRealista.azulejo` (sus dos imágenes) y `CespedTextura.nueva`; gemelas `_imagen_gd`, `_azulejo_gd`, `nueva_gd`.
+	Ref<Image> telon_imagen(const Color &c1, const Color &c2, int64_t p, bool girado) const;
+	Array azulejo_imagenes(int64_t n) const;
+	Ref<Image> cesped_imagen(const String &patron, const Color &claro, const Color &oscuro) const;
+	// (19-11) `KitTextureFactory` (visor/kit_texture_factory.gd, nativo/src/kit_nativo.cpp): `_caja_util`, `_color_dominante`, `_retenir`, `_paint_barba`; gemelas `*_gd`.
+	Rect2i kit_caja_util(const Ref<Image> &img) const;
+	Color kit_color_dominante(const Ref<Image> &img, const Rect2i &r) const;
+	PackedByteArray kit_retener(const PackedByteArray &datos, int64_t w, int64_t h, const Color &piel, const Color &pelo, double lum_piel, double lum_pelo, const Rect2i &cabeza, const Rect2i &manos) const;
+	Ref<Image> kit_barba(const Ref<Image> &img, const Color &pelo, int64_t barba, const Rect2i &rect) const;
 	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
 	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
 	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;
