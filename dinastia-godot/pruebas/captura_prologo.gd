@@ -61,6 +61,15 @@ func _paso(i: int, clave: String) -> void:
 	e.rumbo = PI
 	e.cuerpo.rotation.y = PI
 	e._colocar_camara(1.0)
-	_p._hablar()
+	if OS.get_environment("PLANOS") == "1" and PrologoPlanos.tiene(clave):   ## PLANOS=1: el plano de la sala (fotos a 0,8 s y 2,4 s) y luego el mentor
+		_p._al_llegar()
+		await get_tree().create_timer(0.8).timeout
+		await _foto("%02d_%s_plano_a" % [i + 1, clave])
+		await get_tree().create_timer(1.6).timeout
+		await _foto("%02d_%s_plano_b" % [i + 1, clave])
+		while _p._plano != null:
+			await get_tree().process_frame
+	else:
+		_p._hablar()
 	await get_tree().create_timer(1.5).timeout
 	await _foto("%02d_%s" % [i + 1, clave])

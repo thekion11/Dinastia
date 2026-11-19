@@ -53,6 +53,7 @@ var _directivos: Array[PrologoMentor] = []
 var _directiva_hecha := false
 var _guardado_al_encender := false
 var _listo := false
+var _plano: Node   ## el plano de la sala que se está rodando (`PrologoPlanos`), o null
 
 func _exit_tree() -> void:
 	activo = false
@@ -343,7 +344,7 @@ func _process(_delta: float) -> void:
 	var misma_planta := (fuera and not dentro) or (not fuera and dentro and planta == destino_planta)
 	var d := Vector2(yo.x - destino.x, yo.z - destino.z).length() if destino != Vector3.INF else 0.0
 	_aro.visible = destino != Vector3.INF and misma_planta and not dialogo.visible
-	if destino != Vector3.INF and not dialogo.visible and not (pc != null and pc.abierto):
+	if destino != Vector3.INF and not dialogo.visible and not (pc != null and pc.abierto) and _plano == null:
 		var adelante := -explorador.camara.global_transform.basis.z
 		var hacia := Vector3(destino.x - yo.x, 0, destino.z - yo.z)
 		var ang := atan2(hacia.x, hacia.z) - atan2(adelante.x, adelante.z)
@@ -356,8 +357,7 @@ func _process(_delta: float) -> void:
 		if String(PrologoPasos.PASOS[paso_i]["clave"]) == "llegada":
 			_ir_al_paso(paso_i + 1)
 		else:
-			_meter_saludo()
-			_hablar()
+			(self as PrologoDT)._al_llegar()   ## (18-11) el plano de la sala (`PrologoPlanos`) y, después, el saludo y el mentor
 
 func _input(ev: InputEvent) -> void:
 	if not dialogo.visible:
