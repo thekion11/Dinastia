@@ -42,6 +42,17 @@ void DinastiaNativo::_bind_methods() {
 			&DinastiaNativo::mover_jugadores_fisica);
 	ClassDB::bind_method(D_METHOD("cerrar_notas", "p", "rng"), &DinastiaNativo::cerrar_notas);
 	ClassDB::bind_method(D_METHOD("pcg_coincide"), &DinastiaNativo::pcg_coincide);
+	ClassDB::bind_method(D_METHOD("prog_por_edad", "edad"), &DinastiaNativo::prog_por_edad);
+	ClassDB::bind_method(D_METHOD("prog_freno", "edad", "ovr", "pot"), &DinastiaNativo::prog_freno);
+	ClassDB::bind_method(D_METHOD("prog_prob_semanal", "edad", "ovr", "pot", "motor"), &DinastiaNativo::prog_prob_semanal);
+	ClassDB::bind_method(D_METHOD("hab_factor_nivel", "nivel"), &DinastiaNativo::hab_factor_nivel);
+	ClassDB::bind_method(D_METHOD("hab_factor_puesto", "pesos"), &DinastiaNativo::hab_factor_puesto);
+	ClassDB::bind_method(D_METHOD("hab_precio_zona", "valor", "clase", "factor_nivel", "factor_puesto"), &DinastiaNativo::hab_precio_zona);
+	ClassDB::bind_method(D_METHOD("hab_coste", "suma", "n", "z"), &DinastiaNativo::hab_coste);
+	ClassDB::bind_method(D_METHOD("hab_promedio", "valores"), &DinastiaNativo::hab_promedio);
+	ClassDB::bind_method(D_METHOD("hab_coste_puesto", "misma_linea", "conocido", "factor_nivel"), &DinastiaNativo::hab_coste_puesto);
+	ClassDB::bind_method(D_METHOD("hab_reparto", "id_jugador", "ids", "meta"), &DinastiaNativo::hab_reparto);
+	ClassDB::bind_method(D_METHOD("premio_mejor", "clubes", "minimo_notas"), &DinastiaNativo::premio_mejor);
 	ClassDB::bind_method(D_METHOD("son_tono", "hz", "dur", "vol", "forma", "frecuencia"), &DinastiaNativo::son_tono);
 	ClassDB::bind_method(D_METHOD("son_ruido", "dur", "f0", "f1", "vol", "frecuencia"), &DinastiaNativo::son_ruido);
 	ClassDB::bind_method(D_METHOD("son_mezclar", "destino", "fuente", "retraso", "frecuencia"), &DinastiaNativo::son_mezclar);

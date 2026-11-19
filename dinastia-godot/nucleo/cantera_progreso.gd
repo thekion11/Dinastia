@@ -19,13 +19,25 @@ static func por_edad(edad: int) -> float:
 ## puntos hasta el potencial cuestan más que los primeros; con el 0,10 plano un chico de tu academia pasaba de 70 a
 ## 88 entre los 17 y los 20. Lo usan `prob_semanal()` y `Entrenamiento._sesion_general()/_plan_por_dias()`.
 static func freno(j: Jugador) -> float:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("prog_freno"):   ## (19-11) en C++ (`nativo/src/carrera_nativo.cpp`); la versión de abajo es su gemela
+		return nat.prog_freno(j.edad, j.ovr, j.pot)
+	return _freno_gd(j)
+
+static func _freno_gd(j: Jugador) -> float:
 	if j.ovr >= j.pot or j.edad >= 24:
 		return 0.0
 	return por_edad(j.edad) * clampf(float(j.pot - j.ovr) / 8.0, 0.35, 1.0)
 
 ## Prob. semanal de +1 para quien NO es tuyo (unas 30 semanas de liga al año). Tu plantel va por su plan.
 static func prob_semanal(j: Jugador) -> float:
-	var p := 0.10 * freno(j)
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("prog_prob_semanal"):   ## (19-11) en C++; gemela: `_prob_semanal_gd`
+		return nat.prog_prob_semanal(j.edad, j.ovr, j.pot, j.rasgo == "motor")
+	return _prob_semanal_gd(j)
+
+static func _prob_semanal_gd(j: Jugador) -> float:
+	var p := 0.10 * _freno_gd(j)
 	if j.rasgo == "motor":
 		p *= 1.5
 	return p

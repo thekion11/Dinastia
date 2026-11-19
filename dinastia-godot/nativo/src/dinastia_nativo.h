@@ -19,6 +19,7 @@
 #include <godot_cpp/variant/quaternion.hpp>
 #include <godot_cpp/variant/packed_float32_array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
+#include <godot_cpp/variant/packed_string_array.hpp>
 #include <godot_cpp/variant/packed_vector2_array.hpp>
 #include <godot_cpp/variant/packed_vector3_array.hpp>
 
@@ -130,6 +131,18 @@ public:
 	// ¿El generador de azar del motor es el PCG32 que reproduce `simular_90`? (autocomprobación; si no, `simular_90` usa el del motor)
 	bool pcg_coincide() const;
 	// La síntesis del sonido (`nucleo/sonido_p1.gd`, nativo/src/sonido_nativo.cpp): `_tono`, `_ruido`, `_mezclar` y el paso a 16 bits de `_a_wav`.
+	// (19-11) `nucleo/cantera_progreso.gd`, `carrera_habilidad.gd` y `premio_mensual.gd` (nativo/src/carrera_nativo.cpp): cuentas puras con su gemela GDScript.
+	double prog_por_edad(int64_t edad) const;
+	double prog_freno(int64_t edad, int64_t ovr, int64_t pot) const;
+	double prog_prob_semanal(int64_t edad, int64_t ovr, int64_t pot, bool motor) const;
+	double hab_factor_nivel(int64_t nivel) const;
+	double hab_factor_puesto(const PackedFloat64Array &pesos) const;
+	double hab_precio_zona(int64_t valor, int64_t clase, double factor_nivel, double factor_puesto) const;
+	int64_t hab_coste(int64_t suma, int64_t n, double z) const;
+	int64_t hab_promedio(const PackedInt32Array &valores) const;
+	int64_t hab_coste_puesto(bool misma_linea, bool conocido, double factor_nivel) const;
+	PackedInt32Array hab_reparto(const String &id_jugador, const PackedStringArray &ids, int64_t meta) const;
+	Variant premio_mejor(const Array &clubes, int64_t minimo_notas) const;
 	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
 	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
 	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;
