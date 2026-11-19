@@ -68,6 +68,8 @@ func mayusculas(texto: String) -> String:
 		texto = texto.replace("i", "İ").replace("ı", "I")
 	return texto.to_upper()
 
+const CODIGOS_PAIS_COMO_PALABRA := ["MAR", "SUR", "VIE", "DOM"]   ## (19-11) códigos de país que son palabra («MAR» salía «TUE»): no se traducen
+
 func _directa(frase: String) -> String:
 	var ex: Dictionary = _extra.get(idioma, {})
 	if ex.has(frase) and String(ex[frase]) != "":
@@ -77,10 +79,8 @@ func _directa(frase: String) -> String:
 		var fila: Array = TABLA[frase]
 		if i < fila.size() and String(fila[i]) != "":
 			return String(fila[i])
-	## TÍTULOS EN MAYÚSCULAS (29-9-2026): muchas cabeceras se pintan con
-	## `to_upper()` antes de traducir ("PLANTEL", "PRÓXIMO PARTIDO"). Se busca
-	## la forma normal ("Plantel", "Próximo partido") y se devuelve en mayúsculas.
-	if frase.length() > 1 and frase == frase.to_upper() and frase != frase.to_lower():
+	## TÍTULOS EN MAYÚSCULAS (29-9-2026): las cabeceras se pintan con `to_upper()` antes de traducir ("PLANTEL"): se busca la forma normal y se devuelve en mayúsculas.
+	if frase.length() > 1 and frase == frase.to_upper() and frase != frase.to_lower() and not CODIGOS_PAIS_COMO_PALABRA.has(frase):
 		var baja := frase.to_lower()
 		var normal := baja.substr(0, 1).to_upper() + baja.substr(1)
 		for cand: String in [normal, baja]:
@@ -204,11 +204,8 @@ func _t(frase: String, prof: int) -> String:
 	var d := _directa(frase)
 	if d != "" or prof > 3:
 		return d if d != "" else frase
-	## El icono de delante («🙏 », «⚠️ ») aparte ANTES de partir en oraciones
-	## (petición 2 de la sesión 2): con varias oraciones, la primera se traducía
-	## sola y el resto quedaba en castellano aunque la frase entera sin el icono
-	## fuera una clave. El móvil lo esquivaba con su propio `_t_icono`.
-	## Solo símbolos (emoji, flechas: desde U+2000) y espacios: «, ¿ o ( son parte de la frase.
+	## El icono de delante («🙏 », «⚠️ ») aparte ANTES de partir en oraciones (con varias, la primera se traducía sola y el resto quedaba en
+	## castellano aunque la frase entera sin el icono fuera una clave). Solo símbolos (emoji, flechas: desde U+2000) y espacios.
 	var ini0 := 0
 	while ini0 < frase.length() and (frase.unicode_at(ini0) >= 0x2000 or frase.unicode_at(ini0) == 32):
 		ini0 += 1
@@ -275,13 +272,9 @@ func _t(frase: String, prof: int) -> String:
 	var pp := _patron(frase, prof)
 	return pp if pp != "" else frase
 
-## DE DÓNDE VIENE UN TEXTO YA TRADUCIDO (s3, 26-10-2026). Lo que se construye
-## una vez con `Idiomas.t` (botones de la cabecera, el panel de objetivos…) queda
-## en el idioma de ese momento y no guarda su castellano: al cambiar de idioma en
-## Opciones se quedaba en el anterior (arrancar en alemán y pasar a turco dejaba
-## «📅 Kalender» o «Mit dem Mentor sprechen»). Devuelve la clave castellana de una
-## traducción de cualquier idioma, con su icono delante, o "" si el texto ya es
-## una clave castellana o no se conoce.
+## DE DÓNDE VIENE UN TEXTO YA TRADUCIDO (s3, 26-10-2026). Lo que se construye una vez con `Idiomas.t` queda en el idioma de ese momento y no guarda
+## su castellano (arrancar en alemán y pasar a turco dejaba «📅 Kalender»). Devuelve la clave castellana de una traducción de cualquier idioma,
+## con su icono delante, o "" si el texto ya es una clave castellana o no se conoce.
 var _inverso := {}
 func origen(texto: String) -> String:
 	## Un texto solo puede estar en un idioma que ya se haya cargado (para pintarlo hubo que elegirlo): no hace falta cargar los demás.
@@ -385,13 +378,9 @@ func cobertura(cual: String) -> int:
 			n += 1
 	return n
 
-## CAMBIO DE IDIOMA EN PARTIDA (26-10-2026, auditoría de textos). Muchos rótulos
-## se escriben UNA vez al construir la pantalla (`Idiomas.t` al crearlos): al
-## cambiar de idioma en Ajustes, `_refrescar()` repintaba lo dinámico, pero la
-## barra de arriba («Calendario», «Un día», el buscador, el mentor...) seguía en
-## el idioma anterior hasta reiniciar. Esto recorre el árbol, devuelve cada
-## texto a su castellano con el diccionario inverso de `antes` y lo traduce al
-## idioma nuevo. Lo que no reconoce (nombres, cifras) lo deja como está.
+## CAMBIO DE IDIOMA EN PARTIDA (26-10-2026). Muchos rótulos se escriben UNA vez al construir la pantalla y seguían en el idioma anterior hasta
+## reiniciar. Esto recorre el árbol, devuelve cada texto a su castellano con el diccionario inverso de `antes` y lo traduce al idioma nuevo.
+## Lo que no reconoce (nombres, cifras) lo deja como está.
 func retraducir_arbol(n: Node, antes: String) -> void:
 	if antes == idioma:
 		return
@@ -424,14 +413,23 @@ func _inverso_de(cual: String) -> Dictionary:
 		return inv
 	var ex: Dictionary = _extra.get(cual, {})
 	for k: String in ex:
-		inv[String(ex[k])] = k
+		_anotar_inverso(inv, String(ex[k]), k)
 	var i := ORDEN.find(cual)
 	if i >= 0:
 		for k: String in TABLA:
 			var fila: Array = TABLA[k]
 			if i < fila.size() and String(fila[i]) != "":
-				inv[String(fila[i])] = k
+				_anotar_inverso(inv, String(fila[i]), k)
 	return inv
+
+## (19-11) Dos frases castellanas con la misma traducción («Calendario» y «Plan de juego» → «Spielplan»): gana la más corta (si empatan, la
+## primera en orden alfabético), no la última que entró: al cambiar de idioma «Calendario» volvía como «Plan de juego».
+func _anotar_inverso(inv: Dictionary, trad: String, es: String) -> void:
+	if inv.has(trad):
+		var ya := String(inv[trad])
+		if ya.length() < es.length() or (ya.length() == es.length() and ya < es):
+			return
+	inv[trad] = es
 
 ## El castellano de un texto pintado en `antes`, o "" si no se reconoce. Mira
 ## el texto entero y, si no, sin el icono de delante («📅 Takvim»).
