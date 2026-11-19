@@ -126,6 +126,7 @@ pasa "textura del balón" "godot --headless --path . --script res://pruebas/prob
 pasa "avance por días: modelo de eventos del día" "godot --headless --path . res://pruebas/probar_eventos_dia.tscn" "FIN. 0 fallos"
 # 5d. El avance por días, paso 2: los disparadores (directiva, crisis de caja, imprevistos, jugador del mes): solo observan (17-11)
 pasa "avance por días: disparadores (directiva, caja, imprevistos, jugador del mes)" "godot --headless --path . res://pruebas/probar_disparadores_dia.tscn" "FIN. 0 fallos"
+pasa "mentor: el consejo sigue tras cerrar la pantalla y salta pantallas liberadas" "godot --headless --path . res://pruebas/probar_mentor_voz.tscn" "FIN. 0 fallos"
 # 5e. El avance por días, paso 3 (núcleo): se detiene en el primer día con eventos y recorre una temporada entera (17-11)
 pasa "avance por días: núcleo (paradas)" "godot --headless --path . res://pruebas/probar_avance_dias.tscn" "FIN. 0 fallos"
 # 5f. El avance por días, pasos 3, 5 y 6: el botón «Avanzar» nuevo en el menú central, campanas, «Jugar/Saltar partido» y las pantallas (17-11)
