@@ -27,3 +27,10 @@ static func en_mayusculas(txt: String, inv: Dictionary) -> String:
 		if inv.has(cand):
 			return String(inv[cand]).to_upper()
 	return ""
+
+## La forma normal de un texto en MAYÚSCULAS («FORMA» → «Forma»); si no es todo mayúsculas, el mismo texto.
+static func normal(texto: String) -> String:
+	if texto.length() < 2 or texto != texto.to_upper() or texto == texto.to_lower():
+		return texto
+	var baja := texto.to_lower()
+	return baja.substr(0, 1).to_upper() + baja.substr(1)

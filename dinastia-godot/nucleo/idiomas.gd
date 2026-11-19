@@ -285,7 +285,7 @@ func _t(frase: String, prof: int) -> String:
 var _inverso := {}
 func origen(texto: String) -> String:
 	## Un texto solo puede estar en un idioma que ya se haya cargado (para pintarlo hubo que elegirlo): no hace falta cargar los demás.
-	if texto == "" or _directa_es(texto):
+	if texto == "" or _directa_es(texto) or _directa_es(IdiomasInverso.normal(texto)):   ## «FORMA» es «Forma» en capitales (el título que pintó `to_upper()`), no la traducción en capitales de otra clave
 		return ""
 	if _inverso.is_empty():
 		for k: String in TABLA:
