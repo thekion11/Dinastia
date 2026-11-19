@@ -1,7 +1,7 @@
 extends "res://pruebas/banco/cobertura_p1.gd"
 ## [Banco · grupo «cobertura»] (18-11) Pruebas de COMPORTAMIENTO de clases que el banco casi no tocaba (informe
 ## `docs/04_auditorias/cobertura_lineas_2026-11-18.md`). Esta capa: las citas en persona (nacimiento, caducidad,
-## lecturas, resolución y guardado). La capa 1 (`cobertura_p1.gd`): actualizador, entrada al campeonato y roles.
+## lecturas, resolución y guardado) y el pulso de roles. La capa 1 (`cobertura_p1.gd`): actualizador, entrada al campeonato y roles.
 
 func _mundo_citas(semilla: int, pais: String, quien := 3) -> Mundo:
 	var m := Mundo.new()
@@ -247,3 +247,97 @@ func _probar_citas_rueda_y_guardado() -> void:
 	_comprobar(ci.lista[0]["estado"] == "pendiente", "lo cargado es una copia, no comparte datos con la partida guardada")
 	otro.desde_dic({})
 	_comprobar(otro.lista.is_empty() and otro.objetivo == "" and otro.favor_agente == -1, "desde_dic({}) deja todo en blanco")
+
+func _probar_roles_pulso_y_ascenso_de_ayudante() -> void:
+	_titulo("ROLES: PULSO DE PARTIDOS, AYUDANTE, INTERINATO Y CANTERA")
+	var m := _mundo_roles(8101)
+	var r: Roles = m.roles
+	r.prestigio = 50
+	r.tras_partido(2, 0)
+	_comprobar(r.prestigio == 51, "ganar sube 1 de prestigio")
+	r.tras_partido(1, 1)
+	_comprobar(r.prestigio == 51, "empatar no lo mueve")
+	r.tras_partido(0, 1)
+	_comprobar(r.prestigio == 50, "perder baja 1")
+	var rep_antes := r.reputacion.historial.size()
+	r.tras_partido(5, 0)
+	r.tras_partido(0, 4)
+	_comprobar(r.prestigio == 50, "una goleada a favor y otra en contra (±1): vuelve a 50 (%d)" % r.prestigio)
+	_comprobar(r.reputacion.historial.size() >= rep_antes + 2, "las goleadas dejan anotada su reputación de «ganador»")
+	## Ayudante: gana y asciende.
+	var m2 := _mundo_roles(8102)
+	var a: Roles = m2.roles
+	a.arrancar_ayudante()
+	var ascensos: Array[String] = []
+	var cambios: Array[String] = []
+	a.ascenso.connect(func(n: String) -> void: ascensos.append(n))
+	a.rol_cambiado.connect(func(x: String, y: String) -> void: cambios.append(x + ">" + y))
+	a.prestigio = Roles.PRESTIGIO_PARA_EL_BANCO
+	a.dt_empleado["confianza"] = Roles.JEFE_ASCIENDE - 2
+	a.tras_partido(2, 0)
+	_comprobar(a.rol == Roles.DT and not a.es_ayudante(), "tras ganar con confianza y prestigio altos pasa a entrenador principal")
+	_comprobar(ascensos == [Roles.DT] and cambios == ["ayudante>dt"] and bool(a.ayudante.get("ascendido", false)) and a.dt_empleado.is_empty(), "señales de ascenso y marca de «ascendido»")
+	_comprobar(m2.directiva.confianza == 62 and a.prestigio >= Roles.PRESTIGIO_PARA_EL_BANCO + 8, "ascender: confianza directiva 62 y +8 de prestigio (%d)" % m2.directiva.confianza)
+	## Ayudante: pierde mucho y lo echan del cuerpo técnico.
+	var m3 := _mundo_roles(8103)
+	var e: Roles = m3.roles
+	e.arrancar_ayudante()
+	var fuera: Array[String] = []
+	e.fuera_del_cuerpo_tecnico.connect(func(j: String) -> void: fuera.append(j))
+	var jefe := e.jefe_nombre()
+	var p_ini := e.prestigio
+	e.dt_empleado["confianza"] = Roles.JEFE_ECHA + 1
+	e.tras_partido(0, 1)
+	_comprobar(e.sin_club and e.rol == Roles.DT and fuera == [jefe] and e.ayudante.is_empty() and e.prestigio == p_ini - 1 - 3, "con la confianza del jefe por los suelos te sacan del cuerpo técnico (sin club, −1 y −3 de prestigio)")
+	## Ayudante con empate: la confianza solo sube 1 y no hay ascenso.
+	var m4 := _mundo_roles(8104)
+	var f: Roles = m4.roles
+	f.arrancar_ayudante()
+	f.dt_empleado["confianza"] = 40
+	f.tras_partido(1, 1)
+	_comprobar(f.jefe_confianza() == 41 and f.es_ayudante(), "un empate: +1 de confianza del jefe")
+	f.tras_partido(0, 1)
+	_comprobar(f.jefe_confianza() == 39 and int(f.dt_empleado["malos"]) == 1, "una derrota: −2 y un «mal» más")
+	f.tras_partido(3, 0)
+	_comprobar(f.jefe_confianza() == 42 and int(f.dt_empleado["malos"]) == 0, "ganar: +3 y borra los «malos»")
+	## Interinato: se resuelve a las cinco fechas.
+	var m5 := _mundo_roles(8105)
+	var i: Roles = m5.roles
+	i.arrancar_interinato("CHI")
+	var resultados: Array[bool] = []
+	i.interinato_resuelto.connect(func(s: bool) -> void: resultados.append(s))
+	_comprobar(i.en_interinato() and i.fechas_interinato_restantes() > 0, "recién empezado quedan fechas (%d)" % i.fechas_interinato_restantes())
+	i.tras_jornada()
+	_comprobar(resultados.is_empty() and i.en_interinato(), "con fechas por jugar no se resuelve")
+	var liga := m5.liga_de(m5.mi_club())
+	liga.jornada_actual = liga.jornadas()
+	_comprobar(i.fechas_interinato_restantes() == 0, "sin fechas por jugar quedan 0")
+	var prest0 := i.prestigio
+	i.tras_jornada()
+	_comprobar(resultados.size() == 1 and not i.en_interinato() and bool(i.interino["cumplido"]) and i.prestigio != prest0, "se cumple el contrato: veredicto emitido y el prestigio se mueve")
+	_comprobar(i.fechas_interinato_restantes() == 0, "ya no es interino: 0 fechas")
+	i.tras_jornada()
+	_comprobar(resultados.size() == 1, "no se resuelve dos veces")
+	## Cantera: meta cumplida y meta incumplida.
+	var m6 := _mundo_roles(8106)
+	var q: Roles = m6.roles
+	q.arrancar_cantera()
+	var av: Array[String] = []
+	q.aviso.connect(func(t: String, _x: String) -> void: av.append(t))
+	q.cantera["meta"] = 2
+	q.cantera["subidos"] = ["a", "b"]
+	var p0 := q.prestigio
+	var conf0 := m6.directiva.confianza
+	q._chequeo_cantera()
+	_comprobar(q.prestigio == p0 + 8 and av.back() == "Objetivo de cantera cumplido" and m6.directiva.confianza >= conf0, "cantera cumplida: +8 de prestigio y aviso")
+	_comprobar(int(q.cantera["meta"]) >= 3 and int(q.cantera["meta"]) <= 5 and (q.cantera["subidos"] as Array).is_empty(), "y se fija una meta nueva de 3 a 5 con el contador a cero")
+	q.cantera["subidos"] = ["a"]
+	q.cantera["meta"] = 4
+	var conf1 := m6.directiva.confianza
+	q._chequeo_cantera()
+	_comprobar(av.back() == "Objetivo de cantera incumplido" and m6.directiva.confianza < conf1, "cantera incumplida: aviso y baja la confianza de la directiva")
+	## Reputación de temporada: lealtad, formador y social.
+	var antes := q.reputacion.historial.size()
+	q._reputacion_de_temporada()
+	_comprobar(q.reputacion.historial.size() >= antes + 3, "el cierre de temporada anota lealtad, formador y social")
+	_comprobar(m6.mi_club().socios >= 0, "los socios no quedan negativos")

@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2510 archivos (.gd, .cpp, .h), 360489 líneas, 991 clases con nombre.
+Total: 2510 archivos (.gd, .cpp, .h), 360485 líneas, 991 clases con nombre.
 
 ## Extensión C++
 
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1229 archivos, 118725 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1229 archivos, 118721 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
@@ -155,7 +155,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | `Copa` | `nucleo/copa.gd` | 348 | 95 |  |
 | `Mercado` | `nucleo/mercado.gd` | 64 | 92 | mercado_p1.gd |
 | `Finanzas` | `nucleo/finanzas.gd` | 384 | 89 |  |
-| `Roles` | `nucleo/roles.gd` | 357 | 78 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
+| `Roles` | `nucleo/roles.gd` | 357 | 79 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
 | `Prensa` | `nucleo/prensa.gd` | 445 | 74 | prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
 | `Calendario` | `nucleo/calendario.gd` | 78 | 70 | calendario_p1.gd |
 | `CargaCiudad` | `nucleo/carga_ciudad.gd` | 14 | 67 |  |
