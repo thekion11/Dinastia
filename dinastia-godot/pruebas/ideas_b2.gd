@@ -72,7 +72,8 @@ func ejecutar() -> void:
 		var r := m.prensa.resolver("a")
 		if String(r["titulo"]) == "Reclamo rechazado":
 			multas += 1
-			_comprobar(c.saldo < antes, "el reclamo rechazado trae multa (807)") if multas == 1 else null
+			if multas == 1:
+				_comprobar(c.saldo < antes, "el reclamo rechazado trae multa (807)")
 		elif String(r["titulo"]) == "Reclamo acogido":
 			acogidos += 1
 	_comprobar(multas >= 3 and acogidos >= 3 and m.prensa.arbitro_polemico == "", "reclamar es una apuesta: %d multas / %d acogidos (804, 807)" % [multas, acogidos])

@@ -227,7 +227,6 @@ static func _aparcamiento(e: Node3D, centro: Vector3, a_lo_largo_z: bool, largo:
 	raya.size = Vector2(0.14, 5.0)
 	var rayas: Array[Transform3D] = []
 	var acostada := Basis(Vector3.RIGHT, -PI * 0.5)
-	var giro_r := Basis() if a_lo_largo_z else Basis(Vector3.UP, PI * 0.5)
 	var plazas := int(largo / 2.7)
 	var hechos := 0   ## MÍNIMO: de cada 3 coches se queda 1 (cada coche son ~2 llamadas de dibujo; el azar se gasta igual y el resto sale idéntico)
 	for hilera: float in [-1.0, 1.0]:

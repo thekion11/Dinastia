@@ -257,7 +257,8 @@ func _ideas_a_regens() -> void:
 		for p: String in er.activas:
 			if er.activas[p]["tipo"] == "dorada":
 				doradas += 1
-				_comprobar(er.bono(p, m.anio) == Eras.BONO_DORADA and er.mapa_del_talento(m.anio).size() >= 1, "una época dorada sube un 13%% el techo de los juveniles de %s (491)" % p) if doradas == 1 else null
+				if doradas == 1:
+					_comprobar(er.bono(p, m.anio) == Eras.BONO_DORADA and er.mapa_del_talento(m.anio).size() >= 1, "una época dorada sube un 13%% el techo de los juveniles de %s (491)" % p)
 	_comprobar(doradas >= 3, "con los años aparecen épocas doradas (%d en 60 cierres) (491)" % doradas)
 	for k: Club in m.clubes.values():
 		k.saldo = 0
@@ -268,7 +269,8 @@ func _ideas_a_regens() -> void:
 		for p: String in er.activas:
 			if er.activas[p]["tipo"] == "decadencia":
 				decad += 1
-				_comprobar(er.bono(p, m.anio) == Eras.BONO_DECADENCIA, "un país arruinado entra en decadencia y su techo baja al 90%% (%s) (492)" % p) if decad == 1 else null
+				if decad == 1:
+					_comprobar(er.bono(p, m.anio) == Eras.BONO_DECADENCIA, "un país arruinado entra en decadencia y su techo baja al 90%% (%s) (492)" % p)
 	_comprobar(decad >= 3, "con las ligas arruinadas aparece decadencia (%d en 80 cierres) (492)" % decad)
 	for k: Club in m.clubes.values():
 		k.saldo = 900000000

@@ -10,7 +10,6 @@ extends RefCounted
 static func sala(nodo: Node3D, nombre: String, caja: Rect2, y0: float, c1: Color) -> void:
 	if Calidad.elegida <= Calidad.MINIMO:
 		return
-	var cx := caja.get_center().x
 	match nombre:
 		"Enfermería":
 			## Lavabo y botiquín junto a la puerta (contra el tabique del pasillo, de cara a la sala) y una caja de material.

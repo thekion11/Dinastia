@@ -29,7 +29,6 @@ const PELOS := ["#231a14", "#3d2a19", "#6b4a2a", "#c8a05a", "#1a1a1a", "#4a3a2a"
 
 ## Un jugador, en el diccionario que espera el equipador.
 static func jugador(j: Jugador) -> Dictionary:
-	var h := _hash(j.id)
 	return {
 		"id": j.id,
 		"nombre": j.nombre,

@@ -369,7 +369,8 @@ func _texturas() -> void:
 			if (vistas[t][0] as float) == (l2[0][0] as float):
 				var im := (t as Texture2D).get_image()
 				if im != null:
-					im.decompress() if im.is_compressed() else null
+					if im.is_compressed():
+						im.decompress()
 					im.resize(256, 280, Image.INTERPOLATE_BILINEAR)
 					im.save_png(OS.get_environment("TEXTURA_PNG") if OS.get_environment("TEXTURA_PNG") != "" else "/tmp/textura_grande.png")
 	for e in l2.slice(0, 25):

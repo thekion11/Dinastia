@@ -70,7 +70,10 @@ func _pintar() -> void:
 		av.add_theme_color_override("font_color", Color(1.0, 0.8, 0.35))
 		_caja.add_child(av)
 	if _estado == "menu":
-		(_pintar_ventanilla() if ventanilla else _pintar_menu())
+		if ventanilla:
+			_pintar_ventanilla()
+		else:
+			_pintar_menu()
 	else:
 		_pintar_teclado()
 

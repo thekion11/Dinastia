@@ -361,12 +361,10 @@ func _construir(disp: String) -> void:
 	_pivote.add_child(_modelo)
 	var ps := disp == "ps"
 	var c_cuerpo := Color("e6e8ee") if ps else Color("2b2f37")
-	var c_empu := Color("d3d6de") if ps else Color("23262d")
 	var c_mando := Color("1b1d22") if ps else Color("15171b")
 	var c_tapa := Color("20232a") if ps else Color("3c414c")
 	var m_cuerpo := _material(c_cuerpo, 0.5, 0.0)
 	m_cuerpo.vertex_color_use_as_albedo = true
-	var m_empu := _material(c_empu, 0.6, 0.0)
 	var m_negro := _material(c_mando, 0.5, 0.2)
 	## Cuerpo y empuñaduras: una sola malla suave.
 	_malla_cuerpo(m_cuerpo)

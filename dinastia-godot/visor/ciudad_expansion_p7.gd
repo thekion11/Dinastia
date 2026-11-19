@@ -160,7 +160,6 @@ func _instalacion(uso: String, r: Rect2) -> void:
 
 func _dibujar_bloque(bl: Dictionary) -> void:
 	var r: Rect2 = bl["rect"]
-	var c := Vector3(r.get_center().x, 0, r.get_center().y)
 	var uso := String(bl["uso"])
 	match uso:
 		"rio":
