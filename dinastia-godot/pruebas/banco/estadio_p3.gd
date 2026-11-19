@@ -174,6 +174,26 @@ func _probar_avatares_realistas() -> void:
 		_comprobar(String(PersonajeDT.aspecto({"modelo": quitado})["modelo"]) == "", "una partida vieja con «%s» vuelve al atleta" % quitado)
 	for k: String in FutbolistaQ.todos_ajenos():
 		_comprobar(FutbolistaQ.ajeno_disponible(k), "«%s» (realista) está en el proyecto" % k)
+	## (19-11) Civiles elegibles: sin metal ni facetas (`AcabadoAjeno`) y con el tono de piel elegido.
+	var lisas := AcabadoAjeno.suavizar(PackedVector3Array([Vector3.ZERO, Vector3.ZERO, Vector3(1, 0, 0), Vector3(1, 0, 0)]),
+		PackedVector3Array([Vector3(0, 1, 0), Vector3(0.3, 0.954, 0).normalized(), Vector3(0, 1, 0), Vector3(1, 0, 0)]))
+	_comprobar(absf(lisas[0].x - lisas[1].x) < 1e-4 and lisas[2].is_equal_approx(Vector3(0, 1, 0)), "normales: se suavizan las caras casi planas y se respeta la arista de 90°")
+	var padre_c := Node3D.new()
+	add_child(padre_c)
+	var dc := FutbolistaQ.ajeno(padre_c, "mh_casual", 1.8, Color("8a5536"))
+	var metal := 0.0
+	var piel_ok := false
+	if not dc.is_empty():
+		for n in (dc["modelo"] as Node).find_children("*", "MeshInstance3D", true, false):
+			var mi := n as MeshInstance3D
+			for s_i in mi.get_surface_override_material_count():
+				var mt := mi.get_surface_override_material(s_i) as StandardMaterial3D
+				if mt != null:
+					metal = maxf(metal, mt.metallic)
+					piel_ok = piel_ok or (mt.resource_name.to_lower().contains("skin") and mt.albedo_color.r < 0.6)
+	_comprobar(not dc.is_empty() and metal < 0.001, "los civiles elegibles salen mates, sin metal (máx %.2f)" % metal)
+	_comprobar(piel_ok, "y su piel toma el tono elegido en el creador")
+	padre_c.queue_free()
 	for carpeta: String in ["kaykit", "vrm", "Skins"]:
 		_comprobar(not DirAccess.dir_exists_absolute("res://assets/characters/" + carpeta), "la carpeta de no realistas «%s» ya no está" % carpeta)
 	## El avatar regalo: excluido de los 6 presets (licencia y cara sin confirmar).
@@ -187,6 +207,9 @@ func _probar_avatares_realistas() -> void:
 		if not d.is_empty():
 			var rt := (d["avatar"] as Node).find_child("AvatarRegaloRetarget", true, false) as AvatarRegaloRetarget
 			_comprobar(rt != null and rt.pares() >= 50, "su retarget cubre cadera, columna, brazos, piernas y dedos (%d huesos)" % (rt.pares() if rt != null else 0))
+			## (19-11) Por `PersonajeDT.crear` volvía sin animación de reposo: se quedaba en T.
+			var ap_r := d.get("anim") as AnimationPlayer
+			_comprobar(ap_r != null and ap_r.is_playing(), "el avatar regalo arranca con su animación de reposo (no en T)")
 		padre.queue_free()
 	## Personal del club: determinista, sin repetirse, reservado.
 	var claves: Array = PersonalEstadio.PUESTOS.keys()

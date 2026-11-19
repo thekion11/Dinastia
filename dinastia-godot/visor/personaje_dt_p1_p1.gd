@@ -100,10 +100,10 @@ const BASE_ESBELTA := {
 	"calf_l": Vector3(0.94, 1.0, 0.94), "calf_r": Vector3(0.94, 1.0, 0.94),
 }
 
-## Sobre la base esbelta: menos hombro y pecho, brazo más fino, cuello algo más largo y la
+## Sobre la base esbelta: menos hombro y pecho, brazo más fino, cuello algo más corto y la
 ## cabeza un pelo mayor (la del pack es pequeña, de héroe).
 const PROPORCION_PERSONA := {
-	"spine_03": Vector3(0.94, 1.0, 0.93), "neck_01": Vector3(1.0, 1.06, 1.0), "Head": Vector3(1.04, 1.04, 1.04),
+	"spine_03": Vector3(0.94, 1.0, 0.93), "neck_01": Vector3(1.0, 0.97, 1.0), "Head": Vector3(1.04, 1.04, 1.04),   ## (19-11) antes 1,06 de largo: de cisne; engordar el hueso abultaba la mandíbula (el grosor, en `equipacion_q`)
 	"clavicle_l": Vector3(0.9, 0.95, 0.95), "clavicle_r": Vector3(0.9, 0.95, 0.95),
 	"upperarm_l": Vector3(1.0, 0.93, 0.93), "upperarm_r": Vector3(1.0, 0.93, 0.93),
 }

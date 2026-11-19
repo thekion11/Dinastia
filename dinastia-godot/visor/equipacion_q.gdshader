@@ -314,8 +314,8 @@ void vertex() {
 		// mandíbula y la nuca (sin escalones). En la mujer, la mitad.
 		{
 			float yc = y - dy_cuerpo;
-			float zona_cuello = (1.0 - brazo) * smoothstep(1.53, 1.565, yc) * (1.0 - smoothstep(1.6, 1.64, yc))
-				* (1.0 - smoothstep(0.055, 0.085, ax));
+			float zona_cuello = (1.0 - brazo) * smoothstep(1.525, 1.575, yc) * (1.0 - smoothstep(1.575, 1.61, yc))
+				* (1.0 - smoothstep(0.035, 0.09, ax));   // (19-11) hasta 1,64 abultaba bajo la mandíbula con la cabeza girada
 			vec3 nh = vec3(n_anim.x, 0.0, n_anim.z);
 			float lado = clamp(length(nh), 0.0, 1.0) * (1.0 - 0.6 * smoothstep(0.4, 0.9, n_anim.z));
 			VERTEX += normalize(nh + vec3(1e-5)) * zona_cuello * lado * cuello_extra * (dy_cuerpo < -0.01 ? 0.5 : 1.0);
