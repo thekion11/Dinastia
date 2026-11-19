@@ -1,0 +1,450 @@
+{
+ "fecha": "2026-11-18",
+ "rama": "main",
+ "issues": [
+  {
+   "key": "AaHo4KucrF4dwmzojDts",
+   "rule": "python:S8786",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:herramientas/jugadores_parecido.py",
+   "project": "thekion11_Dinastia",
+   "line": 97,
+   "hash": "ea7fd9093e6f6befef5647d510d973a3",
+   "textRange": {
+    "startLine": 97,
+    "endLine": 97,
+    "startOffset": 24,
+    "endOffset": 78
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "Simplify this regular expression to reduce its runtime, as it has super-linear performance due to backtracking.",
+   "effort": "20min",
+   "debt": "20min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "performance",
+    "regex"
+   ],
+   "creationDate": "2026-11-17T09:01:46+0000",
+   "updateDate": "2026-11-17T09:38:27+0000",
+   "type": "CODE_SMELL",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "EFFICIENT",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "RELIABILITY",
+     "severity": "MEDIUM"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "97cb3318-df42-425c-98a8-8d857a42f765",
+   "lastChangeSource": "ANALYSIS",
+   "producer": "SCANNER"
+  },
+  {
+   "key": "AaHo4KucrF4dwmzojDtr",
+   "rule": "python:S4790",
+   "severity": "CRITICAL",
+   "component": "thekion11_Dinastia:herramientas/jugadores_parecido.py",
+   "project": "thekion11_Dinastia",
+   "line": 54,
+   "hash": "d543d4305e914ecf3d1db834e750ed13",
+   "textRange": {
+    "startLine": 54,
+    "endLine": 54,
+    "startOffset": 39,
+    "endOffset": 43
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "Make sure that hashing data is safe here.",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cryptography",
+    "cwe",
+    "former-hotspot"
+   ],
+   "creationDate": "2026-11-17T05:31:44+0000",
+   "updateDate": "2026-11-17T09:38:27+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "TRUSTWORTHY",
+   "cleanCodeAttributeCategory": "RESPONSIBLE",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "97cb3318-df42-425c-98a8-8d857a42f765",
+   "lastChangeSource": "ANALYSIS",
+   "producer": "SCANNER"
+  },
+  {
+   "key": "AaHo4KucrF4dwmzojDtt",
+   "rule": "python:S8786",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:herramientas/jugadores_parecido.py",
+   "project": "thekion11_Dinastia",
+   "line": 133,
+   "hash": "91e20d753669e5656783d7c84e58248b",
+   "textRange": {
+    "startLine": 133,
+    "endLine": 133,
+    "startOffset": 23,
+    "endOffset": 34
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "Simplify this regular expression to reduce its runtime, as it has super-linear performance due to backtracking.",
+   "effort": "20min",
+   "debt": "20min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "performance",
+    "regex"
+   ],
+   "creationDate": "2026-11-17T05:31:44+0000",
+   "updateDate": "2026-11-17T09:38:27+0000",
+   "type": "CODE_SMELL",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "EFFICIENT",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "RELIABILITY",
+     "severity": "MEDIUM"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "97cb3318-df42-425c-98a8-8d857a42f765",
+   "lastChangeSource": "ANALYSIS",
+   "producer": "SCANNER"
+  },
+  {
+   "key": "AaHojpOf8U9q3ZFa3-SU",
+   "rule": "javascript:S7773",
+   "severity": "MINOR",
+   "component": "thekion11_Dinastia:docs/04_auditorias/maqueta_avanzar_2026-11-16.html",
+   "project": "thekion11_Dinastia",
+   "line": 874,
+   "hash": "71bf9e373a81e4930652300c62daab3d",
+   "textRange": {
+    "startLine": 874,
+    "endLine": 874,
+    "startOffset": 33,
+    "endOffset": 41
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "Prefer `Number.parseInt` over `parseInt`.",
+   "effort": "2min",
+   "debt": "2min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "convention",
+    "editable-source",
+    "es2015"
+   ],
+   "creationDate": "2026-11-17T01:59:08+0000",
+   "updateDate": "2026-11-17T02:00:11+0000",
+   "type": "CODE_SMELL",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "CONVENTIONAL",
+   "cleanCodeAttributeCategory": "CONSISTENT",
+   "impacts": [
+    {
+     "softwareQuality": "RELIABILITY",
+     "severity": "MEDIUM"
+    },
+    {
+     "softwareQuality": "MAINTAINABILITY",
+     "severity": "LOW"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "2c79794a-f84a-4882-a1c6-11f9ddc5a04c",
+   "lastChangeSource": "ANALYSIS",
+   "producer": "SCANNER"
+  },
+  {
+   "key": "AaHojpOf8U9q3ZFa3-SY",
+   "rule": "css:S4657",
+   "severity": "CRITICAL",
+   "component": "thekion11_Dinastia:docs/04_auditorias/maqueta_avanzar_2026-11-16.html",
+   "project": "thekion11_Dinastia",
+   "line": 255,
+   "hash": "b96c2a51bf78c223084e362e76fe3c85",
+   "textRange": {
+    "startLine": 255,
+    "endLine": 255,
+    "startOffset": 27,
+    "endOffset": 31
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "Overridden property \"font-style\" by shorthand \"font\"",
+   "effort": "5min",
+   "debt": "5min",
+   "author": "noreply@anthropic.com",
+   "tags": [],
+   "creationDate": "2026-11-17T01:46:12+0000",
+   "updateDate": "2026-11-17T01:47:14+0000",
+   "type": "BUG",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "LOGICAL",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "RELIABILITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "2c79794a-f84a-4882-a1c6-11f9ddc5a04c",
+   "lastChangeSource": "ANALYSIS",
+   "producer": "SCANNER"
+  },
+  {
+   "key": "AaHojpOf8U9q3ZFa3-SV",
+   "rule": "javascript:S3923",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:docs/04_auditorias/maqueta_avanzar_2026-11-16.html",
+   "project": "thekion11_Dinastia",
+   "line": 1375,
+   "hash": "2cbea60c5bdfb549b83eccec78c62d7c",
+   "textRange": {
+    "startLine": 1375,
+    "endLine": 1375,
+    "startOffset": 39,
+    "endOffset": 59
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "This conditional operation returns the same value whether the condition is \"true\" or \"false\".",
+   "effort": "15min",
+   "debt": "15min",
+   "author": "noreply@anthropic.com",
+   "tags": [],
+   "creationDate": "2026-11-17T01:46:12+0000",
+   "updateDate": "2026-11-17T01:47:14+0000",
+   "type": "BUG",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "CLEAR",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "RELIABILITY",
+     "severity": "MEDIUM"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "2c79794a-f84a-4882-a1c6-11f9ddc5a04c",
+   "lastChangeSource": "ANALYSIS",
+   "producer": "SCANNER"
+  },
+  {
+   "key": "AaHojpOf8U9q3ZFa3-SX",
+   "rule": "css:S4657",
+   "severity": "CRITICAL",
+   "component": "thekion11_Dinastia:docs/04_auditorias/maqueta_avanzar_2026-11-16.html",
+   "project": "thekion11_Dinastia",
+   "line": 113,
+   "hash": "c60ef89d5e33b34520b7705009974e57",
+   "textRange": {
+    "startLine": 113,
+    "endLine": 113,
+    "startOffset": 95,
+    "endOffset": 99
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "Overridden property \"line-height\" by shorthand \"font\"",
+   "effort": "5min",
+   "debt": "5min",
+   "author": "noreply@anthropic.com",
+   "tags": [],
+   "creationDate": "2026-11-16T23:38:49+0000",
+   "updateDate": "2026-11-16T23:39:46+0000",
+   "type": "BUG",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "LOGICAL",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "RELIABILITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "2c79794a-f84a-4882-a1c6-11f9ddc5a04c",
+   "lastChangeSource": "ANALYSIS",
+   "producer": "SCANNER"
+  },
+  {
+   "key": "AaHojpOf8U9q3ZFa3-SW",
+   "rule": "css:S4656",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:docs/04_auditorias/maqueta_avanzar_2026-11-16.html",
+   "project": "thekion11_Dinastia",
+   "line": 205,
+   "hash": "dc37bb6182314d5563291568b7eed969",
+   "textRange": {
+    "startLine": 205,
+    "endLine": 205,
+    "startOffset": 15,
+    "endOffset": 22
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "Duplicate property \"display\"",
+   "effort": "1min",
+   "debt": "1min",
+   "author": "noreply@anthropic.com",
+   "tags": [],
+   "creationDate": "2026-11-16T23:10:41+0000",
+   "updateDate": "2026-11-16T23:12:00+0000",
+   "type": "BUG",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "LOGICAL",
+   "cleanCodeAttributeCategory": "INTENTIONAL",
+   "impacts": [
+    {
+     "softwareQuality": "RELIABILITY",
+     "severity": "MEDIUM"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "2c79794a-f84a-4882-a1c6-11f9ddc5a04c",
+   "lastChangeSource": "ANALYSIS",
+   "producer": "SCANNER"
+  },
+  {
+   "key": "AaHiXQjNeSdwXqCrLwRx",
+   "rule": "githubactions:S7637",
+   "severity": "MAJOR",
+   "component": "thekion11_Dinastia:.github/workflows/compilar.yml",
+   "project": "thekion11_Dinastia",
+   "line": 603,
+   "hash": "3f56ad555588d90bf6f7c432056b69ba",
+   "textRange": {
+    "startLine": 603,
+    "endLine": 603,
+    "startOffset": 14,
+    "endOffset": 45
+   },
+   "flows": [],
+   "status": "OPEN",
+   "message": "Use full commit SHA hash for this dependency.",
+   "effort": "30min",
+   "debt": "30min",
+   "author": "noreply@anthropic.com",
+   "tags": [
+    "cwe",
+    "former-hotspot"
+   ],
+   "creationDate": "2026-11-16T03:09:15+0000",
+   "updateDate": "2026-11-16T03:17:18+0000",
+   "type": "VULNERABILITY",
+   "organization": "thekion11",
+   "cleanCodeAttribute": "TRUSTWORTHY",
+   "cleanCodeAttributeCategory": "RESPONSIBLE",
+   "impacts": [
+    {
+     "softwareQuality": "SECURITY",
+     "severity": "HIGH"
+    }
+   ],
+   "issueStatus": "OPEN",
+   "projectName": "Dinastia",
+   "internalTags": [],
+   "lastChangeAnalysisUuid": "afc470e6-6e57-4452-9ecd-b9c3c67e2b60",
+   "lastChangeSource": "ANALYSIS",
+   "producer": "SCANNER"
+  }
+ ],
+ "hotspots": [],
+ "duplicaciones": [
+  {
+   "path": "recursos/modelos3d/cc0_web/kenney_city-kit-commercial/Overview.html",
+   "lineas": 150,
+   "pct": "64.1"
+  },
+  {
+   "path": "recursos/modelos3d/cc0_web/kenney_car-kit/Overview.html",
+   "lineas": 150,
+   "pct": "61.7"
+  },
+  {
+   "path": "dinastia-godot/nativo/src/league_equipo_nativo.cpp",
+   "lineas": 73,
+   "pct": "22.8"
+  },
+  {
+   "path": "dinastia-godot/nativo/src/league_portador_nativo.cpp",
+   "lineas": 70,
+   "pct": "18.5"
+  },
+  {
+   "path": "herramientas/caras_reales_rescate.ps1",
+   "lineas": 31,
+   "pct": "18.3"
+  },
+  {
+   "path": "herramientas/empaquetar.ps1",
+   "lineas": 28,
+   "pct": "10.3"
+  },
+  {
+   "path": "herramientas/caras_reales_buscar.ps1",
+   "lineas": 27,
+   "pct": "15.1"
+  },
+  {
+   "path": "dinastia-godot/nativo/src/sin_balon_nativo.cpp",
+   "lineas": 19,
+   "pct": "4.4"
+  },
+  {
+   "path": "herramientas/generar_2d_ia.ps1",
+   "lineas": 14,
+   "pct": "16.7"
+  },
+  {
+   "path": "herramientas/generar_3d_ia.ps1",
+   "lineas": 14,
+   "pct": "13.9"
+  },
+  {
+   "path": "herramientas/compilacion_menu/aplicar.py",
+   "lineas": 10,
+   "pct": "19.2"
+  },
+  {
+   "path": "herramientas/compilacion_menu/exper.py",
+   "lineas": 10,
+   "pct": "11.9"
+  }
+ ]
+}
