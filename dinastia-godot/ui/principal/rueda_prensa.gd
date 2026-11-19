@@ -135,7 +135,7 @@ func _montar_plato() -> void:
 		if liga != null:
 			clubes = liga.clubes
 	_ctx = _contexto_rueda()
-	escena.montar(mio, p.COL_ACENTO, Calidad.elegida, _look_dt(), clubes, _ctx)
+	escena.montar(mio, p.col_acento, Calidad.elegida, _look_dt(), clubes, _ctx)
 
 ## Arriba a la izquierda: «RUEDA DE PRENSA» y la placa del DT (foto y nombre).
 func _cabecera() -> Control:
@@ -157,7 +157,7 @@ func _cabecera() -> Control:
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 0)
 	fila.add_child(col)
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🎙️ RUEDA DE PRENSA")
 	t.uppercase = true
 	col.add_child(t)
@@ -176,7 +176,7 @@ func _franja_tv() -> PanelContainer:
 	franja.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var sb := _caja(0.78, 0, 22.0)
 	sb.border_width_top = 3
-	sb.border_color = Color(p.COL_ACENTO, 0.7)
+	sb.border_color = Color(p.col_acento, 0.7)
 	franja.add_theme_stylebox_override("panel", sb)
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 4)
@@ -184,7 +184,7 @@ func _franja_tv() -> PanelContainer:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 12)
 	col.add_child(fila)
-	_quien = p._texto(14, p.COL_ACENTO)
+	_quien = p._texto(14, p.col_acento)
 	fila.add_child(_quien)
 	_medio = p._texto(12, Principal.COL_SUAVE)
 	_medio.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -330,7 +330,7 @@ func _fila_opciones(e: Dictionary) -> Container:
 			textos.append(String((op as Array)[0]))
 		else:
 			textos.append(str(op))
-	var sel := SelectorDireccional.crear(textos, p.COL_ACENTO)
+	var sel := SelectorDireccional.crear(textos, p.col_acento)
 	sel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for i in sel.get_child_count():
 		var b := sel.get_child(i) as Button

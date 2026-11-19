@@ -239,7 +239,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 		obj = pv + (arco - pv).normalized() * (1.2 if al_hombre else 2.4)
 	## La defensa no persigue a cada delantero hacia su arco: se queda en la
 	## línea común (M-123) y solo cierra por dentro hacia el que marca.
-	if _rol(p) in ["DFC", "LD", "LI"] and not _SIN_LINEA:
+	if _rol(p) in ["DFC", "LD", "LI"] and not sin_linea:
 		obj.z = _linea_defensiva(bool(p["es_local"]))
 	return MotorAncla.limitar(self as Object as MotorJugable, p, MotorRegiones.libre(self as Object as MotorJugable, p, obj))   ## región propia + ancla (3-11)
 

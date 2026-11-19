@@ -141,7 +141,7 @@ func _fila_reloj() -> VBoxContainer:
 	reloj.show_percentage = false
 	reloj.custom_minimum_size = Vector2(0, 5)
 	reloj.max_value = Prensa.TITUBEO_SEG
-	for par: Array in [["background", Color(1, 1, 1, 0.1)], ["fill", Color(p.COL_ACENTO, 0.85)]]:
+	for par: Array in [["background", Color(1, 1, 1, 0.1)], ["fill", Color(p.col_acento, 0.85)]]:
 		var sbr := StyleBoxFlat.new()
 		sbr.bg_color = par[1]
 		sbr.set_corner_radius_all(3)

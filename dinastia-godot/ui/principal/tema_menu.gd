@@ -26,8 +26,8 @@ func _aplicar_tema() -> void:
 	## (10-11, estética) Con RELIEVE (`ProfundidadUI`): sombra en reposo, más al pasar por encima, y pulsado se hunde.
 	t.set_stylebox("normal", "Button", ProfundidadUI.relieve(p._caja(reposo, borde, radio, 1)))
 	t.set_stylebox("hover", "Button", ProfundidadUI.relieve(p._caja(p._mezcla(panel, texto, 0.24), borde, radio, 1), true))
-	t.set_stylebox("pressed", "Button", ProfundidadUI.hundido(p._caja(p._mezcla(panel, p.COL_ACENTO, 0.45), p.COL_ACENTO, radio, 1)))
-	t.set_stylebox("focus", "Button", p._caja(Color(0, 0, 0, 0), p.COL_ACENTO, radio, 2))
+	t.set_stylebox("pressed", "Button", ProfundidadUI.hundido(p._caja(p._mezcla(panel, p.col_acento, 0.45), p.col_acento, radio, 1)))
+	t.set_stylebox("focus", "Button", p._caja(Color(0, 0, 0, 0), p.col_acento, radio, 2))
 	t.set_stylebox("disabled", "Button", p._caja(p._mezcla(panel, texto, 0.05), borde, radio, 1))
 	t.set_color("font_color", "Button", texto)
 	t.set_color("font_hover_color", "Button", texto)
@@ -43,9 +43,9 @@ func _aplicar_tema() -> void:
 	for clase: String in ["OptionButton", "MenuButton", "CheckBox", "CheckButton"]:
 		t.set_stylebox("normal", clase, ProfundidadUI.relieve(p._caja(reposo, borde, radio, 1)))
 		t.set_stylebox("hover", clase, ProfundidadUI.relieve(p._caja(p._mezcla(panel, texto, 0.24), borde, radio, 1), true))
-		t.set_stylebox("pressed", clase, ProfundidadUI.hundido(p._caja(p._mezcla(panel, p.COL_ACENTO, 0.45), p.COL_ACENTO, radio, 1)))
+		t.set_stylebox("pressed", clase, ProfundidadUI.hundido(p._caja(p._mezcla(panel, p.col_acento, 0.45), p.col_acento, radio, 1)))
 		## (10-11, estética) el mismo FOCO y DESACTIVADO que el botón: los desplegables y casillas usaban los de fábrica (otro color y grosor)
-		t.set_stylebox("focus", clase, p._caja(Color(0, 0, 0, 0), p.COL_ACENTO, radio, 2))
+		t.set_stylebox("focus", clase, p._caja(Color(0, 0, 0, 0), p.col_acento, radio, 2))
 		t.set_stylebox("disabled", clase, p._caja(p._mezcla(panel, texto, 0.05), borde, radio, 1))
 		t.set_color("font_color", clase, texto)
 		t.set_color("font_hover_color", clase, texto)
@@ -59,7 +59,7 @@ func _aplicar_tema() -> void:
 	hoja.content_margin_bottom = 6
 	t.set_stylebox("panel", "TabContainer", hoja)
 	t.set_stylebox("tabbar_background", "TabContainer", p._caja(Color(0, 0, 0, 0), borde, 0, 0))
-	t.set_stylebox("tab_selected", "TabContainer", p._caja(p._mezcla(panel, p.COL_ACENTO, 0.30), p.COL_ACENTO, radio, 1))
+	t.set_stylebox("tab_selected", "TabContainer", p._caja(p._mezcla(panel, p.col_acento, 0.30), p.col_acento, radio, 1))
 	t.set_stylebox("tab_unselected", "TabContainer", p._caja(p._mezcla(panel, texto, 0.06), borde, radio, 1))
 	t.set_stylebox("tab_hovered", "TabContainer", p._caja(p._mezcla(panel, texto, 0.18), borde, radio, 1))
 	t.set_color("font_selected_color", "TabContainer", texto)
@@ -80,13 +80,13 @@ func _aplicar_tema() -> void:
 		t.set_stylebox("normal", clase2, hueco)
 		t.set_color("font_color", clase2, texto)
 		t.set_color("font_placeholder_color", clase2, suave)
-		t.set_color("caret_color", clase2, p.COL_ACENTO)
-	t.set_stylebox("focus", "LineEdit", p._caja(p._mezcla(panel, p._pal_fondo(), 0.55), p.COL_ACENTO, radio, 2))
+		t.set_color("caret_color", clase2, p.col_acento)
+	t.set_stylebox("focus", "LineEdit", p._caja(p._mezcla(panel, p._pal_fondo(), 0.55), p.col_acento, radio, 2))
 
 	## Barras y deslizadores.
-	TemaSliders.aplicar(t, p.COL_ACENTO, p._mezcla(panel, p._pal_fondo(), 0.5), borde, p.get_tree())   ## deslizadores gruesos (pista 8, tirador 28, área 44)
+	TemaSliders.aplicar(t, p.col_acento, p._mezcla(panel, p._pal_fondo(), 0.5), borde, p.get_tree())   ## deslizadores gruesos (pista 8, tirador 28, área 44)
 	t.set_stylebox("background", "ProgressBar", p._caja(p._mezcla(panel, p._pal_fondo(), 0.5), borde, 3, 0))
-	t.set_stylebox("fill", "ProgressBar", p._caja(p.COL_ACENTO, p.COL_ACENTO, 3, 0))
+	t.set_stylebox("fill", "ProgressBar", p._caja(p.col_acento, p.col_acento, 3, 0))
 
 	t.set_color("default_color", "RichTextLabel", texto)
 	t.set_color("font_color", "Label", texto)
@@ -278,7 +278,7 @@ func _panel() -> PanelContainer:
 	## StyleBox porque un StyleBox solo sabe pintar un borde entero y uniforme.
 	if p._marca_tarjeta != "ninguno":
 		var mk := MarcaPanel.new()
-		mk.poner(p._marca_tarjeta, p.COL_ACENTO)
+		mk.poner(p._marca_tarjeta, p.col_acento)
 		panel.add_child(mk)
 	if not p._brillo_tarjetas:
 		return panel

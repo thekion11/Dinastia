@@ -17,7 +17,7 @@ extends PantallaBase
 ## que corregirla después).
 func _paleta_ficha() -> Dictionary:
 	return {
-		"suave": p._pal_suave(), "texto": p._pal_texto(), "acento": p.COL_ACENTO,
+		"suave": p._pal_suave(), "texto": p._pal_texto(), "acento": p.col_acento,
 		"verde": p._color_accesible(Principal.COL_VERDE), "rojo": p._color_accesible(Principal.COL_ROJO),
 		"oro": p._color_accesible(Principal.COL_ORO), "escala": p._escala_texto,
 	}
@@ -44,7 +44,7 @@ func _pagar_clausula(j: Jugador) -> void:
 ## Los colores que recibe `PanelClubDentro`: los mismos `COL_*` de siempre,
 ## sin traducir -los traduce `_texto()`, que es quien pinta-.
 func _paleta_club_dentro() -> Dictionary:
-	return {"suave": Principal.COL_SUAVE, "acento": p.COL_ACENTO, "verde": Principal.COL_VERDE, "texto": Principal.COL_TEXTO,
+	return {"suave": Principal.COL_SUAVE, "acento": p.col_acento, "verde": Principal.COL_VERDE, "texto": Principal.COL_TEXTO,
 		"oro": Principal.COL_ORO, "rojo": Principal.COL_ROJO}
 
 func _alternar_consejero(k: String) -> void:

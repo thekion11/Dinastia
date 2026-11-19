@@ -18,7 +18,7 @@ const MARGENES := {
 	"pelvis": 0.09, "spine_02": 0.09, "spine_03": 0.09, "neck_01": 0.09, "Head": 0.10,
 }
 const RUTA_CLIPS := "res://datos/clips_bajo_suelo.json"
-static var CLIPS: Dictionary = {}
+static var clips: Dictionary = {}
 
 var _nodo: Node3D
 var _modelo: Node3D
@@ -30,12 +30,12 @@ var _base_y := 0.0
 var offset := 0.0
 
 static func _cargar() -> void:
-	if not CLIPS.is_empty():
+	if not clips.is_empty():
 		return
 	var txt := FileAccess.get_file_as_string(RUTA_CLIPS)
 	var lista: Variant = JSON.parse_string(txt) if txt != "" else []
 	for c: Variant in (lista as Array if lista is Array else []):
-		CLIPS[String(c)] = true
+		clips[String(c)] = true
 
 ## Se cuelga del nodo de un futbolista (el que crea `PlayerSpawner`). Sin esqueleto o sin modelo conocido, no hace nada.
 static func poner(nodo: Node3D, anim: AnimationPlayer) -> AnclaSuelo:
@@ -78,7 +78,7 @@ func _process(delta: float) -> void:
 	if not is_instance_valid(_anim) or not is_instance_valid(_modelo) or not is_instance_valid(_esq) or not is_instance_valid(_nodo):
 		set_process(false)
 		return
-	var activo := CLIPS.has(String(_anim.assigned_animation))   ## `assigned`: el clip que acaba sin bucle deja su última pose
+	var activo := clips.has(String(_anim.assigned_animation))   ## `assigned`: el clip que acaba sin bucle deja su última pose
 	if not activo and offset < 0.002:
 		return
 	var objetivo := necesario() if activo else 0.0

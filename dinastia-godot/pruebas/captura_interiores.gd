@@ -7,7 +7,7 @@ const CLAVES_BASE := ["ciudad_ayuntamiento", "ciudad_hospital", "ciudad_comisari
 	"edificio_oficina", "edificio_tienda|Farmacia", "edificio_mercado"]
 ## SALAS="clave1,clave2" para fotografiar solo esas; PREFIJO="antes_" para no pisar fotos.
 var claves: Array = Array(OS.get_environment("SALAS").split(",")) if OS.get_environment("SALAS") != "" else CLAVES_BASE
-var PREFIJO := OS.get_environment("PREFIJO")
+var prefijo := OS.get_environment("PREFIJO")
 var _i := -1
 var _t := 0.0
 var _int: Control
@@ -26,7 +26,7 @@ func _process(d: float) -> void:
 		cam.look_at(_cam_fija[1], Vector3.UP)
 	if _int == null or _t > 2.0:
 		if _int != null:
-			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/interior_%s%s.png" % [PREFIJO, String(claves[_i]).get_slice("|", 0)])
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/interior_%s%s.png" % [prefijo, String(claves[_i]).get_slice("|", 0)])
 			print("FOTO %s · %d triángulos · %d llamadas · %d nodos" % [claves[_i],
 				RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME),
 				RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),

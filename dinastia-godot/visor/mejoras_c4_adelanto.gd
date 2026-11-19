@@ -6,15 +6,15 @@ extends RefCounted
 ## rival más cercano, con su reacción) y, si gana el rival, prueba con la mitad del adelanto y, si tampoco, se la da al pie.
 ## Solo en C4 (gancho `_guia_pase` de la capa 1; el motor de siempre no cambia). Contadores: `c4_adelanto_medio`, `c4_adelanto_pie`.
 
-static var MODO := OS.get_environment("C4_ADELANTO")
-static var activo := MODO in ["1", "2", "3"]
+static var modo := OS.get_environment("C4_ADELANTO")
+static var activo := modo in ["1", "2", "3"]
 ## Con `C4_ADELANTO=2` (variante de medida) no toca los pases al hueco: el riesgo del pase al espacio se queda.
-static var respeta_hueco := MODO == "2"
+static var respeta_hueco := modo == "2"
 ## (12-11, sesión 15) `C4_ADELANTO=3`: solo en campo propio o con el marcador a favor, NUNCA en el último tercio (el riesgo que crea
 ## el peligro se queda). `C4_ADELANTO=4`: el adelanto no cambia; si el punto lo gana el rival, el pasador ELIGE OTRO compañero cuyo
 ## punto gane el nuestro (si no hay ninguno, el pase de siempre).
-static var por_zona := MODO == "3"
-static var otro := MODO == "4"
+static var por_zona := modo == "3"
+static var otro := modo == "4"
 const V_BALON := 15.0       ## m/s medio del pase raso
 const V_RECEPTOR := 6.0     ## m/s del receptor yendo al punto
 const V_RIVAL := 6.5        ## m/s del rival

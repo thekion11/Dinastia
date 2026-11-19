@@ -216,9 +216,9 @@ func _pintar_mesa_debate(p_local: Prensa) -> void:
 		var c2: Club = f2["club"]
 		p._dato("%d.  %s" % [i2 + 1, c2.nombre],
 			Idiomas.t("%d  ·  va %d.º y se le esperaba %d.º") % [int(f2["nota"]), int(f2["puesto"]), int(f2["esperado"])],
-			p.COL_ACENTO if bool(f2["mio"]) else Principal.COL_TEXTO, p._lista_redes)
+			p.col_acento if bool(f2["mio"]) else Principal.COL_TEXTO, p._lista_redes)
 	if mi_puesto > 8:
-		var mp := p._texto(11, p.COL_ACENTO)
+		var mp := p._texto(11, p.col_acento)
 		mp.text = Idiomas.t("Tú vas %d.º de %d.") % [mi_puesto, rank.size()]
 		p._lista_redes.add_child(mp)
 

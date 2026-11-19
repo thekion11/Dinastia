@@ -327,7 +327,7 @@ static var a_max_v := float(OS.get_environment("A_MAX")) if OS.get_environment("
 ## - nunca se mete en su área chica ni pasa al balón.
 ## Se calcula una vez por paso y se mueve suave (la línea va junta, sin saltos).
 var _linea_def := [INF, INF]
-static var _SIN_LINEA := OS.get_environment("SIN_LINEA") != ""   ## (sondas: la defensa de antes)
+static var sin_linea := OS.get_environment("SIN_LINEA") != ""   ## (sondas: la defensa de antes)
 var _linea_def_t := [-1.0, -1.0]
 
 ## Quién lo lanza. El usuario, si es de su equipo y le toca: los córners y las

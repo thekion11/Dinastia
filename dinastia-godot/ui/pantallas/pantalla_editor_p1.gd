@@ -45,7 +45,7 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 	if mio == null:
 		return
 	p._lista_editor.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("COMPETICIONES")
 	p._lista_editor.add_child(t)
 	for l: Liga in p.mundo.ligas:
@@ -153,7 +153,7 @@ func _fila_mas_menos(etiqueta: String, valor: String, accion: Callable, padre: N
 
 func _pintar_editor_clubes(ed: Editor) -> void:
 	p._lista_editor.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("CLUBES")
 	p._lista_editor.add_child(t)
 	var busca := LineEdit.new()
@@ -424,7 +424,7 @@ func _pintar_editor_jugadores(ed: Editor) -> void:
 	if c == null:
 		return
 	p._lista_editor.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("JUGADORES DE TU PLANTEL")
 	p._lista_editor.add_child(t)
 	for j: Jugador in c.plantilla:

@@ -198,7 +198,7 @@ func _pintar_clubes() -> void:
 			b.add_theme_font_size_override("font_size", Tema.letra(12))
 			## (12-11) El club propio, con el acento ACLARADO hasta leerse sobre el panel (un verde o un azul oscuro de club casi no se veía), y toda su fila con él.
 			var mio := club == p.mundo.mi_club()
-			var col_mio: Color = p._con_contraste(p.COL_ACENTO)
+			var col_mio: Color = p._con_contraste(p.col_acento)
 			b.add_theme_color_override("font_color", col_mio if mio else p._color_de_paleta(p.COL_TEXTO))
 			b.pressed.connect(func() -> void:
 				p._clubes_ficha = null if p._clubes_ficha == club else club

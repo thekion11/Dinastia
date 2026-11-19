@@ -135,7 +135,7 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		reg += 0.35
 	## Defensa contra regate al cuadrado: el buen defensor roba bastante más
 	## que el malo (antes la proporción lineal igualaba a todos).
-	var exito := def_loc * def_loc / (def_loc * def_loc + reg * reg) * (0.55 if barrida else 0.32) * MotorDuelo.K
+	var exito := def_loc * def_loc / (def_loc * def_loc + reg * reg) * (0.55 if barrida else 0.32) * MotorDuelo.k
 	## La entrada de pie también es cuerpo: el fuerte se impone al débil (y
 	## el que tiene equilibrio aguanta). De media no cambia nada.
 	if not barrida:

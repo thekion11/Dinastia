@@ -8,7 +8,7 @@ extends BaseIdea
 ## AUDITORIA=detalle imprime cada caso. Falla si una pasada (idioma × resolución) tiene más
 ## cortes que `TOPE_CORTADOS`. Medido el 26-10 tras arreglar: 7/7/3 (es/de/tr) a 1280×720 y
 ## 23/21/17 a 1920×1080 (antes: 69/16/12 y 139/84/28); y 0 botones sin foco (antes 18).
-var IDIOMAS: Array = OS.get_environment("AUDITORIA_IDIOMAS").split(",") if OS.get_environment("AUDITORIA_IDIOMAS") != "" else ["es", "de", "tr"]
+var idiomas: Array = OS.get_environment("AUDITORIA_IDIOMAS").split(",") if OS.get_environment("AUDITORIA_IDIOMAS") != "" else ["es", "de", "tr"]
 var resoluciones: Array = [Vector2i(1280, 720)] if OS.get_environment("AUDITORIA_RES") == "1280" else [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const TOPE_CORTADOS := 30
 const TOPE_SIN_FOCO := 0
@@ -34,7 +34,7 @@ func _ready() -> void:
 	var sin_foco := 0
 	for res: Vector2i in resoluciones:
 		get_tree().root.size = res
-		for l: String in IDIOMAS:
+		for l: String in idiomas:
 			Idiomas.idioma = l
 			var r := await _recorrer()
 			peor = maxi(peor, int(r[0]))
