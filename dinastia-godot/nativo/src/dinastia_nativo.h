@@ -171,6 +171,11 @@ public:
 	Color kit_color_dominante(const Ref<Image> &img, const Rect2i &r) const;
 	PackedByteArray kit_retener(const PackedByteArray &datos, int64_t w, int64_t h, const Color &piel, const Color &pelo, double lum_piel, double lum_pelo, const Rect2i &cabeza, const Rect2i &manos) const;
 	Ref<Image> kit_barba(const Ref<Image> &img, const Color &pelo, int64_t barba, const Rect2i &rect) const;
+	// (19-11) `StadiumBuilder._pintar_publico` (visor/stadium_builder_p4.gd, nativo/src/publico_nativo.cpp): el público de la textura de grada (null si la imagen no es RGB8 de w×h); gemela `_pintar_publico_gd`. Avanza el estado de `rng`.
+	Ref<Image> publico_pintar(const Ref<Image> &img, int64_t w, int64_t h, const Color &a1, const Color &a2, double lleno, const Ref<RandomNumberGenerator> &rng) const;
+	// (19-11) texturas de grada (nativo/src/grada_nativo.cpp): `StadiumBuilder._make_stand_texture_calc` y `_make_stand_texture_tramos` (la imagen RGB8 de 96×320, sin mipmaps); gemelas `*_gd`.
+	Ref<Image> grada_imagen(const String &patron, const Color &a1, const Color &a2, const Color &a3, int64_t semilla, double lleno) const;
+	Ref<Image> grada_tramos(const Array &patrones, const Array &colores, int64_t semilla, double lleno) const;
 	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
 	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
 	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;

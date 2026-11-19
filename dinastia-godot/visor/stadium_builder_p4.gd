@@ -194,6 +194,16 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 ## que se ve en `ea_fc25_referencia.mp4`: filas, no una mancha de confeti.
 static func _pintar_publico(img: Image, w: int, h: int, a1: Color, a2: Color,
 		lleno: float, rng: RandomNumberGenerator) -> void:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("publico_pintar"):   ## (19-11) en C++ (`nativo/src/publico_nativo.cpp`); gemela: `_pintar_publico_gd`
+		var hecha: Image = nat.publico_pintar(img, w, h, a1, a2, lleno, rng)
+		if hecha != null:
+			img.blit_rect(hecha, Rect2i(0, 0, w, h), Vector2i.ZERO)
+			return
+	_pintar_publico_gd(img, w, h, a1, a2, lleno, rng)
+
+static func _pintar_publico_gd(img: Image, w: int, h: int, a1: Color, a2: Color,
+		lleno: float, rng: RandomNumberGenerator) -> void:
 	var piel := [Color(0.95, 0.78, 0.62), Color(0.80, 0.60, 0.42),
 		Color(0.55, 0.38, 0.26), Color(0.36, 0.24, 0.17)]
 	var ropa := [Color(0.85, 0.85, 0.88), Color(0.15, 0.16, 0.2), a1, a2,
@@ -277,6 +287,17 @@ static func _make_stand_texture(patron: String, a1: Color, a2: Color, a3: Color,
 		_make_stand_texture_calc.bind(patron, a1, a2, a3, seed_val, lleno))
 
 static func _make_stand_texture_calc(patron: String, a1: Color, a2: Color, a3: Color, seed_val: int, lleno: float) -> ImageTexture:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("grada_imagen"):   ## (19-11) la imagen entera, en C++ (`nativo/src/grada_nativo.cpp`); gemela: `_make_stand_texture_gd`
+		var im: Image = nat.grada_imagen(patron, a1, a2, a3, seed_val, lleno)
+		im.generate_mipmaps()
+		return ImageTexture.create_from_image(im)
+	var img := _make_stand_texture_gd(patron, a1, a2, a3, seed_val, lleno)
+	img.generate_mipmaps()
+	return ImageTexture.create_from_image(img)
+
+## La gemela GDScript de `grada_imagen`: la imagen RGB8 de 96×320 (sin mipmaps generados).
+static func _make_stand_texture_gd(patron: String, a1: Color, a2: Color, a3: Color, seed_val: int, lleno: float) -> Image:
 	## 96, no 64 (23-9-2026): hasta arreglar el atlas de UV del `BoxMesh` solo se veía un tercio de estos texeles.
 	var w := 96    # resolucion subiendo la rampa
 	var h := 320   # resolucion a lo largo (se repite cada ~20 m, mismo tramo que antes)
@@ -318,9 +339,8 @@ static func _make_stand_texture_calc(patron: String, a1: Color, a2: Color, a3: C
 			col = Color(clampf(col.r + grano, 0, 1), clampf(col.g + grano, 0, 1), clampf(col.b + grano, 0, 1))
 			img.set_pixel(x, y, col)
 	_pintar_publico(img, w, h, a1, a2, lleno, rng)
-	## Sin mipmaps (21-9-2026) el ruido de gente visto de lejos hacía aliasing como estática de TV.
-	img.generate_mipmaps()
-	return ImageTexture.create_from_image(img)
+	## Sin mipmaps (21-9-2026) el ruido de gente visto de lejos hacía aliasing como estática de TV (los genera quien llama).
+	return img
 
 ## FASE 3 "TRAMO" de "el estadio por MODULOS", conectada de verdad (22-9-2026).
 ## Nacio como spike (16-9-2026, `pruebas/spike_tramo.gd`) para decidir con una
@@ -335,6 +355,17 @@ static func _make_stand_texture_calc(patron: String, a1: Color, a2: Color, a3: C
 ## tercio de `s`- en vez de generalizada con parametros: se dejo asi a
 ## proposito en el spike y sigue rindiendo bien, no vale la pena abstraerla.
 static func _make_stand_texture_tramos(patrones: Array, colores: Array, seed_val: int, lleno: float) -> ImageTexture:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("grada_tramos"):   ## (19-11) en C++ (`nativo/src/grada_nativo.cpp`); gemela: `_make_stand_texture_tramos_gd`
+		var im: Image = nat.grada_tramos(patrones, colores, seed_val, lleno)
+		im.generate_mipmaps()
+		return ImageTexture.create_from_image(im)
+	var img := _make_stand_texture_tramos_gd(patrones, colores, seed_val, lleno)
+	img.generate_mipmaps()
+	return ImageTexture.create_from_image(img)
+
+## La gemela GDScript de `grada_tramos`: la imagen RGB8 de 96×320 (sin mipmaps generados).
+static func _make_stand_texture_tramos_gd(patrones: Array, colores: Array, seed_val: int, lleno: float) -> Image:
 	## 96 por el mismo motivo que su hermana, ver la nota alli.
 	var w := 96
 	var h := 320
@@ -400,8 +431,7 @@ static func _make_stand_texture_tramos(patrones: Array, colores: Array, seed_val
 	## importa es la de la GRADA, no la de la gente encima-.
 	var trio_c: Array = colores[1] if colores.size() > 1 else colores[0]
 	_pintar_publico(img, w, h, trio_c[0], trio_c[1], lleno, rng)
-	img.generate_mipmaps()
-	return ImageTexture.create_from_image(img)
+	return img
 
 # ------------------------------------------------------------------ estadio
 

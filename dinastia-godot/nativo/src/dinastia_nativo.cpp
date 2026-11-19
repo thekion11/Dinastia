@@ -71,6 +71,9 @@ void DinastiaNativo::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("kit_color_dominante", "img", "r"), &DinastiaNativo::kit_color_dominante);
 	ClassDB::bind_method(D_METHOD("kit_retener", "datos", "w", "h", "piel", "pelo", "lum_piel", "lum_pelo", "cabeza", "manos"), &DinastiaNativo::kit_retener);
 	ClassDB::bind_method(D_METHOD("kit_barba", "img", "pelo", "barba", "rect"), &DinastiaNativo::kit_barba);
+	ClassDB::bind_method(D_METHOD("publico_pintar", "img", "w", "h", "a1", "a2", "lleno", "rng"), &DinastiaNativo::publico_pintar);
+	ClassDB::bind_method(D_METHOD("grada_imagen", "patron", "a1", "a2", "a3", "semilla", "lleno"), &DinastiaNativo::grada_imagen);
+	ClassDB::bind_method(D_METHOD("grada_tramos", "patrones", "colores", "semilla", "lleno"), &DinastiaNativo::grada_tramos);
 	ClassDB::bind_method(D_METHOD("son_tono", "hz", "dur", "vol", "forma", "frecuencia"), &DinastiaNativo::son_tono);
 	ClassDB::bind_method(D_METHOD("son_ruido", "dur", "f0", "f1", "vol", "frecuencia"), &DinastiaNativo::son_ruido);
 	ClassDB::bind_method(D_METHOD("son_mezclar", "destino", "fuente", "retraso", "frecuencia"), &DinastiaNativo::son_mezclar);
