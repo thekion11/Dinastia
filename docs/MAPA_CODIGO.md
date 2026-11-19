@@ -4,16 +4,16 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2508 archivos (.gd, .cpp, .h), 359651 líneas, 991 clases con nombre.
+Total: 2508 archivos (.gd, .cpp, .h), 359662 líneas, 991 clases con nombre.
 
 ## Extensión C++
 
-22 archivos, 4608 líneas. Carpetas: `nativo/src`.
+22 archivos, 4614 líneas. Carpetas: `nativo/src`.
 
 Cada función es copia exacta de su gemela GDScript (regla de la extensión). Archivos por tamaño:
 
+- `nativo/src/partido_90.cpp` (429 líneas)
 - `nativo/src/sin_balon_nativo.cpp` (427 líneas)
-- `nativo/src/partido_90.cpp` (423 líneas)
 - `nativo/src/dinastia_nativo.cpp` (378 líneas)
 - `nativo/src/league_portador_nativo.cpp` (378 líneas)
 - `nativo/src/cerrar_notas.cpp` (354 líneas)
@@ -52,11 +52,11 @@ Cerca del tope (≥ 400 líneas): `carrera_ruta.gd` (450), `carrera_jugador_p1.g
 
 ## Partido: motor C4 y respaldo
 
-89 archivos, 15787 líneas. Carpetas: `nucleo`, `visor`.
+89 archivos, 15792 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Partido` | `nucleo/partido.gd` | 444 | 344 | partido_p2.gd ← partido_p1.gd |
+| `Partido` | `nucleo/partido.gd` | 449 | 344 | partido_p2.gd ← partido_p1.gd |
 | `MotorJugable` | `visor/motor_jugable.gd` | 201 | 181 | motor_jugable_p11.gd ← motor_jugable_p10.gd ← motor_jugable_p9.gd ← motor_jugable_p8.gd ← motor_jugable_p8_p1.gd ← motor_jugable_p7.gd ← motor_jugable_p7_p1.gd ← motor_jugable_p6.gd ← motor_jugable_p6_p1.gd ← motor_jugable_p5.gd ← motor_jugable_p5_p1.gd |
 | `MotorLeague` | `visor/motor_league.gd` | 450 | 25 | motor_league_p1.gd |
 | `MotorCombinado` | `visor/motor_combinado.gd` | 443 | 15 |  |
@@ -71,7 +71,7 @@ Cerca del tope (≥ 400 líneas): `carrera_ruta.gd` (450), `carrera_jugador_p1.g
 | `LeagueMovimiento` | `visor/league_movimiento.gd` | 267 | 8 |  |
 | `MotorColocacion` | `visor/motor_colocacion.gd` | 87 | 8 |  |
 
-Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450), `motor_jugable_p4.gd` (450), `motor_league.gd` (450), `motor_jugable_p2.gd` (449), `motor_jugable_p6_p1.gd` (448), `motor_jugable_p1.gd` (446), `partido.gd` (444), `motor_jugable_p8_p1.gd` (444), `motor_combinado.gd` (443).
+Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450), `motor_jugable_p4.gd` (450), `motor_league.gd` (450), `partido.gd` (449), `motor_jugable_p2.gd` (449), `motor_jugable_p6_p1.gd` (448), `motor_jugable_p1.gd` (446), `motor_jugable_p8_p1.gd` (444), `motor_combinado.gd` (443).
 
 ## Club e instalaciones
 

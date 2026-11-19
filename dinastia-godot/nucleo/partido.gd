@@ -81,14 +81,19 @@ func simular_minuto() -> void:
 	if not motor_externo:
 		if rng.randf() < p_l:
 			_atacar(local, once_local, true)
-		if rng.randf() < p_v:
+		## (19-11) Si el ataque del local SUSPENDE el partido (una roja deja a alguien con menos de siete, `_revisar_siete`), el
+		## minuto se acaba ahí: antes el visitante atacaba igual y podía marcar con el partido ya terminado (un 3-0 de mesa quedaba
+		## 3-1, y la crónica no cuadraba: `ideas/s5_auditoria_partidos`). Igual en la gemela C++ (`nativo/src/partido_90.cpp`).
+		if not terminado_ya and rng.randf() < p_v:
 			_atacar(visita, once_visita, false)
+	if terminado_ya:
+		return
 
 	_incidencias()
 	minuto_jugado.emit(minuto)
 	if prorroga_si_empate and minuto >= minutos_fin and minutos_fin == MINUTOS and goles_local == goles_visita:
 		prorroga_externa()
-	if minuto >= minutos_fin:
+	if minuto >= minutos_fin and not terminado_ya:   ## (19-11) suspendido en `_incidencias` en el último minuto: no se emite `terminado` dos veces
 		terminado_ya = true
 		_devolver_tactica()
 		terminado.emit(goles_local, goles_visita)

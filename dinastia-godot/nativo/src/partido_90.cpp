@@ -351,8 +351,14 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		if (az.randf() < e.pl) {
 			atacar(true);
 		}
-		if (az.randf() < e.pv) {
+		// (19-11) Gemela de `simular_minuto()`: si el ataque del local suspende el partido (menos de siete), el minuto se acaba ahí.
+		e.terminado = bool(p->get(k_term));
+		if (!e.terminado && az.randf() < e.pv) {
 			atacar(false);
+		}
+		if (bool(p->get(k_term))) {
+			e.terminado = true;
+			break;
 		}
 		// _incidencias
 		if (az.randf() < p_amarilla) {
