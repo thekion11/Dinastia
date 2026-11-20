@@ -124,6 +124,13 @@ func _azar(red: String, sec: Vector2i) -> float:
 
 ## El tiempo de una hora a partir del clima de la semana (`Mundo.clima()`): {viento 0..1, lluvia mm/h}.
 static func tiempo_de(clima: String, hora: int) -> Dictionary:
+	var nat := Nativo.de("nuc_tiempo_de")
+	if nat != null:
+		return nat.nuc_tiempo_de(clima, hora)
+	return tiempo_de_gd(clima, hora)
+
+## Gemela GDScript de `nuc_tiempo_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func tiempo_de_gd(clima: String, hora: int) -> Dictionary:
 	var h := posmod(hora, 24)
 	match clima:
 		"lluvia":

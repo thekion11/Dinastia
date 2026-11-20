@@ -144,6 +144,13 @@ func satisfaccion(j: Jugador) -> Dictionary:
 
 ## Qué parte de la satisfacción explica el cambio, en palabras del vestuario.
 static func motivo_satisfaccion(sat: Dictionary, baja: bool) -> String:
+	var nat := Nativo.de("nuc_motivo_satisfaccion")
+	if nat != null:
+		return nat.nuc_motivo_satisfaccion(sat, baja)
+	return motivo_satisfaccion_gd(sat, baja)
+
+## Gemela GDScript de `nuc_motivo_satisfaccion` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func motivo_satisfaccion_gd(sat: Dictionary, baja: bool) -> String:
 	var claves := ["min", "rend", "tact", "inst"]
 	var elegida: String = claves[0]
 	for k: String in claves:
