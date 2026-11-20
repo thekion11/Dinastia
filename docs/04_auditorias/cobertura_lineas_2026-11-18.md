@@ -2,35 +2,29 @@
 
 Generado por `herramientas/cobertura_lineas.sh` (instrumenta, corre el banco, restaura con git). Cuenta sentencias dentro de funciones; no cuenta las de varias líneas dentro de paréntesis, `elif`/`else`, brazos de `match` ni funciones de una línea. Solo lo que ejecuta el BANCO (no las especiales con pantalla).
 
-**Total: 21914 de 28137 sentencias ejecutadas (77.9 %)** en 279 archivos.
+**Total: 22634 de 28141 sentencias ejecutadas (80.4 %)** en 279 archivos.
 
 ## Los 30 archivos con más sentencias sin ejecutar
 
 | archivo | sentencias | ejecutadas | % | primeras líneas sin ejecutar |
 |---|---|---|---|---|
-| `nucleo/medicion.gd` | 253 | 3 | 1 % | 50, 51, 52, 53, 56, 58, 59, 60 |
-| `nucleo/actualizador.gd` | 160 | 0 | 0 % | 37, 40, 44, 45, 46, 47, 48, 49 |
-| `nucleo/citas.gd` | 251 | 92 | 37 % | 80, 89, 132, 134, 151, 152, 153, 154 |
-| `nucleo/entrada_campeonato.gd` | 154 | 0 | 0 % | 60, 61, 62, 63, 64, 65, 66, 67 |
-| `nucleo/roles_p3.gd` | 225 | 104 | 46 % | 32, 35, 38, 67, 69, 70, 71, 72 |
-| `nucleo/entrenamiento_p2.gd` | 280 | 162 | 58 % | 21, 28, 42, 44, 69, 70, 71, 72 |
+| `nucleo/medicion.gd` | 253 | 63 | 25 % | 50, 51, 52, 53, 56, 58, 59, 60 |
 | `nucleo/idiomas.gd` | 335 | 233 | 70 % | 21, 24, 77, 78, 79, 88, 108, 139 |
 | `nucleo/mundo_p7_p1.gd` | 247 | 148 | 60 % | 56, 57, 58, 59, 61, 92, 97, 125 |
 | `nucleo/partido.gd` | 295 | 203 | 69 % | 7, 48, 49, 54, 90, 109, 120, 130 |
 | `nucleo/prensa.gd` | 293 | 210 | 72 % | 12, 27, 54, 55, 56, 57, 58, 59 |
 | `nucleo/trabajadores_p1.gd` | 221 | 138 | 62 % | 145, 155, 156, 157, 158, 186, 198, 204 |
 | `nucleo/ocasiones_dt.gd` | 84 | 2 | 2 % | 50, 51, 52, 53, 54, 55, 56, 63 |
-| `nucleo/roles_p2.gd` | 214 | 133 | 62 % | 5, 21, 23, 24, 25, 30, 50, 52 |
 | `nucleo/lector_pantalla.gd` | 102 | 23 | 23 % | 34, 38, 39, 40, 41, 42, 43, 45 |
 | `nucleo/roles_p4.gd` | 272 | 193 | 71 % | 22, 34, 44, 59, 60, 61, 62, 63 |
 | `nucleo/cesiones_p2.gd` | 236 | 158 | 67 % | 24, 33, 46, 49, 50, 51, 52, 53 |
 | `nucleo/tablon_liga.gd` | 77 | 0 | 0 % | 29, 30, 31, 32, 33, 34, 35, 36 |
 | `nucleo/recorridos_red.gd` | 105 | 34 | 32 % | 64, 65, 66, 67, 68, 69, 70, 71 |
+| `nucleo/roles_p2.gd` | 214 | 143 | 67 % | 21, 23, 24, 25, 30, 50, 52, 56 |
 | `nucleo/dialogos_ciudad.gd` | 70 | 0 | 0 % | 12, 16, 19, 22, 32, 36, 38, 39 |
 | `nucleo/club_dentro.gd` | 122 | 53 | 43 % | 62, 71, 79, 80, 81, 83, 84, 86 |
 | `nucleo/reloj.gd` | 111 | 42 | 38 % | 126, 127, 131, 132, 141, 142, 145, 149 |
 | `nucleo/incidentes_ciudad.gd` | 68 | 0 | 0 % | 30, 31, 32, 33, 34, 35, 36, 37 |
-| `nucleo/comercial.gd` | 207 | 140 | 68 % | 62, 63, 87, 88, 89, 90, 91, 92 |
 | `nucleo/mando.gd` | 157 | 90 | 57 % | 109, 110, 111, 112, 113, 114, 115, 116 |
 | `nucleo/prensa_p6.gd` | 247 | 180 | 73 % | 29, 31, 33, 39, 63, 64, 98, 106 |
 | `nucleo/selecciones_p2.gd` | 280 | 216 | 77 % | 86, 87, 89, 120, 140, 141, 142, 143 |
@@ -38,6 +32,12 @@ Generado por `herramientas/cobertura_lineas.sh` (instrumenta, corre el banco, re
 | `nucleo/prensa_p5.gd` | 246 | 183 | 74 % | 42, 72, 73, 87, 88, 110, 111, 112 |
 | `nucleo/partida_exportar.gd` | 68 | 9 | 13 % | 23, 24, 25, 26, 27, 28, 29, 30 |
 | `nucleo/musica.gd` | 221 | 163 | 74 % | 133, 142, 143, 144, 147, 148, 149, 158 |
+| `nucleo/vida_global.gd` | 61 | 3 | 5 % | 18, 21, 26, 27, 28, 29, 31, 32 |
+| `nucleo/comercial.gd` | 207 | 151 | 73 % | 62, 63, 87, 88, 89, 90, 91, 92 |
+| `nucleo/cantera_p2.gd` | 238 | 183 | 77 % | 7, 50, 56, 105, 117, 140, 163, 192 |
+| `nucleo/planificador_plantilla.gd` | 53 | 0 | 0 % | 30, 31, 32, 33, 34, 35, 36, 37 |
+| `nucleo/negociacion.gd` | 213 | 161 | 76 % | 81, 86, 94, 97, 98, 148, 155, 156 |
+| `nucleo/ojeadores_p1.gd` | 181 | 129 | 71 % | 74, 76, 77, 78, 79, 80, 81, 82 |
 
 ## Todos los archivos
 
@@ -45,7 +45,7 @@ Generado por `herramientas/cobertura_lineas.sh` (instrumenta, corre el banco, re
 |---|---|---|
 | `nucleo/academia.gd` | 203 | 93 % |
 | `nucleo/acciones_juego.gd` | 39 | 90 % |
-| `nucleo/actualizador.gd` | 160 | 0 % |
+| `nucleo/actualizador.gd` | 160 | 76 % |
 | `nucleo/afinidad_club.gd` | 31 | 39 % |
 | `nucleo/ascensos_pais.gd` | 80 | 86 % |
 | `nucleo/aspecto_club.gd` | 19 | 95 % |
@@ -92,21 +92,21 @@ Generado por `herramientas/cobertura_lineas.sh` (instrumenta, corre el banco, re
 | `nucleo/carrera_vida.gd` | 42 | 79 % |
 | `nucleo/cartera_dt.gd` | 155 | 79 % |
 | `nucleo/catalogo_jugadas.gd` | 30 | 57 % |
-| `nucleo/causas_partido.gd` | 114 | 99 % |
+| `nucleo/causas_partido.gd` | 118 | 99 % |
 | `nucleo/cesiones.gd` | 90 | 71 % |
 | `nucleo/cesiones_p1.gd` | 147 | 78 % |
 | `nucleo/cesiones_p2.gd` | 236 | 67 % |
 | `nucleo/charlas.gd` | 64 | 64 % |
 | `nucleo/cierre.gd` | 10 | 10 % |
 | `nucleo/cierre_torneos.gd` | 70 | 90 % |
-| `nucleo/citas.gd` | 251 | 37 % |
+| `nucleo/citas.gd` | 251 | 94 % |
 | `nucleo/citas_ramas.gd` | 30 | 27 % |
 | `nucleo/ciudad.gd` | 38 | 92 % |
 | `nucleo/ciudad_p1.gd` | 206 | 85 % |
 | `nucleo/clima.gd` | 77 | 79 % |
 | `nucleo/club.gd` | 165 | 94 % |
 | `nucleo/club_dentro.gd` | 122 | 43 % |
-| `nucleo/comercial.gd` | 207 | 68 % |
+| `nucleo/comercial.gd` | 207 | 73 % |
 | `nucleo/compilar_fondo.gd` | 35 | 0 % |
 | `nucleo/conexion.gd` | 2 | 100 % |
 | `nucleo/continental.gd` | 191 | 92 % |
@@ -129,10 +129,10 @@ Generado por `herramientas/cobertura_lineas.sh` (instrumenta, corre el banco, re
 | `nucleo/disparadores_dia.gd` | 186 | 94 % |
 | `nucleo/economia.gd` | 33 | 70 % |
 | `nucleo/editor.gd` | 178 | 85 % |
-| `nucleo/entrada_campeonato.gd` | 154 | 0 % |
+| `nucleo/entrada_campeonato.gd` | 154 | 99 % |
 | `nucleo/entrenamiento.gd` | 149 | 88 % |
-| `nucleo/entrenamiento_p1.gd` | 153 | 77 % |
-| `nucleo/entrenamiento_p2.gd` | 280 | 58 % |
+| `nucleo/entrenamiento_p1.gd` | 153 | 81 % |
+| `nucleo/entrenamiento_p2.gd` | 280 | 95 % |
 | `nucleo/eras.gd` | 86 | 93 % |
 | `nucleo/estadio_propio.gd` | 16 | 100 % |
 | `nucleo/estadio_propio_p1.gd` | 46 | 89 % |
@@ -173,7 +173,7 @@ Generado por `herramientas/cobertura_lineas.sh` (instrumenta, corre el banco, re
 | `nucleo/interiores_club.gd` | 35 | 83 % |
 | `nucleo/interruptor_ciudad.gd` | 1 | 0 % |
 | `nucleo/jugador.gd` | 180 | 93 % |
-| `nucleo/junta.gd` | 85 | 82 % |
+| `nucleo/junta.gd` | 85 | 87 % |
 | `nucleo/lector_pantalla.gd` | 102 | 23 % |
 | `nucleo/lesiones_absurdas.gd` | 20 | 95 % |
 | `nucleo/leyes_pais.gd` | 200 | 85 % |
@@ -188,7 +188,7 @@ Generado por `herramientas/cobertura_lineas.sh` (instrumenta, corre el banco, re
 | `nucleo/maestria.gd` | 78 | 68 % |
 | `nucleo/mando.gd` | 157 | 57 % |
 | `nucleo/mando_perfiles.gd` | 26 | 96 % |
-| `nucleo/medicion.gd` | 253 | 1 % |
+| `nucleo/medicion.gd` | 253 | 25 % |
 | `nucleo/medico.gd` | 71 | 79 % |
 | `nucleo/medico_p1.gd` | 160 | 88 % |
 | `nucleo/mentor_primer_mes.gd` | 63 | 86 % |
@@ -284,8 +284,8 @@ Generado por `herramientas/cobertura_lineas.sh` (instrumenta, corre el banco, re
 | `nucleo/rol_tactico.gd` | 40 | 2 % |
 | `nucleo/roles.gd` | 220 | 79 % |
 | `nucleo/roles_p1.gd` | 25 | 16 % |
-| `nucleo/roles_p2.gd` | 214 | 62 % |
-| `nucleo/roles_p3.gd` | 225 | 46 % |
+| `nucleo/roles_p2.gd` | 214 | 67 % |
+| `nucleo/roles_p3.gd` | 225 | 92 % |
 | `nucleo/roles_p4.gd` | 272 | 71 % |
 | `nucleo/ropero_dt.gd` | 39 | 10 % |
 | `nucleo/seleccion_equipo.gd` | 72 | 97 % |
