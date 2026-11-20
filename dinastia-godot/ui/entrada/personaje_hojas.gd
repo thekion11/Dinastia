@@ -135,7 +135,7 @@ func _hoja_cuerpo() -> Control:
 	var vb := hoja()
 	var cb := cambiar
 	ControlesPersonaje.opciones(vb, asp, "Cuerpo", "cuerpo", [["male", "Hombre"], ["female", "Mujer"]], cb)
-	## Modelo base 3D: solo realistas (11-11). Los civiles traen su ropa; el avatar regalo solo si está en el proyecto (no va en los builds públicos).
+	## Modelo base 3D: solo realistas (11-11; 20-11: los civiles pasan al personal del club). El avatar regalo trae su ropa y solo sale si está en el proyecto.
 	var modelos: Array = [["", "Atleta (clásico)"]]
 	var ajenos := FutbolistaQ.todos_ajenos()
 	for k: String in ajenos:
@@ -146,7 +146,7 @@ func _hoja_cuerpo() -> Control:
 		modelos.append([AvatarRegalo.CLAVE, AvatarRegalo.NOMBRE])
 	if modelos.size() > 1:
 		ControlesPersonaje.opciones(vb, asp, "Modelo base", "modelo", modelos, cb, false,
-			"los civiles traen su ropa" if String(asp.get("modelo", "")) != "" else "")
+			"trae su propia ropa" if String(asp.get("modelo", "")) != "" else "")
 	ControlesPersonaje.deslizador(vb, asp, "Estatura", "altura", 1.55, 2.02, 0.01,
 		func(v: float) -> String: return ("%.2f m" % v).replace(".", ","), cb)
 	for par: Array in [["Complexión", "complexion"], ["Hombros", "hombros"], ["Barriga", "barriga"],

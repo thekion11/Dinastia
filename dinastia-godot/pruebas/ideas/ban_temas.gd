@@ -5,12 +5,14 @@ extends BaseIdea
 func _ready() -> void:
 	await get_tree().process_frame
 	_titulo("M-296: BANDEJA POR TEMAS")
+	var idioma_antes := Idiomas.idioma
 	_comprobar(CategoriaAviso.de("Firmado: Pérez") == "mercado" and CategoriaAviso.de("Lesión en entrenamiento") == "plantel"
 		and CategoriaAviso.de("Llega la camada juvenil") == "cantera" and CategoriaAviso.de("PLAYOFFS POR EL TÍTULO 2027") == "competicion"
 		and CategoriaAviso.de("Crédito concedido") == "club" and CategoriaAviso.de("🎙 Rueda de prensa") == "prensa"
 		and CategoriaAviso.de("Llaman del colegio") == "vida", "cada título cae en su tema")
 	var pr: Principal = load("res://escenas/principal.tscn").instantiate()
 	add_child(pr)
+	Idiomas.idioma = "es"   ## (19-11) la pantalla principal carga el idioma guardado de la máquina; la prueba busca «Firmado» en castellano
 	pr._bandeja.clear()
 	for t: String in ["Firmado: Pérez", "Renovado: Soto", "Lesión en entrenamiento", "Crédito concedido"]:
 		pr._bandeja.append({"titulo": t, "cuerpo": "x", "semana": 1, "anio": 2026, "leida": false})
@@ -28,6 +30,7 @@ func _ready() -> void:
 			chips = h.get_child_count()
 	_comprobar(chips == 4, "fila de temas: todos + mercado + plantel + club (%d)" % chips)
 	pr.queue_free()
+	Idiomas.idioma = idioma_antes
 	await get_tree().process_frame
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())

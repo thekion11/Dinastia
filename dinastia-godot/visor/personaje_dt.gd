@@ -165,10 +165,14 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 	if AvatarRegalo.es_clave(mb) and AvatarRegalo.disponible():
 		var dr := AvatarRegalo.crear(padre, float(a["altura"]))
 		if not dr.is_empty():
+			## (19-11) Sin esto el avatar regalo se quedaba en T (en el creador, hasta el primer gesto; fuera de él, siempre).
+			var quieto_r := parado_persona(dr)
+			if quieto_r != "":
+				(dr["anim"] as AnimationPlayer).play(quieto_r)
 			return dr
 		mb = ""
 	if FutbolistaQ.todos_ajenos().has(mb):
-		var da := FutbolistaQ.ajeno(padre, mb, float(a["altura"]))
+		var da := FutbolistaQ.ajeno(padre, mb, float(a["altura"]), Color(String(a["piel"])))
 		if not da.is_empty():
 			return da
 	var d := FutbolistaQ.crear(float(a["altura"]), String(a["cuerpo"]))
@@ -184,7 +188,9 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 	## por encima de la copa y dejaban la visera flotando (28-9-2026).
 	if bool(a["gorra"]) and not corte in ["corto", "fade", "rapado", "calvo"]:
 		corte = "corto"
-	PeloQ.poner(d, corte, Color(String(a["color_pelo"])), bool(a["barba"]) and String(a["cuerpo"]) == "male")
+	## (20-11) Los cortes rizado, afro, flequillo y ondulado con el peinado del Drive (como los futbolistas): el pack solo trae cuatro mallas y el «afro» era el tupé a escala 1,10.
+	var drive := -1 if bool(a["gorra"]) or String(a["cuerpo"]) == "female" else PeloDrive.para_futbolista("dt_%s_%s_%s" % [corte, a["color_pelo"], a["altura"]], corte, false)
+	PeloQ.poner(d, corte, Color(String(a["color_pelo"])), bool(a["barba"]) and String(a["cuerpo"]) == "male", drive)
 	_cejas(d, float(a.get("cejas", 0.0)))
 	_cara_biblioteca(d, a)
 	PersonajeVida.envejecer(d, a)

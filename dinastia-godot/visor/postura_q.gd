@@ -19,6 +19,10 @@ const CURVA_PULGAR := [6.0, 8.0, 6.0]
 ## verdad (cada dedo más doblado que el anterior, hacia el meñique; la falange del medio, la que más; el pulgar casi en reposo: doblado se cierra en círculo con el índice y estirado se abre de lado).
 const MANO_ATLETA := {"index": [26.0, 36.0, 17.0], "middle": [38.0, 50.0, 24.0], "ring": [45.0, 56.0, 27.0], "pinky": [52.0, 60.0, 30.0], "thumb": [2.0, 6.0, 6.0]}
 const PROB_BAJA := 0.08
+## (19-11, comparación con PES 2020; nota del dueño 17-11: «manos grandes y toscas») La mano del cuerpo base tiene el largo de una
+## persona (~0,75 del antebrazo) pero es ancha y gruesa como un guante. En el atleta se estrecha y adelgaza (ejes X y Z del hueso, el Y
+## va a lo largo de los dedos), tras la animación en cada fotograma (ningún clip la pisa).
+const MANO_ESCALA := Vector3(0.88, 0.96, 0.86)
 const NIVELA := 0.85
 
 static var eje_dedos := Vector3.RIGHT
@@ -30,6 +34,7 @@ var _giros: Array[Quaternion] = []
 var _fijos: PackedInt32Array = PackedInt32Array()   ## huesos que no siguen al clip: su giro es reposo × `_fijos_q`
 var _fijos_q: Array[Quaternion] = []
 var _cabeza := -1
+var _manos: PackedInt32Array = PackedInt32Array()
 var _nivelar := true
 
 ## Pone el modificador a la persona `nodo` (una vez). `semilla` fija sus medidas. `atleta` (futbolistas, 31-10): mano
@@ -62,6 +67,9 @@ func configurar(esq: Skeleton3D, semilla: int, atleta := false) -> void:
 		var signo := 1.0 if lado == "l" else -1.0
 		_anadir(esq, "clavicle_" + lado, eje_hombro, hombro * signo)
 		if atleta:
+			var im := esq.find_bone("hand_" + lado)
+			if im >= 0:
+				_manos.append(im)
 			var suelta := rng.randf_range(0.85, 1.15)
 			for dedo: String in MANO_ATLETA:
 				for f in 3:
@@ -95,6 +103,8 @@ func _process_modification() -> void:
 		esq.set_bone_pose_rotation(_fijos[k], _fijos_q[k])
 	for k in _huesos.size():
 		esq.set_bone_pose_rotation(_huesos[k], esq.get_bone_pose_rotation(_huesos[k]) * _giros[k])
+	for i in _manos:
+		esq.set_bone_pose_scale(i, MANO_ESCALA)
 	if _nivelar and _cabeza >= 0:
 		_nivelar_cabeza(esq)
 
