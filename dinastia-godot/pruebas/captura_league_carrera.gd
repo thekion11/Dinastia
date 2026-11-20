@@ -41,7 +41,7 @@ func _ready() -> void:
 	var base := OS.get_environment("CLIP_LS") if OS.get_environment("CLIP_LS") != "" else "ls_movement__sprint__000_idlelevel1"
 	for fila in 2:
 		for k in 6:
-			var nodo := sp._crear_jugador(self, j.id, "DEL", "", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+			var nodo := sp._crear_jugador(self, j.id, "DEL", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look, Color(0, 0, 0, 0), datos)
 			var n3 := nodo["nodo"] as Node3D
 			n3.position = Vector3(-6.25 + k * 2.5, 1.3 - fila * 2.5, 0)
 			n3.rotation.y = PI * 0.5

@@ -130,8 +130,7 @@ func vestir(cols: Array) -> void:
 	_raiz.add_child(nodo)
 	var datos: Dictionary = load(_RUTA_PUENTE3D).jugador(jugador)
 	var look: Array = load(_RUTA_PLAYER_SPAWNER)._look_de(datos)
-	var d: Dictionary = spawner._crear_jugador(nodo, jugador.id, "DEL", "", c1, c2, String(kit.get("estilo", "liso")) if titular else "liso",
-		maxi(jugador.dorsal, 1), look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+	var d: Dictionary = spawner._crear_jugador(nodo, jugador.id, "DEL", c1, c2, String(kit.get("estilo", "liso")) if titular else "liso", maxi(jugador.dorsal, 1), look, Color(0, 0, 0, 0), datos)
 	if spawner is Node:
 		(spawner as Node).queue_free()
 	var alto := float(d.get("altura", ALTURA)) if d.has("altura") else ALTURA

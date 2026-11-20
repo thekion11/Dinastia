@@ -124,8 +124,7 @@ func _jugador(raiz: Node3D, spawner, j: Jugador, pos: Vector3, mira: float, anim
 	raiz.add_child(nodo)
 	var datos := Puente3D.jugador(j)
 	var look: Array = load(_RUTA_PLAYER_SPAWNER)._look_de(datos)
-	var d: Dictionary = spawner._crear_jugador(nodo, j.id, "POR" if j.pos_e == "POR" else "DEL", "", c1, c2, estilo_camiseta, maxi(j.dorsal, 1),
-		look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+	var d: Dictionary = spawner._crear_jugador(nodo, j.id, "POR" if j.pos_e == "POR" else "DEL", c1, c2, estilo_camiseta, maxi(j.dorsal, 1), look, Color(0, 0, 0, 0), datos)
 	if d.is_empty():
 		return nodo
 	jugadores += 1

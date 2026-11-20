@@ -233,9 +233,10 @@ static func poner_brazalete(nodo: Node, color: Color) -> void:
 				g.set_surface_override_material(k, _con_brazalete(g.get_surface_override_material(k), color))
 
 ## Un jugador con el modelo realista (cuerpo Quaternius vestido con su equipación).
-func _crear_jugador(root: Node3D, jid: String, puesto: String, _img_kit: String,
-		c1: Color, c2: Color, estilo: String, dorsal: int, piel: Color, pelo: Color,
-		barba: int, color_liso: Color = Color(0, 0, 0, 0), jug: Dictionary = {}) -> Dictionary:
+## `look` = [piel: Color, pelo: Color, barba: int] (lo que devuelve `Cara.look_de`, sin el resto).
+func _crear_jugador(root: Node3D, jid: String, puesto: String, c1: Color, c2: Color, estilo: String, dorsal: int,
+		look: Array, color_liso: Color = Color(0, 0, 0, 0), jug: Dictionary = {}) -> Dictionary:
+	var piel: Color = look[0]; var pelo: Color = look[1]; var barba: int = look[2]
 	if USAR_MODELO_Q:
 		var dq: Dictionary = FutbolistaQ.crear(altura_de(jug, jid, puesto), "male")
 		if not dq.is_empty():
@@ -337,8 +338,7 @@ func spawn_team(root: Node3D, xi: Array, jugadores: Dictionary, formacion: Dicti
 		## Color liso: el pantalón del árbitro y, en el muñeco de respaldo, la
 		## equipación cuando no hay una imagen de camiseta que ponerle.
 		var liso := kc1 if kimg == "" else Color(0, 0, 0, 0)
-		var nodo := _crear_jugador(root, jid, str(slot[0]), kimg, kc1, kc2, kestilo,
-			int(jug.get("dorsal", 0)), piel, pelo, look[2], liso, jug)
+		var nodo := _crear_jugador(root, jid, str(slot[0]), kc1, kc2, kestilo, int(jug.get("dorsal", 0)), [piel, pelo, look[2]], liso, jug)
 		if nodo.is_empty():
 			continue
 		var n: Node3D = nodo["nodo"]
@@ -373,9 +373,7 @@ func spawn_arbitros(root: Node3D, kit: Dictionary = {}) -> Array:
 	]
 	var out: Array = []
 	for p in puestos:
-		var d := _crear_jugador(root, str(p["id"]), "ARB", "", camiseta,
-			ribete, "liso", 0, Color(0.82, 0.63, 0.5), Color(0.16, 0.12, 0.09), 0,
-			Color(pantalon, 1.0))
+		var d := _crear_jugador(root, str(p["id"]), "ARB", camiseta, ribete, "liso", 0, [Color(0.82, 0.63, 0.5), Color(0.16, 0.12, 0.09), 0], Color(pantalon, 1.0))
 		if d.is_empty():
 			continue
 		var n: Node3D = d["nodo"]
