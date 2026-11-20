@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2531 archivos (.gd, .cpp, .h), 363603 líneas, 996 clases con nombre.
+Total: 2532 archivos (.gd, .cpp, .h), 363749 líneas, 996 clases con nombre.
 
 ## Extensión C++
 
@@ -52,7 +52,7 @@ Cerca del tope (≥ 400 líneas): `carrera_jugador_p1.gd` (449), `carrera_jugado
 
 ## Partido: motor C4 y respaldo
 
-89 archivos, 15805 líneas. Carpetas: `nucleo`, `visor`.
+89 archivos, 15810 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -93,7 +93,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p4.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-469 archivos, 93460 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+469 archivos, 93554 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -102,7 +102,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p4.gd` (450), `stadium_builde
 | `VistaEstadio` | `ui/estadio.gd` | 446 | 186 | estadio_p5.gd ← estadio_p5_p1.gd ← estadio_p4.gd ← estadio_p3.gd ← estadio_p2.gd ← estadio_p1.gd |
 | `VistaCiudad` | `ui/ciudad_vista.gd` | 218 | 104 | ciudad_vista_p1.gd ← ciudad_vista_p1_p1.gd |
 | `Escudo` | `ui/escudo.gd` | 71 | 101 | escudo_p1.gd |
-| `Cara` | `ui/cara.gd` | 377 | 75 | cara_p1.gd |
+| `Cara` | `ui/cara.gd` | 377 | 76 | cara_p1.gd |
 | `EscalaMovil` | `ui/componentes/escala_movil.gd` | 148 | 75 |  |
 | `Animar` | `ui/componentes/animar.gd` | 95 | 70 |  |
 | `PedidoPartida` | `ui/principal/pedido_partida.gd` | 71 | 68 |  |
@@ -112,7 +112,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p4.gd` (450), `stadium_builde
 | `Inicio` | `ui/inicio.gd` | 112 | 41 | inicio_p2.gd ← inicio_p1.gd |
 | `MenuLateral` | `ui/componentes/menu_lateral.gd` | 423 | 40 |  |
 
-Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla_pes.gd` (450), `pantalla_cantera_p2.gd` (450), `pantalla_opciones.gd` (450), `pantalla_opciones_p1.gd` (450), `partido_jugable.gd` (450), `telefono_p1.gd` (449), `pantalla_despacho.gd` (449), `panel_plantel.gd` (448), `estadio_p1.gd` (448).
+Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla_pes.gd` (450), `pantalla_cantera_p2.gd` (450), `pantalla_opciones.gd` (450), `pantalla_opciones_p1.gd` (450), `partido_jugable.gd` (450), `telefono_p1.gd` (449), `pantalla_despacho.gd` (449), `interior_instalacion_p2.gd` (448), `panel_plantel.gd` (448).
 
 ## Minijuegos
 
@@ -137,13 +137,13 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1235 archivos, 119508 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1235 archivos, 119506 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
 ## Núcleo: mundo, gestión y datos
 
-252 archivos, 52027 líneas. Carpetas: `nucleo`.
+252 archivos, 52060 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `m
 
 ## Visor: 3D, cámaras y efectos
 
-328 archivos, 61155 líneas. Carpetas: `visor`.
+328 archivos, 61148 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -174,7 +174,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `m
 | `CityBuilder` | `visor/city_builder.gd` | 185 | 166 | city_builder_p11.gd ← city_builder_p10.gd ← city_builder_p9.gd ← city_builder_p8.gd ← city_builder_p7.gd ← city_builder_p6.gd ← city_builder_p5.gd ← city_builder_p4.gd ← city_builder_p3.gd ← city_builder_p2.gd ← city_builder_p1.gd |
 | `FutbolistaQ` | `visor/futbolista_q.gd` | 203 | 128 |  |
 | `ExploradorCiudad` | `visor/explorador_ciudad.gd` | 13 | 118 | explorador_ciudad_p5.gd ← explorador_ciudad_p5_p1.gd ← explorador_ciudad_p4.gd ← explorador_ciudad_p3.gd ← explorador_ciudad_p2.gd ← explorador_ciudad_p1.gd |
-| `PlayerSpawner` | `visor/player_spawner.gd` | 230 | 95 | player_spawner_p1.gd |
+| `PlayerSpawner` | `visor/player_spawner.gd` | 226 | 95 | player_spawner_p1.gd |
 | `Puente3D` | `visor/puente3d.gd` | 223 | 91 |  |
 | `PersonajeDT` | `visor/personaje_dt.gd` | 348 | 77 | personaje_dt_p1.gd ← personaje_dt_p1_p1.gd |
 | `Mini3D` | `visor/mini3d.gd` | 257 | 62 |  |
