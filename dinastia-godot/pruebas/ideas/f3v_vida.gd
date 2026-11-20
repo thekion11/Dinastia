@@ -274,7 +274,7 @@ func _probar_async() -> void:
 			_m.roles.patrimonio = 0
 			var gas1: float = sr.modelo.gas[int(surt["id"])]
 			_v.usar_surtidor("surtidor_0", "normal")
-			_comprobar(_m.vida.combustible == 5.0 and is_equal_approx(float(sr.modelo.gas[int(surt["id"])]), gas1), "sin dinero no echa gasolina ni gasta existencias")
+			_comprobar(is_equal_approx(_m.vida.combustible, 5.0) and is_equal_approx(float(sr.modelo.gas[int(surt["id"])]), gas1), "sin dinero no echa gasolina ni gasta existencias")
 			_m.roles.cartera.efectivo = 80
 			_v.usar_surtidor("surtidor_0", "normal")
 			_comprobar(_m.vida.combustible > 40.0 and _m.roles.cartera.efectivo < 80 and gas0 > 0.0, "con efectivo paga en efectivo")
@@ -301,7 +301,7 @@ func _probar_async() -> void:
 			_e._pedal = 1.0
 			_e.vel = 0.0
 			_e._conducir(Vector2(0, 1), 0.1)
-			_comprobar(_e.sin_gasolina and _e.vel == 0.0, "sin gasolina el acelerador no mueve el coche")
+			_comprobar(_e.sin_gasolina and is_zero_approx(_e.vel), "sin gasolina el acelerador no mueve el coche")
 			_m.vida.combustible = comb_ok
 			_v.gasolina_tick(0.016)
 			_e.vel = vel0

@@ -244,10 +244,10 @@ func _pintar_goleadores(pais: String) -> void:
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.add_theme_font_size_override("font_size", Tema.letra(12))
 		if suyo != null and suyo == mio:   ## los tuyos, con el acento del club
-			b.add_theme_color_override("font_color", p._con_contraste(p.COL_ACENTO))
+			b.add_theme_color_override("font_color", p._con_contraste(p.col_acento))
 		b.pressed.connect(func() -> void: p._ver_ficha(j))
 		g.add_child(b)
-		p._celda(g, suyo.nombre if suyo else "—", p._con_contraste(p.COL_ACENTO) if suyo != null and suyo == mio else Principal.COL_SUAVE, false, 11)
+		p._celda(g, suyo.nombre if suyo else "—", p._con_contraste(p.col_acento) if suyo != null and suyo == mio else Principal.COL_SUAVE, false, 11)
 		p._celda(g, str(j.ovr if sin_goles else j.goles), Principal.COL_TEXTO if sin_goles else Principal.COL_VERDE, true, 12)
 
 ## M-300: «↶ Deshacer» el último cambio de la pizarra (dibujo, perillas, interruptores u once). Apagado si no hay nada.

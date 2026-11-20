@@ -20,6 +20,7 @@ const ASIENTO_CIUDAD := 0.65
 ## Con el asiento a 0,45 m la pelvis de «Sitting_Idle» deja los tobillos a ~14 cm del suelo: se baja la raíz 4 cm para que las suelas apoyen.
 const PIES_AL_SUELO := 0.04
 const OCUPACION := 0.45   ## fracción de asientos cercanos con alguien
+const _RUTA_ANIM_EXTRA := "res://visor/anim_extra.gd"
 
 var vida
 var expl
@@ -81,7 +82,7 @@ func vigilar_buses() -> void:
 		var id := (v["nodo"] as Node3D).get_instance_id()
 		if float(v.get("espera", 0.0)) > 0.0:
 			_parados[id] = float(_parados.get(id, 0.0)) + 1.0
-			if float(_parados[id]) == 3.0:
+			if is_equal_approx(float(_parados[id]), 3.0):
 				_eventos.append((v["nodo"] as Node3D).global_position)
 				embarque(v["nodo"])
 				if _eventos.size() > 40:
@@ -179,7 +180,7 @@ func _llegadas(delta: float) -> void:
 				s["fase"] = 1
 				s["t"] = 0.0
 				var ap: AnimationPlayer = d["anim"]
-				load("res://visor/anim_extra.gd").asegurar(ap, FutbolistaQ.esqueleto_de(n), "sentarse")
+				load(_RUTA_ANIM_EXTRA).asegurar(ap, FutbolistaQ.esqueleto_de(n), "sentarse")
 				Mini3D.anim(d, "sentarse" if ap.has_animation("sentarse") else "sentado", "sentado")
 		else:
 			n.rotation.y = MovimientoNatural.girar(n.rotation.y, float(s["giro"]), delta)
@@ -203,7 +204,7 @@ func _levantar(i: int) -> void:
 	var d: Dictionary = c["d"]
 	var n: Node3D = d["nodo"]
 	var ap: AnimationPlayer = d["anim"]
-	if not is_instance_valid(n) or not load("res://visor/anim_extra.gd").asegurar(ap, FutbolistaQ.esqueleto_de(n), "levantarse"):
+	if not is_instance_valid(n) or not load(_RUTA_ANIM_EXTRA).asegurar(ap, FutbolistaQ.esqueleto_de(n), "levantarse"):
 		if is_instance_valid(n):
 			n.queue_free()
 		return

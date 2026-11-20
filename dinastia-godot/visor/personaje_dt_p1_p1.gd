@@ -190,7 +190,7 @@ static func aspecto(guardado: Dictionary) -> Dictionary:
 
 ## La escala que cada hueso debería tener EN EL MUNDO (ejes del modelo: x de
 ## lado, y arriba, z hacia delante). Lo que no aparece, 1.
-static func _objetivos(a: Dictionary, cuerpo: String = "male") -> Dictionary:
+static func _objetivos(a: Dictionary, _cuerpo: String = "male") -> Dictionary:
 	var c: float = a["complexion"]
 	var h: float = a["hombros"]
 	var b: float = a["barriga"]
@@ -413,9 +413,9 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 	## El abrigo: faldón hasta la rodilla.
 	if ropa == "abrigo":
 		var cadera := _pegar(esq, "pelvis")
-		var paño := _mat(r1, 0.85)
+		var pano := _mat(r1, 0.85)
 		for s in [-1.0, 1.0]:
-			var f := _caja(cadera, Vector3(0.1 * s, 0.72, 0.02), Vector3(0.19, 0.46, 0.25), paño)
+			var f := _caja(cadera, Vector3(0.1 * s, 0.72, 0.02), Vector3(0.19, 0.46, 0.25), pano)
 			f.rotation_degrees.z = 4.0 * s
 
 ## Una cara de la biblioteca modular (mezcla de varias, nunca la de un jugador)

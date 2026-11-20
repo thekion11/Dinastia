@@ -90,8 +90,8 @@ func _probar_ropa_separada() -> void:
 	_comprobar(mal.is_empty(), "prenda_en(): torso y manga → camiseta, mano y cabeza → nada, pantalón, medias %s" % str(mal))
 	_comprobar(RopaSeparada.holgura_en(1, Vector3(0.42, 1.4, 0)) > RopaSeparada.holgura_en(1, Vector3(0.23, 1.4, 0)), "la manga se abre hacia el puño")
 	_comprobar(RopaSeparada.holgura_en(1, Vector3(0, 1.0, 0)) > RopaSeparada.holgura_en(1, Vector3(0, 1.3, 0)), "la camiseta, más suelta abajo que en el pecho")
-	_comprobar(RopaSeparada.holgura_en(2, Vector3(0, 0.62, 0)) > RopaSeparada.holgura_en(2, Vector3(0, 0.9, 0)) and RopaSeparada.holgura_en(3, Vector3.ZERO) == 0.006
-		and RopaSeparada.holgura_en(0, Vector3.ZERO) == 0.0, "el pantalón se abre en la pernera; las medias, ajustadas")
+	_comprobar(RopaSeparada.holgura_en(2, Vector3(0, 0.62, 0)) > RopaSeparada.holgura_en(2, Vector3(0, 0.9, 0)) and is_equal_approx(RopaSeparada.holgura_en(3, Vector3.ZERO), 0.006)
+		and is_zero_approx(RopaSeparada.holgura_en(0, Vector3.ZERO)), "el pantalón se abre en la pernera; las medias, ajustadas")
 	var am := _malla_cuerpo()
 	var ms := RopaSeparada.mallas(am, 0)
 	_comprobar(ms.size() == 3 and ms.has(1) and ms.has(2) and ms.has(3), "tres prendas sacadas del cuerpo")
@@ -126,7 +126,9 @@ func _probar_ropa_separada() -> void:
 		var cual := int((h.mesh as ArrayMesh).get_meta("prenda"))
 		mats_ok = mats_ok and int((h.material_override as ShaderMaterial).get_shader_parameter("prenda")) == cual and h.material_override != mat
 	_comprobar(RopaSeparada.vestido(cuerpo) and mats_ok, "vestir(): 3 prendas, cada una con su material (prenda 1, 2, 3)")
-	_comprobar(RopaSeparada.material_de(mat, 2) == RopaSeparada.material_de(mat, 2), "material_de() en caché")
+	var rep1_a = RopaSeparada.material_de(mat, 2)
+	var rep1_b = RopaSeparada.material_de(mat, 2)
+	_comprobar(rep1_a == rep1_b, "material_de() en caché")
 	RopaSeparada.vestir(cuerpo, 0, mat)
 	var vivas := padre.get_children().filter(func(h: Node) -> bool: return h.has_meta("prenda_aparte") and not h.is_queued_for_deletion())
 	_comprobar(vivas.size() == 3, "vestir dos veces no duplica: las de antes se van")
@@ -167,7 +169,7 @@ func _probar_kit_factory() -> void:
 	_comprobar(not pecho, "y nada en el pecho (taparía el escudo)")
 	var img0 := Image.create(1024, 1024, false, Image.FORMAT_RGBA8)
 	f._paint_dorsal(img0, 0, Color.WHITE)
-	_comprobar(img0.get_pixel(cx, cy + 5).a == 0.0, "dorsal 0: sin número")
+	_comprobar(is_zero_approx(img0.get_pixel(cx, cy + 5).a), "dorsal 0: sin número")
 	## El color dominante (no el promedio): azul con una banda amarilla y letras.
 	var k := Image.create(200, 200, false, Image.FORMAT_RGBA8)
 	var azul := Color8(12, 51, 153)

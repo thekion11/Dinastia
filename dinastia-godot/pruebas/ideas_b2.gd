@@ -45,9 +45,9 @@ func ejecutar() -> void:
 	var con_var := decisiones[0]
 	Partido.ctx_factor_tarjetas = 1.0
 	_comprobar(sin_var > 5, "un árbitro estricto cobra penales polémicos (806): %d" % sin_var)
-	_comprobar(con_var < sin_var and not fe.var_activo and fe.factor_tarjetas() == 1.0, "con VAR hay menos decisiones polémicas: %d < %d (805)" % [con_var, sin_var])
+	_comprobar(con_var < sin_var and not fe.var_activo and is_equal_approx(fe.factor_tarjetas(), 1.0), "con VAR hay menos decisiones polémicas: %d < %d (805)" % [con_var, sin_var])
 	fe.var_activo = true
-	_comprobar(fe.factor_tarjetas() == 0.5, "el VAR votado recorta tarjetas a la mitad (805)")
+	_comprobar(is_equal_approx(fe.factor_tarjetas(), 0.5), "el VAR votado recorta tarjetas a la mitad (805)")
 	_comprobar("VAR en toda la categoría" in fe.reglas_vigentes("CHI"), "y el reglamento consultable lo muestra (805, 819)")
 	fe.var_activo = false
 	## Designación conocida de antemano (802) e historial con cada árbitro (803).

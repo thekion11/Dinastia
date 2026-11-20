@@ -34,17 +34,17 @@ func _kart(delta: float) -> void:
 	if not arranca:
 		y = 0.0
 		x = 0.0
-	if y != 0.0:
+	if not is_zero_approx(y):
 		_empezado = true
 	var en_pista := _fuera_de_eje(_kp) < ANCHO_PISTA * 0.5
 	var tope := KART_VEL if en_pista else KART_VEL * 0.35
 	_kv = clampf(_kv + y * 16.0 * delta, -6.0, maxf(tope, _kv))
-	if y == 0.0:
+	if is_zero_approx(y):
 		_kv = move_toward(_kv, 0.0, 6.0 * delta)
 	if _kv > tope:
 		_kv = move_toward(_kv, tope, 22.0 * delta)
 	## Girar a la izquierda con la flecha izquierda (rumbo +x = derecha en pantalla).
-	_kr -= x * 1.9 * delta * clampf(absf(_kv) / 8.0, 0.0, 1.0) * signf(_kv if _kv != 0.0 else 1.0)
+	_kr -= x * 1.9 * delta * clampf(absf(_kv) / 8.0, 0.0, 1.0) * signf(_kv if not is_zero_approx(_kv) else 1.0)
 	var antes := _kp
 	_kp += Vector3(sin(_kr), 0, cos(_kr)) * _kv * delta
 	## Las barreras de neumáticos: no se atraviesan.

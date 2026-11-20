@@ -46,11 +46,11 @@ func _idiomas() -> void:
 			var txt := (v.get("_cronica") as RichTextLabel).get_parsed_text()
 			for linea in txt.split("\n"):
 				lineas += 1
-				var m_ := re_marcas.search(linea)
-				if m_ != null:
+				var m_loc := re_marcas.search(linea)
+				if m_loc != null:
 					malas += 1
 					if malas <= 8:
-						print("    MARCA «%s» en %s: %s" % [m_.get_string(), idi, linea.left(100)])
+						print("    MARCA «%s» en %s: %s" % [m_loc.get_string(), idi, linea.left(100)])
 			var seguidas := 0
 			for linea in txt.split("\n"):
 				seguidas = seguidas + 1 if linea.strip_edges() == "" else 0
@@ -96,7 +96,6 @@ func _descanso_y_saltos() -> void:
 	var r := _abrir(31)
 	var p: Partido = r[1]
 	var v: PartidoVivo = r[2]
-	var m: Mundo = r[0]
 	v.call("_charla_libre", "")   ## una charla vacía fuera de tiempo
 	var vueltas := 0
 	while p.minuto < 45 and vueltas < 3000:

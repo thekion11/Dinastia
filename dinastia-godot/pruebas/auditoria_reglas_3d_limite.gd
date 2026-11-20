@@ -170,7 +170,6 @@ func _motor_cambios() -> void:
 	m.goles = [1, 1]
 	m._fin_de_mitad()
 	_comprobar(m.estado == "tanda", "se llega a la tanda (%s)" % m.estado)
-	var lanz: Dictionary = m.tanda.get("lanzador", {})
 	var objetivo: Dictionary = (m.tanda["orden"][0] as Array)[0]
 	var nuevos2 := sp.spawn_team(raiz, una["xi"], una["jugadores"], {"s": [[objetivo["slot_code"], 50, 50]]}, bool(objetivo["es_local"]), Puente3D.kit(club), Puente3D.kit_portero(club))
 	m.reemplazar(String(objetivo["id"]), nuevos2[0])

@@ -11,7 +11,7 @@ var _foco := ""
 ## En un `HFlowContainer` y no en una fila: a 1280×720 los tres controles no
 ## caben en la columna central y el último se salía por la derecha.
 func _pintar_filtros(mio: Club) -> void:
-	var t := _lbl(11, COL_SUAVE)
+	var t := _lbl(11, col_suave)
 	t.text = Idiomas.t("FILTRAR")
 	add_child(t)
 
@@ -69,7 +69,7 @@ func _con_foco(b: Button, clave: String) -> void:
 	b.pressed.connect(func() -> void: _foco = clave)
 
 func _fila_ajuste(g: GridContainer, etiqueta: String, valor_txt: String, campo: String) -> void:
-	var et := _lbl(11, COL_SUAVE)
+	var et := _lbl(11, col_suave)
 	et.text = etiqueta
 	et.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_child(et)
@@ -85,7 +85,7 @@ func _fila_ajuste(g: GridContainer, etiqueta: String, valor_txt: String, campo: 
 		b.pressed.connect(func() -> void: campo_ajustado.emit(campo, d))
 		g.add_child(b)
 		if s == "−":
-			var va := _lbl(12, COL_TEXTO)
+			var va := _lbl(12, col_texto)
 			va.text = valor_txt
 			va.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 			va.custom_minimum_size = Vector2(96, 0)
@@ -103,28 +103,28 @@ func _rejilla_ajustes() -> GridContainer:
 # ── MESA DE NEGOCIACIÓN ───────────────────────────────────────────────────
 func _pintar_mesa_negociacion(n: Negociacion) -> void:
 	var vendedor: Club = _mundo.clubes.get(n.club_vendedor_id)
-	var t := _lbl(12, COL_ORO)
+	var t := _lbl(12, col_oro)
 	t.text = Idiomas.t("MESA DE NEGOCIACIÓN  ·  %s  (%s)  ·  ronda %d") % [
 		n.jugador.nombre if n.jugador else "—", vendedor.nombre if vendedor else "?", n.ronda]
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(t)
 
 	if n.rival_id != "":
-		var av := _lbl(11, COL_ROJO)
+		var av := _lbl(11, col_rojo)
 		av.text = Idiomas.t("Otro club anda detrás de él: cuanto más se alargue la mesa, más riesgo de perderlo.")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		add_child(av)
 
 	_pintar_precontrato(n.jugador)
 	_pintar_resultado_ronda(n)
-	_dato(Idiomas.t("Piden"), _dinero(n.pedido), COL_SUAVE)
-	_dato(Idiomas.t("Perciben con tu oferta actual"), _dinero(n.valor_percibido()), COL_TEXTO)
-	var col_costo := COL_TEXTO if n.costo_inmediato() <= _mundo.mi_club().saldo else COL_ROJO
+	_dato(Idiomas.t("Piden"), _dinero(n.pedido), col_suave)
+	_dato(Idiomas.t("Perciben con tu oferta actual"), _dinero(n.valor_percibido()), col_texto)
+	var col_costo := col_texto if n.costo_inmediato() <= _mundo.mi_club().saldo else col_rojo
 	_dato(Idiomas.t("Sale de tu caja hoy"), _dinero(n.costo_inmediato()), col_costo)
 	_pintar_termometro(n)
 
 	# ── CON EL CLUB ───────────────────────────────────────────────────────
-	var tc := _lbl(11, COL_SUAVE)
+	var tc := _lbl(11, col_suave)
 	tc.text = Idiomas.t("CON EL CLUB")
 	add_child(tc)
 	var gc := _rejilla_ajustes()
@@ -133,13 +133,13 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 	_fila_ajuste(gc, Idiomas.t("Bonos por objetivos"), _dinero(n.bonos), "bonos")
 	_fila_ajuste(gc, Idiomas.t("% de venta futura"), "%d%%" % n.pct, "pct")
 	_fila_ajuste(gc, Idiomas.t("Pago bajo cuerda"), _dinero(n.opaco), "opaco")
-	var pista := _lbl(10, COL_SUAVE)
+	var pista := _lbl(10, col_suave)
 	pista.text = Idiomas.t("Para el club pesa más el fijo: lo aplazado vale algo menos, los bonos mucho menos y lo opaco algo más.")
 	pista.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(pista)
 
 	# ── PARTE DE PAGO: uno de los tuyos ──────────────────────────────────
-	var ti := _lbl(11, COL_SUAVE)
+	var ti := _lbl(11, col_suave)
 	ti.text = Idiomas.t("PARTE DE PAGO: UNO DE LOS TUYOS")
 	add_child(ti)
 	var mio_neg := _mundo.mi_club()
@@ -154,7 +154,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 		flow_ic.add_theme_constant_override("v_separation", 6)
 		add_child(flow_ic)
 		if candidatos.is_empty():
-			var vac := _lbl(11, COL_SUAVE)
+			var vac := _lbl(11, col_suave)
 			vac.text = Idiomas.t("Nadie de tu plantel se acerca a su nivel.")
 			flow_ic.add_child(vac)
 		for x: Jugador in candidatos.slice(0, 8):
@@ -168,7 +168,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 			flow_ic.add_child(bi)
 
 	# ── CON ÉL (rol prometido + condiciones) ─────────────────────────────
-	var tj := _lbl(11, COL_SUAVE)
+	var tj := _lbl(11, col_suave)
 	tj.text = Idiomas.t("CON ÉL")
 	add_child(tj)
 	var flow := HFlowContainer.new()
@@ -221,13 +221,13 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 ## paciencia que les queda a los dos lados: la mesa no es infinita.
 func _pintar_termometro(n: Negociacion) -> void:
 	var pct := int(round(float(n.valor_percibido()) * 100.0 / float(maxi(1, n.pedido))))
-	var col := COL_VERDE if pct >= 97 else (COL_ORO if pct >= 80 else COL_ROJO)
+	var col := col_verde if pct >= 97 else (col_oro if pct >= 80 else col_rojo)
 	if n.acuerdo_club:
-		col = COL_VERDE
+		col = col_verde
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 8)
 	add_child(fila)
-	var et := _lbl(11, COL_SUAVE)
+	var et := _lbl(11, col_suave)
 	et.text = Idiomas.t("Cubre lo que piden")
 	et.custom_minimum_size = Vector2(190, 0)
 	fila.add_child(et)
@@ -242,7 +242,7 @@ func _pintar_termometro(n: Negociacion) -> void:
 	relleno.bg_color = col
 	relleno.set_corner_radius_all(4)
 	var fondo := StyleBoxFlat.new()
-	fondo.bg_color = Color(COL_SUAVE, 0.18)
+	fondo.bg_color = Color(col_suave, 0.18)
 	fondo.set_corner_radius_all(4)
 	barra.add_theme_stylebox_override("fill", relleno)
 	barra.add_theme_stylebox_override("background", fondo)
@@ -252,10 +252,10 @@ func _pintar_termometro(n: Negociacion) -> void:
 	va.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	va.custom_minimum_size = Vector2(52, 0)
 	fila.add_child(va)
-	var pac := _lbl(11, COL_ROJO if mini(n.paciencia, n.paciencia_jugador) <= 1 else COL_SUAVE)
+	var pac := _lbl(11, col_rojo if mini(n.paciencia, n.paciencia_jugador) <= 1 else col_suave)
 	if n.acuerdo_club:
 		pac.text = Idiomas.t("✔ Con el club ya hay acuerdo: falta convencerle a él (paciencia: %d ronda(s)).") % n.paciencia_jugador
-		pac.add_theme_color_override("font_color", COL_VERDE if n.paciencia_jugador > 1 else COL_ROJO)
+		pac.add_theme_color_override("font_color", col_verde if n.paciencia_jugador > 1 else col_rojo)
 	else:
 		pac.text = Idiomas.t("Paciencia del club: %d ronda(s)  ·  la de él: %d") % [n.paciencia, n.paciencia_jugador]
 	pac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -269,7 +269,7 @@ func _pintar_resultado_ronda(n: Negociacion) -> void:
 	var tipo := String(_ultimo_resultado.get("tipo", ""))
 	var titulo := ""
 	var cuerpo := ""
-	var col := COL_ORO
+	var col := col_oro
 	match tipo:
 		"club_pide_mas":
 			titulo = Idiomas.t("↩️ CONTRAOFERTA DEL CLUB")
@@ -277,7 +277,7 @@ func _pintar_resultado_ronda(n: Negociacion) -> void:
 				_dinero(int(_ultimo_resultado.get("falta", 0))), String(_ultimo_resultado.get("prefiere", ""))]
 		"sin_caja":
 			titulo = Idiomas.t("💸 NO TE ALCANZA")
-			col = COL_ROJO
+			col = col_rojo
 			cuerpo = Idiomas.t("Hoy saldrían %s de tu caja (fijo, opaco, prima y comisión) y tienes %s.") % [
 				_dinero(int(_ultimo_resultado.get("hace_falta", 0))), _dinero(_mundo.mi_club().saldo)]
 		"jugador_no":
@@ -311,7 +311,7 @@ func _pintar_resultado_ronda(n: Negociacion) -> void:
 	var lt := _lbl(12, col)
 	lt.text = titulo
 	v.add_child(lt)
-	var lc := _lbl(12, COL_TEXTO)
+	var lc := _lbl(12, col_texto)
 	lc.text = cuerpo
 	lc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(lc)
@@ -368,10 +368,10 @@ func inicializar(mundo: Mundo, paleta: Dictionary, ultimo: Dictionary = {}) -> v
 	_mundo          = mundo
 	_ultimo_resultado = ultimo
 	# Aplicar paleta del club activo
-	if paleta.has("acento"): COL_ACENTO = paleta["acento"]
-	if paleta.has("texto"):  COL_TEXTO  = paleta["texto"]
-	if paleta.has("suave"):  COL_SUAVE  = paleta["suave"]
-	if paleta.has("verde"):  COL_VERDE  = paleta["verde"]
-	if paleta.has("rojo"):   COL_ROJO   = paleta["rojo"]
-	if paleta.has("oro"):    COL_ORO    = paleta["oro"]
+	if paleta.has("acento"): col_acento = paleta["acento"]
+	if paleta.has("texto"):  col_texto  = paleta["texto"]
+	if paleta.has("suave"):  col_suave  = paleta["suave"]
+	if paleta.has("verde"):  col_verde  = paleta["verde"]
+	if paleta.has("rojo"):   col_rojo   = paleta["rojo"]
+	if paleta.has("oro"):    col_oro    = paleta["oro"]
 	pintar()

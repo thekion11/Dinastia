@@ -3,7 +3,7 @@ extends "res://visor/mejoras_c4_p1.gd"
 ## (Parte 2 de 2 de `mejoras_c4.gd`.)
 
 static func contener_colocacion(m: Object, p: Dictionary) -> Vector3:
-	if not CONTENER2 or bool(p["por"]):
+	if not contener2 or bool(p["por"]):
 		return Vector3.INF
 	var c: Dictionary = m.poseedor
 	if c.is_empty() or bool(c["es_local"]) == bool(p["es_local"]):
@@ -27,7 +27,7 @@ static func contener_colocacion(m: Object, p: Dictionary) -> Vector3:
 		return Vector3.INF
 	var hacia := Vector3(arco.x - pc.x, 0.0, arco.z - pc.z).normalized()
 	hacia = (hacia + Vector3(-signf(pc.x) * 0.35, 0.0, 0.0)).normalized()   ## del lado de dentro: lo empuja a la banda
-	p["correr"] = mi_d > CONT2_DIST + 2.0
-	return Vector3(pc.x, 0.0, pc.z) + hacia * CONT2_DIST
+	p["correr"] = mi_d > cont2_dist + 2.0
+	return Vector3(pc.x, 0.0, pc.z) + hacia * cont2_dist
 
-static var SEGUIR_SPRINT := OS.get_environment("C4_SEGUIR_SPRINT") == "1"   ## `=1`: seguir el tiro esprintando siempre (v1); por defecto solo si está a más de 6 m (v2)
+static var seguir_sprint := OS.get_environment("C4_SEGUIR_SPRINT") == "1"   ## `=1`: seguir el tiro esprintando siempre (v1); por defecto solo si está a más de 6 m (v2)

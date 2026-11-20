@@ -11,7 +11,7 @@ func _ver_estadio_con_carga() -> void: await _vistas._ver_estadio_con_carga()
 func _dato(etiqueta: String, valor: String, color: Color, padre: Node = null) -> void: _piezas._dato(etiqueta, valor, color, padre)
 
 
-static var AIRE_CIFRA := _aire_cifra()
+static var aire_cifra := _aire_cifra()
 static func _aire_cifra() -> StyleBoxEmpty:
 	var sb := StyleBoxEmpty.new()
 	sb.content_margin_right = 14

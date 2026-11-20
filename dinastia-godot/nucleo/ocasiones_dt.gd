@@ -65,21 +65,35 @@ static func primer_minuto(semilla: int, minuto_inicio: int) -> int:
 	return minuto_inicio + rng.randi_range(2, 9)
 
 static func hueco(minuto: int, minuto_fin: int, restantes: int) -> int:
+	var nat := Nativo.de("nuc_hueco")
+	if nat != null:
+		return nat.nuc_hueco(minuto, minuto_fin, restantes)
+	return hueco_gd(minuto, minuto_fin, restantes)
+
+## Gemela GDScript de `nuc_hueco` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func hueco_gd(minuto: int, minuto_fin: int, restantes: int) -> int:
 	if restantes <= 0:
 		return 999
 	return clampi(int(float(minuto_fin - minuto) / (float(restantes) + 1.5)), 3, 15)
 
 ## Cuánto se rebaja el listón: 0 normal, 1 si quedan pocos minutos para las que
 ## faltan, 2 si peligra el mínimo de tres.
-static func nivel(minuto: int, minuto_fin: int, hechas: int, cupo_: int) -> int:
+static func nivel(minuto: int, minuto_fin: int, hechas: int, cupo_arg: int) -> int:
+	var nat := Nativo.de("nuc_nivel_ocasion")
+	if nat != null:
+		return nat.nuc_nivel_ocasion(minuto, minuto_fin, hechas, cupo_arg, CUPO_MIN)
+	return nivel_gd(minuto, minuto_fin, hechas, cupo_arg)
+
+## Gemela GDScript de `nuc_nivel_ocasion` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nivel_gd(minuto: int, minuto_fin: int, hechas: int, cupo_arg: int) -> int:
 	var quedan := float(minuto_fin - minuto)
-	if hechas < mini(CUPO_MIN, cupo_) and quedan < float(mini(CUPO_MIN, cupo_) - hechas) * 6.0:
+	if hechas < mini(CUPO_MIN, cupo_arg) and quedan < float(mini(CUPO_MIN, cupo_arg) - hechas) * 6.0:
 		return 2
-	return 1 if quedan < float(cupo_ - hechas) * 12.0 else 0
+	return 1 if quedan < float(cupo_arg - hechas) * 12.0 else 0
 
 ## ¿Esta llegada es clara para el listón `nivel` (ver `nivel()`)?
-static func es_clara(dist_arco: float, lateral: float, espacio: float, nivel_: int = 0) -> bool:
-	match nivel_:
+static func es_clara(dist_arco: float, lateral: float, espacio: float, nivel_arg: int = 0) -> bool:
+	match nivel_arg:
 		2: return dist_arco <= DIST_MINIMO and absf(lateral) <= LATERAL_MINIMO and espacio >= ESPACIO_MINIMO
 		1: return dist_arco <= DIST_APURADA and absf(lateral) <= LATERAL_CLARA and espacio >= ESPACIO_APURADA
 	return dist_arco <= DIST_CLARA and absf(lateral) <= LATERAL_CLARA and espacio >= ESPACIO_CLARA
@@ -164,6 +178,13 @@ const AJUSTE_TIRO_EN_JUEGO := 0.55
 const AJUSTE_PASE_3D := 0.66
 
 static func prob_tiro_3d(dist: float, lateral: float, tapada: bool, tiro_attr: float) -> float:
+	var nat := Nativo.de("nuc_prob_tiro_3d")
+	if nat != null:
+		return nat.nuc_prob_tiro_3d(dist, lateral, tapada, tiro_attr)
+	return prob_tiro_3d_gd(dist, lateral, tapada, tiro_attr)
+
+## Gemela GDScript de `nuc_prob_tiro_3d` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func prob_tiro_3d_gd(dist: float, lateral: float, tapada: bool, tiro_attr: float) -> float:
 	if tapada:
 		return 0.02
 	var geo := 0.08 + 0.85 * exp(-(dist - 8.0) / 7.0) + 0.006 * absf(lateral)

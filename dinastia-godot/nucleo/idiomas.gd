@@ -1,4 +1,4 @@
-extends "res://nucleo/idiomas_p1.gd"
+extends "res://nucleo/idiomas_p2.gd"
 ## [Capa 2/2 de `idiomas.gd`] _cargar_extra, _ready, _ordinales, mayusculas, _directa, _tiene_letras … (+13)
 
 ## (3-11-2026, memoria en el móvil) `idiomas_extra.json` con los 9 idiomas ocupaba ~46 MB al arrancar. Ahora solo se guarda la tabla de los idiomas PEDIDOS (`_asegurar`): en castellano
@@ -196,9 +196,6 @@ func _oraciones(texto: String) -> Array:
 		i += 1
 	partes.append(texto.substr(ini))
 	return partes
-
-static func _es_letra(c: int) -> bool:
-	return (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or (c >= 192 and c <= 687) or (c >= 48 and c <= 57) or c == 191 or c == 161
 
 func _t(frase: String, prof: int) -> String:
 	var d := _directa(frase)

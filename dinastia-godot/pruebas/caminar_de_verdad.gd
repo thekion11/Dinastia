@@ -214,7 +214,7 @@ func _separacion() -> void:
 			n += 1
 			var d := _separacion_a(q)
 			minima = minf(minima, d)
-			if d == 0.0:
+			if is_zero_approx(d):
 				dentro += 1
 		_tecla(KEY_W, false)
 	print("  SEPARACIÓN avatar–objetos: mínima %.2f m en %d muestras · dentro de una huella: %d" % [minima, n, dentro])

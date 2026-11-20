@@ -57,6 +57,7 @@ var _marca: Label
 const ORDEN_MENUS := ["historia", "gente", "carrera", "operaciones", "vida", "editar", "ajustes", "ciudad", "estadio"]
 
 const ORDEN_IDIOMAS := ["en", "pt", "fr", "it", "de", "ca", "pl", "tr", "es"]
+const _RUTA_CARRERA_JUGADOR := "res://escenas/carrera_jugador.tscn"
 
 # ------------------------------------------------------------------ rótulos
 
@@ -382,7 +383,7 @@ func _paso_ciudad(t: float) -> void:
 
 func _montar_carrera() -> void:
 	CarreraJugadorUI.mundo = null
-	var ui: CarreraJugadorUI = load("res://escenas/carrera_jugador.tscn").instantiate()
+	var ui: CarreraJugadorUI = load(_RUTA_CARRERA_JUGADOR).instantiate()
 	add_child(ui)
 	_x["ui"] = ui
 
@@ -392,7 +393,7 @@ func _paso_carrera(t: float) -> void:
 
 func _montar_jugable() -> void:
 	CarreraJugadorUI.mundo = null
-	var ui: CarreraJugadorUI = load("res://escenas/carrera_jugador.tscn").instantiate()
+	var ui: CarreraJugadorUI = load(_RUTA_CARRERA_JUGADOR).instantiate()
 	add_child(ui)
 	ui._crear()
 	var club := ui.carrera.club(CarreraJugadorUI.mundo)

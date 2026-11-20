@@ -88,16 +88,16 @@ func _probar() -> void:
 		defensa["vel"] = Vector3(0, 0, d * 4.0)
 	var h: Dictionary = pitadas.call("hombro", frente)
 	_comprobar(int(h["nada"]) == 30, "la carga de hombro limpia (0,9 < 1,0) no se pita: %s" % str(h))
-	var p_: Dictionary = pitadas.call("de_pie", frente)
-	_comprobar(int(p_["falta"]) == 30, "la entrada de pie (1,2) es falta sin tarjeta: %s" % str(p_))
-	var a_: Dictionary = pitadas.call("agarron", frente)
-	_comprobar(int(a_["falta"]) == 30, "el agarrón (1,4) es falta sin tarjeta: %s" % str(a_))
-	var dt_: Dictionary = pitadas.call("deslizante", detras)
-	_comprobar(int(dt_["amarilla"]) == 30, "en plancha por detrás (5,6) es amarilla: %s" % str(dt_))
+	var p_loc: Dictionary = pitadas.call("de_pie", frente)
+	_comprobar(int(p_loc["falta"]) == 30, "la entrada de pie (1,2) es falta sin tarjeta: %s" % str(p_loc))
+	var a_loc: Dictionary = pitadas.call("agarron", frente)
+	_comprobar(int(a_loc["falta"]) == 30, "el agarrón (1,4) es falta sin tarjeta: %s" % str(a_loc))
+	var dt: Dictionary = pitadas.call("deslizante", detras)
+	_comprobar(int(dt["amarilla"]) == 30, "en plancha por detrás (5,6) es amarilla: %s" % str(dt))
 	defensa["agresividad"] = 0.9
-	var ag_: Dictionary = pitadas.call("empujon", frente)
-	_comprobar(int(ag_["falta"]) + int(ag_["amarilla"]) == 30 and int(ag_["amarilla"]) > 0,
-		"empujón agresivo (4,1 ± 0,4): falta o amarilla según el criterio: %s" % str(ag_))
+	var ag: Dictionary = pitadas.call("empujon", frente)
+	_comprobar(int(ag["falta"]) + int(ag["amarilla"]) == 30 and int(ag["amarilla"]) > 0,
+		"empujón agresivo (4,1 ± 0,4): falta o amarilla según el criterio: %s" % str(ag))
 	defensa["agresividad"] = 0.5
 	## 4) La falta táctica del usuario (RB + A): agarrón con amarilla segura.
 	motor.estado = "juego"

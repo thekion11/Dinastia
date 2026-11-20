@@ -81,8 +81,7 @@ func _ready() -> void:
 				continue
 			var datos := Puente3D.jugador(j)
 			var look: Array = PlayerSpawner._look_de(datos)
-			var nodo := sp._crear_jugador(self, j.id, j.pos, "", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]),
-				7 + i, look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+			var nodo := sp._crear_jugador(self, j.id, j.pos, Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 7 + i, look, Color(0, 0, 0, 0), datos)
 			if nodo.is_empty():
 				continue
 			var n3 := nodo["nodo"] as Node3D

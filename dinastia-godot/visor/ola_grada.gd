@@ -26,29 +26,29 @@ var edad := 0.0
 var _mats: Array = []
 var _dura := DURA_OLA
 
-static func lanzar(raiz: Node, tipo_ := "ola", centro := Vector3.ZERO, bando := 0) -> OlaGrada:
-	if raiz == null or not tipo_ in TIPOS:
+static func lanzar(raiz: Node, tipo_arg := "ola", centro := Vector3.ZERO, bando := 0) -> OlaGrada:
+	if raiz == null or not tipo_arg in TIPOS:
 		return null
 	var mats := materiales(raiz)
 	if mats.is_empty():
 		return null
 	## Una de cada tipo a la vez.
-	var viejo := raiz.get_node_or_null("OlaGrada_" + tipo_)
+	var viejo := raiz.get_node_or_null("OlaGrada_" + tipo_arg)
 	if viejo != null:
 		viejo.name = "OlaGradaVieja"
 		viejo.queue_free()
 	var o := OlaGrada.new()
-	o.name = "OlaGrada_" + tipo_
-	o.tipo = tipo_
+	o.name = "OlaGrada_" + tipo_arg
+	o.tipo = tipo_arg
 	o._mats = mats
-	o._dura = {"ola": DURA_OLA, "onda": DURA_ONDA, "ocasion": DURA_OCASION}.get(tipo_, DURA_PROTESTA)
+	o._dura = {"ola": DURA_OLA, "onda": DURA_ONDA, "ocasion": DURA_OCASION}.get(tipo_arg, DURA_PROTESTA)
 	for m: ShaderMaterial in mats:
-		if tipo_ != "ola":
-			m.set_shader_parameter(tipo_ + "_bando", float(clampi(bando, 0, 1)))
-		if tipo_ == "ola":
+		if tipo_arg != "ola":
+			m.set_shader_parameter(tipo_arg + "_bando", float(clampi(bando, 0, 1)))
+		if tipo_arg == "ola":
 			## Arranca en un sitio distinto cada vez.
 			m.set_shader_parameter("ola_inicio", randf() * TAU)
-		elif tipo_ == "onda":
+		elif tipo_arg == "onda":
 			m.set_shader_parameter("onda_centro", centro)
 	raiz.add_child(o)
 	o._escribir(0.0)

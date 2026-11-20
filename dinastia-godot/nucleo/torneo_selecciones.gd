@@ -17,10 +17,10 @@ var en_grupos := true
 var campeon: Club = null
 var resultados: Array = []      ## [{fase, local, visita, gl, gv, penales, pasa}]
 
-static func crear(nombre_: String, anio_: int, sel: Array[Club]) -> TorneoSelecciones:
+static func crear(nombre_arg: String, anio_arg: int, sel: Array[Club]) -> TorneoSelecciones:
 	var t := TorneoSelecciones.new()
-	t.nombre = nombre_
-	t.anio = anio_
+	t.nombre = nombre_arg
+	t.anio = anio_arg
 	t.equipos = sel.duplicate()
 	var orden := sel.duplicate()
 	orden.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep if a.rep != b.rep else a.id < b.id)

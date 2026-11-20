@@ -9,7 +9,7 @@ var _ed_csv: String = ""
 ## HTML se pueda pegar aquí tal cual.
 func _pintar_editor_csv(ed: Editor) -> void:
 	p._lista_editor.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("IMPORTAR UNA BASE (CSV)")
 	p._lista_editor.add_child(t)
 	var ex := p._texto(10, Principal.COL_SUAVE)
@@ -55,7 +55,7 @@ func _pintar_editor_csv(ed: Editor) -> void:
 	p._lista_editor.add_child(bp)
 
 	p._lista_editor.add_child(HSeparator.new())
-	var te := p._texto(11, p.COL_ACENTO)
+	var te := p._texto(11, p.col_acento)
 	te.text = Idiomas.t("EXPORTAR LA BASE (CSV)")
 	p._lista_editor.add_child(te)
 	var ee := p._texto(10, Principal.COL_SUAVE)

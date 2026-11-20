@@ -17,7 +17,7 @@ static func mostrar(pr: Principal, titulo: String, tipo_titulo: String, rival: C
 	var e := EventoCelebracion.new()
 	e.tipo = tipo_titulo
 	e.paleta_noche = true
-	e.acento = SelectorDireccional.acento_legible(pr.COL_ACENTO)
+	e.acento = SelectorDireccional.acento_legible(pr.col_acento)
 	e._montar_base(pr)
 	e._rellenar(pr, titulo, rival, equipo)
 	return e

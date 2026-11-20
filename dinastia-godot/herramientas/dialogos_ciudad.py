@@ -118,8 +118,9 @@ for k, o in OF.items():
         reg(o[g])
     for c in o["charla"]:
         reg(c)
-with open(ruta_segura(ruta), "w", encoding="utf-8") as salida:
-    salida.write(json.dumps(extra, ensure_ascii=False, indent="\t"))
+if "--solo-gd" not in _sys.argv:   ## `--solo-gd`: regenera solo el GDScript y deja `idiomas_extra.json` como está (su formato es indent=1)
+    with open(ruta_segura(ruta), "w", encoding="utf-8") as salida:
+        salida.write(json.dumps(extra, ensure_ascii=False, indent="\t"))
 
 # --- GDScript con literales Idiomas.t("...")
 def q(s): return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
@@ -133,23 +134,30 @@ out = ['class_name DialogosCiudad', 'extends RefCounted',
  'static func oficio_de(numero: int) -> String:', '\treturn String(OFICIOS[absi(numero) % OFICIOS.size()])', '',
  '## Grupo de ánimo: pos (euforia, bien), neu (normal), neg (mal, crisis).',
  'static func grupo(animo: String) -> String:',
+ '\tvar nat := Nativo.de("nuc_grupo_dialogo")', '\tif nat != null:', '\t\treturn nat.nuc_grupo_dialogo(animo)', '\treturn grupo_gd(animo)', '',
+ '## Gemela GDScript de `nuc_grupo_dialogo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.',
+ 'static func grupo_gd(animo: String) -> String:',
  '\tmatch animo:', '\t\t"euforia", "bien": return "pos"', '\t\t"mal", "crisis": return "neg"', '\treturn "neu"', '',
  'static func nombre(oficio: String) -> String:', '\tmatch oficio:']
 for k, o in OF.items():
     out.append('\t\t%s: return Idiomas.t(%s)' % (q(k), q(o["nombre"][0])))
-out += ['\treturn ""', '', '## Turno 0 = saludo, 1 = charla, 2 = despedida.',
+def ident(k): return "".join(ch if ch.isalnum() or ch == "_" else "_" for ch in k)
+out += ['\treturn ""', '', '## Turno 0 = saludo, 1 = charla, 2 = despedida. Cada oficio tiene su función (`_linea_<oficio>`).',
  'static func linea(oficio: String, turno: int, animo: String, rng: RandomNumberGenerator) -> String:', '\tmatch oficio:']
 for k, o in OF.items():
-    out.append('\t\t%s:' % q(k))
-    out.append('\t\t\tif turno == 0:')
-    out.append('\t\t\t\tmatch grupo(animo):')
-    out.append('\t\t\t\t\t"pos": return Idiomas.t(%s)' % q(o["pos"][0]))
-    out.append('\t\t\t\t\t"neg": return Idiomas.t(%s)' % q(o["neg"][0]))
-    out.append('\t\t\t\treturn Idiomas.t(%s)' % q(o["neu"][0]))
-    out.append('\t\t\tif turno == 1:')
-    out.append('\t\t\t\tvar c := [' + ", ".join('Idiomas.t(%s)' % q(c[0]) for c in o["charla"]) + ']')
-    out.append('\t\t\t\treturn String(c[rng.randi() % c.size()])')
-    out.append('\t\t\treturn Idiomas.t(%s)' % q(o["desp"][0]))
+    out.append('\t\t%s: return _linea_%s(turno, animo, rng)' % (q(k), ident(k)))
 out += ['\treturn ""', '']
+for k, o in OF.items():
+    out.append('static func _linea_%s(turno: int, animo: String, rng: RandomNumberGenerator) -> String:' % ident(k))
+    out.append('\tif turno == 0:')
+    out.append('\t\tmatch grupo(animo):')
+    out.append('\t\t\t"pos": return Idiomas.t(%s)' % q(o["pos"][0]))
+    out.append('\t\t\t"neg": return Idiomas.t(%s)' % q(o["neg"][0]))
+    out.append('\t\treturn Idiomas.t(%s)' % q(o["neu"][0]))
+    out.append('\tif turno == 1:')
+    out.append('\t\tvar c := [' + ", ".join('Idiomas.t(%s)' % q(c[0]) for c in o["charla"]) + ']')
+    out.append('\t\treturn String(c[rng.randi() % c.size()])')
+    out.append('\treturn Idiomas.t(%s)' % q(o["desp"][0]))
+    out.append('')
 pathlib.Path("nucleo/dialogos_ciudad.gd").write_text("\n".join(out), encoding="utf-8")
 print("frases:", sum(1 + 4 + len(o["charla"]) - 1 + 0 for o in OF.values()) )

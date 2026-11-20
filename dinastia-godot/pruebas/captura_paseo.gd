@@ -16,7 +16,7 @@ const PARADAS_BASE := [
 	["paseo_6_calle", Vector3(-224.0, 0, -880.0), PI * 0.5],
 ]
 ## PARADAS="nombre:x:z:rumbo;nombre2:..." para fotografiar otros sitios.
-var PARADAS: Array = _paradas()
+var paradas: Array = _paradas()
 
 static func _paradas() -> Array:
 	var txt := OS.get_environment("PARADAS")
@@ -48,8 +48,8 @@ func _process(_d: float) -> void:
 		_e = _v.get("_explorador")
 		_e.primera_persona = OS.get_environment("FP") != ""
 	var k := (_n - 8) / 8
-	if _n >= 8 and (_n - 8) % 8 == 0 and k < PARADAS.size():
-		var par: Array = PARADAS[k]
+	if _n >= 8 and (_n - 8) % 8 == 0 and k < paradas.size():
+		var par: Array = paradas[k]
 		if k == 1 and OS.get_environment("CASA") != "":
 			## Frente a la fachada de una casa del barrio (CASA=n elige cuál).
 			var ct: Transform3D = _e.cb.expansion._casas_t[int(OS.get_environment("CASA")) % _e.cb.expansion._casas_t.size()]
@@ -76,8 +76,8 @@ func _process(_d: float) -> void:
 					var ab := (g as MeshInstance3D).get_aabb().size * (g as Node3D).global_transform.basis.get_scale()
 					if ab.y > 12.0:
 						print("MALLA ", g.name, " ", mm.resource_name, " alto=", snappedf(ab.y, 0.1), " ovr=", (g as MeshInstance3D).material_override, " pos=", gp)
-	if _n >= 8 and (_n - 8) % 8 == 6 and k < PARADAS.size():
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % PARADAS[k][0])
-		print("FOTO ", PARADAS[k][0])
-	if k >= PARADAS.size():
+	if _n >= 8 and (_n - 8) % 8 == 6 and k < paradas.size():
+		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % paradas[k][0])
+		print("FOTO ", paradas[k][0])
+	if k >= paradas.size():
 		get_tree().quit()

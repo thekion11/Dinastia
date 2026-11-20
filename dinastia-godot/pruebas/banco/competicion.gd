@@ -180,7 +180,6 @@ func _probar_copa() -> void:
 
 	## El premio es fijo y se cobra. Es lo que hace que una copa cambie el ano
 	## de un club chico.
-	var antes := copa.campeon.saldo
 	## 2-11 (auditoría 28-10): con un número impar de vivos el último club pasa con un «bye», no se descarta.
 	var copa_i := Copa.new("Impar")
 	var impares: Array[Club] = []
@@ -324,7 +323,7 @@ func _probar_ascensos() -> void:
 	var n1 := primera.clubes.size()
 	var n2 := segunda.clubes.size()
 
-	var resumen := m.nueva_temporada()
+	m.nueva_temporada()
 	_linea("  campeon: %s   suben: %s, %s   bajan: %s, %s" % [
 		campeon.nombre, primero_b.nombre, segundo_b.nombre, ultimo.nombre, penultimo.nombre])
 	_comprobar(campeon.saldo > caja_antes, "el campeon cobra el premio")

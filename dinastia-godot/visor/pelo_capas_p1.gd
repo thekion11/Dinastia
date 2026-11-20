@@ -335,7 +335,7 @@ static func _candidatos_cuero(cuerpo: Dictionary) -> Array:
 	_cand_cuero[clave] = [verts, tri]
 	return _cand_cuero[clave]
 
-static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictionary, h: Dictionary,
+static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, _datos: Dictionary, h: Dictionary,
 		capas: int) -> ArrayMesh:
 	var v: PackedVector3Array = cuerpo["v"]
 	var nor: PackedVector3Array = cuerpo["n"]

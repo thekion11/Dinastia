@@ -15,11 +15,11 @@ var con_tarjeta := false           ## «Pagar con tarjeta y PIN» (U6): cada com
 var _aviso := ""
 var _caja := VBoxContainer.new()
 
-static func abrir(capa: CanvasLayer, titulo: String, surtido_: Array, al_comprar_: Callable, saldo_: Callable, pos: Vector3, quien: Node3D) -> PanelTienda:
+static func abrir(capa: CanvasLayer, titulo: String, surtido_arg: Array, al_comprar_arg: Callable, saldo_arg: Callable, pos: Vector3, quien: Node3D) -> PanelTienda:
 	var p := PanelTienda.new()
-	p.surtido = surtido_
-	p.al_comprar = al_comprar_
-	p.saldo_texto = saldo_
+	p.surtido = surtido_arg
+	p.al_comprar = al_comprar_arg
+	p.saldo_texto = saldo_arg
 	p.cajero_pos = pos
 	p.jugador = quien
 	p.set_anchors_preset(Control.PRESET_CENTER)

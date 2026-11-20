@@ -1,5 +1,7 @@
 class_name Tutorial
 extends "res://ui/componentes/tutorial_p2.gd"
+
+
 ## [Capa 3/3 de `tutorial.gd`] _construir_prologo, iniciar, fase, guion_actual, aspecto_actual, indice … (+3)
 
 ## EL PRÓLOGO: franjas de cine, el escudo, el lugar y la escena a máquina.
@@ -52,8 +54,8 @@ func _construir_prologo(mundo: Mundo, ctx: Dictionary) -> void:
 	fila_prologo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	centro.add_child(fila_prologo)
 	var ancho_texto := minf(720.0, get_viewport_rect().size.x - 48.0)
-	if load("res://visor/persona_realista.gd").disponible() and get_viewport_rect().size.x > 900.0:
-		var figura = load("res://visor/persona_realista.gd").retrato(_aspecto, Vector2i(250, 380), Color(0.03, 0.04, 0.04), "medio")
+	if load(_RUTA_PERSONA_REALISTA).disponible() and get_viewport_rect().size.x > 900.0:
+		var figura = load(_RUTA_PERSONA_REALISTA).retrato(_aspecto, Vector2i(250, 380), Color(0.03, 0.04, 0.04), "medio")
 		figura.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		fila_prologo.add_child(figura)
 		ancho_texto = minf(600.0, get_viewport_rect().size.x - 350.0)

@@ -42,7 +42,7 @@ func _probar() -> void:
 		var mat := ShaderMaterial.new()
 		mat.shader = load("res://visor/hinchada.gdshader")
 		PublicoVat.configurar(mat, m, "cruzados")
-		_comprobar(float(mat.get_shader_parameter("vat_activo")) == 1.0 and int(mat.get_shader_parameter("vat_reposo")) == 5,
+		_comprobar(is_equal_approx(float(mat.get_shader_parameter("vat_activo")), 1.0) and int(mat.get_shader_parameter("vat_reposo")) == 5,
 			"%s: material con VAT activo y el reposo del grupo" % nivel)
 		_comprobar((m as ArrayMesh).custom_aabb.end.y >= alto_festejo - 0.001, "%s: la caja de la malla cubre los brazos en alto" % nivel)
 	## Las poses quietas siguen ahí como respaldo.

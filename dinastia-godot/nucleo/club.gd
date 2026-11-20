@@ -227,7 +227,7 @@ const _FORMAS_GRANDE := ["cuenco", "oval", "caldera", "principal", "ingles", "cu
 func _formas_de_tamano() -> Array:
 	return _FORMAS_CHICO if estadio_aforo < 10000 else (_FORMAS_MEDIO if estadio_aforo < 35000 else _FORMAS_GRANDE)
 
-func _forma_por_tamano(h: int) -> String:
+func _forma_por_tamano(_h: int) -> String:
 	var lista := _formas_de_tamano()
 	return String(lista[absi(("forma_estadio:" + id).hash()) % lista.size()])
 ## Los diseños de corte que sortean los clubes (14-10-2026: antes solo eran 4 y se

@@ -54,7 +54,7 @@ func _probar_ambience() -> void:
 		var luna: DirectionalLight3D = luces2[0]
 		var focos: DirectionalLight3D = luces2[1]
 		_comprobar(is_equal_approx(luna.light_energy, 0.25) and luna.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS, "la luna floja y 4 cascadas en Alto")
-		_comprobar(focos.light_specular == 0.0 and not focos.shadow_enabled and focos.light_color == StadiumBuilder.color_luz({"luzFocos": "calida"}),
+		_comprobar(is_zero_approx(focos.light_specular) and not focos.shadow_enabled and focos.light_color == StadiumBuilder.color_luz({"luzFocos": "calida"}),
 			"el relleno de los focos: sin brillo ni sombra, del color elegido")
 		_comprobar(is_equal_approx(we2.environment.tonemap_exposure, 1.35), "exposición subida de noche (1,35)")
 	var sin_focos := Node3D.new()
@@ -123,7 +123,7 @@ func _probar_precipitacion() -> void:
 	_comprobar(a_medio < a_alto and a_alto < a_ultra, "la cantidad sigue a la calidad (%d < %d < %d)" % [a_medio, a_alto, a_ultra])
 	var tormenta := Precipitacion.montar(raiz, "tormenta", 40.0, 60.0)
 	var rel := tormenta.get_node_or_null("Relampagos")
-	_comprobar(rel != null and _de_tipo(rel, "DirectionalLight3D").size() == 1 and (_de_tipo(rel, "DirectionalLight3D")[0] as DirectionalLight3D).light_energy == 0.0,
+	_comprobar(rel != null and _de_tipo(rel, "DirectionalLight3D").size() == 1 and is_zero_approx((_de_tipo(rel, "DirectionalLight3D")[0] as DirectionalLight3D).light_energy),
 		"tormenta: con relámpagos (una luz apagada hasta el destello)")
 	var nieve := Precipitacion.montar(raiz, "nieve", 40.0, 60.0)
 	var pn: GPUParticles3D = _de_tipo(nieve, "GPUParticles3D")[0]
@@ -208,7 +208,7 @@ func _probar_fachada() -> void:
 		por_semilla[FachadaEstadio.estilo_de({}, s, 2)] = true
 	_comprobar(por_semilla.size() >= 4 and FachadaEstadio.estilo_de({}, 33, 2) == FachadaEstadio.estilo_de({}, 33, 2), "con hormigón sin color, la semilla reparte estilos (%d) y siempre igual" % por_semilla.size())
 	var c := FachadaEstadio.cara(Vector3(0, 0, -60), Vector3(0, 0, -1), 100.0, 18.0, "tribuna", true, 25.0, 2)
-	_comprobar(absf((c["u"] as Vector3).dot(c["n"])) < 1e-5 and (c["u"] as Vector3).y == 0.0 and (c["o"] as Vector3).is_equal_approx(Vector3(0, 0, -60) - (c["u"] as Vector3) * 50.0),
+	_comprobar(absf((c["u"] as Vector3).dot(c["n"])) < 1e-5 and is_zero_approx((c["u"] as Vector3).y) and (c["o"] as Vector3).is_equal_approx(Vector3(0, 0, -60) - (c["u"] as Vector3) * 50.0),
 		"cara(): el paño corre perpendicular a su normal, con el pie izquierdo en su sitio")
 	var esquina := FachadaEstadio.cara(Vector3(50, 0, -50), Vector3(0.7071, 0, -0.7071), 12.0, 16.0, "esquina", false, 12.0, 2)
 	var diminuta := FachadaEstadio.cara(Vector3(0, 0, 60), Vector3(0, 0, 1), 1.5, 18.0, "tribuna", true, 25.0, 2)
@@ -271,7 +271,9 @@ func _probar_extras() -> void:
 	for i in 30:
 		var ci := Club.new("club_%d" % i, "C")
 		animales[EstadioExtras.animal_de(ci)] = true
-	_comprobar(EstadioExtras.animal_de(c) == EstadioExtras.animal_de(c) and MascotaQ.ANIMALES.has(EstadioExtras.animal_de(c)) and animales.size() >= 6,
+	var rep1_a = EstadioExtras.animal_de(c)
+	var rep1_b = EstadioExtras.animal_de(c)
+	_comprobar(rep1_a == rep1_b and MascotaQ.ANIMALES.has(EstadioExtras.animal_de(c)) and animales.size() >= 6,
 		"la mascota sale del club: siempre la misma, y variada entre clubes (%d animales)" % animales.size())
 	raiz.free()
 	raiz2.free()

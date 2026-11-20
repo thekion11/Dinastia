@@ -42,7 +42,7 @@ static func pintar_desarrollo(lista: VBoxContainer, j: Jugador, mundo: Mundo,
 ## `🔁 POSICIÓN Y RECONVERSIÓN`: un botón por cada puesto del mismo lado de la
 ## cancha. `al_elegir` recibe el puesto de destino -son varios botones, no uno,
 ## así que hace falta el parámetro-.
-static func pintar_reconversion(lista: VBoxContainer, j: Jugador, mundo: Mundo,
+static func pintar_reconversion(lista: VBoxContainer, j: Jugador, _mundo: Mundo,
 		paleta: Dictionary, al_elegir: Callable) -> void:
 	var posd: Dictionary = Datos.tabla("POSD")
 	if posd.is_empty():

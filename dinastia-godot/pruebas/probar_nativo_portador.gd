@@ -111,10 +111,10 @@ static func probar(nat: Object) -> Dictionary:
 		az1.seed = caso + 77
 		az2.seed = caso + 77
 		var t0 := Time.get_ticks_usec()
-		var prev := LeagueNucleo.ZONA_TIRO
-		LeagueNucleo.ZONA_TIRO = zona
+		var prev := LeagueNucleo.zona_tiro
+		LeagueNucleo.zona_tiro = zona
 		var a := LeagueNucleo.decidir_gd(yo, mates, riv, mov_balon, posesion, az1, muestras)
-		LeagueNucleo.ZONA_TIRO = prev
+		LeagueNucleo.zona_tiro = prev
 		var t1 := Time.get_ticks_usec()
 		var b: Dictionary = nat.league_decidir(yo, mates, riv, mov_balon, posesion, az2, muestras, zona)
 		var t2 := Time.get_ticks_usec()

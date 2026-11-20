@@ -4,7 +4,6 @@ func _probar() -> void:
 	_titulo("AUDITORÍA 4 · caché de Idiomas.t acotada")
 	Idiomas._asegurar_todos()
 	Idiomas.idioma = "en"
-	var antes: Dictionary = Idiomas._cache.get("en", {})
 	for i in 60000:
 		Idiomas.t("Jornada %d de 30 · Racha %d" % [i, i * 7])
 	var cache: Dictionary = Idiomas._cache.get("en", {})

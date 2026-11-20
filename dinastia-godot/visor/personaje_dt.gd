@@ -1,5 +1,9 @@
 class_name PersonajeDT
 extends "res://visor/personaje_dt_p1.gd"
+
+const _RUTA_ANIM_EXTRA := "res://visor/anim_extra.gd"
+const _RUTA_ANIM_QUATERNIUS := "res://visor/anim_quaternius.gd"
+
 ## [Capa 3/3 de `personaje_dt.gd`] _accesorios, crear, _cejas, parado_persona, poner_en_banda, gestos_banda … (+4)
 
 # -----------------------------------------------------------------------------
@@ -223,8 +227,8 @@ static func parado_persona(d: Dictionary) -> String:
 	if not ap.has_animation("parado") or not d.has("esqueleto"):
 		return "parado" if ap.has_animation("parado") else ""
 	var esq: Skeleton3D = d["esqueleto"]
-	var a = load("res://visor/anim_quaternius.gd")._relajar_dedos(ap.get_animation("parado"), esq, 0.85)
-	load("res://visor/anim_quaternius.gd")._brazos_al_cuerpo(a, -0.14)
+	var a = load(_RUTA_ANIM_QUATERNIUS)._relajar_dedos(ap.get_animation("parado"), esq, 0.85)
+	load(_RUTA_ANIM_QUATERNIUS)._brazos_al_cuerpo(a, -0.14)
 	PersonajeVida.piernas_de_persona(a, esq)
 	var lib := AnimationLibrary.new()
 	lib.add_animation("parado", a)
@@ -258,7 +262,7 @@ static func gestos_banda(d: Dictionary) -> void:
 		return
 	var pre := str(ap.get_path_to(esq))
 	var lib := AnimationLibrary.new()
-	var fab = load("res://visor/anim_extra.gd").new()
+	var fab = load(_RUTA_ANIM_EXTRA).new()
 	## «senalar» es el señalar adelante de AnimExtra; «llamar_hinchada» sale del portafolio de
 	## fútbol (en caché por esqueleto: se copia antes de tocarle las piernas).
 	var futbol = load("res://visor/anim_futbol.gd").todas(esq, pre)
@@ -270,7 +274,7 @@ static func gestos_banda(d: Dictionary) -> void:
 			a = (futbol[g] as Animation).duplicate(true)
 		else:
 			a = fab.call("senalar_adelante" if g == "senalar" else g, esq, pre)
-		load("res://visor/anim_extra.gd")._completar(a, esq, pre)
+		load(_RUTA_ANIM_EXTRA)._completar(a, esq, pre)
 		PersonajeVida.piernas_de_persona(a, esq)
 		lib.add_animation(g, a)
 	ap.add_animation_library("banda", lib)

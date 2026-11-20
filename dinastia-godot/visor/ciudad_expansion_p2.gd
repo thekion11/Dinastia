@@ -337,7 +337,7 @@ func _multimesh(malla: Mesh, mat: Material, ts: Array[Transform3D], _esc: Vector
 	return mi
 
 ## Altura del suelo del puente en x (rampas y tablero), para la balaustrada.
-func _altura_puente(x: float, rx: float, agua0: float, agua1: float, rampa: float) -> float:
+func _altura_puente(x: float, _rx: float, agua0: float, agua1: float, rampa: float) -> float:
 	if x >= agua0 and x <= agua1:
 		return PUENTE_ALTO
 	if x < agua0:

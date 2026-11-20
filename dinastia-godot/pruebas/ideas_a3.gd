@@ -62,7 +62,7 @@ func _ideas_a_lesiones() -> void:
 		j.lesion = 0
 		md.lesionar(j, Medico.GRAVE, "prueba", m.anio, 5)
 		n += 1
-	_comprobar(md.lesiones_graves(j) >= 2 and md.factor_valor(j) == 0.85, "dos lesiones largas dejan el factor de valor en 0,85 (521)")
+	_comprobar(md.lesiones_graves(j) >= 2 and is_equal_approx(md.factor_valor(j), 0.85), "dos lesiones largas dejan el factor de valor en 0,85 (521)")
 	_comprobar(float(j.valor) < float(v0) * 0.9 and float(j.valor) > float(v0) * 0.78, "y el valor de mercado baja ~15%% (%d → %d) (521)" % [v0, j.valor])
 	## Retiro forzado por lesión crónica (532).
 	var viejo: Jugador = c.plantilla[3]

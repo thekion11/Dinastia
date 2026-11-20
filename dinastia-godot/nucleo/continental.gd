@@ -156,6 +156,13 @@ func _unir_playoff_y_octavos() -> void:
 
 ## El orden de los cabezas de serie dentro del cuadro: [0, 7, 3, 4, 1, 6, 2, 5] con 8.
 static func _orden_de_semillas(n: int) -> Array:
+	var nat := Nativo.de("nuc_orden_de_semillas")
+	if nat != null:
+		return nat.nuc_orden_de_semillas(n)
+	return _orden_de_semillas_gd(n)
+
+## Gemela GDScript de `nuc_orden_de_semillas` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _orden_de_semillas_gd(n: int) -> Array:
 	var orden: Array = [0]
 	var tam := 1
 	while tam < n:

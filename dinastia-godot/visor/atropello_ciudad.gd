@@ -14,7 +14,7 @@ const ATURDIDO := 2.0       ## segundos quieto
 static func peaton_delante(e: ExploradorCiudad, alcance := 2.6) -> Dictionary:
 	if e == null or e.trafico == null or e.cuerpo == null:
 		return {}
-	var morro := e.cuerpo.position + Vector3(sin(e.rumbo), 0, cos(e.rumbo)) * 2.0 * signf(e.vel if e.vel != 0.0 else 1.0)
+	var morro := e.cuerpo.position + Vector3(sin(e.rumbo), 0, cos(e.rumbo)) * 2.0 * signf(e.vel if not is_zero_approx(e.vel) else 1.0)
 	var mejor: Dictionary = {}
 	var md := alcance * alcance
 	for v: Dictionary in e.trafico._vehiculos:

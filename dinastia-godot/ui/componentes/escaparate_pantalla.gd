@@ -83,7 +83,7 @@ func repintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 	_pintar_cuerpo(p, c, liga, dias, acento)
 	vb.add_child(EscaparatePie.crear(p))
 
-func _pintar_cuerpo(p: Principal, c: Club, liga: Liga, dias: int, acento: Color) -> void:
+func _pintar_cuerpo(p: Principal, c: Club, liga: Liga, _dias: int, acento: Color) -> void:
 	for h in _cuerpo.get_children():
 		_cuerpo.remove_child(h)
 		h.queue_free()

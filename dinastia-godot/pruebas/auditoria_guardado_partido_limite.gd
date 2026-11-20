@@ -87,7 +87,7 @@ func _todo() -> void:
 		await _marco(3)
 	_comprobar(c.energia == e1 and j.atributos == atr1, "abandonar el partido 6 veces seguidas entrena UNA sola vez (energía %d → %d, atributos iguales: %s)" % [e1, c.energia, str(j.atributos == atr1)])
 	_comprobar(c.entreno_msg == msg1 and msg1 != "", "…y el mensaje de la semana es el mismo")
-	_comprobar(m.semana == m.semana and c.entreno_semana == m.anio * 60 + m.semana, "el entreno se anota en su semana (%d)" % c.entreno_semana)
+	_comprobar(c.entreno_semana == m.anio * 60 + m.semana, "el entreno se anota en su semana (%d)" % c.entreno_semana)
 	## 2) Guardar justo antes, jugar entero (a toda prisa), guardar justo después.
 	var semana0 := m.semana
 	var anio0 := m.anio

@@ -108,12 +108,12 @@ func _tocar() -> void:
 	if absf(_x - _pie) > 0.09:
 		_aviso(Idiomas.t("¡Lejos del pie!"), 0.6)
 		return
-	var precisión := 1.0 - absf(_y - 0.85) / 0.12
+	var precision := 1.0 - absf(_y - 0.85) / 0.12
 	var extra := 0
-	if precisión > 0.8:
+	if precision > 0.8:
 		extra = 2
 		_aviso(Idiomas.t("¡PERFECTO!"), 0.7)
-	elif precisión > 0.45:
+	elif precision > 0.45:
 		extra = 1
 		_aviso(Idiomas.t("¡Bien!"), 0.5)
 	_racha = _racha + 1 if extra > 0 else 0

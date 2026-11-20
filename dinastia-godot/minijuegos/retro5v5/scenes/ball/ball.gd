@@ -31,7 +31,7 @@ func _ready() -> void:
 	spawn_position = position
 	GameEvents.team_reset.connect(on_team_reset.bind())
 	GameEvents.kickoff_started.connect(on_kickoff_started.bind())
-	
+
 func _process(_delta: float) -> void:
 	ball_sprite.position = Vector2.UP * height
 	scoring_raycast.rotation = velocity.angle()
@@ -49,14 +49,14 @@ func shoot(shot_velocity : Vector2) -> void:
 	velocity = shot_velocity
 	carrier = null
 	switch_state(Ball.State.SHOT)
-	
+
 func tumble(tumble_velocity: Vector2) -> void:
 	velocity = tumble_velocity
 	carrier = null
 	height_velocity = TUMBLE_HEIGHT_VELOCITY
 	switch_state(Ball.State.FREEFORM, BallStateData.build().set_lock_duration(DURATION_TUMBLE_LOCK))
 
-func pass_to(destination: Vector2, lock_duration: int = DURATION_PASS_LOCK) -> void:
+func pass_to(destination: Vector2, _lock_duration: int = DURATION_PASS_LOCK) -> void:
 	var direction := position.direction_to(destination)
 	var distance := position.distance_to(destination)
 	var intensity := sqrt(2 * distance * friction_ground)

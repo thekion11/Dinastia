@@ -6,16 +6,18 @@ extends RefCounted
 ## paso y por equipo, y el que ya tiene el papel lo conserva salvo que otro esté `CAMBIO` m mejor. Para el segundo, un central
 ## cuenta `CASTIGO_CENTRAL` m de más: que salga un medio y el central guarde su sitio.
 const CAMBIO := 1.5
-static var CASTIGO_CENTRAL := float(OS.get_environment("PRES_CASTIGO")) if OS.get_environment("PRES_CASTIGO") != "" else 3.0
+static var castigo_central := float(OS.get_environment("PRES_CASTIGO")) if OS.get_environment("PRES_CASTIGO") != "" else 3.0
 static var _sin := OS.has_environment("SIN_PRESION_ESTABLE")   ## vuelve a lo de antes (para medir)
 
 ## [id del primero, id del segundo] del equipo (local o visitante); "" si no hay.
+const _SIN_CLAVE := Vector2(-1, -1)
 static func papeles(m: MotorJugable, local: bool) -> Array:
 	var clave := Vector2(m.t, m._t_estado)
-	var cache: Dictionary = m.get_meta("presion", {})
-	if cache.get("clave", Vector2(-1, -1)) == clave and cache.has(local):
+	var cache: Dictionary = m.get_meta("presion") if m.has_meta("presion") else {}   ## (19-11) sin un `{}` por defecto en cada llamada
+	var clave_guardada: Vector2 = cache.get("clave", _SIN_CLAVE)
+	if clave_guardada == clave and cache.has(local):
 		return cache[local]
-	if cache.get("clave", Vector2(-1, -1)) != clave:
+	if clave_guardada != clave:
 		cache = {"clave": clave}
 	var antes: Array = (m.get_meta("presion_antes", {}) as Dictionary).get(local, ["", ""])
 	var b := m.balon.position
@@ -51,7 +53,7 @@ static func _elegir(dist: Dictionary, previo: String, fuera: String, roles: Dict
 	return mejor
 
 static func _nota(dist: Dictionary, roles: Dictionary, id: String) -> float:
-	return float(dist[id]) + (CASTIGO_CENTRAL if not _sin and String(roles.get(id, "")) == "DFC" else 0.0)
+	return float(dist[id]) + (castigo_central if not _sin and String(roles.get(id, "")) == "DFC" else 0.0)
 
 ## PRESIÓN POR ZONA (01-11-2026, IA U1, idea de League-Soccer `ShouldStartZonePressure`): un gatillo más de `_gatillo_presion`.
 ## El equipo que defiende sale a morder si el balón ya está adentrado en el campo rival (territorio > 0,55 − 0,9·presión, con la
@@ -80,4 +82,4 @@ static func zona(m: MotorJugable, dueno: Dictionary) -> bool:
 ## DESMARQUES (`_ultima_linea`: `_companero_al_hueco` y el ataque sin balón) la última línea rival se mira donde estará dentro
 ## de 0,24 s, no donde está: el delantero se adelanta a la defensa que sube y no se queda en fuera de juego. El fuera de juego
 ## que pita el árbitro (`_foto_offside`) no cambia. `SIN_LINEA_PREVISTA=1` = antes.
-static var PREVE_LINEA := 0.0 if OS.has_environment("SIN_LINEA_PREVISTA") else 0.24
+static var preve_linea := 0.0 if OS.has_environment("SIN_LINEA_PREVISTA") else 0.24

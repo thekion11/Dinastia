@@ -262,7 +262,7 @@ func _probar_fundir_piezas() -> void:
 	_comprobar(mallas.size() == 1 and (mallas[0] as MeshInstance3D).mesh.get_surface_count() == 2, "una malla con una superficie por material")
 	var m: MeshInstance3D = mallas[0]
 	_comprobar(m.mesh.surface_get_material(0) == rojo and m.mesh.surface_get_material(1) == azul, "las superficies llevan los MISMOS materiales")
-	_comprobar(m.visibility_range_end == 300.0, "lleva la distancia de corte pedida")
+	_comprobar(is_equal_approx(m.visibility_range_end, 300.0), "lleva la distancia de corte pedida")
 	_comprobar(is_instance_valid(puerta) and puerta.get_parent() == raiz and is_instance_valid(rotulo), "la excluida y el rótulo se quedan")
 	var vert := 0
 	for k in m.mesh.get_surface_count():
@@ -331,7 +331,7 @@ func _probar_visor_pequenos() -> void:
 	CeremoniaFoto.destellar(l, 0.75)   ## (0,75 + 0,2) mod 0,45 = 0,05 s: en pleno destello
 	var encendido := l.light_energy
 	CeremoniaFoto.destellar(l, 0.88)   ## fase 0,18 s: apagado
-	_comprobar(encendido > 0.0 and l.light_energy == 0.0, "el flash destella a ratos y se apaga entre medias")
+	_comprobar(encendido > 0.0 and is_zero_approx(l.light_energy), "el flash destella a ratos y se apaga entre medias")
 	for nd2: Node3D in nodos:
 		nd2.queue_free()
 	raiz_luz.queue_free()

@@ -1,9 +1,9 @@
 class_name TecladoPin
 ## El teclado de PIN que comparten el cajero (`PanelCajero`) y el pago con tarjeta (`PanelPagoPin`): título, los cuatro puntos y las 12 teclas.
 ## No guarda nada: pinta en `caja` y avisa con `al_tecla(t)` ("0".."9", "⌫" o "✕").
-static func pintar(caja: Container, titulo_: String, tecleado: String, al_tecla: Callable) -> void:
+static func pintar(caja: Container, titulo_arg: String, tecleado: String, al_tecla: Callable) -> void:
 	var titulo := Label.new()
-	titulo.text = titulo_
+	titulo.text = titulo_arg
 	titulo.add_theme_font_size_override("font_size", Tema.letra(19))
 	caja.add_child(titulo)
 	var pantalla := Label.new()

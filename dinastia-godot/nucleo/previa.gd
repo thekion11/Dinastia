@@ -136,4 +136,11 @@ static func _poisson(lam: float) -> Array[float]:
 
 ## El margen de la casa: 1.07 en vez de 1.00, que es de donde sale su ganancia.
 static func _cuota(p: float) -> float:
+	var nat := Nativo.de("nuc_cuota")
+	if nat != null:
+		return nat.nuc_cuota(p)
+	return _cuota_gd(p)
+
+## Gemela GDScript de `nuc_cuota` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _cuota_gd(p: float) -> float:
 	return maxf(1.03, 1.07 / maxf(p, 0.01))

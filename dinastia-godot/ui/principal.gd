@@ -1,5 +1,8 @@
 class_name Principal
 extends "res://ui/principal_p17.gd"
+
+const _RUTA_PORTADA_PERIODICO := "res://ui/componentes/portada_periodico.gd"
+
 ## [Capa 17/17 de `principal.gd`] _ready, _capa_modal_encima, _input, _pintar_identidad, _al_paso_nuevo, _portada_nueva
 
 ## Los hijos que ya estaban al terminar `_ready()` (el menú, el riel, el reloj…).
@@ -8,7 +11,7 @@ extends "res://ui/principal_p17.gd"
 var _hijos_base: Dictionary = {}
 
 func _ready() -> void:
-	await super()   ## (10-11) `_ready` puede montar en trozos (detrás de la pantalla de carga); si no, `await` sigue al instante
+	await super()   ## (10-11) `_ready` puede montar en trozos (detrás de la pantalla de carga); si no, la espera sigue al instante
 	add_child(SalidaGuardada.new(self))   ## cerrar la ventana / «atrás» / pausa en Android: ¿guardar antes de salir?
 	add_child(GuardianFoco.new(self))   ## (10-11) con mando, el foco nunca se queda en nada ni detrás de una capa
 	add_child(EscalaTipografica.new(self))   ## (10-11) tres tamaños de letra en los menús (rótulo, cuerpo, destacado)
@@ -50,6 +53,6 @@ func _portada_nueva() -> void:
 	var nueva := bool(d.get("nueva", false))
 	for x: Dictionary in mundo.prensa.portadas:
 		x.erase("nueva")
-	if nueva and load("res://ui/componentes/portada_periodico.gd").auto():
-		load("res://ui/componentes/portada_periodico.gd").mostrar(self, mundo, d)
+	if nueva and load(_RUTA_PORTADA_PERIODICO).auto():
+		load(_RUTA_PORTADA_PERIODICO).mostrar(self, mundo, d)
 	_al_paso_nuevo()

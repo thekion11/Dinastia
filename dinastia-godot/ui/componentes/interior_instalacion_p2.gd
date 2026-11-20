@@ -259,8 +259,15 @@ func _cartel(texto: String, pos: Vector3, tam: int = 64, col: Color = Color.WHIT
 
 ## Mesa con sillas a lo largo de sus dos lados largos (X local) y gente sentada
 ## con probabilidad `ocupa`; un plato (y lo que se pida) delante de cada silla.
+## `opc` (todo opcional): «deporte» Array de la ropa de los sentados ([]), «plato» String ("comida/plate"; "" = sin plato), «encima» Array
+## de piezas que se reparten sobre la mesa ([]), «tonos_silla» Dictionary ({}) y «variar» bool (false: la ropa sale de `_calle()`).
 func _mesa_con_sillas(p: Vector3, giro: float, mesa: String, escala_mesa: Variant, por_lado: int, silla: String,
-		ocupa: float, deporte: Array = [], plato: String = "comida/plate", encima: Array = [], tonos_silla: Dictionary = {}, variar: bool = false) -> void:
+		ocupa: float, opc: Dictionary = {}) -> void:
+	var deporte: Array = opc.get("deporte", [])
+	var plato := String(opc.get("plato", "comida/plate"))
+	var encima: Array = opc.get("encima", [])
+	var tonos_silla: Dictionary = opc.get("tonos_silla", {})
+	var variar := bool(opc.get("variar", false))
 	_poner(mesa, p, giro, escala_mesa)
 	var m := _medida(mesa, escala_mesa)
 	var f := Vector3(sin(giro), 0, cos(giro))
@@ -364,7 +371,8 @@ func _oficina() -> void:
 	else:
 		_cartel("💼 " + _sala_nombre().to_upper(), Vector3(4.2, 2.55, -5.95), 32)
 		InteriorComercioExtra.oficina(self)
-		_mesa_con_sillas(Vector3(4.6, 0, 1.6), 0.0, "table", 2.2, 2, "chairModernCushion", 0.5, _calle(), "", ["laptop", "books", "comida/cup-coffee"], {}, true)
+		_mesa_con_sillas(Vector3(4.6, 0, 1.6), 0.0, "table", 2.2, 2, "chairModernCushion", 0.5,
+			{"deporte": _calle(), "plato": "", "encima": ["laptop", "books", "comida/cup-coffee"], "tonos_silla": {}, "variar": true})
 		_pantalla(Vector3(7.96, 1.7, 1.6), Vector2(1.5, 0.85), Color(0.3, 0.5, 0.75), -PI * 0.5)
 	## Dos puestos más contra la pared izquierda.
 	for z: float in [-0.4, 1.8]:

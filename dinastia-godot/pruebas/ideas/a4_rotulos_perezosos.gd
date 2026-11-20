@@ -33,7 +33,7 @@ func _probar() -> void:
 		if r._vivo[i] != null:
 			l0 = r._vivo[i]
 			break
-	_comprobar(l0 != null and l0.font_size == 34 and is_equal_approx(l0.pixel_size, 0.0055) and l0.outline_size == 0 and l0.width == 420.0, "el cartel creado conserva sus propiedades")
+	_comprobar(l0 != null and l0.font_size == 34 and is_equal_approx(l0.pixel_size, 0.0055) and l0.outline_size == 0 and is_equal_approx(l0.width, 420.0), "el cartel creado conserva sus propiedades")
 	## Se va lejos: se sueltan todos (histéresis incluida).
 	cam.global_position = Vector3(5000, 2, 5000)
 	for k in 12:

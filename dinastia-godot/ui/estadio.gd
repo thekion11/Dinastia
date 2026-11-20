@@ -57,14 +57,14 @@ static func poner_banca_de(raiz: Node3D, sp: PlayerSpawner, c: Club, once_c: Arr
 static func poner_personal(raiz: Node3D) -> CamarografosSiguen:
 	if raiz == null:
 		return null
-	var _raiz3d := raiz
+	var raiz3d := raiz
 	var i := 0
 	var sig := CamarografosSiguen.new()
 	sig.name = "CamarografosSiguen"
 	raiz.add_child(sig)
-	for cam in _raiz3d.find_children("Camarografo*", "Node3D", true, false):
+	for cam in raiz3d.find_children("Camarografo*", "Node3D", true, false):
 		var base := cam as Node3D
-		var d := PersonajeDT.personal_estadio(_raiz3d, "prensa", base.position - base.basis.z * 0.12, base.rotation.y, 700 + i)
+		var d := PersonajeDT.personal_estadio(raiz3d, "prensa", base.position - base.basis.z * 0.12, base.rotation.y, 700 + i)
 		if not d.is_empty():
 			for mi in base.find_children("*", "MeshInstance3D", false, false):
 				if mi.has_meta("cuerpo"):
@@ -80,7 +80,7 @@ static func poner_personal(raiz: Node3D) -> CamarografosSiguen:
 	]
 	for k in puestos.size():
 		## El giro es hacia FUERA del campo: la persona mira a +Z sin girar.
-		PersonajeDT.personal_estadio(_raiz3d, "seguridad", puestos[k][0], puestos[k][1], 900 + k)
+		PersonajeDT.personal_estadio(raiz3d, "seguridad", puestos[k][0], puestos[k][1], 900 + k)
 	return sig
 
 func _tocar_ambiente() -> void:

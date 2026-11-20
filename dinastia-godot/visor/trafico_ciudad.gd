@@ -121,7 +121,7 @@ func _paso_gd(delta_real: float) -> void:
 		if es_peaton:
 			_lateral(v, delta)
 			_mirar_delante(v, s0, delta)
-		elif v.has("lat_obj") or float(v.get("lat", 0.0)) != 0.0:
+		elif v.has("lat_obj") or float(v.get("lat", 0.0)) != 0.0:   ## exacto a propósito: igual que `trafico_nativo.cpp` (gemela C++)
 			_lateral(v, delta, VEL_ADELANTA)   ## el coche que adelanta se abre al centro de la calzada y vuelve a su carril
 		if _peatones_ruta.has(ruta) and es_peaton:
 			for o: Dictionary in _peatones_ruta[ruta]:
@@ -229,7 +229,7 @@ func _lateral(v: Dictionary, delta: float, vel := VEL_LATERAL) -> void:
 	var t_lat := float(v.get("t_lat", 0.0))
 	if t_lat > 0.0:
 		v["t_lat"] = t_lat - delta
-	elif float(v.get("lat_obj", 0.0)) != 0.0:
+	elif float(v.get("lat_obj", 0.0)) != 0.0:   ## exacto a propósito: igual que `trafico_cuerpo.cpp` (gemela C++)
 		v["lat_obj"] = 0.0
 	var lat := float(v.get("lat", 0.0))
 	var obj := float(v.get("lat_obj", 0.0))

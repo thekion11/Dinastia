@@ -11,7 +11,7 @@ extends RefCounted
 ## la hora del reloj del juego (más seguido en punta, más espaciado a última hora y el domingo), con servicio de 05:30 a 23:30 (los
 ## locales, de 06:30 a 22:00), y llega a cada paradero tras la DISTANCIA REAL del recorrido hasta él a `VEL_COMERCIAL`. En la
 ## calle, la app usa la posición y la velocidad reales de los buses (`BusesRed.llegadas`).
-## TODO ES DETERMINISTA: no toca `Azar` ni la hora del sistema.
+## Todo ES DETERMINISTA: no toca `Azar` ni la hora del sistema.
 
 ## Las medidas de la ciudad grande que definen las zonas (copiadas de `CiudadExpansion` y `CargaCiudad.de("CityBuilder").RIO_X`; la prueba
 ## `pruebas/ideas/red_app.gd` comprueba que siguen iguales). El núcleo es el club con sus anillos.

@@ -227,7 +227,7 @@ func _con_balon(u: Dictionary, yo: Vector3, arco: Vector3, quiero: Dictionary) -
 		hacia = (hacia + Vector3(-hacia.z, 0, hacia.x) * lado * 0.6).normalized()
 	_stick(hacia, quiero)
 	quiero["jugar_sprint"] = 1.0 if rival.is_empty() or _motor.pos(rival).distance_to(yo) > 5.0 else 0.0
-	if quiero["jugar_sprint"] == 0.0:
+	if is_zero_approx(quiero["jugar_sprint"]):
 		quiero.erase("jugar_sprint")
 
 func _defender(u: Dictionary, yo: Vector3, due: Dictionary, quiero: Dictionary) -> void:

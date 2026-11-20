@@ -53,7 +53,7 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 		for f: Dictionary in s.campeones_continentales:
 			var propio := String(f.get("club_id", "")) == mi_id
 			p._dato("%s %d" % [CompeticionInfo.nombre_visible(String(f.get("torneo", ""))), int(f.get("anio", 0))],
-				String(f.get("campeon", "")), p.COL_ACENTO if propio else Principal.COL_TEXTO, p._lista_seleccion)
+				String(f.get("campeon", "")), p.col_acento if propio else Principal.COL_TEXTO, p._lista_seleccion)
 
 func _nacionalizar(j: Jugador) -> void:
 	var problema := p.mundo.selecciones.nacionalizar(j)
@@ -190,7 +190,7 @@ func _pintar_seleccion(c: Club) -> void:
 	p._lista_seleccion.add_child(tm)
 	for fila2: Dictionary in s.mas_convocados(8):
 		var j2: Jugador = fila2["jugador"]
-		var col := p.COL_ACENTO if j2.club_id == c.id else Principal.COL_TEXTO
+		var col := p.col_acento if j2.club_id == c.id else Principal.COL_TEXTO
 		var lm := p._texto(12, col)
 		lm.text = Idiomas.t("%s  ·  %d caps") % [j2.nombre, int(fila2["caps"])]
 		p._lista_seleccion.add_child(lm)
@@ -201,7 +201,7 @@ func _pintar_seleccion(c: Club) -> void:
 	p._lista_seleccion.add_child(te)
 	for fila3: Dictionary in s.ranking(14):
 		var propia := String(fila3["nombre"]) == s.nombre_seleccion()
-		var le := p._texto(12, p.COL_ACENTO if propia else Principal.COL_SUAVE)
+		var le := p._texto(12, p.col_acento if propia else Principal.COL_SUAVE)
 		le.text = "%s%s  ·  %d" % ["> " if propia else "   ", String(fila3["nombre"]), int(fila3["fuerza"])]
 		p._lista_seleccion.add_child(le)
 

@@ -16,8 +16,8 @@ func _probar_dinastias() -> void:
 	var copia := Cantera.new(m)
 	copia.desde_dic(m.cantera.a_dic())
 	var guardado_propio := false
-	for L: Dictionary in copia.leyendas:
-		if String(L["nombre"]) == "Ramiro Valdivia" and bool(L.get("propio", false)):
+	for ley: Dictionary in copia.leyendas:
+		if String(ley["nombre"]) == "Ramiro Valdivia" and bool(ley.get("propio", false)):
 			guardado_propio = true
 	_comprobar(guardado_propio, "la dinastía propia sobrevive al guardado")
 	m.cantera.call("_hijos_de_leyendas")

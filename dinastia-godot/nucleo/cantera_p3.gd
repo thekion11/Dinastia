@@ -49,9 +49,9 @@ func _proceso_etiquetas() -> Array[Dictionary]:
 		elif anios >= 1 and j.partidos >= 6:
 			e["presion"] = int(e.get("presion", 0)) + 1
 		if int(e["presion"]) == 6:
-			var _m0 := j.moral
+			var m0 := j.moral
 			j.moral = clampi(j.moral - 14, 5, 99)
-			j.anotar_moral(j.moral - _m0, "Cantera")
+			j.anotar_moral(j.moral - m0, "Cantera")
 			etiqueta_pesa.emit(j, String(e.get("ref", "")))
 			noticia.emit("El peso de un apellido",
 				"La prensa se cansó de esperar a %s. «El nuevo %s no aparece», titulan hoy. El chico entrenó cabizbajo toda la semana: la etiqueta que le pusieron a los diecisiete le pesa como una mochila de piedras." % [
@@ -59,9 +59,9 @@ func _proceso_etiquetas() -> Array[Dictionary]:
 			sucesos.append({"tipo": "etiqueta_pesa", "jugador": j})
 		if int(e.get("cumple", 0)) >= 8:
 			e["libre"] = true
-			var _m0 := j.moral
+			var m0 := j.moral
 			j.moral = clampi(j.moral + 12, 5, 99)
-			j.anotar_moral(j.moral - _m0, "Cantera")
+			j.anotar_moral(j.moral - m0, "Cantera")
 			etiqueta_superada.emit(j, String(e.get("ref", "")))
 			noticia.emit("Ya no es «el nuevo» nadie",
 				"%s se sacó la etiqueta de encima a fuerza de partidos. Hoy la prensa escribe su nombre solo, sin compararlo con %s." % [
@@ -366,6 +366,13 @@ func sortear_guerra_agentes() -> Dictionary:
 ## desconfía de ti. La confianza va de −10 a +10 y arranca en 0 (neutral). (12-11: la pantalla comparaba con 45, como si fuera de 0 a 100, y
 ## pintaba en rojo a TODOS los que tenían dos clientes desde el primer día.)
 static func agente_aprieta(clientes: int, confianza: int) -> bool:
+	var nat := Nativo.de("nuc_agente_aprieta")
+	if nat != null:
+		return nat.nuc_agente_aprieta(clientes, confianza)
+	return agente_aprieta_gd(clientes, confianza)
+
+## Gemela GDScript de `nuc_agente_aprieta` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func agente_aprieta_gd(clientes: int, confianza: int) -> bool:
 	return clientes >= 2 and confianza < 0
 
 func hay_exigencia() -> bool:

@@ -147,6 +147,15 @@ func semana(c: Club, prensa: Prensa, academia: Academia, sem: int, resultado: in
 
 ## El efecto actual de una categoría, en palabras, para la ficha.
 func efecto_actual(clave: String) -> String:
+	var r_efecto_actual_1: Variant = _efecto_actual_1(clave)
+	if r_efecto_actual_1 != null:
+		return r_efecto_actual_1
+	var r_efecto_actual_2: Variant = _efecto_actual_2(clave)
+	if r_efecto_actual_2 != null:
+		return r_efecto_actual_2
+	return ""
+
+func _efecto_actual_1(clave: String) -> Variant:
 	var e := efectivo(clave) * _norma()
 	match clave:
 		"ataque": return "+%.1f %% de ataque" % (e * 0.2)
@@ -157,6 +166,11 @@ func efecto_actual(clave: String) -> String:
 		"fisica": return "+%d de físico por semana" % int(efectivo(clave) / 9.0)
 		"cargas": return "+%d de forma por semana a los cansados" % int(efectivo(clave) / 9.0)
 		"liderazgo": return "+%d de moral cada cuatro semanas" % (1 + int(efectivo(clave) / 20.0)) if nivel(clave) > 0 else "sin efecto aún"
+	return null
+
+func _efecto_actual_2(clave: String) -> Variant:
+	var e := efectivo(clave) * _norma()
+	match clave:
 		"psicologia": return "suelo de moral en %d" % (20 + int(efectivo(clave))) if nivel(clave) > 0 else "sin efecto aún"
 		"idiomas": return "+%d de adaptación por semana" % int(efectivo(clave) / 5.0)
 		"formacion": return "+%.2f de nivel semanal a cada chico" % (efectivo(clave) * 0.02)
@@ -164,7 +178,8 @@ func efecto_actual(clave: String) -> String:
 		"aficion": return "+%.1f %% de público" % (e * 0.3)
 		"finanzas": return "ingreso semanal extra (%d)" % int(250.0 * e) if nivel(clave) > 0 else "sin efecto aún"
 		"negociacion": return "recuperas %.1f %% de los sueldos" % (e * 0.3)
-	return ""
+	return null
+
 
 func a_dic() -> Dictionary:
 	return {"niv": niveles, "pts": puntos, "gan": ganados}

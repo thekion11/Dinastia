@@ -43,8 +43,8 @@ func _probar() -> void:
 		if mi.material_overlay != null or mi.material_override is ShaderMaterial and (mi.material_override as ShaderMaterial).shader.resource_path == PersonajeVida.SHADER_CANAS:
 			hay = true
 	_comprobar(not hay, "28 años: sin arrugas ni canas")
-	_comprobar(PersonajeVida.arrugas_de(30) == 0.0 and PersonajeVida.arrugas_de(65) > 0.95, "arrugas: nada a los 30, del todo a los 65")
-	_comprobar(PersonajeVida.canas_de(70) <= 0.85 and PersonajeVida.entradas_de(30) == 0.0, "canas con tope; sin entradas a los 30")
+	_comprobar(is_zero_approx(PersonajeVida.arrugas_de(30)) and PersonajeVida.arrugas_de(65) > 0.95, "arrugas: nada a los 30, del todo a los 65")
+	_comprobar(PersonajeVida.canas_de(70) <= 0.85 and is_zero_approx(PersonajeVida.entradas_de(30)), "canas con tope; sin entradas a los 30")
 	(j["nodo"] as Node).free()
 	## Forma de cara: el hueso «Head» se ensancha o se alarga.
 	var ancha := PersonajeDT._objetivos(PersonajeDT.aspecto({"forma_cara": 1.0, "ropa": "traje"}))["Head"] as Vector3

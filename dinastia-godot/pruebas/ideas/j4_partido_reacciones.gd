@@ -28,7 +28,7 @@ func _probar() -> void:
 	## 251: el clima vacía la grada; el techo salva la lluvia, no la niebla.
 	_comprobar(Clima.factor_publico({"clave": "lluvia"}) < 0.95 and Clima.factor_publico({"clave": "tormenta"}) < Clima.factor_publico({"clave": "lluvia"}),
 		"lluvia y tormenta bajan el público (%.2f / %.2f)" % [Clima.factor_publico({"clave": "lluvia"}), Clima.factor_publico({"clave": "tormenta"})])
-	_comprobar(Clima.factor_publico({"clave": "lluvia"}, true) == 1.0 and Clima.factor_publico({"clave": "niebla"}, true) < 1.0, "el techo retráctil salva la lluvia, no la niebla")
+	_comprobar(is_equal_approx(Clima.factor_publico({"clave": "lluvia"}, true), 1.0) and Clima.factor_publico({"clave": "niebla"}, true) < 1.0, "el techo retráctil salva la lluvia, no la niebla")
 	_comprobar(Clima.factor({"clave": "lluvia"}) < 1.0, "y la lluvia sigue trabando el juego")
 	var m := Mundo.new()
 	m.generar(["CHI"], 4711)

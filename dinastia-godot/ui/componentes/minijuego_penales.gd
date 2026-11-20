@@ -189,7 +189,7 @@ func _patear(z: int) -> void:
 		if _portero.is_empty():
 			return
 		var px := float(ZONAS[p].x)
-		var clip := "atajar_bajo" if px == 0.0 else ("atajar_der" if px < 0.0 else "atajar_izq")
+		var clip := "atajar_bajo" if is_zero_approx(px) else ("atajar_der" if px < 0.0 else "atajar_izq")
 		Mini3D.anim(_portero, clip, "", 0.05)
 		var pn: Node3D = _portero["nodo"]
 		var tp := pn.create_tween()

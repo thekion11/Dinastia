@@ -178,7 +178,7 @@ func _control_usuario(delta: float) -> void:
 	var rel := Vector2(rs_mundo.dot(der), rs_mundo.dot(fwd))
 	if con_balon:
 		var dir_mira := mundo.normalized() if mundo.length() > 0.1 else fwd
-		if _control_balon_inicio(p, d, mv, mundo, lb, rb, lt, sprint, fwd, rel, dir_mira):
+		if _control_balon_inicio(p, d, mv, mundo, {"lb": lb, "rb": rb, "lt": lt, "sprint": sprint}, fwd, rel, dir_mira):
 			return
 		if _control_tiro(p, d, mv, mundo, lb, rb, lt, delta):
 			return
@@ -187,7 +187,12 @@ func _control_usuario(delta: float) -> void:
 		_control_sin_balon(p, d, mv, mundo, rb, lt, sprint, rs_mundo)
 
 ## Con el balón: el portero con él en las manos, el pase elegante, los regates con modificadores y las filigranas. `true` = ya hizo algo que acaba el turno.
-func _control_balon_inicio(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, lb: bool, rb: bool, lt: bool, sprint: bool, fwd: Vector3, rel: Vector2, dir_mira: Vector3) -> bool:
+## `ent` = los botones {lb, rb, lt, sprint} de este fotograma.
+func _control_balon_inicio(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, ent: Dictionary, fwd: Vector3, rel: Vector2, dir_mira: Vector3) -> bool:
+	var lb := bool(ent["lb"])
+	var rb := bool(ent["rb"])
+	var lt := bool(ent["lt"])
+	var sprint := bool(ent["sprint"])
 	## EL PORTERO CON EL BALÓN EN LAS MANOS: X saque largo (de volea),
 	## A pase corto con la mano.
 	if bool(p["por"]):
@@ -238,7 +243,7 @@ func _control_balon_inicio(p: Dictionary, d: float, mv: Vector2, mundo: Vector3,
 	return false
 
 ## Con el balón: cargar el tiro (mantener) y soltarlo, y el amago. `true` = el turno acaba aquí.
-func _control_tiro(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, lb: bool, rb: bool, lt: bool, delta: float) -> bool:
+func _control_tiro(p: Dictionary, d: float, mv: Vector2, _mundo: Vector3, lb: bool, rb: bool, lt: bool, delta: float) -> bool:
 	## El tiro: se carga manteniendo y sale al soltar; los modificadores
 	## valen si se pulsan en algún momento de la carga.
 	if Input.is_action_pressed("jugar_tiro"):
@@ -260,7 +265,7 @@ func _control_tiro(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, lb: boo
 			carga = 0.0
 			_filigrana(p, "amago_rabona" if lt else "amago_tiro", 1.0)
 		return true
-	elif cargando:
+	if cargando:
 		cargando = false
 		var ap_tiro := Vector2(-mv.x * d, -mv.y * 0.5)
 		if Mando.ayuda("tiro") == "asistido" and _mods_carga != "potente":

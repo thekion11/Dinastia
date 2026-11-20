@@ -60,7 +60,7 @@ func _clausula() -> void:
 	## Si se va a otro club, deja de aplicarse.
 	var otro: Jugador = yo.plantilla[2]
 	otro.club_id = "otro"
-	_comprobar(otro.factor_clausula() == 1.0, "en otro club la cláusula ya no cuenta")
+	_comprobar(is_equal_approx(otro.factor_clausula(), 1.0), "en otro club la cláusula ya no cuenta")
 	otro.club_id = yo.id
 	## Ascenso: vuelven a su nivel.
 	Contratos.levantar_descenso(yo)
@@ -69,7 +69,7 @@ func _clausula() -> void:
 		## Los sueldos se redondean a 10: en uno pequeño (320) un paso de redondeo ya es más del 3 %, así que cuenta como cero.
 		if absi(j.sueldo - int(antes[j.id])) > 10:
 			max_dif = maxf(max_dif, absf(float(j.sueldo) / float(antes[j.id]) - 1.0))
-	_comprobar(max_dif <= 0.03 and yo.plantilla.all(func(j: Jugador) -> bool: return j.rebaja_descenso == 0.0),
+	_comprobar(max_dif <= 0.03 and yo.plantilla.all(func(j: Jugador) -> bool: return is_zero_approx(j.rebaja_descenso)),
 		"al ascender cada sueldo vuelve a su nivel (desvío máx %.1f %%)" % (max_dif * 100.0))
 	## Y en el cierre real: el último de Primera baja con la cláusula puesta (IA o humano).
 	var m2 := Mundo.new()

@@ -93,7 +93,7 @@ func _probar() -> void:
 	motor._indicar_pase(0.2)
 	_comprobar(motor._receptor_marcado.is_empty(), "con el indicador apagado, la flecha se va")
 	motor.usuario = {}
-	_comprobar(CameraRig.PRO_DISTANCIAS["lejos"] > CameraRig.PRO_DISTANCIAS["normal"] and CameraRig.PRO_DISTANCIAS["normal"] == 4.2, "cámara Pro: cerca, normal (4,2 m, la de siempre) y lejos")
+	_comprobar(CameraRig.PRO_DISTANCIAS["lejos"] > CameraRig.PRO_DISTANCIAS["normal"] and is_equal_approx(CameraRig.PRO_DISTANCIAS["normal"], 4.2), "cámara Pro: cerca, normal (4,2 m, la de siempre) y lejos")
 	## Un rato de partido con centros de verdad no rompe nada.
 	motor.autopiloto = true
 	motor._saque_de_centro(true)
