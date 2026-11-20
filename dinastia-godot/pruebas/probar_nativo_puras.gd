@@ -73,6 +73,9 @@ static func probar(nat: Object) -> Dictionary:
 		if not nat.has_method(nuc):
 			fallos.append("%s.%s: la extensión no trae `%s`" % [caso[0], nombre, nuc])
 			continue
+		if Nativo.de(nuc) == null:   ## sin esto la comparación sería GDScript contra GDScript y pasaría en vacío
+			fallos.append("%s.%s: `Nativo.de(\"%s\")` no devuelve la extensión (el envoltorio usaría GDScript)" % [caso[0], nombre, nuc])
+			continue
 		var scr: Script = load(String(caso[0]))
 		var tiene: Dictionary = {}
 		for m: Dictionary in scr.get_script_method_list():
