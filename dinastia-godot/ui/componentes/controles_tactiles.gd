@@ -146,7 +146,7 @@ func _gestos() -> bool:
 	return _modo_mando != "botones"
 
 ## ¿Se ve (y se puede pulsar) este botón ahora? `con_balon` / `en_banda` / `modo` son los de este momento (las pruebas los pasan). Siempre salen los 4 (modo Gestos: solo Sprint y, sin balón, Cambiar).
-func visible_en(nombre: String, con_balon: bool, en_banda: bool, modo: String) -> bool:
+func visible_en(nombre: String, con_balon: bool, _en_banda: bool, modo: String) -> bool:
 	if modo == "gestos":
 		return nombre == "Pausa" or nombre == "SP" or (nombre == "PA" and not con_balon)
 	return true

@@ -9,7 +9,7 @@ func _ok(cond: bool, msg: String) -> void:
 		fallos += 1
 		print("FALLO ", msg)
 
-func correr(padre: Node = null) -> int:
+func correr(_padre: Node = null) -> int:
 	for cfg: Array in [[["CHI"], 11], [["ARG", "BRA"], 22], [["ESP", "ENG"], 33], [["GER", "ITA", "FRA"], 44]]:
 		var m := Mundo.new()
 		var ps: Array[String] = []

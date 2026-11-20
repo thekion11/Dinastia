@@ -357,8 +357,8 @@ func _probar_puente3d() -> void:
 
 	## El aspecto tiene que ser ESTABLE: el mismo jugador, la misma cara siempre.
 	var j: Jugador = a.once()[3]
-	var _r1a = Puente3D.jugador(j)["look"]["piel"]; var _r1b = Puente3D.jugador(j)["look"]["piel"]
-	_comprobar(_r1a == _r1b,
+	var rep1_a = Puente3D.jugador(j)["look"]["piel"]; var rep1_b = Puente3D.jugador(j)["look"]["piel"]
+	_comprobar(rep1_a == rep1_b,
 		"el mismo jugador tiene siempre el mismo aspecto")
 
 	## Y el portero tiene que CONTRASTAR con sus companeros, o desde la camara

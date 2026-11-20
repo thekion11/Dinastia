@@ -17,7 +17,7 @@ func _mundo(paises: Array, semilla: int) -> Mundo:
 	m.tomar_el_mando(m.ligas[0].clubes[1 + semilla % 3].id)
 	return m
 
-func correr(padre: Node = null) -> int:
+func correr(_padre: Node = null) -> int:
 	for cfg: Array in [[["CHI"], 11], [["ARG", "BRA"], 22], [["ESP", "ENG"], 33]]:
 		var m := _mundo(cfg[0], int(cfg[1]))
 		var e := "%s/%d" % [",".join(cfg[0]), cfg[1]]

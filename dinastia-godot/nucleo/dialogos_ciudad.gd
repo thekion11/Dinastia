@@ -13,6 +13,13 @@ static func oficio_de(numero: int) -> String:
 
 ## Grupo de ánimo: pos (euforia, bien), neu (normal), neg (mal, crisis).
 static func grupo(animo: String) -> String:
+	var nat := Nativo.de("nuc_grupo_dialogo")
+	if nat != null:
+		return nat.nuc_grupo_dialogo(animo)
+	return grupo_gd(animo)
+
+## Gemela GDScript de `nuc_grupo_dialogo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func grupo_gd(animo: String) -> String:
 	match animo:
 		"euforia", "bien": return "pos"
 		"mal", "crisis": return "neg"

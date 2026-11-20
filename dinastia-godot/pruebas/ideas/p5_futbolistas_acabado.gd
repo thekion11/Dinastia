@@ -11,9 +11,9 @@ func _probar() -> void:
 	_comprobar(PeloDrive.para_futbolista("j1", "flequillo", false) == 68, "el flequillo, el flequillo despeinado (68)")
 	_comprobar(PeloDrive.para_futbolista("j1", "corto", false) == -1, "el corto sigue con el corte del pack")
 	_comprobar(PeloDrive.para_futbolista("j1", "rizado", true) == -1, "con foto real no se le cambia el pelo")
-	var _r1a = PeloDrive.para_futbolista("j7", "rizado", false)
-	var _r1b = PeloDrive.para_futbolista("j7", "rizado", false)
-	_comprobar(_r1a == _r1b, "y el mismo jugador lleva siempre el mismo")
+	var rep1_a = PeloDrive.para_futbolista("j7", "rizado", false)
+	var rep1_b = PeloDrive.para_futbolista("j7", "rizado", false)
+	_comprobar(rep1_a == rep1_b, "y el mismo jugador lleva siempre el mismo")
 	for id in [80, 68, 59]:
 		_comprobar(PeloDrive.malla(id) != null, "la malla del peinado %d existe" % id)
 	## Postura: el atleta tiene las manos igual de relajadas pero los hombros y el cuello mucho más rectos que el peatón.

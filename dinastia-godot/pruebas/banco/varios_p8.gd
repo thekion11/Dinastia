@@ -127,9 +127,9 @@ func _probar_instituciones_c5_c8() -> void:
 				noche_con_queda = true
 	_comprobar(n > 10 and n < 60, "son raras: %d en 400 semanas" % n)
 	_comprobar(not noche_con_queda, "con toque de queda no hay lesiones de noche")
-	var _r2a = LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false)
-	var _r2b = LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false)
-	_comprobar(_r2a == _r2b, "no consume Azar: la misma semana, lo mismo")
+	var rep2_a = LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false)
+	var rep2_b = LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false)
+	_comprobar(rep2_a == rep2_b, "no consume Azar: la misma semana, lo mismo")
 
 ## C6/C7: hablar con un jugador (según quién es, con memoria y promesas que se
 ## cobran), la entrevista al paso de un medio nuevo (mueve seguidores) y la
@@ -393,9 +393,9 @@ func _probar_marcas_y_escudos() -> void:
 			_comprobar(DisenosKit.MARCA_FORMA.has(marca) and marca != "propia", "fabricante de %s: %s (conocido, no la marca propia)" % [c.nombre, marca])
 		vistos[marca] = true
 	_comprobar(vistos.size() >= 4, "los clubes de una liga visten de %d fabricantes distintos" % vistos.size())
-	var _r1a = DisenosKit.marca_de(mf.ligas[0].clubes[0])
-	var _r1b = DisenosKit.marca_de(mf.ligas[0].clubes[0])
-	_comprobar(_r1a == _r1b, "el fabricante de un club es fijo")
+	var rep1_a = DisenosKit.marca_de(mf.ligas[0].clubes[0])
+	var rep1_b = DisenosKit.marca_de(mf.ligas[0].clubes[0])
+	_comprobar(rep1_a == rep1_b, "el fabricante de un club es fijo")
 	## Las formas de estadio de los clubes según su tamaño (21-10-2026, M-002).
 	var mf2 := Mundo.new()
 	mf2.generar(["CHI", "ESP", "ARG", "ENG", "GER", "ITA"], 31)

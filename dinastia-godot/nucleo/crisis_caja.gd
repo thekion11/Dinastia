@@ -32,6 +32,13 @@ static func tirada(semilla: int, anio: int, semana: int, saldo: int, ref: float)
 	return {"tipo": tipo, "importe": int(round(ref * (0.2 + 0.5 * u) * peso * grave / 1000.0)) * 1000}
 
 static func concepto(tipo: String) -> String:
+	var nat := Nativo.de("nuc_concepto_crisis")
+	if nat != null:
+		return nat.nuc_concepto_crisis(tipo)
+	return concepto_gd(tipo)
+
+## Gemela GDScript de `nuc_concepto_crisis` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func concepto_gd(tipo: String) -> String:
 	match tipo:
 		"multa":
 			return "Multa de la federación"
