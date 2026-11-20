@@ -106,6 +106,12 @@ static var aereo := OS.get_environment("LS_AEREO") != "0"
 static var reaccion := OS.get_environment("LS_REACCION") != "0"
 const CLIPS_CABEZA := ["cabezazo", "cabezazo_potente", "cabezazo_picado", "pase_cabeza"]
 const CLIPS_SALTO := ["cabezazo_potente", "cabezazo", "cabezazo_picado"]
+## (19-11) Cabezazo en salto de MIXAMO (bajado por el dueño; `herramientas/mixamo_partido.gd` lo recorta con la cabeza arriba a los
+## `PICO` s y hornea su espejo, en una biblioteca de 61 KB que se abre sin tirón). Sale en 1 de cada 3 saltos a disputar, por id, en
+## lugar del de `CLIPS_SALTO`: solo cambia lo que se ve (el motor sigue contando la duración del clip que pide). `LS_MIXAMO=0` lo apaga.
+static var mixamo := OS.get_environment("LS_MIXAMO") != "0"
+const BIBLIOTECA_MIXAMO := "res://assets/characters/quaternius/anims_mixamo/mixamo_partido.res"
+const SALTOS_MIXAMO := ["mx_cabezazo", "mx_cabezazo_espejo"]
 const REACCIONES_FALLO := ["manos_cabeza", "cmu_111_25", "manos_cabeza", "lamento"]
 ## (12-11, sesión 16) Falta pitada SIN tarjeta: el infractor pide perdón, se pone en jarras o protesta (con tarjeta ya protesta el motor).
 const REACCIONES_FALTA := ["pedir_perdon", "brazos_jarra", "protestar", "pedir_perdon"]
@@ -181,7 +187,13 @@ static func tiempo_a_altura(y0: float, vy: float, h: float, g: float) -> float:
 static func despegar(t: float, p: Dictionary) -> void:
 	p["ls_aereo_desde"] = t
 	saltos += 1
-	_poner_propio(t, p, String(CLIPS_SALTO[absi(String(p.get("id", "")).hash()) % CLIPS_SALTO.size()]), "aereo")
+	var h := absi(String(p.get("id", "")).hash())
+	var clip := String(CLIPS_SALTO[h % CLIPS_SALTO.size()])
+	if mixamo and (h / CLIPS_SALTO.size()) % 3 == 0:
+		var mx := _mixamo(p, String(SALTOS_MIXAMO[(h / 9 + saltos) % SALTOS_MIXAMO.size()]))
+		if mx != "":
+			clip = mx
+	_poner_propio(t, p, clip, "aereo")
 
 ## Pone `clip` como clip propio de `p` hasta que acabe. Sin cuerpo (pruebas sin gráficos) solo marca el tiempo (~1 s), para contar.
 static func _poner_propio(t: float, p: Dictionary, clip: String, tipo: String) -> void:
@@ -269,6 +281,23 @@ static func _quizas_reaccionar(m: MotorLeague, p: Dictionary) -> void:
 		AnimExtra.asegurar(ap, FutbolistaQ.esqueleto_de(p["node"]), clip)
 	reacciones += 1
 	_poner_propio(m.t, p, clip if clip != "" else "manos_cabeza", "reaccion")
+
+## Un clip de `BIBLIOTECA_MIXAMO` cargado en el AnimationPlayer de `p` con las pistas apuntando a su esqueleto; "" si no hay cuerpo o clip.
+static func _mixamo(p: Dictionary, base: String) -> String:
+	var ap: AnimationPlayer = p.get("anim")
+	if not is_instance_valid(ap) or not ap.has_animation("correr") or ap.get_animation("correr").get_track_count() == 0:
+		return ""
+	if ap.has_animation(base):
+		return base
+	var lib := load(BIBLIOTECA_MIXAMO) as AnimationLibrary
+	if lib == null or not lib.has_animation(base):
+		return ""
+	var a: Animation = lib.get_animation(base).duplicate(true)
+	var prefijo := String(ap.get_animation("correr").track_get_path(0)).get_slice(":", 0)
+	for i in a.get_track_count():
+		a.track_set_path(i, NodePath("%s:%s" % [prefijo, str(a.track_get_path(i)).get_slice(":", 1)]))
+	ap.get_animation_library("").add_animation(base, a)
+	return base
 
 ## Un clip de CMU (`cmu_<id>`) cargado en el AnimationPlayer de `p` como `ext_cmu_<id>` (recortado a `MAX_CELEBRACION`); "" si no hay.
 static func _cmu(p: Dictionary, base: String) -> String:
