@@ -3,6 +3,8 @@ extends "res://nucleo/partido_p2.gd"
 ## [Capa 3/3 de `partido.gd`] simular_minuto, _por_id, gol_externo, anular_gol_externo, remate_externo, tarjeta_externa … (+16)
 
 func simular_minuto() -> void:
+	if minuto == 0 and not motor_externo and not terminado_ya:   ## (19-11) «menos de siete» también en el saque (sin azar; igual en `PartidoRapido`; el 3D no)
+		_revisar_siete()
 	if terminado_ya:
 		return
 	## LA INVASIÓN, DENTRO DEL MINUTO (25-9-2026, plan maestro B2). Antes solo

@@ -403,6 +403,28 @@ func _probar_acciones_visuales() -> void:
 	_comprobar(LeagueAcciones.ocupado(p, 10.1, "correr", false, 1.4), "en el aire, un ciclo (correr) no pisa el salto")
 	_comprobar(LeagueAcciones.ocupado(p, 10.3, "cabezazo", true, 1.4) and not p.has("ls_propio_hasta") and is_equal_approx(float(p["gesto_hasta"]), 11.3),
 		"el cabezazo de verdad sigue con el salto que ya va y el motor queda como si lo hubiera puesto él (gesto hasta %.2f)" % float(p.get("gesto_hasta", 0.0)))
+	## (19-11) Cabezazo de MIXAMO: biblioteca pequeña recortada (cabeza arriba a los 0,3 s), con espejo; entra con la ruta del esqueleto
+	## y el motor sigue contando la duración de SU cabezazo (solo cambia lo que se ve).
+	var mxl := load(LeagueAcciones.BIBLIOTECA_MIXAMO) as AnimationLibrary
+	_comprobar(mxl != null and mxl.has_animation("mx_cabezazo") and mxl.has_animation("mx_cabezazo_espejo") \
+		and absf(mxl.get_animation("mx_cabezazo").length - 0.97) < 0.05, "el cabezazo de Mixamo está recortado (≈0,97 s) y con espejo")
+	var corr := Animation.new()
+	corr.length = 0.8
+	corr.track_set_path(corr.add_track(Animation.TYPE_ROTATION_3D), NodePath("Esq:pelvis"))
+	lib.remove_animation("correr")
+	lib.add_animation("correr", corr)
+	var id_mx := ""
+	for k in 300:
+		if (absi(("mx_banco_%d" % k).hash()) / LeagueAcciones.CLIPS_SALTO.size()) % 3 == 0:
+			id_mx = "mx_banco_%d" % k
+			break
+	var q_mx := {"id": id_mx, "anim": ap, "vel": Vector3.ZERO, "es_local": false, "por": false, "anim_actual": "correr"}
+	LeagueAcciones.despegar(20.0, q_mx)
+	var clip_q := String(q_mx.get("ls_propio_clip", ""))
+	_comprobar(clip_q.begins_with("mx_cabezazo") and ap.has_animation(clip_q) and String(ap.get_animation(clip_q).track_get_path(0)).begins_with("Esq:"),
+		"1 de cada 3 jugadores salta con el cabezazo de Mixamo, con las pistas en su esqueleto (%s)" % clip_q)
+	_comprobar(LeagueAcciones.ocupado(q_mx, 20.3, "cabezazo", true, 1.4) and is_equal_approx(float(q_mx["gesto_hasta"]), 21.3),
+		"con el salto de Mixamo el motor sigue contando su cabezazo (gesto hasta %.2f)" % float(q_mx.get("gesto_hasta", 0.0)))
 	## Variante nueva (entrada de pie): el motor ve la duración del clip que pidió, aunque se vea otro.
 	var distintas := {}
 	for i in 8:

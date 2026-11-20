@@ -25,6 +25,7 @@ Actualizar este archivo solo con reglas u órdenes vigentes nuevas. Lo completad
 - Datos de caras reales fuera de los builds públicos. Legal: la licencia libre cubre la foto, no el derecho de imagen.
   (30-10, opción B) TODOS los presets son públicos; lo real va en `caras_reales.pck` (`herramientas/empaquetar_caras.gd`),
   que `PaqueteReal` monta si está junto al ejecutable o en user://. El .pck NO se publica ni va al repo.
+- Mapa del código: `docs/MAPA_CODIGO.md` lo genera `dinastia-godot/herramientas/mapa_codigo.py` (no editar a mano; `banco.sh` falla si difiere: regenerarlo antes de subir).
 - `datos/idiomas_extra.json` (9 idiomas) round-trips con `json.dumps(ensure_ascii=False, indent=1)`; textos nuevos de UI con `Idiomas.t`.
 - Diálogos de ciudad y narración se GENERAN (`herramientas/dialogos_ciudad.py`, `montar_narracion.py`): no editar a mano los resultados.
 - En el motor del partido, no usar dicts de jugador como clave: usar `p["id"]`.

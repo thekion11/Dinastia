@@ -527,6 +527,10 @@ pasa "r2: uite_movil_textos" "godot --headless --path . res://pruebas/ideas/uite
 pasa "r2: uite_traducciones" "godot --headless --path . res://pruebas/ideas/uite_traducciones.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: uitm_lenguaje" "godot --headless --path . res://pruebas/ideas/uitm_lenguaje.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: vat_hinchada" "godot --headless --path . res://pruebas/ideas/vat_hinchada.tscn" "(^|[^0-9])0 fallos"
+# 18-11: las 3 escenas con aserciones que nadie lanzaba y que hoy pasan (sen_conexiones tarda ~2 min)
+pasa "r2: pgra_grada" "godot --headless --path . res://pruebas/ideas/pgra_grada.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: prueba_obras_a_pie" "godot --headless --path . res://pruebas/prueba_obras_a_pie.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: sen_conexiones" "godot --headless --path . res://pruebas/ideas/sen_conexiones.tscn" "(^|[^0-9])0 fallos"
 BLOQUE=""
 if [[ "$1" = "todo" ]]; then
   # Reutilizadas lentas (> 45 s cada una)
