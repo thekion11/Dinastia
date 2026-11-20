@@ -13,6 +13,12 @@ extends RefCounted
 
 const ANCHO := 96
 const ALTO := 64
+const _GRUPO_A := ["CHI", "ARG", "BRA", "URU", "COL", "ECU", "PER"]
+const _GRUPO_B := ["PAR", "BOL", "VEN", "ESP", "ENG", "ITA", "GER"]
+const _GRUPO_C := ["FRA", "JPN", "KOR", "KSA", "EGY", "MAR", "RSA"]
+const _GRUPO_D := ["AUS", "MEX", "USA", "POR", "NED", "BEL", "CRO"]
+const _GRUPO_E := ["DEN", "SEN", "NGA", "CMR", "IRN", "CRC", "CAN"]
+const _GRUPO_F := ["NZL", "QAT", "RUS", "UAE", "CHN"]
 static var _cache := {}
 static var solo_dibujo := false
 
@@ -109,12 +115,32 @@ static func _estrella(img: Image, cx: float, cy: float, r: float, c: Color) -> v
 				img.set_pixel(x, y, c)
 
 static func _pintar(img: Image, codigo: String) -> void:
+	if codigo in _GRUPO_A:
+		_pintar_a(img, codigo)
+	elif codigo in _GRUPO_B:
+		_pintar_b(img, codigo)
+	elif codigo in _GRUPO_C:
+		_pintar_c(img, codigo)
+	elif codigo in _GRUPO_D:
+		_pintar_d(img, codigo)
+	elif codigo in _GRUPO_E:
+		_pintar_e(img, codigo)
+	elif codigo in _GRUPO_F:
+		_pintar_f(img, codigo)
+	else:
+		## Sin dibujo propio: dos franjas con colores sacados del código.
+		var b := Color.WHITE
+		var h := absi(codigo.hash())
+		var c1 := Color.from_hsv(float(h % 360) / 360.0, 0.7, 0.75)
+		var c2 := Color.from_hsv(float((h / 360) % 360) / 360.0, 0.6, 0.9)
+		_franjas(img, [c1, b, c2])
+
+static func _pintar_a(img: Image, codigo: String) -> void:
 	var b := Color.WHITE
 	var rojo := Color("d52b1e")
 	var azul := Color("0039a6")
 	var amarillo := Color("fcd116")
 	var verde := Color("009b3a")
-	var negro := Color("111111")
 	match codigo:
 		"CHI":
 			_franjas(img, [b, rojo])
@@ -144,6 +170,11 @@ static func _pintar(img: Image, codigo: String) -> void:
 			_disco(img, ANCHO / 2.0, ALTO / 2.0, 7.0, Color("6b4a2b"))
 		"PER":
 			_franjas(img, [Color("d91023"), b, Color("d91023")], true)
+
+static func _pintar_b(img: Image, codigo: String) -> void:
+	var b := Color.WHITE
+	var negro := Color("111111")
+	match codigo:
 		"PAR":
 			_franjas(img, [Color("d52b1e"), b, Color("0038a8")])
 		"BOL":
@@ -163,6 +194,11 @@ static func _pintar(img: Image, codigo: String) -> void:
 			_franjas(img, [Color("009246"), b, Color("ce2b37")], true)
 		"GER":
 			_franjas(img, [negro, Color("dd0000"), Color("ffce00")])
+
+static func _pintar_c(img: Image, codigo: String) -> void:
+	var b := Color.WHITE
+	var negro := Color("111111")
+	match codigo:
 		"FRA":
 			_franjas(img, [Color("0055a4"), b, Color("ef4135")], true)
 		"JPN":
@@ -198,6 +234,12 @@ static func _pintar(img: Image, codigo: String) -> void:
 				var ancho_t := int((1.0 - absf(float(y) - ALTO / 2.0) / (ALTO / 2.0)) * 36.0)
 				for x in ancho_t:
 					img.set_pixel(x, y, Color("ffb612") if x > ancho_t - 4 else negro)
+
+static func _pintar_d(img: Image, codigo: String) -> void:
+	var b := Color.WHITE
+	var amarillo := Color("fcd116")
+	var negro := Color("111111")
+	match codigo:
 		"AUS":
 			_franjas(img, [Color("00008b")])
 			_rect(img, 0, 0, 48, 32, Color("00008b"))
@@ -232,6 +274,10 @@ static func _pintar(img: Image, codigo: String) -> void:
 			for i in 3:
 				for k in 2:
 					_rect(img, ANCHO / 2 - 9 + i * 6, ALTO / 2 - 9 + k * 6, 6, 6, Color("ff0000") if (i + k) % 2 == 0 else b)
+
+static func _pintar_e(img: Image, codigo: String) -> void:
+	var b := Color.WHITE
+	match codigo:
 		"DEN":
 			_franjas(img, [Color("c8102e")])
 			_rect(img, 0, ALTO / 2 - 5, ANCHO, 10, b)
@@ -251,6 +297,10 @@ static func _pintar(img: Image, codigo: String) -> void:
 		"CAN":
 			_franjas(img, [Color("d52b1e"), b, Color("d52b1e")], true, [1, 2, 1])
 			_estrella(img, ANCHO / 2.0, ALTO / 2.0, 12.0, Color("d52b1e"))
+
+static func _pintar_f(img: Image, codigo: String) -> void:
+	var b := Color.WHITE
+	match codigo:
 		"NZL":
 			_franjas(img, [Color("012169")])
 			for e in [[0.72, 0.3], [0.62, 0.5], [0.82, 0.48], [0.72, 0.75]]:
@@ -265,12 +315,6 @@ static func _pintar(img: Image, codigo: String) -> void:
 		"CHN":
 			_franjas(img, [Color("de2910")])
 			_estrella(img, ANCHO * 0.2, ALTO * 0.3, 9.0, Color("ffde00"))
-		_:
-			## Sin dibujo propio: dos franjas con colores sacados del código.
-			var h := absi(codigo.hash())
-			var c1 := Color.from_hsv(float(h % 360) / 360.0, 0.7, 0.75)
-			var c2 := Color.from_hsv(float((h / 360) % 360) / 360.0, 0.6, 0.9)
-			_franjas(img, [c1, b, c2])
 
 ## La bandera de un club: sus dos colores en franjas verticales, como las que
 ## cuelgan en una sala de prensa.
