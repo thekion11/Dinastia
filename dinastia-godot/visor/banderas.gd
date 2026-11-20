@@ -135,6 +135,21 @@ static func _pintar(img: Image, codigo: String) -> void:
 		var c2 := Color.from_hsv(float((h / 360) % 360) / 360.0, 0.6, 0.9)
 		_franjas(img, [c1, b, c2])
 
+## Rombo amarillo de la bandera de Brasil (un bucle de píxeles, sacado de `_pintar_a`).
+static func _rombo_brasil(img: Image) -> void:
+	for y in ALTO:
+		for x in ANCHO:
+			if absf(float(x) - ANCHO / 2.0) / (ANCHO * 0.42) + absf(float(y) - ALTO / 2.0) / (ALTO * 0.40) <= 1.0:
+				img.set_pixel(x, y, Color("fedf00"))
+
+## La franja roja del disco coreano (sacada de `_pintar_c`).
+static func _franja_corea(img: Image) -> void:
+	for y in ALTO:
+		for x in ANCHO:
+			var d := Vector2(x - ANCHO / 2.0, y - ALTO / 2.0)
+			if d.length() <= 16.0 and d.y < sin(d.x / 16.0 * PI) * 5.0:
+				img.set_pixel(x, y, Color("cd2e3a"))
+
 static func _pintar_a(img: Image, codigo: String) -> void:
 	var b := Color.WHITE
 	var rojo := Color("d52b1e")
@@ -151,10 +166,7 @@ static func _pintar_a(img: Image, codigo: String) -> void:
 			_disco(img, ANCHO / 2.0, ALTO / 2.0, 6.0, Color("f6b40e"))
 		"BRA":
 			_franjas(img, [verde])
-			for y in ALTO:
-				for x in ANCHO:
-					if absf(float(x) - ANCHO / 2.0) / (ANCHO * 0.42) + absf(float(y) - ALTO / 2.0) / (ALTO * 0.40) <= 1.0:
-						img.set_pixel(x, y, Color("fedf00"))
+			_rombo_brasil(img)
 			_disco(img, ANCHO / 2.0, ALTO / 2.0, 13.0, Color("002776"))
 		"URU":
 			var cols: Array = []
@@ -207,11 +219,7 @@ static func _pintar_c(img: Image, codigo: String) -> void:
 		"KOR":
 			_franjas(img, [b])
 			_disco(img, ANCHO / 2.0, ALTO / 2.0, 16.0, Color("003478"))
-			for y in ALTO:
-				for x in ANCHO:
-					var d := Vector2(x - ANCHO / 2.0, y - ALTO / 2.0)
-					if d.length() <= 16.0 and d.y < sin(d.x / 16.0 * PI) * 5.0:
-						img.set_pixel(x, y, Color("cd2e3a"))
+			_franja_corea(img)
 			for k: Vector2 in [Vector2(14, 12), Vector2(82, 12), Vector2(14, 52), Vector2(82, 52)]:
 				_rect(img, int(k.x) - 7, int(k.y) - 5, 14, 2, negro)
 				_rect(img, int(k.x) - 7, int(k.y) - 1, 14, 2, negro)
