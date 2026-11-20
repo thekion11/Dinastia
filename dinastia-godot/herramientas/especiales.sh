@@ -72,6 +72,7 @@ pasa "simular temporada con barra" "godot --headless --path . res://pruebas/idea
 # 3. Colisiones del club (paredes, muebles, gente, barreras invisibles)
 pasa "colisiones del club" "godot --headless --path . res://pruebas/prueba_colisiones_club.tscn" "FIN. 0 fallos"
 pasa "muebles del club (3 países)" "godot --headless --path . res://pruebas/auditoria_muebles_club.tscn" "FIN. 0 fallos"
+pasa "rutas del personal del club (3 países, andando 3 min)" "godot --headless --path . res://pruebas/auditoria_rutas_personal.tscn" "FIN. 0 fallos"
 pasa "caras coplanares del club (parpadeo)" "godot --headless --path . res://pruebas/prueba_coplanares_club.tscn" "FIN. 0 fallos"
 pasa "visor del trofeo (toque y mando)" "godot --headless --path . res://pruebas/prueba_visor_trofeo_mandos.tscn" "FIN. 0 fallos"
 # 4. Partido con el motor real (acta = césped) y control del equipo
@@ -527,6 +528,10 @@ pasa "r2: uite_movil_textos" "godot --headless --path . res://pruebas/ideas/uite
 pasa "r2: uite_traducciones" "godot --headless --path . res://pruebas/ideas/uite_traducciones.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: uitm_lenguaje" "godot --headless --path . res://pruebas/ideas/uitm_lenguaje.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: vat_hinchada" "godot --headless --path . res://pruebas/ideas/vat_hinchada.tscn" "(^|[^0-9])0 fallos"
+# 18-11: las 3 escenas con aserciones que nadie lanzaba y que hoy pasan (sen_conexiones tarda ~2 min)
+pasa "r2: pgra_grada" "godot --headless --path . res://pruebas/ideas/pgra_grada.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: prueba_obras_a_pie" "godot --headless --path . res://pruebas/prueba_obras_a_pie.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: sen_conexiones" "godot --headless --path . res://pruebas/ideas/sen_conexiones.tscn" "(^|[^0-9])0 fallos"
 BLOQUE=""
 if [[ "$1" = "todo" ]]; then
   # Reutilizadas lentas (> 45 s cada una)

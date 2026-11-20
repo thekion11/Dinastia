@@ -41,10 +41,21 @@ const PERSONAL := {
 	"mm_soldier": ["Soldado", "res://assets/characters/modular/women/Soldier.glb", "female"],
 	"mh_punk": ["Punk", "res://assets/characters/modular/men/Punk.glb", "male"],
 	"mm_punk": ["Punk", "res://assets/characters/modular/women/Punk.glb", "female"],
+	## (20-11, orden del dueño: «sácalos de donde quieras») Tres más del mismo pack CC0 (Quaternius, volvieron a bajarse del paquete original):
+	## el granjero para el jardinero y el aventurero (explorador) para el ojeador. Solo del personal; el jugador no los elige.
+	"mh_farmer": ["Granjero", "res://assets/characters/modular/men/Farmer.glb", "male"],
+	"mh_adventurer": ["Aventurero", "res://assets/characters/modular/men/Adventurer.glb", "male"],
+	"mm_adventurer": ["Aventurera", "res://assets/characters/modular/women/Adventurer.glb", "female"],
 }
 static var _modulares: Dictionary = {}
-## Todos los modelos ajenos elegibles: los modulares y, si está en el proyecto (no va en los builds públicos), el avatar regalo.
+## Los modelos AJENOS que el jugador puede elegir como «Modelo base». (20-11, decisión del dueño: en el creador «solo los realistas» y
+## «que los otros sean del personal del club», para que no haya dos veces el mismo personaje) Ninguno: el jugador elige el atleta o
+## `AvatarRegalo`; los 9 civiles son del PERSONAL (`civiles()`, `PersonalEstadio.MODELO_PERSONAL`). Partida vieja con un civil: vuelve al atleta.
 static func todos_ajenos() -> Dictionary:
+	return {}
+
+## Los civiles modulares: SOLO para el personal del club (20-11).
+static func civiles() -> Dictionary:
 	if _modulares.is_empty():
 		for k: String in MODULARES_H:
 			_modulares["mh_" + k.to_lower()] = [MODULARES_H[k], "res://assets/characters/modular/men/%s.glb" % k, "male"]
@@ -60,17 +71,18 @@ static func modelo_valido(clave: String) -> bool:
 
 ## ¿Está el modelo ajeno en el juego?
 static func ajeno_disponible(clave: String) -> bool:
-	var t := todos_ajenos()
+	var t := civiles()
 	if PERSONAL.has(clave):
 		return ResourceLoader.exists(String((PERSONAL[clave] as Array)[1]))
 	return t.has(clave) and ResourceLoader.exists(String((t[clave] as Array)[1]))
 
 ## Arma un modelo ajeno a `altura` m (medida por sus mallas) con su «Idle» en bucle y sin armas.
 ## Devuelve {"nodo","modelo","anim","altura","cuerpo","ajeno"} (sin esqueleto Quaternius). `padre` en el árbol.
-static func ajeno(padre: Node3D, clave: String, altura: float) -> Dictionary:
+## `piel` (opcional): el tono elegido en el creador; los civiles lo aplican a su piel (`AcabadoAjeno`).
+static func ajeno(padre: Node3D, clave: String, altura: float, piel := Color(0, 0, 0, 0), pelo := Color(0, 0, 0, 0), variante := 0) -> Dictionary:
 	if not ajeno_disponible(clave):
 		return {}
-	var fila: Array = PERSONAL[clave] if PERSONAL.has(clave) else todos_ajenos()[clave]
+	var fila: Array = PERSONAL[clave] if PERSONAL.has(clave) else civiles()[clave]
 	var packed: PackedScene = load(String(fila[1]))
 	if packed == null:
 		return {}
@@ -78,19 +90,24 @@ static func ajeno(padre: Node3D, clave: String, altura: float) -> Dictionary:
 	var raiz := Node3D.new()
 	raiz.add_child(modelo)
 	padre.add_child(raiz)
+	## (19-11) Sin metal ni facetas: materiales mates y normales suaves (`AcabadoAjeno`).
+	AcabadoAjeno.aplicar(modelo, piel, pelo, variante)
 	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
 		var nom := String(mi.name).to_lower()
 		for a: String in ARMAS:
 			if nom.contains(a):
 				(mi as MeshInstance3D).visible = false
 				break
-	## Altura: de los pies a la coronilla de las mallas visibles.
+	## Altura: de los pies a la coronilla de las mallas visibles, en el espacio de `raiz` (20-11: con la global, una persona
+	## que no estaba a altura 0 -el personal de las plantas del estadio- quedaba hundida o flotando).
 	var ymin := 1e9
 	var ymax := -1e9
+	var a_raiz := raiz.global_transform.affine_inverse()
 	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
 		var m := mi as MeshInstance3D
-		if m.visible and m.mesh != null:
-			var bb := m.global_transform * m.get_aabb()
+		## La mochila del aventurero tiene la caja de 1,6 m de alto bajando hasta -0,74 m (los pies a 0): contaría la altura de más y lo encogería.
+		if m.visible and m.mesh != null and not String(m.name).to_lower().contains("backpack"):
+			var bb := a_raiz * m.global_transform * m.get_aabb()
 			ymin = minf(ymin, bb.position.y)
 			ymax = maxf(ymax, bb.end.y)
 	var h := ymax - ymin

@@ -165,10 +165,14 @@ static func crear(padre: Node3D, asp_guardado: Dictionary, c1: Color = Color("1f
 	if AvatarRegalo.es_clave(mb) and AvatarRegalo.disponible():
 		var dr := AvatarRegalo.crear(padre, float(a["altura"]))
 		if not dr.is_empty():
+			## (19-11) Sin esto el avatar regalo se quedaba en T (en el creador, hasta el primer gesto; fuera de él, siempre).
+			var quieto_r := parado_persona(dr)
+			if quieto_r != "":
+				(dr["anim"] as AnimationPlayer).play(quieto_r)
 			return dr
 		mb = ""
 	if FutbolistaQ.todos_ajenos().has(mb):
-		var da := FutbolistaQ.ajeno(padre, mb, float(a["altura"]))
+		var da := FutbolistaQ.ajeno(padre, mb, float(a["altura"]), Color(String(a["piel"])))
 		if not da.is_empty():
 			return da
 	var d := FutbolistaQ.crear(float(a["altura"]), String(a["cuerpo"]))

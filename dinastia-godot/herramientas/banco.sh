@@ -39,6 +39,12 @@ comp_mal() {
   rm -f "$COMP_TXT"
 }
 LOG="${1:-${TMPDIR:-/tmp}/banco.txt}"
+# 18-11: el mapa del código (docs/MAPA_CODIGO.md) se genera con herramientas/mapa_codigo.py y no puede envejecer.
+if command -v python3 > /dev/null 2>&1 && ! python3 -I herramientas/mapa_codigo.py --comprobar; then
+  echo "FALLO: docs/MAPA_CODIGO.md está desactualizado. Correr: python3 dinastia-godot/herramientas/mapa_codigo.py"
+  kill "$COMP_PID" 2> /dev/null
+  exit 1
+fi
 SIN_AVANCE="${SIN_AVANCE:-240}"
 NUCLEOS=$(nproc 2>/dev/null || echo 1)
 N="${BANCO_PARTES:-$(( NUCLEOS < 6 ? NUCLEOS : 6 ))}"
