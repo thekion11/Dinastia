@@ -36,7 +36,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 	elif k == KEY_V and modo == "coche" and estado == "calle":
 		cam_coche = (cam_coche + 1) % 3
 		_aviso.text = [Idiomas.t("Cámara: tercera persona"), Idiomas.t("Cámara: capó"), Idiomas.t("Cámara: primera persona")][cam_coche]
-	elif k == KEY_V:
+	elif k == KEY_V and VistaJuego.puede_cambiar():   ## (18-11) en el juego, solo primera persona
 		primera_persona = not primera_persona
 		_raton_en_primera_persona()
 		_aviso.text = Idiomas.t("Primera persona") if primera_persona else Idiomas.t("Tercera persona")

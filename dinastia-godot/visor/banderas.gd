@@ -38,6 +38,8 @@ const ISO := {
 	"BDI": "bi", "CAF": "cf", "GNB": "gw", "GNQ": "gq", "HAI": "ht", "JOR": "jo", "KOS": "xk", "MAD": "mg", "MLT": "mt", "PAL": "ps", "PHI": "ph", "RUS": "ru", "SLV": "sv", "SYR": "sy", "ZIM": "zw", "DOM": "do", "MRT": "mr", "PUR": "pr",
 	## (12-11) los 29 países nuevos con liga (flag-icons 7.2.1, MIT)
 	"CYP": "cy", "IRQ": "iq", "BLR": "by", "EST": "ee", "KAZ": "kz", "LTU": "lt", "LVA": "lv", "NIR": "gb-nir", "BHR": "bh", "ESA": "sv", "GUA": "gt", "IND": "in", "MAS": "my", "OMA": "om", "THA": "th", "VIE": "vn", "AND": "ad", "FRO": "fo", "GIB": "gi", "HKG": "hk", "KGZ": "kg", "KUW": "kw", "LBN": "lb", "LBY": "ly", "NCA": "ni", "SGP": "sg", "SMR": "sm", "TAN": "tz", "TJK": "tj",
+	## (18-11) alias que usan los datos reales (códigos no FIFA o el nombre del país): misma bandera que el código normal.
+	"ARGENTINA": "ar", "URUGUAY": "uy", "PARAGUAY": "py", "COLOMBIA": "co", "CHILE": "cl", "SPA": "es", "SER": "rs", "ROM": "ro", "CTA": "cf", "DRC": "cd", "MTN": "mr",   ## (DOM y PUR ya están arriba; MTN es otro código de Mauritania, como MRT)
 }
 
 static func textura(codigo: String) -> ImageTexture:

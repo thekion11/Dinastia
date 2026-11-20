@@ -109,6 +109,10 @@ static func _material(color: Color, tex: int = 1) -> StandardMaterial3D:
 	## huecos rellenos de negro o, al revés, la cabeza calva debajo.
 	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	m.alpha_scissor_threshold = 0.4
+	## (19-11) Borde de los mechones suavizado con MSAA (alpha to coverage): de cerca el nacimiento del pelo era un
+	## serrucho de píxeles sueltos. Sin MSAA (MÍNIMA) no hace nada y queda el recorte de siempre.
+	m.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE
+	m.alpha_antialiasing_edge = 0.3
 	m.albedo_color = Color(minf(color.r * 1.7, 1.0), minf(color.g * 1.7, 1.0), minf(color.b * 1.7, 1.0))
 	m.roughness = 0.75
 	m.cull_mode = BaseMaterial3D.CULL_DISABLED

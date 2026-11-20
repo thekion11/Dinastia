@@ -53,6 +53,13 @@ func nombre_fase() -> String:
 
 ## Los cruces de un grupo en la fecha `f` (método del círculo; con número impar, uno descansa).
 static func _cruces(g: Array, f: int) -> Array:
+	var nat := Nativo.de("nuc_cruces")
+	if nat != null:
+		return nat.nuc_cruces(g, f)
+	return _cruces_gd(g, f)
+
+## Gemela GDScript de `nuc_cruces` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _cruces_gd(g: Array, f: int) -> Array:
 	var lista := g.duplicate()
 	if lista.size() % 2 == 1:
 		lista.append(null)

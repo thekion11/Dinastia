@@ -128,6 +128,7 @@ int64_t DinastiaNativo::nuc_prefijo_comun(const String &a, const String &b) cons
 }
 
 void DinastiaNativo::_bind_puras2() {
+	_bind_puras3();
 	ClassDB::bind_method(D_METHOD("nuc_icono_calendario", "tipo"), &DinastiaNativo::nuc_icono_calendario);
 	ClassDB::bind_method(D_METHOD("nuc_concepto_crisis", "tipo"), &DinastiaNativo::nuc_concepto_crisis);
 	ClassDB::bind_method(D_METHOD("nuc_grupo_dialogo", "animo"), &DinastiaNativo::nuc_grupo_dialogo);
