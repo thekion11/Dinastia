@@ -233,7 +233,8 @@ func _comedor() -> void:
 	for i in 2:
 		for j in 3:
 			var p := Vector3(-5.5 + float(j) * 5.5, 0, -0.6 + float(i) * 3.0)
-			_mesa_con_sillas(p, 0.0, "table", 2.2, 3, "chair", 0.6, [_c1, _c2], "comida/plate-dinner", ["comida/glass", "comida/salad", "comida/sandwich"])
+			_mesa_con_sillas(p, 0.0, "table", 2.2, 3, "chair", 0.6,
+				{"deporte": [_c1, _c2], "plato": "comida/plate-dinner", "encima": ["comida/glass", "comida/salad", "comida/sandwich"]})
 	_ventana(-1.0, 0.8, 2.0)
 	_ventana(1.0, 0.8, 2.0)
 	_planta(Vector3(-8.4, 0, 5.4))

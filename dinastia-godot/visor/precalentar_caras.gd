@@ -114,6 +114,5 @@ func _uno(it: Dictionary) -> void:
 	raiz.visible = false
 	add_child(raiz)
 	_spawner._kit_x = k.get("x", {})
-	_spawner._crear_jugador(raiz, String(it["jid"]), "MC", "", Color(k.get("c1", "#2b6b45")), Color(k.get("c2", "#ffffff")),
-		String(k.get("estilo", "liso")), int(jug.get("dorsal", 0)), look[0], look[1], look[2], Color(0, 0, 0, 0), jug)
+	_spawner._crear_jugador(raiz, String(it["jid"]), "MC", Color(k.get("c1", "#2b6b45")), Color(k.get("c2", "#ffffff")), String(k.get("estilo", "liso")), int(jug.get("dorsal", 0)), look, Color(0, 0, 0, 0), jug)
 	raiz.queue_free()

@@ -53,8 +53,7 @@ func _ready() -> void:
 		var j: Jugador = c.plantel()[3 + i]
 		var datos := Puente3D.jugador(j)
 		var look: Array = PlayerSpawner._look_de(datos)
-		var nodo := sp._crear_jugador(self, j.id, j.pos, "", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]),
-			5 + i, look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+		var nodo := sp._crear_jugador(self, j.id, j.pos, Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 5 + i, look, Color(0, 0, 0, 0), datos)
 		var n3 := nodo["nodo"] as Node3D
 		n3.position = Vector3((i - (_clips.size() - 1) * 0.5) * 1.6, 0, 0)
 		n3.rotation_degrees.y = float(OS.get_environment("GIRO")) if OS.get_environment("GIRO") != "" else 60.0

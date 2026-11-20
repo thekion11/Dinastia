@@ -178,7 +178,7 @@ func _control_usuario(delta: float) -> void:
 	var rel := Vector2(rs_mundo.dot(der), rs_mundo.dot(fwd))
 	if con_balon:
 		var dir_mira := mundo.normalized() if mundo.length() > 0.1 else fwd
-		if _control_balon_inicio(p, d, mv, mundo, lb, rb, lt, sprint, fwd, rel, dir_mira):
+		if _control_balon_inicio(p, d, mv, mundo, {"lb": lb, "rb": rb, "lt": lt, "sprint": sprint}, fwd, rel, dir_mira):
 			return
 		if _control_tiro(p, d, mv, mundo, lb, rb, lt, delta):
 			return
@@ -187,7 +187,12 @@ func _control_usuario(delta: float) -> void:
 		_control_sin_balon(p, d, mv, mundo, rb, lt, sprint, rs_mundo)
 
 ## Con el balón: el portero con él en las manos, el pase elegante, los regates con modificadores y las filigranas. `true` = ya hizo algo que acaba el turno.
-func _control_balon_inicio(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, lb: bool, rb: bool, lt: bool, sprint: bool, fwd: Vector3, rel: Vector2, dir_mira: Vector3) -> bool:
+## `ent` = los botones {lb, rb, lt, sprint} de este fotograma.
+func _control_balon_inicio(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, ent: Dictionary, fwd: Vector3, rel: Vector2, dir_mira: Vector3) -> bool:
+	var lb := bool(ent["lb"])
+	var rb := bool(ent["rb"])
+	var lt := bool(ent["lt"])
+	var sprint := bool(ent["sprint"])
 	## EL PORTERO CON EL BALÓN EN LAS MANOS: X saque largo (de volea),
 	## A pase corto con la mano.
 	if bool(p["por"]):

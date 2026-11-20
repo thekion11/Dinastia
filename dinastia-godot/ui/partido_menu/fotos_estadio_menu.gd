@@ -164,7 +164,6 @@ func _poner_jugador(raiz: Node3D) -> void:
 	spawner.set("_kit_x", kit.get("x", {}) if kit.get("x") is Dictionary else {})
 	var datos: Dictionary = load(_RUTA_PUENTE3D).jugador(_jugador)
 	var look: Array = load(_RUTA_PLAYER_SPAWNER)._look_de(datos)
-	spawner._crear_jugador(nodo, _jugador.id, "DEL", "", Color(String(kit.get("c1", _club.color1))), Color(String(kit.get("c2", _club.color2))),
-		String(kit.get("estilo", "liso")), maxi(_jugador.dorsal, 1), look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+	spawner._crear_jugador(nodo, _jugador.id, "DEL", Color(String(kit.get("c1", _club.color1))), Color(String(kit.get("c2", _club.color2))), String(kit.get("estilo", "liso")), maxi(_jugador.dorsal, 1), look, Color(0, 0, 0, 0), datos)
 	if spawner is Node:
 		(spawner as Node).queue_free()
