@@ -135,9 +135,7 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 			m.directiva.trofeos.append(t)
 
 	m.staff.desde_dic(datos.get("staff", {}))
-	## Y hay que volver a aplicarlo: los niveles solos no mueven nada, el motor de
-	## partido lee `Club.bonus_ataque` y `bonus_defensa`. Sin este `aplicar`, un
-	## staff de nivel 5 cargado de disco no hacia absolutamente nada.
+	## Hay que volver a aplicarlo: el motor lee `Club.bonus_ataque`/`bonus_defensa`, no los niveles.
 	m.staff.aplicar(mio)
 	## Las obras van DESPUES de fijar el aforo base, y hay que volver a aplicarlas:
 	## el aforo del club que viene del guardado ya trae las tribunas construidas,
@@ -233,6 +231,8 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 	## Y se recalculan los bonificadores del motor con el staff, el arbol del DT
 	## y el vestuario ya cargados: los niveles solos no mueven nada.
 	m.aplicar_bonificadores()
+	var bm: Array = datos.get("bonus_mio", [])
+	if bm.size() == 2 and m.mi_club() != null: m.mi_club().bonus_ataque = float(bm[0]); m.mi_club().bonus_defensa = float(bm[1])
 
 	var dp: Dictionary = datos.get("prensa", {})
 	if not dp.is_empty() and m.prensa != null:
@@ -316,10 +316,8 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		push_error("Partida: «clubes», «ligas» o «mi_club» del guardado no tienen la forma esperada; no se carga")
 		return null
 
-	## Un guardado anterior a la base ficticia (sin la clave) se jugó siempre
-	## con los datos reales. Si esta instalación no tiene el pack, se queda en
-	## la ficticia: los nombres del propio guardado se ven igual, solo se
-	## pierden las equipaciones reales.
+	## Un guardado anterior a la base ficticia (sin la clave) se jugó con datos reales. Si esta instalación no tiene
+	## el pack, se queda en la ficticia: los nombres del guardado se ven igual, solo se pierden las equipaciones reales.
 	Datos.usar_base_real(bool(datos.get("base_real", true)))
 
 	var m := Mundo.new()
