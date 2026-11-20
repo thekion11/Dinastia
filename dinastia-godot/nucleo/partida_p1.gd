@@ -267,10 +267,8 @@ static func _liga_a_dic(l: Liga) -> Dictionary:
 	var ids: Array = []
 	for c in l.clubes:
 		ids.append(c.id)
-	## OJO con `div`: de él dependen los derechos de televisión y quién sube y
-	## baja. Sin guardarlo, al cargar una partida todas las ligas volvían a ser
-	## primera división y el club que acababa de descender cobraba otra vez
-	## como si estuviera arriba.
+	## OJO con `div`: de él dependen los derechos de televisión y quién sube y baja. Sin guardarlo, al cargar
+	## todas las ligas volvían a ser primera división.
 	return {
 		"nombre": l.nombre, "pais": l.pais, "div": l.div, "clubes": ids,
 		"jornada": l.jornada_actual, "tabla": l.tabla_puntos, "h2h": l.h2h,
@@ -281,10 +279,8 @@ static func _liga_a_dic(l: Liga) -> Dictionary:
 # ---------------------------------------------------------------------------
 
 ## LA PARTIDA ENTERA COMO DICCIONARIO. Sale aparte de `guardar()` porque el
-## mismo retrato sirve para dos cosas distintas: escribirlo a disco y
-## guardarlo en memoria para poder DESHACER. Antes solo existia dentro de
-## `guardar()`, asi que deshacer habria obligado a escribir un archivo por cada
-## decision reversible.
+## mismo retrato sirve para escribirlo a disco y para guardarlo en memoria y poder DESHACER
+## (sin escribir un archivo por cada decision reversible).
 static func instantanea(m: Mundo) -> Dictionary:
 	var datos := {
 		"version": VERSION,
@@ -293,7 +289,6 @@ static func instantanea(m: Mundo) -> Dictionary:
 		## 28-10: el ESTADO del azar, no solo la semilla: cargar y seguir da la misma línea que seguir sin cargar.
 		"azar": str(Azar._rng.state),   ## como texto: es de 64 bits y el JSON lo redondearía
 		"ex_mio": Partido.ex_de_mi_club,
-		"bonos_mio": PartidaArchivo.bonos_texto(m.mi_club()),   ## (19-11) los bonos exactos de tu club (`PartidaArchivo.bonos_texto`)
 		"anio": m.anio,
 		"semana": m.semana,
 		"horario": m.horario,
@@ -318,6 +313,7 @@ static func instantanea(m: Mundo) -> Dictionary:
 		## sin logros y sin torneos continentales — y sin una sola queja.
 		"directiva": _directiva_a_dic(m.directiva),
 		"staff": m.staff.a_dic(),
+		"bonus_mio": [m.mi_club().bonus_ataque, m.mi_club().bonus_defensa] if m.mi_club() != null else [],   ## lo que el motor usa ahora (se aplicó al final de la semana anterior)
 		"obras": m.obras.a_dic(),
 		"roles": m.roles.a_dic() if m.roles != null else {},
 		"federacion": m.federacion.a_dic(),
@@ -423,6 +419,8 @@ static func _dic_a_jugador(d: Dictionary) -> Jugador:
 	j.pos = String(d["g"]); j.pos_e = String(d["pe"])
 	j.edad = int(d["e"]); j.ovr = int(d["o"]); j.pot = int(d["t"])
 	j.atributos = d["at"]; j.rasgo = String(d["r"])
+	for k in j.atributos:   ## el JSON da decimales: los atributos enteros vuelven a ser enteros (si no, cambian divisiones y redondeos del partido)
+		j.atributos[k] = int(j.atributos[k]) if j.atributos[k] is float and is_zero_approx(fposmod(float(j.atributos[k]), 1.0)) else j.atributos[k]
 	j.forma = int(d["f"]); j.moral = int(d["m"]); j.fisico = int(d["fi"])
 	j.historial_moral = (d.get("hm", []) as Array).duplicate(true)
 	j.lesion = int(d["l"]); j.suspension = int(d["s"]); j.susp_semana = int(d.get("ss", -1)); j.amarillas = int(d["a"])
