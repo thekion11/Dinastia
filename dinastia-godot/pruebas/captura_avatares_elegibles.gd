@@ -46,7 +46,7 @@ func _ready() -> void:
 		add_child(nodo)
 		nodo.position = Vector3((i - (_claves.size() - 1) * 0.5) * SEP, 0, 0)
 		var asp := {"cuerpo": "female" if k == "@female" else "male", "modelo": "" if k.begins_with("@") else k,
-			"piel": pieles[(i * 5 + 2) % pieles.size()]}
+			"piel": OS.get_environment("PIEL") if OS.get_environment("PIEL") != "" else pieles[(i * 5 + 2) % pieles.size()]}   ## PIEL=3a2216 fija el tono
 		var fila = FutbolistaQ.todos_ajenos().get(k)
 		if fila is Array:
 			asp["cuerpo"] = fila[2]

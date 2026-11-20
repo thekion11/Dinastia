@@ -105,7 +105,8 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		mat.set_shader_parameter("muneca", 0.69 if es_mujer else 0.755)
 		mat.set_shader_parameter("dy_cuerpo", -0.06 if es_mujer else 0.0)
 		var pl := piel.srgb_to_linear()
-		mat.set_shader_parameter("piel_obj", Vector3(pl.r, pl.g, pl.b))
+		var realce := realce_piel_oscura(0.2126 * pl.r + 0.7152 * pl.g + 0.0722 * pl.b)
+		mat.set_shader_parameter("piel_obj", Vector3(pl.r, pl.g, pl.b) * realce)
 		mat.set_shader_parameter("largo", largo)
 		mat.set_shader_parameter("usa_reposo", (cuerpo.mesh as ArrayMesh) != null and cuerpo.mesh.has_meta("con_reposo"))
 		var un := DisenosKit.uniforms(kit, dorsal, nombre)
@@ -140,6 +141,15 @@ static func exposicion_piel(lum: float) -> float:
 	## salían hundidas por el pie del mapeo de tonos -medido de día: Ayoze al
 	## 74 %, Kondogbia casi negro-. Las claras no cambian; el orden se mantiene.)
 	return clampf(pow(0.39 / maxf(lum, 0.001), 0.53), 1.0, 3.0)
+## (20-11) La luz y el mapeo de tonos se comen las pieles oscuras: el tono más oscuro de la paleta (`3a2216`) salía en (25,10,4) y el medio (`6b4028`)
+## un 30 % por debajo de su color (medido en `pruebas/captura_avatares_elegibles.tscn`, PIEL=...). La cara en malla ya lo compensa
+## (`exposicion_piel`); el cuerpo y la cara pintada no. Multiplicador del albedo: 1 para pieles claras y medias (luminancia lineal > 0,35),
+## creciente al oscurecerse, con tope. La misma curva ha de usarse en cualquier otro sitio que tiña piel con `piel_obj`.
+static func realce_piel_oscura(lum: float) -> float:
+	return clampf(pow(0.35 / maxf(lum, 0.001), REALCE_EXP), 1.0, REALCE_TOPE)
+const REALCE_EXP := 0.236
+const REALCE_TOPE := 2.2
+
 ## (19-11) Albedo físico de la piel: la paleta es el color «que se ve»; usada tal cual, la piel clara salía casi blanca.
 ## Compresión por encima de 0,15 de luminancia media ya expuesta (las oscuras, ya calibradas, no cambian); la clara
 ## (#f0c39b, 0,60) queda en ~0,35, la de la piel clara real. La misma cuenta en `cara_malla.gdshader` y `equipacion_q.gdshader`.
