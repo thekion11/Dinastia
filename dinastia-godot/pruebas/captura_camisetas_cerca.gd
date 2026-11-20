@@ -33,7 +33,7 @@ func _ready() -> void:
 		var j: Jugador = c.plantel()[0]
 		var datos := Puente3D.jugador(j)
 		var look: Array = PlayerSpawner._look_de(datos)
-		var nodo := sp._crear_jugador(self, j.id, "DEL", "", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+		var nodo := sp._crear_jugador(self, j.id, "DEL", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look, Color(0, 0, 0, 0), datos)
 		var n3 := nodo["nodo"] as Node3D
 		n3.position = Vector3(-1.5 + i * 1.0, 0, 0)
 		n3.rotation_degrees.y = giros[i]

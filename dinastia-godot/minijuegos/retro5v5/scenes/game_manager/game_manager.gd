@@ -25,7 +25,7 @@ func detener() -> void:
 	if current_state != null and is_instance_valid(current_state):
 		current_state.queue_free()
 	current_state = null
-	
+
 func switch_state(state: State, data: GameStateData = GameStateData.new()) -> void:
 	if current_state != null:
 		current_state.queue_free()

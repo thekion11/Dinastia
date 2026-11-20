@@ -130,7 +130,7 @@ func _fila_club(c: Club) -> HBoxContainer:
 	h.add_child(_escudo(c, 24))
 	var n := Label.new()
 	n.text = c.nombre
-	n.add_theme_font_size_override("font_size", 13)
+	n.add_theme_font_size_override("font_size", Tema.letra(13))
 	n.add_theme_color_override("font_color",
 		Color(String(_paleta()["acento"])) if c == _mio else COL_TEXTO)
 	n.clip_text = true
@@ -160,7 +160,7 @@ func _cuadro_de_grupos(raiz: VBoxContainer) -> void:
 		rej.add_child(col)
 		var et := Label.new()
 		et.text = Idiomas.t("GRUPO %s") % char(65 + i)
-		et.add_theme_font_size_override("font_size", 14)
+		et.add_theme_font_size_override("font_size", Tema.letra(14))
 		et.add_theme_color_override("font_color", Color(String(_paleta()["acento"])))
 		col.add_child(et)
 		for c: Club in _grupos[i]:
@@ -188,7 +188,7 @@ func _fila_cruce(a: Club, b: Club) -> HBoxContainer:
 	h.add_child(_escudo(a, 34))
 	var na := Label.new()
 	na.text = a.nombre
-	na.add_theme_font_size_override("font_size", 15)
+	na.add_theme_font_size_override("font_size", Tema.letra(15))
 	na.add_theme_color_override("font_color", Color(String(_paleta()["acento"])) if propio else COL_TEXTO)
 	na.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	na.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -196,14 +196,14 @@ func _fila_cruce(a: Club, b: Club) -> HBoxContainer:
 	h.add_child(na)
 	var vs := Label.new()
 	vs.text = "vs"
-	vs.add_theme_font_size_override("font_size", 13)
+	vs.add_theme_font_size_override("font_size", Tema.letra(13))
 	vs.add_theme_color_override("font_color", COL_SUAVE)
 	vs.custom_minimum_size = Vector2(34, 0)
 	vs.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	h.add_child(vs)
 	var nb := Label.new()
 	nb.text = b.nombre
-	nb.add_theme_font_size_override("font_size", 15)
+	nb.add_theme_font_size_override("font_size", Tema.letra(15))
 	nb.add_theme_color_override("font_color", Color(String(_paleta()["acento"])) if propio else COL_TEXTO)
 	nb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nb.clip_text = true
@@ -267,7 +267,7 @@ func _mostrar_cuadro() -> void:
 
 	var t := Label.new()
 	t.text = "%s  ·  %s" % [String(p["nombre"]), Idiomas.t(_titulo_ronda)]
-	t.add_theme_font_size_override("font_size", 30)
+	t.add_theme_font_size_override("font_size", Tema.letra(30))
 	t.add_theme_color_override("font_color", Color(String(p["acento"])))
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	raiz.add_child(t)
@@ -354,7 +354,7 @@ func _construir() -> void:
 	## la ronda; repetirlo aquí encima la tapaba y se leían las dos cosas a la
 	## vez, una sobre otra. Este rótulo queda libre para el club de cada bola.
 	_rotulo.text = ""
-	_rotulo.add_theme_font_size_override("font_size", 34)
+	_rotulo.add_theme_font_size_override("font_size", Tema.letra(34))
 	_rotulo.add_theme_color_override("font_color", COL_TEXTO)
 	## Sombra dura detrás del texto. Encima de una escena 3D que se mueve, un
 	## rótulo sin sombra se pierde en cuanto pasa un foco por detrás: el color
@@ -370,7 +370,7 @@ func _construir() -> void:
 
 	_pie = Label.new()
 	_pie.text = Idiomas.t("ESC o «Saltar» para ir directo al cuadro")
-	_pie.add_theme_font_size_override("font_size", 12)
+	_pie.add_theme_font_size_override("font_size", Tema.letra(12))
 	_pie.add_theme_color_override("font_color", COL_SUAVE)
 	_pie.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_pie.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)

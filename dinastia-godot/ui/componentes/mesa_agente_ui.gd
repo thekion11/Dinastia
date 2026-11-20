@@ -206,7 +206,7 @@ func _boton(t: String, accion: Callable, padre: Node, col: Color) -> Button:
 	var b := Button.new()
 	b.text = t
 	b.custom_minimum_size = Vector2(0, 44)
-	b.add_theme_font_size_override("font_size", 13)
+	b.add_theme_font_size_override("font_size", Tema.letra(13))
 	var e := StyleBoxFlat.new()
 	e.bg_color = Color(col, 0.18)
 	e.border_color = col

@@ -17,7 +17,7 @@ static func _fila(o: Dictionary, p: int, perdido := false) -> Dictionary:
 	return {"texto": String(o.get("texto", "")), "peso": int(o.get("peso", 0)), "progreso": p, "estado": _estado(p, perdido), "tipo": String(o.get("tipo", ""))}
 
 ## Progreso en una copa (o copa continental): rondas ganadas frente a las que pide la meta.
-static func _en_copa(copa: Copa, c: Club, o: Dictionary, grupos_ok := true) -> Dictionary:
+static func _en_copa(copa: Copa, c: Club, o: Dictionary, _grupos_ok := true) -> Dictionary:
 	var meta := int(o.get("meta", 0))
 	var ganadas := ObjetivosClub.rondas_ganadas(copa, c)
 	var need := ObjetivosClub.rondas_para(copa, meta)

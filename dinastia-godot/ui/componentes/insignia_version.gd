@@ -23,7 +23,7 @@ static func poner(padre: Control, ruta: String = InfoBuild.RUTA) -> InsigniaVers
 		ins.add_child(r)
 	var l := Label.new()
 	l.text = texto
-	l.add_theme_font_size_override("font_size", 13)
+	l.add_theme_font_size_override("font_size", Tema.letra(13))
 	l.add_theme_color_override("font_color", Tema.SUAVE)
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE

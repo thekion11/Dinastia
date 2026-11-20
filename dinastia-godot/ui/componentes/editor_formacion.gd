@@ -33,12 +33,12 @@ func _ready() -> void:
 	add_theme_constant_override("separation", 6)
 	var tit := Label.new()
 	tit.text = Idiomas.t("EDITAR POSICIONES")
-	tit.add_theme_font_size_override("font_size", 12)
+	tit.add_theme_font_size_override("font_size", Tema.letra(12))
 	add_child(tit)
 	var ayuda := Label.new()
 	ayuda.text = Idiomas.t("Arrastra cada ficha a donde quieras: el puesto cambia solo según la zona. Con mando o teclado: la cruceta elige la ficha, Aceptar la agarra, la cruceta la mueve y Aceptar la suelta.")
 	ayuda.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	ayuda.add_theme_font_size_override("font_size", 11)
+	ayuda.add_theme_font_size_override("font_size", Tema.letra(11))
 	add_child(ayuda)
 	_lienzo = Control.new()
 	_lienzo.custom_minimum_size = Vector2(0, ALTO)
@@ -54,7 +54,7 @@ func _ready() -> void:
 	_lienzo.set_meta("cruceta_propia", func(dir: int) -> bool: return agarrada or _vecina(Vector2(0, dir)) >= 0)   ## `GuardianFoco` no se la quita
 	add_child(_lienzo)
 	_aviso = Label.new()
-	_aviso.add_theme_font_size_override("font_size", 11)
+	_aviso.add_theme_font_size_override("font_size", Tema.letra(11))
 	add_child(_aviso)
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 6)
@@ -227,7 +227,7 @@ static func botones(p: Object, c: Club) -> void:
 	lista.add_child(fila)
 	var be := Button.new()
 	be.text = "✏ " + Idiomas.t("Editar posiciones")
-	be.add_theme_font_size_override("font_size", 11)
+	be.add_theme_font_size_override("font_size", Tema.letra(11))
 	fila.add_child(be)
 	be.pressed.connect(func() -> void:
 		be.disabled = true
@@ -238,7 +238,7 @@ static func botones(p: Object, c: Club) -> void:
 	if FormacionPropia.es_propia(c.tactica.formacion):
 		var bb := Button.new()
 		bb.text = "🗑 " + Idiomas.t("Borrar esta formación")
-		bb.add_theme_font_size_override("font_size", 11)
+		bb.add_theme_font_size_override("font_size", Tema.letra(11))
 		fila.add_child(bb)
 		bb.pressed.connect(func() -> void:
 			DeshacerTactica.apuntar(c)

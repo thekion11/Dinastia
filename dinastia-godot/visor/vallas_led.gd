@@ -42,6 +42,8 @@ var _anuncios: Array = []
 var _materiales: Array[StandardMaterial3D] = []
 ## {"caja": MeshInstance3D, "label": Label3D, "fase": float, "ult": int}
 var _paneles: Array = []
+var _prox_cambio := 0.0   ## (18-11) instante (`_t`) del siguiente cambio de anuncio de algún panel
+var _n_prox := -1
 var _t := 0.0
 
 func sembrar(anuncios: Array) -> void:
@@ -235,6 +237,11 @@ func _process(delta: float) -> void:
 		_evento = {}
 		for p: Dictionary in _paneles:
 			p["ult"] = -999
+			_prox_cambio = 0.0
+	if _t < _prox_cambio and _paneles.size() == _n_prox:   ## (18-11) ningún panel cambia de anuncio antes de `_prox_cambio`
+		return
+	_n_prox = _paneles.size()
+	var prox := INF
 	for p: Dictionary in _paneles:
 		## Solo una división y una comparación por panel y por frame. El texto
 		## de un `Label3D` reconstruye su malla al asignarlo, así que solo se
@@ -242,6 +249,8 @@ func _process(delta: float) -> void:
 		var ciclo := int(floor((_t + float(p["fase"])) / SEG))
 		if ciclo != int(p["ult"]):
 			_pintar(p, ciclo)
+		prox = minf(prox, float(ciclo + 1) * SEG - float(p["fase"]))
+	_prox_cambio = prox
 
 func _pintar(p: Dictionary, ciclo: int) -> void:
 	if _anuncios.is_empty():
@@ -341,6 +350,7 @@ func _montar_atlas() -> void:
 			l.queue_free()
 		p["label"] = null
 		p["ult"] = -999   ## que el siguiente fotograma ponga su celda
+		_prox_cambio = 0.0
 
 ## Pinta (texto, tinta) en una textura-atlas y la pone en el material. Las celdas ya conocidas se conservan.
 func _construir_atlas(nuevas: Array) -> void:
@@ -397,3 +407,4 @@ func _construir_atlas(nuevas: Array) -> void:
 	_atlas_n = lista.size()
 	for p: Dictionary in _paneles:
 		p["ult"] = -999
+		_prox_cambio = 0.0

@@ -357,7 +357,7 @@ func _probar_necesidades_con_efecto() -> void:
 	m.tomar_el_mando(c.id)
 	m.aplicar_bonificadores()
 	var ata0 := c.bonus_ataque
-	_comprobar(not m.necesidades.preparacion_cambio() and m.necesidades.factor_preparacion() == 1.0,
+	_comprobar(not m.necesidades.preparacion_cambio() and is_equal_approx(m.necesidades.factor_preparacion(), 1.0),
 		"con la rutina la preparación no cambia (×1)")
 	m.necesidades.pasar(20 * 60, "horas_extra")
 	var prep := m.necesidades.factor_preparacion()
@@ -382,7 +382,7 @@ func _probar_necesidades_con_efecto() -> void:
 	_comprobar(cansado > con_rutina, "cansado y con hambre hay más imprevistos (%d contra %d en 120 semanas)" % [cansado, con_rutina])
 	## En «ligera» no castiga.
 	m.necesidades.poner_modo("ligera")
-	_comprobar(m.necesidades.factor_preparacion() == 1.0 and m.necesidades.factor_riesgo() == 1.0, "con la vida ligera, sin castigo")
+	_comprobar(is_equal_approx(m.necesidades.factor_preparacion(), 1.0) and is_equal_approx(m.necesidades.factor_riesgo(), 1.0), "con la vida ligera, sin castigo")
 
 ## LO QUE CUESTA JUGAR (26-10, pedido del dueño): el día de partido y el viaje salen de precios reales y de la
 ## distancia, no de un porcentaje. Se comprueba la lógica, no cifras sueltas.
@@ -391,7 +391,7 @@ func _probar_viajes() -> void:
 	var scl := Viajes.distancia_km("CHI", "ESP")
 	_comprobar(scl > 10000.0 and scl < 11500.0, "Santiago–Madrid ≈ 10.700 km (sale %d)" % int(scl))
 	_comprobar(absf(Viajes.distancia_km("CHI", "ARG") - Viajes.distancia_km("ARG", "CHI")) < 0.01, "la distancia es simétrica")
-	_comprobar(Viajes.distancia_km("ENG", "ENG") == 220.0, "dentro del mismo país: los km medios de su liga")
+	_comprobar(is_equal_approx(Viajes.distancia_km("ENG", "ENG"), 220.0), "dentro del mismo país: los km medios de su liga")
 	_comprobar(Viajes.medio(300.0) == "bus" and Viajes.medio(2000.0) == "avion" and Viajes.medio(8000.0) == "charter",
 		"autocar, avión y chárter según los km")
 	var local := Viajes.viaje_interno("ENG", "ENG", 70)

@@ -22,9 +22,9 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEAD
 @export var ball : Ball
 @export var control_scheme : ControlScheme
 @export var own_goal : Goal
-@export var power : float 
+@export var power : float
 @export var speed : float
-@export var target_goal : Goal 	
+@export var target_goal : Goal
 
 @onready var animation_player : AnimationPlayer = %AnimationPlayer
 @onready var ball_detection_area : Area2D = %BallDetectionArea
@@ -105,7 +105,7 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 	current_state.state_transition_requested.connect(switch_state.bind())
 	current_state.name = "PlayerStateMachine: " + str(state)
 	call_deferred("add_child", current_state)
-	
+
 func set_movement_animation() -> void:
 	var vel_length := velocity.length()
 	if vel_length < 1:
@@ -138,7 +138,7 @@ func flip_sprites() -> void:
 		player_sprite.flip_h = true
 		tackle_damage_emitter_area.scale.x = -1
 		opponent_detection_area.scale.x = -1
-		
+
 func set_sprite_visibility() -> void:
 	control_sprite.visible = has_ball() or not control_scheme == ControlScheme.CPU
 
@@ -168,7 +168,7 @@ func is_facing_target_goal() -> bool:
 
 func on_animation_complete() -> void:
 	if current_state != null:
-		current_state.on_animation_complete() 
+		current_state.on_animation_complete()
 
 func set_control_scheme(scheme: ControlScheme) -> void:
 	control_scheme = scheme

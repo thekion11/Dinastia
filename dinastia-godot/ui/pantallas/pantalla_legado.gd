@@ -136,7 +136,7 @@ func _pintar_records() -> void:
 				int(p_local.get("puesto", 0)), String(p_local.get("mvp", "—"))]
 			bp.flat = true
 			bp.alignment = HORIZONTAL_ALIGNMENT_LEFT
-			bp.add_theme_font_size_override("font_size", 12)
+			bp.add_theme_font_size_override("font_size", Tema.letra(12))
 			bp.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_ORO if abierto else Principal.COL_TEXTO))
 			bp.pressed.connect(func() -> void:
 				_plantel_abierto = 0 if _plantel_abierto == anio_p else anio_p

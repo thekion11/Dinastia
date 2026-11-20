@@ -23,7 +23,6 @@ func _probar() -> void:
 	## Primer lado (en x, eje 1): con el eje 1 en rojo para peatones (t = 1 → eje 0 en verde, peatonal(1) en rojo) NO cruza.
 	sem.t = 1.0
 	_comprobar(sem.peatonal(1) == "r", "preparado: la peatonal del eje 1 está en rojo")
-	var s_ant := float(v["s"])
 	for i in 300:
 		sem.t = 1.0   ## congelado en esa fase
 		t._process(DT)

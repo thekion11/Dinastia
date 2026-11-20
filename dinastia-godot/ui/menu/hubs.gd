@@ -50,7 +50,7 @@ func abrir(clave: String) -> void:
 		var b := Button.new()
 		b.text = titulo
 		b.custom_minimum_size = Vector2(180, 44)
-		b.add_theme_font_size_override("font_size", 14)
+		b.add_theme_font_size_override("font_size", Tema.letra(14))
 		var destino := titulo
 		b.pressed.connect(func() -> void:
 			capa.queue_free()

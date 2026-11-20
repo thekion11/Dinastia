@@ -1,4 +1,4 @@
-extends "res://nucleo/idiomas_p1.gd"
+extends "res://nucleo/idiomas_p2.gd"
 ## [Capa 2/2 de `idiomas.gd`] _cargar_extra, _ready, _ordinales, mayusculas, _directa, _tiene_letras … (+13)
 
 ## (3-11-2026, memoria en el móvil) `idiomas_extra.json` con los 9 idiomas ocupaba ~46 MB al arrancar. Ahora solo se guarda la tabla de los idiomas PEDIDOS (`_asegurar`): en castellano
@@ -80,7 +80,7 @@ func _directa(frase: String) -> String:
 	## TÍTULOS EN MAYÚSCULAS (29-9-2026): muchas cabeceras se pintan con
 	## `to_upper()` antes de traducir ("PLANTEL", "PRÓXIMO PARTIDO"). Se busca
 	## la forma normal ("Plantel", "Próximo partido") y se devuelve en mayúsculas.
-	if frase.length() > 1 and frase == frase.to_upper() and frase != frase.to_lower():
+	if frase.length() > 1 and frase == frase.to_upper() and frase != frase.to_lower() and not (frase.length() == 3 and Paises.conocido(frase)):   ## un código de país (MAR, DOM) no es un título: «MAR» salía «TUE»
 		var baja := frase.to_lower()
 		var normal := baja.substr(0, 1).to_upper() + baja.substr(1)
 		for cand: String in [normal, baja]:
@@ -197,9 +197,6 @@ func _oraciones(texto: String) -> Array:
 	partes.append(texto.substr(ini))
 	return partes
 
-static func _es_letra(c: int) -> bool:
-	return (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or (c >= 192 and c <= 687) or (c >= 48 and c <= 57) or c == 191 or c == 161
-
 func _t(frase: String, prof: int) -> String:
 	var d := _directa(frase)
 	if d != "" or prof > 3:
@@ -285,7 +282,7 @@ func _t(frase: String, prof: int) -> String:
 var _inverso := {}
 func origen(texto: String) -> String:
 	## Un texto solo puede estar en un idioma que ya se haya cargado (para pintarlo hubo que elegirlo): no hace falta cargar los demás.
-	if texto == "" or _directa_es(texto):
+	if texto == "" or _directa_es(texto) or _directa_es(IdiomasInverso.normal(texto)):   ## «FORMA» es «Forma» en capitales (el título que pintó `to_upper()`), no la traducción en capitales de otra clave
 		return ""
 	if _inverso.is_empty():
 		for k: String in TABLA:
@@ -424,13 +421,13 @@ func _inverso_de(cual: String) -> Dictionary:
 		return inv
 	var ex: Dictionary = _extra.get(cual, {})
 	for k: String in ex:
-		inv[String(ex[k])] = k
+		inv[String(ex[k])] = IdiomasInverso.mejor(String(inv.get(String(ex[k]), "")), k, String(ex[k]))
 	var i := ORDEN.find(cual)
 	if i >= 0:
 		for k: String in TABLA:
 			var fila: Array = TABLA[k]
 			if i < fila.size() and String(fila[i]) != "":
-				inv[String(fila[i])] = k
+				inv[String(fila[i])] = IdiomasInverso.mejor(String(inv.get(String(fila[i]), "")), k, String(fila[i]))
 	return inv
 
 ## El castellano de un texto pintado en `antes`, o "" si no se reconoce. Mira
@@ -438,10 +435,10 @@ func _inverso_de(cual: String) -> Dictionary:
 func _a_castellano(txt: String, antes: String, inv: Dictionary) -> String:
 	if txt.strip_edges() == "":
 		return ""
-	if antes == "es":
+	if antes == "es" or inv.is_empty():   ## un idioma sin tabla (ja) deja el castellano tal cual: se lee como castellano, no como una traducción
 		return txt if _directa(txt) != "" else ""
-	if inv.has(txt):
-		return String(inv[txt])
+	if inv.has(txt): return String(inv[txt])
+	if IdiomasInverso.en_mayusculas(txt, inv) != "": return IdiomasInverso.en_mayusculas(txt, inv)   ## rótulos pintados con `to_upper()` («FORM»)
 	var ini := 0
 	while ini < txt.length() and not _es_letra(txt.unicode_at(ini)):
 		ini += 1

@@ -16,6 +16,7 @@ const T_FINAL := 7.0      ## s: el equipo vuelve al círculo con la copa y la c�
 const VEL_VUELTA := 5.5   ## m/s del capitán
 const VEL_CICLO_TROTE := 3.05
 const CONFETI_CANONES := 6
+const _RUTA_PLAYER_SPAWNER := "res://visor/player_spawner.gd"
 
 var _raiz: Node3D
 var _club: Club
@@ -52,7 +53,7 @@ func _montar() -> void:
 	_rx = minf(float(g["dx"]) - 6.0, 31.0)   ## la vuelta va por dentro de las vallas, sobre el césped, para que la cámara no las atraviese
 	_rz = minf(float(g["dz"]) - 8.0, 49.0)
 	var l := Puente3D.once(_club.once())
-	var spawner = load("res://visor/player_spawner.gd").new()
+	var spawner = load(_RUTA_PLAYER_SPAWNER).new()
 	var filas = spawner.spawn_team(_raiz, l["xi"], l["jugadores"], Puente3D.formacion(_club.tactica.formacion), true,
 		Puente3D.kit(_club), Puente3D.kit_portero(_club))
 	var k := 0
@@ -61,7 +62,7 @@ func _montar() -> void:
 		var d := {"nodo": n, "anim": f["anim"], "base": n.position, "extra": 0.0, "id": String(f["id"]), "i": k,
 			"capi": bool((f["jugador"] as Dictionary).get("capitan", false)) and String(f.get("slot_code", "")) != "POR"}
 		_preparar_clips(d)
-		var rot = n.get_node_or_null(NodePath(load("res://visor/player_spawner.gd").ROTULO))
+		var rot = n.get_node_or_null(NodePath(load(_RUTA_PLAYER_SPAWNER).ROTULO))
 		if rot != null:
 			(rot as Node3D).visible = false   ## sin nombres flotando: es una foto de equipo
 		_jug.append(d)

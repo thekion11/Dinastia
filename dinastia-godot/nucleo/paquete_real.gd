@@ -14,5 +14,5 @@ static func montar() -> void:
 	for ruta in [OS.get_executable_path().get_base_dir().path_join(NOMBRE), "user://" + NOMBRE]:
 		if FileAccess.file_exists(ruta) and ProjectSettings.load_resource_pack(ruta, false):
 			montado = ruta
-			print("Paquete real montado: ", ruta)
+			print("Paquete real montado: ", ruta)   ## LOG: salida que leen las pruebas y el diagnóstico
 			return

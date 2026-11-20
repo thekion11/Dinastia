@@ -53,7 +53,7 @@ func _montar() -> void:
 	boton_engranaje = Button.new()
 	boton_engranaje.text = "⚙"
 	boton_engranaje.tooltip_text = Idiomas.t("Ajustes")
-	boton_engranaje.add_theme_font_size_override("font_size", 20)
+	boton_engranaje.add_theme_font_size_override("font_size", Tema.letra(20))
 	boton_engranaje.custom_minimum_size = Vector2(40, 40)
 	boton_engranaje.focus_mode = Control.FOCUS_NONE
 	add_child(boton_engranaje)
@@ -150,7 +150,7 @@ func deslizador(texto: String, valor: float, al_cambiar: Callable) -> HSlider:
 	fila_v.add_theme_constant_override("separation", 0)
 	var l := Label.new()
 	l.text = texto
-	l.add_theme_font_size_override("font_size", 13)
+	l.add_theme_font_size_override("font_size", Tema.letra(13))
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	fila_v.add_child(l)
 	var s := HSlider.new()

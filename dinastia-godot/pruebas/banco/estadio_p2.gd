@@ -48,7 +48,9 @@ func _probar_fundir_r2() -> void:
 		mt.albedo_color = colores[i]
 		mi.material_override = mt
 		r3.add_child(mi)
-	_comprobar(FundirPiezas._firma_material(StandardMaterial3D.new()) == FundirPiezas._firma_material(StandardMaterial3D.new()), "R2: dos materiales iguales tienen la misma firma")
+	var rep1_a = FundirPiezas._firma_material(StandardMaterial3D.new())
+	var rep1_b = FundirPiezas._firma_material(StandardMaterial3D.new())
+	_comprobar(rep1_a == rep1_b, "R2: dos materiales iguales tienen la misma firma")
 	FundirPiezas.fundir_profundo(r3, "Fundido", [], true)
 	_comprobar((r3.get_node("Fundido") as MeshInstance3D).mesh.get_surface_count() == 2, "R2: 3 materiales (2 iguales) → 2 superficies con `por_firma`")
 	r3.queue_free()
@@ -125,8 +127,8 @@ func _probar_paseo_optimizado() -> void:
 	mundo.environment = ent0
 	nn.free()
 	## (7-11) Un peatón detrás de la cámara (a más de 3 m) no anima; delante, o pegado, sí.
-	var mira_ := Vector3(0, 0, -1)
-	_comprobar(not TraficoCiudad.detras(Vector3.ZERO, mira_, Vector3(0, 0, -10)) and TraficoCiudad.detras(Vector3.ZERO, mira_, Vector3(0, 0, 10)) and not TraficoCiudad.detras(Vector3.ZERO, mira_, Vector3(0, 0, 2)),
+	var mira_loc := Vector3(0, 0, -1)
+	_comprobar(not TraficoCiudad.detras(Vector3.ZERO, mira_loc, Vector3(0, 0, -10)) and TraficoCiudad.detras(Vector3.ZERO, mira_loc, Vector3(0, 0, 10)) and not TraficoCiudad.detras(Vector3.ZERO, mira_loc, Vector3(0, 0, 2)),
 		"un peatón detrás de la cámara no anima; delante o pegado a ella, sí")
 
 ## (7-11) Alcance de los rótulos 3D según su tamaño: el del personal (6 cm) a ~17 m, el letrero de la fachada (1,5 m) a 90 m, y no se toca el que ya trae un tope menor.
@@ -322,13 +324,13 @@ func _probar_subsistemas_quietos() -> void:
 	var sub := Node3D.new()
 	var tren := Node3D.new()
 	var parte_tren := MeshInstance3D.new()
-	var andén := MeshInstance3D.new()
+	var anden := MeshInstance3D.new()
 	sub.add_child(tren)
 	tren.add_child(parte_tren)
-	sub.add_child(andén)
-	var sin_registro := SubsistemasQuietos.permite(sub, andén)
+	sub.add_child(anden)
+	var sin_registro := SubsistemasQuietos.permite(sub, anden)
 	SubsistemasQuietos.estaticos[sub] = {tren: true}
-	var quieto := SubsistemasQuietos.permite(sub, andén)
+	var quieto := SubsistemasQuietos.permite(sub, anden)
 	var movil := SubsistemasQuietos.permite(sub, parte_tren)
 	SubsistemasQuietos.limpiar()
 	_comprobar(not sin_registro and quieto and not movil and SubsistemasQuietos.estaticos.is_empty(), "sin registro nada es quieto; registrado, el andén sí y la pieza del tren no; limpiar vacía el registro")
@@ -434,7 +436,7 @@ func _probar_hud_tv() -> void:
 	## Los dos escudos en una textura, y el aviso de repetición pequeño arriba a la derecha.
 	var ej := MarcadorTV.escudos_juntos(negro, rojo, 28)
 	var rr := RotuloRepeticion.entrar(host, null)
-	_comprobar(ej.get_width() == 56 and ej.get_height() == 28 and rr.visible and rr.anchor_left == 1.0 and rr.offset_top >= 60.0
+	_comprobar(ej.get_width() == 56 and ej.get_height() == 28 and rr.visible and is_equal_approx(rr.anchor_left, 1.0) and rr.offset_top >= 60.0
 		and rr.custom_minimum_size.y <= 40.0 and rr.texto != "" and not rr.texto.begins_with("⟲"),
 		"escudos juntos (%dx%d) y «%s» pequeño (%.0f px de alto) arriba a la derecha" % [ej.get_width(), ej.get_height(), rr.texto, rr.custom_minimum_size.y])
 	host.free()

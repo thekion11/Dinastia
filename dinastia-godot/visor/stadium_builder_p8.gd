@@ -349,7 +349,7 @@ static func _pantallas(root: Node3D, tipo: String, dz: float, alto: float,
 ## que sube hacia +Z con angulo `ang` hay que girarlo `-(PI/2 + ang)` en X
 ## -comprobado despejando `R_x(t)·(0,0,1) = (0, cos(ang), -sin(ang))`, que es
 ## la normal de esa rampa-.
-static func _escudo_en_grada(root: Node3D, mat: Material, dz: float, alto: float,
+static func _escudo_en_grada(root: Node3D, mat: Material, dz: float, _alto: float,
 		ang: float, largo_rake: float) -> void:
 	var tam: float = clampf(FONDO_BANDEJA * 0.6, 3.0, 8.0)
 	## A media rampa de la primera bandeja: abajo lo tapan las butacas reales y
@@ -372,7 +372,7 @@ static func _escudo_en_grada(root: Node3D, mat: Material, dz: float, alto: float
 ## `build_pitch()` (ver `_escudo_cancha()` para "cancha"/"todo"). Uno solo por
 ## posicion, en la tribuna principal (la que da a la camara "Principal (TV)"),
 ## que es donde de verdad se ve -repetirlo en las 4 tribunas seria ruido.
-static func _escudo_tribuna(root: Node3D, mi: Club, donde: String, dx: float, dz: float, alto: float,
+static func _escudo_tribuna(root: Node3D, mi: Club, donde: String, _dx: float, dz: float, alto: float,
 		fachada_puesta := false) -> void:
 	if donde not in ["grada", "fachada", "techo", "todo"]:
 		return

@@ -1,4 +1,7 @@
 extends "res://visor/explorador_ciudad_p1.gd"
+
+const _RUTA_ANIM_EXTRA := "res://visor/anim_extra.gd"
+
 ## [Capa 2/6 de `explorador_ciudad.gd`] _choca_moviles, _rect_coche, _dentro_rect, _huella, buscar_libre, es_tactil … (+9)
 
 
@@ -121,17 +124,17 @@ static func es_tactil() -> bool:
 ## Con `luego` (P3, 27-10): el gesto se reproduce una vez y encadena ese bucle (p. ej.
 ## «sentarse» → «sentado») hasta que te muevas; sin `luego`, dura lo que el clip (≤ 3 s).
 func _gesto_propio(gesto: String, luego: String = "") -> void:
-	if _anim == null or not load("res://visor/anim_extra.gd").UAL.has(gesto):
+	if _anim == null or not load(_RUTA_ANIM_EXTRA).UAL.has(gesto):
 		return
 	var esq := FutbolistaQ.esqueleto_de(cuerpo)
-	load("res://visor/anim_extra.gd").asegurar(_anim, esq, gesto)
+	load(_RUTA_ANIM_EXTRA).asegurar(_anim, esq, gesto)
 	if not _anim.has_animation(gesto):
 		return
 	_anim.speed_scale = 1.0
 	_anim.play(gesto, 0.25)
 	_t_gesto_propio = minf(_anim.get_animation(gesto).length, 3.0)
-	if luego != "" and load("res://visor/anim_extra.gd").UAL.has(luego):
-		load("res://visor/anim_extra.gd").asegurar(_anim, esq, luego)
+	if luego != "" and load(_RUTA_ANIM_EXTRA).UAL.has(luego):
+		load(_RUTA_ANIM_EXTRA).asegurar(_anim, esq, luego)
 		if _anim.has_animation(luego):
 			_anim.get_animation(gesto).loop_mode = Animation.LOOP_NONE
 			_anim.clear_queue()
@@ -207,7 +210,7 @@ func _hablar_con_vecino(v: Dictionary) -> void:
 	for ap: AnimationPlayer in nodo.find_children("*", "AnimationPlayer", true, false):
 		var lib := ap.get_animation_library("")
 		if lib != null:
-			load("res://visor/anim_extra.gd").asegurar(ap, FutbolistaQ.esqueleto_de(nodo), gesto)
+			load(_RUTA_ANIM_EXTRA).asegurar(ap, FutbolistaQ.esqueleto_de(nodo), gesto)
 		if lib != null and lib.has_animation(gesto):
 			ap.play(gesto, 0.2)
 			get_tree().create_timer(6.0).timeout.connect(func() -> void:

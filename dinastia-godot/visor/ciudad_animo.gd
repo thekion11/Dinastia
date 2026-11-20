@@ -118,7 +118,7 @@ static func montar(raiz: Node3D, animo: Dictionary, frentes: Array, estadio: Vec
 			n = Vector2(0, signf(hacia.y))
 			cara = Vector2(centro.x, centro.y + n.y * (r.size.y * 0.5 + 0.25))
 		var giro := atan2(n.x, n.y)
-		var ancho := minf(r.size.x if n.x == 0.0 else r.size.y, 14.0)
+		var ancho := minf(r.size.x if is_zero_approx(n.x) else r.size.y, 14.0)
 		if est == "euforia" or est == "bien":
 			_pancarta(nodo, Vector3(cara.x, 0, cara.y), giro, ancho, c1 if i % 2 == 0 else c2, c2 if i % 2 == 0 else c1)
 			cuenta["pancartas"] += 1

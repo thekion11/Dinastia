@@ -5,7 +5,7 @@ extends Node
 ## del centro), toques simulados (mover, correr, pasar, tirar, cambiar de jugador sin balón, pausa) y fotos con balón, en la banda y
 ## sin balón. Salida: CAPTURA_DIR/tactil_<orientación>_<partido>_<contexto>.jpg
 ##   herramientas/captura.sh res://pruebas/captura_tactil_movil.tscn   con   RESOLUCION=2400x1080 (o 1080x2400) PARTIDO=0
-var DPI := 400.0 if OS.get_environment("DPI") == "" else float(OS.get_environment("DPI"))   ## DPI=267 con 720x1600: el mismo teléfono de 6,5"
+var dpi := 400.0 if OS.get_environment("DPI") == "" else float(OS.get_environment("DPI"))   ## DPI=267 con 720x1600: el mismo teléfono de 6,5"
 const MIN_MM_GRANDE := 10.0      ## diámetro mínimo de Pase y Tiro (guías: ≥ 9 mm; juegos de fútbol de móvil ≈ 11-13 mm)
 const MIN_MM_PEQUENO := 7.0      ## y del resto (Apple 44 pt ≈ 7 mm; Material 48 dp ≈ 7,6 mm)
 const SEMILLAS := [20261110, 777, 4242]
@@ -30,7 +30,7 @@ func _ready() -> void:
 	_orient = "vertical" if v.y > v.x else "horizontal"
 	PartidoJugable.con_ceremonia = false
 	ControlesTactiles.forzar = true
-	PantallaMovil.dpi_forzado = DPI
+	PantallaMovil.dpi_forzado = dpi
 	EscalaMovil.forzar = true   ## como en el teléfono: el zoom de la interfaz del móvil (en vertical, el del lienzo estrecho)
 	EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	AjustesTactil.restaurar()

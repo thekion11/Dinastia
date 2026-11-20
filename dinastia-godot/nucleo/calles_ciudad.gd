@@ -62,9 +62,23 @@ static func nombre_fila(j: int) -> String:
 	return String(FILAS[clampi(j + K, 0, FILAS.size() - 1)])
 
 static func es_avenida_columna(i: int) -> bool:
+	var nat := Nativo.de("nuc_es_avenida_columna")
+	if nat != null:
+		return nat.nuc_es_avenida_columna(i)
+	return es_avenida_columna_gd(i)
+
+## Gemela GDScript de `nuc_es_avenida_columna` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func es_avenida_columna_gd(i: int) -> bool:
 	return i % 3 == 0 or i == -5 or i == 4
 
 static func es_avenida_fila(j: int) -> bool:
+	var nat := Nativo.de("nuc_es_avenida_fila")
+	if nat != null:
+		return nat.nuc_es_avenida_fila(j)
+	return es_avenida_fila_gd(j)
+
+## Gemela GDScript de `nuc_es_avenida_fila` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func es_avenida_fila_gd(j: int) -> bool:
 	return j % 3 == 0 or j == -4 or j == 6
 
 static func dentro_nucleo(x: float, z: float, margen: float = 0.0) -> bool:

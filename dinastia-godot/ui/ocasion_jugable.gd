@@ -53,7 +53,7 @@ func _construir() -> void:
 		var b := Button.new()
 		b.name = "Ocasion_" + k
 		b.custom_minimum_size = Vector2(236, 66)
-		b.add_theme_font_size_override("font_size", 16)
+		b.add_theme_font_size_override("font_size", Tema.letra(16))
 		b.focus_mode = Control.FOCUS_ALL
 		b.pressed.connect(elegir.bind(k))
 		fila.add_child(b)

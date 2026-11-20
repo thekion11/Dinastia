@@ -21,4 +21,4 @@ func _probar() -> void:
 	e._rotulos_de_paseo(true)
 	_comprobar(l.visibility_range_end > 0.0 and l.visibility_range_end <= 100.0, "en coche solo se ve a menos de %d m" % int(l.visibility_range_end))
 	e._rotulos_de_paseo(false)
-	_comprobar(l.fixed_size and l.no_depth_test and l.visibility_range_end == 0.0, "en la vista aérea vuelve la etiqueta de tamaño fijo y sin límite")
+	_comprobar(l.fixed_size and l.no_depth_test and is_zero_approx(l.visibility_range_end), "en la vista aérea vuelve la etiqueta de tamaño fijo y sin límite")

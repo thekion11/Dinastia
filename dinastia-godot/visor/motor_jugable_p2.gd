@@ -414,14 +414,14 @@ func _expulsar(p: Dictionary) -> void:
 
 ## Para reabrir el partido a mitad (tras el descanso): el marcador y el reloj
 ## del `Partido`, y saque de centro.
-func empezar_en(minuto_: int, gl: int, gv: int) -> void:
+func empezar_en(minuto_arg: int, gl: int, gv: int) -> void:
 	goles = [gl, gv]
-	if minuto_ >= 45:
+	if minuto_arg >= 45:
 		mitad = 2
-		t = clampf(float(minuto_ - 45) / 45.0 * duracion_mitad, 0.0, duracion_mitad - 1.0)
+		t = clampf(float(minuto_arg - 45) / 45.0 * duracion_mitad, 0.0, duracion_mitad - 1.0)
 		_saque_de_centro(not saca_primero_local)
 	else:
-		t = clampf(float(minuto_) / 45.0 * duracion_mitad, 0.0, duracion_mitad - 1.0)
+		t = clampf(float(minuto_arg) / 45.0 * duracion_mitad, 0.0, duracion_mitad - 1.0)
 
 ## Contadores para las sondas (remates por clase y cómo acaban: «remate_pie_atajada»…).
 var diag := {}

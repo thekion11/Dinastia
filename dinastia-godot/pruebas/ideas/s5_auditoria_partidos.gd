@@ -141,12 +141,12 @@ func _en_vivo(m: Mundo, idioma: String) -> void:
 						break
 		var gl := "%d-%d" % [p.goles_local, p.goles_visita]
 		if not texto.contains(gl):
-			incoherentes.append("sin el marcador final %s" % gl)
+			incoherentes.append("sin el marcador final %s: …%s" % [gl, texto.right(160).replace("\n", " ¶ ")])
 		vivo.queue_free()
 	if idioma == "es":
 		_linea("  líneas/partido %.1f · repetidas en el mismo partido %d (%.1f %%) · silencio máximo %d' · silencios ≥ 20' %d" % [
 			float(lineas_total) / N, repetidas, 100.0 * repetidas / maxf(lineas_total, 1), max_silencio, silencios_largos])
-		_comprobar(incoherentes.is_empty(), "la crónica cierra con el marcador real en los %d" % N)
+		_comprobar(incoherentes.is_empty(), "la crónica cierra con el marcador real en los %d %s" % [N, str(incoherentes.slice(0, 3))])
 		## Antes: 48 de 50 partidos con 20' o más sin una línea (máximo 38').
 		_comprobar(max_silencio <= 10 and silencios_largos == 0, "la crónica nunca se queda callada más de 10' (máximo %d')" % max_silencio)
 		_comprobar(float(repetidas) / maxf(lineas_total, 1) < 0.03, "menos de un 3 %% de frases repetidas en el mismo partido (%.1f %%)" % (100.0 * repetidas / maxf(lineas_total, 1)))

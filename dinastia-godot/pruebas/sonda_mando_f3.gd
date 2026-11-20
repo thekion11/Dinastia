@@ -141,7 +141,7 @@ func _esperar_juego(motor: MotorJugable) -> void:
 		pasos += 1
 
 ## Lo pone quieto lejos del balón, en su campo, mirando al arco rival.
-func _colocar(motor: MotorJugable, q: Dictionary, x: float, z: float) -> void:
+func _colocar(_motor: MotorJugable, q: Dictionary, x: float, z: float) -> void:
 	var d := MotorJugable.dir_ataque(bool(q["es_local"]))
 	var n: Node3D = q["node"]
 	n.position = Vector3(x, 0, z * d)
@@ -150,7 +150,7 @@ func _colocar(motor: MotorJugable, q: Dictionary, x: float, z: float) -> void:
 	q["aguante"] = 1.0
 
 ## Palanca en una dirección del campo (adelante = hacia el arco rival) con o sin sprint.
-func _palanca(motor: MotorJugable, q: Dictionary, mundo: Vector3, sprint: bool) -> void:
+func _palanca(_motor: MotorJugable, q: Dictionary, mundo: Vector3, sprint: bool) -> void:
 	for acc in SondaPaseDir.ACC:
 		Input.action_release(acc)
 	SondaPaseDir.apuntar(mundo, MotorJugable.dir_ataque(bool(q["es_local"])))

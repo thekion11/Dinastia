@@ -298,6 +298,13 @@ static func _aforo_modesto(l: Liga) -> int:
 
 ## La misma fórmula de socios que `Mundo._crear_club()`.
 static func _socios_de(aforo: int, rep: int) -> int:
+	var nat := Nativo.de("nuc_socios_de")
+	if nat != null:
+		return nat.nuc_socios_de(aforo, rep)
+	return _socios_de_gd(aforo, rep)
+
+## Gemela GDScript de `nuc_socios_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _socios_de_gd(aforo: int, rep: int) -> int:
 	return int(float(aforo) * (0.22 + float(rep) / 420.0))
 
 static func _cuerpo_titular(p: Dictionary, c: Club) -> String:

@@ -235,9 +235,9 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	return [false]
 
 func _probar_guardado() -> void:
-	var _r1 = _probar_guardado_1()
-	var m: Mundo = _r1[0]
-	var v_rp = _r1[1]
-	var _r2 = _probar_guardado_2(m, v_rp)
-	if _r2[0]:
+	var r1 = _probar_guardado_1()
+	var m: Mundo = r1[0]
+	var v_rp = r1[1]
+	var r2 = _probar_guardado_2(m, v_rp)
+	if r2[0]:
 		return

@@ -64,7 +64,6 @@ func _construir(b, w: float, f: float, mats: Dictionary, ex) -> void:
 	var z_h0 := -f * 0.5 + 2.0
 	var z_h1 := z_h0 + LARGO_TUNEL               ## la boca del túnel, hacia el andén
 	var z_tope := f * 0.13                        ## los topes de las vías
-	var gris = b._mat_simple(Color(0.62, 0.63, 0.64), 0.8)
 	var beton := StandardMaterial3D.new()          ## hormigón con manchas (el ruido del subsuelo), triplanar
 	beton.albedo_texture = SubsueloDetalle._ruido(31, 0.04, FastNoiseLite.TYPE_SIMPLEX_SMOOTH)
 	beton.albedo_color = Color(0.62, 0.62, 0.6)

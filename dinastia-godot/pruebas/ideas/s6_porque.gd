@@ -16,9 +16,9 @@ func _probar() -> void:
 		j.ovr = 50
 		iguales = iguales and is_equal_approx(FichaPorque.ritmo_por_edad(e), ProgresoJugador.freno(j))
 	j.edad = 24
-	_comprobar(iguales and ProgresoJugador.freno(j) == 0.0 and FichaPorque.ritmo_por_edad(24) == 0.0,
+	_comprobar(iguales and is_zero_approx(ProgresoJugador.freno(j)) and is_zero_approx(FichaPorque.ritmo_por_edad(24)),
 		"la curva dibujada (16-24) es el freno por edad de ProgresoJugador")
-	_comprobar(FichaPorque.ritmo_por_edad(29) == 0.0 and FichaPorque.ritmo_por_edad(30) < 0.0 and FichaPorque.ritmo_por_edad(33) < FichaPorque.ritmo_por_edad(31),
+	_comprobar(is_zero_approx(FichaPorque.ritmo_por_edad(29)) and FichaPorque.ritmo_por_edad(30) < 0.0 and FichaPorque.ritmo_por_edad(33) < FichaPorque.ritmo_por_edad(31),
 		"plano de 24 a 29 y cuesta abajo desde los 30, cada vez más")
 	## 2) Los umbrales de los puntos de habilidad = Entrenamiento.repartir_puntos().
 	var a: Jugador = c.plantilla[1]

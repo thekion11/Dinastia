@@ -27,7 +27,6 @@ func _pos(h: String) -> Vector3:
 	return esq.global_transform * esq.get_bone_global_pose(esq.find_bone(h)).origin
 
 func _initialize() -> void:
-	var anims: Array = []   # [clip, tipo, bucle, Animation]
 	var escenas := {}
 	for i in [1, 2]:
 		var ruta := OS.get_environment("UAL%d_GLB" % i)

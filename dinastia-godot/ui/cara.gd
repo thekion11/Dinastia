@@ -266,7 +266,6 @@ static func limpiar_cache() -> void:
 static func svg_rasgos(lk: Dictionary) -> String:
 	var cara := clampi(int(lk.get("cara", 0)), 0, CARAS_RX.size() - 1)
 	var rx: float = CARAS_RX[cara]
-	var pc := String(lk.get("peloC", "#231a14"))
 	var b := clampi(int(lk.get("boca", 0)), 0, 2)
 	var bocas := [
 		"M28 %.1fq4 2.2 8 0" % (43.5 + float(b)),

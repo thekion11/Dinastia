@@ -10,7 +10,7 @@ var selector: SelectorDireccional
 static func mostrar(pr: Principal, ev: Dictionary) -> EventoDialogo:
 	var e := EventoDialogo.new()
 	e.paleta_noche = true
-	e.acento = SelectorDireccional.acento_legible(pr.COL_ACENTO)
+	e.acento = SelectorDireccional.acento_legible(pr.col_acento)
 	e._montar_base(pr)
 	e._rellenar(pr, ev)
 	return e

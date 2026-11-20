@@ -86,7 +86,7 @@ func _montar(club: Club, titulo: String) -> void:
 	var once: Array = club.once()
 	if once.is_empty():
 		once = club.plantilla.slice(0, MAX_JUG)
-	var spawner = load("res://visor/player_spawner.gd").new()
+	var spawner = load(_RUTA_PLAYER_SPAWNER).new()
 	match modo:
 		"escenario", "fuegos": _escenario(raiz, spawner, once, c1, c2)
 		"palco": _palco(raiz, spawner, once, c1, c2)
@@ -123,9 +123,8 @@ func _jugador(raiz: Node3D, spawner, j: Jugador, pos: Vector3, mira: float, anim
 	nodo.rotation.y = mira
 	raiz.add_child(nodo)
 	var datos := Puente3D.jugador(j)
-	var look: Array = load("res://visor/player_spawner.gd")._look_de(datos)
-	var d: Dictionary = spawner._crear_jugador(nodo, j.id, "POR" if j.pos_e == "POR" else "DEL", "", c1, c2, estilo_camiseta, maxi(j.dorsal, 1),
-		look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+	var look: Array = load(_RUTA_PLAYER_SPAWNER)._look_de(datos)
+	var d: Dictionary = spawner._crear_jugador(nodo, j.id, "POR" if j.pos_e == "POR" else "DEL", c1, c2, estilo_camiseta, maxi(j.dorsal, 1), look, Color(0, 0, 0, 0), datos)
 	if d.is_empty():
 		return nodo
 	jugadores += 1

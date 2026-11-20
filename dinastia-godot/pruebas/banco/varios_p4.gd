@@ -36,7 +36,7 @@ func _probar_fundar_club() -> void:
 	for l: Liga in m.ligas:
 		if l.pais == "ESP":
 			esp = l   ## (10-11) la última que salga: si el país tiene Segunda, la división más baja
-	
+
 	if esp != null:
 		var peor_esp: Club = esp.clubes[0]
 		for c: Club in esp.clubes:

@@ -71,6 +71,7 @@ var _vehiculos: Array = []      ## [{nodo, ruta, s, vel, alto}]
 ## donde se queda unos segundos (los autobuses).
 var semaforos: Semaforos = null
 var _controles := {}            ## ruta -> [{s, eje}]
+var _ver_controles := 0          ## (18-11) sube con cada control nuevo: la extensión guarda una copia de `_controles` mientras no cambie
 
 var _en_cola := {}              ## ruta -> [vehículos con cola]
 
@@ -141,6 +142,7 @@ func agregar_control(ruta: int, s: float, eje: int) -> void:
 	if not _controles.has(ruta):
 		_controles[ruta] = []
 	(_controles[ruta] as Array).append({"s": s, "eje": eje})
+	_ver_controles += 1
 
 ## El último vehículo añadido respeta la cola (no se mete encima del de
 ## delante cuando este frena en un semáforo o en una parada).

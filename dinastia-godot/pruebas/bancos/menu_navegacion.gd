@@ -152,7 +152,7 @@ func _riel() -> void:
 		_comprobar(_volver() != null, "riel «%s»: se ve el botón «Volver»" % id)
 		var tarjetas := 0
 		for c in pm.find_children("*", "Button", true, false):
-			if (c as Button).is_visible_in_tree() and (c as Button).custom_minimum_size.x >= 250.0:
+			if (c as Button).is_visible_in_tree() and ((c as Button).custom_minimum_size.x >= 250.0 or (c as Button).custom_minimum_size.y >= 100.0):   ## la rejilla de siempre (ancho) o el mosaico (`PortadaMosaico`, ancho 0 y alto ≥ 118)
 				tarjetas += 1
 		var esperadas := (mn["subs"] as Array).size()
 		_comprobar(tarjetas == esperadas, "riel «%s»: la portada enseña sus %d tarjetas (%d)" % [id, esperadas, tarjetas])
@@ -295,7 +295,11 @@ func _mando() -> void:
 	_comprobar(unicos.size() == tabs and pasos[tabs - 1] == 0, "R1: %d pulsaciones recorren los %d submenús del plantel y vuelven al primero %s" % [tabs, tabs, str(pasos)])
 	await _accion("dinastia_tab_anterior")
 	await _frames(4)
-	_comprobar(_abierto() != null and _abierto().submenu_activo() == tabs - 1, "L1 retrocede (del primero al último)")
+	var subs0: Array = MenusLaterales.MENUS[0]["subs"]
+	var ultimo := subs0.size() - 1
+	while ultimo > 0 and (subs0[ultimo] as Dictionary).has("accion"):   ## las «acciones» (Plantilla detallada) no son pantallas: L1 las salta
+		ultimo -= 1
+	_comprobar(_abierto() != null and _abierto().submenu_activo() == ultimo, "L1 retrocede (del primero al último submenú que es pantalla: %d)" % ultimo)
 	await _cerrar_todo()
 	_comprobar(_en_central(), "tras navegar con el mando, cerrar vuelve al central")
 

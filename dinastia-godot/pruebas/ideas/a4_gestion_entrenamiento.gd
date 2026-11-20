@@ -79,7 +79,7 @@ func _medico() -> void:
 		j.lesion = 0
 		var r := md.riesgo_por_fatiga(j, carga)
 		_comprobar(is_finite(r) and r >= 0.0 and r <= 1.0, "riesgo por fatiga con carga %s: probabilidad válida (%s)" % [str(carga), str(r)])
-		_comprobar(carga < 1000.0 or r == 1.0, "carga absurda: la probabilidad se queda en 1 (%s)" % str(r))
+		_comprobar(carga < 1000.0 or is_equal_approx(r, 1.0), "carga absurda: la probabilidad se queda en 1 (%s)" % str(r))
 		md.chequeo_de_fatiga(j, carga, m.anio, 1)
 	j.lesion = 0
 	_comprobar(md.pct_recuperado(j) >= 0 and md.pct_recuperado(j) <= 100, "recuperación con 0 semanas: %d %%" % md.pct_recuperado(j))

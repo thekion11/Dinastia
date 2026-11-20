@@ -111,7 +111,7 @@ func _mover(delta: float) -> void:
 		match int(s["fase"]):
 			0:   ## camina (entra: hasta la puerta; sale: la puerta ya está abierta)
 				nodo.position = (s["a"] as Vector3).lerp(s["b"], u)
-				if entra and u >= 0.88 and float(hoja["objetivo"]) == 0.0:
+				if entra and u >= 0.88 and is_zero_approx(float(hoja["objetivo"])):
 					hoja["objetivo"] = 1.0
 					Mini3D.anim(fig, "saludo_mano", "")   ## tiende la mano al picaporte (si el clip no está, queda parado)
 					CargaCiudad.de("PeatonVida").gesto(nodo, "saludo_mano")

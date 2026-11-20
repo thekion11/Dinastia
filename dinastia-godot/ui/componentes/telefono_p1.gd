@@ -154,7 +154,7 @@ func _icono_app(a: Array) -> Control:
 	var b := Button.new()
 	b.custom_minimum_size = Vector2(62, 62)
 	b.text = String(a[2])
-	b.add_theme_font_size_override("font_size", 28)
+	b.add_theme_font_size_override("font_size", Tema.letra(28))
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(String(a[3]))
 	sb.set_corner_radius_all(16)
@@ -439,7 +439,7 @@ func _comentario(p: Dictionary, i: int, mia: bool) -> Control:
 			var d: Array = Redes.RESPUESTAS[tono]
 			var b := Button.new()
 			b.text = "%s %s" % [String(d[0]), Idiomas.t(String(d[1]))]
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			var k := tono
 			b.pressed.connect(func() -> void:
 				var res := m.redes.responder(m, id, i, k)

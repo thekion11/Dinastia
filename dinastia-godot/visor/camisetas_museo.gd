@@ -15,8 +15,8 @@ static func lista() -> Array:
 ## (cuello y bajo de la camiseta). (12-11) Cuadros más grandes (de lejos se perdían), camiseta con forma (mangas caídas, cuello, bajo),
 ## paño iluminado detrás, placa dorada con el nombre y una lámpara de cuadro encendida encima. Una rama `CamisetaRetirada` por dorsal.
 static func poner(nodo: Node3D, caja: Rect2, y0: float, c1: Color, retiradas: Array = [], c2 := Color(0.95, 0.95, 0.95)) -> void:
-	var lista_ := retiradas if not retiradas.is_empty() else lista()
-	var n := mini(lista_.size(), MAXIMO)
+	var lista_loc := retiradas if not retiradas.is_empty() else lista()
+	var n := mini(lista_loc.size(), MAXIMO)
 	if n == 0:
 		return
 	var oro: StandardMaterial3D = Texturas.metal(Color(0.95, 0.78, 0.3), 0.22)
@@ -34,7 +34,7 @@ static func poner(nodo: Node3D, caja: Rect2, y0: float, c1: Color, retiradas: Ar
 	var paso := ancho / float(n)
 	var w := clampf(paso - 0.14, 0.7, 1.25)
 	for k in n:
-		var e: Dictionary = lista_[lista_.size() - n + k]   ## las más recientes
+		var e: Dictionary = lista_loc[lista_loc.size() - n + k]   ## las más recientes
 		var r := Node3D.new()
 		r.name = "CamisetaRetirada%d" % k
 		r.position = Vector3(caja.position.x + 0.6 + paso * (float(k) + 0.5), y0 + 2.05, z)

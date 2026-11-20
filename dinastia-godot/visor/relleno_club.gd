@@ -10,7 +10,6 @@ extends RefCounted
 static func sala(nodo: Node3D, nombre: String, caja: Rect2, y0: float, c1: Color) -> void:
 	if Calidad.elegida <= Calidad.MINIMO:
 		return
-	var cx := caja.get_center().x
 	_zocalo(nodo, caja, y0, c1)
 	match nombre:
 		"Enfermería":

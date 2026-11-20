@@ -36,9 +36,9 @@ var _anim: PcAnimacion
 var animar := true            ## false: enciende de golpe (el prólogo en modo rápido, el de las pruebas)
 
 ## `padre3d`: dónde colgar el aro (el mismo padre que el explorador).
-func montar(padre3d: Node3D, punto_uso: Vector3, planta_: int) -> void:
+func montar(padre3d: Node3D, punto_uso: Vector3, planta_arg: int) -> void:
 	punto = punto_uso
-	planta = planta_
+	planta = planta_arg
 	_aro = crear_aro(padre3d, Color(0.35, 0.85, 1.0))
 	_aro.position = punto + Vector3(0, 0.04, 0)
 

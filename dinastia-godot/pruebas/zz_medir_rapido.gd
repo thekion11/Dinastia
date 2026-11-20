@@ -17,7 +17,6 @@ func _ready() -> void:
 	var huella := 0
 	var t_tot := 0.0
 	var t_prep := 0.0
-	var t_cierre := 0.0
 	for par: Array in cruces:
 		var a := Time.get_ticks_usec()
 		var p := Partido.new(par[0], par[1])

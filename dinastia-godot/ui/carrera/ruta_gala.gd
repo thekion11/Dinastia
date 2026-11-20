@@ -8,6 +8,7 @@ extends RefCounted
 
 const E := preload("res://ui/carrera/ruta_estilo.gd")
 const FESTEJO_DE := {"liga": "escenario", "copa": "palco", "continental": "fuegos", "otro": "foto"}
+const _RUTA_GALA_PREMIO3D := "res://visor/gala_premio3d.gd"
 
 static func vista(ui: Variant, t: Dictionary) -> Control:
 	var festejo: Variant = load("res://visor/festejo_campo3d.gd")
@@ -41,7 +42,7 @@ static func vista(ui: Variant, t: Dictionary) -> Control:
 		var clase := String((tr as Dictionary).get("clase", "otro"))
 		## Con calidad para ello, el festejo del equipo entero; en la mínima, tú con la copa (más ligero).
 		var poner_t := func() -> void: _poner(marco, festejo.crear(modo, club, nombre) if festejo.con_3d() else
-			load("res://visor/gala_premio3d.gd").crear_gala("trofeo_" + clase, datos.merged({"titulo": nombre})))
+			load(_RUTA_GALA_PREMIO3D).crear_gala("trofeo_" + clase, datos.merged({"titulo": nombre})))
 		botones.add_child(E.opcion("🏆 " + Nombres.visible(nombre), E.ORO, grupo, primero, poner_t, 32))
 		if primero:
 			poner_t.call()
@@ -49,7 +50,7 @@ static func vista(ui: Variant, t: Dictionary) -> Control:
 	for id: Variant in orden:
 		if not CarreraPremios.PREMIOS.has(String(id)):
 			continue
-		var poner_p := func() -> void: _poner(marco, load("res://visor/gala_premio3d.gd").crear_gala(String(id), datos))
+		var poner_p := func() -> void: _poner(marco, load(_RUTA_GALA_PREMIO3D).crear_gala(String(id), datos))
 		botones.add_child(E.opcion("🏅 " + Idiomas.t(String(CarreraPremios.PREMIOS[String(id)][0])), E.ORO, grupo, primero, poner_p, 32))
 		if primero:
 			poner_p.call()

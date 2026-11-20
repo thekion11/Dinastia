@@ -4,7 +4,7 @@ extends Control
 ## fotograma. Lo que pinta cada capa está en `intro_capas.gd`; la clase que se usa es
 ## `IntroMarca` (`intro.gd`).
 ##
-## TODO ES FUNCIÓN PURA DEL TIEMPO `_t`. Nada se integra fotograma a fotograma (ni las
+## Todo ES FUNCIÓN PURA DEL TIEMPO `_t`. Nada se integra fotograma a fotograma (ni las
 ## chispas: su trayectoria con rozamiento tiene fórmula cerrada), así que la intro se puede
 ## congelar en cualquier instante y la captura sale idéntica a lo que ve el jugador, y una
 ## caída de fotogramas no deja la animación a medias: el siguiente fotograma ya está en su sitio.

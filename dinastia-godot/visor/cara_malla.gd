@@ -413,7 +413,7 @@ static func _armar(nombre: String, datos: Array, cuerpo: Dictionary) -> ArrayMes
 		st.add_index(_tri[t + 1])
 	return st.commit()
 
-static func _vestir_cara(d: Dictionary, esq: Skeleton3D, hueso: int, nombre: String, tex: Texture2D,
+static func _vestir_cara(_d: Dictionary, esq: Skeleton3D, hueso: int, nombre: String, tex: Texture2D,
 		piel: Color, malla: ArrayMesh) -> MeshInstance3D:
 	var mat := ShaderMaterial.new()
 	mat.shader = load(SHADER)

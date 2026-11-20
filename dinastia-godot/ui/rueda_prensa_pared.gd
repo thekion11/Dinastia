@@ -93,7 +93,7 @@ static func _escudo(c: Club) -> Control:
 	ini.set_anchors_preset(Control.PRESET_FULL_RECT)
 	ini.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	ini.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	ini.add_theme_font_size_override("font_size", 26)
+	ini.add_theme_font_size_override("font_size", Tema.letra(26))
 	ini.add_theme_color_override("font_color", Color.from_string(c.color_escudo2(), Color.WHITE))
 	celda.add_child(ini)
 	return celda
@@ -111,6 +111,6 @@ static func _nombre(c: Club, col: Color) -> Control:
 	nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	nom.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	nom.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	nom.add_theme_font_size_override("font_size", 19)
+	nom.add_theme_font_size_override("font_size", Tema.letra(19))
 	nom.add_theme_color_override("font_color", Color(col, 0.95))
 	return nom

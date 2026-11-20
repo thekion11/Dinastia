@@ -331,18 +331,6 @@ func _suelo() -> void:
 	ma.roughness = 0.55
 	## (25-10-2026) sin metálico y tinte más claro: ver la nota de `_calles`.
 	ma.metallic = 0.0
-	## La plaza de las instalaciones se dimensiona por las que DE VERDAD están
-	## construidas -cuatro por fila, 32 m entre filas-: con una plaza fija, un
-	## club que solo tiene tres instalaciones aparecía con un descampado
-	## asfaltado de 150 m esperando edificios que aún no existen.
-	var cuantas := 0
-	var inst_p: Dictionary = datos.get("inst", {})
-	for e in EDIFICIOS:
-		if int(inst_p.get(e["k"], 0)) > 0:
-			cuantas += 1
-	var filas_p: int = maxi(1, int(ceil(float(maxi(cuantas, 1)) / 4.0)))
-	var fondo_p: float = 56.0 + (filas_p - 1) * 48.0
-	var centro_p: float = 118.0 + (filas_p - 1) * 24.0
 	## 7-10-2026: la plaza de las instalaciones ya no es una losa de asfalto
 	## de 276 m (se leía como un aparcamiento con edificios encima, «falta de
 	## coherencia»): el complejo es césped con paseos, ver `_campus()`.

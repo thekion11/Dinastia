@@ -82,7 +82,7 @@ func _primera_vez() -> void:
 	marco.add_child(x)
 	## El reparto por anclas se aplica al cambiar el padre de tamaño (como al girar el móvil).
 	marco.size = Vector2(1366, 768)
-	_comprobar(x.anchor_left == 0.0 and x.anchor_top == 0.0 and x.anchor_right == 1.0 and x.anchor_bottom == 1.0
+	_comprobar(is_zero_approx(x.anchor_left) and is_zero_approx(x.anchor_top) and is_equal_approx(x.anchor_right, 1.0) and is_equal_approx(x.anchor_bottom, 1.0)
 		and x.size == marco.size, "dentro de un Control va a pantalla completa por anclas (%s)" % str(x.size))
 	marco.queue_free()
 	_comprobar(a.mouse_filter == Control.MOUSE_FILTER_STOP, "tapa los clics de lo que haya debajo")

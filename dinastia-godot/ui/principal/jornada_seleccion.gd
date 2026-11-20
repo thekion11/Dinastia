@@ -156,7 +156,7 @@ static func pintar_legado(p: Principal, lista: Control) -> void:
 	for o: Array in opciones:
 		var b := Button.new()
 		b.text = String(o[0]) if String(o[0]).begins_with("📋") else Idiomas.t(String(o[0]))
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var accion: Callable = o[1]
 		b.pressed.connect(func() -> void:

@@ -59,7 +59,7 @@ func _nombre(h: int) -> String:
 	return "%s %s" % [_NOMBRES[h % _NOMBRES.size()], _APELLIDOS[absi(("ap%d" % h).hash()) % _APELLIDOS.size()]]
 
 ## Una vez por semana. Convoca la junta del trimestre.
-func semana(c: Club, anio: int, sem: int) -> void:
+func semana(c: Club, _anio: int, sem: int) -> void:
 	formar(c)
 	if not pendiente.is_empty() or sem % CADA != 0 or accionistas.is_empty():
 		return

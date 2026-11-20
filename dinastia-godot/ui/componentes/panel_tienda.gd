@@ -15,11 +15,11 @@ var con_tarjeta := false           ## «Pagar con tarjeta y PIN» (U6): cada com
 var _aviso := ""
 var _caja := VBoxContainer.new()
 
-static func abrir(capa: CanvasLayer, titulo: String, surtido_: Array, al_comprar_: Callable, saldo_: Callable, pos: Vector3, quien: Node3D) -> PanelTienda:
+static func abrir(capa: CanvasLayer, titulo: String, surtido_arg: Array, al_comprar_arg: Callable, saldo_arg: Callable, pos: Vector3, quien: Node3D) -> PanelTienda:
 	var p := PanelTienda.new()
-	p.surtido = surtido_
-	p.al_comprar = al_comprar_
-	p.saldo_texto = saldo_
+	p.surtido = surtido_arg
+	p.al_comprar = al_comprar_arg
+	p.saldo_texto = saldo_arg
 	p.cajero_pos = pos
 	p.jugador = quien
 	p.set_anchors_preset(Control.PRESET_CENTER)
@@ -53,13 +53,13 @@ func _pintar() -> void:
 	_caja.add_child(CuadroDialogo.placa("🛒 " + String(get_meta("titulo"))))
 	var saldo := Label.new()
 	saldo.text = String(saldo_texto.call()) if saldo_texto.is_valid() else ""
-	saldo.add_theme_font_size_override("font_size", 17)
+	saldo.add_theme_font_size_override("font_size", Tema.letra(17))
 	_caja.add_child(saldo)
 	if _aviso != "":
 		var av := Label.new()
 		av.text = _aviso
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		av.add_theme_font_size_override("font_size", 17)
+		av.add_theme_font_size_override("font_size", Tema.letra(17))
 		av.add_theme_color_override("font_color", Color(1.0, 0.8, 0.35))
 		_caja.add_child(av)
 	var bt := CheckButton.new()

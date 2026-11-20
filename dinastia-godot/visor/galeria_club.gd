@@ -113,16 +113,16 @@ static func montar(padre: Node3D, est: Dictionary, c1: Color, c2: Color, nombre_
 	## Los dos tramos: suelo, techo y paredes con la franja del club.
 	var largo_a := zc + MEDIO - z0
 	_tramo(nodo, Vector3(xa, y, z0 + largo_a / 2.0), Vector2(MEDIO * 2.0, largo_a), horm, suelo, techo)
-	if s != 0.0:
+	if not is_zero_approx(s):
 		var largo_b := absf(xb - xa) + MEDIO * 2.0
 		_tramo(nodo, Vector3((xa + xb) / 2.0, y, zc), Vector2(largo_b, MEDIO * 2.0), horm, suelo, techo)
 	## Paredes del tramo largo. La del lado del giro se corta donde empieza el
 	## corto; la del otro lado llega hasta el fondo.
-	var lado_giro := s if s != 0.0 else 1.0
+	var lado_giro := s if not is_zero_approx(s) else 1.0
 	for lado in [-1.0, 1.0]:
-		var z_hasta := zc - MEDIO if (s != 0.0 and lado == lado_giro) else zc + MEDIO
+		var z_hasta := zc - MEDIO if (not is_zero_approx(s) and lado == lado_giro) else zc + MEDIO
 		_muro_z(nodo, xa + lado * (MEDIO + 0.15), z0, z_hasta, y, horm, pared, franja, franja2, -lado)
-	if s != 0.0:
+	if not is_zero_approx(s):
 		## El tramo corto: pared del cruce (lado de los campos) y la de enfrente,
 		## con el hueco de la escalera; el fondo cierra al otro lado.
 		_muro_x(nodo, zc - MEDIO - 0.15, xa + s * MEDIO, xb + s * MEDIO, y, horm, pared, franja, franja2, 1.0)
@@ -154,7 +154,7 @@ static func montar(padre: Node3D, est: Dictionary, c1: Color, c2: Color, nombre_
 			_lampara(nodo, Vector3(xa, y + ALTO - 0.4, zl))
 		k += 1
 		zl += 8.0
-	if s != 0.0:
+	if not is_zero_approx(s):
 		var xl := xa + s * 6.0
 		while (xb - xl) * s > -1.0:
 			PiezasObra._caja(nodo, Vector3(xl, y + ALTO - 0.04, zc), Vector3(0.3, 0.04, 1.2), luz, false)
@@ -319,7 +319,7 @@ static func montar_caseta(padre: Node3D, est: Dictionary, c1: Color) -> void:
 	PiezasObra._caja(nodo, totem + Vector3(0, 3.75, 0), Vector3(0.7, 0.3, 0.45), acero, false)
 	for giro in [0.0, PI]:
 		PiezasObra._rotulo(nodo, "⇣\n%s\n%s" % [Idiomas.t("GALERÍA"), Idiomas.t("ESTADIO")],
-			totem + Vector3(0, 2.6, 0.19 if giro == 0.0 else -0.19), giro, 30, Color.WHITE if techo.albedo_color.get_luminance() < 0.6 else Color(0.08, 0.08, 0.1))
+			totem + Vector3(0, 2.6, 0.19 if is_zero_approx(giro) else -0.19), giro, 30, Color.WHITE if techo.albedo_color.get_luminance() < 0.6 else Color(0.08, 0.08, 0.1))
 	var o := OmniLight3D.new()
 	o.position = b + Vector3(0, 2.6, -1.5)
 	o.omni_range = 7.0

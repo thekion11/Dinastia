@@ -37,15 +37,15 @@ func _ready() -> void:
 		if i % 10 != 0:
 			continue
 		for p: Dictionary in mo.jugadores:
-			var pos_ := i % 20 == 0
+			var pos := i % 20 == 0
 			var loc := bool(p["es_local"])
-			var s := Time.get_ticks_usec(); mo._forma(p, pos_); tt["forma"] += Time.get_ticks_usec() - s
-			s = Time.get_ticks_usec(); (mo as MotorCombinado)._forma_gd(p, pos_); tt["forma_gd"] += Time.get_ticks_usec() - s
+			var s := Time.get_ticks_usec(); mo._forma(p, pos); tt["forma"] += Time.get_ticks_usec() - s
+			s = Time.get_ticks_usec(); (mo as MotorCombinado)._forma_gd(p, pos); tt["forma_gd"] += Time.get_ticks_usec() - s
 			s = Time.get_ticks_usec(); MotorRoles.base(mo, p); tt["base"] += Time.get_ticks_usec() - s
 			s = Time.get_ticks_usec(); MotorColocacion.balon_lento(mo, loc); tt["lento"] += Time.get_ticks_usec() - s
-			s = Time.get_ticks_usec(); MotorColocacion.pesos(mo, loc, pos_); tt["pesos"] += Time.get_ticks_usec() - s
+			s = Time.get_ticks_usec(); MotorColocacion.pesos(mo, loc, pos); tt["pesos"] += Time.get_ticks_usec() - s
 			s = Time.get_ticks_usec(); MotorTacticaViva.f(mo, loc, "linea"); MotorTacticaViva.urgencia(mo, loc); MotorTacticaViva.f(mo, loc, "amplitud"); tt["tv"] += Time.get_ticks_usec() - s
-			s = Time.get_ticks_usec(); MotorAdaptacion.desvio_x(mo, loc, pos_); tt["desvio"] += Time.get_ticks_usec() - s
+			s = Time.get_ticks_usec(); MotorAdaptacion.desvio_x(mo, loc, pos); tt["desvio"] += Time.get_ticks_usec() - s
 			s = Time.get_ticks_usec(); var rc: Variant = nat.roles_base(mo, p, mo.t, mo.jugadores); tt["base_cpp"] += Time.get_ticks_usec() - s
 			if rc == null:
 				nulos += 1

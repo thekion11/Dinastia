@@ -11,14 +11,24 @@ extends RefCounted
 ##  - los veteranos empiezan a bajar a los 30.
 ## Lo mide `pruebas/ideas/cant_estabilidad.gd` (pirámide estable en cinco temporadas).
 
+## El factor por edad del freno (única fuente: lo dibuja también `FichaPorque.ritmo_por_edad`).
+static func por_edad(edad: int) -> float:
+	var nat := Nativo.de("nuc_por_edad")
+	if nat != null:
+		return nat.nuc_por_edad(edad)
+	return por_edad_gd(edad)
+
+## Gemela GDScript de `nuc_por_edad` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func por_edad_gd(edad: int) -> float:
+	return 0.8 if edad <= 20 else (0.4 if edad <= 22 else 0.25)
+
 ## El freno común a toda subida semanal (la tuya y la del resto): con la edad y al acercarse al techo. Los últimos
 ## puntos hasta el potencial cuestan más que los primeros; con el 0,10 plano un chico de tu academia pasaba de 70 a
 ## 88 entre los 17 y los 20. Lo usan `prob_semanal()` y `Entrenamiento._sesion_general()/_plan_por_dias()`.
 static func freno(j: Jugador) -> float:
 	if j.ovr >= j.pot or j.edad >= 24:
 		return 0.0
-	var por_edad := 0.8 if j.edad <= 20 else (0.5 if j.edad <= 22 else 0.3)
-	return por_edad * clampf(float(j.pot - j.ovr) / 8.0, 0.35, 1.0)
+	return por_edad(j.edad) * clampf(float(j.pot - j.ovr) / 8.0, 0.35, 1.0)
 
 ## Prob. semanal de +1 para quien NO es tuyo (unas 30 semanas de liga al año). Tu plantel va por su plan.
 static func prob_semanal(j: Jugador) -> float:

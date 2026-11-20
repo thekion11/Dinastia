@@ -13,10 +13,10 @@ extends RefCounted
 ## Fuera de esa situación no hace nada: cada uno vuelve a su zona (la frontal no se vacía: solo se marca a los del área y a los que llegan).
 ## El que presiona al portador no entra en el reparto. Contadores `c4_marca_area` (asignaciones por paso) y `c4_segundo_palo`.
 ## Solo GDScript: nuestra `_ia_defensa` no tiene gemela C++ (la de la extensión es la colocación de League, C1).
-static var ACTIVO := OS.get_environment("C4_MARCA_AREA") == "1"
+static var activo := OS.get_environment("C4_MARCA_AREA") == "1"
 const ZONA := 35.0
-static var MARGEN_X := MARGEN_Z * 0.7 if MARGEN_Z > 3.0 else 2.0
-static var MARGEN_Z := float(OS.get_environment("C4_MARCA_PROF")) if OS.get_environment("C4_MARCA_PROF") != "" else 3.0   ## m más allá del área en los que ya se marca
+static var margen_x := margen_z * 0.7 if margen_z > 3.0 else 2.0
+static var margen_z := float(OS.get_environment("C4_MARCA_PROF")) if OS.get_environment("C4_MARCA_PROF") != "" else 3.0   ## m más allá del área en los que ya se marca
 const LLEGADA := 24.0
 const VEL_LLEGADA := 3.0
 const PEGADO := 1.2
@@ -24,7 +24,7 @@ const CAMBIO := 3.0
 
 ## Objetivo de `p` (defensor de campo) si le toca marcar, o Vector3.INF.
 static func objetivo(m: Object, p: Dictionary) -> Vector3:
-	if not ACTIVO:
+	if not activo:
 		return Vector3.INF
 	var local := bool(p["es_local"])
 	var reparto := _reparto(m, local)
@@ -55,7 +55,7 @@ static func _reparto(m: Object, local: bool) -> Dictionary:
 	var arco := Vector3(0, 0, -m.LARGO if local else m.LARGO)
 	var ataca_rival := Vector2(b.x - arco.x, b.z - arco.z).length() < ZONA and (pos_rival.is_empty() or bool(pos_rival["es_local"]) != local)
 	if ataca_rival:
-		var d_area: float = m.AREA_Z + MARGEN_Z
+		var d_area: float = m.AREA_Z + margen_z
 		var hacia := signf(arco.z)
 		var defensores: Array = []
 		var atacantes: Array = []
@@ -72,7 +72,7 @@ static func _reparto(m: Object, local: bool) -> Dictionary:
 				continue
 			var pq: Vector3 = m.pos(q)
 			var prof := (pq.z - arco.z) * -hacia   ## metros desde la línea de gol hacia el campo
-			if absf(pq.x) < m.AREA_X + MARGEN_X and prof < d_area:
+			if absf(pq.x) < m.AREA_X + margen_x and prof < d_area:
 				atacantes.append(q)
 			elif Vector2(pq.x - arco.x, pq.z - arco.z).length() < LLEGADA:
 				var v: Vector3 = q.get("vel", Vector3.ZERO)

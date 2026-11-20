@@ -98,14 +98,14 @@ func _construir(obras: Instalaciones, ciudad: Ciudad, perfil_estadio: Dictionary
 	_boton(barra, "Volver", func() -> void: cerrado.emit())
 
 	_reloj = Label.new()
-	_reloj.add_theme_font_size_override("font_size", 15)
+	_reloj.add_theme_font_size_override("font_size", Tema.letra(15))
 	_reloj.add_theme_color_override("font_color", Color(1, 1, 1, 0.85))
 	_reloj.position = Vector2(18, 52)
 	add_child(_reloj)
 
 	var ayuda := Label.new()
 	ayuda.text = Idiomas.t("arrastra para girar · clic derecho o WASD para moverte · rueda para acercar · clic en un edificio o solar para ver su ficha")
-	ayuda.add_theme_font_size_override("font_size", 13)
+	ayuda.add_theme_font_size_override("font_size", Tema.letra(13))
 	ayuda.add_theme_color_override("font_color", Color(1, 1, 1, 0.65))
 	ayuda.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	ayuda.offset_left = 18

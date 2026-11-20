@@ -1,4 +1,4 @@
-﻿class_name ControlPartido
+class_name ControlPartido
 extends Node3D
 
 ## Sistema de Control Manual de Jugadores estilo EA Sports FC 26.

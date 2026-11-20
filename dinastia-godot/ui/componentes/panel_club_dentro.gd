@@ -68,7 +68,7 @@ static func _espacios(raiz: VBoxContainer, c: Club, mundo: Mundo, cd: ClubDentro
 			fila.add_child(bono)
 			var b := Button.new()
 			b.text = Idiomas.t("Puesto") if tengo else (Eco.dinero(Eco.escalar(float(f[3]), float(c.rep))) if int(f[3]) > 0 else "gratis")
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.disabled = tengo
 			b.custom_minimum_size = Vector2(96, 0)
 			b.pressed.connect(func() -> void: _elegir_espacio(mundo, que, clave, c, escribir, al_cambiar))
@@ -110,7 +110,7 @@ static func _digital(raiz: VBoxContainer, c: Club, mundo: Mundo, cd: ClubDentro,
 		fila_a.add_child(campo_a)
 		var b_a := Button.new()
 		b_a.text = Eco.dinero(Eco.escalar(ClubDentro.COSTE_APP, float(c.rep)))
-		b_a.add_theme_font_size_override("font_size", 11)
+		b_a.add_theme_font_size_override("font_size", Tema.letra(11))
 		b_a.custom_minimum_size = Vector2(96, 0)
 		b_a.pressed.connect(func() -> void: _lanzar_app(mundo, campo_a.text, c, escribir, al_cambiar))
 		fila_a.add_child(b_a)
@@ -142,7 +142,7 @@ static func _digital(raiz: VBoxContainer, c: Club, mundo: Mundo, cd: ClubDentro,
 		fila_w.add_child(campo_w)
 		var b_w := Button.new()
 		b_w.text = Eco.dinero(Eco.escalar(ClubDentro.COSTE_WEB, float(c.rep)))
-		b_w.add_theme_font_size_override("font_size", 11)
+		b_w.add_theme_font_size_override("font_size", Tema.letra(11))
 		b_w.custom_minimum_size = Vector2(96, 0)
 		b_w.pressed.connect(func() -> void: _lanzar_web(mundo, campo_w.text, c, escribir, al_cambiar))
 		fila_w.add_child(b_w)
@@ -167,7 +167,7 @@ static func _detalles(raiz: VBoxContainer, c: Club, cd: ClubDentro, texto: Calla
 		var clave_r := String(r[0])
 		var b_r := Button.new()
 		b_r.text = String(r[1])
-		b_r.add_theme_font_size_override("font_size", 11)
+		b_r.add_theme_font_size_override("font_size", Tema.letra(11))
 		b_r.clip_text = true
 		b_r.toggle_mode = true
 		b_r.button_pressed = cd.ct_ropa == clave_r
@@ -197,7 +197,7 @@ static func _detalles(raiz: VBoxContainer, c: Club, cd: ClubDentro, texto: Calla
 		fila_col.add_child(pk)
 	var b_igual := Button.new()
 	b_igual.text = Idiomas.t("Igualar a los colores del club")
-	b_igual.add_theme_font_size_override("font_size", 11)
+	b_igual.add_theme_font_size_override("font_size", Tema.letra(11))
 	b_igual.pressed.connect(func() -> void:
 		cd.ct_color1 = ""
 		cd.ct_color2 = ""
@@ -215,7 +215,7 @@ static func _detalles(raiz: VBoxContainer, c: Club, cd: ClubDentro, texto: Calla
 	campo_fr.text = cd.frase
 	campo_fr.placeholder_text = Idiomas.t("Lo que quieres que lean antes de salir")
 	campo_fr.max_length = ClubDentro.FRASE_MAX
-	campo_fr.add_theme_font_size_override("font_size", 12)
+	campo_fr.add_theme_font_size_override("font_size", Tema.letra(12))
 	campo_fr.text_submitted.connect(func(t: String) -> void:
 		cd.escribir_frase(t)
 		al_cambiar.call())

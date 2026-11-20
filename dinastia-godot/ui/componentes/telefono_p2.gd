@@ -72,7 +72,7 @@ func _tarjeta(p: Dictionary) -> PanelContainer:
 			var d: Array = Redes.COMENTAR_JUGADOR[tono]
 			var b := Button.new()
 			b.text = "%s %s" % [String(d[0]), Idiomas.t(String(d[1]))]
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			var k := tono
 			b.pressed.connect(func() -> void:
 				var res := m.redes.comentar_jugador(m, id, k)
@@ -150,7 +150,7 @@ func _publicar() -> void:
 		b.clip_text = true
 		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		b.tooltip_text = b.text
-		b.add_theme_font_size_override("font_size", 12)
+		b.add_theme_font_size_override("font_size", Tema.letra(12))
 		var k := tipo
 		b.pressed.connect(func() -> void:
 			_tipo_elegido = k
@@ -176,7 +176,7 @@ func _publicar() -> void:
 		b.toggle_mode = true
 		b.button_pressed = h in _tags_elegidos
 		b.text = h + (" 📈" if h == r.tendencia else "")
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		var hh := h
 		b.toggled.connect(func(si: bool) -> void:
 			if si and not hh in _tags_elegidos:
@@ -223,7 +223,7 @@ func _tribuna() -> void:
 	var atras := Button.new()
 	atras.flat = true
 	atras.text = "‹"
-	atras.add_theme_font_size_override("font_size", 22)
+	atras.add_theme_font_size_override("font_size", Tema.letra(22))
 	atras.pressed.connect(func() -> void: (self as Telefono).abrir_app("inicio"))
 	cab.add_child(atras)
 	cab.add_child(_avatar_de(r.sesion, 30))
@@ -233,7 +233,7 @@ func _tribuna() -> void:
 	cab.add_child(quien)
 	var cambiar := Button.new()
 	cambiar.text = Idiomas.t("⇄ Cuenta")
-	cambiar.add_theme_font_size_override("font_size", 11)
+	cambiar.add_theme_font_size_override("font_size", Tema.letra(11))
 	cambiar.pressed.connect(_cerrar_sesion_animado)
 	cab.add_child(cambiar)
 	_cuerpo.add_child(cab)
@@ -249,7 +249,7 @@ func _tribuna() -> void:
 		b.button_pressed = _sub == String(t[0])
 		b.text = String(t[1])
 		b.tooltip_text = Idiomas.t(String(t[2]))
-		b.add_theme_font_size_override("font_size", 18)
+		b.add_theme_font_size_override("font_size", Tema.letra(18))
 		b.custom_minimum_size = Vector2(70, 34)
 		var k := String(t[0])
 		b.pressed.connect(func() -> void:
@@ -289,7 +289,7 @@ func _un_chat() -> void:
 	var atras := Button.new()
 	atras.flat = true
 	atras.text = "‹"
-	atras.add_theme_font_size_override("font_size", 22)
+	atras.add_theme_font_size_override("font_size", Tema.letra(22))
 	atras.pressed.connect(func() -> void:
 		_chat = ""
 		(self as Telefono).abrir_app("mensajes"))
@@ -348,7 +348,7 @@ func _titulo_app(texto: String) -> void:
 	var atras := Button.new()
 	atras.flat = true
 	atras.text = "‹"
-	atras.add_theme_font_size_override("font_size", 22)
+	atras.add_theme_font_size_override("font_size", Tema.letra(22))
 	atras.pressed.connect(func() -> void: (self as Telefono).abrir_app("inicio"))
 	fila.add_child(atras)
 	fila.add_child(Tema.etiqueta(Tema.TAM_DESTACADO + 2, Tema.TEXTO, Idiomas.t(texto)))

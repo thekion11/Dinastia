@@ -36,12 +36,12 @@ func _probar() -> void:
 	var antes := c.saldo
 	var aviso := {}
 	var semana_aviso := 0
-	for s_ in range(1, 80):
-		m.semana = s_
+	for sem in range(1, 80):
+		m.semana = sem
 		CrisisCaja.semana(m)
 		if not m.roles.crisis_pendiente.is_empty():
 			aviso = (m.roles.crisis_pendiente[0] as Dictionary).duplicate()
-			semana_aviso = s_
+			semana_aviso = sem
 			break
 	_comprobar(not aviso.is_empty() and c.saldo == antes, "primero AVISA y no cobra todavía (semana %d: %s por %d)" % [semana_aviso, str(aviso.get("tipo")), int(aviso.get("importe", 0))])
 	_comprobar(int(aviso["vence"]) == m.anio * 60 + semana_aviso + CrisisCaja.AVISO_SEMANAS, "el cobro vence a las %d semanas" % CrisisCaja.AVISO_SEMANAS)

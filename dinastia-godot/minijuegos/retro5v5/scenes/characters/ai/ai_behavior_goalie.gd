@@ -7,7 +7,7 @@ func perform_ai_movements() -> void:
 	var total_steering_force := Vector2.ZERO
 	total_steering_force = total_steering_force.limit_length(1.0)
 	player.velocity = total_steering_force * player.speed
-	
+
 func perform_ai_decisions() -> void:
 	if ball.is_headed_for_scoring_area(player.own_goal.get_scoring_area()):
 		player.switch_state(Player.State.DIVING)

@@ -7,6 +7,13 @@ extends RefCounted
 ## Lo que mueve la confianza un objetivo de `peso`: cumplirlo suma el peso y fallarlo resta un 25 % más (calibrado el 10-11 con 3 ligas: sin esto, un club de arriba
 ## cumplía casi todo y la confianza no bajaba nunca).
 static func delta_de(peso: int, cumplido: bool) -> int:
+	var nat := Nativo.de("nuc_delta_de")
+	if nat != null:
+		return nat.nuc_delta_de(peso, cumplido)
+	return delta_de_gd(peso, cumplido)
+
+## Gemela GDScript de `nuc_delta_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func delta_de_gd(peso: int, cumplido: bool) -> int:
 	return peso if cumplido else -int(ceil(float(peso) * 1.25))
 
 ## Juzga un secundario. Devuelve {cumplido, aplica}. `aplica` = falso si no hubo ocasión de cumplirlo (p. ej. no jugó la copa continental).

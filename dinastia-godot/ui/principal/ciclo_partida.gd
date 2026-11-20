@@ -216,7 +216,7 @@ func _indicador_guardado() -> void:
 		_ind_guardado.offset_top = 62.0
 		_ind_guardado.offset_bottom = 84.0
 		_ind_guardado.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		_ind_guardado.add_theme_font_size_override("font_size", 13)
+		_ind_guardado.add_theme_font_size_override("font_size", Tema.letra(13))
 		_ind_guardado.add_theme_color_override("font_color", Color(0.75, 0.9, 0.75))
 		_ind_guardado.z_index = 50
 		p.add_child(_ind_guardado)

@@ -15,7 +15,7 @@ func _ready() -> void:
 	var capa := get_tree().root.find_child("BloqueoMedicion", false, false) as CanvasLayer
 	_comprobar(capa != null and capa.layer >= 100, "la capa de bloqueo está por encima de las pantallas (capa %d)" % (capa.layer if capa != null else -1))
 	var fondo: ColorRect = capa.get_child(0) as ColorRect if capa != null else null
-	_comprobar(fondo != null and fondo.mouse_filter == Control.MOUSE_FILTER_STOP and fondo.anchor_right == 1.0 and fondo.anchor_bottom == 1.0,
+	_comprobar(fondo != null and fondo.mouse_filter == Control.MOUSE_FILTER_STOP and is_equal_approx(fondo.anchor_right, 1.0) and is_equal_approx(fondo.anchor_bottom, 1.0),
 		"cubre toda la pantalla y se come el ratón y el dedo")
 	var botones := capa.find_children("*", "Button", true, false) if capa != null else []
 	_comprobar(botones.size() == 1 and (botones[0] as Button).text == "Cancelar la prueba", "solo queda un botón: «Cancelar la prueba» (%d)" % botones.size())

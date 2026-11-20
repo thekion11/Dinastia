@@ -241,7 +241,7 @@ func _probar_ojeadores() -> void:
 	## cobertura=1.5, pais cubierto=nivel*0.9, y ojeado siempre 3 sin importar
 	## lo demas.
 	var mio_j: Jugador = mio.plantilla[0]
-	_comprobar(oj.nivel_de(mio_j) == 3.0, "un jugador propio se conoce del todo")
+	_comprobar(is_equal_approx(oj.nivel_de(mio_j), 3.0), "un jugador propio se conoce del todo")
 	var rival_arg: Jugador = null
 	var rival_local: Jugador = null
 	var rival_lejano: Jugador = null
@@ -257,9 +257,9 @@ func _probar_ojeadores() -> void:
 	if rival_arg != null:
 		_comprobar(oj.nivel_de(rival_arg) == float(Staff.NIVEL_MAX) * 0.9, "un pais cubierto da nivel*0.9 (%.1f)" % oj.nivel_de(rival_arg))
 	if rival_local != null:
-		_comprobar(oj.nivel_de(rival_local) == 1.5, "tu propio pais sin cobertura extra da 1.5 (%.1f)" % oj.nivel_de(rival_local))
+		_comprobar(is_equal_approx(oj.nivel_de(rival_local), 1.5), "tu propio pais sin cobertura extra da 1.5 (%.1f)" % oj.nivel_de(rival_local))
 	if rival_lejano != null:
-		_comprobar(oj.nivel_de(rival_lejano) == 0.0, "un pais ajeno y sin cubrir da 0 (%.1f)" % oj.nivel_de(rival_lejano))
+		_comprobar(is_zero_approx(oj.nivel_de(rival_lejano)), "un pais ajeno y sin cubrir da 0 (%.1f)" % oj.nivel_de(rival_lejano))
 		var txt := oj.ovr_texto(rival_lejano)
 		_comprobar(txt.find("-") >= 0, "sin conocerlo la media sale en rango, no exacta (%s)" % txt)
 		_comprobar(oj.ovr_texto(rival_lejano) == txt, "el rango es estable: no cambia entre llamadas para el mismo jugador")
@@ -286,7 +286,7 @@ func _probar_ojeadores() -> void:
 		var problema2 := oj.ojear(rival_arg)
 		_comprobar(problema2 == "", "ojear a un rival funciona (%s)" % problema2)
 		_comprobar(m.ojeados.has(rival_arg.id), "el jugador ojeado queda marcado en mundo.ojeados")
-		_comprobar(oj.nivel_de(rival_arg) == 3.0, "ojeado, se conoce del todo")
+		_comprobar(is_equal_approx(oj.nivel_de(rival_arg), 3.0), "ojeado, se conoce del todo")
 		_comprobar(oj.ovr_texto(rival_arg) == str(rival_arg.ovr), "ojeado, la media sale exacta")
 		_comprobar(oj.presupuesto < presupuesto_antes or mio.saldo < saldo_antes, "ojear gasta de verdad, del presupuesto de ojeo o de la caja")
 		_comprobar(oj.ojear(rival_arg) == "ya está ojeado", "no se puede ojear dos veces al mismo jugador")

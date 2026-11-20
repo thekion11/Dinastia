@@ -36,6 +36,7 @@ static func _lum_tx(c1: String) -> String:
 ## costados y el bajo) y la marca del fabricante y el escudo del club en el pecho.
 ## `num` y `sp` no se dibujan aquí: van encima como etiquetas de Godot.
 const _CUERPO := "M33 5 L11 16 L2 43 L18 50 L24 41 L24 91 Q50 96 76 91 L76 41 L82 50 L98 43 L89 16 L67 5 Q50 21 33 5 Z"
+const _RUTA_DISENOS_KIT := "res://ui/disenos_kit.gd"
 
 static func _estampado(estilo: String, c2: String) -> String:
 	match estilo:
@@ -59,7 +60,7 @@ static func _estampado(estilo: String, c2: String) -> String:
 		"arlequin": return '<path d="M50 6 76 30 50 54 24 30zM50 54 76 78 50 102 24 78zM24 30 0 54 24 78 48 54zM76 30 100 54 76 78 52 54z" fill="%s" opacity=".95"/>' % c2
 	return ""
 
-static func svg_de(c1: String, c2: String, estilo: String, num: int = 0, sp: String = "") -> String:
+static func svg_de(c1: String, c2: String, estilo: String, _num: int = 0, _sp: String = "") -> String:
 	var tx := _lum_tx(c1)
 	var cuello := c2 if estilo != "hombros" else c1
 	var p := (
@@ -85,9 +86,9 @@ static var _cache_svg: Dictionary = {}
 ## el control la encoja.
 static func textura_procedural(c1: String, c2: String, estilo: String, ancho_px: int = 128) -> Texture2D:
 	## Los diseños nuevos del diseñador (26-9-2026) los dibuja `DisenosKit`.
-	if not KITS.has(estilo) and load("res://ui/disenos_kit.gd").claves().has(estilo):
+	if not KITS.has(estilo) and load(_RUTA_DISENOS_KIT).claves().has(estilo):
 		var cols: Array[Color] = [Color(c1), Color(c2), Color(c2).darkened(0.35), Color.WHITE, Color("111111")]
-		return load("res://ui/disenos_kit.gd").textura_camiseta(estilo, cols, 1, ancho_px)
+		return load(_RUTA_DISENOS_KIT).textura_camiseta(estilo, cols, 1, ancho_px)
 	var clave := "%s_%s_%s_%d" % [c1, c2, estilo, ancho_px]
 	if _cache_svg.has(clave):
 		return _cache_svg[clave]
@@ -158,7 +159,7 @@ static func textura(club: Club, cual: int = 0, ancho_px: int = 128, custom_kit: 
 	var estilo := custom_kit if custom_kit != "" else club.kit_estilo
 	## Con la equipación del diseñador, sus cinco colores y su ribete.
 	if cual == 0 and custom_kit == "" and (not club.kit_x.is_empty() or AspectoClub.fila(club).has("camiseta")):   ## orden 15: el diseño del club real también en las fichas
-		var kx = load("res://ui/disenos_kit.gd").kit_de_club(club)
-		return load("res://ui/disenos_kit.gd").textura_camiseta(String(kx["dis"]), load("res://ui/disenos_kit.gd").colores(kx), int(kx.get("trim", 1)), ancho_px)
+		var kx = load(_RUTA_DISENOS_KIT).kit_de_club(club)
+		return load(_RUTA_DISENOS_KIT).textura_camiseta(String(kx["dis"]), load(_RUTA_DISENOS_KIT).colores(kx), int(kx.get("trim", 1)), ancho_px)
 	return textura_procedural(club.color_kit1(), club.color_kit2(),
 		kit_de(club, estilo), ancho_px)

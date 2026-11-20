@@ -202,7 +202,7 @@ func _probar_tanda_top25b() -> void:
 				quieto = false
 	_comprobar(quieto, "cambio: el que entra espera en la banda hasta la palmada")
 	_comprobar(fases.has("palmada") and fases.has("se_va"), "cambio: se chocan la mano y el que sale se va (%s)" % str(fases))
-	_comprobar(float(entra.get("freno_duelo", 0.0)) == 1.0, "cambio: el que entra queda suelto después")
+	_comprobar(is_equal_approx(float(entra.get("freno_duelo", 0.0)), 1.0), "cambio: el que entra queda suelto después")
 	_comprobar(not is_instance_valid(esc) or esc.is_queued_for_deletion(), "cambio: la escena se borra sola")
 	motor.queue_free()
 	raiz.queue_free()
@@ -332,7 +332,7 @@ func _probar_peluches() -> void:
 	var ligero := Peluches.def("pollito")
 	var pesado := Peluches.def("elefante")
 	_comprobar(pe.probabilidad(ligero, 0.0) > pe.probabilidad(pesado, 0.0) and pe.probabilidad(ligero, 0.0) > pe.probabilidad(ligero, 0.1), "agarra mejor lo ligero y lo que tiene la garra encima")
-	_comprobar(pe.probabilidad(ligero, Peluches.RADIO_AGARRE + 0.01) == 0.0, "fuera del radio no hay agarre")
+	_comprobar(is_zero_approx(pe.probabilidad(ligero, Peluches.RADIO_AGARRE + 0.01)), "fuera del radio no hay agarre")
 	var p0 := pe.probabilidad(pesado, 0.05)
 	pe.fallos_seguidos = 3
 	_comprobar(pe.probabilidad(pesado, 0.05) > p0 and pe.probabilidad(pesado, 0.05) <= 0.95, "cada fallo seguido sube la probabilidad (nunca es imposible ni segura)")

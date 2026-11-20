@@ -47,11 +47,11 @@ static func onda() -> AudioStreamWAV:
 var peligro: Callable
 var _subida := 0.0
 
-static func montar(padre: Node, peligro_: Callable) -> GradaFondo:
+static func montar(padre: Node, peligro_arg: Callable) -> GradaFondo:
 	var g := GradaFondo.new()
 	g.name = "GradaFondo"
 	g.stream = onda()
-	g.peligro = peligro_
+	g.peligro = peligro_arg
 	padre.add_child(g)
 	g.volume_db = g._objetivo_db()
 	g.play()

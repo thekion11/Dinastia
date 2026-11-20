@@ -240,6 +240,13 @@ static func _md(u: int) -> Array:
 
 ## Domingo de Pascua (algoritmo anónimo gregoriano).
 static func pascua(anio: int) -> Array:
+	var nat := Nativo.de("nuc_pascua")
+	if nat != null:
+		return nat.nuc_pascua(anio)
+	return pascua_gd(anio)
+
+## Gemela GDScript de `nuc_pascua` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func pascua_gd(anio: int) -> Array:
 	var a := anio % 19
 	var b := int(anio / 100.0)
 	var c := anio % 100
@@ -349,6 +356,13 @@ static func torneos(anio: int) -> Array:
 ## (10-11) ¿Toca este año el torneo continental de selecciones de la confederación `clave`? (los mismos años que enseña `torneos`):
 ## Eurocopa y Copa América cada 4 desde 2028; Copa Oro y Copa Africana en los impares; Copa de Asia cada 4 desde 2027; Oceanía cada 4 desde 2028.
 static func toca_continental_selecciones(clave: String, anio: int) -> bool:
+	var nat := Nativo.de("nuc_toca_continental")
+	if nat != null:
+		return nat.nuc_toca_continental(clave, anio)
+	return toca_continental_selecciones_gd(clave, anio)
+
+## Gemela GDScript de `nuc_toca_continental` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func toca_continental_selecciones_gd(clave: String, anio: int) -> bool:
 	match clave:
 		"ucl", "lib", "oce": return (anio - 2028) % 4 == 0
 		"conc", "afr": return anio % 2 != 0
@@ -372,6 +386,13 @@ static func de_la_semana(pais: String, anio: int, semana: int) -> Array:
 	return r
 
 static func icono(tipo: String) -> String:
+	var nat := Nativo.de("nuc_icono_calendario")
+	if nat != null:
+		return nat.nuc_icono_calendario(tipo)
+	return icono_gd(tipo)
+
+## Gemela GDScript de `nuc_icono_calendario` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func icono_gd(tipo: String) -> String:
 	match tipo:
 		"fiesta": return "🎉"
 		"memoria": return "🕯️"

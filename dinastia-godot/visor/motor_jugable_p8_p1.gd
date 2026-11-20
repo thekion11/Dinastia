@@ -1,7 +1,7 @@
 extends "res://visor/motor_jugable_p7.gd"
 ## (Parte 1 de 2 de `motor_jugable_p8.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `motor_jugable_p8.gd`, conserva la clase.)
 
-static var ANTICIPA := OS.get_environment("PMOT_ANT") != "0"   ## encendido el 3-11 (vídeo del dueño: persecución en vez de intercepción); PMOT_ANT=0 = antes
+static var anticipa := OS.get_environment("PMOT_ANT") != "0"   ## encendido el 3-11 (vídeo del dueño: persecución en vez de intercepción); PMOT_ANT=0 = antes
 ## [Capa 8/12 de `motor_jugable.gd`] _forma, _zona_de_llegada, _ia_ataque_sin_balon, _gatillo_presion, _linea_defensiva, _ia_defensa … (+10)
 
 ## La forma del equipo: la posición de la formación, movida con el balón.
@@ -25,11 +25,11 @@ func _forma(p: Dictionary, en_posesion: bool) -> Vector3:
 	return Vector3(clampf(x, -ANCHO + 2.0, ANCHO - 2.0), 0, z)
 
 func _zona_de_llegada(p: Dictionary) -> Vector3:
-	if not LLEGADA or poseedor.is_empty() or poseedor == p or bool(poseedor["es_local"]) != bool(p["es_local"]):
+	if not llegada or poseedor.is_empty() or poseedor == p or bool(poseedor["es_local"]) != bool(p["es_local"]):
 		return Vector3.INF
 	var arco := _arco_rival(p)
 	var pb := pos(poseedor)
-	if pb.distance_to(arco) > MotorApoyo.LLEGADA_R:
+	if pb.distance_to(arco) > MotorApoyo.llegada_r:
 		return Vector3.INF
 	## Los dos apoyos cercanos siguen ofreciéndose al portador.
 	if pos(p).distance_to(pb) < 9.0:
@@ -86,7 +86,7 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 			obj = MotorApoyo.punto(self as Object as MotorJugable, p, poseedor, obj)   ## campo de fuerzas (F3, 03-11)
 		elif d < 14.0:
 			var lado := signf(pos(p).x - pos(poseedor).x)
-			if lado == 0.0:
+			if is_zero_approx(lado):
 				lado = 1.0
 			obj = pos(poseedor) + Vector3(lado * 9.0, 0, dir_ataque(bool(p["es_local"])) * 5.0)
 	## LLEGADA AL ÁREA (20-10-2026, más chispa): con el balón de un compañero
@@ -168,10 +168,10 @@ func _linea_defensiva(local: bool) -> float:
 		z = fondo
 	## Movimiento suave: sube despacio, recula rápido (como una defensa de verdad).
 	if _linea_def_t[eq] >= 0.0 and _linea_def[eq] != INF:
-		var dt_ := clampf(t - float(_linea_def_t[eq]), 0.0, 0.5)
+		var dt := clampf(t - float(_linea_def_t[eq]), 0.0, 0.5)
 		var sube := (z - float(_linea_def[eq])) * d > 0.0
 		var vel := (6.0 if trampa else 4.0) if sube else 7.5
-		z = move_toward(float(_linea_def[eq]), z, vel * dt_)
+		z = move_toward(float(_linea_def[eq]), z, vel * dt)
 	_linea_def[eq] = z
 	_linea_def_t[eq] = t
 	return z
@@ -195,7 +195,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 			return b + (arco - b).normalized() * 5.0
 		p["correr"] = true
 		## (Sondas, PMOT_ANT=1: el que presiona va adonde VA a estar el portador.)
-		if ANTICIPA and not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
+		if anticipa and not poseedor.is_empty() and bool(poseedor["es_local"]) != bool(p["es_local"]):
 			var ba := b + _plano(poseedor["vel"] as Vector3) * clampf(pos(p).distance_to(b) / 8.0, 0.0, 0.5)
 			return ba + (arco - ba).normalized() * 0.8
 		return b + (arco - b).normalized() * 0.8
@@ -219,7 +219,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 	var md := 16.0 if al_hombre else 11.0
 	var r_vista := MotorMente.retardo(self as Object as MotorJugable, p)   ## (13-11, rendimiento) una vez por jugador, no por rival
 	var es_local_p := bool(p["es_local"])
-	if r_vista == 0.0:   ## (15-11, rendimiento) sin retardo `pos_vista_con` devuelve `pos(q)`: se lee directo, sin la llamada estática por rival
+	if is_zero_approx(r_vista):   ## (15-11, rendimiento) sin retardo `pos_vista_con` devuelve `pos(q)`: se lee directo, sin la llamada estática por rival
 		for q: Dictionary in jugadores:
 			if bool(q["es_local"]) != es_local_p and not bool(q["por"]):
 				var d := (q["node"] as Node3D).position.distance_to(obj)
@@ -239,7 +239,7 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 		obj = pv + (arco - pv).normalized() * (1.2 if al_hombre else 2.4)
 	## La defensa no persigue a cada delantero hacia su arco: se queda en la
 	## línea común (M-123) y solo cierra por dentro hacia el que marca.
-	if _rol(p) in ["DFC", "LD", "LI"] and not _SIN_LINEA:
+	if _rol(p) in ["DFC", "LD", "LI"] and not sin_linea:
 		obj.z = _linea_defensiva(bool(p["es_local"]))
 	return MotorAncla.limitar(self as Object as MotorJugable, p, MotorRegiones.libre(self as Object as MotorJugable, p, obj))   ## región propia + ancla (3-11)
 

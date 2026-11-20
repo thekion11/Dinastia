@@ -57,12 +57,12 @@ func _initialize() -> void:
 						cuadro[l] = k
 						alto[l] = p.y
 					prev[l] = p
-			var l_ := 0 if mejor[0] > mejor[1] else 1
-			ficha["pie_que_golpea"] = "I" if l_ == 0 else "D"
-			ficha["cuadro_toque_balon"] = cuadro[l_]
-			ficha["tiempo_toque_s"] = snappedf(float(cuadro[l_]) / FPS, 0.001)
-			ficha["velocidad_pie_ms"] = snappedf(mejor[l_], 0.1)
-			ficha["altura_pie_m"] = snappedf(alto[l_], 0.001)
+			var l_loc := 0 if mejor[0] > mejor[1] else 1
+			ficha["pie_que_golpea"] = "I" if l_loc == 0 else "D"
+			ficha["cuadro_toque_balon"] = cuadro[l_loc]
+			ficha["tiempo_toque_s"] = snappedf(float(cuadro[l_loc]) / FPS, 0.001)
+			ficha["velocidad_pie_ms"] = snappedf(mejor[l_loc], 0.1)
+			ficha["altura_pie_m"] = snappedf(alto[l_loc], 0.001)
 			if true:   # TODOS los golpeos: picos locales de velocidad (> 45 % del máximo); el principal es el más rápido
 				var toques := []
 				for l in 2:

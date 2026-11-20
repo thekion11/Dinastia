@@ -31,7 +31,7 @@ func _ready() -> void:
 	fondo.add_child(caja)
 	var q := Label.new()
 	q.text = Idiomas.t("¿Cuánto te divirtió este partido?")
-	q.add_theme_font_size_override("font_size", 18)
+	q.add_theme_font_size_override("font_size", Tema.letra(18))
 	q.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caja.add_child(q)
 	var fila := HBoxContainer.new()
@@ -42,7 +42,7 @@ func _ready() -> void:
 		var b := Button.new()
 		b.text = str(n)
 		b.custom_minimum_size = Vector2(64, 56)
-		b.add_theme_font_size_override("font_size", 22)
+		b.add_theme_font_size_override("font_size", Tema.letra(22))
 		b.pressed.connect(func() -> void:
 			MotorEleccion.votar(n, _motor, _extra)
 			queue_free())

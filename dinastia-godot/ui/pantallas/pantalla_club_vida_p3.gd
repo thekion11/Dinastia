@@ -68,7 +68,7 @@ func _ent_rotacion() -> void:
 	var b_v := Button.new()
 	b_v.text = Idiomas.t("📽️ Videoanálisis del rival de esta semana") if p.mundo.puede_analizar() \
 		else "📽️ Videoanálisis (hecho hace poco)"
-	b_v.add_theme_font_size_override("font_size", 11)
+	b_v.add_theme_font_size_override("font_size", Tema.letra(11))
 	b_v.disabled = not p.mundo.puede_analizar()
 	b_v.tooltip_text = Idiomas.t("Cuesta dos de físico a todo el plantel y da un empujón para ESTE partido. Contra un rival mejor que tú vale más.")
 	b_v.pressed.connect(func() -> void:
@@ -116,7 +116,7 @@ func _ent_plan(e: Entrenamiento, carga: Dictionary) -> void:
 		dia.custom_minimum_size = Vector2(80, 0)
 		fila.add_child(dia)
 		var b := OptionButton.new()
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		for k in catalogo.size():
 			var f: Array = catalogo[k]
@@ -164,7 +164,7 @@ func _ent_habilidades(e: Entrenamiento) -> void:
 		if motivo == "":
 			var b2 := Button.new()
 			b2.text = Idiomas.t("Aprender")
-			b2.add_theme_font_size_override("font_size", 11)
+			b2.add_theme_font_size_override("font_size", Tema.letra(11))
 			b2.pressed.connect(func() -> void: _aprender(j, clave))
 			fila2.add_child(b2)
 		else:
@@ -347,7 +347,7 @@ func _pintar_gobierno(c: Club) -> void:
 	p._lista_fed.add_child(l)
 	var b := Button.new()
 	b.text = Idiomas.t("🧑‍🏫 ¿Cómo funciona el Estado aquí?")
-	b.add_theme_font_size_override("font_size", 13)
+	b.add_theme_font_size_override("font_size", Tema.letra(13))
 	b.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	b.pressed.connect(func() -> void:
 		MentorVoz.decir(p, p.mundo, "Cómo se gobierna %s" % c.pais, Politica.explicacion(c.pais)))

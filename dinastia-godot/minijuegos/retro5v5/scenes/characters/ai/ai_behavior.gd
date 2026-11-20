@@ -17,7 +17,7 @@ func setup(context_player: Player, context_ball: Ball, context_opponent_detectio
 	ball = context_ball
 	opponent_detection_area = context_opponent_detection_area
 	teammate_detection_area = context_teammate_detection_area
-	
+
 func process_ai() -> void:
 	if Time.get_ticks_msec() - time_since_last_ai_tick > DURATION_AI_TICK_FREQUENCY	:
 		time_since_last_ai_tick = Time.get_ticks_msec()
@@ -33,12 +33,11 @@ func get_bicircular_weight(position: Vector2, center_target: Vector2, inner_circ
 	var distance_to_center := position.distance_to(center_target)
 	if distance_to_center > outer_circle_radius:
 		return outer_circle_weight
-	elif distance_to_center < inner_circle_radius:
+	if distance_to_center < inner_circle_radius:
 		return inner_circle_weight
-	else:
-		var distance_to_inner_radius := distance_to_center - inner_circle_radius
-		var close_range_distance := outer_circle_radius - inner_circle_radius
-		return lerpf(inner_circle_weight, outer_circle_weight, distance_to_inner_radius / close_range_distance)
+	var distance_to_inner_radius := distance_to_center - inner_circle_radius
+	var close_range_distance := outer_circle_radius - inner_circle_radius
+	return lerpf(inner_circle_weight, outer_circle_weight, distance_to_inner_radius / close_range_distance)
 
 func is_ball_possessed_by_opponent() -> bool:
 	return ball.carrier != null and ball.carrier.club != player.club

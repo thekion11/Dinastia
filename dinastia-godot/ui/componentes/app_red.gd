@@ -59,7 +59,7 @@ static func pintar(tel: Telefono) -> void:
 	var atras := Button.new()
 	atras.flat = true
 	atras.text = "‹"
-	atras.add_theme_font_size_override("font_size", 22)
+	atras.add_theme_font_size_override("font_size", Tema.letra(22))
 	atras.pressed.connect(func() -> void: tel.abrir_app("inicio"))
 	fila.add_child(atras)
 	var marca := PanelContainer.new()
@@ -134,7 +134,7 @@ static func _buscador(tel: Telefono, cuerpo: VBoxContainer) -> void:
 		fila.add_child(cerca)
 	cuerpo.add_child(fila)
 
-static func _tarjeta_paradero(tel: Telefono, cuerpo: VBoxContainer, cod: String, distancia: float) -> void:
+static func _tarjeta_paradero(_tel: Telefono, cuerpo: VBoxContainer, cod: String, distancia: float) -> void:
 	var caja := PanelContainer.new()
 	caja.add_theme_stylebox_override("panel", Tema.caja(Telefono.TARJETA, 12, Color(ROJO, 0.6)))
 	var v := VBoxContainer.new()

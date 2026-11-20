@@ -54,32 +54,32 @@ static func scripts(carpeta: String, prefijos: PackedStringArray) -> PackedStrin
 
 ## Los recursos llevan delante el principio de su huella: al guardar uno nuevo se borran los de
 ## otras huellas (código o motor viejos, ~11 MB cada biblioteca), así la carpeta no crece sin fin.
-static func _ruta(clave: String, huella_: String) -> String:
-	return CARPETA + huella_.left(8) + "_" + clave.md5_text() + ".res"
+static func _ruta(clave: String, huella_arg: String) -> String:
+	return CARPETA + huella_arg.left(8) + "_" + clave.md5_text() + ".res"
 
 ## El recurso guardado con esa clave, o null si no hay (o no es del tipo esperado).
-static func cargar(clave: String, huella_: String, tipo: String) -> Resource:
+static func cargar(clave: String, huella_arg: String, tipo: String) -> Resource:
 	if not activa():
 		return null
-	var ruta := _ruta(clave, huella_)
+	var ruta := _ruta(clave, huella_arg)
 	if not FileAccess.file_exists(ruta):
 		return null
 	var r := ResourceLoader.load(ruta, tipo, ResourceLoader.CACHE_MODE_IGNORE)
 	return r if r != null and r.is_class(tipo) else null
 
 ## Guarda el recurso (a un temporal y luego renombra: un cierre a medias no deja un archivo roto).
-static func guardar(clave: String, huella_: String, r: Resource) -> void:
+static func guardar(clave: String, huella_arg: String, r: Resource) -> void:
 	if not activa() or r == null:
 		return
 	DirAccess.make_dir_recursive_absolute(CARPETA)
-	var ruta := _ruta(clave, huella_)
+	var ruta := _ruta(clave, huella_arg)
 	var tmp := ruta.get_basename() + ".tmp.res"
 	if ResourceSaver.save(r, tmp, ResourceSaver.FLAG_COMPRESS) == OK:
 		DirAccess.rename_absolute(tmp, ruta)
 	else:
 		DirAccess.remove_absolute(tmp)
 	for f in DirAccess.get_files_at(CARPETA):
-		if f.ends_with(".res") and not f.begins_with(huella_.left(8) + "_"):
+		if f.ends_with(".res") and not f.begins_with(huella_arg.left(8) + "_"):
 			DirAccess.remove_absolute(CARPETA + f)
 
 ## LA CACHÉ HORNEADA DEL BUILD (30-10-2026): la que mete en el paquete `addons/cache_horneada` al

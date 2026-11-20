@@ -172,9 +172,9 @@ func resumen(p: Partido, motor: MotorJugable) -> Array:
 		xv = p.xg_visita
 	filas.append(["Goles esperados (xG)", "%.2f" % xl, "%.2f" % xv, xl, xv])
 	if not tiros.is_empty():
-		var al_ := xa(true)
-		var av_ := xa(false)
-		filas.append(["Asistencias esperadas (xA)", "%.2f" % al_, "%.2f" % av_, al_, av_])
+		var al_loc := xa(true)
+		var av_loc := xa(false)
+		filas.append(["Asistencias esperadas (xA)", "%.2f" % al_loc, "%.2f" % av_loc, al_loc, av_loc])
 	if motor != null:
 		var pl := int(motor.pases[0])
 		var pv := int(motor.pases[1])

@@ -34,10 +34,13 @@ static func casa(m: MotorJugable, p: Dictionary) -> int:
 	var b: Vector3 = MotorRoles.base(m, p)
 	return numero(m, b.x, b.z)
 
+const _CLAVE_LOCAL := "_regiones_l"
+const _CLAVE_VISITA := "_regiones_v"
 static func _ocup(m: MotorJugable, local: bool) -> Dictionary:
-	var k := "_regiones_%s" % ("l" if local else "v")
-	var e: Dictionary = m.get_meta(k, {"t": -99.0, "mapa": {}})
-	if e["t"] != m.t:
+	## (19-11, rendimiento) la clave es constante y no se crea un diccionario por defecto en cada llamada (antes: un `%` y un `{}` por jugador y paso). Mismo resultado.
+	var k := _CLAVE_LOCAL if local else _CLAVE_VISITA
+	var e: Variant = m.get_meta(k) if m.has_meta(k) else null
+	if e == null or e["t"] != m.t:
 		e = {"t": m.t, "mapa": {}}
 		m.set_meta(k, e)
 	return e["mapa"]

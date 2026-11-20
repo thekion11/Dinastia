@@ -25,7 +25,7 @@ func _init() -> void:
 			squads.get(club_name).append(player_resource)
 		assert(players.size() == 6)
 	json_file.close()
-	
+
 func get_squad(club: String) -> Array:
 	if squads.has(club):
 		return squads[club]

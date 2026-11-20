@@ -132,7 +132,7 @@ func _fin_taquilla(c: Club, taq: Dictionary) -> void:
 		fila_t.add_child(nt)
 		var bt := Button.new()
 		bt.text = Idiomas.t("Retirar") if activa else Idiomas.t("Lanzar  %s") % p._dinero(Eco.escalar(int(linea["montaje"]), c.rep))
-		bt.add_theme_font_size_override("font_size", 11)
+		bt.add_theme_font_size_override("font_size", Tema.letra(11))
 		bt.pressed.connect(func() -> void:
 			var err := p.mundo.alternar_tienda(clave, c)
 			if err != "":

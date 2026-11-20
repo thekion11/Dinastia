@@ -350,7 +350,7 @@ func _eventos_posibles(m: Mundo, j: Jugador) -> Array:
 	p.append_array(CarreraEventosRuta.eventos(self, m))
 	return p
 
-func _evento_bienvenida(m: Mundo) -> void:
+func _evento_bienvenida(_m: Mundo) -> void:
 	eventos.append(_ev("debut_firma", "Tu primer contrato profesional",
 		"Tienes 17 años y acabas de firmar tu primer contrato. El utilero te da la camiseta con tu dorsal.",
 		[_op("Te sacas una foto con ella para tu familia.", {"moral": 5, "seguidores": 50}),

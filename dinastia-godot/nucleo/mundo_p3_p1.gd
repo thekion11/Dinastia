@@ -227,6 +227,7 @@ func _crear_liga_completa(f: Dictionary) -> Liga:
 	return liga
 
 func _generar_inicio(semilla_partida: int) -> void:
+	Jugador.semana_global = 0   ## un mundo nuevo empieza en la semana 0: sin esto la sanción de un jugador (`susp_semana`) heredaba la semana del mundo anterior y dos mundos de la misma semilla no salían iguales
 	Partido.ex_de_mi_club.clear()   ## 28-10: un mundo nuevo no hereda los rencores del anterior (los ids j%d se repiten)
 	semilla = Azar.sembrar(semilla_partida)
 	mercado = Mercado.new(self)

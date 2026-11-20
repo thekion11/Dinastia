@@ -402,8 +402,8 @@ func _probar_cabeza_c4() -> void:
 	var arco := motor._arco_rival(yo)
 	(gk["node"] as Node3D).position = Vector3(2.0, 0, arco.z)
 	var d := Vector3(2.5, 1.8, arco.z)
-	var antes := [MejorasC4Cabeza.ACTIVO, MejorasC4Cabeza.solo_c4]
-	MejorasC4Cabeza.ACTIVO = true
+	var antes := [MejorasC4Cabeza.activo, MejorasC4Cabeza.solo_c4]
+	MejorasC4Cabeza.activo = true
 	_comprobar(MejorasC4Cabeza.destino(motor, yo, d) == d and is_equal_approx(MejorasC4Cabeza.velocidad(motor, 15.0), 15.0), "fuera de C4 no cambia nada")
 	MejorasC4Cabeza.solo_c4 = false
 	var otro := 0
@@ -417,7 +417,7 @@ func _probar_cabeza_c4() -> void:
 	var fuera := Vector3(5.0, 1.0, arco.z)
 	_comprobar(MejorasC4Cabeza.destino(motor, yo, fuera) == fuera, "el cabezazo que ya va fuera no se toca")
 	_comprobar(MejorasC4Cabeza.velocidad(motor, 15.0) > 15.0, "sale más fuerte")
-	MejorasC4Cabeza.ACTIVO = antes[0]; MejorasC4Cabeza.solo_c4 = antes[1]
+	MejorasC4Cabeza.activo = antes[0]; MejorasC4Cabeza.solo_c4 = antes[1]
 	(r[1] as Node3D).queue_free()
 
 ## (12-11, sesión 15) MÁS PASES AL HUECO EN C4 (`MejorasC4Hueco`): el lateral que se incorpora también recibe al espacio; con la línea tapada, no.
@@ -438,13 +438,13 @@ func _probar_hueco_c4() -> void:
 	var linea := motor._ultima_linea(false)
 	(yo["node"] as Node3D).position = Vector3(0, 0, linea - d * 15.0)
 	(lat["node"] as Node3D).position = Vector3(8.0, 0, linea - d * 1.0)
-	var antes := MejorasC4Hueco.ACTIVO
-	MejorasC4Hueco.ACTIVO = false
+	var antes := MejorasC4Hueco.activo
+	MejorasC4Hueco.activo = false
 	_comprobar(MejorasC4Hueco.buscar(motor, yo).is_empty(), "con la bandera apagada no busca")
-	MejorasC4Hueco.ACTIVO = true
+	MejorasC4Hueco.activo = true
 	_comprobar(MejorasC4Hueco.buscar(motor, yo) == lat, "el lateral que se incorpora recibe al hueco")
 	var rival: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))[0]
 	(rival["node"] as Node3D).position = ((yo["node"] as Node3D).position + (lat["node"] as Node3D).position + Vector3(0, 0, d * 7.0)) * 0.5
 	_comprobar(MejorasC4Hueco.buscar(motor, yo).is_empty(), "con un rival en la línea de pase, no")
-	MejorasC4Hueco.ACTIVO = antes
+	MejorasC4Hueco.activo = antes
 	(r[1] as Node3D).queue_free()

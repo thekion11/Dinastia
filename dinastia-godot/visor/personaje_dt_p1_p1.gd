@@ -190,7 +190,7 @@ static func aspecto(guardado: Dictionary) -> Dictionary:
 
 ## La escala que cada hueso debería tener EN EL MUNDO (ejes del modelo: x de
 ## lado, y arriba, z hacia delante). Lo que no aparece, 1.
-static func _objetivos(a: Dictionary, cuerpo: String = "male") -> Dictionary:
+static func _objetivos(a: Dictionary, _cuerpo: String = "male") -> Dictionary:
 	var c: float = a["complexion"]
 	var h: float = a["hombros"]
 	var b: float = a["barriga"]
@@ -415,8 +415,8 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 	## El abrigo: faldón hasta la rodilla.
 	if ropa == "abrigo":
 		var cadera := _pegar(esq, "pelvis")
-		var paño := _mat(r1, 0.85)
-		AbrigoDT.faldon(cadera, paño)   ## (20-11) tronco de cono oval acampanado (antes dos cajas rectas)
+		var pano := _mat(r1, 0.85)
+		AbrigoDT.faldon(cadera, pano)   ## (20-11) tronco de cono oval acampanado (antes dos cajas rectas)
 
 ## Una cara de la biblioteca modular (mezcla de varias, nunca la de un jugador)
 ## y, si se eligió, un corte medido. Con gorra no va el corte medido.

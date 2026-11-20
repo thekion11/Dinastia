@@ -1,5 +1,8 @@
 class_name FichaJugadorInfo
 extends RefCounted
+
+const _RUTA_ANIM_EXTRA := "res://visor/anim_extra.gd"
+
 ## Los bloques DE SOLO LECTURA de la ficha de un jugador: informe ciego,
 ## estadísticas de la temporada, cabeza/vestuario, promesa y satisfacción,
 ## habilidades, historial médico, vida personal y crecimiento por temporada.
@@ -59,7 +62,7 @@ static func pintar_ciega(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta:
 	_dato(lista, "Partidos esta temporada", Idiomas.t("%d · %d goles · %d asistencias") % [j.partidos, j.goles, j.asistencias], paleta["texto"], paleta)
 	_dato(lista, "Nota media", ("%.1f" % j.media_notas()) if j.notas.size() >= 3 else Idiomas.t("sin datos"), paleta["texto"], paleta)
 	_dato(lista, "Carácter", Idiomas.t(Nombres.limpiar(String((Datos.tabla("RASGOS") as Dictionary).get(j.rasgo, [Idiomas.t("sin rasgos marcados")])[0]))) if j.rasgo != "" else Idiomas.t("sin rasgos marcados"), paleta["texto"], paleta)
-	_dato(lista, "Celebración", Idiomas.t(String(load("res://visor/anim_extra.gd").NOMBRE_CELEBRACION.get(load("res://visor/anim_extra.gd").celebracion_firma(j.rasgo, j.id), "Salto y abrazo"))), paleta["texto"], paleta)
+	_dato(lista, "Celebración", Idiomas.t(String(load(_RUTA_ANIM_EXTRA).NOMBRE_CELEBRACION.get(load(_RUTA_ANIM_EXTRA).celebracion_firma(j.rasgo, j.id), "Salto y abrazo"))), paleta["texto"], paleta)
 	_dato(lista, "Fiabilidad del informe", Idiomas.t(oj.fiabilidad_de(j)), paleta["suave"], paleta)
 
 ## Lo que ha hecho esta temporada.

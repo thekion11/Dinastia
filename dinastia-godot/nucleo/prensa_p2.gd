@@ -120,7 +120,7 @@ func _rival_de_la_semana(m: Mundo, mio: Club) -> Club:
 ## contra el código antes de escribirlos: ninguno existía. Todos tienen dos
 ## salidas que mueven algo, y varios dejan un efecto que dura semanas
 ## (`efectos`, se descuenta en `semana()`).
-func _eventos_nuevos(pool: Array[Dictionary], m: Mundo, mio: Club, fig: Jugador, rival: Club, rep: float) -> void:
+func _eventos_nuevos(pool: Array[Dictionary], m: Mundo, mio: Club, _fig: Jugador, rival: Club, rep: float) -> void:
 	## Juegos mentales en el túnel: solo si hay partido esta semana.
 	if rival != null:
 		pool.append({"id": "tunel", "pid": "",
