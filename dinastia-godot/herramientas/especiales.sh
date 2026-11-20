@@ -101,6 +101,7 @@ pasa "La Ruta: la entrega en 3D de cada premio 3/6 (con pantalla)" "PARTE=3/6 xv
 pasa "La Ruta: la entrega en 3D de cada premio 4/6 (con pantalla)" "PARTE=4/6 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_gala_premio.tscn" "FIN. 0 fallos"
 pasa "La Ruta: la entrega en 3D de cada premio 5/6 (con pantalla)" "PARTE=5/6 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_gala_premio.tscn" "FIN. 0 fallos"
 pasa "La Ruta: la entrega en 3D de cada premio 6/6 (con pantalla)" "PARTE=6/6 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_gala_premio.tscn" "FIN. 0 fallos"
+pasa "El PC de la oficina y los planos del prólogo (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_pc_animacion.tscn" "FIN. 0 fallos"
 pasa "La Ruta: todas las pantallas en los 8 idiomas (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/prueba_ruta_idiomas.tscn" "FIN. 0 fallos"
 pasa "partido de despedida (UI, con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_despedida_ui.tscn" "0 fallos"
 pasa "rueda de prensa en cruz y eventos con diálogo (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_rueda_eventos.tscn" "FIN. 0 fallos"
