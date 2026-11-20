@@ -108,6 +108,13 @@ static func club_de(m: Mundo, nombre: String, fuerza: int, anio: int, elegidos: 
 	return sel
 
 static func _total(por_grupo: Dictionary) -> int:
+	var nat := Nativo.de("nuc_total_grupos")
+	if nat != null:
+		return nat.nuc_total_grupos(por_grupo)
+	return _total_gd(por_grupo)
+
+## Gemela GDScript de `nuc_total_grupos` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _total_gd(por_grupo: Dictionary) -> int:
 	var n := 0
 	for g: String in por_grupo:
 		n += (por_grupo[g] as Array).size()
