@@ -113,8 +113,9 @@ func pulsar(un_dia := false) -> void:
 	if partido_hoy():
 		actualizar_botones()
 		return
-	if _con_pantalla() and await _hito_pendiente() and not await _confirmar_hito():
-		return
+	if _con_pantalla() and await _hito_pendiente():
+		if not await _confirmar_hito():
+			return
 	en_curso = true
 	AvanceSemana.dias_en_curso = true
 	var est := _estado()
