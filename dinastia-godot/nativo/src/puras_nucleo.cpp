@@ -27,6 +27,7 @@ inline int64_t posmod_(int64_t a, int64_t b) {
 } // namespace
 
 void DinastiaNativo::_bind_puras() {
+	_bind_puras2();
 	ClassDB::bind_method(D_METHOD("nuc_cuota_francesa", "deuda", "tasa", "cuotas"), &DinastiaNativo::nuc_cuota_francesa);
 	ClassDB::bind_method(D_METHOD("nuc_pascua", "anio"), &DinastiaNativo::nuc_pascua);
 	ClassDB::bind_method(D_METHOD("nuc_es_avenida_columna", "i"), &DinastiaNativo::nuc_es_avenida_columna);

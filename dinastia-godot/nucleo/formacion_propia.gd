@@ -49,6 +49,13 @@ static func puesto_de_gd(x: float, y: float) -> String:
 	return "DC"
 
 static func linea_de(puesto: String) -> String:
+	var nat := Nativo.de("nuc_linea_de")
+	if nat != null:
+		return nat.nuc_linea_de(puesto)
+	return linea_de_gd(puesto)
+
+## Gemela GDScript de `nuc_linea_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func linea_de_gd(puesto: String) -> String:
 	match puesto:
 		"POR": return "POR"
 		"LD", "LI", "DFC", "CAD", "CAI": return "DEF"

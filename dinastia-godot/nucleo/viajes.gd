@@ -81,12 +81,26 @@ const RADIO_TIERRA_KM := 6371.0
 
 ## Cómo se viaja: «bus», «avion» o «charter».
 static func medio(km: float) -> String:
+	var nat := Nativo.de("nuc_medio_viaje")
+	if nat != null:
+		return nat.nuc_medio_viaje(km, KM_BUS_MAX, KM_AVION_MAX)
+	return medio_gd(km)
+
+## Gemela GDScript de `nuc_medio_viaje` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func medio_gd(km: float) -> String:
 	if km <= KM_BUS_MAX:
 		return "bus"
 	return "avion" if km <= KM_AVION_MAX else "charter"
 
 ## Noches de hotel de la delegación: ninguna si se vuelve en el día.
 static func noches(km: float) -> int:
+	var nat := Nativo.de("nuc_noches_viaje")
+	if nat != null:
+		return nat.nuc_noches_viaje(km, KM_BUS_NOCHE)
+	return noches_gd(km)
+
+## Gemela GDScript de `nuc_noches_viaje` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func noches_gd(km: float) -> int:
 	if km <= KM_BUS_NOCHE:
 		return 0
 	if km <= 2500.0:

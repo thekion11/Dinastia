@@ -26,4 +26,23 @@
 	int64_t nuc_delegacion(int64_t rep) const;
 	double nuc_dir_equipo(int64_t eq) const;
 	bool nuc_toca_olimpicos(int64_t anio) const;
+	// 2.ª tanda (puras_nucleo2.cpp; las constantes de la clase GDScript llegan como argumentos)
+	static void _bind_puras2();
+	String nuc_icono_calendario(const String &tipo) const;
+	String nuc_concepto_crisis(const String &tipo) const;
+	String nuc_grupo_dialogo(const String &animo) const;
+	String nuc_linea_de(const String &puesto) const;
+	String nuc_aviso_incidente(const String &tipo) const;
+	String nuc_resuelto_incidente(const String &tipo) const;
+	String nuc_situacion_libre(const String &situacion) const;
+	String nuc_nombre_escena(const String &e) const;
+	int64_t nuc_nivel_ocasion(int64_t minuto, int64_t minuto_fin, int64_t hechas, int64_t cupo_arg, int64_t cupo_min) const;
+	String nuc_medio_viaje(double km, double km_bus_max, double km_avion_max) const;
+	int64_t nuc_noches_viaje(double km, double km_bus_noche) const;
+	bool nuc_toca_continental(const String &clave, int64_t anio) const;
+	bool nuc_cumple_reto(const String &id, int64_t gf, int64_t gc) const;
+	int64_t nuc_seq_de(const String &id, const String &prefijo, int64_t defecto) const;
+	int64_t nuc_hash_txt(const String &s) const;
+	bool nuc_es_letra_nombre(const String &c) const;
+	int64_t nuc_prefijo_comun(const String &a, const String &b) const;
 	// --- fin funciones puras ---

@@ -79,6 +79,13 @@ static func hueco_gd(minuto: int, minuto_fin: int, restantes: int) -> int:
 ## Cuánto se rebaja el listón: 0 normal, 1 si quedan pocos minutos para las que
 ## faltan, 2 si peligra el mínimo de tres.
 static func nivel(minuto: int, minuto_fin: int, hechas: int, cupo_arg: int) -> int:
+	var nat := Nativo.de("nuc_nivel_ocasion")
+	if nat != null:
+		return nat.nuc_nivel_ocasion(minuto, minuto_fin, hechas, cupo_arg, CUPO_MIN)
+	return nivel_gd(minuto, minuto_fin, hechas, cupo_arg)
+
+## Gemela GDScript de `nuc_nivel_ocasion` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nivel_gd(minuto: int, minuto_fin: int, hechas: int, cupo_arg: int) -> int:
 	var quedan := float(minuto_fin - minuto)
 	if hechas < mini(CUPO_MIN, cupo_arg) and quedan < float(mini(CUPO_MIN, cupo_arg) - hechas) * 6.0:
 		return 2

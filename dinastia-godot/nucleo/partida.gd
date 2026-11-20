@@ -1,5 +1,5 @@
 class_name Partida
-extends "res://nucleo/partida_p1.gd"
+extends "res://nucleo/partida_p2.gd"
 ## [Capa 2/2 de `partida.gd`] _dic_a_club, _dic_a_liga, _dic_a_copa, _restaurar_lo_tuyo, desde_instantanea, cargar … (+2)
 
 static func _dic_a_club(d: Dictionary) -> Club:
@@ -422,11 +422,6 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	LeyesPais.clubes_mundo = m.clubes
 	LeyesPais.anio_actual = m.anio
 	return m
-
-## El número de un id «j123» / «c45»; `defecto` si no tiene esa forma.
-static func _seq_de(id: String, prefijo: String, defecto: int) -> int:
-	var n := id.trim_prefix(prefijo)
-	return int(n) if id.begins_with(prefijo) and n.is_valid_int() else defecto
 
 ## `soltar_antes`: lo que quien llama quiere soltar del mundo de ANTES (p. ej. `func(): p.mundo = null`). Se llama cuando el guardado ya se leyó y se sabe bueno (huella, versión y claves) y ANTES de construir el
 ## mundo nuevo (10-11, pico de RAM: con el mundo entero conviven el mundo viejo, el diccionario del JSON (~230 MB) y el mundo nuevo; así nunca coinciden los tres). Si el guardado no sirve, no se llama y el

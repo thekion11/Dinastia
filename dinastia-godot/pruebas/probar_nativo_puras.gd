@@ -37,14 +37,42 @@ const CASOS: Array = [
 	["res://nucleo/viajes.gd", "delegacion", "nuc_delegacion", [["i", -20, 130]]],
 	["res://nucleo/motor_libre_p1.gd", "_dir", "nuc_dir_equipo", [["i", -2, 3]]],
 	["res://nucleo/olimpicos.gd", "toca", "nuc_toca_olimpicos", [["i", 1900, 2100]]],
+	## 2.ª tanda (las constantes de la clase se resuelven en el script: «const:NOMBRE» = su valor, para probar justo los umbrales)
+	["res://nucleo/calendario_p1.gd", "icono", "nuc_icono_calendario", [["s", ["fiesta", "memoria", "trabajo", "festividad", "otro", ""]]]],
+	["res://nucleo/crisis_caja.gd", "concepto", "nuc_concepto_crisis", [["s", ["multa", "patrocinio", "obra", "x", ""]]]],
+	["res://nucleo/dialogos_ciudad.gd", "grupo", "nuc_grupo_dialogo", [["s", ["euforia", "bien", "mal", "crisis", "normal", "x", ""]]]],
+	["res://nucleo/formacion_propia.gd", "linea_de", "nuc_linea_de", [["s", ["POR", "LD", "LI", "DFC", "CAD", "CAI", "DC", "ED", "EI", "SD", "MC", "MCD", "MCO", "MD", "MI", "x", ""]]]],
+	["res://nucleo/incidentes_ciudad.gd", "aviso", "nuc_aviso_incidente", [["s", ["incendio", "accidente", "robo", "x", ""]]]],
+	["res://nucleo/incidentes_ciudad.gd", "resuelto", "nuc_resuelto_incidente", [["s", ["incendio", "accidente", "robo", "x", ""]]]],
+	["res://nucleo/musica_libre.gd", "situacion_libre", "nuc_situacion_libre", [["s", ["partido", "final", "celebracion", "grada", "parón", "paron", "oficina", "x", ""]]]],
+	["res://nucleo/tipo_titulo.gd", "nombre_escena", "nuc_nombre_escena", [["s", ["escenario", "palco", "fuegos", "sobrio", "foto", "manteo", "champan", "desfile", "pasillo", "otra", ""]]]],
+	["res://nucleo/ocasiones_dt.gd", "nivel", "nuc_nivel_ocasion", [["i", 0, 95], ["i", 0, 130], ["i", 0, 12], ["i", -2, 12]]],
+	["res://nucleo/viajes.gd", "medio", "nuc_medio_viaje", [["f", 0.0, 12000.0, ["const:KM_BUS_MAX", "const:KM_AVION_MAX", 0.0]]]],
+	["res://nucleo/viajes.gd", "noches", "nuc_noches_viaje", [["f", 0.0, 12000.0, ["const:KM_BUS_NOCHE", 2500.0, 9000.0, 0.0]]]],
+	["res://nucleo/calendario_p1.gd", "toca_continental_selecciones", "nuc_toca_continental", [["s", ["ucl", "lib", "oce", "conc", "afr", "asia", "x", ""]], ["i", 1990, 2100]]],
+	["res://nucleo/retos_semana.gd", "cumple", "nuc_cumple_reto", [["s", ["ganar", "ganar_2", "cero", "no_perder", "marcar_2", "marcar_3", "encajar_1", "x", ""]], ["i", 0, 8], ["i", 0, 8]]],
+	["res://nucleo/partida.gd", "_seq_de", "nuc_seq_de", [["s", ["c1", "c12", "j7", "cx", "", "c", "j-3", "c+4", "c 5", "x9", "j007"]], ["s", ["c", "j", ""]], ["i", -3, 5]]],
+	["res://nucleo/selecciones_p1.gd", "_hash_txt", "nuc_hash_txt", [["r", 12]]],
+	["res://nucleo/nombres.gd", "_es_letra", "nuc_es_letra_nombre", [["s", ["a", "Z", "ñ", "Ā", "ſ", "À", "é", "1", " ", "", "🎉", "İ", "ab"]], ]],
+	["res://nucleo/idiomas_inverso.gd", "_prefijo", "nuc_prefijo_comun", [["r", 8], ["r", 8]]],
 ]
 
 ## Los valores de un argumento: bordes y puntos de cambio primero, el resto al azar.
-static func _valores(espec: Array, rng: RandomNumberGenerator) -> Array:
+static func _valores(espec: Array, rng: RandomNumberGenerator, scr: Script) -> Array:
 	var v: Array = []
 	match String(espec[0]):
 		"b":
 			return [false, true]
+		"s":
+			return (espec[1] as Array).duplicate()
+		"r":
+			var alfabeto := "abcXYZ áéíóúñÑüÜ0123_-🎉ßİıÀ"
+			v.append("")
+			for _k in AZAR:
+				var t := ""
+				for _c in rng.randi_range(0, int(espec[1])):
+					t += alfabeto[rng.randi() % alfabeto.length()]
+				v.append(t)
 		"i":
 			var lo := int(espec[1])
 			var hi := int(espec[2])
@@ -55,7 +83,8 @@ static func _valores(espec: Array, rng: RandomNumberGenerator) -> Array:
 			var lo := float(espec[1])
 			var hi := float(espec[2])
 			v.append_array([lo, hi, (lo + hi) * 0.5])
-			v.append_array(espec[3])
+			for extra: Variant in espec[3]:
+				v.append(float(scr.get_script_constant_map()[String(extra).substr(6)]) if extra is String else float(extra))
 			for _k in AZAR:
 				v.append(rng.randf_range(lo, hi))
 				v.append(float(rng.randi_range(int(lo), int(hi))))   ## valores enteros: donde suelen estar los umbrales
@@ -85,7 +114,7 @@ static func probar(nat: Object) -> Dictionary:
 			continue
 		var conjuntos: Array = []
 		for espec: Array in caso[3]:
-			conjuntos.append(_valores(espec, rng))
+			conjuntos.append(_valores(espec, rng, scr))
 		## Cada argumento con su propia lista; se combinan por posición (las listas de borde primero) y con barajado del resto.
 		var n := 0
 		for conj: Array in conjuntos:

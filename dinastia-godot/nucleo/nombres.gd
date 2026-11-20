@@ -45,6 +45,13 @@ static func _limpiar(nombre: String) -> String:
 	return salida
 
 static func _es_letra(c: String) -> bool:
+	var nat := Nativo.de("nuc_es_letra_nombre")
+	if nat != null:
+		return nat.nuc_es_letra_nombre(c)
+	return _es_letra_gd(c)
+
+## Gemela GDScript de `nuc_es_letra_nombre` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _es_letra_gd(c: String) -> bool:
 	if c.is_empty():
 		return false
 	var u := c.unicode_at(0)

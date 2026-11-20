@@ -10,6 +10,13 @@ static func mejor(actual: String, nueva: String, traduccion: String) -> String:
 	return nueva if _prefijo(nueva, traduccion) >= _prefijo(actual, traduccion) else actual
 
 static func _prefijo(a: String, b: String) -> int:
+	var nat := Nativo.de("nuc_prefijo_comun")
+	if nat != null:
+		return nat.nuc_prefijo_comun(a, b)
+	return _prefijo_gd(a, b)
+
+## Gemela GDScript de `nuc_prefijo_comun` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _prefijo_gd(a: String, b: String) -> int:
 	var x := a.to_lower()
 	var y := b.to_lower()
 	var n := 0
