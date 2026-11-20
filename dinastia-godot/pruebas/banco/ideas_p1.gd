@@ -281,9 +281,9 @@ func _probar_ideas_personas_y_negocios() -> void:
 	for k: String in ["video", "rehab", "cocina", "med", "park"]:
 		var t := Trabajadores.de(c, k)
 		_comprobar(not t.is_empty() and String(t["nombre"]) != "" and String(t["puesto"]) != "", "la instalación «%s» tiene encargado con nombre y puesto (%s)" % [k, String(t.get("puesto", ""))])
-	var _r1a = Trabajadores.de(c, "video")
-	var _r1b = Trabajadores.de(c, "video")
-	_comprobar(_r1a == _r1b, "y es siempre la misma persona (determinista)")
+	var rep1_a = Trabajadores.de(c, "video")
+	var rep1_b = Trabajadores.de(c, "video")
+	_comprobar(rep1_a == rep1_b, "y es siempre la misma persona (determinista)")
 	## Negociación (81, 82, 83, 65): oferta con cuotas, bonos, cláusula; el jugador responde.
 	var objetivo: Jugador = null
 	for cl: Club in m.ligas[0].clubes:

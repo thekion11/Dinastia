@@ -271,9 +271,9 @@ func _probar_extras() -> void:
 	for i in 30:
 		var ci := Club.new("club_%d" % i, "C")
 		animales[EstadioExtras.animal_de(ci)] = true
-	var _r1a = EstadioExtras.animal_de(c)
-	var _r1b = EstadioExtras.animal_de(c)
-	_comprobar(_r1a == _r1b and MascotaQ.ANIMALES.has(EstadioExtras.animal_de(c)) and animales.size() >= 6,
+	var rep1_a = EstadioExtras.animal_de(c)
+	var rep1_b = EstadioExtras.animal_de(c)
+	_comprobar(rep1_a == rep1_b and MascotaQ.ANIMALES.has(EstadioExtras.animal_de(c)) and animales.size() >= 6,
 		"la mascota sale del club: siempre la misma, y variada entre clubes (%d animales)" % animales.size())
 	raiz.free()
 	raiz2.free()

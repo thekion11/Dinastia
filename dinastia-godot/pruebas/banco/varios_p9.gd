@@ -93,9 +93,9 @@ func _probar_historia_c4() -> void:
 	var grande: Club = clubes[0]
 	var chico: Club = clubes[clubes.size() - 1]
 	_comprobar(int(HistoriaClub.de(grande, clubes)["titulos"]) > int(HistoriaClub.de(chico, clubes)["titulos"]), "el grande tiene más títulos que el chico")
-	var _r1a = HistoriaClub.de(grande, clubes)
-	var _r1b = HistoriaClub.de(grande, clubes)
-	_comprobar(_r1a == _r1b, "el mismo club tiene siempre la misma historia")
+	var rep1_a = HistoriaClub.de(grande, clubes)
+	var rep1_b = HistoriaClub.de(grande, clubes)
+	_comprobar(rep1_a == rep1_b, "el mismo club tiene siempre la misma historia")
 	## (12-11) Coherencia con el año de fundación en TODOS los clubes: ni más títulos que años de vida dan, ni época dorada anterior al club.
 	var raros: Array = []
 	for c9: Club in m2.clubes.values():

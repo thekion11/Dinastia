@@ -68,9 +68,9 @@ func _rutinas() -> void:
 			m8_otro += 1
 		if RutinaPeatones.lleva_maletin(3.0, 0.8, i):
 			m3 += 1
-		var _r1a = RutinaPeatones.lleva_maletin(8.0, 0.8, i)
-		var _r1b = RutinaPeatones.lleva_maletin(8.0, 0.8, i)
-		if _r1a != _r1b:
+		var rep1_a = RutinaPeatones.lleva_maletin(8.0, 0.8, i)
+		var rep1_b = RutinaPeatones.lleva_maletin(8.0, 0.8, i)
+		if rep1_a != rep1_b:
 			estable = false
 	_comprobar(m8 >= 75 and m8 <= 125, "maletín: a las 8 hacia el trabajo, uno de cada tres (%d de 300)" % m8)
 	_comprobar(m3 == 0 and m8_otro == 0, "maletín: nadie de madrugada ni a contramano (%d / %d)" % [m3, m8_otro])
