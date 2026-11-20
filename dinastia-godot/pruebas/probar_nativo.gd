@@ -413,65 +413,11 @@ func _probar() -> void:
 	_comprobar((es["fallos"] as Array).is_empty(), "estado por paso de League: C++ = GDScript (pasada de estado, historial y filtro de interferir)")
 	for t: String in es["textos"]:
 		print(t)
-	var ca := ProbarNativoCarrera.probar(nat)   ## (19-11) progreso de jugadores, precios de La Ruta y jugador del mes
-	for f: String in ca["fallos"]:
-		_comprobar(false, "carrera en C++: " + f)
-	_comprobar((ca["fallos"] as Array).is_empty(), "progreso, precios de La Ruta y jugador del mes: C++ = GDScript (byte a byte)")
-	for t: String in ca["textos"]:
-		print(t)
-	var ro := ProbarNativoRopa.probar(nat)   ## (19-11) la ropa aparte de los futbolistas
-	for f: String in ro["fallos"]:
-		_comprobar(false, "ropa aparte en C++: " + f)
-	_comprobar((ro["fallos"] as Array).is_empty(), "ropa aparte: C++ = GDScript (índices, orden, posiciones y normales de cada prenda)")
-	for t: String in ro["textos"]:
-		print(t)
-	var cr := ProbarNativoCara.probar(nat)   ## (19-11) el borde de la cara pegado al cráneo
-	for f: String in cr["fallos"]:
-		_comprobar(false, "cara en C++: " + f)
-	_comprobar((cr["fallos"] as Array).is_empty(), "borde de la cara: C++ = GDScript (rejilla, posiciones y distancias, byte a byte)")
-	for t: String in cr["textos"]:
-		print(t)
-	var pe := ProbarNativoPelo.probar(nat)   ## (19-11) las cuentas del pelo por capas
-	for f: String in pe["fallos"]:
-		_comprobar(false, "pelo en C++: " + f)
-	_comprobar((pe["fallos"] as Array).is_empty(), "pelo por capas: C++ = GDScript (normales, densidades, máximo y suavizado, byte a byte)")
-	for t: String in pe["textos"]:
-		print(t)
-	var es2 := ProbarNativoEspejo.probar(nat)   ## (19-11) el espejo de las animaciones
-	for f: String in es2["fallos"]:
-		_comprobar(false, "espejo en C++: " + f)
-	_comprobar((es2["fallos"] as Array).is_empty(), "espejo de animaciones: C++ = GDScript (pistas, tiempos y valores, byte a byte)")
-	for t: String in es2["textos"]:
-		print(t)
-	var asf := ProbarNativoAsfalto.probar(nat)   ## (19-11) la imagen del asfalto
-	for f: String in asf["fallos"]:
-		_comprobar(false, "asfalto en C++: " + f)
-	_comprobar((asf["fallos"] as Array).is_empty(), "imagen del asfalto: C++ = GDScript (bytes RGB8)")
-	for t: String in asf["textos"]:
-		print(t)
-	var tx := ProbarNativoTexturas.probar(nat)   ## (19-11) texturas procedimentales (trapos, azulejo, césped)
-	for f: String in tx["fallos"]:
-		_comprobar(false, "texturas procedimentales (trapos, azulejo, césped) en C++: " + f)
-	_comprobar((tx["fallos"] as Array).is_empty(), "texturas procedimentales (trapos, azulejo, césped): C++ = GDScript (byte a byte)")
-	for t: String in tx["textos"]:
-		print(t)
-	var kt := ProbarNativoKit.probar(nat)   ## (19-11) pintura de la cabeza del jugador
-	for f: String in kt["fallos"]:
-		_comprobar(false, "pintura de la cabeza del jugador en C++: " + f)
-	_comprobar((kt["fallos"] as Array).is_empty(), "pintura de la cabeza del jugador: C++ = GDScript (byte a byte)")
-	for t: String in kt["textos"]:
-		print(t)
-	var pu := ProbarNativoPublico.probar(nat)   ## (19-11) el público y las texturas de grada
-	for f: String in pu["fallos"]:
-		_comprobar(false, "grada en C++: " + f)
-	_comprobar((pu["fallos"] as Array).is_empty(), "público y texturas de grada: C++ = GDScript (bytes y estado del azar)")
-	for t: String in pu["textos"]:
-		print(t)
-	var dm := ProbarNativoDtMapa.probar(nat)   ## (19-11) el mapa UV de la cabeza del DT
-	for f: String in dm["fallos"]:
-		_comprobar(false, "mapa del DT en C++: " + f)
-	_comprobar((dm["fallos"] as Array).is_empty(), "mapa UV de la cabeza del DT: C++ = GDScript (bytes RGBAF)")
-	for t: String in dm["textos"]:
+	var nu := ProbarNativoNuevas.probar(nat)   ## (19-11) progreso, La Ruta, jugador del mes, ropa, cara, pelo, espejo, texturas, kit de la cabeza, grada y mapa del DT
+	for f: String in nu["fallos"]:
+		_comprobar(false, "nuevas en C++: " + f)
+	_comprobar((nu["fallos"] as Array).is_empty(), "portes del 19-11 (carrera, ropa, cara, pelo, espejo, texturas, kit, grada, DT): C++ = GDScript (byte a byte)")
+	for t: String in nu["textos"]:
 		print(t)
 	var so := ProbarNativoSonido.probar(nat)   ## (19-11) la síntesis del sonido
 	for f: String in so["fallos"]:

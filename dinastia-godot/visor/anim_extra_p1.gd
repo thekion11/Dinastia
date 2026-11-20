@@ -185,7 +185,6 @@ static func espejar(original: Animation, esq: Skeleton3D, prefijo: String, clave
 	if out != null and clave != "":
 		_cache_espejo[cc] = out
 	return out
-
 static func _espejar_gd(original: Animation, esq: Skeleton3D, prefijo: String) -> Animation:
 	var n := esq.get_bone_count()
 	## Qué pistas hay por hueso.
