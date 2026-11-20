@@ -388,3 +388,7 @@ Medido con `pruebas/zz_medir_menu_gpu.tscn` (xvfb + opengl3, MEDIA, club de GER;
 - Resultado con la pantalla quieta (3 s): central, Modos, Idioma y los 10 menús laterales, en suave y en clásico: **1 dibujado** (antes, clásico 68-128). Abrir un menú lateral: **85-159 ms** hasta verse (meta < 1 s).
 - Probado y descartado: quitar la sombra de las cajas (−2 llamadas). Los tres estilos de menú (píldora, compacto, barra) cuestan lo mismo.
 - Lo que queda caro: el central dibuja ~390 llamadas cuando se repinta (texto y cajas alternados rompen el agrupado en 2D); con el reposo solo cuenta mientras el usuario actúa.
+
+## 20-11 — medición del paso del motor y escalón 7 del modo adaptativo
+- Paso del motor C4 (`perfil_colocacion`, 2 partidos, 19.198 pasos): **616 µs** (`_ia_defensa` 155, `_ia_ataque_sin_balon` 114, `_mover_jugadores` 102, `_forma` 53, `_estado_league` 23). Es < 2 % del margen de 33 ms por paso (30 Hz): portar la IA a C++ no se vería en FPS; el cuello del teléfono es la GPU (prueba del dueño del 3-11: GPU 100 %, CPU 0 %). No se portó.
+- **Escalón 7 de `RendimientoAdaptativo`** («partido ligero»): si tras los seis escalones el equipo sigue bajo 40 FPS, se aplica el recorte de «Partido ligero» (sin ajuste de color, rótulos 3D ni focos) solo en ESE partido, sin cambiar lo guardado en Ajustes (que sigue apagado por defecto, orden 32). Probado en `probar_rendimiento_adaptativo` (7 escalones, 0 fallos). Sin medir en dispositivo.
