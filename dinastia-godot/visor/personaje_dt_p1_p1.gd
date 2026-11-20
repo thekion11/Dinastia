@@ -343,14 +343,16 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 			cuello = 2
 			zapato = "5a4636"
 		"camisa":
+			## (20-11) Cuadro vichy sutil (segundo color un 9 % más oscuro): con el 35 % salía un tablero de ajedrez.
 			dis = "cuadros_chicos"
-			cols = [r2, r2.darkened(0.35), r1, r1, r2]
+			cols = [r2, r2.darkened(0.09), r1, r1, r2]
 			pant = r1
 			cuello = 2
 			zapato = "5a4636"
 		"sudadera":
+			## (20-11) Canesú del mismo tono (14 % más oscuro): con el color 2 era una capa blanca.
 			dis = "canesu"
-			cols = [r1, r2, r2, r1, r2]
+			cols = [r1, r1.darkened(0.14), r2, r1, r2]
 			pant = Color("2b2f3a")
 			zapato = "f2f2f2"
 			cuello = 1
@@ -367,7 +369,7 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 			## Rayas anchas y suaves (13-10-2026): las finas, sobre la forma del
 			## pecho, se torcían y daban muaré.
 			dis = "franjas"
-			cols = [r2, r2.lerp(r1, 0.45), r1, r1, r2]
+			cols = [r2, r2.lerp(r1, 0.3), r1, r1, r2]   ## (20-11) 0,45 → 0,3: paneles grises desiguales
 			pant = Color("2b2f3a") if r1.get_luminance() > 0.3 else Color("c2b280")
 			cuello = 2
 			zapato = "5a4636"
@@ -414,9 +416,7 @@ static func _vestir(d: Dictionary, a: Dictionary, c1: Color, c2: Color) -> void:
 	if ropa == "abrigo":
 		var cadera := _pegar(esq, "pelvis")
 		var paño := _mat(r1, 0.85)
-		for s in [-1.0, 1.0]:
-			var f := _caja(cadera, Vector3(0.1 * s, 0.72, 0.02), Vector3(0.19, 0.46, 0.25), paño)
-			f.rotation_degrees.z = 4.0 * s
+		AbrigoDT.faldon(cadera, paño)   ## (20-11) tronco de cono oval acampanado (antes dos cajas rectas)
 
 ## Una cara de la biblioteca modular (mezcla de varias, nunca la de un jugador)
 ## y, si se eligió, un corte medido. Con gorra no va el corte medido.
