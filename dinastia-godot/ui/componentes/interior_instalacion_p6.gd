@@ -316,7 +316,7 @@ func _vivienda() -> void:
 	_poner("comida/cutting-board", Vector3(4.4, encimera, zc + 0.05), PI * 0.5)
 	if bool(h["cocina"]): _trabajador(Vector3(3.3, 0, -3.05), PI, false, ["charla", "brazos_jarra"], [Color(0.9, 0.85, 0.7), Color(0.3, 0.3, 0.35), true])
 	## Comedor.
-	_mesa_con_sillas(Vector3(3.3, 0, -0.6), 0.0, "table", 2.2, 2, "chairCushion", float(h["mesa"]), _calle(), "comida/plate", ["comida/glass"])
+	_mesa_con_sillas(Vector3(3.3, 0, -0.6), 0.0, "table", 2.2, 2, "chairCushion", float(h["mesa"]), {"deporte": _calle(), "plato": "comida/plate", "encima": ["comida/glass"]})
 	_poner("comida/cake", Vector3(3.3, _alto("table", 2.2), -0.6))
 	_ventana(1.0, 0.6)
 	## Entrada.

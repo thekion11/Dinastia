@@ -208,8 +208,7 @@ func _servir() -> void:
 	## con mangas y bajo), aunque en el partido siga pintada sobre el cuerpo.
 	var aparte_antes = load(_RUTA_VESTIDOR_Q).ropa_aparte
 	load(_RUTA_VESTIDOR_Q).ropa_aparte = true
-	var nodo = _spawner._crear_jugador(raiz, j.id, puesto, "", Color(job["k1"]), Color(job["k2"]), "liso",
-		maxi(j.dorsal, 1), look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+	var nodo = _spawner._crear_jugador(raiz, j.id, puesto, Color(job["k1"]), Color(job["k2"]), "liso", maxi(j.dorsal, 1), look, Color(0, 0, 0, 0), datos)
 	load(_RUTA_VESTIDOR_Q).ropa_aparte = aparte_antes
 	if not nodo.is_empty():
 		var alto = load(_RUTA_PLAYER_SPAWNER).altura_de(datos, j.id, puesto)

@@ -114,7 +114,12 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	if partido != null and partido.once_local.is_empty():
 		partido.preparar()
 	if visitante != null:
-		_sacar_los_22(); await _respiro(); _sacar_banca(); await _respiro(); _sacar_personal()   ## (10-11) en tres tiempos: ver `_sacar_banca`
+		## (10-11) en tres tiempos: ver `_sacar_banca`
+		_sacar_los_22()
+		await _respiro()
+		_sacar_banca()
+		await _respiro()
+		_sacar_personal()
 	await _respiro()
 
 	## Las cámaras se calculan CONTRA el estadio recién construido, no se ponen
