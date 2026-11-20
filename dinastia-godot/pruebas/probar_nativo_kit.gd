@@ -57,6 +57,7 @@ static func probar(nat: Object) -> Dictionary:
 	## El trofeo: la paleta recoloreada (RGBA8 y RGB8 al azar).
 	for formato: int in [Image.FORMAT_RGBA8, Image.FORMAT_RGB8]:
 		var paleta := _ruido(rng, formato, 256, 128, true)
+		paleta.generate_mipmaps()   ## la paleta real del trofeo trae mipmaps (87.380 bytes para 128×128 RGBA8)
 		for cols in [[Color(0.95, 0.75, 0.2), Color(0.3, 0.3, 0.32)], [Color(0.8, 0.8, 0.85), Color(0.15, 0.1, 0.1)]]:
 			var t_gd: Image = TrofeoModelo._textura_img_gd(paleta.duplicate() as Image, cols[0], cols[1])
 			var t_c: Image = nat.trofeo_textura(paleta, cols[0], cols[1])

@@ -76,7 +76,7 @@ void godot::pintar_publico_interno(LienzoRGB &lz, int64_t w, int64_t h, const Co
 // Devuelve la imagen pintada (RGB8 de w×h), o null si `img` no es RGB8 de ese tamaño.
 Ref<Image> DinastiaNativo::publico_pintar(const Ref<Image> &img, int64_t w, int64_t h, const Color &a1, const Color &a2, double lleno, const Ref<RandomNumberGenerator> &rng_gd) const {
 	Ref<Image> nada;
-	if (img.is_null() || rng_gd.is_null() || img->get_format() != Image::FORMAT_RGB8 || img->get_width() != w || img->get_height() != h || w < 1 || h < 1) {
+	if (img.is_null() || rng_gd.is_null() || img->get_format() != Image::FORMAT_RGB8 || img->has_mipmaps() || img->get_width() != w || img->get_height() != h || w < 1 || h < 1) {
 		return nada;
 	}
 	LienzoRGB lz(w, h);

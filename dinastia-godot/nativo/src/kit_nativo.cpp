@@ -170,7 +170,7 @@ PackedByteArray DinastiaNativo::kit_retener(const PackedByteArray &datos_in, int
 // `KitTextureFactory._paint_barba` (el bucle): los bytes RGBA8 de `img` con la sombra de barba. Devuelve la imagen cambiada, o null si no es RGBA8.
 Ref<Image> DinastiaNativo::kit_barba(const Ref<Image> &img, const Color &pelo, int64_t barba, const Rect2i &rect) const {
 	Ref<Image> nada;
-	if (img.is_null() || img->get_format() != Image::FORMAT_RGBA8) {
+	if (img.is_null() || img->get_format() != Image::FORMAT_RGBA8 || img->has_mipmaps()) {
 		return nada;
 	}
 	const int64_t w = img->get_width();
@@ -225,5 +225,6 @@ Ref<Image> DinastiaNativo::trofeo_textura(const Ref<Image> &src, const Color &me
 			}
 		}
 	}
-	return Image::create_from_data(v.w, v.h, false, v.bpp == 4 ? Image::FORMAT_RGBA8 : Image::FORMAT_RGB8, sal);
+	// Con los mipmaps de la imagen de origen tal cual (la gemela cambia solo el nivel 0 y deja los demás, como `duplicate()` + `set_pixel`).
+	return Image::create_from_data(v.w, v.h, src->has_mipmaps(), v.bpp == 4 ? Image::FORMAT_RGBA8 : Image::FORMAT_RGB8, sal);
 }
