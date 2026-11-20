@@ -31,18 +31,24 @@ func _init() -> void:
 		if not FileAccess.file_exists(r):
 			continue
 		n += _sumar(pck, r)
-		## Si se importó (no está en modo `keep`), también su `.import` y lo importado.
-		if FileAccess.file_exists(r + ".import"):
-			n += _sumar(pck, r + ".import")
-			for linea in FileAccess.get_file_as_string(r + ".import").split("\n"):
-				if linea.begins_with("path") and "res://.godot/imported/" in linea:
-					var importado := linea.get_slice("\"", 1)
-					if FileAccess.file_exists(importado):
-						n += _sumar(pck, importado)
+		n += _sumar_importado(pck, r)
 	pck.flush()
 	print("PAQUETE REAL: %d archivos en %s (%.1f MB)" % [n, destino,
 		FileAccess.get_file_as_bytes(destino).size() / 1048576.0 if FileAccess.file_exists(destino) else 0.0])
 	quit(0 if n > 0 else 1)
+
+## Si se importó (no está en modo `keep`), también su `.import` y lo importado.
+func _sumar_importado(pck: PCKPacker, r: String) -> int:
+	if not FileAccess.file_exists(r + ".import"):
+		return 0
+	var n := _sumar(pck, r + ".import")
+	for linea in FileAccess.get_file_as_string(r + ".import").split("\n"):
+		if not (linea.begins_with("path") and "res://.godot/imported/" in linea):
+			continue
+		var importado := linea.get_slice("\"", 1)
+		if FileAccess.file_exists(importado):
+			n += _sumar(pck, importado)
+	return n
 
 func _sumar(pck: PCKPacker, ruta: String) -> int:
 	return 1 if pck.add_file(ruta, ProjectSettings.globalize_path(ruta)) == OK else 0

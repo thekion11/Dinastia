@@ -312,6 +312,12 @@ func _probar_porque_moral() -> void:
 ## 27-10 (pieza D): los peluches coleccionables, la máquina funcional y sus logros.
 func _probar_peluches() -> void:
 	_titulo("PELUCHES: TABLA, PARTIDA, ÁLBUM Y LOGROS")
+	_peluches_tabla_y_campo()
+	_peluches_agarre()
+	_peluches_album()
+	_peluches_guardado_maquina_ciudad()
+
+func _peluches_tabla_y_campo() -> void:
 	var ids := {}
 	var series := {}
 	for p: Dictionary in Peluches.PELUCHES:
@@ -328,6 +334,8 @@ func _probar_peluches() -> void:
 		for j in range(i + 1, c1.size()):
 			solape = solape or Vector2(float(c1[i]["x"]) - float(c1[j]["x"]), float(c1[i]["y"]) - float(c1[j]["y"])).length() < 0.2
 	_comprobar(c1.size() >= 5 and str(c1) == str(c2) and not solape and not ajeno, "el campo (%d peluches) sale de la semilla, sin solapes y solo con los de su máquina" % c1.size())
+
+func _peluches_agarre() -> void:
 	var pe := Peluches.new()
 	var ligero := Peluches.def("pollito")
 	var pesado := Peluches.def("elefante")
@@ -349,6 +357,8 @@ func _probar_peluches() -> void:
 		if bool(pe.intento(campo_a, 0.5, 0.5, rng)["exito"]):
 			aciertos += 1
 	_comprobar(aciertos > 160 and aciertos < 320, "un oso (peso 3) justo debajo de la garra se agarra en torno al 50-60 %% (%d de 400)" % aciertos)
+
+func _peluches_album() -> void:
 	var album := Peluches.new()
 	var nuevos: Array = []
 	for p: Dictionary in Peluches.de_serie("bosque"):
@@ -359,6 +369,8 @@ func _probar_peluches() -> void:
 	for p: Dictionary in Peluches.PELUCHES:
 		todos.append_array(album.conseguir(String(p["id"])))
 	_comprobar(album.completa() and album.logros.size() == Peluches.SERIES.size() + 1 and album.logros.has(Peluches.LOGRO_TODO) and todos.has(Peluches.LOGRO_TODO), "con los 15: un logro por serie y otro por la colección entera (%d logros)" % album.logros.size())
+
+func _peluches_guardado_maquina_ciudad() -> void:
 	var mundo_p := Mundo.new()
 	var roles := Roles.new(mundo_p)
 	roles.peluches.conseguir("unicornio")
@@ -430,3 +442,4 @@ func _probar_peluches() -> void:
 		if x != null:
 			x.free()
 	cb.queue_free()
+
