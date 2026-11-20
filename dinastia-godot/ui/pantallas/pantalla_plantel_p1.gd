@@ -16,7 +16,7 @@ var _orden_plantel_desc: bool = true
 var _libres_filtro := "todos"
 
 func _pintar_plantel(c: Club) -> void:
-	PanelPlantel.pintar(p._lista_plantel, c, p.mundo, _orden_plantel, _orden_plantel_desc, p.COL_ACENTO,
+	PanelPlantel.pintar(p._lista_plantel, c, p.mundo, _orden_plantel, _orden_plantel_desc, p.col_acento,
 		func(color: Color) -> Color: return p._color_de_paleta(color),
 		func(g: GridContainer, j: Jugador, columnas: Array, colores: Array) -> void:
 			p._fila_jugador(g, j, columnas, colores),
@@ -197,7 +197,7 @@ func _pintar_balon_parado(c: Club) -> void:
 
 	for bloque in [["Córners", Tactica.CORNERS, c.tactica.corner, "corner"],
 			["Tiros libres", Tactica.LIBRES, c.tactica.libre, "libre"]]:
-		var tb := p._texto(11, p.COL_ACENTO)
+		var tb := p._texto(11, p.col_acento)
 		tb.text = String(bloque[0]).to_upper()
 		p._lista_tactica.add_child(tb)
 		var lista: Array = bloque[1]
@@ -234,7 +234,7 @@ func _pintar_balon_parado(c: Club) -> void:
 	## LOS PLANES. Se aplican solos en el minuto 60 según cómo vaya el marcador.
 	## En el 60 y no antes: cambiar el plan en el 20 no es un plan, es
 	## nerviosismo.
-	var tp := p._texto(11, p.COL_ACENTO)
+	var tp := p._texto(11, p.col_acento)
 	tp.text = Idiomas.t("PLANES SEGÚN EL MARCADOR")
 	p._lista_tactica.add_child(tp)
 	if not p._modo_experto:

@@ -76,7 +76,7 @@ func apuntar(tipo: String, texto: String) -> void:
 ## jugador. Es el único `print` del código del juego: así hay un solo sitio donde
 ## silenciarlo o redirigirlo.
 func depurar(tema: String, texto: String) -> void:
-	print("[%s] %s" % [tema, texto])
+	print("[%s] %s" % [tema, texto])   ## LOG: salida que leen las pruebas y el diagnóstico
 
 ## Quita de un texto lo que podría identificar al jugador.
 func limpiar(texto: String) -> String:

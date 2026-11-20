@@ -204,11 +204,11 @@ func _pintar_ranking_canteras() -> void:
 		var propio := c == mio
 		p._dato("%d.  %s" % [i + 1, c.nombre],
 			"%d juveniles  ·  %d" % [int(f["juveniles"]), int(f["nota"])],
-			p.COL_ACENTO if propio else Principal.COL_TEXTO, p._lista_logros)
+			p.col_acento if propio else Principal.COL_TEXTO, p._lista_logros)
 	## Si no estás entre los diez, se dice en qué puesto estás: un ranking en el
 	## que no te encuentras no sirve de nada.
 	if mi_puesto > 10:
-		var p_local := p._texto(11, p.COL_ACENTO)
+		var p_local := p._texto(11, p.col_acento)
 		p_local.text = Idiomas.t("Tu club va %d.º de %d.") % [mi_puesto, r.size()]
 		p._lista_logros.add_child(p_local)
 
@@ -271,7 +271,7 @@ func _pintar_logros() -> void:
 	## porque es lo único de esta pestaña que no se pierde ni empezando de cero.
 	var perfil := Logros.perfil_leer()
 	var nivel := Logros.perfil_nivel(int(perfil["xp"]))
-	var tp := p._texto(13, p.COL_ACENTO)
+	var tp := p._texto(13, p.col_acento)
 	tp.text = "%s  ·  %d XP" % [String(nivel["nombre"]), int(nivel["xp"])]
 	p._lista_logros.add_child(tp)
 	var barra := ProgressBar.new()
@@ -367,7 +367,7 @@ func _pintar_conti(c: Club) -> void:
 	for k: String in p.mundo.continentales:
 		var t: Continental = p.mundo.continentales[k]
 		var propia := t == mia
-		var cab := p._texto(13, p.COL_ACENTO if propia else Principal.COL_SUAVE)
+		var cab := p._texto(13, p.col_acento if propia else Principal.COL_SUAVE)
 		var estado := ("campeón: " + t.campeon.nombre) if t.campeon != null else Idiomas.t(t.nombre_de_ronda())
 		cab.text = "%s%s  —  %s" % ["> " if propia else "   ", Continental.nombre_conti(k), estado]
 		p._lista_conti.add_child(cab)
@@ -380,7 +380,7 @@ func _pintar_conti(c: Club) -> void:
 				p._lista_conti.add_child(g)
 				for fila: Dictionary in t.filas_con_puesto(i, c, 9):
 					var club: Club = fila["club"]
-					var l := p._texto(12, p.COL_ACENTO if club == c else Principal.COL_TEXTO)
+					var l := p._texto(12, p.col_acento if club == c else Principal.COL_TEXTO)
 					l.text = Idiomas.t("    %s  ·  %d pts") % [club.nombre, int(fila.get("pts", 0))]
 					p._lista_conti.add_child(l)
 		var cruce := t.emparejamiento_de(c)

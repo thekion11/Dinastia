@@ -7,7 +7,7 @@ extends RefCounted
 ## (`MotorCombinado._mejor_pase`); contador `c4_no_atras`.
 
 static var activo := OS.get_environment("C4_NO_ATRAS") == "1"
-static var DIST := float(OS.get_environment("C4_NO_ATRAS_D")) if OS.get_environment("C4_NO_ATRAS_D") != "" else 35.0
+static var dist := float(OS.get_environment("C4_NO_ATRAS_D")) if OS.get_environment("C4_NO_ATRAS_D") != "" else 35.0
 const PRESION := 3.0
 const ATRAS := 3.0
 
@@ -18,7 +18,7 @@ static func filtrar(m: Object, p: Dictionary, q: Dictionary) -> Dictionary:
 	var arco: Vector3 = m._arco_rival(p)
 	var yo: Vector3 = m.pos(p)
 	var dy := absf(arco.z - yo.z)
-	if dy > DIST or float(m._presion(p)) < PRESION:
+	if dy > dist or float(m._presion(p)) < PRESION:
 		return q
 	if absf(arco.z - m.pos(q).z) - dy < ATRAS:
 		return q

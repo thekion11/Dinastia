@@ -25,7 +25,7 @@ static var pac_base := _num("C4_PAC_BASE", 0.55)     ## probabilidad de tirar a 
 static var pac_caida := _num("C4_PAC_CAIDA", 0.035)  ## ...que baja esto por metro (a 30 m ≈ 0,27; a 38 m ≈ 0,02)
 static var pac_mejor := _num("C4_PAC_MEJOR", 0.35)   ## por esto si un compañero está mejor colocado
 static var pac_espacio := _num("C4_PAC_ESPACIO", 0.6) ## por esto si tiene espacio para seguir conduciendo
-static var CORNER_DESVIO := _num("C4_DESVIO", 0.2)   ## (perilla C4_DESVIO) probabilidad de que un remate fallado que sale por el fondo sea córner (MotorCorner)
+static var corner_desvio := _num("C4_DESVIO", 0.2)   ## (perilla C4_DESVIO) probabilidad de que un remate fallado que sale por el fondo sea córner (MotorCorner)
 const CENTRO_BANDA := 13.0          ## a más de esto del eje...
 const CENTRO_FONDO := 30.0          ## ...y a menos de esto de la línea de fondo, se puede centrar
 
@@ -55,13 +55,13 @@ const AEREO_PECHO := 0.6
 ## y desde más lejos daba un pase corto, aunque los rematadores ya estaban colocados en el área como en un córner. En C4, desde un
 ## costado (|x| > FALTA_X) a menos de 40 m, o centrada a 30-40 m, se centra al área: al primer palo, al penal o al segundo palo, con el
 ## error del pase del lanzador. Las faltas centradas y cercanas se siguen tirando a puerta.
-static var FALTA := _bandera("C4_FALTA", true)
+static var falta := _bandera("C4_FALTA", true)
 const FALTA_X := 14.0
 
 ## RITMO EN EL ÚLTIMO TERCIO (12-11-2026, sesión 13). Con espacio, el portador decide cada 1,5-2,5 s; con la paciencia ya no tira de
 ## lejos y conduce todo ese tiempo contra el bloque rival (las pérdidas por entrada en el último tercio subieron). En C4, a menos de
 ## `RITMO_D` m del arco la espera hasta la próxima decisión se multiplica por `RITMO_K`: pase, regate o tiro llegan antes.
-static var RITMO := _bandera("C4_RITMO", false)
+static var ritmo := _bandera("C4_RITMO", false)
 static var ritmo_k := _num("C4_RITMO_K", 0.55)
 const RITMO_D := 35.0
 
@@ -113,7 +113,7 @@ static func _bandera(nombre: String, defecto: bool) -> bool:
 ## Pone en el motor lo que lee `MotorCarreras` (por metadatos: el motor de siempre no los tiene).
 static func preparar(m: Object) -> void:
 	if balon_parado:
-		m.set_meta("corner_desvio", CORNER_DESVIO)
+		m.set_meta("corner_desvio", corner_desvio)
 	if desmarques:
 		m.set_meta("carreras_n", CARRERAS_A_LA_VEZ)
 		m.set_meta("carreras_descanso", DESCANSO_CARRERA)
@@ -300,7 +300,7 @@ static func _tras_centro(m: Object) -> bool:
 		return true
 	return String(m.get_meta("_traza_saque_tipo", "")) == "corner" and t - float(m.get_meta("_traza_saque_t", -99.0)) < 3.0
 static func falta_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: RandomNumberGenerator) -> bool:
-	if not FALTA:
+	if not falta:
 		return false
 	var arco: Vector3 = m._arco_rival(p)
 	var dist := Vector2(lugar.x - arco.x, lugar.z - arco.z).length()
@@ -318,7 +318,7 @@ static func falta_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: Random
 	m._contar("c4_falta_ensayada")
 	return true
 static func ritmo_ultimo_tercio(m: Object, p: Dictionary, decision_en: float) -> float:
-	if not RITMO:
+	if not ritmo:
 		return decision_en
 	var yo: Vector3 = m.pos(p)
 	var arco: Vector3 = m._arco_rival(p)

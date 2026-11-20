@@ -13,6 +13,13 @@ extends RefCounted
 
 ## El factor por edad del freno (única fuente: lo dibuja también `FichaPorque.ritmo_por_edad`).
 static func por_edad(edad: int) -> float:
+	var nat := Nativo.de("nuc_por_edad")
+	if nat != null:
+		return nat.nuc_por_edad(edad)
+	return por_edad_gd(edad)
+
+## Gemela GDScript de `nuc_por_edad` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func por_edad_gd(edad: int) -> float:
 	return 0.8 if edad <= 20 else (0.4 if edad <= 22 else 0.25)
 
 ## El freno común a toda subida semanal (la tuya y la del resto): con la edad y al acercarse al techo. Los últimos

@@ -54,6 +54,13 @@ var _entrada := Vector2.ZERO
 var _orden := ""
 
 static func _dir(eq: int) -> float:
+	var nat := Nativo.de("nuc_dir_equipo")
+	if nat != null:
+		return nat.nuc_dir_equipo(eq)
+	return _dir_gd(eq)
+
+## Gemela GDScript de `nuc_dir_equipo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _dir_gd(eq: int) -> float:
 	return 1.0 if eq == 0 else -1.0
 
 func _dar_balon(i: int) -> void:

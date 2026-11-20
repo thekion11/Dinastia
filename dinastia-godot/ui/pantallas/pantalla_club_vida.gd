@@ -79,7 +79,7 @@ func _pintar_hinchada(c: Club, con_fair_play := true) -> void:   ## (12-11) en s
 			var fila_a := HBoxContainer.new()
 			fila_a.add_theme_constant_override("separation", 8)
 			p._lista_estadio.add_child(fila_a)
-			var la := p._texto(12, p.COL_ACENTO if elegido else Principal.COL_SUAVE)
+			var la := p._texto(12, p.col_acento if elegido else Principal.COL_SUAVE)
 			la.text = "%s  ×%.2f" % [String(fila2[1]).strip_edges(), float(fila2[2])]
 			la.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			fila_a.add_child(la)

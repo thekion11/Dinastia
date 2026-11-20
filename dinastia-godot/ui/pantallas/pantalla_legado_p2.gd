@@ -111,7 +111,7 @@ func _pintar_epilogo(r: Roles) -> void:
 		va.text = String(par[1])
 		col.add_child(va)
 	var v: Dictionary = r.veredicto_carrera()
-	var tonos := {"oro": Principal.COL_ORO, "verde": Principal.COL_VERDE, "ambar": p.COL_ACENTO, "suave": Principal.COL_SUAVE}
+	var tonos := {"oro": Principal.COL_ORO, "verde": Principal.COL_VERDE, "ambar": p.col_acento, "suave": Principal.COL_SUAVE}
 	var frase := p._texto(13, tonos.get(String(v["tono"]), Principal.COL_SUAVE))
 	frase.text = Idiomas.t(String(v["texto"]))
 	frase.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -194,7 +194,7 @@ func _legado_club(r: Roles) -> void:
 		p._dato("Multiplicador de desafíos", Idiomas.t("×%.2f sobre %s de base") % [float(p_local["multiplicador"]), p._miles(int(p_local["base"]))],
 			Principal.COL_VERDE, p._lista_legado)
 	if not r.filosofia.is_empty():
-		var fi := p._texto(12, p.COL_ACENTO)
+		var fi := p._texto(12, p.col_acento)
 		fi.text = Idiomas.t("📚 Tu escuela táctica: %s  (%s)") % [String(r.filosofia["nombre"]), String(r.filosofia.get("formacion", ""))]
 		fi.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(fi)

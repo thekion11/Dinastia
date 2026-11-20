@@ -69,9 +69,12 @@ def m_ast(f):
         s = ln.strip()
         if re.search(r"#\s*(TODO|FIXME|HACK|XXX)\b", ln):
             out.append(hallazgo(f, i, "ast:pendiente", s[:120]))
-        if re.match(r"^\s*print(_debug|_rich)?\(", ln) or re.match(r"^\s*breakpoint\b", ln):
+        ## En pruebas/ y herramientas/ el print ES la salida (la leen banco.sh y los patrones de especiales.sh); en el juego, un
+        ## print intencional se marca con «## LOG» (marcas que leen las pruebas: MEDICION, PREF_PISA_*, DINASTIA_MENU_LISTO…).
+        if (re.match(r"^\s*print(_debug|_rich)?\(", ln) and "## LOG" not in ln and "/pruebas/" not in "/" + f
+                and "/herramientas/" not in "/" + f) or re.match(r"^\s*breakpoint\b", ln):
             out.append(hallazgo(f, i, "ast:depuracion", s[:120]))
-        if re.search(r"(==|!=)\s*-?\d+\.\d+\b|\b\d+\.\d+\s*(==|!=)", ln) and not s.startswith("#"):
+        if re.search(r"(==|!=)\s*-?\d+\.\d+\b|\b\d+\.\d+\s*(==|!=)", ln) and not s.startswith("#") and "exacto a propósito" not in ln:
             out.append(hallazgo(f, i, "ast:igualdad-flotante", s[:120], "media"))
         if re.match(r"^\s*#\s*(var|func|if|for|while|return|print)\b.*[:=(]", ln):
             out.append(hallazgo(f, i, "ast:codigo-comentado", s[:120]))

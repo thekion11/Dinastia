@@ -397,12 +397,12 @@ static func cargar() -> void:
 		var antes := elegida
 		CalidadAuto.aplicar_si_primera_vez()   ## primera vez: perfil según el hardware
 		if elegida != antes and OS.get_environment("PREF_IDIOMA_DIAG") != "":
-			print("PREF_PISA_CALIDAD_AUTO ", antes, " -> ", elegida)
+			print("PREF_PISA_CALIDAD_AUTO ", antes, " -> ", elegida)   ## LOG: salida que leen las pruebas y el diagnóstico
 		return
 	if cf.has_section_key("grafica", "calidad"):
 		var guardada := desde_guardado(int(cf.get_value("grafica", "calidad")), int(cf.get_value("grafica", "version_calidad", 1)))
 		if guardada != elegida and OS.get_environment("PREF_IDIOMA_DIAG") != "":
-			print("PREF_PISA_CALIDAD ", elegida, " -> ", guardada)   ## diagnóstico de pruebas (A4): el guardado manda sobre la calidad puesta antes
+			print("PREF_PISA_CALIDAD ", elegida, " -> ", guardada)   ## LOG: diagnóstico de pruebas (A4): el guardado manda sobre la calidad puesta antes
 		elegida = guardada
 	if cf.has_section_key("grafica", "adaptativa"):
 		adaptativa = bool(cf.get_value("grafica", "adaptativa"))

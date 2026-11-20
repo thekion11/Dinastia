@@ -81,13 +81,13 @@ func _refrescar() -> void:
 	## Entrenadora: si tu personaje es mujer, toda la interfaz te trata como tal (el cuerpo por defecto es «male», como `PersonajeDT.BASE`).
 	Genero.fijar(String(UsuarioEn3D.aspecto.get("cuerpo", "male")) == "female")
 	var liga := p._liga_de(c)
-	var acento_antes := p.COL_ACENTO
-	p.COL_ACENTO = p._acento_de(c)
+	var acento_antes := p.col_acento
+	p.col_acento = p._acento_de(c)
 	## El acento sale de la identidad del club y tine tambien el tema -pestana
 	## activa, boton pulsado, barras-. Al cambiar de club o de colores hay que
 	## rehacerlo; comparando primero, para no reconstruir un Theme entero en cada
 	## refresco cuando no ha cambiado nada.
-	if acento_antes != p.COL_ACENTO:
+	if acento_antes != p.col_acento:
 		p._aplicar_tema()
 	p._cabecera.text = c.nombre
 	p._limpiar(p._escudo_cabecera)
@@ -138,7 +138,7 @@ func _refrescar() -> void:
 		TablaCompeticion.pintar(p._lista_tabla, p.mundo, liga, c, {
 			"suave":  p._pal_suave(),
 			"texto":  p._pal_texto(),
-			"acento": p._con_contraste(p.COL_ACENTO),   ## (12-11) un club de color oscuro no se leía en su propia fila
+			"acento": p._con_contraste(p.col_acento),   ## (12-11) un club de color oscuro no se leía en su propia fila
 			"verde":  p._color_accesible(p.COL_VERDE),
 			"rojo":   p._color_accesible(p.COL_ROJO),
 			"oro":    p._color_accesible(p.COL_ORO),
@@ -160,7 +160,7 @@ func _refrescar() -> void:
 	if p._panel_mercado != null:
 		p._perezoso(p._panel_mercado, func() -> void:
 			p._panel_mercado.inicializar(p.mundo, {
-				"acento": p._con_contraste(p.COL_ACENTO),   ## (12-11) un club de color oscuro no se leía en su propia fila
+				"acento": p._con_contraste(p.col_acento),   ## (12-11) un club de color oscuro no se leía en su propia fila
 				"texto":  p._pal_texto(),
 				"suave":  p._pal_suave(),
 				"verde":  p._color_accesible(p.COL_VERDE),

@@ -6,8 +6,8 @@ extends SceneTree
 ##  · BRAZOS EN EL CUERPO: distancia mínima de la mano y del codo al eje de la columna (pelvis→cuello) durante el ciclo.
 ##  · SALTO DE CIERRE: diferencia de pose entre el último cuadro y el primero (para el bucle).
 ##   godot --headless --path . --script res://herramientas/estilo100_revisar.gd
-var LIB := "res://terceros/estilo100/biblioteca/100style.res"   ## con ESTILO100_NOMBRE=otro → otro.res
-var CATALOGO := "res://terceros/estilo100/catalogos/animaciones_catalogo_100style.json"
+var lib := "res://terceros/estilo100/biblioteca/100style.res"   ## con ESTILO100_NOMBRE=otro → otro.res
+var catalogo := "res://terceros/estilo100/catalogos/animaciones_catalogo_100style.json"
 const MIN_MANO := 0.12
 const MIN_CODO := 0.11
 const MAX_PATINAJE_MIN := 0.60   ## aviso si el pie en apoyo se desliza más que esto y más que la propia velocidad
@@ -28,8 +28,8 @@ func _dist_segmento(p: Vector3, a: Vector3, b: Vector3) -> float:
 func _initialize() -> void:
 	var nom := OS.get_environment("ESTILO100_NOMBRE")
 	if nom != "":
-		LIB = "res://terceros/estilo100/biblioteca/%s.res" % nom
-		CATALOGO = "res://terceros/estilo100/catalogos/animaciones_catalogo_%s.json" % nom
+		lib = "res://terceros/estilo100/biblioteca/%s.res" % nom
+		catalogo = "res://terceros/estilo100/catalogos/animaciones_catalogo_%s.json" % nom
 	var d := FutbolistaQ.crear(1.8, "male")
 	root.add_child(d["nodo"])
 	await process_frame
@@ -37,8 +37,8 @@ func _initialize() -> void:
 	await process_frame
 	esq = d["esqueleto"]
 	ap = d["anim"]
-	ap.add_animation_library("x100", load(LIB))
-	var cat: Array = JSON.parse_string(FileAccess.get_file_as_string(CATALOGO))
+	ap.add_animation_library("x100", load(lib))
+	var cat: Array = JSON.parse_string(FileAccess.get_file_as_string(catalogo))
 	for f: Dictionary in cat:
 		fichas[f["nombre"]] = f
 	var malos := 0
@@ -120,7 +120,7 @@ func _initialize() -> void:
 					v_pies, resid, r["mano"], r["codo"], "" if motivos.is_empty() else "  <== " + ", ".join(motivos)])
 	for s in filas:
 		print(s)
-	var f := FileAccess.open(CATALOGO, FileAccess.WRITE)
+	var f := FileAccess.open(catalogo, FileAccess.WRITE)
 	f.store_string(JSON.stringify(cat, "\t"))
 	f.close()
 	print("revisados ", revisados, "  con aviso ", malos)

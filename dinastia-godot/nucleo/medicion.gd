@@ -91,7 +91,7 @@ func _ready() -> void:
 
 func _linea(t: String) -> void:
 	_informe.append(t)
-	print("MEDICION ", t)
+	print("MEDICION ", t)   ## LOG: salida que leen las pruebas y el diagnóstico
 
 func _empezar_parte(nombre: String) -> void:
 	_parte = nombre
@@ -283,8 +283,8 @@ func _terminar() -> void:
 			a.store_string(par[1])
 			a.close()
 	var ruta := ProjectSettings.globalize_path(base + ".txt")
-	print("MEDICION informe en ", ruta)
-	print("MEDICION_JSON ", JSON.stringify(_json))   ## también sale por logcat en Android
+	print("MEDICION informe en ", ruta)   ## LOG: salida que leen las pruebas y el diagnóstico
+	print("MEDICION_JSON ", JSON.stringify(_json))   ## LOG:  también sale por logcat en Android
 	DisplayServer.clipboard_set(texto)
 	if forzada:
 		_mostrar_resultado(texto, ruta)   ## desde el botón: se queda en pantalla, sin adb

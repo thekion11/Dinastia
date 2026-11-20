@@ -95,6 +95,13 @@ static func noches(km: float) -> int:
 
 ## Quiénes viajan: 25 del plantel y cuerpo técnico, más en un club grande (rep 70 → 38; rep 85 → 45).
 static func delegacion(rep: int) -> int:
+	var nat := Nativo.de("nuc_delegacion")
+	if nat != null:
+		return nat.nuc_delegacion(rep)
+	return delegacion_gd(rep)
+
+## Gemela GDScript de `nuc_delegacion` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func delegacion_gd(rep: int) -> int:
 	return clampi(int(round(38.0 + (float(rep) - 70.0) * 0.45)), 32, 52)
 
 ## Desglose del viaje de ida y vuelta de un club de `origen` a `destino`, EN EUROS REALES (sin escala del juego).

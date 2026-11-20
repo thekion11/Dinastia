@@ -96,7 +96,7 @@ func _pintar_estadio(c: Club) -> void:
 			## diseñador. Elegir "lluvia" como se elige un color era ilógico.
 			["LOS DETALLES", ["banquillo", "banquilloCol", "vallaCol", "ledPaleta", "ledFondo", "ledTinta", "tunel", "sonidoGol"]],
 		]:
-		var tb := p._texto(11, p.COL_ACENTO)
+		var tb := p._texto(11, p.col_acento)
 		tb.text = String(bloque[0])
 		p._lista_estadio.add_child(tb)
 		for campo: String in (bloque[1] as Array):
@@ -108,7 +108,7 @@ func _pintar_estadio(c: Club) -> void:
 	## "quiero decidir esto tribuna por tribuna" y por eso cuesta.
 	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
-	var tt := p._texto(11, p.COL_ACENTO)
+	var tt := p._texto(11, p.col_acento)
 	tt.text = Idiomas.t("LAS TRIBUNAS")
 	p._lista_estadio.add_child(tt)
 	_fila_interruptor_estadio(e.ajustes, "personalizar_bandejas", "Personalizar cada tribuna",
@@ -186,7 +186,7 @@ func _pintar_estadio(c: Club) -> void:
 	## tocarlos.
 	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
-	var ti := p._texto(11, p.COL_ACENTO)
+	var ti := p._texto(11, p.col_acento)
 	ti.text = Idiomas.t("EL RECINTO")
 	p._lista_estadio.add_child(ti)
 	_fila_interruptor_estadio(e.ajustes, "pista", "Pista de atletismo",

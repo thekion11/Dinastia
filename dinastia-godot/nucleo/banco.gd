@@ -71,6 +71,13 @@ var gracia_liquidacion: int = 0          ## semanas de más antes de liquidar; e
 ## La cuota francesa: c = D·i / (1 − (1+i)^−n). Con interés cero se reparte a
 ## partes iguales, que es el caso límite de la misma fórmula.
 static func cuota_francesa(deuda: int, tasa: float, cuotas: int) -> int:
+	var nat := Nativo.de("nuc_cuota_francesa")
+	if nat != null:
+		return nat.nuc_cuota_francesa(deuda, tasa, cuotas)
+	return cuota_francesa_gd(deuda, tasa, cuotas)
+
+## Gemela GDScript de `nuc_cuota_francesa` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func cuota_francesa_gd(deuda: int, tasa: float, cuotas: int) -> int:
 	if cuotas <= 0:
 		return deuda
 	if tasa <= 0.0:

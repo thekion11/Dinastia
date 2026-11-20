@@ -9,7 +9,6 @@ func _ok(cond: bool, msg: String) -> void:
 		print("FALLO ", msg)
 
 func correr(padre: Node = null) -> int:
-	var p_loc := padre
 	var mundos := [[["CHI"], 11], [["ARG", "BRA"], 22], [["ESP", "ENG"], 33], [["GER", "ITA", "FRA"], 44]]
 	var vistos := {"partido": 0, "pantalla": 0, "aviso": 0}
 	for cfg: Array in mundos:

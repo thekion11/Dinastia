@@ -19,7 +19,7 @@ func _init() -> void:
 	for ruta in buscar():
 		if ProjectSettings.load_resource_pack(ruta, true):
 			montados.append(ruta)
-			print("Parche montado: ", ruta)
+			print("Parche montado: ", ruta)   ## LOG: salida que leen las pruebas y el diagnóstico
 		else:
 			push_warning("No se pudo montar el parche %s" % ruta)
 

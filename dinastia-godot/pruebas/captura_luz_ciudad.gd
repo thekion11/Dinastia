@@ -6,15 +6,15 @@ var _n := 0
 var _p: Node
 var _v: VistaCiudad
 var _e: ExploradorCiudad
-var HORAS := [7.0, 12.0, 17.4, 18.3, 21.5]   ## HORAS=17.4,21.5 para repetir solo algunas
+var horas := [7.0, 12.0, 17.4, 18.3, 21.5]   ## HORAS=17.4,21.5 para repetir solo algunas
 const POR_ESCENA := 24
 
 func _ready() -> void:
 	AjustesCiudad.guardar("tutorial_visto", true)   ## sin el tutorial de la primera visita
 	if OS.get_environment("HORAS") != "":
-		HORAS = []
+		horas = []
 		for t in OS.get_environment("HORAS").split(","):
-			HORAS.append(float(t))
+			horas.append(float(t))
 	_p = load("res://escenas/principal.tscn").instantiate()
 	add_child(_p)
 
@@ -36,12 +36,12 @@ func _process(_d: float) -> void:
 		(cl as CanvasLayer).visible = false
 	var k := (_n - 8) / POR_ESCENA
 	var f := (_n - 8) % POR_ESCENA
-	if k >= HORAS.size():
+	if k >= horas.size():
 		print("FIN. 0 fallos")
 		get_tree().quit()
 		return
 	## La hora se fija en CADA fotograma: la vida de la ciudad la vuelve a poner con el reloj de la partida.
-	_v.set("_hora", HORAS[k])
+	_v.set("_hora", horas[k])
 	_v.call("_aplicar_hora")
 	if f == 0:
 		var b: CityBuilder = _e.cb

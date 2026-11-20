@@ -79,7 +79,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	if not todo:
 		p._lista_partido.get_child(p._lista_partido.get_child_count() - 1).queue_free()   ## el separador del cartel: la banda ya separa
 		p._lista_partido.add_child(CifrasClave.banda([
-			[Idiomas.t("Ganas tú"), "%.2f" % float(cuo["cuota_gano"]), SelectorDireccional.acento_legible(p.COL_ACENTO)],
+			[Idiomas.t("Ganas tú"), "%.2f" % float(cuo["cuota_gano"]), SelectorDireccional.acento_legible(p.col_acento)],
 			[Idiomas.t("Empate"), "%.2f" % float(cuo["cuota_empate"]), Principal.COL_SUAVE],
 			[Idiomas.t("Gana %s") % rival.nombre, "%.2f" % float(cuo["cuota_pierdo"]), Principal.COL_TEXTO],
 			[Idiomas.t("Tu ataque vs su defensa"), "%d / %d" % [int(round(f_mia["ata"])), int(round(f_suya["def"]))], Principal.COL_ORO]], Principal.COL_SUAVE))
@@ -150,9 +150,9 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 		g.add_theme_constant_override("h_separation", 12)
 		p._lista_partido.add_child(g)
 		p._celda(g, "", Principal.COL_SUAVE)
-		p._celda(g, "%s  (%s)" % [local.nombre, local.tactica.formacion], p.COL_ACENTO if de_local else Principal.COL_TEXTO, false, 12)
+		p._celda(g, "%s  (%s)" % [local.nombre, local.tactica.formacion], p.col_acento if de_local else Principal.COL_TEXTO, false, 12)
 		p._celda(g, "", Principal.COL_SUAVE)
-		p._celda(g, "%s  (%s)" % [visita.nombre, visita.tactica.formacion], Principal.COL_TEXTO if de_local else p.COL_ACENTO, false, 12)
+		p._celda(g, "%s  (%s)" % [visita.nombre, visita.tactica.formacion], Principal.COL_TEXTO if de_local else p.col_acento, false, 12)
 		for i in maxi(medidor.once_local.size(), medidor.once_visita.size()):
 			if i < medidor.once_local.size():
 				var jl: Jugador = medidor.once_local[i]

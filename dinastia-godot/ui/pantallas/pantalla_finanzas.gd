@@ -156,7 +156,7 @@ func _abrir_examen() -> void:
 	ex.cerrado.connect(p._refrescar)
 
 func _pintar_carrera(r: Roles) -> void:
-	PanelAspectoDT.pintar(p._lista_club, r, p._texto, {"suave": Principal.COL_SUAVE, "acento": p.COL_ACENTO}, p._refrescar,
+	PanelAspectoDT.pintar(p._lista_club, r, p._texto, {"suave": Principal.COL_SUAVE, "acento": p.col_acento}, p._refrescar,
 		func() -> void:
 			var cp := CreadorPersonaje.abrir(p, p.mundo)
 			cp.cerrado.connect(p._refrescar))

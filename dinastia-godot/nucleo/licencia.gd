@@ -56,6 +56,13 @@ var espera_hasta: int = 0      ## semana absoluta desde la que puedes volver a p
 var intentos: int = 0
 
 static func _abs(anio: int, semana: int) -> int:
+	var nat := Nativo.de("nuc_abs_semana")
+	if nat != null:
+		return nat.nuc_abs_semana(anio, semana)
+	return _abs_gd(anio, semana)
+
+## Gemela GDScript de `nuc_abs_semana` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _abs_gd(anio: int, semana: int) -> int:
 	return anio * 60 + semana
 
 func nombre() -> String:

@@ -89,7 +89,6 @@ func _metro(m: Object) -> void:
 		_comprobar(est.size() >= 3 and trenes.size() >= 1, "línea %s: %d estaciones y %d trenes" % [String(l["nombre"]), est.size(), trenes.size()])
 		var copias: Array = []
 		for t0 in trenes:
-			var c: Variant = m.get_script().get_script_constant_map()["Tren"] if false else null
 			copias.append(_copiar_tren(t0))
 		var paso := 1.0 / 60.0   ## el paso real del juego
 		var pasos := int(1500.0 / paso)   ## 25 minutos

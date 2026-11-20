@@ -56,12 +56,12 @@ const GIRO_SECO_V := 0.6   ## por debajo de esta velocidad la física ya no curv
 ## futbolista real sigue una curva v(t) = punta·(1 − e^(−t/τ)) con τ ≈ 0,9-1,1 s (perfiles fuerza-velocidad de Samozino y Morin): 10 m en
 ## ~1,8-1,9 s y el 90 % de la punta a los ~2 s. Aquí el objetivo del que manejas se acerca para pedir esa curva (también quita el tope de 7,5 m/s).
 ## Medido (sonda, parte A): τ = 0,9 → 10 m en 1,97-2,33 s (algo lento); τ = 0,8 por defecto.
-static var INERCIA := OS.get_environment("C4_INERCIA") == "1"
+static var inercia := OS.get_environment("C4_INERCIA") == "1"
 static var inercia_tau := float(OS.get_environment("C4_INERCIA_TAU")) if OS.get_environment("C4_INERCIA_TAU") != "" else 0.8
 
 ## Retoca el objetivo que puso `_control_usuario` (solo si es el de la palanca: a 3 m en la dirección `manual`).
 static func carrera(m: MotorJugable, p: Dictionary, delta: float) -> void:
-	if p.is_empty() or not (punta or giro_seco or INERCIA):
+	if p.is_empty() or not (punta or giro_seco or inercia):
 		return
 	var man: Vector3 = p.get("manual", Vector3.ZERO)
 	if man.length() < 0.5 or not p.has("objetivo"):
@@ -75,7 +75,7 @@ static func carrera(m: MotorJugable, p: Dictionary, delta: float) -> void:
 	if giro_seco and vel.length() > GIRO_SECO_V and rad_to_deg(vel.angle_to(man)) > GIRO_SECO_ANG:
 		p["objetivo"] = yo   ## frena recto; cuando baja de GIRO_SECO_V, gira rápido (el giro es más cerrado cuanto más lento)
 		return
-	if INERCIA and delta > 0.0:
+	if inercia and delta > 0.0:
 		var tope := tope_de(m, p)
 		var sp := vel.length()
 		var quiere := sp + (tope - sp) * clampf(delta / inercia_tau, 0.0, 1.0)

@@ -138,7 +138,6 @@ func _modos_y_dificultades() -> void:
 			_comprobar(String(_p.get("_titulo_club").text if _p.get("_titulo_club") != null and _p.get("_titulo_club").get("text") != null else mundo.mi_club().nombre).contains(mundo.mi_club().nombre) or true, "%s: la cabecera nombra el club" % donde)
 			## Siete días de juego sin fallar: la fecha avanza y la semana corre.
 			var sem0 := mundo.semana
-			var fecha0 := String(mundo.fecha_texto()) if mundo.has_method("fecha_texto") else ""
 			AvanceSemana.partido_obliga = false   ## (9-11) la prueba recorre semanas a mano
 			for k in 7:
 				_p._avanzar_dia()

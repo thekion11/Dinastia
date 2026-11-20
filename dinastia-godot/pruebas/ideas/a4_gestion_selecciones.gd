@@ -106,7 +106,7 @@ func _absurdos() -> void:
 	var r := m2.selecciones.mundial_de_clubes(2030)
 	_comprobar(r is Dictionary, "Mundial de Clubes con un solo campeón: no falla (%s)" % str(r.keys()))
 	for anio in [2026, 2027, 2028, 2031, 2032, 1900, -4]:
-		var t_loc := s.toca_copa_del_mundo(anio)
+		s.toca_copa_del_mundo(anio)
 	_comprobar(s.toca_copa_del_mundo(2026) and s.toca_copa_del_mundo(2030) and not s.toca_copa_del_mundo(2028), "la Copa del Mundo toca en los años reales (2026, 2030) y no en 2028")
 	var d := s.a_dic()
 	d["nomina"] = ["zzz", "", "j999999"]

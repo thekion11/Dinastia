@@ -13,6 +13,13 @@ const CUPOS := {"ucl": 4, "conmebol": 2, "conc": 3, "asia": 3, "afr": 3, "oce": 
 const BAJA_FUERZA := 8   ## un equipo olímpico rinde por debajo de su absoluta
 
 static func toca(anio: int) -> bool:
+	var nat := Nativo.de("nuc_toca_olimpicos")
+	if nat != null:
+		return nat.nuc_toca_olimpicos(anio)
+	return toca_gd(anio)
+
+## Gemela GDScript de `nuc_toca_olimpicos` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func toca_gd(anio: int) -> bool:
 	return anio >= 2028 and (anio - 2028) % 4 == 0
 
 ## Las selecciones de la confederación (Conmebol = las de la Copa América que no son de la Concacaf).
