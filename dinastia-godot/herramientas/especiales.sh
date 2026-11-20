@@ -72,6 +72,7 @@ pasa "simular temporada con barra" "godot --headless --path . res://pruebas/idea
 # 3. Colisiones del club (paredes, muebles, gente, barreras invisibles)
 pasa "colisiones del club" "godot --headless --path . res://pruebas/prueba_colisiones_club.tscn" "FIN. 0 fallos"
 pasa "muebles del club (3 países)" "godot --headless --path . res://pruebas/auditoria_muebles_club.tscn" "FIN. 0 fallos"
+pasa "rutas del personal del club (3 países, andando 3 min)" "godot --headless --path . res://pruebas/auditoria_rutas_personal.tscn" "FIN. 0 fallos"
 pasa "caras coplanares del club (parpadeo)" "godot --headless --path . res://pruebas/prueba_coplanares_club.tscn" "FIN. 0 fallos"
 pasa "visor del trofeo (toque y mando)" "godot --headless --path . res://pruebas/prueba_visor_trofeo_mandos.tscn" "FIN. 0 fallos"
 # 4. Partido con el motor real (acta = césped) y control del equipo

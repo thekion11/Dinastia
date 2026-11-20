@@ -16,6 +16,9 @@ const MAPA := {
 }
 const DEDOS := {"thumb": "Thumb", "index": "Index", "middle": "Middle", "ring": "Ring", "pinky": "Pinky"}
 
+## (20-11) Grados que se ABREN los brazos hacia fuera sobre lo que dice la animación: la del cuerpo del juego deja las manos pegadas a unas caderas
+## estrechas y en los civiles con falda o pantalón ancho las manos atravesaban la ropa. 0 = como antes (el avatar regalo).
+var abrir_brazos := 0.0
 var origen: Skeleton3D
 var _pares: Array[Dictionary] = []
 var _ratio_cadera := 1.0
@@ -43,7 +46,10 @@ func configurar(esq_origen: Skeleton3D, otro_mapa: Dictionary = {}) -> void:
 	var ids := por_destino.keys()
 	ids.sort()
 	for i_d: int in ids:
-		_pares.append({"o": int(por_destino[i_d]), "d": i_d,
+		var nom_d := destino.get_bone_name(i_d)
+		var cadena := nom_d.begins_with("UpperArm") or nom_d.begins_with("LowerArm") or nom_d.begins_with("Hand.") or nom_d.begins_with("Index") \
+			or nom_d.begins_with("Middle") or nom_d.begins_with("Ring") or nom_d.begins_with("Pinky") or nom_d.begins_with("Thumb")
+		_pares.append({"o": int(por_destino[i_d]), "d": i_d, "lado": (1.0 if nom_d.ends_with(".L") else (-1.0 if nom_d.ends_with(".R") else 0.0)) if cadena else 0.0,
 			"rest_o": origen.get_bone_global_rest(int(por_destino[i_d])).basis.orthonormalized(),
 			"rest_d": destino.get_bone_global_rest(i_d).basis.orthonormalized()})
 	var cad_o := origen.find_bone("pelvis")
@@ -67,6 +73,9 @@ func _process_modification() -> void:
 		var id: int = par["d"]
 		var pose_o: Transform3D = origen.get_bone_global_pose(io)
 		var delta_mundo: Basis = (b_o * pose_o.basis.orthonormalized()) * (b_o * (par["rest_o"] as Basis)).inverse()
+		if abrir_brazos != 0.0 and float(par["lado"]) != 0.0:
+			## Todo el brazo (hombro a dedos) gira el mismo ángulo en el mundo, sobre el eje de «adelante» del personaje: abre la mano sin torcer el codo.
+			delta_mundo = Basis(destino.global_basis.orthonormalized().z, deg_to_rad(abrir_brazos) * float(par["lado"])) * delta_mundo
 		var rot_mundo: Basis = delta_mundo * (destino.global_basis.orthonormalized() * (par["rest_d"] as Basis))
 		var rot_esq: Basis = b_d_inv * rot_mundo
 		var padre := destino.get_bone_parent(id)

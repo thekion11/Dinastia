@@ -8,10 +8,15 @@ class_name AcabadoAjeno
 ##   - la PIEL toma el tono elegido en el creador (antes se ignoraba) con el mismo albedo físico que el resto del juego
 ##     (`VestidorQ.albedo_piel`).
 const ANGULO_DURO := 60.0
+## Pelos naturales para variar al personal (castaño, negro, castaño claro, rubio, canoso, castaño rojizo, castaño oscuro, rubio oscuro, gris).
+const PELOS_NATURALES: Array[Color] = [Color(0.17, 0.11, 0.07), Color(0.04, 0.035, 0.03), Color(0.36, 0.22, 0.11), Color(0.62, 0.48, 0.24),
+	Color(0.55, 0.55, 0.54), Color(0.38, 0.14, 0.07), Color(0.10, 0.07, 0.05), Color(0.30, 0.22, 0.12), Color(0.42, 0.40, 0.38)]
 static var _lisas := {}   ## id de la malla original → ArrayMesh lisa
 static var _mats := {}    ## clave → StandardMaterial3D
 
-static func aplicar(modelo: Node, piel := Color(0, 0, 0, 0)) -> void:
+## `pelo` (opcional, alfa > 0): color del pelo; `variante` (opcional, > 0): da otro color a la ropa del mismo modelo (matiz y claridad según la
+## variante), para que dos del personal con el mismo civil no se vean iguales (20-11: solo hay 7 modelos de hombre para 12 puestos).
+static func aplicar(modelo: Node, piel := Color(0, 0, 0, 0), pelo := Color(0, 0, 0, 0), variante := 0) -> void:
 	for n in modelo.find_children("*", "MeshInstance3D", true, false):
 		var mi := n as MeshInstance3D
 		var m := mi.mesh as ArrayMesh
@@ -22,7 +27,7 @@ static func aplicar(modelo: Node, piel := Color(0, 0, 0, 0)) -> void:
 		for s in lisa.get_surface_count():
 			var mat := lisa.surface_get_material(s) as StandardMaterial3D
 			if mat != null:
-				mi.set_surface_override_material(s, _material(mat, piel))
+				mi.set_surface_override_material(s, _material(mat, piel, pelo, variante))
 
 ## La malla con normales suaves (o la misma si trae formas de mezcla, que no se rehacen aquí).
 static func _lisa(m: ArrayMesh) -> ArrayMesh:
@@ -75,10 +80,14 @@ static func suavizar(v: PackedVector3Array, n: PackedVector3Array) -> PackedVect
 				sal[i] = suma.normalized()
 	return sal
 
-static func _material(orig: StandardMaterial3D, piel: Color) -> StandardMaterial3D:
+static func _material(orig: StandardMaterial3D, piel: Color, pelo := Color(0, 0, 0, 0), variante := 0) -> StandardMaterial3D:
 	var nom := orig.resource_name.to_lower()
 	var es_piel := nom.contains("skin")
-	var clave := "%d|%s" % [orig.get_instance_id(), piel.to_html() if es_piel else ""]
+	var es_pelo := nom.contains("hair") and not nom.contains("eyebrow")
+	## Los blancos (camisa, suela) y la ropa de seguridad (casco amarillo, chaleco naranja) se quedan como están.
+	var es_ropa := not (es_piel or es_pelo or nom.contains("eye") or nom.contains("white") or nom.contains("yellow") or nom.contains("orange"))
+	var clave := "%d|%s|%s|%d" % [orig.get_instance_id(), piel.to_html() if es_piel else "", pelo.to_html() if es_pelo and pelo.a > 0.0 else "",
+		variante if (es_ropa or es_pelo) else 0]
 	if _mats.has(clave):
 		return _mats[clave]
 	var m := orig.duplicate() as StandardMaterial3D
@@ -101,5 +110,15 @@ static func _material(orig: StandardMaterial3D, piel: Color) -> StandardMaterial
 	elif nom.contains("hair"):
 		m.roughness = 0.6
 		m.metallic_specular = 0.3
+		if es_pelo and pelo.a > 0.0:
+			m.albedo_color = Color(pelo, 1.0)
+		elif es_pelo and variante > 0:
+			m.albedo_color = PELOS_NATURALES[variante % PELOS_NATURALES.size()]
+	if es_ropa and variante > 0:
+		## Otro tono de ropa: el matiz se mueve hasta ±0,1 y la claridad entre 0,8 y 1,2 según la variante (un traje sigue siendo un traje).
+		var c := orig.albedo_color
+		var k := variante % 5
+		var h := fposmod(c.h + (k - 2) * 0.05, 1.0) if c.s > 0.18 else c.h
+		m.albedo_color = Color.from_hsv(h, c.s, clampf(c.v * (0.8 + 0.1 * k), 0.08, 1.0))
 	_mats[clave] = m
 	return m

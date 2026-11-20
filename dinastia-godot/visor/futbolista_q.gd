@@ -74,7 +74,7 @@ static func ajeno_disponible(clave: String) -> bool:
 ## Arma un modelo ajeno a `altura` m (medida por sus mallas) con su «Idle» en bucle y sin armas.
 ## Devuelve {"nodo","modelo","anim","altura","cuerpo","ajeno"} (sin esqueleto Quaternius). `padre` en el árbol.
 ## `piel` (opcional): el tono elegido en el creador; los civiles lo aplican a su piel (`AcabadoAjeno`).
-static func ajeno(padre: Node3D, clave: String, altura: float, piel := Color(0, 0, 0, 0)) -> Dictionary:
+static func ajeno(padre: Node3D, clave: String, altura: float, piel := Color(0, 0, 0, 0), pelo := Color(0, 0, 0, 0), variante := 0) -> Dictionary:
 	if not ajeno_disponible(clave):
 		return {}
 	var fila: Array = PERSONAL[clave] if PERSONAL.has(clave) else civiles()[clave]
@@ -86,7 +86,7 @@ static func ajeno(padre: Node3D, clave: String, altura: float, piel := Color(0, 
 	raiz.add_child(modelo)
 	padre.add_child(raiz)
 	## (19-11) Sin metal ni facetas: materiales mates y normales suaves (`AcabadoAjeno`).
-	AcabadoAjeno.aplicar(modelo, piel)
+	AcabadoAjeno.aplicar(modelo, piel, pelo, variante)
 	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
 		var nom := String(mi.name).to_lower()
 		for a: String in ARMAS:

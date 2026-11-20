@@ -5,6 +5,10 @@ class_name CivilAnimado
 ## (anima caminar, parado y la librería «banda»), y el civil copia sus rotaciones con `AvatarRegaloRetarget` y este mapa de huesos.
 ## Devuelve el mismo diccionario que `FutbolistaQ.crear()` (+ "avatar"), así `PersonalEstadio` lo trata como a cualquiera.
 
+## Grados que se abren los brazos para que las manos no atraviesen la ropa (medido el 20-11 en las 3 hojas del personal): mujeres con falda o pantalón.
+const ABRIR_MUJER := 12.0
+const ABRIR_HOMBRE := 3.0
+
 ## Quaternius (origen) → esqueleto de los civiles modulares (49 huesos). Padres antes que hijos.
 const MAPA := {
 	"pelvis": "Hips", "spine_01": "Abdomen", "spine_02": "Torso", "spine_03": "Chest", "neck_01": "Neck", "Head": "Head",
@@ -43,7 +47,7 @@ static func mapa_para(esq: Skeleton3D) -> Dictionary:
 	return m
 
 ## `padre` ya en el árbol. `clave` de `FutbolistaQ.civiles()` o `FutbolistaQ.PERSONAL`. {} si no se puede.
-static func crear(padre: Node3D, clave: String, altura: float, piel := Color(0, 0, 0, 0)) -> Dictionary:
+static func crear(padre: Node3D, clave: String, altura: float, piel := Color(0, 0, 0, 0), pelo := Color(0, 0, 0, 0), variante := 0) -> Dictionary:
 	if not FutbolistaQ.ajeno_disponible(clave):
 		return {}
 	var fila: Array = FutbolistaQ.PERSONAL[clave] if FutbolistaQ.PERSONAL.has(clave) else FutbolistaQ.civiles()[clave]
@@ -54,7 +58,7 @@ static func crear(padre: Node3D, clave: String, altura: float, piel := Color(0, 
 	FutbolistaQ.terminar(d, false)
 	for mi in (d["modelo"] as Node).find_children("*", "MeshInstance3D", true, false):
 		(mi as MeshInstance3D).visible = false
-	var da := FutbolistaQ.ajeno(d["nodo"], clave, altura, piel)
+	var da := FutbolistaQ.ajeno(d["nodo"], clave, altura, piel, pelo, variante)
 	if da.is_empty():
 		return d
 	## Su reposo procedural pelearía con el retarget: lo manda el cuerpo del juego.
@@ -68,11 +72,12 @@ static func crear(padre: Node3D, clave: String, altura: float, piel := Color(0, 
 		var rt := AvatarRegaloRetarget.new()
 		rt.name = "CivilRetarget"
 		esq_c.add_child(rt)
+		rt.abrir_brazos = ABRIR_MUJER if String(fila[2]) == "female" else ABRIR_HOMBRE
 		rt.configurar(d["esqueleto"] as Skeleton3D, mapa_para(esq_c))
 		rt.active = true
 	d["avatar"] = da["nodo"]
 	d["ajeno"] = false
-	var quieto := PersonajeDT.parado_persona(d)
-	if quieto != "":
-		(d["anim"] as AnimationPlayer).play(quieto)
+	## El «parado» normal, no el de persona (`parado_persona` junta los brazos al cuerpo del atleta y, con falda o pantalón ancho, las manos atravesaban la ropa).
+	if (d["anim"] as AnimationPlayer).has_animation("parado"):
+		(d["anim"] as AnimationPlayer).play("parado")
 	return d
