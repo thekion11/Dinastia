@@ -75,7 +75,7 @@ func _perilla(etiqueta: String, opciones: Array, actual: int, al_cambiar: Callab
 		b.text = String(opciones[i])
 		b.toggle_mode = true
 		b.button_pressed = (i == actual)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.pressed.connect(func() -> void:
 			al_cambiar.call(i)
@@ -180,7 +180,7 @@ func _pintar_banquillo() -> void:
 		b.text = "%s  %s  %d%s" % [j.pos_e, j.nombre, j.ovr, "" if j.disponible() else Idiomas.t("  (fuera)")]
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.add_theme_font_size_override("font_size", 12)
+		b.add_theme_font_size_override("font_size", Tema.letra(12))
 		b.add_theme_color_override("font_color", COL_TEXTO if j.disponible() else COL_ROJO)
 		## Solo se puede meter a alguien cuando ya se ha elegido a quién sacar:
 		## así no hay forma de terminar con doce en el campo por un clic de más.

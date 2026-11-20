@@ -29,7 +29,6 @@ const PELOS := ["#231a14", "#3d2a19", "#6b4a2a", "#c8a05a", "#1a1a1a", "#4a3a2a"
 
 ## Un jugador, en el diccionario que espera el equipador.
 static func jugador(j: Jugador) -> Dictionary:
-	var h := _hash(j.id)
 	return {
 		"id": j.id,
 		"nombre": j.nombre,
@@ -98,6 +97,7 @@ static func once(jugadores: Array[Jugador]) -> Dictionary:
 ## colores), así que la alternativa va lisa.
 ## Diseños en los que el color de adorno ocupa poco (la camiseta se lee del color principal).
 const ADORNO_CHICO := ["hombros", "canesu", "franja_pecho", "pecho_ribete", "banda_baja"]
+const _RUTA_DISENOS_KIT := "res://ui/disenos_kit.gd"
 
 static func distancia_color(a: Color, b: Color) -> float:
 	return Vector3(a.r - b.r, a.g - b.g, a.b - b.b).length()
@@ -118,7 +118,7 @@ static func kit_visita(local: Club, visita: Club) -> Dictionary:
 		v2["camiseta"] = ADORNO_CHICO[absi(hash(visita.id + "adorno")) % ADORNO_CHICO.size()]
 	if not v2.is_empty() and visita.kit_color1 == "" and visita.kit_x.is_empty():   ## el uniforme que se diseñó el jugador manda
 		var propio := {"c1": String(v2["c1"]), "c2": String(v2["c2"]), "estilo": String(v2.get("camiseta", "liso")), "img": "",
-			"x": load("res://ui/disenos_kit.gd").kit_de_club_visita(visita, v2)}
+			"x": load(_RUTA_DISENOS_KIT).kit_de_club_visita(visita, v2)}
 		if not chocan(kl, propio):
 			return propio
 	var invertido := {"c1": kv["c2"], "c2": kv["c1"], "estilo": String(kv.get("estilo", "liso")), "img": "", "x": {}}
@@ -131,7 +131,7 @@ static func kit(c: Club) -> Dictionary:
 	var estilo := Jersey.kit_de(c, c.kit_estilo)
 	var img := Jersey.fichero_real(c)
 	## "x": la equipación completa del diseñador (26-9-2026).
-	return {"c1": c.color_kit1(), "c2": c.color_kit2(), "estilo": estilo, "img": img, "x": load("res://ui/disenos_kit.gd").kit_de_club(c)}
+	return {"c1": c.color_kit1(), "c2": c.color_kit2(), "estilo": estilo, "img": img, "x": load(_RUTA_DISENOS_KIT).kit_de_club(c)}
 
 ## La del portero. Tiene que CONTRASTAR con la de sus compañeros, o desde la
 ## cámara alta no se distingue al arquero de un defensa. Se elige el color que

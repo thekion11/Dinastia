@@ -10,7 +10,7 @@ func _probar() -> void:
 	a.fill(Color(0.08, 0.1, 0.09))
 	var b := a.duplicate() as Image
 	var d0: Vector3 = V.diferencia(a, b)
-	_comprobar(int(d0.z) == 0 and d0.x == 0.0, "dos pantallas iguales: ningún bloque cambia")
+	_comprobar(int(d0.z) == 0 and is_zero_approx(d0.x), "dos pantallas iguales: ningún bloque cambia")
 	## Un rótulo claro de 90×40 px (lo que ocupa una palabra en la cabecera).
 	b.fill_rect(Rect2i(600, 330, 90, 40), Color(0.9, 0.9, 0.9))
 	var d1: Vector3 = V.diferencia(a, b)

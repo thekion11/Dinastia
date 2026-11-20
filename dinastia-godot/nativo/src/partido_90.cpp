@@ -351,9 +351,11 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		if (az.randf() < e.pl) {
 			atacar(true);
 		}
-		// (19-11) Gemela de `simular_minuto()`: si el ataque del local suspende el partido (menos de siete), el minuto se acaba ahí.
+		// Gemela de `simular_minuto()`: se sortea SIEMPRE el ataque del visitante (como GDScript: `rng.randf() < p_v and not terminado_ya`), pero si el
+		// del local suspendió el partido (menos de siete) no ataca; y entonces el minuto se acaba ahí.
+		const bool sorteo_v = az.randf() < e.pv;
 		e.terminado = bool(p->get(k_term));
-		if (!e.terminado && az.randf() < e.pv) {
+		if (sorteo_v && !e.terminado) {
 			atacar(false);
 		}
 		if (bool(p->get(k_term))) {

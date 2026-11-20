@@ -23,17 +23,17 @@ var _pin_valido := ""             ## el PIN que acaba de validarse (para las ope
 var _aviso := ""
 var _caja := VBoxContainer.new()
 
-static func abrir(capa: CanvasLayer, c: CarteraDT, r: Roles, dia_: int, banco_: String, comision_: int, pos: Vector3, quien: Node3D, ventanilla_ := false) -> PanelCajero:
+static func abrir(capa: CanvasLayer, c: CarteraDT, r: Roles, dia_arg: int, banco_arg: String, comision_arg: int, pos: Vector3, quien: Node3D, ventanilla_arg := false) -> PanelCajero:
 	var p := PanelCajero.new()
 	p.cartera = c
 	p.roles = r
-	p.dia = dia_
-	p.banco = banco_
-	p.comision = comision_
+	p.dia = dia_arg
+	p.banco = banco_arg
+	p.comision = comision_arg
 	p.cajero_pos = pos
 	p.jugador = quien
-	p.ventanilla = ventanilla_
-	if ventanilla_:
+	p.ventanilla = ventanilla_arg
+	if ventanilla_arg:
 		p._estado = "menu"
 	p.set_anchors_preset(Control.PRESET_CENTER)
 	p.offset_left = -230
@@ -66,11 +66,14 @@ func _pintar() -> void:
 		var av := Label.new()
 		av.text = _aviso
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		av.add_theme_font_size_override("font_size", 17)
+		av.add_theme_font_size_override("font_size", Tema.letra(17))
 		av.add_theme_color_override("font_color", Color(1.0, 0.8, 0.35))
 		_caja.add_child(av)
 	if _estado == "menu":
-		(_pintar_ventanilla() if ventanilla else _pintar_menu())
+		if ventanilla:
+			_pintar_ventanilla()
+		else:
+			_pintar_menu()
 	else:
 		_pintar_teclado()
 
@@ -86,7 +89,7 @@ func _pintar_teclado() -> void:
 func _pintar_ventanilla() -> void:
 	var saldos := Label.new()
 	saldos.text = "%s: %s\n%s: %s" % [Idiomas.t("Cuenta"), _euros(cartera.cuenta_eur(roles)), Idiomas.t("En el bolsillo"), _euros(cartera.efectivo)]
-	saldos.add_theme_font_size_override("font_size", 20)
+	saldos.add_theme_font_size_override("font_size", Tema.letra(20))
 	_caja.add_child(saldos)
 	if cartera.bloqueada:
 		var bd := Button.new()
@@ -111,14 +114,14 @@ func _pintar_ventanilla() -> void:
 	_caja.add_child(bi)
 	var cab := Label.new()
 	cab.text = Idiomas.t("Últimos movimientos")
-	cab.add_theme_font_size_override("font_size", 16)
+	cab.add_theme_font_size_override("font_size", Tema.letra(16))
 	_caja.add_child(cab)
 	var n := cartera.movimientos.size()
 	for i in range(n - 1, maxi(-1, n - 6), -1):
 		var mv: Dictionary = cartera.movimientos[i]
 		var fila := Label.new()
 		fila.text = "%s  %s" % [Idiomas.t(String(mv["concepto"])), _euros(int(mv["importe"]))]
-		fila.add_theme_font_size_override("font_size", 15)
+		fila.add_theme_font_size_override("font_size", Tema.letra(15))
 		_caja.add_child(fila)
 	var bs := Button.new()
 	bs.text = Idiomas.t("Salir")
@@ -128,13 +131,13 @@ func _pintar_ventanilla() -> void:
 func _pintar_menu() -> void:
 	var saldos := Label.new()
 	saldos.text = "%s: %s\n%s: %s" % [Idiomas.t("Cuenta"), _euros(cartera.cuenta_eur(roles)), Idiomas.t("En el bolsillo"), _euros(cartera.efectivo)]
-	saldos.add_theme_font_size_override("font_size", 20)
+	saldos.add_theme_font_size_override("font_size", Tema.letra(20))
 	_caja.add_child(saldos)
 	if comision > 0:
 		var nota := Label.new()
 		nota.text = Idiomas.t("Cajero de otro banco: comisión de %s por retirada.") % _euros(comision)
 		nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		nota.add_theme_font_size_override("font_size", 15)
+		nota.add_theme_font_size_override("font_size", Tema.letra(15))
 		_caja.add_child(nota)
 	for n: int in IMPORTES:
 		var b := Button.new()

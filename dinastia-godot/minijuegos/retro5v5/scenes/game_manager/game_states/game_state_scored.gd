@@ -3,7 +3,7 @@ extends GameState
 
 const DURATION_CELEBRATION := 100
 
-var time_since_celebration := Time.get_ticks_msec() 
+var time_since_celebration := Time.get_ticks_msec()
 
 func _enter_tree() -> void:
 	var index_club_scoring := 1 if state_data.club_scored_on == manager.clubs[0] else 0

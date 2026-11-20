@@ -68,7 +68,6 @@ func _probar() -> void:
 	e.call("_entrar_en_edificio", SALAS[0])
 	for i in 3:
 		await get_tree().process_frame
-	var interior_pos: Vector3 = e.cuerpo.position
 	e.call("_entrar_en_edificio", SALAS[1])   ## la segunda pulsación con el interior ya abierto
 	for i in 3:
 		await get_tree().process_frame

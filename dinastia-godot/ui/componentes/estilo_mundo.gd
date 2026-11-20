@@ -43,6 +43,6 @@ static func crear(p: Object) -> void:
 	cb.text = Idiomas.t("Mundo suave (fondos quietos, sin partículas)")
 	cb.tooltip_text = Idiomas.t("Apagado: Mundo clásico, con menos partículas y movimiento que antes. Encendido: pantallas quietas que solo se dibujan al cambiar.")
 	cb.button_pressed = suave
-	cb.add_theme_font_size_override("font_size", 11)
+	cb.add_theme_font_size_override("font_size", Tema.letra(11))
 	cb.toggled.connect(func(si: bool) -> void: elegir(si))
 	p._lista_ajustes.add_child(cb)

@@ -240,6 +240,13 @@ static func _md(u: int) -> Array:
 
 ## Domingo de Pascua (algoritmo anónimo gregoriano).
 static func pascua(anio: int) -> Array:
+	var nat := Nativo.de("nuc_pascua")
+	if nat != null:
+		return nat.nuc_pascua(anio)
+	return pascua_gd(anio)
+
+## Gemela GDScript de `nuc_pascua` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func pascua_gd(anio: int) -> Array:
 	var a := anio % 19
 	var b := int(anio / 100.0)
 	var c := anio % 100

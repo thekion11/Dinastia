@@ -127,7 +127,9 @@ func _probar_instituciones_c5_c8() -> void:
 				noche_con_queda = true
 	_comprobar(n > 10 and n < 60, "son raras: %d en 400 semanas" % n)
 	_comprobar(not noche_con_queda, "con toque de queda no hay lesiones de noche")
-	_comprobar(LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false) == LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false), "no consume Azar: la misma semana, lo mismo")
+	var _r2a = LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false)
+	var _r2b = LesionesAbsurdas.sortear(m.mi_club(), 2026, 7, false)
+	_comprobar(_r2a == _r2b, "no consume Azar: la misma semana, lo mismo")
 
 ## C6/C7: hablar con un jugador (según quién es, con memoria y promesas que se
 ## cobran), la entrevista al paso de un medio nuevo (mueve seguidores) y la
@@ -272,7 +274,7 @@ func _probar_calendario_c13() -> void:
 				sem_memoria = s
 	_comprobar(sem_fiesta > 0 and sem_memoria > 0 and sem_fiesta != sem_memoria, "Fiestas Patrias y el 11 caen en semanas distintas (%d y %d)" % [sem_fiesta, sem_memoria])
 	_comprobar(Calendario.factor_publico("CHI", 2026, sem_fiesta) > 1.0, "la semana de Fiestas Patrias llena más el estadio")
-	_comprobar(Calendario.factor_publico("CHI", 2026, sem_memoria) == 1.0 and Calendario.hay_memoria("CHI", 2026, sem_memoria), "la del 11 de septiembre no tiene bonus de fiesta")
+	_comprobar(is_equal_approx(Calendario.factor_publico("CHI", 2026, sem_memoria), 1.0) and Calendario.hay_memoria("CHI", 2026, sem_memoria), "la del 11 de septiembre no tiene bonus de fiesta")
 	## Los torneos.
 	_comprobar(Calendario.torneos(2026).any(func(t: Dictionary) -> bool: return String(t["nombre"]) == "Copa del Mundo"), "2026 es año de Mundial")
 	_comprobar(not Calendario.torneos(2027).any(func(t: Dictionary) -> bool: return String(t["nombre"]) == "Copa del Mundo"), "2027 no")
@@ -380,7 +382,7 @@ func _probar_marcas_y_escudos() -> void:
 		con_esc += 1 if (fila as Dictionary).has("escudo") else 0
 		con_cam += 1 if (fila as Dictionary).has("camiseta") else 0
 	_comprobar(con_esc >= 46 and con_cam >= 98,   ## (10-11) 98: Fortaleza (BRA) descendió y salió de la liga con su camiseta
-		 "M-063/M-068: %d escudos y %d camisetas con rasgo del club real" % [con_esc, con_cam])
+			"M-063/M-068: %d escudos y %d camisetas con rasgo del club real" % [con_esc, con_cam])
 	## Los fabricantes en la camiseta 3D (21-10-2026, M-057).
 	var mf := Mundo.new()
 	mf.generar(["CHI"], 4711)
@@ -391,7 +393,9 @@ func _probar_marcas_y_escudos() -> void:
 			_comprobar(DisenosKit.MARCA_FORMA.has(marca) and marca != "propia", "fabricante de %s: %s (conocido, no la marca propia)" % [c.nombre, marca])
 		vistos[marca] = true
 	_comprobar(vistos.size() >= 4, "los clubes de una liga visten de %d fabricantes distintos" % vistos.size())
-	_comprobar(DisenosKit.marca_de(mf.ligas[0].clubes[0]) == DisenosKit.marca_de(mf.ligas[0].clubes[0]), "el fabricante de un club es fijo")
+	var _r1a = DisenosKit.marca_de(mf.ligas[0].clubes[0])
+	var _r1b = DisenosKit.marca_de(mf.ligas[0].clubes[0])
+	_comprobar(_r1a == _r1b, "el fabricante de un club es fijo")
 	## Las formas de estadio de los clubes según su tamaño (21-10-2026, M-002).
 	var mf2 := Mundo.new()
 	mf2.generar(["CHI", "ESP", "ARG", "ENG", "GER", "ITA"], 31)

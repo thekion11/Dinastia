@@ -83,13 +83,13 @@ static func _chip(boton: String, que: String) -> HBoxContainer:
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var b := Label.new()
 	b.text = boton
-	b.add_theme_font_size_override("font_size", 11)
+	b.add_theme_font_size_override("font_size", Tema.letra(11))
 	b.add_theme_color_override("font_color", Color("0c1510"))
 	p.add_child(b)
 	h.add_child(p)
 	var t := Label.new()
 	t.text = que
-	t.add_theme_font_size_override("font_size", 12)
+	t.add_theme_font_size_override("font_size", Tema.letra(12))
 	t.add_theme_color_override("font_color", Tema.SUAVE)
 	h.add_child(t)
 	return h

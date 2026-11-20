@@ -274,7 +274,7 @@ func _probar_mini3d_persona() -> void:
 	_comprobar(pedidos.size() >= 10 and faltan.is_empty(), "los %d clips que piden los minijuegos e interiores existen %s" % [pedidos.size(), str(faltan)])
 	var lejos := true
 	for mi: MeshInstance3D in nodo.find_children("*", "MeshInstance3D", true, false):
-		lejos = lejos and mi.visibility_range_end == 0.0
+		lejos = lejos and is_zero_approx(mi.visibility_range_end)
 	_comprobar(lejos, "de cerca siempre (sin corte por distancia: es una escena chica)")
 	var dep := Mini3D.persona(raiz, _rng(78), Vector3.ZERO, [Color.RED, Color.WHITE])
 	var trab := Mini3D.persona(raiz, _rng(79), Vector3.ZERO, [Color.BLUE, Color.BLACK, true])

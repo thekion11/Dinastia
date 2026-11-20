@@ -142,14 +142,14 @@ func _probar_cara_malla() -> void:
 	var nariz := pos[1]
 	_comprobar(nariz.z > pos[CaraMalla.OJO_IZQ[0]].z and nariz.y < CaraMalla.OJO_Y, "la punta de la nariz va delante de los ojos y por debajo")
 	_comprobar(CaraMalla.balance(k) == Vector3.ONE and CaraMalla.balance("nadie") == Vector3.ONE, "balance de blancos (y neutro si no hay cara)")
-	_comprobar(CaraMalla.color_iris(k).a > 0.5 and CaraMalla.color_iris("nadie").a == 0.0, "color de iris medido (alfa 0 si no hay)")
+	_comprobar(CaraMalla.color_iris(k).a > 0.5 and is_zero_approx(CaraMalla.color_iris("nadie").a), "color de iris medido (alfa 0 si no hay)")
 	_comprobar(CaraMalla.geometria("nadie").is_empty() and CaraMalla.centros_ojos("nadie").is_empty(), "sin cara: vacío, no error")
 	## El tono de piel: media recortada de los puntos de la cara sobre la foto.
 	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
 	var tono := Color(0.72, 0.52, 0.4)
 	img.fill(tono)
 	var medido := CaraMalla.tono_piel(k, ImageTexture.create_from_image(img))
-	if medido.a == 0.0:
+	if is_zero_approx(medido.a):
 		_linea("  (headless sin imágenes de GPU: tono_piel no se puede medir aquí)")
 	else:
 		_comprobar(absf(medido.r - tono.r) < 0.02 and absf(medido.g - tono.g) < 0.02 and absf(medido.b - tono.b) < 0.02, "tono_piel de una foto lisa = su color (%s)" % medido.to_html(false))
@@ -199,11 +199,11 @@ func _probar_pelo_capas_puro() -> void:
 			mal.append("%s→%s" % [cs[1], PeloCapas.corte_de(cs[0])])
 	_comprobar(mal.is_empty(), "corte_de(): afro, melena rizada, rapado, tupé, degradado y normal %s" % str(mal))
 	var linea := [Vector2(-1, 1.0), Vector2(0, 2.0), Vector2(1, 1.5)]
-	_comprobar(PeloCapas._linea_en([], 0.0) == 1.76 and is_equal_approx(PeloCapas._linea_en(linea, -0.5), 1.5)
-		and PeloCapas._linea_en(linea, -9.0) == 1.0 and PeloCapas._linea_en(linea, 9.0) == 1.5, "_linea_en(): interpola y por fuera toma el borde")
+	_comprobar(is_equal_approx(PeloCapas._linea_en([], 0.0), 1.76) and is_equal_approx(PeloCapas._linea_en(linea, -0.5), 1.5)
+		and is_equal_approx(PeloCapas._linea_en(linea, -9.0), 1.0) and is_equal_approx(PeloCapas._linea_en(linea, 9.0), 1.5), "_linea_en(): interpola y por fuera toma el borde")
 	var den := PeloCapas._densidades(Marshalls.raw_to_base64(PackedByteArray([0, 255, 51])), 5)
-	_comprobar(den.size() == 5 and den[0] == 0.0 and den[1] == 1.0 and is_equal_approx(den[2], 0.2) and den[4] == 0.0, "_densidades(): bytes → 0..1, relleno con ceros")
-	_comprobar(PeloCapas._max(den) == 1.0 and PeloCapas._densidades("", 3) == PackedFloat32Array([0, 0, 0]), "_max y densidades vacías")
+	_comprobar(den.size() == 5 and is_zero_approx(den[0]) and is_equal_approx(den[1], 1.0) and is_equal_approx(den[2], 0.2) and is_zero_approx(den[4]), "_densidades(): bytes → 0..1, relleno con ceros")
+	_comprobar(is_equal_approx(PeloCapas._max(den), 1.0) and PeloCapas._densidades("", 3) == PackedFloat32Array([0, 0, 0]), "_max y densidades vacías")
 	## Una tira de cuatro triángulos (0-1-2, 1-3-2, 2-3-4, 3-5-4) para los recorridos.
 	var tri := PackedInt32Array([0, 1, 2, 1, 3, 2, 2, 3, 4, 3, 5, 4])
 	var an := PeloCapas._anillo([0], tri, 1)

@@ -28,6 +28,13 @@ func activo() -> bool:
 
 ## La fuerza más alta de selección que te puede llamar con este prestigio (50 → 70; 80 → 88; 99 → 99).
 static func _alcanza(prestigio: int) -> int:
+	var nat := Nativo.de("nuc_alcanza")
+	if nat != null:
+		return nat.nuc_alcanza(prestigio)
+	return _alcanza_gd(prestigio)
+
+## Gemela GDScript de `nuc_alcanza` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _alcanza_gd(prestigio: int) -> int:
 	return 40 + int(round(float(prestigio) * 0.6))
 
 ## Todas las selecciones que existen en los torneos (sin repetir).

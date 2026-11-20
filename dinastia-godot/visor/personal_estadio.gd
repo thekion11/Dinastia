@@ -67,8 +67,8 @@ var c2 := Color.BLACK
 ## Una por persona: {clave, nombre, puesto, planta, nodo, anim, ruta, i, dir, espera, quieto}
 var gente: Array = []
 
-func preparar(datos_: Dictionary, col1: Color, col2: Color) -> void:
-	datos = datos_
+func preparar(datos_arg: Dictionary, col1: Color, col2: Color) -> void:
+	datos = datos_arg
 	c1 = col1
 	c2 = col2
 	name = "PersonalEstadio"
@@ -182,7 +182,7 @@ func _nombre_de_respaldo(clave: String) -> String:
 
 ## El camino de cada uno: del puesto a su vuelta (y de vuelta). En una sala:
 ## puesto → puerta (dentro) → puerta (pasillo) → un punto del pasillo.
-func _ruta(clave: String, planta: int, zona: String) -> Array:
+func _ruta(_clave: String, planta: int, zona: String) -> Array:
 	var x0: float = datos.get("x0", 0.0)
 	var z_fin: float = datos.get("z_fin", 0.0)
 	var y := RecorridoClub.y_de(planta)

@@ -340,7 +340,7 @@ func _construir_lista() -> void:
 		b.custom_minimum_size = Vector2(0, 33)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.focus_mode = Control.FOCUS_ALL
-		b.add_theme_font_size_override("font_size", 15)
+		b.add_theme_font_size_override("font_size", Tema.letra(15))
 		b.set_meta("sin_sonido", true)
 		b.set_meta("modo", String(m.get("id", "")))
 		if not jugable(m):
@@ -403,7 +403,7 @@ func _construir_pie() -> void:
 	atras.text = "← " + Idiomas.t("Volver")
 	atras.flat = true
 	atras.focus_mode = Control.FOCUS_NONE
-	atras.add_theme_font_size_override("font_size", 15)
+	atras.add_theme_font_size_override("font_size", Tema.letra(15))
 	atras.add_theme_color_override("font_color", Tema.SUAVE)
 	atras.set_meta("sin_sonido", true)
 	atras.pressed.connect(_volver)
@@ -414,7 +414,7 @@ func _construir_pie() -> void:
 	nov.text = "✨ %s %s%s" % [Idiomas.t("Novedades"), PantallaNovedades.version(), "  •" if PantallaNovedades.hay_sin_ver() else ""]
 	nov.flat = true
 	nov.focus_mode = Control.FOCUS_NONE
-	nov.add_theme_font_size_override("font_size", 15)
+	nov.add_theme_font_size_override("font_size", Tema.letra(15))
 	nov.add_theme_color_override("font_color", Tema.ORO)
 	nov.pressed.connect(func() -> void:
 		_novedades = PantallaNovedades.abrir(self)

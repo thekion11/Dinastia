@@ -18,9 +18,9 @@ func _init(principal: Principal) -> void:
 func _idolo_del_club(c: Club) -> String:
 	if p.mundo.cantera != null:
 		for k in range(p.mundo.cantera.leyendas.size() - 1, -1, -1):
-			var L: Dictionary = p.mundo.cantera.leyendas[k]
-			if String(L.get("club_id", "")) == c.id:
-				return String(L.get("nombre", ""))
+			var l_loc: Dictionary = p.mundo.cantera.leyendas[k]
+			if String(l_loc.get("club_id", "")) == c.id:
+				return String(l_loc.get("nombre", ""))
 	var mejor: Jugador = null
 	for j: Jugador in c.plantilla:
 		if j.capitan:
@@ -108,6 +108,7 @@ func _ver_ciudad_con_carga() -> void:
 ## No hace falta ni un dato nuevo: todo sale de `mundo.ligas` y de las
 ## plantillas que ya existen.
 const SECC_CLUBES := ["tablas", "goleadores", "rivales"]
+const _RUTA_ESTADIO := "res://ui/estadio.gd"
 func _pintar_clubes() -> void:
 	p._limpiar(p._lista_clubes)
 	if _clubes_pais == "":
@@ -145,7 +146,7 @@ func _pintar_clubes() -> void:
 		bp.text = pais
 		bp.toggle_mode = true
 		bp.button_pressed = pais == _clubes_pais
-		bp.add_theme_font_size_override("font_size", 11)
+		bp.add_theme_font_size_override("font_size", Tema.letra(11))
 		bp.pressed.connect(func() -> void:
 			_clubes_pais = pais
 			p._clubes_ficha = null
@@ -194,10 +195,10 @@ func _pintar_clubes() -> void:
 			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			b.icon = Escudo.textura(club, 20)
 			b.add_theme_constant_override("icon_max_width", 22)
-			b.add_theme_font_size_override("font_size", 12)
+			b.add_theme_font_size_override("font_size", Tema.letra(12))
 			## (12-11) El club propio, con el acento ACLARADO hasta leerse sobre el panel (un verde o un azul oscuro de club casi no se veía), y toda su fila con él.
 			var mio := club == p.mundo.mi_club()
-			var col_mio: Color = p._con_contraste(p.COL_ACENTO)
+			var col_mio: Color = p._con_contraste(p.col_acento)
 			b.add_theme_color_override("font_color", col_mio if mio else p._color_de_paleta(p.COL_TEXTO))
 			b.pressed.connect(func() -> void:
 				p._clubes_ficha = null if p._clubes_ficha == club else club
@@ -373,7 +374,7 @@ func _ver_estadio_propio(por_partes := false) -> void:
 		if h is CanvasItem and (h as CanvasItem).visible and not h is PantallaCarga:   ## la carga sigue encima
 			(h as CanvasItem).visible = false
 			ocultados.append(h)
-	var vista = load("res://ui/estadio.gd").new()
+	var vista = load(_RUTA_ESTADIO).new()
 	vista.por_partes = por_partes   ## con carga: se arma entre fotogramas y la carga sigue viva
 	vista.arrancar_a_pie = true   ## (9-11, «solo club») «Entrar al estadio» te deja caminando el club (sin vista exterior del estadio)
 	## Sin partido la pantalla gigante enseña bienvenida + tabla + goleadores,
@@ -416,7 +417,7 @@ func _ver_vuelta_olimpica(titulo: String) -> void:
 		if h is CanvasItem and (h as CanvasItem).visible and not h is PantallaCarga:   ## la carga sigue encima
 			(h as CanvasItem).visible = false
 			ocultados.append(h)
-	var vista = load("res://ui/estadio.gd").new()
+	var vista = load(_RUTA_ESTADIO).new()
 	vista.datos_pantalla = p._datos_pantalla_estadio(c)
 	p.add_child(vista)
 	vista.abrir(c, 1.0, null, null, p.mundo.perfil_estadio_de(c), Comercial.color_balon(p.mundo.comercial.balon, c))

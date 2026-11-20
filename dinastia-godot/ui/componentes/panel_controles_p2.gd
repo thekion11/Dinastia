@@ -141,7 +141,7 @@ func _montar_cabecera(col: VBoxContainer) -> void:
 		b.text = String(par[1])
 		b.flat = true
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.add_theme_font_size_override("font_size", 15)
+		b.add_theme_font_size_override("font_size", Tema.letra(15))
 		b.set_meta("sin_sonido", true)
 		var clave: String = par[0]
 		b.pressed.connect(func() -> void:
@@ -207,7 +207,7 @@ func _montar_menu(cuerpo: HBoxContainer) -> void:
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.custom_minimum_size = Vector2(0, 40)
-		b.add_theme_font_size_override("font_size", 13)
+		b.add_theme_font_size_override("font_size", Tema.letra(13))
 		b.text = ("%s  %s   %s" % [s[2], s[1], Idiomas.t(String(s[3]))]) if String(s[1]) != "" else ("%s   %s" % [s[2], Idiomas.t(String(s[3]))])
 		b.clip_text = true
 		b.set_meta("sin_sonido", true)
@@ -333,7 +333,7 @@ func _preguntar(titulo: String, texto: String, botones: Array) -> void:
 		var b := Button.new()
 		b.text = String(par[0])
 		b.custom_minimum_size = Vector2(0, 40)
-		b.add_theme_font_size_override("font_size", 15)
+		b.add_theme_font_size_override("font_size", Tema.letra(15))
 		b.set_meta("sin_sonido", true)
 		var accion: Callable = par[1]
 		b.focus_entered.connect(_sonar.bind("menu_mover"))
@@ -435,7 +435,7 @@ func _montar_pie(col: VBoxContainer) -> void:
 		var b := Button.new()
 		b.text = Idiomas.t(String(par[0]))
 		b.custom_minimum_size = Vector2(140, 40)
-		b.add_theme_font_size_override("font_size", 15)
+		b.add_theme_font_size_override("font_size", Tema.letra(15))
 		b.set_meta("sin_sonido", true)
 		var que: String = par[1]
 		if que == "guardar":

@@ -54,7 +54,8 @@ func _ready() -> void:
 			var clip := nuestro if fila == 0 else ls
 			if not ap.has_animation(clip):
 				if not AnimExtra.asegurar(ap, esq, clip):
-					AnimExtra.unir(ap, esq, clip, AnimExtra.BARRIDA_REAL) if clip == "barrida_real" else null
+					if clip == "barrida_real":
+						AnimExtra.unir(ap, esq, clip, AnimExtra.BARRIDA_REAL)
 			var t0 := 0.0 if fila == 0 else maxf(contacto - 0.3, 0.0)
 			_cuerpos.append([ap, clip, t0 + paso * k])
 

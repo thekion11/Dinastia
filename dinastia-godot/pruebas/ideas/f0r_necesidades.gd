@@ -40,7 +40,7 @@ func _rutina() -> void:
 	_comprobar(absi(n.energia_m - e0) <= 3000, "tras 3 días de rutina la energía sigue igual (%d → %d)" % [e0 / 1000, n.energia()])
 	_comprobar(peor_hambre[0] < Necesidades.HAMBRE_UMBRALES[0], "con tres comidas el hambre nunca llega a aviso (máx %d)" % peor_hambre[0])
 	_comprobar(peor_energia[0] > Necesidades.ENERGIA_UMBRALES[0], "durmiendo 8 h la energía nunca llega a aviso (mín %d)" % peor_energia[0])
-	_comprobar(_estados.is_empty() and n.factor_riesgo() == 1.0, "la rutina no dispara avisos ni riesgo")
+	_comprobar(_estados.is_empty() and is_equal_approx(n.factor_riesgo(), 1.0), "la rutina no dispara avisos ni riesgo")
 
 func _sube_y_baja() -> void:
 	_estados.clear()
@@ -84,7 +84,7 @@ func _topes_y_efectos() -> void:
 	_comprobar(n.energia_m == Necesidades.MAXIMO, "dormir 48 h no pasa de 100 de energía")
 	_comprobar(n.nivel_hambre() == 2 and n.factor_riesgo() > 1.0, "pero se despierta famélico y con más riesgo (%.2f)" % n.factor_riesgo())
 	n.pasar(30, "comer")
-	_comprobar(n.factor_riesgo() == 1.0 and n.factor_rendimiento() == 1.0, "descansado y comido: riesgo ×1 y rendimiento ×1")
+	_comprobar(is_equal_approx(n.factor_riesgo(), 1.0) and is_equal_approx(n.factor_rendimiento(), 1.0), "descansado y comido: riesgo ×1 y rendimiento ×1")
 	n.pasar(60 * 60, "libre")
 	_comprobar(n.energia_m == 0 and n.hambre_m == Necesidades.MAXIMO, "60 h despierto y sin comer: energía 0 y hambre 100 (topes)")
 	_comprobar(_agotamientos.size() == 1, "con la energía a 0 avisa de agotamiento (una vez)")
@@ -93,7 +93,7 @@ func _topes_y_efectos() -> void:
 	_comprobar(_estados.has(["energia", 2]) and _estados.has(["hambre", 2]), "los dos llegan a grave: %s" % str(_estados))
 	_comprobar(absf(n.factor_riesgo() - 1.8) < 0.0001, "en el fondo el riesgo es ×1.8 (%.3f)" % n.factor_riesgo())
 	_comprobar(absf(n.factor_rendimiento() - 0.75) < 0.0001, "y el rendimiento 0.75 (%.3f)" % n.factor_rendimiento())
-	_comprobar(absf(n.probabilidad_de_fallo(0.1) - 0.18) < 0.0001 and n.probabilidad_de_fallo(0.9) == 1.0,
+	_comprobar(absf(n.probabilidad_de_fallo(0.1) - 0.18) < 0.0001 and is_equal_approx(n.probabilidad_de_fallo(0.9), 1.0),
 		"una probabilidad de fallo de 10%% pasa a 18%%, y nunca supera el 100%%")
 	n.pasar(10 * 60, "dormir")
 	n.pasar(30, "comer")

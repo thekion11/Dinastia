@@ -50,7 +50,7 @@ static func pintar(padre: Node, mio: Club, otro: Club, col_suave: Color, col_tex
 		return
 	var t := Label.new()
 	t.text = Idiomas.t("TU CLUB FRENTE A %s") % otro.nombre.to_upper()
-	t.add_theme_font_size_override("font_size", 11)
+	t.add_theme_font_size_override("font_size", Tema.letra(11))
 	t.add_theme_color_override("font_color", col_suave)
 	padre.add_child(t)
 	var g := GridContainer.new()
@@ -76,7 +76,7 @@ static func _celda(texto: String, color: Color, derecha: bool) -> Label:
 	var l := Label.new()
 	l.text = texto
 	l.clip_text = true
-	l.add_theme_font_size_override("font_size", 11)
+	l.add_theme_font_size_override("font_size", Tema.letra(11))
 	l.add_theme_color_override("font_color", color)
 	if derecha:
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT

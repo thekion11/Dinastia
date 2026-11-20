@@ -242,7 +242,7 @@ func _interfaz(nombre: String) -> void:
 	add_child(banda)
 	_titulo = Label.new()
 	_titulo.text = Idiomas.t("🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir") % [nombre, _raiz.find_children("*", "Skeleton3D", true, false).size()]
-	_titulo.add_theme_font_size_override("font_size", 20)
+	_titulo.add_theme_font_size_override("font_size", Tema.letra(20))
 	_titulo.position = Vector2(20, 14)
 	_titulo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_titulo)

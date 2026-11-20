@@ -17,7 +17,7 @@ extends PantallaBase
 ## que corregirla después).
 func _paleta_ficha() -> Dictionary:
 	return {
-		"suave": p._pal_suave(), "texto": p._pal_texto(), "acento": p.COL_ACENTO,
+		"suave": p._pal_suave(), "texto": p._pal_texto(), "acento": p.col_acento,
 		"verde": p._color_accesible(Principal.COL_VERDE), "rojo": p._color_accesible(Principal.COL_ROJO),
 		"oro": p._color_accesible(Principal.COL_ORO), "escala": p._escala_texto,
 	}
@@ -44,7 +44,7 @@ func _pagar_clausula(j: Jugador) -> void:
 ## Los colores que recibe `PanelClubDentro`: los mismos `COL_*` de siempre,
 ## sin traducir -los traduce `_texto()`, que es quien pinta-.
 func _paleta_club_dentro() -> Dictionary:
-	return {"suave": Principal.COL_SUAVE, "acento": p.COL_ACENTO, "verde": Principal.COL_VERDE, "texto": Principal.COL_TEXTO,
+	return {"suave": Principal.COL_SUAVE, "acento": p.col_acento, "verde": Principal.COL_VERDE, "texto": Principal.COL_TEXTO,
 		"oro": Principal.COL_ORO, "rojo": Principal.COL_ROJO}
 
 func _alternar_consejero(k: String) -> void:
@@ -76,7 +76,7 @@ func _pintar_consejeros(d: Directiva, _c: Club) -> void:
 		nom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fila.add_child(nom)
 		var b := Button.new()
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		if contratado:
 			b.text = Idiomas.t("Cesar")
 		else:
@@ -207,7 +207,7 @@ func _alternar_pais_ojeo(pais: String) -> void:
 ## `toggleRed()` del HTML: qué países cubre tu red de ojeadores, con nombre y
 ## sesgo de cada uno. Cuántos puedes cubrir a la vez sale del nivel de
 ## "ojeador" en el cuerpo técnico, justo arriba de esta sección.
-func _pintar_ojeadores(c: Club) -> void:
+func _pintar_ojeadores(_c: Club) -> void:
 	var oj := p.mundo.ojeadores
 	if oj == null:
 		return
@@ -232,7 +232,7 @@ func _pintar_ojeadores(c: Club) -> void:
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			b.clip_text = true
 			b.custom_minimum_size = Vector2(120, 0)
-			b.add_theme_font_size_override("font_size", 12)
+			b.add_theme_font_size_override("font_size", Tema.letra(12))
 			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			b.pressed.connect(func() -> void: p._ver_ficha(j))
 			fila.add_child(b)
@@ -265,7 +265,7 @@ func _pintar_ojeadores(c: Club) -> void:
 	fila_ciego.add_child(txt_ciego)
 	var b_ciego := Button.new()
 	b_ciego.text = Idiomas.t("Ir a Ajustes")
-	b_ciego.add_theme_font_size_override("font_size", 11)
+	b_ciego.add_theme_font_size_override("font_size", Tema.letra(11))
 	b_ciego.pressed.connect(func() -> void:
 		p._secc_ajustes = "acceso"
 		p._ir_a_pestana("Ajustes"))
@@ -300,7 +300,7 @@ func _pintar_ojeadores(c: Club) -> void:
 		for pais2: String in paises:
 			var bp := Button.new()
 			bp.text = pais2
-			bp.add_theme_font_size_override("font_size", 11)
+			bp.add_theme_font_size_override("font_size", Tema.letra(11))
 			bp.custom_minimum_size = Vector2(52, 28)
 			bp.disabled = oj.red.size() >= oj.max_paises()
 			bp.pressed.connect(func() -> void: _alternar_pais_ojeo(pais2))
@@ -337,7 +337,7 @@ func _pintar_analitica(c: Club) -> void:
 	var b := Button.new()
 	var tope := oj.analitica_nivel >= Ojeadores.ANALITICA_MAX
 	b.text = Idiomas.t("AL MÁXIMO") if tope else Idiomas.t("Ampliar · %s") % p._dinero(oj.coste_analitica(c))
-	b.add_theme_font_size_override("font_size", 11)
+	b.add_theme_font_size_override("font_size", Tema.letra(11))
 	b.disabled = tope or c.saldo < oj.coste_analitica(c)
 	b.clip_text = true
 	b.custom_minimum_size = Vector2(140, 0)
@@ -369,7 +369,7 @@ func _pintar_analitica(c: Club) -> void:
 			bj.text = Idiomas.t("%s  ·  %s, %d años") % [j.nombre, suyo.nombre if suyo else "libre", j.edad]
 			bj.flat = true
 			bj.alignment = HORIZONTAL_ALIGNMENT_LEFT
-			bj.add_theme_font_size_override("font_size", 12)
+			bj.add_theme_font_size_override("font_size", Tema.letra(12))
 			bj.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			bj.clip_text = true
 			bj.pressed.connect(func() -> void: p._ver_ficha(j))
@@ -416,7 +416,7 @@ func _pintar_academias(c: Club) -> void:
 		var tengo := oj.tiene_academia(pais)
 		var bp := Button.new()
 		bp.text = ("🏫 " if tengo else "") + pais
-		bp.add_theme_font_size_override("font_size", 11)
+		bp.add_theme_font_size_override("font_size", Tema.letra(11))
 		bp.toggle_mode = true
 		bp.button_pressed = tengo
 		bp.custom_minimum_size = Vector2(64, 28)

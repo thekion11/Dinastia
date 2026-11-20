@@ -59,7 +59,7 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 			if not tocar_pelo:
 				pass
 			elif pelo_foto.a > 0.0:
-				_teñir_pelo(d.get("nodo", modelo), pelo_foto)
+				_tenir_pelo(d.get("nodo", modelo), pelo_foto)
 			## Pelo, barba, cejas y pestañas por capas, medidos en la foto.
 			var geo := CaraMalla.geometria(nombre_foto)
 			if not tocar_pelo:

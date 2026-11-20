@@ -318,9 +318,9 @@ func _rotulos_de_paseo(si: bool) -> void:
 		l.pixel_size = 0.0145 if si else 0.0007
 		l.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y if si else BaseMaterial3D.BILLBOARD_ENABLED
 
-func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, estado_animo: String) -> void:
+func iniciar(builder: CityBuilder, modo_arg: String, desde: Vector3, club: String, estado_animo: String) -> void:
 	cb = builder
-	modo = modo_
+	modo = modo_arg
 	club_nombre = club
 	animo = estado_animo
 	trafico = cb.get_node_or_null("Trafico") as TraficoCiudad
@@ -340,6 +340,9 @@ func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, 
 		trafico.jugador = cuerpo
 		## Los peatones que te esquivan o adelantan miran que el lado esté libre.
 		trafico.libre_fn = func(q: Vector3) -> bool: return libre_obst(q, 0.3) and not _choca_circulos(q, 0.3)
+		## (18-11, ciudad a C++) La misma comprobación para la extensión: sus rejillas (se vacían y rellenan en sitio) y las constantes que usa.
+		trafico.libre_ctx = {"obst": _rej_obst, "circ": _rej_circ, "radio": 0.3, "limite": LIMITE, "celda_obst": CELDA_OBST, "celda_circ": CELDA_CIRC,
+				"rio_x": CityBuilder.RIO_X, "celda_av": CiudadExpansion.CELDA, "ancho_av": CiudadExpansion.ANCHO_AV}
 		trafico.jugador_huella = Vector2(RADIO_COCHE, SEP_COCHE + RADIO_COCHE) if modo == "coche" else Vector2(RADIO_PIE, RADIO_PIE) * 0.6
 	add_child(cuerpo)
 	cuerpo.position = buscar_libre(desde)

@@ -16,7 +16,7 @@ func _ready() -> void:
 		var mejor := [1e9]
 		for paso in [15.0, 5.0, 2.0]:
 			var c: Array = mejor.slice(1) if mejor.size() > 1 else [0.0, 0.0, 0.0, 90.0]
-			var rango := 6 if paso == 15.0 else 3
+			var rango := 6 if is_equal_approx(paso, 15.0) else 3
 			for a in range(-rango, rango + 1):
 				for b in range(-rango, rango + 1):
 					for e in range(-rango, rango + 1):

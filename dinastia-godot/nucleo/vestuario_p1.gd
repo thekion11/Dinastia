@@ -212,7 +212,6 @@ func _jugador(id: String) -> Jugador:
 
 func _montar_clan(cid: String, tipo: String, nombre: String, ids: Array,
 		orden: Dictionary, por_potencial: bool, previos: Dictionary) -> Dictionary:
-	var m := _mundo()
 	var lista := ids.duplicate()
 	lista.sort_custom(func(a: String, b: String) -> bool:
 		var ja := _jugador(a)

@@ -10,13 +10,14 @@ const TONO := {
 	## África subsahariana
 	"ANG": 6.3, "BEN": 6.4, "BFA": 6.4, "CGO": 6.3, "CIV": 6.3, "CMR": 6.3, "COD": 6.4, "GAB": 6.3, "GAM": 6.4, "GHA": 6.3,
 	"GUI": 6.4, "KEN": 6.3, "MLI": 6.3, "MOZ": 6.2, "NGA": 6.3, "SEN": 6.4, "TAN": 6.2, "TOG": 6.3, "UGA": 6.3, "ZAM": 6.2,
-	"ZIM": 6.2, "MAD": 4.8, "NAM": 5.4, "CPV": 4.6,
+	"ZIM": 6.2, "MAD": 4.8, "NAM": 5.4, "CPV": 4.6, "CAF": 6.4, "BDI": 6.4, "GNB": 6.4, "GNQ": 6.3, "COM": 5.6, "RWA": 6.4, "BOT": 6.0, "MWI": 6.3,
+	"LBR": 6.4, "SLE": 6.4, "VAN": 6.2, "MRT": 4.6,
 	## Norte de África y Oriente Medio
 	"ALG": 3.6, "TUN": 3.5, "LBY": 3.7, "BHR": 3.4, "KUW": 3.4, "OMA": 3.6, "IRQ": 3.1, "JOR": 3.0, "LBN": 2.8, "SYR": 2.9,
-	"PLE": 3.0,
+	"PLE": 3.0, "PAL": 3.0,
 	## Caribe, Centroamérica y Norteamérica
 	"JAM": 6.0, "HAI": 6.2, "TRI": 5.0, "CUR": 5.0, "CUW": 5.0, "SUR": 5.0, "CRC": 3.2, "GUA": 3.6, "HON": 3.7, "NCA": 3.5,
-	"ESA": 3.6, "PAN": 4.0, "CAN": 2.4,
+	"ESA": 3.6, "SLV": 3.6, "PAN": 4.0, "CAN": 2.4, "DOM": 4.8, "PUR": 3.8,
 	## Europa
 	"ALB": 2.0, "AND": 1.7, "ARM": 2.2, "AZE": 2.4, "BIH": 1.8, "BLR": 1.4, "CYP": 2.2, "EST": 1.2, "FIN": 1.2, "FRO": 1.1,
 	"GEO": 2.2, "GIB": 1.8, "IRL": 1.4, "ISL": 1.1, "KOS": 2.0, "KVX": 2.0, "LTU": 1.3, "LUX": 1.9, "LVA": 1.3, "MDA": 1.6,

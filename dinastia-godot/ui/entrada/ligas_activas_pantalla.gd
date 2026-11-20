@@ -108,7 +108,11 @@ func _ready() -> void:
 	var bv := Button.new()
 	bv.text = Idiomas.t("Ahora no") if agregando else Idiomas.t("Volver")
 	bv.custom_minimum_size = Vector2(130, 44)
-	bv.pressed.connect(func() -> void: terminado.emit({"ligas": {"paises": []}, "cancelado": true}) if mundo_agregar != null else volver.emit())
+	bv.pressed.connect(func() -> void:
+		if mundo_agregar != null:
+			terminado.emit({"ligas": {"paises": []}, "cancelado": true})
+		else:
+			volver.emit())
 	fila.add_child(bv)
 	_continuar = Button.new()
 	_continuar.text = Idiomas.t("Añadir") if agregando else Idiomas.t("Continuar ▶")

@@ -36,9 +36,9 @@ func _probar() -> void:
 	motor._patear(gk, motor.balon.position + Vector3(0, 0, signf(-motor._arco_propio(gk).z) * 55.0), 25.0, 2.0)
 	_comprobar(String(gk.get("anim_actual", "")) != "saque_mano", "el envío largo sigue siendo de pie («%s»)" % String(gk.get("anim_actual", "")))
 	## 3) La barrida de la UAL2 se arma en el jugador y dura lo que debe.
-	var def_: Dictionary = motor.jugadores[3]
-	var ap: AnimationPlayer = def_["anim"]
-	_comprobar(AnimExtra.unir(ap, FutbolistaQ.esqueleto_de(def_["node"]), "barrida_real", AnimExtra.BARRIDA_REAL), "la barrida de la UAL2 se arma en un futbolista")
+	var def: Dictionary = motor.jugadores[3]
+	var ap: AnimationPlayer = def["anim"]
+	_comprobar(AnimExtra.unir(ap, FutbolistaQ.esqueleto_de(def["node"]), "barrida_real", AnimExtra.BARRIDA_REAL), "la barrida de la UAL2 se arma en un futbolista")
 	var largo := ap.get_animation("barrida_real").length if ap.has_animation("barrida_real") else 0.0
 	_comprobar(largo > 1.4 and largo < 2.2, "entra, se desliza y se levanta en %.2f s" % largo)
 	## 4) La barrida del jugador (la IA no se tira al suelo): una de cada tres es la de la UAL2, entera (1,8 s).

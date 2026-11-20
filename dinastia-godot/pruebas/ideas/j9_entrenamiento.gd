@@ -4,7 +4,7 @@ extends BaseIdea
 ## intensidad, el foco y el plan de días tienen que cambiar el resultado, no ser adornos.
 
 ## (4-11, A4-GES-006) 8 semillas sumadas: con una sola, +9 contra +10 en una decena de jóvenes era ruido del azar (cualquier ajuste del entrenamiento movía el resultado).
-const SEMILLAS := [4711, 4712, 4713, 4714, 4715, 4716, 4717, 4718]
+const SEMILLAS := [4711, 4712, 4713, 4714, 4715, 4716, 4717, 4718, 4719, 4720, 4721, 4722, 4723, 4724, 4725, 4726, 4727, 4728, 4729, 4730, 4731, 4732, 4733, 4734]
 
 func _entrenar(config: Callable) -> Dictionary:
 	var tot := {"sube": 0, "jovenes": 0, "fisico": 0.0, "lesiones": 0}

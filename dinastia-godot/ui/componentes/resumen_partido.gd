@@ -177,7 +177,7 @@ func _revelar(mo: Dictionary) -> void:
 		tw.tween_property(_marcador, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 ## ¿El último gol fue del usuario? Se mira qué lado subió.
-func _es_mio(gl: int, gv: int) -> bool:
+func _es_mio(gl: int, _gv: int) -> bool:
 	var subio_local := gl > int(_marcador.get_meta("gl", 0))
 	return subio_local == (partido.local == mi_club)
 

@@ -37,9 +37,9 @@ func _probar() -> void:
 	var sin: Vector2i = sec
 	var con := Vector2i(4, 4) if sin != Vector2i(4, 4) else Vector2i(0, 0)
 	_comprobar(ex._farolas_sec.size() >= 20, "las farolas van por sectores (%d)" % ex._farolas_sec.size())
-	_comprobar(float((ex._farolas_sec[sin]["luz"] as StandardMaterial3D).emission_energy_multiplier) == 0.0 \
+	_comprobar(is_zero_approx(float((ex._farolas_sec[sin]["luz"] as StandardMaterial3D).emission_energy_multiplier)) \
 		and float((ex._farolas_sec[con]["luz"] as StandardMaterial3D).emission_energy_multiplier) > 2.0, "de noche, las farolas del sector sin luz se apagan y las demás no")
-	_comprobar((ex._farolas_sec[sin]["charco"] as StandardMaterial3D).albedo_color.a == 0.0 and float((ex._farolas_sec[sin]["cono"] as ShaderMaterial).get_shader_parameter("fuerza")) == 0.0, "y también su charco de luz y su haz")
+	_comprobar(is_zero_approx((ex._farolas_sec[sin]["charco"] as StandardMaterial3D).albedo_color.a) and is_zero_approx(float((ex._farolas_sec[sin]["cono"] as ShaderMaterial).get_shader_parameter("fuerza"))), "y también su charco de luz y su haz")
 	v.modelo.reparar("luz", sin)
 	v.modelo.recalcular()
 	ex.encender(1.0)

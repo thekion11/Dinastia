@@ -3,7 +3,7 @@ extends Node3D
 ## vistos (a) de cerca y (b) con la CÁMARA REAL de la transmisión (FOV 33°, 17 m de altura, 46 m de distancia; recorte alrededor de la
 ## fila). Se buscan brazos que atraviesen el cuerpo y pies que floten o se crucen.
 ##   CLIPS=Neutral_FW_1,Neutral_FR_1 SALIDA=res://docs... herramientas/captura.sh res://pruebas/captura_anims_100style.tscn
-var LIB := "res://terceros/estilo100/biblioteca/100style.res"
+var lib_v := "res://terceros/estilo100/biblioteca/100style.res"
 const FASES := 8
 const SEP := 1.4
 var _clips: PackedStringArray
@@ -18,8 +18,8 @@ func _ready() -> void:
 		_salida = OS.get_environment("SALIDA")
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_salida))
 	if OS.get_environment("BIBLIOTECA") != "":
-		LIB = OS.get_environment("BIBLIOTECA")
-	var lib: AnimationLibrary = load(LIB)
+		lib_v = OS.get_environment("BIBLIOTECA")
+	var lib: AnimationLibrary = load(lib_v)
 	var suelo := MeshInstance3D.new()
 	var pm := PlaneMesh.new()
 	pm.size = Vector2(120, 120)

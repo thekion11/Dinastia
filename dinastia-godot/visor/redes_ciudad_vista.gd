@@ -18,6 +18,7 @@ const POTAB := Vector3(-1450, 0, 420)        ## potabilizadora
 const DEPUR := Vector3(-1450, 0, 760)        ## depuradora
 const DEPOSITO := Vector3(-990, 0, 440)      ## el depósito de `_deposito_agua`
 const SEPARACION_TORRES := 90.0
+const _RUTA_DELIVERY_FLAT := "res://assets/ciudad/kenney_cars/delivery-flat.glb"
 
 var modelo: RedesCiudad
 var e: CiudadExpansion
@@ -151,7 +152,7 @@ func _bocas(candidatas: Array) -> void:
 ## LAS CUADRILLAS (27-10): un camión con conos y baliza junto a la tapa más cercana al centro de cada sector; solo se ve
 ## mientras hay una avería abierta en él y desaparece al repararse (`refrescar`).
 func _cuadrillas_montar(candidatas: Array) -> void:
-	var camion := load("res://assets/ciudad/kenney_cars/delivery-flat.glb") as PackedScene
+	var camion := load(_RUTA_DELIVERY_FLAT) as PackedScene
 	var cono := load("res://assets/ciudad/kenney_cars/cone.glb") as PackedScene
 	var lado := float(RedesCiudad.LADO_SECTOR) * CiudadExpansion.CELDA
 	var baliza := b._mat_unico(Color(1.0, 0.55, 0.05), 0.4, 3.0)
@@ -402,7 +403,7 @@ func _camion_cisterna(p: Vector3) -> Node3D:
 	g.name = "Cisterna"
 	g.position = p
 	g.visible = false
-	var camion := load("res://assets/ciudad/kenney_cars/delivery-flat.glb") as PackedScene
+	var camion := load(_RUTA_DELIVERY_FLAT) as PackedScene
 	if camion != null:
 		var t: Node3D = camion.instantiate()
 		t.scale = Vector3.ONE * 2.6

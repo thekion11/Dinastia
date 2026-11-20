@@ -68,7 +68,6 @@ func _probar() -> void:
 						tapados += 1
 						quien[n] = int(quien.get(n, 0)) + 1
 			var enterrada := cam.global_position.y < 0.3
-			var dentro := not _primer_impacto(meshes, cam.global_position, Vector3.DOWN, 0.2).is_empty() and cam.global_position.y > 1.5
 			linea += " | %s %d/35" % [cn.left(9), tapados]
 			var clave := "%s · %s" % [nombre, cn]
 			if tapados > 0:

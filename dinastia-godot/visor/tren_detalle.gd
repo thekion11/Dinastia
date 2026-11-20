@@ -34,7 +34,7 @@ static func _mat(c: Color, rug: float = 0.6, metal: float = 0.0) -> StandardMate
 	m.metallic = metal
 	return m
 
-static func vestir(n: Node3D, col: Color, f: float, nombre_linea: String = "") -> void:
+static func vestir(n: Node3D, _col: Color, f: float, nombre_linea: String = "") -> void:
 	var oscuro := _mat(Color(0.05, 0.05, 0.06), 0.7)
 	var gris := _mat(Color(0.45, 0.47, 0.5), 0.5, 0.5)
 	var hierro := _mat(Color(0.12, 0.12, 0.13), 0.45, 0.6)

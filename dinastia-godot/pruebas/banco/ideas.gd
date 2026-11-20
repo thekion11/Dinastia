@@ -14,7 +14,6 @@ func _probar_ideas_simulacion_del_partido() -> void:
 	var mejores_ok := true
 	var momentum_ok := true
 	var cambios_ok := 0
-	var penales_ok := false
 	for i in 24:
 		var a: Club = cl[i % cl.size()]
 		var b: Club = cl[(i + 3) % cl.size()]

@@ -68,8 +68,8 @@ var _origen := Vector3.ZERO
 # ============================================================================ MONTAR
 
 ## Construye la casa colgada de `raiz3d`, con la puerta en `origen + (0, 0, fondo/2)`.
-func montar(raiz3d: Node3D, mundo_: Mundo, origen: Vector3) -> void:
-	mundo = mundo_
+func montar(raiz3d: Node3D, mundo_arg: Mundo, origen: Vector3) -> void:
+	mundo = mundo_arg
 	_origen = origen
 	name = "CasaDT"
 	position = origen

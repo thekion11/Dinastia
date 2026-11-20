@@ -53,7 +53,7 @@ static func _multi_vom(deck: MeshInstance3D, nombre: String, ts: Array[Transform
 		mm.set_instance_transform(i, ts[i])
 	var mat := StandardMaterial3D.new()
 	mat.albedo_color = col
-	mat.roughness = 0.95 if brillo == 0.0 else 0.4
+	mat.roughness = 0.95 if is_zero_approx(brillo) else 0.4
 	if brillo > 0.0:
 		mat.emission_enabled = true
 		mat.emission = col

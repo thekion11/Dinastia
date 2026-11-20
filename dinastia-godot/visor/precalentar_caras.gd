@@ -7,6 +7,7 @@ extends Node
 ## fotograma. Se detiene sola si el jugador entra en una pantalla pesada (`detener()`: partido, estadio, ciudad). En móvil solo se precalienta el club propio.
 
 const MS_POR_FOTOGRAMA := 1.0
+const _RUTA_PLAYER_SPAWNER := "res://visor/player_spawner.gd"
 
 static var _activa: PrecalentarCaras = null
 static var _hechos := {}
@@ -17,7 +18,7 @@ var _cola: Array = []
 var _mundo: WeakRef = null   ## el mundo para el que se precalienta: si se cierra la partida o cambia de club, se suelta lo pendiente
 var _club_id := ""
 var _espera := 0
-var _spawner = load("res://visor/player_spawner.gd").new()
+var _spawner = load(_RUTA_PLAYER_SPAWNER).new()
 
 ## El once del club `c` (al tomar el mando).
 static func club(c: Club) -> void:
@@ -108,7 +109,7 @@ func _uno(it: Dictionary) -> void:
 	_hechos[it["clave"]] = true
 	var jug: Dictionary = it["jug"]
 	var k: Dictionary = it["kit"]
-	var look = load("res://visor/player_spawner.gd")._look_de(jug)
+	var look = load(_RUTA_PLAYER_SPAWNER)._look_de(jug)
 	var raiz := Node3D.new()
 	raiz.visible = false
 	add_child(raiz)

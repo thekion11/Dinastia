@@ -31,7 +31,7 @@ static func pintar(p: Principal) -> void:
 			continue
 		var b := Button.new()
 		b.text = Idiomas.t(tab)
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(92, 24)
 		## (12-11) Si el aviso dice a qué pantalla de la pestaña va (`secc`), se abre esa y no la última que se miró.

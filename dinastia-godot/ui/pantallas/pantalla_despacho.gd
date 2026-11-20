@@ -83,7 +83,7 @@ func _pintar_sin_banco() -> void:
 		fila.add_child(nom)
 		var b := Button.new()
 		b.text = Idiomas.t("Firmar")
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		var id := c.id
 		b.pressed.connect(func() -> void: _aceptar_trabajo(id))
 		fila.add_child(b)
@@ -201,7 +201,7 @@ func _pintar_junta() -> void:
 			Aviso.mostrar(p, "contrato", "🏛️", String(r.get("titulo", "")), String(r.get("cuerpo", "")))
 			p._refrescar())
 		CuadroDialogo.respuesta(b)
-		b.add_theme_font_size_override("font_size", 16)
+		b.add_theme_font_size_override("font_size", Tema.letra(16))
 		fila.add_child(b)
 	var partes: PackedStringArray = []
 	for a: Dictionary in jt.accionistas:

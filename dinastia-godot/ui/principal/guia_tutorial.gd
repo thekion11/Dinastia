@@ -51,6 +51,12 @@ func quizas(modo: String) -> void:
 
 ## El control que señala el paso `clave` (o null si no existe).
 func objetivo(clave: String) -> Control:
+	## Con el escaparate del Inicio a la vista, el estado, el registro y la tabla del menú de siempre están tapados: se señala la barra del escaparate (club, fecha y pestañas).
+	if clave in ["estado", "registro", "tabla"]:
+		var tapado: Control = {"estado": p._sub, "registro": p._registro, "tabla": p._lista_tabla}[clave]
+		var barra := nodos.get("escaparate_barra") as Control
+		if (tapado == null or not tapado.is_visible_in_tree()) and is_instance_valid(barra) and barra.is_visible_in_tree():
+			return barra
 	match clave:
 		"estado": return p._sub
 		## (3-11, rediseño) Ya no hay fila de bloques ni carril de chips: se señala el RIEL del menú lateral o uno de sus botones.

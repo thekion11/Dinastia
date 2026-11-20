@@ -237,7 +237,7 @@ func _probar_ideas_instalaciones_y_marca() -> void:
 	_comprobar(co.kits.has("titular") and co.kits.has("alt") and co.kits.has("por"), "hay camiseta titular, alternativa y de arquero (32, 33)")
 	co.fijar_kit("alt", "c1", "#112233")
 	_comprobar(String(co.kits["alt"]["c1"]) == "#112233", "se cambia el color de la alternativa (33)")
-	_comprobar(co.medias == co.medias and co.pantalon == co.pantalon, "medias y pantalón son personalizables (35, 36)")
+	_comprobar(typeof(co.medias) == TYPE_STRING and typeof(co.pantalon) == TYPE_STRING, "medias y pantalón son personalizables (35, 36)")
 	_comprobar(Comercial.tipografias().size() >= 3, "hay varias tipografías para nombres y números (37): %d" % Comercial.tipografias().size())
 	_comprobar(Comercial.proveedores().size() >= 3, "hay proveedores de indumentaria ficticios (38): %d" % Comercial.proveedores().size())
 	_comprobar(Comercial.zonas().size() >= 3, "hay zonas de patrocinio (pecho, manga, espalda, short…) (121-123)")
@@ -281,7 +281,9 @@ func _probar_ideas_personas_y_negocios() -> void:
 	for k: String in ["video", "rehab", "cocina", "med", "park"]:
 		var t := Trabajadores.de(c, k)
 		_comprobar(not t.is_empty() and String(t["nombre"]) != "" and String(t["puesto"]) != "", "la instalación «%s» tiene encargado con nombre y puesto (%s)" % [k, String(t.get("puesto", ""))])
-	_comprobar(Trabajadores.de(c, "video") == Trabajadores.de(c, "video"), "y es siempre la misma persona (determinista)")
+	var _r1a = Trabajadores.de(c, "video")
+	var _r1b = Trabajadores.de(c, "video")
+	_comprobar(_r1a == _r1b, "y es siempre la misma persona (determinista)")
 	## Negociación (81, 82, 83, 65): oferta con cuotas, bonos, cláusula; el jugador responde.
 	var objetivo: Jugador = null
 	for cl: Club in m.ligas[0].clubes:

@@ -71,6 +71,13 @@ var gracia_liquidacion: int = 0          ## semanas de más antes de liquidar; e
 ## La cuota francesa: c = D·i / (1 − (1+i)^−n). Con interés cero se reparte a
 ## partes iguales, que es el caso límite de la misma fórmula.
 static func cuota_francesa(deuda: int, tasa: float, cuotas: int) -> int:
+	var nat := Nativo.de("nuc_cuota_francesa")
+	if nat != null:
+		return nat.nuc_cuota_francesa(deuda, tasa, cuotas)
+	return cuota_francesa_gd(deuda, tasa, cuotas)
+
+## Gemela GDScript de `nuc_cuota_francesa` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func cuota_francesa_gd(deuda: int, tasa: float, cuotas: int) -> int:
 	if cuotas <= 0:
 		return deuda
 	if tasa <= 0.0:
@@ -208,7 +215,7 @@ func semana(c: Club) -> void:
 
 ## Los avisos de cada escalón. Se avisa EN el umbral y no antes: un aviso cada
 ## semana se convierte en ruido y se deja de leer.
-func _avisar_escalon(c: Club) -> void:
+func _avisar_escalon(_c: Club) -> void:
 	## `SEM_LIQUIDACION + gracia_liquidacion` no es una constante -depende del
 	## Consejero legal-, y `match` en GDScript exige patrones constantes: con
 	## eso como caso de un `match` ni siquiera compila ("Expression in match

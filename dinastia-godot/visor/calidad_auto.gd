@@ -64,5 +64,5 @@ static func aplicar_si_primera_vez(info: Dictionary = {}) -> Dictionary:
 	Calidad.adaptativa = true
 	Calidad.motor_ligero = Calidad.puede_relanzar() and not Calidad.es_compatibilidad()
 	Calidad.guardar()
-	print("CALIDAD AUTO: equipo modesto (%s) → %s, adaptativa, motor ligero=%s" % [", ".join(info["motivos"]), "MÍNIMO" if Calidad.elegida == Calidad.MINIMO else "MEDIO", Calidad.motor_ligero])
+	print("CALIDAD AUTO: equipo modesto (%s) → %s, adaptativa, motor ligero=%s" % [", ".join(info["motivos"]), "MÍNIMO" if Calidad.elegida == Calidad.MINIMO else "MEDIO", Calidad.motor_ligero])   ## LOG: salida que leen las pruebas y el diagnóstico
 	return info

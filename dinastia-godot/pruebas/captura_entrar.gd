@@ -4,7 +4,7 @@ extends Node
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_entrar.tscn
 const CLAVES_BASE := ["ciudad_hospital", "edificio_bar|Bar El Rincón", "edificio_vivienda|Casa de la familia Ortega"]
 ## SALAS="clave1,clave2" para entrar en otras (p. ej. «edificio_tienda|Farmacia»).
-var CLAVES: Array = Array(OS.get_environment("SALAS").split(",")) if OS.get_environment("SALAS") != "" else CLAVES_BASE
+var claves: Array = Array(OS.get_environment("SALAS").split(",")) if OS.get_environment("SALAS") != "" else CLAVES_BASE
 var _p: Node
 var _v: VistaCiudad
 var _e: ExploradorCiudad
@@ -38,9 +38,9 @@ func _process(_d: float) -> void:
 		_pos_calle = _e.cuerpo.position
 	var fase := (_n - 12) / 40
 	var paso := (_n - 12) % 40
-	if _n > 12 and fase < CLAVES.size():
+	if _n > 12 and fase < claves.size():
 		if paso == 1:
-			_e.call("_entrar_en_edificio", CLAVES[fase])
+			_e.call("_entrar_en_edificio", claves[fase])
 		if paso == 2:
 			print("MUEBLES ", fase, " círculos=", _e._int_circulos.size())
 		if paso == 12:
@@ -55,5 +55,5 @@ func _process(_d: float) -> void:
 			_e.call("_salir_del_edificio")
 		if paso == 34:
 			print("SALIDA estado=", _e.estado, " pos_igual=", _e.cuerpo.position.distance_to(_pos_calle) < 0.1)
-	if _n > 12 + 40 * CLAVES.size() + 5:
+	if _n > 12 + 40 * claves.size() + 5:
 		get_tree().quit()

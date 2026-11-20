@@ -4,7 +4,7 @@ extends BaseIdea
 func _probar() -> void:
 	_titulo("P6: HABITANTES DE LA VIVIENDA SEGÚN LA HORA")
 	var noche := HabitantesCasa.plan(2.0)
-	_comprobar(not bool(noche["cocina"]) and not bool(noche["sofa"]) and not bool(noche["pasea"]) and float(noche["mesa"]) == 0.0 and String(noche["estado"]) == "Duermen", "a las 2:00 la familia duerme: nadie a la vista")
+	_comprobar(not bool(noche["cocina"]) and not bool(noche["sofa"]) and not bool(noche["pasea"]) and is_zero_approx(float(noche["mesa"])) and String(noche["estado"]) == "Duermen", "a las 2:00 la familia duerme: nadie a la vista")
 	var desayuno := HabitantesCasa.plan(7.5)
 	_comprobar(bool(desayuno["cocina"]) and float(desayuno["mesa"]) > 0.5 and not bool(desayuno["sofa"]), "a las 7:30 se cocina y se desayuna")
 	var tarde := HabitantesCasa.plan(16.0)

@@ -285,7 +285,7 @@ func cambiar_rol(j: Jugador, rol: String) -> Dictionary:
 		d = -(ahora - antes) * 5
 		_mover_moral(j, d)
 		return {"ok": true, "txt": "Se lo tomó mal: %d de moral" % d, "d_moral": d}
-	elif ahora < antes:
+	if ahora < antes:
 		d = (antes - ahora) * 4
 		_mover_moral(j, d)
 		return {"ok": true, "txt": "Le has subido el escalafón", "d_moral": d}

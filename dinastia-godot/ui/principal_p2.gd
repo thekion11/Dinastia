@@ -9,21 +9,21 @@ extends "res://ui/principal_p1.gd"
 ## Las que conectan señales del mundo son `Node` hijos (ver la cabecera de
 ## `sorteos.gd`), y se cuelgan aquí mismo, al crearse la pantalla. Se declaran
 ## en esta capa (no en la de cada puente) para que todas las de encima las vean.
-const _PrincipalSorteos := preload("res://ui/principal/sorteos.gd")
-var _sorteos := _ayudante(_PrincipalSorteos.new(self)) as _PrincipalSorteos
-const _PrincipalNoticias := preload("res://ui/principal/noticias.gd")
-var _noticias := _ayudante(_PrincipalNoticias.new(self)) as _PrincipalNoticias
-const _PrincipalPreferencias := preload("res://ui/principal/preferencias.gd")
-var _prefs := _PrincipalPreferencias.new(self)
-const _PrincipalCicloPartida := preload("res://ui/principal/ciclo_partida.gd")
-var _partida := _PrincipalCicloPartida.new(self)
+const _PRINCIPAL_SORTEOS := preload("res://ui/principal/sorteos.gd")
+var _sorteos := _ayudante(_PRINCIPAL_SORTEOS.new(self)) as _PRINCIPAL_SORTEOS
+const _PRINCIPAL_NOTICIAS := preload("res://ui/principal/noticias.gd")
+var _noticias := _ayudante(_PRINCIPAL_NOTICIAS.new(self)) as _PRINCIPAL_NOTICIAS
+const _PRINCIPAL_PREFERENCIAS := preload("res://ui/principal/preferencias.gd")
+var _prefs := _PRINCIPAL_PREFERENCIAS.new(self)
+const _PRINCIPAL_CICLO_PARTIDA := preload("res://ui/principal/ciclo_partida.gd")
+var _partida := _PRINCIPAL_CICLO_PARTIDA.new(self)
 ## Puente de solo lectura para las pantallas que miran la pila de deshacer
 ## (Opciones enseña cuántos pasos quedan; Ajustes la vacía al cambiar de mundo).
 var _pila_deshacer: Array[Dictionary]:
 	get:
 		return _partida.pila_deshacer
-const _PrincipalGuia := preload("res://ui/principal/guia_tutorial.gd")
-var _guia := _PrincipalGuia.new(self)
+const _PRINCIPAL_GUIA := preload("res://ui/principal/guia_tutorial.gd")
+var _guia := _PRINCIPAL_GUIA.new(self)
 
 ## Cuelga un ayudante `Node` de esta pantalla y lo devuelve. Se llama desde el
 ## inicializador de la variable: así existe antes de `_ready()` y de cualquier

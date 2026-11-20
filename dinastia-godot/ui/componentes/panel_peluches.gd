@@ -37,11 +37,11 @@ var _caja := Control.new()
 var _botones := HBoxContainer.new()
 var _vista: VistaGarra3D          ## la máquina en 3D (`vista_garra3d.gd`) si los peluches tienen modelo; si no, el dibujo 2D de siempre
 
-static func abrir(capa: CanvasLayer, roles_: Roles, dia_: int, maquina_: int, pos: Vector3, quien: Node) -> PanelPeluches:
+static func abrir(capa: CanvasLayer, roles_arg: Roles, dia_arg: int, maquina_arg: int, pos: Vector3, quien: Node) -> PanelPeluches:
 	var p := PanelPeluches.new()
-	p.roles = roles_
-	p.dia = dia_
-	p.maquina = maquina_
+	p.roles = roles_arg
+	p.dia = dia_arg
+	p.maquina = maquina_arg
 	p.pos_maquina = pos
 	p.expl = quien
 	p.set_anchors_preset(Control.PRESET_CENTER)

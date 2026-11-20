@@ -238,7 +238,7 @@ func _control_balon_inicio(p: Dictionary, d: float, mv: Vector2, mundo: Vector3,
 	return false
 
 ## Con el balón: cargar el tiro (mantener) y soltarlo, y el amago. `true` = el turno acaba aquí.
-func _control_tiro(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, lb: bool, rb: bool, lt: bool, delta: float) -> bool:
+func _control_tiro(p: Dictionary, d: float, mv: Vector2, _mundo: Vector3, lb: bool, rb: bool, lt: bool, delta: float) -> bool:
 	## El tiro: se carga manteniendo y sale al soltar; los modificadores
 	## valen si se pulsan en algún momento de la carga.
 	if Input.is_action_pressed("jugar_tiro"):
@@ -260,7 +260,7 @@ func _control_tiro(p: Dictionary, d: float, mv: Vector2, mundo: Vector3, lb: boo
 			carga = 0.0
 			_filigrana(p, "amago_rabona" if lt else "amago_tiro", 1.0)
 		return true
-	elif cargando:
+	if cargando:
 		cargando = false
 		var ap_tiro := Vector2(-mv.x * d, -mv.y * 0.5)
 		if Mando.ayuda("tiro") == "asistido" and _mods_carga != "potente":

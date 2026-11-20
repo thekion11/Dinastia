@@ -183,6 +183,21 @@ static func candidatas(p: Partido, mio: int) -> Array:
 	## La posesión es relleno: nunca le gana a algo que pasó de verdad (una lesión pesa 0,35).
 	c.append(_c("posesion", signi(pos - 50) if absi(pos - 50) >= 8 else 0, 0.05 + absf(pos - 50) / 200.0,
 		Idiomas.t("Tuvimos el balón el %d %% del partido.") % pos))
+	## RELLENO FINAL: siempre tres causas distintas. Si por los umbrales no salieron (partido en campo neutral, once casi iguales…),
+	## se suman las comparaciones de plantilla, forma y físico aunque la diferencia sea pequeña (peso mínimo: nunca le ganan a una causa real).
+	var claves := {}
+	for x: Dictionary in c:
+		claves[x["clave"]] = true
+	if claves.size() < 3:
+		if not claves.has("plantilla") and om != os:
+			c.append(_c("plantilla", signi(om - os), 0.02,
+				(Idiomas.t("Sobre el papel éramos mejores (media del once %d frente a %d).") if om > os else Idiomas.t("Sobre el papel su once era mejor (media %d frente a %d).")) % [om, os]))
+		if not claves.has("forma") and fm != fs:
+			c.append(_c("forma", signi(fm - fs), 0.015,
+				(Idiomas.t("Llegábamos en mejor forma (media %d frente a %d).") if fm > fs else Idiomas.t("El rival llegaba en mejor forma (media %d frente a %d).")) % [fm, fs]))
+		if not claves.has("cansancio") and fim != fis:
+			c.append(_c("cansancio", signi(fim - fis), 0.01,
+				(Idiomas.t("Llegamos más frescos (físico %d frente a %d).") if fim > fis else Idiomas.t("Llegamos cansados (físico %d frente a %d).")) % [fim, fis]))
 	return c
 
 static func _c(clave: String, signo: int, peso: float, texto: String) -> Dictionary:

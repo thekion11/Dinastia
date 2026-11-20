@@ -5,7 +5,7 @@ extends Node3D
 ## `DESFASE=0,0.3,…`: segundos que se adelanta el clip de cada uno; `BALON=x,y,z`: un balón en ese punto (el instante del contacto).
 ## `LEJOS=1`: cámara a la distancia de la de TV (para ver si se lee). Salida: pruebas/capturas/acciones_<SUFIJO>_<n>.png
 ## `TIEMPOS=0,1,2…` cambia los instantes (s).
-var TIEMPOS := [0.0, 0.15, 0.3, 0.45, 0.6, 0.8, 1.1, 1.5]
+var tiempos := [0.0, 0.15, 0.3, 0.45, 0.6, 0.8, 1.1, 1.5]
 var _n := 0
 var _k := 0
 var _cam: Camera3D
@@ -14,7 +14,7 @@ var _clips: Array = []
 
 func _ready() -> void:
 	if OS.get_environment("TIEMPOS") != "":
-		TIEMPOS = Array(OS.get_environment("TIEMPOS").split(",")).map(func(x: String) -> float: return float(x))
+		tiempos = Array(OS.get_environment("TIEMPOS").split(",")).map(func(x: String) -> float: return float(x))
 	_clips = Array((OS.get_environment("CLIPS") if OS.get_environment("CLIPS") != "" else "cabezazo,cabezazo_potente,pase_cabeza,entrada_de_pie,barrida_real").split(","))
 	var paises: Array[String] = ["ENG", "ARG", "JPN"]
 	var m := Mundo.new()
@@ -107,9 +107,9 @@ func _process(_d: float) -> void:
 	if _n < 10:
 		return
 	if (_n - 10) % 3 == 0:
-		_posar(float(TIEMPOS[_k]))
+		_posar(float(tiempos[_k]))
 	elif (_n - 10) % 3 == 2:
 		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/acciones_%s_%d.png" % [OS.get_environment("SUFIJO"), _k])
 		_k += 1
-		if _k >= TIEMPOS.size():
+		if _k >= tiempos.size():
 			get_tree().quit()

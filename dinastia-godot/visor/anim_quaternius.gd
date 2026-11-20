@@ -181,7 +181,7 @@ static func _piernas_naturales(anim: Animation, esq: Skeleton3D, cadera: float, 
 		var ruta := str(anim.track_get_path(t))
 		var hueso := ruta.get_slice(":", ruta.get_slice_count(":") - 1)
 		## La pista de posición de la RAÍZ del esqueleto (sea «root» o «pelvis»): sube todo el cuerpo.
-		if anim.track_get_type(t) == Animation.TYPE_POSITION_3D and alza != 0.0 and esq.find_bone(hueso) >= 0 \
+		if anim.track_get_type(t) == Animation.TYPE_POSITION_3D and not is_zero_approx(alza) and esq.find_bone(hueso) >= 0 \
 				and esq.get_bone_parent(esq.find_bone(hueso)) < 0:
 			for k in anim.track_get_key_count(t):
 				var pos: Vector3 = anim.track_get_key_value(t, k)
@@ -201,7 +201,7 @@ static func _piernas_naturales(anim: Animation, esq: Skeleton3D, cadera: float, 
 			var q: Quaternion = anim.track_get_key_value(t, k)
 			anim.track_set_key_value(t, k, q * delta)
 	## Sin pista de posición de la raíz en el clip: se crea con el reposo más el alza.
-	if alza != 0.0 and not subida and esq.get_bone_count() > 0:
+	if not is_zero_approx(alza) and not subida and esq.get_bone_count() > 0:
 		var raiz := 0
 		for i in esq.get_bone_count():
 			if esq.get_bone_parent(i) < 0:

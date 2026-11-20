@@ -16,6 +16,9 @@ signal terminado(resultado: Dictionary)
 const LIMA := Color("c6ff3a")
 const FUCSIA := Color("ff2e88")
 const NEGRO := Color(0.03, 0.035, 0.045, 0.88)
+const _RUTA_ESTADIO := "res://ui/estadio.gd"
+const _RUTA_MOTOR_JUGABLE := "res://visor/motor_jugable.gd"
+const _RUTA_STADIUM_BUILDER := "res://visor/stadium_builder.gd"
 
 var mundo: Mundo
 var carrera: CarreraJugador
@@ -86,6 +89,8 @@ var _kit_arb: Dictionary = {}
 
 var _banner_pendiente := ""
 var _t_rotulos := 0.0
+var _sb_script: GDScript = null   ## (18-11) el script del estadio, cargado una vez (antes `load()` en cada fotograma)
+var _hud_clave: Array = []   ## (18-11) datos con los que se pintó el HUD por última vez: sin cambios no se reformatea
 
 # ---------------------------------------------------------------- pausa y final
 
@@ -295,7 +300,7 @@ func _cine_gol(de_local: bool, autor_id: String) -> void:
 			return {}
 		return {"dorsal": int(jd.get("dorsal", 0)), "nombre": String(jd.get("nombre", "")),
 			"tiros": int(_tiros_de.get(autor_id, 1)), "goles": int(_goles_de.get(autor_id, 1))}
-	var gc = load("res://visor/stadium_builder.gd").geom_de_forma(String(_perfil.get("forma", "oval")))
+	var gc = load(_RUTA_STADIUM_BUILDER).geom_de_forma(String(_perfil.get("forma", "oval")))
 	_cine = CineGol.iniciar(self, _raiz, club_gol, de_local, nodo, carta, float(gc["dx"]))
 	_ver_rotulos(false)
 	_ver_hud_abajo(false)
@@ -358,7 +363,7 @@ func _caja_centro(titulo: String, botones: Array) -> Control:
 		var bt := Button.new()
 		bt.text = Idiomas.t(String(b[0]))
 		bt.custom_minimum_size = Vector2(360, 44)
-		bt.add_theme_font_size_override("font_size", 17)
+		bt.add_theme_font_size_override("font_size", Tema.letra(17))
 		bt.pressed.connect(b[1])
 		v.add_child(bt)
 	return capa

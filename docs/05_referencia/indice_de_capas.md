@@ -636,6 +636,6 @@ y la última (sin `_pN` en el nombre) conserva la ruta y el `class_name` de siem
 ## `visor/vestidor_q.gd` · 3 capas
 
 1. `vestidor_q_p1.gd` — 419 líneas — _botin_de, _cargar_male, _textura_recoloreada, _mallas, vestir, _material_liso … (+5)
-2. `vestidor_q_p2.gd` — 288 líneas — vestir_equipacion, exposicion_piel, compensar_piel, _afin_foto, _ocultar_cejas_y_barba, _teñir_pelo … (+4)
+2. `vestidor_q_p2.gd` — 288 líneas — vestir_equipacion, exposicion_piel, compensar_piel, _afin_foto, _ocultar_cejas_y_barba, _tenir_pelo … (+4)
 3. `vestidor_q.gd` — 183 líneas — poner_cara
 

@@ -241,6 +241,12 @@ static func _c(hex, fallback := "#ffffff") -> Color:
 		return Color(hex)
 	return Color(fallback)
 
+static var _techo_cam := 0
+static var _techo_n := -1
+static var _techo_n0 := 0
+static var _techo_n1 := 0
+static var _techo_pos := Vector3.INF
+
 static func marcar_techo(mi: GeometryInstance3D, fuera: Vector3) -> void:
 	if mi == null:
 		return
@@ -253,7 +259,17 @@ static func ocultar_techo_ante(cam: Camera3D) -> void:
 		return
 	if cam.cull_mask & CAPA_TECHO_OCULTO:
 		cam.cull_mask &= ~CAPA_TECHO_OCULTO
-	for n in cam.get_tree().get_nodes_in_group("techo_estadio"):
+	## (18-11) Los techos no se mueven: con la misma cámara, en el mismo sitio y los mismos techos, el resultado es el de antes y no se recorre nada.
+	var techos := cam.get_tree().get_nodes_in_group("techo_estadio")
+	var pos := cam.global_position
+	if cam.get_instance_id() == _techo_cam and techos.size() == _techo_n and pos == _techo_pos and (techos.is_empty() or techos[0].get_instance_id() == _techo_n0 and techos[-1].get_instance_id() == _techo_n1):
+		return
+	_techo_cam = cam.get_instance_id()
+	_techo_n = techos.size()
+	_techo_n0 = techos[0].get_instance_id() if _techo_n > 0 else 0
+	_techo_n1 = techos[-1].get_instance_id() if _techo_n > 0 else 0
+	_techo_pos = pos
+	for n in techos:
 		## GeometryInstance3D: también las vigas del techo (un MultiMesh, 26-10-2026).
 		var mi := n as GeometryInstance3D
 		if mi == null:

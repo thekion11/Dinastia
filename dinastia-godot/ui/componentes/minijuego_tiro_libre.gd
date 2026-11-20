@@ -294,7 +294,7 @@ func _patear() -> void:
 			tb.tween_property(bn, "position:y", 0.0, 0.25).set_ease(Tween.EASE_IN)
 		if cal != "barrera" and not _portero.is_empty():
 			var pn: Node3D = _portero["nodo"]
-			var clip := "atajar_bajo" if dir_portero == 0.0 else ("atajar_der" if dir_portero < 0.0 else "atajar_izq")
+			var clip := "atajar_bajo" if is_zero_approx(dir_portero) else ("atajar_der" if dir_portero < 0.0 else "atajar_izq")
 			Mini3D.anim(_portero, clip, "", 0.05)
 			var tp := pn.create_tween()
 			tp.tween_interval(0.25)

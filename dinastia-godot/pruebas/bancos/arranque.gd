@@ -5,6 +5,7 @@ var _p: Principal
 const RANURA := "prueba_banco_arranque"
 const MODOS := ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "fondo"]
 const SEMILLA := 20261104
+const _RUTA_PRINCIPAL := "res://escenas/principal.tscn"
 
 func _frames(n: int = 4) -> void:
 	for i in n:
@@ -96,7 +97,7 @@ func _modos_y_dificultades() -> void:
 			PedidoPartida.dt_nombre_elegido = "Prueba Banco"
 			PedidoPartida.dificultad_elegida = dificultad
 			PedidoPartida.aplicado_a = 0
-			_p = load("res://escenas/principal.tscn").instantiate()
+			_p = load(_RUTA_PRINCIPAL).instantiate()
 			add_child(_p)
 			await _frames(6)
 			_quitar_tutorial()
@@ -137,7 +138,6 @@ func _modos_y_dificultades() -> void:
 			_comprobar(String(_p.get("_titulo_club").text if _p.get("_titulo_club") != null and _p.get("_titulo_club").get("text") != null else mundo.mi_club().nombre).contains(mundo.mi_club().nombre) or true, "%s: la cabecera nombra el club" % donde)
 			## Siete días de juego sin fallar: la fecha avanza y la semana corre.
 			var sem0 := mundo.semana
-			var fecha0 := String(mundo.fecha_texto()) if mundo.has_method("fecha_texto") else ""
 			AvanceSemana.partido_obliga = false   ## (9-11) la prueba recorre semanas a mano
 			for k in 7:
 				_p._avanzar_dia()
@@ -156,7 +156,7 @@ func _tutorial_por_modo() -> void:
 		PedidoPartida.modo_elegido = modo
 		PedidoPartida.aplicado_a = 0
 		PedidoPartida.tutorial_pedido = true
-		_p = load("res://escenas/principal.tscn").instantiate()
+		_p = load(_RUTA_PRINCIPAL).instantiate()
 		add_child(_p)
 		await _frames(8)
 		var t: Tutorial = null
@@ -199,7 +199,7 @@ func _guardar_y_cargar() -> void:
 		PedidoPartida.mundo_a_cargar = c
 		PedidoPartida.modo_elegido = ""
 		PedidoPartida.aplicado_a = 0
-		_p = load("res://escenas/principal.tscn").instantiate()
+		_p = load(_RUTA_PRINCIPAL).instantiate()
 		add_child(_p)
 		await _frames(6)
 		_quitar_tutorial()

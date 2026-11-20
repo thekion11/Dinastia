@@ -45,9 +45,9 @@ func _process(_d: float) -> void:
 		## cayendo dentro de la misma copa). Si el shader mueve vértices de
 		## verdad, ese punto pasa de "borde de la copa" a "fondo" o viceversa
 		## entre una captura y otra.
-		var imgA := Image.new()
-		imgA.load("res://pruebas/capturas/viento_arboles_a.png")
-		var pA := imgA.get_pixel(560, 470)
-		var pB := img2.get_pixel(560, 470)
-		print("pixel de borde en A: %s   en B: %s   ¿distinto? %s" % [pA, pB, pA != pB])
+		var img_a := Image.new()
+		img_a.load("res://pruebas/capturas/viento_arboles_a.png")
+		var p_a := img_a.get_pixel(560, 470)
+		var p_b := img2.get_pixel(560, 470)
+		print("pixel de borde en A: %s   en B: %s   ¿distinto? %s" % [p_a, p_b, p_a != p_b])
 		get_tree().quit()

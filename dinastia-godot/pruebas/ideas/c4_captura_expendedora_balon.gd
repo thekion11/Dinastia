@@ -6,7 +6,7 @@ var _cam: Camera3D
 func _ready() -> void:
 	var cb := CityBuilder.new()
 	add_child(cb)
-	var ex := CiudadExpansion.new(cb)
+	CiudadExpansion.new(cb)
 	ExpendedoraCiudad.montar(cb, Vector3.ZERO, 0.0)
 	var bal := BalonSuelto.new()
 	bal.position = Vector3(1.4, 0.6, 1.6)

@@ -111,7 +111,7 @@ static func _pintar_tablon(lista: VBoxContainer, m: Mundo, tab: Array, candidato
 			continue
 		var b := Button.new()
 		b.text = Idiomas.t("Ofrecer a %s") % j.nombre
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.tooltip_text = Idiomas.t("Si le encaja, el club te manda una oferta a la bandeja del mercado.")
 		var club: Club = n["club"]
 		b.pressed.connect(func() -> void:
@@ -144,7 +144,7 @@ static func _bloque(lista: VBoxContainer, clave: String, titulo: String, _texto:
 	var b := Button.new()
 	b.flat = true
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	b.add_theme_font_size_override("font_size", 12)
+	b.add_theme_font_size_override("font_size", Tema.letra(12))
 	b.add_theme_color_override("font_color", Principal.COL_ORO)
 	lista.add_child(b)
 	var caja := VBoxContainer.new()

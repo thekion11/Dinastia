@@ -115,7 +115,7 @@ func _ready() -> void:
 	for v: Array in [["⬆ Arriba: botones", YAW0, PITCH0], ["↻ Atrás: gatillos y bumpers", PI, 0.3]]:
 		var b := Button.new()
 		b.text = Idiomas.t(String(v[0]))
-		b.add_theme_font_size_override("font_size", 12)
+		b.add_theme_font_size_override("font_size", Tema.letra(12))
 		b.focus_mode = Control.FOCUS_NONE
 		b.pressed.connect(mirar.bind(float(v[1]), float(v[2])))
 		fila.add_child(b)

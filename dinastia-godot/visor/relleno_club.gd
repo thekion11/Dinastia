@@ -7,10 +7,9 @@ extends RefCounted
 ## ahí) el relleno decorativo NO se pone: lo existente queda igual y las salas nuevas se llenan en BAJA o más.
 
 ## `caja`: el suelo libre de la sala (x, z); las salas miran a +Z (el pasillo está en `caja.end.y`).
-static func sala(nodo: Node3D, nombre: String, caja: Rect2, y0: float, c1: Color) -> void:
+static func sala(nodo: Node3D, nombre: String, caja: Rect2, y0: float, _c1: Color) -> void:
 	if Calidad.elegida <= Calidad.MINIMO:
 		return
-	var cx := caja.get_center().x
 	match nombre:
 		"Enfermería":
 			## Lavabo y botiquín junto a la puerta (contra el tabique del pasillo, de cara a la sala) y una caja de material.

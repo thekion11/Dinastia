@@ -45,7 +45,7 @@ func _ready() -> void:
 			if h is EventoDialogo:
 				h.queue_free()
 		var tag := "%d_%s" % [n, club.pais]
-		print("club: ", club.nombre, " (", club.pais, ") acento ", p.COL_ACENTO.to_html(false))
+		print("club: ", club.nombre, " (", club.pais, ") acento ", p.col_acento.to_html(false))
 		## 1) La rueda de prensa con las respuestas en cruz.
 		p.mundo.prensa.abrir_rueda(true, false)
 		p._abrir_rueda_pantalla_completa(p.mundo.prensa.entrevista)

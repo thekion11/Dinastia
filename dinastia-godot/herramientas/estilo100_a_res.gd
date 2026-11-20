@@ -7,8 +7,8 @@ extends SceneTree
 ## Retarget por DIRECCIÓN (como `league_anim_a_res.gd`): el BVH usa los mismos ejes que nuestro esqueleto (Y arriba, mira a +Z, izquierda +X)
 ## y el reposo en T, así que el giro global de cada articulación de origen G se aplica a nuestro hueso con la corrección Q que lleva la
 ## dirección de reposo de nuestro hueso a la del origen:  global_nuestro = G · Q · reposo_global_nuestro.
-var SALIDA := "res://terceros/estilo100/biblioteca/100style.res"   ## con ESTILO100_NOMBRE=otro → otro.res y su catálogo
-var CATALOGO := "res://terceros/estilo100/catalogos/animaciones_catalogo_100style.json"
+var salida := "res://terceros/estilo100/biblioteca/100style.res"   ## con ESTILO100_NOMBRE=otro → otro.res y su catálogo
+var catalogo_v := "res://terceros/estilo100/catalogos/animaciones_catalogo_100style.json"
 const FPS := 30.0
 const COSTE_MAX := 1.0
 const ALTURA_CADERA_ORIGEN := 97.9   ## cm: altura de la cadera del origen de pie (patas rectas)
@@ -36,8 +36,8 @@ func _init() -> void:
 	var ruta := OS.get_environment("ESTILO100_JSON")
 	var nom := OS.get_environment("ESTILO100_NOMBRE")
 	if nom != "":
-		SALIDA = "res://terceros/estilo100/biblioteca/%s.res" % nom
-		CATALOGO = "res://terceros/estilo100/catalogos/animaciones_catalogo_%s.json" % nom
+		salida = "res://terceros/estilo100/biblioteca/%s.res" % nom
+		catalogo_v = "res://terceros/estilo100/catalogos/animaciones_catalogo_%s.json" % nom
 	var doc: Variant = JSON.parse_string(FileAccess.get_file_as_string(ruta))
 	if not doc is Dictionary:
 		print("ERROR: sin ESTILO100_JSON=", ruta)
@@ -72,9 +72,9 @@ func _init() -> void:
 			var ficha := _ficha(clip, nombre, espejo)
 			catalogo.append(ficha)
 		n += 1
-	DirAccess.make_dir_recursive_absolute(SALIDA.get_base_dir())
-	print("ciclos: ", n, " (+ espejos)  guardar: ", ResourceSaver.save(lib, SALIDA, ResourceSaver.FLAG_COMPRESS))
-	var f := FileAccess.open(CATALOGO, FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute(salida.get_base_dir())
+	print("ciclos: ", n, " (+ espejos)  guardar: ", ResourceSaver.save(lib, salida, ResourceSaver.FLAG_COMPRESS))
+	var f := FileAccess.open(catalogo_v, FileAccess.WRITE)
 	f.store_string(JSON.stringify(catalogo, "\t"))
 	f.close()
 	(d["nodo"] as Node).free()
@@ -104,7 +104,7 @@ func _ficha(c: Dictionary, nombre: String, espejo: bool) -> Dictionary:
 
 func _convertir(clip: Dictionary, espejo: bool) -> Animation:
 	var n := int(clip["cuadros"])
-	var J := juntas.size()
+	var j := juntas.size()
 	var q: Array = clip["q"]
 	var alto: Array = clip["alto_cadera_cm"]
 	var largo := float(n) / FPS
@@ -122,10 +122,10 @@ func _convertir(clip: Dictionary, espejo: bool) -> Animation:
 		var f := k % n
 		var t := float(k) / FPS
 		var g := {}
-		for i in J:
+		for i in j:
 			var nom := String(juntas[i]["nombre"])
 			var fuente := _espejo_nombre(nom) if espejo else nom
-			var o: int = (f * J + int(idx[fuente])) * 4
+			var o: int = (f * j + int(idx[fuente])) * 4
 			var ql := Quaternion(float(q[o]), float(q[o + 1]), float(q[o + 2]), float(q[o + 3]))
 			if espejo:
 				ql = Quaternion(ql.x, -ql.y, -ql.z, ql.w)

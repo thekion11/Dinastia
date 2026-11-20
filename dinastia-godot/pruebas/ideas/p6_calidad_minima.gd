@@ -4,7 +4,9 @@ extends BaseIdea
 ## abiertos en MÍNIMO y el sol ya girado, que NINGUNA luz tiene sombra y que ningún entorno tiene glow, SSAO, SSIL, SSR, SDFGI ni niebla volumétrica.
 
 ## Excepciones declaradas (cada una con su motivo): no se cuentan como «sin mirar la calidad».
-const EXCEPCIONES := {"res://visor/gala_premio3d.gd": "la gala de premios de La Ruta va siempre a calidad máxima (orden del dueño, 14-11; confirmada el 16-11)"}
+const EXCEPCIONES := {"res://visor/gala_premio3d.gd": "la gala de premios de La Ruta va siempre a calidad máxima (orden del dueño, 14-11; confirmada el 16-11)",
+	"res://visor/retrato3d.gd": "retratos 3D de los menús: viewport pequeño fuera del partido y la ciudad; se quedan como están (decisión del dueño, 18-11: excepción)",
+	"res://ui/partido_menu/retrato_jugador3d.gd": "retrato 3D del jugador en el menú del partido: viewport pequeño, fuera del partido; se queda como está (decisión del dueño, 18-11: excepción)"}
 const PATRON := "shadow_enabled = true|glow_enabled = true|ssao_enabled = true|msaa_3d = Viewport.MSAA_4X|msaa_3d = Viewport.MSAA_8X|shadow_enabled = dia"
 
 func _probar() -> void:

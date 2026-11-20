@@ -125,6 +125,13 @@ static func _de_la_liga(c: CarreraJugador, m: Mundo, j: Jugador, club: Club, mej
 	return out
 
 static func _puntos_mundial(nota: float, goles: int, asist: int, titulos: int) -> float:
+	var nat := Nativo.de("nuc_puntos_mundial")
+	if nat != null:
+		return nat.nuc_puntos_mundial(nota, goles, asist, titulos)
+	return _puntos_mundial_gd(nota, goles, asist, titulos)
+
+## Gemela GDScript de `nuc_puntos_mundial` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _puntos_mundial_gd(nota: float, goles: int, asist: int, titulos: int) -> float:
 	return nota * 10.0 + float(goles + asist) * 0.3 + float(titulos) * 3.0
 
 static func _mejor_del_mundo(m: Mundo, j: Jugador, mios: float) -> bool:

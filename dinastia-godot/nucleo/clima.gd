@@ -37,6 +37,13 @@ static func latitud(pais: String) -> float:
 ## El mes (1-12) de una semana de la temporada. La semana 1 es la última de
 ## enero, como en el calendario de la pantalla principal.
 static func mes_de(semana: int) -> int:
+	var nat := Nativo.de("nuc_mes_de")
+	if nat != null:
+		return nat.nuc_mes_de(semana)
+	return mes_de_gd(semana)
+
+## Gemela GDScript de `nuc_mes_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func mes_de_gd(semana: int) -> int:
 	return clampi(1 + int(float(maxi(semana, 1) - 1) * 7.0 / 30.4 + 0.85), 1, 12)
 
 ## "verano", "otono", "invierno", "primavera", o "tropical" cerca del ecuador.

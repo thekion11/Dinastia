@@ -3,6 +3,7 @@ extends BaseIdea
 ## SALIR (cerrar la ventana / «atrás» de Android) la pregunta «¿Guardar antes de salir?» (Guardar y salir / Salir sin guardar / Cancelar). Sin salir de verdad.
 
 const RANURA := "zz_gua_prueba"
+const _RUTA_CICLO_PARTIDA := "res://ui/principal/ciclo_partida.gd"
 
 func _esperar_guardado() -> void:
 	var n := 0
@@ -12,7 +13,7 @@ func _esperar_guardado() -> void:
 
 func _probar() -> void:
 	_titulo("GUARDADO: AUTOGUARDADO EN SEGUNDO PLANO Y PREGUNTA AL SALIR")
-	load("res://ui/principal/ciclo_partida.gd").ranura_prueba = RANURA
+	load(_RUTA_CICLO_PARTIDA).ranura_prueba = RANURA
 	SalidaGuardada.salir_de_verdad = false
 	Partida.borrar(RANURA)
 	AvanceSemana.partido_obliga = false   ## (10-11) la prueba recorre días a mano: sin esto, el sábado con partido abre solo el menú del partido (`VidaApp`) y el «atrás» es suyo
@@ -88,5 +89,5 @@ func _probar() -> void:
 	await get_tree().process_frame
 	_comprobar(get_tree().auto_accept_quit, "al salir de Principal el árbol vuelve a aceptar el cierre")
 	Partida.borrar(RANURA)
-	load("res://ui/principal/ciclo_partida.gd").ranura_prueba = ""
+	load(_RUTA_CICLO_PARTIDA).ranura_prueba = ""
 	SalidaGuardada.salir_de_verdad = true

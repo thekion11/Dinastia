@@ -28,8 +28,8 @@ static func _chk(f: Array[String], n: Array, nombre: String, a: Variant, b: Vari
 static func _balon(nat: Object, f: Array[String], n: Array) -> void:
 	var cfg := LeagueNucleo.config_balon()
 	var motor := MotorLeague.new()
-	var R := MotorJugable.R
-	var k := PackedFloat64Array([MotorLeague.PASO_BALON, R, R + 0.02, 0.2, 0.012, Balance.GIRO_AIRE, Balance.GIRO_SUELO, MotorJugable.LARGO, MotorJugable.PALO, MotorJugable.LARGUERO])
+	var r_loc := MotorJugable.R
+	var k := PackedFloat64Array([MotorLeague.PASO_BALON, r_loc, r_loc + 0.02, 0.2, 0.012, Balance.GIRO_AIRE, Balance.GIRO_SUELO, MotorJugable.LARGO, MotorJugable.PALO, MotorJugable.LARGUERO])
 	var cfg_int := cfg.duplicate()
 	cfg_int["humedad"] = 1       ## ints donde GDScript espera float
 	cfg_int["cesped"] = 1
@@ -40,16 +40,16 @@ static func _balon(nat: Object, f: Array[String], n: Array) -> void:
 	var cfg_mojado := LeagueNucleo.config_balon(7.0, Vector3(30, 0, -30))   ## humedad fuera de 0..1 y viento fuerte
 	var cfgs := {"base": cfg, "int": cfg_int, "cesped0": cfg_c0, "arrastre": cfg_arr, "mojado": cfg_mojado}
 	var estados := {
-		"reposo": [Vector3(1, R, 1), Vector3.ZERO], "bajo tierra": [Vector3(1, -2.0, 1), Vector3(3, -4.0, 1)], "suelo exacto": [Vector3(1, R, 1), Vector3(3, 0, 1)],
-		"aire": [Vector3(1, 3, 1), Vector3(30, 5, 10)], "rebote": [Vector3(1, 0.05, 1), Vector3(3, -9, 1)], "NaN": [Vector3(1, R, 1), Vector3(NAN, 0, 0)],
-		"inf": [Vector3(1, R, 1), Vector3(INF, 0, 0)], "enorme": [Vector3(1, R, 1), Vector3(1e30, 1e30, 1e30)], "sobre el cesped": [Vector3(1, R + 0.025, 1), Vector3(5, 0, 5)]}
+		"reposo": [Vector3(1, r_loc, 1), Vector3.ZERO], "bajo tierra": [Vector3(1, -2.0, 1), Vector3(3, -4.0, 1)], "suelo exacto": [Vector3(1, r_loc, 1), Vector3(3, 0, 1)],
+		"aire": [Vector3(1, 3, 1), Vector3(30, 5, 10)], "rebote": [Vector3(1, 0.05, 1), Vector3(3, -9, 1)], "NaN": [Vector3(1, r_loc, 1), Vector3(NAN, 0, 0)],
+		"inf": [Vector3(1, r_loc, 1), Vector3(INF, 0, 0)], "enorme": [Vector3(1, r_loc, 1), Vector3(1e30, 1e30, 1e30)], "sobre el cesped": [Vector3(1, r_loc + 0.025, 1), Vector3(5, 0, 5)]}
 	for cn: String in cfgs:
 		for en: String in estados:
 			var p: Vector3 = estados[en][0]
 			var v: Vector3 = estados[en][1]
 			for total in [0, 1, 70]:
-				_chk(f, n, "predicción %s/%s/%d" % [cn, en, total], MotorLeague.prediccion_gd(p, v, cfgs[cn], false, Vector3.ZERO, total), nat.balon_prediccion(p, v, cfgs[cn], false, Vector3.ZERO, total, 0.01, R))
-			_chk(f, n, "predicción con portador %s/%s" % [cn, en], MotorLeague.prediccion_gd(p, v, cfgs[cn], true, Vector3(3, 0, -2), 20), nat.balon_prediccion(p, v, cfgs[cn], true, Vector3(3, 0, -2), 20, 0.01, R))
+				_chk(f, n, "predicción %s/%s/%d" % [cn, en, total], MotorLeague.prediccion_gd(p, v, cfgs[cn], false, Vector3.ZERO, total), nat.balon_prediccion(p, v, cfgs[cn], false, Vector3.ZERO, total, 0.01, r_loc))
+			_chk(f, n, "predicción con portador %s/%s" % [cn, en], MotorLeague.prediccion_gd(p, v, cfgs[cn], true, Vector3(3, 0, -2), 20), nat.balon_prediccion(p, v, cfgs[cn], true, Vector3(3, 0, -2), 20, 0.01, r_loc))
 			for delta in [0.0, -0.01, 0.0099999, 0.01, 1.0, 1e-9]:
 				motor.cfg_balon = cfgs[cn]
 				motor.vel_balon = v
@@ -130,7 +130,7 @@ static func _cercano(nat: Object, f: Array[String], n: Array) -> void:
 	motor.free()
 	raiz.free()
 
-static func _toques(nat: Object, f: Array[String], n: Array) -> void:
+static func _toques(_nat: Object, f: Array[String], n: Array) -> void:
 	var guardado: Dictionary = LeagueToques.catalogo().duplicate(true)
 	var quieta := PackedVector3Array()
 	quieta.resize(71)
