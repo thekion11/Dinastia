@@ -23,6 +23,9 @@ const POSES := {
 const JUGADOR := Vector3(-6.0, 0.0, -14.0)
 const TAM := Vector2i(960, 540)
 const DIR := "user://fotos_estadio"
+const _RUTA_PLAYER_SPAWNER := "res://visor/player_spawner.gd"
+const _RUTA_PUENTE3D := "res://visor/puente3d.gd"
+const _RUTA_STADIUM_BUILDER := "res://visor/stadium_builder.gd"
 
 static var _hechas := {}   ## clave -> {pose: ImageTexture}
 static var _en_curso := {}  ## clave -> el que las está haciendo (si se piden dos veces, no se monta otro estadio)
@@ -98,13 +101,13 @@ static func _mb() -> float:
 	return Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0
 
 ## Monta el estadio dentro de `raiz` (lo usa también la prueba del banco, sin pantalla, para comprobar que montar y desmontar no deja nodos).
-static func montar_estadio(raiz: Node3D, local: Club, perfil: Dictionary, ligera_: bool, quien_cede: Object) -> void:
-	var builder = load("res://visor/stadium_builder.gd")
+static func montar_estadio(raiz: Node3D, local: Club, perfil: Dictionary, ligera_arg: bool, quien_cede: Object) -> void:
+	var builder = load(_RUTA_STADIUM_BUILDER)
 	var antes = builder.ceder
 	builder.ceder = quien_cede
 	Ambience.apply(raiz, perfil, null, Calidad.elegida)
 	builder.build_pitch(raiz, perfil, local)
-	await builder.build(raiz, perfil, int(perfil.get("aforo", 20000)), 0.0 if ligera_ else 0.85, local._hash_id(), local)
+	await builder.build(raiz, perfil, int(perfil.get("aforo", 20000)), 0.0 if ligera_arg else 0.85, local._hash_id(), local)
 	builder.ceder = antes
 
 func _ready() -> void:
@@ -124,7 +127,7 @@ func _ready() -> void:
 	cam.far = 900.0
 	raiz.add_child(cam)
 	cam.current = true
-	var builder = load("res://visor/stadium_builder.gd")
+	var builder = load(_RUTA_STADIUM_BUILDER)
 	var fotos := {}
 	for clave: String in POSES:
 		var p: Array = POSES[clave]
@@ -156,11 +159,11 @@ func _poner_jugador(raiz: Node3D) -> void:
 	nodo.position = JUGADOR
 	nodo.rotation.y = 0.0   ## el modelo ya mira a +Z (como en el retrato): de espaldas a la cámara
 	raiz.add_child(nodo)
-	var spawner = load("res://visor/player_spawner.gd").new()
-	var kit: Dictionary = load("res://visor/puente3d.gd").kit(_club)
+	var spawner = load(_RUTA_PLAYER_SPAWNER).new()
+	var kit: Dictionary = load(_RUTA_PUENTE3D).kit(_club)
 	spawner.set("_kit_x", kit.get("x", {}) if kit.get("x") is Dictionary else {})
-	var datos: Dictionary = load("res://visor/puente3d.gd").jugador(_jugador)
-	var look: Array = load("res://visor/player_spawner.gd")._look_de(datos)
+	var datos: Dictionary = load(_RUTA_PUENTE3D).jugador(_jugador)
+	var look: Array = load(_RUTA_PLAYER_SPAWNER)._look_de(datos)
 	spawner._crear_jugador(nodo, _jugador.id, "DEL", "", Color(String(kit.get("c1", _club.color1))), Color(String(kit.get("c2", _club.color2))),
 		String(kit.get("estilo", "liso")), maxi(_jugador.dorsal, 1), look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
 	if spawner is Node:

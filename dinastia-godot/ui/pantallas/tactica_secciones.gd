@@ -54,7 +54,7 @@ static func _pizarra(p: Principal, pantalla: Object, c: Club) -> void:
 		bf.text = nombre_f
 		bf.toggle_mode = true
 		bf.button_pressed = c.tactica.formacion == nombre_f
-		bf.add_theme_font_size_override("font_size", 11)
+		bf.add_theme_font_size_override("font_size", Tema.letra(11))
 		bf.pressed.connect(func() -> void:
 			DeshacerTactica.apuntar(c)
 			c.tactica.formacion = nombre_f
@@ -97,7 +97,7 @@ static func _ordenes(p: Principal, c: Club) -> void:
 			b.text = String(opciones[n])
 			b.toggle_mode = true
 			b.button_pressed = int(c.tactica.get(prop)) == n
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			var valor := n
 			b.pressed.connect(func() -> void:
 				DeshacerTactica.apuntar(c)
@@ -121,7 +121,7 @@ static func _ordenes(p: Principal, c: Club) -> void:
 		var prop2 := String(it[1])
 		var b2 := Button.new()
 		b2.text = "SÍ" if bool(c.tactica.get(prop2)) else "NO"
-		b2.add_theme_font_size_override("font_size", 11)
+		b2.add_theme_font_size_override("font_size", Tema.letra(11))
 		b2.pressed.connect(func() -> void:
 			DeshacerTactica.apuntar(c)
 			c.tactica.set(prop2, not bool(c.tactica.get(prop2)))
@@ -149,7 +149,7 @@ static func _normas(p: Principal) -> void:
 		fila_n.add_child(en)
 		var bn := Button.new()
 		bn.text = "SÍ" if activa else "NO"
-		bn.add_theme_font_size_override("font_size", 11)
+		bn.add_theme_font_size_override("font_size", Tema.letra(11))
 		bn.pressed.connect(func() -> void:
 			p.mundo.normas[clave] = not bool(p.mundo.normas.get(clave, false))
 			p._refrescar())
@@ -212,7 +212,7 @@ static func _once(p: Principal, c: Club) -> void:
 		var dentro := c.once_elegido.has(j.id)
 		var b := Button.new()
 		b.text = "✔" if dentro else "＋"
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = not j.disponible() and not dentro
 		b.pressed.connect(func() -> void:
 			DeshacerTactica.apuntar(c)

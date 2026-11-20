@@ -18,7 +18,7 @@ func _fecha() -> int:
 	var m := _mundo()
 	return (m.anio * 100 + m.semana) if m != null else 0
 
-func _pregunta_clima(info: Dictionary, gane: bool, empate: bool) -> Dictionary:
+func _pregunta_clima(info: Dictionary, gane: bool, _empate: bool) -> Dictionary:
 	var que := String(info.get("texto", "el tiempo")).to_lower()
 	var q := "Prensa: '¿Cuánto influyó el tiempo (%s) en el resultado?'" % que
 	if gane:

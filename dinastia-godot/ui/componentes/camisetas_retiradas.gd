@@ -8,7 +8,7 @@ static func crear(m: Mundo) -> Control:
 	var caja := VBoxContainer.new()
 	var t := Label.new()
 	t.text = "👕 " + Idiomas.t("CAMISETAS RETIRADAS")
-	t.add_theme_font_size_override("font_size", 12)
+	t.add_theme_font_size_override("font_size", Tema.letra(12))
 	t.add_theme_color_override("font_color", Tema.ORO)
 	caja.add_child(t)
 	var flujo := HFlowContainer.new()
@@ -29,13 +29,13 @@ static func crear(m: Mundo) -> Control:
 		tarjeta.add_child(col)
 		var n := Label.new()
 		n.text = "#%d" % int(e.get("dorsal", 0))
-		n.add_theme_font_size_override("font_size", 28)
+		n.add_theme_font_size_override("font_size", Tema.letra(28))
 		n.add_theme_color_override("font_color", Tema.ORO)
 		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		col.add_child(n)
 		var d := Label.new()
 		d.text = "%s\n%d" % [String(e.get("nombre", "")), int(e.get("anio", 0))]
-		d.add_theme_font_size_override("font_size", 11)
+		d.add_theme_font_size_override("font_size", Tema.letra(11))
 		d.add_theme_color_override("font_color", Tema.SUAVE)
 		d.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		col.add_child(d)

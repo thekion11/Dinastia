@@ -3,7 +3,7 @@ extends BaseIdea
 
 func _probar() -> void:
 	_titulo("P6: ESCALA DE LA INTERFAZ EN EL MÓVIL")
-	_comprobar(EscalaMovil.zoom(1.2) == 1.2 and EscalaMovil.zoom(3.0) == 1.8 and EscalaMovil.zoom(0.1) == 0.7, "un zoom guardado se respeta (con sus topes 0,7-1,8)")
+	_comprobar(is_equal_approx(EscalaMovil.zoom(1.2), 1.2) and is_equal_approx(EscalaMovil.zoom(3.0), 1.8) and is_equal_approx(EscalaMovil.zoom(0.1), 0.7), "un zoom guardado se respeta (con sus topes 0,7-1,8)")
 	var movil := EscalaMovil.es_movil()
 	_comprobar(is_equal_approx(EscalaMovil.zoom(null), EscalaMovil.ZOOM_MOVIL if movil else 1.0), "sin zoom guardado: %.1f (%s)" % [EscalaMovil.zoom(null), "móvil" if movil else "escritorio"])
 	_comprobar(EscalaMovil.campo_alto(40) == (EscalaMovil.ALTO_CAMPO_MOVIL if movil else 40), "los cuadros de texto miden %d px" % EscalaMovil.campo_alto(40))

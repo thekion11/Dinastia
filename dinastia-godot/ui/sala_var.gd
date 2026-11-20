@@ -83,12 +83,12 @@ func _montar() -> void:
 	barra.add_child(fila)
 	_rotulo = Label.new()
 	_rotulo.text = Idiomas.t("🖥️  REVISIÓN VAR  ·  %d'  ·  %s") % [_minuto, Idiomas.t(_motivo)]
-	_rotulo.add_theme_font_size_override("font_size", 26)
+	_rotulo.add_theme_font_size_override("font_size", Tema.letra(26))
 	_rotulo.add_theme_color_override("font_color", Color("e8f4ff"))
 	_rotulo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fila.add_child(_rotulo)
 	_reloj = Label.new()
-	_reloj.add_theme_font_size_override("font_size", 26)
+	_reloj.add_theme_font_size_override("font_size", Tema.letra(26))
 	_reloj.add_theme_color_override("font_color", Color("3fa9f5"))
 	fila.add_child(_reloj)
 	_decision = PanelContainer.new()
@@ -105,7 +105,7 @@ func _montar() -> void:
 	add_child(_decision)
 	var ld := Label.new()
 	ld.text = Idiomas.t("✖  DECISIÓN: GOL ANULADO") if anula else Idiomas.t("✔  DECISIÓN: SE MANTIENE LO DECIDIDO EN EL CAMPO")
-	ld.add_theme_font_size_override("font_size", 30)
+	ld.add_theme_font_size_override("font_size", Tema.letra(30))
 	ld.add_theme_color_override("font_color", Color.WHITE)
 	_decision.add_child(ld)
 	modulate.a = 0.0

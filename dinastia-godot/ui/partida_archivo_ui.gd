@@ -36,7 +36,7 @@ func _boton(h: HBoxContainer, texto: String, cb: Callable, apagado: bool) -> voi
 	var b := Button.new()
 	b.text = texto
 	b.disabled = apagado
-	b.add_theme_font_size_override("font_size", 12)
+	b.add_theme_font_size_override("font_size", Tema.letra(12))
 	b.pressed.connect(cb)
 	h.add_child(b)
 

@@ -94,10 +94,10 @@ func _fps_malos() -> void:
 	RitmoJuego._i = ritmo_previo
 
 func _fps_malos_a_1() -> void:
-	var T := 20.0
+	var t_loc := 20.0
 	var base := _motor(13)
 	var mb: MotorJugable = base[0]
-	while mb.t < T and mb.estado != "fin":
+	while mb.t < t_loc and mb.estado != "fin":
 		mb.paso(PASO)
 	var h0 := _huella(mb)
 	var t0 := mb.t
@@ -108,7 +108,7 @@ func _fps_malos_a_1() -> void:
 		## Un controlador ANTES del motor en el árbol: apaga el motor justo al llegar a T (mismos pasos que a 60 FPS).
 		var ctl := _Parar.new()
 		ctl.motor = m
-		ctl.T = T
+		ctl.T = t_loc
 		ctl.escenario = escenario
 		(r[1] as Node3D).add_child(ctl)
 		(r[1] as Node3D).move_child(ctl, 0)

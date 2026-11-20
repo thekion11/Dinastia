@@ -50,7 +50,6 @@ func _initialize() -> void:
 		var n := int(ficha["cuadros"])
 		var tipo := String(ficha["tipo"])
 		var dt := 1.0 / float(ficha["fps"])
-		var piso := [Vector3.ZERO]
 		var r := {"mano": 9.0, "codo": 9.0}
 		var bi: Array = []   # [pie_izq(pos), pie_der(pos)] por cuadro (marco del modelo, sin mover el cuerpo)
 		var min_y := [9.0, 9.0, 9.0, 9.0]

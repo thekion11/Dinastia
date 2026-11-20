@@ -121,7 +121,7 @@ func _montar_interfaz() -> void:
 	_aviso.offset_left = -320
 	_aviso.offset_right = 320
 	_aviso.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_aviso.add_theme_font_size_override("font_size", 20)
+	_aviso.add_theme_font_size_override("font_size", Tema.letra(20))
 	_aviso.add_theme_color_override("font_color", Color(1, 0.92, 0.6))
 	_aviso.add_theme_color_override("font_outline_color", Color.BLACK)
 	_aviso.add_theme_constant_override("outline_size", 8)
@@ -131,7 +131,7 @@ func _montar_interfaz() -> void:
 	_ayuda.text = Idiomas.t("W/S/A/D o mando · Mayús: correr · V: primera persona · E: usar · Esc: volver") if VistaJuego.puede_cambiar() \
 		else Idiomas.t("W/S/A/D o mando · ratón: mirar · Mayús: correr · E: usar · Esc: volver")
 	_ayuda.position = Vector2(18, 14)
-	_ayuda.add_theme_font_size_override("font_size", 16)
+	_ayuda.add_theme_font_size_override("font_size", Tema.letra(16))
 	_ayuda.add_theme_color_override("font_outline_color", Color.BLACK)
 	_ayuda.add_theme_constant_override("outline_size", 6)
 	_ayuda.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -153,7 +153,7 @@ func _montar_interfaz() -> void:
 		b.text = String(d[0])
 		b.position = (d[1] as Vector2) * tam
 		b.size = Vector2(tam - 6, tam - 6)
-		b.add_theme_font_size_override("font_size", 28)
+		b.add_theme_font_size_override("font_size", Tema.letra(28))
 		b.modulate = Color(1, 1, 1, 0.7)
 		var v: Vector2 = d[2]
 		b.button_down.connect(func() -> void: _tactil_vec += v)

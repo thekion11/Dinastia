@@ -346,8 +346,8 @@ static func _rol_sugerido(m: Mundo, j: Jugador) -> String:
 
 ## `pideFichaje()` del HTML: lo mismo que pide para renovar, más un recargo si
 ## no tiene ganas de venir -cuanto menos le apetece, más caro sale convencerlo.
-static func _pide_fichaje(m: Mundo, j: Jugador, rol: String, anios_: int) -> int:
-	var base := m.vestuario.pide_con_rol(j, rol, anios_) if m.vestuario != null else j.sueldo
+static func _pide_fichaje(m: Mundo, j: Jugador, rol: String, anios_arg: int) -> int:
+	var base := m.vestuario.pide_con_rol(j, rol, anios_arg) if m.vestuario != null else j.sueldo
 	var mio := m.mi_club()
 	var d := 0.5
 	if m.mercado != null and mio != null:

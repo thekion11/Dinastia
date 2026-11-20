@@ -125,9 +125,20 @@ const NOMBRES := ["silbato", "gol", "gol_rival", "roja", "amarilla",
 	## --- Emergencias (27-10-2026): la sirena que sube y baja de policía, bomberos y ambulancia ---
 	"sirena"]
 
+## (19-11-2026) LA SÍNTESIS VA EN C++ (`nativo/src/sonido_nativo.cpp`): `_tono`, `_ruido`, `_mezclar` y `_a_wav` llaman a la extensión si
+## está y, si no (Web sin binario, macOS, `DINASTIA_SIN_NATIVO=1`), a su gemela `_gd`, que da los MISMOS bytes (`pruebas/probar_nativo_sonido.gd`).
+## `_nat` lo fija `_ready()` en el hilo principal antes de arrancar el hilo de fondo (`Nativo.obj()` no se llama desde un hilo).
+var _nat: Object = null
+const _FORMAS := {"seno": 0, "cuadrada": 1, "sierra": 2}
+
+func _tono(hz: float, dur: float, vol: float, forma: String) -> PackedFloat32Array:
+	if _nat != null:
+		return _nat.son_tono(hz, dur, vol, int(_FORMAS.get(forma, 0)), FRECUENCIA)
+	return _tono_gd(hz, dur, vol, forma)
+
 ## Un tono con envolvente exponencial de caída, que es la que suena natural: el
 ## sonido arranca de golpe y se apaga deprisa al principio y despacio al final.
-func _tono(hz: float, dur: float, vol: float, forma: String) -> PackedFloat32Array:
+func _tono_gd(hz: float, dur: float, vol: float, forma: String) -> PackedFloat32Array:
 	var n := int(dur * float(FRECUENCIA))
 	var m := PackedFloat32Array()
 	m.resize(n)
@@ -159,6 +170,14 @@ func _lienzo(seg: float) -> PackedFloat32Array:
 ## y «gol_chilena» o «festejo_hinchada_extra» se comían medio cántico-. Era la trampa que
 ## ya avisaba "trofeo"; ahora no se puede caer en ella.
 func _mezclar(destino: PackedFloat32Array, fuente: PackedFloat32Array, retraso: float = 0.0) -> void:
+	if _nat != null and retraso >= 0.0:
+		var r: PackedFloat32Array = _nat.son_mezclar(destino, fuente, retraso, FRECUENCIA)
+		destino.clear()   ## el arreglo se pasa por referencia: se reescribe el del llamador
+		destino.append_array(r)
+		return
+	_mezclar_gd(destino, fuente, retraso)
+
+func _mezclar_gd(destino: PackedFloat32Array, fuente: PackedFloat32Array, retraso: float = 0.0) -> void:
 	var off := int(retraso * float(FRECUENCIA))
 	if off + fuente.size() > destino.size():
 		destino.resize(off + fuente.size())
@@ -170,6 +189,11 @@ func _mezclar(destino: PackedFloat32Array, fuente: PackedFloat32Array, retraso: 
 ## bajo de un polo: no es un biquad como el del navegador, pero para ruido de
 ## grada la diferencia no se oye y cuesta una décima parte.
 func _ruido(dur: float, f0: float, f1: float, vol: float) -> PackedFloat32Array:
+	if _nat != null:
+		return _nat.son_ruido(dur, f0, f1, vol, FRECUENCIA)
+	return _ruido_gd(dur, f0, f1, vol)
+
+func _ruido_gd(dur: float, f0: float, f1: float, vol: float) -> PackedFloat32Array:
 	var n := int(dur * float(FRECUENCIA))
 	var m := PackedFloat32Array()
 	m.resize(n)
@@ -214,14 +238,18 @@ func _bombo(m: PackedFloat32Array, t0: float, vol: float) -> void:
 
 ## Los pasa a 16 bits, que es lo que quiere `AudioStreamWAV`.
 func _a_wav(m: PackedFloat32Array) -> AudioStreamWAV:
-	var datos := PackedByteArray()
-	datos.resize(m.size() * 2)
-	for i in m.size():
-		var v := int(clampf(m[i], -1.0, 1.0) * 32767.0)
-		datos.encode_s16(i * 2, v)
+	var datos: PackedByteArray = _nat.son_a_16(m) if _nat != null else _a_16_gd(m)
 	var w := AudioStreamWAV.new()
 	w.format = AudioStreamWAV.FORMAT_16_BITS
 	w.mix_rate = FRECUENCIA
 	w.stereo = false
 	w.data = datos
 	return w
+
+func _a_16_gd(m: PackedFloat32Array) -> PackedByteArray:
+	var datos := PackedByteArray()
+	datos.resize(m.size() * 2)
+	for i in m.size():
+		var v := int(clampf(m[i], -1.0, 1.0) * 32767.0)
+		datos.encode_s16(i * 2, v)
+	return datos

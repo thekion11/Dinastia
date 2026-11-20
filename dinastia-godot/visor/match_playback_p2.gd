@@ -54,8 +54,7 @@ func _animar(p: Dictionary, ap: AnimationPlayer, vel: float, celebrando: bool) -
 				ap.play(nom)
 				ap.speed_scale = 1.0
 			return
-		else:
-			_acciones_activas.erase(pid)
+		_acciones_activas.erase(pid)
 
 	var realista := ap.has_animation("correr")
 	var es_por: bool = str(p.get("slot_code", "")) == "POR"

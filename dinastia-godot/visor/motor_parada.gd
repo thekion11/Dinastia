@@ -59,5 +59,5 @@ static var K := float(OS.get_environment("PARADA_K")) if OS.get_environment("PAR
 
 ## CICLO 31: el alcance del portero se multiplica por `clamp((tz-0,1)·2,4, SUELO, 1)`, con `tz` = segundos que tarda el remate en llegar: a quemarropa (tz < 0,5 s) el portero casi no llega a nada (SUELO 0,3) y el gol desde dentro del área es ≈25-32 %
 ## (real ≈12 % de xG por tiro). `PARADA_SUELO` sube ese mínimo; 0,3 = como antes.
-static var SUELO := float(OS.get_environment("PARADA_SUELO")) if OS.get_environment("PARADA_SUELO") != "" else 0.3
+static var suelo := float(OS.get_environment("PARADA_SUELO")) if OS.get_environment("PARADA_SUELO") != "" else 0.3
 

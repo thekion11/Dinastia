@@ -144,7 +144,7 @@ static func _cinta_led(root: Node3D, pos: Vector3, cara: Vector3, largo: float, 
 ## exterior.
 static func _esquina_grada(root: Node3D, sx: float, sz: float, dx: float, dz: float,
 		alto: float, niveles: int, grada_mat: Material, muro_mat: Material,
-		ang: float, est: Dictionary, ocupacion: float, seed_val: int,
+		ang: float, est: Dictionary, ocupacion: float, _seed_val: int,
 		techo: bool = false) -> void:
 	var dir := Vector3(sx, 0.0, sz).normalized()
 	## Donde se cortarían las dos caras interiores de las tribunas vecinas: es
@@ -334,7 +334,7 @@ static func _bandera_ondeante(root: Node3D, pos: Vector3, tam: Vector2, color: C
 ## referencia**. El jugador elegía "Tifo gigante en la popular" y no aparecía
 ## ningún tifo.
 static func _banderas(root: Node3D, est: Dictionary, dx: float, dz: float,
-		alto: float, niveles: int, mi: Club) -> void:
+		alto: float, _niveles: int, mi: Club) -> void:
 	var tipo := String(est.get("banderas", "club"))
 	if tipo == "sin":
 		return

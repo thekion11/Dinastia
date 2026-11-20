@@ -1,5 +1,5 @@
 extends "res://visor/vestidor_q_p1.gd"
-## [Capa 2/3 de `vestidor_q.gd`] vestir_equipacion, exposicion_piel, compensar_piel, _afin_foto, _ocultar_cejas_y_barba, _teñir_pelo … (+4)
+## [Capa 2/3 de `vestidor_q.gd`] vestir_equipacion, exposicion_piel, compensar_piel, _afin_foto, _ocultar_cejas_y_barba, _tenir_pelo … (+4)
 
 ## Pinta la equipación sobre un `FutbolistaQ` ya terminado. Devuelve false si
 ## no pudo (sin shader o sin máscara) y quien llama cae a `vestir()`.
@@ -54,9 +54,9 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 	_con_reposo(cuerpo, superficie)
 	var estilos: Variant = Datos.tabla("KITS")
 	var i_estilo: int = maxi(0, (estilos as Array).find(estilo)) if estilos is Array else 0
-	if pantalon.a == 0.0:
+	if is_zero_approx(pantalon.a):
 		pantalon = c2 if i_estilo == 0 else c1
-	if medias.a == 0.0:
+	if is_zero_approx(medias.a):
 		medias = c1
 	## EL DISEÑADOR (26-9-2026): sin equipación completa, se arma una con lo de
 	## siempre (colores, estilo, pantalón y medias) para que TODO pase por el
@@ -123,7 +123,7 @@ static func vestir_equipacion(d: Dictionary, c1: Color, c2: Color, estilo: Strin
 		cuerpo.set_surface_override_material(superficie, mat_c)
 		RopaSeparada.vestir(cuerpo, superficie, mat)
 		return true
-	elif cuerpo.get_parent() != null:
+	if cuerpo.get_parent() != null:
 		for h in cuerpo.get_parent().get_children():
 			if h.has_meta("prenda_aparte"):
 				h.queue_free()
@@ -182,7 +182,7 @@ static func _ocultar_cejas_y_barba(raiz: Node) -> void:
 
 ## Tiñe el pelo 3D (`PeloQ`) con el color de la foto (misma cuenta que
 ## `PeloQ._material`: la textura del pack es oscura y se aclara x1,7).
-static func _teñir_pelo(raiz: Node, color: Color) -> void:
+static func _tenir_pelo(raiz: Node, color: Color) -> void:
 	var pelo := raiz.find_child("Pelo", true, false)
 	if pelo == null:
 		return

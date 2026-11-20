@@ -9,7 +9,7 @@ func _init() -> void:
 		Player.Role.MIDFIELD: AIBehaviorField,
 		Player.Role.OFFENCE: AIBehaviorField
 	}
-	
+
 func get_ai_behavior(role: Player.Role) -> AIBehavior:
 	assert(roles.has(role), "role doesn't exists!")
 	return roles.get(role).new()

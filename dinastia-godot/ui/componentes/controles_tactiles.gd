@@ -146,7 +146,7 @@ func _gestos() -> bool:
 	return _modo_mando != "botones"
 
 ## ¿Se ve (y se puede pulsar) este botón ahora? `con_balon` / `en_banda` / `modo` son los de este momento (las pruebas los pasan). Siempre salen los 4 (modo Gestos: solo Sprint y, sin balón, Cambiar).
-func visible_en(nombre: String, con_balon: bool, _en_banda_: bool, modo: String) -> bool:
+func visible_en(nombre: String, con_balon: bool, en_banda: bool, modo: String) -> bool:
 	if modo == "gestos":
 		return nombre == "Pausa" or nombre == "SP" or (nombre == "PA" and not con_balon)
 	return true
@@ -401,7 +401,7 @@ func _draw() -> void:
 			var pausa := n == "Pausa"
 			var col := Color(0.8, 0.8, 0.85) if pausa else MandoFC.color(n, true).lerp(MandoFC.color(n, false), 1.0 - _mezcla)
 			var activo := _dedos.values().has(n)
-			var etiqueta := etiqueta_de(n, _con_balon if (pausa or _mezcla == 0.0 or _mezcla == 1.0) else _mezcla >= 0.5)
+			var etiqueta := etiqueta_de(n, _con_balon if (pausa or is_zero_approx(_mezcla) or is_equal_approx(_mezcla, 1.0)) else _mezcla >= 0.5)
 			var tri: Array = [] if pausa or not _gestos() else MandoFC.triangulos(n, _con_balon, _en_banda)
 			DibujoBotonFC.boton(self, centro_de(n), radio_de(n), col, Idiomas.t(etiqueta).split("\n") if not pausa else PackedStringArray([etiqueta]), opac, activo, false, s, tri, 1.0 if pausa else alfa,
 					0.6 if pausa else 0.42, 0.55 if pausa else 0.30, fase)

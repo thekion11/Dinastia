@@ -34,7 +34,8 @@ func _process(_d: float) -> void:
 	if _n == 10:
 		_medir("portada (tras iniciar)")
 		for i in 6:
-			_p.call("avanzar_semana_ui") if _p.has_method("avanzar_semana_ui") else null
+			if _p.has_method("avanzar_semana_ui"):
+				_p.call("avanzar_semana_ui")
 	if _n == 20:
 		_medir("repintado en caliente")
 		var c: Club = _p.mundo.mi_club()
@@ -50,7 +51,11 @@ func _process(_d: float) -> void:
 		_pieza("_traducir_pantalla", func() -> void: _p.call("_traducir_pantalla", _p))
 		_pieza("_pintar_dias", func() -> void: _p.call("_pintar_dias"))
 		_pieza("_actualizar_badges", func() -> void: _p.call("_actualizar_badges"))
-		_pieza("panel_mercado", func() -> void: _p.get("_panel_mercado").inicializar(_p.mundo, {"acento": Color.GREEN, "texto": Color.WHITE, "suave": Color.GRAY, "verde": Color.GREEN, "rojo": Color.RED, "oro": Color.YELLOW}, null) if _p.get("_panel_mercado") != null else null)
+		_pieza("panel_mercado", func() -> void:
+			if _p.get("_panel_mercado") != null:
+				_p.get("_panel_mercado").inicializar(_p.mundo, {"acento": Color.GREEN, "texto": Color.WHITE, "suave": Color.GRAY, "verde": Color.GREEN, "rojo": Color.RED, "oro": Color.YELLOW}, null))
 		_pieza("_aplicar_tema", func() -> void: _p.call("_aplicar_tema"))
-		_pieza("_pintar_pendientes", func() -> void: _p.call("_pintar_pendientes") if _p.has_method("_pintar_pendientes") else null)
+		_pieza("_pintar_pendientes", func() -> void:
+			if _p.has_method("_pintar_pendientes"):
+				_p.call("_pintar_pendientes"))
 		get_tree().quit()

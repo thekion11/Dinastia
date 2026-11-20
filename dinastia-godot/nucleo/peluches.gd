@@ -117,23 +117,23 @@ static func campo(maquina: int, semilla: int) -> Array:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = semilla
 	var lista := de_maquina(maquina)
-	var campo_: Array = []
+	var campo_loc: Array = []
 	if lista.is_empty():
-		return campo_
+		return campo_loc
 	var n := 5 + (semilla % 2)
 	var intentos := 0
-	while campo_.size() < n and intentos < 400:
+	while campo_loc.size() < n and intentos < 400:
 		intentos += 1
-		var p: Dictionary = lista[campo_.size() % lista.size()] if campo_.size() < lista.size() else lista[rng.randi() % lista.size()]
+		var p: Dictionary = lista[campo_loc.size() % lista.size()] if campo_loc.size() < lista.size() else lista[rng.randi() % lista.size()]
 		var x := rng.randf_range(0.12, 0.88)
 		var y := rng.randf_range(0.14, 0.86)
 		var libre := true
-		for q: Dictionary in campo_:
+		for q: Dictionary in campo_loc:
 			if Vector2(float(q["x"]) - x, float(q["y"]) - y).length() < 0.2:
 				libre = false
 		if libre:
-			campo_.append({"id": String(p["id"]), "x": x, "y": y})
-	return campo_
+			campo_loc.append({"id": String(p["id"]), "x": x, "y": y})
+	return campo_loc
 
 ## Probabilidad de agarrar el peluche `def_p` si la garra cierra a `dist` (en fracción del campo) de su centro.
 func probabilidad(def_p: Dictionary, dist: float) -> float:
@@ -144,11 +144,11 @@ func probabilidad(def_p: Dictionary, dist: float) -> float:
 	return clampf(base * cerca + minf(float(fallos_seguidos) * FALLO_EXTRA, MAX_EXTRA), 0.0, 0.95)
 
 ## La garra cierra en (x, y): {"indice": peluche más cercano o -1, "p": probabilidad, "exito": bool}. Si falla, sube la ayuda; no gana nada aquí (lo hace `conseguir`).
-func intento(campo_: Array, x: float, y: float, rng: RandomNumberGenerator) -> Dictionary:
+func intento(campo_arg: Array, x: float, y: float, rng: RandomNumberGenerator) -> Dictionary:
 	var mejor := -1
 	var mejor_d := 9.0
-	for i in campo_.size():
-		var q: Dictionary = campo_[i]
+	for i in campo_arg.size():
+		var q: Dictionary = campo_arg[i]
 		var d := Vector2(float(q["x"]) - x, float(q["y"]) - y).length()
 		if d < mejor_d:
 			mejor_d = d
@@ -156,7 +156,7 @@ func intento(campo_: Array, x: float, y: float, rng: RandomNumberGenerator) -> D
 	if mejor < 0 or mejor_d > RADIO_AGARRE:
 		fallos_seguidos += 1
 		return {"indice": -1, "p": 0.0, "exito": false}
-	var p := probabilidad(def(String(campo_[mejor]["id"])), mejor_d)
+	var p := probabilidad(def(String(campo_arg[mejor]["id"])), mejor_d)
 	var ok := rng.randf() < p
 	if not ok:
 		fallos_seguidos += 1

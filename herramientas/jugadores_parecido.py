@@ -51,7 +51,7 @@ ALTURA_PUESTO = {"POR": 188, "DFC": 186, "LD": 177, "LI": 177, "MCD": 182, "MC":
 
 def _cache_ruta(clave):
     os.makedirs(CACHE, exist_ok=True)
-    return os.path.join(CACHE, hashlib.sha1(clave.encode("utf-8")).hexdigest() + ".txt")
+    return os.path.join(CACHE, hashlib.sha256(clave.encode("utf-8")).hexdigest() + ".txt")
 
 
 HOSTS_PERMITIDOS = ("en.wikipedia.org", "es.wikipedia.org", "www.wikidata.org")
@@ -94,7 +94,7 @@ def pedir(url, reintentos=4):
     return None
 
 
-RE_REDIR = re.compile(r"^\s*#(?:REDIRECT|REDIRECCI[ÓO]N)\s*:?\s*\[\[([^\]|#]+)", re.I)
+RE_REDIR = re.compile(r"^\s*#(?:REDIRECT|REDIRECCI[ÓO]N)\s*(?::\s*)?\[\[([^\]|#]+)", re.I)
 
 
 def wikitexto(titulo, idioma="en", saltos=2):
@@ -125,12 +125,20 @@ def _campos(txt):
     return campos
 
 
+def _sin_parentesis_final(texto):
+    """Quita el «(…)» final, desde el primer «(», sin expresión regular (evita el backtracking, Sonar S8786)."""
+    i = texto.find("(")
+    if texto.endswith(")") and 0 <= i < len(texto) - 1 and "\n" not in texto[i:]:
+        texto = texto[:i]
+    return texto.strip()
+
+
 def _jugador(campos):
     nom = campos.get("name") or campos.get("nombre", "")
     e = RE_ENL.search(nom)
     titulo = e.group(1).strip() if e else ""
     visible = (e.group(2) or e.group(1)).strip() if e else re.sub(r"[\[\]]", "", nom)
-    visible = re.sub(r"\s*\(.*?\)$", "", visible).strip()
+    visible = _sin_parentesis_final(visible)
     if not visible:
         return None
     pos = campos.get("pos", "").upper()

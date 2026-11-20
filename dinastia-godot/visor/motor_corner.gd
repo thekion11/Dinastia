@@ -12,12 +12,12 @@ static func desvio(m: MotorJugable) -> bool:
 
 ## CABEZAZO CON MARCA (ciclo 26): al desviar córneres el cabezazo seguía siendo casi a puerta vacía (7 goles de 32 córneres = 22 %; real ≈3 %). Con `CABEZA_FALLO=f` (0 = como antes) el remate de cabeza
 ## falla con probabilidad `f` (y `f` + 0,25 si hay un rival a < 1,8 m, tope 0,95): se va fuera por un palo o por encima del larguero. Solo sortea con la bandera encendida.
-static var CABEZA := float(OS.get_environment("CABEZA_FALLO")) if OS.get_environment("CABEZA_FALLO") != "" else 0.0
+static var cabeza_v := float(OS.get_environment("CABEZA_FALLO")) if OS.get_environment("CABEZA_FALLO") != "" else 0.0
 
 static func cabeza(m: MotorJugable, p: Dictionary, destino: Vector3) -> Vector3:
-	if CABEZA <= 0.0:
+	if cabeza_v <= 0.0:
 		return destino
-	var f := minf(CABEZA + (0.25 if m._presion(p) < 1.8 else 0.0), 0.95)
+	var f := minf(cabeza_v + (0.25 if m._presion(p) < 1.8 else 0.0), 0.95)
 	if m._rng.randf() >= f:
 		return destino
 	var d := destino
@@ -29,16 +29,16 @@ static func cabeza(m: MotorJugable, p: Dictionary, destino: Vector3) -> Vector3:
 
 ## CENTROS (ciclo 32, plan «construir hasta el área» C3): la IA centraba 3 veces en 16 partidos (real ≈25 por partido; ≈2,8 % de los pases), con 0 compañeros en el área. El centro exigía estar a > 17 m del
 ## eje y a < 20 m de la línea de fondo, con un 55 % de probabilidad. `CENTRO_X`/`CENTRO_Z`/`CENTRO_P` (17 · 20 · 0,55 = como antes) relajan esas tres condiciones. Mismo orden de sorteo que antes.
-static var CX := float(OS.get_environment("CENTRO_X")) if OS.get_environment("CENTRO_X") != "" else 17.0
+static var cx := float(OS.get_environment("CENTRO_X")) if OS.get_environment("CENTRO_X") != "" else 17.0
 static var CZ := float(OS.get_environment("CENTRO_Z")) if OS.get_environment("CENTRO_Z") != "" else 20.0
-static var CP := float(OS.get_environment("CENTRO_P")) if OS.get_environment("CENTRO_P") != "" else 0.55
+static var cp := float(OS.get_environment("CENTRO_P")) if OS.get_environment("CENTRO_P") != "" else 0.55
 
 ## Con `CENTRO_ESPERA=s` (segundos; 0 = como antes) el centrador ESPERA a que haya al menos 2 compañeros a < 18 m del arco (máximo `s` segundos desde que entra en la zona de centro): antes el centro salía al instante y
 ## nadie había llegado al área.
 static var ESPERA := float(OS.get_environment("CENTRO_ESPERA")) if OS.get_environment("CENTRO_ESPERA") != "" else 0.0
 
 static func centrar(m: MotorJugable, p: Dictionary, yo: Vector3, arco: Vector3) -> bool:
-	var zona := absf(yo.x) > CX and absf(arco.z - yo.z) < CZ
+	var zona := absf(yo.x) > cx and absf(arco.z - yo.z) < CZ
 	if ESPERA > 0.0:
 		if not zona:
 			p.erase("_centro_t0")
@@ -51,4 +51,4 @@ static func centrar(m: MotorJugable, p: Dictionary, yo: Vector3, arco: Vector3) 
 					n += 1
 			if n < 2 and m.t - float(p["_centro_t0"]) < ESPERA:
 				return false
-	return zona and m._rng.randf() < CP
+	return zona and m._rng.randf() < cp

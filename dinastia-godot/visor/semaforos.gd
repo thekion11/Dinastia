@@ -25,7 +25,7 @@ var _luces := {}   ## "eje|color" -> StandardMaterial3D
 var botones: Array[Vector3] = []   ## dónde está cada botón peatonal (en el poste, a 1,1 m)
 var _ult_aplicado := ""   ## (28-10) estado ya escrito en los materiales: solo se reescriben cuando cambia
 
-func montar(lista: Array, exp) -> void:
+func montar(lista: Array, _exp) -> void:
 	cruces = lista
 	var postes: Array[Transform3D] = []
 	var cabezas: Array[Transform3D] = []

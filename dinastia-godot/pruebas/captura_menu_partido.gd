@@ -35,7 +35,6 @@ func _ready() -> void:
 		m.generar(ps, 900 + k)
 		var liga: Liga = m.ligas[0]
 		m.tomar_el_mando(liga.clubes[2 + k].id)
-		var par: Array = liga.calendario[0][0] if k == 0 else liga.calendario[0][1]
 		var mio := m.mi_club()
 		var rival: Club = liga.clubes[(2 + k + 5) % liga.clubes.size()]
 		var p := Partido.new(mio, rival)

@@ -182,7 +182,7 @@ static func poner(d: Dictionary, corte: String, color: Color, barba: bool, drive
 		## volumen en el pelo del cuero cabelludo (no cejas ni barba) la cubre sin que se note de cerca.
 		if not String(p[0]).begins_with("Eyebrows") and String(p[0]) != "Hair_Beard":
 			k *= 1.03
-		if k != 1.0:
+		if not is_equal_approx(k, 1.0):
 			## Un poco más de volumen alrededor del centro de la cabeza. La
 			## escala va en el espacio del MODELO (donde vive la malla), antes
 			## de pasarla al del hueso: al revés, el afro salía volando de lado.

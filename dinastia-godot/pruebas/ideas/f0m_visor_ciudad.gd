@@ -231,7 +231,7 @@ func _probar_mini3d() -> void:
 	var we: WorldEnvironment = raiz.find_children("*", "WorldEnvironment", false, false)[0]
 	_comprobar(is_equal_approx(we.environment.tonemap_exposure, 0.82) and not we.environment.fog_enabled and (v["sol"] as Node).get_parent() == raiz, "a pleno sol sin lavar: exposición 0,82, sin niebla y con su sol")
 	var m := Mini3D.mat(Color(1, 0, 0, 0.5), 0.3, 2.0)
-	_comprobar(m.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA and m.emission_enabled and m.emission_energy_multiplier == 2.0 and Mini3D.mat(Color.RED).transparency == BaseMaterial3D.TRANSPARENCY_DISABLED,
+	_comprobar(m.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA and m.emission_enabled and is_equal_approx(m.emission_energy_multiplier, 2.0) and Mini3D.mat(Color.RED).transparency == BaseMaterial3D.TRANSPARENCY_DISABLED,
 		"mat(): transparente si el color lo es, y con brillo si se pide")
 	var cj := Mini3D.caja(raiz, Vector3(1, 2, 3), Vector3(2, 1, 4), m)
 	var ci := Mini3D.cilindro(raiz, Vector3.ZERO, 0.5, 2.0, m, 0.2)

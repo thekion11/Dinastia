@@ -128,7 +128,7 @@ func _boton(texto: String) -> Button:
 	b.text = texto
 	b.custom_minimum_size = Vector2(150, 42)
 	b.focus_mode = Control.FOCUS_ALL
-	b.add_theme_font_size_override("font_size", 15)
+	b.add_theme_font_size_override("font_size", Tema.letra(15))
 	## El sonido lo pone `PantallaModos` (aceptar/atrás), no el tic genérico.
 	b.set_meta("sin_sonido", true)
 	return b

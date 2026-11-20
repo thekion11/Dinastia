@@ -144,8 +144,8 @@ static func curva(hora: int) -> float:
 # ============================================================================ SIMULACIÓN
 
 ## Avanza `n` horas de juego a la hora `hora` del día. `v` viento 0..1 y `ll` lluvia mm/h.
-func pasar(n: int, hora: int, v: float, ll: float, clima_: String = "") -> void:
-	clima = clima_
+func pasar(n: int, hora: int, v: float, ll: float, clima_arg: String = "") -> void:
+	clima = clima_arg
 	viento = clampf(v, 0.0, 1.0)
 	lluvia = maxf(ll, 0.0)
 	for k in maxi(n, 1):

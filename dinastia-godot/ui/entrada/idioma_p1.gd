@@ -110,7 +110,7 @@ func _cabecera() -> Control:
 	fv.base_font = _fuente_serif(700, false)
 	fv.spacing_glyph = 7
 	marca.add_theme_font_override("font", fv)
-	marca.add_theme_font_size_override("font_size", 15)
+	marca.add_theme_font_size_override("font_size", Tema.letra(15))
 	marca.add_theme_color_override("font_color", ORO)
 	marca.text = "DINASTÍA"
 	fila.add_child(marca)
@@ -121,7 +121,7 @@ func _cabecera() -> Control:
 	_boton_volver.flat = true
 	_boton_volver.focus_mode = Control.FOCUS_ALL
 	_boton_volver.set_meta("sin_sonido", true)
-	_boton_volver.add_theme_font_size_override("font_size", 14)
+	_boton_volver.add_theme_font_size_override("font_size", Tema.letra(14))
 	for c: String in ["font_color", "font_hover_color", "font_focus_color"]:
 		_boton_volver.add_theme_color_override(c, SUAVE if c == "font_color" else TEXTO)
 	_boton_volver.visible = _puede_volver

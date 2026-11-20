@@ -4,7 +4,7 @@ extends PlayerState
 func _enter_tree() -> void:
 	animation_player.play("kick")
 	player.velocity = Vector2.ZERO
-	
+
 func on_animation_complete() -> void:
 	var pass_target := state_data.pass_target
 	if pass_target == null:
@@ -14,7 +14,7 @@ func on_animation_complete() -> void:
 	else:
 		ball.pass_to(pass_target.position + pass_target.velocity)
 	transition_state(Player.State.MOVING)
-	
+
 func find_teammate_in_view() -> Player:
 	var players_in_view := teammate_detection_area.get_overlapping_bodies()
 	var teammates_in_view := players_in_view.filter(

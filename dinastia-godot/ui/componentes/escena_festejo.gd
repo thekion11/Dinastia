@@ -233,7 +233,7 @@ func _fuegos(w: float, h: float) -> void:
 ## Una figura: piernas, cuerpo con la camiseta (c1) y una franja (c2), cabeza y brazos (arriba si celebra).
 func _figura(pie: Vector2, e: float, cam: Color, franja: Color, arriba: bool, giro := 0.0) -> void:
 	var piel := Color("e0b48c")
-	var t := Transform2D(sin(giro) * 0.4 if giro != 0.0 else 0.0, pie)
+	var t := Transform2D(sin(giro) * 0.4 if not is_zero_approx(giro) else 0.0, pie)
 	draw_set_transform_matrix(t)
 	draw_line(Vector2(-5, 0) * e, Vector2(-4, -22) * e, Color("1b1b1f"), 5.0 * e)
 	draw_line(Vector2(5, 0) * e, Vector2(4, -22) * e, Color("1b1b1f"), 5.0 * e)

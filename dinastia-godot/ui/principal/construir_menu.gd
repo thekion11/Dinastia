@@ -110,6 +110,8 @@ func _montar_cabecera() -> VBoxContainer:
 	cab.add_child(p._escudo_cabecera)
 	p._cabecera = p._texto(26, p.COL_TEXTO)
 	p._cabecera.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	p._cabecera.clip_text = true   ## con la letra grande el nombre del club se recorta (…) en vez de empujar el dinero fuera de la pantalla
+	p._cabecera.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	cab.add_child(p._cabecera)
 	## LA DERECHA DE LA CABECERA, como en el HTML del usuario: la plata en
 	## grande y la fecha debajo, separadas del nombre del club por todo el
@@ -213,7 +215,7 @@ func _montar_cabecera() -> VBoxContainer:
 	p._buscador.tooltip_text = Idiomas.t("Buscar un jugador o un club por nombre (Enter para abrir su ficha)")
 	## 150 px y no más: cada píxel de esta fila sale del ancho de las columnas de abajo.
 	p._buscador.custom_minimum_size = Vector2(150, 32)
-	p._buscador.add_theme_font_size_override("font_size", 12)
+	p._buscador.add_theme_font_size_override("font_size", Tema.letra(12))
 	p._buscador.text_submitted.connect(p._buscar_global)
 	p._botones.add_child(p._buscador)
 

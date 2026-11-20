@@ -165,10 +165,10 @@ func _probar_fun_club_y_redes() -> void:
 	j.rasgo = ""
 	j.edad = 21
 	j.pot = 64
-	_comprobar(is_equal_approx(ProgresoJugador.prob_semanal(j), 0.025), "prob_semanal: 21 años y 4 de margen = 0,025")
+	_comprobar(is_equal_approx(ProgresoJugador.prob_semanal(j), 0.02), "prob_semanal: 21 años y 4 de margen = 0,02")
 	j.edad = 23
 	j.pot = 61
-	_comprobar(is_equal_approx(ProgresoJugador.prob_semanal(j), 0.0105), "prob_semanal: con 1 punto de margen el freno mínimo es 0,35 (23 años: 0,0105)")
+	_comprobar(is_equal_approx(ProgresoJugador.prob_semanal(j), 0.00875), "prob_semanal: con 1 punto de margen el freno mínimo es 0,35 (23 años: 0,00875)")
 	j.pot = 60
 	_comprobar(is_equal_approx(ProgresoJugador.prob_semanal(j), 0.0), "prob_semanal: en su techo, 0")
 	j.edad = 24

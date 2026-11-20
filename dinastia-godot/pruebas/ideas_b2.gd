@@ -45,9 +45,9 @@ func ejecutar() -> void:
 	var con_var := decisiones[0]
 	Partido.ctx_factor_tarjetas = 1.0
 	_comprobar(sin_var > 5, "un árbitro estricto cobra penales polémicos (806): %d" % sin_var)
-	_comprobar(con_var < sin_var and not fe.var_activo and fe.factor_tarjetas() == 1.0, "con VAR hay menos decisiones polémicas: %d < %d (805)" % [con_var, sin_var])
+	_comprobar(con_var < sin_var and not fe.var_activo and is_equal_approx(fe.factor_tarjetas(), 1.0), "con VAR hay menos decisiones polémicas: %d < %d (805)" % [con_var, sin_var])
 	fe.var_activo = true
-	_comprobar(fe.factor_tarjetas() == 0.5, "el VAR votado recorta tarjetas a la mitad (805)")
+	_comprobar(is_equal_approx(fe.factor_tarjetas(), 0.5), "el VAR votado recorta tarjetas a la mitad (805)")
 	_comprobar("VAR en toda la categoría" in fe.reglas_vigentes("CHI"), "y el reglamento consultable lo muestra (805, 819)")
 	fe.var_activo = false
 	## Designación conocida de antemano (802) e historial con cada árbitro (803).
@@ -72,7 +72,8 @@ func ejecutar() -> void:
 		var r := m.prensa.resolver("a")
 		if String(r["titulo"]) == "Reclamo rechazado":
 			multas += 1
-			_comprobar(c.saldo < antes, "el reclamo rechazado trae multa (807)") if multas == 1 else null
+			if multas == 1:
+				_comprobar(c.saldo < antes, "el reclamo rechazado trae multa (807)")
 		elif String(r["titulo"]) == "Reclamo acogido":
 			acogidos += 1
 	_comprobar(multas >= 3 and acogidos >= 3 and m.prensa.arbitro_polemico == "", "reclamar es una apuesta: %d multas / %d acogidos (804, 807)" % [multas, acogidos])

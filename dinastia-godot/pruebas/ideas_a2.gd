@@ -68,7 +68,7 @@ func _ideas_a_entrenamiento() -> void:
 		obras.iniciar("ct", cc)
 		for k in obras.semanas_de("ct") + 1:
 			obras.avanzar_semana(cc)
-	_comprobar(base == 1.0 and obras.ritmo_de_progreso() > base, "con el centro de entrenamiento el ritmo de progreso pasa de 1,0 a %.2f (442)" % obras.ritmo_de_progreso())
+	_comprobar(is_equal_approx(base, 1.0) and obras.ritmo_de_progreso() > base, "con el centro de entrenamiento el ritmo de progreso pasa de 1,0 a %.2f (442)" % obras.ritmo_de_progreso())
 	var subidas := []
 	for obr in [Instalaciones.new(), obras]:
 		var jj := Jugador.new()
@@ -207,7 +207,7 @@ func _ideas_a_regens() -> void:
 	var cn: Cantera = m.cantera
 	## Regens (476): al cerrar la temporada hay retiros y llega una camada de juveniles.
 	var antes := c.plantilla.size()
-	var res := m.nueva_temporada()
+	m.nueva_temporada()
 	var nuevos := 0
 	for id: String in cn.ultima_camada:
 		if m.jugador_por_id(id) != null:
@@ -257,7 +257,8 @@ func _ideas_a_regens() -> void:
 		for p: String in er.activas:
 			if er.activas[p]["tipo"] == "dorada":
 				doradas += 1
-				_comprobar(er.bono(p, m.anio) == Eras.BONO_DORADA and er.mapa_del_talento(m.anio).size() >= 1, "una época dorada sube un 13%% el techo de los juveniles de %s (491)" % p) if doradas == 1 else null
+				if doradas == 1:
+					_comprobar(er.bono(p, m.anio) == Eras.BONO_DORADA and er.mapa_del_talento(m.anio).size() >= 1, "una época dorada sube un 13%% el techo de los juveniles de %s (491)" % p)
 	_comprobar(doradas >= 3, "con los años aparecen épocas doradas (%d en 60 cierres) (491)" % doradas)
 	for k: Club in m.clubes.values():
 		k.saldo = 0
@@ -268,7 +269,8 @@ func _ideas_a_regens() -> void:
 		for p: String in er.activas:
 			if er.activas[p]["tipo"] == "decadencia":
 				decad += 1
-				_comprobar(er.bono(p, m.anio) == Eras.BONO_DECADENCIA, "un país arruinado entra en decadencia y su techo baja al 90%% (%s) (492)" % p) if decad == 1 else null
+				if decad == 1:
+					_comprobar(er.bono(p, m.anio) == Eras.BONO_DECADENCIA, "un país arruinado entra en decadencia y su techo baja al 90%% (%s) (492)" % p)
 	_comprobar(decad >= 3, "con las ligas arruinadas aparece decadencia (%d en 80 cierres) (492)" % decad)
 	for k: Club in m.clubes.values():
 		k.saldo = 900000000
@@ -366,7 +368,7 @@ func _ideas_a_linajes() -> void:
 	var h2: Jugador = c.plantilla[1]
 	var base := m.vestuario.bonus_hermanos([h1, h2])
 	m.vestuario.emparentar(h1, h2)
-	_comprobar(base == 1.0 and absf(m.vestuario.bonus_hermanos([h1, h2]) - 1.018) < 0.0001 and m.vestuario.bonus_hermanos([h1]) == 1.0, "dos hermanos en el once dan bono de química, sin el hermano no (485)")
+	_comprobar(is_equal_approx(base, 1.0) and absf(m.vestuario.bonus_hermanos([h1, h2]) - 1.018) < 0.0001 and is_equal_approx(m.vestuario.bonus_hermanos([h1]), 1.0), "dos hermanos en el once dan bono de química, sin el hermano no (485)")
 	var gemelos := 0
 	var normales := 0
 	var gem_ok := true

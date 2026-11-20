@@ -34,7 +34,6 @@ func _ready() -> void:
 	var mal_despues := 0
 	var peor_despues := 0.0
 	var no_catalogados: Array = []
-	var movidos_sin_necesidad: Array = []
 	var catalogo := AnclaSuelo.CLIPS
 	for c: String in clips:
 		var largo := ap.get_animation(c).length
@@ -90,7 +89,7 @@ func _ready() -> void:
 				ap.seek(0.2, true)
 				for i in 5:
 					ancla._process(0.1)
-				_comprobar(ancla.offset == 0.0, "«%s» no sube al jugador (offset %.3f)" % [c, ancla.offset])
+				_comprobar(is_zero_approx(ancla.offset), "«%s» no sube al jugador (offset %.3f)" % [c, ancla.offset])
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)

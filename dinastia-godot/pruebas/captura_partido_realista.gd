@@ -39,7 +39,7 @@ func _ready() -> void:
 	for i in rig.cameras.size():
 		print("    [%d] %s" % [i, rig.camera_names[i]])
 
-	
+
 	# Probar ciclado de cámaras
 	for i in range(rig.cameras.size()):
 		rig.cycle()

@@ -369,46 +369,46 @@ func _hijos_de_leyendas() -> void:
 		return
 	## Se recorre una copia porque al final se poda la lista, y quitar entradas
 	## del array que estás recorriendo se salta leyendas.
-	for L: Dictionary in leyendas.duplicate():
-		if bool(L.get("usado", false)) or int(L.get("anio_hijo", 0)) > m.anio:
+	for leyenda_i: Dictionary in leyendas.duplicate():
+		if bool(leyenda_i.get("usado", false)) or int(leyenda_i.get("anio_hijo", 0)) > m.anio:
 			continue
-		L["usado"] = true
-		var club_padre: Club = m.clubes.get(String(L.get("club_id", "")))
+		leyenda_i["usado"] = true
+		var club_padre: Club = m.clubes.get(String(leyenda_i.get("club_id", "")))
 		## Siete de cada diez van al club del padre. El resto se reparte, y ese
 		## resto es la mejor historia que da el sistema: el hijo de tu ídolo
 		## formándose en el rival.
 		var destino: Club = club_padre
 		## DINASTÍA PROPIA (fase 5): el hijo de TU jugador retirado llega siempre
 		## a la cantera del club que diriges ahora.
-		var propio := bool(L.get("propio", false))
+		var propio := bool(leyenda_i.get("propio", false))
 		if propio:
 			destino = m.mi_club()
 		elif destino == null or not Azar.suerte(0.7):
 			destino = m.clubes.get(String(Azar.uno(m.clubes.keys())))
 		if destino == null or destino.plantilla.size() >= TOPE_PLANTEL:
 			continue
-		var grupo := String(L.get("pos", "MED"))
+		var grupo := String(leyenda_i.get("pos", "MED"))
 		if not Azar.suerte(0.7):
 			grupo = String(Azar.uno(["POR", "DEF", "MED", "DEL"]))
 		grupo = grupo_con_tope(destino, grupo)
 		var edad := Azar.ent(16, 17)
 		var ovr := destino.rep - 24 + Azar.ent(0, 6)
 		var j := m.crear_jugador(destino, grupo, demarcacion_de(grupo), edad, ovr)
-		var apellido := _apellido_de(String(L.get("nombre", "")))
+		var apellido := _apellido_de(String(leyenda_i.get("nombre", "")))
 		j.nombre = "%s %s" % [_nombre_de_pila(destino.pais), apellido]
 		## El techo hereda del padre con un margen del 85% al 120%. Nunca menos
 		## de cuatro puntos por encima de su media de hoy: un hijo de leyenda que
 		## no tuviera recorrido sería una noticia sin historia detrás.
-		j.pot = maxi(Jugador.techo_tope(int(round(float(int(L.get("nivel", 80))) * (0.85 + Azar.f() * 0.35))), j.ovr), mini(j.ovr + 4, 97))
+		j.pot = maxi(Jugador.techo_tope(int(round(float(int(leyenda_i.get("nivel", 80))) * (0.85 + Azar.f() * 0.35))), j.ovr), mini(j.ovr + 4, 97))
 		j.generar_atributos()
 		_sortear_origen(j)
 		j.tasar()
 		var f := _ficha(j.id)
 		f["camada"] = m.anio
 		f["linaje"] = {
-			"padre": String(L.get("nombre", "")),
+			"padre": String(leyenda_i.get("nombre", "")),
 			"club": club_padre.nombre if club_padre != null else "?",
-			"nivel": int(L.get("nivel", 80)),
+			"nivel": int(leyenda_i.get("nivel", 80)),
 			"padre_en_club": false,
 			"pedido": false,
 			"propio": propio,
@@ -417,8 +417,8 @@ func _hijos_de_leyendas() -> void:
 		destino.plantilla.append(j)
 		## La etiqueta se cuelga aquí y no en el debut: la prensa no espera a que
 		## juegue para llamarlo «el nuevo Fulano». Ese es justo el problema.
-		etiquetar_promesa(j, String(L.get("nombre", "")))
-		hijo_de_leyenda.emit(j, String(L.get("nombre", "")), destino)
+		etiquetar_promesa(j, String(leyenda_i.get("nombre", "")))
+		hijo_de_leyenda.emit(j, String(leyenda_i.get("nombre", "")), destino)
 		## La señal sale siempre; el titular solo si te toca. Con 384 clubes en el
 		## mundo, anunciar cada hijo de cada leyenda llenaba el diario de gente
 		## que no conoces. Interesa el que llega a TU cantera y el que lleva el
@@ -430,13 +430,13 @@ func _hijos_de_leyendas() -> void:
 		elif destino.id == mio_id or (club_padre != null and club_padre.id == mio_id):
 			noticia.emit("Llega el hijo de una leyenda",
 				"La cantera de %s incorpora a %s, hijo de %s (%d en su mejor momento). La prensa ya habla del «nuevo %s»." % [
-					destino.nombre, j.nombre, String(L.get("nombre", "")), int(L.get("nivel", 80)), apellido])
+					destino.nombre, j.nombre, String(leyenda_i.get("nombre", "")), int(leyenda_i.get("nivel", 80)), apellido])
 	## El libro solo guarda a los que todavía no han traído hijo. Una leyenda ya
 	## usada no vuelve a hacer nada, y sin podarlas la lista crece para siempre:
 	## en cincuenta temporadas eran miles de entradas muertas en cada guardado.
 	## El apellido no se pierde, se queda en el linaje del hijo.
 	var pendientes: Array[Dictionary] = []
-	for L: Dictionary in leyendas:
-		if not bool(L.get("usado", false)):
-			pendientes.append(L)
+	for ley: Dictionary in leyendas:
+		if not bool(ley.get("usado", false)):
+			pendientes.append(ley)
 	leyendas = pendientes

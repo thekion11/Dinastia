@@ -59,7 +59,7 @@ func _pintar_gente_personas() -> void:
 		var b := Button.new()
 		var ya := g.hablado_esta_semana(clave)
 		b.text = Idiomas.t("Ya hablasteis") if ya else Idiomas.t("Charlar")
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = ya or g.charlas_esta_semana >= Gente.CHARLAS_POR_SEMANA
 		b.custom_minimum_size = Vector2(110, 0)
 		b.pressed.connect(func() -> void: _charlar_con(clave))
@@ -82,7 +82,7 @@ func _pintar_gente() -> void:
 		var clave := String(s[0])
 		var b := Button.new()
 		b.text = String(s[1])
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.toggle_mode = true
 		b.button_pressed = p._secc_gente == clave or (clave == "identidad" and p._secc_gente == "kits")
 		b.clip_text = true
@@ -165,7 +165,7 @@ func _pintar_periodistas(p_local: Prensa) -> void:
 		fila.add_child(r)
 		var b := Button.new()
 		b.text = Idiomas.t("Atender")
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.custom_minimum_size = Vector2(90, 0)
 		b.pressed.connect(func() -> void: _atender_periodista(clave))
 		fila.add_child(b)
@@ -257,7 +257,7 @@ func _pintar_influencer(p_local: Prensa) -> void:
 		var invitar: bool = op_b[0]
 		var b := Button.new()
 		b.text = String(op_b[1])
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.clip_text = true
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.disabled = invitar and c != null and c.saldo < coste
@@ -304,7 +304,7 @@ func _pintar_medios_propios(p_local: Prensa) -> void:
 		var b := Button.new()
 		var coste := Eco.escalar(float(f[2]), float(c.rep))
 		b.text = Idiomas.t("Puesto") if tengo else p._dinero(coste)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = tengo or c.saldo < coste
 		b.custom_minimum_size = Vector2(96, 0)
 		b.pressed.connect(func() -> void: _comprar_medio(clave, c))
@@ -331,7 +331,7 @@ func _pintar_vocero(p_local: Prensa) -> void:
 	p._lista_redes.add_child(ex)
 	var b := Button.new()
 	b.text = Idiomas.t("Quitar al portavoz") if hay else Idiomas.t("Nombrar portavoz")
-	b.add_theme_font_size_override("font_size", 11)
+	b.add_theme_font_size_override("font_size", Tema.letra(11))
 	b.pressed.connect(func() -> void:
 		var msg := p_local.nombrar_vocero(p.mundo.mi_club())
 		## Si el estado no cambió es que no se pudo: no hay capitán ni líder a
@@ -383,7 +383,7 @@ func _pintar_derechos_tv(p_local: Prensa) -> void:
 		var individual: bool = op[0]
 		var b := Button.new()
 		b.text = String(op[1])
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = p_local.tv_individual == individual
 		b.custom_minimum_size = Vector2(140, 0)
 		b.clip_text = true
@@ -413,7 +413,7 @@ func _pintar_portadas(p_local: Prensa) -> void:
 		tit.flat = true
 		tit.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		tit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		tit.add_theme_font_size_override("font_size", 12)
+		tit.add_theme_font_size_override("font_size", Tema.letra(12))
 		tit.add_theme_color_override("font_color", Principal.COL_VERDE if tipo == "bien" else (Principal.COL_ROJO if tipo == "mal" else Principal.COL_TEXTO))
 		## Traducido como en la portada (se busca CON comillas, que es como está
 		## en la tabla de la narración) pero sin pasarlo a mayúsculas: en una

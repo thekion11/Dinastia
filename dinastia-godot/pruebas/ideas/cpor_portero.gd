@@ -202,7 +202,7 @@ func _cambios() -> void:
 	_comprobar(motor.usuario == sup and motor.jugadores.has(sup), "suplente: roja al titular y entras tú")
 	(r[1] as Node3D).queue_free()
 	## Titular: el DT no cambia a su portero con una noche normal; goleado, puede.
-	_comprobar(MotorCambioPortero.prob_dt_portero(6.0, 0.0) == 0.0 and MotorCambioPortero.prob_dt_portero(4.2, 0.0) > 0.2, "el DT solo cambia al portero si lo golean")
+	_comprobar(is_zero_approx(MotorCambioPortero.prob_dt_portero(6.0, 0.0)) and MotorCambioPortero.prob_dt_portero(4.2, 0.0) > 0.2, "el DT solo cambia al portero si lo golean")
 	r = _motor()
 	motor = r[0]
 	gk = _portero(motor, true)

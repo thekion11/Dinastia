@@ -195,7 +195,7 @@ static func _limpiar(n: Node) -> void:
 		n.remove_child(h)
 		h.queue_free()
 
-static func _rejilla(lista: VBoxContainer, columnas: int, paleta: Dictionary) -> GridContainer:
+static func _rejilla(lista: VBoxContainer, columnas: int, _paleta: Dictionary) -> GridContainer:
 	_limpiar(lista)
 	var g := GridContainer.new()
 	g.columns = columnas

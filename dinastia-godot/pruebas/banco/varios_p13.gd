@@ -323,7 +323,7 @@ func _probar_funciones_puras_ui() -> void:
 	var t := LeagueAcciones.tiempo_a_altura(0.0, 10.0, 0.0, 9.8)
 	_comprobar(absf(t - 20.0 / 9.8) < 0.0001, "tiempo a la altura de salida: vuelve a bajar a los %.3f s" % t)
 	_comprobar(absf(LeagueAcciones.tiempo_a_altura(0.0, 10.0, 4.0, 9.8) - (10.0 + sqrt(21.6)) / 9.8) < 0.0001, "tiempo bajando por 4 m")
-	_comprobar(LeagueAcciones.tiempo_a_altura(0.0, 5.0, 20.0, 9.8) == -1.0, "si no llega a la altura pedida devuelve -1")
+	_comprobar(is_equal_approx(LeagueAcciones.tiempo_a_altura(0.0, 5.0, 20.0, 9.8), -1.0), "si no llega a la altura pedida devuelve -1")
 	var rx := RegEx.create_from_string("^[A-HJ-NP-PR-VX-Z]{2} \\d{3} [A-HJ-NP-PR-VX-Z]{2}$")
 	var bien := true
 	for i in [0, 1, 7, 99, 1000, 123456, -5, 2147483647]:

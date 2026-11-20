@@ -133,7 +133,7 @@ static func _sitios_de_grada(raiz: Node3D) -> Array:
 	_cache_sitios[clave] = out
 	return out
 
-static func _confeti(sitio: Vector3, colores: Array, cantidad: int, dura: float) -> GPUParticles3D:
+static func _confeti(sitio: Vector3, colores: Array, cantidad: int, _dura: float) -> GPUParticles3D:
 	var p := GPUParticles3D.new()
 	p.name = "Confeti"
 	p.amount = maxi(80, cantidad)
@@ -188,7 +188,7 @@ static func _confeti(sitio: Vector3, colores: Array, cantidad: int, dura: float)
 
 ## Una bengala: chispas rojas muy vivas en la mano y una columna de humo del
 ## color del club que sube y se abre.
-static func _bengala(sitio: Vector3, color: Color, dura: float) -> Node3D:
+static func _bengala(sitio: Vector3, color: Color, _dura: float) -> Node3D:
 	var n := Node3D.new()
 	n.name = "Bengala"
 	n.position = sitio + Vector3(0, 1.7, 0)

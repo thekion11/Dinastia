@@ -71,15 +71,15 @@ func _probar_imagen_mental() -> void:
 	_comprobar(absf(MotorMente.retardo(motor, cpu) - 0.5) < 0.001, "el Practicante ve con 0,5 s de retardo")
 	var visto := MotorMente.pos_vista(motor, cpu, local)
 	_comprobar(visto.x < 5.1, "la CPU de Practicante ve al rival en x=%.1f, no en x=10" % visto.x)
-	_comprobar(MotorMente.retardo(motor, local) == 0.0 and MotorMente.pos_vista(motor, local, cpu) == motor.pos(cpu), "el equipo del usuario ve el presente")
+	_comprobar(is_zero_approx(MotorMente.retardo(motor, local)) and MotorMente.pos_vista(motor, local, cpu) == motor.pos(cpu), "el equipo del usuario ve el presente")
 	motor.dificultad_cpu = "debutante"
-	_comprobar(MotorMente.retardo(motor, cpu) == 0.0 and absf(MotorMente.pos_vista(motor, cpu, local).x - 10.0) < 0.01, "el Debutante lo ve en el presente (calibración de siempre)")
+	_comprobar(is_zero_approx(MotorMente.retardo(motor, cpu)) and absf(MotorMente.pos_vista(motor, cpu, local).x - 10.0) < 0.01, "el Debutante lo ve en el presente (calibración de siempre)")
 	motor.dificultad_cpu = "ultimate"
 	local["vel"] = Vector3(4.0, 0, 0)
 	_comprobar(MotorMente.retardo(motor, cpu) < 0.0, "Ultimate se adelanta (retardo negativo)")
 	_comprobar(absf(MotorMente.pos_vista(motor, cpu, local).x - (10.0 + 4.0 * 0.3)) < 0.01, "Ultimate ve al rival donde ESTARÁ (x=%.1f)" % MotorMente.pos_vista(motor, cpu, local).x)
 	motor.dificultad_cpu = "semiprofesional"
-	_comprobar(MotorMente.retardo(motor, cpu) == 0.0, "Semiprofesional ve el presente")
+	_comprobar(is_zero_approx(MotorMente.retardo(motor, cpu)), "Semiprofesional ve el presente")
 	(r[1] as Node3D).queue_free()
 
 ## ROLES DINÁMICOS (03-11-2026, IA F2, `MotorRoles`): si dos laterales se cruzan de banda, intercambian el puesto; el húngaro es óptimo.
@@ -229,15 +229,15 @@ func _probar_adaptacion() -> void:
 	var motor: MotorJugable = r[0]
 	var locales: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) and not bool(p["por"]))
 	var vis: Array = motor.jugadores.filter(func(p: Dictionary) -> bool: return not bool(p["es_local"]) and not bool(p["por"]))
-	_comprobar(MotorAdaptacion.desvio_x(motor, true, false) == 0.0, "al principio no se desplaza (aún no sabe por dónde ataca el rival)")
+	_comprobar(is_zero_approx(MotorAdaptacion.desvio_x(motor, true, false)), "al principio no se desplaza (aún no sabe por dónde ataca el rival)")
 	motor.poseedor = vis[0]
 	motor.balon.position = Vector3(25.0, 0.11, 10.0)
 	for i in 700:
 		MotorAdaptacion.actualizar(motor, 0.1)
 	var d := MotorAdaptacion.desvio_x(motor, true, false)
 	_comprobar(d > 1.5 and d <= MotorAdaptacion.TOPE_LADO, "tras 70 s con el rival atacando por la derecha, el bloque se corre hacia ese lado (%.1f m)" % d)
-	_comprobar(MotorAdaptacion.desvio_x(motor, false, true) == 0.0, "el equipo que ataca no se desplaza")
-	_comprobar(MotorAdaptacion.desvio_x(motor, true, true) == 0.0, "con la posesión propia tampoco")
+	_comprobar(is_zero_approx(MotorAdaptacion.desvio_x(motor, false, true)), "el equipo que ataca no se desplaza")
+	_comprobar(is_zero_approx(MotorAdaptacion.desvio_x(motor, true, true)), "con la posesión propia tampoco")
 	## Habilidades: un jugador veloz y fuerte tiene más radio que uno lento y débil.
 	var p: Dictionary = locales[1]
 	var attr_viejo: Dictionary = (p["attr"] as Dictionary).duplicate()
@@ -329,15 +329,15 @@ func _probar_tiro_fallido() -> void:
 	var antes := MotorTiroLimpio._real
 	MotorTiroLimpio._real = false
 	_comprobar(MotorTiroLimpio.fallar(motor, tirador, destino, 14.0, 5.0) == destino, "con la bandera apagada el destino no cambia")
-	_comprobar(MotorTiroLimpio.alcance(30.0) == 30.0, "con la bandera apagada el alcance de tiro no cambia")
-	_comprobar(MotorTiroLimpio.bono_area(10.0) == 0.0, "con la bandera apagada no hay bono de área")
-	_comprobar(MotorPaseMejora.RIESGO_K == 1.0 or OS.get_environment("PMOT_RIESGO") != "", "el peso del riesgo del pase es 1,0 por defecto")
-	_comprobar(MotorPaseMejora.VEL_K == 1.2 or OS.get_environment("PMOT_VEL") != "", "la velocidad del pase raso es 1,2 por defecto")
-	_comprobar(MotorPaseMejora.DIST_K == 0.02 or OS.get_environment("PMOT_DIST") != "", "la penalización por distancia del pase es 0,02 por defecto")
-	_comprobar((MotorDuelo.K == 1.0 and MotorDuelo.ENF == 1.0) or OS.get_environment("ENTRADA_K") != "" or OS.get_environment("ENTRADA_ENF") != "", "las perillas de la entrada son neutras (1,0) por defecto")
+	_comprobar(is_equal_approx(MotorTiroLimpio.alcance(30.0), 30.0), "con la bandera apagada el alcance de tiro no cambia")
+	_comprobar(is_zero_approx(MotorTiroLimpio.bono_area(10.0)), "con la bandera apagada no hay bono de área")
+	_comprobar(is_equal_approx(MotorPaseMejora.riesgo_k, 1.0) or OS.get_environment("PMOT_RIESGO") != "", "el peso del riesgo del pase es 1,0 por defecto")
+	_comprobar(is_equal_approx(MotorPaseMejora.vel_k, 1.2) or OS.get_environment("PMOT_VEL") != "", "la velocidad del pase raso es 1,2 por defecto")
+	_comprobar(is_equal_approx(MotorPaseMejora.dist_k, 0.02) or OS.get_environment("PMOT_DIST") != "", "la penalización por distancia del pase es 0,02 por defecto")
+	_comprobar((is_equal_approx(MotorDuelo.K, 1.0) and is_equal_approx(MotorDuelo.enf, 1.0)) or OS.get_environment("ENTRADA_K") != "" or OS.get_environment("ENTRADA_ENF") != "", "las perillas de la entrada son neutras (1,0) por defecto")
 	MotorTiroLimpio._real = true
-	_comprobar(absf(MotorTiroLimpio.alcance(30.0) - 30.0 * MotorTiroLimpio.ALCANCE_K) < 0.001 and MotorTiroLimpio.ALCANCE_K > 1.0, "con la bandera encendida el alcance de tiro crece")
-	_comprobar(MotorTiroLimpio.bono_area(10.0) > 0.0 and MotorTiroLimpio.bono_area(30.0) == 0.0, "encendida, el bono solo vale dentro del área")
+	_comprobar(absf(MotorTiroLimpio.alcance(30.0) - 30.0 * MotorTiroLimpio.alcance_k) < 0.001 and MotorTiroLimpio.alcance_k > 1.0, "con la bandera encendida el alcance de tiro crece")
+	_comprobar(MotorTiroLimpio.bono_area(10.0) > 0.0 and is_zero_approx(MotorTiroLimpio.bono_area(30.0)), "encendida, el bono solo vale dentro del área")
 	var cerca := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 8.0, 5.0)
 	var lejos := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 28.0, 5.0)
 	var apretado := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 8.0, 1.0)
@@ -412,7 +412,7 @@ func _probar_descarga() -> void:
 	var p: Dictionary = motor.jugadores.filter(func(q: Dictionary) -> bool: return bool(q["es_local"]) and not bool(q["por"]))[0]
 	var antes := MotorDescarga._on
 	MotorDescarga._on = false
-	_comprobar(not MotorDescarga.urge(motor, p, 1.0) and MotorDescarga.holgura(0.5) == 0.5, "apagada no urge ni cambia la espera")
+	_comprobar(not MotorDescarga.urge(motor, p, 1.0) and is_equal_approx(MotorDescarga.holgura(0.5), 0.5), "apagada no urge ni cambia la espera")
 	MotorDescarga._on = true
 	motor.t = 50.0
 	p["tomo_en"] = 40.0
@@ -424,7 +424,7 @@ func _probar_descarga() -> void:
 	motor.t += 1.0
 	p["tomo_en"] = motor.t - 0.1
 	_comprobar(not MotorDescarga.urge(motor, p, 1.5), "recién recibido el balón (0,1 s) no decide aún")
-	_comprobar(MotorDescarga.holgura(0.5) == MotorDescarga.HOLGURA and MotorDescarga.holgura(1.0) == 1.0, "la espera con presión baja a %.2f y sin presión no cambia" % MotorDescarga.HOLGURA)
+	_comprobar(MotorDescarga.holgura(0.5) == MotorDescarga.HOLGURA and is_equal_approx(MotorDescarga.holgura(1.0), 1.0), "la espera con presión baja a %.2f y sin presión no cambia" % MotorDescarga.HOLGURA)
 	MotorDescarga._on = antes
 	(r[1] as Node3D).queue_free()
 
@@ -438,13 +438,13 @@ func _probar_adelanto_c4() -> void:
 		(p["node"] as Node3D).position = Vector3(40.0, 0, 0) if bool(p["es_local"]) != bool(q["es_local"]) else Vector3(-30.0, 0, 0)
 	(q["node"] as Node3D).position = Vector3(0, 0, 10.0)
 	motor.balon.position = Vector3(0, 0, -5.0); var base := Vector3(0, 0, 6.0)
-	var antes := MejorasC4Adelanto.ACTIVO; MejorasC4Adelanto.ACTIVO = false
+	var antes := MejorasC4Adelanto.activo; MejorasC4Adelanto.activo = false
 	_comprobar(MejorasC4Adelanto.guia(motor, q, base) == base, "con la bandera apagada no cambia nada")
-	MejorasC4Adelanto.ACTIVO = true; _comprobar(MejorasC4Adelanto.guia(motor, q, base) == base, "sin rival cerca del punto se adelanta entero")
+	MejorasC4Adelanto.activo = true; _comprobar(MejorasC4Adelanto.guia(motor, q, base) == base, "sin rival cerca del punto se adelanta entero")
 	var rival: Dictionary = motor.jugadores.filter(func(p: Dictionary) -> bool: return bool(p["es_local"]) != bool(q["es_local"]))[0]
 	(rival["node"] as Node3D).position = Vector3(0, 0, 23.0)   ## llega antes a 16 m, no a 13 m
 	_comprobar(MejorasC4Adelanto.guia(motor, q, base) == base * 0.5, "con un rival en el punto, la mitad del adelanto")
 	(rival["node"] as Node3D).position = Vector3(0.5, 0, 12.5)
 	_comprobar(MejorasC4Adelanto.guia(motor, q, base) == Vector3.ZERO, "con el rival también a mitad de camino, al pie")
-	MejorasC4Adelanto.ACTIVO = antes
+	MejorasC4Adelanto.activo = antes
 	(r[1] as Node3D).queue_free()

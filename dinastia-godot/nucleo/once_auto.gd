@@ -12,7 +12,7 @@ static func asignar(libres: Array, ranuras: Array, orden: Array) -> Dictionary:
 
 ## (16-11, paso a C++) El once automático ENTERO en una llamada (`disponibles()` + las dos vueltas + el orden de las ranuras): en C++ si la extensión está. Devuelve [] si no hay extensión
 ## o si hay menos de 7 libres: entonces `Club.once()` sigue con su camino de siempre (GDScript, con la red de seguridad). La gemela es ese mismo camino de `Club.once()`.
-static func armar(plantilla: Array, ranuras: Array, orden: Array) -> Array:
+static func armar(plantilla: Array, ranuras: Array, _orden: Array) -> Array:
 	var nat := Nativo.obj()
 	if nat == null or not nat.has_method("once_armar"):
 		return []

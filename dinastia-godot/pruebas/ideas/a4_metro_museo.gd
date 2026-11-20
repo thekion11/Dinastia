@@ -41,7 +41,6 @@ func _metro(e: Object, vc: Node) -> void:
 	var metro: Object = e.metro
 	var accesos: Array = metro.accesos
 	_comprobar(accesos.size() >= 4, "el metro tiene accesos (%d)" % accesos.size())
-	var calle0: Vector3 = e.cuerpo.position
 	var malas: Array[String] = []
 	var n_ok := 0
 	var nodos0 := 0
@@ -102,7 +101,6 @@ func _metro(e: Object, vc: Node) -> void:
 			await _esperar(2)
 			_sin_tren(metro, nombre, llegado)
 			var p2: Vector3 = e.cuerpo.position
-			var medio: Vector2 = e._anden_medio
 			var rel: Vector3 = p2 - e._anden_c
 			if String(e.estado) != "anden" or not is_finite(p2.x) or absf(rel.y) > 4.0 or absf(rel.x) > 60.0 or absf(rel.z) > 60.0:
 				malos_t.append("%s tren %d: baja en %s (andén en %s, %s)" % [nombre, k, str(p2), str(e._anden_c), e.estado])

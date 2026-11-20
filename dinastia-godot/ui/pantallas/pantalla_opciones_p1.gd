@@ -44,7 +44,7 @@ func _pintar_idioma() -> void:
 		var ficha: Array = Idiomas.NOMBRES[k]
 		var b := Button.new()
 		b.text = "%s  %s" % [String(ficha[1]), String(ficha[0])]
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.toggle_mode = true
 		b.button_pressed = Idiomas.idioma == clave
 		b.clip_text = true
@@ -80,7 +80,7 @@ func _pintar_moneda() -> void:
 		var codigo := k
 		var b := Button.new()
 		b.text = "%s  %s" % [codigo, String(Eco.MONEDAS[codigo]["nombre"])]
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.toggle_mode = true
 		b.button_pressed = Eco.moneda == codigo
 		b.clip_text = true
@@ -195,7 +195,7 @@ func _pintar_musica() -> void:
 		var p_local: Dictionary = Musica.PIEZAS[k]
 		var b := Button.new()
 		b.text = String(p_local["nombre"])
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		b.toggle_mode = true
 		b.button_pressed = Musica.pieza == clave and not Musica.automatica
 		b.disabled = not Musica.encendida
@@ -243,7 +243,7 @@ func _pintar_mezclador() -> void:
 		var bp := Button.new()
 		bp.text = "▶"
 		bp.tooltip_text = String(b[3])
-		bp.add_theme_font_size_override("font_size", 11)
+		bp.add_theme_font_size_override("font_size", Tema.letra(11))
 		bp.disabled = not Sonido.encendido
 		var muestra := String(b[2])
 		bp.pressed.connect(func() -> void: Sonido.toca(muestra, bus))
@@ -342,7 +342,7 @@ func _pintar_penas_y_ramas(c: Club, h: Hinchada) -> void:
 		var b := Button.new()
 		var coste_r := Eco.escalar(float(f[3]), float(c.rep))
 		b.text = Idiomas.t("Cerrar") if abierta else p._dinero(coste_r)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = not abierta and c.saldo < coste_r
 		b.custom_minimum_size = Vector2(96, 0)
 		b.pressed.connect(func() -> void: _alternar_rama(clave, c, abierta))

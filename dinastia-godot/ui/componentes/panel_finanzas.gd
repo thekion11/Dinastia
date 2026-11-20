@@ -168,7 +168,7 @@ static func pintar_auspicio(lista: VBoxContainer, c: Club, mundo: Mundo,
 		fila.add_child(e2)
 		var b := Button.new()
 		b.text = Idiomas.t("Firmar")
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.custom_minimum_size = Vector2(80, 0)
 		b.pressed.connect(func() -> void: al_firmar.call(idx))
 		fila.add_child(b)
@@ -209,7 +209,7 @@ static func pintar_patrocinio(lista: VBoxContainer, c: Club, mundo: Mundo,
 			fila.add_child(n)
 			var b := Button.new()
 			b.text = _dinero(coste)
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.disabled = c.saldo < coste
 			b.custom_minimum_size = Vector2(90, 0)
 			b.pressed.connect(func() -> void: al_lanzar_campana.call(clave))
@@ -285,14 +285,14 @@ static func pintar_banco(lista: VBoxContainer, c: Club, mundo: Mundo, paleta: Di
 			var idx := i
 			var bp := Button.new()
 			bp.text = Idiomas.t("Prepagar  %s") % _dinero(int(p["deuda"]))
-			bp.add_theme_font_size_override("font_size", 11)
+			bp.add_theme_font_size_override("font_size", Tema.letra(11))
 			bp.disabled = c.saldo < int(p["deuda"])
 			bp.pressed.connect(func() -> void: al_prepagar.call(idx))
 			fila.add_child(bp)
 			if not bool(p["renegociado"]):
 				var br := Button.new()
 				br.text = Idiomas.t("Renegociar (baja la cuota, sube la tasa)")
-				br.add_theme_font_size_override("font_size", 11)
+				br.add_theme_font_size_override("font_size", Tema.letra(11))
 				br.clip_text = true
 				br.custom_minimum_size = Vector2(150, 0)
 				br.pressed.connect(func() -> void: al_renegociar.call(idx))
@@ -334,7 +334,7 @@ static func pintar_banco(lista: VBoxContainer, c: Club, mundo: Mundo, paleta: Di
 		var idx2 := i2
 		var bt := Button.new()
 		bt.text = Idiomas.t("Tomar")
-		bt.add_theme_font_size_override("font_size", 11)
+		bt.add_theme_font_size_override("font_size", Tema.letra(11))
 		bt.disabled = b.prestamos.size() >= Banco.MAX_PRESTAMOS or b.en_mora()
 		bt.custom_minimum_size = Vector2(72, 0)
 		bt.pressed.connect(func() -> void: al_pedir_credito.call(idx2))
@@ -393,11 +393,11 @@ static func _dato(padre: Node, etiqueta: String, valor: String, color: Color, pa
 	var b := _texto(12, color, paleta)
 	b.text = valor
 	## Aire a la derecha: la barra de desplazamiento tapaba el final de la cifra.
-	b.add_theme_stylebox_override("normal", _AIRE)
+	b.add_theme_stylebox_override("normal", aire)
 	h.add_child(b)
 	padre.add_child(h)
 
-static var _AIRE := _aire()
+static var aire := _aire()
 static func _aire() -> StyleBoxEmpty:
 	var sb := StyleBoxEmpty.new()
 	sb.content_margin_right = 14

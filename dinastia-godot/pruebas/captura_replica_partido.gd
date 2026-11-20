@@ -35,7 +35,7 @@ func _ready() -> void:
 		if String(e.get("tipo", "")) == "gol":
 			minuto = int(e["min"])
 			break
-	var r := ReplicaPartido.abrir(pr, orig, minuto)
+	ReplicaPartido.abrir(pr, orig, minuto)
 	await get_tree().create_timer(9.0).timeout
 	get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path("res://pruebas/capturas/replica_momento.png"))
 	print("MINUTO ", minuto, " vivo: ", pr.find_children("*", "PartidoVivo", true, false).size())

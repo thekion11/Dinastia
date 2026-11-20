@@ -131,4 +131,4 @@ static func _tapa(c: Control) -> bool:
 	## (12-11) Una capa que OTRA ha aislado (`FocoMando.aislar`: un menú a pantalla completa abierto encima de un evento) no es la de arriba:
 	## antes el guardián intentaba enfocarla cada 0,25 s, fallaba («can't grab focus») y el foco no volvía al menú.
 	return c.visible and not c.is_queued_for_deletion() and c.mouse_filter == Control.MOUSE_FILTER_STOP and not c.has_meta("foco_tapado") \
-		and c.anchor_left == 0.0 and c.anchor_top == 0.0 and c.anchor_right == 1.0 and c.anchor_bottom == 1.0
+		and is_zero_approx(c.anchor_left) and is_zero_approx(c.anchor_top) and is_equal_approx(c.anchor_right, 1.0) and is_equal_approx(c.anchor_bottom, 1.0)

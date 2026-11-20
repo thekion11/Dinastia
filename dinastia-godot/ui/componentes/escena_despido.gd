@@ -14,6 +14,7 @@ extends Control
 signal cerrado
 
 const ROJO := Color(0.88, 0.33, 0.33)
+const _RUTA_PERSONAJE_DT := "res://visor/personaje_dt.gd"
 
 var _mundo: Mundo
 var _club: Club
@@ -110,7 +111,7 @@ void fragment() {
 	_boton = Button.new()
 	_boton.text = Idiomas.t("Ver ofertas de otros clubes ▶")
 	_boton.custom_minimum_size = Vector2(320, 46)
-	_boton.add_theme_font_size_override("font_size", 18)
+	_boton.add_theme_font_size_override("font_size", Tema.letra(18))
 	_boton.visible = false
 	_boton.pressed.connect(_cerrar)
 	add_child(_boton)
@@ -169,12 +170,12 @@ func _presidente_3d(marco: Control, c1: Color, c2: Color, bajo := false) -> bool
 	vp.add_child(raiz)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash("presidente_" + _nombre_pres)
-	var asp = load("res://visor/personaje_dt.gd").aleatorio(rng)
+	var asp = load(_RUTA_PERSONAJE_DT).aleatorio(rng)
 	asp.merge({"cuerpo": "male", "ropa": "traje", "c_ropa": "15171c", "c_ropa2": "f2f2f2", "corbata": true,
 		"color_pelo": ["9b9b98", "c8c8c4", "6e6a66"][rng.randi() % 3], "gorra": false, "bufanda": false,
 		"auriculares": false, "pendiente": false, "cadena": false, "manga_corta": false, "tatuaje": 0,
 		"pelo": ["corto", "calvo", "rapado"][rng.randi() % 3]}, true)
-	var d = load("res://visor/personaje_dt.gd").crear(raiz, asp, c1, c2)
+	var d = load(_RUTA_PERSONAJE_DT).crear(raiz, asp, c1, c2)
 	if d.is_empty():
 		cont.queue_free()
 		return false

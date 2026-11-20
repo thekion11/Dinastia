@@ -371,7 +371,7 @@ func tras_responder(r: Dictionary) -> void:
 	var per := String(p.mundo.prensa.entrevista.get("periodista", _ultimo_periodista))
 	cerrar()
 	p._refrescar()
-	_PrincipalRuedaResumen.mostrar(p, _suma, p.mundo.prensa.titular_pendiente, _ultimo_medio, per)
+	_PRINCIPAL_RUEDA_RESUMEN.mostrar(p, _suma, p.mundo.prensa.titular_pendiente, _ultimo_medio, per)
 
 ## Responder con tus palabras. El tono lo decide `Prensa.clasificar_respuesta()`
 ## por palabras clave, en local: nada sale del ordenador.
@@ -385,7 +385,7 @@ func _fila_texto_libre() -> VBoxContainer:
 	abre.text = Idiomas.t("✍️ Con tus palabras")
 	abre.flat = true
 	abre.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	abre.add_theme_font_size_override("font_size", 12)
+	abre.add_theme_font_size_override("font_size", Tema.letra(12))
 	bloque.add_child(abre)
 	var fila := HBoxContainer.new()
 	fila.name = "TextoLibre"
@@ -434,7 +434,7 @@ func _fila_posturas() -> VBoxContainer:
 		b.text = Idiomas.t("%s %s" % [String(datos[0]), String(datos[1])])
 		b.toggle_mode = true
 		b.button_pressed = (k == p.mundo.prensa.cuerpo)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.pressed.connect(func() -> void:
 			p.mundo.prensa.fijar_cuerpo(k)
 			repintar_posturas())

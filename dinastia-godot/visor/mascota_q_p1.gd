@@ -167,7 +167,7 @@ static func _cil(root: Node3D, pos: Vector3, giro: Vector3, r: float, h: float, 
 # -----------------------------------------------------------------------------
 
 static func cabeza(cab: Node3D, animal: String, fila: Array, pelo: Color, mat_pelo: Material,
-		mat_claro: Material, c1: Color, c2: Color) -> void:
+		mat_claro: Material, _c1: Color, c2: Color) -> void:
 	var oscuro := _mat(Color(0.06, 0.05, 0.05), 0.35)
 	var rosa := _mat(Color(0.95, 0.58, 0.62), 0.8)
 	var hocico := String(fila[2])

@@ -208,7 +208,7 @@ func semana(c: Club) -> void:
 
 ## Los avisos de cada escalón. Se avisa EN el umbral y no antes: un aviso cada
 ## semana se convierte en ruido y se deja de leer.
-func _avisar_escalon(c: Club) -> void:
+func _avisar_escalon(_c: Club) -> void:
 	## `SEM_LIQUIDACION + gracia_liquidacion` no es una constante -depende del
 	## Consejero legal-, y `match` en GDScript exige patrones constantes: con
 	## eso como caso de un `match` ni siquiera compila ("Expression in match

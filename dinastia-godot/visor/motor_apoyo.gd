@@ -9,8 +9,8 @@ extends RefCounted
 ##  · LÍNEA DE PASE: si un rival tapa la línea al portador, sale hacia el lado libre;
 ##  · AVANCE: delanteros y extremos empujan hacia el arco rival; defensas, un poco hacia atrás.
 ## La fuerza total se limita a `TOPE` m para que el compañero no se vaya de su zona. `SIN_APOYO=1` = el ofrecimiento fijo de antes.
-static var ALCANCE := float(OS.get_environment("APOYO_ALCANCE")) if OS.get_environment("APOYO_ALCANCE") != "" else 18.0   ## perilla ciclo 19 (3-11)
-static var ANILLO := float(OS.get_environment("APOYO_ANILLO")) if OS.get_environment("APOYO_ANILLO") != "" else 12.0   ## perilla del ciclo 15 (3-11)
+static var alcance := float(OS.get_environment("APOYO_ALCANCE")) if OS.get_environment("APOYO_ALCANCE") != "" else 18.0   ## perilla ciclo 19 (3-11)
+static var anillo := float(OS.get_environment("APOYO_ANILLO")) if OS.get_environment("APOYO_ANILLO") != "" else 12.0   ## perilla del ciclo 15 (3-11)
 const SEPARA := 9.0
 const LEJOS_RIVAL := 6.0
 const TOPE := 12.0
@@ -31,7 +31,7 @@ static func fuerza(m: MotorJugable, p: Dictionary, c: Dictionary) -> Vector3:
 	if d < 0.01:
 		a = Vector3(1, 0, 0)
 		d = 0.01
-	f += -a / d * clampf(d - ANILLO, -6.0, 6.0) * 0.8
+	f += -a / d * clampf(d - anillo, -6.0, 6.0) * 0.8
 	## Repulsión de compañeros y de rivales.
 	for q: Dictionary in m.jugadores:
 		if q == p or q == c or bool(q["por"]):
@@ -55,7 +55,7 @@ static func fuerza(m: MotorJugable, p: Dictionary, c: Dictionary) -> Vector3:
 				if t > 0.1 and t < 0.9:
 					var perp := w.dot(lado)
 					if absf(perp) < 1.6:
-						f += -lado * signf(perp if perp != 0.0 else 1.0) * (1.6 - absf(perp)) * 2.5
+						f += -lado * signf(perp if not is_zero_approx(perp) else 1.0) * (1.6 - absf(perp)) * 2.5
 	## Avance según el puesto.
 	match m._rol(p):
 		"DC", "ED", "EI":
@@ -68,7 +68,7 @@ static func fuerza(m: MotorJugable, p: Dictionary, c: Dictionary) -> Vector3:
 
 ## Dónde se ofrece `p` al portador `c`, a partir de su puesto `obj`. Si no está al alcance, `obj` sin cambios.
 static func punto(m: MotorJugable, p: Dictionary, c: Dictionary, obj: Vector3) -> Vector3:
-	if _sin or m.pos(p).distance_to(m.pos(c)) > ALCANCE:
+	if _sin or m.pos(p).distance_to(m.pos(c)) > alcance:
 		return obj
 	var f := fuerza(m, p, c)
 	var o := m.pos(p) + f
@@ -79,5 +79,5 @@ static func punto(m: MotorJugable, p: Dictionary, c: Dictionary, obj: Vector3) -
 	return res
 
 ## Ciclo 23: distancia del portador al arco rival a partir de la cual el ataque ocupa el área (`_zona_de_llegada`); 32 m = como antes. `APOYO_LLEGADA` la sube.
-static var LLEGADA_R := float(OS.get_environment("APOYO_LLEGADA")) if OS.get_environment("APOYO_LLEGADA") != "" else 32.0
+static var llegada_r := float(OS.get_environment("APOYO_LLEGADA")) if OS.get_environment("APOYO_LLEGADA") != "" else 32.0
 

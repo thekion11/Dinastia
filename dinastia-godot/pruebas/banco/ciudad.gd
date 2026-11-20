@@ -97,17 +97,17 @@ func _probar_redes_ciudad() -> void:
 	_titulo("REDES DE LA CIUDAD: LUZ, AGUA, DRENAJE Y GAS")
 	var r := RedesCiudad.new(7)
 	r.averias_azar = false
-	_comprobar(r.sectores().size() == 25 and r.fraccion_luz() == 1.0, "25 sectores y todos con luz al empezar")
+	_comprobar(r.sectores().size() == 25 and is_equal_approx(r.fraccion_luz(), 1.0), "25 sectores y todos con luz al empezar")
 	_comprobar(RedesCiudad.sector_en(0.0, 0.0) == Vector2i(2, 2) and RedesCiudad.sector_en(-1320.0, -1320.0) == Vector2i(0, 0) \
 		and RedesCiudad.sector_en(1320.0, 1320.0) == Vector2i(4, 4), "cada punto del mapa cae en su sector")
 	## LUZ: de madrugada sobra energía; en hora punta y sin viento se cortan sectores, menos el del hospital.
 	r.pasar(1, 3, 0.5, 0.0)
-	_comprobar(r.fraccion_luz() == 1.0, "de madrugada hay luz en toda la ciudad")
+	_comprobar(is_equal_approx(r.fraccion_luz(), 1.0), "de madrugada hay luz en toda la ciudad")
 	r.pasar(1, 20, 0.0, 0.0)
 	_comprobar(r.fraccion_luz() < 1.0, "a las 20:00 sin viento faltan %.0f MW y se cortan sectores" % (r.demanda - r.generacion))
 	_comprobar(r.hay_luz(RedesCiudad.sector_de(Vector2i(5, -1))), "el hospital nunca se queda a oscuras")
 	r.pasar(1, 20, 1.0, 0.0)
-	_comprobar(r.fraccion_luz() == 1.0, "con viento pleno vuelve la luz en hora punta")
+	_comprobar(is_equal_approx(r.fraccion_luz(), 1.0), "con viento pleno vuelve la luz en hora punta")
 	r.averiar("luz", Vector2i(1, 1))
 	r.pasar(1, 3, 0.5, 0.0)
 	_comprobar(not r.hay_luz(Vector2i(1, 1)) and r.hay_luz(Vector2i(1, 2)), "un transformador averiado deja sin luz solo su sector")
@@ -133,13 +133,13 @@ func _probar_redes_ciudad() -> void:
 	d.pasar(10, 12, 0.5, 8.0)
 	_comprobar(d.inundado[Vector2i(2, 2)] and not d.inundado[Vector2i(2, 3)], "con 8 mm/h solo se inunda el sector de los sumideros atascados")
 	_comprobar(RedesCiudad.tiempo_de("tormenta", 15)["lluvia"] > RedesCiudad.tiempo_de("lluvia", 15)["lluvia"] \
-		and RedesCiudad.tiempo_de("despejado", 15)["lluvia"] == 0.0, "el clima de la semana manda la lluvia")
+		and is_zero_approx(RedesCiudad.tiempo_de("despejado", 15)["lluvia"]), "el clima de la semana manda la lluvia")
 	## GAS: se reposta, baja el depósito, la cisterna repone y sin luz no hay bomba.
 	var g := RedesCiudad.new(7)
 	g.averias_azar = false
 	var antes: float = g.gas[0]
 	var rep := g.repostar(0, Vector2i(2, 2), 45.0)
-	_comprobar(float(rep["litros"]) == 45.0 and int(rep["coste"]) == 63 and float(g.gas[0]) == antes - 45.0, "45 l cuestan 63 € y salen del depósito")
+	_comprobar(is_equal_approx(float(rep["litros"]), 45.0) and int(rep["coste"]) == 63 and float(g.gas[0]) == antes - 45.0, "45 l cuestan 63 € y salen del depósito")
 	g.averiar("luz", Vector2i(2, 2))
 	g.pasar(1, 3, 0.5, 0.0)
 	_comprobar(int(g.repostar(0, Vector2i(2, 2), 45.0)["coste"]) == 0, "sin corriente las bombas no sirven")
@@ -205,7 +205,7 @@ func _probar_redes_ciudad() -> void:
 	_comprobar(vuelta.luz == gd.luz and vuelta.inundado == gd.inundado and vuelta.historial.size() == gd.historial.size(), "y la luz, las inundaciones y las curvas son las mismas")
 	var vieja := RedesCiudad.new(5)
 	vieja.desde_dic({})
-	_comprobar(vieja.horas == 0 and vieja.fraccion_luz() == 1.0, "una partida vieja sin redes se queda con las redes nuevas")
+	_comprobar(vieja.horas == 0 and is_equal_approx(vieja.fraccion_luz(), 1.0), "una partida vieja sin redes se queda con las redes nuevas")
 	var mu := Mundo.new()
 	mu.generar(["CHI"], 3131)
 	mu.tomar_el_mando(mu.ligas[0].clubes[0].id)
@@ -219,7 +219,7 @@ func _probar_redes_ciudad() -> void:
 	vd.gastar_combustible(10000.0)
 	_comprobar(is_equal_approx(vd.combustible, 40.0), "10 km gastan 5 l (0,5 l/km, decisión del dueño del 31-10)")
 	vd.gastar_combustible(100000.0)
-	_comprobar(vd.combustible == 0.0, "el depósito no baja de cero")
+	_comprobar(is_zero_approx(vd.combustible), "el depósito no baja de cero")
 	vd.combustible = 6.0
 	vd.aviso_comb = 202645
 	var vd2 := VidaDT.new()
@@ -354,7 +354,8 @@ func _probar_cajero() -> void:
 	_comprobar(r3.cartera.bloqueada and p3._estado == "pin", "tres PIN malos bloquean la tarjeta y no se abre el menú")
 	p3._tecla("✕")
 	_comprobar(not is_instance_valid(p3) or p3.is_queued_for_deletion(), "la tecla ✕ cierra el cajero")
-	_comprobar(CajeroCiudad.banco_de("cajero_1") == CajeroCiudad.banco_de("cajero_1") and not CajeroCiudad.servicio(null, "surtidor_0"), "cada cajero tiene un banco fijo y el gancho ignora lo que no es cajero")
+	var _r1a = CajeroCiudad.banco_de("cajero_1"); var _r1b = CajeroCiudad.banco_de("cajero_1")
+	_comprobar(_r1a == _r1b and not CajeroCiudad.servicio(null, "surtidor_0"), "cada cajero tiene un banco fijo y el gancho ignora lo que no es cajero")
 	## La ventanilla del banco: sin PIN, restablece el PIN y quita el bloqueo.
 	var r4 := Roles.new(m)
 	r4.patrimonio = 10

@@ -138,7 +138,7 @@ func _pintar_seleccion(c: Club) -> void:
 			fila.add_child(n)
 			var b := Button.new()
 			b.text = Idiomas.t("Pedido") if pedido else Idiomas.t("Pedir descanso")
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.disabled = pedido
 			b.custom_minimum_size = Vector2(120, 0)
 			b.pressed.connect(func() -> void:
@@ -179,7 +179,7 @@ func _pintar_seleccion(c: Club) -> void:
 			var costo := s.costo_nacionalizacion(j)
 			var b := Button.new()
 			b.text = Idiomas.t("Nacionalizar  %s") % p._dinero(costo)
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.disabled = costo > c.saldo
 			b.pressed.connect(func() -> void: _nacionalizar(j))
 			fila_h.add_child(b)
@@ -274,7 +274,7 @@ func _pintar_fondos(c: Club) -> void:
 			var clave := String(f[0])
 			var b := Button.new()
 			b.text = "%s  %s" % [String(f[1]).split(" ")[0], p._dinero(ce.oferta_de_fondo(j2, clave, 25))]
-			b.add_theme_font_size_override("font_size", 10)
+			b.add_theme_font_size_override("font_size", Tema.letra(10))
 			b.clip_text = true
 			b.tooltip_text = Idiomas.t("%s  ·  vende el 25%% del próximo traspaso de %s") % [String(f[3]), j2.nombre]
 			b.custom_minimum_size = Vector2(140 if de_pie else 120, 0)   ## de pie cabe el importe entero («390k EUR»)
@@ -362,7 +362,7 @@ func _pintar_linaje(c: Club) -> void:   ## (12-11) los fondos y el mapa del tale
 			b.text = j.nombre
 			b.flat = true
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-			b.add_theme_font_size_override("font_size", 12)
+			b.add_theme_font_size_override("font_size", Tema.letra(12))
 			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			b.pressed.connect(func() -> void: p._ver_ficha(j))
 			fila.add_child(b)

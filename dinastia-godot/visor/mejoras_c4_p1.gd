@@ -12,19 +12,19 @@ extends RefCounted
 ##                      y córneres por desvío (los remates bloqueados que salen por el fondo son córner: 4,5 → ~9 por partido)
 ## Los valores por defecto son los que ganaron en la medición (ver `docs/04_auditorias/MOTOR_LEAGUE_SOCCER_PLAN.md`, «Mejoras de C4»).
 
-static var DESMARQUES := _bandera("C4_DESMARQUES", true)
-static var SPRINTS := _bandera("C4_SPRINTS", true)
-static var LARGOS := _bandera("C4_LARGOS", true)
-static var BALON_PARADO := _bandera("C4_BALON_PARADO", true)
-static var CENTROS := _bandera("C4_CENTROS", true)   ## solo la parte de los centros (para medirla aparte de los córneres)
-static var PACIENCIA := _bandera("C4_PACIENCIA", true)   ## (12-11, sesión 13) menos tiros lejanos: se pasa o se conduce
-static var BANDA := _bandera("C4_BANDA", true)   ## (12-11, sesión 13) el de banda con espacio encara hacia el fondo para centrar
+static var desmarques := _bandera("C4_DESMARQUES", true)
+static var sprints := _bandera("C4_SPRINTS", true)
+static var largos := _bandera("C4_LARGOS", true)
+static var balon_parado := _bandera("C4_BALON_PARADO", true)
+static var centros := _bandera("C4_CENTROS", true)   ## solo la parte de los centros (para medirla aparte de los córneres)
+static var paciencia := _bandera("C4_PACIENCIA", true)   ## (12-11, sesión 13) menos tiros lejanos: se pasa o se conduce
+static var banda := _bandera("C4_BANDA", true)   ## (12-11, sesión 13) el de banda con espacio encara hacia el fondo para centrar
 ## Paciencia ante el tiro (perillas para barrer; valores por defecto = los que ganaron la medición).
-static var PAC_D := _num("C4_PAC_D", 22.0)           ## desde aquí (m al arco) se pide paciencia
-static var PAC_BASE := _num("C4_PAC_BASE", 0.55)     ## probabilidad de tirar a PAC_D m...
-static var PAC_CAIDA := _num("C4_PAC_CAIDA", 0.035)  ## ...que baja esto por metro (a 30 m ≈ 0,27; a 38 m ≈ 0,02)
-static var PAC_MEJOR := _num("C4_PAC_MEJOR", 0.35)   ## por esto si un compañero está mejor colocado
-static var PAC_ESPACIO := _num("C4_PAC_ESPACIO", 0.6) ## por esto si tiene espacio para seguir conduciendo
+static var pac_d := _num("C4_PAC_D", 22.0)           ## desde aquí (m al arco) se pide paciencia
+static var pac_base := _num("C4_PAC_BASE", 0.55)     ## probabilidad de tirar a PAC_D m...
+static var pac_caida := _num("C4_PAC_CAIDA", 0.035)  ## ...que baja esto por metro (a 30 m ≈ 0,27; a 38 m ≈ 0,02)
+static var pac_mejor := _num("C4_PAC_MEJOR", 0.35)   ## por esto si un compañero está mejor colocado
+static var pac_espacio := _num("C4_PAC_ESPACIO", 0.6) ## por esto si tiene espacio para seguir conduciendo
 static var CORNER_DESVIO := _num("C4_DESVIO", 0.2)   ## (perilla C4_DESVIO) probabilidad de que un remate fallado que sale por el fondo sea córner (MotorCorner)
 const CENTRO_BANDA := 13.0          ## a más de esto del eje...
 const CENTRO_FONDO := 30.0          ## ...y a menos de esto de la línea de fondo, se puede centrar
@@ -38,16 +38,16 @@ const LARGO_MAX := 55.0
 
 ## PASE AL MEJOR COLOCADO (12-11, sesión 13, con la paciencia): a `PAC_D`-45 m del arco, si un compañero está mejor colocado, se le pasa
 ## (antes, sin presión y cerca del arco, se seguía conduciendo y casi nunca se le daba). Se llama al decidir, antes de la decisión de siempre.
-static var PASE_MEJOR := _bandera("C4_PASE_MEJOR", false)   ## medido el 12-11: no mejora a la paciencia sola (descartado, queda apagado)
+static var pase_mejor := _bandera("C4_PASE_MEJOR", false)   ## medido el 12-11: no mejora a la paciencia sola (descartado, queda apagado)
 
 ## IR AL BALÓN AÉREO (12-11-2026, sesión 13). El receptor de un pase corre a `_punto_de_recepcion`: dónde rueda el balón en ~0,6 s,
 ## proyectado en el SUELO. Con un centro el balón aún va por el aire y el rematador llega tarde al radio del cabezazo (0,8 m con el
 ## balón a 1,5-2,4 m): casi no había remates de cabeza. Con el balón en el aire se predice (tiro parabólico, sin arrastre) dónde baja a la
 ## altura de la cabeza (`AEREO_ALTO`) si cae cerca de un área, o al pecho si no. Devuelve Vector3.INF si el balón no va por el aire.
-static var AEREO := _bandera("C4_AEREO", false)   ## medido el 12-11 (12+12 partidos): más cabezazos pero −1 gol de pie por partido; DESCARTADO, apagado
-static var SOLO_AREA := _bandera("C4_AEREO_AREA", true)
-static var SOLO_CENTRO := _bandera("C4_AEREO_CENTRO", true)   ## solo en los 3 s tras un centro   ## solo balones que caen cerca de un área
-static var RADIO_CABEZA := _num("C4_RADIO_CABEZA", 0.8)   ## alcance del cabezazo en C4 (0,8 = el de siempre)
+static var aereo := _bandera("C4_AEREO", false)   ## medido el 12-11 (12+12 partidos): más cabezazos pero −1 gol de pie por partido; DESCARTADO, apagado
+static var solo_area := _bandera("C4_AEREO_AREA", true)
+static var solo_centro := _bandera("C4_AEREO_CENTRO", true)   ## solo en los 3 s tras un centro   ## solo balones que caen cerca de un área
+static var radio_cabeza := _num("C4_RADIO_CABEZA", 0.8)   ## alcance del cabezazo en C4 (0,8 = el de siempre)
 const AEREO_ALTO := 1.9
 const AEREO_PECHO := 0.6
 
@@ -62,45 +62,45 @@ const FALTA_X := 14.0
 ## lejos y conduce todo ese tiempo contra el bloque rival (las pérdidas por entrada en el último tercio subieron). En C4, a menos de
 ## `RITMO_D` m del arco la espera hasta la próxima decisión se multiplica por `RITMO_K`: pase, regate o tiro llegan antes.
 static var RITMO := _bandera("C4_RITMO", false)
-static var RITMO_K := _num("C4_RITMO_K", 0.55)
+static var ritmo_k := _num("C4_RITMO_K", 0.55)
 const RITMO_D := 35.0
 
 ## SAQUE DE BANDA ENSAYADO (12-11-2026, sesión 13). La IA buscaba el receptor más seguro (`MotorSaque.receptor`), casi siempre de
 ## espaldas o hacia atrás. En C4, en campo rival, se busca primero al compañero que está por DELANTE del saque (6-20 m), libre (sin rival
 ## a < 2,5 m) y habilitado, y se le lanza al pie, adelantado a su carrera.
-static var BANDA_SAQUE := _bandera("C4_BANDA_SAQUE", false)
+static var banda_saque := _bandera("C4_BANDA_SAQUE", false)
 
 ## CONTENER EN EL ÚLTIMO TERCIO (12-11-2026, sesión 13, decisión del líder). La IA entra en cuanto el portador queda a ~1,25 m: en el
 ## último tercio eso mataba la jugada antes del regate o la pared (~3,5 pérdidas por entrada por partido ahí). En C4, a menos de
 ## `CONTENER_D` m de su arco, el defensor solo entra con el radio de siempre si es buen momento (`MotorEntrada`: de espaldas, control
 ## largo, pegado a la banda) o si es el ÚLTIMO hombre; si no, contiene y temporiza (radio × `CONTENER_K`). v2: solo cuenta «de espaldas»
 ## (el control largo se daba casi siempre al conducir y la primera versión no cambiaba nada: medido el 12-11).
-static var CONTENER := _bandera("C4_CONTENER", false)   ## medido el 12-11 (12+12, v1 y v2, K 0,6 y 0,4): sin efecto en intentos ni goles; DESCARTADO, apagado
-static var CONTENER_K := _num("C4_CONTENER_K", 0.6)
+static var contener := _bandera("C4_CONTENER", false)   ## medido el 12-11 (12+12, v1 y v2, K 0,6 y 0,4): sin efecto en intentos ni goles; DESCARTADO, apagado
+static var contener_k := _num("C4_CONTENER_K", 0.6)
 const CONTENER_D := 32.0
 
 ## SEGUIR EL TIRO (12-11-2026, sesión 13; objetivo 6, portero y rechaces). Tras un remate, los `SEGUIR_N` compañeros más cerca de la zona
 ## del rechace (delante del área chica) corren a ella durante `SEGUIR_T` s: el rechace del portero tiene quien lo empuje.
 ## Devuelve el destino o Vector3.INF si `p` no sigue el tiro.
-static var SEGUIR := _bandera("C4_SEGUIR", true)   ## v2 (12-11): zona a 9 m y sin esprintar de cerca; la v1 destapó las tarjetas de más de C4 (arregladas con C4_NO_DETRAS)
+static var seguir := _bandera("C4_SEGUIR", true)   ## v2 (12-11): zona a 9 m y sin esprintar de cerca; la v1 destapó las tarjetas de más de C4 (arregladas con C4_NO_DETRAS)
 const SEGUIR_N := 2
 const SEGUIR_T := 2.0
-static var SEGUIR_Z := _num("C4_SEGUIR_Z", 9.0)   ## distancia de la zona del rechace a la línea de gol
+static var seguir_z := _num("C4_SEGUIR_Z", 9.0)   ## distancia de la zona del rechace a la línea de gol
 
 ## NO ENTRAR POR DETRÁS (12-11-2026, sesión 13). Con los sprints sin balón de C4, el defensor que repliega llega lanzado por la espalda
 ## y entra de pie: en C4 las tarjetas eran casi todas «de pie + por detrás + a gran velocidad» (5-7 por partido frente a 3,5 del motor
 ## de siempre; con expulsiones reales, hasta 3 en un partido y el partido suspendido de `prueba_partido_motor`). En C4 el que viene por
 ## detrás de un portador que se aleja (la misma regla que `puntos_falta`) no entra de pie: acompaña (las cargas y duelos siguen).
-static var NO_DETRAS := _bandera("C4_NO_DETRAS", true)
-static var NO_DETRAS_V := _num("C4_NO_DETRAS_V", 5.0)   ## solo si el defensor llega a más de esto (m/s; 0 = siempre: tarjetas 0,5 por partido, demasiado pocas)
+static var no_detras := _bandera("C4_NO_DETRAS", true)
+static var no_detras_v := _num("C4_NO_DETRAS_V", 5.0)   ## solo si el defensor llega a más de esto (m/s; 0 = siempre: tarjetas 0,5 por partido, demasiado pocas)
 
 ## CONTENER POR COLOCACIÓN (12-11-2026, sesión 13, decisión del líder; toca COLOCACIÓN, orden 23: SOLO en C4 y con bandera). El defensor
 ## más cercano al portador rival, cuando este está a < `CONTENER_D` m del arco que defiende y hay un compañero de cobertura más atrás, no
 ## va a por el balón: se planta a `CONT2_DIST` m del portador, en la línea portador → arco, corrido hacia el centro (le cierra el camino al
 ## arco y lo empuja a la banda), y temporiza. Queda fuera del radio de entrada: entra si el portador se le echa encima o se le escapa.
 ## Devuelve el destino o Vector3.INF si no le toca contener.
-static var CONTENER2 := _bandera("C4_CONTENER2", false)
-static var CONT2_DIST := _num("C4_CONT2_DIST", 1.8)
+static var contener2 := _bandera("C4_CONTENER2", false)
+static var cont2_dist := _num("C4_CONT2_DIST", 1.8)
 
 static func _num(nombre: String, defecto: float) -> float:
 	var v := OS.get_environment(nombre)
@@ -112,16 +112,16 @@ static func _bandera(nombre: String, defecto: bool) -> bool:
 
 ## Pone en el motor lo que lee `MotorCarreras` (por metadatos: el motor de siempre no los tiene).
 static func preparar(m: Object) -> void:
-	if BALON_PARADO:
+	if balon_parado:
 		m.set_meta("corner_desvio", CORNER_DESVIO)
-	if DESMARQUES:
+	if desmarques:
 		m.set_meta("carreras_n", CARRERAS_A_LA_VEZ)
 		m.set_meta("carreras_descanso", DESCANSO_CARRERA)
 		m.set_meta("carreras_roles", ROLES_CARRERA)
 
 ## Sprints sin balón: si el destino queda lejos, se corre.
 static func sprint(m: Object, p: Dictionary, obj: Vector3) -> void:
-	if SPRINTS and obj != Vector3.INF:
+	if sprints and obj != Vector3.INF:
 		var yo: Vector3 = m.pos(p)
 		if Vector2(obj.x - yo.x, obj.z - yo.z).length() > SPRINT_LEJOS:
 			p["correr"] = true
@@ -140,7 +140,7 @@ static func corredores(m: Object, local: bool) -> Array:
 ## Balón largo al que corre al espacio: lejos del arco rival (cerca ya lo hace el pase al hueco de siempre), con la línea de pase
 ## limpia y el receptor habilitado. Devuelve true si pateó.
 static func balon_largo(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
-	if not LARGOS:
+	if not largos:
 		return false
 	var local := bool(p["es_local"])
 	var yo: Vector3 = m.pos(p)
@@ -169,7 +169,7 @@ static func balon_largo(m: Object, p: Dictionary, rng: RandomNumberGenerator) ->
 ## Centro desde la banda (de jugadores de banda o delanteros abiertos) cuando hay al menos 2 compañeros en el área: al punto de penal o
 ## al segundo palo, alto, con el error del pase. El remate de cabeza lo resuelve el motor como siempre. Devuelve true si centró.
 static func centro(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
-	if not (BALON_PARADO and CENTROS):
+	if not (balon_parado and centros):
 		return false
 	var yo: Vector3 = m.pos(p)
 	var arco: Vector3 = m._arco_rival(p)
@@ -198,21 +198,21 @@ static func centro(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool
 ## un compañero está mejor colocado (más cerca del arco, libre y con la línea de pase limpia) o si hay espacio para seguir. Si no tira,
 ## sigue la decisión de siempre (pase al hueco, mejor pase o conducir). Devuelve las ganas (o −1: no tira).
 static func ganas_tiro(m: Object, p: Dictionary, dist: float, ganas: float, presion: float, rng: RandomNumberGenerator) -> float:
-	if not PACIENCIA or ganas <= 0.0 or dist < PAC_D:
+	if not paciencia or ganas <= 0.0 or dist < pac_d:
 		return ganas
-	var prob := maxf(PAC_BASE - (dist - PAC_D) * PAC_CAIDA, 0.02) * (0.6 + float(p["attr"]["tir"]) * 0.8)
+	var prob := maxf(pac_base - (dist - pac_d) * pac_caida, 0.02) * (0.6 + float(p["attr"]["tir"]) * 0.8)
 	if presion > 5.0:
-		prob *= PAC_ESPACIO
+		prob *= pac_espacio
 	if prob > 0.03 and not _companero_mejor(m, p, dist).is_empty():
-		prob *= PAC_MEJOR
+		prob *= pac_mejor
 	return ganas if rng.randf() < prob else -1.0
 static func pase_al_mejor(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
-	if not (PACIENCIA and PASE_MEJOR):
+	if not (paciencia and pase_mejor):
 		return false
 	var yo: Vector3 = m.pos(p)
 	var arco: Vector3 = m._arco_rival(p)
 	var dist := Vector2(yo.x - arco.x, yo.z - arco.z).length()
-	if dist < PAC_D or dist > 45.0:
+	if dist < pac_d or dist > 45.0:
 		return false
 	var q := _companero_mejor(m, p, dist)
 	if q.is_empty() or rng.randf() > 0.45 + float(p["attr"]["pas"]) * 0.35:
@@ -249,7 +249,7 @@ static func _companero_mejor(m: Object, p: Dictionary, dist: float) -> Dictionar
 ## portador abierto (|x| > 13 m), a 8-40 m del fondo y sin un rival delante en su carril, conduce pegado a la banda hacia el fondo en vez
 ## de ir al centro: así llega a la zona del centro (`centro`, < 30 m del fondo). Se llama después de la decisión de siempre.
 static func encarar_banda(m: Object, p: Dictionary) -> void:
-	if not BANDA or String((m.poseedor as Dictionary).get("id", "")) != String(p["id"]):
+	if not banda or String((m.poseedor as Dictionary).get("id", "")) != String(p["id"]):
 		return
 	var yo: Vector3 = m.pos(p)
 	var arco: Vector3 = m._arco_rival(p)
@@ -267,9 +267,9 @@ static func encarar_banda(m: Object, p: Dictionary) -> void:
 	p["objetivo"] = Vector3(x, 0.0, yo.z + d * 6.0)
 	p["correr"] = true
 static func punto_aereo(m: Object) -> Vector3:
-	if not AEREO:
+	if not aereo:
 		return Vector3.INF
-	if SOLO_CENTRO and not _tras_centro(m):
+	if solo_centro and not _tras_centro(m):
 		return Vector3.INF   ## solo tras un centro o un córner (medido: con todos los balones altos bajaban los goles de pie)
 	var b: Vector3 = (m.balon as Node3D).position
 	var v: Vector3 = m.vel_balon
@@ -281,7 +281,7 @@ static func punto_aereo(m: Object) -> Vector3:
 		return Vector3.INF
 	var cae := Vector3(b.x + v.x * cae_t, 0.0, b.z + v.z * cae_t)
 	if absf(absf(cae.z) - float(m.LARGO)) > 20.0:
-		return Vector3.INF if SOLO_AREA else cae   ## lejos del área, el de siempre (medido: en todo el campo bajaban los goles de pie)
+		return Vector3.INF if solo_area else cae   ## lejos del área, el de siempre (medido: en todo el campo bajaban los goles de pie)
 	var alto_t := _t_altura(b.y, v.y, g, AEREO_ALTO)
 	return Vector3(b.x + v.x * alto_t, 0.0, b.z + v.z * alto_t) if alto_t > 0.0 else cae
 
@@ -325,9 +325,9 @@ static func ritmo_ultimo_tercio(m: Object, p: Dictionary, decision_en: float) ->
 	if Vector2(yo.x - arco.x, yo.z - arco.z).length() > RITMO_D:
 		return decision_en
 	var t: float = m.t
-	return t + (decision_en - t) * RITMO_K
+	return t + (decision_en - t) * ritmo_k
 static func banda_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: RandomNumberGenerator) -> bool:
-	if not BANDA_SAQUE:
+	if not banda_saque:
 		return false
 	var local := bool(p["es_local"])
 	var d: float = m.dir_ataque(local)
@@ -356,8 +356,8 @@ static func banda_ensayada(m: Object, p: Dictionary, lugar: Vector3, rng: Random
 	m._anim(p, AnimExtra.variante(p["anim"], "saque_banda", String(p.get("id", "")), rng), true)
 	m._contar("c4_banda_ensayada")
 	return true
-static func radio_entrada(m: Object, p: Dictionary, victima: Dictionary, base: float, r: float) -> float:
-	if not CONTENER:
+static func radio_entrada(m: Object, p: Dictionary, victima: Dictionary, _base: float, r: float) -> float:
+	if not contener:
 		return r
 	var arco: Vector3 = m._arco_rival(victima)   ## el arco que defiende `p`
 	var pv: Vector3 = m.pos(victima)
@@ -367,7 +367,7 @@ static func radio_entrada(m: Object, p: Dictionary, victima: Dictionary, base: f
 	for q: Dictionary in m.jugadores:
 		if bool(q["es_local"]) == bool(p["es_local"]) and not bool(q["por"]) and String(q["id"]) != String(p["id"]):
 			if Vector2(m.pos(q).x - arco.x, m.pos(q).z - arco.z).length() < yo_d - 1.0:
-				return r * CONTENER_K   ## hay cobertura detrás: contener
+				return r * contener_k   ## hay cobertura detrás: contener
 	return r   ## último hombre: entra
 
 ## ¿El portador está de espaldas al defensor? (como `MotorEntrada`; el control largo no cuenta aquí: al conducir casi siempre se cumplía)
@@ -379,7 +379,7 @@ static func _de_espaldas(m: Object, p: Dictionary, victima: Dictionary) -> bool:
 		return false
 	return Vector3(sin(n.rotation.y), 0.0, cos(n.rotation.y)).dot(hacia.normalized()) < -0.2
 static func seguir_tiro(m: Object, p: Dictionary) -> Vector3:
-	if not SEGUIR:
+	if not seguir:
 		return Vector3.INF
 	var tv: Dictionary = m._tiro_vivo
 	if tv.is_empty() or float(m.t) - float(tv["t"]) > SEGUIR_T:
@@ -389,7 +389,7 @@ static func seguir_tiro(m: Object, p: Dictionary) -> Vector3:
 		return Vector3.INF
 	var arco: Vector3 = m._arco_rival(tirador)
 	var d: float = m.dir_ataque(bool(p["es_local"]))
-	var zona := Vector3(clampf(m.pos(tirador).x * 0.3, -4.0, 4.0), 0.0, arco.z - d * SEGUIR_Z)   ## v2: más atrás, sin meterse en la disputa
+	var zona := Vector3(clampf(m.pos(tirador).x * 0.3, -4.0, 4.0), 0.0, arco.z - d * seguir_z)   ## v2: más atrás, sin meterse en la disputa
 	var clave := "%s@%.2f" % [String(tirador["id"]), float(tv["t"])]
 	if String(m.get_meta("_c4_sigue_clave", "")) != clave:
 		var cand: Array = []
@@ -418,7 +418,7 @@ static func seguidor_en(m: Object, infractor: Dictionary, victima: Dictionary) -
 		return "seguidor"
 	return "a_seguidor" if String(victima["id"]) in ids else ""
 static func por_detras(m: Object, p: Dictionary, victima: Dictionary) -> bool:
-	if not NO_DETRAS:
+	if not no_detras:
 		return false
 	var vi: Vector3 = victima.get("vel", Vector3.ZERO)
 	vi.y = 0.0
@@ -426,6 +426,6 @@ static func por_detras(m: Object, p: Dictionary, victima: Dictionary) -> bool:
 	desde.y = 0.0
 	var vp: Vector3 = p.get("vel", Vector3.ZERO)
 	vp.y = 0.0
-	if vp.length() < NO_DETRAS_V:
+	if vp.length() < no_detras_v:
 		return false   ## por detrás pero sin llegar lanzado: puede entrar
 	return vi.length() > 1.5 and desde.length() > 0.05 and vi.normalized().dot(desde.normalized()) > 0.6

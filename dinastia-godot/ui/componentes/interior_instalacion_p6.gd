@@ -132,7 +132,7 @@ func _pisc_paredes() -> void:
 	_ventana(-1.0, -4.4, 3.0, false)
 	_ventana(1.0, -4.4, 3.0, false)
 
-func _pisc_gente(c: Vector3, hx: float, hz: float, calles: Array[float], agua: Variant) -> void:
+func _pisc_gente(c: Vector3, hx: float, hz: float, calles: Array[float], _agua: Variant) -> void:
 	var dep := [_c1, _c2]
 	for i: int in [0, 2]:
 		var a := Vector3(c.x - hx + 1.3, -0.95, calles[i])

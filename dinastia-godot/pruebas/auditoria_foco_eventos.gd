@@ -94,7 +94,7 @@ func _seleccion(m: Mundo) -> void:
 	await _capa("selección: convocatoria", conv)
 
 ## La ficha de competición con una liga que tiene fase final (playoffs o grupos de campeonato).
-func _fase_final(m: Mundo) -> void:
+func _fase_final(_m: Mundo) -> void:
 	_p.call("_abrir_competicion")
 	await get_tree().process_frame
 	var comp: Control = null
@@ -115,7 +115,7 @@ func _fase_final(m: Mundo) -> void:
 	comp.queue_free()
 	await get_tree().process_frame
 
-func _editor(mio: Club) -> void:
+func _editor(_mio: Club) -> void:
 	_p.call("_ir_a_pestana", "Táctica")
 	for i in 10:
 		await get_tree().process_frame

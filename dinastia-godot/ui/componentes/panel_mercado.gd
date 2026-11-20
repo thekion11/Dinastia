@@ -25,7 +25,7 @@ func _pintar_filtros(mio: Club) -> void:
 	buscar.placeholder_text = Idiomas.t("Buscar por nombre…")
 	buscar.text = _filtro_texto
 	buscar.custom_minimum_size = Vector2(180, 0)
-	buscar.add_theme_font_size_override("font_size", 11)
+	buscar.add_theme_font_size_override("font_size", Tema.letra(11))
 	buscar.text_changed.connect(func(v: String) -> void:
 		_filtro_texto = v
 		_repintar_lista(mio))
@@ -33,7 +33,7 @@ func _pintar_filtros(mio: Club) -> void:
 
 	# Selector de línea
 	var op := OptionButton.new()
-	op.add_theme_font_size_override("font_size", 11)
+	op.add_theme_font_size_override("font_size", Tema.letra(11))
 	op.clip_text = true
 	op.custom_minimum_size = Vector2(130, 0)
 	op.add_item(Idiomas.t("Todas las líneas"), 0)
@@ -55,7 +55,7 @@ func _pintar_filtros(mio: Club) -> void:
 	bp.text = Idiomas.t("Solo lo que puedo pagar")
 	bp.toggle_mode = true
 	bp.button_pressed = _filtro_pagables
-	bp.add_theme_font_size_override("font_size", 11)
+	bp.add_theme_font_size_override("font_size", Tema.letra(11))
 	bp.pressed.connect(func() -> void:
 		_filtro_pagables = not _filtro_pagables
 		_repintar_lista(mio))
@@ -78,7 +78,7 @@ func _fila_ajuste(g: GridContainer, etiqueta: String, valor_txt: String, campo: 
 		var b := Button.new()
 		b.text = s
 		b.custom_minimum_size = Vector2(30, 26)
-		b.add_theme_font_size_override("font_size", 13)
+		b.add_theme_font_size_override("font_size", Tema.letra(13))
 		b.tooltip_text = (Idiomas.t("Bajar: %s") if signos[s] < 0 else Idiomas.t("Subir: %s")) % etiqueta
 		var d: int = signos[s]
 		_con_foco(b, campo + s)
@@ -162,7 +162,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 			bi.text = "%s  (%s)" % [x.nombre, _dinero(x.valor)]
 			bi.toggle_mode = true
 			bi.button_pressed = (n.intercambio == x)
-			bi.add_theme_font_size_override("font_size", 11)
+			bi.add_theme_font_size_override("font_size", Tema.letra(11))
 			_con_foco(bi, "ic_" + x.id)
 			bi.pressed.connect(func() -> void: intercambio_elegido.emit(x))
 			flow_ic.add_child(bi)
@@ -181,7 +181,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 		br.text = String(def[1]) if def.size() > 1 else rol
 		br.toggle_mode = true
 		br.button_pressed = (rol == n.rol)
-		br.add_theme_font_size_override("font_size", 11)
+		br.add_theme_font_size_override("font_size", Tema.letra(11))
 		_con_foco(br, "rol_" + rol)
 		br.pressed.connect(func() -> void: rol_ajustado.emit(rol))
 		flow.add_child(br)
@@ -193,7 +193,7 @@ func _pintar_mesa_negociacion(n: Negociacion) -> void:
 
 	var bcl := Button.new()
 	bcl.text = Idiomas.t("Cláusula: sí") if n.clausula else Idiomas.t("Cláusula: no")
-	bcl.add_theme_font_size_override("font_size", 11)
+	bcl.add_theme_font_size_override("font_size", Tema.letra(11))
 	_con_foco(bcl, "clausula")
 	bcl.pressed.connect(func() -> void: rol_ajustado.emit("__clausula__"))
 	add_child(bcl)

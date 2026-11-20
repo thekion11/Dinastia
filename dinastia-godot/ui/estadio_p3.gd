@@ -138,7 +138,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_montar_cajon_de_ajustes()
 
 	_pie = Label.new()
-	_pie.add_theme_font_size_override("font_size", 13)
+	_pie.add_theme_font_size_override("font_size", Tema.letra(13))
 	_pie.add_theme_color_override("font_color", Color("e9eeea"))
 	_pie.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	_pie.offset_left = 18

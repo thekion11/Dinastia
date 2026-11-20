@@ -86,7 +86,7 @@ func _traducir_pantalla(n: Node) -> void:
 		## Si el boton repartia ancho por el largo de su rotulo -la fila de
 		## acciones-, el reparto se rehace con el rotulo NUEVO: "Temporada
 		## siguiente" y "Next season" no piden lo mismo.
-		if nuevo2 != actual2 and b.size_flags_stretch_ratio != 1.0:
+		if nuevo2 != actual2 and not is_equal_approx(b.size_flags_stretch_ratio, 1.0):
 			b.size_flags_stretch_ratio = clampf(float(nuevo2.length()) / 12.0, 0.95, 1.9)
 		b.text = nuevo2
 	elif n is LineEdit:

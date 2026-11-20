@@ -67,7 +67,7 @@ func _probar() -> void:
 	_comprobar(int(motor.tiros[0]) == tiros + 1, "el tiro sale del motor real (tiros %d → %d)" % [tiros, int(motor.tiros[0])])
 	_comprobar(res in ["gol", "atajada", "poste", "fallo", "parado"], "y su resultado es el del césped: %s" % res)
 	_comprobar(oc._t_total <= OcasionesDT.SEGUNDOS_MAX, "la ocasión duró %.1f s (≤ 15)" % oc._t_total)
-	_comprobar(Engine.time_scale == 1.0, "al cerrar, el tiempo vuelve a su ritmo")
+	_comprobar(is_equal_approx(Engine.time_scale, 1.0), "al cerrar, el tiempo vuelve a su ritmo")
 	_titulo("OCASIONES: conducir y volver a decidir")
 	_escena(motor, loc, vis, del, comp)
 	oc._proxima = 0
@@ -373,5 +373,5 @@ func _extremos(motor: MotorJugable, loc: Array, vis: Array, del: Dictionary, com
 		_comprobar(Engine.time_scale < 1.0, "con la cámara lenta, la ocasión baja el ritmo del tiempo")
 	oc.queue_free()
 	await get_tree().process_frame
-	_comprobar(Engine.time_scale == 1.0, "cerrar la ocasión a mitad devuelve el tiempo a su ritmo")
+	_comprobar(is_equal_approx(Engine.time_scale, 1.0), "cerrar la ocasión a mitad devuelve el tiempo a su ritmo")
 	Engine.time_scale = 1.0

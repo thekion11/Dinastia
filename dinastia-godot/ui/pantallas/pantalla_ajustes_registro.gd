@@ -31,7 +31,7 @@ static func pintar(p: Principal) -> void:
 	var bc := Button.new()
 	bc.name = "CopiarInforme"
 	bc.text = Idiomas.t("Copiar informe de fallos")
-	bc.add_theme_font_size_override("font_size", 11)
+	bc.add_theme_font_size_override("font_size", Tema.letra(11))
 	bc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bc.pressed.connect(func() -> void:
 		DisplayServer.clipboard_set(informe_con_semilla(int(p.mundo.semilla) if p.mundo != null else -1, Registro.informe()))
@@ -41,7 +41,7 @@ static func pintar(p: Principal) -> void:
 		var bs := Button.new()
 		bs.name = "CopiarSemilla"
 		bs.text = Idiomas.t("Copiar semilla")
-		bs.add_theme_font_size_override("font_size", 11)
+		bs.add_theme_font_size_override("font_size", Tema.letra(11))
 		bs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		bs.pressed.connect(func() -> void:
 			DisplayServer.clipboard_set(str(int(p.mundo.semilla)))
@@ -51,7 +51,7 @@ static func pintar(p: Principal) -> void:
 		var ba := Button.new()
 		ba.name = "AbrirCarpeta"
 		ba.text = Idiomas.t("Abrir carpeta")
-		ba.add_theme_font_size_override("font_size", 11)
+		ba.add_theme_font_size_override("font_size", Tema.letra(11))
 		ba.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		ba.pressed.connect(func() -> void: Registro.abrir_carpeta())
 		fila.add_child(ba)

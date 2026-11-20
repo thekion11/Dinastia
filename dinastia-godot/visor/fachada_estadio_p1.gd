@@ -317,11 +317,11 @@ static func _tramos(c: Dictionary, a: float, b: float, f: Callable) -> void:
 			f.call(t.x, t.y)
 
 ## Las posiciones de los ejes estructurales (vanos iguales de ~`paso` m).
-static func _ejes(L: float, paso: float) -> Array:
-	var nb := maxi(1, roundi(L / paso))
+static func _ejes(l_arg: float, paso: float) -> Array:
+	var nb := maxi(1, roundi(l_arg / paso))
 	var sal: Array = []
 	for i in nb + 1:
-		sal.append(L * float(i) / float(nb))
+		sal.append(l_arg * float(i) / float(nb))
 	return sal
 
 static func _libre(c: Dictionary, a: float, b: float) -> bool:
@@ -335,16 +335,16 @@ static func _libre(c: Dictionary, a: float, b: float) -> bool:
 ## --- clásico: pilastras, arcos, cornisas y lonas -----------------------------
 static func _clasico(ctx: Dictionary, c: Dictionary, pisos: Array) -> void:
 	var g: _Malla = ctx["grande"]
-	var L: float = c["L"]
-	var H: float = c["H"]
+	var l_loc: float = c["L"]
+	var h_loc: float = c["H"]
 	var paso := 5.6 + float(int(ctx["h"]) % 4) * 0.45
-	var ejes := _ejes(L, paso)
-	var y_arcada: float = (pisos[0] - 0.9) if not pisos.is_empty() else minf(H * 0.55, 6.0)
+	var ejes := _ejes(l_loc, paso)
+	var y_arcada: float = (pisos[0] - 0.9) if not pisos.is_empty() else minf(h_loc * 0.55, 6.0)
 	y_arcada = clampf(y_arcada, 3.4, 7.5)
 	for i in ejes.size():
 		var s: float = ejes[i]
 		if _libre(c, s - 0.5, s + 0.5):
-			g.bloque(c, K_ESTRUCTURA, s - 0.5, s + 0.5, 0.0, H - 0.9, 0.0, 0.55)
+			g.bloque(c, K_ESTRUCTURA, s - 0.5, s + 0.5, 0.0, h_loc - 0.9, 0.0, 0.55)
 			## Farol en cada pilastra.
 			(ctx["detalle"] as _Malla).bloque(c, K_LUZ, s - 0.16, s + 0.16, y_arcada + 0.5, y_arcada + 0.95, 0.55, 0.8)
 		if i == ejes.size() - 1:
@@ -361,38 +361,38 @@ static func _clasico(ctx: Dictionary, c: Dictionary, pisos: Array) -> void:
 		## Ventanas en arco en cada piso de arriba.
 		var bandas: Array = [y_arcada + 0.6]
 		bandas.append_array(pisos.filter(func(y: float) -> bool: return y > y_arcada + 2.0))
-		bandas.append(H - 1.0)
+		bandas.append(h_loc - 1.0)
 		for k in bandas.size() - 1:
 			var y0: float = bandas[k] + 0.7
 			var y1: float = bandas[k + 1] - 0.5
 			if y1 - y0 > 1.6:
 				g.arco(c, K_VIDRIO, cx, ancho * 0.42, y0, y1 - y0, 0.12)
 		## Lonas del club cada tres vanos.
-		if i % 3 == 1 and H > 10.0:
-			g.bloque(c, K_REVEST, cx - ancho * 0.3, cx + ancho * 0.3, y_arcada + 1.2, H - 1.6, 0.6, 0.66)
-			g.bloque(c, K_ACENTO, cx - ancho * 0.07, cx + ancho * 0.07, y_arcada + 1.2, H - 1.6, 0.66, 0.7)
+		if i % 3 == 1 and h_loc > 10.0:
+			g.bloque(c, K_REVEST, cx - ancho * 0.3, cx + ancho * 0.3, y_arcada + 1.2, h_loc - 1.6, 0.6, 0.66)
+			g.bloque(c, K_ACENTO, cx - ancho * 0.07, cx + ancho * 0.07, y_arcada + 1.2, h_loc - 1.6, 0.66, 0.7)
 	## Cornisas: en cada piso, sobre la arcada y la de coronación.
 	var cornisas: Array = [y_arcada + 0.3]
 	cornisas.append_array(pisos)
-	_tramos(c, 0.0, L, func(a: float, b: float) -> void:
+	_tramos(c, 0.0, l_loc, func(a: float, b: float) -> void:
 		for y: float in cornisas:
-			if y < H - 2.0:
+			if y < h_loc - 2.0:
 				g.bloque(c, K_ESTRUCTURA, a, b, y - 0.22, y + 0.22, 0.0, 0.72)
-		g.bloque(c, K_ESTRUCTURA, a, b, H - 1.1, H - 0.2, 0.0, 0.95)
-		g.bloque(c, K_ESTRUCTURA, a, b, H - 0.2, H + 0.25, 0.0, 0.6)
-		(ctx["detalle"] as _Malla).bloque(c, K_LUZ, a, b, H - 1.25, H - 1.1, 0.75, 0.9))
+		g.bloque(c, K_ESTRUCTURA, a, b, h_loc - 1.1, h_loc - 0.2, 0.0, 0.95)
+		g.bloque(c, K_ESTRUCTURA, a, b, h_loc - 0.2, h_loc + 0.25, 0.0, 0.6)
+		(ctx["detalle"] as _Malla).bloque(c, K_LUZ, a, b, h_loc - 1.25, h_loc - 1.1, 0.75, 0.9))
 
 ## --- membrana: pórticos inclinados y almohadas de lona -----------------------
 static func _membrana(ctx: Dictionary, c: Dictionary) -> void:
 	var g: _Malla = ctx["grande"]
-	var L: float = c["L"]
-	var H: float = c["H"]
+	var l_loc: float = c["L"]
+	var h_loc: float = c["H"]
 	var paso := 8.0 + float(int(ctx["h"]) % 3)
-	var ejes := _ejes(L, paso)
+	var ejes := _ejes(l_loc, paso)
 	var y_base := 4.6
 	var vuelo := 1.8 if c["tipo"] == "tribuna" else 1.2
 	## El vestíbulo acristalado a pie de calle.
-	_tramos(c, 0.0, L, func(a: float, b: float) -> void:
+	_tramos(c, 0.0, l_loc, func(a: float, b: float) -> void:
 		g.bloque(c, K_VIDRIO, a, b, 0.7, y_base - 0.3, 0.0, 0.32)
 		g.bloque(c, K_ESTRUCTURA, a, b, y_base - 0.3, y_base, 0.0, 1.0)
 		g.bloque(c, K_LUZ, a, b, y_base - 0.42, y_base - 0.3, 0.6, 0.95))
@@ -401,15 +401,15 @@ static func _membrana(ctx: Dictionary, c: Dictionary) -> void:
 		if not _libre(c, s - 0.4, s + 0.4):
 			continue
 		## El pórtico se abre hacia fuera al subir.
-		g.barra(c, K_ESTRUCTURA, Vector3(s, 0.0, 0.5), Vector3(s, H + 1.4, vuelo + 0.4), 0.55, 0.75)
+		g.barra(c, K_ESTRUCTURA, Vector3(s, 0.0, 0.5), Vector3(s, h_loc + 1.4, vuelo + 0.4), 0.55, 0.75)
 		if i == ejes.size() - 1:
 			break
 		var a: float = s + 0.35
 		var b: float = ejes[i + 1] - 0.35
-		if not _libre(c, a, b) or H - y_base < 3.0:
+		if not _libre(c, a, b) or h_loc - y_base < 3.0:
 			continue
-		g.almohada(c, K_REVEST, a, b, y_base + 0.2, H + 1.0, 0.55, vuelo + 0.2, minf(0.9, (b - a) * 0.12))
+		g.almohada(c, K_REVEST, a, b, y_base + 0.2, h_loc + 1.0, 0.55, vuelo + 0.2, minf(0.9, (b - a) * 0.12))
 	## El aro de luz de la coronación.
-	_tramos(c, 0.0, L, func(a: float, b: float) -> void:
-		g.bloque(c, K_ESTRUCTURA, a, b, H + 1.0, H + 1.45, 0.0, vuelo + 0.6)
-		g.bloque(c, K_LUZ, a, b, H + 0.85, H + 1.0, vuelo + 0.2, vuelo + 0.55))
+	_tramos(c, 0.0, l_loc, func(a: float, b: float) -> void:
+		g.bloque(c, K_ESTRUCTURA, a, b, h_loc + 1.0, h_loc + 1.45, 0.0, vuelo + 0.6)
+		g.bloque(c, K_LUZ, a, b, h_loc + 0.85, h_loc + 1.0, vuelo + 0.2, vuelo + 0.55))

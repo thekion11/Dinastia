@@ -5,6 +5,7 @@ var _p: Principal
 const RANURA := "prueba_banco_arranque"
 const MODOS := ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "fondo"]
 const SEMILLA := 20261104
+const _RUTA_PRINCIPAL := "res://escenas/principal.tscn"
 
 func _frames(n: int = 4) -> void:
 	for i in n:
@@ -96,7 +97,7 @@ func _modos_y_dificultades() -> void:
 			PedidoPartida.dt_nombre_elegido = "Prueba Banco"
 			PedidoPartida.dificultad_elegida = dificultad
 			PedidoPartida.aplicado_a = 0
-			_p = load("res://escenas/principal.tscn").instantiate()
+			_p = load(_RUTA_PRINCIPAL).instantiate()
 			add_child(_p)
 			await _frames(6)
 			_quitar_tutorial()
@@ -156,7 +157,7 @@ func _tutorial_por_modo() -> void:
 		PedidoPartida.modo_elegido = modo
 		PedidoPartida.aplicado_a = 0
 		PedidoPartida.tutorial_pedido = true
-		_p = load("res://escenas/principal.tscn").instantiate()
+		_p = load(_RUTA_PRINCIPAL).instantiate()
 		add_child(_p)
 		await _frames(8)
 		var t: Tutorial = null
@@ -199,7 +200,7 @@ func _guardar_y_cargar() -> void:
 		PedidoPartida.mundo_a_cargar = c
 		PedidoPartida.modo_elegido = ""
 		PedidoPartida.aplicado_a = 0
-		_p = load("res://escenas/principal.tscn").instantiate()
+		_p = load(_RUTA_PRINCIPAL).instantiate()
 		add_child(_p)
 		await _frames(6)
 		_quitar_tutorial()

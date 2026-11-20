@@ -33,8 +33,8 @@ func _par(rotulo: String, control: Control) -> HBoxContainer:
 ## Los desplegables traían la letra del tema (~20 px) en filas de 11-12: se
 ## veían el doble de grandes que todo lo de alrededor.
 func _letra_12(ob: OptionButton) -> OptionButton:
-	ob.add_theme_font_size_override("font_size", 12)
-	ob.get_popup().add_theme_font_size_override("font_size", 12)
+	ob.add_theme_font_size_override("font_size", Tema.letra(12))
+	ob.get_popup().add_theme_font_size_override("font_size", Tema.letra(12))
 	return ob
 
 ## EL EDITOR DE COMPETICIONES (28-9-2026, bloque 47): las ligas de tu país
@@ -60,7 +60,7 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 		var nom := LineEdit.new()
 		nom.text = l.nombre
 		nom.custom_minimum_size = Vector2(220, 0)
-		nom.add_theme_font_size_override("font_size", 12)
+		nom.add_theme_font_size_override("font_size", Tema.letra(12))
 		var liga := l
 		nom.text_submitted.connect(func(x: String) -> void:
 			var p_local := ed.renombrar_liga(liga, x)
@@ -72,7 +72,7 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 		desc.min_value = 1
 		desc.max_value = 4
 		desc.value = l.plazas_descenso
-		desc.get_line_edit().add_theme_font_size_override("font_size", 12)
+		desc.get_line_edit().add_theme_font_size_override("font_size", Tema.letra(12))
 		desc.value_changed.connect(func(v: float) -> void: ed.fijar_descensos(liga, int(v)))
 		fila.add_child(_par("Bajan/suben:", desc))
 		var pv := OptionButton.new()
@@ -89,7 +89,7 @@ func _pintar_editor_competiciones(ed: Editor) -> void:
 		var nc := LineEdit.new()
 		nc.text = p.mundo.copa.nombre
 		nc.custom_minimum_size = Vector2(220, 0)
-		nc.add_theme_font_size_override("font_size", 12)
+		nc.add_theme_font_size_override("font_size", Tema.letra(12))
 		nc.text_submitted.connect(func(x: String) -> void:
 			var p_local := ed.renombrar_copa(x)
 			if p_local != "":
@@ -131,7 +131,7 @@ func _fila_mas_menos(etiqueta: String, valor: String, accion: Callable, padre: N
 	fila.add_child(et)
 	var bm := Button.new()
 	bm.text = "−"
-	bm.add_theme_font_size_override("font_size", 12)
+	bm.add_theme_font_size_override("font_size", Tema.letra(12))
 	bm.custom_minimum_size = Vector2(30, 22)
 	bm.pressed.connect(func() -> void:
 		accion.call(-1)
@@ -144,7 +144,7 @@ func _fila_mas_menos(etiqueta: String, valor: String, accion: Callable, padre: N
 	fila.add_child(v)
 	var bp := Button.new()
 	bp.text = "+"
-	bp.add_theme_font_size_override("font_size", 12)
+	bp.add_theme_font_size_override("font_size", Tema.letra(12))
 	bp.custom_minimum_size = Vector2(30, 22)
 	bp.pressed.connect(func() -> void:
 		accion.call(1)
@@ -159,7 +159,7 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 	var busca := LineEdit.new()
 	busca.text = _ed_filtro
 	busca.placeholder_text = Idiomas.t("Buscar en todo el mundo… (vacío: los de tu país)")
-	busca.add_theme_font_size_override("font_size", 12)
+	busca.add_theme_font_size_override("font_size", Tema.letra(12))
 	busca.text_submitted.connect(func(x: String) -> void:
 		_ed_filtro = x.strip_edges()
 		p._refrescar())
@@ -189,7 +189,7 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 			c2.nombre, c2.pais, c2.division, c2.rep]
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.add_theme_font_size_override("font_size", 12)
+		b.add_theme_font_size_override("font_size", Tema.letra(12))
 		b.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_ORO if abierto else Principal.COL_TEXTO))
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.clip_text = true
@@ -203,7 +203,7 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 
 		var campo := LineEdit.new()
 		campo.text = c2.nombre
-		campo.add_theme_font_size_override("font_size", 12)
+		campo.add_theme_font_size_override("font_size", Tema.letra(12))
 		campo.text_submitted.connect(func(x: String) -> void:
 			var p_local := ed.renombrar_club(c2, x)
 			if p_local != "":
@@ -235,7 +235,7 @@ func _pintar_editor_clubes(ed: Editor) -> void:
 		var br := Button.new()
 		var pidiendo := _ed_confirmar_regen == c2.id
 		br.text = Idiomas.t("¿SEGURO? Se pierde la plantilla entera") if pidiendo else Idiomas.t("🎲 Regenerar plantel")
-		br.add_theme_font_size_override("font_size", 11)
+		br.add_theme_font_size_override("font_size", Tema.letra(11))
 		br.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_ROJO if pidiendo else Principal.COL_TEXTO))
 		br.pressed.connect(func() -> void:
 			if not pidiendo:
@@ -272,7 +272,7 @@ func _rejilla_editor(titulo: String, opciones: Array, actual: String, accion: Ca
 		var rot: Array = rotulos.get(clave, [clave, ""])
 		b.text = String(rot[0]) if clave != "" else "—"
 		b.tooltip_text = String(rot[1])
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		b.toggle_mode = true
 		b.button_pressed = actual == clave
 		b.clip_text = true
@@ -297,7 +297,7 @@ func _rejilla_colores_editor(ed: Editor, j: Jugador, clave: String, colores: Arr
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(24, 22)
 		b.text = "✔" if actual == hex else " "
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		var estilo := StyleBoxFlat.new()
 		estilo.bg_color = Color(hex)
 		estilo.corner_radius_top_left = 3
@@ -322,7 +322,7 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 
 	var campo := LineEdit.new()
 	campo.text = j.nombre
-	campo.add_theme_font_size_override("font_size", 12)
+	campo.add_theme_font_size_override("font_size", Tema.letra(12))
 	campo.text_submitted.connect(func(x: String) -> void:
 		var p_local := ed.fijar_campo(j, "nombre", x)
 		if p_local != "":
@@ -386,7 +386,7 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 		var tope: int = par[2]
 		var bb := Button.new()
 		bb.text = "%s ▸" % String(par[1])
-		bb.add_theme_font_size_override("font_size", 10)
+		bb.add_theme_font_size_override("font_size", Tema.letra(10))
 		bb.custom_minimum_size = Vector2(66, 22)
 		## Con repintado: sin él la cara de arriba no cambiaba y el botón
 		## parecía no hacer nada (nadie escucha `Editor.cambiado`).
@@ -401,7 +401,7 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 		var clave3 := String(par2[0])
 		var bs := Button.new()
 		bs.text = String(par2[1])
-		bs.add_theme_font_size_override("font_size", 10)
+		bs.add_theme_font_size_override("font_size", Tema.letra(10))
 		bs.toggle_mode = true
 		bs.button_pressed = bool(look.get(clave3, false))
 		bs.custom_minimum_size = Vector2(66, 22)
@@ -412,7 +412,7 @@ func _pintar_editor_ficha(ed: Editor, j: Jugador, c: Club) -> void:
 
 	var b_azar := Button.new()
 	b_azar.text = Idiomas.t("🎲 Aleatorio")
-	b_azar.add_theme_font_size_override("font_size", 11)
+	b_azar.add_theme_font_size_override("font_size", Tema.letra(11))
 	b_azar.tooltip_text = Idiomas.t("Un aspecto entero nuevo de una sola vez, no rasgo a rasgo.")
 	b_azar.pressed.connect(func() -> void:
 		ed.aleatorizar_look(j)
@@ -435,7 +435,7 @@ func _pintar_editor_jugadores(ed: Editor) -> void:
 			j.nombre, j.pos_e, j.edad, j.ovr]
 		b.flat = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.add_theme_font_size_override("font_size", 12)
+		b.add_theme_font_size_override("font_size", Tema.letra(12))
 		b.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_ORO if abierto else Principal.COL_TEXTO))
 		b.clip_text = true
 		b.pressed.connect(func() -> void:

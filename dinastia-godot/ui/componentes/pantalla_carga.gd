@@ -109,7 +109,7 @@ static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 		zona.add_child(esc)
 	var t := Label.new()
 	t.text = mensaje
-	t.add_theme_font_size_override("font_size", 30)
+	t.add_theme_font_size_override("font_size", Tema.letra(30))
 	t.add_theme_color_override("font_color", Color(0.94, 0.97, 0.94))
 	t.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.5))
 	t.add_theme_constant_override("outline_size", 4)
@@ -127,7 +127,7 @@ static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 	n._barra.size = Vector2(110, 6)
 	pista.add_child(n._barra)
 	n._etapa = Label.new()
-	n._etapa.add_theme_font_size_override("font_size", 15)
+	n._etapa.add_theme_font_size_override("font_size", Tema.letra(15))
 	n._etapa.add_theme_color_override("font_color", Color(0.85, 0.9, 0.85, 0.85))
 	n._etapa.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caja.add_child(n._etapa)
@@ -139,12 +139,12 @@ static func mostrar(padre: Node, mensaje: String) -> PantallaCarga:
 	var v := VBoxContainer.new()
 	tarjeta.add_child(v)
 	n._contador = Label.new()
-	n._contador.add_theme_font_size_override("font_size", 13)
+	n._contador.add_theme_font_size_override("font_size", Tema.letra(13))
 	n._contador.add_theme_color_override("font_color", Color(1.0, 0.82, 0.35))
 	v.add_child(CuadroDialogo.placa(Idiomas.t("Consejo")))
 	v.add_child(n._contador)
 	n._tarjeta_txt = Label.new()
-	n._tarjeta_txt.add_theme_font_size_override("font_size", 18)
+	n._tarjeta_txt.add_theme_font_size_override("font_size", Tema.letra(18))
 	n._tarjeta_txt.add_theme_color_override("font_color", Color(0.9, 0.92, 0.9))
 	n._tarjeta_txt.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	n._tarjeta_txt.custom_minimum_size = Vector2(560, 56)

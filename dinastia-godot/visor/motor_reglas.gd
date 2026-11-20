@@ -11,28 +11,28 @@ class_name MotorReglas
 ## cruza la pelota ENTERA (el centro a un radio más allá de la línea: regla 9 y 10). Antes bastaba con el centro.
 static func palos_y_lineas(m: MotorJugable, antes: Vector3) -> void:
 	var p: Vector3 = m.balon.position
-	var R: float = m.R
-	var LARGO: float = m.LARGO
+	var r: float = m.R
+	var largo: float = m.LARGO
 	for signo: float in [-1.0, 1.0]:
-		var linea := LARGO * signo
-		if (antes.z - linea) * (p.z - linea) <= 0.0 and absf(p.z) >= LARGO - 0.001 and signf(p.z) == signo:
+		var linea := largo * signo
+		if (antes.z - linea) * (p.z - linea) <= 0.0 and absf(p.z) >= largo - 0.001 and signf(p.z) == signo:
 			## Poste: el balón pega en el palo si pasa a un radio de él.
-			if p.y < m.LARGUERO + R and absf(absf(p.x) - m.PALO) < 0.12 + R:
+			if p.y < m.LARGUERO + r and absf(absf(p.x) - m.PALO) < 0.12 + r:
 				m.vel_balon.z = -m.vel_balon.z * 0.6
 				m.vel_balon.x += signf(p.x) * 1.5
 				m.balon.position.z = linea - signo * 0.2
 				m.aviso.emit("¡AL PALO!")
 				m._cerrar_tiro("poste")
 				return
-			if absf(p.x) < m.PALO and absf(p.y - m.LARGUERO) < 0.12 + R:
+			if absf(p.x) < m.PALO and absf(p.y - m.LARGUERO) < 0.12 + r:
 				m.vel_balon.y = -absf(m.vel_balon.y) * 0.5
 				m.vel_balon.z = -m.vel_balon.z * 0.5
 				m.balon.position.z = linea - signo * 0.2
 				m.aviso.emit("¡AL LARGUERO!")
 				m._cerrar_tiro("poste")
 				return
-		var entera := (LARGO + R) * signo
-		if (antes.z - entera) * (p.z - entera) <= 0.0 and absf(p.z) >= LARGO + R - 0.001 and signf(p.z) == signo:
+		var entera := (largo + r) * signo
+		if (antes.z - entera) * (p.z - entera) <= 0.0 and absf(p.z) >= largo + r - 0.001 and signf(p.z) == signo:
 			if absf(p.x) < m.PALO and p.y < m.LARGUERO:
 				m._gol(signo > 0.0)
 				return
@@ -42,14 +42,14 @@ static func palos_y_lineas(m: MotorJugable, antes: Vector3) -> void:
 			var ut: Dictionary = m.ultimo_toque
 			var toco_defensor := desvio or (not ut.is_empty() and bool(ut["es_local"]) == defiende_local)
 			if toco_defensor:
-				m._empezar_saque("corner", not defiende_local, Vector3(signf(p.x) * (m.ANCHO - 0.3), R, linea - signo * 0.3))
+				m._empezar_saque("corner", not defiende_local, Vector3(signf(p.x) * (m.ANCHO - 0.3), r, linea - signo * 0.3))
 			else:
-				m._empezar_saque("puerta", defiende_local, Vector3(signf(p.x) * 5.0, R, linea - signo * 5.5))
+				m._empezar_saque("puerta", defiende_local, Vector3(signf(p.x) * 5.0, r, linea - signo * 5.5))
 			return
-	if absf(p.x) > m.ANCHO + R:
+	if absf(p.x) > m.ANCHO + r:
 		var ut2: Dictionary = m.ultimo_toque
 		var local_saca := ut2.is_empty() or not bool(ut2["es_local"])
-		m._empezar_saque("banda", local_saca, Vector3(signf(p.x) * (m.ANCHO - 0.2), R, clampf(p.z, -LARGO + 1.0, LARGO - 1.0)))
+		m._empezar_saque("banda", local_saca, Vector3(signf(p.x) * (m.ANCHO - 0.2), r, clampf(p.z, -largo + 1.0, largo - 1.0)))
 
 # ------------------------------------------------------------------ cambios (M6-13)
 

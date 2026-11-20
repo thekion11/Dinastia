@@ -26,7 +26,6 @@ func _nodos() -> int:
 
 ## ---- abrir y cerrar la ciudad 3 veces
 func _fugas() -> void:
-	var base := 0
 	var cuentas: Array[int] = []
 	var huerfanos: Array[int] = []
 	for i in 3:

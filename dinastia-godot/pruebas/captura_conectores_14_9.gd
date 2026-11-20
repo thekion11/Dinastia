@@ -70,7 +70,6 @@ func _process(_d: float) -> void:
 		mun.mi_club_id = club_de_prueba.id
 		_pantalla.call("_conectar_mi_continental")
 		b0 = _pantalla.get("_bandeja").size()
-		var vb0: int = 0
 		t.campeon_proclamado.emit(club_de_prueba)
 		## campeon_proclamado va por Aviso.mostrar(), no por el correo: se
 		## comprueba que no revienta y que, con OTRO club, no dispara nada.

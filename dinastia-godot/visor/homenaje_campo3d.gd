@@ -8,6 +8,7 @@ extends SubViewportContainer
 const MAX_FIGURAS := 3
 const PUBLICO := 900   ## espectadores de la grada (un MultiMesh: una sola llamada de dibujo)
 const RADIO_CAMARA := 9.0
+const _RUTA_PLAYER_SPAWNER := "res://visor/player_spawner.gd"
 
 var _vp: SubViewport
 var _cam: Camera3D
@@ -141,7 +142,7 @@ func _focos(raiz: Node3D) -> void:
 
 ## Los homenajeados en el círculo central, celebrando, y a su espalda la camiseta retirada enmarcada.
 func _figuras(raiz: Node3D, filas: Array, c1: Color, c2: Color) -> void:
-	var spawner = load("res://visor/player_spawner.gd").new()
+	var spawner = load(_RUTA_PLAYER_SPAWNER).new()
 	var n := mini(filas.size(), MAX_FIGURAS)
 	for k in n:
 		var f: Dictionary = filas[k]
@@ -151,7 +152,7 @@ func _figuras(raiz: Node3D, filas: Array, c1: Color, c2: Color) -> void:
 		nodo.position = Vector3(x, 0, 0.6)
 		raiz.add_child(nodo)
 		var datos := Puente3D.jugador(j)
-		var look: Array = load("res://visor/player_spawner.gd")._look_de(datos)
+		var look: Array = load(_RUTA_PLAYER_SPAWNER)._look_de(datos)
 		var puesto := "POR" if j.pos_e == "POR" else "DEL"
 		var d: Dictionary = spawner._crear_jugador(nodo, j.id, puesto, "", c1, c2, "liso", maxi(int(f.get("dorsal", j.dorsal)), 1),
 			look[0], look[1], look[2], Color(0, 0, 0, 0), datos)

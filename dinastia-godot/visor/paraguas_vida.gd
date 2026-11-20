@@ -13,6 +13,8 @@ const COLORES := [Color(0.16, 0.2, 0.34), Color(0.5, 0.12, 0.14), Color(0.1, 0.1
 const NOMBRE := "Paraguas"
 const ALTO_COPA := 0.75   ## del puño a la copa (mango y copa en el eje de los dedos)
 const POSE_BRAZO := Vector3(35.0, -14.0, 105.0)   ## brazo derecho: adelante, costado; codo (grados): el antebrazo casi vertical
+const _RUTA_ANIM_EXTRA := "res://visor/anim_extra.gd"
+const _RUTA_ANIM_QUATERNIUS := "res://visor/anim_quaternius.gd"
 
 static var _canopy: CylinderMesh = null
 static var _mango: CylinderMesh = null
@@ -229,13 +231,13 @@ static func _animacion_paraguas(ap: AnimationPlayer, esq: Skeleton3D) -> Animati
 	var a: Animation = ap.get_animation("caminar").duplicate(true)
 	var pre := str(ap.get_path_to(esq))
 	for clave: String in ["brazo_d", "antebrazo_d"]:
-		var idx = a.find_track(NodePath("%s:%s" % [pre, String(load("res://visor/anim_quaternius.gd").HUESOS[clave])]), Animation.TYPE_ROTATION_3D)
+		var idx = a.find_track(NodePath("%s:%s" % [pre, String(load(_RUTA_ANIM_QUATERNIUS).HUESOS[clave])]), Animation.TYPE_ROTATION_3D)
 		if idx >= 0:
 			a.remove_track(idx)
-	var v_brazo = load("res://visor/anim_extra.gd")._brazo("d", POSE_BRAZO.x, POSE_BRAZO.y)
-	var v_codo = load("res://visor/anim_extra.gd")._codo("d", POSE_BRAZO.z)
-	load("res://visor/anim_quaternius.gd")._pista(a, esq, "brazo_d", [[0.0, v_brazo], [a.length, v_brazo]], pre)
-	load("res://visor/anim_quaternius.gd")._pista(a, esq, "antebrazo_d", [[0.0, v_codo], [a.length, v_codo]], pre)
+	var v_brazo = load(_RUTA_ANIM_EXTRA)._brazo("d", POSE_BRAZO.x, POSE_BRAZO.y)
+	var v_codo = load(_RUTA_ANIM_EXTRA)._codo("d", POSE_BRAZO.z)
+	load(_RUTA_ANIM_QUATERNIUS)._pista(a, esq, "brazo_d", [[0.0, v_brazo], [a.length, v_brazo]], pre)
+	load(_RUTA_ANIM_QUATERNIUS)._pista(a, esq, "antebrazo_d", [[0.0, v_codo], [a.length, v_codo]], pre)
 	return a
 
 ## El mango vertical: sale de la mano y sube hacia un punto del eje del cuerpo (60 % del camino de la mano al eje): como mucho unos 12° de

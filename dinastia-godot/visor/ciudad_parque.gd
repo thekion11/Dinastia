@@ -33,7 +33,7 @@ static func rellenar(ex: CiudadExpansion, r: Rect2, c: Vector3) -> void:
 			if n % 2 == 0:
 				var p := base + lado * 3.1 + dir * 1.4
 				ex._pieza_kit(PAPELERA, Vector3(p.x, SUELO, p.z), ex._escala_ancho(PAPELERA, 0.7), 0.0)
-			if d == 24.0:
+			if is_equal_approx(d, 24.0):
 				_picnic(ex, base - lado * 4.2, n)
 			n += 1
 

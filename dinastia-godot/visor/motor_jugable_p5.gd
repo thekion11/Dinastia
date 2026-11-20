@@ -159,7 +159,7 @@ func _mover_jugadores(delta: float) -> void:
 			esperado.append(_anim_esperado_gd(jugadores[i], int(dec_g[i * 2])))
 	var d: PackedFloat64Array = nat.animar_jugadores(jugadores, res, t, pid, cansancio_real, _anim_league(), true)
 	for i in jugadores.size():
-		if d[i * 2] == -2.0:
+		if is_equal_approx(d[i * 2], -2.0):
 			_animar_uno(i, res)
 		elif comparar_anim and d[i * 2] >= 0.0:
 			var p: Dictionary = jugadores[i]
@@ -174,7 +174,7 @@ func _anim_decidir_gd(res: PackedFloat64Array) -> PackedFloat64Array:
 		out[idx * 2] = -1.0
 		out[idx * 2 + 1] = -1.0
 		var p: Dictionary = jugadores[idx]
-		if res[idx * 4] == 0.0:
+		if is_zero_approx(res[idx * 4]):
 			continue
 		if float(p.get("levantar_en", 0.0)) > 0.0:
 			out[idx * 2] = -2.0
@@ -217,7 +217,7 @@ func _anim_esperado_gd(p: Dictionary, codigo: int) -> Array:
 	if _anim_league():
 		if p.has("ls_propio_hasta"):
 			return r
-		if not (float(p.get("ls_trans_hasta", 0.0)) <= t and float(p.get("ls_cuerpo", 0.0)) == 0.0):
+		if not (float(p.get("ls_trans_hasta", 0.0)) <= t and is_zero_approx(float(p.get("ls_cuerpo", 0.0)))):
 			r[1] = nombre
 			return r
 		r[2] = false
