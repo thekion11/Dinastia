@@ -174,7 +174,7 @@ func _probar_avatares_realistas() -> void:
 		_comprobar(String(PersonajeDT.aspecto({"modelo": quitado})["modelo"]) == "", "una partida vieja con «%s» vuelve al atleta" % quitado)
 	for k: String in FutbolistaQ.todos_ajenos():
 		_comprobar(FutbolistaQ.ajeno_disponible(k), "«%s» (realista) está en el proyecto" % k)
-	## (19-11) Civiles elegibles: sin metal ni facetas (`AcabadoAjeno`) y con el tono de piel elegido.
+	## (19-11) Civiles: sin metal ni facetas (`AcabadoAjeno`) y con el tono de piel pedido.
 	var lisas := AcabadoAjeno.suavizar(PackedVector3Array([Vector3.ZERO, Vector3.ZERO, Vector3(1, 0, 0), Vector3(1, 0, 0)]),
 		PackedVector3Array([Vector3(0, 1, 0), Vector3(0.3, 0.954, 0).normalized(), Vector3(0, 1, 0), Vector3(1, 0, 0)]))
 	_comprobar(absf(lisas[0].x - lisas[1].x) < 1e-4 and lisas[2].is_equal_approx(Vector3(0, 1, 0)), "normales: se suavizan las caras casi planas y se respeta la arista de 90°")
@@ -191,8 +191,20 @@ func _probar_avatares_realistas() -> void:
 				if mt != null:
 					metal = maxf(metal, mt.metallic)
 					piel_ok = piel_ok or (mt.resource_name.to_lower().contains("skin") and mt.albedo_color.r < 0.6)
-	_comprobar(not dc.is_empty() and metal < 0.001, "los civiles elegibles salen mates, sin metal (máx %.2f)" % metal)
-	_comprobar(piel_ok, "y su piel toma el tono elegido en el creador")
+	_comprobar(not dc.is_empty() and metal < 0.001, "los civiles salen mates, sin metal (máx %.2f)" % metal)
+	_comprobar(piel_ok, "y su piel toma el tono pedido")
+	## (20-11, orden del dueño) Los civiles son SOLO del personal y los realistas SOLO del jugador: nadie sale dos veces.
+	_comprobar(FutbolistaQ.todos_ajenos().is_empty() and not FutbolistaQ.modelo_valido("mh_casual"), "el jugador ya no puede elegir un civil (una partida vieja con uno vuelve al atleta)")
+	var usados := {}
+	for k: String in PersonalEstadio.MODELO_PERSONAL:
+		for m: String in PersonalEstadio.MODELO_PERSONAL[k]:
+			usados[m] = true
+	var todos_puestos := PersonalEstadio.PUESTOS.keys().all(func(k: String) -> bool: return PersonalEstadio.MODELO_PERSONAL.has(k))
+	_comprobar(todos_puestos, "todo el personal del club lleva un civil (ninguno el cuerpo del atleta del jugador)")
+	_comprobar(not usados.keys().any(func(m: String) -> bool: return FutbolistaQ.modelo_valido(m)), "ningún modelo del personal es elegible por el jugador")
+	var dca := CivilAnimado.crear(padre_c, "mm_formal", 1.7, Color("c68d68"))
+	var rt_c := (dca.get("avatar") as Node).find_child("CivilRetarget", true, false) as AvatarRegaloRetarget if not dca.is_empty() and dca.get("avatar") != null else null
+	_comprobar(rt_c != null and rt_c.pares() >= 40 and (dca["anim"] as AnimationPlayer).is_playing(), "el civil del personal se anima con el cuerpo del juego (%d huesos)" % (rt_c.pares() if rt_c != null else 0))
 	padre_c.queue_free()
 	for carpeta: String in ["kaykit", "vrm", "Skins"]:
 		_comprobar(not DirAccess.dir_exists_absolute("res://assets/characters/" + carpeta), "la carpeta de no realistas «%s» ya no está" % carpeta)

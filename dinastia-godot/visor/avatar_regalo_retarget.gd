@@ -20,17 +20,19 @@ var origen: Skeleton3D
 var _pares: Array[Dictionary] = []
 var _ratio_cadera := 1.0
 
-func configurar(esq_origen: Skeleton3D) -> void:
+## `otro_mapa` (20-11): otro esqueleto de destino (los civiles del personal, `CivilAnimado.MAPA`); vacío = el Mixamo del avatar regalo.
+func configurar(esq_origen: Skeleton3D, otro_mapa: Dictionary = {}) -> void:
 	origen = esq_origen
 	_pares.clear()
 	var destino := get_skeleton()
 	if origen == null or destino == null:
 		return
-	var mapa := MAPA.duplicate()
-	for lado: String in ["l", "r"]:
-		for d: String in DEDOS:
-			for n in [1, 2, 3]:
-				mapa["%s_0%d_%s" % [d, n, lado]] = "%sHand%s%d" % ["Left" if lado == "l" else "Right", DEDOS[d], n]
+	var mapa := otro_mapa.duplicate() if not otro_mapa.is_empty() else MAPA.duplicate()
+	if otro_mapa.is_empty():
+		for lado: String in ["l", "r"]:
+			for d: String in DEDOS:
+				for n in [1, 2, 3]:
+					mapa["%s_0%d_%s" % [d, n, lado]] = "%sHand%s%d" % ["Left" if lado == "l" else "Right", DEDOS[d], n]
 	## Orden: el del esqueleto de destino (los padres siempre van antes que los hijos).
 	var por_destino := {}
 	for k: String in mapa:
@@ -76,4 +78,10 @@ func _process_modification() -> void:
 			var rest_o: Transform3D = origen.get_bone_global_rest(io)
 			var dp: Vector3 = b_o * (pose_o.origin - rest_o.origin) * origen.global_basis.get_scale().y * _ratio_cadera
 			var rest_d: Transform3D = destino.get_bone_global_rest(id)
-			destino.set_bone_pose_position(id, rest_d.origin + b_d_inv * dp / maxf(destino.global_basis.get_scale().y, 0.0001))
+			var p_esq: Vector3 = rest_d.origin + b_d_inv * dp / maxf(destino.global_basis.get_scale().y, 0.0001)
+			## (20-11) La posición de pose es LOCAL al padre: con padre (el «Root» de los civiles) hay que pasarla a su espacio; sin
+			## padre (el Mixamo del avatar regalo) es la misma de antes.
+			var padre_h := destino.get_bone_parent(id)
+			if padre_h >= 0:
+				p_esq = destino.get_bone_global_pose(padre_h).affine_inverse() * p_esq
+			destino.set_bone_pose_position(id, p_esq)

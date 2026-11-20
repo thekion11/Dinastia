@@ -29,7 +29,14 @@ const PUESTOS := {
 }
 
 ## Modelos exclusivos del personal [hombre, mujer] (`FutbolistaQ.PERSONAL`).
-const MODELO_PERSONAL := {"portero": ["mh_swat", "mm_soldier"], "hincha": ["mh_punk", "mm_punk"]}
+## (20-11, orden del dueño: «que los otros sean del personal del club» y no haya dos veces el mismo personaje) TODO el personal lleva
+## un civil (`FutbolistaQ.civiles()` y `PERSONAL`), nunca el cuerpo del atleta que elige el jugador. Mismo modelo en dos puestos:
+## los distingue el tono de piel de su apariencia (`AcabadoAjeno`).
+const MODELO_PERSONAL := {"portero": ["mh_swat", "mm_soldier"], "hincha": ["mh_punk", "mm_punk"],
+	"conserje": ["mh_worker", "mm_worker"], "jardinero": ["mh_beach", "mm_worker"], "cocinera": ["mh_worker", "mm_worker"],
+	"utilero": ["mh_casual", "mm_casual"], "ojeador": ["mh_casual2", "mm_casual"], "prensa": ["mh_casual2", "mm_formal"],
+	"medico": ["mh_casual", "mm_formal"], "chofer": ["mh_suit", "mm_suit"], "secretaria": ["mh_suit", "mm_formal"],
+	"presidente": ["mh_suit", "mm_suit"]}
 const VEL := 1.25
 
 ## Los gestos de cada oficio en su puesto (librería «banda» de `PersonajeDT`).
@@ -113,12 +120,7 @@ func _ready() -> void:
 		asp["corbata"] = clave in ["presidente", "secretaria", "portero"]
 		asp["gorra"] = clave == "portero"
 		asp["gafas"] = "" if clave != "ojeador" else String(asp.get("gafas", ""))
-		## SWAT/soldado en la puerta y punk en la hinchada: modelos SOLO del personal (no elegibles por el jugador).
-		var d: Dictionary = {}
-		if MODELO_PERSONAL.has(clave):
-			d = FutbolistaQ.ajeno(raiz, String((MODELO_PERSONAL[clave] as Array)[1 if bool(mujeres[clave]) else 0]), float(asp["altura"]))
-		if d.is_empty():
-			d = PersonajeDT.crear(raiz, asp, c1, c2)
+		var d := cuerpo(raiz, clave, asp, bool(mujeres[clave]), c1, c2)
 		if Calidad.elegida <= Calidad.BAJA:   ## (7-11) ULTRA BAJA y BAJA: la gente del club se dibuja solo a menos de 90 m (desde el mapa aéreo eran 163 piezas invisibles)
 			for g: Node in raiz.find_children("*", "GeometryInstance3D", true, false):
 				(g as GeometryInstance3D).visibility_range_end = 90.0
@@ -296,6 +298,17 @@ func _process(delta_real: float) -> void:
 		n.position += hacia / dist * paso
 		n.rotation.y = atan2(hacia.x, hacia.z)
 		_anim(g, "caminar")
+
+## El cuerpo de una persona del club en `raiz` (ya en el árbol): su civil animado (SWAT/soldado en la puerta, punk en la hinchada,
+## obrero, traje…: modelos SOLO del personal, no elegibles por el jugador) o, si faltara el modelo, el de siempre.
+static func cuerpo(raiz: Node3D, clave: String, asp: Dictionary, mujer: bool, c1: Color, c2: Color) -> Dictionary:
+	var d: Dictionary = {}
+	if MODELO_PERSONAL.has(clave):
+		d = CivilAnimado.crear(raiz, String((MODELO_PERSONAL[clave] as Array)[1 if mujer else 0]), float(asp.get("altura", 1.75)),
+			Color(String(asp.get("piel", "c68d68"))))
+	if d.is_empty():
+		d = PersonajeDT.crear(raiz, asp, c1, c2)
+	return d
 
 func _anim(g: Dictionary, nombre: String) -> void:
 	var a: AnimationPlayer = g.get("anim") as AnimationPlayer

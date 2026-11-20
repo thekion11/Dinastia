@@ -43,8 +43,14 @@ const PERSONAL := {
 	"mm_punk": ["Punk", "res://assets/characters/modular/women/Punk.glb", "female"],
 }
 static var _modulares: Dictionary = {}
-## Todos los modelos ajenos elegibles: los modulares y, si está en el proyecto (no va en los builds públicos), el avatar regalo.
+## Los modelos AJENOS que el jugador puede elegir como «Modelo base». (20-11, decisión del dueño: en el creador «solo los realistas» y
+## «que los otros sean del personal del club», para que no haya dos veces el mismo personaje) Ninguno: el jugador elige el atleta o
+## `AvatarRegalo`; los 9 civiles son del PERSONAL (`civiles()`, `PersonalEstadio.MODELO_PERSONAL`). Partida vieja con un civil: vuelve al atleta.
 static func todos_ajenos() -> Dictionary:
+	return {}
+
+## Los civiles modulares: SOLO para el personal del club (20-11).
+static func civiles() -> Dictionary:
 	if _modulares.is_empty():
 		for k: String in MODULARES_H:
 			_modulares["mh_" + k.to_lower()] = [MODULARES_H[k], "res://assets/characters/modular/men/%s.glb" % k, "male"]
@@ -60,7 +66,7 @@ static func modelo_valido(clave: String) -> bool:
 
 ## ¿Está el modelo ajeno en el juego?
 static func ajeno_disponible(clave: String) -> bool:
-	var t := todos_ajenos()
+	var t := civiles()
 	if PERSONAL.has(clave):
 		return ResourceLoader.exists(String((PERSONAL[clave] as Array)[1]))
 	return t.has(clave) and ResourceLoader.exists(String((t[clave] as Array)[1]))
@@ -71,7 +77,7 @@ static func ajeno_disponible(clave: String) -> bool:
 static func ajeno(padre: Node3D, clave: String, altura: float, piel := Color(0, 0, 0, 0)) -> Dictionary:
 	if not ajeno_disponible(clave):
 		return {}
-	var fila: Array = PERSONAL[clave] if PERSONAL.has(clave) else todos_ajenos()[clave]
+	var fila: Array = PERSONAL[clave] if PERSONAL.has(clave) else civiles()[clave]
 	var packed: PackedScene = load(String(fila[1]))
 	if packed == null:
 		return {}
@@ -87,13 +93,15 @@ static func ajeno(padre: Node3D, clave: String, altura: float, piel := Color(0, 
 			if nom.contains(a):
 				(mi as MeshInstance3D).visible = false
 				break
-	## Altura: de los pies a la coronilla de las mallas visibles.
+	## Altura: de los pies a la coronilla de las mallas visibles, en el espacio de `raiz` (20-11: con la global, una persona
+	## que no estaba a altura 0 -el personal de las plantas del estadio- quedaba hundida o flotando).
 	var ymin := 1e9
 	var ymax := -1e9
+	var a_raiz := raiz.global_transform.affine_inverse()
 	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
 		var m := mi as MeshInstance3D
 		if m.visible and m.mesh != null:
-			var bb := m.global_transform * m.get_aabb()
+			var bb := a_raiz * m.global_transform * m.get_aabb()
 			ymin = minf(ymin, bb.position.y)
 			ymax = maxf(ymax, bb.end.y)
 	var h := ymax - ymin
