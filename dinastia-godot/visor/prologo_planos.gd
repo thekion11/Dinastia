@@ -94,7 +94,7 @@ static func poses_fachada(puerta: Vector3, semilla: int, obstaculos: Array[AABB]
 				break
 		if libre:
 			a = puerta + cand
-			lado = signf(cand.x) if cand.x != 0.0 else lado
+			lado = signf(cand.x) if not is_zero_approx(cand.x) else lado
 			break
 	var b := puerta + Vector3(2.5 * lado, 2.2, 7.5)
 	return [Transform3D(Basis.IDENTITY, a).looking_at(puerta + Vector3(0, 3.0, 0), Vector3.UP),

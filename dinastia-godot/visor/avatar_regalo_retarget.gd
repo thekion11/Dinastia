@@ -73,7 +73,7 @@ func _process_modification() -> void:
 		var id: int = par["d"]
 		var pose_o: Transform3D = origen.get_bone_global_pose(io)
 		var delta_mundo: Basis = (b_o * pose_o.basis.orthonormalized()) * (b_o * (par["rest_o"] as Basis)).inverse()
-		if abrir_brazos != 0.0 and float(par["lado"]) != 0.0:
+		if not is_zero_approx(abrir_brazos) and not is_zero_approx(float(par["lado"])):
 			## Todo el brazo (hombro a dedos) gira el mismo ángulo en el mundo, sobre el eje de «adelante» del personaje: abre la mano sin torcer el codo.
 			delta_mundo = Basis(destino.global_basis.orthonormalized().z, deg_to_rad(abrir_brazos) * float(par["lado"])) * delta_mundo
 		var rot_mundo: Basis = delta_mundo * (destino.global_basis.orthonormalized() * (par["rest_d"] as Basis))
