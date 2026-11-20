@@ -33,8 +33,8 @@ const PUESTOS := {
 ## un civil (`FutbolistaQ.civiles()` y `PERSONAL`), nunca el cuerpo del atleta que elige el jugador. Mismo modelo en dos puestos:
 ## los distingue el tono de piel de su apariencia (`AcabadoAjeno`).
 const MODELO_PERSONAL := {"portero": ["mh_swat", "mm_soldier"], "hincha": ["mh_punk", "mm_punk"],
-	"conserje": ["mh_worker", "mm_worker"], "jardinero": ["mh_beach", "mm_worker"], "cocinera": ["mh_worker", "mm_worker"],
-	"utilero": ["mh_casual", "mm_casual"], "ojeador": ["mh_casual2", "mm_casual"], "prensa": ["mh_casual2", "mm_formal"],
+	"conserje": ["mh_worker", "mm_worker"], "jardinero": ["mh_farmer", "mm_worker"], "cocinera": ["mh_worker", "mm_worker"],
+	"utilero": ["mh_casual", "mm_casual"], "ojeador": ["mh_adventurer", "mm_adventurer"], "prensa": ["mh_casual2", "mm_formal"],
 	"medico": ["mh_casual", "mm_formal"], "chofer": ["mh_suit", "mm_suit"], "secretaria": ["mh_suit", "mm_formal"],
 	"presidente": ["mh_suit", "mm_suit"]}
 const VEL := 1.25
@@ -382,8 +382,8 @@ func _andar(g: Dictionary, n: Node3D, hacia: Vector3, dist: float, delta: float,
 static func cuerpo(raiz: Node3D, clave: String, asp: Dictionary, mujer: bool, c1: Color, c2: Color) -> Dictionary:
 	var d: Dictionary = {}
 	if MODELO_PERSONAL.has(clave):
-		## Su pelo (natural) y la ropa en otro tono según el puesto: dos con el mismo civil no se ven iguales. El portero (SWAT) y el hincha (punk) van de uniforme.
-		var uniforme := clave in ["portero", "hincha"]
+		## Su pelo (natural) y la ropa en otro tono según el puesto: dos con el mismo civil no se ven iguales. Los que tienen modelo único van como vienen.
+		var uniforme := clave in ["portero", "hincha", "jardinero", "ojeador"]   ## modelos únicos (SWAT, punk, granjero, aventurero): no varían
 		d = CivilAnimado.crear(raiz, String((MODELO_PERSONAL[clave] as Array)[1 if mujer else 0]), float(asp.get("altura", 1.75)),
 			Color(String(asp.get("piel", "c68d68"))), Color(0, 0, 0, 0), 0 if uniforme else 1 + absi(clave.hash()) % 9)
 	if d.is_empty():

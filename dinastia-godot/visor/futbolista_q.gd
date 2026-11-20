@@ -41,6 +41,11 @@ const PERSONAL := {
 	"mm_soldier": ["Soldado", "res://assets/characters/modular/women/Soldier.glb", "female"],
 	"mh_punk": ["Punk", "res://assets/characters/modular/men/Punk.glb", "male"],
 	"mm_punk": ["Punk", "res://assets/characters/modular/women/Punk.glb", "female"],
+	## (20-11, orden del dueño: «sácalos de donde quieras») Tres más del mismo pack CC0 (Quaternius, volvieron a bajarse del paquete original):
+	## el granjero para el jardinero y el aventurero (explorador) para el ojeador. Solo del personal; el jugador no los elige.
+	"mh_farmer": ["Granjero", "res://assets/characters/modular/men/Farmer.glb", "male"],
+	"mh_adventurer": ["Aventurero", "res://assets/characters/modular/men/Adventurer.glb", "male"],
+	"mm_adventurer": ["Aventurera", "res://assets/characters/modular/women/Adventurer.glb", "female"],
 }
 static var _modulares: Dictionary = {}
 ## Los modelos AJENOS que el jugador puede elegir como «Modelo base». (20-11, decisión del dueño: en el creador «solo los realistas» y
@@ -100,7 +105,8 @@ static func ajeno(padre: Node3D, clave: String, altura: float, piel := Color(0, 
 	var a_raiz := raiz.global_transform.affine_inverse()
 	for mi in modelo.find_children("*", "MeshInstance3D", true, false):
 		var m := mi as MeshInstance3D
-		if m.visible and m.mesh != null:
+		## La mochila del aventurero tiene la caja de 1,6 m de alto bajando hasta -0,74 m (los pies a 0): contaría la altura de más y lo encogería.
+		if m.visible and m.mesh != null and not String(m.name).to_lower().contains("backpack"):
 			var bb := a_raiz * m.global_transform * m.get_aabb()
 			ymin = minf(ymin, bb.position.y)
 			ymax = maxf(ymax, bb.end.y)

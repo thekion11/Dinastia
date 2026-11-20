@@ -125,7 +125,7 @@ Peinados, barba y cejas de los jugadores 3D: *Universal Base Characters* de Quat
    nacionalidad. Viaja en los builds públicos. ¿Basta para el derecho de imagen? Lo decide el dueño (M-421).
 
 ## Ultimate Modular Men / Women — `assets/characters/modular/`
-Quaternius, CC0-1.0 (vía `trebeljahr/quaternius-showcase/LICENSES.md`). 13 civiles realistas sin animaciones (de 21; sin texturas): 9 elegibles por el jugador y 4 (Swat, Soldier, Punk ×2) solo para el personal del club, esqueleto de 49-51 huesos; `visor/idle_procedural.gd` les da el reposo. Fuera de LFS (OK del dueño, 2-11-2026).
+Quaternius, CC0-1.0 (vía `trebeljahr/quaternius-showcase/LICENSES.md`). 16 civiles sin animaciones (de 21; sin texturas): 9 que antes elegía el jugador (ya NO: el 20-11 pasaron al personal) y 7 solo del personal del club (Swat, Soldier, Punk ×2 y, desde el 20-11, Granjero y Aventurero/a, vueltos a bajar del paquete original CC0 de Quaternius), esqueleto de 49-51 huesos; `visor/idle_procedural.gd` les da el reposo. Fuera de LFS (OK del dueño, 2-11-2026).
 
 ## Avatar regalo del dueño — `assets/characters/avatar_regalo/` (11-11-2026)
 FBX de cuerpo entero con texturas incrustadas (esqueleto Mixamo, 73 huesos, 1,82 m). 🟢 Licencia confirmada por el dueño (11-11) y su cara NO es de una persona real: va en los builds y es elegible como avatar del jugador. Revisar el logotipo de la camiseta.
