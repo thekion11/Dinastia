@@ -263,6 +263,12 @@ static func _patron_svg_1(p: String, c2: String, c3: String = "") -> Variant:
 	return null
 
 static func _patron_svg_2(c2: String, p: String) -> Variant:
+	var r_patron_svg_2_1: Variant = _patron_svg_2_1(c2, p)
+	if r_patron_svg_2_1 != null:
+		return r_patron_svg_2_1
+	return null
+
+static func _patron_svg_2_1(c2: String, p: String) -> Variant:
 	match p:
 		"estrella":
 			return '<path d="M32 12 37 26h15l-12 9 4.5 15L32 41l-12.5 9L24 35l-12-9h15Z" fill="%s" opacity=".9"/>' % c2
@@ -319,6 +325,7 @@ static func _patron_svg_2(c2: String, p: String) -> Variant:
 					e += '<circle cx="%d" cy="%.0f" r="9" fill="%s" opacity=".88"/>' % [x, y, c2]
 			return e
 	return null
+
 
 static func _patron_svg_3(c2: String, p: String) -> Variant:
 	match p:
