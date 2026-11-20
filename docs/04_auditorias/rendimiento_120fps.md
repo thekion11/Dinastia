@@ -388,3 +388,8 @@ Medido con `pruebas/zz_medir_menu_gpu.tscn` (xvfb + opengl3, MEDIA, club de GER;
 - Resultado con la pantalla quieta (3 s): central, Modos, Idioma y los 10 menús laterales, en suave y en clásico: **1 dibujado** (antes, clásico 68-128). Abrir un menú lateral: **85-159 ms** hasta verse (meta < 1 s).
 - Probado y descartado: quitar la sombra de las cajas (−2 llamadas). Los tres estilos de menú (píldora, compacto, barra) cuestan lo mismo.
 - Lo que queda caro: el central dibuja ~390 llamadas cuando se repinta (texto y cajas alternados rompen el agrupado en 2D); con el reposo solo cuenta mientras el usuario actúa.
+
+## Generación del mundo entero (19-11, medido; sin cambios)
+`medir_mundo_completo`: 2.206 clubes, 55.150 jugadores, **~3,3 s** (sin pantalla, este contenedor). Reparto: `_poblar` 2,70 s · `_generar_cierre` 0,29 s · `Reales.aplicar` 0,19 s · `_crear_club` 0,09 s · `Liga.preparar` 0,03 s.
+Por jugador (~49 µs): nombre 23 · `Jugador.new()` 15 (48 campos) · atributos 10 · tasar 7 · resto <4. El nombre cuesta por los REINTENTOS (cada intento ~2,5 µs: sorteo + huella md5 del veto; se repite si el nombre ya existe o está vetado):
+bajar intentos cambia las tiradas de `Azar` y con ello el mundo (huella `igualdad_mundo`), así que no se toca. El juego genera por trozos (`generar_por_trozos`, 25 ms por cuadro): no congela la pantalla. Sin mejora segura que no cambie el mundo.
