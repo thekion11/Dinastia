@@ -65,6 +65,13 @@ static func primer_minuto(semilla: int, minuto_inicio: int) -> int:
 	return minuto_inicio + rng.randi_range(2, 9)
 
 static func hueco(minuto: int, minuto_fin: int, restantes: int) -> int:
+	var nat := Nativo.de("nuc_hueco")
+	if nat != null:
+		return nat.nuc_hueco(minuto, minuto_fin, restantes)
+	return hueco_gd(minuto, minuto_fin, restantes)
+
+## Gemela GDScript de `nuc_hueco` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func hueco_gd(minuto: int, minuto_fin: int, restantes: int) -> int:
 	if restantes <= 0:
 		return 999
 	return clampi(int(float(minuto_fin - minuto) / (float(restantes) + 1.5)), 3, 15)
@@ -164,6 +171,13 @@ const AJUSTE_TIRO_EN_JUEGO := 0.55
 const AJUSTE_PASE_3D := 0.66
 
 static func prob_tiro_3d(dist: float, lateral: float, tapada: bool, tiro_attr: float) -> float:
+	var nat := Nativo.de("nuc_prob_tiro_3d")
+	if nat != null:
+		return nat.nuc_prob_tiro_3d(dist, lateral, tapada, tiro_attr)
+	return prob_tiro_3d_gd(dist, lateral, tapada, tiro_attr)
+
+## Gemela GDScript de `nuc_prob_tiro_3d` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func prob_tiro_3d_gd(dist: float, lateral: float, tapada: bool, tiro_attr: float) -> float:
 	if tapada:
 		return 0.02
 	var geo := 0.08 + 0.85 * exp(-(dist - 8.0) / 7.0) + 0.006 * absf(lateral)

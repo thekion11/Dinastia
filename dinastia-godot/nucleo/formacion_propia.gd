@@ -21,6 +21,13 @@ const X_MAX := 94.0
 ## El puesto que corresponde a una casilla del tablero (zonas como las de las formaciones de serie: bandas por fuera de x 24/76,
 ## carrileros entre y 54 y 70, como los de 3-5-2 y 5-3-2).
 static func puesto_de(x: float, y: float) -> String:
+	var nat := Nativo.de("nuc_puesto_de")
+	if nat != null:
+		return nat.nuc_puesto_de(x, y)
+	return puesto_de_gd(x, y)
+
+## Gemela GDScript de `nuc_puesto_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func puesto_de_gd(x: float, y: float) -> String:
 	var banda := x >= 76.0 or x <= 24.0
 	var derecha := x >= 50.0
 	if banda:

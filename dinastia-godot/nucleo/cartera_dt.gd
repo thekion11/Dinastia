@@ -247,6 +247,13 @@ func desde_dict(d: Dictionary) -> void:
 
 ## Clave de día para los límites diarios.
 static func clave_dia(anio: int, semana: int, dia: int) -> int:
+	var nat := Nativo.de("nuc_clave_dia")
+	if nat != null:
+		return nat.nuc_clave_dia(anio, semana, dia)
+	return clave_dia_gd(anio, semana, dia)
+
+## Gemela GDScript de `nuc_clave_dia` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func clave_dia_gd(anio: int, semana: int, dia: int) -> int:
 	return anio * 1000 + semana * 10 + dia
 
 ## Texto (ya traducido) de un código de error, para el cuadro del comercio.

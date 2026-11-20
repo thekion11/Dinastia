@@ -167,6 +167,13 @@ static func _repetir(r: Array, veces: int) -> Array:
 	return sal
 
 static func _rr(n: int) -> int:
+	var nat := Nativo.de("nuc_rr")
+	if nat != null:
+		return nat.nuc_rr(n)
+	return _rr_gd(n)
+
+## Gemela GDScript de `nuc_rr` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _rr_gd(n: int) -> int:
 	return n if n % 2 == 1 else n - 1
 
 

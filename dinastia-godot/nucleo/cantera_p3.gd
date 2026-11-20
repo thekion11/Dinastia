@@ -366,6 +366,13 @@ func sortear_guerra_agentes() -> Dictionary:
 ## desconfía de ti. La confianza va de −10 a +10 y arranca en 0 (neutral). (12-11: la pantalla comparaba con 45, como si fuera de 0 a 100, y
 ## pintaba en rojo a TODOS los que tenían dos clientes desde el primer día.)
 static func agente_aprieta(clientes: int, confianza: int) -> bool:
+	var nat := Nativo.de("nuc_agente_aprieta")
+	if nat != null:
+		return nat.nuc_agente_aprieta(clientes, confianza)
+	return agente_aprieta_gd(clientes, confianza)
+
+## Gemela GDScript de `nuc_agente_aprieta` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func agente_aprieta_gd(clientes: int, confianza: int) -> bool:
 	return clientes >= 2 and confianza < 0
 
 func hay_exigencia() -> bool:

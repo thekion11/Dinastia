@@ -418,6 +418,12 @@ func _probar() -> void:
 	_comprobar((so["fallos"] as Array).is_empty(), "síntesis del sonido: C++ = GDScript (214 sonidos × 4 variantes, byte a byte)")
 	for t: String in so["textos"]:
 		print(t)
+	var pu := ProbarNativoPuras.probar(nat)   ## (20-11, orden 63) las funciones puras del núcleo
+	for f: String in pu["fallos"]:
+		_comprobar(false, "funciones puras en C++: " + f)
+	_comprobar((pu["fallos"] as Array).is_empty(), "funciones puras del núcleo: C++ = GDScript (bytes del resultado)")
+	for t: String in pu["textos"]:
+		print(t)
 	_fin()
 
 func _comprobar(ok: bool, que: String) -> void:
