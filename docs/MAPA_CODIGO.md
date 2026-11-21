@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2598 archivos (.gd, .cpp, .h), 371923 líneas, 1013 clases con nombre.
+Total: 2598 archivos (.gd, .cpp, .h), 371758 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -29,13 +29,13 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 
 ## La Ruta (modo jugador)
 
-40 archivos, 5701 líneas. Carpetas: `nucleo`, `ui/carrera`.
+40 archivos, 5679 líneas. Carpetas: `nucleo`, `ui/carrera`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `CarreraJugador` | `nucleo/carrera_jugador.gd` | 450 | 55 | carrera_jugador_p2.gd ← carrera_jugador_p1.gd |
 | `CarreraRuta` | `nucleo/carrera_ruta.gd` | 26 | 33 | carrera_ruta_p1.gd |
-| `CarreraPremios` | `nucleo/carrera_premios.gd` | 265 | 14 |  |
+| `CarreraPremios` | `nucleo/carrera_premios.gd` | 257 | 14 |  |
 | `CarreraPortero` | `nucleo/carrera_jugador_portero.gd` | 63 | 11 |  |
 | `CarreraEstilo` | `nucleo/carrera_estilo.gd` | 126 | 9 |  |
 | `CarreraEventosRuta` | `nucleo/carrera_eventos_ruta.gd` | 147 | 9 |  |
@@ -48,7 +48,7 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 | `CarreraLogros` | `nucleo/carrera_logros.gd` | 114 | 7 |  |
 | `CarreraPatrocinio` | `nucleo/carrera_patrocinio.gd` | 72 | 7 |  |
 
-Cerca del tope (≥ 400 líneas): `carrera_jugador.gd` (450), `carrera_ruta_p1.gd` (449).
+Cerca del tope (≥ 400 líneas): `carrera_jugador.gd` (450), `carrera_ruta_p1.gd` (435).
 
 ## Partido: motor C4 y respaldo
 
@@ -143,7 +143,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 
 ## Núcleo: mundo, gestión y datos
 
-257 archivos, 53243 líneas. Carpetas: `nucleo`.
+257 archivos, 53091 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -153,8 +153,8 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | `Nombres` | `nucleo/nombres.gd` | 183 | 171 |  |
 | `Nativo` | `nucleo/nativo.gd` | 29 | 124 |  |
 | `Partida` | `nucleo/partida.gd` | 261 | 119 | partida_p2.gd ← partida_p1.gd |
-| `Copa` | `nucleo/copa.gd` | 360 | 95 |  |
-| `Mercado` | `nucleo/mercado.gd` | 64 | 93 | mercado_p1.gd |
+| `Copa` | `nucleo/copa.gd` | 348 | 95 |  |
+| `Mercado` | `nucleo/mercado.gd` | 64 | 92 | mercado_p1.gd |
 | `Finanzas` | `nucleo/finanzas.gd` | 398 | 91 |  |
 | `Roles` | `nucleo/roles.gd` | 357 | 79 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
 | `Prensa` | `nucleo/prensa.gd` | 393 | 76 | prensa_narra.gd ← prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
@@ -166,12 +166,12 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `l
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62799 líneas. Carpetas: `visor`.
+340 archivos, 62808 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Calidad` | `visor/calidad.gd` | 22 | 273 | calidad_p1.gd |
-| `CityBuilder` | `visor/city_builder.gd` | 185 | 168 | city_builder_p11.gd ← city_builder_p10.gd ← city_builder_p9.gd ← city_builder_p8.gd ← city_builder_p7.gd ← city_builder_p6.gd ← city_builder_p5.gd ← city_builder_p4.gd ← city_builder_p3.gd ← city_builder_p2.gd ← city_builder_p1.gd |
+| `CityBuilder` | `visor/city_builder.gd` | 186 | 168 | city_builder_p11.gd ← city_builder_p10.gd ← city_builder_p9.gd ← city_builder_p8.gd ← city_builder_p7.gd ← city_builder_p6.gd ← city_builder_p5.gd ← city_builder_p4.gd ← city_builder_p3.gd ← city_builder_p2.gd ← city_builder_p1.gd |
 | `FutbolistaQ` | `visor/futbolista_q.gd` | 220 | 130 |  |
 | `ExploradorCiudad` | `visor/explorador_ciudad.gd` | 13 | 119 | explorador_ciudad_p5.gd ← explorador_ciudad_p5_p1.gd ← explorador_ciudad_p4.gd ← explorador_ciudad_p3.gd ← explorador_ciudad_p2.gd ← explorador_ciudad_p1.gd |
 | `PlayerSpawner` | `visor/player_spawner.gd` | 226 | 95 | player_spawner_p1.gd |

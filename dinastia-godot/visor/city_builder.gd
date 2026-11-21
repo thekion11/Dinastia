@@ -55,24 +55,25 @@ func _distritos() -> void:
 			var z := esquina.y + CALLE_DISTRITO * 0.5 + float(k) * paso.y
 			_franja(Vector3(esquina.x + ancho_total * 0.5, 0, z), Vector2(ancho_total, CALLE_DISTRITO), asfalto)
 		var mitad := Vector2(float(nx) * 0.5, float(nz) * 0.5)
-		for i in nx:
-			for k in nz:
-				var c2 := origen + Vector2(float(i) * paso.x + MANZANA.x * 0.5, float(k) * paso.y + MANZANA.y * 0.5)
-				var c := Vector3(c2.x, 0, c2.y)
-				## La acera de la manzana.
-				var base := _caja_en(Vector3(c.x, altura_en(c.x, c.z) + 0.1, c.z), Vector3(MANZANA.x, 0.2, MANZANA.y), acera)
-				base.name = "Manzana"
-				if rng.randf() > lleno:
-					continue
-				manzanas_distrito += 1
-				## El corazón del distrito norte: torres.
-				var cerca_centro: bool = bool(d["centro"]) and absf(float(i) + 0.5 - mitad.x) <= 1.0 and absf(float(k) + 0.5 - mitad.y) <= 1.0
-				if cerca_centro and not altos.is_empty():
-					## Tres torres por manzana y comercios en la planta baja.
-					for o: Vector3 in [Vector3(-14, 0, -9), Vector3(14, 0, -9), Vector3(0, 0, 10)]:
-						_torre_distrito(altos[rng.randi() % altos.size()], c + o, rng)
-				else:
-					_manzana(c, comercial, naves, toldos, rng)
+		for ik in nx * nz:
+			var i := ik / nz
+			var k := ik % nz
+			var c2 := origen + Vector2(float(i) * paso.x + MANZANA.x * 0.5, float(k) * paso.y + MANZANA.y * 0.5)
+			var c := Vector3(c2.x, 0, c2.y)
+			## La acera de la manzana.
+			var base := _caja_en(Vector3(c.x, altura_en(c.x, c.z) + 0.1, c.z), Vector3(MANZANA.x, 0.2, MANZANA.y), acera)
+			base.name = "Manzana"
+			if rng.randf() > lleno:
+				continue
+			manzanas_distrito += 1
+			## El corazón del distrito norte: torres.
+			var cerca_centro: bool = bool(d["centro"]) and absf(float(i) + 0.5 - mitad.x) <= 1.0 and absf(float(k) + 0.5 - mitad.y) <= 1.0
+			if cerca_centro and not altos.is_empty():
+				## Tres torres por manzana y comercios en la planta baja.
+				for o: Vector3 in [Vector3(-14, 0, -9), Vector3(14, 0, -9), Vector3(0, 0, 10)]:
+					_torre_distrito(altos[rng.randi() % altos.size()], c + o, rng)
+			else:
+				_manzana(c, comercial, naves, toldos, rng)
 		_cartel(Vector3(origen.x - 6.0, 0, origen.y - 6.0), String(d["nombre"]), false)
 
 ## La casa grande del barrio: un complejo residencial de cuatro bloques de
