@@ -24,6 +24,18 @@ static func guion(m: Mundo) -> Array:
 		return []
 	var caps: Array = []
 	caps.append({"titulo": "%s · Temporada %d" % [c.nombre, m.anio], "texto": "Un año entero en %d minutos de película. Esto fue lo que pasó." % 1, "tipo": "escudo", "ref": c})
+	_capitulos_fichajes(m, c, caps)
+	_capitulo_goleador(c, caps)
+	## Los partidos: mayor goleada, peor derrota y racha.
+	var liga := m.liga_de(c)
+	_capitulos_partidos(liga, c, caps)
+	_capitulo_veredicto(liga, c, caps)
+	caps.append({"titulo": "Fin", "texto": "Dirigida por %s.\nProtagonistas: el plantel de %s y su gente." % [m.roles.nombre if m.roles != null else "el míster", c.nombre], "tipo": "escudo", "ref": c})
+	(caps[0] as Dictionary)["texto"] = "Un año entero en %d capítulos. Esto fue lo que pasó." % (caps.size() - 2)
+	return caps
+
+## Fichajes de la temporada: entran y salen (capítulo 1).
+static func _capitulos_fichajes(m: Mundo, c: Club, caps: Array) -> void:
 	## Fichajes.
 	var entran: Array = []
 	var salen: Array = []
@@ -43,6 +55,9 @@ static func guion(m: Mundo) -> Array:
 		caps.append({"titulo": "Capítulo 1 · El verano", "texto": t, "tipo": "escudo", "ref": c})
 	else:
 		caps.append({"titulo": "Capítulo 1 · El verano", "texto": "Ni una sola incorporación. El plantel que terminó el año pasado fue el que salió a pelear este.", "tipo": "escudo", "ref": c})
+
+## El goleador de la temporada (capítulo 2).
+static func _capitulo_goleador(c: Club, caps: Array) -> void:
 	## El goleador y el mejor.
 	var gol: Jugador = null
 	for j: Jugador in c.plantilla:
@@ -50,8 +65,9 @@ static func guion(m: Mundo) -> Array:
 			gol = j
 	if gol != null and gol.goles > 0:
 		caps.append({"titulo": "Capítulo 2 · El goleador", "texto": "%s marcó %d goles en %d partidos. Cada vez que el equipo necesitó a alguien, miró hacia él." % [gol.nombre, gol.goles, gol.partidos], "tipo": "jugador", "ref": gol})
-	## Los partidos: mayor goleada, peor derrota y racha.
-	var liga := m.liga_de(c)
+
+## La noche grande, la racha y la herida: los partidos de la liga (capítulos 3 a 5).
+static func _capitulos_partidos(liga: Liga, c: Club, caps: Array) -> void:
 	var mejor := {}
 	var peor := {}
 	var racha := 0
@@ -83,6 +99,9 @@ static func guion(m: Mundo) -> Array:
 		caps.append({"titulo": "Capítulo 4 · La racha", "texto": "%d victorias seguidas y %d partidos sin perder. Durante unas semanas, parecía imposible ganarles." % [racha_max, invicto_max], "tipo": "escudo", "ref": c})
 	if not peor.is_empty() and int(peor["dif"]) < 0:
 		caps.append({"titulo": "Capítulo 5 · La herida", "texto": "%d-%d contra %s. Hubo silencio en el vestuario y alguien lo pegó en la pizarra para no olvidarlo." % [peor["gf"], peor["gc"], (peor["rival"] as Club).nombre], "tipo": "rival", "ref": peor["rival"]})
+
+## El veredicto de la liga (capítulo final).
+static func _capitulo_veredicto(liga: Liga, c: Club, caps: Array) -> void:
 	## El veredicto.
 	if liga != null:
 		var t2 := liga.tabla()
@@ -107,9 +126,6 @@ static func guion(m: Mundo) -> Array:
 		else:
 			final = "%dº de %d, con %d puntos." % [puesto, t2.size(), pts]
 		caps.append({"titulo": "Capítulo final · El veredicto", "texto": final, "tipo": "escudo", "ref": c})
-	caps.append({"titulo": "Fin", "texto": "Dirigida por %s.\nProtagonistas: el plantel de %s y su gente." % [m.roles.nombre if m.roles != null else "el míster", c.nombre], "tipo": "escudo", "ref": c})
-	(caps[0] as Dictionary)["texto"] = "Un año entero en %d capítulos. Esto fue lo que pasó." % (caps.size() - 2)
-	return caps
 
 static func abrir(padre: Control, caps: Array, retrato: Callable = Callable()) -> DocumentalTemporada:
 	if caps.is_empty():

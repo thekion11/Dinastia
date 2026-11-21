@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2598 archivos (.gd, .cpp, .h), 371882 líneas, 1013 clases con nombre.
+Total: 2598 archivos (.gd, .cpp, .h), 371897 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -93,7 +93,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-472 archivos, 93798 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+472 archivos, 93813 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -149,7 +149,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 |---|---|---|---|---|
 | `Mundo` | `nucleo/mundo.gd` | 158 | 920 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
 | `Jugador` | `nucleo/jugador.gd` | 32 | 482 | jugador_p1.gd |
-| `Liga` | `nucleo/liga.gd` | 235 | 200 |  |
+| `Liga` | `nucleo/liga.gd` | 235 | 201 |  |
 | `Nombres` | `nucleo/nombres.gd` | 183 | 171 |  |
 | `Nativo` | `nucleo/nativo.gd` | 29 | 124 |  |
 | `Partida` | `nucleo/partida.gd` | 261 | 119 | partida_p2.gd ← partida_p1.gd |
