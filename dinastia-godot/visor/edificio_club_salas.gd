@@ -216,6 +216,13 @@ static func _luces_museo(nodo: Node3D, caja: Rect2, y0: float, cx: float) -> voi
 		o.light_color = Color(1, 0.9, 0.75)
 		nodo.add_child(o)
 
+## Un par de botas en la balda de abajo; devuelve la z de la siguiente (sacado de `utileria`).
+static func _botas(lote, m, xs: float, yb: float, z: float) -> float:
+	for s: float in [-1.0, 1.0]:
+		lote.caja(m["bota"], _en(Vector3(xs + s * 0.06, yb + 0.06, z), PI / 2.0), Vector3(0.1, 0.09, 0.27))
+	return z + 0.3
+
+
 static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color) -> Variant:
 	var lote = load(_RUTA_TUNEL_VESTUARIO_PIEZAS).Lote.new()
 	var m = load(_RUTA_TUNEL_VESTUARIO_PIEZAS).materiales(c1, c2)
@@ -239,9 +246,7 @@ static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color)
 			match b:
 				0:
 					## Abajo, los pares de botas.
-					for s: float in [-1.0, 1.0]:
-						lote.caja(m["bota"], _en(Vector3(xs + s * 0.06, yb + 0.06, z), PI / 2.0), Vector3(0.1, 0.09, 0.27))
-					z += 0.3
+					z = _botas(lote, m, xs, yb, z)
 				1:
 					## La ropa doblada en montones del color del club.
 					var alto := rng.randf_range(0.08, 0.22)
