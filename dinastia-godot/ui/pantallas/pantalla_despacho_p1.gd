@@ -391,6 +391,11 @@ func _pintar_despacho() -> void:
 		"agente": _pintar_exigencia_agente(p.mundo.cantera.exigencia)
 		"decision": p._pintar_decision(p.mundo.prensa.pendiente)
 		"solicitud": _pintar_solicitud_plantel()
+		_: _pintar_asuntos_mas(asuntos)
+
+## Los asuntos de la segunda mitad (mismo orden de antes).
+func _pintar_asuntos_mas(asuntos: Array) -> void:
+	match String((asuntos[p._aviso_abierto] as Dictionary)["id"]):
 		"junta": _pintar_junta()
 		"cantera": _pintar_asunto_cantera()
 		"personal": _pintar_asunto_personal()
