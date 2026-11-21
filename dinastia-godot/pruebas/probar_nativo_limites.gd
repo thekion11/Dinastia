@@ -88,7 +88,7 @@ static func _cercano(nat: Object, f: Array[String], n: Array) -> void:
 		for locales in [0, 1, 2, cuantos]:
 			var lista := _lista(cuantos, mini(locales, cuantos), rr, raiz)
 			motor.jugadores = lista
-			_cercano_puntos(nat, f, n, motor, lista, cuantos, locales)
+			_cercano_puntos(nat, f, n, {"motor": motor, "lista": lista}, cuantos, locales)
 			for lado in [1.0, -1.0, 0.0]:
 				for loc in [true, false]:
 					for con_vel in [true, false]:
@@ -122,8 +122,10 @@ static func _cercano(nat: Object, f: Array[String], n: Array) -> void:
 	raiz.free()
 
 ## Los puntos de prueba (el origen y las esquinas, incluidos NAN e INF) contra el motor de C++.
-static func _cercano_puntos(nat: Object, f: Array[String], n: Array, motor: MotorLeague,
-		lista: Array, cuantos: int, locales: int) -> void:
+static func _cercano_puntos(nat: Object, f: Array[String], n: Array, esc: Dictionary,
+		cuantos: int, locales: int) -> void:
+	var motor: MotorLeague = esc["motor"]
+	var lista: Array = esc["lista"]
 	for punto in [Vector2.ZERO, Vector2(1e7, 1e7), Vector2(NAN, 0), Vector2(INF, 0)]:
 		for loc in [true, false]:
 			var rg := motor._mas_cercano_uno_gd(punto, loc, [])
