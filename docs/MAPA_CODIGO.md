@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2615 archivos (.gd, .cpp, .h), 373583 líneas, 1013 clases con nombre.
+Total: 2616 archivos (.gd, .cpp, .h), 373643 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -93,7 +93,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-475 archivos, 93963 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+476 archivos, 94023 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -177,7 +177,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `l
 | `PlayerSpawner` | `visor/player_spawner.gd` | 226 | 95 | player_spawner_p1.gd |
 | `Puente3D` | `visor/puente3d.gd` | 223 | 91 |  |
 | `PersonajeDT` | `visor/personaje_dt.gd` | 354 | 84 | personaje_dt_p1.gd ← personaje_dt_p1_p1.gd |
-| `Mini3D` | `visor/mini3d.gd` | 257 | 62 |  |
+| `Mini3D` | `visor/mini3d.gd` | 257 | 63 |  |
 | `CiudadExpansion` | `visor/ciudad_expansion.gd` | 421 | 61 | ciudad_expansion_p8.gd ← ciudad_expansion_p7.gd ← ciudad_expansion_p6.gd ← ciudad_expansion_p5.gd ← ciudad_expansion_p4.gd ← ciudad_expansion_p3.gd ← ciudad_expansion_p2.gd ← ciudad_expansion_p1.gd |
 | `CameraRig` | `visor/camera_rig.gd` | 245 | 57 | camera_rig_p1.gd |
 | `VidaCiudad` | `visor/vida_ciudad.gd` | 432 | 52 | vida_ciudad_p1.gd |
