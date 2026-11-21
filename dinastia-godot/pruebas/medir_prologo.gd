@@ -171,7 +171,8 @@ func _llamadas() -> float:
 		await get_tree().process_frame
 	return Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 
-func _grupos_nombre(ciudad: Node, _base: Vector2) -> void:
+## Los diagnósticos por variable de entorno (MMHIST, ESCENAS, HIJOS, RUTAS), cada uno solo si está puesto.
+func _grupos_diagnosticos(ciudad: Node) -> void:
 	if OS.get_environment("MMHIST") != "":
 		_historia_mm(ciudad)
 	if OS.get_environment("ESCENAS") != "":
@@ -180,6 +181,10 @@ func _grupos_nombre(ciudad: Node, _base: Vector2) -> void:
 		_hijos(ciudad)
 	if OS.get_environment("RUTAS") != "":
 		_rutas(ciudad)
+
+
+## Agrupa las piezas visibles por el nombre de su nodo (o el de su primer padre con nombre útil).
+func _agrupar_por_nombre(ciudad: Node) -> Dictionary:
 	var por := {}
 	for n in ciudad.find_children("*", "GeometryInstance3D", true, false):
 		if n is Label3D or not (n as Node3D).visible:
@@ -195,6 +200,12 @@ func _grupos_nombre(ciudad: Node, _base: Vector2) -> void:
 		if not por.has(nm):
 			por[nm] = []
 		por[nm].append(n)
+	return por
+
+
+func _grupos_nombre(ciudad: Node, _base: Vector2) -> void:
+	_grupos_diagnosticos(ciudad)
+	var por := _agrupar_por_nombre(ciudad)
 	var ks := por.keys()
 	ks.sort_custom(func(a, b): return por[a].size() > por[b].size())
 	for k in ks.slice(0, 30):
@@ -310,53 +321,73 @@ func _texturas() -> void:
 	var total := 0.0
 	for n in _p.find_children("*", "GeometryInstance3D", true, false):
 		var g := n as GeometryInstance3D
-		var mats: Array = []
-		if g.material_override != null:
-			mats.append(g.material_override)
-		if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
-			for i in (g as MeshInstance3D).mesh.get_surface_count():
-				var m := (g as MeshInstance3D).get_active_material(i)
-				if m != null:
-					mats.append(m)
-		elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh != null and (g as MultiMeshInstance3D).multimesh.mesh != null:
-			var mm := (g as MultiMeshInstance3D).multimesh.mesh
-			for i in mm.get_surface_count():
-				if mm.surface_get_material(i) != null:
-					mats.append(mm.surface_get_material(i))
-		for mat in mats:
-			var lista: Array = []
-			if mat is BaseMaterial3D:
-				for k in [BaseMaterial3D.TEXTURE_ALBEDO, BaseMaterial3D.TEXTURE_NORMAL, BaseMaterial3D.TEXTURE_ROUGHNESS, BaseMaterial3D.TEXTURE_METALLIC, BaseMaterial3D.TEXTURE_EMISSION, BaseMaterial3D.TEXTURE_AMBIENT_OCCLUSION]:
-					var t := (mat as BaseMaterial3D).get_texture(k)
-					if t != null:
-						lista.append(t)
-			elif mat is ShaderMaterial:
-				for pr in (mat as ShaderMaterial).shader.get_shader_uniform_list():
-					var v: Variant = (mat as ShaderMaterial).get_shader_parameter(String(pr["name"]))
-					if v is Texture2D:
-						lista.append(v)
-			for t: Texture2D in lista:
-				if vistas.has(t):
-					continue
-				var mb := float(t.get_width() * t.get_height()) * 4.0 * 1.33 / 1048576.0
-				if t is CompressedTexture2D:
-					mb /= 4.0   ## ~1 byte/píxel comprimida en VRAM
-				vistas[t] = [mb, "%dx%d %s  (%s)" % [t.get_width(), t.get_height(), t.resource_path.get_file() if t.resource_path != "" else t.get_class(), String(g.get_path()).right(60)] + " mesh=%s mat=%s aabb=%s" % [(g as MeshInstance3D).mesh.resource_name if g is MeshInstance3D and (g as MeshInstance3D).mesh != null else "", String(mat.resource_name), str((g as MeshInstance3D).mesh.get_aabb().size.round()) if g is MeshInstance3D and (g as MeshInstance3D).mesh != null else ""]]
-				total += mb
+		for mat in _texturas_de_pieza(g):
+			for t: Texture2D in _texturas_de_material(mat):
+				total += _texturas_registrar(vistas, t, g, mat)
 	var l2 := vistas.values()
 	l2.sort_custom(func(a, b): return a[0] > b[0])
 	print("TEXTURAS únicas=%d total estimado=%.0f MB" % [vistas.size(), total])
 	if l2.size() > 0 and vistas.size() > 0:
-		for t in vistas:
-			if (vistas[t][0] as float) == (l2[0][0] as float):
-				var im := (t as Texture2D).get_image()
-				if im != null:
-					if im.is_compressed():
-						im.decompress()
-					im.resize(256, 280, Image.INTERPOLATE_BILINEAR)
-					im.save_png(OS.get_environment("TEXTURA_PNG") if OS.get_environment("TEXTURA_PNG") != "" else "/tmp/textura_grande.png")
+		_texturas_png_mayor(vistas, l2)
 	for e in l2.slice(0, 25):
 		print("TEXTURA %7.1f MB  %s" % [e[0], e[1]])
+
+
+## Los materiales de la pieza: el de sobrescritura, los de cada superficie y los de su malla múltiple.
+func _texturas_de_pieza(g: GeometryInstance3D) -> Array:
+	var mats: Array = []
+	if g.material_override != null:
+		mats.append(g.material_override)
+	if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
+		for i in (g as MeshInstance3D).mesh.get_surface_count():
+			var m := (g as MeshInstance3D).get_active_material(i)
+			if m != null:
+				mats.append(m)
+	elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh != null and (g as MultiMeshInstance3D).multimesh.mesh != null:
+		var mm := (g as MultiMeshInstance3D).multimesh.mesh
+		for i in mm.get_surface_count():
+			if mm.surface_get_material(i) != null:
+				mats.append(mm.surface_get_material(i))
+	return mats
+
+
+## Las texturas que usa un material: las estándar (albedo, normal, etc.) o las uniformes del shader.
+func _texturas_de_material(mat: Variant) -> Array:
+	var lista: Array = []
+	if mat is BaseMaterial3D:
+		for k in [BaseMaterial3D.TEXTURE_ALBEDO, BaseMaterial3D.TEXTURE_NORMAL, BaseMaterial3D.TEXTURE_ROUGHNESS, BaseMaterial3D.TEXTURE_METALLIC, BaseMaterial3D.TEXTURE_EMISSION, BaseMaterial3D.TEXTURE_AMBIENT_OCCLUSION]:
+			var t := (mat as BaseMaterial3D).get_texture(k)
+			if t != null:
+				lista.append(t)
+	elif mat is ShaderMaterial:
+		for pr in (mat as ShaderMaterial).shader.get_shader_uniform_list():
+			var v: Variant = (mat as ShaderMaterial).get_shader_parameter(String(pr["name"]))
+			if v is Texture2D:
+				lista.append(v)
+	return lista
+
+
+## Anota una textura la primera vez (su tamaño estimado y dónde se usa). Devuelve los MB que suma; 0 si ya estaba.
+func _texturas_registrar(vistas: Dictionary, t: Texture2D, g: GeometryInstance3D, mat: Variant) -> float:
+	if vistas.has(t):
+		return 0.0
+	var mb := float(t.get_width() * t.get_height()) * 4.0 * 1.33 / 1048576.0
+	if t is CompressedTexture2D:
+		mb /= 4.0   ## ~1 byte/píxel comprimida en VRAM
+	vistas[t] = [mb, "%dx%d %s  (%s)" % [t.get_width(), t.get_height(), t.resource_path.get_file() if t.resource_path != "" else t.get_class(), String(g.get_path()).right(60)] + " mesh=%s mat=%s aabb=%s" % [(g as MeshInstance3D).mesh.resource_name if g is MeshInstance3D and (g as MeshInstance3D).mesh != null else "", String(mat.resource_name), str((g as MeshInstance3D).mesh.get_aabb().size.round()) if g is MeshInstance3D and (g as MeshInstance3D).mesh != null else ""]]
+	return mb
+
+
+## Guarda como PNG (256x280) la textura más grande, para verla (TEXTURA_PNG o /tmp).
+func _texturas_png_mayor(vistas: Dictionary, l2: Array) -> void:
+	for t in vistas:
+		if (vistas[t][0] as float) == (l2[0][0] as float):
+			var im := (t as Texture2D).get_image()
+			if im != null:
+				if im.is_compressed():
+					im.decompress()
+				im.resize(256, 280, Image.INTERPOLATE_BILINEAR)
+				im.save_png(OS.get_environment("TEXTURA_PNG") if OS.get_environment("TEXTURA_PNG") != "" else "/tmp/textura_grande.png")
 
 ## Con DETALLE=1 (7-11): lo que se DIBUJA de verdad desde la cámara (en el campo de visión y dentro de su distancia de corte) por tipo de malla y distancia.
 func _dibujado(raiz: Node) -> void:
