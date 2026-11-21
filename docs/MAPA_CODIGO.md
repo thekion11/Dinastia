@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2614 archivos (.gd, .cpp, .h), 373572 líneas, 1013 clases con nombre.
+Total: 2614 archivos (.gd, .cpp, .h), 373591 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `l
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62846 líneas. Carpetas: `visor`.
+340 archivos, 62865 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -178,7 +178,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `l
 | `Puente3D` | `visor/puente3d.gd` | 223 | 91 |  |
 | `PersonajeDT` | `visor/personaje_dt.gd` | 354 | 84 | personaje_dt_p1.gd ← personaje_dt_p1_p1.gd |
 | `Mini3D` | `visor/mini3d.gd` | 257 | 62 |  |
-| `CiudadExpansion` | `visor/ciudad_expansion.gd` | 421 | 61 | ciudad_expansion_p8.gd ← ciudad_expansion_p7.gd ← ciudad_expansion_p6.gd ← ciudad_expansion_p5.gd ← ciudad_expansion_p4.gd ← ciudad_expansion_p3.gd ← ciudad_expansion_p2.gd ← ciudad_expansion_p1.gd |
+| `CiudadExpansion` | `visor/ciudad_expansion.gd` | 440 | 61 | ciudad_expansion_p8.gd ← ciudad_expansion_p7.gd ← ciudad_expansion_p6.gd ← ciudad_expansion_p5.gd ← ciudad_expansion_p4.gd ← ciudad_expansion_p3.gd ← ciudad_expansion_p2.gd ← ciudad_expansion_p1.gd |
 | `CameraRig` | `visor/camera_rig.gd` | 245 | 57 | camera_rig_p1.gd |
 | `VidaCiudad` | `visor/vida_ciudad.gd` | 432 | 52 | vida_ciudad_p1.gd |
 | `Texturas` | `visor/texturas.gd` | 36 | 51 | texturas_p1.gd ← texturas_p1_p1.gd |
