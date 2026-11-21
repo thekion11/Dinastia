@@ -123,13 +123,8 @@ static func _semialtura(x: float, z: float) -> float:
 static func _caida(x: float, z: float) -> float:
 	return -0.03 * pow(maxf(absf(x) - 4.5, 0.0), 2.0) - 0.03 * pow(maxf(z - 1.5, 0.0), 2.0)
 
-func _malla_cuerpo(mat: Material) -> MeshInstance3D:
-	## La silueta se saca EXACTA por rayos desde el centro (bisección en el borde)
-	## y la malla se reparte en anillos (más densos hacia el borde): así no hay
-	## bordes dentados como con una cuadrícula.
-	var n := 200
-	var anillos := 56
-	var centro := Vector2(0.0, 0.4)
+## El radio de la silueta en cada una de las `n` direcciones (bisección en el borde).
+func _radios_silueta(centro: Vector2, n: int) -> Array[float]:
 	var radios: Array[float] = []
 	for i in n:
 		var ang := TAU * float(i) / float(n)
@@ -146,6 +141,16 @@ func _malla_cuerpo(mat: Material) -> MeshInstance3D:
 			else:
 				hi = mid
 		radios.append(lo)
+	return radios
+
+func _malla_cuerpo(mat: Material) -> MeshInstance3D:
+	## La silueta se saca EXACTA por rayos desde el centro (bisección en el borde)
+	## y la malla se reparte en anillos (más densos hacia el borde): así no hay
+	## bordes dentados como con una cuadrícula.
+	var n := 200
+	var anillos := 56
+	var centro := Vector2(0.0, 0.4)
+	var radios: Array[float] = _radios_silueta(centro, n)
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	## Vértices: arriba (anillos 0..anillos) y abajo (anillos 0..anillos-1); el
