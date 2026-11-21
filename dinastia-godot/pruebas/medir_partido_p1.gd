@@ -293,21 +293,25 @@ func _de_grupo(nombre: String) -> Array:
 		if not g.is_visible_in_tree():
 			continue
 		var es_mm := g is MultiMeshInstance3D
-		var mn := ""
-		if es_mm and (g as MultiMeshInstance3D).multimesh != null and (g as MultiMeshInstance3D).multimesh.mesh != null:
-			mn = (g as MultiMeshInstance3D).multimesh.mesh.resource_name
-		match nombre:
-			"butacas": if String(g.name).begins_with("Butacas"): r.append(g)
-			"hinchas": if es_mm and not String(g.name).begins_with("Butacas") and (g as MultiMeshInstance3D).multimesh.instance_count > 200: r.append(g)
-			"jugadores": if g.get_parent() is Skeleton3D: r.append(g)
-			"pelo": if String(g.get_parent().name) == "PeloCapas" or String(g.name).begins_with("Pelo"): r.append(g)
-			"resto_multimesh": if es_mm: r.append(g)
-			"focos": if String(g.name).begins_with("stadium_light"): r.append(g)
-			"fundidos": if String(g.name).begins_with("Fundid"): r.append(g)
-			"mm_sin_nombre": if es_mm and String(g.name).begins_with("@MultiMesh"): r.append(g)
-			"ojos_cejas": if String(g.name).begins_with("Eyes") or String(g.name).begins_with("Eyebrow"): r.append(g)
-			"coches": if String(g.name) == "car" or String(g.name) == "whell": r.append(g)
+		if _en_grupo(nombre, g, es_mm):
+			r.append(g)
 	return r
+
+
+## ¿Pertenece la pieza `g` al grupo `nombre` (butacas, hinchas, jugadores…)?
+func _en_grupo(nombre: String, g: GeometryInstance3D, es_mm: bool) -> bool:
+	match nombre:
+		"butacas": return String(g.name).begins_with("Butacas")
+		"hinchas": return es_mm and not String(g.name).begins_with("Butacas") and (g as MultiMeshInstance3D).multimesh.instance_count > 200
+		"jugadores": return g.get_parent() is Skeleton3D
+		"pelo": return String(g.get_parent().name) == "PeloCapas" or String(g.name).begins_with("Pelo")
+		"resto_multimesh": return es_mm
+		"focos": return String(g.name).begins_with("stadium_light")
+		"fundidos": return String(g.name).begins_with("Fundid")
+		"mm_sin_nombre": return es_mm and String(g.name).begins_with("@MultiMesh")
+		"ojos_cejas": return String(g.name).begins_with("Eyes") or String(g.name).begins_with("Eyebrow")
+		"coches": return String(g.name) == "car" or String(g.name) == "whell"
+	return false
 
 func _partes() -> void:
 	var m := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME), Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
