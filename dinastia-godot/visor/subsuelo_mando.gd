@@ -162,51 +162,70 @@ static func usar(s, e, k: String) -> bool:
 	var m: RedesCiudad = s.redes.modelo
 	match k:
 		"sub_reparar":
-			var r := m.evento.reconectar(m)
-			var n := m.reparar_todo()
-			s.redes.refrescar()
-			if e.vida != null:
-				e.vida._sincronizar_luz()
-				e.vida.avisos_redes()
-			if r == "ok":
-				s._decir(e, Idiomas.t("Cuadro de mando"), Idiomas.t("Red reconectada: vuelve la luz en los sectores del apagón. Nadie sabrá quién fue."))
-			elif r == "falta_rearmar":
-				s._decir(e, Idiomas.t("Cuadro de mando"), Idiomas.t("El disyuntor general sigue saltado: rearma primero el cuadro general de la galería eléctrica."))
-			else:
-				s._decir(e, Idiomas.t("Cuadro de mando"), Idiomas.t("La cuadrilla sale a arreglar: %d averías reparadas.") % n if n > 0 else Idiomas.t("Todo en orden: no hay averías."))
+			_orden_reparar(s, e, m)
 		"sub_disyuntor":
-			var r2 := m.evento.rearmar()
-			if r2 == "ok":
-				s._decir(e, Idiomas.t("Cuadro general"), Idiomas.t("Levantas el disyuntor con las dos manos. Chispea, pero aguanta. Ahora reconecta la red desde la sala de control."))
-			elif r2 == "ya":
-				s._decir(e, Idiomas.t("Cuadro general"), Idiomas.t("El disyuntor ya está rearmado. Falta reconectar la red en la sala de control."))
-			else:
-				s._decir(e, Idiomas.t("Cuadro general"), Idiomas.t("El cuadro general está en orden. Mejor no tocar nada."))
+			_orden_disyuntor(s, e, m)
 		"sub_cortar":
-			if m.esta_averiado("luz", s.sector_entrada):
-				m.reparar("luz", s.sector_entrada)
-				s._decir(e, Idiomas.t("Palanca roja"), Idiomas.t("Vuelves a subir la palanca: el sector recupera la luz."))
-			else:
-				m.averiar("luz", s.sector_entrada)
-				s._decir(e, Idiomas.t("Palanca roja"), Idiomas.t("¡Clac! El sector de arriba se queda sin luz. Los vecinos no sabrán por qué."))
-			m.recalcular()
-			s.redes.refrescar()
-			if e.vida != null:
-				e.vida._sincronizar_luz()
+			_orden_cortar(s, e, m)
 		"sub_secreto":
-			s._decir(e, Idiomas.t("Cuarto olvidado"), Idiomas.t("Una tele vieja con el escudo del club y una nota: «Los de arriba juegan; los de abajo hacemos que enciendan las luces». Nadie más lo sabe.") if not s._secreto_visto else Idiomas.t("Sigue ahí, con la tele encendida. Es vuestro secreto."))
-			s._secreto_visto = true
+			_orden_secreto(s, e)
 		_:
 			if not k.begins_with("sub_edif_"):
 				return false
-			var id := int(k.get_slice("_", 2))
-			if id < 0 or id >= m.edificios.size():
+			if not _orden_edificio(s, e, k, m):
 				return false
-			var ed: Dictionary = m.edificios[id]
-			ed["aislado"] = not bool(ed["aislado"])
-			m.anotar("%s %s" % [String(ed["nombre"]), "AISLADO de la red" if bool(ed["aislado"]) else "reconectado"])
-			m.recalcular()
-			s.redes.refrescar()
-			s._decir(e, Idiomas.t("Acometida"), Idiomas.t("Cortas la acometida: el edificio queda aislado de las redes.") if bool(ed["aislado"]) else Idiomas.t("Restableces la acometida: el edificio vuelve a la red."))
 	actualizar(s)
+	return true
+
+## Las órdenes de reparar (cuadrilla y red).
+static func _orden_reparar(s, e, m: RedesCiudad) -> void:
+	var r := m.evento.reconectar(m)
+	var n := m.reparar_todo()
+	s.redes.refrescar()
+	if e.vida != null:
+		e.vida._sincronizar_luz()
+		e.vida.avisos_redes()
+	if r == "ok":
+		s._decir(e, Idiomas.t("Cuadro de mando"), Idiomas.t("Red reconectada: vuelve la luz en los sectores del apagón. Nadie sabrá quién fue."))
+	elif r == "falta_rearmar":
+		s._decir(e, Idiomas.t("Cuadro de mando"), Idiomas.t("El disyuntor general sigue saltado: rearma primero el cuadro general de la galería eléctrica."))
+	else:
+		s._decir(e, Idiomas.t("Cuadro de mando"), Idiomas.t("La cuadrilla sale a arreglar: %d averías reparadas.") % n if n > 0 else Idiomas.t("Todo en orden: no hay averías."))
+
+static func _orden_disyuntor(s, e, m: RedesCiudad) -> void:
+	var r2 := m.evento.rearmar()
+	if r2 == "ok":
+		s._decir(e, Idiomas.t("Cuadro general"), Idiomas.t("Levantas el disyuntor con las dos manos. Chispea, pero aguanta. Ahora reconecta la red desde la sala de control."))
+	elif r2 == "ya":
+		s._decir(e, Idiomas.t("Cuadro general"), Idiomas.t("El disyuntor ya está rearmado. Falta reconectar la red en la sala de control."))
+	else:
+		s._decir(e, Idiomas.t("Cuadro general"), Idiomas.t("El cuadro general está en orden. Mejor no tocar nada."))
+
+static func _orden_cortar(s, e, m: RedesCiudad) -> void:
+	if m.esta_averiado("luz", s.sector_entrada):
+		m.reparar("luz", s.sector_entrada)
+		s._decir(e, Idiomas.t("Palanca roja"), Idiomas.t("Vuelves a subir la palanca: el sector recupera la luz."))
+	else:
+		m.averiar("luz", s.sector_entrada)
+		s._decir(e, Idiomas.t("Palanca roja"), Idiomas.t("¡Clac! El sector de arriba se queda sin luz. Los vecinos no sabrán por qué."))
+	m.recalcular()
+	s.redes.refrescar()
+	if e.vida != null:
+		e.vida._sincronizar_luz()
+
+static func _orden_secreto(s, e) -> void:
+	s._decir(e, Idiomas.t("Cuarto olvidado"), Idiomas.t("Una tele vieja con el escudo del club y una nota: «Los de arriba juegan; los de abajo hacemos que enciendan las luces». Nadie más lo sabe.") if not s._secreto_visto else Idiomas.t("Sigue ahí, con la tele encendida. Es vuestro secreto."))
+	s._secreto_visto = true
+
+## Acometida de un edificio (`k` = "sub_edif_<id>"). Falso si el id no existe.
+static func _orden_edificio(s, e, k: String, m: RedesCiudad) -> bool:
+	var id := int(k.get_slice("_", 2))
+	if id < 0 or id >= m.edificios.size():
+		return false
+	var ed: Dictionary = m.edificios[id]
+	ed["aislado"] = not bool(ed["aislado"])
+	m.anotar("%s %s" % [String(ed["nombre"]), "AISLADO de la red" if bool(ed["aislado"]) else "reconectado"])
+	m.recalcular()
+	s.redes.refrescar()
+	s._decir(e, Idiomas.t("Acometida"), Idiomas.t("Cortas la acometida: el edificio queda aislado de las redes.") if bool(ed["aislado"]) else Idiomas.t("Restableces la acometida: el edificio vuelve a la red."))
 	return true
