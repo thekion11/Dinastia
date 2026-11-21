@@ -69,7 +69,7 @@ Para una función pura que devuelva texto o números, **compara con la versión 
 
 ## Flujo de trabajo
 
-* Cada sesión trabaja en SU rama (la que le asigna el sistema) y **se une a `main` ella misma** tras verificar (orden 44): `git fetch origin main && git merge origin/main`, vuelve a pasar banco + `compilar_todo`, `git push origin main` y `git push origin <tu rama>`. Sin PR, sin force push.
+* **(21-11, regla vigente)** Cada sesión empuja SOLO a su rama `refactor-forma-sesion-<letra>-<carpeta>` (`git push -u origin <rama>`) cada 3-5 funciones verificadas, y avisa a la líder con `send_message` a `@parent`; **la líder verifica (compilar_todo, banco, probar_nativo, igualdad_motor, líneas) y fusiona a `main`**. El control de permisos deniega a las sesiones hijas empujar a `main`, y lo que no está en una rama remota se pierde si el contenedor se reclama. Sin PR, sin force push. Si `main` avanza: `git fetch origin main && git merge origin/main` en tu rama y repite banco + `compilar_todo`. Sin identificadores de modelo en los mensajes de commit. El límite de uso de 5 h es de TODA la organización: lecturas pequeñas y no repetir el banco entero tras cada cambio mínimo.
 * Commit y push cada ~10 funciones (bloques pequeños). Mensaje: qué funciones, que el comportamiento no cambia, y las comprobaciones que pasaron.
 * Cada sesión toca **solo los archivos de su bloque** (para no pisarse): si una firma cambia, corrige las llamadas aunque estén en otro bloque, con el cambio mínimo, y mira `git status` antes del merge.
 * Si `main` avanza y hay conflicto: resuélvelo conservando lo de la otra sesión; nunca reescribas historia.

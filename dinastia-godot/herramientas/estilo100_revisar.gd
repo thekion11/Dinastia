@@ -26,10 +26,7 @@ func _dist_segmento(p: Vector3, a: Vector3, b: Vector3) -> float:
 	return p.distance_to(a + ab * t)
 
 func _initialize() -> void:
-	var nom := OS.get_environment("ESTILO100_NOMBRE")
-	if nom != "":
-		lib = "res://terceros/estilo100/biblioteca/%s.res" % nom
-		catalogo = "res://terceros/estilo100/catalogos/animaciones_catalogo_%s.json" % nom
+	_elegir_archivos()
 	var d := FutbolistaQ.crear(1.8, "male")
 	root.add_child(d["nodo"])
 	await process_frame
@@ -46,68 +43,22 @@ func _initialize() -> void:
 	var filas: Array[String] = []
 	for ficha: Dictionary in cat:
 		var nombre: String = ficha["nombre"]
-		var anim: Animation = ap.get_animation("x100/" + nombre)
 		var n := int(ficha["cuadros"])
 		var tipo := String(ficha["tipo"])
 		var dt := 1.0 / float(ficha["fps"])
-		var r := {"mano": 9.0, "codo": 9.0}
-		var bi: Array = []   # [pie_izq(pos), pie_der(pos)] por cuadro (marco del modelo, sin mover el cuerpo)
-		var min_y := [9.0, 9.0, 9.0, 9.0]
-		for k in n + 1:
-			ap.play("x100/" + nombre)
-			ap.seek(float(k) * dt, true)
-			ap.advance(0.0)
-			var pi := _pos("pelvis")
-			var cu := _pos("neck_01")
-			var pl := _pos("ball_l")
-			var pr := _pos("ball_r")
-			var tl := _pos("foot_l")
-			var tr := _pos("foot_r")
-			bi.append([pl, pr, tl, tr])
-			for q in 4:
-				min_y[q] = minf(min_y[q], [pl, pr, tl, tr][q].y)
-			for lado in ["l", "r"]:
-				r["mano"] = minf(r["mano"], _dist_segmento(_pos("hand_" + lado), pi, cu))
-				r["codo"] = minf(r["codo"], _dist_segmento(_pos("lowerarm_" + lado), pi, cu))
-		ap.stop()
-		## Pies: en apoyo (ball a < 4 cm sobre su mínimo) la velocidad del pie respecto al cuerpo es la que hay que cancelar avanzando.
-		var dir_mov: Vector2 = Vector2.ZERO
-		var ang := deg_to_rad(float(ficha["angulo_mov_grados"]))
-		if tipo != "reposo":
-			dir_mov = Vector2(sin(ang), cos(ang))   # (izquierda, adelante)
-		var rel := 0.0
-		var m := 0
-		for lado in 4:
-			for k in n:
-				var a: Vector3 = bi[k][lado]
-				var b: Vector3 = bi[k + 1][lado]
-				if a.y - min_y[lado] < UMBRAL_APOYO and b.y - min_y[lado] < UMBRAL_APOYO:
-					var v := Vector2(b.x - a.x, b.z - a.z) / dt   # el pie se mueve «hacia atrás» respecto al cuerpo cuando avanza
-					rel += -v.dot(dir_mov) if tipo != "reposo" else 0.0
-					m += 1
-		var v_pies := (rel / float(m)) if m > 0 else 0.0
-		var resid := 0.0
-		if tipo != "reposo" and m > 0:
-			for lado in 4:
-				for k in n:
-					var a2: Vector3 = bi[k][lado]
-					var b2: Vector3 = bi[k + 1][lado]
-					if a2.y - min_y[lado] < UMBRAL_APOYO and b2.y - min_y[lado] < UMBRAL_APOYO:
-						var vv := Vector2(b2.x - a2.x, b2.z - a2.z) / dt + dir_mov * v_pies
-						resid += vv.length()
-			resid /= float(m)
+		var medido := _medir_clip(nombre, n, dt)
+		var r: Dictionary = medido["r"]
+		var dir_mov := _direccion_movimiento(ficha, tipo)
+		var pies := _velocidades_pies(medido["bi"], medido["min_y"], n, dt, tipo, dir_mov)
+		var v_pies: float = pies["v_pies"]
+		var resid: float = pies["resid"]
+		var m: int = pies["m"]
 		ficha["velocidad_pies_ms"] = snappedf(v_pies, 0.01)
 		ficha["patinaje_ms"] = snappedf(resid, 0.01)
 		ficha["min_dist_mano_torso_m"] = snappedf(r["mano"], 0.001)
 		ficha["min_dist_codo_torso_m"] = snappedf(r["codo"], 0.001)
 		ficha["revision"] = "ok"
-		var motivos: Array[String] = []
-		if r["mano"] < MIN_MANO:
-			motivos.append("mano en el cuerpo %.3f" % r["mano"])
-		if r["codo"] < MIN_CODO:
-			motivos.append("codo en el cuerpo %.3f" % r["codo"])
-		if tipo != "reposo" and resid > maxf(MAX_PATINAJE_MIN, v_pies):
-			motivos.append("patina %.2f m/s" % resid)
+		var motivos := _motivos(r, tipo, resid, v_pies)
 		ficha["velocidad_cadera_ms"] = ficha["velocidad_ms"]
 		if tipo != "reposo" and m > 0 and v_pies > 0.2:
 			ficha["velocidad_ms"] = ficha["velocidad_pies_ms"]   # la velocidad que no patina (la de los pies)
@@ -125,3 +76,85 @@ func _initialize() -> void:
 	f.close()
 	print("revisados ", revisados, "  con aviso ", malos)
 	quit(0)
+
+## Con ESTILO100_NOMBRE=otro se usan otra biblioteca y otro catálogo.
+func _elegir_archivos() -> void:
+	var nom := OS.get_environment("ESTILO100_NOMBRE")
+	if nom != "":
+		lib = "res://terceros/estilo100/biblioteca/%s.res" % nom
+		catalogo = "res://terceros/estilo100/catalogos/animaciones_catalogo_%s.json" % nom
+
+## Reproduce el clip cuadro a cuadro: posiciones de los pies (`bi`), su altura mínima (`min_y`) y las distancias de brazo al torso (`r`).
+func _medir_clip(nombre: String, n: int, dt: float) -> Dictionary:
+	var r := {"mano": 9.0, "codo": 9.0}
+	var bi: Array = []   # [pie_izq(pos), pie_der(pos)] por cuadro (marco del modelo, sin mover el cuerpo)
+	var min_y := [9.0, 9.0, 9.0, 9.0]
+	for k in n + 1:
+		ap.play("x100/" + nombre)
+		ap.seek(float(k) * dt, true)
+		ap.advance(0.0)
+		var pi := _pos("pelvis")
+		var cu := _pos("neck_01")
+		var pl := _pos("ball_l")
+		var pr := _pos("ball_r")
+		var tl := _pos("foot_l")
+		var tr := _pos("foot_r")
+		bi.append([pl, pr, tl, tr])
+		for q in 4:
+			min_y[q] = minf(min_y[q], [pl, pr, tl, tr][q].y)
+		for lado in ["l", "r"]:
+			r["mano"] = minf(r["mano"], _dist_segmento(_pos("hand_" + lado), pi, cu))
+			r["codo"] = minf(r["codo"], _dist_segmento(_pos("lowerarm_" + lado), pi, cu))
+	ap.stop()
+	return {"bi": bi, "min_y": min_y, "r": r}
+
+## Dirección de avance (izquierda, adelante) según el ángulo del clip; vacía en reposo.
+func _direccion_movimiento(ficha: Dictionary, tipo: String) -> Vector2:
+	var dir_mov: Vector2 = Vector2.ZERO
+	var ang := deg_to_rad(float(ficha["angulo_mov_grados"]))
+	if tipo != "reposo":
+		dir_mov = Vector2(sin(ang), cos(ang))   # (izquierda, adelante)
+	return dir_mov
+
+## Pies: en apoyo (ball a < 4 cm sobre su mínimo) la velocidad del pie respecto al cuerpo es la que hay que cancelar avanzando.
+## Devuelve la velocidad de los pies (`v_pies`), el patinaje residual (`resid`) y cuántos cuadros de apoyo hubo (`m`).
+func _velocidades_pies(bi: Array, min_y: Array, n: int, dt: float, tipo: String, dir_mov: Vector2) -> Dictionary:
+	var rel := 0.0
+	var m := 0
+	for lado in 4:
+		for k in n:
+			var a: Vector3 = bi[k][lado]
+			var b: Vector3 = bi[k + 1][lado]
+			if a.y - min_y[lado] < UMBRAL_APOYO and b.y - min_y[lado] < UMBRAL_APOYO:
+				var v := Vector2(b.x - a.x, b.z - a.z) / dt   # el pie se mueve «hacia atrás» respecto al cuerpo cuando avanza
+				rel += -v.dot(dir_mov) if tipo != "reposo" else 0.0
+				m += 1
+	var v_pies := (rel / float(m)) if m > 0 else 0.0
+	var resid := 0.0
+	if tipo != "reposo" and m > 0:
+		resid = _patinaje_residual(bi, min_y, dt, dir_mov, v_pies, m)
+	return {"v_pies": v_pies, "resid": resid, "m": m}
+
+## Velocidad MUNDIAL de los pies en apoyo tras cancelar el avance del cuerpo (`dir_mov * v_pies`), media por apoyo.
+func _patinaje_residual(bi: Array, min_y: Array, dt: float, dir_mov: Vector2, v_pies: float, m: int) -> float:
+	var n := bi.size() - 1   # bi tiene n + 1 cuadros (ver _medir_clip)
+	var resid := 0.0
+	for lado in 4:
+		for k in n:
+			var a2: Vector3 = bi[k][lado]
+			var b2: Vector3 = bi[k + 1][lado]
+			if a2.y - min_y[lado] < UMBRAL_APOYO and b2.y - min_y[lado] < UMBRAL_APOYO:
+				var vv := Vector2(b2.x - a2.x, b2.z - a2.z) / dt + dir_mov * v_pies
+				resid += vv.length()
+	return resid / float(m)
+
+## Motivos del aviso: brazo o codo pegados al cuerpo, o pie que patina.
+func _motivos(r: Dictionary, tipo: String, resid: float, v_pies: float) -> Array[String]:
+	var motivos: Array[String] = []
+	if r["mano"] < MIN_MANO:
+		motivos.append("mano en el cuerpo %.3f" % r["mano"])
+	if r["codo"] < MIN_CODO:
+		motivos.append("codo en el cuerpo %.3f" % r["codo"])
+	if tipo != "reposo" and resid > maxf(MAX_PATINAJE_MIN, v_pies):
+		motivos.append("patina %.2f m/s" % resid)
+	return motivos

@@ -26,7 +26,6 @@ func _ready() -> void:
 	asp["gorra"] = false
 	asp["pelo"] = "corto"
 	asp["barba"] = false
-	var nodos: Array = []
 	var nombres: Array[String] = []
 	## Una primera pasada para saber qué animaciones hay.
 	var d0 := PersonajeDT.crear(raiz, asp, Color(0.8, 0.1, 0.1), Color.WHITE)

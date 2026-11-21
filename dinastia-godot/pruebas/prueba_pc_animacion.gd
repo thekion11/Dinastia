@@ -111,7 +111,7 @@ func _planos(exp: Node3D, cam: Camera3D) -> void:
 	var filtro := PrologoPlanos._crear_filtro()
 	add_child(filtro)
 	await get_tree().process_frame
-	_comprobar(filtro.material is ShaderMaterial and (filtro.material as ShaderMaterial).shader.code.contains("fuerza") and float((filtro.material as ShaderMaterial).get_shader_parameter("fuerza")) == 0.0 \
+	_comprobar(filtro.material is ShaderMaterial and (filtro.material as ShaderMaterial).shader.code.contains("fuerza") and is_zero_approx(float((filtro.material as ShaderMaterial).get_shader_parameter("fuerza"))) \
 		and filtro.mouse_filter == Control.MOUSE_FILTER_IGNORE, "el filtro de realismo del plano compila, empieza apagado y no se come el ratón")
 	filtro.queue_free()
 	var ojos := cam.global_transform

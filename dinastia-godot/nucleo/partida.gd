@@ -140,10 +140,10 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 	## Las obras van DESPUES de fijar el aforo base, y hay que volver a aplicarlas:
 	## el aforo del club que viene del guardado ya trae las tribunas construidas,
 	## asi que si se aplicara sobre el, cada carga lo multiplicaria otra vez.
-	var do_: Dictionary = datos.get("obras", {})
-	if not do_.is_empty():
-		m.obras.desde_dic(do_)
-		if int(do_.get("aforo_base", 0)) <= 0:
+	var obras_dic: Dictionary = datos.get("obras", {})
+	if not obras_dic.is_empty():
+		m.obras.desde_dic(obras_dic)
+		if int(obras_dic.get("aforo_base", 0)) <= 0:
 			## Guardado viejo, sin aforo base: se deduce quitando las tribunas.
 			m.obras.fijar_aforo_base(int(round(float(mio.estadio_aforo) / (1.0 + 0.15 * float(m.obras.nivel("trib"))))))
 		m.obras.aplicar(mio)

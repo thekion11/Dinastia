@@ -12,7 +12,8 @@ func _mundo_citas(semilla: int, pais: String, quien := 3) -> Mundo:
 
 func _probar_citas_nacen_y_caducan() -> void:
 	_titulo("CITAS: NACEN DE LO QUE PASA, CADUCAN EL DOMINGO Y TIENEN TOPE")
-	_comprobar(Citas.nombre_ficticio("a|b") == Citas.nombre_ficticio("a|b") and Citas.nombre_ficticio("a|b") != Citas.nombre_ficticio("x|y"), "nombre_ficticio(): determinista por semilla y distinto entre semillas")
+	var rep1_a = Citas.nombre_ficticio("a|b"); var rep1_b = Citas.nombre_ficticio("a|b")
+	_comprobar(rep1_a == rep1_b and rep1_a != Citas.nombre_ficticio("x|y"), "nombre_ficticio(): determinista por semilla y distinto entre semillas")
 	var m := _mundo_citas(9001, "ESP")
 	var ci := m.citas
 	var c := m.mi_club()

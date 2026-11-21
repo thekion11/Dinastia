@@ -1,4 +1,4 @@
-extends "res://pruebas/banco/varios_p11_p1.gd"
+extends "res://pruebas/banco/varios_p11_p2.gd"
 ## (Parte 2 de 2 de `varios_p11.gd`.)
 
 ## FORMACIONES PROPIAS (10-11, pedido del dueño, «Editar posición» del PES 2020): el puesto cambia solo según la zona, el portero no

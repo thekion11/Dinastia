@@ -45,4 +45,21 @@
 	int64_t nuc_hash_txt(const String &s) const;
 	bool nuc_es_letra_nombre(const String &c) const;
 	int64_t nuc_prefijo_comun(const String &a, const String &b) const;
+	// 3.ª tanda (puras_nucleo3.cpp: Array, Dictionary, Vector2/3)
+	static void _bind_puras3();
+	double nuc_xg(const Vector2 &desde) const;
+	Array nuc_unir_arrays(const Array &x, const Array &y) const;
+	Array nuc_vuelta_pares(const Array &r) const;
+	String nuc_escapar_re(const String &t) const;
+	int64_t nuc_maximo_de(const Dictionary &registro) const;
+	bool nuc_es_clara(double dist_arco, double lateral, double espacio, int64_t nivel_arg, const PackedFloat64Array &k) const;
+	String nuc_recomendar(const Dictionary &lect, double gol_tras_pase, double gol_tras_conducir) const;
+	int64_t nuc_relacion_politica(const Dictionary &g) const;
+	bool nuc_antes_recorrido(const String &a, const String &c) const;
+	int64_t nuc_sector_de(const Vector3 &pos, double periferia, double rio_x, double rio_medio, double nuc_z0, double nuc_x1, double nuc_z1) const;
+	int64_t nuc_sector_del_codigo(const String &cod) const;
+	Dictionary nuc_tiempo_de(const String &clima, int64_t hora) const;
+	int64_t nuc_total_grupos(const Dictionary &por_grupo) const;
+	Array nuc_cruces(const Array &g, int64_t f) const;
+	String nuc_motivo_satisfaccion(const Dictionary &sat, bool baja) const;
 	// --- fin funciones puras ---

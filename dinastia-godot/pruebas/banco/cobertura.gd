@@ -87,18 +87,18 @@ func _probar_entrenamiento_semana_y_planes() -> void:
 	## Freno de la temporada.
 	u.partidos = 0
 	e._subidas[u.id] = 0
-	_comprobar(e.freno_temporada(u) == 1.0, "sin subidas, sin freno")
+	_comprobar(is_equal_approx(e.freno_temporada(u), 1.0), "sin subidas, sin freno")
 	e._subidas[u.id] = 4
 	_comprobar(absf(e.freno_temporada(u) - 0.5) < 0.0001, "con 4 subidas sin minutos: 0,5")
 	e._subidas[u.id] = 5
 	_comprobar(absf(e.freno_temporada(u) - 0.3) < 0.0001, "5 subidas: 0,3")
 	u.partidos = 12
 	e._subidas[u.id] = 5
-	_comprobar(e.freno_temporada(u) == 1.0, "con 12 partidos el umbral sube a 6")
+	_comprobar(is_equal_approx(e.freno_temporada(u), 1.0), "con 12 partidos el umbral sube a 6")
 	e._subidas[u.id] = Entrenamiento.TOPE_TEMPORADA
-	_comprobar(e.freno_temporada(u) == 0.0, "tope duro de la temporada: 0")
+	_comprobar(is_zero_approx(e.freno_temporada(u)), "tope duro de la temporada: 0")
 	e.reiniciar_subidas()
-	_comprobar(e.freno_temporada(u) == 1.0, "reiniciar_subidas() levanta el freno")
+	_comprobar(is_equal_approx(e.freno_temporada(u), 1.0), "reiniciar_subidas() levanta el freno")
 	## Plan individual completado: la habilidad se aprende.
 	var otro: Jugador = c.plantilla.filter(func(x: Jugador) -> bool: return x != u and not x.es_portero())[0]
 	_comprobar(e.asignar_individual(otro, "penales") == "" and e.plan_de(otro)["clave"] == "penales", "asignar_individual(): queda el plan")
@@ -195,13 +195,13 @@ func _probar_medicion_calculos() -> void:
 	Medicion.largo = largo0
 	## Columnas: [cpu, llamadas, triángulos, objetos, memoria, vídeo]
 	md._muestras = [[1.0, 100, 1000, 10, 50.0, 20.0], [3.0, 300, 9000, 30, 70.0, 40.0], [2.0, 200, 2000, 20, 60.0, 30.0], [6.0, 600, 3000, 60, 80.0, 50.0]]
-	_comprobar(md._media_col(0) == 3.0 and md._media_col(4) == 65.0, "_media_col(): media de la columna")
-	_comprobar(md._max_col(2) == 9000.0 and md._max_col(1) == 600.0, "_max_col(): el máximo")
-	_comprobar(md._mediana_col(2) == 2000.0, "_mediana_col(): la mediana BAJA con número par de muestras (1000, 2000, 3000, 9000 → 2000)")
+	_comprobar(is_equal_approx(md._media_col(0), 3.0) and is_equal_approx(md._media_col(4), 65.0), "_media_col(): media de la columna")
+	_comprobar(is_equal_approx(md._max_col(2), 9000.0) and is_equal_approx(md._max_col(1), 600.0), "_max_col(): el máximo")
+	_comprobar(is_equal_approx(md._mediana_col(2), 2000.0), "_mediana_col(): la mediana BAJA con número par de muestras (1000, 2000, 3000, 9000 → 2000)")
 	md._muestras = [[0, 7, 0, 0, 0, 0], [0, 5, 0, 0, 0, 0], [0, 9, 0, 0, 0, 0]]
-	_comprobar(md._mediana_col(1) == 7.0, "_mediana_col(): impar, la del medio (7) aunque lleguen desordenadas")
+	_comprobar(is_equal_approx(md._mediana_col(1), 7.0), "_mediana_col(): impar, la del medio (7) aunque lleguen desordenadas")
 	md._muestras = []
-	_comprobar(md._mediana_col(1) == 0.0 and md._media_col(1) == 0.0 and md._max_col(1) == 0.0, "sin muestras todo da 0 (sin dividir por cero)")
+	_comprobar(is_zero_approx(md._mediana_col(1)) and is_zero_approx(md._media_col(1)) and is_zero_approx(md._max_col(1)), "sin muestras todo da 0 (sin dividir por cero)")
 	_comprobar(absf(md._fps_de([10.0, 10.0]) - 100.0) < 0.001 and absf(md._fps_de([20.0, 10.0, 30.0]) - 50.0) < 0.001, "_fps_de(): 1000 / ms medio")
 	_comprobar(md._fps_de([]) > 0.0, "_fps_de([]) no divide por cero")
 	## Duración por parte.
@@ -223,8 +223,8 @@ func _probar_medicion_calculos() -> void:
 	md._cerrar_parte()
 	var d: Dictionary = (md._json["partes"] as Array)[0]
 	_comprobar(String(d["parte"]) == "prueba" and int(d["fotogramas"]) == 5 and absf(float(d["fps_medio"]) - 83.3) < 0.2, "fps_medio sin los 3 primeros fotogramas: quedan 5, media de 12 ms = 83,3 FPS (%s)" % str(d["fps_medio"]))
-	_comprobar(float(d["peor_ms"]) == 20.0 and float(d["fps_min"]) == 50.0 and float(d["fps_p1"]) == 50.0, "peor fotograma 20 ms = 50 FPS")
-	_comprobar(int(d["llamadas"]) == 200 and int(d["triangulos"]) == 2000 and int(d["triangulos_max"]) == 3000 and int(d["muestras"]) == 3 and float(d["cpu_ms"]) == 3.33, "la mediana para llamadas y triángulos, el máximo aparte y la media para la CPU")
+	_comprobar(is_equal_approx(float(d["peor_ms"]), 20.0) and is_equal_approx(float(d["fps_min"]), 50.0) and is_equal_approx(float(d["fps_p1"]), 50.0), "peor fotograma 20 ms = 50 FPS")
+	_comprobar(int(d["llamadas"]) == 200 and int(d["triangulos"]) == 2000 and int(d["triangulos_max"]) == 3000 and int(d["muestras"]) == 3 and is_equal_approx(float(d["cpu_ms"]), 3.33), "la mediana para llamadas y triángulos, el máximo aparte y la media para la CPU")
 	_comprobar(md._muestras.is_empty() and not d.has("caida_pct"), "tras cerrar se vacían las muestras; sin modo largo no hay calor")
 	md._frames = PackedFloat32Array([1.0, 1.0, 1.0])
 	md._cerrar_parte()
@@ -241,13 +241,13 @@ func _probar_medicion_calculos() -> void:
 	md._muestras = [[1.0, 1, 1, 1, 1.0, 1.0]]
 	md._cerrar_parte()
 	var dl: Dictionary = (md._json["partes"] as Array)[1]
-	_comprobar(dl.has("caida_pct") and float(dl["fps_primer_tercio"]) == 100.0 and float(dl["fps_ultimo_tercio"]) == 50.0 and float(dl["caida_pct"]) == 50.0, "modo largo: de 100 a 50 FPS = caída del 50 %")
+	_comprobar(dl.has("caida_pct") and is_equal_approx(float(dl["fps_primer_tercio"]), 100.0) and is_equal_approx(float(dl["fps_ultimo_tercio"]), 50.0) and is_equal_approx(float(dl["caida_pct"]), 50.0), "modo largo: de 100 a 50 FPS = caída del 50 %")
 	md.largo = false
 	## Resumen del MSAA.
 	md._json["partes"] = [{"parte": "estadio MÍNIMA al 50 % con MSAA", "fps_medio": 40.0}, {"parte": "estadio MÍNIMA al 50 % sin MSAA", "fps_medio": 50.0},
 		{"parte": "estadio MÍNIMA al 70 % con MSAA", "fps_medio": 30.0}, {"parte": "estadio MÍNIMA al 70 % sin MSAA", "fps_medio": 27.0}, {"parte": "menú", "fps_medio": 99.0}]
 	md._resumen_msaa()
-	_comprobar(md._json.has("msaa_50") and md._json["msaa_50"]["gana_pct"] == 25.0 and md._json["msaa_70"]["gana_pct"] == -10.0 and not md._json.has("msaa_menú"), "MSAA: apagarlo gana 25 % a la escala 50 y pierde 10 % a la 70")
+	_comprobar(md._json.has("msaa_50") and is_equal_approx(md._json["msaa_50"]["gana_pct"], 25.0) and is_equal_approx(md._json["msaa_70"]["gana_pct"], -10.0) and not md._json.has("msaa_menú"), "MSAA: apagarlo gana 25 % a la escala 50 y pierde 10 % a la 70")
 	var inf := md._informe
 	_comprobar(inf.size() >= 2 and inf[inf.size() - 2].contains("gana") and inf[inf.size() - 1].contains("pierde"), "el informe dice «gana» o «pierde» según el caso")
 	md.free()
