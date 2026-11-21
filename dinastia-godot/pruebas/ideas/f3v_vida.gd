@@ -103,29 +103,7 @@ func f3v_la_agenda_del_m_vil_01() -> void:
 			var taller := not bool(VidaCiudad.transporte(_m)["coche"])
 			_m.vida.semana(_m.mi_club(), _m.roles, _m.anio, _m.semana, 0)
 			_comprobar(d1 == 24 and taller and _m.vida.danio == 0, "un golpe a 43 km/h suma %d de daño; con 75 el coche va al taller y la semana lo repara" % d1)
-			## Mejoras E y G (31-10): el claxon y la velocidad asustan a los peatones cercanos (aprietan el paso).
-			if _e.trafico != null:
-				var pe: Dictionary = {}
-				for v: Dictionary in _e.trafico._vehiculos:
-					if bool(v.get("peaton", false)) and is_instance_valid(v["nodo"]):
-						pe = v
-						break
-				if not pe.is_empty():
-					var pp: Vector3 = (pe["nodo"] as Node3D).position
-					var n_sust := _e.trafico.asustar(pp, 3.0)
-					_comprobar(n_sust >= 1 and float(pe.get("susto", 0.0)) > 0.0 and _e.trafico.asustar(pp + Vector3(500, 0, 500), 3.0) == 0,
-						"el claxon asusta a los peatones de alrededor (%d) y a los lejanos no" % n_sust)
-					pe["susto"] = 0.0
-					## Mejora F: el golpe que multa contra una persona es un atropello con reacción (150 €).
-					var morro := _e.cuerpo.position + Vector3(sin(_e.rumbo), 0, cos(_e.rumbo)) * 2.0
-					(pe["nodo"] as Node3D).position = morro
-					_m.roles.cartera.efectivo = 200
-					var mult0 := _e.multas
-					_v.multa_temeraria()
-					var lejos := ((pe["nodo"] as Node3D).position - morro).length()
-					_comprobar(_m.roles.cartera.efectivo == 50 and lejos >= 1.3 and float(pe.get("espera", 0.0)) > 0.0 and _e.multas == mult0 + 1,
-						"atropello: el peatón se aparta de un salto (%.1f m) y se queda aturdido; multa de 150 € (efectivo %d, espera %.1f, multas %d→%d)" % [lejos, _m.roles.cartera.efectivo, float(pe.get("espera", 0.0)), mult0, _e.multas])
-					_e.multas = mult0
+			_ag_peatones()
 			_comprobar((_m.mi_club().saldo if _m.mi_club() != null else 0) == club_saldo, "y el club no paga la gasolina")
 			_m.vida.combustible = 5.0
 			_m.roles.patrimonio = 0
@@ -135,43 +113,81 @@ func f3v_la_agenda_del_m_vil_01() -> void:
 			_m.roles.cartera.efectivo = 80
 			_v.usar_surtidor("surtidor_0", "normal")
 			_comprobar(_m.vida.combustible > 40.0 and _m.roles.cartera.efectivo < 80 and gas0 > 0.0, "con efectivo paga en efectivo")
-			## §2.5: dos combustibles; la E sin tipo abre el surtidor con los dos precios; la premium rinde más.
-			_m.vida.combustible = 5.0
-			_m.roles.patrimonio = 5000
-			_v.usar_surtidor("surtidor_0")
-			var panel_ok := is_instance_valid(_v._panel_cajero) and (_v._panel_cajero as PanelTienda).surtido.size() == 2
-			if is_instance_valid(_v._panel_cajero):
-				_v._panel_cajero.free()
-			_v.usar_surtidor("surtidor_0", "premium")
-			var lleno := _m.vida.combustible
-			_m.vida.gastar_combustible(10000.0)
-			var gasto_p := lleno - _m.vida.combustible
-			_m.vida.premium = false
-			_m.vida.combustible = lleno
-			_m.vida.gastar_combustible(10000.0)
-			var gasto_n := lleno - _m.vida.combustible
-			## Auditoría del coche (31-10): con el depósito vacío, el pedal no mueve el coche.
-			var comb_ok := _m.vida.combustible
-			_m.vida.combustible = 0.0
-			_v.gasolina_tick(0.016)
-			var vel0 := _e.vel
-			_e._pedal = 1.0
-			_e.vel = 0.0
-			_e._conducir(Vector2(0, 1), 0.1)
-			_comprobar(_e.sin_gasolina and is_zero_approx(_e.vel), "sin gasolina el acelerador no mueve el coche")
-			_m.vida.combustible = comb_ok
-			_v.gasolina_tick(0.016)
-			_e.vel = vel0
-			_e._pedal = 0.0
+			var dos := _ag_dos_combustibles()
+			var panel_ok: bool = dos["panel_ok"]
+			var gasto_p: float = dos["gasto_p"]
+			var gasto_n: float = dos["gasto_n"]
+			_ag_coche_sin_gasolina()
 			_comprobar(panel_ok and gasto_p < gasto_n, "el surtidor ofrece normal y premium, y la premium gasta menos (%.2f l contra %.2f l en 10 km)" % [gasto_p, gasto_n])
-			var id0 := int(surt["id"])
-			var gas_g: float = sr.modelo.gas[id0]
-			sr.modelo.gas[id0] = RedesCiudad.GAS_DEPOSITO * 0.1
-			var caro := sr.modelo.precio_litro(id0)
-			sr.modelo.gas[id0] = RedesCiudad.GAS_DEPOSITO * 0.9
-			var normal := sr.modelo.precio_litro(id0)
-			sr.modelo.gas[id0] = gas_g
-			_comprobar(caro > normal and is_equal_approx(normal, 1.4) and sr.modelo.precio_litro(id0, "premium") > normal, "el precio sube con pocas existencias (%.2f contra %.2f €/l) y la premium cuesta más" % [caro, normal])
+			_ag_precio(sr, surt)
+
+func _ag_peatones() -> void:
+	## Mejoras E y G (31-10): el claxon y la velocidad asustan a los peatones cercanos (aprietan el paso).
+	if _e.trafico != null:
+		var pe: Dictionary = {}
+		for v: Dictionary in _e.trafico._vehiculos:
+			if bool(v.get("peaton", false)) and is_instance_valid(v["nodo"]):
+				pe = v
+				break
+		if not pe.is_empty():
+			var pp: Vector3 = (pe["nodo"] as Node3D).position
+			var n_sust := _e.trafico.asustar(pp, 3.0)
+			_comprobar(n_sust >= 1 and float(pe.get("susto", 0.0)) > 0.0 and _e.trafico.asustar(pp + Vector3(500, 0, 500), 3.0) == 0,
+				"el claxon asusta a los peatones de alrededor (%d) y a los lejanos no" % n_sust)
+			pe["susto"] = 0.0
+			## Mejora F: el golpe que multa contra una persona es un atropello con reacción (150 €).
+			var morro := _e.cuerpo.position + Vector3(sin(_e.rumbo), 0, cos(_e.rumbo)) * 2.0
+			(pe["nodo"] as Node3D).position = morro
+			_m.roles.cartera.efectivo = 200
+			var mult0 := _e.multas
+			_v.multa_temeraria()
+			var lejos := ((pe["nodo"] as Node3D).position - morro).length()
+			_comprobar(_m.roles.cartera.efectivo == 50 and lejos >= 1.3 and float(pe.get("espera", 0.0)) > 0.0 and _e.multas == mult0 + 1,
+				"atropello: el peatón se aparta de un salto (%.1f m) y se queda aturdido; multa de 150 € (efectivo %d, espera %.1f, multas %d→%d)" % [lejos, _m.roles.cartera.efectivo, float(pe.get("espera", 0.0)), mult0, _e.multas])
+			_e.multas = mult0
+
+func _ag_dos_combustibles() -> Dictionary:
+	## §2.5: dos combustibles; la E sin tipo abre el surtidor con los dos precios; la premium rinde más.
+	_m.vida.combustible = 5.0
+	_m.roles.patrimonio = 5000
+	_v.usar_surtidor("surtidor_0")
+	var panel_ok := is_instance_valid(_v._panel_cajero) and (_v._panel_cajero as PanelTienda).surtido.size() == 2
+	if is_instance_valid(_v._panel_cajero):
+		_v._panel_cajero.free()
+	_v.usar_surtidor("surtidor_0", "premium")
+	var lleno := _m.vida.combustible
+	_m.vida.gastar_combustible(10000.0)
+	var gasto_p := lleno - _m.vida.combustible
+	_m.vida.premium = false
+	_m.vida.combustible = lleno
+	_m.vida.gastar_combustible(10000.0)
+	var gasto_n := lleno - _m.vida.combustible
+	return {"panel_ok": panel_ok, "gasto_p": gasto_p, "gasto_n": gasto_n}
+
+func _ag_coche_sin_gasolina() -> void:
+	## Auditoría del coche (31-10): con el depósito vacío, el pedal no mueve el coche.
+	var comb_ok := _m.vida.combustible
+	_m.vida.combustible = 0.0
+	_v.gasolina_tick(0.016)
+	var vel0 := _e.vel
+	_e._pedal = 1.0
+	_e.vel = 0.0
+	_e._conducir(Vector2(0, 1), 0.1)
+	_comprobar(_e.sin_gasolina and is_zero_approx(_e.vel), "sin gasolina el acelerador no mueve el coche")
+	_m.vida.combustible = comb_ok
+	_v.gasolina_tick(0.016)
+	_e.vel = vel0
+	_e._pedal = 0.0
+
+func _ag_precio(sr: RedesCiudadVista, surt: Dictionary) -> void:
+	var id0 := int(surt["id"])
+	var gas_g: float = sr.modelo.gas[id0]
+	sr.modelo.gas[id0] = RedesCiudad.GAS_DEPOSITO * 0.1
+	var caro := sr.modelo.precio_litro(id0)
+	sr.modelo.gas[id0] = RedesCiudad.GAS_DEPOSITO * 0.9
+	var normal := sr.modelo.precio_litro(id0)
+	sr.modelo.gas[id0] = gas_g
+	_comprobar(caro > normal and is_equal_approx(normal, 1.4) and sr.modelo.precio_litro(id0, "premium") > normal, "el precio sube con pocas existencias (%.2f contra %.2f €/l) y la premium cuesta más" % [caro, normal])
 
 func f3v_sin_cartera_mundo_sin_ro() -> void:
 	## Sin cartera (mundo sin roles) la gasolina no sale gratis: la paga el club como antes.
