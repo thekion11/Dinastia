@@ -15,7 +15,16 @@ static func probar(nat: Object) -> Dictionary:
 	var fallos: Array[String] = []
 	var textos: Array[String] = []
 	var j := Jugador.new()
-	## --- ProgresoJugador: toda la rejilla de edad, media y potencial, con y sin el rasgo «motor».
+	var casos := _probar_progreso(nat, fallos, j)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 1911
+	var hab_casos := _probar_habilidades(nat, fallos, rng)
+	_probar_jugador_del_mes(nat, fallos, rng)
+	textos.append("progreso: %d casos; La Ruta: %d comparaciones; jugador del mes: 40 ligas" % [casos, hab_casos])
+	return {"fallos": fallos, "textos": textos}
+
+## ProgresoJugador: toda la rejilla de edad, media y potencial, con y sin el rasgo «motor».
+static func _probar_progreso(nat: Object, fallos: Array[String], j: Jugador) -> int:
 	var casos := 0
 	var malos := 0
 	for edad in range(15, 41):
@@ -36,10 +45,11 @@ static func probar(nat: Object) -> Dictionary:
 						malos += 1
 	if malos > 0:
 		fallos.append("progreso: %d de %d casos distintos" % [malos, casos])
-	## --- CarreraHabilidad: precios, costes, reparto y cambio de puesto, en varios puestos y niveles.
+	return casos
+
+## CarreraHabilidad y cuentas sueltas: precios, costes, reparto y cambio de puesto.
+static func _probar_habilidades(nat: Object, fallos: Array[String], rng: RandomNumberGenerator) -> int:
 	var puestos := ["POR", "DFC", "LD", "MC", "MCO", "ED", "DC", "MCD", "EI"]
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 1911
 	var hab_casos := 0
 	var hab_malos := 0
 	for pe: String in puestos:
@@ -113,7 +123,10 @@ static func probar(nat: Object) -> Dictionary:
 				if ref != int(nat.hab_coste(suma, n, z)):
 					fallos.append("hab_coste(%d, %d, %s) distinto" % [suma, n, z])
 	_con(nat)
-	## --- PremioMensual: varias ligas al azar, con empates (mismas notas y distinta media) para tocar la desigualdad aproximada.
+	return hab_casos
+
+## PremioMensual: varias ligas al azar, con empates, para tocar la desigualdad aproximada.
+static func _probar_jugador_del_mes(nat: Object, fallos: Array[String], rng: RandomNumberGenerator) -> void:
 	var pm_malos := 0
 	for semilla in range(40):
 		rng.seed = 5000 + semilla
@@ -141,5 +154,4 @@ static func probar(nat: Object) -> Dictionary:
 		fallos.append("jugador del mes: %d de 40 ligas distintas" % pm_malos)
 	_con(null)
 	Nativo._mirado = false   ## que `Nativo.obj()` vuelva a mirar la extensión
-	textos.append("progreso: %d casos; La Ruta: %d comparaciones; jugador del mes: 40 ligas" % [casos, hab_casos])
-	return {"fallos": fallos, "textos": textos}
+

@@ -88,16 +88,7 @@ static func _cercano(nat: Object, f: Array[String], n: Array) -> void:
 		for locales in [0, 1, 2, cuantos]:
 			var lista := _lista(cuantos, mini(locales, cuantos), rr, raiz)
 			motor.jugadores = lista
-			for punto in [Vector2.ZERO, Vector2(1e7, 1e7), Vector2(NAN, 0), Vector2(INF, 0)]:
-				for loc in [true, false]:
-					var rg := motor._mas_cercano_uno_gd(punto, loc, [])
-					var kc: int = nat.league_mas_cercano(lista, punto, loc)
-					_chk(f, n, "más cercano %d/%d %s %s" % [cuantos, locales, punto, loc], rg.size(), 0 if kc < 0 else 1)
-					if kc >= 0 and rg.size() == 1:
-						_chk(f, n, "más cercano (quién) %d/%d" % [cuantos, locales], rg[0]["id"], lista[kc]["id"])
-				var tg := motor._mas_cercano_a_todos_gd(punto)
-				var kt: int = nat.league_mas_cercano_todos(lista, punto)
-				_chk(f, n, "más cercano de todos %d/%d %s" % [cuantos, locales, punto], tg.get("id", ""), lista[kt]["id"] if kt >= 0 else "")
+			_cercano_puntos(nat, f, n, motor, lista, cuantos, locales)
 			for lado in [1.0, -1.0, 0.0]:
 				for loc in [true, false]:
 					for con_vel in [true, false]:
@@ -129,6 +120,21 @@ static func _cercano(nat: Object, f: Array[String], n: Array) -> void:
 	_chk(f, n, "índice con id repetido", d1["x"]["n"], d2["x"]["n"])
 	motor.free()
 	raiz.free()
+
+## Los puntos de prueba (el origen y las esquinas, incluidos NAN e INF) contra el motor de C++.
+static func _cercano_puntos(nat: Object, f: Array[String], n: Array, motor: MotorLeague,
+		lista: Array, cuantos: int, locales: int) -> void:
+	for punto in [Vector2.ZERO, Vector2(1e7, 1e7), Vector2(NAN, 0), Vector2(INF, 0)]:
+		for loc in [true, false]:
+			var rg := motor._mas_cercano_uno_gd(punto, loc, [])
+			var kc: int = nat.league_mas_cercano(lista, punto, loc)
+			_chk(f, n, "más cercano %d/%d %s %s" % [cuantos, locales, punto, loc], rg.size(), 0 if kc < 0 else 1)
+			if kc >= 0 and rg.size() == 1:
+				_chk(f, n, "más cercano (quién) %d/%d" % [cuantos, locales], rg[0]["id"], lista[kc]["id"])
+		var tg := motor._mas_cercano_a_todos_gd(punto)
+		var kt: int = nat.league_mas_cercano_todos(lista, punto)
+		_chk(f, n, "más cercano de todos %d/%d %s" % [cuantos, locales, punto], tg.get("id", ""), lista[kt]["id"] if kt >= 0 else "")
+
 
 static func _toques(_nat: Object, f: Array[String], n: Array) -> void:
 	var guardado: Dictionary = LeagueToques.catalogo().duplicate(true)
