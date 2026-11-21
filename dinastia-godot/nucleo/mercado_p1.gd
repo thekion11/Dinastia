@@ -1,4 +1,4 @@
-extends RefCounted
+extends "res://nucleo/mercado_p0.gd"
 ## [Capa 1/2 de `mercado.gd`] _init, _mundo, valor_pedido, deseo_de_venir, ficha_que_pide, club_acepta … (+10)
 
 ## El mercado de fichajes: cuánto piden, cuánto quieren venir y quién acepta.
@@ -98,20 +98,7 @@ func deseo_de_venir(j: Jugador, destino: Club) -> Dictionary:
 			razones.append({"bien": false, "txt": Idiomas.t("Viene de un club más grande: %d de reputación contra tus %d") % [suyo.rep, destino.rep]})
 		elif d >= 8.0:
 			razones.append({"bien": true, "txt": Idiomas.t("Tu club es un salto de categoría para él")})
-		if destino.pais == suyo.pais:
-			if destino.division > suyo.division:
-				p -= 0.30
-				razones.append({"bien": false, "txt": Idiomas.t("Bajaría de división")})
-			elif destino.division < suyo.division:
-				p += 0.16
-				razones.append({"bien": true, "txt": Idiomas.t("Subiría de división")})
-		else:
-			var t := Eco.tier_pais(destino.pais) - Eco.tier_pais(suyo.pais)
-			p += clampf(t * 0.35, -0.24, 0.18)
-			if t < -0.12:
-				razones.append({"bien": false, "txt": Idiomas.t("Cambiar de país para ir a una liga menor no le seduce")})
-			elif t > 0.12:
-				razones.append({"bien": true, "txt": Idiomas.t("Daría el salto a una liga más fuerte")})
+		p = _ajuste_por_liga(destino, suyo, p, razones)
 	if j.pide_salir:
 		p += 0.20
 		razones.append({"bien": true, "txt": Idiomas.t("Ya pidió salir de su club")})
