@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2621 archivos (.gd, .cpp, .h), 374198 líneas, 1013 clases con nombre.
+Total: 2621 archivos (.gd, .cpp, .h), 374202 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -75,7 +75,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 ## Club e instalaciones
 
-22 archivos, 6317 líneas. Carpetas: `nucleo`, `visor`.
+22 archivos, 6321 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -83,7 +83,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 | `StadiumBuilder` | `visor/stadium_builder.gd` | 13 | 136 | stadium_builder_p10.gd ← stadium_builder_p10_p1.gd ← estadio_partes_tribuna.gd ← stadium_builder_p9.gd ← stadium_builder_p8.gd ← stadium_builder_p7.gd ← stadium_builder_p6.gd ← stadium_builder_p5.gd ← stadium_builder_p4.gd ← stadium_builder_p4_p1.gd ← stadium_builder_p3.gd |
 | `EstadioExtras` | `visor/estadio_extras.gd` | 310 | 9 |  |
 | `ClubDentro` | `nucleo/club_dentro.gd` | 285 | 8 |  |
-| `CasaDT` | `visor/casa_dt.gd` | 322 | 7 |  |
+| `CasaDT` | `visor/casa_dt.gd` | 326 | 7 |  |
 | `EstadioObra` | `visor/estadio_partes_obra.gd` | 69 | 5 |  |
 | `DetalleGrada` | `visor/estadio_partes_tribuna_detalle.gd` | 299 | 5 |  |
 | `CasaPlano` | `visor/casa_plano.gd` | 210 | 4 |  |
