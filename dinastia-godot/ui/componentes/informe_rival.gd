@@ -39,23 +39,7 @@ static func datos(rival_arg: Club, mio_arg: Club, liga_arg: Liga) -> Dictionary:
 	var d := {"puesto": 0, "pts": 0, "racha": [], "mejores": [], "goleador": null, "bajas": 0,
 		"media_rival": 0.0, "media_mia": 0.0, "consejos": []}
 	if liga_arg != null:
-		var tabla := liga_arg.tabla()
-		for i in tabla.size():
-			if (tabla[i]["club"] as Club) == rival_arg:
-				d["puesto"] = i + 1
-				d["pts"] = int(tabla[i]["pts"])
-		## La racha: los últimos cinco partidos del rival en la liga, del más
-		## viejo al más nuevo (V, E, D).
-		var racha: Array = []
-		for jornada: Array in liga_arg.historial:
-			for r: Dictionary in jornada:
-				var es_l: bool = r["local"] == rival_arg
-				if not es_l and r["visita"] != rival_arg:
-					continue
-				var a := int(r["gl"] if es_l else r["gv"])
-				var b := int(r["gv"] if es_l else r["gl"])
-				racha.append("V" if a > b else ("E" if a == b else "D"))
-		d["racha"] = racha.slice(maxi(racha.size() - 5, 0))
+		_puesto_y_racha(d, rival_arg, liga_arg)
 	var once := rival_arg.once()
 	var orden: Array = once.duplicate()
 	orden.sort_custom(func(x: Jugador, y: Jugador) -> bool: return x.ovr > y.ovr)
@@ -69,6 +53,31 @@ static func datos(rival_arg: Club, mio_arg: Club, liga_arg: Liga) -> Dictionary:
 	d["goleador"] = gol
 	d["media_rival"] = _media(once)
 	d["media_mia"] = _media(mio_arg.once()) if mio_arg != null else 0.0
+	d["consejos"] = _consejos_rival(d, rival_arg, gol)
+	return d
+
+## Puesto y pts del rival en la liga, y su racha (los últimos cinco partidos, del más viejo al más nuevo).
+static func _puesto_y_racha(d: Dictionary, rival_arg: Club, liga_arg: Liga) -> void:
+	var tabla := liga_arg.tabla()
+	for i in tabla.size():
+		if (tabla[i]["club"] as Club) == rival_arg:
+			d["puesto"] = i + 1
+			d["pts"] = int(tabla[i]["pts"])
+	## La racha: los últimos cinco partidos del rival en la liga, del más
+	## viejo al más nuevo (V, E, D).
+	var racha: Array = []
+	for jornada: Array in liga_arg.historial:
+		for r: Dictionary in jornada:
+			var es_l: bool = r["local"] == rival_arg
+			if not es_l and r["visita"] != rival_arg:
+				continue
+			var a := int(r["gl"] if es_l else r["gv"])
+			var b := int(r["gv"] if es_l else r["gl"])
+			racha.append("V" if a > b else ("E" if a == b else "D"))
+	d["racha"] = racha.slice(maxi(racha.size() - 5, 0))
+
+## Los consejos de la pizarra del rival, de la diferencia de nivel y de sus jugadores.
+static func _consejos_rival(d: Dictionary, rival_arg: Club, gol: Jugador) -> Array:
 	## Los consejos, de la pizarra del rival y de la diferencia de nivel.
 	var t := rival_arg.tactica
 	var c: Array = []
@@ -102,8 +111,7 @@ static func datos(rival_arg: Club, mio_arg: Club, liga_arg: Liga) -> Dictionary:
 		c.append("En el papel sois mejores: toma la iniciativa desde el inicio.")
 	if c.is_empty():
 		c.append("Partido parejo: los detalles (balón parado, cambios) decidirán.")
-	d["consejos"] = c
-	return d
+	return c
 
 static func _media(js: Array) -> float:
 	if js.is_empty():

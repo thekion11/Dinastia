@@ -141,6 +141,13 @@ func _process(delta: float) -> void:
 			salir()
 			return
 	_t += delta
+	_paso_fase(delta)
+	if _vista != null:
+		_vista.actualizar(self)
+	_caja.queue_redraw()
+
+## Lo que hace cada fase de la garra en este fotograma.
+func _paso_fase(delta: float) -> void:
 	match fase:
 		MOVER:
 			var d := Vector2(float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT)),
@@ -166,9 +173,6 @@ func _process(delta: float) -> void:
 		SALE:
 			if _t >= T_SALIDA:
 				_terminar()
-	if _vista != null:
-		_vista.actualizar(self)
-	_caja.queue_redraw()
 
 ## Mueve la garra `d` (−1..1 en cada eje) durante `delta` segundos, sin salirse del cristal.
 func mover(d: Vector2, delta: float) -> void:

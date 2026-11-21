@@ -227,36 +227,7 @@ static func look_de(j: Jugador) -> Dictionary:
 	## (`herramientas/caras_reales_rasgos.py`), así su cara procedural se le
 	## parece aunque no se enseñe la foto.
 	elif j.real and Datos.base_real:
-		var r: Variant = _rasgos_reales_de().get(Nombres.limpiar(j.nombre))
-		## Sin rasgos viejos: la piel y el pelo medidos para su cara 3D.
-		if not (r is Dictionary):
-			var e = load("res://visor/cara_malla.gd").entrada(Nombres.limpiar(j.nombre))
-			if String(e.get("s", "")) != "":
-				r = {"piel": String(e["s"])}
-				if e.get("h") is Dictionary:
-					r["peloC"] = String(e["h"].get("c", "#2e2118"))
-					if bool(e["h"].get("calvo", false)):
-						r["pelo"] = "calvo"
-		if not (r is Dictionary) and not CaraPrior.aplicar(base, j):   ## (10-11) sin foto ni malla: la cara típica de su país, no un azar de ocho tonos
-			_piel_y_pelo_del_pais(base, j)   ## (12-11) y si su país tiene pocas caras medidas, el modelo del país (antes quedaba el azar: rubios en Japón)
-		if r is Dictionary:
-			medido = true
-			for k: String in (r as Dictionary):
-				base[k] = r[k]
-			if not (r as Dictionary).has("barba"):
-				CaraPrior.barba(base, j)
-			## A una persona real no se le inventan marcas ni adornos, y el
-			## corte (que la foto no dice) sale de los habituales.
-			base["acc"] = ""
-			## Pelo que la foto no dejó ver (fondo, gorra): castaño oscuro, el
-			## más común, antes que un color al azar (salían rubios de mentira).
-			if not (r as Dictionary).has("peloC"):
-				base["peloC"] = "#2e2118"
-			base["pecas"] = false
-			base["lunar"] = false
-			base["cicatriz"] = false
-			if String((r as Dictionary).get("pelo", "")) == "":
-				base["pelo"] = CORTES_SOBRIOS[_hash(j.id + "corte") % CORTES_SOBRIOS.size()]
+		medido = _look_real(base, j)
 	elif not (j.real and CaraPrior.aplicar(base, j)):   ## (10-11) los de nombre fijo de la base pública (`j.real`) toman la cara típica de su país; los inventados, el modelo de siempre
 		_piel_y_pelo_del_pais(base, j)
 	## LA EDAD SE VE (M-085, 20-10; 10-11 ampliado): canas, entradas, calvicie y arrugas (`CaraEdad`). No a quien lleva el color de su foto real.
@@ -267,6 +238,42 @@ static func look_de(j: Jugador) -> Dictionary:
 	for k: String in j.look:
 		base[k] = j.look[k]
 	return base
+
+## La cara de un jugador real con la base real: rasgos de su foto o de su malla, o la cara típica de su país.
+## Devuelve true si la cara sale de sus rasgos medidos (no se le encanece encima).
+static func _look_real(base: Dictionary, j: Jugador) -> bool:
+	var medido := false
+	var r: Variant = _rasgos_reales_de().get(Nombres.limpiar(j.nombre))
+	## Sin rasgos viejos: la piel y el pelo medidos para su cara 3D.
+	if not (r is Dictionary):
+		var e = load("res://visor/cara_malla.gd").entrada(Nombres.limpiar(j.nombre))
+		if String(e.get("s", "")) != "":
+			r = {"piel": String(e["s"])}
+			if e.get("h") is Dictionary:
+				r["peloC"] = String(e["h"].get("c", "#2e2118"))
+				if bool(e["h"].get("calvo", false)):
+					r["pelo"] = "calvo"
+	if not (r is Dictionary) and not CaraPrior.aplicar(base, j):   ## (10-11) sin foto ni malla: la cara típica de su país, no un azar de ocho tonos
+		_piel_y_pelo_del_pais(base, j)   ## (12-11) y si su país tiene pocas caras medidas, el modelo del país (antes quedaba el azar: rubios en Japón)
+	if r is Dictionary:
+		medido = true
+		for k: String in (r as Dictionary):
+			base[k] = r[k]
+		if not (r as Dictionary).has("barba"):
+			CaraPrior.barba(base, j)
+		## A una persona real no se le inventan marcas ni adornos, y el
+		## corte (que la foto no dice) sale de los habituales.
+		base["acc"] = ""
+		## Pelo que la foto no dejó ver (fondo, gorra): castaño oscuro, el
+		## más común, antes que un color al azar (salían rubios de mentira).
+		if not (r as Dictionary).has("peloC"):
+			base["peloC"] = "#2e2118"
+		base["pecas"] = false
+		base["lunar"] = false
+		base["cicatriz"] = false
+		if String((r as Dictionary).get("pelo", "")) == "":
+			base["pelo"] = CORTES_SOBRIOS[_hash(j.id + "corte") % CORTES_SOBRIOS.size()]
+	return medido
 
 ## "🎲 Aleatorio" (`edAleatorio()` del HTML): un aspecto ENTERO nuevo, de una
 ## vez, no rasgo a rasgo. No usa `Azar` -el generador determinista de la

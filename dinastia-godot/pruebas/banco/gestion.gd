@@ -1,9 +1,6 @@
 extends "res://pruebas/banco/gestion_p2.gd"
 ## [Capa 3/3 de `gestion.gd`] _probar_negociacion, _probar_economia, _probar_capitan_votado, _probar_piel_por_pais, _probar_contratos_c9, _jug_ley … (+2)
 var _cobra
-var _m: Mundo
-var _mio
-var _mk
 var _n
 var _objetivo
 
