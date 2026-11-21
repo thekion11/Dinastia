@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2599 archivos (.gd, .cpp, .h), 371800 líneas, 1013 clases con nombre.
+Total: 2599 archivos (.gd, .cpp, .h), 372177 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -29,13 +29,13 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 
 ## La Ruta (modo jugador)
 
-40 archivos, 5679 líneas. Carpetas: `nucleo`, `ui/carrera`.
+40 archivos, 5701 líneas. Carpetas: `nucleo`, `ui/carrera`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `CarreraJugador` | `nucleo/carrera_jugador.gd` | 450 | 55 | carrera_jugador_p2.gd ← carrera_jugador_p1.gd |
 | `CarreraRuta` | `nucleo/carrera_ruta.gd` | 26 | 33 | carrera_ruta_p1.gd |
-| `CarreraPremios` | `nucleo/carrera_premios.gd` | 257 | 14 |  |
+| `CarreraPremios` | `nucleo/carrera_premios.gd` | 265 | 14 |  |
 | `CarreraPortero` | `nucleo/carrera_jugador_portero.gd` | 63 | 11 |  |
 | `CarreraEstilo` | `nucleo/carrera_estilo.gd` | 126 | 9 |  |
 | `CarreraEventosRuta` | `nucleo/carrera_eventos_ruta.gd` | 147 | 9 |  |
@@ -48,11 +48,11 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 | `CarreraLogros` | `nucleo/carrera_logros.gd` | 114 | 7 |  |
 | `CarreraPatrocinio` | `nucleo/carrera_patrocinio.gd` | 72 | 7 |  |
 
-Cerca del tope (≥ 400 líneas): `carrera_jugador.gd` (450), `carrera_ruta_p1.gd` (435).
+Cerca del tope (≥ 400 líneas): `carrera_jugador.gd` (450), `carrera_ruta_p1.gd` (449).
 
 ## Partido: motor C4 y respaldo
 
-89 archivos, 15843 líneas. Carpetas: `nucleo`, `visor`.
+89 archivos, 15847 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -79,7 +79,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Club` | `nucleo/club.gd` | 420 | 832 |  |
+| `Club` | `nucleo/club.gd` | 420 | 833 |  |
 | `StadiumBuilder` | `visor/stadium_builder.gd` | 13 | 136 | stadium_builder_p10.gd ← stadium_builder_p10_p1.gd ← estadio_partes_tribuna.gd ← stadium_builder_p9.gd ← stadium_builder_p8.gd ← stadium_builder_p7.gd ← stadium_builder_p6.gd ← stadium_builder_p5.gd ← stadium_builder_p4.gd ← stadium_builder_p4_p1.gd ← stadium_builder_p3.gd |
 | `EstadioExtras` | `visor/estadio_extras.gd` | 310 | 9 |  |
 | `ClubDentro` | `nucleo/club_dentro.gd` | 285 | 8 |  |
@@ -93,7 +93,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-472 archivos, 93665 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+472 archivos, 93712 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -110,7 +110,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 | `Tutorial` | `ui/componentes/tutorial.gd` | 223 | 48 | tutorial_p2.gd ← tutorial_p1.gd |
 | `CajonAjustes` | `ui/componentes/cajon_ajustes.gd` | 258 | 47 |  |
 | `Inicio` | `ui/inicio.gd` | 112 | 41 | inicio_p2.gd ← inicio_p1.gd |
-| `MenuLateral` | `ui/componentes/menu_lateral.gd` | 423 | 40 |  |
+| `MenuLateral` | `ui/componentes/menu_lateral.gd` | 429 | 40 |  |
 
 Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla_pes.gd` (450), `pantalla_cantera_p2.gd` (450), `pantalla_opciones.gd` (450), `pantalla_opciones_p1.gd` (450), `partido_jugable.gd` (450), `telefono_p1.gd` (449), `interior_instalacion_p2.gd` (448), `panel_plantel.gd` (448), `estadio_p1.gd` (448).
 
@@ -137,24 +137,24 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1261 archivos, 121556 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1261 archivos, 121726 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
 ## Núcleo: mundo, gestión y datos
 
-257 archivos, 53091 líneas. Carpetas: `nucleo`.
+257 archivos, 53188 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Mundo` | `nucleo/mundo.gd` | 158 | 921 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
+| `Mundo` | `nucleo/mundo.gd` | 158 | 923 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
 | `Jugador` | `nucleo/jugador.gd` | 32 | 482 | jugador_p1.gd |
 | `Liga` | `nucleo/liga.gd` | 235 | 201 |  |
 | `Nombres` | `nucleo/nombres.gd` | 183 | 171 |  |
 | `Nativo` | `nucleo/nativo.gd` | 29 | 124 |  |
 | `Partida` | `nucleo/partida.gd` | 261 | 119 | partida_p2.gd ← partida_p1.gd |
 | `Copa` | `nucleo/copa.gd` | 348 | 95 |  |
-| `Mercado` | `nucleo/mercado.gd` | 64 | 92 | mercado_p1.gd |
+| `Mercado` | `nucleo/mercado.gd` | 64 | 93 | mercado_p1.gd |
 | `Finanzas` | `nucleo/finanzas.gd` | 398 | 91 |  |
 | `Roles` | `nucleo/roles.gd` | 357 | 79 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
 | `Prensa` | `nucleo/prensa.gd` | 393 | 76 | prensa_narra.gd ← prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `l
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62799 líneas. Carpetas: `visor`.
+340 archivos, 62836 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
