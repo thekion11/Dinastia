@@ -105,22 +105,7 @@ static func _de_la_liga(c: CarreraJugador, m: Mundo, j: Jugador, club: Club, mej
 	var pj := int(s["pj"])
 	var nota := c.nota_media()
 	var liga := CarreraRuta._liga_de(m, club)
-	if liga != null and pj >= PJ_LIGA:
-		var mas_goles := int(s["goles"]) >= 8
-		var mas_asist := int(s["asist"]) >= 6
-		var mejor_nota := nota >= 7.0
-		var mejor_portero := j.es_portero() and nota >= 6.7
-		for cl: Club in liga.clubes:
-			for o: Jugador in cl.plantilla:
-				if o == j:
-					continue
-				mas_goles = mas_goles and o.goles < int(s["goles"])
-				mas_asist = mas_asist and o.asistencias < int(s["asist"])
-				mejor_nota = mejor_nota and _nota_de(o, PJ_LIGA) < nota
-				mejor_portero = mejor_portero and not (o.es_portero() and _nota_de(o, PJ_LIGA) >= nota)
-		for par: Array in [["goleador_liga", mas_goles], ["asistidor_liga", mas_asist], ["portero_liga", mejor_portero], ["mvp_liga", mejor_nota]]:
-			if bool(par[1]):
-				out.append(String(par[0]))
+	_premios_de_la_liga(out, liga, j, s, pj, nota)
 	var clases := {}
 	for t: Dictionary in trofeos(m, club):
 		clases[String(t["clase"])] = true
@@ -263,3 +248,23 @@ static func palmares(c: CarreraJugador) -> Dictionary:
 			if p is Dictionary and PREMIOS.has(String((p as Dictionary).get("id", ""))):
 				out[String(p["id"])] = int(out.get(String(p["id"]), 0)) + 1
 	return out
+
+
+## Los premios de la liga: goleador, asistidor, portero y la mejor nota de tu liga entera.
+static func _premios_de_la_liga(out: Array, liga: Liga, j: Jugador, s: Dictionary, pj: int, nota: float) -> void:
+	if liga != null and pj >= PJ_LIGA:
+		var mas_goles := int(s["goles"]) >= 8
+		var mas_asist := int(s["asist"]) >= 6
+		var mejor_nota := nota >= 7.0
+		var mejor_portero := j.es_portero() and nota >= 6.7
+		for cl: Club in liga.clubes:
+			for o: Jugador in cl.plantilla:
+				if o == j:
+					continue
+				mas_goles = mas_goles and o.goles < int(s["goles"])
+				mas_asist = mas_asist and o.asistencias < int(s["asist"])
+				mejor_nota = mejor_nota and _nota_de(o, PJ_LIGA) < nota
+				mejor_portero = mejor_portero and not (o.es_portero() and _nota_de(o, PJ_LIGA) >= nota)
+		for par: Array in [["goleador_liga", mas_goles], ["asistidor_liga", mas_asist], ["portero_liga", mejor_portero], ["mvp_liga", mejor_nota]]:
+			if bool(par[1]):
+				out.append(String(par[0]))
