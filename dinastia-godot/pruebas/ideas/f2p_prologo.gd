@@ -25,8 +25,15 @@ func _frames(n: int) -> void:
 	for i in n:
 		await get_tree().process_frame
 
+var _pr
+
 func _probar_async() -> void:
 	_titulo("f2p: el prólogo 3D, paso a paso")
+	_pro_02_u_modos_entran_al_pr_l()
+	_pro_03_l_guion()
+	await _pro_04_l_mundo_y_la_escena()
+
+func _pro_02_u_modos_entran_al_pr_l() -> void:
 	## --- qué modos entran al prólogo ------------------------------------------------
 	OrquestadorMundo.sin_prologo = false
 	_comprobar(OrquestadorMundo.con_prologo("dt") and OrquestadorMundo.con_prologo("creador") and OrquestadorMundo.con_prologo("jeque"),
@@ -36,6 +43,8 @@ func _probar_async() -> void:
 	OrquestadorMundo.sin_prologo = true
 	_comprobar(not OrquestadorMundo.con_prologo("dt"), "las pruebas pueden apagarlo")
 	OrquestadorMundo.sin_prologo = false
+
+func _pro_03_l_guion() -> void:
 	## --- el guion ------------------------------------------------------------------
 	_comprobar(PrologoPasos.PASOS.size() == 12 and PrologoPasos.indice("oficina") == 11, "el guion tiene 12 pasos y termina en tu oficina")
 	var sin_traducir: Array[String] = []
@@ -47,6 +56,22 @@ func _probar_async() -> void:
 				sin_traducir.append(f.left(30))
 	Idiomas.idioma = idioma_antes
 	_comprobar(sin_traducir.is_empty(), "todas las frases del mentor están traducidas %s" % [sin_traducir])
+
+func _pro_04_l_mundo_y_la_escena() -> void:
+	await _mundo_01_el_mundo_y_la_escena()
+	_mundo_02_paso_0_habla_al_mome()
+	_mundo_03_cada_sala_del_recorr()
+	await _mundo_04_llegar_al_mentor_pas()
+	await _mundo_05_las_salas_una_tras_o()
+	await _mundo_06_directiva()
+	await _mundo_07_prensa()
+	await _mundo_08_la_oficina_y_el_pc()
+	await _mundo_09_2_5_1_desde_el_pc_pa()
+	await _mundo_10_volver_a_encenderlo_()
+	_mundo_11_guardar_y_cargar_con()
+	_mundo_12_fase_0_7_2_31_10_lo_()
+
+func _mundo_01_el_mundo_y_la_escena() -> void:
 	## --- el mundo y la escena --------------------------------------------------------
 	_m = _mundo(4242)
 	PedidoPartida.mundo_pregenerado = _m
@@ -65,10 +90,14 @@ func _probar_async() -> void:
 	_e = _p.explorador
 	_comprobar(_p.mentor != null and _p.mentor.nombre != "" and _p.mentor.visible, "el mentor está en la puerta con nombre (%s)" % _p.mentor.nombre)
 	_comprobar(_e.cuerpo.position.distance_to(_p.puerta) < 9.0 and String(_e.estado) == "calle", "apareces en la acera frente a la puerta del club")
+
+func _mundo_02_paso_0_habla_al_mome() -> void:
 	## Paso 0: habla al momento.
 	_comprobar(_p.paso_i == 0 and _p.dialogo.visible and _p.frase_i == 0, "el mentor te recibe hablando (llegada)")
 	_terminar_charla()
 	_comprobar(_p.esperando_llegada and not _p.dialogo.visible, "tras hablar espera a que te acerques")
+
+func _mundo_03_cada_sala_del_recorr() -> void:
 	## Cada sala del recorrido se puede pisar con el cuerpo entero.
 	var inalcanzables: Array[String] = []
 	for paso: Dictionary in PrologoPasos.PASOS:
@@ -78,6 +107,8 @@ func _probar_async() -> void:
 		if not ColisionClub.cabe(_p.est["zonas"], c - CityBuilder.ESTADIO_EN, int(paso["planta"])):
 			inalcanzables.append(String(paso["zona"]))
 	_comprobar(inalcanzables.is_empty(), "el centro de cada sala del recorrido cabe el cuerpo entero %s" % [inalcanzables])
+
+func _mundo_04_llegar_al_mentor_pas() -> void:
 	## Llegar al mentor → paso 1 (puerta); hablar → espera a que entres.
 	_e.cuerpo.position = _p.mentor.position + Vector3(0, 0, 0.8)
 	await _frames(2)
@@ -90,11 +121,15 @@ func _probar_async() -> void:
 	_e._entrar_al_estadio()
 	await _frames(2)
 	_comprobar(_p.paso_i == 2 and String(_e.estado) == "estadio", "al cruzar la puerta empieza el recorrido (vestuario)")
+
+func _mundo_05_las_salas_una_tras_o() -> void:
 	## Las salas, una tras otra.
 	for clave: String in ["vestuario", "tunel", "campo", "utileria", "enfermeria"]:
 		var ok := await _llegar_y_escuchar(clave)
 		_comprobar(ok, "sala «%s»: el mentor espera allí y habla al llegar" % clave)
 	_comprobar(_saludos.has("utilero") and _saludos.has("medico"), "en la utilería y la enfermería el personal saluda antes que el mentor %s" % [_saludos])
+
+func _mundo_06_directiva() -> void:
 	## Directiva.
 	var ok_pres := await _llegar_y_escuchar("presidente", false)
 	_comprobar(ok_pres and is_instance_valid(_p.hud._directiva), "en el despacho se abre la pregunta de la directiva")
@@ -107,6 +142,8 @@ func _probar_async() -> void:
 	await _frames(2)
 	var ok_video := await _llegar_y_escuchar("video")
 	_comprobar(ok_video and _saludos.has("ojeador"), "sala de vídeo: el ojeador saluda y el mentor la explica")
+
+func _mundo_07_prensa() -> void:
 	## Prensa.
 	var ok_prensa := await _llegar_y_escuchar("prensa", false)
 	_comprobar(ok_prensa and is_instance_valid(_p.prensa), "en la sala de prensa se abre la presentación")
@@ -126,6 +163,8 @@ func _probar_async() -> void:
 	_comprobar(_p.paso_i == PrologoPasos.indice("comedor") and _p.prensa == null, "al salir de la sala de prensa toca el comedor")
 	var ok_com := await _llegar_y_escuchar("comedor")
 	_comprobar(ok_com and _saludos.has("cocinera"), "comedor del plantel: la cocinera saluda")
+
+func _mundo_08_la_oficina_y_el_pc() -> void:
 	## La oficina y el PC.
 	var ok_of := await _llegar_y_escuchar("oficina", false)
 	_comprobar(ok_of and _p.pc != null, "en la oficina aparece el PC")
@@ -134,28 +173,32 @@ func _probar_async() -> void:
 	_comprobar(_p.pc.cerca(), "delante del escritorio el PC se puede usar")
 	_p.pc.encender()
 	await _frames(4)
-	var pr := _p.pc.principal()
-	_comprobar(pr != null and pr is Principal and (pr as Principal).mundo == _m, "E enciende el menú central con TU partida")
+	_pr = _p.pc.principal()
+	_comprobar(_pr != null and _pr is Principal and (_pr as Principal).mundo == _m, "E enciende el menú central con TU partida")
 	_comprobar(not _p.vista.visible and _p.explorador.process_mode == Node.PROCESS_MODE_DISABLED, "mientras el PC está encendido el mundo 3D se esconde y se congela")
 	_comprobar(_m.prologo_visto, "la primera vez que enciendes el PC el prólogo queda hecho")
 	_comprobar(_m.logros != null and _m.logros.largos.has("primer_dia"), "y cae el logro «Primer día»")
+
+func _mundo_09_2_5_1_desde_el_pc_pa() -> void:
 	## §2.5-1: desde el PC, «Pasear» y «Ver la ciudad» te levantan (no abren otra ciudad dentro del menú).
 	InterruptorCiudad.activa = true
-	await (pr as Principal)._ver_ciudad_explorando("pie")
+	await (_pr as Principal)._ver_ciudad_explorando("pie")
 	await _frames(2)
-	_comprobar(not _p.pc.abierto and pr.find_children("*", "VistaCiudad", true, false).is_empty() and _p.vista.visible,
+	_comprobar(not _p.pc.abierto and _pr.find_children("*", "VistaCiudad", true, false).is_empty() and _p.vista.visible,
 		"desde el PC, «Pasear» te levanta en vez de abrir otra ciudad dentro del menú")
 	_p.pc.encender()
 	await _frames(2)
-	await (pr as Principal)._ver_ciudad_con_carga()
+	await (_pr as Principal)._ver_ciudad_con_carga()
 	await _frames(2)
-	_comprobar(not _p.pc.abierto and pr.find_children("*", "VistaCiudad", true, false).is_empty(),
+	_comprobar(not _p.pc.abierto and _pr.find_children("*", "VistaCiudad", true, false).is_empty(),
 		"desde el PC, «Ver la ciudad en 3D» también te levanta")
 	_p.pc.encender()
 	await _frames(2)
 	_p.pc.apagar()
 	await _frames(3)
 	_comprobar(_p.pc.principal() == null and _p.vista.visible and _p.explorador.process_mode == Node.PROCESS_MODE_INHERIT, "levantarte apaga el PC y devuelve el mundo")
+
+func _mundo_10_volver_a_encenderlo_() -> void:
 	## Volver a encenderlo retoma la MISMA partida (no una nueva ni la caja escalada otra vez).
 	var saldo := _m.mi_club().saldo
 	_p.pc.encender()
@@ -164,9 +207,13 @@ func _probar_async() -> void:
 	_comprobar(pr2 != null and (pr2 as Principal).mundo == _m and _m.mi_club().saldo == saldo, "volver a encender el PC retoma la misma partida con la misma caja (y la misma pantalla)")
 	_p.pc.apagar()
 	await _frames(2)
+
+func _mundo_11_guardar_y_cargar_con() -> void:
 	## Guardar y cargar conservan la marca.
 	var datos := Partida.instantanea(_m)
 	_comprobar(bool(datos.get("prologo_visto", false)), "la instantánea guarda prologo_visto")
+
+func _mundo_12_fase_0_7_2_31_10_lo_() -> void:
 	## Fase 0 §7.2 (31-10): lo pedido en la entrada se aplica UNA vez (el orquestador antes de autoguardar,
 	## y Principal lo encuentra hecho), y una partida guardada con el prólogo pendiente vuelve al prólogo.
 	var mf := _mundo(4243)
@@ -220,3 +267,5 @@ func _llegar_y_escuchar(clave: String, cerrar: bool = true) -> bool:
 		_terminar_charla()
 		await _frames(2)
 	return mentor_alli and habla
+
+
