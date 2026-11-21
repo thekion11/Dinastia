@@ -1,4 +1,4 @@
-extends "res://ui/componentes/interior_instalacion_p3.gd"
+extends "res://ui/componentes/interior_instalacion_estacion.gd"
 ## [Capa 4/7 de `interior_instalacion.gd`] _caja_cobro, _supermercado, _puesto_mercado, _mercado, _cine, _camiseta … (+15)
 
 ## Una caja de cobro del mini mercado (registradora en un extremo, cinta en el
