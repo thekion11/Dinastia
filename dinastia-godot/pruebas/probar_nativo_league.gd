@@ -59,14 +59,24 @@ static func _probar_legalidad(nat: Object, rng: RandomNumberGenerator, cuerpos: 
 	var n_legal := 0
 	for vi in 4:
 		for vo in 4:
-			for cs: float in cuerpos:
-				for ci: float in cuerpos:
-					for f: float in LeagueAuto.ANGULOS + [rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0)]:
-						n_legal += 1
-						if LeagueAuto.legal_gd(vi, vo, cs, ci, f * PI) != bool(nat.league_legal(vi, vo, cs, ci, f * PI)):
-							dis_legal += 1
+			var par := _legal_velocidades(nat, rng, cuerpos, vi, vo)
+			n_legal += par[0]
+			dis_legal += par[1]
 	if dis_legal != 0:
 		fallos.append("legalidad de las intermedias: C++ ≠ GDScript en %d de %d casos" % [dis_legal, n_legal])
+
+## Las combinaciones de cuerpos y direcciones para una pareja de velocidades: [casos, distintos].
+static func _legal_velocidades(nat: Object, rng: RandomNumberGenerator, cuerpos: Array,
+		vi: int, vo: int) -> Array:
+	var n_legal := 0
+	var dis_legal := 0
+	for cs: float in cuerpos:
+		for ci: float in cuerpos:
+			for f: float in LeagueAuto.ANGULOS + [rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0)]:
+				n_legal += 1
+				if LeagueAuto.legal_gd(vi, vo, cs, ci, f * PI) != bool(nat.league_legal(vi, vo, cs, ci, f * PI)):
+					dis_legal += 1
+	return [n_legal, dis_legal]
 
 ## 3. El bucle de huesos de las intermedias: 40 construidas de las dos maneras, igual clave a clave.
 static func _probar_intermedias(nat: Object, rng: RandomNumberGenerator, fallos: Array,
