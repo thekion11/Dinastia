@@ -19,6 +19,17 @@ func informe_de_gestion() -> Array[Dictionary]:
 	if mio == null:
 		return salida
 
+	_informe_caja(salida, mio)
+	_informe_plantilla(salida, mio)
+	_informe_calle(salida)
+	_informe_pendientes(salida)
+
+	if salida.is_empty():
+		salida.append({"grave": false, "txt": "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.", "tab": ""})
+	return salida
+
+## La caja: en rojo o justa.
+func _informe_caja(salida: Array[Dictionary], mio: Club) -> void:
 	## 1. La caja, que es lo único que puede acabar la partida sin jugar.
 	var caja_ref := Eco.ref_caja(float(mio.rep))
 	if mio.saldo < 0:
@@ -26,6 +37,8 @@ func informe_de_gestion() -> Array[Dictionary]:
 	elif float(mio.saldo) < caja_ref * 0.25:
 		salida.append({"grave": false, "txt": "La caja está justa: %s. Cuidado con el próximo fichaje." % Cesiones.dinero(mio.saldo), "tab": "Finanzas", "secc": "cuentas"})
 
+## La plantilla: lesionados, contratos que acaban y la moral del vestuario.
+func _informe_plantilla(salida: Array[Dictionary], mio: Club) -> void:
 	## 2. Quién no puede jugar el domingo.
 	var fuera := 0
 	for j: Jugador in mio.plantilla:
@@ -53,12 +66,16 @@ func informe_de_gestion() -> Array[Dictionary]:
 		salida.append({"grave": descontentos >= 5, "txt": "%d jugador%s con la moral por los suelos o pidiendo salir." % [
 			descontentos, "es" if descontentos > 1 else ""], "tab": "Camarín", "secc": "clima"})
 
+## La calle y el despacho: la funa y la confianza de la directiva.
+func _informe_calle(salida: Array[Dictionary]) -> void:
 	## 5. La calle y el despacho.
 	if prensa != null and prensa.funa >= 55:
 		salida.append({"grave": prensa.funa >= 75, "txt": "El ruido en redes está en %d. La directiva lo lee." % prensa.funa, "tab": "Redes"})
 	if directiva != null and directiva.confianza < 40:
 		salida.append({"grave": directiva.confianza < 25, "txt": "La confianza del directorio está en %d. Estás en la cuerda floja." % directiva.confianza, "tab": "Club"})
 
+## Lo que se puede hacer y no se está haciendo.
+func _informe_pendientes(salida: Array[Dictionary]) -> void:
 	## 6. Lo que se puede hacer y no se está haciendo.
 	if mercado_abierto() and semanas_de_mercado() <= 2:
 		salida.append({"grave": false, "txt": "El mercado cierra en %d semana(s)." % semanas_de_mercado(), "tab": "Mercado"})
@@ -69,9 +86,6 @@ func informe_de_gestion() -> Array[Dictionary]:
 	if auspicio != null and auspicio.contrato.is_empty() and not auspicio.ofertas.is_empty():
 		salida.append({"grave": false, "txt": "Hay %d marcas esperando respuesta por la camiseta." % auspicio.ofertas.size(), "tab": "Finanzas", "secc": "patrocinio"})
 
-	if salida.is_empty():
-		salida.append({"grave": false, "txt": "Todo en orden: sin lesionados largos, sin contratos en el aire y con la caja sana.", "tab": ""})
-	return salida
 ## LA IA RENUEVA UN AÑO ANTES (25-10; antes 60% del mundo en su último año; 26-10: 0,65/0,30, con 0,8 bajaba al 11%). Tu club no.
 func _vence_contrato(j: Jugador, c: Club) -> bool:
 	c = clubes.get(String(cesiones.cesion_de(j.id).get("de", "")), c) if cesiones != null else c   ## A4-GES-009: decide su DUEÑO, no quien lo tiene cedido

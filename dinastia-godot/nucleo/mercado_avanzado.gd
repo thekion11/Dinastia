@@ -188,94 +188,114 @@ func resolver(m: Mundo, op: String) -> Dictionary:
 				break
 	match String(p["id"]):
 		"superagente":
-			if j == null:
-				return {}
-			if op == "a":
-				j.sueldo = int(round(float(j.sueldo) * 1.15))
-				var m0 := j.moral
-				j.moral = clampi(j.moral + 8, 0, 100)
-				j.anotar_moral(j.moral - m0, "Mercado y contratos")
-				if r != null:
-					r.anotar_reputacion("negociador", -2, "Cediste ante el superagente %s" % superagente)
-				return {"titulo": "💰 Aumento para %s" % j.nombre, "cuerpo": "El agente se va contento. Los otros dos clientes ya saben que contigo funciona apretar."}
-			var m0 := j.moral
-			j.moral = clampi(j.moral - 10, 0, 100)
-			j.anotar_moral(j.moral - m0, "Mercado y contratos")
-			if _rng.randf() < 0.45:
-				j.pide_salir = true
-			if r != null:
-				r.anotar_reputacion("negociador", 2, "Te plantaste ante el superagente %s" % superagente)
-			return {"titulo": "🧱 Te plantas ante %s" % superagente, "cuerpo": "%s no está contento%s." % [j.nombre, " y ya pide salir" if j.pide_salir else ""]}
+			return _resolver_superagente(j, op, r)
 		"impuesto":
-			var idx := m.libres.find(j) if j != null else -1
-			if op == "a" and idx >= 0:
-				var res := m.fichar_libre(idx, c)
-				if res.has("ok"):
-					if m.directiva != null:
-						m.directiva.mover_confianza(4, "aceptaste el fichaje que pedía")
-					return {"titulo": "✍️ Llega %s" % j.nombre, "cuerpo": "La directiva está feliz. Tú, con un veterano más en el plantel que no pediste."}
-				return {"titulo": "El fichaje no se cerró", "cuerpo": "Al final no firmó: %s." % String(res.get("error", "rechazó la oferta"))}
-			if m.directiva != null:
-				m.directiva.mover_confianza(-6, "te negaste al fichaje que pedía")
-			if r != null:
-				r.anotar_reputacion("leal", -1, "Le dijiste que no a la directiva")
-			return {"titulo": "🚫 No al fichaje", "cuerpo": "La directiva toma nota. El plantel lo armas tú, pero la paciencia de arriba baja."}
+			return _resolver_impuesto(m, j, c, op, r)
 		"apuestas":
-			if j == null:
-				return {}
-			if op == "a":
-				j.suspension = maxi(j.suspension, 3)
-				var m0 := j.moral
-				j.moral = clampi(j.moral - 12, 0, 100)
-				j.anotar_moral(j.moral - m0, "Mercado y contratos")
-				if r != null:
-					r.anotar_reputacion("honesto", 3, "Sancionaste a %s por apostar" % j.nombre)
-				return {"titulo": "⚖️ %s, sancionado" % j.nombre, "cuerpo": "Tres partidos fuera. La prensa aplaude la decisión."}
-			if _rng.randf() < 0.4:
-				if r != null:
-					r.anotar_reputacion("honesto", -5, "El club tapó las apuestas de %s" % j.nombre)
-				if m.prensa != null:
-					m.prensa.animo = clampi(m.prensa.animo - 6, 0, 100)
-				j.suspension = maxi(j.suspension, 5)
-				noticia.emit("📰 Salió a la luz", "Las apuestas de %s y que el club lo tapó. La federación lo suspende cinco partidos." % j.nombre)
-				return {"titulo": "📰 Se supo todo", "cuerpo": "Lo taparon y salió igual: peor para todos."}
-			return {"titulo": "🤫 Queda en casa", "cuerpo": "Por ahora nadie más lo sabe."}
+			return _resolver_apuestas(m, j, op, r)
 		"corrupcion":
-			var coste := int(p.get("coste", 0))
-			if op == "a":
-				c.mover_saldo(-coste)
-				movimiento.emit("Pago en negro a un intermediario", -coste)
-				if m.federacion != null:
-					m.federacion.enojo_arbitral = 0
-				if r != null:
-					r.anotar_reputacion("honesto", -6, "Pagaste por arbitrajes amables")
-				if _rng.randf() < 0.35:
-					for l in m.ligas:
-						if l.clubes.has(c) and l.tabla_puntos.has(c.id):
-							l.sancionar(c.id, 9)
-					if m.prensa != null:
-						m.prensa.animo = clampi(m.prensa.animo - 10, 0, 100)
-					noticia.emit("💣 Escándalo de corrupción", "Se filtró el pago de %s a un intermediario de la federación: 9 puntos menos y la hinchada furiosa." % c.nombre)
-					return {"titulo": "💣 Se destapó", "cuerpo": "Pagaste y salió a la luz: 9 puntos menos."}
-				return {"titulo": "🤐 Pagado", "cuerpo": "Nadie habla. Los árbitros, de momento, te miran con otros ojos."}
-			if r != null:
-				r.anotar_reputacion("honesto", 4, "Denunciaste la corrupción federativa")
-			if m.federacion != null:
-				m.federacion.aliados = clampi(m.federacion.aliados - 3, -10, 10)
-			noticia.emit("⚖️ Denuncia de corrupción", "%s denuncia a un intermediario de la federación. La prensa aplaude; en la asamblea te miran mal." % c.nombre)
-			return {"titulo": "⚖️ Denunciado", "cuerpo": "Ganas en juego limpio y pierdes aliados en la asamblea."}
+			return _resolver_corrupcion(m, p, c, op, r)
 		"transparencia":
-			if op == "a":
-				if r != null:
-					r.anotar_reputacion("honesto", 3, "Publicaste las cuentas del club")
-					r.anotar_reputacion("social", 2, "Los socios valoran la transparencia")
-				if m.prensa != null:
-					m.prensa.animo = clampi(m.prensa.animo + 4, 0, 100)
-				return {"titulo": "📊 Cuentas públicas", "cuerpo": "Los socios lo valoran. Los rivales ahora saben cuánto puedes gastar."}
-			if r != null:
-				r.anotar_reputacion("social", -1, "No publicaste las cuentas")
-			return {"titulo": "🔒 Cuentas cerradas", "cuerpo": "Los socios que las pedían se quedan con la duda."}
+			return _resolver_transparencia(m, op, r)
 	return {}
+
+## Rama «superagente» de `resolver`, sacada tal cual (orden 63: partida en auxiliares).
+func _resolver_superagente(j: Jugador, op: String, r: Roles) -> Dictionary:
+	if j == null:
+		return {}
+	if op == "a":
+		j.sueldo = int(round(float(j.sueldo) * 1.15))
+		var m0 := j.moral
+		j.moral = clampi(j.moral + 8, 0, 100)
+		j.anotar_moral(j.moral - m0, "Mercado y contratos")
+		if r != null:
+			r.anotar_reputacion("negociador", -2, "Cediste ante el superagente %s" % superagente)
+		return {"titulo": "💰 Aumento para %s" % j.nombre, "cuerpo": "El agente se va contento. Los otros dos clientes ya saben que contigo funciona apretar."}
+	var m0 := j.moral
+	j.moral = clampi(j.moral - 10, 0, 100)
+	j.anotar_moral(j.moral - m0, "Mercado y contratos")
+	if _rng.randf() < 0.45:
+		j.pide_salir = true
+	if r != null:
+		r.anotar_reputacion("negociador", 2, "Te plantaste ante el superagente %s" % superagente)
+	return {"titulo": "🧱 Te plantas ante %s" % superagente, "cuerpo": "%s no está contento%s." % [j.nombre, " y ya pide salir" if j.pide_salir else ""]}
+
+## Rama «impuesto» de `resolver`, sacada tal cual (orden 63: partida en auxiliares).
+func _resolver_impuesto(m: Mundo, j: Jugador, c: Club, op: String, r: Roles) -> Dictionary:
+	var idx := m.libres.find(j) if j != null else -1
+	if op == "a" and idx >= 0:
+		var res := m.fichar_libre(idx, c)
+		if res.has("ok"):
+			if m.directiva != null:
+				m.directiva.mover_confianza(4, "aceptaste el fichaje que pedía")
+			return {"titulo": "✍️ Llega %s" % j.nombre, "cuerpo": "La directiva está feliz. Tú, con un veterano más en el plantel que no pediste."}
+		return {"titulo": "El fichaje no se cerró", "cuerpo": "Al final no firmó: %s." % String(res.get("error", "rechazó la oferta"))}
+	if m.directiva != null:
+		m.directiva.mover_confianza(-6, "te negaste al fichaje que pedía")
+	if r != null:
+		r.anotar_reputacion("leal", -1, "Le dijiste que no a la directiva")
+	return {"titulo": "🚫 No al fichaje", "cuerpo": "La directiva toma nota. El plantel lo armas tú, pero la paciencia de arriba baja."}
+
+## Rama «apuestas» de `resolver`, sacada tal cual (orden 63: partida en auxiliares).
+func _resolver_apuestas(m: Mundo, j: Jugador, op: String, r: Roles) -> Dictionary:
+	if j == null:
+		return {}
+	if op == "a":
+		j.suspension = maxi(j.suspension, 3)
+		var m0 := j.moral
+		j.moral = clampi(j.moral - 12, 0, 100)
+		j.anotar_moral(j.moral - m0, "Mercado y contratos")
+		if r != null:
+			r.anotar_reputacion("honesto", 3, "Sancionaste a %s por apostar" % j.nombre)
+		return {"titulo": "⚖️ %s, sancionado" % j.nombre, "cuerpo": "Tres partidos fuera. La prensa aplaude la decisión."}
+	if _rng.randf() < 0.4:
+		if r != null:
+			r.anotar_reputacion("honesto", -5, "El club tapó las apuestas de %s" % j.nombre)
+		if m.prensa != null:
+			m.prensa.animo = clampi(m.prensa.animo - 6, 0, 100)
+		j.suspension = maxi(j.suspension, 5)
+		noticia.emit("📰 Salió a la luz", "Las apuestas de %s y que el club lo tapó. La federación lo suspende cinco partidos." % j.nombre)
+		return {"titulo": "📰 Se supo todo", "cuerpo": "Lo taparon y salió igual: peor para todos."}
+	return {"titulo": "🤫 Queda en casa", "cuerpo": "Por ahora nadie más lo sabe."}
+
+## Rama «corrupcion» de `resolver`, sacada tal cual (orden 63: partida en auxiliares).
+func _resolver_corrupcion(m: Mundo, p: Dictionary, c: Club, op: String, r: Roles) -> Dictionary:
+	var coste := int(p.get("coste", 0))
+	if op == "a":
+		c.mover_saldo(-coste)
+		movimiento.emit("Pago en negro a un intermediario", -coste)
+		if m.federacion != null:
+			m.federacion.enojo_arbitral = 0
+		if r != null:
+			r.anotar_reputacion("honesto", -6, "Pagaste por arbitrajes amables")
+		if _rng.randf() < 0.35:
+			for l in m.ligas:
+				if l.clubes.has(c) and l.tabla_puntos.has(c.id):
+					l.sancionar(c.id, 9)
+			if m.prensa != null:
+				m.prensa.animo = clampi(m.prensa.animo - 10, 0, 100)
+			noticia.emit("💣 Escándalo de corrupción", "Se filtró el pago de %s a un intermediario de la federación: 9 puntos menos y la hinchada furiosa." % c.nombre)
+			return {"titulo": "💣 Se destapó", "cuerpo": "Pagaste y salió a la luz: 9 puntos menos."}
+		return {"titulo": "🤐 Pagado", "cuerpo": "Nadie habla. Los árbitros, de momento, te miran con otros ojos."}
+	if r != null:
+		r.anotar_reputacion("honesto", 4, "Denunciaste la corrupción federativa")
+	if m.federacion != null:
+		m.federacion.aliados = clampi(m.federacion.aliados - 3, -10, 10)
+	noticia.emit("⚖️ Denuncia de corrupción", "%s denuncia a un intermediario de la federación. La prensa aplaude; en la asamblea te miran mal." % c.nombre)
+	return {"titulo": "⚖️ Denunciado", "cuerpo": "Ganas en juego limpio y pierdes aliados en la asamblea."}
+
+## Rama «transparencia» de `resolver`, sacada tal cual (orden 63: partida en auxiliares).
+func _resolver_transparencia(m: Mundo, op: String, r: Roles) -> Dictionary:
+	if op == "a":
+		if r != null:
+			r.anotar_reputacion("honesto", 3, "Publicaste las cuentas del club")
+			r.anotar_reputacion("social", 2, "Los socios valoran la transparencia")
+		if m.prensa != null:
+			m.prensa.animo = clampi(m.prensa.animo + 4, 0, 100)
+		return {"titulo": "📊 Cuentas públicas", "cuerpo": "Los socios lo valoran. Los rivales ahora saben cuánto puedes gastar."}
+	if r != null:
+		r.anotar_reputacion("social", -1, "No publicaste las cuentas")
+	return {"titulo": "🔒 Cuentas cerradas", "cuerpo": "Los socios que las pedían se quedan con la duda."}
 
 func a_dic() -> Dictionary:
 	return {"pend": pendiente.duplicate(true), "agente": superagente, "clientes": clientes.duplicate(),

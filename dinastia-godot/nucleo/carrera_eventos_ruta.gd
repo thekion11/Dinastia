@@ -14,6 +14,16 @@ static func texto(e: Dictionary, clave: String) -> String:
 static func eventos(c: CarreraJugador, m: Mundo) -> Array:
 	var p: Array = []
 	var r := CarreraRuta.asegurar(c)
+	_eventos_ruta_racha_y_rival(p, c, r)
+	_eventos_ruta_pique_y_vida(p, c, m)
+	_eventos_ruta_escuela_y_legado(p, c, m)
+	_eventos_ruta_docu(p, c, m)
+	_eventos_ruta_burla_y_estancado(p, c, r)
+	_eventos_ruta_primo_y_bar(p, c, m)
+	return p
+
+## Racha y el rival que habla de ti.
+static func _eventos_ruta_racha_y_rival(p: Array, c: CarreraJugador, r: Dictionary) -> void:
 	if int(r["racha"]) >= 3:
 		p.append(c._ev("ruta_racha", "La prensa te pone por las nubes",
 			"Tres partidos seguidos a gran nivel y ya te comparan con los grandes. El DT lee los titulares con el ceño fruncido.",
@@ -24,6 +34,9 @@ static func eventos(c: CarreraJugador, m: Mundo) -> Array:
 			"En una entrevista, tu rival suelta que este año el duelo es suyo y que tú aún estás verde.",
 			[c._op("Contestas en el campo.", {"moral": 4, "relacion": 1}),
 			c._op("Le respondes en tus redes.", {"seguidores": 600, "fama": 1, "relacion": -2, "ruta_marca": "pique"})], true))
+
+## El duelo que se calienta, el preparador, el niño y el veterano.
+static func _eventos_ruta_pique_y_vida(p: Array, c: CarreraJugador, m: Mundo) -> void:
 	## EN CADENA: si le contestaste en redes, el duelo se calienta unas semanas después.
 	if not c.hitos.has("ruta_pique") and semanas_desde(c, m, "pique") >= 4:
 		p.append(c._ev("ruta_pique", "El duelo se calienta",
@@ -45,6 +58,9 @@ static func eventos(c: CarreraJugador, m: Mundo) -> Array:
 			"El más viejo del vestuario te ofrece una hora extra de trabajo tras el entreno, los dos solos.",
 			[c._op("Te quedas con él.", {"ruta_xp": 60, "energia": -8, "relacion": 1, "ruta_marca": "veterano"}),
 			c._op("Hoy no: estás cansado.", {"energia": 6})], true))
+
+## La escuela del niño de las botas y el consejo del veterano.
+static func _eventos_ruta_escuela_y_legado(p: Array, c: CarreraJugador, m: Mundo) -> void:
 	## EN CADENA: el niño de las botas vuelve doce semanas después, con su equipo entero.
 	if not c.hitos.has("ruta_escuela") and semanas_desde(c, m, "botas") >= 12:
 		p.append(c._ev("ruta_escuela", "El niño de las botas vuelve",
@@ -57,6 +73,9 @@ static func eventos(c: CarreraJugador, m: Mundo) -> Array:
 			"Tras semanas quedándoos los dos solos, el veterano te dice que ya no tiene nada que enseñarte, salvo una cosa: elegir.",
 			[c._op("«Enséñame a leer el juego.»", {"ruta_xp": 120, "relacion": 1}),
 			c._op("«Enséñame a mandar en el vestuario.»", {"relacion": 4, "moral": 3})], true))
+
+## El documental y su estreno.
+static func _eventos_ruta_docu(p: Array, c: CarreraJugador, m: Mundo) -> void:
 	## (13-11 noche) Los que nacen de los logros, del corte del duelo y de los puntos sin gastar.
 	if not c.hitos.has("ruta_docu") and CarreraLogros.ganados(c).size() >= 5:
 		p.append(c._ev("ruta_docu", "Un documental sobre ti",
@@ -69,6 +88,9 @@ static func eventos(c: CarreraJugador, m: Mundo) -> Array:
 			"Se estrena esta semana y el club te deja ir a la gala, que cae la víspera del partido.",
 			[c._op("Vas a la gala.", {"fama": 3, "seguidores": 2000, "energia": -10, "relacion": -2}),
 			c._op("Lo ves en casa y descansas.", {"energia": 8, "moral": 2})], true))
+
+## La burla en la tele y el estancamiento.
+static func _eventos_ruta_burla_y_estancado(p: Array, c: CarreraJugador, r: Dictionary) -> void:
 	if not c.hitos.has("ruta_burla") and CarreraDuelo.por_remontar(c):
 		p.append(c._ev("ruta_burla", "Tu rival se ríe en la tele",
 			"Va por delante en vuestro duelo y lo dice en directo: «Este año ni se acerca».",
@@ -79,6 +101,9 @@ static func eventos(c: CarreraJugador, m: Mundo) -> Array:
 			"Tienes puntos de talento sin usar y te lo dice claro: lo que no se trabaja, se pierde.",
 			[c._op("Te quedas a trabajar esta semana.", {"ruta_xp": 40, "energia": -5}),
 			c._op("Prefieres guardarlos para más adelante.", {"moral": 1})], true))
+
+## El primo, su bar y las noticias del bar.
+static func _eventos_ruta_primo_y_bar(p: Array, c: CarreraJugador, m: Mundo) -> void:
 	var j := c.jugador(m)
 	if not c.hitos.has("ruta_primo") and j != null and CarreraVida.ahorros(c) >= j.sueldo * 20:
 		p.append(c._ev("ruta_primo", "Tu primo tiene un negocio",
@@ -91,8 +116,6 @@ static func eventos(c: CarreraJugador, m: Mundo) -> Array:
 			"El bar con tu nombre se llena cada día de partido. Tu primo quiere saber qué haces con tu parte.",
 			[c._op("Recuperas lo prestado, con un extra (doce semanas de sueldo).", {"ruta_ahorros_semanas": 12}),
 			c._op("Lo dejas dentro: que el bar lleve tu cara.", {"seguidores": 900, "fama": 2, "moral": 2})], true))
-	return p
-
 ## Semanas desde que una decisión dejó la marca `cual` (-1 si no la hay).
 static func semanas_desde(c: CarreraJugador, m: Mundo, cual: String) -> int:
 	var marcas: Variant = CarreraRuta.asegurar(c).get("marcas")

@@ -47,6 +47,15 @@ func _cumple_oculto(clave: String) -> bool:
 	var c := mundo.mi_club()
 	if c == null:
 		return false
+	var v: Variant = _cumple_oculto_a(clave)
+	if v == null:
+		v = _cumple_oculto_b(clave, c)
+	if v != null:
+		return bool(v)
+	return false
+
+## Logros ocultos de carrera de club (centenario, mecenas, imperio, sabio). Devuelve null si la clave no es de este grupo.
+func _cumple_oculto_a(clave: String) -> Variant:
 	match clave:
 		"centenario":
 			return mundo.roles != null and mundo.roles.trofeos.size() >= 100
@@ -59,6 +68,11 @@ func _cumple_oculto(clave: String) -> bool:
 			return mundo.obras != null and mundo.obras.todo_al_maximo()
 		"sabio":
 			return mundo.entrenamiento != null and mundo.entrenamiento.mentorias.size() >= 4
+	return null
+
+## Logros ocultos del once y las rachas (cantera, ídolos, invicto, remontada). Devuelve null si la clave no es de este grupo.
+func _cumple_oculto_b(clave: String, c: Club) -> Variant:
+	match clave:
 		"cantera11":
 			## Once canteranos a la vez. Se mira el once REAL, no la plantilla:
 			## tener once de la casa en la lista no es alinearlos.
@@ -82,7 +96,7 @@ func _cumple_oculto(clave: String) -> bool:
 			return l != null and not l.quedan_jornadas() and int(rachas.get("invicto", 0)) >= l.jornadas()
 		"remontada":
 			return bool(marcas.get("remontada", false))
-	return false
+	return null
 
 func revisar_ocultos() -> Array[String]:
 	var nuevos: Array[String] = []

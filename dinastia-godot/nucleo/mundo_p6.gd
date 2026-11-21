@@ -137,6 +137,38 @@ func _clausula_descenso(c: Club, baja: bool) -> void:
 ## `nueva_temporada()`; desde fuera se usa `cerrar_temporada()` (mundo_p7).
 func _cerrar_campeonato() -> Dictionary:
 	var resumen := {"campeones": [], "suben": [], "bajan": [], "directiva": {}}
+	_cerrar_ramas()
+	var tablas := {}
+	var mi_puesto := _cerrar_ligas(tablas, resumen)
+	_cerrar_logros_y_eras(resumen)
+	_cerrar_auspicio(mi_puesto, resumen)
+	## Los que bajan de Primera y los que suben de Segunda, por cada país con las dos divisiones: las reglas de siempre o las REALES del país
+	## (`ReglasAscenso`: tres bajan en ENG/ESP/ITA, dos directos y un playoff de cuatro; promoción en GER y FRA).
+	AscensosPais.cerrar(self, tablas, resumen)
+
+	## Y la cuenta que de verdad importa: si cumpliste lo que te pidieron.
+	##
+	## OJO: el puesto se saca de `mi_puesto`, calculado ARRIBA con la foto de las
+	## tablas de antes de mover a nadie. Mirarlo aqui seria mirar la liga NUEVA de
+	## tu club si acabas de ascender o descender, donde todavia no has jugado nada
+	## y por tanto eres primero por diferencia de goles cero. Al que acaba de bajar
+	## le saldria que cumplio.
+	## Los puntos de habilidad de la temporada, antes del veredicto: si te echan,
+	## al menos tu plantel se queda con lo que ganó jugando.
+	_cerrar_entrenamiento_y_copa()
+	_cerrar_directiva(mi_puesto, resumen)
+
+	## El pulso de la carrera: prestigio, ascensos, y si el interino no se
+	## resolvió por fechas (interinato de menos de cinco semanas jugadas al
+	## cerrar la temporada), por temporada terminada.
+	if roles != null:
+		resumen["roles"] = roles.tras_temporada(resumen.get("directiva", {}))
+
+	_cerrar_reto(mi_puesto, resumen)
+	return resumen
+
+## Las ramas del club terminan su temporada (C12): noticia y portada del femenino si gana.
+func _cerrar_ramas() -> void:
 	## LAS RAMAS TERMINAN SU TEMPORADA (C12).
 	if hinchada != null and mi_club() != null and prensa != null:
 		for rr: Dictionary in hinchada.temporada_ramas(mi_club(), anio):
@@ -146,7 +178,9 @@ func _cerrar_campeonato() -> Dictionary:
 			if p == 1 and String(rr["clave"]) == "femenino":
 				prensa.guardar_portada("¡EL FEMENINO, CAMPEÓN!", "La rama femenina del club gana la liga.", "bien",
 					{"img": "escudo", "sub": "La rama femenina gana la liga y el club suma reputación y socios.", "nueva": true})
-	var tablas := {}
+
+## Las ligas: campeón, reputación, Supercopa y la tabla de cada una. Devuelve tu puesto (foto de antes de mover a nadie).
+func _cerrar_ligas(tablas: Dictionary, resumen: Dictionary) -> int:
 	## El puesto de TU club, con la foto de antes de mover a nadie.
 	var mi_puesto := 0
 	for l in ligas:
@@ -179,7 +213,10 @@ func _cerrar_campeonato() -> Dictionary:
 					break
 				n += 1
 			mi_puesto = n
+	return mi_puesto
 
+## La gala, las épocas doradas y la moda tactica al cerrar el año.
+func _cerrar_logros_y_eras(resumen: Dictionary) -> void:
 	## La gala de fin de año: equipo ideal, mejor joven, mejor entrenador. Tiene
 	## que ir AQUÍ, antes del bloque de ascensos/descensos de abajo: por dentro
 	## vuelve a pedir `liga_de(mi_club()).tabla()`, y si ya se hubiera movido de
@@ -196,6 +233,8 @@ func _cerrar_campeonato() -> Dictionary:
 	## mejor dibujo del juego lo es para siempre y se elige una vez en diez años.
 	_rodar_era()
 
+## La marca del pecho: su exigencia contractual, con el puesto de antes de mover a nadie.
+func _cerrar_auspicio(mi_puesto: int, resumen: Dictionary) -> void:
 	## LA MARCA DEL PECHO MIRA LA TABLA. La exigencia contractual se cobra aqui,
 	## con `mi_puesto` ya calculado sobre la foto de ANTES de mover a nadie de
 	## liga: si se leyera despues, un descendido tendria el puesto de su liga
@@ -205,19 +244,8 @@ func _cerrar_campeonato() -> Dictionary:
 		if cierre_ausp != "":
 			resumen["auspicio"] = cierre_ausp
 
-	## Los que bajan de Primera y los que suben de Segunda, por cada país con las dos divisiones: las reglas de siempre o las REALES del país
-	## (`ReglasAscenso`: tres bajan en ENG/ESP/ITA, dos directos y un playoff de cuatro; promoción en GER y FRA).
-	AscensosPais.cerrar(self, tablas, resumen)
-
-	## Y la cuenta que de verdad importa: si cumpliste lo que te pidieron.
-	##
-	## OJO: el puesto se saca de `mi_puesto`, calculado ARRIBA con la foto de las
-	## tablas de antes de mover a nadie. Mirarlo aqui seria mirar la liga NUEVA de
-	## tu club si acabas de ascender o descender, donde todavia no has jugado nada
-	## y por tanto eres primero por diferencia de goles cero. Al que acaba de bajar
-	## le saldria que cumplio.
-	## Los puntos de habilidad de la temporada, antes del veredicto: si te echan,
-	## al menos tu plantel se queda con lo que ganó jugando.
+## Puntos de habilidad del entrenamiento y los títulos de liga y copa de tu club.
+func _cerrar_entrenamiento_y_copa() -> void:
 	if entrenamiento != null and mi_club() != null:
 		entrenamiento.repartir_puntos(mi_club())
 	if copa != null and copa.campeon == mi_club() and logros != null:
@@ -225,6 +253,9 @@ func _cerrar_campeonato() -> Dictionary:
 	## La COPA es un título: va a la vitrina de la carrera (y al museo) con la final que se jugó (decisión del dueño, 27-10-2026).
 	if copa != null and copa.campeon == mi_club() and roles != null:
 		roles.sumar_trofeo(copa.nombre, {"final": _final_de_copa(copa)})
+
+## El veredicto de la directiva, sus objetivos, las primas por objetivos del reglamento.
+func _cerrar_directiva(mi_puesto: int, resumen: Dictionary) -> void:
 	if directiva != null and not directiva.despedido_ya and mi_puesto > 0:
 		resumen["directiva"] = directiva.tras_temporada(mi_puesto, mi_puesto == 1, copa != null and copa.campeon == mi_club())
 		ObjetivosCierre.al_cerrar_temporada(self, directiva, mi_puesto, resumen["directiva"])   ## (10-11) objetivos secundarios y proyecto a 3 temporadas
@@ -238,11 +269,9 @@ func _cerrar_campeonato() -> Dictionary:
 			for j in mio_p.plantilla:
 				j.cambiar_moral(6, "Normas y cuerpo técnico del club")
 			resumen["primas_pagadas"] = prima_total
-	## El pulso de la carrera: prestigio, ascensos, y si el interino no se
-	## resolvió por fechas (interinato de menos de cinco semanas jugadas al
-	## cerrar la temporada), por temporada terminada.
-	if roles != null:
-		resumen["roles"] = roles.tras_temporada(resumen.get("directiva", {}))
+
+## El reto de la carrera (26-9-2026): se juzga al cerrar su temporada.
+func _cerrar_reto(mi_puesto: int, resumen: Dictionary) -> void:
 	## EL RETO (26-9-2026): se juzga al cerrar su temporada.
 	if not reto.is_empty() and mi_club() != null:
 		var yo := mi_club()
@@ -259,7 +288,6 @@ func _cerrar_campeonato() -> Dictionary:
 			resumen["reto"] = rr
 			if prensa != null:
 				prensa.noticia.emit(String(rr["titulo"]), String(rr["texto"]))
-	return resumen
 
 ## La final de la copa, en una línea: «A 2-1 B» (con penales si los hubo).
 func _final_de_copa(c: Copa) -> String:

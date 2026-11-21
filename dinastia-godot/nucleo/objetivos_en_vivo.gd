@@ -40,50 +40,17 @@ static func lista(m: Mundo, d: Directiva) -> Array[Dictionary]:
 		var meta := int(o.get("meta", 0))
 		match String(o.get("tipo", "")):
 			"copa":
-				if m.copa != null and m.copa.participantes.has(c):
-					salida.append(_en_copa(m.copa, c, o))
+				_lista_copa(salida, m, c, o)
 			"continental":
-				for k: Variant in m.continentales:
-					var cont: Continental = m.continentales[k]
-					if cont == null or not cont.participa(c):
-						continue
-					if meta > 4:   ## superar la fase de grupos
-						var pasa := cont.campeon == c or cont.clasificados().has(c) or ObjetivosClub.rondas_ganadas(cont, c) > 0
-						if pasa:
-							salida.append(_fila(o, 100))
-						elif cont.en_fase_de_grupos():
-							var mar: Dictionary = cont.marcador.get(c.id, {})
-							salida.append(_fila(o, 35 + mini(int(mar.get("pts", 0)) * 7, 55)))
-						else:
-							salida.append(_fila(o, 0, true))
-					else:
-						salida.append(_en_copa(cont, c, o))
-					break
+				_lista_continental(salida, m, c, o, meta)
 			"economia":
-				var base := int(d.bases.get("saldo", 0))
-				var p := 0
-				if meta == 0:
-					p = 100 if c.saldo >= 0 else int(round(100.0 * (1.0 - float(-c.saldo) / float(maxi(-base, 1)))))
-				elif meta > 0:
-					var obj := base + maxi(int(absf(float(base)) * 0.1), Eco.escalar(300000.0, float(c.rep)))
-					p = int(round(100.0 * float(c.saldo - base) / float(maxi(obj - base, 1))))
-				else:
-					var piso := float(base) * 0.9
-					p = 100 if float(c.saldo) >= piso else int(round(100.0 * float(c.saldo) / maxf(piso, 1.0)))
-				salida.append(_fila(o, p))
+				_lista_economia(salida, c, d, o, meta)
 			"cantera":
-				var jovenes := 0
-				for j: Jugador in c.plantilla:
-					if j.edad <= 21:
-						jovenes += 1
-				salida.append(_fila(o, int(round(100.0 * float(jovenes) / float(maxi(meta, 1))))))
+				_lista_cantera(salida, c, o, meta)
 			"social":
-				var b := int(d.bases.get("socios", 0))
-				if b > 0:
-					salida.append(_fila(o, int(round(100.0 * float(c.socios - b) / (float(b) * float(meta) / 100.0)))))
+				_lista_social(salida, c, d, o, meta)
 			"estilo":
-				if liga != null and liga.jornada_actual > 0:
-					salida.append(_fila(o, _estilo(liga, c, meta)))
+				_lista_estilo(salida, liga, c, o, meta)
 	var pr: Dictionary = d.proyecto
 	if not pr.is_empty():
 		var tot := maxi(int(pr.get("temporadas", ObjetivosClub.TEMPORADAS_PROYECTO)), 1)
@@ -94,6 +61,63 @@ static func lista(m: Mundo, d: Directiva) -> Array[Dictionary]:
 			fila["estado"] = "riesgo"
 		salida.append(fila)
 	return salida
+
+## Objetivo de copa: si tu club participa, su marcador en la copa.
+static func _lista_copa(salida: Array[Dictionary], m: Mundo, c: Club, o: Dictionary) -> void:
+	if m.copa != null and m.copa.participantes.has(c):
+		salida.append(_en_copa(m.copa, c, o))
+
+## Objetivo continental: superar la fase de grupos o ir lejos en el continental.
+static func _lista_continental(salida: Array[Dictionary], m: Mundo, c: Club, o: Dictionary, meta: int) -> void:
+	for k: Variant in m.continentales:
+		var cont: Continental = m.continentales[k]
+		if cont == null or not cont.participa(c):
+			continue
+		if meta > 4:   ## superar la fase de grupos
+			var pasa := cont.campeon == c or cont.clasificados().has(c) or ObjetivosClub.rondas_ganadas(cont, c) > 0
+			if pasa:
+				salida.append(_fila(o, 100))
+			elif cont.en_fase_de_grupos():
+				var mar: Dictionary = cont.marcador.get(c.id, {})
+				salida.append(_fila(o, 35 + mini(int(mar.get("pts", 0)) * 7, 55)))
+			else:
+				salida.append(_fila(o, 0, true))
+		else:
+			salida.append(_en_copa(cont, c, o))
+		break
+
+## Objetivo de economía: el saldo frente a la base (o el piso, si la meta es negativa).
+static func _lista_economia(salida: Array[Dictionary], c: Club, d: Directiva, o: Dictionary, meta: int) -> void:
+	var base := int(d.bases.get("saldo", 0))
+	var p := 0
+	if meta == 0:
+		p = 100 if c.saldo >= 0 else int(round(100.0 * (1.0 - float(-c.saldo) / float(maxi(-base, 1)))))
+	elif meta > 0:
+		var obj := base + maxi(int(absf(float(base)) * 0.1), Eco.escalar(300000.0, float(c.rep)))
+		p = int(round(100.0 * float(c.saldo - base) / float(maxi(obj - base, 1))))
+	else:
+		var piso := float(base) * 0.9
+		p = 100 if float(c.saldo) >= piso else int(round(100.0 * float(c.saldo) / maxf(piso, 1.0)))
+	salida.append(_fila(o, p))
+
+## Objetivo de cantera: los jugadores de 21 años o menos frente a la meta.
+static func _lista_cantera(salida: Array[Dictionary], c: Club, o: Dictionary, meta: int) -> void:
+	var jovenes := 0
+	for j: Jugador in c.plantilla:
+		if j.edad <= 21:
+			jovenes += 1
+	salida.append(_fila(o, int(round(100.0 * float(jovenes) / float(maxi(meta, 1))))))
+
+## Objetivo social: los socios frente a la base.
+static func _lista_social(salida: Array[Dictionary], c: Club, d: Directiva, o: Dictionary, meta: int) -> void:
+	var b := int(d.bases.get("socios", 0))
+	if b > 0:
+		salida.append(_fila(o, int(round(100.0 * float(c.socios - b) / (float(b) * float(meta) / 100.0)))))
+
+## Objetivo de estilo: según la tabla de hoy.
+static func _lista_estilo(salida: Array[Dictionary], liga: Liga, c: Club, o: Dictionary, meta: int) -> void:
+	if liga != null and liga.jornada_actual > 0:
+		salida.append(_fila(o, _estilo(liga, c, meta)))
 
 ## 0-100 para el objetivo de estilo según la tabla de hoy.
 static func _estilo(liga: Liga, c: Club, meta: int) -> int:

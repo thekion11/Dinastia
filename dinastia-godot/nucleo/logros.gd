@@ -22,6 +22,28 @@ func premios_temporada() -> Dictionary:
 	var universo := mundo.jugadores()
 	var acta := {"anio": mundo.anio, "puesto": mi_puesto}
 
+	var ideal := _premio_equipo_ideal(universo, acta)
+	_premio_pichichi(liga, acta)
+	var joven := _premio_joven(universo, acta)
+	## MEJOR ENTRENADOR: el del campeón. Los técnicos rivales no están portados,
+	## así que se nombra al club y no a la persona; lo que sí importa de verdad
+	## —si eres tú— se decide igual.
+	acta["dt"] = campeon.nombre
+	acta["dt_es_mio"] = campeon == mio
+
+	_premio_fair_play(universo, mio, acta)
+	var grandes := _premio_club_popular(mio, acta)
+	_premio_estadio(mio, grandes, acta)
+	_premio_ganados(acta, joven, ideal, mio)
+
+	premios.push_front(acta)
+	while premios.size() > MAX_PREMIOS:
+		premios.pop_back()
+	_archivar_plantel(mi_puesto)
+	premios_entregados.emit(acta)
+	return acta
+## Equipo ideal: plaza por plaza, con cada premio en la ficha. Devuelve el once.
+func _premio_equipo_ideal(universo: Array, acta: Dictionary) -> Array[Jugador]:
 	## EQUIPO IDEAL. Se reparte plaza por plaza y no de una vez, porque un mismo
 	## jugador no puede ocupar dos: por eso los ya elegidos se descartan.
 	var ideal: Array[Jugador] = []
@@ -44,7 +66,10 @@ func premios_temporada() -> Dictionary:
 	## Cada premio queda en la ficha del jugador (C17).
 	for j in ideal:
 		j.premios.append({"anio": mundo.anio, "premio": "Equipo ideal de la temporada"})
-	## EL MÁXIMO GOLEADOR de tu liga, con su trofeo en la ficha.
+	return ideal
+
+## El máximo goleador de la liga, con su trofeo en la ficha.
+func _premio_pichichi(liga: Liga, acta: Dictionary) -> void:
 	var pichichi: Jugador = null
 	if liga != null:
 		for c: Club in liga.clubes:
@@ -55,8 +80,8 @@ func premios_temporada() -> Dictionary:
 		pichichi.premios.append({"anio": mundo.anio, "premio": "Máximo goleador (%d goles)" % pichichi.goles})
 		acta["pichichi"] = "%s (%d goles, %s)" % [Nombres.visible(pichichi.nombre), pichichi.goles, _nombre_club(pichichi.club_id)]
 
-	## MEJOR JOVEN. Sub-21, y en caso de empate manda la media: entre dos chicos
-	## con los mismos números, el mejor jugador.
+## Mejor joven (sub-21). Devuelve al jugador, o null si no hay ninguno.
+func _premio_joven(universo: Array, acta: Dictionary) -> Jugador:
 	var joven: Jugador = null
 	var joven_nota := -1.0
 	for j in universo:
@@ -70,17 +95,10 @@ func premios_temporada() -> Dictionary:
 		joven.premios.append({"anio": mundo.anio, "premio": "Mejor jugador joven"})
 	acta["joven"] = "%s (%d años, %s)" % [
 		Nombres.visible(joven.nombre), joven.edad, _nombre_club(joven.club_id)] if joven != null else "—"
+	return joven
 
-	## MEJOR ENTRENADOR: el del campeón. Los técnicos rivales no están portados,
-	## así que se nombra al club y no a la persona; lo que sí importa de verdad
-	## —si eres tú— se decide igual.
-	acta["dt"] = campeon.nombre
-	acta["dt_es_mio"] = campeon == mio
-
-	## FAIR PLAY: el club de primera de tu país con menos amarillas en todo el
-	## año. El HTML fijaba "CHI" a mano porque allí solo se podía dirigir en
-	## Chile; aquí se usa el país de tu club, que da lo mismo dirigiendo en Chile
-	## y lo correcto dirigiendo en cualquier otro sitio.
+## Fair play: el club de primera de tu país con menos amarillas.
+func _premio_fair_play(universo: Array, mio: Club, acta: Dictionary) -> void:
 	var amarillas := {}
 	for j in universo:
 		var c: Club = mundo.clubes.get(j.club_id)
@@ -96,10 +114,8 @@ func premios_temporada() -> Dictionary:
 	acta["fairplay"] = _nombre_club(limpio_id)
 	acta["fairplay_es_mio"] = limpio_id == mio.id
 
-	## CLUB MÁS POPULAR Y MEJOR HINCHADA. La popularidad es la reputación; la
-	## hinchada la ganas tú si la tienes contenta, y si no se la lleva uno de los
-	## grandes. El sorteo va por `Azar` a propósito: con el azar de Godot la
-	## misma semilla dejaría de dar la misma gala.
+## Club más popular y mejor hinchada. Devuelve los grandes de tu país (para el estadio).
+func _premio_club_popular(mio: Club, acta: Dictionary) -> Array[Club]:
 	var grandes: Array[Club] = []
 	for c: Club in mundo.clubes.values():
 		if c.pais == mio.pais and c.division == 1:
@@ -111,8 +127,10 @@ func premios_temporada() -> Dictionary:
 		hinchada = grandes[Azar.ent(0, mini(3, grandes.size() - 1))]
 	acta["hinchada"] = hinchada.nombre
 	acta["hinchada_es_mia"] = hinchada == mio
+	return grandes
 
-	## MEJOR ESTADIO: el de más aforo. Empatado gana el tuyo, como en el HTML.
+## Mejor estadio: el de más aforo (empatado gana el tuyo).
+func _premio_estadio(mio: Club, grandes: Array[Club], acta: Dictionary) -> void:
 	var mejor_ajeno := 0
 	for c in grandes:
 		if c != mio:
@@ -120,8 +138,8 @@ func premios_temporada() -> Dictionary:
 	acta["estadio_es_mio"] = mio.estadio_aforo >= mejor_ajeno
 	acta["estadio"] = "Estadio de %s" % (mio.nombre if acta["estadio_es_mio"] else _mayor_aforo(grandes, mio))
 
-	## QUÉ SE LLEVA TU CLUB. Es la lista que se lee en voz alta, y por eso se
-	## arma aquí y no en la interfaz: el acta tiene que poder contarse sola.
+## Lo que se lleva tu club: la lista que se lee en voz alta.
+func _premio_ganados(acta: Dictionary, joven: Jugador, ideal: Array[Jugador], mio: Club) -> void:
 	var ganados: Array[String] = []
 	if bool(acta["dt_es_mio"]):
 		ganados.append("Mejor entrenador del año")
@@ -142,12 +160,6 @@ func premios_temporada() -> Dictionary:
 	acta["ganados"] = ganados
 	acta["ideal_mios"] = mios_en_ideal
 
-	premios.push_front(acta)
-	while premios.size() > MAX_PREMIOS:
-		premios.pop_back()
-	_archivar_plantel(mi_puesto)
-	premios_entregados.emit(acta)
-	return acta
 
 ## El cierre completo de la temporada desde el lado del reconocimiento: la
 ## experiencia por haberla aguantado entera, la gala y el repaso de logros.
