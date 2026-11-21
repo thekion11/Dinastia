@@ -405,10 +405,15 @@ func _candidatos_de(j: Jugador, c: Club, obras: Instalaciones) -> Array[String]:
 				break
 		if solo:
 			candidatos.append("compa")
+	_motivos_de_estado_y_cargo(j, c, obras, candidatos)
+	return candidatos
+
+## Motivos de estado físico, instalaciones y capitanía: el resto de la lista de candidatos.
+func _motivos_de_estado_y_cargo(j: Jugador, c: Club, obras: Instalaciones, candidatos: Array[String]) -> void:
 	if j.fisico < 58:
 		candidatos.append("descanso")
 	if obras != null and obras.nivel("ct") + obras.nivel("med") < 3:
 		candidatos.append("instal")
 	if j.edad >= 28 and j.ovr >= c.rep - 4 and not j.capitan:
 		candidatos.append("capitan")
-	return candidatos
+

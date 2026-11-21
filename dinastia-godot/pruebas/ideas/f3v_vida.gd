@@ -59,6 +59,9 @@ func f3v_la_agenda_del_m_vil() -> void:
 	_tel._adelantar("partido")
 	_comprobar(_m.reloj.dia == 5 and _m.reloj.hora() == VidaCiudad.HORA_PARTIDO, "y pasado el partido, no salta a la semana siguiente")
 	_comprobar(absf(_vista._hora - _m.reloj.hora_decimal()) < 0.01, "la luz de la ciudad siguió al móvil")
+	f3v_la_agenda_del_m_vil_01()
+
+func f3v_la_agenda_del_m_vil_01() -> void:
 	## EL SURTIDOR COBRA AL BOLSILLO DEL DT (pieza C de §2.2h), no al club.
 	if _v != null and _v._redes() != null and _m.roles != null:
 		var sr := _v._redes()

@@ -21,16 +21,21 @@ static func probar(nat: Object) -> Dictionary:
 	var motor := MotorLeague.new()
 	motor.jugadores = lista
 	motor.balon = bola_nodo
-	_pasada_estado(nat, rr, raiz, lista, bola_nodo, motor, fallos, textos)
-	_mas_cercano_equipo(nat, rr, raiz, lista, bola_nodo, motor, fallos, textos)
-	_historial(nat, rr, raiz, lista, bola_nodo, motor, fallos, textos)
-	_filtro_interferir(nat, rr, raiz, lista, bola_nodo, motor, fallos, textos)
-	_varios_cercanos(nat, rr, raiz, lista, bola_nodo, motor, fallos, textos)
+	var esc := {"rr": rr, "raiz": raiz, "lista": lista, "bola": bola_nodo, "motor": motor}
+	_pasada_estado(nat, esc, fallos, textos)
+	_mas_cercano_equipo(nat, esc, fallos, textos)
+	_historial(nat, esc, fallos, textos)
+	_filtro_interferir(nat, esc, fallos, textos)
+	_varios_cercanos(nat, esc, fallos, textos)
 	return {"fallos": fallos, "textos": textos}
 
 
 ## 1. La pasada de estado: ms al balón, el más cercano de todos y las 4 líneas.
-static func _pasada_estado(nat: Object, rr: RandomNumberGenerator, raiz: Node3D, lista: Array, bola_nodo: Node3D, motor: MotorLeague, fallos: Array[String], textos: Array[String]) -> void:
+static func _pasada_estado(nat: Object, esc: Dictionary, fallos: Array[String], textos: Array[String]) -> void:
+	var rr: RandomNumberGenerator = esc["rr"]
+	var lista: Array = esc["lista"]
+	var bola_nodo: Node3D = esc["bola"]
+	var motor: MotorLeague = esc["motor"]
 	var dis := 0
 	var t_gd := 0
 	var t_c := 0
@@ -64,9 +69,11 @@ static func _pasada_estado(nat: Object, rr: RandomNumberGenerator, raiz: Node3D,
 		fallos.append("pasada de estado distinta en %d de %d casos" % [dis, n1])
 	textos.append("pasada de estado (ms al balón x2 + más cercano + 4 líneas): GDScript %.1f µs, C++ %.1f µs por conjunto" % [t_gd / float(n1), t_c / float(n1)])
 
-
 ## 2. El más cercano de cada equipo (a la vez).
-static func _mas_cercano_equipo(nat: Object, rr: RandomNumberGenerator, raiz: Node3D, lista: Array, bola_nodo: Node3D, motor: MotorLeague, fallos: Array[String], textos: Array[String]) -> void:
+static func _mas_cercano_equipo(nat: Object, esc: Dictionary, fallos: Array[String], textos: Array[String]) -> void:
+	var rr: RandomNumberGenerator = esc["rr"]
+	var lista: Array = esc["lista"]
+	var motor: MotorLeague = esc["motor"]
 	var n1 := 2500
 	var dis := 0
 	var t_gd := 0
@@ -90,9 +97,9 @@ static func _mas_cercano_equipo(nat: Object, rr: RandomNumberGenerator, raiz: No
 		fallos.append("más cercano de cada equipo distinto en %d de %d casos" % [dis, n1])
 	textos.append("más cercano de cada equipo: GDScript %.1f µs, C++ %.1f µs por par" % [t_gd / float(n1), t_c / float(n1)])
 
-
 ## 3. El historial: secuencias largas (pasan de 600 entradas, con saltos de dt de 0 a 0,1 s).
-static func _historial(nat: Object, rr: RandomNumberGenerator, raiz: Node3D, lista: Array, bola_nodo: Node3D, motor: MotorLeague, fallos: Array[String], textos: Array[String]) -> void:
+static func _historial(nat: Object, esc: Dictionary, fallos: Array[String], textos: Array[String]) -> void:
+	var rr: RandomNumberGenerator = esc["rr"]
 	var dis := 0
 	var t_gd := 0
 	var t_c := 0
@@ -118,9 +125,11 @@ static func _historial(nat: Object, rr: RandomNumberGenerator, raiz: Node3D, lis
 		fallos.append("historial (registrar + acumular + media) distinto en %d de %d pasos" % [dis, pasos])
 	textos.append("historial (registrar + acumular + media_f): GDScript %.1f µs, C++ %.1f µs por paso" % [t_gd / float(pasos), t_c / float(pasos)])
 
-
 ## 4. El filtro de `_interferir`.
-static func _filtro_interferir(nat: Object, rr: RandomNumberGenerator, raiz: Node3D, lista: Array, bola_nodo: Node3D, motor: MotorLeague, fallos: Array[String], textos: Array[String]) -> void:
+static func _filtro_interferir(nat: Object, esc: Dictionary, fallos: Array[String], textos: Array[String]) -> void:
+	var rr: RandomNumberGenerator = esc["rr"]
+	var lista: Array = esc["lista"]
+	var motor: MotorLeague = esc["motor"]
 	var n1 := 2500
 	var dis := 0
 	var t_gd := 0
@@ -169,9 +178,12 @@ static func _filtro_interferir(nat: Object, rr: RandomNumberGenerator, raiz: Nod
 		fallos.append("la prueba de candidatos casi nunca da alguno (%d de %d): no prueba nada" % [con_cand, n1])
 	textos.append("candidatos de _interferir (%d con alguno de %d): GDScript %.1f µs, C++ %.1f µs por llamada" % [con_cand, n1, t_gd / float(n1), t_c / float(n1)])
 
-
 ## 5. Los varios más cercanos (con y sin excluidos; muchos empates exactos).
-static func _varios_cercanos(nat: Object, rr: RandomNumberGenerator, raiz: Node3D, lista: Array, bola_nodo: Node3D, motor: MotorLeague, fallos: Array[String], textos: Array[String]) -> void:
+static func _varios_cercanos(nat: Object, esc: Dictionary, fallos: Array[String], textos: Array[String]) -> void:
+	var rr: RandomNumberGenerator = esc["rr"]
+	var raiz: Node3D = esc["raiz"]
+	var lista: Array = esc["lista"]
+	var motor: MotorLeague = esc["motor"]
 	var dis := 0
 	var t_gd := 0
 	var t_c := 0
