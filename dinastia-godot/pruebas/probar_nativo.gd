@@ -412,6 +412,12 @@ func _probar() -> void:
 	_comprobar((es["fallos"] as Array).is_empty(), "estado por paso de League: C++ = GDScript (pasada de estado, historial y filtro de interferir)")
 	for t: String in es["textos"]:
 		print(t)
+	var nu := ProbarNativoNuevas.probar(nat)   ## (19-11) progreso, La Ruta, jugador del mes, ropa, cara, pelo, espejo, texturas, kit de la cabeza, grada y mapa del DT
+	for f: String in nu["fallos"]:
+		_comprobar(false, "nuevas en C++: " + f)
+	_comprobar((nu["fallos"] as Array).is_empty(), "portes del 19-11 (carrera, ropa, cara, pelo, espejo, texturas, kit, grada, DT): C++ = GDScript (byte a byte)")
+	for t: String in nu["textos"]:
+		print(t)
 	var so := ProbarNativoSonido.probar(nat)   ## (19-11) la síntesis del sonido
 	for f: String in so["fallos"]:
 		_comprobar(false, "síntesis del sonido en C++: " + f)
