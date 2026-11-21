@@ -4,11 +4,11 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2580 archivos (.gd, .cpp, .h), 369478 líneas, 1013 clases con nombre.
+Total: 2581 archivos (.gd, .cpp, .h), 369761 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
-45 archivos, 8271 líneas. Carpetas: `nativo/src`.
+46 archivos, 8440 líneas. Carpetas: `nativo/src`.
 
 Cada función es copia exacta de su gemela GDScript (regla de la extensión). Archivos por tamaño:
 
@@ -21,7 +21,7 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 - `nativo/src/estado_nativo.cpp` (319 líneas)
 - `nativo/src/league_equipo_nativo.cpp` (319 líneas)
 - `nativo/src/pasos_nativo.cpp` (318 líneas)
-- `nativo/src/puras_nucleo3.cpp` (288 líneas)
+- `nativo/src/puras_nucleo3.cpp` (289 líneas)
 - `nativo/src/guia_nativo.cpp` (259 líneas)
 - `nativo/src/trafico_cuerpo.cpp` (243 líneas)
 - `nativo/src/puras_nucleo.cpp` (236 líneas)
@@ -52,7 +52,7 @@ Cerca del tope (≥ 400 líneas): `carrera_jugador_p1.gd` (449), `carrera_jugado
 
 ## Partido: motor C4 y respaldo
 
-89 archivos, 15811 líneas. Carpetas: `nucleo`, `visor`.
+89 archivos, 15818 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -137,22 +137,22 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1257 archivos, 121222 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1257 archivos, 121273 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
 ## Núcleo: mundo, gestión y datos
 
-252 archivos, 52183 líneas. Carpetas: `nucleo`.
+252 archivos, 52239 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Mundo` | `nucleo/mundo.gd` | 158 | 913 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
-| `Jugador` | `nucleo/jugador.gd` | 32 | 476 | jugador_p1.gd |
+| `Jugador` | `nucleo/jugador.gd` | 32 | 477 | jugador_p1.gd |
 | `Liga` | `nucleo/liga.gd` | 235 | 197 |  |
 | `Nombres` | `nucleo/nombres.gd` | 176 | 171 |  |
 | `Partida` | `nucleo/partida.gd` | 443 | 118 | partida_p2.gd ← partida_p1.gd |
-| `Nativo` | `nucleo/nativo.gd` | 29 | 103 |  |
+| `Nativo` | `nucleo/nativo.gd` | 29 | 109 |  |
 | `Copa` | `nucleo/copa.gd` | 348 | 95 |  |
 | `Mercado` | `nucleo/mercado.gd` | 64 | 92 | mercado_p1.gd |
 | `Finanzas` | `nucleo/finanzas.gd` | 384 | 90 |  |
