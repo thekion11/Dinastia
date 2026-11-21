@@ -26,8 +26,21 @@ static func pintar(ui: Variant) -> Control:
 	centro.add_child(p)
 	var v := E.columna(10)
 	p.add_child(v)
+	_cabecera(ui, v, t)
+	_cifras(v, t)
+	_duelo(v, t)
+	_premios(ui, v, t, c)
+	v.add_child(E.boton("SEGUIR  ▸", E.ORO, func() -> void: ui._pintar_semana(), 52, true))
+	E.entrada(velo)
+	return velo
+
+## Rótulos de arriba: el año y el club.
+static func _cabecera(ui: Variant, v: VBoxContainer, t: Dictionary) -> void:
 	v.add_child(E.rotulo(Idiomas.t("FIN DE LA TEMPORADA %d") % int(t.get("anio", 0)), E.ORO))
 	v.add_child(E.titulo(34 if E.estrecho(ui) else 48, E.TEXTO, Idiomas.t("TU AÑO EN %s") % Nombres.visible(String(t.get("club", ""))).to_upper()))
+
+## Las cifras grandes de la temporada.
+static func _cifras(v: VBoxContainer, t: Dictionary) -> void:
 	var cif := E.fila(6)
 	v.add_child(cif)
 	cif.add_child(E.cifra(str(int(t.get("pj", 0))), "partidos"))
@@ -35,7 +48,9 @@ static func pintar(ui: Variant) -> Control:
 	cif.add_child(E.cifra(str(int(t.get("asist", 0))), "asist."))
 	cif.add_child(E.cifra(("%.2f" % float(t.get("nota", 0.0))) if float(t.get("nota", 0.0)) > 0.0 else "—", "nota", E.MENTA))
 	cif.add_child(E.cifra("%+d" % int(t.get("sube", 0)), "tu media", E.MENTA if int(t.get("sube", 0)) > 0 else E.SUAVE))
-	## El duelo.
+
+## El duelo.
+static func _duelo(v: VBoxContainer, t: Dictionary) -> void:
 	var d: Array = t.get("duelo", [0, 0]) if t.get("duelo") is Array else [0, 0]
 	if String(t.get("rival", "")) != "" and d.size() == 2:
 		var gano := bool(t.get("gano_duelo", false))
@@ -46,7 +61,9 @@ static func pintar(ui: Variant) -> Control:
 		ld.clip_text = true
 		ld.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fr.add_child(ld)
-	## Los premios.
+
+## Los premios: la gala, las copas, los premios individuales y el nivel que suben.
+static func _premios(ui: Variant, v: VBoxContainer, t: Dictionary, c: CarreraJugador) -> void:
 	v.add_child(E.rotulo("TUS PREMIOS"))
 	var gala := RutaGala.vista(ui, t)   ## la entrega en 3D (nada sin pantalla o en calidad mínima)
 	if gala != null:
@@ -81,9 +98,6 @@ static func pintar(ui: Variant) -> Control:
 			f.add_child(E.titulo(20, E.ORO, "+%d XP" % int(def[2])))
 	if int(t.get("niveles", 0)) > 0:
 		v.add_child(E.lbl(14, E.MENTA, Idiomas.t("Los premios te suben a nivel %d.") % CarreraRuta.nivel(c), true))
-	v.add_child(E.boton("SEGUIR  ▸", E.ORO, func() -> void: ui._pintar_semana(), 52, true))
-	E.entrada(velo)
-	return velo
 
 ## El palmarés personal (para «Ruta»): cada premio con las veces que lo ganaste.
 static func palmares(ui: Variant) -> Control:

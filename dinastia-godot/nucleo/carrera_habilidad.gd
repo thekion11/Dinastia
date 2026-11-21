@@ -45,6 +45,13 @@ static func de_zona(zona: String) -> Array:
 
 ## La zona a la que pertenece una habilidad.
 static func zona_de(hab: String) -> String:
+	var nat := Nativo.de("nuc_zona_habilidad")
+	if nat != null:
+		return nat.nuc_zona_habilidad(hab)
+	return zona_de_gd(hab)
+
+## Gemela GDScript de `nuc_zona_habilidad` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func zona_de_gd(hab: String) -> String:
 	for zona: String in DETALLE:
 		for par: Array in DETALLE[zona]:
 			if String(par[0]) == hab:

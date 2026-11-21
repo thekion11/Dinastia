@@ -56,6 +56,13 @@ const CATALOGO := [
 
 ## La fila de una clave (vacía si no existe).
 static func fila(clave: String) -> Array:
+	var nat := Nativo.de("nuc_fila_logro")
+	if nat != null:
+		return nat.nuc_fila_logro(clave)
+	return fila_gd(clave)
+
+## Gemela GDScript de `nuc_fila_logro` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func fila_gd(clave: String) -> Array:
 	for f: Array in CATALOGO:
 		if String(f[0]) == clave:
 			return f
@@ -71,6 +78,15 @@ static func valor(clave: String, lg: Logros) -> int:
 	if c == null:
 		return 0
 	var pre := clave.split("_")[0]
+	var v: Variant = _valor_de_carrera(pre, m, c, lg)
+	if v == null:
+		v = _valor_del_club(pre, m, c, lg)
+	if v == null:
+		return 0
+	return v
+
+## Valores de carrera y de la liga (anios, pj, racha, títulos, goleador…). Devuelve null si la clave no es de este grupo.
+static func _valor_de_carrera(pre: String, m: Mundo, c: Club, lg: Logros) -> Variant:
 	match pre:
 		"anios":
 			return maxi(0, m.anio - lg.anio_inicio)
@@ -92,6 +108,11 @@ static func valor(clave: String, lg: Logros) -> int:
 			return _maximo_de(lg.rec.get("pj", {}))
 		"publico":
 			return int(lg.rec["mas_publico"]["n"]) if lg.rec.has("mas_publico") else 0
+	return null
+
+## Valores del club (aforo, caja, socios, reputación, once, galas…). Devuelve null si la clave no es de este grupo.
+static func _valor_del_club(pre: String, m: Mundo, c: Club, lg: Logros) -> Variant:
+	match pre:
 		"aforo":
 			return c.estadio_aforo
 		"caja":
@@ -113,7 +134,8 @@ static func valor(clave: String, lg: Logros) -> int:
 			return mejor
 		"primer":
 			return 1 if m.prologo_visto else 0
-	return 0
+	return null
+
 
 ## El mayor valor de un registro: los goles van {nombre: n} y los partidos
 ## {id: {"nombre", "n"}} (así los guarda `Logros._anotar_participaciones`).

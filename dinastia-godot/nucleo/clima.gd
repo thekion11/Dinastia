@@ -63,6 +63,13 @@ static func estacion(pais: String, semana: int) -> String:
 	return "otono"
 
 static func _hash(s: String) -> int:
+	var nat := Nativo.de("nuc_hash_abs")
+	if nat != null:
+		return nat.nuc_hash_abs(s)
+	return _hash_gd(s)
+
+## Gemela GDScript de `nuc_hash_abs` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _hash_gd(s: String) -> int:
 	return absi(s.hash())
 
 ## El tiempo del partido. Devuelve:

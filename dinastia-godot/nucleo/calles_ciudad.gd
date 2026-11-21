@@ -56,9 +56,23 @@ const NUCLEO := [
 ]
 
 static func nombre_columna(i: int) -> String:
+	var nat := Nativo.de("nuc_nombre_columna")
+	if nat != null:
+		return nat.nuc_nombre_columna(i)
+	return nombre_columna_gd(i)
+
+## Gemela GDScript de `nuc_nombre_columna` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nombre_columna_gd(i: int) -> String:
 	return String(COLUMNAS[clampi(i + K, 0, COLUMNAS.size() - 1)])
 
 static func nombre_fila(j: int) -> String:
+	var nat := Nativo.de("nuc_nombre_fila")
+	if nat != null:
+		return nat.nuc_nombre_fila(j)
+	return nombre_fila_gd(j)
+
+## Gemela GDScript de `nuc_nombre_fila` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nombre_fila_gd(j: int) -> String:
 	return String(FILAS[clampi(j + K, 0, FILAS.size() - 1)])
 
 static func es_avenida_columna(i: int) -> bool:

@@ -57,6 +57,13 @@ static func partes(v: String) -> Array[int]:
 
 ## -1 si a < b, 0 si iguales, 1 si a > b.
 static func comparar(a: String, b: String) -> int:
+	var nat := Nativo.de("nuc_comparar_version")
+	if nat != null:
+		return nat.nuc_comparar_version(a, b)
+	return comparar_gd(a, b)
+
+## Gemela GDScript de `nuc_comparar_version` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func comparar_gd(a: String, b: String) -> int:
 	var pa := partes(a)
 	var pb := partes(b)
 	for i in maxi(pa.size(), pb.size()):
@@ -75,9 +82,23 @@ static func leer_tag(tag: String) -> Dictionary:
 	return {"version": m.get_string(1), "sistema": m.get_string(2)}
 
 static func nombre_archivo(version: String) -> String:
+	var nat := Nativo.de("nuc_nombre_parche")
+	if nat != null:
+		return nat.nuc_nombre_parche(version)
+	return nombre_archivo_gd(version)
+
+## Gemela GDScript de `nuc_nombre_parche` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nombre_archivo_gd(version: String) -> String:
 	return "parche_%s.pck" % version
 
 static func ruta_destino(version: String) -> String:
+	var nat := Nativo.de("nuc_ruta_parche")
+	if nat != null:
+		return nat.nuc_ruta_parche(version)
+	return ruta_destino_gd(version)
+
+## Gemela GDScript de `nuc_ruta_parche` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func ruta_destino_gd(version: String) -> String:
 	return CARPETA.path_join(nombre_archivo(version))
 
 ## La mejor Release: publicada (ni borrador ni prerrelease), de este sistema, más nueva que `actual` y con su `parche_<versión>.pck`.

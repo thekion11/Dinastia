@@ -133,6 +133,13 @@ static func equipo_de(m: Mundo, retirados: Array[Jugador]) -> Club:
 
 ## Cuántos hay por línea en una lista de jugadores: {POR, DEF, MED, DEL}.
 static func por_linea(lista: Array) -> Dictionary:
+	var nat := Nativo.de("nuc_por_linea")
+	if nat != null:
+		return nat.nuc_por_linea(lista)
+	return por_linea_gd(lista)
+
+## Gemela GDScript de `nuc_por_linea` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func por_linea_gd(lista: Array) -> Dictionary:
 	var n := {"POR": 0, "DEF": 0, "MED": 0, "DEL": 0}
 	for j: Jugador in lista:
 		n[j.pos] = int(n.get(j.pos, 0)) + 1

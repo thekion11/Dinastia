@@ -71,6 +71,59 @@ const CASOS: Array = [
 	["res://nucleo/seleccion_equipo.gd", "_total", "nuc_total_grupos", [["g", "por_grupo"]]],
 	["res://nucleo/torneo_selecciones.gd", "_cruces", "nuc_cruces", [["g", "lista_cruces"], ["g", "f_pos"]]],
 	["res://nucleo/vestuario_p3.gd", "motivo_satisfaccion", "nuc_motivo_satisfaccion", [["g", "sat"], ["b"]]],
+	## 4.ª tanda (textos, diccionarios, Color y objetos Jugador; ninguna modifica sus argumentos)
+	["res://nucleo/cesiones_p2.gd", "nueva_oferta", "nuc_nueva_oferta", [["i", 0, 200000000]]],
+	["res://nucleo/idiomas.gd", "_tiene_letras", "nuc_tiene_letras", [["r", 8]]],
+	["res://nucleo/idiomas_inverso.gd", "normal", "nuc_normal_titulo", [["g", "mayus_mixto"]]],
+	["res://nucleo/mercado_dt.gd", "_sin_fecha", "nuc_sin_fecha", [["g", "dict_fecha"]]],
+	["res://nucleo/movil.gd", "remitente_de", "nuc_remitente_de", [["g", "texto_msg"], ["g", "texto_msg"]]],
+	["res://nucleo/recorridos_red.gd", "normalizar", "nuc_normalizar_codigo", [["g", "codigo"]]],
+	["res://nucleo/partido_despedida.gd", "por_linea", "nuc_por_linea", [["g", "jugadores"]]],
+	["res://nucleo/ropero_dt.gd", "aplicar", "nuc_ropero_aplicar", [["g", "aspecto"], ["s", ["camiseta_club", "chandal", "bufanda_club", "gorra_club", "otro", ""]], ["g", "color"], ["g", "color"]]],
+	["res://nucleo/ciudad_p1.gd", "paletas_luces", "nuc_paletas_luces", []],
+	## 5.ª tanda (tablas de reputación, rutina, calles, rarezas; hash de textos)
+	["res://nucleo/reputacion.gd", "nivel_de", "nuc_nivel_reputacion", [["i", 0, 100]]],
+	["res://nucleo/reputacion.gd", "nombre_nivel", "nuc_nombre_nivel", [["i", 0, 100]]],
+	["res://nucleo/reputacion.gd", "tope_instalaciones", "nuc_tope_instalaciones", [["i", 0, 100]]],
+	["res://nucleo/reputacion.gd", "mult_patrocinio", "nuc_mult_patrocinio", [["i", 0, 100]]],
+	["res://nucleo/habilidades_jugador.gd", "estrellas_de", "nuc_estrellas_de", [["f", 60.0, 100.0, [74.0, 81.0, 88.0]]]],
+	["res://nucleo/finanzas.gd", "meses_de", "nuc_meses_de", [["i", 0, 30]]],
+	["res://nucleo/reloj.gd", "actividad_de_rutina", "nuc_actividad_rutina", [["i", 0, 1500]]],
+	["res://nucleo/reloj.gd", "_fin_tramo", "nuc_fin_tramo", [["i", 0, 1500]]],
+	["res://nucleo/calles_ciudad.gd", "nombre_columna", "nuc_nombre_columna", [["i", -20, 20]]],
+	["res://nucleo/calles_ciudad.gd", "nombre_fila", "nuc_nombre_fila", [["i", -20, 20]]],
+	["res://nucleo/meta.gd", "rareza_de", "nuc_rareza_de", [["i", 40, 99], ["b"]]],
+	["res://nucleo/recorridos_red.gd", "base_de", "nuc_base_recorrido", [["s", ["122", "150c", "122e", "C02", "C09c", "150ce", "150ec", "c", "e", "", "cc", "ee"]]]],
+	["res://nucleo/politica.gd", "_h", "nuc_hash_abs", [["r", 12]]],
+	["res://nucleo/citas_p1.gd", "_h", "nuc_hash_abs", [["r", 12]]],
+	["res://nucleo/historia_club.gd", "_h", "nuc_hash_abs", [["r", 12]]],
+	["res://nucleo/clima.gd", "_hash", "nuc_hash_abs", [["r", 12]]],
+	## 6.ª tanda (versiones, nombres, recorridos con hash(Array) del motor)
+	["res://nucleo/actualizador.gd", "comparar", "nuc_comparar_version", [["s", ["0.9.2", "v0.9.10", "V1", "1.0", "0.9.2-beta", "10.2.3.4", "", "a", "1..2", "9999999999.1", " 0.9.2 ", "1.0.0", "0.10"]], ["s", ["0.9.2", "v0.9.10", "V1", "1.0", "0.9.2-beta", "10.2.3.4", "", "a", "1..2", "9999999999.1", " 0.9.2 ", "1.0.0", "0.10"]]]],
+	["res://nucleo/actualizador.gd", "nombre_archivo", "nuc_nombre_parche", [["s", ["0.9.2", "v0.9.10", "V1", "1.0", "0.9.2-beta", "10.2.3.4", "", "a", "1..2", "9999999999.1", " 0.9.2 ", "1.0.0", "0.10"]]]],
+	["res://nucleo/actualizador.gd", "ruta_destino", "nuc_ruta_parche", [["s", ["0.9.2", "v0.9.10", "V1", "1.0", "0.9.2-beta", "10.2.3.4", "", "a", "1..2", "9999999999.1", " 0.9.2 ", "1.0.0", "0.10"]]]],
+	["res://nucleo/nombres.gd", "huella", "nuc_huella_nombre", [["r", 20]]],
+	["res://nucleo/presets_tactica.gd", "limpiar_nombre", "nuc_limpiar_nombre_tactica", [["r", 40]]],
+	["res://nucleo/formacion_propia.gd", "nombre_valido", "nuc_nombre_valido_formacion", [["s", ["", "  ", "★ Mi", "x★ y", "★ ★ ★", "abcdefghijklmnopqrstuvwxyz0123", "Mi formación"]], ]],
+	["res://nucleo/formacion_propia.gd", "nombre_valido", "nuc_nombre_valido_formacion", [["r", 40]]],
+	["res://nucleo/formatos_conti.gd", "premio_de_ronda", "nuc_premio_de_ronda", [["s", ["lib", "sud", "ucl", "x", ""]], ["i", 0, 40]]],
+	["res://nucleo/recorridos_red.gd", "flota", "nuc_flota_recorrido", [["s", ["122", "150c", "C02", "C09c", "122e", "150ce", "301e", "", "x", "c"]]]],
+	["res://nucleo/recorridos_red.gd", "patente", "nuc_patente_recorrido", [["s", ["122", "150c", "C02", "C09c", "122e", "150ce", "301e", "", "x", "c"]], ["i", -5, 40]]],
+	["res://nucleo/recorridos_red.gd", "ocupacion", "nuc_ocupacion_recorrido", [["s", ["122", "150c", "C02", "C09c", "122e", "150ce", "301e", "", "x", "c"]], ["i", 0, 20], ["i", 0, 1439], ["i", 0, 6]]],
+	["res://nucleo/idiomas_inverso.gd", "mejor", "nuc_mejor_inverso", [["r", 6], ["r", 6], ["r", 6]]],
+	["res://nucleo/recorridos_mapa.gd", "vuelta_de", "nuc_vuelta_recorrido", [["s", ["122", "150c", "C02", "C09c", "122e", "150ce", "301e", "", "x", "c"]]]],
+	## 7.ª tanda (tablas `const` del propio archivo; se generan con herramientas/generar_tablas_puras.py)
+	["res://nucleo/carrera_habilidad.gd", "zona_de", "nuc_zona_habilidad", [["s", ["aceleracion", "punta", "desmarque", "definicion", "potencia", "lejano", "volea", "penal", "vision", "centro", "libre", "corto", "largo", "efecto", "agilidad", "equilibrio", "reaccion", "control", "conduccion", "temple", "intercepcion", "aereo", "marcaje", "entrada", "barrida", "salto", "resistencia", "fuerza", "garra", "rit", "tir", "pas", "reg", "def", "fis", "x", ""]]]],
+	["res://nucleo/incidentes_ciudad.gd", "ritmo_fuego", "nuc_ritmo_fuego", [["b"]]],
+	["res://nucleo/expendedora.gd", "elegir", "nuc_elegir_expendedora", [["i", 0, 100], ["i", 0, 100]]],
+	["res://nucleo/tienda_gasolinera.gd", "elegir", "nuc_elegir_gasolinera", [["i", 0, 100]]],
+	["res://nucleo/tactica.gd", "def_corner", "nuc_def_corner", [["s", ["area", "corto", "primer", "segundo", "borde", "x", ""]]]],
+	["res://nucleo/tactica.gd", "def_libre", "nuc_def_libre", [["s", ["directo", "centro", "ensayada", "bloqueo", "x", ""]]]],
+	["res://nucleo/finanzas.gd", "def_campana", "nuc_def_campana", [["s", ["abonos", "cantera", "internacional", "familia", "leyendas", "x", ""]]]],
+	["res://nucleo/logros_largo.gd", "fila", "nuc_fila_logro", [["s", ["anios_1", "anios_5", "anios_15", "anios_25", "pj_100", "pj_500", "pj_1000", "pg_50", "pg_250", "pg_500", "racha_10", "invicto_40", "titulos_3", "titulos_5", "titulos_50", "cantera_5", "cantera_40", "goleador_50", "goleador_150", "fiel_200", "publico_50k", "aforo_90k", "caja_10m", "caja_500m", "socios_50k", "rep_90", "once_80", "dt_3", "fairplay_1", "ideal_5", "primer_dia", "x", ""]]]],
+	["res://nucleo/retos.gd", "datos", "nuc_datos_reto", [["s", ["david", "ascenso", "deuda", "cantera", "titulo", "x", ""]]]],
+	["res://nucleo/ropero_dt.gd", "articulo", "nuc_articulo_ropero", [["s", ["camiseta_club", "bufanda_club", "gorra_club", "chandal", "botines", "balon", "balon_playa", "x", ""]]]],
+	["res://nucleo/carrera_momentos.gd", "desenlace", "nuc_desenlace_momento", [["s", ["remate", "mano", "pase", "robo", "entrada", "despeje", "parada", "vuelo", "salida", "falta", "cabezazo", "centro", "cobertura", "penal", "pies"]], ["f", 0.0, 1.0, [0.6, 1.0, 0.1]]]],
 ]
 
 ## Los valores de un argumento: bordes y puntos de cambio primero, el resto al azar.
@@ -191,6 +244,43 @@ static func _generar(nombre: String, rng: RandomNumberGenerator) -> Array:
 				v.append(rng.randi_range(0, 30))
 			"nivel":
 				v.append(rng.randi_range(-1, 3))
+			"mayus_mixto":
+				var t := ""
+				for _i in rng.randi_range(0, 9):
+					t += "ABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚÜß abc12-".substr(rng.randi() % 39, 1)
+				v.append(t if rng.randi() % 3 != 0 else t.to_upper())
+			"dict_fecha":
+				var d: Dictionary = {"x": rng.randi_range(0, 9)}
+				if rng.randi() % 2 == 0:
+					d["anio"] = 2026 + rng.randi_range(0, 5)
+				if rng.randi() % 2 == 0:
+					d["semana"] = rng.randi_range(1, 52)
+				d["y"] = "t%d" % rng.randi_range(0, 9)
+				v.append(d)
+			"texto_msg":
+				var palabras: Array = ["directiva", "Confianza", "JUNTA", "casa", "familia", "Oferta", "contrato", "lesión", "LESION", "médico", "gol", "xyz", "", "pareja", "mascota", "agente"]
+				var t := ""
+				for _i in rng.randi_range(0, 4):
+					t += String(palabras[rng.randi() % palabras.size()]) + (" " if rng.randi() % 2 == 0 else "")
+				v.append(t)
+			"codigo":
+				var opciones: Array = ["pa1234", " PA 12-34 ", "1234", "pa12", "PA12345", "-", "", "ab 123", "PA999", "pa-5000", "123", "PAxx12", "12 3"]
+				v.append(opciones[rng.randi() % opciones.size()])
+			"jugadores":
+				var a: Array = []
+				for _i in rng.randi_range(0, 8):
+					var j := Jugador.new()
+					j.pos = ["POR", "DEF", "MED", "DEL", "XX"][rng.randi() % 5]
+					a.append(j)
+				v.append(a)
+			"aspecto":
+				var d: Dictionary = {"pelo": "corto"}
+				for c: String in ["ropa", "corbata", "gorra", "bufanda", "c_ropa"]:
+					if rng.randi() % 2 == 0:
+						d[c] = rng.randi_range(0, 3)
+				v.append(d)
+			"color":
+				v.append(Color(rng.randf(), rng.randf(), rng.randf(), 1.0 if rng.randi() % 2 == 0 else rng.randf()))
 			"sat":
 				var d: Dictionary = {}
 				for c: String in ["min", "rend", "tact", "inst"]:
@@ -228,6 +318,10 @@ static func probar(nat: Object) -> Dictionary:
 		for conj: Array in conjuntos:
 			n = maxi(n, conj.size())
 		var malos := 0
+		if conjuntos.is_empty():   ## sin argumentos: una sola comparación
+			total += 1
+			if var_to_bytes(scr.callv(nombre, [])) != var_to_bytes(scr.callv(nombre + "_gd", [])):
+				fallos.append("%s.%s(): C++ distinto de GDScript" % [String(caso[0]).get_file(), nombre])
 		for k in n * 2:
 			var args: Array = []
 			for conj: Array in conjuntos:

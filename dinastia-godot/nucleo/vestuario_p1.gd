@@ -287,6 +287,22 @@ func armar() -> Array[Dictionary]:
 	for i in pl.size():
 		orden[pl[i].id] = i
 
+	_clanes_de_colonias(pl, orden, previos)
+	_clanes_de_edad(pl, orden, previos)
+	_clanes_de_agente(pl, orden, previos)
+
+	## Cada jugador pertenece al PRIMER grupo que lo contiene, no a todos. Si se
+	## repartiera el mismo enfado por tres vías, un extranjero veterano con
+	## agente conocido cobraría el triple que su compañero de al lado.
+	for j in pl:
+		for cl in camarillas:
+			if (cl["miembros"] as Array).has(j.id):
+				_clan_de[j.id] = cl["id"]
+				break
+	return camarillas
+
+## Colonias por nacionalidad: un clan por país con más de medio plantel cerca de la mayoría (con banderas de la tabla).
+func _clanes_de_colonias(pl: Array, orden: Dictionary, previos: Dictionary) -> void:
 	## --- Colonias por nacionalidad ---
 	var por_pais: Dictionary = {}
 	for j in pl:
@@ -314,6 +330,8 @@ func armar() -> Array[Dictionary]:
 		var nom := "Colonia %s %s" % [String(bandera.get(p, "")), p]
 		camarillas.append(_montar_clan("n_" + p, "nacion", nom.strip_edges(), ids, orden, false, previos))
 
+## Veteranos (30 o más) y la camada joven (21 o menos).
+func _clanes_de_edad(pl: Array, orden: Dictionary, previos: Dictionary) -> void:
 	## --- Veteranos y camada joven ---
 	var vets: Array = []
 	var jov: Array = []
@@ -329,6 +347,8 @@ func armar() -> Array[Dictionary]:
 	if jov.size() >= MIEMBROS_MINIMOS:
 		camarillas.append(_montar_clan("jov", "cantera", "La camada joven", jov, orden, true, previos))
 
+## Representados por el mismo agente.
+func _clanes_de_agente(pl: Array, orden: Dictionary, previos: Dictionary) -> void:
 	## --- Representados por el mismo agente ---
 	var por_agente: Dictionary = {}
 	for j in pl:
@@ -340,16 +360,6 @@ func armar() -> Array[Dictionary]:
 		var ids_ag: Array = por_agente[a]
 		if ids_ag.size() >= MIEMBROS_MINIMOS:
 			camarillas.append(_montar_clan("ag_" + a, "agencia", "Representados por " + a, ids_ag, orden, false, previos))
-
-	## Cada jugador pertenece al PRIMER grupo que lo contiene, no a todos. Si se
-	## repartiera el mismo enfado por tres vías, un extranjero veterano con
-	## agente conocido cobraría el triple que su compañero de al lado.
-	for j in pl:
-		for cl in camarillas:
-			if (cl["miembros"] as Array).has(j.id):
-				_clan_de[j.id] = cl["id"]
-				break
-	return camarillas
 
 func clan_por_id(cid: String) -> Dictionary:
 	for cl in camarillas:

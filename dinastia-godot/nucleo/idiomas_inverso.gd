@@ -5,6 +5,13 @@ extends RefCounted
 ## Ahora gana la clave más parecida a la traducción (más letras iguales al principio): «Form» → «Forma». En un empate, la última, como siempre.
 
 static func mejor(actual: String, nueva: String, traduccion: String) -> String:
+	var nat := Nativo.de("nuc_mejor_inverso")
+	if nat != null:
+		return nat.nuc_mejor_inverso(actual, nueva, traduccion)
+	return mejor_gd(actual, nueva, traduccion)
+
+## Gemela GDScript de `nuc_mejor_inverso` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func mejor_gd(actual: String, nueva: String, traduccion: String) -> String:
 	if actual == "":
 		return nueva
 	return nueva if _prefijo(nueva, traduccion) >= _prefijo(actual, traduccion) else actual
@@ -37,6 +44,13 @@ static func en_mayusculas(txt: String, inv: Dictionary) -> String:
 
 ## La forma normal de un texto en MAYÚSCULAS («FORMA» → «Forma»); si no es todo mayúsculas, el mismo texto.
 static func normal(texto: String) -> String:
+	var nat := Nativo.de("nuc_normal_titulo")
+	if nat != null:
+		return nat.nuc_normal_titulo(texto)
+	return normal_gd(texto)
+
+## Gemela GDScript de `nuc_normal_titulo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func normal_gd(texto: String) -> String:
 	if texto.length() < 2 or texto != texto.to_upper() or texto == texto.to_lower():
 		return texto
 	var baja := texto.to_lower()

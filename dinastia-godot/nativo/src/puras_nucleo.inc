@@ -62,4 +62,57 @@
 	int64_t nuc_total_grupos(const Dictionary &por_grupo) const;
 	Array nuc_cruces(const Array &g, int64_t f) const;
 	String nuc_motivo_satisfaccion(const Dictionary &sat, bool baja) const;
+	// 4.ª tanda (puras_nucleo4.cpp: textos, diccionarios y Color; ninguna modifica sus argumentos)
+	static void _bind_puras4();
+	Dictionary nuc_nueva_oferta(int64_t pedido) const;
+	bool nuc_tiene_letras(const String &s) const;
+	String nuc_normal_titulo(const String &texto) const;
+	Dictionary nuc_sin_fecha(const Dictionary &d) const;
+	Array nuc_remitente_de(const String &titulo, const String &cuerpo) const;
+	String nuc_normalizar_codigo(const String &texto) const;
+	Dictionary nuc_por_linea(const Array &lista) const;
+	Dictionary nuc_ropero_aplicar(const Dictionary &asp, const String &id, const Color &c1, const Color &c2) const;
+	Array nuc_paletas_luces() const;
+	// 5.ª tanda (puras_nucleo5.cpp: tablas de reputación, rutina, calles y rarezas; hash de textos)
+	static void _bind_puras5();
+	int64_t nuc_nivel_reputacion(int64_t rep) const;
+	String nuc_nombre_nivel(int64_t rep) const;
+	int64_t nuc_tope_instalaciones(int64_t rep) const;
+	double nuc_mult_patrocinio(int64_t rep) const;
+	int64_t nuc_estrellas_de(double puntos) const;
+	int64_t nuc_meses_de(int64_t partidos_en_casa) const;
+	String nuc_actividad_rutina(int64_t minuto) const;
+	int64_t nuc_fin_tramo(int64_t minuto) const;
+	String nuc_nombre_columna(int64_t i) const;
+	String nuc_nombre_fila(int64_t j) const;
+	String nuc_rareza_de(int64_t ovr, bool leyenda) const;
+	String nuc_base_recorrido(const String &r) const;
+	int64_t nuc_hash_abs(const String &s) const;
+	// 6.ª tanda (puras_nucleo6.cpp: versiones, nombres, recorridos con hash(Array) del motor)
+	static void _bind_puras6();
+	int64_t nuc_comparar_version(const String &a, const String &b) const;
+	String nuc_nombre_parche(const String &version) const;
+	String nuc_ruta_parche(const String &version) const;
+	String nuc_huella_nombre(const String &nombre) const;
+	String nuc_limpiar_nombre_tactica(const String &n) const;
+	String nuc_nombre_valido_formacion(const String &nombre) const;
+	int64_t nuc_premio_de_ronda(const String &k, int64_t vivos_antes) const;
+	int64_t nuc_flota_recorrido(const String &r) const;
+	String nuc_patente_recorrido(const String &r, int64_t bus) const;
+	int64_t nuc_ocupacion_recorrido(const String &r, int64_t vuelta, int64_t minuto_dia, int64_t dia) const;
+	String nuc_mejor_inverso(const String &actual, const String &nueva, const String &traduccion) const;
+	String nuc_vuelta_recorrido(const String &num) const;
+	// 7.ª tanda (puras_nucleo7.cpp: tablas `const` del propio archivo, generadas por herramientas/generar_tablas_puras.py)
+	static void _bind_puras7();
+	String nuc_zona_habilidad(const String &hab) const;
+	double nuc_ritmo_fuego(bool hay_presion) const;
+	Dictionary nuc_elegir_expendedora(int64_t energia, int64_t hambre) const;
+	Dictionary nuc_elegir_gasolinera(int64_t hambre) const;
+	Array nuc_def_corner(const String &clave) const;
+	Array nuc_def_libre(const String &clave) const;
+	Array nuc_def_campana(const String &clave) const;
+	Array nuc_fila_logro(const String &clave) const;
+	Array nuc_datos_reto(const String &id) const;
+	Dictionary nuc_articulo_ropero(const String &id) const;
+	Dictionary nuc_desenlace_momento(const String &tipo, double q) const;
 	// --- fin funciones puras ---

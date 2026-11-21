@@ -149,12 +149,26 @@ var plan_perdiendo: String = "nada"
 var plan_ganando: String = "nada"
 
 static func def_corner(clave: String) -> Array:
+	var nat := Nativo.de("nuc_def_corner")
+	if nat != null:
+		return nat.nuc_def_corner(clave)
+	return def_corner_gd(clave)
+
+## Gemela GDScript de `nuc_def_corner` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func def_corner_gd(clave: String) -> Array:
 	for f: Array in CORNERS:
 		if String(f[0]) == clave:
 			return f
 	return CORNERS[0]
 
 static func def_libre(clave: String) -> Array:
+	var nat := Nativo.de("nuc_def_libre")
+	if nat != null:
+		return nat.nuc_def_libre(clave)
+	return def_libre_gd(clave)
+
+## Gemela GDScript de `nuc_def_libre` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func def_libre_gd(clave: String) -> Array:
 	for f: Array in LIBRES:
 		if String(f[0]) == clave:
 			return f

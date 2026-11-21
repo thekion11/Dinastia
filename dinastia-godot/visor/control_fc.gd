@@ -313,9 +313,18 @@ func leer(rel: Vector2, t: float, lb: bool, lt: bool, rb: bool, sprint := false)
 ## La filigrana que corresponde a una secuencia.
 static func reconocer(seq: Array, lb: bool, lt: bool, rb: bool, sprint := false) -> Dictionary:
 	var s := " ".join(seq)
-	var lado_de := func(d: String) -> float: return 1.0 if d.ends_with("R") else -1.0
+	var r := _reconocer_toques(seq, s, lb, lt, rb, sprint)
+	if not r.is_empty():
+		return r
+	return _reconocer_giros(seq)
+
+static func _lado_de(d: String) -> float:
+	return 1.0 if d.ends_with("R") else -1.0
+
+## Toques sueltos (con «N» entre medias). Vacío = ningún toque suelto.
+static func _reconocer_toques(seq: Array, s: String, lb: bool, lt: bool, rb: bool,
+		sprint: bool) -> Dictionary:
 	var final_lado: bool = seq.size() == 3 and (String(seq[2]) == "R" or String(seq[2]) == "L")
-	## Toques sueltos (con «N» entre medias).
 	if s == "B N F N F":
 		return {"id": "sombrerito_flair", "lado": 1.0}
 	if s == "F N B":
@@ -323,17 +332,20 @@ static func reconocer(seq: Array, lb: bool, lt: bool, rb: bool, sprint := false)
 	if s == "B N F":
 		return {"id": "sombrero", "lado": 1.0}
 	if s.begins_with("F N ") and final_lado:
-		return {"id": "mcgeady" if sprint else "giro_berba", "lado": lado_de.call(seq[2])}
+		return {"id": "mcgeady" if sprint else "giro_berba", "lado": _lado_de(seq[2])}
 	if s.begins_with("B N ") and final_lado:
 		if lt:
-			return {"id": "arrastre_tacon" if sprint else "ruleta_tres", "lado": lado_de.call(seq[2])}
-		return {"id": "giro_dragster", "lado": lado_de.call(seq[2])}
+			return {"id": "arrastre_tacon" if sprint else "ruleta_tres", "lado": _lado_de(seq[2])}
+		return {"id": "giro_dragster", "lado": _lado_de(seq[2])}
 	if s == "F":
 		if lb and rb:
 			return {"id": "cano", "lado": 1.0}
 		if sprint:
 			return {"id": "adelantar", "lado": 1.0}
-	## Giros continuos: cuánto recorre y en qué sentido.
+	return {}
+
+## Giros continuos: cuánto recorre y en qué sentido.
+static func _reconocer_giros(seq: Array) -> Dictionary:
 	var giro := _recorrido(seq)
 	var primero: String = seq[0]
 	var ultimo: String = seq[seq.size() - 1]
@@ -347,18 +359,19 @@ static func reconocer(seq: Array, lb: bool, lt: bool, rb: bool, sprint := false)
 		if por_delante and (primero == "L" or primero == "FL") and (ultimo == "R" or ultimo == "FR"):
 			return {"id": "elastica_inversa", "lado": 1.0}
 		if seq.has("B"):
-			return {"id": "amago_salida", "lado": lado_de.call(ultimo)}
+			return {"id": "amago_salida", "lado": _lado_de(ultimo)}
 	if absf(giro) >= 60.0:
 		if primero == "F":
-			return {"id": "bicicleta", "lado": lado_de.call(ultimo)}
+			return {"id": "bicicleta", "lado": _lado_de(ultimo)}
 		if ultimo == "F":
-			return {"id": "bicicleta_inversa", "lado": -lado_de.call(primero)}
+			return {"id": "bicicleta_inversa", "lado": -_lado_de(primero)}
 		## De atrás a un lado y luego vuelta al contrario.
 		if primero.begins_with("B") and seq.size() >= 4:
-			return {"id": "hocus_pocus", "lado": lado_de.call(ultimo)}
+			return {"id": "hocus_pocus", "lado": _lado_de(ultimo)}
 	if seq.size() == 1 and (primero == "L" or primero == "R"):
-		return {"id": "finta_cuerpo", "lado": lado_de.call(primero)}
+		return {"id": "finta_cuerpo", "lado": _lado_de(primero)}
 	return {}
+
 
 ## Grados recorridos por la secuencia (+ en sentido horario: hacia la derecha).
 static func _recorrido(seq: Array) -> float:

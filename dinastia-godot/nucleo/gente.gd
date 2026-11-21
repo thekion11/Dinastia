@@ -110,6 +110,15 @@ func charlar(clave: String) -> String:
 	## ganársela antes de que sirva para algo.
 	if conf < 60 or c == null:
 		return "Charla corta. Te escucha, asiente y sigue con lo suyo."
+	var v: Variant = _charla_grupo_a(clave, m, c)
+	if v == null:
+		v = _charla_grupo_b(clave, m, c)
+	if v != null:
+		return String(v)
+	return "Una charla tranquila, de las que no se notan hasta que faltan."
+
+## Charla con la cocinera, el jardinero, el médico, la prensa, el hincha y el ojeador. Devuelve null si no es de este grupo.
+func _charla_grupo_a(clave: String, m: Mundo, c: Club) -> Variant:
 	match clave:
 		"cocinera":
 			for j in c.plantilla:
@@ -131,6 +140,11 @@ func charlar(clave: String) -> String:
 			return "Te habla de un partido de hace treinta años como si fuera ayer. Sales con ganas de ganar el domingo."
 		"ojeador":
 			return "Te da un nombre apuntado en una libreta que ya no usa nadie. Dice que lo mires."
+	return null
+
+## Charla con el utilero, la secretaria, el conserje y el chofer. Devuelve null si no es de este grupo.
+func _charla_grupo_b(clave: String, m: Mundo, c: Club) -> Variant:
+	match clave:
 		"utilero":
 			for j3 in c.plantilla:
 				j3.cambiar_moral(1, "Entorno personal")
@@ -141,7 +155,8 @@ func charlar(clave: String) -> String:
 			return "Te cuenta, sin darle importancia, tres cosas que pasaron esta semana y que nadie te contó."
 		"chofer":
 			return "Escucha más de lo que habla. Hoy te ha hablado, y eso ya dice algo."
-	return "Una charla tranquila, de las que no se notan hasta que faltan."
+	return null
+
 
 ## El pulso semanal: se reinicia el cupo de charlas y la confianza se enfría un
 ## poco si no apareces. La gente no se ofende, pero se acostumbra a tu ausencia.
