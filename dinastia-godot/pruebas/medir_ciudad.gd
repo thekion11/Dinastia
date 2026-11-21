@@ -70,24 +70,7 @@ func _process(_d: float) -> void:
 	if _n == 71:
 		_res["aerea"] = _media(_m)
 		if OS.get_environment("DETALLE") != "":
-			_detalle_a_pie("AEREA")   ## (7-11) lo dibujado de verdad desde la vista aérea
-			_detalle()
-			var por_dueno := {}
-			for g in _v.find_children("*", "MeshInstance3D", true, false):
-				if g.get_parent() is Skeleton3D and g.is_visible_in_tree():
-					var a: Node = g
-					var cadena := ""
-					for k in 6:
-						a = a.get_parent()
-						if a == null or a == _v:
-							break
-						cadena += String(a.name).left(14) + "<"
-					var kk := "%s rango=%.0f" % [cadena, (g as GeometryInstance3D).visibility_range_end]
-					por_dueno[kk] = int(por_dueno.get(kk, 0)) + 1
-			for kk in por_dueno:
-				print("CUERPO ", por_dueno[kk], " ", kk)
-			for f: Dictionary in Optimizar.informe(_v, 22):
-				print("TRIS %9d  piezas=%d corte=%.0f  %s" % [f["tris"], f["piezas"], f["corte"], f["clave"]])
+			_detalle_aerea()
 		_m.clear()
 		_v.explorar("pie")
 		var e: ExploradorCiudad = _v.get("_explorador")
@@ -98,29 +81,53 @@ func _process(_d: float) -> void:
 		_res["a_pie"] = _media(_m)
 		if OS.get_environment("DETALLE") != "":
 			_detalle_a_pie()
-		var ex: ExploradorCiudad = _v.get("_explorador")
-		_res["circulos"] = ex.cb.circulos.size()
-		var tipos := {}
-		var n_fach := 0
-		for r: Rect2 in ex.cb._frentes:
-			var e := ex.edificio_en(Vector3(r.position.x - 1.0, 0, r.get_center().y))
-			if not e.is_empty():
-				n_fach += 1
-				var base := String(e["k"]).get_slice("|", 0)
-				tipos[base] = int(tipos.get(base, 0)) + 1
-		_res["fachadas"] = "%d de %d: %s" % [n_fach, ex.cb._frentes.size(), JSON.stringify(tipos)]
-		var ok := 0
-		var n_prueba := mini(40, ex.cb.circulos.size())
-		for i in n_prueba:
-			var c: Vector3 = ex.cb.circulos[i * (ex.cb.circulos.size() / maxi(n_prueba, 1))]
-			if not ex.libre_total(Vector3(c.x, 0.2, c.y), 0.3):
-				ok += 1
-		_res["circulos_solidos"] = "%d de %d" % [ok, n_prueba]
+		_fachadas_y_circulos()
 		if OS.get_environment("CPU") != "":
 			_cpu_por_partes()
 			return
 		print("MEDIDA_CIUDAD ", JSON.stringify(_res))
 		get_tree().quit()
+
+## Con DETALLE=1, en la vista aérea: lo dibujado, los dueños de los cuerpos y las piezas más pesadas.
+func _detalle_aerea() -> void:
+		_detalle_a_pie("AEREA")   ## (7-11) lo dibujado de verdad desde la vista aérea
+		_detalle()
+		var por_dueno := {}
+		for g in _v.find_children("*", "MeshInstance3D", true, false):
+			if g.get_parent() is Skeleton3D and g.is_visible_in_tree():
+				var a: Node = g
+				var cadena := ""
+				for k in 6:
+					a = a.get_parent()
+					if a == null or a == _v:
+						break
+					cadena += String(a.name).left(14) + "<"
+				var kk := "%s rango=%.0f" % [cadena, (g as GeometryInstance3D).visibility_range_end]
+				por_dueno[kk] = int(por_dueno.get(kk, 0)) + 1
+		for kk in por_dueno:
+			print("CUERPO ", por_dueno[kk], " ", kk)
+		for f: Dictionary in Optimizar.informe(_v, 22):
+			print("TRIS %9d  piezas=%d corte=%.0f  %s" % [f["tris"], f["piezas"], f["corte"], f["clave"]])
+## Cuántas fachadas y círculos de peatón quedan bien (ocupados y libres).
+func _fachadas_y_circulos() -> void:
+	var ex: ExploradorCiudad = _v.get("_explorador")
+	_res["circulos"] = ex.cb.circulos.size()
+	var tipos := {}
+	var n_fach := 0
+	for r: Rect2 in ex.cb._frentes:
+		var e := ex.edificio_en(Vector3(r.position.x - 1.0, 0, r.get_center().y))
+		if not e.is_empty():
+			n_fach += 1
+			var base := String(e["k"]).get_slice("|", 0)
+			tipos[base] = int(tipos.get(base, 0)) + 1
+	_res["fachadas"] = "%d de %d: %s" % [n_fach, ex.cb._frentes.size(), JSON.stringify(tipos)]
+	var ok := 0
+	var n_prueba := mini(40, ex.cb.circulos.size())
+	for i in n_prueba:
+		var c: Vector3 = ex.cb.circulos[i * (ex.cb.circulos.size() / maxi(n_prueba, 1))]
+		if not ex.libre_total(Vector3(c.x, 0.2, c.y), 0.3):
+			ok += 1
+	_res["circulos_solidos"] = "%d de %d" % [ok, n_prueba]
 
 ## Con DETALLE=1: qué piezas sueltas (sin distancia de corte) pesan más, por
 ## el nombre del nodo padre. Sirve para elegir dónde atacar.
@@ -177,7 +184,8 @@ func _medir_cuadros(c: int) -> float:
 		await get_tree().process_frame
 	return (Time.get_ticks_usec() - t0) / 1000.0 / c
 
-func _cat(g: GeometryInstance3D) -> String:
+## Las categorías que no dependen de la malla: el estadio, los cuerpos y los edificios lejanos. Vacío si no es ninguna.
+func _cat_especial(g: GeometryInstance3D) -> String:
 	var estadio := false
 	var a: Node = g
 	while a != null:
@@ -190,13 +198,18 @@ func _cat(g: GeometryInstance3D) -> String:
 		return "cuerpos"
 	if String(g.name) == "EdificiosLejos":
 		return "edificios_lejos"
+	return ""
+
+
+func _cat(g: GeometryInstance3D) -> String:
+	var especial := _cat_especial(g)
+	if especial != "":
+		return especial
 	var m: Mesh = null
-	var n_inst := 1
 	if g is MeshInstance3D:
 		m = (g as MeshInstance3D).mesh
 	elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh != null:
 		m = (g as MultiMeshInstance3D).multimesh.mesh
-		n_inst = (g as MultiMeshInstance3D).multimesh.instance_count
 	if m == null:
 		return "otros"
 	var t := Optimizar._tris(m)
@@ -258,6 +271,14 @@ func _detalle_a_pie(pref := "A_PIE") -> void:
 	var cam := get_viewport().get_camera_3d()
 	if cam == null:
 		return
+	var rec := _a_pie_recoger(cam)
+	_a_pie_imprimir(pref, rec["grupos"], rec["ejemplos"], rec["nombres"])
+	_a_pie_trafico()
+	_a_pie_grupos_todas()
+
+
+## Recorre lo visible desde la cámara y cuenta por grupo de nodos, por malla y por grupo de Godot.
+func _a_pie_recoger(cam: Camera3D) -> Dictionary:
 	var grupos := {}
 	var ejemplos := {}
 	var nombres_a_pie := {}
@@ -269,14 +290,7 @@ func _detalle_a_pie(pref := "A_PIE") -> void:
 		var d := cam.global_position.distance_to(c)
 		if (g.visibility_range_end > 0.0 and d > g.visibility_range_end) or not cam.is_position_in_frustum(c):
 			continue
-		var a := g.get_parent()
-		var clave := g.get_class()
-		for k in 2:
-			if a == null or a == _v:
-				break
-			var nom := String(a.name)
-			clave = (a.get_class() if nom.begins_with("@") else nom.rstrip("0123456789_")) + "/" + clave
-			a = a.get_parent()
+		var clave := _a_pie_clave(g)
 		grupos[clave] = int(grupos.get(clave, 0)) + 1
 		## (7-11) Por QUÉ malla (o la del agrupado) y a qué distancia: para elegir qué agrupar o recortar.
 		var mm := g as MultiMeshInstance3D
@@ -284,22 +298,52 @@ func _detalle_a_pie(pref := "A_PIE") -> void:
 		var kn := "%s %s %s" % [g.get_class().replace("Instance3D", ""), ml.resource_name if ml != null and ml.resource_name != "" else (str(ml.get_class()) if ml != null else "-"), "cerca" if d < 60.0 else ("medio" if d < 200.0 else "lejos")]
 		nombres_a_pie[kn] = int(nombres_a_pie.get(kn, 0)) + 1
 		if not ejemplos.has(clave):
-			var sc := ""
-			var q2: Node = g.get_parent()
-			while q2 != null and q2 != _v:
-				if q2.get_script() != null:
-					sc = String((q2.get_script() as Script).resource_path).get_file()
-					break
-				q2 = q2.get_parent()
-			ejemplos[clave] = "%s malla=%s script=%s pos=%s" % [g.name, g.get("mesh").get_class() if g.get("mesh") != null else "-", sc, g.global_position.round()]
+			ejemplos[clave] = _a_pie_ejemplo(g)
 		## El primer grupo de Godot hacia arriba: lo que impide a `agrupar` juntarla.
-		var q: Node = g
-		while q != null and q != _v:
-			if not q.get_groups().is_empty():
-				var gk := "GRUPO " + str(q.get_groups()[0])
-				grupos[gk] = int(grupos.get(gk, 0)) + 1
-				break
-			q = q.get_parent()
+		var pg := _a_pie_primer_grupo(g)
+		if not pg.is_empty():
+			var gk := "GRUPO " + str(pg[0])
+			grupos[gk] = int(grupos.get(gk, 0)) + 1
+	return {"grupos": grupos, "ejemplos": ejemplos, "nombres": nombres_a_pie}
+
+
+## La clave de la pieza: su clase y, hasta dos niveles arriba, el nombre de cada padre.
+func _a_pie_clave(g: GeometryInstance3D) -> String:
+	var a := g.get_parent()
+	var clave := g.get_class()
+	for k in 2:
+		if a == null or a == _v:
+			break
+		var nom := String(a.name)
+		clave = (a.get_class() if nom.begins_with("@") else nom.rstrip("0123456789_")) + "/" + clave
+		a = a.get_parent()
+	return clave
+
+
+## Un ejemplo de la clave: nombre, malla, script del primer padre con script y posición.
+func _a_pie_ejemplo(g: GeometryInstance3D) -> String:
+	var sc := ""
+	var q2: Node = g.get_parent()
+	while q2 != null and q2 != _v:
+		if q2.get_script() != null:
+			sc = String((q2.get_script() as Script).resource_path).get_file()
+			break
+		q2 = q2.get_parent()
+	return "%s malla=%s script=%s pos=%s" % [g.name, g.get("mesh").get_class() if g.get("mesh") != null else "-", sc, g.global_position.round()]
+
+
+## El grupo de Godot del nodo o del primer ancestro que lo tenga (antes de la vista). Vacío si no hay.
+func _a_pie_primer_grupo(n: Node) -> Array:
+	var q: Node = n
+	while q != null and q != _v:
+		if not q.get_groups().is_empty():
+			return [q.get_groups()[0]]
+		q = q.get_parent()
+	return []
+
+
+## Imprime lo más pesado por grupo y por malla, y los motivos de agrupado.
+func _a_pie_imprimir(pref: String, grupos: Dictionary, ejemplos: Dictionary, nombres_a_pie: Dictionary) -> void:
 	var orden := grupos.keys()
 	orden.sort_custom(func(x, y): return grupos[x] > grupos[y])
 	for k in orden.slice(0, 30):
@@ -310,32 +354,35 @@ func _detalle_a_pie(pref := "A_PIE") -> void:
 		print(pref, "_MALLA ", nombres_a_pie[k], "  ", k)
 	for m in Optimizar._motivos:
 		print("MOTIVO ", Optimizar._motivos[m], "  ", m)
-	## Todas las mallas (vean o no) que un grupo impide juntar, por nombre de grupo (M-476).
+
+
+## Dentro de `Trafico`: mallas por vehículo (nombre del hijo directo sin números) (M-476).
+func _a_pie_trafico() -> void:
+	var traf := _v.find_child("Trafico", true, false)
+	if traf == null:
+		return
+	var por_veh := {}
+	for n in traf.find_children("*", "MeshInstance3D", true, false):
+		var top: Node = n
+		while top.get_parent() != null and top.get_parent() != traf:
+			top = top.get_parent()
+		var nom := String(top.name).rstrip("0123456789_") if not String(top.name).begins_with("@") else top.get_class()
+		por_veh[nom] = Vector2i(int(por_veh.get(nom, Vector2i.ZERO).x) + 1, 0)
+	var ov := por_veh.keys()
+	ov.sort_custom(func(x, y): return por_veh[x].x > por_veh[y].x)
+	for k in ov.slice(0, 12):
+		print("TRAFICO_MALLAS ", por_veh[k].x, "  ", k)
+
+
+## Todas las mallas (vean o no) que un grupo impide juntar, por nombre de grupo (M-476).
+func _a_pie_grupos_todas() -> void:
 	var por_grupo := {}
 	for n in _v.find_children("*", "MeshInstance3D", true, false):
-		var q2: Node = n
-		while q2 != null and q2 != _v:
-			if not q2.get_groups().is_empty():
-				var gk2 := String(q2.get_groups()[0])
-				por_grupo[gk2] = int(por_grupo.get(gk2, 0)) + 1
-				break
-			q2 = q2.get_parent()
-	## Dentro de `Trafico`: mallas por vehículo (nombre del hijo directo sin números) (M-476).
-	var traf := _v.find_child("Trafico", true, false)
-	if traf != null:
-		var por_veh := {}
-		for n in traf.find_children("*", "MeshInstance3D", true, false):
-			var top: Node = n
-			while top.get_parent() != null and top.get_parent() != traf:
-				top = top.get_parent()
-			var nom := String(top.name).rstrip("0123456789_") if not String(top.name).begins_with("@") else top.get_class()
-			por_veh[nom] = Vector2i(int(por_veh.get(nom, Vector2i.ZERO).x) + 1, 0)
-		var ov := por_veh.keys()
-		ov.sort_custom(func(x, y): return por_veh[x].x > por_veh[y].x)
-		for k in ov.slice(0, 12):
-			print("TRAFICO_MALLAS ", por_veh[k].x, "  ", k)
+		var pg := _a_pie_primer_grupo(n)
+		if not pg.is_empty():
+			var gk2 := String(pg[0])
+			por_grupo[gk2] = int(por_grupo.get(gk2, 0)) + 1
 	var og := por_grupo.keys()
 	og.sort_custom(func(x, y): return por_grupo[x] > por_grupo[y])
 	for k in og.slice(0, 12):
 		print("GRUPO_TODAS ", por_grupo[k], "  ", k)
-

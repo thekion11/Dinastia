@@ -224,35 +224,14 @@ func _modo_transp() -> bool:
 		var g := mi as GeometryInstance3D
 		if not g.is_visible_in_tree() or g is Label3D:
 			continue
-		var mats: Array = []
-		if g.material_override != null:
-			mats.append(g.material_override)
-		if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
-			for si in (g as MeshInstance3D).mesh.get_surface_count():
-				var mt: Material = (g as MeshInstance3D).get_active_material(si)
-				if mt != null:
-					mats.append(mt)
-		var trans := false
-		for mt in mats:
-			if mt is BaseMaterial3D and (mt as BaseMaterial3D).transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
-				trans = true
-			elif mt is ShaderMaterial and (mt as ShaderMaterial).shader != null and (mt as ShaderMaterial).shader.code.contains("blend_"):
-				trans = true
-		if not trans:
+		var mats := _transp_materiales(g)
+		if not _transp_es(mats):
 			continue
-		var det := ""
-		for mt in mats:
-			if mt is BaseMaterial3D:
-				var bm := mt as BaseMaterial3D
-				det = " modo=%d alfa=%.2f tex=%s scissor=%.2f cull=%d prof=%d" % [bm.transparency, bm.albedo_color.a, str(bm.albedo_texture != null), bm.alpha_scissor_threshold, bm.cull_mode, bm.depth_draw_mode]
-				break
-			elif mt is ShaderMaterial:
-				det = " shader=" + String((mt as ShaderMaterial).shader.resource_path).get_file()
-				break
+		var det := _transp_detalle(mats)
 		var k := String(g.name).rstrip("0123456789@_") + " <" + String(g.get_parent().name).rstrip("0123456789@_") + ">" + det
 		var ab := g.get_aabb().size
 		if OS.get_environment("TRANSP") == "2" and det.contains("alfa=0.00"):
-			print("ALFA0 %s mesh=%s aabb=%s pos=%s abuelo=%s script=%s" % [str(g.get_path()).right(70), (g as MeshInstance3D).mesh.get_class() if g is MeshInstance3D else "-", str(g.get_aabb().size.snapped(Vector3.ONE * 0.1)), str(g.global_position.snapped(Vector3.ONE)), g.get_parent().get_parent().name if g.get_parent().get_parent() != null else "-", str(g.get_parent().get_script().resource_path if g.get_parent().get_script() != null else "")])
+			_transp_alfa0(g)
 		var f: Array = tr.get(k, [0, 0.0])
 		f[0] += 1; f[1] = maxf(f[1], maxf(ab.x * ab.z, maxf(ab.x * ab.y, ab.y * ab.z)))
 		tr[k] = f
@@ -260,6 +239,49 @@ func _modo_transp() -> bool:
 		print("TRANSP x%-3d área máx %7.0f m²  %s" % [tr[k][0], tr[k][1], k])
 	raiz.get_tree().quit()
 	return true
+
+
+## Los materiales de la pieza: el de sobrescritura y los activos de cada superficie.
+func _transp_materiales(g: GeometryInstance3D) -> Array:
+	var mats: Array = []
+	if g.material_override != null:
+		mats.append(g.material_override)
+	if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
+		for si in (g as MeshInstance3D).mesh.get_surface_count():
+			var mt: Material = (g as MeshInstance3D).get_active_material(si)
+			if mt != null:
+				mats.append(mt)
+	return mats
+
+
+## ¿Alguno de los materiales es transparente o con mezcla (blend_ en el shader)?
+func _transp_es(mats: Array) -> bool:
+	var trans := false
+	for mt in mats:
+		if mt is BaseMaterial3D and (mt as BaseMaterial3D).transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
+			trans = true
+		elif mt is ShaderMaterial and (mt as ShaderMaterial).shader != null and (mt as ShaderMaterial).shader.code.contains("blend_"):
+			trans = true
+	return trans
+
+
+## El detalle del primer material (estándar o de shader) que describe la transparencia.
+func _transp_detalle(mats: Array) -> String:
+	var det := ""
+	for mt in mats:
+		if mt is BaseMaterial3D:
+			var bm := mt as BaseMaterial3D
+			det = " modo=%d alfa=%.2f tex=%s scissor=%.2f cull=%d prof=%d" % [bm.transparency, bm.albedo_color.a, str(bm.albedo_texture != null), bm.alpha_scissor_threshold, bm.cull_mode, bm.depth_draw_mode]
+			break
+		elif mt is ShaderMaterial:
+			det = " shader=" + String((mt as ShaderMaterial).shader.resource_path).get_file()
+			break
+	return det
+
+
+## TRANSP=2: las piezas con alfa 0 (la malla, su caja, su posición y el script de su padre).
+func _transp_alfa0(g: GeometryInstance3D) -> void:
+	print("ALFA0 %s mesh=%s aabb=%s pos=%s abuelo=%s script=%s" % [str(g.get_path()).right(70), (g as MeshInstance3D).mesh.get_class() if g is MeshInstance3D else "-", str(g.get_aabb().size.snapped(Vector3.ONE * 0.1)), str(g.global_position.snapped(Vector3.ONE)), g.get_parent().get_parent().name if g.get_parent().get_parent() != null else "-", str(g.get_parent().get_script().resource_path if g.get_parent().get_script() != null else "")])
 
 
 ## PELO: triángulos al cambiar la distancia a la que el pelo pasa de `Cuero` a `CueroLejos`.
