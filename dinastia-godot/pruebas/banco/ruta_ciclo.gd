@@ -48,54 +48,58 @@ func _suma_notas(m: Mundo) -> Vector2:
 func _probar_ruta_ida_vuelta_json() -> void:
 	_titulo("LA RUTA POR JSON (guardar, cargar y seguir: lo mismo)")
 	for caso: Array in [[["FRA", "ARG", "ENG"], "MC", 41], [["ITA", "BRA", "GER"], "POR", 52]]:
-		var par := _nueva(caso[0], String(caso[1]), int(caso[2]))
-		var m: Mundo = par[0]
-		var c: CarreraJugador = par[1]
-		for _i in 5:
-			_semana(c, m)
-		c.stats_temp["vallas"] = 2
-		if m.copa != null:
-			m.ajustes_competicion["copa_sede"] = c.club(m).id
-			m.copa.sede_final_id = c.club(m).id
-		var foto: Dictionary = JSON.parse_string(JSON.stringify(Partida.instantanea(m)))
-		var m2 := Partida.desde_instantanea(foto)
-		var c2: CarreraJugador = m2.carrera_jugador if m2 != null else null
-		_comprobar(c2 != null and c2.jugador(m2) != null, "%s en %s: la carrera vuelve del JSON con su futbolista" % [caso[1], c.club(m).nombre])
-		if c2 == null:
-			continue
-		var tipos := true
-		for k: String in ["pj", "titular", "goles", "asist", "vallas"]:
-			tipos = tipos and typeof(c2.stats_temp[k]) == TYPE_INT and int(c2.stats_temp[k]) == int(c.stats_temp[k])
-		_comprobar(tipos and is_equal_approx(c2.nota_media(), c.nota_media()), "  partidos, goles, asistencias y porterías de la temporada vuelven enteros (%d pj, %d goles)" % [int(c2.stats_temp["pj"]), int(c2.stats_temp["goles"])])
-		_comprobar(_suma_notas(m2).is_equal_approx(_suma_notas(m)) and _suma_notas(m).y > 0.0, "  la nota de la temporada de todo el mundo vuelve igual (R-03: %d partidos con nota)" % int(_suma_notas(m).y))
-		_comprobar(m2._entreno_mundo != null and m._entreno_mundo != null and m2._entreno_mundo._subidas == m._entreno_mundo._subidas,
-			"  el entrenamiento del mundo vuelve con su tope de subidas (G-04: %d con subidas)" % (m._entreno_mundo._subidas.size() if m._entreno_mundo != null else -1))
-		_comprobar(m.copa == null or (m2.copa != null and m2.copa.sede_final_id == m.copa.sede_final_id and m2.ajustes_competicion == m.ajustes_competicion),
-			"  la sede de la final y los ajustes de competición vuelven también en La Ruta (G-03)")
-		## Seguir en los dos mundos: el original y el cargado juegan la misma semana.
-		Azar._rng.state = int(String(foto["azar"]))   ## el azar es global: cada mundo sigue desde el mismo estado
-		m.avanzar_semana(null)
-		Azar._rng.state = int(String(foto["azar"]))
-		m2.avanzar_semana(null)
-		var g1 := 0
-		var g2 := 0
-		for cl: Club in m.clubes.values():
-			for o: Jugador in cl.plantilla:
-				g1 += o.goles * 7 + o.ovr
-		for cl2: Club in m2.clubes.values():
-			for o2: Jugador in cl2.plantilla:
-				g2 += o2.goles * 7 + o2.ovr
-		var dif: Array = []
-		for cl4: Club in m.clubes.values():
-			var cl5: Club = m2.clubes.get(cl4.id)
-			for o4: Jugador in cl4.plantilla:
-				var o5: Jugador = null
-				for x: Jugador in (cl5.plantilla if cl5 != null else []):
-					if x.id == o4.id:
-						o5 = x
-				if dif.size() < 4 and (o5 == null or o5.goles != o4.goles or o5.ovr != o4.ovr):
-					dif.append("%s %s %d/%d g%d/%d" % [cl4.nombre, o4.nombre, o4.ovr, o5.ovr if o5 else -1, o4.goles, o5.goles if o5 else -1])
-		_comprobar(g1 == g2, "  seguir o cargar y seguir dan la misma semana (%d / %d) %s" % [g1, g2, str(dif)])
+		_ida_vuelta_caso(caso)
+
+## Un caso de ida y vuelta (una carrera por JSON, ya cargada y jugada en los dos mundos).
+func _ida_vuelta_caso(caso: Array) -> void:
+	var par := _nueva(caso[0], String(caso[1]), int(caso[2]))
+	var m: Mundo = par[0]
+	var c: CarreraJugador = par[1]
+	for _i in 5:
+		_semana(c, m)
+	c.stats_temp["vallas"] = 2
+	if m.copa != null:
+		m.ajustes_competicion["copa_sede"] = c.club(m).id
+		m.copa.sede_final_id = c.club(m).id
+	var foto: Dictionary = JSON.parse_string(JSON.stringify(Partida.instantanea(m)))
+	var m2 := Partida.desde_instantanea(foto)
+	var c2: CarreraJugador = m2.carrera_jugador if m2 != null else null
+	_comprobar(c2 != null and c2.jugador(m2) != null, "%s en %s: la carrera vuelve del JSON con su futbolista" % [caso[1], c.club(m).nombre])
+	if c2 == null:
+		return
+	var tipos := true
+	for k: String in ["pj", "titular", "goles", "asist", "vallas"]:
+		tipos = tipos and typeof(c2.stats_temp[k]) == TYPE_INT and int(c2.stats_temp[k]) == int(c.stats_temp[k])
+	_comprobar(tipos and is_equal_approx(c2.nota_media(), c.nota_media()), "  partidos, goles, asistencias y porterías de la temporada vuelven enteros (%d pj, %d goles)" % [int(c2.stats_temp["pj"]), int(c2.stats_temp["goles"])])
+	_comprobar(_suma_notas(m2).is_equal_approx(_suma_notas(m)) and _suma_notas(m).y > 0.0, "  la nota de la temporada de todo el mundo vuelve igual (R-03: %d partidos con nota)" % int(_suma_notas(m).y))
+	_comprobar(m2._entreno_mundo != null and m._entreno_mundo != null and m2._entreno_mundo._subidas == m._entreno_mundo._subidas,
+		"  el entrenamiento del mundo vuelve con su tope de subidas (G-04: %d con subidas)" % (m._entreno_mundo._subidas.size() if m._entreno_mundo != null else -1))
+	_comprobar(m.copa == null or (m2.copa != null and m2.copa.sede_final_id == m.copa.sede_final_id and m2.ajustes_competicion == m.ajustes_competicion),
+		"  la sede de la final y los ajustes de competición vuelven también en La Ruta (G-03)")
+	## Seguir en los dos mundos: el original y el cargado juegan la misma semana.
+	Azar._rng.state = int(String(foto["azar"]))   ## el azar es global: cada mundo sigue desde el mismo estado
+	m.avanzar_semana(null)
+	Azar._rng.state = int(String(foto["azar"]))
+	m2.avanzar_semana(null)
+	var g1 := 0
+	var g2 := 0
+	for cl: Club in m.clubes.values():
+		for o: Jugador in cl.plantilla:
+			g1 += o.goles * 7 + o.ovr
+	for cl2: Club in m2.clubes.values():
+		for o2: Jugador in cl2.plantilla:
+			g2 += o2.goles * 7 + o2.ovr
+	var dif: Array = []
+	for cl4: Club in m.clubes.values():
+		var cl5: Club = m2.clubes.get(cl4.id)
+		for o4: Jugador in cl4.plantilla:
+			var o5: Jugador = null
+			for x: Jugador in (cl5.plantilla if cl5 != null else []):
+				if x.id == o4.id:
+					o5 = x
+			if dif.size() < 4 and (o5 == null or o5.goles != o4.goles or o5.ovr != o4.ovr):
+				dif.append("%s %s %d/%d g%d/%d" % [cl4.nombre, o4.nombre, o4.ovr, o5.ovr if o5 else -1, o4.goles, o5.goles if o5 else -1])
+	_comprobar(g1 == g2, "  seguir o cargar y seguir dan la misma semana (%d / %d) %s" % [g1, g2, str(dif)])
 
 ## UNA SEMANA EN EL ORDEN DE LA INTERFAZ: los retos que viste son los que se juegan, y el partido se anota UNA vez.
 func _probar_ruta_semana_interfaz() -> void:

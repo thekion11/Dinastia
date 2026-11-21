@@ -313,6 +313,11 @@ static func _rol_sugerido(m: Mundo, j: Jugador) -> String:
 		return "titular"
 	ovrs.sort()
 	ovrs.reverse()
+	var k := _rol_por_nivel(j, ovrs)
+	return _ajustar_rol_por_vestuario(m, j, k)
+
+## El rol que le toca por su nivel frente al once (titular, intocable, rotación, promesa o suplente).
+static func _rol_por_nivel(j: Jugador, ovrs: Array[int]) -> String:
 	var mejores := 0
 	for o in ovrs:
 		if o > j.ovr:
@@ -333,6 +338,10 @@ static func _rol_sugerido(m: Mundo, j: Jugador) -> String:
 		k = "suplente"
 	if j.edad <= 21 and j.pot >= j.ovr + 8 and (k == "rotacion" or k == "suplente"):
 		k = "promesa"
+	return k
+
+## Si el vestuario no acepta el rol, se busca el más cercano que sí acepte.
+static func _ajustar_rol_por_vestuario(m: Mundo, j: Jugador, k: String) -> String:
 	if m.vestuario == null:
 		return k
 	if bool(m.vestuario.acepta_rol(j, k).get("ok", true)):

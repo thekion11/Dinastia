@@ -1,4 +1,4 @@
-extends "res://pruebas/banco/varios_p2.gd"
+extends "res://pruebas/banco/varios_p3_p1.gd"
 ## [Capa 3/10 de `varios.gd`] _probar_roles_y_federacion, _probar_pulso_de_roles, _probar_logros, _probar_desafios
 
 func _probar_roles_y_federacion() -> void:
@@ -6,7 +6,12 @@ func _probar_roles_y_federacion() -> void:
 	var m := Mundo.new()
 	m.generar(["CHI"], 909090)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
+	_roles_cargos(m)
+	var liga := _entrenamiento_y_federacion(m)
+	_estadio_propio(m, liga)
 
+## Cargos del DT: cada uno tiene que apagar cosas distintas (ayudante, interino, DT clasico).
+func _roles_cargos(m: Mundo) -> void:
 	## ROLES: cada uno tiene que APAGAR cosas distintas. Un rol que permite lo
 	## mismo que otro no es un rol, es un nombre.
 	_comprobar(m.roles != null, "el rol arranca al tomar el mando")
@@ -28,6 +33,8 @@ func _probar_roles_y_federacion() -> void:
 	_comprobar(m3.roles.en_interinato(), "se puede entrar de interino")
 	_comprobar(not m3.roles.puede_fichar(), "el interino tiene el mercado cerrado")
 
+## Entrenamiento y federación: el campeón sale de la tabla de la liga del mando.
+func _entrenamiento_y_federacion(m: Mundo) -> Liga:
 	## ENTRENAMIENTO: apretar tiene que subir el riesgo, o el plan no decide nada.
 	var e := m.entrenamiento
 	_comprobar(e != null, "el entrenamiento arranca con el mando")
@@ -57,7 +64,10 @@ func _probar_roles_y_federacion() -> void:
 			perdidos += 1
 	_linea("  con playoffs: de 30 finales, el lider perdio el titulo %d veces" % perdidos)
 	_comprobar(perdidos > 0, "con playoffs el lider puede perder el titulo")
+	return liga
 
+## Estadio propio: perfil, bandejas y componentes, tramos y los 24 estilos.
+func _estadio_propio(m: Mundo, liga: Liga) -> void:
 	## ESTADIO PROPIO: el perfil que va al visor tiene que traer las claves que
 	## consume el constructor 3D, o el estadio sale a medias sin un solo error.
 	var p := m.perfil_estadio_de(m.mi_club())
@@ -125,37 +135,7 @@ func _probar_roles_y_federacion() -> void:
 	for lado in ["norte", "este", "oeste"]:
 		_comprobar(String(bandejas.get(lado, {}).get("asientoP", "")) == String(p2.get("asientoP", "")),
 			"la tribuna %s sigue heredando el patron global" % lado)
-
-	## TRAMO (22-9-2026, Fase 3 de "el estadio por MODULOS", ultima de las
-	## tres): mismo criterio que Bandeja -apagado no cambia una clave,
-	## prendido solo cambia lo que se reformo-, mas la resolucion de los
-	## tercios en blanco. Con `personalizar_bandejas` YA prendido (bloque de
-	## arriba) para probar de paso que las dos fases conviven: la tribuna sur
-	## tiene ahora un `bandeja_sur_asientoP` propio ("damero"), asi que sus
-	## tercios en blanco tienen que heredar ESE valor, no el global.
-	_comprobar(not p.has("tramos"), "sin personalizar_tramos, el perfil no trae la clave tramos")
-	_comprobar(m.estadio.reformar(mio, {"personalizar_tramos": true}, m.obras) == "",
-		"se puede activar mezclar patrones por tercios")
-	_comprobar(m.estadio.reformar(mio, {"tramo_sur_2": "moteado"}, m.obras) == "",
-		"se puede reformar solo el tercio 2 de la tribuna sur")
-	m.estadio.terminar_obra()
-	var p3 := m.perfil_estadio_de(mio)
-	_comprobar(p3.has("tramos"), "con el interruptor activo, el perfil SI trae tramos")
-	var tramos: Dictionary = p3.get("tramos", {})
-	var tramos_sur: Array = tramos.get("sur", [])
-	_comprobar(tramos_sur.size() == 3, "la tribuna sur trae sus 3 tercios (dio %d)" % tramos_sur.size())
-	_comprobar(String(tramos_sur[0]) == "damero" and String(tramos_sur[2]) == "damero",
-		"los tercios 1 y 3 en blanco heredan 'damero' -el de Bandeja, no el global- (dio %s y %s)" % [
-			tramos_sur[0] if tramos_sur.size() > 0 else "?", tramos_sur[2] if tramos_sur.size() > 2 else "?"])
-	_comprobar(String(tramos_sur[1]) == "moteado", "el tercio 2 quedo con el patron reformado")
-	for lado in ["norte", "este", "oeste"]:
-		var t_lado: Array = tramos.get(lado, [])
-		_comprobar(t_lado.size() == 3 and t_lado[0] == t_lado[1] and t_lado[1] == t_lado[2]
-			and String(t_lado[0]) == String(p3.get("asientoP", "")),
-			"la tribuna %s (sin tercios propios) sale con sus 3 tercios iguales al patron global" % lado)
-	## El rival nunca disenio nada: nunca trae ni bandejas ni tramos.
-	_comprobar(not m.perfil_estadio_de(rival).has("tramos"), "el rival nunca trae la clave tramos")
-
+	_estadio_tramos(m, p, mio, rival)
 	## LOS 8 ESTILOS, ENRIQUECIDOS (16-9-2026): ya traian banquillo/tunel/corner
 	## desde antes -mudos hasta la Fase 2 de hoy-, y ahora tambien redTipo y
 	## escudoDonde. Los 8, no solo uno, para no dejar pasar un typo de catalogo
@@ -168,7 +148,6 @@ func _probar_roles_y_federacion() -> void:
 			"'%s' trae un redTipo valido (%s)" % [est_p["clave"], cambios.get("redTipo")])
 		_comprobar(cambios.has("escudoDonde") and m.estadio.es_valido("escudoDonde", cambios["escudoDonde"]),
 			"'%s' trae un escudoDonde valido (%s)" % [est_p["clave"], cambios.get("escudoDonde")])
-
 
 ## Comprueba que el enganche a Mundo funciona, no las reglas de Roles en si
 ## -esas ya las prueba _probar_roles_y_federacion(). Antes de hoy tras_partido(),

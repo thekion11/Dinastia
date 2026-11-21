@@ -271,22 +271,26 @@ static func llegada(m: Object, p: Dictionary) -> Vector3:
 	var arco: Vector3 = m._arco_rival(p)
 	if absf(bp.x) < 9.0 or absf(arco.z - bp.z) > 25.0:
 		return Vector3.INF
-	var d: float = m.dir_ataque(bool(p["es_local"]))
-	var lado := signf(bp.x)
-	var rol := String(m._rol(p))
-	var obj := Vector3.INF
-	if rol == "DC":
-		obj = Vector3(lado * 2.5, 0, arco.z - d * 6.0)
-	elif (rol == "ED" or rol == "EI") and signf(m.pos(p).x) != lado:
-		obj = Vector3(-lado * 3.0, 0, arco.z - d * 8.0)
-	elif rol == "MC" and _mc_mas_cerca(m, p, arco):
-		obj = Vector3(0, 0, arco.z - d * 11.0)
+	var obj := _punto_de_llegada(m, p, arco, bp)
 	if obj == Vector3.INF or (m.pos(p) as Vector3).distance_to(obj) > 35.0:
 		return Vector3.INF
 	if m.get("diag") is Dictionary and float(p.get("_c4_llegada_t", -99.0)) < float(b.get("tomo_en", 0.0)):
 		p["_c4_llegada_t"] = float(m.t)
 		(m.diag as Dictionary)["c4_llegada"] = int((m.diag as Dictionary).get("c4_llegada", 0)) + 1
 	return obj
+
+## Punto de llegada según el rol (DC, ED/EI, MC más cercano al arco). Vector3.INF = ninguno.
+static func _punto_de_llegada(m: Object, p: Dictionary, arco: Vector3, bp: Vector3) -> Vector3:
+	var d: float = m.dir_ataque(bool(p["es_local"]))
+	var lado := signf(bp.x)
+	var rol := String(m._rol(p))
+	if rol == "DC":
+		return Vector3(lado * 2.5, 0, arco.z - d * 6.0)
+	if (rol == "ED" or rol == "EI") and signf(m.pos(p).x) != lado:
+		return Vector3(-lado * 3.0, 0, arco.z - d * 8.0)
+	if rol == "MC" and _mc_mas_cerca(m, p, arco):
+		return Vector3(0, 0, arco.z - d * 11.0)
+	return Vector3.INF
 
 static func _mc_mas_cerca(m: Object, p: Dictionary, arco: Vector3) -> bool:
 	var yo := (m.pos(p) as Vector3).distance_to(arco)

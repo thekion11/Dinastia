@@ -252,11 +252,12 @@ func _probar_dificultad_cpu() -> void:
 	var cpu: Dictionary = {}
 	var mio: Dictionary = {}
 	for p: Dictionary in motor.jugadores:
-		if not bool(p["por"]):
-			if bool(p["es_local"]) and mio.is_empty():
-				mio = p
-			elif not bool(p["es_local"]) and cpu.is_empty():
-				cpu = p
+		if bool(p["por"]):
+			continue
+		if bool(p["es_local"]):
+			if mio.is_empty(): mio = p
+		elif cpu.is_empty():
+			cpu = p
 	var puro := float(cpu["attr_puro"]["pas"])
 	_comprobar(motor.equipo_cpu() == -1 and is_equal_approx(float(cpu["attr"]["pas"]), puro), "sin nadie al mando no hay CPU que ajustar")
 	motor.control_equipo = 0

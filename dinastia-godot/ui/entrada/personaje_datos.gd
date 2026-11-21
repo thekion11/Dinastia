@@ -266,26 +266,40 @@ static func aspecto_coherente(rng: RandomNumberGenerator, mujer: int = -1, edad:
 	a["cuerpo"] = "female" if es_mujer else "male"
 	a["altura"] = snappedf(rng.randf_range(1.58, 1.76) if es_mujer else rng.randf_range(1.68, 1.95), 0.01)
 	if es_mujer:
-		a["barba"] = false
-		a["pelo"] = CORTES_MUJER[rng.randi() % CORTES_MUJER.size()]
+		_cabello_mujer(a, rng)
+	else:
+		_cabello_hombre(a, rng, edad)
+	_canas_y_cuerpo(a, rng, edad)
+	_detalles_ropa(a, rng)
+	return a
+
+## Cabello y cara de una mujer (sin barba).
+static func _cabello_mujer(a: Dictionary, rng: RandomNumberGenerator) -> void:
+	a["barba"] = false
+	a["pelo"] = CORTES_MUJER[rng.randi() % CORTES_MUJER.size()]
+	a["cara"] = -1
+	a["corte_med"] = ""
+
+## Cabello, barba y cara de un hombre.
+static func _cabello_hombre(a: Dictionary, rng: RandomNumberGenerator, edad: int) -> void:
+	a["barba"] = rng.randf() < 0.4
+	## Cortes de un DT de verdad: los llamativos (samurái, rastas, coleta, melena,
+	## afro) quedan para uno de cada diez.
+	if rng.randf() < 0.9:
+		a["pelo"] = CORTES_SOBRIOS[rng.randi() % CORTES_SOBRIOS.size()]
+	if edad >= 50 and rng.randf() < 0.35:
+		a["pelo"] = ["calvo", "rapado", "corto"][rng.randi() % 3]
+	if BibliotecaCaras.hay() and rng.randf() < 0.6:
+		var n := BibliotecaCaras.del_tono(Color(String(a["piel"]))).size()
+		a["cara"] = rng.randi() % maxi(n, 1)
+		var pelos := BibliotecaCaras.pelos()
+		a["corte_med"] = String(pelos[rng.randi() % pelos.size()]) if not pelos.is_empty() and rng.randf() < 0.45 else ""
+	else:
 		a["cara"] = -1
 		a["corte_med"] = ""
-	else:
-		a["barba"] = rng.randf() < 0.4
-		## Cortes de un DT de verdad: los llamativos (samurái, rastas, coleta, melena,
-		## afro) quedan para uno de cada diez.
-		if rng.randf() < 0.9:
-			a["pelo"] = CORTES_SOBRIOS[rng.randi() % CORTES_SOBRIOS.size()]
-		if edad >= 50 and rng.randf() < 0.35:
-			a["pelo"] = ["calvo", "rapado", "corto"][rng.randi() % 3]
-		if BibliotecaCaras.hay() and rng.randf() < 0.6:
-			var n := BibliotecaCaras.del_tono(Color(String(a["piel"]))).size()
-			a["cara"] = rng.randi() % maxi(n, 1)
-			var pelos := BibliotecaCaras.pelos()
-			a["corte_med"] = String(pelos[rng.randi() % pelos.size()]) if not pelos.is_empty() and rng.randf() < 0.45 else ""
-		else:
-			a["cara"] = -1
-			a["corte_med"] = ""
+
+## Las canas, por edad, y el cuerpo.
+static func _canas_y_cuerpo(a: Dictionary, rng: RandomNumberGenerator, edad: int) -> void:
 	## Las canas, por edad (las mismas franjas que el retrato 2D de `CaraDT`).
 	var canas := 0.55 if edad >= 55 else (0.25 if edad >= 45 else 0.0)
 	if rng.randf() < canas:
@@ -301,6 +315,9 @@ static func aspecto_coherente(rng: RandomNumberGenerator, mujer: int = -1, edad:
 	a["barriga"] = snappedf(clampf(rng.randfn(clampf((edad - 35) / 60.0, 0.0, 0.4), 0.2), -0.3, 0.8), 0.05)
 	if rng.randf() < 0.8:
 		a["ropa"] = ROPAS_BANQUILLO[rng.randi() % ROPAS_BANQUILLO.size()]
+
+## Ropa, adornos y detalles que van con la ropa.
+static func _detalles_ropa(a: Dictionary, rng: RandomNumberGenerator) -> void:
 	a["pendiente"] = rng.randf() < 0.05
 	a["cadena"] = rng.randf() < 0.04
 	if String(a["color_pelo"]) == "8a2a12" and rng.randf() < 0.7:
@@ -315,8 +332,6 @@ static func aspecto_coherente(rng: RandomNumberGenerator, mujer: int = -1, edad:
 	## El tatuaje se ve en el antebrazo: sin manga corta no luce.
 	if not bool(a["manga_corta"]):
 		a["tatuaje"] = 0
-	return a
-
 ## Un personaje entero al azar del país `pais` (el resto, coherente con él).
 static func al_azar(pais: String, rng: RandomNumberGenerator, mujer: int = -1) -> Dictionary:
 	var p := nuevo(pais)
