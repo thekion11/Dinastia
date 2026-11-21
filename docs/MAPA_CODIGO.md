@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2598 archivos (.gd, .cpp, .h), 371749 líneas, 1013 clases con nombre.
+Total: 2598 archivos (.gd, .cpp, .h), 371782 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -52,7 +52,7 @@ Cerca del tope (≥ 400 líneas): `carrera_jugador.gd` (450), `carrera_ruta_p1.g
 
 ## Partido: motor C4 y respaldo
 
-89 archivos, 15843 líneas. Carpetas: `nucleo`, `visor`.
+89 archivos, 15847 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `l
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62799 líneas. Carpetas: `visor`.
+340 archivos, 62828 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
