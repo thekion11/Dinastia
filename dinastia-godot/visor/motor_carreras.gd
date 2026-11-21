@@ -62,19 +62,9 @@ static func objetivo(m: MotorJugable, p: Dictionary, obj: Vector3, linea: float,
 			for otra in plazas:
 				if otra != plaza:
 					ocupados.append(String(_est(m, local, otra)["id"]))
-			var mejor := ""
-			var mejor_x := 0.0
-			var ms := -999.0
-			for q: Dictionary in m.jugadores:
-				if bool(q["es_local"]) == local and q != m.poseedor and m._rol(q) in roles and not (String(q["id"]) in ocupados):
-					var falta := (linea - m.pos(q).z) * dz
-					if falta < -2.0 or falta > 28.0:
-						continue
-					var s := -falta * 0.05 - absf(m.pos(q).x - hueco(m, local)) * 0.03 + fmod(absf(float(hash(String(q["id"]) + str(int(m.t / 8.0))))), 1.0) * 0.4
-					if s > ms:
-						ms = s
-						mejor = String(q["id"])
-						mejor_x = m.pos(q).x
+			var elegido := _elegir_corredor(m, local, roles, linea, dz, ocupados)
+			var mejor: String = elegido[0]
+			var mejor_x: float = elegido[1]
 			if mejor != "":
 				var men := float(m._tac(local, "mentalidad") - 1)
 				e["id"] = mejor
@@ -87,3 +77,21 @@ static func objetivo(m: MotorJugable, p: Dictionary, obj: Vector3, linea: float,
 	## Los demás delanteros: forma, algo por detrás de la línea.
 	var z := linea - dz * FORMA_ATRAS
 	return Vector3(obj.x, 0, z if (z - obj.z) * dz > 0.0 else obj.z)
+
+## Delantero libre con más campo y más cerca de la línea: [id, x] ("" si ninguno).
+static func _elegir_corredor(m: MotorJugable, local: bool, roles: Array,
+		linea: float, dz: float, ocupados: Array) -> Array:
+	var mejor := ""
+	var mejor_x := 0.0
+	var ms := -999.0
+	for q: Dictionary in m.jugadores:
+		if bool(q["es_local"]) == local and q != m.poseedor and m._rol(q) in roles and not (String(q["id"]) in ocupados):
+			var falta := (linea - m.pos(q).z) * dz
+			if falta < -2.0 or falta > 28.0:
+				continue
+			var s := -falta * 0.05 - absf(m.pos(q).x - hueco(m, local)) * 0.03 + fmod(absf(float(hash(String(q["id"]) + str(int(m.t / 8.0))))), 1.0) * 0.4
+			if s > ms:
+				ms = s
+				mejor = String(q["id"])
+				mejor_x = m.pos(q).x
+	return [mejor, mejor_x]
