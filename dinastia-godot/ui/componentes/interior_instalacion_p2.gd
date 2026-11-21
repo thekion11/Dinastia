@@ -1,4 +1,5 @@
 extends "res://ui/componentes/interior_instalacion_p1.gd"
+const _DIBUJO_SUELO := preload("res://ui/componentes/interior_suelos.gd")
 ## [Capa 2/7 de `interior_instalacion.gd`] _cerrar_para_pasear, _textura_suelo, _mat_suelo, _sala, _medida, _altura_cadera … (+13)
 
 ## Cierra la fachada (antes baja, para ver dentro) dejando un hueco de puerta de
@@ -42,44 +43,13 @@ static func _textura_suelo(piso: String) -> Texture2D:
 	rng.seed = hash(piso)
 	match piso:
 		"parquet":
-			## 8 hileras de tablas de largo variable, con veta y junta oscura.
-			for fila in 8:
-				var x0 := rng.randi_range(0, 120)
-				var x := -x0
-				while x < n:
-					var largo := rng.randi_range(90, 170)
-					var tono := rng.randf_range(0.78, 1.0)
-					var veta := rng.randf_range(0.0, 6.28)
-					for px in range(maxi(x, 0), mini(x + largo, n)):
-						for py in range(fila * 32, fila * 32 + 32):
-							var v := tono * (0.94 + 0.06 * sin(float(px) * 0.09 + float(py) * 0.6 + veta))
-							if py == fila * 32 or px == x:
-								v *= 0.55
-							img.set_pixel(px, py, Color(v, v, v))
-					x += largo
+			_DIBUJO_SUELO._dibujar_parquet(img, rng, n)
 		"losa":
-			for i in 4:
-				for j in 4:
-					var tono := rng.randf_range(0.92, 1.0)
-					for px in range(i * 64, i * 64 + 64):
-						for py in range(j * 64, j * 64 + 64):
-							var v := tono * rng.randf_range(0.97, 1.0)
-							if px - i * 64 < 2 or py - j * 64 < 2:
-								v = 0.62
-							img.set_pixel(px, py, Color(v, v, v))
+			_DIBUJO_SUELO._dibujar_losa(img, rng, n)
 		"moqueta":
-			for px in n:
-				for py in n:
-					var v := rng.randf_range(0.86, 1.0)
-					img.set_pixel(px, py, Color(v, v, v))
+			_DIBUJO_SUELO._dibujar_moqueta(img, rng, n)
 		_:
-			var ruido := FastNoiseLite.new()
-			ruido.seed = 7
-			ruido.frequency = 0.02
-			for px in n:
-				for py in n:
-					var v := 0.88 + ruido.get_noise_2d(float(px), float(py)) * 0.1 + rng.randf_range(-0.03, 0.03)
-					img.set_pixel(px, py, Color(v, v, v))
+			_DIBUJO_SUELO._dibujar_ruido(img, rng, n)
 	img.generate_mipmaps()
 	var t := ImageTexture.create_from_image(img)
 	_texturas_suelo[piso] = t
