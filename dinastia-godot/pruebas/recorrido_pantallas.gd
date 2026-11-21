@@ -127,11 +127,23 @@ func _process(_d: float) -> void:
 		return
 	var paso: Array = _cola.pop_front()
 	var t0 := Time.get_ticks_usec()
+	if not _ejecutar_paso(paso, t0):
+		return
+	_pantallas += 1
+	_donde = " ".join(paso.map(func(x: Variant) -> String: return str(x.get("tab", "")) + "/" + str(x.get("secc", "")) if x is Dictionary else str(x)))
+	if OS.get_environment("RECORRIDO_TEXTOS") != "":
+		_recoger(_p)
+	if OS.get_environment("RECORRIDO_LARGOS") != "":
+		_espera = 2
+
+## Ejecuta un paso del recorrido (ir a un chip, una pestaña, un menú o una ficha).
+## Devuelve false si el paso no cuenta (los kits se saltan).
+func _ejecutar_paso(paso: Array, t0: int) -> bool:
 	match String(paso[0]):
 		"chip":
 			var ch: Dictionary = paso[1]
 			if String(ch.get("secc", "")) == "kits":
-				return
+				return false
 			_p.call("_ir_a_chip", ch)
 			_p.call("_refrescar")
 			_tiempos["chip " + String(ch["tab"]) + "/" + String(ch.get("secc", ""))] = (Time.get_ticks_usec() - t0) / 1000.0
@@ -162,12 +174,7 @@ func _process(_d: float) -> void:
 			_p.call("_ver_ficha", c.plantilla[0])
 			print("PANTALLA ficha %s" % paso[1])
 			_pulsar_botones()
-	_pantallas += 1
-	_donde = " ".join(paso.map(func(x: Variant) -> String: return str(x.get("tab", "")) + "/" + str(x.get("secc", "")) if x is Dictionary else str(x)))
-	if OS.get_environment("RECORRIDO_TEXTOS") != "":
-		_recoger(_p)
-	if OS.get_environment("RECORRIDO_LARGOS") != "":
-		_espera = 2
+	return true
 
 func _informe_tiempos() -> void:
 	var claves := _tiempos.keys()

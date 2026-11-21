@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2600 archivos (.gd, .cpp, .h), 371871 líneas, 1013 clases con nombre.
+Total: 2601 archivos (.gd, .cpp, .h), 371896 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -57,7 +57,7 @@ Cerca del tope (≥ 400 líneas): `carrera_jugador.gd` (450), `carrera_ruta_p1.g
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Partido` | `nucleo/partido.gd` | 447 | 346 | partido_p2.gd ← partido_p1.gd |
-| `MotorJugable` | `visor/motor_jugable.gd` | 201 | 181 | motor_jugable_p11.gd ← motor_jugable_p10.gd ← motor_jugable_p9.gd ← motor_jugable_p8.gd ← motor_jugable_p8_p1.gd ← motor_jugable_p7.gd ← motor_jugable_p7_p1.gd ← motor_jugable_p6.gd ← motor_jugable_p6_p1.gd ← motor_jugable_p5.gd ← motor_jugable_p5_p1.gd |
+| `MotorJugable` | `visor/motor_jugable.gd` | 201 | 182 | motor_jugable_p11.gd ← motor_jugable_p10.gd ← motor_jugable_p9.gd ← motor_jugable_p8.gd ← motor_jugable_p8_p1.gd ← motor_jugable_p7.gd ← motor_jugable_p7_p1.gd ← motor_jugable_p6.gd ← motor_jugable_p6_p1.gd ← motor_jugable_p5.gd ← motor_jugable_p5_p1.gd |
 | `MotorLeague` | `visor/motor_league.gd` | 450 | 25 | motor_league_p1.gd |
 | `MotorCombinado` | `visor/motor_combinado.gd` | 443 | 15 |  |
 | `MotorTraza` | `visor/motor_traza.gd` | 260 | 14 |  |
@@ -93,11 +93,11 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-474 archivos, 93787 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+472 archivos, 93665 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Principal` | `ui/principal.gd` | 58 | 262 | principal_p17.gd ← principal_p16.gd ← principal_p15.gd ← principal_p14.gd ← principal_p13.gd ← principal_p12.gd ← principal_p10.gd ← principal_p9.gd ← principal_p8.gd ← principal_p7.gd ← principal_p6.gd |
+| `Principal` | `ui/principal.gd` | 58 | 261 | principal_p17.gd ← principal_p16.gd ← principal_p15.gd ← principal_p14.gd ← principal_p13.gd ← principal_p12.gd ← principal_p10.gd ← principal_p9.gd ← principal_p8.gd ← principal_p7.gd ← principal_p6.gd |
 | `Tema` | `ui/tema.gd` | 153 | 250 |  |
 | `VistaEstadio` | `ui/estadio.gd` | 446 | 188 | estadio_p5.gd ← estadio_p5_p1.gd ← estadio_p4.gd ← estadio_p3.gd ← estadio_p2.gd ← estadio_p1.gd |
 | `VistaCiudad` | `ui/ciudad_vista.gd` | 218 | 104 | ciudad_vista_p1.gd ← ciudad_vista_p1_p1.gd |
@@ -107,12 +107,12 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 | `Animar` | `ui/componentes/animar.gd` | 95 | 70 |  |
 | `PedidoPartida` | `ui/principal/pedido_partida.gd` | 71 | 69 |  |
 | `AjustesCiudad` | `ui/componentes/ajustes_ciudad.gd` | 172 | 57 |  |
-| `Tutorial` | `ui/componentes/tutorial.gd` | 223 | 48 | tutorial_p2.gd ← tutorial_p1.gd |
+| `Tutorial` | `ui/componentes/tutorial.gd` | 223 | 49 | tutorial_p2.gd ← tutorial_p1.gd |
 | `CajonAjustes` | `ui/componentes/cajon_ajustes.gd` | 258 | 47 |  |
 | `Inicio` | `ui/inicio.gd` | 112 | 41 | inicio_p2.gd ← inicio_p1.gd |
-| `MenuLateral` | `ui/componentes/menu_lateral.gd` | 429 | 40 |  |
+| `MenuLateral` | `ui/componentes/menu_lateral.gd` | 423 | 40 |  |
 
-Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla_pes.gd` (450), `pantalla_cantera_p2.gd` (450), `pantalla_opciones.gd` (450), `pantalla_opciones_p1.gd` (450), `partido_jugable.gd` (450), `telefono_p1.gd` (449), `interior_instalacion_p2.gd` (448), `estadio_p1.gd` (448), `partido_vivo_p2.gd` (448).
+Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla_pes.gd` (450), `pantalla_cantera_p2.gd` (450), `pantalla_opciones.gd` (450), `pantalla_opciones_p1.gd` (450), `partido_jugable.gd` (450), `telefono_p1.gd` (449), `interior_instalacion_p2.gd` (448), `panel_plantel.gd` (448), `estadio_p1.gd` (448).
 
 ## Minijuegos
 
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1260 archivos, 121505 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1263 archivos, 121652 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
@@ -147,9 +147,9 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Mundo` | `nucleo/mundo.gd` | 158 | 920 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
+| `Mundo` | `nucleo/mundo.gd` | 158 | 922 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
 | `Jugador` | `nucleo/jugador.gd` | 32 | 483 | jugador_p1.gd |
-| `Liga` | `nucleo/liga.gd` | 235 | 200 |  |
+| `Liga` | `nucleo/liga.gd` | 235 | 201 |  |
 | `Nombres` | `nucleo/nombres.gd` | 183 | 171 |  |
 | `Nativo` | `nucleo/nativo.gd` | 29 | 124 |  |
 | `Partida` | `nucleo/partida.gd` | 261 | 119 | partida_p2.gd ← partida_p1.gd |
