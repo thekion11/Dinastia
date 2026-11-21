@@ -214,6 +214,12 @@ static func _efecto_entorno(en: Environment, e: String) -> void:
 
 ## Apaga, sobre luces, sombras, césped o viewport, el efecto `e` de la lista EFECTO.
 static func _efecto_sobre(vista: Node, vp: Viewport, e: String) -> void:
+	_efecto_luces(vista, e)
+	_efecto_superficie(vista, vp, e)
+
+
+## Los efectos de luces y sombras (omni, spot y sombras de las luces).
+static func _efecto_luces(vista: Node, e: String) -> void:
 	match e:
 		"omni":
 			for l in vista.find_children("*", "OmniLight3D", true, false):
@@ -236,6 +242,11 @@ static func _efecto_sobre(vista: Node, vp: Viewport, e: String) -> void:
 			for l in vista.find_children("*", "Light3D", true, false):
 				if not l is DirectionalLight3D:
 					(l as Light3D).shadow_enabled = false
+
+
+## Los efectos de superficie y viewport (césped, debanding y FXAA).
+static func _efecto_superficie(vista: Node, vp: Viewport, e: String) -> void:
+	match e:
 		"cesped":
 			## EFECTO=cesped: el campo con un material plano sin sombreado (mismo verde): ¿cuánto cuesta el shader de la hierba (franjas, dibujo, ruido)?
 			var campo := vista.find_child("Cesped", true, false) as MeshInstance3D

@@ -140,29 +140,50 @@ func _fase_diagnostico_oclusion() -> void:
 		if oc == null:
 			print("DIAG_OCLU: NO montada (estadio abierto o calidad > MEDIO)")
 		else:
-			var vis_n := 0
-			var vis_sa := 0
-			for c in oc.entorno.get_children():
-				var gi: Array = c.find_children("*", "GeometryInstance3D", true, false)
-				var propio := 1 if c is GeometryInstance3D else 0
-				if c is Node3D and (c as Node3D).visible:
-					vis_n += gi.size() + propio
-					if c.is_in_group("sin_agrupar"):
-						vis_sa += gi.size() + propio
-			print("DIAG_OCLU n=%d: hijos visibles del entorno: %d geometrías (%d del horizonte); hijos=%d, ocultables=%d" % [_n, vis_n, vis_sa, oc.entorno.get_child_count(), oc.ocultables.size()])
-			var otros: Array[String] = []
-			for c in oc.entorno.get_children():
-				if c is Node3D and (c as Node3D).visible and not c.is_in_group("sin_agrupar") or (c is Node3D and (c as Node3D).visible and c.is_in_group("sin_agrupar") and c.get_child_count() == 0):
-					otros.append("%s[%s] hijos=%d" % [c.name, c.get_class(), c.get_child_count()])
-			print("DIAG_OCLU visibles que no deberían: %d -> %s" % [otros.size(), ", ".join(otros.slice(0, 12))])
-			var no_h: Array[String] = []
-			for c in oc.entorno.get_children():
-				if c.is_in_group("sin_agrupar") and c.get_child_count() > 3:
-					no_h.append("%s hijos=%d" % [c.name, c.get_child_count()])
-			print("DIAG_OCLU sin_agrupar con >3 hijos: %s" % ", ".join(no_h.slice(0, 12)))
-			var cam_o: Camera3D = oc.get_viewport().get_camera_3d()
-			print("DIAG_OCLU: oclusión procesa=%s modo=%d t=%.3f cam_propia=%s dentro_arbol=%s" % [str(oc.is_processing()), oc.process_mode, oc._t, str(cam_o.global_position) if cam_o != null else "NULA", str(oc.is_inside_tree())])
-			print("DIAG_OCLU: montada mx=%.1f mz=%.1f alto=%.1f cam=%s tapado=%s" % [oc.mx, oc.mz, oc.ALTO, str(cam.global_position), str(oc.tapado(cam.global_position))])
+			_diag_oclusion(oc, cam)
+
+
+## Lo que el diagnóstico de la oclusión imprime, en el mismo orden de siempre.
+func _diag_oclusion(oc: Node, cam: Camera3D) -> void:
+	var vis := _diag_visibles(oc)
+	print("DIAG_OCLU n=%d: hijos visibles del entorno: %d geometrías (%d del horizonte); hijos=%d, ocultables=%d" % [_n, vis[0], vis[1], oc.entorno.get_child_count(), oc.ocultables.size()])
+	_diag_otros(oc)
+	_diag_sin_agrupar(oc)
+	var cam_o: Camera3D = oc.get_viewport().get_camera_3d()
+	print("DIAG_OCLU: oclusión procesa=%s modo=%d t=%.3f cam_propia=%s dentro_arbol=%s" % [str(oc.is_processing()), oc.process_mode, oc._t, str(cam_o.global_position) if cam_o != null else "NULA", str(oc.is_inside_tree())])
+	print("DIAG_OCLU: montada mx=%.1f mz=%.1f alto=%.1f cam=%s tapado=%s" % [oc.mx, oc.mz, oc.ALTO, str(cam.global_position), str(oc.tapado(cam.global_position))])
+
+
+## Cuántas geometrías del entorno están visibles: [todas, del horizonte (grupo sin_agrupar)].
+func _diag_visibles(oc: Node) -> Array:
+	var vis_n := 0
+	var vis_sa := 0
+	for c in oc.entorno.get_children():
+		var gi: Array = c.find_children("*", "GeometryInstance3D", true, false)
+		var propio := 1 if c is GeometryInstance3D else 0
+		if c is Node3D and (c as Node3D).visible:
+			vis_n += gi.size() + propio
+			if c.is_in_group("sin_agrupar"):
+				vis_sa += gi.size() + propio
+	return [vis_n, vis_sa]
+
+
+## Los hijos visibles que no deberían (sin agrupar vacíos o agrupados visibles).
+func _diag_otros(oc: Node) -> void:
+	var otros: Array[String] = []
+	for c in oc.entorno.get_children():
+		if c is Node3D and (c as Node3D).visible and not c.is_in_group("sin_agrupar") or (c is Node3D and (c as Node3D).visible and c.is_in_group("sin_agrupar") and c.get_child_count() == 0):
+			otros.append("%s[%s] hijos=%d" % [c.name, c.get_class(), c.get_child_count()])
+	print("DIAG_OCLU visibles que no deberían: %d -> %s" % [otros.size(), ", ".join(otros.slice(0, 12))])
+
+
+## Los sin_agrupar que tienen más de 3 hijos.
+func _diag_sin_agrupar(oc: Node) -> void:
+	var no_h: Array[String] = []
+	for c in oc.entorno.get_children():
+		if c.is_in_group("sin_agrupar") and c.get_child_count() > 3:
+			no_h.append("%s hijos=%d" % [c.name, c.get_child_count()])
+	print("DIAG_OCLU sin_agrupar con >3 hijos: %s" % ", ".join(no_h.slice(0, 12)))
 
 
 ## Lo que se oculta antes de medir: grupos enteros (OCULTAR_GRUPOS), piezas por nombre (OCULTAR) y la gente fuera del campo.
@@ -293,21 +314,25 @@ func _de_grupo(nombre: String) -> Array:
 		if not g.is_visible_in_tree():
 			continue
 		var es_mm := g is MultiMeshInstance3D
-		var mn := ""
-		if es_mm and (g as MultiMeshInstance3D).multimesh != null and (g as MultiMeshInstance3D).multimesh.mesh != null:
-			mn = (g as MultiMeshInstance3D).multimesh.mesh.resource_name
-		match nombre:
-			"butacas": if String(g.name).begins_with("Butacas"): r.append(g)
-			"hinchas": if es_mm and not String(g.name).begins_with("Butacas") and (g as MultiMeshInstance3D).multimesh.instance_count > 200: r.append(g)
-			"jugadores": if g.get_parent() is Skeleton3D: r.append(g)
-			"pelo": if String(g.get_parent().name) == "PeloCapas" or String(g.name).begins_with("Pelo"): r.append(g)
-			"resto_multimesh": if es_mm: r.append(g)
-			"focos": if String(g.name).begins_with("stadium_light"): r.append(g)
-			"fundidos": if String(g.name).begins_with("Fundid"): r.append(g)
-			"mm_sin_nombre": if es_mm and String(g.name).begins_with("@MultiMesh"): r.append(g)
-			"ojos_cejas": if String(g.name).begins_with("Eyes") or String(g.name).begins_with("Eyebrow"): r.append(g)
-			"coches": if String(g.name) == "car" or String(g.name) == "whell": r.append(g)
+		if _en_grupo(nombre, g, es_mm):
+			r.append(g)
 	return r
+
+
+## ¿Pertenece la pieza `g` al grupo `nombre` (butacas, hinchas, jugadores…)?
+func _en_grupo(nombre: String, g: GeometryInstance3D, es_mm: bool) -> bool:
+	match nombre:
+		"butacas": return String(g.name).begins_with("Butacas")
+		"hinchas": return es_mm and not String(g.name).begins_with("Butacas") and (g as MultiMeshInstance3D).multimesh.instance_count > 200
+		"jugadores": return g.get_parent() is Skeleton3D
+		"pelo": return String(g.get_parent().name) == "PeloCapas" or String(g.name).begins_with("Pelo")
+		"resto_multimesh": return es_mm
+		"focos": return String(g.name).begins_with("stadium_light")
+		"fundidos": return String(g.name).begins_with("Fundid")
+		"mm_sin_nombre": return es_mm and String(g.name).begins_with("@MultiMesh")
+		"ojos_cejas": return String(g.name).begins_with("Eyes") or String(g.name).begins_with("Eyebrow")
+		"coches": return String(g.name) == "car" or String(g.name) == "whell"
+	return false
 
 func _partes() -> void:
 	var m := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME), Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
@@ -343,38 +368,17 @@ func _arbol() -> void:
 	## base cambiaba sola: salían ahorros negativos) y cada parte se compara con
 	## una base tomada JUSTO antes de apagarla.
 	Engine.time_scale = 0.0
-	var raiz: Node3D = _vista.get("_raiz3d")
 	var m := Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME), Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
 	_paso_a += 1
 	if _paso_a % 4 != 0:
 		return
 	if _prev != null:
-		var pista := ""
-		if _prev is MeshInstance3D and (_prev as MeshInstance3D).mesh != null:
-			var mm := (_prev as MeshInstance3D).mesh
-			pista = "%s %s" % [mm.get_class(), str(mm.get_aabb().size.round())]
-		elif _prev is MultiMeshInstance3D and (_prev as MultiMeshInstance3D).multimesh != null:
-			pista = "MultiMesh x%d" % (_prev as MultiMeshInstance3D).multimesh.instance_count
-		else:
-			pista = "%d hijos" % _prev.get_child_count()
-		print("ARBOL sin %-34s %8d tris  %5d llamadas  (%s)" % [_prev.get_path().get_concatenated_names().right(40), _base_a.x - m.x, _base_a.y - m.y, pista])
-		_prev.visible = true
-		_prev = null
+		_arbol_cerrar_parte(m)
 		return
 	if _cola_arbol.is_empty() and _paso_a > 4:
 		if not _arbol_listo:
 			_arbol_listo = true
-			print("ARBOL base tris=%d llamadas=%d" % [m.x, m.y])
-			for c in raiz.get_children():
-				if c is Node3D:
-					_cola_arbol.append(c)
-			var extra: Array = []
-			for c in _cola_arbol:
-				if c.get_child_count() > 6:
-					for g in c.get_children():
-						if g is Node3D:
-							extra.append(g)
-			_cola_arbol.append_array(extra)
+			_arbol_encolar(m)
 			return
 		get_tree().quit()
 		return
@@ -383,6 +387,40 @@ func _arbol() -> void:
 	_base_a = m
 	_prev = _cola_arbol.pop_front()
 	_prev.visible = false
+
+
+## Imprime cuánto ahorró apagar la parte `_prev` y la vuelve a encender.
+func _arbol_cerrar_parte(m: Vector2) -> void:
+	print("ARBOL sin %-34s %8d tris  %5d llamadas  (%s)" % [_prev.get_path().get_concatenated_names().right(40), _base_a.x - m.x, _base_a.y - m.y, _arbol_pista(_prev)])
+	_prev.visible = true
+	_prev = null
+
+
+## Qué es la parte: su malla, su multimalla o cuántos hijos tiene.
+func _arbol_pista(prev: Node3D) -> String:
+	if prev is MeshInstance3D and (prev as MeshInstance3D).mesh != null:
+		var mm := (prev as MeshInstance3D).mesh
+		return "%s %s" % [mm.get_class(), str(mm.get_aabb().size.round())]
+	if prev is MultiMeshInstance3D and (prev as MultiMeshInstance3D).multimesh != null:
+		return "MultiMesh x%d" % (prev as MultiMeshInstance3D).multimesh.instance_count
+	return "%d hijos" % prev.get_child_count()
+
+
+## Llena la cola con los hijos del raíz y con los nietos de los que tienen más de 6 hijos.
+func _arbol_encolar(m: Vector2) -> void:
+	var raiz: Node3D = _vista.get("_raiz3d")
+	print("ARBOL base tris=%d llamadas=%d" % [m.x, m.y])
+	for c in raiz.get_children():
+		if c is Node3D:
+			_cola_arbol.append(c)
+	var extra: Array = []
+	for c in _cola_arbol:
+		if c.get_child_count() > 6:
+			for g in c.get_children():
+				if g is Node3D:
+					extra.append(g)
+	_cola_arbol.append_array(extra)
+
 
 func _medida() -> Vector2:
 	return Vector2(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),
