@@ -406,6 +406,11 @@ func _asuntos_despacho() -> Array:
 		asuntos.append({"et": Idiomas.t("📌 Hay que decidir"), "col": Principal.COL_ORO, "id": "decision"})
 	if p.mundo.vestuario != null and not p.mundo.vestuario.solicitud.is_empty():
 		asuntos.append({"et": Idiomas.t("🗣️ Te busca un jugador"), "col": Principal.COL_VERDE, "id": "solicitud"})
+	_asuntos_mas(asuntos)
+	return asuntos
+
+## Los asuntos de la segunda mitad de la lista (mismo orden que antes).
+func _asuntos_mas(asuntos: Array) -> void:
 	if p.mundo.junta != null and not p.mundo.junta.pendiente.is_empty():
 		asuntos.append({"et": Idiomas.t("🏛️ Junta de accionistas"), "col": Principal.COL_ORO, "id": "junta"})
 	if p.mundo.eventos_cantera != null and not p.mundo.eventos_cantera.pendiente.is_empty():
@@ -418,4 +423,3 @@ func _asuntos_despacho() -> Array:
 		asuntos.append({"et": Idiomas.t("💸 Crisis económica"), "col": Principal.COL_ROJO, "id": "insolvencia"})
 	if p.mundo.vida != null and not p.mundo.vida.pendiente.is_empty():
 		asuntos.append({"et": Idiomas.t("🏠 Pasa en casa"), "col": Principal.COL_ORO, "id": "vida"})
-	return asuntos

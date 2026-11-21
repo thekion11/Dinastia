@@ -75,6 +75,12 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			load("res://ui/componentes/creador_personaje.gd").abrir(p, p.mundo)
 		"album":
 			PanelMeta.abrir(p, p.mundo)
+		_:
+			_ejecutar_mas(p, accion)
+
+## Las acciones de la segunda mitad (mismo orden de antes).
+static func _ejecutar_mas(p: Principal, accion: String) -> void:
+	match accion:
 		"elegir_club":
 			## El menú de Competiciones se cierra: «Elegir club» es una ventana propia y debajo quedaba su fondo marrón.
 			var ml: Variant = p.get("_menu_lateral")
