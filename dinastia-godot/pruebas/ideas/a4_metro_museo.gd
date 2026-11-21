@@ -38,9 +38,9 @@ func _esperar(n: int) -> void:
 ## Avanza el servicio hasta que NO haya tren parado en la estación (E en el andén con un tren parado sube a él: para salir a la calle hay que esperar a que se vaya).
 func _sin_tren(metro: Object, linea: String, idx: int) -> void:
 	for i in 400:
-		if int(_metro_m.tren_parado_en(linea, idx)) < 0:
+		if int(metro.tren_parado_en(linea, idx)) < 0:
 			return
-		_metro_m.call("_process", 0.25)
+		metro.call("_process", 0.25)
 
 func _metro(e: Object, vc: Node) -> void:
 	_metro_m = e.metro
