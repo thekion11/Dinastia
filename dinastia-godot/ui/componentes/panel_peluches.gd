@@ -240,40 +240,48 @@ func _pintar() -> void:
 			continue
 		_peluche(_punto(Vector2(float(campo[i]["x"]), float(campo[i]["y"]))), Peluches.def(String(campo[i]["id"])), 24.0)
 	if fase >= MOVER and fase != FIN:
-		var salida := Vector2(0.09, 0.9)
-		var c := garra
-		var alto := 0.0                                      ## 0 arriba … 1 abajo
-		match fase:
-			BAJA:
-				alto = clampf(_t / T_BAJA, 0.0, 1.0)
-			CIERRA:
-				alto = 1.0
-			SUBE:
-				alto = 1.0 - clampf(_t / T_SUBE, 0.0, 1.0)
-			LLEVA:
-				c = garra.lerp(salida, clampf(_t / T_LLEVA, 0.0, 1.0))
-			SALE:
-				c = salida
-		var pc := _punto(c)
-		var r := 18.0 - alto * 6.0
-		var cierre := 0.0
-		if fase == CIERRA:
-			cierre = clampf(_t / T_CIERRA, 0.0, 1.0)
-		elif fase >= SUBE:
-			cierre = 1.0
-		_caja.draw_line(Vector2(pc.x, CAMPO.position.y - 12), pc, Color(0.8, 0.8, 0.85), 2.0)       ## el cable
-		_caja.draw_circle(pc + Vector2(6, 8) * alto, r * 0.9, Color(0, 0, 0, 0.28))                    ## la sombra
-		if _agarrado >= 0 and fase >= SUBE and fase <= LLEVA:
-			_peluche(pc + Vector2(0, 8), Peluches.def(String(campo[_agarrado]["id"])), 22.0)
-		for k in 3:
-			var ang := TAU * float(k) / 3.0 + 0.5
-			var abre := lerpf(1.0, 0.45, cierre)
-			_caja.draw_line(pc, pc + Vector2(cos(ang), sin(ang)) * r * abre, Color(0.95, 0.8, 0.2), 4.0)
-		_caja.draw_circle(pc, 5.0, Color(0.95, 0.8, 0.2))
+		_dibujar_garra()
 	if fase == SALE and _gana != "":
-		var q := clampf(_t / T_SALIDA, 0.0, 1.0)
-		_peluche(_punto(Vector2(0.09, 0.9)) + Vector2(0, q * 24.0), Peluches.def(_gana), 22.0 * (1.0 - q * 0.3))
+		_dibujar_ganador()
 	_textos()
+
+## La garra en la máquina: el cable, la sombra, el peluche que lleva y los dedos.
+func _dibujar_garra() -> void:
+	var salida := Vector2(0.09, 0.9)
+	var c := garra
+	var alto := 0.0                                      ## 0 arriba … 1 abajo
+	match fase:
+		BAJA:
+			alto = clampf(_t / T_BAJA, 0.0, 1.0)
+		CIERRA:
+			alto = 1.0
+		SUBE:
+			alto = 1.0 - clampf(_t / T_SUBE, 0.0, 1.0)
+		LLEVA:
+			c = garra.lerp(salida, clampf(_t / T_LLEVA, 0.0, 1.0))
+		SALE:
+			c = salida
+	var pc := _punto(c)
+	var r := 18.0 - alto * 6.0
+	var cierre := 0.0
+	if fase == CIERRA:
+		cierre = clampf(_t / T_CIERRA, 0.0, 1.0)
+	elif fase >= SUBE:
+		cierre = 1.0
+	_caja.draw_line(Vector2(pc.x, CAMPO.position.y - 12), pc, Color(0.8, 0.8, 0.85), 2.0)       ## el cable
+	_caja.draw_circle(pc + Vector2(6, 8) * alto, r * 0.9, Color(0, 0, 0, 0.28))                    ## la sombra
+	if _agarrado >= 0 and fase >= SUBE and fase <= LLEVA:
+		_peluche(pc + Vector2(0, 8), Peluches.def(String(campo[_agarrado]["id"])), 22.0)
+	for k in 3:
+		var ang := TAU * float(k) / 3.0 + 0.5
+		var abre := lerpf(1.0, 0.45, cierre)
+		_caja.draw_line(pc, pc + Vector2(cos(ang), sin(ang)) * r * abre, Color(0.95, 0.8, 0.2), 4.0)
+	_caja.draw_circle(pc, 5.0, Color(0.95, 0.8, 0.2))
+
+## El peluche que se lleva la salida, cayendo por la boca.
+func _dibujar_ganador() -> void:
+	var q := clampf(_t / T_SALIDA, 0.0, 1.0)
+	_peluche(_punto(Vector2(0.09, 0.9)) + Vector2(0, q * 24.0), Peluches.def(_gana), 22.0 * (1.0 - q * 0.3))
 
 func _textos() -> void:
 	## Todo lo que es texto SE PARTE en líneas (en alemán, ruso... una frase no cabe en 420 px): `draw_string` la cortaba.

@@ -231,14 +231,21 @@ func _seguir_jugada() -> bool:
 		return false
 	var otra := _pasos < OcasionesDT.PASOS_MAX and _t_total < OcasionesDT.SEGUNDOS_MAX - 3.0
 	if _espera == "pase":
-		if not dueno.is_empty() and dueno != _portador and dt > 0.15:
-			if otra and not bool(dueno["por"]) and _dist_arco(dueno) <= OcasionesDT.DIST_MINIMO:
-				return _abrir(dueno)
-			_cerrar("pase")
-		elif dt > 4.0:
-			_cerrar("perdida")
-		return false
-	## Conducción: al cabo de 1,3 s (si sigue con ella) toca decidir otra vez.
+		return _seguir_pase(dueno, dt, otra)
+	return _seguir_conduccion(dueno, dt, otra)
+
+## Tras un pase: el compañero que recibe (abrir otra jugada si conviene) o se cierra.
+func _seguir_pase(dueno: Dictionary, dt: float, otra: bool) -> bool:
+	if not dueno.is_empty() and dueno != _portador and dt > 0.15:
+		if otra and not bool(dueno["por"]) and _dist_arco(dueno) <= OcasionesDT.DIST_MINIMO:
+			return _abrir(dueno)
+		_cerrar("pase")
+	elif dt > 4.0:
+		_cerrar("perdida")
+	return false
+
+## Conducción: al cabo de 1,3 s (si sigue con ella) toca decidir otra vez.
+func _seguir_conduccion(dueno: Dictionary, dt: float, otra: bool) -> bool:
 	if dueno == _portador and dt >= 1.3:
 		if otra and _dist_arco(dueno) <= OcasionesDT.DIST_MINIMO:
 			return _abrir(dueno)
