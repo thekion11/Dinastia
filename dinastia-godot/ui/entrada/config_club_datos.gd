@@ -232,7 +232,7 @@ func desde_dic(d: Dictionary) -> void:
 
 ## Los problemas de la configuración: [{paso, texto, grave}]. Un problema grave
 ## impide confirmar; uno leve solo se avisa (son decisiones de gusto).
-func validar() -> Array:
+func _avisos_nombre() -> Array:
 	var r: Array = []
 	var n := club.nombre.strip_edges()
 	if n.length() < NOMBRE_MIN:
@@ -243,6 +243,11 @@ func validar() -> Array:
 		r.append({"paso": 0, "grave": true, "texto": Idiomas.t("El nombre del club tiene que llevar letras.")})
 	elif _nombre_repetido(n):
 		r.append({"paso": 0, "grave": true, "texto": Idiomas.t("Ya hay otro club que se llama así.")})
+	return r
+
+func validar() -> Array:
+	var r: Array = []
+	r.append_array(_avisos_nombre())
 	var e := club.estadio_nombre.strip_edges()
 	if e != "" and (e.length() < NOMBRE_MIN or e.length() > ESTADIO_MAX):
 		r.append({"paso": 0, "grave": true, "texto": Idiomas.t("El nombre del estadio debe tener entre 3 y 40 letras (o quedar vacío).")})
