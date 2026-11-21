@@ -166,67 +166,89 @@ func _cerrar_semana(res: Dictionary, ya_entrenado := false) -> void:
 	if bool(res.get("sin_minutos", false)):
 		res = {}
 	if not res.is_empty() and not par.is_empty():
-		var p := Partido.new(par[0], par[1])
-		p.goles_local = int(res["goles_local"])
-		p.goles_visita = int(res["goles_visita"])
-		## La tanda del césped va al acta: la copa la lee con `penales()`.
-		var pen: Array = res.get("penales", [])
-		if es_copa and p.goles_local == p.goles_visita and pen.size() == 2:
-			p.penales_externos(int(pen[0]), int(pen[1]))
-		CarreraRuta.retos(carrera, m)   ## (16-11, informe R-02) fija los retos de ESTA semana antes de avanzarla
-		m.avanzar_semana(p)
-		carrera.tras_partido(m, res)
-		carrera.partidos_jugables += 1
-		_msg += "  ·  " + Idiomas.t("Final %d-%d, tu nota %.1f (%d').") % [p.goles_local, p.goles_visita, float(res["nota"]), int(res.get("minutos", 90))]
-		if bool(res.get("sustituido", false)):
-			_msg += " " + Idiomas.t("El DT te cambió.")
-		if es_copa:
-			_msg += " " + CarreraCopa.texto_penales(p, club)
+		_cerrar_semana_jugado(res, par, es_copa, club, m)
 	else:
-		var antes := CarreraSemana.foto(j)
-		var previo: Variant = CarreraSemana.meter_en_el_once(carrera, m) if titular else null   ## (16-11, informe R-05)
-		var gc_antes := CarreraPortero.goles_en_contra(m, club)
-		## La copa simulada también se decide con prórroga y penales; tus goles
-		## son los del cruce (la liga de tu club se simula aparte esa semana).
-		var copa_p: Partido = null
-		if es_copa:
-			copa_p = Partido.new(par[0], par[1])
-			CarreraCopa.simular(copa_p)
-		var del_copa := CarreraSemana.lo_del_mundo(j, antes)
-		CarreraRuta.retos(carrera, m)   ## (16-11, informe R-02) fija los retos de ESTA semana antes de avanzarla
-		m.avanzar_semana(copa_p)
-		CarreraSemana.soltar_once(carrera, m, previo)
+		_cerrar_semana_sin_partido(par, es_copa, titular, j, club, m)
+	_cerrar_semana_fin(m)
+
+## Semana con partido jugado en directo: se anota el resultado en la carrera y en el mundo.
+func _cerrar_semana_jugado(res: Dictionary, par: Array, es_copa: bool, club: Club, m: Mundo) -> void:
+	var p := Partido.new(par[0], par[1])
+	p.goles_local = int(res["goles_local"])
+	p.goles_visita = int(res["goles_visita"])
+	## La tanda del césped va al acta: la copa la lee con `penales()`.
+	var pen: Array = res.get("penales", [])
+	if es_copa and p.goles_local == p.goles_visita and pen.size() == 2:
+		p.penales_externos(int(pen[0]), int(pen[1]))
+	CarreraRuta.retos(carrera, m)   ## (16-11, informe R-02) fija los retos de ESTA semana antes de avanzarla
+	m.avanzar_semana(p)
+	carrera.tras_partido(m, res)
+	carrera.partidos_jugables += 1
+	_msg += "  ·  " + Idiomas.t("Final %d-%d, tu nota %.1f (%d').") % [p.goles_local, p.goles_visita, float(res["nota"]), int(res.get("minutos", 90))]
+	if bool(res.get("sustituido", false)):
+		_msg += " " + Idiomas.t("El DT te cambió.")
+	if es_copa:
+		_msg += " " + CarreraCopa.texto_penales(p, club)
+
+## Semana sin partido jugado en directo: la copa se simula y, si tú no juegas, tu partido también.
+func _cerrar_semana_sin_partido(par: Array, es_copa: bool, titular: bool, j: Jugador, club: Club, m: Mundo) -> void:
+	var antes := CarreraSemana.foto(j)
+	var previo: Variant = CarreraSemana.meter_en_el_once(carrera, m) if titular else null   ## (16-11, informe R-05)
+	var gc_antes := CarreraPortero.goles_en_contra(m, club)
+	## La copa simulada también se decide con prórroga y penales; tus goles
+	## son los del cruce (la liga de tu club se simula aparte esa semana).
+	var copa_p: Partido = null
+	if es_copa:
+		copa_p = Partido.new(par[0], par[1])
+		CarreraCopa.simular(copa_p)
+	var del_copa := CarreraSemana.lo_del_mundo(j, antes)
+	CarreraRuta.retos(carrera, m)   ## (16-11, informe R-02) fija los retos de ESTA semana antes de avanzarla
+	m.avanzar_semana(copa_p)
+	CarreraSemana.soltar_once(carrera, m, previo)
+	if copa_p != null:
+		_msg += "  ·  " + Idiomas.t("Copa: %s %d-%d %s.") % [Nombres.visible(copa_p.local.nombre), copa_p.goles_local,
+			copa_p.goles_visita, Nombres.visible(copa_p.visita.nombre)]
+		var tp := CarreraCopa.texto_penales(copa_p, club)
+		if tp != "":
+			_msg += " " + tp
+	var ctx := {"antes": antes, "copa_p": copa_p, "gc_antes": gc_antes, "del_copa": del_copa, "es_copa": es_copa}
+	_semana_simulada(par, titular, j, club, m, ctx)
+
+## Tu partido simulado (titular o suplente) dentro de la semana.
+func _semana_simulada(par: Array, titular: bool, j: Jugador, club: Club, m: Mundo, ctx: Dictionary) -> void:
+	var antes: Dictionary = ctx["antes"]
+	var copa_p: Partido = ctx["copa_p"]
+	var gc_antes: int = ctx["gc_antes"]
+	var del_copa: Dictionary = ctx["del_copa"]
+	var es_copa: bool = ctx["es_copa"]
+	if titular and not par.is_empty() and j != null:
+		var del_mundo := del_copa if es_copa else CarreraSemana.lo_del_mundo(j, antes)
+		var g := int(del_mundo["goles"])
+		## La nota del simulado: la de tu nivel, más lo que marcaste (el
+		## portero, por lo que encajó: `CarreraPortero.nota_simulada`).
+		var nota := clampf(5.6 + float(CarreraEstilo.media_de_hoy(carrera, j) - 55) * 0.04 + float(g) * 0.9 + randf_range(-0.6, 0.6), 4.0, 9.5)
+		var gc := CarreraPortero.goles_en_contra(m, club) - gc_antes
 		if copa_p != null:
-			_msg += "  ·  " + Idiomas.t("Copa: %s %d-%d %s.") % [Nombres.visible(copa_p.local.nombre), copa_p.goles_local,
-				copa_p.goles_visita, Nombres.visible(copa_p.visita.nombre)]
-			var tp := CarreraCopa.texto_penales(copa_p, club)
-			if tp != "":
-				_msg += " " + tp
-		if titular and not par.is_empty() and j != null:
-			var del_mundo := del_copa if es_copa else CarreraSemana.lo_del_mundo(j, antes)
-			var g := int(del_mundo["goles"])
-			## La nota del simulado: la de tu nivel, más lo que marcaste (el
-			## portero, por lo que encajó: `CarreraPortero.nota_simulada`).
-			var nota := clampf(5.6 + float(CarreraEstilo.media_de_hoy(carrera, j) - 55) * 0.04 + float(g) * 0.9 + randf_range(-0.6, 0.6), 4.0, 9.5)
-			var gc := CarreraPortero.goles_en_contra(m, club) - gc_antes
-			if copa_p != null:
-				gc = copa_p.goles_visita if copa_p.local == club else copa_p.goles_local
-			if j.es_portero():
-				nota = CarreraPortero.nota_simulada(j, gc, randf_range(-0.5, 0.5))
-			carrera.tras_partido(m, {"minutos": 90, "goles": g, "asist": int(del_mundo["asist"]), "nota": snappedf(nota, 0.1), "titular": true,
-				"encajados": gc, "en_mundo": CarreraSemana.lo_del_mundo(j, antes)["en_mundo"]})
-			_msg += "  ·  " + RutaEstilo.plural(g, "Jugaste (simulado): %d gol, nota %.1f.", "Jugaste (simulado): %d goles, nota %.1f.") % [g, nota]
-		elif not titular and not par.is_empty() and j != null and j.disponible():
-			## Suplente simulado: a veces entras un rato.
-			var entra := carrera.minuto_entrada_suplente(j.es_portero())
-			if entra >= 0:
-				var minutos := 90 - entra
-				var g2 := 1 if randf() < float(minutos) / 90.0 * (0.25 if j.pos == "DEL" else (0.0 if j.es_portero() else 0.08)) else 0
-				var nota2 := clampf(5.8 + float(CarreraEstilo.media_de_hoy(carrera, j) - 55) * 0.03 + float(g2) * 0.9 + randf_range(-0.4, 0.4), 4.5, 9.0)
-				carrera.tras_partido(m, {"minutos": minutos, "goles": g2, "asist": 0, "nota": snappedf(nota2, 0.1), "titular": false})
-				_msg += "  ·  " + Idiomas.t("Entraste en el %d' (simulado): nota %.1f.") % [entra, nota2]
-			else:
-				_msg += "  ·  " + Idiomas.t("No saliste del banco.")
+			gc = copa_p.goles_visita if copa_p.local == club else copa_p.goles_local
+		if j.es_portero():
+			nota = CarreraPortero.nota_simulada(j, gc, randf_range(-0.5, 0.5))
+		carrera.tras_partido(m, {"minutos": 90, "goles": g, "asist": int(del_mundo["asist"]), "nota": snappedf(nota, 0.1), "titular": true,
+			"encajados": gc, "en_mundo": CarreraSemana.lo_del_mundo(j, antes)["en_mundo"]})
+		_msg += "  ·  " + RutaEstilo.plural(g, "Jugaste (simulado): %d gol, nota %.1f.", "Jugaste (simulado): %d goles, nota %.1f.") % [g, nota]
+	elif not titular and not par.is_empty() and j != null and j.disponible():
+		## Suplente simulado: a veces entras un rato.
+		var entra := carrera.minuto_entrada_suplente(j.es_portero())
+		if entra >= 0:
+			var minutos := 90 - entra
+			var g2 := 1 if randf() < float(minutos) / 90.0 * (0.25 if j.pos == "DEL" else (0.0 if j.es_portero() else 0.08)) else 0
+			var nota2 := clampf(5.8 + float(CarreraEstilo.media_de_hoy(carrera, j) - 55) * 0.03 + float(g2) * 0.9 + randf_range(-0.4, 0.4), 4.5, 9.0)
+			carrera.tras_partido(m, {"minutos": minutos, "goles": g2, "asist": 0, "nota": snappedf(nota2, 0.1), "titular": false})
+			_msg += "  ·  " + Idiomas.t("Entraste en el %d' (simulado): nota %.1f.") % [entra, nota2]
+		else:
+			_msg += "  ·  " + Idiomas.t("No saliste del banco.")
+
+## Lo que queda de la semana: los retos, la agenda, la temporada, el guardado y el pintado.
+func _cerrar_semana_fin(m: Mundo) -> void:
 	var nuevos := carrera.semana(m)
 	if carrera.aviso_agenda != "":
 		_msg += "  ·  " + carrera.aviso_agenda
