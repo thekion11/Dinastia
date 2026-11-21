@@ -101,25 +101,10 @@ static func _cono(explorador: Node3D, planta: int, zona: String, camara: Camera3
 	var activo := OS.get_environment("SIN_CONO") == "" and planta == 0 and zona == "Túnel" and camara != null and raiz != null and datos.has("z_boca") and datos.has("x0") \
 		and absf(camara.position.z - float(datos["z_boca"])) > 1.5 and int(explorador.get_meta(META_CLAVE, 0)) == 0
 	if not activo:
-		if not antes.is_empty():
-			for n: Variant in antes:
-				if is_instance_valid(n):
-					(n as Node3D).visible = bool(antes[n])
-			explorador.set_meta(META_CONO, {})
+		_quitar_cono(explorador, antes)
 		return
-	var c := camara.position
-	var z := float(datos["z_boca"])
-	var x0 := float(datos["x0"])
-	var m := TunelMedidas.MEDIO + 0.5
-	var esq: Array[Vector3] = [Vector3(x0 - m, -0.5, z), Vector3(x0 + m, -0.5, z), Vector3(x0 + m, TunelMedidas.ALTO + 0.5, z), Vector3(x0 - m, TunelMedidas.ALTO + 0.5, z)]
-	var centro := Vector3(x0, TunelMedidas.ALTO / 2.0, z)
-	var planos: Array[Plane] = []
-	for i in 4:
-		var pl := Plane(c, esq[i], esq[(i + 1) % 4])
-		if pl.distance_to(centro) < 0.0:
-			pl = Plane(-pl.normal, -pl.d)
-		planos.append(pl)
-	planos.append(Plane(Vector3(0, 0, -1), Vector3(0, 0, z)))   ## solo lo que está más allá de la boca (z menor)
+	var planos: Array[Plane] = _planos_del_cono(camara.position,
+			float(datos["x0"]), float(datos["z_boca"]))
 	for h in raiz.get_children():
 		if not (h is Node3D) or h is Light3D or h is Camera3D or h == explorador or String(h.name) in CONSERVAR or String(h.name) in CALLE:
 			continue
@@ -229,3 +214,25 @@ static func _devolver_plantas(explorador: Node3D) -> void:
 			(n as Node3D).visible = bool(plantas[n])
 	explorador.set_meta(META_PLANTAS, {})
 	explorador.set_meta(META_PLANTAS_CLAVE, [-99, 0])
+
+## Quita del cono lo que él ocultó (vuelve a verse) y olvida el estado.
+static func _quitar_cono(explorador: Node3D, antes: Dictionary) -> void:
+	if not antes.is_empty():
+		for n: Variant in antes:
+			if is_instance_valid(n):
+				(n as Node3D).visible = bool(antes[n])
+		explorador.set_meta(META_CONO, {})
+
+## Planos del cono de visión desde la cámara hacia la boca del túnel (`z`), con el túnel en `x0`.
+static func _planos_del_cono(c: Vector3, x0: float, z: float) -> Array[Plane]:
+	var m := TunelMedidas.MEDIO + 0.5
+	var esq: Array[Vector3] = [Vector3(x0 - m, -0.5, z), Vector3(x0 + m, -0.5, z), Vector3(x0 + m, TunelMedidas.ALTO + 0.5, z), Vector3(x0 - m, TunelMedidas.ALTO + 0.5, z)]
+	var centro := Vector3(x0, TunelMedidas.ALTO / 2.0, z)
+	var planos: Array[Plane] = []
+	for i in 4:
+		var pl := Plane(c, esq[i], esq[(i + 1) % 4])
+		if pl.distance_to(centro) < 0.0:
+			pl = Plane(-pl.normal, -pl.d)
+		planos.append(pl)
+	planos.append(Plane(Vector3(0, 0, -1), Vector3(0, 0, z)))   ## solo lo que está más allá de la boca (z menor)
+	return planos
