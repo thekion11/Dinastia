@@ -148,6 +148,17 @@ func _once_con(c: Club, yo: Jugador) -> Array[Jugador]:
 		once[peor] = yo
 	return once
 
+## El suplente de tu línea (mismo puesto, o el mejor de los que quedan) que entra en tu lugar; null si no hay.
+func _suplente_de_linea(mi_club: Club, yo: Jugador) -> Jugador:
+	var quien: Jugador = null
+	var once := _once_con(mi_club, yo) if equipo_usuario != null else mi_club.once()
+	for j: Jugador in mi_club.plantilla:
+		if j == yo or once.has(j) or not j.disponible() or j.es_portero() != yo.es_portero():
+			continue
+		if quien == null or (j.pos == yo.pos) and (quien.pos != yo.pos or j.ovr > quien.ovr):
+			quien = j
+	return quien
+
 ## CAMBIOS (MEGAPLAN fase 3). En la banda espera un jugador más: tú, si
 ## empiezas en el banco, o el mejor suplente de tu puesto, por si el DT te saca.
 ## El portero, desde el 26-10-2026, también: su cambio es otro portero (y el
@@ -163,13 +174,7 @@ func _preparar_cambio(sp: PlayerSpawner, yo: Jugador) -> void:
 	var quien: Jugador = yo
 	if entra_al < 0:
 		## Titular: el suplente de tu línea con más media.
-		quien = null
-		var once := _once_con(mi_club, yo) if equipo_usuario != null else mi_club.once()
-		for j: Jugador in mi_club.plantilla:
-			if j == yo or once.has(j) or not j.disponible() or j.es_portero() != yo.es_portero():
-				continue
-			if quien == null or (j.pos == yo.pos) and (quien.pos != yo.pos or j.ovr > quien.ovr):
-				quien = j
+		quien = _suplente_de_linea(mi_club, yo)
 		if quien == null:
 			return
 	var una := Puente3D.once([quien] as Array[Jugador])

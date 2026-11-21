@@ -58,37 +58,9 @@ func _traducir_pantalla(n: Node) -> void:
 		l.set_meta("_i18n_out", nuevo)
 		l.text = nuevo
 	elif n is OptionButton:
-		## El desplegable, por dentro: cada entrada por separado. El texto del
-		## botón lo pinta Godot con la entrada elegida, así que no hay que tocarlo.
-		var ob := n as OptionButton
-		var outs: Array = ob.get_meta("_i18n_out") if ob.has_meta("_i18n_out") else []
-		var srcs: Array = ob.get_meta("_i18n_src") if ob.has_meta("_i18n_src") else []
-		var nuevos_src: Array = []
-		var nuevos_out: Array = []
-		for i in ob.item_count:
-			var actual_i := ob.get_item_text(i)
-			var fue_mio_i: bool = i < outs.size() and String(outs[i]) == actual_i
-			var base_i: String = String(srcs[i]) if (fue_mio_i and i < srcs.size()) else actual_i
-			var nuevo_i := base_i if Idiomas.idioma == "es" else Idiomas.t(base_i)
-			ob.set_item_text(i, nuevo_i)
-			nuevos_src.append(base_i)
-			nuevos_out.append(nuevo_i)
-		ob.set_meta("_i18n_src", nuevos_src)
-		ob.set_meta("_i18n_out", nuevos_out)
+		_traducir_desplegable(n)
 	elif n is Button:
-		var b := n as Button
-		var actual2 := b.text
-		var fue_mio2: bool = b.has_meta("_i18n_out") and String(b.get_meta("_i18n_out")) == actual2
-		var base2: String = String(b.get_meta("_i18n_src")) if fue_mio2 else _origen_de(actual2)
-		var nuevo2 := base2 if Idiomas.idioma == "es" else Idiomas.t(base2)
-		b.set_meta("_i18n_src", base2)
-		b.set_meta("_i18n_out", nuevo2)
-		## Si el boton repartia ancho por el largo de su rotulo -la fila de
-		## acciones-, el reparto se rehace con el rotulo NUEVO: "Temporada
-		## siguiente" y "Next season" no piden lo mismo.
-		if nuevo2 != actual2 and not is_equal_approx(b.size_flags_stretch_ratio, 1.0):
-			b.size_flags_stretch_ratio = clampf(float(nuevo2.length()) / 12.0, 0.95, 1.9)
-		b.text = nuevo2
+		_traducir_boton(n)
 	elif n is LineEdit:
 		## El texto de ayuda del campo ("🔎 Buscar..."), no lo que escribe el jugador.
 		var le := n as LineEdit
@@ -112,3 +84,39 @@ func _traducir_pantalla(n: Node) -> void:
 			ctrl.tooltip_text = nuevo_tip
 	for h in n.get_children():
 		_traducir_pantalla(h)
+
+## El desplegable, por dentro: cada entrada por separado (el texto del botón lo pinta Godot).
+func _traducir_desplegable(n: Node) -> void:
+	## El desplegable, por dentro: cada entrada por separado. El texto del
+	## botón lo pinta Godot con la entrada elegida, así que no hay que tocarlo.
+	var ob := n as OptionButton
+	var outs: Array = ob.get_meta("_i18n_out") if ob.has_meta("_i18n_out") else []
+	var srcs: Array = ob.get_meta("_i18n_src") if ob.has_meta("_i18n_src") else []
+	var nuevos_src: Array = []
+	var nuevos_out: Array = []
+	for i in ob.item_count:
+		var actual_i := ob.get_item_text(i)
+		var fue_mio_i: bool = i < outs.size() and String(outs[i]) == actual_i
+		var base_i: String = String(srcs[i]) if (fue_mio_i and i < srcs.size()) else actual_i
+		var nuevo_i := base_i if Idiomas.idioma == "es" else Idiomas.t(base_i)
+		ob.set_item_text(i, nuevo_i)
+		nuevos_src.append(base_i)
+		nuevos_out.append(nuevo_i)
+	ob.set_meta("_i18n_src", nuevos_src)
+	ob.set_meta("_i18n_out", nuevos_out)
+
+## Un botón: su texto, y el reparto de ancho si cambia con el rótulo nuevo.
+func _traducir_boton(n: Node) -> void:
+	var b := n as Button
+	var actual2 := b.text
+	var fue_mio2: bool = b.has_meta("_i18n_out") and String(b.get_meta("_i18n_out")) == actual2
+	var base2: String = String(b.get_meta("_i18n_src")) if fue_mio2 else _origen_de(actual2)
+	var nuevo2 := base2 if Idiomas.idioma == "es" else Idiomas.t(base2)
+	b.set_meta("_i18n_src", base2)
+	b.set_meta("_i18n_out", nuevo2)
+	## Si el boton repartia ancho por el largo de su rotulo -la fila de
+	## acciones-, el reparto se rehace con el rotulo NUEVO: "Temporada
+	## siguiente" y "Next season" no piden lo mismo.
+	if nuevo2 != actual2 and not is_equal_approx(b.size_flags_stretch_ratio, 1.0):
+		b.size_flags_stretch_ratio = clampf(float(nuevo2.length()) / 12.0, 0.95, 1.9)
+	b.text = nuevo2
