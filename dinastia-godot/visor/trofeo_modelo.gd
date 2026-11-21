@@ -46,7 +46,14 @@ static func _color(h: String, por_defecto: Color) -> Color:
 
 ## La paleta del modelo recoloreada: lo dorado toma el color del metal y lo gris, el de la base.
 static func _textura(metal: Color, piedra: Color) -> ImageTexture:
-	var img := _tex.duplicate() as Image
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("trofeo_textura"):   ## (19-11) en C++ (`nativo/src/kit_nativo.cpp`); gemela: `_textura_img_gd`
+		var im: Image = nat.trofeo_textura(_tex, metal, piedra)
+		if im != null:
+			return ImageTexture.create_from_image(im)
+	return ImageTexture.create_from_image(_textura_img_gd(_tex.duplicate() as Image, metal, piedra))
+
+static func _textura_img_gd(img: Image, metal: Color, piedra: Color) -> Image:
 	for y in img.get_height():
 		for x in img.get_width():
 			var c := img.get_pixel(x, y)
@@ -55,7 +62,7 @@ static func _textura(metal: Color, piedra: Color) -> ImageTexture:
 			var cb := piedra if oscuro else metal
 			var f := l / (0.45 if oscuro else 0.8)
 			img.set_pixel(x, y, Color(clampf(cb.r * f, 0.0, 1.0), clampf(cb.g * f, 0.0, 1.0), clampf(cb.b * f, 0.0, 1.0), 1.0))
-	return ImageTexture.create_from_image(img)
+	return img
 
 static func _copa_mesh(i: int, alto: float, ancho: float, pie: float) -> ArrayMesh:
 	var src: Mesh = _meshes[i]

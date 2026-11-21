@@ -30,6 +30,14 @@ static func material(c1: Color, c2: Color, patron: int, girado: bool) -> Standar
 	return m
 
 static func _imagen(c1: Color, c2: Color, p: int, girado: bool) -> Image:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("telon_imagen"):   ## (19-11) el trapo entero (patrón, desgaste y giro), en C++ (`nativo/src/texturas_nativo.cpp`); gemela: `_imagen_gd`
+		var im: Image = nat.telon_imagen(c1, c2, p, girado)
+		im.generate_mipmaps()
+		return im
+	return _imagen_gd(c1, c2, p, girado)
+
+static func _imagen_gd(c1: Color, c2: Color, p: int, girado: bool) -> Image:
 	var img := Image.create(ANCHO, ALTO, false, Image.FORMAT_RGB8)
 	## Contraste mínimo: si los dos colores del club se parecen (azul y azul marino), el segundo pasa a claro.
 	## Y si el del club ya es claro (blanco, celeste pálido), el dibujo va en negro sobre él.

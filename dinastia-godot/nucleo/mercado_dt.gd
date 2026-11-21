@@ -147,6 +147,13 @@ func cambiar_dt(m: Mundo, c: Club) -> Dictionary:
 	return entra
 
 static func _sin_fecha(d: Dictionary) -> Dictionary:
+	var nat := Nativo.de("nuc_sin_fecha")
+	if nat != null:
+		return nat.nuc_sin_fecha(d)
+	return _sin_fecha_gd(d)
+
+## Gemela GDScript de `nuc_sin_fecha` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _sin_fecha_gd(d: Dictionary) -> Dictionary:
 	var r := d.duplicate()
 	r.erase("anio")
 	r.erase("semana")

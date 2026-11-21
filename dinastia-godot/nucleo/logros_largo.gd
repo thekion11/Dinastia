@@ -133,6 +133,13 @@ static func _valor_del_club(pre: String, m: Mundo, c: Club, lg: Logros) -> Varia
 ## El mayor valor de un registro: los goles van {nombre: n} y los partidos
 ## {id: {"nombre", "n"}} (así los guarda `Logros._anotar_participaciones`).
 static func _maximo_de(registro: Dictionary) -> int:
+	var nat := Nativo.de("nuc_maximo_de")
+	if nat != null:
+		return nat.nuc_maximo_de(registro)
+	return _maximo_de_gd(registro)
+
+## Gemela GDScript de `nuc_maximo_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _maximo_de_gd(registro: Dictionary) -> int:
 	var mejor := 0
 	for k in registro:
 		var r: Variant = registro[k]

@@ -93,6 +93,13 @@ static func nivel_gd(minuto: int, minuto_fin: int, hechas: int, cupo_arg: int) -
 
 ## ¿Esta llegada es clara para el listón `nivel` (ver `nivel()`)?
 static func es_clara(dist_arco: float, lateral: float, espacio: float, nivel_arg: int = 0) -> bool:
+	var nat := Nativo.de("nuc_es_clara")
+	if nat != null:
+		return nat.nuc_es_clara(dist_arco, lateral, espacio, nivel_arg, PackedFloat64Array([DIST_MINIMO, LATERAL_MINIMO, ESPACIO_MINIMO, DIST_APURADA, LATERAL_CLARA, ESPACIO_APURADA, DIST_CLARA, ESPACIO_CLARA]))
+	return es_clara_gd(dist_arco, lateral, espacio, nivel_arg)
+
+## Gemela GDScript de `nuc_es_clara` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func es_clara_gd(dist_arco: float, lateral: float, espacio: float, nivel_arg: int = 0) -> bool:
 	match nivel_arg:
 		2: return dist_arco <= DIST_MINIMO and absf(lateral) <= LATERAL_MINIMO and espacio >= ESPACIO_MINIMO
 		1: return dist_arco <= DIST_APURADA and absf(lateral) <= LATERAL_CLARA and espacio >= ESPACIO_APURADA
@@ -196,6 +203,13 @@ static func prob_tiro_3d_gd(dist: float, lateral: float, tapada: bool, tiro_attr
 ## vendría después, por lo que sale el pase o la conducción, con un pequeño
 ## descuento por lo que puede torcerse en medio.
 static func recomendar(lect: Dictionary, gol_tras_pase: float, gol_tras_conducir: float) -> String:
+	var nat := Nativo.de("nuc_recomendar")
+	if nat != null:
+		return nat.nuc_recomendar(lect, gol_tras_pase, gol_tras_conducir)
+	return recomendar_gd(lect, gol_tras_pase, gol_tras_conducir)
+
+## Gemela GDScript de `nuc_recomendar` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func recomendar_gd(lect: Dictionary, gol_tras_pase: float, gol_tras_conducir: float) -> String:
 	var mejor := ""
 	var mv := -1.0
 	for k: String in ["tiro", "pase", "conducir"]:

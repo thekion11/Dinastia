@@ -11,7 +11,7 @@ extends SceneTree
 ## aplicada sobre el reposo del nuestro; los dos esqueletos están en T). La pelvis conserva la altura y pierde el avance (lo pone el
 ## motor). Cada clip se llama como su archivo, en minúsculas y con «_» (p. ej. «Fast Run.fbx» → «fast_run»).
 ## Probado con un FBX del pack de fútbol de Quaternius (mismos nombres que los nuestros, `MIXAMO_PRUEBA=1`); con un FBX de Mixamo
-## real queda por probar en cuanto el dueño los baje.
+## real (18-11, «Soccer Header»): arreglada la elección de la animación (ver `_la_animacion`).
 const SALIDA := "res://assets/characters/quaternius/anims_mixamo/mixamo.res"
 const FPS := 30.0
 ## Mixamo → esqueleto tipo Unreal del cuerpo Quaternius.
@@ -43,7 +43,10 @@ func _initialize() -> void:
 		if a == null:
 			printerr("MIXAMO: sin clip en ", ruta)
 			continue
-		var clave := ruta.get_file().get_basename().to_lower().replace(" ", "_").replace("-", "_")
+		if _giro_maximo(a) < 0.01:
+			printerr("MIXAMO: sin movimiento (¿es el modelo del personaje?) en ", ruta)
+			continue
+		var clave := ruta.get_file().get_basename().to_lower().replace(" ", "_").replace("-", "_").replace("(", "").replace(")", "")
 		lib.add_animation(clave, a)
 		hechos += 1
 		print("MIXAMO %s  %.2f s" % [clave, a.length])
@@ -73,6 +76,19 @@ static func nombre_nuestro(hueso: String) -> String:
 					return "%s_0%s_%s" % [DEDOS[k], resto.right(1), "l" if lado == "Left" else "r"]
 	return ""
 
+## Mayor giro (rad) de cualquier hueso respecto al primer cuadro: 0 = el clip está quieto (p. ej. el FBX del propio muñeco, sin animación).
+static func _giro_maximo(a: Animation) -> float:
+	var mx := 0.0
+	for i in a.get_track_count():
+		if a.track_get_type(i) != Animation.TYPE_ROTATION_3D:
+			continue
+		var q0: Quaternion = a.rotation_track_interpolate(i, 0.0)
+		var t := 0.0
+		while t < a.length:
+			mx = maxf(mx, q0.angle_to(a.rotation_track_interpolate(i, t)))
+			t += 0.1
+	return mx
+
 ## Un FBX → un clip para nuestro esqueleto (o null).
 func convertir(ruta: String) -> Animation:
 	var doc := FBXDocument.new()
@@ -96,9 +112,59 @@ func convertir(ruta: String) -> Animation:
 			for i in esq_o.get_bone_count():
 				var nuevo := nombre_nuestro(esq_o.get_bone_name(i))
 				esq_o.set_bone_name(i, nuevo if nuevo != "" else "x_" + esq_o.get_bone_name(i))
-		r = _hornear(ap, String(ap.get_animation_list()[0]), esq_o, esq_d)
+			## (18-11) Las PISTAS de la animación siguen apuntando al hueso con su nombre de Mixamo: sin cambiarlas, no movían ningún hueso (clip quieto).
+			var anim := ap.get_animation(_la_animacion(ap))
+			for i in anim.get_track_count():
+				var ruta_p := String(anim.track_get_path(i))
+				var k := ruta_p.rfind(":")
+				if k >= 0:
+					var hueso := ruta_p.substr(k + 1)
+					var nombre_n := nombre_nuestro(hueso)
+					anim.track_set_path(i, NodePath(ruta_p.substr(0, k + 1) + (nombre_n if nombre_n != "" else "x_" + hueso)))
+		r = _hornear(ap, _la_animacion(ap), esq_o, esq_d)
 	raiz.queue_free()
 	return r
+
+## (18-11) Un FBX de Mixamo trae DOS animaciones: «Take 001» (vacía, 0 pistas) y «mixamo_com» (la de verdad). Se toma la que más pistas tiene.
+static func _la_animacion(ap: AnimationPlayer) -> String:
+	var mejor := ""
+	var pistas := -1
+	for n in ap.get_animation_list():
+		var c := ap.get_animation(n).get_track_count()
+		if c > pistas:
+			pistas = c
+			mejor = String(n)
+	return mejor
+
+## (18-11) `RetargetFutbolQ.aplicar()` lee `get_bone_global_pose` del origen, y con un FBX de Mixamo esa pose global se queda en el reposo aunque
+## la pose LOCAL cambie (clip quieto). Aquí se calcula la global a mano (padre × local) y se hace la misma cuenta que `aplicar()`.
+static func _global_fk(esq: Skeleton3D, i: int, cache: Dictionary) -> Transform3D:
+	if cache.has(i):
+		return cache[i]
+	var padre := esq.get_bone_parent(i)
+	var g := esq.get_bone_pose(i) if padre < 0 else _global_fk(esq, padre, cache) * esq.get_bone_pose(i)
+	cache[i] = g
+	return g
+
+static func _aplicar_fk(ret: RetargetFutbolQ, esq_o: Skeleton3D) -> void:
+	var cache := {}
+	var dest := ret.destino
+	var glob_d := {}   ## globales del DESTINO que vamos fijando (el getter del esqueleto da valores obsoletos también aquí)
+	var raiz_animada := _global_fk(esq_o, ret._raiz_origen, cache) if ret._raiz_origen >= 0 else Transform3D.IDENTITY
+	var inv_raiz_animada := raiz_animada.affine_inverse()
+	var inv_raiz_reposo := ret._reposo_raiz_origen.affine_inverse()
+	for par in ret._pares:
+		var pose_modelo: Transform3D = inv_raiz_animada * _global_fk(esq_o, int(par["origen"]), cache)
+		var reposo_modelo: Transform3D = inv_raiz_reposo * (par["reposo_origen"] as Transform3D)
+		var desvio: Transform3D = pose_modelo * reposo_modelo.affine_inverse()
+		var reposo_destino_modelo: Transform3D = ret._reposo_raiz_destino.affine_inverse() * (par["reposo_destino"] as Transform3D)
+		var nueva: Transform3D = ret._reposo_raiz_destino * (desvio * reposo_destino_modelo)
+		var i := int(par["destino"])
+		var padre := dest.get_bone_parent(i)
+		var g_padre := _global_fk(dest, padre, glob_d) if padre >= 0 else Transform3D.IDENTITY
+		var local := g_padre.affine_inverse() * nueva
+		dest.set_bone_pose_rotation(i, local.basis.orthonormalized().get_rotation_quaternion())
+		glob_d[i] = nueva
 
 func _hornear(ap: AnimationPlayer, nombre: String, esq_o: Skeleton3D, esq_d: Skeleton3D) -> Animation:
 	var clip := ap.get_animation(nombre)
@@ -119,14 +185,20 @@ func _hornear(ap: AnimationPlayer, nombre: String, esq_o: Skeleton3D, esq_d: Ske
 	while t <= clip.length + 0.001:
 		ap.seek(minf(t, clip.length), true)
 		esq_d.reset_bone_poses()
-		ret.aplicar()
+		_aplicar_fk(ret, esq_o)
 		for i in esq_d.get_bone_count():
 			a.rotation_track_insert_key(pistas[i], t, esq_d.get_bone_pose_rotation(i))
 		## La pelvis: solo su altura (en el espacio del esqueleto, Y arriba como el glTF); el avance lo pone el motor.
-		var g := esq_d.get_bone_global_pose(ip).origin
+		var cache_d := {}
 		var g0 := esq_d.get_bone_global_rest(ip).origin
+		## Altura de la cadera: la del ORIGINAL (FK propia) escalada a nuestra estatura. La que sale del retarget mezcla el giro de la cadera con la altura.
+		var cache_o := {}
+		var io := esq_o.find_bone("pelvis")
+		var go := _global_fk(esq_o, io, cache_o).origin
+		var go0 := esq_o.get_bone_global_rest(io).origin
+		var g := Vector3(g0.x, g0.y + (go.y - go0.y) * (g0.y / go0.y), g0.z)
 		var padre := esq_d.get_bone_parent(ip)
-		var pg := esq_d.get_bone_global_pose(padre) if padre >= 0 else Transform3D.IDENTITY
+		var pg := _global_fk(esq_d, padre, cache_d) if padre >= 0 else Transform3D.IDENTITY
 		a.position_track_insert_key(pp, t, pg.affine_inverse() * Vector3(g0.x, g.y, g0.z))
 		t += 1.0 / FPS
 	return a

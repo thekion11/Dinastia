@@ -7,7 +7,7 @@ shader_type spatial;
 // entre medio (el rapado, la barba de días) -la técnica de pelo corto de los
 // juegos de deporte-. `COLOR.r` = densidad en ese punto (nacimiento del pelo,
 // barba rala), UV2 = coordenadas de las hebras en centímetros.
-render_mode cull_disabled, depth_draw_opaque;
+render_mode cull_disabled, depth_draw_opaque, alpha_to_coverage;
 
 uniform sampler2D foto : filter_linear_mipmap, repeat_disable;
 // Barba y cejas toman el color de la FOTO en ese punto (exacto, con sus
@@ -62,7 +62,11 @@ void fragment() {
 	vec2 f = fract(p) - 0.5 - (h22(cel) - 0.5) * 0.5;
 	float largo = mix(0.35, 1.0, h11(cel + 7.1));
 	float r = radio * (1.0 - v_capa * 0.65);
-	float hebra = step(length(f), r) * step(v_capa, largo * v_dens + 0.001);
+	// (19-11) Canto de la hebra suave (un píxel) en vez de un escalón: con MSAA (alpha to coverage) el nacimiento del
+	// pelo ya no es un serrucho de píxeles sueltos. Sin MSAA el recorte a 0,5 da la misma silueta que antes.
+	float df = length(f);
+	float aa = max(fwidth(df), 1e-4);
+	float hebra = (1.0 - smoothstep(r - aa, r + aa, df)) * step(v_capa, largo * v_dens + 0.001);
 	// Menos hebras donde la densidad es baja (el nacimiento, la barba rala):
 	// el borde se ralea poco a poco, sin corte.
 	hebra *= step(h11(cel + 3.7), smoothstep(0.0, 0.8, v_dens) * 1.1);
@@ -78,6 +82,8 @@ void fragment() {
 	}
 	ALPHA = hebra;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
+	ALPHA_ANTIALIASING_EDGE = 0.3;
+	ALPHA_TEXTURE_COORDINATE = p;
 	vec3 c;
 	if (usa_foto) {
 		// El color del PELO medido, con solo un poco de la foto (canas,

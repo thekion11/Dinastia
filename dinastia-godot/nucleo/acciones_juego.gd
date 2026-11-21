@@ -117,6 +117,13 @@ static func usa_pie_malo(j: Jugador, lado_izquierdo: bool, rng: RandomNumberGene
 ## Probabilidad de gol de un disparo (el "xG"): distancia y ángulo a portería.
 ## `desde` en metros con la portería en (0, 0) y el campo hacia +x.
 static func xg(desde: Vector2) -> float:
+	var nat := Nativo.de("nuc_xg")
+	if nat != null:
+		return nat.nuc_xg(desde)
+	return xg_gd(desde)
+
+## Gemela GDScript de `nuc_xg` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func xg_gd(desde: Vector2) -> float:
 	## El ángulo de portería que se ve desde ahí, al cuadrado: ~0,25 desde el
 	## punto de penal en jugada, ~0,08 desde 20 m, ~0,03 desde 30 m.
 	var d := desde.length()

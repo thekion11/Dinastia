@@ -53,6 +53,7 @@ var _directivos: Array[PrologoMentor] = []
 var _directiva_hecha := false
 var _guardado_al_encender := false
 var _listo := false
+var _plano: Node   ## el plano de la sala que se está rodando (`PrologoPlanos`), o null
 
 func _exit_tree() -> void:
 	activo = false
@@ -233,13 +234,13 @@ func _ir_al_paso(i: int) -> void:
 			destino_planta = int(p["planta"])
 			esperando_llegada = true
 			if rapido:
-				mentor.colocar(destino, PI)
+				mentor.colocar((self as PrologoDT)._sitio_mentor(String(p["clave"]), destino), PI)
 			else:
 				## Se adelanta desde donde estaba y aparece esperando en la sala.
-				mentor.adelantarse(destino)
+				mentor.adelantarse((self as PrologoDT)._sitio_mentor(String(p["clave"]), destino))
 				get_tree().create_timer(2.2).timeout.connect(func() -> void:
 					if is_instance_valid(mentor) and paso_i == i:
-						mentor.colocar(destino, PI))
+						mentor.colocar((self as PrologoDT)._sitio_mentor(String(p["clave"]), destino), PI))
 	_aro.position = destino + Vector3(0, 0.04, 0)
 
 ## El centro de la sala `zona` en la planta dada (la zona más grande con ese
@@ -343,7 +344,7 @@ func _process(_delta: float) -> void:
 	var misma_planta := (fuera and not dentro) or (not fuera and dentro and planta == destino_planta)
 	var d := Vector2(yo.x - destino.x, yo.z - destino.z).length() if destino != Vector3.INF else 0.0
 	_aro.visible = destino != Vector3.INF and misma_planta and not dialogo.visible
-	if destino != Vector3.INF and not dialogo.visible and not (pc != null and pc.abierto):
+	if destino != Vector3.INF and not dialogo.visible and not (pc != null and pc.abierto) and _plano == null:
 		var adelante := -explorador.camara.global_transform.basis.z
 		var hacia := Vector3(destino.x - yo.x, 0, destino.z - yo.z)
 		var ang := atan2(hacia.x, hacia.z) - atan2(adelante.x, adelante.z)
@@ -356,8 +357,7 @@ func _process(_delta: float) -> void:
 		if String(PrologoPasos.PASOS[paso_i]["clave"]) == "llegada":
 			_ir_al_paso(paso_i + 1)
 		else:
-			_meter_saludo()
-			_hablar()
+			(self as PrologoDT)._al_llegar()   ## (18-11) el plano de la sala (`PrologoPlanos`) y, después, el saludo y el mentor
 
 func _input(ev: InputEvent) -> void:
 	if not dialogo.visible:
@@ -431,6 +431,7 @@ func _entregar_oficina() -> void:
 	pc.mundo = mundo
 	pc.mundo_3d = vista
 	pc.explorador = explorador
+	pc.animar = not rapido   ## (18-11) las pruebas encienden el PC sin la animación de sentarse
 	## El punto de uso: delante del escritorio (la mesa está 0,6 m al fondo de la sala).
 	pc.montar(vista._raiz3d, destino + Vector3(0, 0, 0.9), destino_planta)
 	destino = pc.punto

@@ -305,6 +305,13 @@ func vender(j: Jugador, comprador: Club, monto: int, pct_futuro: int = 0) -> Dic
 ## Una oferta estructurada en blanco, con la parte fija ya puesta en el 70% de lo
 ## que piden, igual que abre la mesa el HTML.
 static func nueva_oferta(pedido: int) -> Dictionary:
+	var nat := Nativo.de("nuc_nueva_oferta")
+	if nat != null:
+		return nat.nuc_nueva_oferta(pedido)
+	return nueva_oferta_gd(pedido)
+
+## Gemela GDScript de `nuc_nueva_oferta` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nueva_oferta_gd(pedido: int) -> Dictionary:
 	return {
 		"fijo": int(round(float(pedido) * 0.7 / 1000.0)) * 1000,
 		"cuotas": 0, "bonos": 0, "pct": 0, "opaco": 0, "firma": 0,

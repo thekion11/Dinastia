@@ -232,6 +232,19 @@ const LADO_MAPA := 256
 static func _mapa(malla: Mesh, clave: String) -> ImageTexture:
 	if _mapas.has(clave):
 		return _mapas[clave]
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("dt_mapa"):   ## (19-11) el rasterizado y la dilatación, en C++ (`nativo/src/dtmapa_nativo.cpp`); gemela: `_mapa_gd`
+		var sups: Array = []
+		for s0 in malla.get_surface_count():
+			var arr0 := malla.surface_get_arrays(s0)
+			sups.append([arr0[Mesh.ARRAY_VERTEX], arr0[Mesh.ARRAY_TEX_UV], arr0[Mesh.ARRAY_INDEX]])
+		var im: Image = nat.dt_mapa(sups)
+		var tex0: ImageTexture = null if im == null else ImageTexture.create_from_image(im)
+		_mapas[clave] = tex0
+		return tex0
+	return _mapa_gd(malla, clave)
+
+static func _mapa_gd(malla: Mesh, clave: String) -> ImageTexture:
 	var img := Image.create_empty(LADO_MAPA, LADO_MAPA, false, Image.FORMAT_RGBAF)
 	var hay := false
 	for s in malla.get_surface_count():

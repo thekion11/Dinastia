@@ -33,7 +33,7 @@ func _process(_d: float) -> void:
 			if dup[k] > 1: n_dup += dup[k] - 1
 		print("LUCES total=", luces.size(), " tipos=", por_tipo, " con_sombra=", con_sombra, " visibles=", visibles, " con_distance_fade=", con_rango, " duplicadas(misma pos y energía)=", n_dup)
 		var lab := v.find_children("*", "Label3D", true, false)
-		var gl := {}; var vr := {}
+		var gl := {}
 		for x in lab:
 			var l2 := x as Label3D
 			var pad := String(l2.get_parent().name).left(14)

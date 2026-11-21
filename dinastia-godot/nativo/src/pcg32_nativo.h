@@ -34,6 +34,25 @@ struct Pcg32 {
 		}
 		return std::ldexp(float(rand() | 0x80000001), -32 - __builtin_clz(proto_exp_offset));
 	}
+	// `rand(bounds)` del motor (pcg32_boundedrand_r): un entero en [0, bounds) sin sesgo.
+	uint32_t rand_acotado(uint32_t bounds) {
+		const uint32_t umbral = (0u - bounds) % bounds;
+		for (;;) {
+			const uint32_t r = rand();
+			if (r >= umbral) {
+				return r % bounds;
+			}
+		}
+	}
+	// `randi_range(desde, hasta)` del motor (`RandomPCG::random(int, int)`).
+	int32_t randi_range(int32_t desde, int32_t hasta) {
+		if (desde == hasta) {
+			return desde;
+		}
+		const int32_t menor = desde < hasta ? desde : hasta;
+		const int32_t dif = desde > hasta ? desde - hasta : hasta - desde;
+		return int32_t(rand_acotado(uint32_t(dif) + 1u)) + menor;
+	}
 	// `randf_range(desde, hasta)` del motor: en float de 32 bits (`RandomPCG::randf_range(float, float)`).
 	float randf_range(float desde, float hasta) {
 		const float r = randf() * (hasta - desde);

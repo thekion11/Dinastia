@@ -222,10 +222,21 @@ static func _causas_lesiones(c: Array, r: RastroPartido, mio: int) -> void:
 
 ## Localía y posesión.
 static func _causas_localia_y_posesion(c: Array, p: Partido, r: RastroPartido, mio: int) -> void:
+	var suyo := 1 - mio
+	var fm := int(r.inicio["forma"][mio])
+	var fs := int(r.inicio["forma"][suyo])
+	var om := int(r.inicio["ovr"][mio])
+	var os := int(r.inicio["ovr"][suyo])
 	## Y si no hubo nada más fuerte: la localía (del modelo: +8 % en casa, −6 % fuera) y la posesión.
 	if not r.con_motor and not p.neutral:
 		c.append(_c("localia", 1 if mio == 0 else -1, 0.15,
 			Idiomas.t("Jugar en casa: un 8 % más de llegadas.") if mio == 0 else Idiomas.t("Jugar fuera: un 6 % menos de llegadas.")))
+	## (18-11) Relleno de último recurso para que SIEMPRE haya tres causas distintas (con el motor del 3D no hay clima, eficacia ni localía):
+	## plantillas y forma parecidas. Pesan menos que cualquier cosa que pasó de verdad y solo salen si no hay una causa de esa clave.
+	if absi(om - os) < 3:
+		c.append(_c("plantilla", 0, 0.03, Idiomas.t("Las plantillas estaban igualadas (media del once %d frente a %d).") % [om, os]))
+	if absi(fm - fs) < 5:
+		c.append(_c("forma", 0, 0.02, Idiomas.t("Los dos llegaban con una forma parecida (media %d frente a %d).") % [fm, fs]))
 	var pos := int(round(p.posesion_local)) if mio == 0 else 100 - int(round(p.posesion_local))
 	## La posesión es relleno: nunca le gana a algo que pasó de verdad (una lesión pesa 0,35).
 	c.append(_c("posesion", signi(pos - 50) if absi(pos - 50) >= 8 else 0, 0.05 + absf(pos - 50) / 200.0,

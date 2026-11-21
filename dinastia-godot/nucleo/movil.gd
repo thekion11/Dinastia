@@ -65,6 +65,13 @@ static func texto(msj: Dictionary) -> String:
 ## Algunas noticias también te llegan como mensaje de alguien: [de, icono], o
 ## vacío si no es cosa de nadie en concreto.
 static func remitente_de(titulo: String, cuerpo: String) -> Array:
+	var nat := Nativo.de("nuc_remitente_de")
+	if nat != null:
+		return nat.nuc_remitente_de(titulo, cuerpo)
+	return remitente_de_gd(titulo, cuerpo)
+
+## Gemela GDScript de `nuc_remitente_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func remitente_de_gd(titulo: String, cuerpo: String) -> Array:
 	var t := (titulo + " " + cuerpo).to_lower()
 	for par: Array in [
 			[["directiva", "confianza", "junta", "despedido", "presidente"], "Directiva", "🏛️"],

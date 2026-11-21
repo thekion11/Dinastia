@@ -37,6 +37,13 @@ static func en_mayusculas(txt: String, inv: Dictionary) -> String:
 
 ## La forma normal de un texto en MAYÚSCULAS («FORMA» → «Forma»); si no es todo mayúsculas, el mismo texto.
 static func normal(texto: String) -> String:
+	var nat := Nativo.de("nuc_normal_titulo")
+	if nat != null:
+		return nat.nuc_normal_titulo(texto)
+	return normal_gd(texto)
+
+## Gemela GDScript de `nuc_normal_titulo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func normal_gd(texto: String) -> String:
 	if texto.length() < 2 or texto != texto.to_upper() or texto == texto.to_lower():
 		return texto
 	var baja := texto.to_lower()

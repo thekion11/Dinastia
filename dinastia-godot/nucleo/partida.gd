@@ -132,10 +132,8 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		push_error("Partida: «clubes», «ligas» o «mi_club» del guardado no tienen la forma esperada; no se carga")
 		return null
 
-	## Un guardado anterior a la base ficticia (sin la clave) se jugó siempre
-	## con los datos reales. Si esta instalación no tiene el pack, se queda en
-	## la ficticia: los nombres del propio guardado se ven igual, solo se
-	## pierden las equipaciones reales.
+	## Un guardado anterior a la base ficticia (sin la clave) se jugó con datos reales. Si esta instalación no tiene
+	## el pack, se queda en la ficticia: los nombres del guardado se ven igual, solo se pierden las equipaciones reales.
 	Datos.usar_base_real(bool(datos.get("base_real", true)))
 
 	var m := Mundo.new()

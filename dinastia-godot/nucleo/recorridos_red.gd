@@ -46,6 +46,13 @@ const VEL_COMERCIAL := 330.0     ## m por minuto de reloj (~20 km/h con paradas 
 ## La zona de la ciudad de un punto, como `CargaCiudad.de("CiudadExpansion")._zona`: oeste del río, centro de torres al norte del club,
 ## comercio al este, casas al sur y el núcleo del club; más allá de 1.100 m, la periferia.
 static func sector_de(pos: Vector3) -> int:
+	var nat := Nativo.de("nuc_sector_de")
+	if nat != null:
+		return nat.nuc_sector_de(pos, PERIFERIA, RIO_X, RIO_MEDIO, NUC_Z0, NUC_X1, NUC_Z1)
+	return sector_de_gd(pos)
+
+## Gemela GDScript de `nuc_sector_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func sector_de_gd(pos: Vector3) -> int:
 	if maxf(absf(pos.x), absf(pos.z)) > PERIFERIA:
 		return 600
 	if pos.x < RIO_X - RIO_MEDIO:
@@ -80,6 +87,13 @@ static func paradero_en(pos: Vector3, radio := 3.0) -> String:
 
 ## Lo que escribe el jugador («pa1234», «1234», «PA 1234») a la forma del cartel; "" si no es un código.
 static func normalizar(texto: String) -> String:
+	var nat := Nativo.de("nuc_normalizar_codigo")
+	if nat != null:
+		return nat.nuc_normalizar_codigo(texto)
+	return normalizar_gd(texto)
+
+## Gemela GDScript de `nuc_normalizar_codigo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func normalizar_gd(texto: String) -> String:
 	var t := texto.strip_edges().to_upper().replace(" ", "").replace("-", "")
 	if not t.begins_with("PA"):
 		t = "PA" + t
@@ -90,6 +104,13 @@ static func normalizar(texto: String) -> String:
 
 ## El sector del código: su primera cifra (PA2xxx = centro). Los del mapa siempre tienen cuatro.
 static func sector_del_codigo(cod: String) -> int:
+	var nat := Nativo.de("nuc_sector_del_codigo")
+	if nat != null:
+		return nat.nuc_sector_del_codigo(cod)
+	return sector_del_codigo_gd(cod)
+
+## Gemela GDScript de `nuc_sector_del_codigo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func sector_del_codigo_gd(cod: String) -> int:
 	var cifras := cod.substr(2)
 	if cifras.length() == 4 and int(cifras[0]) >= 1 and int(cifras[0]) <= 6:
 		return int(cifras[0]) * 100
