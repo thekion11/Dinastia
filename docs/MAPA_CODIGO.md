@@ -4,43 +4,43 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2551 archivos (.gd, .cpp, .h), 366856 líneas, 1002 clases con nombre.
+Total: 2580 archivos (.gd, .cpp, .h), 369478 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
-32 archivos, 6580 líneas. Carpetas: `nativo/src`.
+45 archivos, 8271 líneas. Carpetas: `nativo/src`.
 
 Cada función es copia exacta de su gemela GDScript (regla de la extensión). Archivos por tamaño:
 
 - `nativo/src/partido_90.cpp` (431 líneas)
 - `nativo/src/sin_balon_nativo.cpp` (427 líneas)
-- `nativo/src/dinastia_nativo.cpp` (385 líneas)
+- `nativo/src/dinastia_nativo.cpp` (423 líneas)
 - `nativo/src/league_portador_nativo.cpp` (378 líneas)
 - `nativo/src/trafico_nativo.cpp` (377 líneas)
 - `nativo/src/cerrar_notas.cpp` (354 líneas)
 - `nativo/src/estado_nativo.cpp` (319 líneas)
 - `nativo/src/league_equipo_nativo.cpp` (319 líneas)
 - `nativo/src/pasos_nativo.cpp` (318 líneas)
-- `nativo/src/puras_nucleo3.cpp` (289 líneas)
+- `nativo/src/puras_nucleo3.cpp` (288 líneas)
 - `nativo/src/guia_nativo.cpp` (259 líneas)
 - `nativo/src/trafico_cuerpo.cpp` (243 líneas)
 - `nativo/src/puras_nucleo.cpp` (236 líneas)
-- `nativo/src/trafico_comun.h` (208 líneas)
+- `nativo/src/kit_nativo.cpp` (230 líneas)
 
 ## La Ruta (modo jugador)
 
-39 archivos, 5525 líneas. Carpetas: `nucleo`, `ui/carrera`.
+39 archivos, 5572 líneas. Carpetas: `nucleo`, `ui/carrera`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `CarreraJugador` | `nucleo/carrera_jugador.gd` | 439 | 54 | carrera_jugador_p1.gd |
+| `CarreraJugador` | `nucleo/carrera_jugador.gd` | 439 | 55 | carrera_jugador_p1.gd |
 | `CarreraRuta` | `nucleo/carrera_ruta.gd` | 26 | 33 | carrera_ruta_p1.gd |
 | `CarreraPremios` | `nucleo/carrera_premios.gd` | 257 | 14 |  |
 | `CarreraPortero` | `nucleo/carrera_jugador_portero.gd` | 63 | 10 |  |
 | `CarreraEstilo` | `nucleo/carrera_estilo.gd` | 126 | 9 |  |
 | `CarreraEventosRuta` | `nucleo/carrera_eventos_ruta.gd` | 124 | 9 |  |
+| `CarreraHabilidad` | `nucleo/carrera_habilidad.gd` | 250 | 9 |  |
 | `RutaSub` | `ui/carrera/ruta_sub.gd` | 136 | 9 |  |
-| `CarreraHabilidad` | `nucleo/carrera_habilidad.gd` | 203 | 8 |  |
 | `CarreraVida` | `nucleo/carrera_vida.gd` | 84 | 8 |  |
 | `RutaEstilo` | `ui/carrera/ruta_estilo.gd` | 364 | 8 |  |
 | `CarreraComienzo` | `nucleo/carrera_comienzo.gd` | 54 | 7 |  |
@@ -52,11 +52,11 @@ Cerca del tope (≥ 400 líneas): `carrera_jugador_p1.gd` (449), `carrera_jugado
 
 ## Partido: motor C4 y respaldo
 
-89 archivos, 15817 líneas. Carpetas: `nucleo`, `visor`.
+89 archivos, 15811 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Partido` | `nucleo/partido.gd` | 447 | 345 | partido_p2.gd ← partido_p1.gd |
+| `Partido` | `nucleo/partido.gd` | 447 | 346 | partido_p2.gd ← partido_p1.gd |
 | `MotorJugable` | `visor/motor_jugable.gd` | 201 | 181 | motor_jugable_p11.gd ← motor_jugable_p10.gd ← motor_jugable_p9.gd ← motor_jugable_p8.gd ← motor_jugable_p8_p1.gd ← motor_jugable_p7.gd ← motor_jugable_p7_p1.gd ← motor_jugable_p6.gd ← motor_jugable_p6_p1.gd ← motor_jugable_p5.gd ← motor_jugable_p5_p1.gd |
 | `MotorLeague` | `visor/motor_league.gd` | 450 | 25 | motor_league_p1.gd |
 | `MotorCombinado` | `visor/motor_combinado.gd` | 443 | 15 |  |
@@ -75,12 +75,12 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 ## Club e instalaciones
 
-21 archivos, 6279 líneas. Carpetas: `nucleo`, `visor`.
+22 archivos, 6313 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Club` | `nucleo/club.gd` | 416 | 822 |  |
-| `StadiumBuilder` | `visor/stadium_builder.gd` | 13 | 135 | stadium_builder_p10.gd ← stadium_builder_p10_p1.gd ← estadio_partes_tribuna.gd ← stadium_builder_p9.gd ← stadium_builder_p8.gd ← stadium_builder_p7.gd ← stadium_builder_p6.gd ← stadium_builder_p5.gd ← stadium_builder_p4.gd ← stadium_builder_p3.gd ← stadium_builder_p2.gd |
+| `Club` | `nucleo/club.gd` | 416 | 823 |  |
+| `StadiumBuilder` | `visor/stadium_builder.gd` | 13 | 136 | stadium_builder_p10.gd ← stadium_builder_p10_p1.gd ← estadio_partes_tribuna.gd ← stadium_builder_p9.gd ← stadium_builder_p8.gd ← stadium_builder_p7.gd ← stadium_builder_p6.gd ← stadium_builder_p5.gd ← stadium_builder_p4.gd ← stadium_builder_p4_p1.gd ← stadium_builder_p3.gd |
 | `EstadioExtras` | `visor/estadio_extras.gd` | 310 | 9 |  |
 | `ClubDentro` | `nucleo/club_dentro.gd` | 285 | 8 |  |
 | `CasaDT` | `visor/casa_dt.gd` | 322 | 7 |  |
@@ -89,7 +89,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 | `CasaPlano` | `visor/casa_plano.gd` | 210 | 4 |  |
 | `CasaConstruccion` | `visor/casa_construccion.gd` | 133 | 2 |  |
 
-Cerca del tope (≥ 400 líneas): `stadium_builder_p4.gd` (450), `stadium_builder_p6.gd` (450), `stadium_builder_p8.gd` (438), `stadium_builder_p7.gd` (434), `stadium_builder_p3.gd` (431), `stadium_builder_p1.gd` (426), `stadium_builder_p2.gd` (424), `club.gd` (416), `stadium_builder_p5.gd` (413).
+Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builder_p8.gd` (438), `stadium_builder_p4_p1.gd` (436), `stadium_builder_p7.gd` (434), `stadium_builder_p3.gd` (431), `stadium_builder_p1.gd` (426), `stadium_builder_p2.gd` (424), `club.gd` (416), `stadium_builder_p5.gd` (413).
 
 ## Menús e interfaz
 
@@ -137,24 +137,24 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1246 archivos, 120554 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1257 archivos, 121222 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
 ## Núcleo: mundo, gestión y datos
 
-252 archivos, 52221 líneas. Carpetas: `nucleo`.
+252 archivos, 52183 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Mundo` | `nucleo/mundo.gd` | 158 | 913 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
 | `Jugador` | `nucleo/jugador.gd` | 32 | 476 | jugador_p1.gd |
-| `Liga` | `nucleo/liga.gd` | 235 | 195 |  |
+| `Liga` | `nucleo/liga.gd` | 235 | 197 |  |
 | `Nombres` | `nucleo/nombres.gd` | 176 | 171 |  |
 | `Partida` | `nucleo/partida.gd` | 443 | 118 | partida_p2.gd ← partida_p1.gd |
+| `Nativo` | `nucleo/nativo.gd` | 29 | 103 |  |
 | `Copa` | `nucleo/copa.gd` | 348 | 95 |  |
 | `Mercado` | `nucleo/mercado.gd` | 64 | 92 | mercado_p1.gd |
-| `Nativo` | `nucleo/nativo.gd` | 29 | 92 |  |
 | `Finanzas` | `nucleo/finanzas.gd` | 384 | 90 |  |
 | `Roles` | `nucleo/roles.gd` | 357 | 79 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
 | `Prensa` | `nucleo/prensa.gd` | 445 | 74 | prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `m
 
 ## Visor: 3D, cámaras y efectos
 
-334 archivos, 62464 líneas. Carpetas: `visor`.
+338 archivos, 62690 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -180,9 +180,9 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `m
 | `Mini3D` | `visor/mini3d.gd` | 257 | 62 |  |
 | `CiudadExpansion` | `visor/ciudad_expansion.gd` | 421 | 61 | ciudad_expansion_p8.gd ← ciudad_expansion_p7.gd ← ciudad_expansion_p6.gd ← ciudad_expansion_p5.gd ← ciudad_expansion_p4.gd ← ciudad_expansion_p3.gd ← ciudad_expansion_p2.gd ← ciudad_expansion_p1.gd |
 | `CameraRig` | `visor/camera_rig.gd` | 245 | 57 | camera_rig_p1.gd |
+| `Texturas` | `visor/texturas.gd` | 36 | 51 | texturas_p1.gd ← texturas_p1_p1.gd |
 | `VidaCiudad` | `visor/vida_ciudad.gd` | 432 | 51 | vida_ciudad_p1.gd |
-| `Texturas` | `visor/texturas.gd` | 36 | 48 | texturas_p1.gd |
 | `TraficoCiudad` | `visor/trafico_ciudad.gd` | 449 | 47 | trafico_ciudad_puente.gd ← trafico_ciudad_p1.gd |
 | `EdificioClub` | `visor/edificio_club.gd` | 305 | 46 | edificio_club_p1.gd |
 
-Cerca del tope (≥ 400 líneas): `anim_quaternius.gd` (450), `city_builder_p1.gd` (450), `city_builder_p4.gd` (450), `city_builder_p9.gd` (450), `edificio_club_p1.gd` (450), `explorador_ciudad_p1.gd` (450), `explorador_ciudad_p3.gd` (450), `explorador_ciudad_p5_p1.gd` (450), `personaje_dt_p1_p1.gd` (450), `texturas_p1.gd` (450).
+Cerca del tope (≥ 400 líneas): `anim_extra_p1.gd` (450), `anim_quaternius.gd` (450), `city_builder_p1.gd` (450), `city_builder_p4.gd` (450), `city_builder_p9.gd` (450), `edificio_club_p1.gd` (450), `explorador_ciudad_p1.gd` (450), `explorador_ciudad_p3.gd` (450), `explorador_ciudad_p5_p1.gd` (450), `personaje_dt_p1_p1.gd` (450).

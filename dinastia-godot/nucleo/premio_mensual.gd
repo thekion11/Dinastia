@@ -11,6 +11,12 @@ static func elegir(m: Mundo) -> Jugador:
 	var liga := m.liga_de(mio) if mio != null else null
 	if liga == null:
 		return null
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("premio_mejor"):   ## (19-11) el bucle por la liga entera, en C++; gemela: `_mejor_gd`
+		return nat.premio_mejor(liga.clubes, MINIMO_NOTAS)
+	return _mejor_gd(liga)
+
+static func _mejor_gd(liga: Liga) -> Jugador:
 	var mejor: Jugador = null
 	var mejor_media := -1.0
 	for c: Club in liga.clubes:

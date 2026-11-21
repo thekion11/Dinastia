@@ -181,6 +181,12 @@ static func _clave_cuero(cuerpo: Dictionary, hd: Dictionary, pos: PackedVector3A
 ## Reparte un poco de cada valor a sus vecinos (la forma de la ceja entre los
 ## puntos que marca MediaPipe).
 static func _suavizar(a: PackedFloat32Array, tri: PackedInt32Array, f: float) -> PackedFloat32Array:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("pelo_suavizar"):   ## (19-11) en C++ (`nativo/src/pelo_nativo.cpp`); gemela: `_suavizar_gd`
+		return nat.pelo_suavizar(a, tri, f)
+	return _suavizar_gd(a, tri, f)
+
+static func _suavizar_gd(a: PackedFloat32Array, tri: PackedInt32Array, f: float) -> PackedFloat32Array:
 	var out := a.duplicate()
 	for t in range(0, tri.size() - 2, 3):
 		for j in 3:
