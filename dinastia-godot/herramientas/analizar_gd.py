@@ -107,9 +107,11 @@ def m_ast(f):
             + sum(1 for _ in fn.find_data("match_branch"))
         if cc > 15:
             out.append(hallazgo(f, a, "ast:complejidad-ciclomatica", f"{nombre}: {cc}", "alta" if cc > 30 else "media"))
-        nargs = sum(1 for _ in fn.find_data("func_arg_regular")) + sum(1 for _ in fn.find_data("func_arg_inf")) \
-            + sum(1 for _ in fn.find_data("func_arg_typed")) + sum(1 for _ in fn.find_data("func_arg_regular_assigned")) \
-            + sum(1 for _ in fn.find_data("func_arg_typed_assigned")) + sum(1 for _ in fn.find_data("func_arg_inf_assigned"))
+        # Solo los parámetros de la cabecera: los de las lambdas que hay dentro del cuerpo no son de la función.
+        cab = next(fn.find_data("func_header"), None)
+        nargs = 0 if cab is None else sum(1 for _ in cab.find_data("func_arg_regular")) + sum(1 for _ in cab.find_data("func_arg_inf")) \
+            + sum(1 for _ in cab.find_data("func_arg_typed")) + sum(1 for _ in cab.find_data("func_arg_regular_assigned")) \
+            + sum(1 for _ in cab.find_data("func_arg_typed_assigned")) + sum(1 for _ in cab.find_data("func_arg_inf_assigned"))
         if nargs > 6:
             out.append(hallazgo(f, a, "ast:muchos-parametros", f"{nombre}: {nargs}"))
         base = min((len(l) - len(l.lstrip("\t")) for l in lines[a:b] if l.strip()), default=0)
