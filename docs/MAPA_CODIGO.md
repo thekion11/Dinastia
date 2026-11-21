@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2581 archivos (.gd, .cpp, .h), 369569 líneas, 1013 clases con nombre.
+Total: 2582 archivos (.gd, .cpp, .h), 369587 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `m
 
 ## Visor: 3D, cámaras y efectos
 
-339 archivos, 62781 líneas. Carpetas: `visor`.
+340 archivos, 62799 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -182,7 +182,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `m
 | `CameraRig` | `visor/camera_rig.gd` | 245 | 57 | camera_rig_p1.gd |
 | `Texturas` | `visor/texturas.gd` | 36 | 51 | texturas_p1.gd ← texturas_p1_p1.gd |
 | `VidaCiudad` | `visor/vida_ciudad.gd` | 432 | 51 | vida_ciudad_p1.gd |
+| `EdificioClub` | `visor/edificio_club.gd` | 305 | 47 | edificio_club_p1.gd |
 | `TraficoCiudad` | `visor/trafico_ciudad.gd` | 449 | 47 | trafico_ciudad_puente.gd ← trafico_ciudad_p1.gd |
-| `EdificioClub` | `visor/edificio_club.gd` | 305 | 46 | edificio_club_p1.gd |
 
 Cerca del tope (≥ 400 líneas): `anim_extra_p1.gd` (450), `anim_quaternius.gd` (450), `city_builder_p1.gd` (450), `city_builder_p4.gd` (450), `city_builder_p9.gd` (450), `edificio_club_p1.gd` (450), `explorador_ciudad_p1.gd` (450), `explorador_ciudad_p3.gd` (450), `explorador_ciudad_p5_p1.gd` (450), `personaje_dt_p1_p1.gd` (450).
