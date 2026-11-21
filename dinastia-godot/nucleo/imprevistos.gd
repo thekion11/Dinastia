@@ -196,23 +196,34 @@ func _candidatos(f: Dictionary, c: Club, toque_de_queda: bool) -> Array[Jugador]
 
 func _cumple_jugador(conds: Array, j: Jugador, c: Club) -> bool:
 	for k: String in conds:
-		match k:
-			"sano":
-				if j.lesion > 0: return false
-			"sin_lesion_larga":
-				if j.lesion > 2: return false
-			"extranjero":
-				if j.pais == c.pais: return false
-			"joven":
-				if j.edad > 21: return false
-			"veterano":
-				if j.edad < 31: return false
-			"moral_baja":
-				if j.moral >= 50: return false
-			"moral_alta":
-				if j.moral < 75: return false
-			"bueno":
-				if j.ovr < 68: return false
+		if not _cumple_fisico(k, j, c) or not _cumple_moral(k, j):
+			return false
+	return true
+
+## Condiciones físicas y de edad o nacionalidad de un jugador. Devuelve false si no la cumple.
+static func _cumple_fisico(k: String, j: Jugador, c: Club) -> bool:
+	match k:
+		"sano":
+			if j.lesion > 0: return false
+		"sin_lesion_larga":
+			if j.lesion > 2: return false
+		"extranjero":
+			if j.pais == c.pais: return false
+		"joven":
+			if j.edad > 21: return false
+		"veterano":
+			if j.edad < 31: return false
+	return true
+
+## Condiciones de moral y de nivel de un jugador. Devuelve false si no la cumple.
+static func _cumple_moral(k: String, j: Jugador) -> bool:
+	match k:
+		"moral_baja":
+			if j.moral >= 50: return false
+		"moral_alta":
+			if j.moral < 75: return false
+		"bueno":
+			if j.ovr < 68: return false
 	return true
 
 func _cumple_club(f: Dictionary, c: Club) -> bool:
