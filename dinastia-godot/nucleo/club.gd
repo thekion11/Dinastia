@@ -261,6 +261,18 @@ func perfil_estadio() -> Dictionary:
 	## club, y su REPUTACIÓN lo recorta: un club chico no tiene techo total ni
 	## anillo de pantallas. El clima no se toca -lo pone la hora del partido- y
 	## el túnel tampoco.
+	_aplicar_estilo_preset(p, rep, id)
+	var r: Dictionary = fila_estadio_real()
+	if not r.is_empty():
+		_aplicar_estadio_real(p, r)
+	var asi: Variant = AspectoClub.fila(self).get("asientos", [])   ## orden 15: las butacas del club real si su estadio no trae las suyas
+	if asi is Array and (asi as Array).size() >= 2 and not r.has("asientos"):
+		p["asiento1"] = String(asi[0])
+		p["asiento2"] = String(asi[1])
+	return p
+
+## Estilo completo para los rivales (presets de estadio), con la reputación recortando el techo y los anillos.
+func _aplicar_estilo_preset(p: Dictionary, rep, id: String) -> void:
 	var presets: Variant = Datos.tabla("EST_PRESETS")
 	if presets is Array and not (presets as Array).is_empty():
 		## Hash aparte y bien mezclado: con `h >> 7` los ids seguidos (c1, c2...)
@@ -282,37 +294,29 @@ func perfil_estadio() -> Dictionary:
 			p["niveles"] = mini(int(p["niveles"]) + 1, maxi(1, int(e.get("niveles", p["niveles"]))))
 		elif rep >= 60 and String(e.get("techo", "sin")) in ["sin", "parcial", "visera"]:
 			p["techo"] = e["techo"]
-	## SU ESTADIO DE VERDAD (26-9-2026, `herramientas/estadios_reales.py`): si
-	## el club representa a uno real, su estadio copia la arquitectura del real
-	## -forma, bandejas, techo, pista, focos y fachada-, gane o no reputación.
-	## La caldera de tres bandejas, el óvalo con pista, la herradura al cerro,
-	## el techo retráctil... Los demás siguen con los estilos genéricos.
-	var r: Dictionary = fila_estadio_real()
-	if not r.is_empty():
-		for k in ["forma", "niveles", "techo", "pista", "focos", "fachada", "rasgo",
-				"arco", "torres_rampa", "torres_col", "costillas", "costillas_col", "fachada_curva", "colchon", "pista_col", "techoCol", "fachadaCol", "asientoP", "asiento3", "pantalla", "niveles_lado", "esquinas_abiertas"]:
-			if r.has(k):   ## (10-11) las piezas de los estadios reales (`PiezasRealesEstadio`) y sus colores
-				p[k] = r[k]
-		p["real"] = true
-		if r.get("techo_lados") is Array:   ## (10-11) techo solo en esos lados (p. ej. ["oeste"]); el resto, al aire
-			var bandejas := {}   ## el formato que lee el constructor (`est["bandejas"][lado]["techo"]`)
-			for lado: String in ["sur", "norte", "este", "oeste"]:
-				bandejas[lado] = {"techo": String(r.get("techo", "parcial")) if lado in (r["techo_lados"] as Array) else "sin"}
-			p["bandejas"] = bandejas
-		## LOS COLORES DE SU ESTADIO (14-10-2026): las butacas del real, que no
-		## siempre son las del uniforme (Bombonera azul y oro, Maracanã azul...).
-		if r.has("asientos") and (r["asientos"] as Array).size() >= 2:
-			p["asiento1"] = String(r["asientos"][0])
-			p["asiento2"] = String(r["asientos"][1])
-		## El apodo del estadio (genérico, nunca el oficial): sale en el rótulo.
-		var ap = load("res://visor/guinos_estadio.gd").apodo(p)
-		if ap != "":
-			p["apodo"] = ap
-	var asi: Variant = AspectoClub.fila(self).get("asientos", [])   ## orden 15: las butacas del club real si su estadio no trae las suyas
-	if asi is Array and (asi as Array).size() >= 2 and not r.has("asientos"):
-		p["asiento1"] = String(asi[0])
-		p["asiento2"] = String(asi[1])
-	return p
+
+## Su estadio de verdad: arquitectura, techo, pista, colores y apodo, si el club representa a uno real.
+func _aplicar_estadio_real(p: Dictionary, r: Dictionary) -> void:
+	for k in ["forma", "niveles", "techo", "pista", "focos", "fachada", "rasgo",
+			"arco", "torres_rampa", "torres_col", "costillas", "costillas_col", "fachada_curva", "colchon", "pista_col", "techoCol", "fachadaCol", "asientoP", "asiento3", "pantalla", "niveles_lado", "esquinas_abiertas"]:
+		if r.has(k):   ## (10-11) las piezas de los estadios reales (`PiezasRealesEstadio`) y sus colores
+			p[k] = r[k]
+	p["real"] = true
+	if r.get("techo_lados") is Array:   ## (10-11) techo solo en esos lados (p. ej. ["oeste"]); el resto, al aire
+		var bandejas := {}   ## el formato que lee el constructor (`est["bandejas"][lado]["techo"]`)
+		for lado: String in ["sur", "norte", "este", "oeste"]:
+			bandejas[lado] = {"techo": String(r.get("techo", "parcial")) if lado in (r["techo_lados"] as Array) else "sin"}
+		p["bandejas"] = bandejas
+	## LOS COLORES DE SU ESTADIO (14-10-2026): las butacas del real, que no
+	## siempre son las del uniforme (Bombonera azul y oro, Maracanã azul...).
+	if r.has("asientos") and (r["asientos"] as Array).size() >= 2:
+		p["asiento1"] = String(r["asientos"][0])
+		p["asiento2"] = String(r["asientos"][1])
+	## El apodo del estadio (genérico, nunca el oficial): sale en el rótulo.
+	var ap = load("res://visor/guinos_estadio.gd").apodo(p)
+	if ap != "":
+		p["apodo"] = ap
+
 
 ## La fila de ESTADIO_CLUB de este club (estadio, colores y escudo del real), o {}.
 ## BUSCA TAMBIÉN POR EL NOMBRE LIMPIO (14-10-2026, auditoría por club): en la base

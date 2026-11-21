@@ -129,6 +129,19 @@ func _finanzas_de_la_semana(c: Club) -> Finanzas:
 func _cobrar_la_jornada(c: Club, f: Finanzas, jugaron_en_casa: Dictionary) -> void:
 	var soy_yo := c.id == mi_club_id
 	var en_casa := jugaron_en_casa.has(c.id)
+	_cobrar_precios_dinamicos(c, f, jugaron_en_casa, en_casa, soy_yo)
+	if en_casa and soy_yo:
+		_cobrar_local(c, f)
+	if soy_yo and not en_casa:
+		_cobrar_viaje(c, jugaron_en_casa)
+	var f_publico := _factor_publico_jornada(c, en_casa, soy_yo, jugaron_en_casa)
+	f.semana(en_casa, false, f_publico)
+	if en_casa and soy_yo:
+		_cobrar_plus_tv(c, f)
+	_cobrar_embajador(c, soy_yo)
+
+## Los precios dinámicos del partido en casa (solo tu club: la IA no juega con la caja).
+func _cobrar_precios_dinamicos(c: Club, f: Finanzas, jugaron_en_casa: Dictionary, en_casa: bool, soy_yo: bool) -> void:
 	## LOS PRECIOS DINAMICOS. El mismo asiento no vale lo mismo contra el
 	## lider que contra el colista, y con el interruptor encendido se cobra
 	## asi. Solo para tu club: la IA no juega con la caja.
@@ -141,31 +154,36 @@ func _cobrar_la_jornada(c: Club, f: Finanzas, jugaron_en_casa: Dictionary) -> vo
 		var castigo := hinchada.castigo_por_subida(int(round(c.precio_entrada)), cobrado)
 		if castigo > 0 and prensa != null:
 			prensa.mover_animo(-castigo)
-	if en_casa and soy_yo:
-		## Se anota la asistencia real: es de donde salen los ingresos de
-		## estacionamiento, que si no cobrarian sobre un cero.
-		obras.ultima_asistencia = f.asistencia()
-		## La concentración previa: hotel y logística por cada partido en
-		## casa, a cambio de dos puntos de físico para todo el plantel.
-		if bool(normas.get("conc", false)):
-			var coste_conc := Eco.escalar(3500, c.rep)
-			c.mover_saldo(-coste_conc)
-			_anotar_movimiento("Concentración previa (hotel y logística)", -coste_conc)
-			for j in c.plantilla:
-				j.fisico = clampi(j.fisico + 2, 10, 100)
-	## EL VIAJE A DOMICILIO (26-10): distancia real entre las dos sedes, autocar, avión o chárter, hotel y dietas.
-	## Solo tu club lo paga; la IA lleva el correctivo de la directiva.
-	if soy_yo and not en_casa:
-		for id_local: String in jugaron_en_casa:
-			var visita: Club = jugaron_en_casa[id_local]
-			if visita == c:
-				var local: Club = clubes.get(id_local)
-				if local != null:
-					var v := Viajes.viaje_euros(c.pais, local.pais, c.rep)
-					var coste_v := Viajes.viaje_interno(c.pais, local.pais, c.rep)
-					c.mover_saldo(-coste_v)
-					_anotar_movimiento("Viaje a %s (%d km, %d noches)" % [local.nombre, int(v["km"]), int(v["noches"])], -coste_v)
-				break
+
+## Lo que cuesta jugar en casa: la asistencia, la concentración previa y el plantel.
+func _cobrar_local(c: Club, f: Finanzas) -> void:
+	## Se anota la asistencia real: es de donde salen los ingresos de
+	## estacionamiento, que si no cobrarian sobre un cero.
+	obras.ultima_asistencia = f.asistencia()
+	## La concentración previa: hotel y logística por cada partido en
+	## casa, a cambio de dos puntos de físico para todo el plantel.
+	if bool(normas.get("conc", false)):
+		var coste_conc := Eco.escalar(3500, c.rep)
+		c.mover_saldo(-coste_conc)
+		_anotar_movimiento("Concentración previa (hotel y logística)", -coste_conc)
+		for j in c.plantilla:
+			j.fisico = clampi(j.fisico + 2, 10, 100)
+
+## EL VIAJE A DOMICILIO (26-10): distancia real entre las dos sedes, autocar, avión o chárter, hotel y dietas.
+func _cobrar_viaje(c: Club, jugaron_en_casa: Dictionary) -> void:
+	for id_local: String in jugaron_en_casa:
+		var visita: Club = jugaron_en_casa[id_local]
+		if visita == c:
+			var local: Club = clubes.get(id_local)
+			if local != null:
+				var v := Viajes.viaje_euros(c.pais, local.pais, c.rep)
+				var coste_v := Viajes.viaje_interno(c.pais, local.pais, c.rep)
+				c.mover_saldo(-coste_v)
+				_anotar_movimiento("Viaje a %s (%d km, %d noches)" % [local.nombre, int(v["km"]), int(v["noches"])], -coste_v)
+			break
+
+## El factor de público de la jornada: horario, techo, aforo, fiesta nacional y clima.
+func _factor_publico_jornada(c: Club, en_casa: bool, soy_yo: bool, jugaron_en_casa: Dictionary) -> float:
 	## El horario elegido mueve la taquilla: un lunes por la noche llena un
 	## tercio menos. El otro lado -los derechos de TV- lo cobra `Federacion`.
 	## EL TECHO RETRACTIL salva la taquilla cuando llueve, que es literalmente
@@ -187,22 +205,25 @@ func _cobrar_la_jornada(c: Club, f: Finanzas, jugaron_en_casa: Dictionary) -> vo
 		if en_casa and jugaron_en_casa.has(c.id):   ## el clima del partido también vacía la grada (01-11, idea 251)
 			f_publico *= Clima.factor_publico(Clima.del_partido(c.pais, semana, anio, c.id + (jugaron_en_casa[c.id] as Club).id),
 				comercial != null and comercial.nivel_premium("techo") > 0)
-	f.semana(en_casa, false, f_publico)
-	## EL PLUS DE LA TELEVISION POR EL HORARIO. Un lunes por la noche no va
-	## nadie al estadio y paga mucho mas la television: sin este cobro, elegir
-	## horario era regalar taquilla a cambio de nada.
-	if en_casa and soy_yo:
-		var plus_h := factor_tv_horario()
-		if plus_h > 1.0:
-			var plus := int(round(float(f.derechos_tv_base()) * (plus_h - 1.0) * 0.6))
-			if plus > 0:
-				c.mover_saldo(plus)
-				_anotar_movimiento("Plus de televisión por el horario %s" % String(horario_actual()[1]), plus)
+	return f_publico
+
+## El plus de la televisión por el horario.
+func _cobrar_plus_tv(c: Club, f: Finanzas) -> void:
+	var plus_h := factor_tv_horario()
+	if plus_h > 1.0:
+		var plus := int(round(float(f.derechos_tv_base()) * (plus_h - 1.0) * 0.6))
+		if plus > 0:
+			c.mover_saldo(plus)
+			_anotar_movimiento("Plus de televisión por el horario %s" % String(horario_actual()[1]), plus)
+
+## El embajador suma socios todas las semanas.
+func _cobrar_embajador(c: Club, soy_yo: bool) -> void:
 	## El embajador suma socios TODAS las semanas -"G.socios+=25" del HTML
 	## corre en su función semanal, a diferencia del sueldo del cuerpo
 	## técnico, que Godot ya paga en un solo pago mensual-.
 	if soy_yo and directiva != null and not directiva.embajador.is_empty():
 		c.socios += Directiva.SOCIOS_POR_SEMANA_EMBAJADOR
+
 
 ## El cierre de mes de un club: la nómina y, para el tuyo, el resto de sueldos y
 ## rentas del mes.

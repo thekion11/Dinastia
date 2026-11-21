@@ -1,6 +1,6 @@
 class_name CarreraJugador
-extends "res://nucleo/carrera_jugador_p1.gd"
-## [Capa 2/2 de `carrera_jugador.gd`] semana, _ceder, _club_extranjero, resolver, aceptar_oferta, tras_partido … (+10)
+extends "res://nucleo/carrera_jugador_p2.gd"
+## [Capa 3/3 de `carrera_jugador.gd`] semana, _ceder, _club_extranjero, resolver, aceptar_oferta, tras_partido … (+10)
 
 ## Lo que dejó la agenda de la última semana (para el aviso de la interfaz).
 var aviso_agenda := ""
@@ -114,6 +114,17 @@ func resolver(m: Mundo, indice: int, opcion: int) -> String:
 	CarreraRuta.sumar_xp(self, CarreraRuta.XP_DECISION)
 	energia = clampi(energia + int(ef.get("energia", 0)), 0, ENERGIA_MAX)
 	seguidores = maxi(0, seguidores + int(ef.get("seguidores", 0)))
+	_aplicar_efecto_jugador(j, ef)
+	_aplicar_marcas_evento(m, j, ef)
+	_oferta_de_fuera(m, j, ef)
+	historial.append({"anio": m.anio, "semana": m.semana, "titulo": String(ev["titulo"]), "titulo_datos": ev.get("titulo_datos", []), "eleccion": String(o["texto"])})
+	eventos.remove_at(indice)
+	return String(o["texto"])
+
+## Acepta una oferta: te vas a ese club.
+
+## Los efectos de la decisión sobre el jugador: moral, atributos, contrato y lesiones.
+func _aplicar_efecto_jugador(j: Jugador, ef: Dictionary) -> void:
 	if j != null:
 		j.cambiar_moral(int(ef.get("moral", 0)), "Carrera")
 		for k: String in ef:
@@ -124,6 +135,8 @@ func resolver(m: Mundo, indice: int, opcion: int) -> String:
 			j.sueldo = int(float(j.sueldo) * float(ef.get("sueldo", 1.15)))
 		if bool(ef.get("lesion_riesgo", false)) and _rng.randf() < 0.4:
 			j.lesionar(2)
+
+func _aplicar_marcas_evento(m: Mundo, j: Jugador, ef: Dictionary) -> void:
 	if bool(ef.get("lanzador_penales", false)):
 		lanzador["penales"] = true
 	if bool(ef.get("lanzador_faltas", false)):
@@ -144,15 +157,13 @@ func resolver(m: Mundo, indice: int, opcion: int) -> String:
 		_ceder(m)
 	CarreraPatrocinio.firmar(self, String(ef.get("patro", "")))
 	CarreraEventosRuta.aplicar(self, m, ef)
+
+func _oferta_de_fuera(m: Mundo, j: Jugador, ef: Dictionary) -> void:
 	if bool(ef.get("oferta_fuera", false)) and j != null:
 		var fuera := _club_extranjero(m, j)
 		if fuera != null:
 			ofertas.append({"club_id": fuera.id, "sueldo": int(float(j.sueldo) * 2.2), "semanas": 3})
-	historial.append({"anio": m.anio, "semana": m.semana, "titulo": String(ev["titulo"]), "titulo_datos": ev.get("titulo_datos", []), "eleccion": String(o["texto"])})
-	eventos.remove_at(indice)
-	return String(o["texto"])
 
-## Acepta una oferta: te vas a ese club.
 func aceptar_oferta(m: Mundo, i: int) -> bool:
 	if i < 0 or i >= ofertas.size():
 		return false
