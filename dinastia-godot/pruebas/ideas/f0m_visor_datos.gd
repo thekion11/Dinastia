@@ -119,6 +119,14 @@ func _probar_cara_malla() -> void:
 	_comprobar(g.size() == 4, "geometria(): posiciones, uvs, triángulos y escala")
 	if g.size() != 4:
 		return
+	_cm_vertices(g)
+	_cm_ojos(k, g)
+	_cm_colores(k)
+	_cm_tono(k)
+	_cm_foto(k)
+
+
+func _cm_vertices(g: Array) -> void:
 	var pos: PackedVector3Array = g[0]
 	var uv: PackedVector2Array = g[1]
 	var tri: PackedInt32Array = g[2]
@@ -132,6 +140,9 @@ func _probar_cara_malla() -> void:
 	for u in uv:
 		uv_ok = uv_ok and u.x >= -0.01 and u.x <= 1.01 and u.y >= -0.01 and u.y <= 1.01
 	_comprobar(uv_ok and float(g[3]) > 0.0, "las uv caen dentro de la foto")
+
+func _cm_ojos(k: String, g: Array) -> void:
+	var pos: PackedVector3Array = g[0]
 	## Los ojos de la malla, sobre los globos del modelo (escala por los rabillos).
 	var ojos := CaraMalla.centros_ojos(k)
 	var ojos_ok := ojos.size() == 2 and (ojos[0] as Vector2).x < 0.0 and (ojos[1] as Vector2).x > 0.0
@@ -141,9 +152,13 @@ func _probar_cara_malla() -> void:
 	_comprobar(ojos_ok, "los ojos quedan a ±%.3f m y a %.3f m de alto %s" % [CaraMalla.OJO_X, CaraMalla.OJO_Y, str(ojos)])
 	var nariz := pos[1]
 	_comprobar(nariz.z > pos[CaraMalla.OJO_IZQ[0]].z and nariz.y < CaraMalla.OJO_Y, "la punta de la nariz va delante de los ojos y por debajo")
+
+func _cm_colores(k: String) -> void:
 	_comprobar(CaraMalla.balance(k) == Vector3.ONE and CaraMalla.balance("nadie") == Vector3.ONE, "balance de blancos (y neutro si no hay cara)")
 	_comprobar(CaraMalla.color_iris(k).a > 0.5 and is_zero_approx(CaraMalla.color_iris("nadie").a), "color de iris medido (alfa 0 si no hay)")
 	_comprobar(CaraMalla.geometria("nadie").is_empty() and CaraMalla.centros_ojos("nadie").is_empty(), "sin cara: vacío, no error")
+
+func _cm_tono(k: String) -> void:
 	## El tono de piel: media recortada de los puntos de la cara sobre la foto.
 	var img := Image.create(64, 64, false, Image.FORMAT_RGBA8)
 	var tono := Color(0.72, 0.52, 0.4)
@@ -153,6 +168,8 @@ func _probar_cara_malla() -> void:
 		_linea("  (headless sin imágenes de GPU: tono_piel no se puede medir aquí)")
 	else:
 		_comprobar(absf(medido.r - tono.r) < 0.02 and absf(medido.g - tono.g) < 0.02 and absf(medido.b - tono.b) < 0.02, "tono_piel de una foto lisa = su color (%s)" % medido.to_html(false))
+
+func _cm_foto(k: String) -> void:
 	var f := CaraMalla.foto(k)
 	_comprobar(f != null and CaraMalla.foto(k) == f and f.get_width() > 100, "la foto de la cara se carga y queda en caché")
 
