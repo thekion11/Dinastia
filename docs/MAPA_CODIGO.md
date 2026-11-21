@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2622 archivos (.gd, .cpp, .h), 374205 líneas, 1013 clases con nombre.
+Total: 2621 archivos (.gd, .cpp, .h), 374208 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -75,15 +75,15 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 ## Club e instalaciones
 
-22 archivos, 6317 líneas. Carpetas: `nucleo`, `visor`.
+22 archivos, 6321 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Club` | `nucleo/club.gd` | 420 | 847 |  |
+| `Club` | `nucleo/club.gd` | 420 | 846 |  |
 | `StadiumBuilder` | `visor/stadium_builder.gd` | 13 | 136 | stadium_builder_p10.gd ← stadium_builder_p10_p1.gd ← estadio_partes_tribuna.gd ← stadium_builder_p9.gd ← stadium_builder_p8.gd ← stadium_builder_p7.gd ← stadium_builder_p6.gd ← stadium_builder_p5.gd ← stadium_builder_p4.gd ← stadium_builder_p4_p1.gd ← stadium_builder_p3.gd |
 | `EstadioExtras` | `visor/estadio_extras.gd` | 310 | 9 |  |
 | `ClubDentro` | `nucleo/club_dentro.gd` | 285 | 8 |  |
-| `CasaDT` | `visor/casa_dt.gd` | 322 | 7 |  |
+| `CasaDT` | `visor/casa_dt.gd` | 326 | 7 |  |
 | `EstadioObra` | `visor/estadio_partes_obra.gd` | 69 | 5 |  |
 | `DetalleGrada` | `visor/estadio_partes_tribuna_detalle.gd` | 299 | 5 |  |
 | `CasaPlano` | `visor/casa_plano.gd` | 210 | 4 |  |
@@ -143,7 +143,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 
 ## Núcleo: mundo, gestión y datos
 
-258 archivos, 53283 líneas. Carpetas: `nucleo`.
+257 archivos, 53276 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -154,7 +154,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | `Nativo` | `nucleo/nativo.gd` | 29 | 124 |  |
 | `Partida` | `nucleo/partida.gd` | 261 | 121 | partida_p2.gd ← partida_p1.gd |
 | `Copa` | `nucleo/copa.gd` | 360 | 95 |  |
-| `Mercado` | `nucleo/mercado.gd` | 64 | 93 | mercado_p1.gd ← mercado_p0.gd |
+| `Mercado` | `nucleo/mercado.gd` | 64 | 93 | mercado_p1.gd |
 | `Finanzas` | `nucleo/finanzas.gd` | 398 | 91 |  |
 | `Roles` | `nucleo/roles.gd` | 357 | 79 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
 | `Prensa` | `nucleo/prensa.gd` | 399 | 76 | prensa_narra.gd ← prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
@@ -162,11 +162,11 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | `CargaCiudad` | `nucleo/carga_ciudad.gd` | 14 | 67 |  |
 | `Cantera` | `nucleo/cantera.gd` | 233 | 65 | cantera_p3.gd ← cantera_p2.gd ← cantera_p1.gd |
 
-Cerca del tope (≥ 400 líneas): `roles_p4.gd` (450), `leyes_pais.gd` (449), `mundo_p1.gd` (449), `partida_p1.gd` (448), `musica.gd` (446), `comercial.gd` (444), `cantera_p1.gd` (442), `ciudad_p1.gd` (442), `idiomas_p1.gd` (442), `roles_p1.gd` (442).
+Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `leyes_pais.gd` (449), `mundo_p1.gd` (449), `partida_p1.gd` (448), `musica.gd` (446), `comercial.gd` (444), `cantera_p1.gd` (442), `ciudad_p1.gd` (442), `idiomas_p1.gd` (442).
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62865 líneas. Carpetas: `visor`.
+340 archivos, 62871 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
