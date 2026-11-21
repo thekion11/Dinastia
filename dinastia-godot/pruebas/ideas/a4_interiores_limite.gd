@@ -22,6 +22,13 @@ func _probar() -> void:
 	for i in 10:
 		await get_tree().process_frame
 	var calle: Vector3 = e.cuerpo.position
+	await _interior_vueltas(e, vc, calle)
+	await _interior_puertas_dobles(e, vc, calle)
+	await _interior_calidad(e, calle)
+	await _interior_estadio(e, vc)
+	(c["vc"] as Node).free()
+
+func _interior_vueltas(e: Object, vc: Node, calle: Vector3) -> void:
 	var malas: Array[String] = []
 	var abiertas := 0
 	var nodos10 := 0
@@ -64,6 +71,8 @@ func _probar() -> void:
 	_comprobar(malas.is_empty(), "entrar/salir %d veces: dentro de la sala, la calle intacta, sin interior vivo (%d fallos%s)" % [VUELTAS, malas.size(), "" if malas.is_empty() else ": " + str(malas.slice(0, 3))])
 	_comprobar(nodos_ahora - nodos10 < 300, "los nodos no crecen con las vueltas (%d → %d)" % [nodos10, nodos_ahora])
 	_comprobar(huer_ahora - huer10 < 60, "ni los nodos huérfanos (%d → %d)" % [huer10, huer_ahora])
+
+func _interior_puertas_dobles(e: Object, vc: Node, calle: Vector3) -> void:
 	## puertas pulsadas dos veces
 	e.call("_entrar_en_edificio", SALAS[0])
 	for i in 3:
@@ -83,6 +92,8 @@ func _probar() -> void:
 	for h in vc.find_children("InteriorPaseo*", "Node3D", true, false):
 		raices += 1
 	_comprobar(raices == 0, "ningún interior huérfano en el mundo tras la doble pulsación (%d)" % raices)
+
+func _interior_calidad(e: Object, calle: Vector3) -> void:
 	## calidad con el interior abierto
 	e.call("_entrar_en_edificio", SALAS[1])
 	for i in 3:
@@ -96,6 +107,8 @@ func _probar() -> void:
 		await get_tree().process_frame
 	_comprobar(String(e.estado) == "calle" and e.cuerpo.position.distance_to(calle) < 0.5, "cambiar la calidad dentro y salir: vuelve a la calle (%s)" % e.estado)
 	Calidad.elegida = Calidad.MEDIO
+
+func _interior_estadio(e: Object, vc: Node) -> void:
 	## el estadio: 20 entradas y salidas, y la puerta pulsada dos veces
 	var salida_est: Vector3 = Vector3.ZERO
 	var malas_e: Array[String] = []
@@ -126,4 +139,3 @@ func _probar() -> void:
 		nodos_e1 = vc.find_children("*", "", true, false).size()
 	_comprobar(malas_e.is_empty(), "estadio: 20 entradas y salidas (con doble pulsación) coherentes (%d fallos%s)" % [malas_e.size(), "" if malas_e.is_empty() else ": " + str(malas_e.slice(0, 3))])
 	_comprobar(nodos_e1 - nodos_e0 < 200, "el estadio no acumula nodos con las vueltas (%d → %d)" % [nodos_e0, nodos_e1])
-	(c["vc"] as Node).free()

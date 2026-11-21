@@ -3,6 +3,10 @@ extends BaseIdea
 ## fuego más lento sin presión de agua, y multa de la cartera por cruzar en rojo con la policía delante.
 
 func _probar() -> void:
+	_emerg_puro()
+	_emerg_vehiculos_y_multa()
+
+func _emerg_puro() -> void:
 	_titulo("CIUDAD · POLICÍA Y BOMBEROS: INCIDENTES")
 	## --- Lo puro ---
 	var cuenta := {"robo": 0, "incendio": 0, "accidente": 0}
@@ -47,6 +51,8 @@ func _probar() -> void:
 	_comprobar(calle_ok and IncidentesCiudad.largo_de(ruta) >= 100.0 + 268.0 - 40.0, "va por las calles de la rejilla (%.0f m), no a campo través" % IncidentesCiudad.largo_de(ruta))
 	var recta := PackedVector3Array([Vector3(0, 0, 0), Vector3(0, 0, -100)])
 	_comprobar(absf(float(IncidentesCiudad.punto_en(recta, 40.0)[1]) - PI) < 0.01 or absf(float(IncidentesCiudad.punto_en(recta, 40.0)[1]) + PI) < 0.01, "hacia el norte (−Z) el rumbo es ±180°")
+
+func _emerg_vehiculos_y_multa() -> void:
 	## --- Los vehículos ---
 	ServiciosVida.estaciones = {}
 	ServiciosVida.registrar("comisaria", Vector3(550, 0.2, 110), 100.0, 100.0)
