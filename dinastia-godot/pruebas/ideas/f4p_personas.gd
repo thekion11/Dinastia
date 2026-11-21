@@ -23,6 +23,29 @@ func _frames(n: int) -> void:
 
 func _probar_async() -> void:
 	_titulo("f4p: personas en persona (3D)")
+	await _f4p_montar()
+	if _c == null:
+		return
+	## La cita de patrocinio de la primera semana, en el centro comercial.
+	var pend := _m.citas.pendientes()
+	_comprobar(not pend.is_empty(), "hay una cita pendiente (%d)" % pend.size())
+	if pend.is_empty():
+		return
+	var ct: Dictionary = pend[0]
+	var p := _c.punto_de(ct)
+	_comprobar(p != Vector3.INF, "su sitio existe en la ciudad (%s → %s)" % [String(ct["tipo"]), str(p)])
+	_f4p_fuera_de_hora(ct, p)
+	var per: PrologoMentor = await _f4p_en_su_hora(ct)
+	if per == null:
+		return
+	await _f4p_charla(ct, per)
+	await _f4p_entrevista()
+	_f4p_junta_y_estadio()
+	await _f4p_vestuario()
+	PedidoPartida.mundo_pregenerado = null
+	PedidoPartida.mundo_a_cargar = null
+
+func _f4p_montar() -> void:
 	_m = _mundo(4242)
 	_m.reloj.sincronizar(_m.anio, _m.semana)
 	var club := _m.mi_club()
@@ -37,16 +60,8 @@ func _probar_async() -> void:
 	_v = VidaCiudad.enganchar(_e, _vista, _m)
 	_c = _v.citas_3d if _v != null else null
 	_comprobar(_c != null and _c.hud != null and not _c.hud._saltar.visible, "la vida monta las citas 3D con su HUD (sin «Saltar prólogo»)")
-	if _c == null:
-		return
-	## La cita de patrocinio de la primera semana, en el centro comercial.
-	var pend := _m.citas.pendientes()
-	_comprobar(not pend.is_empty(), "hay una cita pendiente (%d)" % pend.size())
-	if pend.is_empty():
-		return
-	var ct: Dictionary = pend[0]
-	var p := _c.punto_de(ct)
-	_comprobar(p != Vector3.INF, "su sitio existe en la ciudad (%s → %s)" % [String(ct["tipo"]), str(p)])
+
+func _f4p_fuera_de_hora(ct: Dictionary, p: Vector3) -> void:
 	## Fuera de hora: nadie, y la flecha solo si está marcada con «Ir».
 	_m.reloj.dia = int(ct["dia"])
 	_m.reloj.minuto = (int(ct["hora"]) - 2) * 60
@@ -58,6 +73,8 @@ func _probar_async() -> void:
 	_m.citas.objetivo = String(ct["id"])
 	_c._process(0.6)
 	_comprobar(_c.hud._flecha.visible and _c.hud._flecha.text.contains("m"), "con «Ir» la flecha marca los metros (%s)" % _c.hud._flecha.text)
+
+func _f4p_en_su_hora(ct: Dictionary) -> PrologoMentor:
 	## En su hora: la persona aparece con nombre y cargo.
 	_m.reloj.minuto = int(ct["hora"]) * 60 + 15
 	_c._revisar_cuerpos()
@@ -65,8 +82,9 @@ func _probar_async() -> void:
 	_comprobar(_c.cuerpos.has(String(ct["id"])), "en su hora aparece con cuerpo")
 	var per: PrologoMentor = _c.cuerpos.get(String(ct["id"]))
 	_comprobar(per != null and per.nombre == String(ct["quien"]) and per.cargo == String(ct["cargo"]), "con su nombre y su cargo")
-	if per == null:
-		return
+	return per
+
+func _f4p_charla(ct: Dictionary, per: PrologoMentor) -> void:
 	## Acercarse: la E habla; la respuesta resuelve la cita.
 	_e.cuerpo.position = per.position + Vector3(0, 0, 1.2)
 	_c._buscar_cerca()
@@ -77,6 +95,8 @@ func _probar_async() -> void:
 	await _frames(1)
 	_comprobar(_m.citas.por_id(String(ct["id"]))["estado"] == "hecha" and _m.comercial.zonas_firmadas.has(zona), "la respuesta resuelve la cita (zona firmada en persona)")
 	_comprobar(_e.is_physics_processing() and not _c.cuerpos.has(String(ct["id"])) and _m.citas.objetivo == "", "y el paseo sigue, la persona se va y la flecha se apaga")
+
+func _f4p_entrevista() -> void:
 	## §2.5: la entrevista en persona son tres preguntas seguidas en el mismo cuadro.
 	var jf: Jugador = _m.mi_club().plantilla[3]
 	_m.citas.entrevista(_m, jf)
@@ -101,6 +121,9 @@ func _probar_async() -> void:
 		"la entrevista en persona: tono, grupo y staff, y al final se resuelve (analista: +15 de adaptación)")
 	_c._process(0.6)
 	_comprobar(not _c.hud._flecha.visible, "sin cita marcada, sin flecha")
+
+func _f4p_junta_y_estadio() -> void:
+	var club := _m.mi_club()
 	## Una cita en el estadio apunta dentro del club.
 	_m.junta.formar(club)
 	_m.junta.pendiente = _m.junta._tema(club, _m.junta.accionistas[0])
@@ -118,6 +141,8 @@ func _probar_async() -> void:
 		_m.reloj.minuto = int(cj["hora"]) * 60
 		_c._revisar_cuerpos()
 		_comprobar(not _c.cuerpos.has(String(cj["id"])), "desde la calle no se ve al presidente en su despacho")
+
+func _f4p_vestuario() -> void:
 	## Fase 5, bloque 1: el vestuario con vida (laborables de 10 a 12, en la planta 0 del club).
 	var vest := _c.vestuario
 	_comprobar(vest != null, "las citas 3D montan el vestuario con vida")
@@ -139,5 +164,3 @@ func _probar_async() -> void:
 		vest.revisar()
 		_comprobar(vest.cuerpos.is_empty(), "fuera de horario el vestuario queda vacío")
 		_e._salir_del_estadio()
-	PedidoPartida.mundo_pregenerado = null
-	PedidoPartida.mundo_a_cargar = null
