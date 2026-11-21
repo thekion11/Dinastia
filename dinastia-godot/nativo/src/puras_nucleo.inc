@@ -73,4 +73,19 @@
 	Dictionary nuc_por_linea(const Array &lista) const;
 	Dictionary nuc_ropero_aplicar(const Dictionary &asp, const String &id, const Color &c1, const Color &c2) const;
 	Array nuc_paletas_luces() const;
+	// 5.ª tanda (puras_nucleo5.cpp: tablas de reputación, rutina, calles y rarezas; hash de textos)
+	static void _bind_puras5();
+	int64_t nuc_nivel_reputacion(int64_t rep) const;
+	String nuc_nombre_nivel(int64_t rep) const;
+	int64_t nuc_tope_instalaciones(int64_t rep) const;
+	double nuc_mult_patrocinio(int64_t rep) const;
+	int64_t nuc_estrellas_de(double puntos) const;
+	int64_t nuc_meses_de(int64_t partidos_en_casa) const;
+	String nuc_actividad_rutina(int64_t minuto) const;
+	int64_t nuc_fin_tramo(int64_t minuto) const;
+	String nuc_nombre_columna(int64_t i) const;
+	String nuc_nombre_fila(int64_t j) const;
+	String nuc_rareza_de(int64_t ovr, bool leyenda) const;
+	String nuc_base_recorrido(const String &r) const;
+	int64_t nuc_hash_abs(const String &s) const;
 	// --- fin funciones puras ---

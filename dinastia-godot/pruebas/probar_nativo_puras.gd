@@ -81,6 +81,23 @@ const CASOS: Array = [
 	["res://nucleo/partido_despedida.gd", "por_linea", "nuc_por_linea", [["g", "jugadores"]]],
 	["res://nucleo/ropero_dt.gd", "aplicar", "nuc_ropero_aplicar", [["g", "aspecto"], ["s", ["camiseta_club", "chandal", "bufanda_club", "gorra_club", "otro", ""]], ["g", "color"], ["g", "color"]]],
 	["res://nucleo/ciudad_p1.gd", "paletas_luces", "nuc_paletas_luces", []],
+	## 5.ª tanda (tablas de reputación, rutina, calles, rarezas; hash de textos)
+	["res://nucleo/reputacion.gd", "nivel_de", "nuc_nivel_reputacion", [["i", 0, 100]]],
+	["res://nucleo/reputacion.gd", "nombre_nivel", "nuc_nombre_nivel", [["i", 0, 100]]],
+	["res://nucleo/reputacion.gd", "tope_instalaciones", "nuc_tope_instalaciones", [["i", 0, 100]]],
+	["res://nucleo/reputacion.gd", "mult_patrocinio", "nuc_mult_patrocinio", [["i", 0, 100]]],
+	["res://nucleo/habilidades_jugador.gd", "estrellas_de", "nuc_estrellas_de", [["f", 60.0, 100.0, [74.0, 81.0, 88.0]]]],
+	["res://nucleo/finanzas.gd", "meses_de", "nuc_meses_de", [["i", 0, 30]]],
+	["res://nucleo/reloj.gd", "actividad_de_rutina", "nuc_actividad_rutina", [["i", 0, 1500]]],
+	["res://nucleo/reloj.gd", "_fin_tramo", "nuc_fin_tramo", [["i", 0, 1500]]],
+	["res://nucleo/calles_ciudad.gd", "nombre_columna", "nuc_nombre_columna", [["i", -20, 20]]],
+	["res://nucleo/calles_ciudad.gd", "nombre_fila", "nuc_nombre_fila", [["i", -20, 20]]],
+	["res://nucleo/meta.gd", "rareza_de", "nuc_rareza_de", [["i", 40, 99], ["b"]]],
+	["res://nucleo/recorridos_red.gd", "base_de", "nuc_base_recorrido", [["s", ["122", "150c", "122e", "C02", "C09c", "150ce", "150ec", "c", "e", "", "cc", "ee"]]]],
+	["res://nucleo/politica.gd", "_h", "nuc_hash_abs", [["r", 12]]],
+	["res://nucleo/citas_p1.gd", "_h", "nuc_hash_abs", [["r", 12]]],
+	["res://nucleo/historia_club.gd", "_h", "nuc_hash_abs", [["r", 12]]],
+	["res://nucleo/clima.gd", "_hash", "nuc_hash_abs", [["r", 12]]],
 ]
 
 ## Los valores de un argumento: bordes y puntos de cambio primero, el resto al azar.

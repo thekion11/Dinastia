@@ -51,6 +51,13 @@ static func guardar(d: Dictionary) -> void:
 	f.store_string(JSON.stringify(d))
 
 static func rareza_de(ovr: int, leyenda: bool) -> String:
+	var nat := Nativo.de("nuc_rareza_de")
+	if nat != null:
+		return nat.nuc_rareza_de(ovr, leyenda)
+	return rareza_de_gd(ovr, leyenda)
+
+## Gemela GDScript de `nuc_rareza_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func rareza_de_gd(ovr: int, leyenda: bool) -> String:
 	if leyenda:
 		return "leyenda"
 	for r: Array in RAREZAS:

@@ -126,6 +126,13 @@ static func recorridos(cod: String) -> Array[String]:
 	return out
 
 static func base_de(recorrido: String) -> String:
+	var nat := Nativo.de("nuc_base_recorrido")
+	if nat != null:
+		return nat.nuc_base_recorrido(recorrido)
+	return base_de_gd(recorrido)
+
+## Gemela GDScript de `nuc_base_recorrido` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func base_de_gd(recorrido: String) -> String:
 	return recorrido.trim_suffix("c").trim_suffix("e")
 
 static func color(recorrido: String) -> Color:
