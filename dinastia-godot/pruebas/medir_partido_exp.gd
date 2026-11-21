@@ -6,9 +6,24 @@ extends RefCounted
 ##   SIN_SOMBRA_FINOS=1  las piezas diminutas de los personajes (ojos, cejas, pestañas, pelo) no proyectan sombra: ¿cuántas llamadas de la pasada de sombras ahorra?
 
 static func aplicar(vista: Node) -> void:
+	_sin_omni(vista)
+	_sin_entorno_fx(vista)
+	_lods_runtime(vista)
+	_impostor(vista)
+	_mesh_lod(vista)
+	_informe_jugadores(vista)
+	_sin_sombra_finos(vista)
+
+
+## SIN_OMNI: apaga las luces omni del partido.
+static func _sin_omni(vista: Node) -> void:
 	if OS.get_environment("SIN_OMNI") != "":
 		for l in vista.find_children("*", "OmniLight3D", true, false):
 			(l as Light3D).visible = false
+
+
+## SIN_ENTORNO_FX: apaga el brillo, la niebla, el ajuste y el SSAO del entorno.
+static func _sin_entorno_fx(vista: Node) -> void:
 	if OS.get_environment("SIN_ENTORNO_FX") != "":
 		for we in vista.find_children("*", "WorldEnvironment", true, false):
 			var en: Environment = (we as WorldEnvironment).environment
@@ -17,8 +32,12 @@ static func aplicar(vista: Node) -> void:
 				en.fog_enabled = false
 				en.adjustment_enabled = false
 				en.ssao_enabled = false
+
+
+## LODS_RUNTIME=1: a las mallas que se construyen en tiempo de ejecución y NO tienen LODs se les generan LODs.
+static func _lods_runtime(vista: Node) -> void:
 	if OS.get_environment("LODS_RUNTIME") != "":
-		## LODS_RUNTIME=1: a las mallas que se construyen en tiempo de ejecución y NO tienen LODs (pelo por capas `Cuero*`, peinados del pack, cara real) se les generan LODs con `ImporterMesh.generate_lods`
+		## LODS_RUNTIME=1: a las mallas que se construyen en tiempo de ejecución y NO tienen LODs (pelo por capas `Cuero*`, peinados del pack, cara real) se les generan LODs con `ImporterMesh.generate_lods
 		## (el mismo simplificador que el importador) y se sustituyen; el motor elige el LOD por distancia (`mesh_lod_threshold` del viewport).
 		var n_l := 0
 		var antes_t := 0
@@ -48,9 +67,13 @@ static func aplicar(vista: Node) -> void:
 			mi.mesh = nuevo
 			n_l += 1
 		print("LODS_RUNTIME: %d mallas con LODs nuevos (%d triángulos base)" % [n_l, antes_t])
+
+
+## IMPOSTOR=<metros>: TECHO de lo que ahorraría un impostor de cuerpo (cápsulas a más de esa distancia).
+static func _impostor(vista: Node) -> void:
 	if OS.get_environment("IMPOSTOR") != "":
-		## IMPOSTOR=<metros> (p. ej. 30): TECHO de lo que ahorraría un impostor de cuerpo: los jugadores del campo a más de esa distancia de la cámara pierden todas sus mallas (cuerpo, cara, pelo) y se dibujan como una
-		## cápsula de ~60 triángulos del color de la camiseta (sin animación). No es el impostor final (no conserva la animación ni los detalles): solo mide el máximo ahorro posible de llamadas y triángulos.
+		## IMPOSTOR=<metros> (p. ej. 30): TECHO de lo que ahorraría un impostor de cuerpo: los jugadores del campo a más de esa distancia de la cámara pierden todas sus mallas (cuerpo, cara, pelo) y se d
+		## cápsula de ~60 triángulos del color de la camiseta (sin animación). No es el impostor final (no conserva la animación ni los detalles): solo mide el máximo ahorro posible de llamadas y triá
 		var cam_i := vista.get_viewport().get_camera_3d()
 		var lejos := float(OS.get_environment("IMPOSTOR"))
 		var n_i := 0
@@ -74,10 +97,18 @@ static func aplicar(vista: Node) -> void:
 			nodo_i.add_child(imp)
 			n_i += 1
 		print("IMPOSTOR: %d jugadores a más de %.0f m sustituidos por una cápsula" % [n_i, lejos])
+
+
+## MESH_LOD: el mesh_lod_threshold del viewport (píxeles de error admitidos al elegir el LOD).
+static func _mesh_lod(vista: Node) -> void:
 	if OS.get_environment("MESH_LOD") != "":
 		## MESH_LOD=6 (o 12, 24…): `mesh_lod_threshold` del viewport (píxeles de error admitidos al elegir el LOD de cada malla: más alto = lo lejano baja antes a mallas más simples; el esqueleto y la animación no cambian).
 		vista.get_viewport().mesh_lod_threshold = float(OS.get_environment("MESH_LOD"))
 		print("MESH_LOD: mesh_lod_threshold = %.1f" % vista.get_viewport().mesh_lod_threshold)
+
+
+## INFORME_JUGADORES=1: por cada jugador del campo, las piezas visibles que dibuja y sus triángulos.
+static func _informe_jugadores(vista: Node) -> void:
 	if OS.get_environment("INFORME_JUGADORES") != "":
 		## INFORME_JUGADORES=1: por cada jugador del campo, las piezas visibles que dibuja (nombre, triángulos, rango de visibilidad) y su distancia a la cámara de TV.
 		var cam := vista.get_viewport().get_camera_3d()
@@ -116,6 +147,10 @@ static func aplicar(vista: Node) -> void:
 		ks.sort_custom(func(a, b): return por_nombre[a].y > por_nombre[b].y)
 		for k in ks:
 			print("  PIEZA %-24s x%3d  %7d triángulos" % [k, int(por_nombre[k].x), int(por_nombre[k].y)])
+
+
+## SIN_SOMBRA_FINOS: quita la sombra de los ojos, pestañas y pelo.
+static func _sin_sombra_finos(vista: Node) -> void:
 	if OS.get_environment("SIN_SOMBRA_FINOS") != "":
 		var nf := 0
 		for g in vista.find_children("*", "MeshInstance3D", true, false):
