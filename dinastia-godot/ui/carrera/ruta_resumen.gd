@@ -36,6 +36,21 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 	var v := E.columna(10)
 	p.add_child(v)
 	v.add_child(E.rotulo("FINAL DEL PARTIDO", tono))
+	_arriba(ui, v, u, nota, tono)
+	_retos(v, u)
+	_botas(v, u, c)
+	_experiencia(v, r, u)
+	if texto_semana != "":
+		var t := E.lbl(13, E.SUAVE, texto_semana)
+		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		v.add_child(t)
+	E.entrada(velo)
+	var b := E.boton("SEGUIR  ▸", tono, func() -> void: ui._pintar_semana(), 52, true)
+	v.add_child(b)
+	return velo
+
+## La nota en grande, la frase y las cifras del partido.
+static func _arriba(ui: Variant, v: VBoxContainer, u: Dictionary, nota: float, tono: Color) -> void:
 	var arriba := E.fila(18)
 	v.add_child(arriba)
 	var n := E.columna(-10)
@@ -56,7 +71,9 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 	cif.add_child(E.cifra("%d'" % int(u.get("minutos", 0)), "minutos"))
 	if int(u.get("racha", 0)) >= 2:
 		cif.add_child(E.cifra("🔥 %d" % int(u["racha"]), (Idiomas.t("racha") + "  ·  +%d XP" % int(u["bono_racha"])) if int(u.get("bono_racha", 0)) > 0 else "racha", E.CORAL))
-	## Los retos.
+
+## Los retos.
+static func _retos(v: VBoxContainer, u: Dictionary) -> void:
 	for reto: Dictionary in u.get("retos", []):
 		var def: Array = CarreraRuta.RETOS.get(String(reto.get("id", "")), ["", 0, []])
 		var hecho := bool(reto.get("hecho", false))
@@ -67,6 +84,9 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		f.add_child(l)
 		f.add_child(E.titulo(20, E.ORO if hecho else E.SUAVE, ("+%d XP" % int(reto.get("xp", 0))) if hecho else "—"))
+
+## El contrato de botas, si lo tienes.
+static func _botas(v: VBoxContainer, u: Dictionary, c: CarreraJugador) -> void:
 	if int(u.get("botas", 0)) > 0:
 		var fb := E.fila(8)
 		v.add_child(fb)
@@ -75,7 +95,9 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 		lb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		fb.add_child(lb)
 		fb.add_child(E.titulo(20, E.ORO, "+%d XP" % int(u["botas"])))
-	## La experiencia y el nivel.
+
+## La experiencia y el nivel.
+static func _experiencia(v: VBoxContainer, r: Dictionary, u: Dictionary) -> void:
 	var xp := E.fila(12)
 	v.add_child(xp)
 	xp.add_child(RutaAnillo.crear(float(r["xp"]) / float(CarreraRuta.xp_para(int(r["nivel"]))), str(int(r["nivel"])), E.ORO, 60))
@@ -89,11 +111,3 @@ static func pintar(ui: Variant, texto_semana: String) -> Control:
 	if subio > 0:
 		E.son("nivel_subido", 3.0)
 		xv.add_child(E.lbl(13, E.MENTA, E.plural(int(r["puntos"]), "Tienes %d punto de talento por gastar en «Yo».", "Tienes %d puntos de talento por gastar en «Yo».") % int(r["puntos"]), true))
-	if texto_semana != "":
-		var t := E.lbl(13, E.SUAVE, texto_semana)
-		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		v.add_child(t)
-	E.entrada(velo)
-	var b := E.boton("SEGUIR  ▸", tono, func() -> void: ui._pintar_semana(), 52, true)
-	v.add_child(b)
-	return velo
