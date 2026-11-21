@@ -112,6 +112,18 @@ const CASOS: Array = [
 	["res://nucleo/recorridos_red.gd", "ocupacion", "nuc_ocupacion_recorrido", [["s", ["122", "150c", "C02", "C09c", "122e", "150ce", "301e", "", "x", "c"]], ["i", 0, 20], ["i", 0, 1439], ["i", 0, 6]]],
 	["res://nucleo/idiomas_inverso.gd", "mejor", "nuc_mejor_inverso", [["r", 6], ["r", 6], ["r", 6]]],
 	["res://nucleo/recorridos_mapa.gd", "vuelta_de", "nuc_vuelta_recorrido", [["s", ["122", "150c", "C02", "C09c", "122e", "150ce", "301e", "", "x", "c"]]]],
+	## 7.ª tanda (tablas `const` del propio archivo; se generan con herramientas/generar_tablas_puras.py)
+	["res://nucleo/carrera_habilidad.gd", "zona_de", "nuc_zona_habilidad", [["s", ["aceleracion", "punta", "desmarque", "definicion", "potencia", "lejano", "volea", "penal", "vision", "centro", "libre", "corto", "largo", "efecto", "agilidad", "equilibrio", "reaccion", "control", "conduccion", "temple", "intercepcion", "aereo", "marcaje", "entrada", "barrida", "salto", "resistencia", "fuerza", "garra", "rit", "tir", "pas", "reg", "def", "fis", "x", ""]]]],
+	["res://nucleo/incidentes_ciudad.gd", "ritmo_fuego", "nuc_ritmo_fuego", [["b"]]],
+	["res://nucleo/expendedora.gd", "elegir", "nuc_elegir_expendedora", [["i", 0, 100], ["i", 0, 100]]],
+	["res://nucleo/tienda_gasolinera.gd", "elegir", "nuc_elegir_gasolinera", [["i", 0, 100]]],
+	["res://nucleo/tactica.gd", "def_corner", "nuc_def_corner", [["s", ["area", "corto", "primer", "segundo", "borde", "x", ""]]]],
+	["res://nucleo/tactica.gd", "def_libre", "nuc_def_libre", [["s", ["directo", "centro", "ensayada", "bloqueo", "x", ""]]]],
+	["res://nucleo/finanzas.gd", "def_campana", "nuc_def_campana", [["s", ["abonos", "cantera", "internacional", "familia", "leyendas", "x", ""]]]],
+	["res://nucleo/logros_largo.gd", "fila", "nuc_fila_logro", [["s", ["anios_1", "anios_5", "anios_15", "anios_25", "pj_100", "pj_500", "pj_1000", "pg_50", "pg_250", "pg_500", "racha_10", "invicto_40", "titulos_3", "titulos_5", "titulos_50", "cantera_5", "cantera_40", "goleador_50", "goleador_150", "fiel_200", "publico_50k", "aforo_90k", "caja_10m", "caja_500m", "socios_50k", "rep_90", "once_80", "dt_3", "fairplay_1", "ideal_5", "primer_dia", "x", ""]]]],
+	["res://nucleo/retos.gd", "datos", "nuc_datos_reto", [["s", ["david", "ascenso", "deuda", "cantera", "titulo", "x", ""]]]],
+	["res://nucleo/ropero_dt.gd", "articulo", "nuc_articulo_ropero", [["s", ["camiseta_club", "bufanda_club", "gorra_club", "chandal", "botines", "balon", "balon_playa", "x", ""]]]],
+	["res://nucleo/carrera_momentos.gd", "desenlace", "nuc_desenlace_momento", [["s", ["remate", "mano", "pase", "robo", "entrada", "despeje", "parada", "vuelo", "salida", "falta", "cabezazo", "centro", "cobertura", "penal", "pies"]], ["f", 0.0, 1.0, [0.6, 1.0, 0.1]]]],
 ]
 
 ## Los valores de un argumento: bordes y puntos de cambio primero, el resto al azar.

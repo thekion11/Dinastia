@@ -17,6 +17,13 @@ const LISTA := [
 ]
 
 static func datos(id: String) -> Array:
+	var nat := Nativo.de("nuc_datos_reto")
+	if nat != null:
+		return nat.nuc_datos_reto(id)
+	return datos_gd(id)
+
+## Gemela GDScript de `nuc_datos_reto` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func datos_gd(id: String) -> Array:
 	for r: Array in LISTA:
 		if String(r[0]) == id:
 			return r

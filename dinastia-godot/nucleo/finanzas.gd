@@ -385,6 +385,13 @@ const CAMPANAS := [
 ]
 
 static func def_campana(clave: String) -> Array:
+	var nat := Nativo.de("nuc_def_campana")
+	if nat != null:
+		return nat.nuc_def_campana(clave)
+	return def_campana_gd(clave)
+
+## Gemela GDScript de `nuc_def_campana` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func def_campana_gd(clave: String) -> Array:
 	for f: Array in CAMPANAS:
 		if String(f[0]) == clave:
 			return f

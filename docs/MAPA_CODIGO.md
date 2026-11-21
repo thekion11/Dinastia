@@ -4,11 +4,11 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2596 archivos (.gd, .cpp, .h), 371362 líneas, 1013 clases con nombre.
+Total: 2597 archivos (.gd, .cpp, .h), 371616 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
-48 archivos, 8823 líneas. Carpetas: `nativo/src`.
+49 archivos, 8988 líneas. Carpetas: `nativo/src`.
 
 Cada función es copia exacta de su gemela GDScript (regla de la extensión). Archivos por tamaño:
 
@@ -29,7 +29,7 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 
 ## La Ruta (modo jugador)
 
-40 archivos, 5637 líneas. Carpetas: `nucleo`, `ui/carrera`.
+40 archivos, 5651 líneas. Carpetas: `nucleo`, `ui/carrera`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -39,7 +39,7 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 | `CarreraPortero` | `nucleo/carrera_jugador_portero.gd` | 63 | 11 |  |
 | `CarreraEstilo` | `nucleo/carrera_estilo.gd` | 126 | 9 |  |
 | `CarreraEventosRuta` | `nucleo/carrera_eventos_ruta.gd` | 147 | 9 |  |
-| `CarreraHabilidad` | `nucleo/carrera_habilidad.gd` | 250 | 9 |  |
+| `CarreraHabilidad` | `nucleo/carrera_habilidad.gd` | 257 | 9 |  |
 | `RutaSub` | `ui/carrera/ruta_sub.gd` | 136 | 9 |  |
 | `CarreraVida` | `nucleo/carrera_vida.gd` | 84 | 8 |  |
 | `RutaEstilo` | `ui/carrera/ruta_estilo.gd` | 364 | 8 |  |
@@ -137,13 +137,13 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1260 archivos, 121413 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1260 archivos, 121425 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
 ## Núcleo: mundo, gestión y datos
 
-257 archivos, 53028 líneas. Carpetas: `nucleo`.
+257 archivos, 53091 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -151,11 +151,11 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | `Jugador` | `nucleo/jugador.gd` | 32 | 482 | jugador_p1.gd |
 | `Liga` | `nucleo/liga.gd` | 235 | 200 |  |
 | `Nombres` | `nucleo/nombres.gd` | 183 | 171 |  |
-| `Nativo` | `nucleo/nativo.gd` | 29 | 119 |  |
+| `Nativo` | `nucleo/nativo.gd` | 29 | 124 |  |
 | `Partida` | `nucleo/partida.gd` | 261 | 119 | partida_p2.gd ← partida_p1.gd |
 | `Copa` | `nucleo/copa.gd` | 348 | 95 |  |
 | `Mercado` | `nucleo/mercado.gd` | 64 | 92 | mercado_p1.gd |
-| `Finanzas` | `nucleo/finanzas.gd` | 391 | 91 |  |
+| `Finanzas` | `nucleo/finanzas.gd` | 398 | 91 |  |
 | `Roles` | `nucleo/roles.gd` | 357 | 79 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
 | `Prensa` | `nucleo/prensa.gd` | 393 | 76 | prensa_narra.gd ← prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
 | `Calendario` | `nucleo/calendario.gd` | 78 | 70 | calendario_p1.gd |

@@ -102,4 +102,17 @@
 	int64_t nuc_ocupacion_recorrido(const String &r, int64_t vuelta, int64_t minuto_dia, int64_t dia) const;
 	String nuc_mejor_inverso(const String &actual, const String &nueva, const String &traduccion) const;
 	String nuc_vuelta_recorrido(const String &num) const;
+	// 7.ª tanda (puras_nucleo7.cpp: tablas `const` del propio archivo, generadas por herramientas/generar_tablas_puras.py)
+	static void _bind_puras7();
+	String nuc_zona_habilidad(const String &hab) const;
+	double nuc_ritmo_fuego(bool hay_presion) const;
+	Dictionary nuc_elegir_expendedora(int64_t energia, int64_t hambre) const;
+	Dictionary nuc_elegir_gasolinera(int64_t hambre) const;
+	Array nuc_def_corner(const String &clave) const;
+	Array nuc_def_libre(const String &clave) const;
+	Array nuc_def_campana(const String &clave) const;
+	Array nuc_fila_logro(const String &clave) const;
+	Array nuc_datos_reto(const String &id) const;
+	Dictionary nuc_articulo_ropero(const String &id) const;
+	Dictionary nuc_desenlace_momento(const String &tipo, double q) const;
 	// --- fin funciones puras ---
