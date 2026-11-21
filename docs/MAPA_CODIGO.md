@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2598 archivos (.gd, .cpp, .h), 371749 líneas, 1013 clases con nombre.
+Total: 2598 archivos (.gd, .cpp, .h), 371757 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `l
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62799 líneas. Carpetas: `visor`.
+340 archivos, 62807 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
