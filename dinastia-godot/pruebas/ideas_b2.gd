@@ -1,21 +1,34 @@
 extends "res://pruebas/ideas_base_b.gd"
 ## Ideas del dueño (lote b, b2): árbitros, disciplina y federación.
 
+var _p: Partido
+
 func ejecutar() -> void:
 	var m := _mb(2702)
 	var c := m.mi_club()
 	var rival: Club = m.ligas[0].clubes[1]
 	var fe: Federacion = m.federacion
+	_b2_01_perfiles_arbitrales_80(m, c, rival, fe)
+	_b2_02_rbitro_estricto_penale(m, c, rival, fe)
+	_b2_03_designaci_n_conocida_d(m, c, rival, fe)
+	_b2_04_reclamo_formal_por_una(m, c, rival, fe)
+	_b2_05_expulsi_n_del_dt_no_di(m, c, rival, fe)
+	_b2_06_agresi_n_apelaci_n_813(m, c, rival, fe)
+	_b2_07_reglamento_por_pa_s_81(m, c, rival, fe)
+	_b2_08_licencia_de_club_831_8(m, c, rival, fe)
+	_b2_09_presidente_con_agenda_(m, c, rival, fe)
+
+func _b2_01_perfiles_arbitrales_80(m: Mundo, c: Club, rival: Club, fe: Federacion) -> void:
 	## Perfiles arbitrales (801): el casero solo castiga al visitante.
 	var perfiles := {}
 	for f: Array in Datos.tabla("ARBITROS"):
 		perfiles[String(f[1])] = true
 	_comprobar(perfiles.size() >= 4 and perfiles.has("casero") and perfiles.has("tarjetero"), "hay árbitros con perfiles distintos: %s (801)" % ", ".join(perfiles.keys()))
 	Azar.sembrar(21)
-	var p := Partido.new(c, rival)
-	p.once_local = c.once()
-	p.once_visita = rival.once()
-	p.arbitro = {"nombre": "Árbitro X", "perfil": "casero"}
+	_p = Partido.new(c, rival)
+	_p.once_local = c.once()
+	_p.once_visita = rival.once()
+	_p.arbitro = {"nombre": "Árbitro X", "perfil": "casero"}
 	var am_l := 0
 	var am_v := 0
 	for j in c.plantilla:
@@ -23,25 +36,27 @@ func ejecutar() -> void:
 	for j in rival.plantilla:
 		j.amarillas = 0
 	for i in 3000:
-		p._chequeo_arbitral()
+		_p._chequeo_arbitral()
 	for j in c.plantilla:
 		am_l += j.amarillas
 	for j in rival.plantilla:
 		am_v += j.amarillas
 	_comprobar(am_v > 5 and am_l == 0, "el árbitro casero solo amonesta al visitante: %d vs %d (801)" % [am_v, am_l])
+
+func _b2_02_rbitro_estricto_penale(m: Mundo, c: Club, rival: Club, fe: Federacion) -> void:
 	## Árbitro estricto: penales que generan decisión polémica (806); el VAR los recorta (805).
-	p.arbitro = {"nombre": "Árbitro Y", "perfil": "estricto"}
+	_p.arbitro = {"nombre": "Árbitro Y", "perfil": "estricto"}
 	var decisiones: Array[int] = [0]
 	var cuenta := func(_t: String, _mi: int) -> void: decisiones[0] += 1
-	p.decision_arbitral.connect(cuenta)
+	_p.decision_arbitral.connect(cuenta)
 	Partido.ctx_factor_tarjetas = 1.0
 	for i in 6000:
-		p._chequeo_arbitral()
+		_p._chequeo_arbitral()
 	var sin_var := decisiones[0]
 	decisiones[0] = 0
 	Partido.ctx_factor_tarjetas = 0.5
 	for i in 6000:
-		p._chequeo_arbitral()
+		_p._chequeo_arbitral()
 	var con_var := decisiones[0]
 	Partido.ctx_factor_tarjetas = 1.0
 	_comprobar(sin_var > 5, "un árbitro estricto cobra penales polémicos (806): %d" % sin_var)
@@ -50,6 +65,8 @@ func ejecutar() -> void:
 	_comprobar(is_equal_approx(fe.factor_tarjetas(), 0.5), "el VAR votado recorta tarjetas a la mitad (805)")
 	_comprobar("VAR en toda la categoría" in fe.reglas_vigentes("CHI"), "y el reglamento consultable lo muestra (805, 819)")
 	fe.var_activo = false
+
+func _b2_03_designaci_n_conocida_d(m: Mundo, c: Club, rival: Club, fe: Federacion) -> void:
 	## Designación conocida de antemano (802) e historial con cada árbitro (803).
 	var a1 := Previa.arbitro_de("c7", 5)
 	_comprobar(a1 == Previa.arbitro_de("c7", 5) and String(a1["nombre"]) != "" and String(a1["descripcion"]) != "", "el árbitro de la previa es siempre el mismo y trae descripción (802)")
@@ -61,6 +78,8 @@ func ejecutar() -> void:
 	fe.anotar_arbitro("Árbitro Z", "casero", 1, 1)
 	fe.anotar_arbitro("Árbitro Z", "casero", 0, 3)
 	_comprobar(fe.texto_arbitro("Árbitro Z") == "Con él: 3 PJ · 1G 1E 1P" and fe.texto_arbitro("Nadie") == "", "el historial con cada árbitro cuenta G/E/P (803)")
+
+func _b2_04_reclamo_formal_por_una(m: Mundo, c: Club, rival: Club, fe: Federacion) -> void:
 	## Reclamo formal por una designación (804) y su multa (807).
 	var multas := 0
 	var acogidos := 0
@@ -77,6 +96,8 @@ func ejecutar() -> void:
 		elif String(r["titulo"]) == "Reclamo acogido":
 			acogidos += 1
 	_comprobar(multas >= 3 and acogidos >= 3 and m.prensa.arbitro_polemico == "", "reclamar es una apuesta: %d multas / %d acogidos (804, 807)" % [multas, acogidos])
+
+func _b2_05_expulsi_n_del_dt_no_di(m: Mundo, c: Club, rival: Club, fe: Federacion) -> void:
 	## Expulsión del DT: no dirige el partido siguiente (808).
 	fe.sancionar_dt(2)
 	_comprobar(not fe.dt_sancionado(), "en el partido de la expulsión aún no cuenta (808)")
@@ -85,6 +106,8 @@ func ejecutar() -> void:
 	fe.cumplir_sancion_dt()
 	fe.cumplir_sancion_dt()
 	_comprobar(not fe.dt_sancionado(), "y cumplida la sanción vuelves a la banda (808)")
+
+func _b2_06_agresi_n_apelaci_n_813(m: Mundo, c: Club, rival: Club, fe: Federacion) -> void:
 	## Agresión, apelación (813, 818) y dopaje (817).
 	var jug: Jugador = c.plantilla[3]
 	jug.suspension = 0
@@ -111,6 +134,8 @@ func ejecutar() -> void:
 				sancionados += 1
 		_comprobar(sancionados >= 1 and escandalos[0] >= 15 and int(positivo["fechas"]) >= 8 and String(fe.casos[0]["tipo"]) == "dopaje",
 			"el positivo suspende 8+ fechas, abre caso y dispara escándalo %d (817)" % escandalos[0])
+
+func _b2_07_reglamento_por_pa_s_81(m: Mundo, c: Club, rival: Club, fe: Federacion) -> void:
 	## Reglamento por país (819) y alineación indebida (826, 827).
 	_comprobar(not fe.reglas_vigentes("CHI").is_empty() and fe.reglas_vigentes("CHI")[0] is String, "el reglamento del país se consulta en frases (819)")
 	var viejos: Array[Jugador] = []
@@ -123,6 +148,8 @@ func ejecutar() -> void:
 	lg.tabla_puntos[c.id]["pts"] = 10
 	lg.sancionar(c.id, 3)
 	_comprobar(int(lg.tabla_puntos[c.id]["pts"]) == 7 and int(lg.tabla_puntos[c.id]["sancion"]) == 3, "la sanción quita puntos y queda anotada (827)")
+
+func _b2_08_licencia_de_club_831_8(m: Mundo, c: Club, rival: Club, fe: Federacion) -> void:
 	## Licencia de club (831-834).
 	var ob: Instalaciones = m.obras
 	c.estadio_aforo = 30000
@@ -145,6 +172,8 @@ func ejecutar() -> void:
 	fe.semanas_en_rojo = 0
 	var fallos_ok := (fe.auditoria_anual(c, ob, 2031)["fallos"] as Array).size()
 	_comprobar((fe.licencia == "vigente") == (fallos_ok == 0) and (fe.licencia == "condicional") == (fallos_ok in [1, 2]), "y arreglando papeles la licencia mejora (834): %s con %d fallos" % [fe.licencia, fallos_ok])
+
+func _b2_09_presidente_con_agenda_(m: Mundo, c: Club, rival: Club, fe: Federacion) -> void:
 	## Presidente con agenda (837).
 	fe.presidente = {}
 	_comprobar(fe.revisar_presidencia(2030) and fe.presidente.has("agenda") and fe.presidente.has("nombre"), "la liga elige presidente con agenda (837)")
@@ -153,3 +182,4 @@ func ejecutar() -> void:
 		if fe.agenda_empuja(k):
 			empuja += 1
 	_comprobar(empuja >= 2 and not fe.revisar_presidencia(2031), "su agenda empuja mociones concretas y el mandato dura (837): %d" % empuja)
+
