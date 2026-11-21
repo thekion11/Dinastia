@@ -252,35 +252,7 @@ func vender(j: Jugador, comprador: Club, monto: int, pct_futuro: int = 0) -> Dic
 	## cuando hacia falta caja, hoy toca pagarlo: es la letra pequena de aquel
 	## dinero facil, y se cobra AQUI y no en la pantalla, para que se descuente
 	## tambien cuando la venta la cierra la IA o una clausula.
-	var pct_fondo := participacion_de(j)
-	if pct_fondo > 0 and mio:
-		var del_fondo := int(round(float(neto) * float(pct_fondo) / 100.0))
-		if del_fondo > 0:
-			vendedor.mover_saldo(-del_fondo)
-			movimiento.emit("Al fondo de inversión por %s (%d%%)" % [j.nombre, pct_fondo], -del_fondo)
-			noticia.emit("El fondo cobra su parte",
-				"De los %s de la venta de %s, %s se van al fondo que compro el %d%% de sus derechos." % [
-					Cesiones.dinero(neto), j.nombre, Cesiones.dinero(del_fondo), pct_fondo])
-		participaciones.erase(j.id)
-
-	## La deuda pendiente por él, si la hay.
-	var pagado := 0
-	var d := porcentaje_pendiente(j.id)
-	if not d.is_empty() and int(d.get("pct", 0)) > 0:
-		var dueno: Club = m.clubes.get(String(d["club"]))
-		var suyo := int(d["pct"])
-		pagado = int(round(float(neto) * float(suyo) / 100.0))
-		if pagado > 0:
-			vendedor.mover_saldo(-pagado)
-			if dueno != null:
-				dueno.mover_saldo(pagado)
-			if mio:
-				var nombre_dueno := dueno.nombre if dueno != null else "su club anterior"
-				movimiento.emit("%% de venta futura a %s: %s" % [nombre_dueno, j.nombre], -pagado)
-				noticia.emit("Te toca pagar el porcentaje pactado",
-					"%s se había guardado el %d%% de la próxima venta de %s. De los %s que entran, %s salen directos para ellos." % [
-						nombre_dueno, suyo, j.nombre, dinero(neto), dinero(pagado)])
-		porcentajes.erase(j.id)
+	var pagado := _pagar_fondo_y_deuda(j, m, vendedor, mio, neto)
 
 	vendedor.soltar(j)
 	comprador.fichar(j)
@@ -437,3 +409,36 @@ func pagar_cuotas(semana: int, pagador: Club) -> Array[Dictionary]:
 			noticia.emit("Traspaso saldado",
 				"Pagada la última cuota por %s." % String(p["jugador"]))
 	return salida
+
+## Lo que se lleva el fondo de inversión y el porcentaje de la venta futura que se debe a un club anterior. Devuelve lo pagado a terceros.
+func _pagar_fondo_y_deuda(j: Jugador, m: Mundo, vendedor: Club, mio: bool, neto: int) -> int:
+	var pct_fondo := participacion_de(j)
+	if pct_fondo > 0 and mio:
+		var del_fondo := int(round(float(neto) * float(pct_fondo) / 100.0))
+		if del_fondo > 0:
+			vendedor.mover_saldo(-del_fondo)
+			movimiento.emit("Al fondo de inversión por %s (%d%%)" % [j.nombre, pct_fondo], -del_fondo)
+			noticia.emit("El fondo cobra su parte",
+				"De los %s de la venta de %s, %s se van al fondo que compro el %d%% de sus derechos." % [
+					Cesiones.dinero(neto), j.nombre, Cesiones.dinero(del_fondo), pct_fondo])
+		participaciones.erase(j.id)
+
+	## La deuda pendiente por él, si la hay.
+	var pagado := 0
+	var d := porcentaje_pendiente(j.id)
+	if not d.is_empty() and int(d.get("pct", 0)) > 0:
+		var dueno: Club = m.clubes.get(String(d["club"]))
+		var suyo := int(d["pct"])
+		pagado = int(round(float(neto) * float(suyo) / 100.0))
+		if pagado > 0:
+			vendedor.mover_saldo(-pagado)
+			if dueno != null:
+				dueno.mover_saldo(pagado)
+			if mio:
+				var nombre_dueno := dueno.nombre if dueno != null else "su club anterior"
+				movimiento.emit("%% de venta futura a %s: %s" % [nombre_dueno, j.nombre], -pagado)
+				noticia.emit("Te toca pagar el porcentaje pactado",
+					"%s se había guardado el %d%% de la próxima venta de %s. De los %s que entran, %s salen directos para ellos." % [
+						nombre_dueno, suyo, j.nombre, dinero(neto), dinero(pagado)])
+		porcentajes.erase(j.id)
+	return pagado

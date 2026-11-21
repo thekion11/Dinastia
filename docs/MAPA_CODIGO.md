@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2623 archivos (.gd, .cpp, .h), 374725 líneas, 1013 clases con nombre.
+Total: 2623 archivos (.gd, .cpp, .h), 374730 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -143,11 +143,11 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 
 ## Núcleo: mundo, gestión y datos
 
-258 archivos, 53283 líneas. Carpetas: `nucleo`.
+258 archivos, 53288 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Mundo` | `nucleo/mundo.gd` | 158 | 942 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
+| `Mundo` | `nucleo/mundo.gd` | 158 | 943 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
 | `Jugador` | `nucleo/jugador.gd` | 32 | 494 | jugador_p1.gd |
 | `Liga` | `nucleo/liga.gd` | 235 | 206 |  |
 | `Nombres` | `nucleo/nombres.gd` | 183 | 172 |  |
@@ -162,7 +162,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | `CargaCiudad` | `nucleo/carga_ciudad.gd` | 14 | 67 |  |
 | `Cantera` | `nucleo/cantera.gd` | 233 | 65 | cantera_p3.gd ← cantera_p2.gd ← cantera_p1.gd |
 
-Cerca del tope (≥ 400 líneas): `roles_p4.gd` (450), `leyes_pais.gd` (449), `mundo_p1.gd` (449), `partida_p1.gd` (448), `musica.gd` (446), `comercial.gd` (444), `cantera_p1.gd` (442), `ciudad_p1.gd` (442), `idiomas_p1.gd` (442), `roles_p1.gd` (442).
+Cerca del tope (≥ 400 líneas): `roles_p4.gd` (450), `leyes_pais.gd` (449), `mundo_p1.gd` (449), `partida_p1.gd` (448), `musica.gd` (446), `cesiones_p2.gd` (444), `comercial.gd` (444), `cantera_p1.gd` (442), `ciudad_p1.gd` (442), `idiomas_p1.gd` (442).
 
 ## Visor: 3D, cámaras y efectos
 
