@@ -357,6 +357,13 @@ func _probar_fun_catalogos_y_calles_03() -> void:
 		if EventosFecha.es_partido({"tipo": t}) != bool(tipos[t]):
 			mal_tipo.append(t)
 	_comprobar(mal_tipo.is_empty(), "es_partido: por tipo de evento (%s)" % str(mal_tipo))
+## Los feriados de ESP, ARG y USA caen en la fecha del día; si no, se anota el país.
+func _fc4_feriados(fe: Dictionary, sem: int, d: int, mal_dia: Array) -> void:
+	for pais: String in ["ESP", "ARG", "USA"]:
+		for x: Dictionary in Calendario.del_dia(pais, 2031, sem, d):
+			if int(x["mes"]) != int(fe["month"]) or int(x["dia"]) != int(fe["day"]):
+				mal_dia.append("%s %d/%d" % [pais, sem, d])
+
 func _probar_fun_catalogos_y_calles_04() -> void:
 	## Calendario.del_dia: solo los feriados cuyo mes y día coinciden con la fecha de (año, semana, día). El 1 de mayo existe salvo en USA, AUS, JPN y ENG.
 	var mal_dia := []
@@ -366,10 +373,7 @@ func _probar_fun_catalogos_y_calles_04() -> void:
 			var fe := Calendario.fecha(2031, sem, d)
 			if int(fe["month"]) == 5 and int(fe["day"]) == 1:
 				mayo = {"sem": sem, "dia": d}
-			for pais: String in ["ESP", "ARG", "USA"]:
-				for x: Dictionary in Calendario.del_dia(pais, 2031, sem, d):
-					if int(x["mes"]) != int(fe["month"]) or int(x["dia"]) != int(fe["day"]):
-						mal_dia.append("%s %d/%d" % [pais, sem, d])
+			_fc4_feriados(fe, sem, d, mal_dia)
 	_comprobar(mal_dia.is_empty() and not mayo.is_empty(), "del_dia: cada feriado cae en su fecha (%s)" % str(mal_dia))
 	if not mayo.is_empty():
 		var hay: Dictionary = {}
