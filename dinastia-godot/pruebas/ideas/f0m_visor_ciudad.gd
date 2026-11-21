@@ -155,6 +155,18 @@ func _probar_control_partido() -> void:
 	var modos: Array = []
 	ctl.modo_cambiado.connect(func(v: bool) -> void: modos.append(v))
 	ctl.setup([a, b, c, d, rival, arb, por], balon, null, true, null)
+	_cp_seleccion(ctl, a, por)
+	var cursor := ctl.get_node_or_null("CursorJugador") as Node3D
+	_cp_modo_y_cursor(ctl, cursor, modos)
+	_cp_conducir(ctl, a, balon)
+	_cp_pase_corto(ctl, a, balon)
+	_cp_pase_largo(ctl, a, balon)
+	_cp_disparo_y_barrida(ctl, a, balon)
+	raiz.free()
+	_comprobar(_nodos() == n0, "sin nodos sueltos")
+
+
+func _cp_seleccion(ctl: ControlPartido, a: Dictionary, por: Dictionary) -> void:
 	_comprobar(ctl.jugadores_equipo.size() == 5, "controla a los suyos: ni al rival ni al árbitro (%d)" % ctl.jugadores_equipo.size())
 	_comprobar(String(ctl.jugador_activo.get("id", "")) == "POR", "elige al más cercano al balón (el portero, a bocajarro)")
 	(por["node"] as Node3D).position = Vector3(6.5, 0, 0.6)
@@ -162,12 +174,15 @@ func _probar_control_partido() -> void:
 	ctl.seleccionar_mas_cercano_al_balon()
 	_comprobar(String(ctl.jugador_activo.get("id", "")) == "A", "pero al portero lejos (> 6 m) no lo coge aunque esté más cerca")
 	(a["node"] as Node3D).position = Vector3.ZERO
-	var cursor := ctl.get_node_or_null("CursorJugador") as Node3D
+
+func _cp_modo_y_cursor(ctl: ControlPartido, cursor: Node3D, modos: Array) -> void:
 	_comprobar(cursor != null and cursor.get_child_count() == 2 and not cursor.visible and modos == [false], "cursor (flecha y anillo) apagado al empezar")
 	ctl.alternar_modo()
 	_comprobar(ctl.activo and cursor.visible and modos == [false, true], "alternar_modo() lo enciende")
 	ctl._process(0.016)
 	_comprobar(cursor.global_position.is_equal_approx(Vector3.ZERO) and ctl.tiene_posesion, "el cursor sigue a su jugador, que tiene el balón al pie")
+
+func _cp_conducir(ctl: ControlPartido, a: Dictionary, balon: Balon3D) -> void:
 	## Correr hacia -Z (W) con el balón: el propio _process orienta al jugador
 	## hacia donde va, y la conducción tiene que llevar el balón DELANTE.
 	var w := InputEventKey.new()
@@ -184,6 +199,9 @@ func _probar_control_partido() -> void:
 	var na: Node3D = a["node"]
 	_comprobar(na.position.z < -5.0, "con W corre hacia -Z (z = %.1f)" % na.position.z)
 	_comprobar(balon.position.z < na.position.z, "y conduce el balón por delante, no a la espalda (balón %.2f, jugador %.2f)" % [balon.position.z, na.position.z])
+
+func _cp_pase_corto(ctl: ControlPartido, a: Dictionary, balon: Balon3D) -> void:
+	var na: Node3D = a["node"]
 	## Pase corto mirando a +Z (como queda tras correr hacia +Z): al compañero de delante.
 	na.position = Vector3.ZERO
 	na.rotation = Vector3.ZERO
@@ -194,10 +212,15 @@ func _probar_control_partido() -> void:
 	ctl._ejecutar_pase_corto()
 	_comprobar(pases.size() == 1 and String(ctl.jugador_activo.get("id", "")) == "B", "pase corto al compañero que tiene delante (no al de atrás) → %s" % str(ctl.jugador_activo.get("id", "")))
 	_comprobar(balon._destino.is_equal_approx(Vector3(0, balon.radio, 12)), "y el balón va a sus pies")
+
+func _cp_pase_largo(ctl: ControlPartido, a: Dictionary, balon: Balon3D) -> void:
 	ctl.seleccionar_jugador(a)
 	balon.position = Vector3(0, 0.11, 0.6)
 	ctl._ejecutar_pase_largo()
 	_comprobar(balon._destino.z > 20.0, "el pase largo sale hacia delante (z = %.1f)" % balon._destino.z)
+
+func _cp_disparo_y_barrida(ctl: ControlPartido, a: Dictionary, balon: Balon3D) -> void:
+	var na: Node3D = a["node"]
 	ctl._ejecutar_disparo(0.8)
 	var al_arco := (Vector3(0, 0, -52.5) - na.global_position).normalized()
 	_comprobar(na.global_transform.basis.z.dot(al_arco) > 0.9, "al tirar, el jugador queda de cara al arco rival")
@@ -212,8 +235,6 @@ func _probar_control_partido() -> void:
 	na.position = Vector3.ZERO
 	ctl._ejecutar_barrida()
 	_comprobar(is_equal_approx(na.position.z, 2.4), "la barrida lo lanza 2,4 m hacia delante (z = %.2f)" % na.position.z)
-	raiz.free()
-	_comprobar(_nodos() == n0, "sin nodos sueltos")
 
 # -------------------------------------------------------------------- Mini3D
 
