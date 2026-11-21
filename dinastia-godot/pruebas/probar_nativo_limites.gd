@@ -172,13 +172,7 @@ static func _equipo(nat: Object, f: Array[String], n: Array) -> void:
 	## posicion_formacion con tácticas en los extremos (alto == bajo si ow = dw = 0: 0/0 = NaN en las dos), ints, lado 0, balón enorme, puesto como StringName.
 	for mz: Dictionary in [ceros, unos, enteros, viva]:
 		for puesto: Variant in ["MC", "DC", "POR", "XX", &"DFC"]:
-			for lado in [1.0, -1.0, 0.0]:
-				for bx in [0.0, 1e6, -1e6]:
-					var e := {"forma": Vector2(0.5, -0.5), "puesto": puesto, "lado": lado, "pos": Vector2.ZERO, "foco": Vector2(10, 5), "balon_x_lento": bx, "balon_y_lento": -bx, "balon_3s": Vector2(3, 1),
-						"balon_2s": Vector2(1, 1), "posesion_desvanecida": 0.5, "lado_posesion_medio": 5.0, "ofensividad": 3.0, "viva": viva, "contra": 0.5, "mezcla": mz, "trampa_x": 0.0}
-					_chk(f, n, "formación %s %s lado %s bx %s" % [mz.get("od"), puesto, lado, bx], LeagueNucleo.posicion_formacion(e), nat.league_posicion_formacion(e))
-					e["balon_3s"] = Vector2(NAN, 1)
-					_chk(f, n, "formación con NaN", LeagueNucleo.posicion_formacion(e), nat.league_posicion_formacion(e))
+			_formacion_lados(nat, f, n, viva, mz, puesto)
 	## Historial: ninguna, una, dos entradas y lleno; `acum` sin rehacer (vacío).
 	var e0 := LeagueEquipo.new(1.0)
 	var e1 := LeagueEquipo.new(-1.0)
@@ -211,6 +205,18 @@ static func _equipo(nat: Object, f: Array[String], n: Array) -> void:
 						_chk(f, n, "campo a %s esc %s ex %s pot %s" % [a, esc, ex, pot], LeagueNucleo.movimiento_campo_gd(campo, actual, a), nat.league_movimiento_campo(campo, actual, a))
 	for campo: Array in [[[Vector2(4, 4), 1, 0, 1, 10, 1]], [[Vector2(NAN, 4), false, false, 1.0, 10.0, 1.0]], [[Vector2(1, 1), false, true, 0.0, 1.0, 1.0]]]:
 		_chk(f, n, "campo ints/NaN/potencia 0", LeagueNucleo.movimiento_campo_gd(campo, Vector2(1, 1), 1.0), nat.league_movimiento_campo(campo, Vector2(1, 1), 1.0))
+
+## Posición de formación con lados, balón y NaN: la extensión y GDScript tienen que dar lo mismo.
+static func _formacion_lados(nat: Object, f: Array[String], n: Array, viva: Dictionary,
+		mz: Dictionary, puesto: Variant) -> void:
+	for lado in [1.0, -1.0, 0.0]:
+		for bx in [0.0, 1e6, -1e6]:
+			var e := {"forma": Vector2(0.5, -0.5), "puesto": puesto, "lado": lado, "pos": Vector2.ZERO, "foco": Vector2(10, 5), "balon_x_lento": bx, "balon_y_lento": -bx, "balon_3s": Vector2(3, 1),
+				"balon_2s": Vector2(1, 1), "posesion_desvanecida": 0.5, "lado_posesion_medio": 5.0, "ofensividad": 3.0, "viva": viva, "contra": 0.5, "mezcla": mz, "trampa_x": 0.0}
+			_chk(f, n, "formación %s %s lado %s bx %s" % [mz.get("od"), puesto, lado, bx], LeagueNucleo.posicion_formacion(e), nat.league_posicion_formacion(e))
+			e["balon_3s"] = Vector2(NAN, 1)
+			_chk(f, n, "formación con NaN", LeagueNucleo.posicion_formacion(e), nat.league_posicion_formacion(e))
+
 
 static func _apoyo(nat: Object, f: Array[String], n: Array) -> void:
 	var base := {"base": Vector2(10, 5), "pos": Vector2(0, 0), "mov": Vector2(1, 1), "lado": 1.0, "mente": 0.5, "puesto": "MC", "correr": false, "adelantado": false, "principal": Vector2(20, 0), "es_principal": false,
