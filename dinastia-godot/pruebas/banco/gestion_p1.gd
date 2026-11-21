@@ -252,7 +252,17 @@ func _probar_obras() -> void:
 	var o := m.obras
 	_linea("  %d obras en el catalogo" % Instalaciones.CATALOGO.size())
 	_comprobar(Instalaciones.CATALOGO.size() == 19, "estan las 19 instalaciones del HTML")
+	_obras_construccion(o, c)
+	_obras_asistencia(o, c)
+	_obras_tribunas(o, c)
+	var total := _obras_ingresos(o, c)
+	_obras_camisetas(o, c)
+	_obras_mantenimiento(o, c, total)
+	_obras_imprevistos(o, c)
+	_obras_efectos(o)
+	_obras_coste_nivel(o, c)
 
+func _obras_construccion(o: Instalaciones, c: Club) -> void:
 	## Las obras NO son instantaneas: es lo que impide comprarlo todo el primer
 	## dia y que el sistema desaparezca. En el HTML se cambio a proposito en la
 	## v2.5 justo por eso.
@@ -273,6 +283,7 @@ func _probar_obras() -> void:
 	_comprobar(o.nivel("cal") == 1, "la obra termina en su plazo (%d semanas%s)" % [o.semanas_de("cal"), " + %d de retraso" % retrasos if retrasos > 0 else ""])
 	_comprobar(not o.en_obra("cal"), "y deja de estar en marcha")
 
+func _obras_asistencia(o: Instalaciones, c: Club) -> void:
 	## Y lo que de verdad importa: que se NOTE. Una obra que no mueve un numero
 	## visible es un boton de gastar dinero.
 	var f_sin := Finanzas.new(c, 0.0)
@@ -281,6 +292,7 @@ func _probar_obras() -> void:
 		f_con.asistencia(), f_sin.asistencia()])
 	_comprobar(f_con.asistencia() > f_sin.asistencia(), "la calidad del estadio llena mas el estadio")
 
+func _obras_tribunas(o: Instalaciones, c: Club) -> void:
 	## Las tribunas cambian el aforo, y hay que poder construirlas varias veces
 	## sin que el aforo se multiplique cada vez que se carga la partida.
 	var aforo0 := c.estadio_aforo
@@ -293,18 +305,7 @@ func _probar_obras() -> void:
 	o.aplicar(c)
 	_comprobar(c.estadio_aforo == aforo2, "aplicarlo tres veces no multiplica el aforo")
 
-	## Los ingresos que solo existen con ladrillo.
-	o.niveles["com"] = 2
-	o.niveles["museo"] = 1
-	o.ultima_asistencia = 20000
-	o.niveles["park"] = 3
-	var ing := o.ingresos_del_mes(c)
-	var total := 0
-	for i: Dictionary in ing:
-		total += int(i["monto"])
-		_linea("  %s: %s al mes" % [String(i["concepto"]), _dinero(int(i["monto"]))])
-	_comprobar(ing.size() == 3, "la tienda, el museo y los estacionamientos dan ingresos")
-	_comprobar(total > 0, "y suman de verdad (%s)" % _dinero(total))
+func _obras_camisetas(o: Instalaciones, c: Club) -> void:
 	## M-224: la estrella del plantel vende camisetas.
 	var mejor_j: Jugador = c.plantilla[0]
 	var ovr0 := mejor_j.ovr
@@ -315,11 +316,8 @@ func _probar_obras() -> void:
 	var tienda_crack := int(o.ingresos_del_mes(c)[0]["monto"])
 	mejor_j.ovr = ovr0
 	_comprobar(tienda_crack > tienda_normal * 1.5, "con un crack de 90 la tienda vende más camisetas (%s → %s)" % [_dinero(tienda_normal), _dinero(tienda_crack)])
-	## M-227: lo construido se mantiene (cuesta cada mes, más cuanto más hay).
-	var mant := o.mantenimiento_del_mes(c.rep)
-	o.niveles["trib"] = 4
-	_comprobar(mant > 0 and o.mantenimiento_del_mes(c.rep) > mant, "el mantenimiento cuesta y crece con lo construido (%s → %s al mes)" % [_dinero(mant), _dinero(o.mantenimiento_del_mes(c.rep))])
-	_comprobar(mant < total * 3, "y no se come lo que rinden las obras (%s vs %s)" % [_dinero(mant), _dinero(total)])
+
+func _obras_imprevistos(o: Instalaciones, c: Club) -> void:
 	## M-228: imprevistos — como mucho uno por obra, y repetibles al recargar.
 	var imp := Instalaciones.new()
 	imp.niveles = o.niveles.duplicate()
@@ -333,6 +331,7 @@ func _probar_obras() -> void:
 			hubo += imp.ultimos_imprevistos.size()
 	_comprobar(hubo > 0 and hubo <= Instalaciones.CATALOGO.size(), "algunas obras tienen un imprevisto, nunca más de uno (%d)" % hubo)
 
+func _obras_efectos(o: Instalaciones) -> void:
 	## Cada efecto tiene una puerta por la que entra al juego. Si alguna devuelve
 	## siempre lo mismo, esa instalacion no hace nada.
 	o.niveles["med"] = 2
@@ -349,6 +348,7 @@ func _probar_obras() -> void:
 	o.niveles["huerto"] = 3
 	_comprobar(o.abarata_operacion() < 1.0, "el huerto abarata la operacion")
 
+func _obras_coste_nivel(o: Instalaciones, c: Club) -> void:
 	## El coste crece con el cuadrado del nivel: el quinto nivel tiene que ser
 	## una decision de club, no un tramite.
 	var c1 := o.coste("gim", c.rep)
@@ -356,6 +356,28 @@ func _probar_obras() -> void:
 	var c4 := o.coste("gim", c.rep)
 	_linea("  gimnasio: nivel 1 cuesta %s, nivel 4 cuesta %s" % [_dinero(c1), _dinero(c4)])
 	_comprobar(c4 > c1 * 3, "el cuarto nivel cuesta mucho mas que el primero")
+
+func _obras_ingresos(o: Instalaciones, c: Club) -> int:
+	## Los ingresos que solo existen con ladrillo.
+	o.niveles["com"] = 2
+	o.niveles["museo"] = 1
+	o.ultima_asistencia = 20000
+	o.niveles["park"] = 3
+	var ing := o.ingresos_del_mes(c)
+	var total := 0
+	for i: Dictionary in ing:
+		total += int(i["monto"])
+		_linea("  %s: %s al mes" % [String(i["concepto"]), _dinero(int(i["monto"]))])
+	_comprobar(ing.size() == 3, "la tienda, el museo y los estacionamientos dan ingresos")
+	_comprobar(total > 0, "y suman de verdad (%s)" % _dinero(total))
+	return total
+
+func _obras_mantenimiento(o: Instalaciones, c: Club, total: int) -> void:
+	## M-227: lo construido se mantiene (cuesta cada mes, más cuanto más hay).
+	var mant := o.mantenimiento_del_mes(c.rep)
+	o.niveles["trib"] = 4
+	_comprobar(mant > 0 and o.mantenimiento_del_mes(c.rep) > mant, "el mantenimiento cuesta y crece con lo construido (%s → %s al mes)" % [_dinero(mant), _dinero(o.mantenimiento_del_mes(c.rep))])
+	_comprobar(mant < total * 3, "y no se come lo que rinden las obras (%s vs %s)" % [_dinero(mant), _dinero(total)])
 
 func _probar_cantera() -> void:
 	_titulo("CANTERA: CAMADA, BECAS Y LINAJE")

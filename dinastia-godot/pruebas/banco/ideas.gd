@@ -22,14 +22,7 @@ func _probar_ideas_simulacion_del_partido() -> void:
 		while not p.terminado_ya:
 			p.simular_minuto()
 			if p.minuto == 60 and i % 4 == 0:
-				var sale: Jugador = p.once_local[5]
-				var entra: Jugador = null
-				for j: Jugador in a.plantilla:
-					if not p.once_local.has(j) and j.disponible():
-						entra = j
-						break
-				if entra != null and p.cambiar(sale, entra) == "":
-					cambios_ok += 1
+				cambios_ok += _cambio_al_60(p, a)
 		for e: Dictionary in p.cronica:
 			if String(e["tipo"]) == "gol":
 				goles += 1
@@ -46,6 +39,18 @@ func _probar_ideas_simulacion_del_partido() -> void:
 	_comprobar(posesiones_ok, "la posesión estimada es creíble en todos los partidos (309)")
 	_comprobar(mejores_ok, "siempre hay jugador del partido (MVP) y notas de los 22 (314)")
 	_comprobar(momentum_ok, "el momentum (barra de ambiente) se mantiene en rango (310)")
+
+## Cambio al minuto 60 (306): saca al quinto del once y mete al primer suplente disponible. Devuelve 1 si se hizo.
+func _cambio_al_60(p: Partido, a: Club) -> int:
+	var sale: Jugador = p.once_local[5]
+	var entra: Jugador = null
+	for j: Jugador in a.plantilla:
+		if not p.once_local.has(j) and j.disponible():
+			entra = j
+			break
+	if entra != null and p.cambiar(sale, entra) == "":
+		return 1
+	return 0
 
 func _probar_ideas_club_y_calendario_de_pretemporada() -> void:
 	_titulo("IDEAS DEL DUEÑO: lema del club, avión, pretemporada con gira, desbloqueo por reputación (284, 298, 343)")
