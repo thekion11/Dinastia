@@ -10,6 +10,61 @@ func _dist_segmento(p: Vector3, a: Vector3, b: Vector3) -> float:
 	var t := clampf((p - a).dot(ab) / maxf(ab.length_squared(), 0.0001), 0.0, 1.0)
 	return (p - (a + ab * t)).length()
 
+func _fb_pose(lista: Array) -> void:
+	for i in 6:
+		await get_tree().process_frame
+	for p: Dictionary in lista:
+		var ap: AnimationPlayer = p["anim"]
+		ap.seek(0.5, true)
+		ap.advance(0.0)
+
+func _fb_cuerpos(lista: Array) -> Dictionary:
+	var esq: Array = []
+	for p: Dictionary in lista:
+		esq.append(FutbolistaQ.esqueleto_de(p["node"]))
+	## Segmentos del cuerpo de cada jugador (hueso A, hueso B, radio): tronco, muslos y pantorrillas.
+	var cuerpo: Array = []
+	for j in lista.size():
+		var ej: Skeleton3D = esq[j]
+		var segs: Array = []
+		for par: Array in [["pelvis", "neck_01", 0.17], ["thigh_l", "calf_l", 0.10], ["thigh_r", "calf_r", 0.10], ["calf_l", "foot_l", 0.08], ["calf_r", "foot_r", 0.08]]:
+			var ia := ej.find_bone(String(par[0]))
+			var ib := ej.find_bone(String(par[1]))
+			if ia >= 0 and ib >= 0:
+				segs.append([ej.global_transform * ej.get_bone_global_pose(ia).origin, ej.global_transform * ej.get_bone_global_pose(ib).origin, float(par[2]), String(par[0])])
+		cuerpo.append(segs)
+	return {"esq": esq, "cuerpo": cuerpo}
+
+func _fb_detalle(esq: Array, lista: Array) -> void:
+	if OS.get_environment("FOTO_DETALLE") != "":
+		for i in [0, 1, 7, 8]:
+			var e: Skeleton3D = esq[i]
+			var cur: String = (lista[i]["anim"] as AnimationPlayer).assigned_animation
+			print("    [%d] %s pelvis %s mano_l %s mano_r %s" % [i, cur, str(e.global_transform * e.get_bone_global_pose(e.find_bone("pelvis")).origin), str(e.global_transform * e.get_bone_global_pose(e.find_bone("hand_l")).origin), str(e.global_transform * e.get_bone_global_pose(e.find_bone("hand_r")).origin)])
+
+func _fb_penetraciones(lista: Array, esq: Array, cuerpo: Array) -> Dictionary:
+	var ajenos := 0
+	var propios := 0
+	var peor := []
+	for i in lista.size():
+		var ei: Skeleton3D = esq[i]
+		for b: String in HUESOS_BRAZO:
+			var hb := ei.find_bone(b)
+			if hb < 0:
+				continue
+			var pos: Vector3 = ei.global_transform * ei.get_bone_global_pose(hb).origin
+			for j in lista.size():
+				for sg: Array in cuerpo[j]:
+					var d := _dist_segmento(pos, sg[0], sg[1])
+					if d < float(sg[2]) * (0.6 if i == j else 1.0):
+						if i == j:
+							propios += 1
+						else:
+							ajenos += 1
+						peor.append([d - float(sg[2]), i, j, "%s → %s" % [b, sg[3]]])
+	peor.sort_custom(func(x: Array, y: Array) -> bool: return x[0] < y[0])
+	return {"ajenos": ajenos, "propios": propios, "peor": peor}
+
 func _ready() -> void:
 	await get_tree().process_frame
 	_titulo("FOTO DE EQUIPO: BRAZOS")
@@ -32,51 +87,15 @@ func _ready() -> void:
 	var visibles := rivales.filter(func(p: Dictionary) -> bool: return (p["node"] as Node3D).visible).size()
 	_comprobar(visibles == 0, "el equipo visitante no sale en la foto del local (%d de %d visibles)" % [visibles, rivales.size()])
 	_comprobar(guardado.size() == 11, "se guardan los once locales para devolverlos (%d)" % guardado.size())
-	for i in 6:
-		await get_tree().process_frame
-	for p: Dictionary in lista:
-		var ap: AnimationPlayer = p["anim"]
-		ap.seek(0.5, true)
-		ap.advance(0.0)
-	var esq: Array = []
-	for p: Dictionary in lista:
-		esq.append(FutbolistaQ.esqueleto_de(p["node"]))
-	## Segmentos del cuerpo de cada jugador (hueso A, hueso B, radio): tronco, muslos y pantorrillas.
-	var cuerpo: Array = []
-	for j in lista.size():
-		var ej: Skeleton3D = esq[j]
-		var segs: Array = []
-		for par: Array in [["pelvis", "neck_01", 0.17], ["thigh_l", "calf_l", 0.10], ["thigh_r", "calf_r", 0.10], ["calf_l", "foot_l", 0.08], ["calf_r", "foot_r", 0.08]]:
-			var ia := ej.find_bone(String(par[0]))
-			var ib := ej.find_bone(String(par[1]))
-			if ia >= 0 and ib >= 0:
-				segs.append([ej.global_transform * ej.get_bone_global_pose(ia).origin, ej.global_transform * ej.get_bone_global_pose(ib).origin, float(par[2]), String(par[0])])
-		cuerpo.append(segs)
-	if OS.get_environment("FOTO_DETALLE") != "":
-		for i in [0, 1, 7, 8]:
-			var e: Skeleton3D = esq[i]
-			var cur: String = (lista[i]["anim"] as AnimationPlayer).assigned_animation
-			print("    [%d] %s pelvis %s mano_l %s mano_r %s" % [i, cur, str(e.global_transform * e.get_bone_global_pose(e.find_bone("pelvis")).origin), str(e.global_transform * e.get_bone_global_pose(e.find_bone("hand_l")).origin), str(e.global_transform * e.get_bone_global_pose(e.find_bone("hand_r")).origin)])
-	var ajenos := 0
-	var propios := 0
-	var peor := []
-	for i in lista.size():
-		var ei: Skeleton3D = esq[i]
-		for b: String in HUESOS_BRAZO:
-			var hb := ei.find_bone(b)
-			if hb < 0:
-				continue
-			var pos: Vector3 = ei.global_transform * ei.get_bone_global_pose(hb).origin
-			for j in lista.size():
-				for sg: Array in cuerpo[j]:
-					var d := _dist_segmento(pos, sg[0], sg[1])
-					if d < float(sg[2]) * (0.6 if i == j else 1.0):
-						if i == j:
-							propios += 1
-						else:
-							ajenos += 1
-						peor.append([d - float(sg[2]), i, j, "%s → %s" % [b, sg[3]]])
-	peor.sort_custom(func(x: Array, y: Array) -> bool: return x[0] < y[0])
+	await _fb_pose(lista)
+	var ce := _fb_cuerpos(lista)
+	var esq: Array = ce["esq"]
+	var cuerpo: Array = ce["cuerpo"]
+	_fb_detalle(esq, lista)
+	var pen := _fb_penetraciones(lista, esq, cuerpo)
+	var ajenos: int = pen["ajenos"]
+	var propios: int = pen["propios"]
+	var peor: Array = pen["peor"]
 	print("  partes del brazo dentro del cuerpo de un compañero: %d · dentro del propio: %d" % [ajenos, propios])
 	if OS.get_environment("FOTO_DETALLE") != "":
 		for x: Array in peor.slice(0, 12):
@@ -86,6 +105,7 @@ func _ready() -> void:
 	CeremoniaFoto.devolver(guardado, todos, anim)
 	var vuelven := rivales.filter(func(p: Dictionary) -> bool: return (p["node"] as Node3D).visible).size()
 	_comprobar(vuelven == rivales.size(), "al acabar la foto el rival reaparece (%d de %d)" % [vuelven, rivales.size()])
+
 	print("")
 	print("===== FIN. %d fallos =====" % _fallos.size())
 	get_tree().quit(0 if _fallos.is_empty() else 1)
