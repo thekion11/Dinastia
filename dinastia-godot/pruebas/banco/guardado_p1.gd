@@ -141,17 +141,24 @@ func _probar_guardado_seguro_06() -> void:
 ## y el cuadro de la copa. Sin guardarlos, todas las ligas volvian a ser primera
 ## -con el club que acababa de descender cobrando otra vez de primera- y el
 ## torneo de copa desaparecia sin que nada se quejara.
+
 func _comprobar_estado_cargado(m: Mundo, m2: Mundo) -> void:
 	var divs_ok := true
 	for i in m2.ligas.size():
 		if m2.ligas[i].div != m.ligas[i].div:
 			divs_ok = false
 	_comprobar(divs_ok, "vuelve la division de cada liga")
-	if m.copa == null:
+	if not _ecarg_copa(m, m2):
 		return
+	_ecarg_sistemas(m, m2)
+
+## Copa: el cuadro y los clubes vivos. Devuelve false si no hay copa (y se corta la comprobación).
+func _ecarg_copa(m: Mundo, m2: Mundo) -> bool:
+	if m.copa == null:
+		return false
 	_comprobar(m2.copa != null, "vuelve la copa")
 	if m2.copa == null:
-		return
+		return false
 	_comprobar(m2.copa.vivos.size() == m.copa.vivos.size() and m2.copa.ronda == m.copa.ronda,
 		"vuelve el cuadro de la copa (%d vivos, ronda %d)" % [m2.copa.vivos.size(), m2.copa.ronda])
 	var mismos := true
@@ -159,7 +166,9 @@ func _comprobar_estado_cargado(m: Mundo, m2: Mundo) -> void:
 		if m2.copa.vivos[i].id != m.copa.vivos[i].id:
 			mismos = false
 	_comprobar(mismos, "los clubes vivos son los mismos y en el mismo orden")
+	return true
 
+func _ecarg_sistemas(m: Mundo, m2: Mundo) -> void:
 	## Y los cuatro sistemas que solo existen para TU club. Sin guardarlos,
 	## cargar te devolvia con la confianza a 55, sin cuerpo tecnico, sin parte
 	## medico, sin logros y sin torneos continentales, y sin una sola queja.
