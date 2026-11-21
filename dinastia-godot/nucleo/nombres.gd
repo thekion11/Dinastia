@@ -154,6 +154,13 @@ static var _vetados: Dictionary = {}
 static var _vetados_listos := false
 
 static func huella(nombre: String) -> String:
+	var nat := Nativo.de("nuc_huella_nombre")
+	if nat != null:
+		return nat.nuc_huella_nombre(nombre)
+	return huella_gd(nombre)
+
+## Gemela GDScript de `nuc_huella_nombre` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func huella_gd(nombre: String) -> String:
 	return nombre.strip_edges().to_lower().md5_text().substr(0, 12)
 
 static func vetado(nombre: String) -> bool:

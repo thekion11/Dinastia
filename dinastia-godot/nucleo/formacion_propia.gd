@@ -102,6 +102,13 @@ static func mover(f: Dictionary, i: int, x: float, y: float) -> String:
 
 ## El nombre con el que se guarda (siempre con la estrella: no pisa nunca a una de serie).
 static func nombre_valido(nombre: String) -> String:
+	var nat := Nativo.de("nuc_nombre_valido_formacion")
+	if nat != null:
+		return nat.nuc_nombre_valido_formacion(nombre)
+	return nombre_valido_gd(nombre)
+
+## Gemela GDScript de `nuc_nombre_valido_formacion` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nombre_valido_gd(nombre: String) -> String:
 	var n := nombre.strip_edges().replace(PREFIJO, "").left(24)
 	return PREFIJO + (n if n != "" else "Mi formación")
 

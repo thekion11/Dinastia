@@ -98,6 +98,20 @@ const CASOS: Array = [
 	["res://nucleo/citas_p1.gd", "_h", "nuc_hash_abs", [["r", 12]]],
 	["res://nucleo/historia_club.gd", "_h", "nuc_hash_abs", [["r", 12]]],
 	["res://nucleo/clima.gd", "_hash", "nuc_hash_abs", [["r", 12]]],
+	## 6.ª tanda (versiones, nombres, recorridos con hash(Array) del motor)
+	["res://nucleo/actualizador.gd", "comparar", "nuc_comparar_version", [["s", ["0.9.2", "v0.9.10", "V1", "1.0", "0.9.2-beta", "10.2.3.4", "", "a", "1..2", "9999999999.1", " 0.9.2 ", "1.0.0", "0.10"]], ["s", ["0.9.2", "v0.9.10", "V1", "1.0", "0.9.2-beta", "10.2.3.4", "", "a", "1..2", "9999999999.1", " 0.9.2 ", "1.0.0", "0.10"]]]],
+	["res://nucleo/actualizador.gd", "nombre_archivo", "nuc_nombre_parche", [["s", ["0.9.2", "v0.9.10", "V1", "1.0", "0.9.2-beta", "10.2.3.4", "", "a", "1..2", "9999999999.1", " 0.9.2 ", "1.0.0", "0.10"]]]],
+	["res://nucleo/actualizador.gd", "ruta_destino", "nuc_ruta_parche", [["s", ["0.9.2", "v0.9.10", "V1", "1.0", "0.9.2-beta", "10.2.3.4", "", "a", "1..2", "9999999999.1", " 0.9.2 ", "1.0.0", "0.10"]]]],
+	["res://nucleo/nombres.gd", "huella", "nuc_huella_nombre", [["r", 20]]],
+	["res://nucleo/presets_tactica.gd", "limpiar_nombre", "nuc_limpiar_nombre_tactica", [["r", 40]]],
+	["res://nucleo/formacion_propia.gd", "nombre_valido", "nuc_nombre_valido_formacion", [["s", ["", "  ", "★ Mi", "x★ y", "★ ★ ★", "abcdefghijklmnopqrstuvwxyz0123", "Mi formación"]], ]],
+	["res://nucleo/formacion_propia.gd", "nombre_valido", "nuc_nombre_valido_formacion", [["r", 40]]],
+	["res://nucleo/formatos_conti.gd", "premio_de_ronda", "nuc_premio_de_ronda", [["s", ["lib", "sud", "ucl", "x", ""]], ["i", 0, 40]]],
+	["res://nucleo/recorridos_red.gd", "flota", "nuc_flota_recorrido", [["s", ["122", "150c", "C02", "C09c", "122e", "150ce", "301e", "", "x", "c"]]]],
+	["res://nucleo/recorridos_red.gd", "patente", "nuc_patente_recorrido", [["s", ["122", "150c", "C02", "C09c", "122e", "150ce", "301e", "", "x", "c"]], ["i", -5, 40]]],
+	["res://nucleo/recorridos_red.gd", "ocupacion", "nuc_ocupacion_recorrido", [["s", ["122", "150c", "C02", "C09c", "122e", "150ce", "301e", "", "x", "c"]], ["i", 0, 20], ["i", 0, 1439], ["i", 0, 6]]],
+	["res://nucleo/idiomas_inverso.gd", "mejor", "nuc_mejor_inverso", [["r", 6], ["r", 6], ["r", 6]]],
+	["res://nucleo/recorridos_mapa.gd", "vuelta_de", "nuc_vuelta_recorrido", [["s", ["122", "150c", "C02", "C09c", "122e", "150ce", "301e", "", "x", "c"]]]],
 ]
 
 ## Los valores de un argumento: bordes y puntos de cambio primero, el resto al azar.

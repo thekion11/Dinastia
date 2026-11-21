@@ -157,6 +157,7 @@ Array DinastiaNativo::nuc_paletas_luces() const {
 
 void DinastiaNativo::_bind_puras4() {
 	_bind_puras5();
+	_bind_puras6();
 	ClassDB::bind_method(D_METHOD("nuc_nueva_oferta", "pedido"), &DinastiaNativo::nuc_nueva_oferta);
 	ClassDB::bind_method(D_METHOD("nuc_tiene_letras", "s"), &DinastiaNativo::nuc_tiene_letras);
 	ClassDB::bind_method(D_METHOD("nuc_normal_titulo", "texto"), &DinastiaNativo::nuc_normal_titulo);
