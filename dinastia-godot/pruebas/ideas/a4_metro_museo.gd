@@ -5,6 +5,11 @@ extends BaseIdea
 ##   2. Museo ampliado: de la planta 0 a la 3 por el ascensor (varias veces seguidas), cada planta con su altura, el jugador dentro del museo, vitrinas con 0 y 500 trofeos y el visor de la copa de cada planta; ampliar varias veces seguidas no duplica salas.
 const Comun := preload("res://pruebas/bancos/ciudad_comun.gd")
 
+var _accesos
+var _metro_m
+var _nodos0
+var _nodos1
+
 func _probar() -> void:
 	_titulo("A4 MUNDO_3D: metro por dentro y museo ampliado (explorador real)")
 	AjustesCiudad.guardar("tutorial_visto", true)
@@ -18,7 +23,7 @@ func _probar() -> void:
 		return
 	for i in 10:
 		await get_tree().process_frame
-	## A4_PARTE=1 (metro) | 2 (museo): con pantalla (xvfb, software) la ciudad entera ya cuesta ~190 s, así que cada mitad va por separado para caber en 300 s. Sin variable, las dos.
+	## A4_PARTE=1 (_metro_m) | 2 (museo): con pantalla (xvfb, software) la ciudad entera ya cuesta ~190 s, así que cada mitad va por separado para caber en 300 s. Sin variable, las dos.
 	var parte := OS.get_environment("A4_PARTE")
 	if parte != "2":
 		await _metro(e, vc)
@@ -33,20 +38,20 @@ func _esperar(n: int) -> void:
 ## Avanza el servicio hasta que NO haya tren parado en la estación (E en el andén con un tren parado sube a él: para salir a la calle hay que esperar a que se vaya).
 func _sin_tren(metro: Object, linea: String, idx: int) -> void:
 	for i in 400:
-		if int(metro.tren_parado_en(linea, idx)) < 0:
+		if int(_metro_m.tren_parado_en(linea, idx)) < 0:
 			return
-		metro.call("_process", 0.25)
+		_metro_m.call("_process", 0.25)
 
 func _metro(e: Object, vc: Node) -> void:
-	var metro: Object = e.metro
-	var accesos: Array = metro.accesos
-	_comprobar(accesos.size() >= 4, "el metro tiene accesos (%d)" % accesos.size())
+	_metro_m = e.metro
+	_accesos = _metro_m.accesos
+	_comprobar(_accesos.size() >= 4, "el metro tiene accesos (%d)" % _accesos.size())
 	var malas: Array[String] = []
 	var n_ok := 0
-	var nodos0 := 0
-	var nodos1 := 0
+	_nodos0 = 0
+	_nodos1 = 0
 	var vuelta := 0
-	for acc: Dictionary in accesos:
+	for acc: Dictionary in _accesos:
 		vuelta += 1
 		e.call("_entrar_al_anden", acc)
 		await _esperar(2)
@@ -56,7 +61,7 @@ func _metro(e: Object, vc: Node) -> void:
 			continue
 		## salir a la calle por la boca (no hay tren parado: se fuerza a que no lo haya)
 		if true:
-			_sin_tren(metro, String(acc["linea"]), int(acc["idx"]))
+			_sin_tren(_metro_m, String(acc["linea"]), int(acc["idx"]))
 			e.call("_usar_en_anden")
 			await _esperar(2)
 			var q: Vector3 = e.cuerpo.position
@@ -77,21 +82,24 @@ func _metro(e: Object, vc: Node) -> void:
 			else:
 				n_ok += 1
 		if vuelta == 3:
-			nodos0 = vc.find_children("*", "", true, false).size()
-		nodos1 = vc.find_children("*", "", true, false).size()
-	_comprobar(malas.is_empty(), "%d accesos del metro: entrar al andén y salir a la calle en la boca, fuera de paredes (%d bien; %d fallos%s)" % [accesos.size(), n_ok, malas.size(), "" if malas.is_empty() else ": " + str(malas.slice(0, 3))])
+			_nodos0 = vc.find_children("*", "", true, false).size()
+		_nodos1 = vc.find_children("*", "", true, false).size()
+	_comprobar(malas.is_empty(), "%d accesos del metro: entrar al andén y salir a la calle en la boca, fuera de paredes (%d bien; %d fallos%s)" % [_accesos.size(), n_ok, malas.size(), "" if malas.is_empty() else ": " + str(malas.slice(0, 3))])
+	await _metro_01(e, vc)
+
+func _metro_01(e: Object, vc: Node) -> void:
 	## trayectos: subir a un tren, avanzar el servicio hasta que pare en una estación y bajar
 	var trayectos := 0
 	var malos_t: Array[String] = []
-	for l: Dictionary in metro.lineas:
+	for l: Dictionary in _metro_m.lineas:
 		var nombre := String(l["nombre"])
 		for k in mini(2, (l["trenes"] as Array).size()):
 			e._linea = nombre
 			e.call("_subir_al_tren", k)
 			var llegado := -1
 			for paso in 600:
-				metro.call("_process", 0.25)
-				llegado = int(metro.estacion_del_tren(nombre, k))
+				_metro_m.call("_process", 0.25)
+				llegado = int(_metro_m.estacion_del_tren(nombre, k))
 				if llegado >= 0:
 					break
 			if llegado < 0:
@@ -99,7 +107,7 @@ func _metro(e: Object, vc: Node) -> void:
 				continue
 			e.call("_bajar_del_tren")
 			await _esperar(2)
-			_sin_tren(metro, nombre, llegado)
+			_sin_tren(_metro_m, nombre, llegado)
 			var p2: Vector3 = e.cuerpo.position
 			var rel: Vector3 = p2 - e._anden_c
 			if String(e.estado) != "anden" or not is_finite(p2.x) or absf(rel.y) > 4.0 or absf(rel.x) > 60.0 or absf(rel.z) > 60.0:
@@ -109,7 +117,7 @@ func _metro(e: Object, vc: Node) -> void:
 			await _esperar(2)
 			var q2: Vector3 = e.cuerpo.position
 			var cerca := false
-			for acc2: Dictionary in accesos:
+			for acc2: Dictionary in _accesos:
 				if String(acc2["linea"]) == nombre and int(acc2["idx"]) == llegado:
 					var pie2: Vector3 = acc2.get("pie", Vector3.ZERO)
 					if Vector2(q2.x - pie2.x, q2.z - pie2.z).length() < 13.0:
@@ -118,9 +126,9 @@ func _metro(e: Object, vc: Node) -> void:
 				malos_t.append("%s tren %d → estación %d: sale a %s (%s), %s de la boca, %s" % [nombre, k, llegado, str(q2), e.estado, "cerca" if cerca else "LEJOS", "libre" if e.call("libre_total", q2, 0.4) else "EN PARED"])
 				continue
 			trayectos += 1
-	print("  (info) %d trayectos completos; nodos tras 3 accesos %d, al final %d" % [trayectos, nodos0, nodos1])
+	print("  (info) %d trayectos completos; nodos tras 3 accesos %d, al final %d" % [trayectos, _nodos0, _nodos1])
 	_comprobar(malos_t.is_empty(), "trayectos en tren (subir, viajar, bajar, salir): %d bien, %d fallos%s" % [trayectos, malos_t.size(), "" if malos_t.is_empty() else ": " + str(malos_t.slice(0, 4))])
-	_comprobar(nodos1 - nodos0 < 300, "el metro no acumula nodos con las entradas y salidas (%d → %d)" % [nodos0, nodos1])
+	_comprobar(_nodos1 - _nodos0 < 300, "el metro no acumula nodos con las entradas y salidas (%d → %d)" % [_nodos0, _nodos1])
 	_comprobar(String(e.estado) == "calle" and e.cuerpo.position.y > -5.0, "al terminar el jugador está en la calle (%s)" % e.estado)
 
 func _hitos(n: int) -> Array:
