@@ -96,11 +96,8 @@ func resumen_tiros() -> Dictionary:
 	r["a_puerta_pct"] = snappedf(100.0 * (ata + float(_t.get("goles", 0))) / tiros, 0.1)
 	return r
 
-func _una_direccion(motor: MotorJugable, p: Dictionary, dir: Vector3, adelante: bool) -> void:
-	var q: Dictionary = motor._companero_en_direccion(p, dir)
-	if q.is_empty():
-		return
-	var local := bool(p["es_local"])
+## El compañero del equipo (3 a 45 m) más alineado con `dir`; y si hay pase limpio a 30°.
+func _mas_alineado(motor: MotorJugable, p: Dictionary, dir: Vector3, local: bool) -> Dictionary:
 	var min_ang := 999.0
 	var min_id := ""
 	var hay_limpio := false
@@ -116,6 +113,17 @@ func _una_direccion(motor: MotorJugable, p: Dictionary, dir: Vector3, adelante: 
 			min_id = String(c["id"])
 		if a <= 30.0 and not motor._linea_tapada(motor.pos(p), motor.pos(c), local):
 			hay_limpio = true
+	return {"ang": min_ang, "id": min_id, "limpio": hay_limpio}
+
+func _una_direccion(motor: MotorJugable, p: Dictionary, dir: Vector3, adelante: bool) -> void:
+	var q: Dictionary = motor._companero_en_direccion(p, dir)
+	if q.is_empty():
+		return
+	var local := bool(p["es_local"])
+	var mejor := _mas_alineado(motor, p, dir, local)
+	var min_ang: float = mejor["ang"]
+	var min_id: String = mejor["id"]
+	var hay_limpio: bool = mejor["limpio"]
 	var err := _ang(motor, p, q, dir)
 	var tapado: bool = motor._linea_tapada(motor.pos(p), motor.pos(q), local)
 	_b["n"] += 1
