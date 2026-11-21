@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2620 archivos (.gd, .cpp, .h), 374358 líneas, 1013 clases con nombre.
+Total: 2621 archivos (.gd, .cpp, .h), 374361 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1280 archivos, 123608 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1281 archivos, 123611 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
@@ -173,7 +173,7 @@ Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `l
 | `Calidad` | `visor/calidad.gd` | 22 | 273 | calidad_p1.gd |
 | `CityBuilder` | `visor/city_builder.gd` | 186 | 168 | city_builder_p11.gd ← city_builder_p10.gd ← city_builder_p9.gd ← city_builder_p8.gd ← city_builder_p7.gd ← city_builder_p6.gd ← city_builder_p5.gd ← city_builder_p4.gd ← city_builder_p3.gd ← city_builder_p2.gd ← city_builder_p1.gd |
 | `FutbolistaQ` | `visor/futbolista_q.gd` | 220 | 130 |  |
-| `ExploradorCiudad` | `visor/explorador_ciudad.gd` | 13 | 119 | explorador_ciudad_p5.gd ← explorador_ciudad_p5_p1.gd ← explorador_ciudad_p4.gd ← explorador_ciudad_p3.gd ← explorador_ciudad_p2.gd ← explorador_ciudad_p1.gd |
+| `ExploradorCiudad` | `visor/explorador_ciudad.gd` | 13 | 120 | explorador_ciudad_p5.gd ← explorador_ciudad_p5_p1.gd ← explorador_ciudad_p4.gd ← explorador_ciudad_p3.gd ← explorador_ciudad_p2.gd ← explorador_ciudad_p1.gd |
 | `PlayerSpawner` | `visor/player_spawner.gd` | 226 | 95 | player_spawner_p1.gd |
 | `Puente3D` | `visor/puente3d.gd` | 223 | 92 |  |
 | `PersonajeDT` | `visor/personaje_dt.gd` | 354 | 84 | personaje_dt_p1.gd ← personaje_dt_p1_p1.gd |
