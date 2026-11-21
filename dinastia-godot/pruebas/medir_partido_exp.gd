@@ -231,17 +231,21 @@ static func _efecto_luces(vista: Node, e: String) -> void:
 			for l in vista.find_children("*", "Light3D", true, false):
 				(l as Light3D).shadow_enabled = false
 		"sombra_sol_extra":
-			## la segunda luz direccional con sombra (de noche hay dos: la del estadio y la de `Ambience`): se apaga la sombra de la que NO se llama «Key»
-			var k := 0
-			for l in vista.find_children("*", "DirectionalLight3D", true, false):
-				if (l as Light3D).shadow_enabled:
-					k += 1
-					if k == 2:
-						(l as Light3D).shadow_enabled = false
+			_sombra_segunda_direccional(vista)
 		"sombras_no_sol":
 			for l in vista.find_children("*", "Light3D", true, false):
 				if not l is DirectionalLight3D:
 					(l as Light3D).shadow_enabled = false
+
+
+## sombra_sol_extra: la segunda luz direccional con sombra (de noche hay dos: la del estadio y la de `Ambience`); se apaga la sombra de la que NO se llama «Key».
+static func _sombra_segunda_direccional(vista: Node) -> void:
+	var k := 0
+	for l in vista.find_children("*", "DirectionalLight3D", true, false):
+		if (l as Light3D).shadow_enabled:
+			k += 1
+			if k == 2:
+				(l as Light3D).shadow_enabled = false
 
 
 ## Los efectos de superficie y viewport (césped, debanding y FXAA).
