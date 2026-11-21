@@ -77,6 +77,12 @@ func _ac_residencia_entrega(m: Mundo, a: Academia) -> void:
 		a.chicos.append(a._nuevo_chico(10))
 	_comprobar(a.captar(0) != "", "con la residencia llena no se capta a nadie más")
 
+	_ac_entrega_guardado(m, a)
+
+
+## ACADEMIA, parte 5: la entrega a los 16 (pasa al plantel) y el guardado de la academia.
+func _ac_entrega_guardado(m: Mundo, a: Academia) -> void:
+	var c := m.mi_club()
 	## Entrega: a los 16 pasa al plantel como Jugador de verdad.
 	var chico15: Dictionary = {}
 	for ch in a.chicos:

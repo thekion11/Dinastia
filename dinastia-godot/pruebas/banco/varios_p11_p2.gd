@@ -22,15 +22,21 @@ func _objetivos_paquetes() -> void:
 			var n := l.clubes.size()
 			var pl := ObjetivosClub.plazas_continentales(l.pais, n)
 			for c: Club in l.clubes:
-				_revisar_club(m, c, l, n, pl, mal, metas_desc, distintos)
+				_revisar_club(m, c, {"l": l, "n": n, "pl": pl}, {"mal": mal, "metas_desc": metas_desc, "distintos": distintos})
 				clubes += 1
 	_comprobar(mal.is_empty(), "%d clubes de 9 países: meta dentro de su liga, salvarse = puesto seguro real, plazas continentales reales, 3-6 secundarios con peso y proyecto (%d fallos%s)" % [clubes, mal.size(), "" if mal.is_empty() else ": " + str(mal.slice(0, 3))])
 	_comprobar(distintos.size() >= 8, "los paquetes se parecen poco entre clubes (%d combinaciones distintas)" % distintos.size())
 	_comprobar(metas_desc.keys().size() < 2 or metas_desc.values().min() != metas_desc.values().max(), "«Evitar el descenso» cambia con el tamaño de la liga (%s)" % str(metas_desc))
 
 ## Un club: su paquete de objetivos tiene que cuadrar con su liga (meta, plazas y secundarios).
-func _revisar_club(m: Mundo, c: Club, l: Liga, n: int, pl: Dictionary, mal: Array[String],
-		metas_desc: Dictionary, distintos: Dictionary) -> void:
+## `liga` = {l, n, pl} (la liga, su tamaño y sus plazas) y `acum` = {mal, metas_desc, distintos} (lo que acumula la prueba).
+func _revisar_club(m: Mundo, c: Club, liga: Dictionary, acum: Dictionary) -> void:
+	var l: Liga = liga["l"]
+	var n: int = liga["n"]
+	var pl: Dictionary = liga["pl"]
+	var mal: Array[String] = acum["mal"]
+	var metas_desc: Dictionary = acum["metas_desc"]
+	var distintos: Dictionary = acum["distintos"]
 	var p := ObjetivosClub.generar(m, c)
 	if p.is_empty():
 		mal.append("%s sin paquete" % c.nombre)

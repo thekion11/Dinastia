@@ -4,12 +4,26 @@ extends RefCounted
 ## lo poco que pese la zona en tu puesto; y se puede entrenar otro puesto. Deja al jugador como estaba.
 
 static func probar(b: Variant, c: CarreraJugador, m: Mundo, j: Jugador) -> void:
+	var guardado := _hab_guardar(c, j)
+	_hab_zonas_promedio(b, c, j)
+	_hab_clave_ajena(b, c, m, j)
+	_hab_puestos(b, c, m, j, guardado)
+	_hab_restaurar(c, j, guardado)
+
+
+## Guarda lo que la prueba toca (habilidades, nivel y atributos del jugador) para dejarlo como estaba.
+static func _hab_guardar(c: CarreraJugador, j: Jugador) -> Dictionary:
 	var guardado := {"hab": c.ruta.get("hab", 0), "hab_nivel": c.ruta.get("hab_nivel", 1), "nivel": int(c.ruta["nivel"]), "attrs": j.atributos.duplicate(),
 		"ovr": j.ovr, "pos_e": j.pos_e, "pos": j.pos, "sec": j.pos_sec.duplicate(), "adapt": j.adapt, "pulidos": (c.ruta.get("pulidos", {}) as Dictionary).duplicate()}
 	c.ruta["nivel"] = 3
 	c.ruta["hab_nivel"] = 1
 	c.ruta["hab"] = 0
 	c.ruta.erase("detalle")
+	return guardado
+
+
+## Puntos por nivel y el promedio de cada zona (y que el entreno sube sus habilidades).
+static func _hab_zonas_promedio(b: Variant, c: CarreraJugador, j: Jugador) -> void:
 	b._comprobar(CarreraHabilidad.puntos(c) == 2 * CarreraHabilidad.PUNTOS_POR_NIVEL and CarreraHabilidad.puntos(c) == 2 * CarreraHabilidad.PUNTOS_POR_NIVEL, "  cada nivel da %d puntos de habilidad, una sola vez" % CarreraHabilidad.PUNTOS_POR_NIVEL)
 	## El detalle: cada zona es el promedio de sus habilidades.
 	var d := CarreraHabilidad.detalle(c, j)
@@ -20,6 +34,10 @@ static func probar(b: Variant, c: CarreraJugador, m: Mundo, j: Jugador) -> void:
 	var zona_p: String = j.atributos.keys()[0]
 	j.atributos[zona_p] = int(j.atributos[zona_p]) + 2
 	b._comprobar(CarreraHabilidad._promedio(CarreraHabilidad.detalle(c, j), CarreraHabilidad.de_zona(zona_p)) == int(j.atributos[zona_p]), "  si el entreno sube una zona, sus habilidades la siguen")
+
+
+## Una zona clave y una que pesa poco en su puesto: el coste, el nivel y subir un punto.
+static func _hab_clave_ajena(b: Variant, c: CarreraJugador, m: Mundo, j: Jugador) -> void:
 	var clave := ""
 	var ajena := ""
 	for z: String in j.atributos:
@@ -54,7 +72,10 @@ static func probar(b: Variant, c: CarreraJugador, m: Mundo, j: Jugador) -> void:
 		b._comprobar(int(j.atributos[zona_c]) == 67, "  con todas sus habilidades a 67, la zona vale 67 (%d)" % int(j.atributos[zona_c]))
 		c.ruta["hab"] = 0
 		b._comprobar(not CarreraHabilidad.subir(c, m, clave), "  sin puntos no se sube")
-	## El puesto: la media sale de las habilidades y del puesto; entrenar otro cuesta más si es de otra línea.
+
+
+## El puesto: la media sale de las habilidades y del puesto; entrenar otro cuesta más si es de otra línea.
+static func _hab_puestos(b: Variant, c: CarreraJugador, m: Mundo, j: Jugador, guardado: Dictionary) -> void:
 	var otros: Array = CarreraHabilidad.puestos(j)
 	var medias := {}
 	for pe: String in otros:
@@ -76,6 +97,10 @@ static func probar(b: Variant, c: CarreraJugador, m: Mundo, j: Jugador) -> void:
 		c.ruta["hab"] = 99
 		var res := CarreraHabilidad.cambiar(c, m, otra)
 		b._comprobar(not res.is_empty() and j.pos_e == otra and CarreraHabilidad.puntos(c) < 99, "  con puntos, pasa a jugar de %s (media %d → %d)" % [otra, int(res.get("antes", 0)), int(res.get("despues", 0))])
+
+
+## Devuelve al jugador y al personaje a como estaban antes de la prueba.
+static func _hab_restaurar(c: CarreraJugador, j: Jugador, guardado: Dictionary) -> void:
 	j.atributos = guardado["attrs"]
 	j.ovr = int(guardado["ovr"]); j.pos_e = String(guardado["pos_e"]); j.pos = String(guardado["pos"]); j.pos_sec = guardado["sec"]; j.adapt = int(guardado["adapt"])
 	j.tasar()
