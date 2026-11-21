@@ -56,6 +56,13 @@ const CATALOGO := [
 
 ## La fila de una clave (vacía si no existe).
 static func fila(clave: String) -> Array:
+	var nat := Nativo.de("nuc_fila_logro")
+	if nat != null:
+		return nat.nuc_fila_logro(clave)
+	return fila_gd(clave)
+
+## Gemela GDScript de `nuc_fila_logro` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func fila_gd(clave: String) -> Array:
 	for f: Array in CATALOGO:
 		if String(f[0]) == clave:
 			return f

@@ -185,9 +185,23 @@ static func pasadas(cod: String, recorrido: String, dia: int) -> PackedInt32Arra
 
 ## Los buses de la flota de un recorrido (6-14) y la patente de cada uno: 4 letras y 2 cifras, como «FLXK-52».
 static func flota(recorrido: String) -> int:
+	var nat := Nativo.de("nuc_flota_recorrido")
+	if nat != null:
+		return nat.nuc_flota_recorrido(recorrido)
+	return flota_gd(recorrido)
+
+## Gemela GDScript de `nuc_flota_recorrido` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func flota_gd(recorrido: String) -> int:
 	return 6 + absi(hash([base_de(recorrido), "flota"])) % 9
 
 static func patente(recorrido: String, bus: int) -> String:
+	var nat := Nativo.de("nuc_patente_recorrido")
+	if nat != null:
+		return nat.nuc_patente_recorrido(recorrido, bus)
+	return patente_gd(recorrido, bus)
+
+## Gemela GDScript de `nuc_patente_recorrido` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func patente_gd(recorrido: String, bus: int) -> String:
 	var id := [base_de(recorrido), bus % flota(recorrido)]
 	var h := absi(hash(id + ["patente"]))
 	var s := ""
@@ -198,6 +212,13 @@ static func patente(recorrido: String, bus: int) -> String:
 
 ## 0 con asientos, 1 de pie, 2 lleno (más lleno en punta).
 static func ocupacion(recorrido: String, vuelta: int, minuto_dia: int, dia: int) -> int:
+	var nat := Nativo.de("nuc_ocupacion_recorrido")
+	if nat != null:
+		return nat.nuc_ocupacion_recorrido(recorrido, vuelta, minuto_dia, dia)
+	return ocupacion_gd(recorrido, vuelta, minuto_dia, dia)
+
+## Gemela GDScript de `nuc_ocupacion_recorrido` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func ocupacion_gd(recorrido: String, vuelta: int, minuto_dia: int, dia: int) -> int:
 	var o := absi(hash([recorrido, vuelta, dia, "ocup"])) % 10
 	var h := minuto_dia / 60
 	var punta := dia < 5 and ((h >= 7 and h < 9) or (h >= 18 and h < 20))

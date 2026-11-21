@@ -14,6 +14,13 @@ const CATALOGO := [
 ]
 
 static func articulo(id: String) -> Dictionary:
+	var nat := Nativo.de("nuc_articulo_ropero")
+	if nat != null:
+		return nat.nuc_articulo_ropero(id)
+	return articulo_gd(id)
+
+## Gemela GDScript de `nuc_articulo_ropero` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func articulo_gd(id: String) -> Dictionary:
 	for a: Dictionary in CATALOGO:
 		if String(a["id"]) == id:
 			return a

@@ -5,6 +5,13 @@ extends RefCounted
 ## Ahora gana la clave más parecida a la traducción (más letras iguales al principio): «Form» → «Forma». En un empate, la última, como siempre.
 
 static func mejor(actual: String, nueva: String, traduccion: String) -> String:
+	var nat := Nativo.de("nuc_mejor_inverso")
+	if nat != null:
+		return nat.nuc_mejor_inverso(actual, nueva, traduccion)
+	return mejor_gd(actual, nueva, traduccion)
+
+## Gemela GDScript de `nuc_mejor_inverso` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func mejor_gd(actual: String, nueva: String, traduccion: String) -> String:
 	if actual == "":
 		return nueva
 	return nueva if _prefijo(nueva, traduccion) >= _prefijo(actual, traduccion) else actual
