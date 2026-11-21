@@ -115,26 +115,35 @@ func _input(ev: InputEvent) -> void:
 			_cerrar_dialogo()
 		return
 	if _escuchando == "":
-		if ev.is_action_pressed("ui_cancel"):
-			get_viewport().set_input_as_handled()
-			_volver()
-			return
-		## Cambiar de sección: LB/RB (o L1/R1) y Re Pág / Av Pág.
-		var izq := (ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed and (ev as InputEventJoypadButton).button_index == JOY_BUTTON_LEFT_SHOULDER) \
-			or (ev is InputEventKey and (ev as InputEventKey).pressed and (ev as InputEventKey).keycode == KEY_PAGEUP)
-		var der := (ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed and (ev as InputEventJoypadButton).button_index == JOY_BUTTON_RIGHT_SHOULDER) \
-			or (ev is InputEventKey and (ev as InputEventKey).pressed and (ev as InputEventKey).keycode == KEY_PAGEDOWN)
-		if izq or der:
-			get_viewport().set_input_as_handled()
-			_cambiar_seccion(-1 if izq else 1)
-		## Con el foco en el menú, «derecha» entra en la tabla.
-		elif ev.is_action_pressed("ui_right") and get_viewport().gui_get_focus_owner() in _items_menu.values():
-			get_viewport().set_input_as_handled()
-			_enfocar_primera_fila()
-		elif ev.is_action_pressed("ui_left") and get_viewport().gui_get_focus_owner() != null and _contenido.is_ancestor_of(get_viewport().gui_get_focus_owner()):
-			get_viewport().set_input_as_handled()
-			(_items_menu[_pestana] as Control).grab_focus()
+		_input_navegacion(ev)
 		return
+	_input_reasignar(ev)
+
+## Con el foco en el menú: cambiar de sección, o las flechas para entrar en la tabla y volver.
+func _input_navegacion(ev: InputEvent) -> void:
+	if ev.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		_volver()
+		return
+	## Cambiar de sección: LB/RB (o L1/R1) y Re Pág / Av Pág.
+	var izq := (ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed and (ev as InputEventJoypadButton).button_index == JOY_BUTTON_LEFT_SHOULDER) \
+		or (ev is InputEventKey and (ev as InputEventKey).pressed and (ev as InputEventKey).keycode == KEY_PAGEUP)
+	var der := (ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed and (ev as InputEventJoypadButton).button_index == JOY_BUTTON_RIGHT_SHOULDER) \
+		or (ev is InputEventKey and (ev as InputEventKey).pressed and (ev as InputEventKey).keycode == KEY_PAGEDOWN)
+	if izq or der:
+		get_viewport().set_input_as_handled()
+		_cambiar_seccion(-1 if izq else 1)
+	## Con el foco en el menú, «derecha» entra en la tabla.
+	elif ev.is_action_pressed("ui_right") and get_viewport().gui_get_focus_owner() in _items_menu.values():
+		get_viewport().set_input_as_handled()
+		_enfocar_primera_fila()
+	elif ev.is_action_pressed("ui_left") and get_viewport().gui_get_focus_owner() != null and _contenido.is_ancestor_of(get_viewport().gui_get_focus_owner()):
+		get_viewport().set_input_as_handled()
+		(_items_menu[_pestana] as Control).grab_focus()
+	return
+
+## Con un botón que reasignar: el siguiente botón (o tecla) pulsado pasa a ser la acción.
+func _input_reasignar(ev: InputEvent) -> void:
 	var vale := (ev is InputEventKey and (ev as InputEventKey).pressed and not (ev as InputEventKey).echo) \
 		or (ev is InputEventJoypadButton and (ev as InputEventJoypadButton).pressed)
 	if not vale:

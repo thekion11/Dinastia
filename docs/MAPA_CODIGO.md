@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2598 archivos (.gd, .cpp, .h), 371862 líneas, 1013 clases con nombre.
+Total: 2598 archivos (.gd, .cpp, .h), 371809 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -79,7 +79,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Club` | `nucleo/club.gd` | 420 | 831 |  |
+| `Club` | `nucleo/club.gd` | 420 | 832 |  |
 | `StadiumBuilder` | `visor/stadium_builder.gd` | 13 | 136 | stadium_builder_p10.gd ← stadium_builder_p10_p1.gd ← estadio_partes_tribuna.gd ← stadium_builder_p9.gd ← stadium_builder_p8.gd ← stadium_builder_p7.gd ← stadium_builder_p6.gd ← stadium_builder_p5.gd ← stadium_builder_p4.gd ← stadium_builder_p4_p1.gd ← stadium_builder_p3.gd |
 | `EstadioExtras` | `visor/estadio_extras.gd` | 310 | 9 |  |
 | `ClubDentro` | `nucleo/club_dentro.gd` | 285 | 8 |  |
@@ -93,7 +93,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-472 archivos, 93778 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+472 archivos, 93725 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -110,7 +110,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 | `Tutorial` | `ui/componentes/tutorial.gd` | 223 | 48 | tutorial_p2.gd ← tutorial_p1.gd |
 | `CajonAjustes` | `ui/componentes/cajon_ajustes.gd` | 258 | 47 |  |
 | `Inicio` | `ui/inicio.gd` | 112 | 41 | inicio_p2.gd ← inicio_p1.gd |
-| `MenuLateral` | `ui/componentes/menu_lateral.gd` | 423 | 40 |  |
+| `MenuLateral` | `ui/componentes/menu_lateral.gd` | 429 | 40 |  |
 
 Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla_pes.gd` (450), `pantalla_cantera_p2.gd` (450), `pantalla_opciones.gd` (450), `pantalla_opciones_p1.gd` (450), `partido_jugable.gd` (450), `telefono_p1.gd` (449), `interior_instalacion_p2.gd` (448), `panel_plantel.gd` (448), `estadio_p1.gd` (448).
 
