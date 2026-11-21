@@ -59,6 +59,14 @@ func _probar_actualizador_flujo() -> void:
 	a.fallo.connect(func(msg: String) -> void: visto["fallo"].append(msg))
 	a.descargado.connect(func(ruta: String, info: Dictionary) -> void: visto["descargado"].append([ruta, info]))
 	a.progreso.connect(func(rec: int, tot: int) -> void: visto["progreso"].append([rec, tot]))
+	_af_consulta(a, visto)
+	_af_descarga(a, visto)
+	_af_cortes(a, visto)
+	_af_ocupado_limpiar(a)
+
+
+## Consulta: sin parche nuevo, con parche nuevo, sin preguntar, y las respuestas malas.
+func _af_consulta(a: Actualizador, visto: Dictionary) -> void:
 	_comprobar(not a.ocupado(), "recién creado no está ocupado")
 	var sist := Actualizador.sistema()
 	var v_nueva := "99.0.0"
@@ -83,6 +91,10 @@ func _probar_actualizador_flujo() -> void:
 		a._al_consultar(int(caso[0]), int(caso[1]), PackedStringArray(), String(caso[2]).to_utf8_buffer())
 	_comprobar((visto["fallo"] as Array).size() == 4 and not a.ocupado(), "cuatro respuestas malas = cuatro fallos y vuelve a libre")
 	_comprobar(String((visto["fallo"] as Array)[0]).contains("limita") and String((visto["fallo"] as Array)[1]).contains("no se entiende") and String((visto["fallo"] as Array)[2]).contains("no se entiende"), "cada fallo con su frase")
+
+
+## Descarga: tamaño y SHA-256 verificados antes del nombre definitivo; el parche queda con su nombre.
+func _af_descarga(a: Actualizador, visto: Dictionary) -> void:
 	## Descarga: tamaño y SHA-256 verificados antes del nombre definitivo.
 	DirAccess.make_dir_recursive_absolute(Actualizador.CARPETA)
 	var contenido := "parche de prueba".to_utf8_buffer()
@@ -118,6 +130,16 @@ func _probar_actualizador_flujo() -> void:
 	a._al_descargar(HTTPRequest.RESULT_SUCCESS, 200, PackedStringArray(), PackedByteArray())
 	_comprobar((visto["descargado"] as Array).size() == 1 and FileAccess.file_exists(destino) and not FileAccess.file_exists(tmp) and not a.ocupado(), "descarga correcta: el parche queda con su nombre")
 	_comprobar(not (visto["progreso"] as Array).is_empty() and int(((visto["progreso"] as Array).back() as Array)[0]) == contenido.size(), "el último aviso de progreso trae lo que llegó")
+
+
+## Cortes: un fallo HTTP en la descarga, la cancelación, la descarga parada y la consulta sin respuesta.
+func _af_cortes(a: Actualizador, visto: Dictionary) -> void:
+	var contenido := "parche de prueba".to_utf8_buffer()
+	var tmp := Actualizador.ruta_destino("0.0.1") + ".descarga"
+	var escribir := func() -> void:
+		var f := FileAccess.open(tmp, FileAccess.WRITE)
+		f.store_buffer(contenido)
+		f.close()
 	## Un fallo HTTP en la descarga y la cancelación.
 	a._estado = "descargando"
 	a._al_descargar(HTTPRequest.RESULT_SUCCESS, 404, PackedStringArray(), PackedByteArray())
@@ -146,6 +168,10 @@ func _probar_actualizador_flujo() -> void:
 	a._t_consulta = 0.0
 	a._process(Actualizador.espera_consulta + 3.5)
 	_comprobar(String((visto["fallo"] as Array).back()).contains("tardó"), "una consulta que nunca responde acaba con «tardó demasiado»")
+
+
+## Ocupado: ni consulta ni descarga otra vez; descargar({}) no hace nada; y se limpia lo que queda.
+func _af_ocupado_limpiar(a: Actualizador) -> void:
 	## consultar() y descargar() no hacen nada si ya está ocupado o si no hay info.
 	a._estado = "consultando"
 	a.consultar()
@@ -154,6 +180,7 @@ func _probar_actualizador_flujo() -> void:
 	a._estado = "libre"
 	a.descargar({})
 	_comprobar(a._estado == "libre", "descargar({}) no hace nada")
+	var destino := Actualizador.ruta_destino("0.0.1")
 	if FileAccess.file_exists(destino):
 		DirAccess.remove_absolute(destino)
 	a.queue_free()
@@ -162,6 +189,13 @@ func _probar_actualizador_flujo() -> void:
 
 func _probar_entrada_campeonato_datos() -> void:
 	_titulo("ENTRADA AL CAMPEONATO: NORMALIZAR, DATOS, CANDIDATOS Y PREVISUALIZACIÓN")
+	_ec_normalizar_datos()
+	var st := _ec_candidatos()
+	_ec_previsualizar(st)
+
+
+## Normalizar la entrada, los datos del club y la reputación del reemplazo y la confederación.
+func _ec_normalizar_datos() -> void:
 	var n := EntradaCampeonato.normalizar({"tipo": "confederacion", "club_id": "c7", "pais": "ARG"})
 	_comprobar(String(n["modo"]) == "pagar" and String(n["pais"]) == "ARG" and String(n["club_reemplazado"]) == "c7", "normalizar(): «confederacion» = «pagar» y toma club_id")
 	n = EntradaCampeonato.normalizar({"modo": "loquesea", "reemplaza": "c3"}, "ESP")
@@ -174,6 +208,11 @@ func _probar_entrada_campeonato_datos() -> void:
 	_comprobar(String(d["nombre"]) == "" and String(d["color1"]) == "" and String(d["estadio"]) == "", "datos_de_config({}) todo vacío")
 	_comprobar(EntradaCampeonato.rep_reemplazo(_club_con_rep(60)) == 50 and EntradaCampeonato.rep_reemplazo(_club_con_rep(3)) == EntradaCampeonato.REP_MINIMA, "rep_reemplazo(): −10 con suelo en 1")
 	_comprobar(EntradaCampeonato.rep_confederacion() == Mundo.REP_FUNDACION - 20, "rep_confederacion() = fundación − 20")
+
+
+## Candidatos, el más flojo de la liga más baja, y el presupuesto base. Devuelve el mundo y las ligas
+## que comparten las previsualizaciones.
+func _ec_candidatos() -> Dictionary:
 	var m := Mundo.new()
 	m.generar(["CHI", "ESP"], 515)
 	var cand := EntradaCampeonato.candidatos(m, "ESP")
@@ -200,6 +239,14 @@ func _probar_entrada_campeonato_datos() -> void:
 	for c: Club in l1.clubes:
 		rep_media += float(c.rep)
 	_comprobar(base1 == int(round(Eco.ref_caja(rep_media / float(l1.clubes.size())))), "presupuesto_base() = ref_caja de la reputación media de la liga")
+	return {"m": m, "cand": cand, "l_baja": l_baja}
+
+
+## Previsualizaciones: A (reemplazar), B (pagar), el error con la liga empezada y la pregunta de rueda.
+func _ec_previsualizar(st: Dictionary) -> void:
+	var m: Mundo = st["m"]
+	var cand: Array = st["cand"]
+	var l_baja: Liga = st["l_baja"]
 	## Previsualizaciones.
 	var pa := EntradaCampeonato.previsualizar(m, "reemplazar", "ESP", cand[2].id)
 	_comprobar(not pa.has("error") and int(pa["cuota"]) == 0 and int(pa["rep"]) == maxi(1, cand[2].rep - 10) and int(pa["jugadores_libres"]) == cand[2].plantilla.size(), "A: sin cuota, reputación −10, sus jugadores quedan libres")
@@ -294,6 +341,15 @@ func _probar_roles_permisos_y_ventana() -> void:
 	var m := _mundo_roles(8001)
 	var r: Roles = m.roles
 	m.semana = 3
+	var avisos: Array[String] = []
+	_ro_permisos_emergencia(m, r, avisos)
+	_ro_ascenso(m, r)
+	_ro_resumen_cambio_dt(m, r, avisos)
+	_ro_bloqueos_cargo()
+
+
+## Permisos del DT con la ventana abierta, el mercado cerrado y la ventana de emergencia (una por temporada).
+func _ro_permisos_emergencia(m: Mundo, r: Roles, avisos: Array[String]) -> void:
 	_comprobar(r.puede_fichar() and r.puede_alinear() and r.puede_contratar_staff() and r.puede_construir() and r.puede_vender_jugadores() and r.puede_rescindir(), "DT con la ventana abierta: puede todo lo del banquillo")
 	_comprobar(not r.puede_contratar_dt() and not r.puede_inyectar_capital() and not r.puede_vender_club() and r.le_pueden_echar(), "el DT no contrata DT, no mete capital, no vende el club y puede ser despedido")
 	m.semana = 10
@@ -301,7 +357,6 @@ func _probar_roles_permisos_y_ventana() -> void:
 	## Ventana de emergencia: una por temporada, una sola bala.
 	_comprobar(not r.emergencia_activa() and r.abrir_emergencia("j1") and r.emergencia_activa() and r.puede_fichar(), "la emergencia abre el mercado")
 	_comprobar(not r.abrir_emergencia("j2"), "no se puede abrir otra en la misma temporada")
-	var avisos: Array[String] = []
 	r.aviso.connect(func(t: String, _x: String) -> void: avisos.append(t))
 	r.usar_emergencia()
 	_comprobar(not r.emergencia_activa() and not r.puede_fichar() and avisos.size() == 1 and bool(r.emergencia["usada"]), "usarla la gasta y avisa")
@@ -314,6 +369,10 @@ func _probar_roles_permisos_y_ventana() -> void:
 	_comprobar(not r.emergencia_activa(), "pasado el plazo caduca")
 	m.semana = 3
 	_comprobar(not r.abrir_emergencia("j9"), "con la ventana abierta no hace falta emergencia")
+
+
+## Ascenso de rol: trofeos y prestigio; el tope y el suelo del prestigio; el dueño no sube más.
+func _ro_ascenso(m: Mundo, r: Roles) -> void:
 	## Ascenso de rol.
 	r.trofeos.clear()
 	r.prestigio = 50
@@ -330,6 +389,10 @@ func _probar_roles_permisos_y_ventana() -> void:
 	r.rol = Roles.DUENO
 	_comprobar(r.puede_ascender() == "" and r.siguiente_escalon() == "", "el dueño no tiene escalón superior")
 	r.rol = Roles.DT
+
+
+## El resumen coincide con las preguntas sueltas; cambiar de DT solo lo hace quien lo contrata, y cuesta.
+func _ro_resumen_cambio_dt(m: Mundo, r: Roles, avisos: Array[String]) -> void:
 	## El resumen coincide con las preguntas sueltas.
 	r.prestigio = 60
 	var s := r.resumen()
@@ -345,6 +408,10 @@ func _probar_roles_permisos_y_ventana() -> void:
 	avisos.clear()
 	_comprobar(r.cambiar_dt() == "" and c.saldo < antes and avisos.size() == 1 and r.estilo_dt() != "", "con caja: cuesta, avisa y el nuevo DT tiene estilo")
 	r.rol = Roles.DT
+
+
+## Motivos de bloqueo por cargo: el ayudante propone, el director y el interino.
+func _ro_bloqueos_cargo() -> void:
 	## Motivos de bloqueo por cargo.
 	var m2 := _mundo_roles(8002)
 	m2.roles.arrancar_ayudante()
