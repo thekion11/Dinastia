@@ -87,6 +87,12 @@ static func _montana_mas(v: String) -> void:
 			for i in 14:
 				var x := -1.0 + i * 0.15
 				PaisTrazo.linea(x, 0.4, x + 0.02, 0.08, 0.004, true)
+		_:
+			_montana_mas2(v)
+
+## Las montañas de la tercera parte de la lista (mismo orden de antes).
+static func _montana_mas2(v: String) -> void:
+	match v:
 		"terrazas":
 			## Machu Picchu: el Huayna Picchu detrás y la ciudadela en terrazas.
 			PaisTrazo.cresta([-1.2, 0.0, -0.9, 0.26, -0.4, 0.34, 0.1, 0.4, 0.28, 0.7, 0.42, 0.95, 0.52, 1.0,
