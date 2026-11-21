@@ -147,12 +147,8 @@ func _poner_campo(campo: Array) -> void:
 		n.name = "p%d" % i
 		_peluches.add_child(n)
 
-## Copia el estado del panel. `fase` y las constantes de tiempo son las de `PanelPeluches`.
-func actualizar(panel: PanelPeluches) -> void:
-	_poner_campo(panel.campo)
-	var fase := panel.fase
-	var t := panel.get("_t") as float
-	var agarrado := panel.get("_agarrado") as int
+## La posición de la garra en esta fase: [dónde va, cuánto baja, cuánto cierra].
+func _pose_garra(fase: int, t: float, panel: PanelPeluches) -> Array:
 	var c: Vector2 = panel.garra
 	var bajada := 0.0
 	var cierre := 0.0
@@ -170,6 +166,32 @@ func actualizar(panel: PanelPeluches) -> void:
 			cierre = 1.0
 		PanelPeluches.SALE:
 			c = SALIDA
+	return [c, bajada, cierre]
+
+## El peluche agarrado deja el montón y cuelga de la garra hasta la salida.
+func _colgar_peluche(panel: PanelPeluches, agarrado: int, lleva: bool) -> void:
+	var id_colgado := String(panel.campo[agarrado]["id"]) if lleva else ""
+	if id_colgado != _colgado_id:
+		if _colgado != null:
+			_colgado.queue_free()
+			_colgado = null
+		_colgado_id = id_colgado
+		if id_colgado != "":
+			_colgado = PelucheModelo.montar(Peluches.def(id_colgado))
+			_raiz.add_child(_colgado)
+	if _colgado != null:
+		_colgado.position = _garra.position + Vector3(0, -0.26, 0)
+
+## Copia el estado del panel. `fase` y las constantes de tiempo son las de `PanelPeluches`.
+func actualizar(panel: PanelPeluches) -> void:
+	_poner_campo(panel.campo)
+	var fase := panel.fase
+	var t := panel.get("_t") as float
+	var agarrado := panel.get("_agarrado") as int
+	var pose := _pose_garra(fase, t, panel)
+	var c: Vector2 = pose[0]
+	var bajada: float = pose[1]
+	var cierre: float = pose[2]
 	var alto := lerpf(ALTO_GARRA, ALTO_ABAJO, smoothstep(0.0, 1.0, bajada))
 	_garra.visible = fase >= PanelPeluches.MOVER and fase != PanelPeluches.FIN
 	_cable.visible = _garra.visible
@@ -182,17 +204,7 @@ func actualizar(panel: PanelPeluches) -> void:
 	var lleva := agarrado >= 0 and fase >= PanelPeluches.SUBE and fase <= PanelPeluches.LLEVA
 	for i in _peluches.get_child_count():
 		(_peluches.get_child(i) as Node3D).visible = not (lleva and i == agarrado) and not (fase >= PanelPeluches.SALE and i == agarrado)
-	var id_colgado := String(panel.campo[agarrado]["id"]) if lleva else ""
-	if id_colgado != _colgado_id:
-		if _colgado != null:
-			_colgado.queue_free()
-			_colgado = null
-		_colgado_id = id_colgado
-		if id_colgado != "":
-			_colgado = PelucheModelo.montar(Peluches.def(id_colgado))
-			_raiz.add_child(_colgado)
-	if _colgado != null:
-		_colgado.position = _garra.position + Vector3(0, -0.26, 0)
+	_colgar_peluche(panel, agarrado, lleva)
 	var gana := String(panel.get("_gana"))
 	if fase == PanelPeluches.SALE and gana != "":
 		if _gana_nodo == null:
