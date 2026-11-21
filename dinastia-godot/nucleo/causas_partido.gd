@@ -221,7 +221,12 @@ static func _causas_lesiones(c: Array, r: RastroPartido, mio: int) -> void:
 			c.append(_c("lesion", -1, 0.35, Idiomas.t("Perdimos a %s por lesión en el %d'.") % [String(le["nombre"]), int(le["min"])]))
 
 ## Localía y posesión.
-static func _causas_localia_y_posesion(c: Array, p: Partido, r: RastroPartido, mio: int, fm: int, fs: int, om: int, os: int) -> void:
+static func _causas_localia_y_posesion(c: Array, p: Partido, r: RastroPartido, mio: int) -> void:
+	var suyo := 1 - mio
+	var fm := int(r.inicio["forma"][mio])
+	var fs := int(r.inicio["forma"][suyo])
+	var om := int(r.inicio["ovr"][mio])
+	var os := int(r.inicio["ovr"][suyo])
 	## Y si no hubo nada más fuerte: la localía (del modelo: +8 % en casa, −6 % fuera) y la posesión.
 	if not r.con_motor and not p.neutral:
 		c.append(_c("localia", 1 if mio == 0 else -1, 0.15,

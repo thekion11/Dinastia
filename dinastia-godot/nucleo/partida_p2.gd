@@ -74,10 +74,10 @@ static func _restaurar_plantilla_y_obras(datos: Dictionary, m: Mundo, mio: Club)
 	## Las obras van DESPUES de fijar el aforo base, y hay que volver a aplicarlas:
 	## el aforo del club que viene del guardado ya trae las tribunas construidas,
 	## asi que si se aplicara sobre el, cada carga lo multiplicaria otra vez.
-	var do_loc: Dictionary = datos.get("obras", {})
-	if not do_loc.is_empty():
-		m.obras.desde_dic(do_loc)
-		if int(do_loc.get("aforo_base", 0)) <= 0:
+	var obras_dic: Dictionary = datos.get("obras", {})
+	if not obras_dic.is_empty():
+		m.obras.desde_dic(obras_dic)
+		if int(obras_dic.get("aforo_base", 0)) <= 0:
 			## Guardado viejo, sin aforo base: se deduce quitando las tribunas.
 			m.obras.fijar_aforo_base(int(round(float(mio.estadio_aforo) / (1.0 + 0.15 * float(m.obras.nivel("trib"))))))
 		m.obras.aplicar(mio)
@@ -173,6 +173,8 @@ static func _restaurar_ajustes_club(datos: Dictionary, m: Mundo) -> void:
 	## Y se recalculan los bonificadores del motor con el staff, el arbol del DT
 	## y el vestuario ya cargados: los niveles solos no mueven nada.
 	m.aplicar_bonificadores()
+	var bm: Array = datos.get("bonus_mio", [])
+	if bm.size() == 2 and m.mi_club() != null: m.mi_club().bonus_ataque = float(bm[0]); m.mi_club().bonus_defensa = float(bm[1])
 
 ## Prensa, médico, logros, retos, mentor, mercado DT, ojeados, libro y continentales.
 static func _restaurar_prensa_y_resto(datos: Dictionary, m: Mundo) -> void:
