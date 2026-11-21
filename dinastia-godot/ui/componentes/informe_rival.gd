@@ -78,18 +78,8 @@ static func _puesto_y_racha(d: Dictionary, rival_arg: Club, liga_arg: Liga) -> v
 
 ## Los consejos de la pizarra del rival, de la diferencia de nivel y de sus jugadores.
 static func _consejos_rival(d: Dictionary, rival_arg: Club, gol: Jugador) -> Array:
-	## Los consejos, de la pizarra del rival y de la diferencia de nivel.
-	var t := rival_arg.tactica
-	var c: Array = []
-	if t != null:
-		if t.presion == Tactica.Nivel.ALTO:
-			c.append("Presionan arriba: juega rápido o en largo para saltar la presión.")
-		if t.linea == Tactica.Nivel.ALTO or t.fuera_de_juego:
-			c.append("Defienden adelantados: hay espacio a la espalda de sus centrales.")
-		if t.mentalidad == Tactica.Mentalidad.DEFENSIVA or t.linea == Tactica.Nivel.BAJO:
-			c.append("Se encierran atrás: abre el campo y busca centros y tiros de fuera.")
-		if t.mentalidad == Tactica.Mentalidad.OFENSIVA:
-			c.append("Atacan con mucha gente: la contra puede hacerles daño.")
+	## Los consejos, de la pizarra del rival (su táctica) y, después, de la diferencia de nivel.
+	var c: Array = _consejos_tactica(rival_arg.tactica)
 	## Sobre sus jugadores: el mejor y el que más marca, con nombre.
 	var top: Array = d["mejores"]
 	if not top.is_empty():
@@ -111,6 +101,20 @@ static func _consejos_rival(d: Dictionary, rival_arg: Club, gol: Jugador) -> Arr
 		c.append("En el papel sois mejores: toma la iniciativa desde el inicio.")
 	if c.is_empty():
 		c.append("Partido parejo: los detalles (balón parado, cambios) decidirán.")
+	return c
+
+## Los consejos de la pizarra del rival (presión, línea, mentalidad). Sin táctica, ninguno.
+static func _consejos_tactica(t: Tactica) -> Array:
+	var c: Array = []
+	if t != null:
+		if t.presion == Tactica.Nivel.ALTO:
+			c.append("Presionan arriba: juega rápido o en largo para saltar la presión.")
+		if t.linea == Tactica.Nivel.ALTO or t.fuera_de_juego:
+			c.append("Defienden adelantados: hay espacio a la espalda de sus centrales.")
+		if t.mentalidad == Tactica.Mentalidad.DEFENSIVA or t.linea == Tactica.Nivel.BAJO:
+			c.append("Se encierran atrás: abre el campo y busca centros y tiros de fuera.")
+		if t.mentalidad == Tactica.Mentalidad.OFENSIVA:
+			c.append("Atacan con mucha gente: la contra puede hacerles daño.")
 	return c
 
 static func _media(js: Array) -> float:
