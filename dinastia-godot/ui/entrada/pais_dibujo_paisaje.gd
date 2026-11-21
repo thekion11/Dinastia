@@ -104,6 +104,12 @@ static func _montana_mas2(v: String) -> void:
 				PaisTrazo.rect(float(c[0]), float(c[1]), float(c[0]) + 0.1, float(c[1]) + 0.05)
 				PaisTrazo.pol([float(c[0]) - 0.01, float(c[1]) + 0.05, float(c[0]) + 0.11, float(c[1]) + 0.05,
 					float(c[0]) + 0.05, float(c[1]) + 0.09])
+		_:
+			_montana_mas3(v)
+
+## Las montañas del final de la lista (mismo orden de antes).
+static func _montana_mas3(v: String) -> void:
+	match v:
 		"glaciar":
 			PaisTrazo.cresta([-1.2, 0.0, -0.9, 0.7, -0.6, 0.86, -0.3, 0.68, 0.1, 0.9, 0.5, 0.74, 0.9, 0.62, 1.2, 0.0])
 			PaisTrazo.pol([-1.2, 0.0, 1.2, 0.0, 1.2, 0.3, 0.9, 0.36, 0.7, 0.32, 0.5, 0.4, 0.3, 0.35, 0.1, 0.42,
