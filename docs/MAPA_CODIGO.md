@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2598 archivos (.gd, .cpp, .h), 371779 líneas, 1013 clases con nombre.
+Total: 2598 archivos (.gd, .cpp, .h), 371819 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -29,7 +29,7 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 
 ## La Ruta (modo jugador)
 
-40 archivos, 5687 líneas. Carpetas: `nucleo`, `ui/carrera`.
+40 archivos, 5701 líneas. Carpetas: `nucleo`, `ui/carrera`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -48,7 +48,7 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 | `CarreraLogros` | `nucleo/carrera_logros.gd` | 114 | 7 |  |
 | `CarreraPatrocinio` | `nucleo/carrera_patrocinio.gd` | 72 | 7 |  |
 
-Cerca del tope (≥ 400 líneas): `carrera_jugador.gd` (450), `carrera_ruta_p1.gd` (435).
+Cerca del tope (≥ 400 líneas): `carrera_jugador.gd` (450), `carrera_ruta_p1.gd` (449).
 
 ## Partido: motor C4 y respaldo
 
@@ -143,7 +143,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 
 ## Núcleo: mundo, gestión y datos
 
-257 archivos, 53113 líneas. Carpetas: `nucleo`.
+257 archivos, 53139 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -154,7 +154,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | `Nativo` | `nucleo/nativo.gd` | 29 | 124 |  |
 | `Partida` | `nucleo/partida.gd` | 261 | 119 | partida_p2.gd ← partida_p1.gd |
 | `Copa` | `nucleo/copa.gd` | 348 | 95 |  |
-| `Mercado` | `nucleo/mercado.gd` | 64 | 92 | mercado_p1.gd |
+| `Mercado` | `nucleo/mercado.gd` | 64 | 93 | mercado_p1.gd |
 | `Finanzas` | `nucleo/finanzas.gd` | 398 | 91 |  |
 | `Roles` | `nucleo/roles.gd` | 357 | 79 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
 | `Prensa` | `nucleo/prensa.gd` | 393 | 76 | prensa_narra.gd ← prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
