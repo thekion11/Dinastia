@@ -30,13 +30,6 @@ func _directa(frase: String) -> String:
 				return mayusculas(r)
 	return ""
 
-static func _tiene_letras(s: String) -> bool:
-	for i in s.length():
-		var c := s.unicode_at(i)
-		if (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or (c >= 192 and c <= 687):
-			return true
-	return false
-
 func _patron(frase: String, prof: int) -> String:
 	for par: Array in _patrones:
 		var m: RegExMatch = (par[0] as RegEx).search(frase)
@@ -55,12 +48,6 @@ func _patron(frase: String, prof: int) -> String:
 
 ## (4-11, A4) PLANTILLAS CON %s / %d: una clave con marcadores («Efecto durante %d semanas.») traduce también la frase ya FORMADA («…durante 5 semanas.»).
 var _plantillas_de := {}   ## idioma → [[trozo literal más largo, RegEx, traducción], ...]
-
-static func _escapar_re(t: String) -> String:
-	var r := t
-	for c: String in ["\\", ".", "^", "$", "|", "(", ")", "[", "]", "{", "}", "*", "+", "?"]:
-		r = r.replace(c, "\\" + c)
-	return r
 
 func _plantillas() -> Array:
 	if _plantillas_de.has(idioma):

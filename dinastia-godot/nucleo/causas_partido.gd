@@ -70,7 +70,7 @@ static func candidatas(p: Partido, mio: int) -> Array:
 	_causas_arbitro(c, p, r, mio)
 	_causas_eficacia(c, p, r, mio, gm, gs)
 	_causas_lesiones(c, r, mio)
-	_causas_localia_y_posesion(c, p, r, mio)
+	_causas_localia_y_posesion(c, p, r, mio, fm, fs, om, os)
 	## RELLENO FINAL: siempre tres causas distintas. Si por los umbrales no salieron (partido en campo neutral, once casi iguales…),
 	## se suman las comparaciones de plantilla, forma y físico aunque la diferencia sea pequeña (peso mínimo: nunca le ganan a una causa real).
 	var claves := {}
@@ -221,7 +221,7 @@ static func _causas_lesiones(c: Array, r: RastroPartido, mio: int) -> void:
 			c.append(_c("lesion", -1, 0.35, Idiomas.t("Perdimos a %s por lesión en el %d'.") % [String(le["nombre"]), int(le["min"])]))
 
 ## Localía y posesión.
-static func _causas_localia_y_posesion(c: Array, p: Partido, r: RastroPartido, mio: int) -> void:
+static func _causas_localia_y_posesion(c: Array, p: Partido, r: RastroPartido, mio: int, fm: int, fs: int, om: int, os: int) -> void:
 	## Y si no hubo nada más fuerte: la localía (del modelo: +8 % en casa, −6 % fuera) y la posesión.
 	if not r.con_motor and not p.neutral:
 		c.append(_c("localia", 1 if mio == 0 else -1, 0.15,
