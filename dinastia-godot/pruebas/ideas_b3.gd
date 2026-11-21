@@ -6,24 +6,12 @@ func ejecutar() -> void:
 	var c := m.mi_club()
 	var sel: Selecciones = m.selecciones
 	var tres := _b3_figuras(c, sel)
-	## Lista preliminar y lista definitiva (862).
-	sel.semana(m.anio, 6)
-	_comprobar(sel.prenomina_ids.size() == 30 and sel.prenominados().size() == 30, "la semana 6 publica una prenómina de 30 (862)")
-	for j in tres:
-		j.fisico = 100
-		j.moral = 50
 	var ev_comp: Array[int] = [0]
-	var f_mov := func(concepto: String, monto: int) -> void:
-		if concepto.begins_with("Compensación"):
-			ev_comp[0] += monto
-	sel.movimiento.connect(f_mov)
 	var tocados: Array[Jugador] = []
-	var f_toc := func(j: Jugador, _s: int, _so: bool) -> void: tocados.append(j)
-	sel.vuelve_tocado.connect(f_toc)
-	_b3_fecha_fifa(m, c, sel, tres)
-	_b3_compensacion(m, sel, tres, tocados, ev_comp)
-	_b3_descanso_y_nacionalidad(c, sel)
-	_b3_mundial(c, sel)
+	_b3_nomina(m, c, sel, tres, ev_comp, tocados)
+	_b3_compensacion(m, sel, tres, ev_comp, tocados)
+	_b3_descanso_y_nacionalidad(m, c, sel, tres)
+	_b3_mundial_y_vitrina(c, sel)
 	_b3_amistosos(m, c)
 	_b3_playoff_y_supercopa(m)
 	_ideas_b_copas(m)
@@ -40,7 +28,19 @@ func _b3_figuras(c: Club, sel: Selecciones) -> Array[Jugador]:
 				break
 	return tres
 
-func _b3_fecha_fifa(m: Mundo, c: Club, sel: Selecciones, tres: Array[Jugador]) -> void:
+## Lista preliminar y lista definitiva (862); los convocados del club vuelven con desgaste (844, 872).
+func _b3_nomina(m: Mundo, c: Club, sel: Selecciones, tres: Array[Jugador], ev_comp: Array[int], tocados: Array[Jugador]) -> void:
+	sel.semana(m.anio, 6)
+	_comprobar(sel.prenomina_ids.size() == 30 and sel.prenominados().size() == 30, "la semana 6 publica una prenómina de 30 (862)")
+	for j in tres:
+		j.fisico = 100
+		j.moral = 50
+	var f_mov := func(concepto: String, monto: int) -> void:
+		if concepto.begins_with("Compensación"):
+			ev_comp[0] += monto
+	sel.movimiento.connect(f_mov)
+	var f_toc := func(j: Jugador, _s: int, _so: bool) -> void: tocados.append(j)
+	sel.vuelve_tocado.connect(f_toc)
 	sel.semana(m.anio, 7)
 	_comprobar(sel.nomina_ids.size() == 18 and sel.convocados().size() == 18, "la fecha FIFA reduce a una nómina definitiva de 18 (862)")
 	var mios_conv := 0
@@ -54,7 +54,7 @@ func _b3_fecha_fifa(m: Mundo, c: Club, sel: Selecciones, tres: Array[Jugador]) -
 	_comprobar(tres[0].moral > 50 and sel.caps_de(tres[0]) == 1, "y con la moral arriba y una internacionalidad más (844)")
 
 ## Con muchas fechas, alguien vuelve lesionado y la FIFA compensa al club (846, 872).
-func _b3_compensacion(m: Mundo, sel: Selecciones, tres: Array[Jugador], tocados: Array[Jugador], ev_comp: Array[int]) -> void:
+func _b3_compensacion(m: Mundo, sel: Selecciones, tres: Array[Jugador], ev_comp: Array[int], tocados: Array[Jugador]) -> void:
 	for i in 120:
 		Azar.sembrar(500 + i)
 		for j in tres:
@@ -65,13 +65,12 @@ func _b3_compensacion(m: Mundo, sel: Selecciones, tres: Array[Jugador], tocados:
 			break
 	_comprobar(not tocados.is_empty() and tocados[0].lesion > 0, "alguno vuelve lesionado de la selección (872)")
 	_comprobar(ev_comp[0] > 0, "y la federación internacional compensa al club con %s (846)" % _dinero(ev_comp[0]))
-	## Conflicto club-selección: pedir descanso (871).
+
+## Conflicto club-selección: pedir descanso (871); nacionalización por años de residencia (863).
+func _b3_descanso_y_nacionalidad(m: Mundo, c: Club, sel: Selecciones, tres: Array[Jugador]) -> void:
 	var fig := tres[2]
 	_comprobar(sel.pedir_descanso(fig) == "" and sel.pidio_descanso(fig), "se pide a la federación que no cite a la figura (871)")
 	_comprobar(sel.pedir_descanso(fig) != "" and sel.pedir_descanso(m.ligas[0].clubes[1].plantilla[0]) != "", "no se repite el pedido ni se pide por jugadores ajenos (871)")
-
-## Nacionalización por años de residencia (863).
-func _b3_descanso_y_nacionalidad(c: Club, sel: Selecciones) -> void:
 	var extr: Jugador = c.plantilla[c.plantilla.size() - 1]
 	extr.pais = "BRA"
 	_comprobar(not sel.elegible(extr) and sel.nacionalizar(extr) != "", "un extranjero recién llegado no se puede nacionalizar (863)")
@@ -82,7 +81,7 @@ func _b3_descanso_y_nacionalidad(c: Club, sel: Selecciones) -> void:
 	_comprobar(sel.nacionalizar(extr) == "" and sel.elegible(extr) and sel.nacionalidad_deportiva(extr) == "CHI" and c.saldo < s_nac, "a los 4 años se nacionaliza pagando el trámite y ya es elegible (863)")
 
 ## Mundial cada cuatro años y vitrina (867, 874).
-func _b3_mundial(c: Club, sel: Selecciones) -> void:
+func _b3_mundial_y_vitrina(c: Club, sel: Selecciones) -> void:
 	_comprobar(sel.toca_copa_del_mundo(2026) and sel.toca_copa_del_mundo(2030) and not sel.toca_copa_del_mundo(2028), "el Mundial toca cada cuatro años, en los años reales (867; 10-11)")
 	var camp := sel.copa_del_mundo(2028)
 	_comprobar(String(camp["campeon"]) != "" and String(sel.mundial["campeon"]) == String(camp["campeon"]) and (camp["convocados"] as Array).size() == 6, "se juega la Copa del Mundo con campeón y seis convocados tuyos (867): %s" % camp["campeon"])
@@ -124,13 +123,14 @@ func _ideas_b_copas(m: Mundo) -> void:
 	for cl: Club in m.clubes.values():
 		todos.append(cl)
 	var l16: Array[Club] = todos.slice(0, 16)
-	_b3_eliminacion_y_sede(m, todos, l16)
-	_b3_continental(l16)
-	_b3_plazas(m, todos)
+	_b3_copa_eliminatoria(m, todos)
+	_b3_continental_grupos(l16)
+	_b3_plazas_continentales(m, todos)
 
-func _b3_eliminacion_y_sede(m: Mundo, todos: Array[Club], l16: Array[Club]) -> void:
-	## Copa de eliminación directa (890), sorteo anunciado (901), sede fija (905).
+## Copa de eliminación directa (890), sorteo anunciado (901), sede fija (905).
+func _b3_copa_eliminatoria(m: Mundo, todos: Array[Club]) -> void:
 	var cp := Copa.new("Copa de prueba")
+	var l16: Array[Club] = todos.slice(0, 16)
 	cp.preparar(l16)
 	var sorteos: Array[int] = [0]
 	cp.sorteo_eliminatoria.connect(func(_r: String, parejas: Array) -> void: sorteos[0] += parejas.size())
@@ -152,8 +152,8 @@ func _b3_eliminacion_y_sede(m: Mundo, todos: Array[Club], l16: Array[Club]) -> v
 	_comprobar(m.copa.sede_final_id == todos[5].id and m.ajustes_competicion["copa_sede"] == todos[5].id, "el editor fija la sede de la final para esta y las próximas temporadas (905)")
 	_comprobar(Copa.copas_de("ENG", "Inglaterra").size() == 2 and Copa.copas_de("ENG", "Inglaterra")[1][0] == "Copa de la Liga" and Copa.copas_de("ESP", "España")[0][0] == "Copa del Rey", "hay copa de la liga secundaria y copas propias de cada país (894)")
 
-func _b3_continental(l16: Array[Club]) -> void:
-	## Copa continental con grupos (896, 903, 904, 907, 908).
+## Copa continental con grupos (896, 903, 904, 907, 908).
+func _b3_continental_grupos(l16: Array[Club]) -> void:
 	var lib := Continental.crear("lib")
 	lib.preparar_con(l16, FormatosConti.CLASICO)   ## (10-11) el formato de antes; los nuevos se prueban en `banco/continentales.gd`
 	_comprobar(lib.por_grupos and lib.grupos.size() == 4 and lib.grupos[0].size() == 4, "la copa internacional arranca con 4 grupos de 4 (896, 903)")
@@ -171,8 +171,8 @@ func _b3_continental(l16: Array[Club]) -> void:
 	var camp2 := lib.jugar_hasta_el_final()
 	_comprobar(camp2 != null and lib.historial.size() == 6, "la copa internacional llega a su final (896)")
 
-func _b3_plazas(m: Mundo, todos: Array[Club]) -> void:
-	## Cupos según la posición en la liga (908).
+## Cupos según la posición en la liga (908).
+func _b3_plazas_continentales(m: Mundo, todos: Array[Club]) -> void:
 	var liga1: Liga = m.ligas[0]
 	var lider: Club = liga1.clubes[7]
 	liga1.tabla_puntos[lider.id]["pts"] = 99
@@ -187,4 +187,3 @@ func _b3_plazas(m: Mundo, todos: Array[Club]) -> void:
 			break
 	var pl2: Array = Continental.plazas(m.clubes.values(), m.ligas, campcopa)["lib"]
 	_comprobar(campcopa != null and pl2.has(campcopa) and pl2.size() == FormatosConti.plazas("lib"), "el campeón de copa se lleva una plaza directa (908)")
-
