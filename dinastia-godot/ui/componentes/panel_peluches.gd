@@ -150,8 +150,7 @@ func _process(delta: float) -> void:
 func _paso_fase(delta: float) -> void:
 	match fase:
 		MOVER:
-			var d := Vector2(float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT)),
-				float(Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN)) - float(Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP)))
+			var d := _direccion_teclas()
 			mover(d, delta)
 		BAJA:
 			if _t >= T_BAJA:
@@ -173,6 +172,11 @@ func _paso_fase(delta: float) -> void:
 		SALE:
 			if _t >= T_SALIDA:
 				_terminar()
+
+## La dirección que piden las teclas (flechas o WASD), cada eje entre −1 y 1.
+func _direccion_teclas() -> Vector2:
+	return Vector2(float(Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT)) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT)),
+		float(Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_DOWN)) - float(Input.is_physical_key_pressed(KEY_W) or Input.is_physical_key_pressed(KEY_UP)))
 
 ## Mueve la garra `d` (−1..1 en cada eje) durante `delta` segundos, sin salirse del cristal.
 func mover(d: Vector2, delta: float) -> void:
