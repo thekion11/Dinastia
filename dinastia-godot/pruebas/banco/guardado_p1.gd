@@ -1,6 +1,12 @@
 extends "res://pruebas/banco/base.gd"
 ## [Capa 1/3 de `guardado.gd`] _probar_repetibilidad, _probar_guardado_seguro, _comprobar_estado_cargado
 
+var _f
+var _m: Mundo
+var _n
+var _ruta
+var _semana1
+
 func _probar_repetibilidad() -> void:
 	_titulo("REPETIBILIDAD (lo que el HTML no puede hacer)")
 	var a := Mundo.new()
@@ -29,55 +35,73 @@ func _probar_repetibilidad() -> void:
 ## partida; se recupera del temporal o de la copia anterior.
 func _probar_guardado_seguro() -> void:
 	_titulo("GUARDADO SEGURO")
-	var m := Mundo.new()
-	m.generar(["CHI"], 909)
-	m.tomar_el_mando(m.ligas[0].clubes[2].id)
+	_m = Mundo.new()
+	_m.generar(["CHI"], 909)
+	_m.tomar_el_mando(_m.ligas[0].clubes[2].id)
+	_probar_guardado_seguro_01()
+	_probar_guardado_seguro_02()
+	_probar_guardado_seguro_03()
+	_probar_guardado_seguro_04()
+	_probar_guardado_seguro_05()
+	_probar_guardado_seguro_06()
+
+func _probar_guardado_seguro_01() -> void:
 	## 20-10: al empezar, tu club ya tiene sus bonificaciones (antes valían 1,0
 	## hasta la primera semana y solo al recargar salían bien).
-	var rec := Partida.desde_instantanea(Partida.instantanea(m))
-	_comprobar(absf(m.mi_club().bonus_ataque - rec.mi_club().bonus_ataque) < 0.0001
-		and absf(m.mi_club().bonus_defensa - rec.mi_club().bonus_defensa) < 0.0001,
+	var rec = Partida.desde_instantanea(Partida.instantanea(_m))
+	_comprobar(absf(_m.mi_club().bonus_ataque - rec.mi_club().bonus_ataque) < 0.0001
+		and absf(_m.mi_club().bonus_defensa - rec.mi_club().bonus_defensa) < 0.0001,
 		"bonificaciones del club iguales en vivo y al recargar (%.3f/%.3f vs %.3f/%.3f)" % [
-		m.mi_club().bonus_ataque, m.mi_club().bonus_defensa, rec.mi_club().bonus_ataque, rec.mi_club().bonus_defensa])
-	var n := "__prueba_seguro__"
-	var ruta := Partida.ruta_de(n)
-	Partida.borrar(n)
-	_comprobar(Partida.guardar(m, n), "se guarda")
-	_comprobar(FileAccess.file_exists(ruta) and not FileAccess.file_exists(ruta + Partida.TEMPORAL), "queda el principal y no el temporal")
-	var semana1 := m.semana
-	m.semana += 3
-	_comprobar(Partida.guardar(m, n), "se guarda otra vez")
-	_comprobar(FileAccess.file_exists(ruta + Partida.RESPALDO), "la versión anterior queda como copia")
+		_m.mi_club().bonus_ataque, _m.mi_club().bonus_defensa, rec.mi_club().bonus_ataque, rec.mi_club().bonus_defensa])
+	_n = "__prueba_seguro__"
+	_ruta = Partida.ruta_de(_n)
+	Partida.borrar(_n)
+	_comprobar(Partida.guardar(_m, _n), "se guarda")
+	_comprobar(FileAccess.file_exists(_ruta) and not FileAccess.file_exists(_ruta + Partida.TEMPORAL), "queda el principal y no el temporal")
+	_semana1 = _m.semana
+	_m.semana += 3
+	_comprobar(Partida.guardar(_m, _n), "se guarda otra vez")
+	_comprobar(FileAccess.file_exists(_ruta + Partida.RESPALDO), "la versión anterior queda como copia")
+
+func _probar_guardado_seguro_02() -> void:
 	## Principal corrompido (basura): carga la copia y avisa.
-	var f := FileAccess.open(ruta, FileAccess.WRITE)
-	f.store_string("basura que no es una partida")
-	f.close()
-	var m2 := Partida.cargar(n)
-	_comprobar(m2 != null and m2.semana == semana1 and Partida.cargada_de_respaldo, "principal roto: se recupera la copia anterior")
+	_f = FileAccess.open(_ruta, FileAccess.WRITE)
+	_f.store_string("basura que no es una partida")
+	_f.close()
+	var m2 = Partida.cargar(_n)
+	_comprobar(m2 != null and m2.semana == _semana1 and Partida.cargada_de_respaldo, "principal roto: se recupera la copia anterior")
+
+func _probar_guardado_seguro_03() -> void:
 	## Principal truncado a 2 bytes: no revienta.
-	f = FileAccess.open(ruta, FileAccess.WRITE)
-	f.store_8(1)
-	f.store_8(2)
-	f.close()
-	_comprobar(Partida.cargar(n) != null, "principal truncado: tampoco se pierde")
+	_f = FileAccess.open(_ruta, FileAccess.WRITE)
+	_f.store_8(1)
+	_f.store_8(2)
+	_f.close()
+	_comprobar(Partida.cargar(_n) != null, "principal truncado: tampoco se pierde")
+
+func _probar_guardado_seguro_04() -> void:
 	## Sin principal: la ranura sigue en el menú.
-	DirAccess.remove_absolute(ruta)
+	DirAccess.remove_absolute(_ruta)
 	var esta := false
 	for d: Dictionary in Partida.listar():
-		esta = esta or String(d.get("fichero", "")) == n
+		esta = esta or String(d.get("fichero", "")) == _n
 	_comprobar(esta, "sin principal, la ranura sigue en la lista de partidas")
+
+func _probar_guardado_seguro_05() -> void:
 	## Un temporal completo (corte entre escribir y mover) se aprovecha.
-	_comprobar(Partida.guardar(m, n), "se guarda de nuevo")
-	DirAccess.rename_absolute(ruta, ruta + Partida.TEMPORAL)
-	var m3 := Partida.cargar(n)
-	_comprobar(m3 != null and m3.semana == semana1 + 3, "un temporal entero se recupera (semana %d)" % (m3.semana if m3 != null else -1))
+	_comprobar(Partida.guardar(_m, _n), "se guarda de nuevo")
+	DirAccess.rename_absolute(_ruta, _ruta + Partida.TEMPORAL)
+	var m3 = Partida.cargar(_n)
+	_comprobar(m3 != null and m3.semana == _semana1 + 3, "un temporal entero se recupera (semana %d)" % (m3.semana if m3 != null else -1))
+
+func _probar_guardado_seguro_06() -> void:
 	## M-412 (20-10): GUARDADOS ESTROPEADOS AL AZAR. Se toma un guardado bueno y
 	## se rompe de 40 maneras (bytes cambiados, cortado, cabecera con un tamaño
 	## absurdo), sin copia de respaldo: cargar nunca revienta; o sale la partida
 	## o sale null (y el banco caza cualquier «SCRIPT ERROR» por el camino).
-	Partida.borrar(n)
-	_comprobar(Partida.guardar(m, n), "guardado bueno para estropear")
-	var bueno := FileAccess.get_file_as_bytes(ruta)
+	Partida.borrar(_n)
+	_comprobar(Partida.guardar(_m, _n), "guardado bueno para estropear")
+	var bueno = FileAccess.get_file_as_bytes(_ruta)
 	var az := RandomNumberGenerator.new()
 	az.seed = 412
 	var nulos := 0
@@ -98,20 +122,20 @@ func _probar_guardado_seguro() -> void:
 				var desde := az.randi_range(4, malo.size() - 2)
 				for k in range(desde, mini(desde + 64, malo.size())):
 					malo[k] = 0
-		DirAccess.remove_absolute(ruta + Partida.RESPALDO)
-		var fm := FileAccess.open(ruta, FileAccess.WRITE)
+		DirAccess.remove_absolute(_ruta + Partida.RESPALDO)
+		var fm = FileAccess.open(_ruta, FileAccess.WRITE)
 		fm.store_buffer(malo)
 		fm.close()
-		var mm := Partida.cargar(n)
+		var mm = Partida.cargar(_n)
 		if mm == null:
 			nulos += 1
 		else:
 			cargados += 1
 	Partida.cargada_de_respaldo = false
 	_comprobar(nulos + cargados == 40, "40 guardados estropeados: ninguno revienta (%d no cargan, %d sí)" % [nulos, cargados])
-	Partida.borrar(n)
-	_comprobar(not FileAccess.file_exists(ruta) and not FileAccess.file_exists(ruta + Partida.TEMPORAL)
-		and not FileAccess.file_exists(ruta + Partida.RESPALDO), "borrar quita principal, temporal y copia")
+	Partida.borrar(_n)
+	_comprobar(not FileAccess.file_exists(_ruta) and not FileAccess.file_exists(_ruta + Partida.TEMPORAL)
+		and not FileAccess.file_exists(_ruta + Partida.RESPALDO), "borrar quita principal, temporal y copia")
 
 ## Lo que no se ve al mirar una partida recien cargada: la division de cada liga
 ## y el cuadro de la copa. Sin guardarlos, todas las ligas volvian a ser primera
