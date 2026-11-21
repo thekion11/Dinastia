@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2623 archivos (.gd, .cpp, .h), 374747 líneas, 1013 clases con nombre.
+Total: 2623 archivos (.gd, .cpp, .h), 374746 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -93,7 +93,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-476 archivos, 94179 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+476 archivos, 94157 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1280 archivos, 123677 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1280 archivos, 123698 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
@@ -148,7 +148,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Mundo` | `nucleo/mundo.gd` | 158 | 942 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
-| `Jugador` | `nucleo/jugador.gd` | 32 | 495 | jugador_p1.gd |
+| `Jugador` | `nucleo/jugador.gd` | 32 | 494 | jugador_p1.gd |
 | `Liga` | `nucleo/liga.gd` | 235 | 206 |  |
 | `Nombres` | `nucleo/nombres.gd` | 183 | 172 |  |
 | `Nativo` | `nucleo/nativo.gd` | 29 | 124 |  |

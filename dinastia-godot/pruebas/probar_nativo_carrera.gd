@@ -54,55 +54,9 @@ static func _probar_habilidades(nat: Object, fallos: Array[String], rng: RandomN
 	var hab_malos := 0
 	for pe: String in puestos:
 		for nivel in [1, 2, 7, 15, 40, 99]:
-			var c := CarreraJugador.new()
-			c.ruta = {}
-			c.ruta["nivel"] = nivel
-			c.ruta["hab_nivel"] = nivel
-			c.ruta["hab"] = 500
-			var q := Jugador.new()
-			q.id = "prueba-%s-%d" % [pe, nivel]
-			q.pos_e = pe
-			q.pos_sec.append("MC" if pe != "MC" else "DFC")
-			var claves: Array = ["div", "par", "saq", "ref", "vel", "pos"] if pe == "POR" else ["rit", "tir", "pas", "reg", "def", "fis"]
-			for k: String in claves:
-				q.atributos[k] = rng.randi_range(22, 99)
-			## Reparto inicial (con y sin extensión) y el detalle resultante.
-			_con(null)
-			c.ruta.erase("detalle")
-			var d_gd: Dictionary = CarreraHabilidad.detalle(c, q).duplicate(true)
-			var res_gd := {}
-			for zona: String in claves:
-				for par: Array in CarreraHabilidad.de_zona(zona):
-					var h := String(par[0])
-					res_gd[h] = [CarreraHabilidad.precio_zona(c, q, h), CarreraHabilidad.coste(c, q, h)]
-			var cp_gd := {}
-			for otro: String in puestos:
-				cp_gd[otro] = CarreraHabilidad.coste_puesto(c, q, otro)
-			var fn_gd := CarreraHabilidad._factor_nivel(c)
-			var fp_gd := CarreraHabilidad._factor_puesto(q)
-			_con(nat)
-			c.ruta.erase("detalle")
-			var d_c: Dictionary = CarreraHabilidad.detalle(c, q).duplicate(true)
-			hab_casos += 1
-			if _bytes(d_gd) != _bytes(d_c):
-				hab_malos += 1
-				fallos.append("reparto del detalle distinto en %s nivel %d" % [pe, nivel])
-			for zona: String in claves:
-				for par: Array in CarreraHabilidad.de_zona(zona):
-					var h := String(par[0])
-					hab_casos += 1
-					if _bytes(res_gd[h]) != _bytes([CarreraHabilidad.precio_zona(c, q, h), CarreraHabilidad.coste(c, q, h)]):
-						hab_malos += 1
-						if hab_malos <= 5:
-							fallos.append("precio o coste de «%s» distinto en %s nivel %d" % [h, pe, nivel])
-			for otro: String in puestos:
-				hab_casos += 1
-				if cp_gd[otro] != CarreraHabilidad.coste_puesto(c, q, otro):
-					hab_malos += 1
-					fallos.append("coste de pasar de %s a %s distinto (nivel %d)" % [pe, otro, nivel])
-			if _bytes(fn_gd) != _bytes(CarreraHabilidad._factor_nivel(c)) or _bytes(fp_gd) != _bytes(CarreraHabilidad._factor_puesto(q)):
-				hab_malos += 1
-				fallos.append("factores de nivel o de puesto distintos en %s nivel %d" % [pe, nivel])
+			var r := _habilidad_puesto(nat, fallos, rng, puestos, pe, nivel)
+			hab_casos += r[0]
+			hab_malos += r[1]
 	## Cuentas sueltas (promedio con redondeo en el .5, coste con zonas de 1 a 6 habilidades).
 	for vs: Array in [[50, 51], [60, 61, 62, 63], [99, 98, 1], [0], [10, 11, 11, 12, 12, 13]]:
 		var lista: Array = []
@@ -126,6 +80,63 @@ static func _probar_habilidades(nat: Object, fallos: Array[String], rng: RandomN
 	return hab_casos
 
 ## PremioMensual: varias ligas al azar, con empates, para tocar la desigualdad aproximada.
+
+## Un puesto y un nivel: reparto, precios y costes de la ruta (devuelve [casos, distintos]).
+static func _habilidad_puesto(nat: Object, fallos: Array[String], rng: RandomNumberGenerator,
+		puestos: Array, pe: String, nivel: int) -> Array:
+	var hab_casos := 0
+	var hab_malos := 0
+	var c := CarreraJugador.new()
+	c.ruta = {}
+	c.ruta["nivel"] = nivel
+	c.ruta["hab_nivel"] = nivel
+	c.ruta["hab"] = 500
+	var q := Jugador.new()
+	q.id = "prueba-%s-%d" % [pe, nivel]
+	q.pos_e = pe
+	q.pos_sec.append("MC" if pe != "MC" else "DFC")
+	var claves: Array = ["div", "par", "saq", "ref", "vel", "pos"] if pe == "POR" else ["rit", "tir", "pas", "reg", "def", "fis"]
+	for k: String in claves:
+		q.atributos[k] = rng.randi_range(22, 99)
+	## Reparto inicial (con y sin extensión) y el detalle resultante.
+	_con(null)
+	c.ruta.erase("detalle")
+	var d_gd: Dictionary = CarreraHabilidad.detalle(c, q).duplicate(true)
+	var res_gd := {}
+	for zona: String in claves:
+		for par: Array in CarreraHabilidad.de_zona(zona):
+			var h := String(par[0])
+			res_gd[h] = [CarreraHabilidad.precio_zona(c, q, h), CarreraHabilidad.coste(c, q, h)]
+	var cp_gd := {}
+	for otro: String in puestos:
+		cp_gd[otro] = CarreraHabilidad.coste_puesto(c, q, otro)
+	var fn_gd := CarreraHabilidad._factor_nivel(c)
+	var fp_gd := CarreraHabilidad._factor_puesto(q)
+	_con(nat)
+	c.ruta.erase("detalle")
+	var d_c: Dictionary = CarreraHabilidad.detalle(c, q).duplicate(true)
+	hab_casos += 1
+	if _bytes(d_gd) != _bytes(d_c):
+		hab_malos += 1
+		fallos.append("reparto del detalle distinto en %s nivel %d" % [pe, nivel])
+	for zona: String in claves:
+		for par: Array in CarreraHabilidad.de_zona(zona):
+			var h := String(par[0])
+			hab_casos += 1
+			if _bytes(res_gd[h]) != _bytes([CarreraHabilidad.precio_zona(c, q, h), CarreraHabilidad.coste(c, q, h)]):
+				hab_malos += 1
+				if hab_malos <= 5:
+					fallos.append("precio o coste de «%s» distinto en %s nivel %d" % [h, pe, nivel])
+	for otro: String in puestos:
+		hab_casos += 1
+		if cp_gd[otro] != CarreraHabilidad.coste_puesto(c, q, otro):
+			hab_malos += 1
+			fallos.append("coste de pasar de %s a %s distinto (nivel %d)" % [pe, otro, nivel])
+	if _bytes(fn_gd) != _bytes(CarreraHabilidad._factor_nivel(c)) or _bytes(fp_gd) != _bytes(CarreraHabilidad._factor_puesto(q)):
+		hab_malos += 1
+		fallos.append("factores de nivel o de puesto distintos en %s nivel %d" % [pe, nivel])
+	return [hab_casos, hab_malos]
+
 static func _probar_jugador_del_mes(nat: Object, fallos: Array[String], rng: RandomNumberGenerator) -> void:
 	var pm_malos := 0
 	for semilla in range(40):
