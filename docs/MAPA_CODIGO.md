@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2597 archivos (.gd, .cpp, .h), 371616 líneas, 1013 clases con nombre.
+Total: 2598 archivos (.gd, .cpp, .h), 371749 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -29,7 +29,7 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 
 ## La Ruta (modo jugador)
 
-40 archivos, 5651 líneas. Carpetas: `nucleo`, `ui/carrera`.
+40 archivos, 5679 líneas. Carpetas: `nucleo`, `ui/carrera`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -93,12 +93,12 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-471 archivos, 93640 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+472 archivos, 93665 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Principal` | `ui/principal.gd` | 58 | 260 | principal_p17.gd ← principal_p16.gd ← principal_p15.gd ← principal_p14.gd ← principal_p13.gd ← principal_p12.gd ← principal_p10.gd ← principal_p9.gd ← principal_p8.gd ← principal_p7.gd ← principal_p6.gd |
-| `Tema` | `ui/tema.gd` | 153 | 249 |  |
+| `Principal` | `ui/principal.gd` | 58 | 261 | principal_p17.gd ← principal_p16.gd ← principal_p15.gd ← principal_p14.gd ← principal_p13.gd ← principal_p12.gd ← principal_p10.gd ← principal_p9.gd ← principal_p8.gd ← principal_p7.gd ← principal_p6.gd |
+| `Tema` | `ui/tema.gd` | 153 | 250 |  |
 | `VistaEstadio` | `ui/estadio.gd` | 446 | 188 | estadio_p5.gd ← estadio_p5_p1.gd ← estadio_p4.gd ← estadio_p3.gd ← estadio_p2.gd ← estadio_p1.gd |
 | `VistaCiudad` | `ui/ciudad_vista.gd` | 218 | 104 | ciudad_vista_p1.gd ← ciudad_vista_p1_p1.gd |
 | `Escudo` | `ui/escudo.gd` | 71 | 101 | escudo_p1.gd ← escudo_p1_p1.gd |
@@ -112,7 +112,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 | `Inicio` | `ui/inicio.gd` | 112 | 41 | inicio_p2.gd ← inicio_p1.gd |
 | `MenuLateral` | `ui/componentes/menu_lateral.gd` | 423 | 40 |  |
 
-Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla_pes.gd` (450), `pantalla_cantera_p2.gd` (450), `pantalla_opciones.gd` (450), `pantalla_opciones_p1.gd` (450), `partido_jugable.gd` (450), `telefono_p1.gd` (449), `pantalla_despacho.gd` (449), `interior_instalacion_p2.gd` (448), `panel_plantel.gd` (448).
+Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla_pes.gd` (450), `pantalla_cantera_p2.gd` (450), `pantalla_opciones.gd` (450), `pantalla_opciones_p1.gd` (450), `partido_jugable.gd` (450), `telefono_p1.gd` (449), `interior_instalacion_p2.gd` (448), `panel_plantel.gd` (448), `estadio_p1.gd` (448).
 
 ## Minijuegos
 
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1260 archivos, 121425 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1260 archivos, 121505 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
