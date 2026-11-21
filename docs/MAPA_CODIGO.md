@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2548 archivos (.gd, .cpp, .h), 366410 líneas, 1002 clases con nombre.
+Total: 2550 archivos (.gd, .cpp, .h), 366496 líneas, 1002 clases con nombre.
 
 ## Extensión C++
 
@@ -79,7 +79,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Club` | `nucleo/club.gd` | 416 | 821 |  |
+| `Club` | `nucleo/club.gd` | 416 | 822 |  |
 | `StadiumBuilder` | `visor/stadium_builder.gd` | 13 | 135 | stadium_builder_p10.gd ← stadium_builder_p10_p1.gd ← estadio_partes_tribuna.gd ← stadium_builder_p9.gd ← stadium_builder_p8.gd ← stadium_builder_p7.gd ← stadium_builder_p6.gd ← stadium_builder_p5.gd ← stadium_builder_p4.gd ← stadium_builder_p3.gd ← stadium_builder_p2.gd |
 | `EstadioExtras` | `visor/estadio_extras.gd` | 310 | 9 |  |
 | `ClubDentro` | `nucleo/club_dentro.gd` | 285 | 8 |  |
@@ -93,7 +93,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p4.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-469 archivos, 93554 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+471 archivos, 93640 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -101,7 +101,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p4.gd` (450), `stadium_builde
 | `Tema` | `ui/tema.gd` | 153 | 249 |  |
 | `VistaEstadio` | `ui/estadio.gd` | 446 | 188 | estadio_p5.gd ← estadio_p5_p1.gd ← estadio_p4.gd ← estadio_p3.gd ← estadio_p2.gd ← estadio_p1.gd |
 | `VistaCiudad` | `ui/ciudad_vista.gd` | 218 | 104 | ciudad_vista_p1.gd ← ciudad_vista_p1_p1.gd |
-| `Escudo` | `ui/escudo.gd` | 71 | 101 | escudo_p1.gd |
+| `Escudo` | `ui/escudo.gd` | 71 | 101 | escudo_p1.gd ← escudo_p1_p1.gd |
 | `Cara` | `ui/cara.gd` | 377 | 76 | cara_p1.gd |
 | `EscalaMovil` | `ui/componentes/escala_movil.gd` | 148 | 75 |  |
 | `Animar` | `ui/componentes/animar.gd` | 95 | 70 |  |
