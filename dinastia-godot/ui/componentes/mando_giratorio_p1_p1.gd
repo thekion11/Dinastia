@@ -264,22 +264,25 @@ func _icono(carpeta: String, nombre: String) -> Texture2D:
 	return t
 
 ## Los iconos de cada pieza para un dispositivo (nombre de archivo sin .png).
+const _ICONOS_PS := {
+	"A": "playstation_button_cross",
+	"B": "playstation_button_circle",
+	"X": "playstation_button_square",
+	"Y": "playstation_button_triangle",
+	"LB": "playstation_trigger_l1",
+	"RB": "playstation_trigger_r1",
+	"LT": "playstation_trigger_l2",
+	"RT": "playstation_trigger_r2",
+	"LS": "playstation_stick_l_press",
+	"RS": "playstation_stick_r_press",
+	"DPAD": "playstation_dpad",
+	"START": "playstation5_button_options",
+	"BACK": "playstation5_button_create",
+}
+
 static func nombre_icono(pieza: String, disp: String) -> String:
-	if disp == "ps":
-		match pieza:
-			"A": return "playstation_button_cross"
-			"B": return "playstation_button_circle"
-			"X": return "playstation_button_square"
-			"Y": return "playstation_button_triangle"
-			"LB": return "playstation_trigger_l1"
-			"RB": return "playstation_trigger_r1"
-			"LT": return "playstation_trigger_l2"
-			"RT": return "playstation_trigger_r2"
-			"LS": return "playstation_stick_l_press"
-			"RS": return "playstation_stick_r_press"
-			"DPAD": return "playstation_dpad"
-			"START": return "playstation5_button_options"
-			"BACK": return "playstation5_button_create"
+	if disp == "ps" and _ICONOS_PS.has(pieza):
+		return String(_ICONOS_PS[pieza])
 	var r_nombre_icono_1: Variant = _nombre_icono_1(pieza)
 	if r_nombre_icono_1 != null:
 		return r_nombre_icono_1
