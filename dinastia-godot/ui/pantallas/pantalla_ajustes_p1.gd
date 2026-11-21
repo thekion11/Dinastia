@@ -238,14 +238,14 @@ func _repintar_tarjetas(n: Node) -> void:
 			if h is TextureRect and (h as TextureRect).texture == Principal._brillo_panel:
 				(h as TextureRect).visible = p._brillo_tarjetas
 			elif h is MarcaPanel:
-				(h as MarcaPanel).poner(p._marca_tarjeta, p.COL_ACENTO)
+				(h as MarcaPanel).poner(p._marca_tarjeta, p.col_acento)
 				tiene_marca = true
 		## Una tarjeta creada cuando la marca estaba en «ninguno» no tiene el nodo:
 		## se le cuelga ahora, o encender las escuadras solo valdria para lo que se
 		## pintara despues.
 		if not tiene_marca and p._marca_tarjeta != "ninguno":
 			var mk2 := MarcaPanel.new()
-			mk2.poner(p._marca_tarjeta, p.COL_ACENTO)
+			mk2.poner(p._marca_tarjeta, p.col_acento)
 			p_local.add_child(mk2)
 	for h2 in n.get_children():
 		_repintar_tarjetas(h2)

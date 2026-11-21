@@ -38,9 +38,9 @@ func _traducir_bbcode(bb: String) -> String:
 		var limpio := tramo.strip_edges()
 		if limpio == "":
 			continue
-		var tr_ := Idiomas.t(limpio)
-		if tr_ != limpio:
-			salida = salida.replace(tramo, tramo.replace(limpio, tr_))
+		var tr := Idiomas.t(limpio)
+		if tr != limpio:
+			salida = salida.replace(tramo, tramo.replace(limpio, tr))
 	return salida
 func _acento_de(c: Club) -> Color:
 	if c == null:
@@ -116,7 +116,7 @@ func _dato(etiqueta: String, valor: String, color: Color, padre: Node = null) ->
 	b.text = valor
 	## Aire a la derecha (s3; petición 6 de la sesión 2): la barra de
 	## desplazamiento de la columna tapaba el final de la cifra.
-	b.add_theme_stylebox_override("normal", Principal.AIRE_CIFRA)
+	b.add_theme_stylebox_override("normal", Principal.aire_cifra)
 	h.add_child(b)
 	## Hueco a la derecha del ancho de la barra de desplazamiento: las columnas
 	## van dentro de un ScrollContainer y su barra vertical tapaba el final del

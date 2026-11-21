@@ -51,6 +51,6 @@ func _probar() -> void:
 	var alt55: int = res["%d/55250" % Calidad.ALTO]["butacas"]
 	var alt76: int = res["%d/76500" % Calidad.ALTO]["butacas"]
 	_comprobar(med34 == med76, "MEDIO: sin cambios, 34 000 y 76 500 dan las mismas butacas (%d y %d)" % [med34, med76])
-	_comprobar(res["%d/20000" % Calidad.MEDIO]["butacas"] == res["%d/20000" % Calidad.MEDIO]["butacas"] and int(res["%d/34000" % Calidad.MEDIO]["instancias"]) == int(res["%d/76500" % Calidad.MEDIO]["instancias"]), "MEDIO: las instancias tampoco cambian por encima de 30 000")
+	_comprobar(int(res["%d/34000" % Calidad.MEDIO]["instancias"]) == int(res["%d/76500" % Calidad.MEDIO]["instancias"]), "MEDIO: las instancias tampoco cambian por encima de 30 000")
 	_comprobar(alt34 > alt20 and alt55 > alt34 and alt76 > alt55, "ALTO: la grada crece con el aforo (%d → %d → %d → %d butacas)" % [alt20, alt34, alt55, alt76])
 	_comprobar(int(res["%d/76500" % Calidad.ALTO]["nodos"]) < 20000, "ALTO: el árbol sigue siendo razonable a 76 500 (%d nodos)" % int(res["%d/76500" % Calidad.ALTO]["nodos"]))

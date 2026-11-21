@@ -159,22 +159,22 @@ static func abrir(padre: Control, clave: String, club: Club = null, minijuego: C
 ## LA SALA PARA PASEARLA (etapa 6): se construye dentro del mundo 3D de la
 ## ciudad, bajo el mapa, con la fachada cerrada salvo la puerta. Devuelve el
 ## objeto (hay que añadirlo al árbol para que la gente se mueva) o null.
-static func en_mundo(raiz3d: Node3D, clave_: String, club_: Club = null) -> InteriorInstalacion:
-	if not tiene(clave_):
+static func en_mundo(raiz3d: Node3D, clave_arg: String, club_arg: Club = null) -> InteriorInstalacion:
+	if not tiene(clave_arg):
 		return null
 	var n := InteriorInstalacion.new()
-	n.clave = clave_
-	n.club = club_
+	n.clave = clave_arg
+	n.club = club_arg
 	n._raiz = raiz3d
 	n.visible = false
 	n.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var sala: Array = _sala_de(clave_)
+	var sala: Array = _sala_de(clave_arg)
 	n.tipo = String(sala[0])
-	n._rng.seed = hash(clave_)
+	n._rng.seed = hash(clave_arg)
 	n._paseo = true
-	if club_ != null:
-		n._c1 = Color(club_.color1)
-		n._c2 = Color(club_.color2)
+	if club_arg != null:
+		n._c1 = Color(club_arg.color1)
+		n._c2 = Color(club_arg.color2)
 	n._construir_sala()
 	n._cerrar_para_pasear()
 	return n

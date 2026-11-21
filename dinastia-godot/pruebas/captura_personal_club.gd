@@ -42,7 +42,10 @@ func _ready() -> void:
 			var raiz := Node3D.new()
 			raiz.position = Vector3(i * 1.0, (CLUBES.size() - 1 - f) * 2.3, 0)
 			add_child(raiz)
-			PersonajeDT.crear(raiz, asp)
+			## (20-11) El mismo camino que el juego (civiles animados); CAMINAR=1 los pone a andar (para ver el retarget).
+			var d := PersonalEstadio.cuerpo(raiz, String(claves[i]), asp, mujeres.has(claves[i]), Color("1f5fa8"), Color.WHITE)
+			if OS.get_environment("CAMINAR") == "1" and d.get("anim") != null and (d["anim"] as AnimationPlayer).has_animation("caminar"):
+				(d["anim"] as AnimationPlayer).play("caminar")
 			if f == 0:
 				var et := Label3D.new()
 				et.text = String(claves[i])
@@ -54,5 +57,10 @@ func _ready() -> void:
 func _process(_dt: float) -> void:
 	_n += 1
 	if _n == 40:
-		get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/personal_club%s.png" % ("" if OS.get_environment("CERCA") != "1" else "_cerca_f%s_m%s" % [OS.get_environment("FILA"), OS.get_environment("MITAD")]))
+		var nom := "personal_club%s%s" % ["" if OS.get_environment("CERCA") != "1" else "_cerca_f%s_m%s" % [OS.get_environment("FILA"), OS.get_environment("MITAD")], OS.get_environment("SUFIJO")]
+		var sal := OS.get_environment("SALIDA")   ## (20-11) SALIDA=carpeta: JPG fuera del repo
+		if sal != "":
+			get_viewport().get_texture().get_image().save_jpg(sal.path_join(nom + ".jpg"), 0.9)
+		else:
+			get_viewport().get_texture().get_image().save_png("res://pruebas/capturas/%s.png" % nom)
 		get_tree().quit()

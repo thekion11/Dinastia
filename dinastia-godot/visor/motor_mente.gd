@@ -47,7 +47,7 @@ static func pos_vista_con(m: MotorJugable, q: Dictionary, r: float) -> Vector3:
 	if r < 0.0:
 		var v: Vector3 = q.get("vel", Vector3.ZERO)
 		return m.pos(q) + Vector3(v.x, 0.0, v.z) * (-r)
-	if r == 0.0:
+	if is_zero_approx(r):
 		return m.pos(q)
 	var e := _est(m)
 	var h: Array = e["h"]

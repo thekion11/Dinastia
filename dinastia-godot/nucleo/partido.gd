@@ -3,6 +3,8 @@ extends "res://nucleo/partido_p2.gd"
 ## [Capa 3/3 de `partido.gd`] simular_minuto, _por_id, gol_externo, anular_gol_externo, remate_externo, tarjeta_externa … (+16)
 
 func simular_minuto() -> void:
+	if minuto == 0 and not motor_externo and not terminado_ya:   ## (19-11) «menos de siete» también en el saque (sin azar; igual en `PartidoRapido`; el 3D no)
+		_revisar_siete()
 	if terminado_ya:
 		return
 	## LA INVASIÓN, DENTRO DEL MINUTO (25-9-2026, plan maestro B2). Antes solo
@@ -253,17 +255,17 @@ func _revisar_siete() -> void:
 		return
 
 ## Posesión, córners y faltas medidos en el césped.
-func fijar_estadisticas(pos_local: float, corners: Array, faltas_: Array, fueras_: Array = []) -> void:
+func fijar_estadisticas(pos_local: float, corners: Array, faltas: Array, fueras: Array = []) -> void:
 	posesion_local = clampf(pos_local, 0.0, 100.0)
 	corners_local = int(corners[0])
 	corners_visita = int(corners[1])
-	faltas_local = int(faltas_[0])
-	faltas_visita = int(faltas_[1])
+	faltas_local = int(faltas[0])
+	faltas_visita = int(faltas[1])
 	## Los fueras de juego del césped (20-10-2026): antes el resumen mostraba
 	## los que sorteaba la simulación, no los que pitó el árbitro del 3D.
-	if fueras_.size() == 2:
-		fueras_local = int(fueras_[0])
-		fueras_visita = int(fueras_[1])
+	if fueras.size() == 2:
+		fueras_local = int(fueras[0])
+		fueras_visita = int(fueras[1])
 
 ## Mete a `entra` por `sale`. Devuelve por qué no se pudo ("" si se hizo). Después de tocar el once se vuelve a medir
 ## (`invalidar_fuerza()`): sin eso el equipo seguiría jugando con la fuerza del once que ya no está en el campo.

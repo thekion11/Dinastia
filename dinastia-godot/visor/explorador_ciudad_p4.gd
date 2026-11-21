@@ -318,9 +318,9 @@ func _rotulos_de_paseo(si: bool) -> void:
 		l.pixel_size = 0.0145 if si else 0.0007
 		l.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y if si else BaseMaterial3D.BILLBOARD_ENABLED
 
-func iniciar(builder: CityBuilder, modo_: String, desde: Vector3, club: String, estado_animo: String) -> void:
+func iniciar(builder: CityBuilder, modo_arg: String, desde: Vector3, club: String, estado_animo: String) -> void:
 	cb = builder
-	modo = modo_
+	modo = modo_arg
 	club_nombre = club
 	animo = estado_animo
 	trafico = cb.get_node_or_null("Trafico") as TraficoCiudad

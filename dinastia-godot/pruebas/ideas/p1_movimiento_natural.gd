@@ -38,7 +38,7 @@ func _probar() -> void:
 	var mov := 0.0
 	for i in 20:
 		mov += MovimientoNatural.marcha(v, 0.0, pedido, DT)
-	_comprobar(ap.current_animation == "parado" and mov == 0.0, "frenado: clip «%s» y avance %.3f" % [ap.current_animation, mov])
+	_comprobar(ap.current_animation == "parado" and is_zero_approx(mov), "frenado: clip «%s» y avance %.3f" % [ap.current_animation, mov])
 	var primero := MovimientoNatural.marcha(v, pedido, pedido, DT)
 	_comprobar(primero < pedido * 0.3, "al soltarlo no arranca de golpe (%.3f de %.3f)" % [primero, pedido])
 	var total := 0.0

@@ -295,7 +295,7 @@ func _al_arrastrar(e: InputEvent) -> void:
 	elif e is InputEventMouseButton and not (e as InputEventMouseButton).pressed:
 		_arrastre = 0.0
 		return
-	if dx == 0.0:
+	if is_zero_approx(dx):
 		return
 	_arrastre += dx
 	if _arrastre > 40.0 and not _abierto:

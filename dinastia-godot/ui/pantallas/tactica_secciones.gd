@@ -14,7 +14,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	if not todo and secc != "pizarra":   ## en «Pizarra y dibujo» manda el campo: con la banda encima el pizarrón no cabía entero
 		var nivel := [Idiomas.t("Defensiva"), Idiomas.t("Equilibrada"), Idiomas.t("Ofensiva")]
 		p._lista_tactica.add_child(CifrasClave.banda([
-			[Idiomas.t("Formación"), c.tactica.formacion, SelectorDireccional.acento_legible(p.COL_ACENTO)],
+			[Idiomas.t("Formación"), c.tactica.formacion, SelectorDireccional.acento_legible(p.col_acento)],
 			[Idiomas.t("Mentalidad"), String(nivel[clampi(c.tactica.mentalidad, 0, 2)]), Principal.COL_TEXTO],
 			[Idiomas.t("El once"), Idiomas.t("%d de 11") % c.once_elegido.size() if c.once_elegido.size() > 0 else Idiomas.t("automático"), Principal.COL_ORO]],
 			Principal.COL_SUAVE))
@@ -223,7 +223,7 @@ static func _once(p: Principal, c: Club) -> void:
 			p._refrescar())
 		g.add_child(b)
 		g.add_child(p._retrato(j, Principal.RETRATO_FILA))
-		var col := p.COL_ACENTO if dentro else (Principal.COL_ROJO if not j.disponible() else Principal.COL_TEXTO)
+		var col := p.col_acento if dentro else (Principal.COL_ROJO if not j.disponible() else Principal.COL_TEXTO)
 		## (12-11, idea del PES ya hecha en la plantilla) El nombre con la «C» del capitán, y más abajo la forma con su flecha.
 		var celda_n := HBoxContainer.new()
 		celda_n.add_theme_constant_override("separation", 6)

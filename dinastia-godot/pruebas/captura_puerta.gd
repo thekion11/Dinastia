@@ -36,7 +36,7 @@ func _ready() -> void:
 	_cam.look_at(Vector3(0, 1.2, 0.5), Vector3.UP)
 	_cam.make_current()
 
-func _process(d: float) -> void:
+func _process(_d: float) -> void:
 	_n += 1
 	## Los pasos de tiempo van por saltos para ver tres momentos: llegando, abriendo y entrando.
 	if _n in [20, 90, 150]:

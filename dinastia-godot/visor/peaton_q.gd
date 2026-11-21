@@ -306,7 +306,7 @@ static func _malla_zapatilla(rest_pie: Transform3D, b: Vector3, t: Vector3, col:
 		st.append_from(tmp, 0, marco * Transform3D(Basis.from_scale(p[2]), p[1]))
 	return st.commit()
 
-static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, pelo_col: Color) -> void:
+static func _variedad(d: Dictionary, rng: RandomNumberGenerator, mujer: bool, _pelo_col: Color) -> void:
 	var modelo: Node3D = d["modelo"]
 	## Complexión: más o menos ancho (y algo de fondo), sin cambiar la estatura.
 	## Más esbeltos que el modelo base de culturista (13-10-2026).

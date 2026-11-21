@@ -27,30 +27,12 @@ func _pos(h: String) -> Vector3:
 	return esq.global_transform * esq.get_bone_global_pose(esq.find_bone(h)).origin
 
 func _initialize() -> void:
-	var anims: Array = []   # [clip, tipo, bucle, Animation]
-	var escenas := {}
-	for i in [1, 2]:
-		var ruta := OS.get_environment("UAL%d_GLB" % i)
-		var doc := GLTFDocument.new()
-		var estado := GLTFState.new()
-		if ruta == "" or doc.append_from_file(ruta, estado) != OK:
-			print("ERROR: UAL%d_GLB=%s" % [i, ruta])
-			quit(1)
-			return
-		escenas[i] = doc.generate_scene(estado)
+	var escenas := _cargar_escenas()
+	if escenas.is_empty():
+		quit(1)
+		return
 	var lib := AnimationLibrary.new()
-	var tabla := {}
-	for e: Array in ELEGIDOS:
-		var p := (escenas[e[0]] as Node).find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer
-		var clave: String = e[1]
-		if not p.has_animation(clave):
-			print("FALTA ", clave)
-			continue
-		var a: Animation = p.get_animation(clave).duplicate(true)
-		a.loop_mode = Animation.LOOP_LINEAR if bool(e[3]) else Animation.LOOP_NONE
-		var nombre := "ual%d_%s" % [e[0], clave]
-		lib.add_animation(nombre, a)
-		tabla[nombre] = e
+	var tabla := _anadir_clips(escenas, lib)
 	for i in [1, 2]:
 		(escenas[i] as Node).free()
 	DirAccess.make_dir_recursive_absolute(SALIDA.get_base_dir())
@@ -65,50 +47,7 @@ func _initialize() -> void:
 	ap.add_animation_library("u", lib)
 	var catalogo := []
 	for nombre: String in tabla:
-		var e: Array = tabla[nombre]
-		var a := ap.get_animation("u/" + nombre)
-		var fps := 30.0
-		var n := maxi(2, int(a.length * fps))
-		var ficha := {"nombre": nombre, "clip": e[1], "fuente": "Quaternius Universal Animation Library %d" % e[0], "licencia": "CC0 1.0", "tipo": e[2],
-			"duracion_s": snappedf(a.length, 0.001), "bucle": bool(e[3]), "fps": 30, "cuadro_toque_balon": null}
-		## Desplazamiento de la cadera entre el primer y el último cuadro (m, marco del jugador: x izquierda, z adelante) y su altura mínima.
-		ap.play("u/" + nombre)
-		ap.seek(0.0, true)
-		ap.advance(0.0)
-		var ini := _pos("pelvis")
-		ap.seek(a.length, true)
-		ap.advance(0.0)
-		var fin := _pos("pelvis")
-		var minh := fin.y
-		for k in 12:
-			ap.seek(a.length * float(k) / 11.0, true)
-			ap.advance(0.0)
-			minh = minf(minh, _pos("pelvis").y)
-		ficha["desplazamiento_m"] = {"izquierda": snappedf(fin.x - ini.x, 0.01), "adelante": snappedf(fin.z - ini.z, 0.01)}
-		ficha["cadera_min_m"] = snappedf(minh, 0.01)
-		if ["marcha", "carrera", "sprint", "marcha_agachado"].has(e[2]):
-			var pts: Array = []
-			var miny := [9.0, 9.0, 9.0, 9.0]
-			for k in n + 1:
-				ap.play("u/" + nombre)
-				ap.seek(minf(float(k) / fps, a.length), true)
-				ap.advance(0.0)
-				var q := [_pos("ball_l"), _pos("ball_r"), _pos("foot_l"), _pos("foot_r")]
-				pts.append(q)
-				for j in 4:
-					miny[j] = minf(miny[j], (q[j] as Vector3).y)
-			var rel := 0.0
-			var m := 0
-			for j in 4:
-				for k in n:
-					var p0: Vector3 = pts[k][j]
-					var p1: Vector3 = pts[k + 1][j]
-					if p0.y - miny[j] < UMBRAL_APOYO and p1.y - miny[j] < UMBRAL_APOYO:
-						rel += -(p1.z - p0.z) * fps
-						m += 1
-			ficha["velocidad_ms"] = snappedf(rel / float(m), 0.01) if m > 0 else 0.0
-			ap.stop()
-		catalogo.append(ficha)
+		catalogo.append(_ficha_clip(nombre, tabla[nombre]))
 	catalogo.sort_custom(func(x: Dictionary, y: Dictionary) -> bool: return String(x["nombre"]) < String(y["nombre"]))
 	var f := FileAccess.open(CATALOGO, FileAccess.WRITE)
 	f.store_string(JSON.stringify(catalogo, "\t"))
@@ -116,3 +55,85 @@ func _initialize() -> void:
 	for c in catalogo:
 		print(c["nombre"], " ", c["tipo"], " ", c["duracion_s"], " s ", c.get("velocidad_ms", ""))
 	quit(0)
+
+## Abre los dos GLB (variables UAL1_GLB y UAL2_GLB). Vacío si falta alguno o no se puede leer.
+func _cargar_escenas() -> Dictionary:
+	var escenas := {}
+	for i in [1, 2]:
+		var ruta := OS.get_environment("UAL%d_GLB" % i)
+		var doc := GLTFDocument.new()
+		var estado := GLTFState.new()
+		if ruta == "" or doc.append_from_file(ruta, estado) != OK:
+			print("ERROR: UAL%d_GLB=%s" % [i, ruta])
+			return {}
+		escenas[i] = doc.generate_scene(estado)
+	return escenas
+
+## Copia cada clip elegido a la biblioteca con su bucle; devuelve la tabla nombre → fila de ELEGIDOS.
+func _anadir_clips(escenas: Dictionary, lib: AnimationLibrary) -> Dictionary:
+	var tabla := {}
+	for e: Array in ELEGIDOS:
+		var p := (escenas[e[0]] as Node).find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer
+		var clave: String = e[1]
+		if not p.has_animation(clave):
+			print("FALTA ", clave)
+			continue
+		var a: Animation = p.get_animation(clave).duplicate(true)
+		a.loop_mode = Animation.LOOP_LINEAR if bool(e[3]) else Animation.LOOP_NONE
+		var nombre := "ual%d_%s" % [e[0], clave]
+		lib.add_animation(nombre, a)
+		tabla[nombre] = e
+	return tabla
+
+## La ficha de un clip: sus datos, cadera y, si es de locomoción, su velocidad medida.
+func _ficha_clip(nombre: String, e: Array) -> Dictionary:
+	var a: Animation = ap.get_animation("u/" + nombre)
+	var ficha := {"nombre": nombre, "clip": e[1], "fuente": "Quaternius Universal Animation Library %d" % e[0], "licencia": "CC0 1.0", "tipo": e[2],
+		"duracion_s": snappedf(a.length, 0.001), "bucle": bool(e[3]), "fps": 30, "cuadro_toque_balon": null}
+	_medir_cadera(ficha, nombre, a)
+	if ["marcha", "carrera", "sprint", "marcha_agachado"].has(e[2]):
+		_medir_velocidad(ficha, nombre, a)
+	return ficha
+
+## Desplazamiento de la cadera entre el primer y el último cuadro (m, marco del jugador: x izquierda, z adelante) y su altura mínima.
+func _medir_cadera(ficha: Dictionary, nombre: String, a: Animation) -> void:
+	ap.play("u/" + nombre)
+	ap.seek(0.0, true)
+	ap.advance(0.0)
+	var ini := _pos("pelvis")
+	ap.seek(a.length, true)
+	ap.advance(0.0)
+	var fin := _pos("pelvis")
+	var minh := fin.y
+	for k in 12:
+		ap.seek(a.length * float(k) / 11.0, true)
+		ap.advance(0.0)
+		minh = minf(minh, _pos("pelvis").y)
+	ficha["desplazamiento_m"] = {"izquierda": snappedf(fin.x - ini.x, 0.01), "adelante": snappedf(fin.z - ini.z, 0.01)}
+	ficha["cadera_min_m"] = snappedf(minh, 0.01)
+
+## Velocidad de avance del ciclo: el pie en apoyo (a menos de UMBRAL_APOYO de su mínimo) retrocede respecto al cuerpo.
+func _medir_velocidad(ficha: Dictionary, nombre: String, a: Animation) -> void:
+	var fps := 30.0
+	var n := maxi(2, int(a.length * fps))
+	var pts: Array = []
+	var miny := [9.0, 9.0, 9.0, 9.0]
+	for k in n + 1:
+		ap.play("u/" + nombre)
+		ap.seek(minf(float(k) / fps, a.length), true)
+		ap.advance(0.0)
+		var q := [_pos("ball_l"), _pos("ball_r"), _pos("foot_l"), _pos("foot_r")]
+		pts.append(q)
+		for j in 4:
+			miny[j] = minf(miny[j], (q[j] as Vector3).y)
+	var rel := 0.0
+	var m := 0
+	for j in 4:
+		for k in n:
+			var p0: Vector3 = pts[k][j]
+			var p1: Vector3 = pts[k + 1][j]
+			if p0.y - miny[j] < UMBRAL_APOYO and p1.y - miny[j] < UMBRAL_APOYO:
+				rel += -(p1.z - p0.z) * fps
+				m += 1
+	ficha["velocidad_ms"] = snappedf(rel / float(m), 0.01) if m > 0 else 0.0
+	ap.stop()

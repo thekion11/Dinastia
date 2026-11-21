@@ -207,6 +207,7 @@ public:
 			double zona_tiro) const;
 	// --- fin portador (agente B) ---
 	int64_t elegir_ponderado(const Array &once, const Dictionary &grupo_de, const Dictionary &bases, double base_def, const String &atr, const PackedFloat64Array &pesos_rol, double r_unit, Object *excluir) const;
+	#include "puras_nucleo.inc"
 };
 
 } // namespace godot

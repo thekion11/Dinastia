@@ -68,9 +68,9 @@ func ejecutar() -> void:
 	var ci: Ciudad = m.ciudad
 	_comprobar(ci.riesgo_incidente(10, 90) > ci.riesgo_incidente(90, 0), "más funa y mal ánimo, más riesgo de incidentes (746)")
 	ci.sancionar("aforo")
-	_comprobar(ci.factor_aforo() == 0.4, "la sanción de aforo recorta la taquilla (746)")
+	_comprobar(is_equal_approx(ci.factor_aforo(), 0.4), "la sanción de aforo recorta la taquilla (746)")
 	ci.sancionar("cerradas")
-	_comprobar(ci.factor_aforo() == 0.0, "puertas cerradas = cero taquilla (746)")
+	_comprobar(is_zero_approx(ci.factor_aforo()), "puertas cerradas = cero taquilla (746)")
 	ci.sancion = {}
 	_ideas_b_prensa(m)
 
@@ -154,13 +154,13 @@ func _ideas_b_prensa(m: Mundo) -> void:
 	c.rep = 90
 	pr.tv_individual = false
 	pr.negociar_tv(true, c)
-	_comprobar(pr.factor_tv() == 1.35, "TV individual con marca fuerte: +35% (794)")
+	_comprobar(is_equal_approx(pr.factor_tv(), 1.35), "TV individual con marca fuerte: +35% (794)")
 	pr.tv_individual = false
 	c.rep = 10
 	pr.negociar_tv(true, c)
-	_comprobar(pr.factor_tv() == 0.70, "TV individual con marca débil: -30% (794)")
+	_comprobar(is_equal_approx(pr.factor_tv(), 0.70), "TV individual con marca débil: -30% (794)")
 	pr.negociar_tv(false, c)
-	_comprobar(pr.factor_tv() == 1.0, "y el bloque no toca nada (794)")
+	_comprobar(is_equal_approx(pr.factor_tv(), 1.0), "y el bloque no toca nada (794)")
 	## Horarios impuestos por la televisión (795).
 	m.horario = "lunes"
 	_comprobar(m.factor_publico() < 1.0 and m.factor_tv_horario() > 1.0, "lunes por la noche: menos público, más TV (795)")

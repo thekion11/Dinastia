@@ -94,7 +94,7 @@ func _rejilla_identidad(c: Club, prop: String, opciones: Array, titulo: String) 
 func _rejilla_especiales(c: Club) -> void:
 	var desbloqueados: Array = Escudo.especiales_desbloqueados()
 	var total: int = Escudo.ESPECIALES.size()
-	var lt := p._texto(11, p.COL_ACENTO)
+	var lt := p._texto(11, p.col_acento)
 	lt.text = Idiomas.t("Escudo especial (coleccionable)")
 	p._lista_gente.add_child(lt)
 	if not p._modo_experto:
@@ -161,7 +161,7 @@ func _boton_heredar(c: Club, props: Array, texto: String) -> void:
 ## EL PROVEEDOR. La marca propia no paga nada y se queda el margen entero: es la
 ## opción del club que no quiere deberle nada a nadie.
 func _pintar_proveedor(co: Comercial, c: Club) -> void:
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🏭 PROVEEDOR DE INDUMENTARIA")
 	p._lista_gente.add_child(t)
 	p._dato("Aporta al año", p._dinero(co.renta_proveedor(c)), Principal.COL_VERDE, p._lista_gente)
@@ -171,7 +171,7 @@ func _pintar_proveedor(co: Comercial, c: Club) -> void:
 		var fila := HBoxContainer.new()
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_gente.add_child(fila)
-		var n := p._texto(12, p.COL_ACENTO if elegido else Principal.COL_TEXTO)
+		var n := p._texto(12, p.col_acento if elegido else Principal.COL_TEXTO)
 		n.text = "%s%s" % ["✔  " if elegido else "     ", Nombres.limpiar(String(f[1]))]
 		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		n.clip_text = true
@@ -193,8 +193,8 @@ func _pintar_proveedor(co: Comercial, c: Club) -> void:
 
 ## LAS CINCO ZONAS. Son contratos INDEPENDIENTES y todos ingresan a la vez, que
 ## es exactamente por qué las camisetas modernas están como están.
-func _pintar_zonas(co: Comercial, c: Club) -> void:
-	var t := p._texto(11, p.COL_ACENTO)
+func _pintar_zonas(co: Comercial, _c: Club) -> void:
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("💸 PATROCINIOS POR ZONA")
 	p._lista_gente.add_child(t)
 	p._dato("Total de las zonas", "%s/semana" % p._dinero(co.renta_zonas()), Principal.COL_VERDE, p._lista_gente)
@@ -261,8 +261,8 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 
 ## EL NAMING. Lo más rentable que existe y lo que más duele: la hinchada lo paga
 ## en ánimo el día que se firma.
-func _pintar_naming(co: Comercial, c: Club) -> void:
-	var t := p._texto(11, p.COL_ACENTO)
+func _pintar_naming(co: Comercial, _c: Club) -> void:
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🏟️ NOMBRE DEL ESTADIO")
 	p._lista_gente.add_child(t)
 	if not co.naming.is_empty():
@@ -321,7 +321,7 @@ func _pintar_naming(co: Comercial, c: Club) -> void:
 ## EL ESTADIO PREMIUM. No es ladrillo —eso son las Obras— sino ESPECTÁCULO. El
 ## techo salva la taquilla cuando llueve y las luces suben el ambiente de verdad.
 func _pintar_premium(co: Comercial, c: Club) -> void:
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("✨ ESTADIO PREMIUM")
 	p._lista_gente.add_child(t)
 	for f: Array in Comercial.premium():
@@ -382,7 +382,7 @@ func _rejilla_comercial(co: Comercial, prop: String, opciones: Array, titulo: St
 ## LOS DETALLES. Ninguno cambia un resultado salvo el avión, y por eso están
 ## todos juntos al final: son las cosas que hacen que el club sea ESE club.
 func _pintar_detalles(co: Comercial, c: Club) -> void:
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🎺 DETALLES DEL CLUB")
 	p._lista_gente.add_child(t)
 	var campo := LineEdit.new()

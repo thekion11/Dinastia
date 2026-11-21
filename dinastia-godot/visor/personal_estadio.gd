@@ -29,8 +29,25 @@ const PUESTOS := {
 }
 
 ## Modelos exclusivos del personal [hombre, mujer] (`FutbolistaQ.PERSONAL`).
-const MODELO_PERSONAL := {"portero": ["mh_swat", "mm_soldier"], "hincha": ["mh_punk", "mm_punk"]}
+## (20-11, orden del dueño: «que los otros sean del personal del club» y no haya dos veces el mismo personaje) TODO el personal lleva
+## un civil (`FutbolistaQ.civiles()` y `PERSONAL`), nunca el cuerpo del atleta que elige el jugador. Mismo modelo en dos puestos:
+## los distingue el tono de piel de su apariencia (`AcabadoAjeno`).
+const MODELO_PERSONAL := {"portero": ["mh_swat", "mm_soldier"], "hincha": ["mh_punk", "mm_punk"],
+	"conserje": ["mh_worker", "mm_worker"], "jardinero": ["mh_farmer", "mm_worker"], "cocinera": ["mh_worker", "mm_worker"],
+	"utilero": ["mh_casual", "mm_casual"], "ojeador": ["mh_adventurer", "mm_adventurer"], "prensa": ["mh_casual2", "mm_formal"],
+	"medico": ["mh_casual", "mm_formal"], "chofer": ["mh_suit", "mm_suit"], "secretaria": ["mh_suit", "mm_formal"],
+	"presidente": ["mh_suit", "mm_suit"]}
 const VEL := 1.25
+## Radio del cuerpo de una persona del club (m) para esquivar muebles, paredes y a los demás (20-11).
+const RADIO := 0.28
+## Velocidad natural del clip «caminar» (medida el 20-11: zancada de 0,71 m por medio ciclo de 1,33 s): con ella se acompasa la animación.
+const VEL_CLIP := 1.06
+const GIRO := 7.0       ## rad/s de giro hacia el rumbo (antes giraba de golpe)
+const ACEL := 1.8       ## m/s² al arrancar
+const FRENO := 3.0      ## m/s² al frenar
+const MARGEN := 0.1     ## m de holgura extra al planear rutas (marcos, esquinas)
+const DIST_SEPARA := 0.9   ## m: a menos de esto de otra persona se aparta
+const SANEAR_DESPUES := 8  ## fotogramas de física que se esperan a que el edificio esté en el espacio de colisión
 
 ## Los gestos de cada oficio en su puesto (librería «banda» de `PersonajeDT`).
 const GESTOS_OFICIO := {
@@ -67,8 +84,8 @@ var c2 := Color.BLACK
 ## Una por persona: {clave, nombre, puesto, planta, nodo, anim, ruta, i, dir, espera, quieto}
 var gente: Array = []
 
-func preparar(datos_: Dictionary, col1: Color, col2: Color) -> void:
-	datos = datos_
+func preparar(datos_arg: Dictionary, col1: Color, col2: Color) -> void:
+	datos = datos_arg
 	c1 = col1
 	c2 = col2
 	name = "PersonalEstadio"
@@ -103,6 +120,8 @@ func _ready() -> void:
 		## El cargo en femenino si es una mujer.
 		if bool(mujeres[clave]):
 			puesto = FEMENINO.get(puesto, puesto)
+		else:
+			puesto = MASCULINO.get(puesto, puesto)
 		var raiz := Node3D.new()
 		raiz.position = ruta[0]
 		add_child(raiz)
@@ -113,12 +132,7 @@ func _ready() -> void:
 		asp["corbata"] = clave in ["presidente", "secretaria", "portero"]
 		asp["gorra"] = clave == "portero"
 		asp["gafas"] = "" if clave != "ojeador" else String(asp.get("gafas", ""))
-		## SWAT/soldado en la puerta y punk en la hinchada: modelos SOLO del personal (no elegibles por el jugador).
-		var d: Dictionary = {}
-		if MODELO_PERSONAL.has(clave):
-			d = FutbolistaQ.ajeno(raiz, String((MODELO_PERSONAL[clave] as Array)[1 if bool(mujeres[clave]) else 0]), float(asp["altura"]))
-		if d.is_empty():
-			d = PersonajeDT.crear(raiz, asp, c1, c2)
+		var d := cuerpo(raiz, clave, asp, bool(mujeres[clave]), c1, c2)
 		if Calidad.elegida <= Calidad.BAJA:   ## (7-11) ULTRA BAJA y BAJA: la gente del club se dibuja solo a menos de 90 m (desde el mapa aéreo eran 163 piezas invisibles)
 			for g: Node in raiz.find_children("*", "GeometryInstance3D", true, false):
 				(g as GeometryInstance3D).visibility_range_end = 90.0
@@ -131,6 +145,8 @@ func _ready() -> void:
 		gente.append({"clave": clave, "nombre": nombre, "puesto": puesto, "planta": int(p[0]), "nodo": raiz,
 			"anim": d.get("anim"), "ruta": ruta, "i": 0, "dir": 1, "espera": 4.0 + float(semilla % 13), "quieto": false})
 
+## (18-11) El cargo en masculino cuando el nombre es de hombre y el puesto está escrito en femenino («Lucas Ortiz · Cocinera del plantel»).
+const MASCULINO := {"Cocinera del plantel": "Cocinero del plantel"}
 const FEMENINO := {"Médico veterano": "Médica veterana", "Utilero": "Utilera", "Jefe de cancha": "Jefa de cancha",
 	"Conserje del estadio": "Conserje del estadio", "Chófer del bus": "Chófer del bus",
 	"Encargado de prensa": "Encargada de prensa", "Ojeador jubilado": "Ojeadora jubilada",
@@ -182,7 +198,7 @@ func _nombre_de_respaldo(clave: String) -> String:
 
 ## El camino de cada uno: del puesto a su vuelta (y de vuelta). En una sala:
 ## puesto → puerta (dentro) → puerta (pasillo) → un punto del pasillo.
-func _ruta(clave: String, planta: int, zona: String) -> Array:
+func _ruta(_clave: String, planta: int, zona: String) -> Array:
 	var x0: float = datos.get("x0", 0.0)
 	var z_fin: float = datos.get("z_fin", 0.0)
 	var y := RecorridoClub.y_de(planta)
@@ -218,6 +234,37 @@ func _ruta(clave: String, planta: int, zona: String) -> Array:
 		Vector3(cx, y, z_tab + 0.7), Vector3(cx + 1.4, y, z_fin - 1.2)]
 
 var _acum := 0.0   ## tiempo acumulado mientras se salta fotogramas (cámara lejos)
+var _fisica := 0
+## Verdadero cuando las rutas ya se rehicieron contra el edificio (`RutaLibre`); `rutas_sin_camino` = tramos que no tienen camino libre.
+var rutas_listas := false
+var rutas_sin_camino := 0
+
+## (20-11, orden del dueño: «no atravesar objetos») Una vez que el edificio está en la física, cada ruta se rehace para que ninguna persona cruce
+## un tabique o un mueble: la puerta de la sala en vez de la pared, y rodeando lo que estorbe. Se hace una vez, al abrir el club.
+func _physics_process(_d: float) -> void:
+	if rutas_listas:
+		return
+	_fisica += 1
+	if _fisica < SANEAR_DESPUES:
+		return
+	rutas_listas = true
+	if gente.is_empty() or PersonalEstadio.en_puesto():
+		return   ## en ULTRA BAJA y BAJA no pasean: nada que rehacer
+	var espacio := get_world_3d().direct_space_state
+	## Se planea con MARGEN (el cuerpo con 10 cm más de radio) para no ir pegado a los marcos y esquinas; si así no hay camino, con el cuerpo justo.
+	var libre_holgado := RutaLibre.libre_fisico(espacio, RADIO + MARGEN)
+	var libre_justo := RutaLibre.libre_fisico(espacio, RADIO)
+	for g: Dictionary in gente:
+		var n: Node3D = g["nodo"]
+		var res := RutaLibre.sanear(g["ruta"], libre_holgado)
+		if int(res["sin_camino"]) > 0:
+			res = RutaLibre.sanear(g["ruta"], libre_justo)
+		var nueva: Array = res["ruta"]
+		rutas_sin_camino += int(res["sin_camino"])
+		if not nueva.is_empty():
+			g["ruta"] = nueva
+			if int(g["i"]) == 0 and is_instance_valid(n):
+				n.position = nueva[0]
 
 ## (7-11, idea del dueño) En ULTRA BAJA y BAJA el personal se queda QUIETO en su puesto (solo sus gestos) y no pasea por el pasillo: menos movimiento, menos
 ## choques con el jugador y menos animación. La conversación ya se abre en un panel 2D (`RecorridoClub.dialogo()`).
@@ -280,8 +327,11 @@ func _process(delta_real: float) -> void:
 		var hacia := meta - n.position
 		hacia.y = 0.0
 		var dist := hacia.length()
-		if dist < 0.05:
+		var es_fin := sig == 0 or sig == ruta.size() - 1   ## donde se para; en los puntos de en medio pasa de largo sin frenar
+		if dist < (0.06 if es_fin else 0.15):
 			g["i"] = sig
+			if es_fin:
+				g["v"] = 0.0
 			continue
 		var paso := minf(dist, VEL * delta)
 		## Cede el paso: si el siguiente trozo lo acerca a menos de un metro de
@@ -293,14 +343,63 @@ func _process(delta_real: float) -> void:
 			if d_luego < 1.0 and d_luego < d_ahora:
 				_anim(g, "parado")
 				continue
-		n.position += hacia / dist * paso
-		n.rotation.y = atan2(hacia.x, hacia.z)
+		_andar(g, n, hacia, dist, delta, es_fin)
+
+## Un paso hacia `hacia` (vector al punto, plano) con modales de persona (20-11): arranca y frena, gira sin saltos, va más despacio mientras
+## gira mucho, se aparta de quien tiene a menos de `DIST_SEPARA` y acompasa la animación a lo que de verdad avanza (antes: 1,25 m/s con un
+## clip de 1,06 m/s, patinaban, y giraba de golpe).
+func _andar(g: Dictionary, n: Node3D, hacia: Vector3, dist: float, delta: float, es_fin: bool) -> void:
+	var dir := hacia / dist
+	for o: Dictionary in gente:
+		if o == g or int(o["planta"]) != int(g["planta"]):
+			continue
+		var no: Node3D = o["nodo"]
+		if not is_instance_valid(no) or not no.visible:
+			continue
+		var d := Vector3(n.position.x - no.position.x, 0.0, n.position.z - no.position.z)
+		var l := d.length()
+		if l < DIST_SEPARA and l > 0.001:
+			dir += d / l * (DIST_SEPARA - l) * 1.6
+	dir.y = 0.0
+	if dir.length_squared() < 0.0001:
+		dir = hacia / dist
+	dir = dir.normalized()
+	var rumbo := atan2(dir.x, dir.z)
+	var error := absf(angle_difference(n.rotation.y, rumbo))
+	n.rotation.y = lerp_angle(n.rotation.y, rumbo, clampf(GIRO * delta, 0.0, 1.0))
+	var v_obj := minf(VEL, 0.25 + dist * 1.2) if es_fin else VEL
+	v_obj *= clampf(cos(error), 0.0, 1.0)
+	var v := float(g.get("v", 0.0))
+	v = move_toward(v, v_obj, (ACEL if v_obj > v else FRENO) * delta)
+	g["v"] = v
+	n.position += dir * minf(v * delta, dist)
+	if v > 0.12:
 		_anim(g, "caminar")
+		var a: AnimationPlayer = g.get("anim") as AnimationPlayer
+		if a != null:
+			a.speed_scale = clampf(v / VEL_CLIP, 0.5, 1.4)
+	else:
+		_anim(g, "parado")
+
+## El cuerpo de una persona del club en `raiz` (ya en el árbol): su civil animado (SWAT/soldado en la puerta, punk en la hinchada,
+## obrero, traje…: modelos SOLO del personal, no elegibles por el jugador) o, si faltara el modelo, el de siempre.
+static func cuerpo(raiz: Node3D, clave: String, asp: Dictionary, mujer: bool, c1: Color, c2: Color) -> Dictionary:
+	var d: Dictionary = {}
+	if MODELO_PERSONAL.has(clave):
+		## Su pelo (natural) y la ropa en otro tono según el puesto: dos con el mismo civil no se ven iguales. Los que tienen modelo único van como vienen.
+		var uniforme := clave in ["portero", "hincha", "jardinero", "ojeador"]   ## modelos únicos (SWAT, punk, granjero, aventurero): no varían
+		d = CivilAnimado.crear(raiz, String((MODELO_PERSONAL[clave] as Array)[1 if mujer else 0]), float(asp.get("altura", 1.75)),
+			Color(String(asp.get("piel", "c68d68"))), Color(0, 0, 0, 0), 0 if uniforme else 1 + absi(clave.hash()) % 9)
+	if d.is_empty():
+		d = PersonajeDT.crear(raiz, asp, c1, c2)
+	return d
 
 func _anim(g: Dictionary, nombre: String) -> void:
 	var a: AnimationPlayer = g.get("anim") as AnimationPlayer
 	if a != null and a.has_animation(nombre) and a.current_animation != nombre:
 		a.play(nombre, 0.3)
+	if a != null and nombre != "caminar":
+		a.speed_scale = 1.0   ## el ritmo de paso solo vale al caminar
 
 ## Quién está a mano de `p` (coordenadas del estadio) en esta planta.
 func cercano(p: Vector3, planta: int, alcance := 1.9) -> Dictionary:
@@ -332,6 +431,7 @@ func gesto(g: Dictionary, nombres: Array) -> float:
 		return 0.0
 	for nombre: String in nombres:
 		if a.has_animation(nombre):
+			a.speed_scale = 1.0
 			a.play(nombre, 0.25)
 			a.queue("parado")
 			g["gesto_t"] = a.get_animation(nombre).length

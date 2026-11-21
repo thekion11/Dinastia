@@ -350,8 +350,11 @@ func _probar_marca() -> void:
 	if not tabla.is_empty():
 		var f0: Array = tabla[0]
 		var n0 := String(f0[0])
-		var c0 := String(f0[1])
-		_comprobar(Marca.forma_de(n0) == Marca.forma_de(n0) and Marca.patron_de(n0) == Marca.patron_de(n0),
+		var rep1_a = Marca.forma_de(n0)
+		var rep1_b = Marca.forma_de(n0)
+		var rep2_a = Marca.patron_de(n0)
+		var rep2_b = Marca.patron_de(n0)
+		_comprobar(rep1_a == rep1_b and rep2_a == rep2_b,
 			"la forma y el patron de una marca no cambian entre llamadas")
 		_comprobar(Marca.iniciales(n0) != "", "las iniciales nunca salen vacias (\"%s\" -> \"%s\")" % [n0, Marca.iniciales(n0)])
 	## Y DOS MARCAS DISTINTAS NO COMPARTEN SIEMPRE EL MISMO LOGO -si compartieran
@@ -382,7 +385,7 @@ func _probar_tribuna_real() -> void:
 		for e: Dictionary in u["cronica"]:
 			if String(e.get("tipo", "")) == "gol" and String(e.get("club", "")) == m.mi_club_id:
 				autores.append(String(e["autor"]))
-		var posts := m.redes.comentar_ultimo_partido(m)
+		m.redes.comentar_ultimo_partido(m)
 		for f: Dictionary in m.redes.publicaciones.slice(0, 6):
 			for a: String in autores:
 				if String(f["texto"]).contains(a):

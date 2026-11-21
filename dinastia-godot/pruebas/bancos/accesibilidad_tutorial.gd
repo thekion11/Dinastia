@@ -111,7 +111,7 @@ func _contraste() -> void:
 	_comprobar(razon(t_alto, Tema.PANEL) >= 15.0, "contraste alto: texto principal %.1f:1 (≥ 15)" % razon(t_alto, Tema.PANEL))
 	_comprobar(razon(s_alto, Tema.PANEL) >= 9.0, "contraste alto: texto suave %.1f:1 (≥ 9)" % razon(s_alto, Tema.PANEL))
 	_comprobar(razon(s_alto, Tema.PANEL) > razon(Tema.SUAVE, Tema.PANEL) + 2.0, "contraste alto: el suave mejora más de 2 puntos")
-	_comprobar(Tema.accesible(Color(Tema.TEXTO, 0.5)).a == 0.5, "contraste alto: el alfa se conserva")
+	_comprobar(is_equal_approx(Tema.accesible(Color(Tema.TEXTO, 0.5)).a, 0.5), "contraste alto: el alfa se conserva")
 	_comprobar(Tema.accesible(Tema.ACENTO) == Tema.ACENTO, "contraste alto: un color sin significado no cambia")
 	Tema.contraste = false
 

@@ -26,6 +26,10 @@ const PREGUNTA_OFICIO := {
 	"ojeador": "¿Algún chico de la cantera que valga?",
 }
 
+const _RUTA_PERSONAL_ESTADIO := "res://visor/personal_estadio.gd"
+const _RUTA_STADIUM_BUILDER := "res://visor/stadium_builder.gd"
+
+
 ## ¿La última respuesta fue mala noticia? (para la cara de quien la dice)
 static var _ultima_mala := false
 
@@ -44,7 +48,7 @@ const NOVEDADES_PORTERO := [
 ## el panel del ascensor del edificio del club (estadio interactivo 2.0).
 
 ## El aviso de abajo al entrar en una zona.
-static func aviso_de(nombre: String, club: String = "") -> String:
+static func aviso_de(nombre: String, _club: String = "") -> String:
 	match nombre:
 		"Vestuario":
 			return Idiomas.t("El vestuario. Por el túnel se sale al campo.")
@@ -191,7 +195,7 @@ static func dialogo(capa: CanvasLayer, personal, g: Dictionary, desde: Vector3) 
 	## El saludo varía con la hora y la semana (`RecorridoCharla`).
 	var pasillo := RecorridoCharla.pasillo(m, g)   ## bloque 7: por tu nombre, según la afinidad
 	CuadroDialogo.escribir(dice, "«%s%s»" % [pasillo + " " if pasillo != "" else "", RecorridoCharla.saludo(String(g["clave"]),
-		String(SALUDOS.get(String(g["clave"]), "Buenas, míster.")), m.semana if m != null else -1, load("res://visor/personal_estadio.gd").hora)])
+		String(SALUDOS.get(String(g["clave"]), "Buenas, míster.")), m.semana if m != null else -1, load(_RUTA_PERSONAL_ESTADIO).hora)])
 	var clave := String(g["clave"])
 	var cerrar := func() -> void:
 		personal.atender(g, desde, false)
@@ -266,7 +270,7 @@ static func dialogo_portero(capa: CanvasLayer, personal, g: Dictionary, desde: V
 	dice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dice.custom_minimum_size = Vector2(610, 0)
 	dice.add_theme_font_size_override("font_size", 19)
-	var h = load("res://visor/personal_estadio.gd").hora
+	var h = load(_RUTA_PERSONAL_ESTADIO).hora
 	var saludo := "Buenas, míster."
 	if h >= 0.0:
 		saludo = "Buenos días, míster." if h < 13.0 else ("Buenas tardes, míster." if h < 20.5 else "Buenas noches, míster. Aquí sigo de guardia.")
@@ -343,13 +347,13 @@ static func _butaca_real(raiz: Node, cerca_de_local: Vector3, signo_x: float) ->
 ## `z`, en la fila `fila` (cada 0,8 m de fondo). Devuelve {pos, rumbo} con el
 ## rumbo mirando al campo.
 static func butaca(est: Dictionary, signo_x: float, z: float, fila: int = 3, raiz: Node = null) -> Dictionary:
-	var g = load("res://visor/stadium_builder.gd").geom_de_forma(String(est.get("forma", "cuenco")))
+	var g = load(_RUTA_STADIUM_BUILDER).geom_de_forma(String(est.get("forma", "cuenco")))
 	var dx: float = g["dx"]
 	var dz: float = g["dz"]
 	var d := 0.6 + float(fila) * 0.8
-	var ang = deg_to_rad(load("res://visor/stadium_builder.gd").RAKE_GRADOS)
-	var x = signo_x * (dx - load("res://visor/stadium_builder.gd").FRENTE_TRIBUNA + d)
-	var y = load("res://visor/stadium_builder.gd").ALTURA_PIE + d * tan(ang) + 0.2
+	var ang = deg_to_rad(load(_RUTA_STADIUM_BUILDER).RAKE_GRADOS)
+	var x = signo_x * (dx - load(_RUTA_STADIUM_BUILDER).FRENTE_TRIBUNA + d)
+	var y = load(_RUTA_STADIUM_BUILDER).ALTURA_PIE + d * tan(ang) + 0.2
 	var zz := clampf(z, -(dz - 12.0), dz - 12.0)
 	var aprox := Vector3(x, y, zz)
 	## 21-10-2026: con el estadio en la escena, la butaca DE VERDAD más cercana
@@ -396,8 +400,8 @@ static func camino_a_butaca(raiz: Node, butaca_local: Vector3) -> Array[Vector3]
 	## La escalera de acceso: desde el suelo, hacia el campo, sube peldaño a
 	## peldaño hasta el pie del pasillo (`StadiumBuilder._escaleras_de_acceso`).
 	var hacia_campo := Vector3(-signf(pie.x), 0, 0)
-	var n = int(ceil((pie.y - 0.05) / load("res://visor/stadium_builder.gd").PELDANO_ALTO))
-	var suelo = r3.to_local(pie + hacia_campo * (0.45 + float(n) * load("res://visor/stadium_builder.gd").PELDANO_FONDO + 0.4))
+	var n = int(ceil((pie.y - 0.05) / load(_RUTA_STADIUM_BUILDER).PELDANO_ALTO))
+	var suelo = r3.to_local(pie + hacia_campo * (0.45 + float(n) * load(_RUTA_STADIUM_BUILDER).PELDANO_FONDO + 0.4))
 	suelo.y = 0.0
 	camino.append(suelo)
 	camino.append(r3.to_local(pie + hacia_campo * 0.45) + Vector3(0, 0.25, 0))

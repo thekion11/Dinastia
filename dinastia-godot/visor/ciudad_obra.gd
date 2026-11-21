@@ -15,18 +15,18 @@ static func montar(ex: CiudadExpansion, r: Rect2) -> void:
 	var h := absi(hash(Vector2(c.x, c.z)))
 	ex._lote("solar", Vector3(c.x, 0.25, c.z), Vector3(w, 0.1, f))
 	var hormigon: Material = ex._mat["solar"]
-	var Y := 0.3
+	var y_loc := 0.3
 	## Estructura: 6 × 4 columnas cada 7 m, forjados en los pisos 1 y 2 y medio forjado en el 3.
 	var cx := c.x - w * 0.12
 	var cz := c.z - f * 0.1
 	for i in 6:
 		for j in 4:
 			for p in 3:
-				ex._pieza_kit(EDIF % "column-thin", Vector3(cx + (float(i) - 2.5) * 7.0, Y + float(p) * PISO, cz + (float(j) - 1.5) * 7.0), 2.0, 0.0)
+				ex._pieza_kit(EDIF % "column-thin", Vector3(cx + (float(i) - 2.5) * 7.0, y_loc + float(p) * PISO, cz + (float(j) - 1.5) * 7.0), 2.0, 0.0)
 	for p in 3:
 		var largo := 36.0 if p < 2 else 22.0
-		b._caja_en(Vector3(cx - (36.0 - largo) * 0.5, Y + float(p + 1) * PISO + 0.1, cz), Vector3(largo, 0.4, 22.0), hormigon)
-	ex._pieza_kit(EDIF % "stairs-open", Vector3(cx + 21.0, Y, cz), 2.0, PI * 0.5)
+		b._caja_en(Vector3(cx - (36.0 - largo) * 0.5, y_loc + float(p + 1) * PISO + 0.1, cz), Vector3(largo, 0.4, 22.0), hormigon)
+	ex._pieza_kit(EDIF % "stairs-open", Vector3(cx + 21.0, y_loc, cz), 2.0, PI * 0.5)
 	## Grúa torre amarilla con contrapeso y cable.
 	var amarillo := b._mat_simple(Color(0.95, 0.75, 0.1), 0.6)
 	var gx := cx + 26.0

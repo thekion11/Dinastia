@@ -25,7 +25,7 @@ func setup(context_player: Player, context_data: PlayerStateData, context_animat
 	target_goal = context_ball_target_goal
 	ai_behavior = context_ai_behavior
 	tackle_damage_emitter_area = context_tackle_damage_emitter_area
-	
+
 
 func transition_state(new_state: Player.State, new_state_data: PlayerStateData = PlayerStateData.new()) -> void:
 	state_transition_requested.emit(new_state, new_state_data)

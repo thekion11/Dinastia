@@ -155,7 +155,7 @@ static func _avenida(e: Node3D, cx: float, cz: float) -> void:
 	mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	e.add_child(mmi)
 
-static func _arboles_y_farolas(e: Node3D, px: float, pz: float, cx: float, cz: float, rng: RandomNumberGenerator) -> void:
+static func _arboles_y_farolas(e: Node3D, _px: float, _pz: float, cx: float, cz: float, rng: RandomNumberGenerator) -> void:
 	var escenas: Array = []
 	for r: String in ARBOLES:
 		if ResourceLoader.exists(r):

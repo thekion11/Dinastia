@@ -139,15 +139,15 @@ func a_dic() -> Dictionary:
 
 func desde_dic(d: Dictionary) -> void:
 	leyendas.clear()
-	for L: Dictionary in d.get("leyendas", []):
+	for ley: Dictionary in d.get("leyendas", []):
 		leyendas.append({
-			"nombre": String(L.get("nombre", "")),
-			"club_id": String(L.get("club_id", "")),
-			"pos": String(L.get("pos", "MED")),
-			"nivel": int(L.get("nivel", 80)),
-			"anio_hijo": int(L.get("anio_hijo", 0)),
-			"usado": bool(L.get("usado", false)),
-			"propio": bool(L.get("propio", false)),
+			"nombre": String(ley.get("nombre", "")),
+			"club_id": String(ley.get("club_id", "")),
+			"pos": String(ley.get("pos", "MED")),
+			"nivel": int(ley.get("nivel", 80)),
+			"anio_hijo": int(ley.get("anio_hijo", 0)),
+			"usado": bool(ley.get("usado", false)),
+			"propio": bool(ley.get("propio", false)),
 		})
 	_fichas.clear()
 	var f: Dictionary = d.get("fichas", {})

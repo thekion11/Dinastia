@@ -14,8 +14,8 @@ func _ready() -> void:
 	get_tree().quit(0)
 
 func _foto(fase: String, extra := "") -> void:
-	var cam_ := get_viewport().get_camera_3d()
-	extra += " far=%s" % (str(snappedf(cam_.far, 1.0)) if cam_ != null else "sin cámara")
+	var cam_loc := get_viewport().get_camera_3d()
+	extra += " far=%s" % (str(snappedf(cam_loc.far, 1.0)) if cam_loc != null else "sin cámara")
 	extra += " vram=%.0f MB (texturas %.0f, buffers %.0f) audio_ram=%.0f MB" % [Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0, Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1048576.0, Performance.get_monitor(Performance.RENDER_BUFFER_MEM_USED) / 1048576.0, 0.0]
 	print("MEDIDA %-22s nodos %6d  objetos %7d  mem_estatica %6.0f MB  dibujo %5d  prim %8d %s" % [fase,
 		int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), int(Performance.get_monitor(Performance.OBJECT_COUNT)),
@@ -205,7 +205,7 @@ func _llamadas() -> float:
 		await get_tree().process_frame
 	return Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 
-func _grupos_nombre(ciudad: Node, base: Vector2) -> void:
+func _grupos_nombre(ciudad: Node, _base: Vector2) -> void:
 	if OS.get_environment("MMHIST") != "":
 		var nodos := ciudad.find_children("*", "MultiMeshInstance3D", true, false)
 		var por := {}

@@ -238,7 +238,7 @@ func _autobuses() -> void:
 			var choca := false
 			for o: Rect2 in _ocupado:
 				choca = choca or o.intersects(caja)
-			if not choca or f == 0.85:
+			if not choca or is_equal_approx(f, 0.85):
 				_insignia(q, String(l["numero"]), l["color"])
 				break
 

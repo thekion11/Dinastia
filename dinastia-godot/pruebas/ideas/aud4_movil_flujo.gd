@@ -9,7 +9,6 @@ func _frames(n: int = 2) -> void:
 ## Botones visibles más bajos que el toque, o fuera de la ventana por la derecha, o ScrollContainer que no se desliza.
 func _problemas(alto: float) -> Array[String]:
 	var r: Array[String] = []
-	var ancho := get_viewport().get_visible_rect().size.x
 	for n in _p.find_children("*", "Button", true, false):
 		var b := n as Button
 		if not b.is_visible_in_tree() or b.get_window() != get_tree().root or b.size.x < 4.0:

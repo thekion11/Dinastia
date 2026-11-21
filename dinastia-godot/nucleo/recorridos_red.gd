@@ -11,7 +11,7 @@ extends RefCounted
 ## la hora del reloj del juego (más seguido en punta, más espaciado a última hora y el domingo), con servicio de 05:30 a 23:30 (los
 ## locales, de 06:30 a 22:00), y llega a cada paradero tras la DISTANCIA REAL del recorrido hasta él a `VEL_COMERCIAL`. En la
 ## calle, la app usa la posición y la velocidad reales de los buses (`BusesRed.llegadas`).
-## TODO ES DETERMINISTA: no toca `Azar` ni la hora del sistema.
+## Todo ES DETERMINISTA: no toca `Azar` ni la hora del sistema.
 
 ## Las medidas de la ciudad grande que definen las zonas (copiadas de `CiudadExpansion` y `CargaCiudad.de("CityBuilder").RIO_X`; la prueba
 ## `pruebas/ideas/red_app.gd` comprueba que siguen iguales). El núcleo es el club con sus anillos.
@@ -46,6 +46,13 @@ const VEL_COMERCIAL := 330.0     ## m por minuto de reloj (~20 km/h con paradas 
 ## La zona de la ciudad de un punto, como `CargaCiudad.de("CiudadExpansion")._zona`: oeste del río, centro de torres al norte del club,
 ## comercio al este, casas al sur y el núcleo del club; más allá de 1.100 m, la periferia.
 static func sector_de(pos: Vector3) -> int:
+	var nat := Nativo.de("nuc_sector_de")
+	if nat != null:
+		return nat.nuc_sector_de(pos, PERIFERIA, RIO_X, RIO_MEDIO, NUC_Z0, NUC_X1, NUC_Z1)
+	return sector_de_gd(pos)
+
+## Gemela GDScript de `nuc_sector_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func sector_de_gd(pos: Vector3) -> int:
 	if maxf(absf(pos.x), absf(pos.z)) > PERIFERIA:
 		return 600
 	if pos.x < RIO_X - RIO_MEDIO:
@@ -90,6 +97,13 @@ static func normalizar(texto: String) -> String:
 
 ## El sector del código: su primera cifra (PA2xxx = centro). Los del mapa siempre tienen cuatro.
 static func sector_del_codigo(cod: String) -> int:
+	var nat := Nativo.de("nuc_sector_del_codigo")
+	if nat != null:
+		return nat.nuc_sector_del_codigo(cod)
+	return sector_del_codigo_gd(cod)
+
+## Gemela GDScript de `nuc_sector_del_codigo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func sector_del_codigo_gd(cod: String) -> int:
 	var cifras := cod.substr(2)
 	if cifras.length() == 4 and int(cifras[0]) >= 1 and int(cifras[0]) <= 6:
 		return int(cifras[0]) * 100

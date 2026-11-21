@@ -93,7 +93,9 @@ func _probar_historia_c4() -> void:
 	var grande: Club = clubes[0]
 	var chico: Club = clubes[clubes.size() - 1]
 	_comprobar(int(HistoriaClub.de(grande, clubes)["titulos"]) > int(HistoriaClub.de(chico, clubes)["titulos"]), "el grande tiene más títulos que el chico")
-	_comprobar(HistoriaClub.de(grande, clubes) == HistoriaClub.de(grande, clubes), "el mismo club tiene siempre la misma historia")
+	var rep1_a = HistoriaClub.de(grande, clubes)
+	var rep1_b = HistoriaClub.de(grande, clubes)
+	_comprobar(rep1_a == rep1_b, "el mismo club tiene siempre la misma historia")
 	## (12-11) Coherencia con el año de fundación en TODOS los clubes: ni más títulos que años de vida dan, ni época dorada anterior al club.
 	var raros: Array = []
 	for c9: Club in m2.clubes.values():
@@ -222,6 +224,12 @@ func _probar_habilidades_en_resultados() -> void:
 		var r := {"g": 0, "e": 0, "p": 0, "gf": 0, "gc": 0, "bono": yo.bonus_ataque}
 		seed(4242)
 		for i in 300:
+			## (19-11) Sin pasar semanas, sanciones y lesiones se acumulan: con «menos de siete» también en el saque, el rival acababa
+			## perdiendo 3-0 de mesa todos los partidos. Como en `_probar_partidos` (4-11), cada uno sale sano: se mide la habilidad, no el desgaste.
+			for c: Club in [yo, rival]:
+				for j: Jugador in c.plantilla:
+					j.suspension = 0
+					j.lesion = 0
 			var pa := Partido.new(yo, rival, true)
 			var res: Dictionary = pa.simular()
 			r["gf"] += int(res["local"])

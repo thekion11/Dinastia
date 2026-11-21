@@ -17,7 +17,7 @@ func _probar() -> void:
 	for p: Vector3 in t.puntos:
 		sobre_terreno = sobre_terreno and p.y > b.altura_en(p.x, p.z) + 8.0
 	_comprobar(sobre_terreno, "el cable nunca roza el terreno (siempre 8 m por encima)")
-	_comprobar(Teleferico.avance(0.0) == 0.0 and is_equal_approx(Teleferico.avance(Teleferico.VIAJE), 1.0) and is_equal_approx(Teleferico.avance(Teleferico.VIAJE + Teleferico.ESPERA + Teleferico.VIAJE), 0.0), "ciclo: sube, espera arriba, baja y espera abajo")
+	_comprobar(is_zero_approx(Teleferico.avance(0.0)) and is_equal_approx(Teleferico.avance(Teleferico.VIAJE), 1.0) and is_equal_approx(Teleferico.avance(Teleferico.VIAJE + Teleferico.ESPERA + Teleferico.VIAJE), 0.0), "ciclo: sube, espera arriba, baja y espera abajo")
 	t._poner_cabinas(Teleferico.VIAJE * 0.5)
 	var a: Vector3 = t.cabinas[0].position
 	var c: Vector3 = t.cabinas[1].position

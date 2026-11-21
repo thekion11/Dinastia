@@ -1,4 +1,7 @@
 extends "res://ui/principal_p8.gd"
+
+const _RUTA_EDIFICIO_CLUB := "res://visor/edificio_club.gd"
+
 ## [Capa 9/17 de `principal.gd`] _origen_de, _traducir_pantalla, _refrescar, _avanzar_semana, _avanzar_dia, _pintar_dias … (+2)
 
 ## Puentes (fase 6, paso 7): viven en `TraduccionMenu`.
@@ -22,8 +25,8 @@ func _pintar_dias() -> void: _avance._pintar_dias()
 ## (el contexto del edificio del club, la Carrera de Jugador, el último mundo)
 ## sobrevivían al cierre y el motor avisaba de objetos sin liberar.
 func _exit_tree() -> void:
-	load("res://visor/edificio_club.gd").ctx = {}
-	load("res://visor/edificio_club.gd").mundo_ref = null
+	load(_RUTA_EDIFICIO_CLUB).ctx = {}
+	load(_RUTA_EDIFICIO_CLUB).mundo_ref = null
 	if ResourceLoader.has_cached("res://ui/carrera_jugador_ui.gd"):   ## (A4 memoria) solo si se llegó a cargar
 		(load("res://ui/carrera_jugador_ui.gd") as GDScript).mundo = null
 	Trabajadores.actual = null

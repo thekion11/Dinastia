@@ -119,6 +119,10 @@ uniform float barba_fuerza = 0.0;
 // La cara real va en su propia malla (`CaraMalla`): la cara del cuerpo se
 // hunde detrás para no asomar (la nariz del modelo, sobre todo).
 uniform bool hay_malla = false;
+// Relleno de luz de la piel con cara en malla: el mismo que la cara (`cara_malla.gdshader`), que lo baja en las claras.
+uniform float relleno_piel = 0.3;
+// Cuánto se engorda el cuello hacia los lados y atrás, en metros (ver «CUELLO DE FUTBOLISTA» en el vértice).
+uniform float cuello_extra = 0.02;
 uniform vec3 piel_foto = vec3(0.5, 0.35, 0.25);
 // Luminancia (lineal) media de la piel de la textura original.
 const float LUM_PIEL_REF = 0.2;
@@ -304,6 +308,18 @@ void vertex() {
 		// La holgura calculada arriba (13-10-2026: se calculaba y nunca se
 		// aplicaba; por eso la ropa parecía pintada sobre el cuerpo).
 		VERTEX += NORMAL * inflar * escala_holgura;
+		// CUELLO DE FUTBOLISTA (19-11, comparación con PES 2020): el del cuerpo base era largo y fino («de cisne»,
+		// la mitad de ancho que la cara); el de un futbolista es grueso y casi tan ancho como la mandíbula. Se
+		// engorda solo hacia los lados y atrás (la nuez y el mentón no se tocan), nace en el escote y se apaga bajo la
+		// mandíbula y la nuca (sin escalones). En la mujer, la mitad.
+		{
+			float yc = y - dy_cuerpo;
+			float zona_cuello = (1.0 - brazo) * smoothstep(1.525, 1.575, yc) * (1.0 - smoothstep(1.575, 1.61, yc))
+				* (1.0 - smoothstep(0.035, 0.09, ax));   // (19-11) hasta 1,64 abultaba bajo la mandíbula con la cabeza girada
+			vec3 nh = vec3(n_anim.x, 0.0, n_anim.z);
+			float lado = clamp(length(nh), 0.0, 1.0) * (1.0 - 0.6 * smoothstep(0.4, 0.9, n_anim.z));
+			VERTEX += normalize(nh + vec3(1e-5)) * zona_cuello * lado * cuello_extra * (dy_cuerpo < -0.01 ? 0.5 : 1.0);
+		}
 		// LA TELA TAPA LOS MÚSCULOS (26-9-2026): donde hay ropa, la superficie
 		// se acerca a la versión ALISADA del cuerpo (`VestidorQ._alisado`):
 		// se rellenan los surcos entre músculos y la luz cae como sobre tela,
@@ -942,6 +958,12 @@ void fragment() {
 		// Sin saturar (el usuario lo pidió el 30-9: pieles limpias, no naranjas).
 		// (16-11, frente 2) 0,78 → 0,9: con 0,78 más el borde de luz y la subsuperficie la piel salía cerosa, casi gris.
 		albedo = mix(vec3(dot(albedo, vec3(0.2126, 0.7152, 0.0722))), albedo, 0.9);
+		// ALBEDO FÍSICO DE LA PIEL (19-11): la paleta es el color «que se ve», no la reflectancia. Usada tal cual,
+		// la piel clara (#f0c39b, luminancia lineal 0,60) reflejaba casi como la camiseta blanca y el tonemap la
+		// quemaba a blanco (veredicto del dueño 17-11: «piel casi blanca y quemada»). La piel clara real (parche
+		// «light skin» de la carta ColorChecker) ronda 0,35: compresión por encima de 0,15 (las oscuras no cambian).
+		float l_alb = max(dot(albedo, vec3(0.2126, 0.7152, 0.0722)), 0.0001);
+		albedo *= 1.0 / (1.0 + 1.6 * max(l_alb - 0.15, 0.0));
 	}
 	float tope = max(max(albedo.r, albedo.g), albedo.b);
 	albedo *= tope > 0.72 ? (0.72 + (tope - 0.72) * 0.25) / tope : 1.0;
@@ -1090,7 +1112,7 @@ void fragment() {
 	// Con cara real: el mismo relleno de luz que la cara (`cara_malla.gdshader`)
 	// en la piel, para que cuello y cara empaten también en sombra.
 	if (hay_malla) {
-		EMISSION = albedo * 0.3 * (0.35 + 0.65 * clamp(dot(NORMAL, VIEW), 0.0, 1.0)) * (1.0 - tela);
+		EMISSION = albedo * relleno_piel * (0.35 + 0.65 * clamp(dot(NORMAL, VIEW), 0.0, 1.0)) * (1.0 - tela);
 	}
 
 	// LA TELA: punto fino de poliéster (una malla de puntitos que se ve de

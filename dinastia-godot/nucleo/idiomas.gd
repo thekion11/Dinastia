@@ -1,4 +1,4 @@
-extends "res://nucleo/idiomas_p1.gd"
+extends "res://nucleo/idiomas_p2.gd"
 ## [Capa 2/2 de `idiomas.gd`] _cargar_extra, _ready, _ordinales, mayusculas, _directa, _tiene_letras … (+13)
 
 ## (3-11-2026, memoria en el móvil) `idiomas_extra.json` con los 9 idiomas ocupaba ~46 MB al arrancar. Ahora solo se guarda la tabla de los idiomas PEDIDOS (`_asegurar`): en castellano
@@ -117,12 +117,6 @@ func _patron(frase: String, prof: int) -> String:
 ## (4-11, A4) PLANTILLAS CON %s / %d: una clave con marcadores («Efecto durante %d semanas.») traduce también la frase ya FORMADA («…durante 5 semanas.»).
 var _plantillas_de := {}   ## idioma → [[trozo literal más largo, RegEx, traducción], ...]
 
-static func _escapar_re(t: String) -> String:
-	var r := t
-	for c: String in ["\\", ".", "^", "$", "|", "(", ")", "[", "]", "{", "}", "*", "+", "?"]:
-		r = r.replace(c, "\\" + c)
-	return r
-
 func _plantillas() -> Array:
 	if _plantillas_de.has(idioma):
 		return _plantillas_de[idioma]
@@ -196,9 +190,6 @@ func _oraciones(texto: String) -> Array:
 		i += 1
 	partes.append(texto.substr(ini))
 	return partes
-
-static func _es_letra(c: int) -> bool:
-	return (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or (c >= 192 and c <= 687) or (c >= 48 and c <= 57) or c == 191 or c == 161
 
 func _t(frase: String, prof: int) -> String:
 	var d := _directa(frase)

@@ -1,5 +1,5 @@
 class_name Partida
-extends "res://nucleo/partida_p1.gd"
+extends "res://nucleo/partida_p2.gd"
 ## [Capa 2/2 de `partida.gd`] _dic_a_club, _dic_a_liga, _dic_a_copa, _restaurar_lo_tuyo, desde_instantanea, cargar … (+2)
 
 static func _dic_a_club(d: Dictionary) -> Club:
@@ -135,17 +135,15 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 			m.directiva.trofeos.append(t)
 
 	m.staff.desde_dic(datos.get("staff", {}))
-	## Y hay que volver a aplicarlo: los niveles solos no mueven nada, el motor de
-	## partido lee `Club.bonus_ataque` y `bonus_defensa`. Sin este `aplicar`, un
-	## staff de nivel 5 cargado de disco no hacia absolutamente nada.
+	## Hay que volver a aplicarlo: el motor lee `Club.bonus_ataque`/`bonus_defensa`, no los niveles.
 	m.staff.aplicar(mio)
 	## Las obras van DESPUES de fijar el aforo base, y hay que volver a aplicarlas:
 	## el aforo del club que viene del guardado ya trae las tribunas construidas,
 	## asi que si se aplicara sobre el, cada carga lo multiplicaria otra vez.
-	var do_: Dictionary = datos.get("obras", {})
-	if not do_.is_empty():
-		m.obras.desde_dic(do_)
-		if int(do_.get("aforo_base", 0)) <= 0:
+	var obras_dic: Dictionary = datos.get("obras", {})
+	if not obras_dic.is_empty():
+		m.obras.desde_dic(obras_dic)
+		if int(obras_dic.get("aforo_base", 0)) <= 0:
 			## Guardado viejo, sin aforo base: se deduce quitando las tribunas.
 			m.obras.fijar_aforo_base(int(round(float(mio.estadio_aforo) / (1.0 + 0.15 * float(m.obras.nivel("trib"))))))
 		m.obras.aplicar(mio)
@@ -233,6 +231,8 @@ static func _restaurar_lo_tuyo(datos: Dictionary, m: Mundo) -> void:
 	## Y se recalculan los bonificadores del motor con el staff, el arbol del DT
 	## y el vestuario ya cargados: los niveles solos no mueven nada.
 	m.aplicar_bonificadores()
+	var bm: Array = datos.get("bonus_mio", [])
+	if bm.size() == 2 and m.mi_club() != null: m.mi_club().bonus_ataque = float(bm[0]); m.mi_club().bonus_defensa = float(bm[1])
 
 	var dp: Dictionary = datos.get("prensa", {})
 	if not dp.is_empty() and m.prensa != null:
@@ -316,10 +316,8 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 		push_error("Partida: «clubes», «ligas» o «mi_club» del guardado no tienen la forma esperada; no se carga")
 		return null
 
-	## Un guardado anterior a la base ficticia (sin la clave) se jugó siempre
-	## con los datos reales. Si esta instalación no tiene el pack, se queda en
-	## la ficticia: los nombres del propio guardado se ven igual, solo se
-	## pierden las equipaciones reales.
+	## Un guardado anterior a la base ficticia (sin la clave) se jugó con datos reales. Si esta instalación no tiene
+	## el pack, se queda en la ficticia: los nombres del guardado se ven igual, solo se pierden las equipaciones reales.
 	Datos.usar_base_real(bool(datos.get("base_real", true)))
 
 	var m := Mundo.new()
@@ -422,11 +420,6 @@ static func desde_instantanea(datos: Dictionary) -> Mundo:
 	LeyesPais.clubes_mundo = m.clubes
 	LeyesPais.anio_actual = m.anio
 	return m
-
-## El número de un id «j123» / «c45»; `defecto` si no tiene esa forma.
-static func _seq_de(id: String, prefijo: String, defecto: int) -> int:
-	var n := id.trim_prefix(prefijo)
-	return int(n) if id.begins_with(prefijo) and n.is_valid_int() else defecto
 
 ## `soltar_antes`: lo que quien llama quiere soltar del mundo de ANTES (p. ej. `func(): p.mundo = null`). Se llama cuando el guardado ya se leyó y se sabe bueno (huella, versión y claves) y ANTES de construir el
 ## mundo nuevo (10-11, pico de RAM: con el mundo entero conviven el mundo viejo, el diccionario del JSON (~230 MB) y el mundo nuevo; así nunca coinciden los tres). Si el guardado no sirve, no se llama y el

@@ -25,7 +25,7 @@ uniform float quitar_luz = 0.7;
 // `VestidorQ.SATURACION_PIEL`).
 uniform float saturacion = 1.0;
 // Ver `VestidorQ.COMPENSAR_PIEL` (el mismo número para el cuerpo).
-uniform float compensar = 1.35;   // (16-11, frente 2) antes 1,6: piel gris rosada, «cerosa»; igual que `VestidorQ.COMPENSAR_PIEL`
+uniform float compensar = 1.12;   // (19-11) 1,35 dejaba la piel rosa grisácea. (16-11, frente 2) antes 1,6: piel gris rosada, «cerosa»; igual que `VestidorQ.COMPENSAR_PIEL`
 uniform float relleno = 0.3;
 // La cámara de la foto expone para la cara; la luz del estadio no. Sin esto la
 // piel salía mucho más oscura que en la foto (sobre todo la piel oscura).
@@ -77,9 +77,13 @@ void fragment() {
 	float g = max(lum(c), 1e-4);
 	// En pieles oscuras el pie del mapeo satura más (salían naranjas): más
 	// compensación (igual que `VestidorQ.compensar_piel`).
-	float comp = compensar + 0.8 * clamp((0.25 - lum_media) / 0.2, 0.0, 1.0);
+	float comp = compensar + 1.03 * clamp((0.25 - lum_media) / 0.2, 0.0, 1.0);   // (19-11) 0,8 → 1,03: las oscuras siguen en 2,15
 	c = g * pow(max(c / g, vec3(0.0)), vec3(1.0 / comp));
 	c = mix(vec3(lum(c)), c, saturacion) * exposicion;
+	// ALBEDO FÍSICO DE LA PIEL (19-11): la paleta y la foto dan el color «que se ve», no la reflectancia; la piel clara
+	// salía casi blanca y quemada. Compresión por encima de 0,15 de la media (las oscuras no cambian; la piel clara real ronda 0,35 de luminancia lineal).
+	// La misma cuenta en el cuerpo (`VestidorQ.albedo_piel`): la cara y el cuello siguen empatando.
+	c *= 1.0 / (1.0 + 1.6 * max(lum_media * exposicion - 0.15, 0.0));
 	ALBEDO = c;
 	// Relleno: la luz que rebota de la grada y el césped levanta un poco las
 	// sombras de la cara (el mismo relleno lleva la piel del cuerpo,

@@ -29,6 +29,9 @@ const TAM_ESCAPARATE := 512   ## (17-11) las tarjetas del escaparate del menú c
 const ALTO_CABEZA := 70
 ## Luminosidad mínima del fondo: con un club negro, fondo y camiseta se fundían.
 const LUZ_FONDO := 0.2
+const _RUTA_PERSONAJE_DT := "res://visor/personaje_dt.gd"
+const _RUTA_PLAYER_SPAWNER := "res://visor/player_spawner.gd"
+const _RUTA_VESTIDOR_Q := "res://visor/vestidor_q.gd"
 
 static var _inst: Retrato3D
 static var _cache := {}
@@ -40,7 +43,7 @@ var _rim: DirectionalLight3D
 var _sol: DirectionalLight3D
 var _relleno: DirectionalLight3D
 var _ocupado := false
-var _spawner = load("res://visor/player_spawner.gd").new()
+var _spawner = load(_RUTA_PLAYER_SPAWNER).new()
 
 static func disponible() -> bool:
 	return DisplayServer.get_name() != "headless" and Engine.get_main_loop() is SceneTree
@@ -194,7 +197,7 @@ func _servir() -> void:
 	var raiz := Node3D.new()
 	_vp.add_child(raiz)
 	var datos := Puente3D.jugador(j)
-	var look: Array = load("res://visor/player_spawner.gd")._look_de(datos)
+	var look: Array = load(_RUTA_PLAYER_SPAWNER)._look_de(datos)
 	var puesto := "POR" if j.pos_e == "POR" else "DEL"
 	## La camiseta completa del CLUB del jugador (escudo y patrocinadores), si se sabe.
 	var m := Mundo.actual()
@@ -203,13 +206,12 @@ func _servir() -> void:
 		_spawner._kit_x = load("res://ui/disenos_kit.gd").kit_de_club(m.clubes[j.club_id])
 	## En los retratos la camiseta va con VOLUMEN (la ropa aparte, la prenda modelada
 	## con mangas y bajo), aunque en el partido siga pintada sobre el cuerpo.
-	var aparte_antes = load("res://visor/vestidor_q.gd").ropa_aparte
-	load("res://visor/vestidor_q.gd").ropa_aparte = true
-	var nodo = _spawner._crear_jugador(raiz, j.id, puesto, "", Color(job["k1"]), Color(job["k2"]), "liso",
-		maxi(j.dorsal, 1), look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
-	load("res://visor/vestidor_q.gd").ropa_aparte = aparte_antes
+	var aparte_antes = load(_RUTA_VESTIDOR_Q).ropa_aparte
+	load(_RUTA_VESTIDOR_Q).ropa_aparte = true
+	var nodo = _spawner._crear_jugador(raiz, j.id, puesto, Color(job["k1"]), Color(job["k2"]), "liso", maxi(j.dorsal, 1), look, Color(0, 0, 0, 0), datos)
+	load(_RUTA_VESTIDOR_Q).ropa_aparte = aparte_antes
 	if not nodo.is_empty():
-		var alto = load("res://visor/player_spawner.gd").altura_de(datos, j.id, puesto)
+		var alto = load(_RUTA_PLAYER_SPAWNER).altura_de(datos, j.id, puesto)
 		## De pecho para arriba, de frente (el modelo mira a +Z); en las filas de las
 		## listas, la cabeza y el cuello de la camiseta.
 		if bool(job.get("cabeza", false)):
@@ -243,9 +245,9 @@ func _servir_dt(job: Dictionary) -> void:
 	var escap := _modo(tam, String(job["k1"]), env)
 	var raiz := Node3D.new()
 	_vp.add_child(raiz)
-	var d = load("res://visor/personaje_dt.gd").crear(raiz, job["dt"], Color(job["k1"]), Color(job["k2"]))
+	var d = load(_RUTA_PERSONAJE_DT).crear(raiz, job["dt"], Color(job["k1"]), Color(job["k2"]))
 	if not d.is_empty():
-		var alto = float(load("res://visor/personaje_dt.gd").aspecto(job["dt"]).get("altura", 1.78))
+		var alto = float(load(_RUTA_PERSONAJE_DT).aspecto(job["dt"]).get("altura", 1.78))
 		if bool(job.get("cabeza", false)):
 			_cam.position = Vector3(0.0, alto * 0.93, 1.1)   ## (10-11) algo más abierto: entran el pelo y la barbilla enteros
 			_cam.look_at(Vector3(0.0, alto * 0.912, 0.0), Vector3.UP)

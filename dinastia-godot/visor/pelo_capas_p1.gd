@@ -1,7 +1,7 @@
 extends "res://visor/pelo_capas_p1_p1.gd"
 ## (Parte 2 de 2 de `pelo_capas_p1.gd`.)
 
-static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, datos: Dictionary, h: Dictionary,
+static func _cuero(cuerpo: Dictionary, cara: PackedVector3Array, _datos: Dictionary, h: Dictionary,
 		capas: int) -> ArrayMesh:
 	var v: PackedVector3Array = cuerpo["v"]
 	var nor: PackedVector3Array = cuerpo["n"]

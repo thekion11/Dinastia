@@ -202,7 +202,7 @@ func _probar_tanda_top25b() -> void:
 				quieto = false
 	_comprobar(quieto, "cambio: el que entra espera en la banda hasta la palmada")
 	_comprobar(fases.has("palmada") and fases.has("se_va"), "cambio: se chocan la mano y el que sale se va (%s)" % str(fases))
-	_comprobar(float(entra.get("freno_duelo", 0.0)) == 1.0, "cambio: el que entra queda suelto después")
+	_comprobar(is_equal_approx(float(entra.get("freno_duelo", 0.0)), 1.0), "cambio: el que entra queda suelto después")
 	_comprobar(not is_instance_valid(esc) or esc.is_queued_for_deletion(), "cambio: la escena se borra sola")
 	motor.queue_free()
 	raiz.queue_free()
@@ -312,6 +312,12 @@ func _probar_porque_moral() -> void:
 ## 27-10 (pieza D): los peluches coleccionables, la máquina funcional y sus logros.
 func _probar_peluches() -> void:
 	_titulo("PELUCHES: TABLA, PARTIDA, ÁLBUM Y LOGROS")
+	_peluches_tabla_y_campo()
+	_peluches_agarre()
+	_peluches_album()
+	_peluches_guardado_maquina_ciudad()
+
+func _peluches_tabla_y_campo() -> void:
 	var ids := {}
 	var series := {}
 	for p: Dictionary in Peluches.PELUCHES:
@@ -328,11 +334,13 @@ func _probar_peluches() -> void:
 		for j in range(i + 1, c1.size()):
 			solape = solape or Vector2(float(c1[i]["x"]) - float(c1[j]["x"]), float(c1[i]["y"]) - float(c1[j]["y"])).length() < 0.2
 	_comprobar(c1.size() >= 5 and str(c1) == str(c2) and not solape and not ajeno, "el campo (%d peluches) sale de la semilla, sin solapes y solo con los de su máquina" % c1.size())
+
+func _peluches_agarre() -> void:
 	var pe := Peluches.new()
 	var ligero := Peluches.def("pollito")
 	var pesado := Peluches.def("elefante")
 	_comprobar(pe.probabilidad(ligero, 0.0) > pe.probabilidad(pesado, 0.0) and pe.probabilidad(ligero, 0.0) > pe.probabilidad(ligero, 0.1), "agarra mejor lo ligero y lo que tiene la garra encima")
-	_comprobar(pe.probabilidad(ligero, Peluches.RADIO_AGARRE + 0.01) == 0.0, "fuera del radio no hay agarre")
+	_comprobar(is_zero_approx(pe.probabilidad(ligero, Peluches.RADIO_AGARRE + 0.01)), "fuera del radio no hay agarre")
 	var p0 := pe.probabilidad(pesado, 0.05)
 	pe.fallos_seguidos = 3
 	_comprobar(pe.probabilidad(pesado, 0.05) > p0 and pe.probabilidad(pesado, 0.05) <= 0.95, "cada fallo seguido sube la probabilidad (nunca es imposible ni segura)")
@@ -349,6 +357,8 @@ func _probar_peluches() -> void:
 		if bool(pe.intento(campo_a, 0.5, 0.5, rng)["exito"]):
 			aciertos += 1
 	_comprobar(aciertos > 160 and aciertos < 320, "un oso (peso 3) justo debajo de la garra se agarra en torno al 50-60 %% (%d de 400)" % aciertos)
+
+func _peluches_album() -> void:
 	var album := Peluches.new()
 	var nuevos: Array = []
 	for p: Dictionary in Peluches.de_serie("bosque"):
@@ -359,6 +369,8 @@ func _probar_peluches() -> void:
 	for p: Dictionary in Peluches.PELUCHES:
 		todos.append_array(album.conseguir(String(p["id"])))
 	_comprobar(album.completa() and album.logros.size() == Peluches.SERIES.size() + 1 and album.logros.has(Peluches.LOGRO_TODO) and todos.has(Peluches.LOGRO_TODO), "con los 15: un logro por serie y otro por la colección entera (%d logros)" % album.logros.size())
+
+func _peluches_guardado_maquina_ciudad() -> void:
 	var mundo_p := Mundo.new()
 	var roles := Roles.new(mundo_p)
 	roles.peluches.conseguir("unicornio")
@@ -430,3 +442,4 @@ func _probar_peluches() -> void:
 		if x != null:
 			x.free()
 	cb.queue_free()
+

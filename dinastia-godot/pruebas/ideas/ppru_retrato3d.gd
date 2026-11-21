@@ -62,7 +62,7 @@ func _probar_async() -> void:
 	## y un cuadro liso NO pasarían las comprobaciones de arriba.
 	var liso := Image.create(Retrato3D.TAM_GRANDE, Retrato3D.TAM_GRANDE, false, Image.FORMAT_RGBA8)
 	liso.fill(Color(K1))
-	_comprobar(_figura_centro(marcador) < 0.5 and _fraccion_distinta(marcador, marcador, 0.06) == 0.0 and _varianza_luz(liso) < 0.002,
+	_comprobar(_figura_centro(marcador) < 0.5 and is_zero_approx(_fraccion_distinta(marcador, marcador, 0.06)) and _varianza_luz(liso) < 0.002,
 		"contraprueba: el marcador (centro %.0f %%) y un cuadro liso suspenderían" % (_figura_centro(marcador) * 100.0))
 	var dab := _fraccion_distinta(ia, ib, 0.08)
 	_comprobar(dab > 0.03, "dos jugadores distintos dan retratos distintos (%.1f %% de píxeles cambian, mín. 3 %%)" % (dab * 100.0))

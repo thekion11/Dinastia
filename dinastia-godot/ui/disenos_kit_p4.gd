@@ -6,7 +6,7 @@ extends "res://ui/disenos_kit_p3.gd"
 ## con su nombre y `color_en` solo la busca aquí. Familia nueva = una fila aquí + su `_fam_*` (y el shader).
 ## Es `static var` y no `const` porque GDScript no admite Callables en una constante; se arma al cargar el
 ## script (no a mitad de un dibujo) y nadie la modifica.
-static var FORMULAS: Dictionary = {
+static var formulas: Dictionary = {
 	1: _fam_franjas, 2: _fam_aros, 3: _fam_banda, 4: _fam_panos_v, 5: _fam_bloques_h,
 	6: _fam_franja_pecho, 7: _fam_canesu, 8: _fam_cuadros, 9: _fam_degrade, 10: _fam_chevron,
 	11: _fam_cruz, 12: _fam_paneles_lado, 13: _fam_franja_central, 14: _fam_tiza, 15: _fam_ondas,
@@ -30,7 +30,7 @@ static func color_en(d: Array, cols: Array[Color], u: float, v: float) -> Color:
 	var f := int(d[2])
 	if f >= 100:
 		return cols[0].lerp(cols[1], _legado(f - 100, u * 0.215, 1.0 + v * 0.52))
-	var formula: Callable = FORMULAS.get(f, Callable())
+	var formula: Callable = formulas.get(f, Callable())
 	return formula.call(d, cols, u, v) if formula.is_valid() else cols[0]
 
 ## La silueta de la camiseta (la misma de `Jersey.svg_de`), en blanco.

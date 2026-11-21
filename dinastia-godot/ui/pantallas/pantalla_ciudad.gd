@@ -68,7 +68,7 @@ func _pintar_luces_ciudad(ci: Ciudad) -> void:
 
 func _pintar_terrenos(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🗺️ TERRENOS")
 	p._lista_ciudad.add_child(t)
 	for f: Array in Ciudad.lista_terrenos():
@@ -103,7 +103,7 @@ func _pintar_terrenos(ci: Ciudad, c: Club) -> void:
 
 func _pintar_negocios(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🏗️ NEGOCIOS ANEXOS")
 	p._lista_ciudad.add_child(t)
 	if not p._modo_experto:
@@ -151,7 +151,7 @@ func _pintar_negocios(ci: Ciudad, c: Club) -> void:
 ## rendimiento el domingo.
 func _pintar_conciertos(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🎤 EVENTOS NO DEPORTIVOS")
 	p._lista_ciudad.add_child(t)
 	p._dato("Conciertos realizados", str(ci.conciertos), Principal.COL_TEXTO, p._lista_ciudad)
@@ -192,7 +192,7 @@ func _pintar_conciertos(ci: Ciudad, c: Club) -> void:
 
 func _pintar_municipalidad(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🏛️ MUNICIPALIDAD Y VECINOS")
 	p._lista_ciudad.add_child(t)
 	var lectura := p._texto(11, Principal.COL_SUAVE)
@@ -253,7 +253,7 @@ func _pintar_municipalidad(ci: Ciudad, c: Club) -> void:
 
 func _pintar_sostenibilidad(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🌿 SOSTENIBILIDAD")
 	p._lista_ciudad.add_child(t)
 	p._dato("Cubierta solar", "%s%s" % ["●".repeat(ci.paneles), "○".repeat(Ciudad.PANELES_MAX - ci.paneles)],
@@ -293,7 +293,7 @@ func _pintar_sostenibilidad(ci: Ciudad, c: Club) -> void:
 
 func _pintar_seguridad(ci: Ciudad, c: Club) -> void:
 	p._lista_ciudad.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🛡️ SEGURIDAD DEL ESTADIO")
 	p._lista_ciudad.add_child(t)
 	for op: Array in [["privada", "Seguridad privada", ci.seg_privada],

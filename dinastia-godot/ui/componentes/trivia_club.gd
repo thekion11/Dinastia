@@ -109,7 +109,7 @@ static func preguntas(m: Mundo, rng: RandomNumberGenerator) -> Array:
 			break
 	return sal
 
-static func _otros_nombres(pl: Array, fuera: Jugador, rng: RandomNumberGenerator) -> Array:
+static func _otros_nombres(pl: Array, fuera: Jugador, _rng: RandomNumberGenerator) -> Array:
 	var otros: Array = []
 	var copia := pl.duplicate()
 	copia.shuffle()

@@ -18,7 +18,7 @@ func _foto() -> void:
 	_imgs.append(img)
 	print("FOTO ", _imgs.size(), " estado=", _e.estado, " zona=", _e._zona_est, " pos=", _e.cuerpo.position)
 
-func _andar(seg: float, corre := false) -> void:
+func _andar(seg: float, _corre := false) -> void:
 	## Avanza simulando la tecla W (sin pulsarla: se fuerza la entrada).
 	_e._tactil_vec = Vector2(0, 1)
 	for i in int(seg * 30.0):

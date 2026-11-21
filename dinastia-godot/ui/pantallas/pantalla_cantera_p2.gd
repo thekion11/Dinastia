@@ -184,7 +184,7 @@ func _pintar_roles_prometidos(c: Club) -> void:
 ## tuyos te exige cosas. Pero `agencias_del_plantel()` -quién controla a quién y
 ## cuánto confía en ti- no la llamaba ninguna pantalla, así que la presión te
 ## llegaba sin que pudieras ver de dónde venía ni prepararte.
-func _pintar_agencias(c: Club) -> void:
+func _pintar_agencias(_c: Club) -> void:
 	if p.mundo.cantera == null:
 		return
 	var lista := p.mundo.cantera.agencias_del_plantel()

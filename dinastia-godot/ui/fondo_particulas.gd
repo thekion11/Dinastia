@@ -51,8 +51,8 @@ static func _radial(g: Gradient) -> Texture2D:
 
 var tipo := "motas"
 
-func _init(tipo_: String = "motas") -> void:
-	tipo = tipo_
+func _init(tipo_arg: String = "motas") -> void:
+	tipo = tipo_arg
 	## Luz que SUMA: donde se cruzan dos motas brilla más, como la luz real.
 	var mat := CanvasItemMaterial.new()
 	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD

@@ -393,11 +393,11 @@ static func _dato(padre: Node, etiqueta: String, valor: String, color: Color, pa
 	var b := _texto(12, color, paleta)
 	b.text = valor
 	## Aire a la derecha: la barra de desplazamiento tapaba el final de la cifra.
-	b.add_theme_stylebox_override("normal", _AIRE)
+	b.add_theme_stylebox_override("normal", aire)
 	h.add_child(b)
 	padre.add_child(h)
 
-static var _AIRE := _aire()
+static var aire := _aire()
 static func _aire() -> StyleBoxEmpty:
 	var sb := StyleBoxEmpty.new()
 	sb.content_margin_right = 14

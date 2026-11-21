@@ -134,7 +134,7 @@ static func _buscador(tel: Telefono, cuerpo: VBoxContainer) -> void:
 		fila.add_child(cerca)
 	cuerpo.add_child(fila)
 
-static func _tarjeta_paradero(tel: Telefono, cuerpo: VBoxContainer, cod: String, distancia: float) -> void:
+static func _tarjeta_paradero(_tel: Telefono, cuerpo: VBoxContainer, cod: String, distancia: float) -> void:
 	var caja := PanelContainer.new()
 	caja.add_theme_stylebox_override("panel", Tema.caja(Telefono.TARJETA, 12, Color(ROJO, 0.6)))
 	var v := VBoxContainer.new()

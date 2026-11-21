@@ -99,9 +99,9 @@ func presentacion(ciudad: String, club: String, segundos: float) -> void:
 
 ## La flecha hacia el destino: `angulo` relativo a la cámara (0 = de frente,
 ## positivo = a la derecha), `metros` y, si está en otra planta, un aviso.
-func flecha(visible_: bool, angulo: float = 0.0, metros: float = 0.0, otra_planta: String = "") -> void:
-	_flecha.visible = visible_
-	if not visible_:
+func flecha(visible_arg: bool, angulo: float = 0.0, metros: float = 0.0, otra_planta: String = "") -> void:
+	_flecha.visible = visible_arg
+	if not visible_arg:
 		return
 	var simbolo := "▲"
 	var a := wrapf(angulo, -PI, PI)

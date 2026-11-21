@@ -1,4 +1,7 @@
 extends RefCounted
+
+const _RUTA_VESTIDOR_Q := "res://visor/vestidor_q.gd"
+
 ## LAS PREFERENCIAS DEL JUGADOR (fase 0: sale de `Principal`, capas 10 y 19).
 ##
 ## Una sola responsabilidad: leer y escribir `Principal.PREFS`
@@ -66,7 +69,7 @@ func cargar() -> void:
 	var idi := String(cf.get_value("juego", "idioma", Idiomas.idioma))
 	if idi == "es" or Idiomas.NOMBRES.has(idi):
 		if idi != Idiomas.idioma and OS.get_environment("PREF_IDIOMA_DIAG") != "":
-			print("PREF_PISA_IDIOMA ", Idiomas.idioma, " -> ", idi)   ## diagnóstico de pruebas (A4): el guardado manda sobre el idioma puesto antes
+			print("PREF_PISA_IDIOMA ", Idiomas.idioma, " -> ", idi)   ## LOG: diagnóstico de pruebas (A4): el guardado manda sobre el idioma puesto antes
 		Idiomas.idioma = idi
 	p._velocidad_partido = clampi(int(cf.get_value("juego", "velocidad_partido", p._velocidad_partido)), 1, 3)
 	Musica.encendida = bool(cf.get_value("musica", "encendida", Musica.encendida))
@@ -83,7 +86,7 @@ func cargar() -> void:
 	PantallaMenu.compacta_pref = bool(cf.get_value("pantalla", "cabecera_compacta", true))
 	PantallaMenu.compacta_pc = bool(cf.get_value("pantalla", "cabecera_compacta_pc", false))
 	IconosUI.dibujados = bool(cf.get_value("pantalla", "iconos_dibujados", true))   ## (orden 36) dibujados por defecto
-	load("res://visor/vestidor_q.gd").ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", load("res://visor/vestidor_q.gd").ropa_aparte))
+	load(_RUTA_VESTIDOR_Q).ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", load(_RUTA_VESTIDOR_Q).ropa_aparte))
 	Cara.usar_fotos = bool(cf.get_value("pantalla", "caras_foto", Cara.usar_fotos))
 	Cara.modo_streamer = bool(cf.get_value("pantalla", "streamer", false))
 	## 0 = «sin límite» (antes el clampi lo volvía 30 al recargar).
@@ -125,7 +128,7 @@ func guardar() -> void:
 	cf.set_value("pantalla", "cabecera_compacta", PantallaMenu.compacta_pref)
 	cf.set_value("pantalla", "cabecera_compacta_pc", PantallaMenu.compacta_pc)
 	cf.set_value("pantalla", "iconos_dibujados", IconosUI.dibujados)
-	cf.set_value("pantalla", "ropa_aparte", load("res://visor/vestidor_q.gd").ropa_aparte)
+	cf.set_value("pantalla", "ropa_aparte", load(_RUTA_VESTIDOR_Q).ropa_aparte)
 	cf.set_value("pantalla", "caras_foto", Cara.usar_fotos)
 	cf.set_value("pantalla", "streamer", Cara.modo_streamer)
 	cf.set_value("pantalla", "fps", p._fps_elegido)

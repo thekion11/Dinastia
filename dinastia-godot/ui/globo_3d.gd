@@ -65,6 +65,7 @@ var _movido := 0.0
 ## El sol del HTML: MUY oblicuo a propósito (línea ~14670 de `juego.js`). Con la z alta el planeta entero quedaba iluminado y las luces de noche nunca se veían;
 ## a 0.28 el terminador siempre cruza el disco visible.
 const SOL := Vector3(-0.62, 0.44, 0.28)
+const _RUTA_PAIS_DATOS_EXTRA := "res://ui/entrada/pais_datos_extra.gd"
 
 var _viewport: SubViewport
 var _pivote: Node3D
@@ -204,7 +205,7 @@ func _crear_pines() -> void:
 	esf.material = mat
 	for p: String in GLOBO_PAIS:
 		_coords[p] = GLOBO_PAIS[p]
-	var extra: Dictionary = load("res://ui/entrada/pais_datos_extra.gd").EXTRA
+	var extra: Dictionary = load(_RUTA_PAIS_DATOS_EXTRA).EXTRA
 	for p: String in extra:
 		_coords[p] = Vector2(float(extra[p][2]), float(extra[p][3]))
 	_orden.assign(_coords.keys())
@@ -253,15 +254,15 @@ func _rotulo_de(p: String) -> Label3D:
 
 ## (15-11) Coordenadas y capital de cualquiera de los 135 países (los 50 de siempre y los de `PaisDatosExtra`).
 static func tiene(p: String) -> bool:
-	return GLOBO_PAIS.has(p) or load("res://ui/entrada/pais_datos_extra.gd").EXTRA.has(p)
+	return GLOBO_PAIS.has(p) or load(_RUTA_PAIS_DATOS_EXTRA).EXTRA.has(p)
 
 static func coord(p: String) -> Vector2:
-	return GLOBO_PAIS[p] if GLOBO_PAIS.has(p) else load("res://ui/entrada/pais_datos_extra.gd").coord(p)
+	return GLOBO_PAIS[p] if GLOBO_PAIS.has(p) else load(_RUTA_PAIS_DATOS_EXTRA).coord(p)
 
 static func capital(p: String) -> String:
 	if CAPITAL.has(p):
 		return String(CAPITAL[p])
-	var f: Array = load("res://ui/entrada/pais_datos_extra.gd").EXTRA.get(p, [])
+	var f: Array = load(_RUTA_PAIS_DATOS_EXTRA).EXTRA.get(p, [])
 	return String(f[1]) if not f.is_empty() else "?"
 
 ## Cambia el rótulo 3D de un país (la pantalla de país pone el nombre completo del

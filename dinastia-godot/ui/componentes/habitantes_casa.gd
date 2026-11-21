@@ -1,12 +1,15 @@
 class_name HabitantesCasa
 extends RefCounted
+
+const _RUTA_PERSONAL_ESTADIO := "res://visor/personal_estadio.gd"
+
 ## LOS HABITANTES DE UNA VIVIENDA SEGÚN LA HORA (M-187, 28-10-2026): la familia no está siempre en el salón. Por la noche duerme (nadie a la vista), por la mañana
 ## y a mediodía se cocina y se desayuna/come, por la tarde alguien anda por casa y de las 18:00 a las 23:30 se ve la tele en el sofá. Solo datos y horas; el interior
 ## (`InteriorInstalacion._vivienda`) pone o quita a la gente con esto. La hora es la del reloj de la ciudad (`PersonalEstadio.hora`; 12 h si no hay).
 
 ## La hora del reloj de la ciudad (0-24).
 static func hora_actual() -> float:
-	return load("res://visor/personal_estadio.gd").hora if load("res://visor/personal_estadio.gd").hora >= 0.0 else 12.0
+	return load(_RUTA_PERSONAL_ESTADIO).hora if load(_RUTA_PERSONAL_ESTADIO).hora >= 0.0 else 12.0
 
 static func _en(h: float, desde: float, hasta: float) -> bool:
 	return h >= desde and h < hasta

@@ -50,7 +50,7 @@ func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, t
 		_patear(p, destino, clampf(dist * 0.45 + 6.0, 10.0, 19.0), 0.25 if (tapada and dist < 25.0) else (1.0 if not largo and not tapada and dist <= 36.0 else 2.0), 0.0, "pase")
 	else:
 		## Con pace: el balón llega al compañero con fuerza, no muriéndose.
-		_patear(p, destino, clampf(_velocidad_pase(dist, 4.0 + dist * 1.5) * MotorPaseMejora.VEL_K, 7.0, 26.0 * MotorPaseMejora.VEL_K), 0.0, 0.0, "pase")
+		_patear(p, destino, clampf(_velocidad_pase(dist, 4.0 + dist * 1.5) * MotorPaseMejora.vel_k, 7.0, 26.0 * MotorPaseMejora.vel_k), 0.0, 0.0, "pase")
 	pase_a = q
 	MotorTraza.pase(self as Object as MotorJugable, p, q, dist)   ## traza (ciclo 13): solo cuenta
 	_pase_eq = 0 if bool(p["es_local"]) else 1

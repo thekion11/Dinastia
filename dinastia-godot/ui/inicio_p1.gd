@@ -59,12 +59,12 @@ var _mundo_guardado = null   ## un `Mundo`, sin nombrar la clase (ver `inicio_pe
 
 ## LO PESADO, EN UN HILO (30-10-2026, arranque): `inicio_pesado.gd` (Partida, Escudo, Logros, Meta…)
 ## se compila en segundo plano; lo que lo necesita espera en `_con_pesado` y se pinta al llegar.
-## Si el jugador pulsa algo antes, `_P()` lo espera (load() aguarda al mismo hilo).
+## Si el jugador pulsa algo antes, `_cargar_pesado()` lo espera (load() aguarda al mismo hilo).
 const PESADO := "res://ui/inicio_pesado.gd"
 var _pesado: Script = null
 var _pendientes: Array[Callable] = []
 
-func _P() -> Script:
+func _cargar_pesado() -> Script:
 	if _pesado == null:
 		_pesado = load(PESADO)
 	return _pesado
@@ -274,7 +274,7 @@ func _panel() -> PanelContainer:
 ## de Logros (`Logros.perfil_leer()`/`perfil_nivel()`); aquí solo hacía falta
 ## enseñarlo también en el menú, que es donde el HTML lo pone.
 func _construir_perfil(raiz: VBoxContainer) -> void:
-	var nivel: Dictionary = _P().perfil()
+	var nivel: Dictionary = _cargar_pesado().perfil()
 	var caja := _panel()
 	raiz.add_child(caja)
 	var v := VBoxContainer.new()
@@ -304,17 +304,17 @@ func _construir_meta(raiz: VBoxContainer) -> void:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 10)
 	raiz.add_child(fila)
-	var d: Dictionary = _P().meta()
+	var d: Dictionary = _cargar_pesado().meta()
 	var b := Button.new()
 	b.text = Idiomas.t("📒 Álbum y museo  ·  %d cromos, %d títulos") % [(d["cromos"] as Dictionary).size(), (d["museo"] as Array).size()]
-	b.pressed.connect(func() -> void: _P().abrir_meta(self))
+	b.pressed.connect(func() -> void: _cargar_pesado().abrir_meta(self))
 	fila.add_child(b)
-	if _P().hay_legado():
+	if _cargar_pesado().hay_legado():
 		var leg: Dictionary = d["legado"]
 		var h := CheckButton.new()
 		h.text = Idiomas.t("🌍 Heredar el mundo de tu última partida (temporada %d)") % int(leg.get("anio", 0))
-		h.button_pressed = _P().heredar()
-		h.toggled.connect(func(si: bool) -> void: _P().heredar(si))
+		h.button_pressed = _cargar_pesado().heredar()
+		h.toggled.connect(func(si: bool) -> void: _cargar_pesado().heredar(si))
 		fila.add_child(h)
 
 func _elegir_dificultad(k: String) -> void:

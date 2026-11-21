@@ -53,6 +53,13 @@ static func para(situacion: String) -> Array:
 
 ## A qué situación libre corresponde lo que pide la interfaz (`Musica.ambientar`): los momentos de partido no tienen (suena lo compuesto).
 static func situacion_libre(situacion: String) -> String:
+	var nat := Nativo.de("nuc_situacion_libre")
+	if nat != null:
+		return nat.nuc_situacion_libre(situacion)
+	return situacion_libre_gd(situacion)
+
+## Gemela GDScript de `nuc_situacion_libre` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func situacion_libre_gd(situacion: String) -> String:
 	match situacion:
 		"partido", "final", "celebracion", "grada":
 			return ""

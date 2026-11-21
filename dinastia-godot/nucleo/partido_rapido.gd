@@ -15,7 +15,9 @@ static func simular(p: Partido) -> Dictionary:
 	p.sin_rastro = rapido   ## el rastro (`CausasPartido`) solo se lee en el partido del jugador; un cruce de la IA que se tira no lo necesita
 	p.preparar()
 	if rapido:
-		_nativo(p, nat)
+		p._revisar_siete()   ## (19-11) la misma revisión del saque inicial que `simular_minuto()` en el minuto 0 (sin azar)
+		if not p.terminado_ya:
+			_nativo(p, nat)
 	else:
 		while not p.terminado_ya:
 			p.simular_minuto()

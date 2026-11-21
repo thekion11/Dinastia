@@ -82,7 +82,7 @@ const COL_SUAVE := Tema.SUAVE
 ## hace una excepcion, como en el HTML: sobre fondo oscuro un acento negro no se
 ## ve, asi que se cambia por un gris claro. Sin club -o con uno sin acento claro-
 ## el valor por defecto es el `--acc` del HTML, no un azul inventado.
-var COL_ACENTO := Color("3fa06a")
+var col_acento := Color("3fa06a")
 const COL_VERDE := Tema.BIEN
 const COL_ROJO := Tema.MAL
 const COL_ORO := Tema.ORO

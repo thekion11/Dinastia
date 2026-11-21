@@ -5,10 +5,13 @@ extends BaseIdea
 const DATOS := {"club": {"nombre": "Andino FC", "c1": Color(0.8, 0.1, 0.1), "c2": Color.WHITE, "cap": 30000, "rep": 60, "socios": 20000,
 	"estadioNom": "Estadio"}, "inst": {}, "obras": [], "terrenos": [], "negocios": {}, "perfil_estadio": {}, "dia_partido": true, "vecinos": 30}
 
+const _RUTA_OPTIMIZAR := "res://visor/optimizar.gd"
+
+
 func _medir() -> Dictionary:
 	return {"nodos": int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), "objetos": int(Performance.get_monitor(Performance.OBJECT_COUNT)),
 		"huerfanos": int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)), "mem": int(OS.get_static_memory_usage() / 1048576),
-		"tris_cache": (load("res://visor/optimizar.gd") as Script).get("_tris_cache").size(), "unidad": (load("res://visor/optimizar.gd") as Script).get("_unidad").size(),
+		"tris_cache": (load(_RUTA_OPTIMIZAR) as Script).get("_tris_cache").size(), "unidad": (load(_RUTA_OPTIMIZAR) as Script).get("_unidad").size(),
 		"bancos_sonido": (get_node("/root/Sonido").get("_bancos") as Dictionary).size(), "ext_nativa": ClassDB.class_exists("DinastiaNativo")}
 
 func _probar() -> void:

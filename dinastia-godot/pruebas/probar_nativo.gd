@@ -206,7 +206,6 @@ func _probar() -> void:
 					var w3 := Time.get_ticks_usec()
 					var b2 := PartidoPonderado.asistente_gd(p, once, b1, 10 + q)
 					var s2 := Azar.f()
-					var w4 := Time.get_ticks_usec()
 					tc0 += (w1 - w0)
 					tg0 += (w3 - w2b)
 					jc += 1
@@ -290,7 +289,7 @@ func _probar() -> void:
 		var res_g := motor._mover_fisica_gd(1.0 / 60.0, bp)
 		var m1 := Time.get_ticks_usec()
 		motor.poseedor = gm[1][posq]
-		var res_c: PackedFloat64Array = nat.mover_jugadores_fisica(gm[1], bp, 1.0 / 60.0, motor.t, true, gm[1][posq]["id"], bool(gm[1][posq]["es_local"]), MotorJugable.A_MAX, MotorJugable.ANCHO,
+		var res_c: PackedFloat64Array = nat.mover_jugadores_fisica(gm[1], bp, 1.0 / 60.0, motor.t, true, gm[1][posq]["id"], bool(gm[1][posq]["es_local"]), MotorJugable.a_max_v, MotorJugable.ANCHO,
 			MotorJugable.LARGO, Balance.GIRO_RAPIDO, PackedFloat64Array([motor._coste_aguante(true), motor._coste_aguante(false)]))
 		var m2 := Time.get_ticks_usec()
 		tmg += m1 - m0
@@ -424,6 +423,12 @@ func _probar() -> void:
 		_comprobar(false, "síntesis del sonido en C++: " + f)
 	_comprobar((so["fallos"] as Array).is_empty(), "síntesis del sonido: C++ = GDScript (214 sonidos × 4 variantes, byte a byte)")
 	for t: String in so["textos"]:
+		print(t)
+	var pu := ProbarNativoPuras.probar(nat)   ## (20-11, orden 63) las funciones puras del núcleo
+	for f: String in pu["fallos"]:
+		_comprobar(false, "funciones puras en C++: " + f)
+	_comprobar((pu["fallos"] as Array).is_empty(), "funciones puras del núcleo: C++ = GDScript (bytes del resultado)")
+	for t: String in pu["textos"]:
 		print(t)
 	_fin()
 

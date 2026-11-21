@@ -45,7 +45,7 @@ func _tiempo() -> float:
 	return suma / float(N_FOT) * 1.0e6
 
 func _ready() -> void:
-	AnclaSuelo.CLIPS = {"entrada_tijera": true}
+	AnclaSuelo.clips = {"entrada_tijera": true}
 	var lista := _crear()
 	for i in 10:
 		await get_tree().process_frame

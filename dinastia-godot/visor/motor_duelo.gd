@@ -5,5 +5,5 @@ extends RefCounted
 ## entradas por equipo y partido en la liga inglesa, StatMuse 2025-26). Dos perillas por variable de entorno, 1,0 = como antes:
 ##  · `ENTRADA_K`: multiplica la probabilidad de éxito de la entrada;
 ##  · `ENTRADA_ENF`: multiplica el tiempo entre dos entradas del mismo defensor (menos intentos).
-static var K := float(OS.get_environment("ENTRADA_K")) if OS.get_environment("ENTRADA_K") != "" else 1.0
-static var ENF := float(OS.get_environment("ENTRADA_ENF")) if OS.get_environment("ENTRADA_ENF") != "" else 1.0
+static var k := float(OS.get_environment("ENTRADA_K")) if OS.get_environment("ENTRADA_K") != "" else 1.0
+static var enf := float(OS.get_environment("ENTRADA_ENF")) if OS.get_environment("ENTRADA_ENF") != "" else 1.0

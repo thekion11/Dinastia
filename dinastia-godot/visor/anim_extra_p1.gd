@@ -141,7 +141,7 @@ static func _brazo(lado: String, adelante: float, costado: float) -> Vector3:
 	## "adelante" (aplaudir con una mano delante y otra a la espalda).
 	return Vector3(0, -adelante * s, costado * s)
 
-static func _codo(lado: String, flex: float) -> Vector3:
+static func _codo(_lado: String, flex: float) -> Vector3:
 	## CORREGIDO (26-9-2026, `pruebas/sonda_lados.gd`): la Y del antebrazo solo
 	## lo gira sobre su eje -la mano no se movía un milímetro-; el codo se dobla
 	## con X positivo, igual en los dos lados.
@@ -202,7 +202,7 @@ static func _espejar_gd(original: Animation, esq: Skeleton3D, prefijo: String) -
 	if pista_rot.is_empty():
 		return null
 	## El reflejo del cuerpo: la x del modelo cambia de signo.
-	var S := Basis(Vector3(-1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1))
+	var s_loc := Basis(Vector3(-1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1))
 	var par_de: Array = []
 	var padres: Array = []
 	var reposo: Array = []
@@ -221,7 +221,7 @@ static func _espejar_gd(original: Animation, esq: Skeleton3D, prefijo: String) -
 	for i in n:
 		## Para el hueso i (destino), su fuente es par_de[i].
 		var src: int = par_de[i]
-		var reflejado: Basis = S * (rg[src] as Transform3D).basis.orthonormalized() * S
+		var reflejado: Basis = s_loc * (rg[src] as Transform3D).basis.orthonormalized() * s_loc
 		corr.append(reflejado.inverse() * (rg[i] as Transform3D).basis.orthonormalized())
 	var out := Animation.new()
 	out.length = original.length
@@ -261,7 +261,7 @@ static func _espejar_gd(original: Animation, esq: Skeleton3D, prefijo: String) -
 		for i in n:
 			var src: int = par_de[i]
 			var gs: Transform3D = g[src]
-			ge[i] = Transform3D(S * gs.basis.orthonormalized() * S * (corr[i] as Basis), S * gs.origin)
+			ge[i] = Transform3D(s_loc * gs.basis.orthonormalized() * s_loc * (corr[i] as Basis), s_loc * gs.origin)
 		for i: int in pistas_out:
 			var pa2: int = padres[i]
 			var local: Transform3D = (ge[i] as Transform3D) if pa2 < 0 else (ge[pa2] as Transform3D).affine_inverse() * (ge[i] as Transform3D)

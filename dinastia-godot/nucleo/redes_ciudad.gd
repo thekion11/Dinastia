@@ -124,6 +124,13 @@ func _azar(red: String, sec: Vector2i) -> float:
 
 ## El tiempo de una hora a partir del clima de la semana (`Mundo.clima()`): {viento 0..1, lluvia mm/h}.
 static func tiempo_de(clima: String, hora: int) -> Dictionary:
+	var nat := Nativo.de("nuc_tiempo_de")
+	if nat != null:
+		return nat.nuc_tiempo_de(clima, hora)
+	return tiempo_de_gd(clima, hora)
+
+## Gemela GDScript de `nuc_tiempo_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func tiempo_de_gd(clima: String, hora: int) -> Dictionary:
 	var h := posmod(hora, 24)
 	match clima:
 		"lluvia":
@@ -138,14 +145,21 @@ static func tiempo_de(clima: String, hora: int) -> Dictionary:
 
 ## Consumo relativo por hora del día (0.4 de madrugada, picos a las 8 y a las 20).
 static func curva(hora: int) -> float:
+	var nat := Nativo.de("nuc_curva_hora")
+	if nat != null:
+		return nat.nuc_curva_hora(hora)
+	return curva_gd(hora)
+
+## Gemela GDScript de `nuc_curva_hora` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func curva_gd(hora: int) -> float:
 	var h := float(posmod(hora, 24))
 	return 0.4 + 0.45 * exp(-pow(h - 8.0, 2.0) / 8.0) + 0.6 * exp(-pow(h - 20.0, 2.0) / 10.0)
 
 # ============================================================================ SIMULACIÓN
 
 ## Avanza `n` horas de juego a la hora `hora` del día. `v` viento 0..1 y `ll` lluvia mm/h.
-func pasar(n: int, hora: int, v: float, ll: float, clima_: String = "") -> void:
-	clima = clima_
+func pasar(n: int, hora: int, v: float, ll: float, clima_arg: String = "") -> void:
+	clima = clima_arg
 	viento = clampf(v, 0.0, 1.0)
 	lluvia = maxf(ll, 0.0)
 	for k in maxi(n, 1):

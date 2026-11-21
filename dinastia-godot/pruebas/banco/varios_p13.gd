@@ -167,10 +167,10 @@ func _probar_solo_primera_persona() -> void:
 	_titulo("SOLO PRIMERA PERSONA EN EL JUEGO")
 	var fuera := OS.get_environment("DINASTIA_CAMARAS") == "1"
 	_comprobar(fuera or (VistaJuego.solo_primera_persona() and VistaJuego.inicial() and not VistaJuego.puede_cambiar()), "sin DINASTIA_CAMARAS se empieza en primera persona y V no cambia de vista")
-	for ruta: String in ["res://visor/explorador_estadio_p1.gd", "res://ui/casa_recorrido.gd"]:
+	for ruta: String in ["res://visor/explorador_estadio_p1.gd", "res://ui/casa_recorrido.gd", "res://visor/explorador_ciudad_p1.gd"]:   ## (18-11) + el del prólogo
 		var src := FileAccess.get_file_as_string(ruta)
 		_comprobar(src.contains("var primera_persona := VistaJuego.inicial()"), "%s empieza con la vista de VistaJuego" % ruta.get_file())
-	for ruta: String in ["res://visor/explorador_estadio.gd", "res://ui/casa_recorrido.gd"]:
+	for ruta: String in ["res://visor/explorador_estadio.gd", "res://ui/casa_recorrido.gd", "res://visor/explorador_ciudad_p5.gd"]:
 		var src := FileAccess.get_file_as_string(ruta)
 		_comprobar(src.contains("KEY_V") and src.contains("VistaJuego.puede_cambiar()"), "%s: la tecla V solo cambia de vista fuera del juego" % ruta.get_file())
 	## (12-11) La planta de decoración: una sola malla con hojas (antes, caja + esfera verde), la misma para todas, y la de Kenney sustituida.
@@ -323,7 +323,7 @@ func _probar_funciones_puras_ui() -> void:
 	var t := LeagueAcciones.tiempo_a_altura(0.0, 10.0, 0.0, 9.8)
 	_comprobar(absf(t - 20.0 / 9.8) < 0.0001, "tiempo a la altura de salida: vuelve a bajar a los %.3f s" % t)
 	_comprobar(absf(LeagueAcciones.tiempo_a_altura(0.0, 10.0, 4.0, 9.8) - (10.0 + sqrt(21.6)) / 9.8) < 0.0001, "tiempo bajando por 4 m")
-	_comprobar(LeagueAcciones.tiempo_a_altura(0.0, 5.0, 20.0, 9.8) == -1.0, "si no llega a la altura pedida devuelve -1")
+	_comprobar(is_equal_approx(LeagueAcciones.tiempo_a_altura(0.0, 5.0, 20.0, 9.8), -1.0), "si no llega a la altura pedida devuelve -1")
 	var rx := RegEx.create_from_string("^[A-HJ-NP-PR-VX-Z]{2} \\d{3} [A-HJ-NP-PR-VX-Z]{2}$")
 	var bien := true
 	for i in [0, 1, 7, 99, 1000, 123456, -5, 2147483647]:

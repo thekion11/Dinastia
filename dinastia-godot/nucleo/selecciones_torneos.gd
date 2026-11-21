@@ -21,7 +21,7 @@ const PLAZAS_MUNDIAL_48 := 48   ## (10-11) desde 2026 el Mundial es de 48 (12 gr
 const ANIO_MUNDIAL_48 := 2026
 
 ## Cuántas selecciones juegan el Mundial de `anio` (48 desde 2026, si hay suficientes en el juego).
-static func plazas_mundial(sel: Selecciones, anio: int) -> int:
+static func plazas_mundial(_sel: Selecciones, anio: int) -> int:
 	if anio >= ANIO_MUNDIAL_48 and Selecciones._tabla_selecciones().size() >= PLAZAS_MUNDIAL_48:
 		return PLAZAS_MUNDIAL_48
 	return PLAZAS_MUNDIAL

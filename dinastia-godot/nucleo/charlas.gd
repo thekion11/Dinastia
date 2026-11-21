@@ -31,6 +31,13 @@ var ultima: Dictionary = {}
 var promesas: Dictionary = {}
 
 static func _abs(anio: int, semana: int) -> int:
+	var nat := Nativo.de("nuc_abs_semana")
+	if nat != null:
+		return nat.nuc_abs_semana(anio, semana)
+	return _abs_gd(anio, semana)
+
+## Gemela GDScript de `nuc_abs_semana` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _abs_gd(anio: int, semana: int) -> int:
 	return anio * 60 + semana
 
 ## Habla con `j` sobre `tema`. Devuelve {respuesta, efecto, moral}.

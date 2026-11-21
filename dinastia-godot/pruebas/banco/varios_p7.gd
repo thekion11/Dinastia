@@ -398,7 +398,7 @@ func _probar_coherencia_c1() -> void:
 			nieve_frio = true
 	_comprobar(not nieve_tropico and nieve_frio, "nieve solo donde y cuando hace frío")
 	var alt := Clima.del_partido("BOL", 10, 2026, "y")
-	_comprobar(Clima.factor_visita(alt, "ARG", "BOL") < 1.0 and Clima.factor_visita(alt, "ECU", "BOL") == 1.0, "la altura castiga al visitante del llano, no al de altura")
+	_comprobar(Clima.factor_visita(alt, "ARG", "BOL") < 1.0 and is_equal_approx(Clima.factor_visita(alt, "ECU", "BOL"), 1.0), "la altura castiga al visitante del llano, no al de altura")
 	## El factor llega al partido.
 	var m := Mundo.new()
 	m.generar(["CHI"], 2468)

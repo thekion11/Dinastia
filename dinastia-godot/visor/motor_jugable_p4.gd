@@ -214,9 +214,9 @@ static func _texto_factores(f: Array) -> String:
 
 ## Devuelve si el árbitro la pitó (una carga legal, por debajo de
 ## `UMBRAL_FALTA`, no se pita y el juego sigue).
-func _falta(infractor: Dictionary, victima: Dictionary, prob_tarjeta := 0.25, motivo := "", tipo := "de_pie") -> bool:
+func _falta(infractor: Dictionary, victima: Dictionary, _prob_tarjeta := 0.25, motivo := "", tipo := "de_pie") -> bool:
 	var pf := puntos_falta(infractor, victima, tipo)
-	if PULIDO and float(pf["puntos"]) < UMBRAL_FALTA and not _falta_tactica:
+	if pulido and float(pf["puntos"]) < UMBRAL_FALTA and not _falta_tactica:
 		duelos["cargas_legales"] = int(duelos.get("cargas_legales", 0)) + 1
 		return false
 	if infractor == usuario:

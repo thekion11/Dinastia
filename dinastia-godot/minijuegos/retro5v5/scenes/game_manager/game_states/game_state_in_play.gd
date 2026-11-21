@@ -11,6 +11,6 @@ func _process(delta: float) -> void:
 			transition_state(GameManager.State.OVERTIME)
 		else:
 			transition_state(GameManager.State.GAMEOVER)
-	
+
 func on_team_scored(club_scored_on: String) -> void:
 	transition_state(GameManager.State.SCORED, GameStateData.build().set_club_scored_on(club_scored_on))

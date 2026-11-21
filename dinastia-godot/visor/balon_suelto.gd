@@ -63,7 +63,7 @@ func _physics_process(dt: float) -> void:
 			vel.y = -vel.y * REBOTE
 			if vel.y < 1.0:
 				vel.y = 0.0
-		rodando = vel.y == 0.0
+		rodando = is_zero_approx(vel.y)
 	if rodando:
 		var f := maxf(0.0, 1.0 - ROZAMIENTO * dt)
 		vel.x *= f
