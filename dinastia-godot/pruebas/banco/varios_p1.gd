@@ -181,90 +181,15 @@ func _probar_base_ficticia() -> void:
 
 func _probar_reales() -> void:
 	_titulo("PLANTILLAS REALES: NOMBRES DE VERDAD SOBRE EL MUNDO GENERADO")
-	## Reales.aplicar() ya corrio dentro de generar(); aqui solo se comprueba
-	## lo que dejo.
 	var m := Mundo.new()
 	m.generar(["CHI"], 2323)
-	var colo: Club = null
-	for c: Club in m.ligas[0].clubes:
-		if Nombres.limpiar(c.nombre) == "Colo-Colo":
-			colo = c
-			break
-	_comprobar(colo != null, "Colo-Colo esta entre los clubes generados")
+	var colo := _rl_colo(m)
 	if colo == null:
 		return
-
-	var reales_en_colo: Array[Jugador] = []
-	for j: Jugador in colo.plantilla:
-		if j.real:
-			reales_en_colo.append(j)
-	_comprobar(reales_en_colo.size() >= 12, "Colo-Colo trae su plantel real completo (%d reales)" % reales_en_colo.size())
-
-	var vidal: Jugador = null
-	for j: Jugador in colo.plantilla:
-		if Nombres.limpiar(j.nombre) == "Arturo Vidal":
-			vidal = j
-			break
-	_comprobar(vidal != null, "Arturo Vidal aparece en el plantel real de Colo-Colo")
-	if vidal != null:
-		_comprobar(vidal.real, "y queda marcado como real")
-		_comprobar(vidal.pos_e == "MC", "en su demarcacion real (MC)")
-		_comprobar(not vidal.atributos.is_empty(), "con atributos generados para su nueva media")
-
-	## Nadie se repite dentro del mismo club -el "usados" de Reales.gd-.
-	var nombres := {}
-	var repetidos := 0
-	for j: Jugador in reales_en_colo:
-		if nombres.has(j.nombre):
-			repetidos += 1
-		nombres[j.nombre] = true
-	_comprobar(repetidos == 0, "ningun nombre real se repite dentro del mismo club")
-
-	## El fondo de plantel inventado no puede pisar a los reales -reescalado
-	## del cuartil bajo-.
-	if reales_en_colo.size() >= 6:
-		var generados: Array[Jugador] = []
-		for j: Jugador in colo.plantilla:
-			if not j.real:
-				generados.append(j)
-		var reales_ovr: Array[int] = []
-		for j: Jugador in reales_en_colo:
-			reales_ovr.append(j.ovr)
-		reales_ovr.sort()
-		reales_ovr.reverse()
-		var idx_cuartil := mini(reales_ovr.size() - 1, int(floor(float(reales_ovr.size()) * 0.75)))
-		var techo := maxi(42, reales_ovr[idx_cuartil] - 1)
-		var todos_bajo_el_techo := true
-		for j: Jugador in generados:
-			if j.ovr > techo:
-				todos_bajo_el_techo = false
-		_comprobar(todos_bajo_el_techo, "ningun generado supera el techo del fondo de plantel real (%d)" % techo)
-
-	## Un pais sin ninguno de sus clubes en la tabla REALES no rompe nada: sigue
-	## saliendo un mundo 100% generado, como antes de portar esto -Japon no
-	## esta entre los 256 clubes con plantel real-.
-	var m2 := Mundo.new()
-	m2.generar(["JPN"], 2323)
-	_comprobar(m2.cuantos_jugadores() > 0, "un pais sin datos reales genera su mundo igual")
-
-	## CARA REAL: la foto que ya bajo caras_reales_buscar.ps1 pisa al retrato
-	## procedural solo para reales con foto encontrada, nunca para nadie mas.
-	if vidal != null:
-		var foto := Cara.foto_real(vidal)
-		_comprobar(foto != null, "Arturo Vidal (real y con foto ya encontrada) tiene foto de verdad")
-		if foto != null:
-			_comprobar(foto.get_width() == foto.get_height(), "la foto queda recortada a cuadrado (%dx%d)" % [foto.get_width(), foto.get_height()])
-			_comprobar(Cara.textura(vidal, "#000000", "#ffffff", 64) == foto, "textura() prefiere la foto real sobre el dibujo procedural")
-			_comprobar(foto.get_width() == 256, "usa el retrato recortado por la cara (256 px), no la foto de prensa entera (%d px)" % foto.get_width())
-			var cred := Cara.credito_foto(vidal)
-			_comprobar(cred.contains("Wikimedia Commons") and cred.contains("CC"), "la ficha puede citar autor y licencia de la foto: " + cred)
-	var generado_cualquiera: Jugador = null
-	for j: Jugador in colo.plantilla:
-		if not j.real:
-			generado_cualquiera = j
-			break
-	if generado_cualquiera != null:
-		_comprobar(Cara.foto_real(generado_cualquiera) == null, "un jugador generado -no real- nunca tiene foto de verdad")
+	var st := _rl_plantel(colo)
+	_rl_nombres_fondo(colo, st["reales"])
+	_rl_otro_pais()
+	_rl_cara(colo, st["vidal"])
 
 ## CANDADO DE LA VARIANTE DEL MOTOR (17-11-2026, pedido de la sesión de auditoría): el juego crea el motor con `MotorFabrica.crear()` (C4 por defecto, orden 39).
 ## Un `MotorCombinado.new()` sin variante es C1 (colocación y locomoción de League, sin MejorasC4): un perfil o una sonda así mide OTRO motor (pasó con
