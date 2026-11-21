@@ -1,4 +1,4 @@
-extends "res://pruebas/banco/varios_p5.gd"
+extends "res://pruebas/banco/varios_p6_p1.gd"
 ## [Capa 6/10 de `varios.gd`] _probar_dinastias, _probar_rotulo_y_sala, _probar_mesa_agente, _probar_plantillas_fijas, _probar_aspecto_y_audio, _probar_tutorial … (+1)
 
 ## DINASTÍAS FAMILIARES (fase 5): tu hijo llega a la cantera que diriges.
@@ -296,9 +296,6 @@ func _probar_aspecto_y_audio() -> void:
 ## propio y ningún paso apunta a un control que `Principal` no sepa encontrar.
 func _probar_tutorial() -> void:
 	_titulo("TUTORIAL INMERSIVO")
-	const OBJETIVOS := ["estado", "grupos", "chips", "plantel", "ficha", "dinero", "partido",
-		"tabla", "registro", "avanzar", "guardar"]
-	const SIMPLES := ["grupo", "ficha", "grupo_club", "plantel", "dinero", "partido", "menu"]
 	var modos := ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "creador"]
 	## Con una partida de verdad: el mentor tiene que hablar de ELLA.
 	var m := Mundo.new()
@@ -321,32 +318,7 @@ func _probar_tutorial() -> void:
 			malos.append("%s: %d pasos o sin epílogo" % [modo, pasos.size()])
 		var misiones := 0
 		for p: Dictionary in pasos:
-			if p.has("mision"):
-				misiones += 1
-				if not p.has("hecho"):
-					malos.append("%s: misión sin forma de cumplirse (%s)" % [modo, p["mision"]])
-			## (3-11, rediseño del menú central) También «riel» y «menu:<id>» (el botón del riel de ese menú).
-			var obj := String(p.get("objetivo", ""))
-			if obj.begins_with("menu:") and not MenusLaterales.menu_por_id(obj.substr(5)).is_empty():
-				pass
-			elif p.has("objetivo") and obj != "riel" and not OBJETIVOS.has(obj):
-				malos.append("%s: objetivo %s" % [modo, p["objetivo"]])
-			for k in ["hecho", "mostrar"]:
-				if not p.has(k):
-					continue
-				var v := String(p[k])
-				var ok := SIMPLES.has(v)
-				if v.begins_with("tab:"):
-					ok = Tutorial.PESTANAS.has(v.substr(4))
-				elif v.begins_with("chip:"):
-					ok = Tutorial.CHIPS.has(v.substr(5))
-				elif v.begins_with("ficha:"):
-					ok = false
-					for j: Jugador in m.mi_club().plantilla:
-						if j.id == v.substr(6):
-							ok = true
-				if not ok:
-					malos.append("%s: %s %s" % [modo, k, v])
+			misiones += _revisar_paso(modo, p, m, malos)
 		misiones_por_modo[modo] = misiones
 		if misiones < 4:
 			malos.append("%s: solo %d misiones" % [modo, misiones])
@@ -364,6 +336,7 @@ func _probar_tutorial() -> void:
 	_comprobar(m1["nombre"] == Tutorial.mentor_de("dt", ctx)["nombre"] and not Nombres.vetado(String(m1["nombre"])),
 		"el mentor es siempre el mismo para el mismo club, e inventado (%s)" % m1["nombre"])
 	_comprobar(Tutorial.pasos_para("dt", "Lautaro FC").size() >= 8, "sin partida también hay guion")
+
 
 ## LA MONEDA (25-9-2026). Una sola función escribe el dinero en todo el juego,
 ## con la moneda elegida. Se cambia `Eco.moneda` a mano, sin `elegir_moneda()`,
