@@ -270,6 +270,7 @@ String DinastiaNativo::nuc_motivo_satisfaccion(const Dictionary &sat, bool baja)
 }
 
 void DinastiaNativo::_bind_puras3() {
+	_bind_puras4();
 	ClassDB::bind_method(D_METHOD("nuc_xg", "desde"), &DinastiaNativo::nuc_xg);
 	ClassDB::bind_method(D_METHOD("nuc_unir_arrays", "x", "y"), &DinastiaNativo::nuc_unir_arrays);
 	ClassDB::bind_method(D_METHOD("nuc_vuelta_pares", "r"), &DinastiaNativo::nuc_vuelta_pares);

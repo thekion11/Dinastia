@@ -45,6 +45,13 @@ static func surtido(ropero: Dictionary) -> Array:
 
 ## Lo que se PONE el personaje: el aspecto (`PersonajeDT`) con esa prenda, en los colores del club. Vacío si no es una prenda que se vista (botines y balones se ven en casa).
 static func aplicar(asp: Dictionary, id: String, c1: Color, c2: Color) -> Dictionary:
+	var nat := Nativo.de("nuc_ropero_aplicar")
+	if nat != null:
+		return nat.nuc_ropero_aplicar(asp, id, c1, c2)
+	return aplicar_gd(asp, id, c1, c2)
+
+## Gemela GDScript de `nuc_ropero_aplicar` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func aplicar_gd(asp: Dictionary, id: String, c1: Color, c2: Color) -> Dictionary:
 	var a := asp.duplicate()
 	match id:
 		"camiseta_club":

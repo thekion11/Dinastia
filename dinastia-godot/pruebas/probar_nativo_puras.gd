@@ -71,6 +71,16 @@ const CASOS: Array = [
 	["res://nucleo/seleccion_equipo.gd", "_total", "nuc_total_grupos", [["g", "por_grupo"]]],
 	["res://nucleo/torneo_selecciones.gd", "_cruces", "nuc_cruces", [["g", "lista_cruces"], ["g", "f_pos"]]],
 	["res://nucleo/vestuario_p3.gd", "motivo_satisfaccion", "nuc_motivo_satisfaccion", [["g", "sat"], ["b"]]],
+	## 4.ª tanda (textos, diccionarios, Color y objetos Jugador; ninguna modifica sus argumentos)
+	["res://nucleo/cesiones_p2.gd", "nueva_oferta", "nuc_nueva_oferta", [["i", 0, 200000000]]],
+	["res://nucleo/idiomas.gd", "_tiene_letras", "nuc_tiene_letras", [["r", 8]]],
+	["res://nucleo/idiomas_inverso.gd", "normal", "nuc_normal_titulo", [["g", "mayus_mixto"]]],
+	["res://nucleo/mercado_dt.gd", "_sin_fecha", "nuc_sin_fecha", [["g", "dict_fecha"]]],
+	["res://nucleo/movil.gd", "remitente_de", "nuc_remitente_de", [["g", "texto_msg"], ["g", "texto_msg"]]],
+	["res://nucleo/recorridos_red.gd", "normalizar", "nuc_normalizar_codigo", [["g", "codigo"]]],
+	["res://nucleo/partido_despedida.gd", "por_linea", "nuc_por_linea", [["g", "jugadores"]]],
+	["res://nucleo/ropero_dt.gd", "aplicar", "nuc_ropero_aplicar", [["g", "aspecto"], ["s", ["camiseta_club", "chandal", "bufanda_club", "gorra_club", "otro", ""]], ["g", "color"], ["g", "color"]]],
+	["res://nucleo/ciudad_p1.gd", "paletas_luces", "nuc_paletas_luces", []],
 ]
 
 ## Los valores de un argumento: bordes y puntos de cambio primero, el resto al azar.
@@ -191,6 +201,43 @@ static func _generar(nombre: String, rng: RandomNumberGenerator) -> Array:
 				v.append(rng.randi_range(0, 30))
 			"nivel":
 				v.append(rng.randi_range(-1, 3))
+			"mayus_mixto":
+				var t := ""
+				for _i in rng.randi_range(0, 9):
+					t += "ABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÓÚÜß abc12-".substr(rng.randi() % 39, 1)
+				v.append(t if rng.randi() % 3 != 0 else t.to_upper())
+			"dict_fecha":
+				var d: Dictionary = {"x": rng.randi_range(0, 9)}
+				if rng.randi() % 2 == 0:
+					d["anio"] = 2026 + rng.randi_range(0, 5)
+				if rng.randi() % 2 == 0:
+					d["semana"] = rng.randi_range(1, 52)
+				d["y"] = "t%d" % rng.randi_range(0, 9)
+				v.append(d)
+			"texto_msg":
+				var palabras: Array = ["directiva", "Confianza", "JUNTA", "casa", "familia", "Oferta", "contrato", "lesión", "LESION", "médico", "gol", "xyz", "", "pareja", "mascota", "agente"]
+				var t := ""
+				for _i in rng.randi_range(0, 4):
+					t += String(palabras[rng.randi() % palabras.size()]) + (" " if rng.randi() % 2 == 0 else "")
+				v.append(t)
+			"codigo":
+				var opciones: Array = ["pa1234", " PA 12-34 ", "1234", "pa12", "PA12345", "-", "", "ab 123", "PA999", "pa-5000", "123", "PAxx12", "12 3"]
+				v.append(opciones[rng.randi() % opciones.size()])
+			"jugadores":
+				var a: Array = []
+				for _i in rng.randi_range(0, 8):
+					var j := Jugador.new()
+					j.pos = ["POR", "DEF", "MED", "DEL", "XX"][rng.randi() % 5]
+					a.append(j)
+				v.append(a)
+			"aspecto":
+				var d: Dictionary = {"pelo": "corto"}
+				for c: String in ["ropa", "corbata", "gorra", "bufanda", "c_ropa"]:
+					if rng.randi() % 2 == 0:
+						d[c] = rng.randi_range(0, 3)
+				v.append(d)
+			"color":
+				v.append(Color(rng.randf(), rng.randf(), rng.randf(), 1.0 if rng.randi() % 2 == 0 else rng.randf()))
 			"sat":
 				var d: Dictionary = {}
 				for c: String in ["min", "rend", "tact", "inst"]:
@@ -228,6 +275,10 @@ static func probar(nat: Object) -> Dictionary:
 		for conj: Array in conjuntos:
 			n = maxi(n, conj.size())
 		var malos := 0
+		if conjuntos.is_empty():   ## sin argumentos: una sola comparación
+			total += 1
+			if var_to_bytes(scr.callv(nombre, [])) != var_to_bytes(scr.callv(nombre + "_gd", [])):
+				fallos.append("%s.%s(): C++ distinto de GDScript" % [String(caso[0]).get_file(), nombre])
 		for k in n * 2:
 			var args: Array = []
 			for conj: Array in conjuntos:

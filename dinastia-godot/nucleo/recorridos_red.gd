@@ -87,6 +87,13 @@ static func paradero_en(pos: Vector3, radio := 3.0) -> String:
 
 ## Lo que escribe el jugador («pa1234», «1234», «PA 1234») a la forma del cartel; "" si no es un código.
 static func normalizar(texto: String) -> String:
+	var nat := Nativo.de("nuc_normalizar_codigo")
+	if nat != null:
+		return nat.nuc_normalizar_codigo(texto)
+	return normalizar_gd(texto)
+
+## Gemela GDScript de `nuc_normalizar_codigo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func normalizar_gd(texto: String) -> String:
 	var t := texto.strip_edges().to_upper().replace(" ", "").replace("-", "")
 	if not t.begins_with("PA"):
 		t = "PA" + t

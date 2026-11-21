@@ -24,3 +24,17 @@ static func _escapar_re_gd(t: String) -> String:
 	for c: String in ["\\", ".", "^", "$", "|", "(", ")", "[", "]", "{", "}", "*", "+", "?"]:
 		r = r.replace(c, "\\" + c)
 	return r
+
+static func _tiene_letras(s: String) -> bool:
+	var nat := Nativo.de("nuc_tiene_letras")
+	if nat != null:
+		return nat.nuc_tiene_letras(s)
+	return _tiene_letras_gd(s)
+
+## Gemela GDScript de `nuc_tiene_letras` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _tiene_letras_gd(s: String) -> bool:
+	for i in s.length():
+		var c := s.unicode_at(i)
+		if (c >= 65 and c <= 90) or (c >= 97 and c <= 122) or (c >= 192 and c <= 687):
+			return true
+	return false

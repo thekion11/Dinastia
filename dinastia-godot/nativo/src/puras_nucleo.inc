@@ -62,4 +62,15 @@
 	int64_t nuc_total_grupos(const Dictionary &por_grupo) const;
 	Array nuc_cruces(const Array &g, int64_t f) const;
 	String nuc_motivo_satisfaccion(const Dictionary &sat, bool baja) const;
+	// 4.ª tanda (puras_nucleo4.cpp: textos, diccionarios y Color; ninguna modifica sus argumentos)
+	static void _bind_puras4();
+	Dictionary nuc_nueva_oferta(int64_t pedido) const;
+	bool nuc_tiene_letras(const String &s) const;
+	String nuc_normal_titulo(const String &texto) const;
+	Dictionary nuc_sin_fecha(const Dictionary &d) const;
+	Array nuc_remitente_de(const String &titulo, const String &cuerpo) const;
+	String nuc_normalizar_codigo(const String &texto) const;
+	Dictionary nuc_por_linea(const Array &lista) const;
+	Dictionary nuc_ropero_aplicar(const Dictionary &asp, const String &id, const Color &c1, const Color &c2) const;
+	Array nuc_paletas_luces() const;
 	// --- fin funciones puras ---
