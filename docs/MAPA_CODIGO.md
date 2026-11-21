@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `roles_p4.gd` (450), `leyes_pais.gd` (449), `m
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62908 líneas. Carpetas: `visor`.
+340 archivos, 62913 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
