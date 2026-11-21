@@ -70,7 +70,7 @@ static func candidatas(p: Partido, mio: int) -> Array:
 	_causas_arbitro(c, p, r, mio)
 	_causas_eficacia(c, p, r, mio, gm, gs)
 	_causas_lesiones(c, r, mio)
-	_causas_localia_y_posesion(c, p, r, mio, fm, fs, om, os)
+	_causas_localia_y_posesion(c, p, r, mio)
 	## RELLENO FINAL: siempre tres causas distintas. Si por los umbrales no salieron (partido en campo neutral, once casi iguales…),
 	## se suman las comparaciones de plantilla, forma y físico aunque la diferencia sea pequeña (peso mínimo: nunca le ganan a una causa real).
 	var claves := {}
