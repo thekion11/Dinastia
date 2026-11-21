@@ -12,6 +12,13 @@ static func dibujar(tipo: String, v: String) -> bool:
 		"piramide_escalonada": _escalonada(v)
 		"columnas": _columnas(v)
 		"arco": _arco(v)
+		_:
+			return _dibujar_mas(tipo, v)
+	return true
+
+## El resto de los edificios (mismo orden de antes).
+static func _dibujar_mas(tipo: String, v: String) -> bool:
+	match tipo:
 		"coliseo": _coliseo()
 		"pagoda": _pagoda(v)
 		"cupula": _cupula(v)

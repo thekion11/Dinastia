@@ -71,6 +71,11 @@ static func preguntas(m: Mundo, rng: RandomNumberGenerator) -> Array:
 		if v != puesto:
 			otros_p.append(v)
 	sal.append(_con_opciones("¿En qué puesto juega %s?" % j4.nombre, puesto, otros_p, rng))
+	_preguntas_mas(sal, m, c, pl, rng)
+	return sal
+
+## Las preguntas 5 a 8 (mismo orden y mismo uso del azar que antes).
+static func _preguntas_mas(sal: Array, m: Mundo, c: Club, pl: Array, rng: RandomNumberGenerator) -> void:
 	## 5. La edad del más joven.
 	pl.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.edad < b.edad)
 	var joven: Jugador = pl[0]
@@ -107,7 +112,6 @@ static func preguntas(m: Mundo, rng: RandomNumberGenerator) -> Array:
 					falsos8.append(p)
 			sal.append(_con_opciones("¿De qué país es %s?" % j.nombre, j.pais, falsos8, rng))
 			break
-	return sal
 
 static func _otros_nombres(pl: Array, fuera: Jugador, _rng: RandomNumberGenerator) -> Array:
 	var otros: Array = []
