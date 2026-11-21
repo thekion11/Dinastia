@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2601 archivos (.gd, .cpp, .h), 372596 líneas, 1013 clases con nombre.
+Total: 2598 archivos (.gd, .cpp, .h), 371935 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -52,12 +52,12 @@ Cerca del tope (≥ 400 líneas): `carrera_jugador.gd` (450), `carrera_ruta_p1.g
 
 ## Partido: motor C4 y respaldo
 
-89 archivos, 15847 líneas. Carpetas: `nucleo`, `visor`.
+89 archivos, 15843 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Partido` | `nucleo/partido.gd` | 447 | 346 | partido_p2.gd ← partido_p1.gd |
-| `MotorJugable` | `visor/motor_jugable.gd` | 201 | 182 | motor_jugable_p11.gd ← motor_jugable_p10.gd ← motor_jugable_p9.gd ← motor_jugable_p8.gd ← motor_jugable_p8_p1.gd ← motor_jugable_p7.gd ← motor_jugable_p7_p1.gd ← motor_jugable_p6.gd ← motor_jugable_p6_p1.gd ← motor_jugable_p5.gd ← motor_jugable_p5_p1.gd |
+| `MotorJugable` | `visor/motor_jugable.gd` | 201 | 181 | motor_jugable_p11.gd ← motor_jugable_p10.gd ← motor_jugable_p9.gd ← motor_jugable_p8.gd ← motor_jugable_p8_p1.gd ← motor_jugable_p7.gd ← motor_jugable_p7_p1.gd ← motor_jugable_p6.gd ← motor_jugable_p6_p1.gd ← motor_jugable_p5.gd ← motor_jugable_p5_p1.gd |
 | `MotorLeague` | `visor/motor_league.gd` | 450 | 25 | motor_league_p1.gd |
 | `MotorCombinado` | `visor/motor_combinado.gd` | 443 | 15 |  |
 | `MotorTraza` | `visor/motor_traza.gd` | 260 | 14 |  |
@@ -79,7 +79,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Club` | `nucleo/club.gd` | 420 | 834 |  |
+| `Club` | `nucleo/club.gd` | 420 | 831 |  |
 | `StadiumBuilder` | `visor/stadium_builder.gd` | 13 | 136 | stadium_builder_p10.gd ← stadium_builder_p10_p1.gd ← estadio_partes_tribuna.gd ← stadium_builder_p9.gd ← stadium_builder_p8.gd ← stadium_builder_p7.gd ← stadium_builder_p6.gd ← stadium_builder_p5.gd ← stadium_builder_p4.gd ← stadium_builder_p4_p1.gd ← stadium_builder_p3.gd |
 | `EstadioExtras` | `visor/estadio_extras.gd` | 310 | 9 |  |
 | `ClubDentro` | `nucleo/club_dentro.gd` | 285 | 8 |  |
@@ -93,7 +93,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-472 archivos, 93838 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+472 archivos, 93665 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -110,7 +110,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 | `Tutorial` | `ui/componentes/tutorial.gd` | 223 | 48 | tutorial_p2.gd ← tutorial_p1.gd |
 | `CajonAjustes` | `ui/componentes/cajon_ajustes.gd` | 258 | 47 |  |
 | `Inicio` | `ui/inicio.gd` | 112 | 41 | inicio_p2.gd ← inicio_p1.gd |
-| `MenuLateral` | `ui/componentes/menu_lateral.gd` | 429 | 40 |  |
+| `MenuLateral` | `ui/componentes/menu_lateral.gd` | 423 | 40 |  |
 
 Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla_pes.gd` (450), `pantalla_cantera_p2.gd` (450), `pantalla_opciones.gd` (450), `pantalla_opciones_p1.gd` (450), `partido_jugable.gd` (450), `telefono_p1.gd` (449), `interior_instalacion_p2.gd` (448), `panel_plantel.gd` (448), `estadio_p1.gd` (448).
 
@@ -137,19 +137,19 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1263 archivos, 121963 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1260 archivos, 121505 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
 ## Núcleo: mundo, gestión y datos
 
-257 archivos, 53243 líneas. Carpetas: `nucleo`.
+257 archivos, 53255 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Mundo` | `nucleo/mundo.gd` | 158 | 926 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
-| `Jugador` | `nucleo/jugador.gd` | 32 | 483 | jugador_p1.gd |
-| `Liga` | `nucleo/liga.gd` | 235 | 201 |  |
+| `Mundo` | `nucleo/mundo.gd` | 158 | 920 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
+| `Jugador` | `nucleo/jugador.gd` | 32 | 482 | jugador_p1.gd |
+| `Liga` | `nucleo/liga.gd` | 235 | 200 |  |
 | `Nombres` | `nucleo/nombres.gd` | 183 | 171 |  |
 | `Nativo` | `nucleo/nativo.gd` | 29 | 124 |  |
 | `Partida` | `nucleo/partida.gd` | 261 | 119 | partida_p2.gd ← partida_p1.gd |
@@ -160,18 +160,18 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | `Prensa` | `nucleo/prensa.gd` | 393 | 76 | prensa_narra.gd ← prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
 | `Calendario` | `nucleo/calendario.gd` | 78 | 70 | calendario_p1.gd |
 | `CargaCiudad` | `nucleo/carga_ciudad.gd` | 14 | 67 |  |
-| `Cantera` | `nucleo/cantera.gd` | 233 | 65 | cantera_p3.gd ← cantera_p2.gd ← cantera_p1.gd |
+| `Cantera` | `nucleo/cantera.gd` | 233 | 66 | cantera_p3.gd ← cantera_p2.gd ← cantera_p1.gd |
 
 Cerca del tope (≥ 400 líneas): `mercado_p1.gd` (450), `roles_p4.gd` (450), `leyes_pais.gd` (449), `mundo_p1.gd` (449), `partida_p1.gd` (448), `musica.gd` (446), `comercial.gd` (444), `cantera_p1.gd` (442), `ciudad_p1.gd` (442), `idiomas_p1.gd` (442).
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62837 líneas. Carpetas: `visor`.
+340 archivos, 62799 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Calidad` | `visor/calidad.gd` | 22 | 273 | calidad_p1.gd |
-| `CityBuilder` | `visor/city_builder.gd` | 186 | 168 | city_builder_p11.gd ← city_builder_p10.gd ← city_builder_p9.gd ← city_builder_p8.gd ← city_builder_p7.gd ← city_builder_p6.gd ← city_builder_p5.gd ← city_builder_p4.gd ← city_builder_p3.gd ← city_builder_p2.gd ← city_builder_p1.gd |
+| `CityBuilder` | `visor/city_builder.gd` | 185 | 168 | city_builder_p11.gd ← city_builder_p10.gd ← city_builder_p9.gd ← city_builder_p8.gd ← city_builder_p7.gd ← city_builder_p6.gd ← city_builder_p5.gd ← city_builder_p4.gd ← city_builder_p3.gd ← city_builder_p2.gd ← city_builder_p1.gd |
 | `FutbolistaQ` | `visor/futbolista_q.gd` | 220 | 130 |  |
 | `ExploradorCiudad` | `visor/explorador_ciudad.gd` | 13 | 119 | explorador_ciudad_p5.gd ← explorador_ciudad_p5_p1.gd ← explorador_ciudad_p4.gd ← explorador_ciudad_p3.gd ← explorador_ciudad_p2.gd ← explorador_ciudad_p1.gd |
 | `PlayerSpawner` | `visor/player_spawner.gd` | 226 | 95 | player_spawner_p1.gd |

@@ -173,43 +173,11 @@ func enviar_oferta() -> Dictionary:
 	var umbral := 0.97 - confianza_agente - perks - float(ronda - 1) * 0.04 - bono_persona()
 
 	if acuerdo_club or ratio >= umbral:
-		var primera_vez := not acuerdo_club
-		acuerdo_club = true
-		if rival_id != "":
-			var rc: Club = m.clubes.get(rival_id)
-			if rc != null and float(rc.saldo) >= float(pedido) * 0.9 and Azar.suerte(clampf(0.08 + float(ronda - 1) * 0.05, 0.04, 0.40)):
-				var precio := int(round(float(pedido) * (0.95 + Azar.f() * 0.20) / 1000.0)) * 1000
-				rc.mover_saldo(-precio)
-				club.mover_saldo(precio)
-				_se_lo_lleva(club, rc)
-				jugador.cambiar_moral(-6, "Mercado y contratos")
-				estado = "rota"
-				return {"tipo": "rival_firma", "club": rc, "precio": precio}
-		var r := _respuesta_del_jugador(m)
-		if bool(r.get("ok", false)):
-			var resumen := _cerrar_fichaje(m)
-			estado = "cerrada"
-			return {"tipo": "cerrado", "resumen": resumen}
-		ronda += 1
-		paciencia_jugador -= 1
-		if paciencia_jugador <= 0:
-			estado = "rota"
-			jugador.no_negociar_hasta = m.semana + 8
-			return {"tipo": "jugador_rota", "motivo": r.get("txt", "")}
-		return {"tipo": "jugador_no", "motivo": r.get("txt", ""), "pide": int(r.get("pide", 0)), "primera_vez": primera_vez}
+		return _cerrar_con_el_jugador(m, club)
 
-	if rival_id != "":
-		var rc2: Club = m.clubes.get(rival_id)
-		var proba := clampf(0.10 + float((rc2.rep if rc2 != null else club.rep) - club.rep) * 0.012 + float(ronda - 1) * 0.06, 0.04, 0.55)
-		if rc2 != null and float(rc2.saldo) >= float(pedido) * 0.9 and Azar.suerte(proba):
-			var precio2 := int(round(float(pedido) * (0.92 + Azar.f() * 0.18) / 1000.0)) * 1000
-			rc2.mover_saldo(-precio2)
-			club.mover_saldo(precio2)
-			_se_lo_lleva(club, rc2)
-			jugador.cambiar_moral(-6, "Mercado y contratos")
-			estado = "rota"
-			return {"tipo": "rival_traspaso", "club": rc2, "precio": precio2}
-
+	var tr: Variant = _traspaso_rival(m, club)
+	if tr != null:
+		return tr
 	ronda += 1
 	paciencia -= 1
 	if paciencia <= 0:
@@ -227,6 +195,7 @@ func enviar_oferta() -> Dictionary:
 	elif pct > 25:
 		prefiere = "que te olvides del porcentaje y subas la parte fija"
 	return {"tipo": "club_pide_mas", "falta": falta, "prefiere": Idiomas.t(prefiere)}
+
 
 ## Un rival se lo lleva (A4-GES-005): antes solo cambiaba `club_id` y el jugador seguía en el plantel del club viejo
 ## (y no aparecía en el del rival). Ahora pasa de verdad de un plantel al otro.
@@ -378,3 +347,46 @@ static func _rival_en_juego(m: Mundo, j: Jugador) -> String:
 	if candidatos.is_empty():
 		return ""
 	return (candidatos[Azar.ent(0, candidatos.size() - 1)] as Club).id
+
+
+## Acuerdo con el jugador: si acepta, se firma; si no, se cuentan las rondas y la paciencia.
+func _cerrar_con_el_jugador(m: Mundo, club: Club) -> Dictionary:
+	var primera_vez := not acuerdo_club
+	acuerdo_club = true
+	if rival_id != "":
+		var rc: Club = m.clubes.get(rival_id)
+		if rc != null and float(rc.saldo) >= float(pedido) * 0.9 and Azar.suerte(clampf(0.08 + float(ronda - 1) * 0.05, 0.04, 0.40)):
+			var precio := int(round(float(pedido) * (0.95 + Azar.f() * 0.20) / 1000.0)) * 1000
+			rc.mover_saldo(-precio)
+			club.mover_saldo(precio)
+			_se_lo_lleva(club, rc)
+			jugador.cambiar_moral(-6, "Mercado y contratos")
+			estado = "rota"
+			return {"tipo": "rival_firma", "club": rc, "precio": precio}
+	var r := _respuesta_del_jugador(m)
+	if bool(r.get("ok", false)):
+		var resumen := _cerrar_fichaje(m)
+		estado = "cerrada"
+		return {"tipo": "cerrado", "resumen": resumen}
+	ronda += 1
+	paciencia_jugador -= 1
+	if paciencia_jugador <= 0:
+		estado = "rota"
+		jugador.no_negociar_hasta = m.semana + 8
+		return {"tipo": "jugador_rota", "motivo": r.get("txt", "")}
+	return {"tipo": "jugador_no", "motivo": r.get("txt", ""), "pide": int(r.get("pide", 0)), "primera_vez": primera_vez}
+
+## Un rival se lleva al jugador si puede pagar lo que pide el club. Devuelve null si no pasa.
+func _traspaso_rival(m: Mundo, club: Club) -> Variant:
+	if rival_id != "":
+		var rc2: Club = m.clubes.get(rival_id)
+		var proba := clampf(0.10 + float((rc2.rep if rc2 != null else club.rep) - club.rep) * 0.012 + float(ronda - 1) * 0.06, 0.04, 0.55)
+		if rc2 != null and float(rc2.saldo) >= float(pedido) * 0.9 and Azar.suerte(proba):
+			var precio2 := int(round(float(pedido) * (0.92 + Azar.f() * 0.18) / 1000.0)) * 1000
+			rc2.mover_saldo(-precio2)
+			club.mover_saldo(precio2)
+			_se_lo_lleva(club, rc2)
+			jugador.cambiar_moral(-6, "Mercado y contratos")
+			estado = "rota"
+			return {"tipo": "rival_traspaso", "club": rc2, "precio": precio2}
+	return null
