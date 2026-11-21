@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2599 archivos (.gd, .cpp, .h), 371800 líneas, 1013 clases con nombre.
+Total: 2600 archivos (.gd, .cpp, .h), 371826 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -57,7 +57,7 @@ Cerca del tope (≥ 400 líneas): `carrera_jugador.gd` (450), `carrera_ruta_p1.g
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Partido` | `nucleo/partido.gd` | 447 | 346 | partido_p2.gd ← partido_p1.gd |
-| `MotorJugable` | `visor/motor_jugable.gd` | 201 | 181 | motor_jugable_p11.gd ← motor_jugable_p10.gd ← motor_jugable_p9.gd ← motor_jugable_p8.gd ← motor_jugable_p8_p1.gd ← motor_jugable_p7.gd ← motor_jugable_p7_p1.gd ← motor_jugable_p6.gd ← motor_jugable_p6_p1.gd ← motor_jugable_p5.gd ← motor_jugable_p5_p1.gd |
+| `MotorJugable` | `visor/motor_jugable.gd` | 201 | 182 | motor_jugable_p11.gd ← motor_jugable_p10.gd ← motor_jugable_p9.gd ← motor_jugable_p8.gd ← motor_jugable_p8_p1.gd ← motor_jugable_p7.gd ← motor_jugable_p7_p1.gd ← motor_jugable_p6.gd ← motor_jugable_p6_p1.gd ← motor_jugable_p5.gd ← motor_jugable_p5_p1.gd |
 | `MotorLeague` | `visor/motor_league.gd` | 450 | 25 | motor_league_p1.gd |
 | `MotorCombinado` | `visor/motor_combinado.gd` | 443 | 15 |  |
 | `MotorTraza` | `visor/motor_traza.gd` | 260 | 14 |  |
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1261 archivos, 121556 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1262 archivos, 121582 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 

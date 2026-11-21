@@ -1,4 +1,4 @@
-extends "res://pruebas/banco/partido_p3_p1.gd"
+extends "res://pruebas/banco/partido_p3_p2.gd"
 ## (Parte 2 de 2 de `partido_p3.gd`.)
 
 ## TIRO POR LÍNEA LIMPIA (03-11-2026, IA F6, `MotorTiroLimpio`): apunta al punto del arco que ni el portero ni un defensa tapan.
@@ -350,22 +350,16 @@ func _probar_tiro_fallido() -> void:
 	var tapado := MotorTiroLimpio.probabilidad_fallo(motor, tirador, destino, 14.0, 5.0)
 	_comprobar(tapado > libre + 0.1, "un defensa en la línea sube el fallo (%.2f frente a %.2f)" % [tapado, libre])
 	## Los fallos salen de los palos o por encima: ninguno cae dentro del arco.
-	var dentro := 0
-	for i in 200:
-		var d := MotorTiroLimpio.fallar(motor, tirador, destino, 28.0, 1.0)
-		if d != destino and absf(d.x) < motor.PALO and d.y < motor.LARGUERO:
-			dentro += 1
+	var dentro := _fallos_dentro_del_arco(motor, tirador, destino)
 	_comprobar(dentro == 0, "un tiro fallido nunca queda dentro del arco (%d de 200)" % dentro)
 	var modo_antes := motor._mod_tiro
 	motor._mod_tiro = "raso"
-	var altos := 0
-	for i in 200:
-		if MotorTiroLimpio.fallar(motor, tirador, Vector3(2.0, 0.3, arco.z), 28.0, 1.0).y > 0.8:
-			altos += 1
+	var altos := _fallos_rasos_altos(motor, tirador, Vector3(2.0, 0.3, arco.z))
 	motor._mod_tiro = modo_antes
 	_comprobar(altos == 0, "un tiro raso fallido nunca sube por encima de 0,8 m (%d de 200)" % altos)
 	MotorTiroLimpio._real = antes
 	(r[1] as Node3D).queue_free()
+
 
 ## LA TRAZA DE POSESIONES (03-11-2026, ciclo 9, `MotorTraza`): cuenta dónde y por qué se pierde la posesión y cuántas veces se entra al área; no decide nada.
 func _probar_traza() -> void:
