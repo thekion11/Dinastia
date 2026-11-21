@@ -9,6 +9,15 @@ func ejecutar() -> void:
 func _ideas_a_partido() -> void:
 	var m := _mundo_ideas(2601)
 	var cl: Array = m.ligas[0].clubes
+	_a1_velocidad()
+	_a1_veinte_partidos(cl)
+	_a1_gol_anulado_var(cl)
+	_a1_cambios_en_vivo(cl)
+	_a1_instruccion_riesgo(cl)
+	_a1_plan_a_mitad(cl)
+	_a1_solo_resultado()
+
+func _a1_velocidad() -> void:
 	## Velocidades (352): el reloj del partido 3D acelera paso a paso y rotula la velocidad.
 	var pb := MatchPlayback.new()
 	pb.vel_idx = 1
@@ -17,6 +26,8 @@ func _ideas_a_partido() -> void:
 	_comprobar(MatchPlayback.VELOCIDADES.size() >= 3 and pb.velocidad() > v0 and pb.etiqueta_velocidad().begins_with("x"), "la velocidad de simulación sube de escalón y se rotula (x1, x2, x4) (352)")
 	pb.vel_idx = 0
 	_comprobar(pb.etiqueta_velocidad() == "PAUSA" and is_zero_approx(pb.velocidad()), "y la pausa congela el reloj (352)")
+
+func _a1_veinte_partidos(cl: Array) -> void:
 	## Saltar al próximo gol (353): simular minutos hasta que cambia el marcador.
 	var saltos := 0
 	## Momentum, xG, palos, atajadas y fallos (355, 357, 358, 376) sobre 20 partidos.
@@ -43,6 +54,8 @@ func _ideas_a_partido() -> void:
 	_comprobar(mom_ok, "el momentum se queda siempre entre 5 y 95 (355)")
 	_comprobar(rem >= 100 and xg_ok, "el xG por partido está entre 0,09 y 0,31 por remate (%d remates) (357)" % rem)
 	_comprobar(tipos["atajada"] > 0 and tipos["poste"] > 0 and tipos["fallo"] > 0, "hay atajadas, palos y fallos: ocasiones claras sin gol (%s) (358, 376)" % str(tipos))
+
+func _a1_gol_anulado_var(cl: Array) -> void:
 	var p2 := Partido.new(cl[0], cl[1])
 	p2.preparar()
 	p2.gol_externo(true, "", "")
@@ -54,6 +67,8 @@ func _ideas_a_partido() -> void:
 		if String(e["tipo"]) == "gol_anulado":
 			anul += 1
 	_comprobar(p2.goles_local == 0 and anul == 1 and p2.momentum_local() < m0, "el VAR anula el gol: baja el marcador, queda «gol_anulado» y cambia el momentum (358)")
+
+func _a1_cambios_en_vivo(cl: Array) -> void:
 	## Cambios en vivo (360): cinco como máximo y el once se actualiza.
 	var a: Club = cl[2]
 	var p3 := Partido.new(a, cl[3])
@@ -70,6 +85,8 @@ func _ideas_a_partido() -> void:
 			if i == 0:
 				_comprobar(p3.once_local.has(banco[0]) and not p3.once_local.has(sale), "el cambio actualiza el once en el campo (360)")
 	_comprobar(hechos == Partido.MAX_CAMBIOS and p3.cambios_local == Partido.MAX_CAMBIOS, "se pueden hacer %d cambios y el sexto se rechaza (360)" % Partido.MAX_CAMBIOS)
+
+func _a1_instruccion_riesgo(cl: Array) -> void:
 	## Instrucciones en vivo (361): «todo al ataque» genera más llegadas de tu lado.
 	## Contexto limpio: lo que dejaron las secciones anteriores del banco (moda, médico…) no debe pesar aquí.
 	Partido.limpiar_contexto()
@@ -88,6 +105,8 @@ func _ideas_a_partido() -> void:
 				sin += pp.remates_local
 	Partido.limpiar_contexto()
 	_comprobar(con > sin, "la instrucción «riesgo» da más remates propios (%d contra %d en 30 partidos) (361)" % [con, sin])
+
+func _a1_plan_a_mitad(cl: Array) -> void:
 	## IA rival / plan a mitad de partido (378): perdiendo con plan ofensivo, a los 60' se adelanta.
 	var club: Club = cl[0]
 	club.tactica.mentalidad = Tactica.Mentalidad.DEFENSIVA
@@ -110,6 +129,8 @@ func _ideas_a_partido() -> void:
 	while p4.minuto < 61 and not p4.terminado_ya:
 		p4.simular_minuto()
 	_comprobar(club.tactica.mentalidad == Tactica.Mentalidad.OFENSIVA and club.tactica.linea == Tactica.Nivel.ALTO, "perdiendo a los 60' el plan cambia la mentalidad a ofensiva y adelanta la línea (378)")
+
+func _a1_solo_resultado() -> void:
 	## Modo «solo resultado» (371): avanzar semanas sin ver partidos deja la tabla coherente.
 	var m5 := _mundo_ideas(2602)
 	for i in 8:

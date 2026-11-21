@@ -5,15 +5,7 @@ func ejecutar() -> void:
 	var m := _mb(2703)
 	var c := m.mi_club()
 	var sel: Selecciones = m.selecciones
-	## Tres figuras del país en el plantel, una por línea, para que entren en la lista.
-	var tres: Array[Jugador] = []
-	for pos in ["POR", "DEF", "DEL"]:
-		for j in c.plantilla:
-			if j.pos == pos and not tres.has(j):
-				j.pais = sel.pais_seleccion()
-				j.ovr = 99
-				tres.append(j)
-				break
+	var tres := _b3_figuras(c, sel)
 	## Lista preliminar y lista definitiva (862).
 	sel.semana(m.anio, 6)
 	_comprobar(sel.prenomina_ids.size() == 30 and sel.prenominados().size() == 30, "la semana 6 publica una prenómina de 30 (862)")
@@ -28,6 +20,27 @@ func ejecutar() -> void:
 	var tocados: Array[Jugador] = []
 	var f_toc := func(j: Jugador, _s: int, _so: bool) -> void: tocados.append(j)
 	sel.vuelve_tocado.connect(f_toc)
+	_b3_fecha_fifa(m, c, sel, tres)
+	_b3_compensacion(m, sel, tres, tocados, ev_comp)
+	_b3_descanso_y_nacionalidad(c, sel)
+	_b3_mundial(c, sel)
+	_b3_amistosos(m, c)
+	_b3_playoff_y_supercopa(m)
+	_ideas_b_copas(m)
+
+## Tres figuras del país en el plantel, una por línea, para que entren en la lista.
+func _b3_figuras(c: Club, sel: Selecciones) -> Array[Jugador]:
+	var tres: Array[Jugador] = []
+	for pos in ["POR", "DEF", "DEL"]:
+		for j in c.plantilla:
+			if j.pos == pos and not tres.has(j):
+				j.pais = sel.pais_seleccion()
+				j.ovr = 99
+				tres.append(j)
+				break
+	return tres
+
+func _b3_fecha_fifa(m: Mundo, c: Club, sel: Selecciones, tres: Array[Jugador]) -> void:
 	sel.semana(m.anio, 7)
 	_comprobar(sel.nomina_ids.size() == 18 and sel.convocados().size() == 18, "la fecha FIFA reduce a una nómina definitiva de 18 (862)")
 	var mios_conv := 0
@@ -39,7 +52,9 @@ func ejecutar() -> void:
 				cansados += 1
 	_comprobar(mios_conv >= 3 and cansados == mios_conv, "los convocados del club vuelven con 12 puntos menos de físico (844, 872): %d/%d" % [cansados, mios_conv])
 	_comprobar(tres[0].moral > 50 and sel.caps_de(tres[0]) == 1, "y con la moral arriba y una internacionalidad más (844)")
-	## Con muchas fechas, alguien vuelve lesionado y la FIFA compensa al club (846, 872).
+
+## Con muchas fechas, alguien vuelve lesionado y la FIFA compensa al club (846, 872).
+func _b3_compensacion(m: Mundo, sel: Selecciones, tres: Array[Jugador], tocados: Array[Jugador], ev_comp: Array[int]) -> void:
 	for i in 120:
 		Azar.sembrar(500 + i)
 		for j in tres:
@@ -54,7 +69,9 @@ func ejecutar() -> void:
 	var fig := tres[2]
 	_comprobar(sel.pedir_descanso(fig) == "" and sel.pidio_descanso(fig), "se pide a la federación que no cite a la figura (871)")
 	_comprobar(sel.pedir_descanso(fig) != "" and sel.pedir_descanso(m.ligas[0].clubes[1].plantilla[0]) != "", "no se repite el pedido ni se pide por jugadores ajenos (871)")
-	## Nacionalización por años de residencia (863).
+
+## Nacionalización por años de residencia (863).
+func _b3_descanso_y_nacionalidad(c: Club, sel: Selecciones) -> void:
 	var extr: Jugador = c.plantilla[c.plantilla.size() - 1]
 	extr.pais = "BRA"
 	_comprobar(not sel.elegible(extr) and sel.nacionalizar(extr) != "", "un extranjero recién llegado no se puede nacionalizar (863)")
@@ -63,7 +80,9 @@ func ejecutar() -> void:
 	_comprobar(sel.temporadas_en_el_pais(extr) == 4, "cada temporada en el país suma residencia (863)")
 	var s_nac := c.saldo
 	_comprobar(sel.nacionalizar(extr) == "" and sel.elegible(extr) and sel.nacionalidad_deportiva(extr) == "CHI" and c.saldo < s_nac, "a los 4 años se nacionaliza pagando el trámite y ya es elegible (863)")
-	## Mundial cada cuatro años y vitrina (867, 874).
+
+## Mundial cada cuatro años y vitrina (867, 874).
+func _b3_mundial(c: Club, sel: Selecciones) -> void:
 	_comprobar(sel.toca_copa_del_mundo(2026) and sel.toca_copa_del_mundo(2030) and not sel.toca_copa_del_mundo(2028), "el Mundial toca cada cuatro años, en los años reales (867; 10-11)")
 	var camp := sel.copa_del_mundo(2028)
 	_comprobar(String(camp["campeon"]) != "" and String(sel.mundial["campeon"]) == String(camp["campeon"]) and (camp["convocados"] as Array).size() == 6, "se juega la Copa del Mundo con campeón y seis convocados tuyos (867): %s" % camp["campeon"])
@@ -74,7 +93,9 @@ func ejecutar() -> void:
 	for i in 30:
 		sel._vitrina_mundialista(estrella, 2030)
 	_comprobar(estrella.ovr > 70 and estrella.valor > valor0, "la vitrina mundialista sube media y valor de mercado (874): %d → %d" % [valor0, estrella.valor])
-	## Amistosos que generan ingresos (881) y torneos de pretemporada (895).
+
+## Amistosos que generan ingresos (881) y torneos de pretemporada (895).
+func _b3_amistosos(m: Mundo, c: Club) -> void:
 	for j in c.plantilla:
 		j.forma = 50
 	m.amistoso_hecho = false
@@ -84,7 +105,9 @@ func ejecutar() -> void:
 	var so_g := c.socios
 	m.jugar_amistosos("gira")
 	_comprobar(c.socios >= so_g + 300, "la gira internacional trae socios y taquilla (881): socios +%d, caja %s" % [c.socios - so_g, _dinero(c.saldo - s_g)])
-	## Playoff de descenso (850) y supercopa (893).
+
+## Playoff de descenso (850) y supercopa (893).
+func _b3_playoff_y_supercopa(m: Mundo) -> void:
 	var prim: Club = m.ligas[0].clubes[2]
 	var asc: Club = m.ligas[0].clubes[3]
 	var pr := m.jugar_promocion(prim, asc)
@@ -95,15 +118,19 @@ func ejecutar() -> void:
 	_comprobar(sc.has("campeon") and (sc["campeon"] == prim or sc["campeon"] == asc) and String(sc["nombre"]).begins_with("Supercopa"), "la supercopa enfrenta a los dos campeones (893)")
 	m._campeon_copa_pasado = prim
 	_comprobar(m.jugar_supercopa().is_empty(), "y si ganó el doblete no hay supercopa (893)")
-	_ideas_b_copas(m)
 
 func _ideas_b_copas(m: Mundo) -> void:
 	var todos: Array[Club] = []
 	for cl: Club in m.clubes.values():
 		todos.append(cl)
+	var l16: Array[Club] = todos.slice(0, 16)
+	_b3_eliminacion_y_sede(m, todos, l16)
+	_b3_continental(l16)
+	_b3_plazas(m, todos)
+
+func _b3_eliminacion_y_sede(m: Mundo, todos: Array[Club], l16: Array[Club]) -> void:
 	## Copa de eliminación directa (890), sorteo anunciado (901), sede fija (905).
 	var cp := Copa.new("Copa de prueba")
-	var l16: Array[Club] = todos.slice(0, 16)
 	cp.preparar(l16)
 	var sorteos: Array[int] = [0]
 	cp.sorteo_eliminatoria.connect(func(_r: String, parejas: Array) -> void: sorteos[0] += parejas.size())
@@ -124,6 +151,8 @@ func _ideas_b_copas(m: Mundo) -> void:
 	ed.fijar_sede_final(todos[5])
 	_comprobar(m.copa.sede_final_id == todos[5].id and m.ajustes_competicion["copa_sede"] == todos[5].id, "el editor fija la sede de la final para esta y las próximas temporadas (905)")
 	_comprobar(Copa.copas_de("ENG", "Inglaterra").size() == 2 and Copa.copas_de("ENG", "Inglaterra")[1][0] == "Copa de la Liga" and Copa.copas_de("ESP", "España")[0][0] == "Copa del Rey", "hay copa de la liga secundaria y copas propias de cada país (894)")
+
+func _b3_continental(l16: Array[Club]) -> void:
 	## Copa continental con grupos (896, 903, 904, 907, 908).
 	var lib := Continental.crear("lib")
 	lib.preparar_con(l16, FormatosConti.CLASICO)   ## (10-11) el formato de antes; los nuevos se prueban en `banco/continentales.gd`
@@ -141,6 +170,8 @@ func _ideas_b_copas(m: Mundo) -> void:
 	_comprobar(lib.premio_de_ronda(8) != uc.premio_de_ronda(8), "y cada copa paga distinto (907)")
 	var camp2 := lib.jugar_hasta_el_final()
 	_comprobar(camp2 != null and lib.historial.size() == 6, "la copa internacional llega a su final (896)")
+
+func _b3_plazas(m: Mundo, todos: Array[Club]) -> void:
 	## Cupos según la posición en la liga (908).
 	var liga1: Liga = m.ligas[0]
 	var lider: Club = liga1.clubes[7]
