@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2598 archivos (.gd, .cpp, .h), 371749 líneas, 1013 clases con nombre.
+Total: 2598 archivos (.gd, .cpp, .h), 371779 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -29,13 +29,13 @@ Cada función es copia exacta de su gemela GDScript (regla de la extensión). Ar
 
 ## La Ruta (modo jugador)
 
-40 archivos, 5679 líneas. Carpetas: `nucleo`, `ui/carrera`.
+40 archivos, 5687 líneas. Carpetas: `nucleo`, `ui/carrera`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `CarreraJugador` | `nucleo/carrera_jugador.gd` | 450 | 55 | carrera_jugador_p2.gd ← carrera_jugador_p1.gd |
 | `CarreraRuta` | `nucleo/carrera_ruta.gd` | 26 | 33 | carrera_ruta_p1.gd |
-| `CarreraPremios` | `nucleo/carrera_premios.gd` | 257 | 14 |  |
+| `CarreraPremios` | `nucleo/carrera_premios.gd` | 265 | 14 |  |
 | `CarreraPortero` | `nucleo/carrera_jugador_portero.gd` | 63 | 11 |  |
 | `CarreraEstilo` | `nucleo/carrera_estilo.gd` | 126 | 9 |  |
 | `CarreraEventosRuta` | `nucleo/carrera_eventos_ruta.gd` | 147 | 9 |  |
@@ -143,7 +143,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 
 ## Núcleo: mundo, gestión y datos
 
-257 archivos, 53091 líneas. Carpetas: `nucleo`.
+257 archivos, 53113 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|

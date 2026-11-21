@@ -62,6 +62,25 @@ static func ganados(c: CarreraJugador, m: Mundo, gano_duelo: bool) -> Array:
 	var s: Dictionary = c.stats_temp
 	var pj := int(s["pj"])
 	var nota := c.nota_media()
+	var mejor_nota := _premios_de_plantilla(out, c, j, club)
+	if pj >= 20 and nota >= 7.3:
+		out.append("once_ideal")
+	if j.es_portero() and int(s.get("vallas", 0)) >= 10:   ## (16-11, informe R-04) las de ESTA temporada, no las de la carrera
+		out.append("muro")
+	if pj >= 30:
+		out.append("hierro")
+	if gano_duelo:
+		out.append("duelo")
+	if c.ovr_inicio >= 0 and j.ovr - c.ovr_inicio >= 4:
+		out.append("salto")
+	out.append_array(_de_la_liga(c, m, j, club, mejor_nota))
+	return out
+
+## Los premios de plantilla: revelación, goleador, mejor del club (devuelve si fue el mejor de la plantilla).
+static func _premios_de_plantilla(out: Array, c: CarreraJugador, j: Jugador, club: Club) -> bool:
+	var s: Dictionary = c.stats_temp
+	var pj := int(s["pj"])
+	var nota := c.nota_media()
 	if c.temporadas.is_empty() and pj >= 15 and nota >= 6.6:
 		out.append("revelacion")
 	var mas_goles := true
@@ -77,18 +96,7 @@ static func ganados(c: CarreraJugador, m: Mundo, gano_duelo: bool) -> Array:
 		out.append("goleador_club")
 	if mejor_nota:
 		out.append("mejor_club")
-	if pj >= 20 and nota >= 7.3:
-		out.append("once_ideal")
-	if j.es_portero() and int(s.get("vallas", 0)) >= 10:   ## (16-11, informe R-04) las de ESTA temporada, no las de la carrera
-		out.append("muro")
-	if pj >= 30:
-		out.append("hierro")
-	if gano_duelo:
-		out.append("duelo")
-	if c.ovr_inicio >= 0 and j.ovr - c.ovr_inicio >= 4:
-		out.append("salto")
-	out.append_array(_de_la_liga(c, m, j, club, mejor_nota))
-	return out
+	return mejor_nota
 
 ## Los premios que se deciden contra toda tu liga, las copas que ganó tu club y el mundial.
 static func _de_la_liga(c: CarreraJugador, m: Mundo, j: Jugador, club: Club, mejor_del_club: bool) -> Array:
