@@ -22,33 +22,39 @@ func _objetivos_paquetes() -> void:
 			var n := l.clubes.size()
 			var pl := ObjetivosClub.plazas_continentales(l.pais, n)
 			for c: Club in l.clubes:
-				var p := ObjetivosClub.generar(m, c)
+				_revisar_club(m, c, l, n, pl, mal, metas_desc, distintos)
 				clubes += 1
-				if p.is_empty():
-					mal.append("%s sin paquete" % c.nombre)
-					continue
-				var pr: Dictionary = p["principal"]
-				var meta := int(pr["meta"])
-				if meta < 1 or meta > n:
-					mal.append("%s (%d clubes): meta %d" % [c.nombre, n, meta])
-				if String(pr["texto"]) == "Evitar el descenso":
-					metas_desc[n] = meta
-					if meta != n - l.plazas_descenso:
-						mal.append("%s: salvarse es el %d.º y la meta es %d" % [c.nombre, n - l.plazas_descenso, meta])
-				if String(pr["texto"]).begins_with("Clasificar") and c.division == 1 and meta > int(pl["elite"]) + int(pl["segunda"]):
-					mal.append("%s: pide %d plazas continentales y la liga da %d" % [c.nombre, meta, int(pl["elite"]) + int(pl["segunda"])])
-				var sec: Array = p["secundarios"]
-				if sec.size() < 3 or sec.size() > 6 or (p["proyecto"] as Dictionary).is_empty():
-					mal.append("%s: %d secundarios o sin proyecto" % [c.nombre, sec.size()])
-				var ids: Array = []
-				for o: Dictionary in sec:
-					ids.append(String(o["id"]))
-					if int(o["peso"]) < 1 or int(o["peso"]) > 10:
-						mal.append("%s: peso %d" % [c.nombre, int(o["peso"])])
-				distintos["%s|%s|%s" % [pr["texto"], str(ids), (p["proyecto"] as Dictionary)["id"]]] = true
 	_comprobar(mal.is_empty(), "%d clubes de 9 países: meta dentro de su liga, salvarse = puesto seguro real, plazas continentales reales, 3-6 secundarios con peso y proyecto (%d fallos%s)" % [clubes, mal.size(), "" if mal.is_empty() else ": " + str(mal.slice(0, 3))])
 	_comprobar(distintos.size() >= 8, "los paquetes se parecen poco entre clubes (%d combinaciones distintas)" % distintos.size())
 	_comprobar(metas_desc.keys().size() < 2 or metas_desc.values().min() != metas_desc.values().max(), "«Evitar el descenso» cambia con el tamaño de la liga (%s)" % str(metas_desc))
+
+## Un club: su paquete de objetivos tiene que cuadrar con su liga (meta, plazas y secundarios).
+func _revisar_club(m: Mundo, c: Club, l: Liga, n: int, pl: Dictionary, mal: Array[String],
+		metas_desc: Dictionary, distintos: Dictionary) -> void:
+	var p := ObjetivosClub.generar(m, c)
+	if p.is_empty():
+		mal.append("%s sin paquete" % c.nombre)
+		return
+	var pr: Dictionary = p["principal"]
+	var meta := int(pr["meta"])
+	if meta < 1 or meta > n:
+		mal.append("%s (%d clubes): meta %d" % [c.nombre, n, meta])
+	if String(pr["texto"]) == "Evitar el descenso":
+		metas_desc[n] = meta
+		if meta != n - l.plazas_descenso:
+			mal.append("%s: salvarse es el %d.º y la meta es %d" % [c.nombre, n - l.plazas_descenso, meta])
+	if String(pr["texto"]).begins_with("Clasificar") and c.division == 1 and meta > int(pl["elite"]) + int(pl["segunda"]):
+		mal.append("%s: pide %d plazas continentales y la liga da %d" % [c.nombre, meta, int(pl["elite"]) + int(pl["segunda"])])
+	var sec: Array = p["secundarios"]
+	if sec.size() < 3 or sec.size() > 6 or (p["proyecto"] as Dictionary).is_empty():
+		mal.append("%s: %d secundarios o sin proyecto" % [c.nombre, sec.size()])
+	var ids: Array = []
+	for o: Dictionary in sec:
+		ids.append(String(o["id"]))
+		if int(o["peso"]) < 1 or int(o["peso"]) > 10:
+			mal.append("%s: peso %d" % [c.nombre, int(o["peso"])])
+	distintos["%s|%s|%s" % [pr["texto"], str(ids), (p["proyecto"] as Dictionary)["id"]]] = true
+
 
 func _objetivos_plazas_y_tamano() -> void:
 	var esp := ObjetivosClub.plazas_continentales("ESP", 20)

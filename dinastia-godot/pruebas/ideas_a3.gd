@@ -3,6 +3,13 @@ extends "res://pruebas/ideas_base.gd"
 
 const _A3B := preload("res://pruebas/ideas_a3b.gd")
 
+var _cat
+var _j
+var _md
+var _v
+
+var _rival
+
 func ejecutar() -> void:
 	_ideas_a_lesiones()
 	_ideas_a_emergencia_y_rehab()
@@ -14,29 +21,41 @@ func _ideas_a_lesiones() -> void:
 	var m := _mundo_ideas(2621)
 	var c := m.mi_club()
 	c.mover_saldo(900000000)
-	var md: Medico = m.medico
-	var cat := md.catalogo()
+	_md = m.medico
+	_cat = _md.catalogo()
 	var clases := {}
-	for f: Array in cat:
+	for f: Array in _cat:
 		clases[String(f[1])] = true
-	_comprobar(cat.size() == 22 and clases.size() == 5 and clases.has("muscular") and clases.has("articular") and clases.has("osea"), "el catálogo tiene 22 lesiones de 5 clases: %s (516, 517)" % ", ".join(clases.keys()))
+	_comprobar(_cat.size() == 22 and clases.size() == 5 and clases.has("muscular") and clases.has("articular") and clases.has("osea"), "el catálogo tiene 22 lesiones de 5 clases: %s (516, 517)" % ", ".join(clases.keys()))
+	_ideas_a_lesiones_01(m, c)
+	_ideas_a_lesiones_02(m, c)
+	_ideas_a_lesiones_03(m, c)
+	_ideas_a_lesiones_04(m, c)
+	_ideas_a_lesiones_05(m, c)
+	_ideas_a_lesiones_06(m, c)
+	_ideas_a_lesiones_07(m, c)
+	_ideas_a_lesiones_08(m, c)
+
+func _ideas_a_lesiones_01(m: Mundo, c: Club) -> void:
 	## Cada lesión cae dentro del rango de su fila (516) y deja su clase en la ficha (517).
-	var rival: Jugador = (m.ligas[0].clubes[1] as Club).plantilla[3]
-	rival.rasgo = ""
+	_rival = (m.ligas[0].clubes[1] as Club).plantilla[3]
+	_rival.rasgo = ""
 	var dentro := true
 	var vistas := {}
 	var duraciones := {}
 	for i in 120:
-		rival.lesion = 0
-		var sem := md.lesionar(rival, Medico.GRAVE if i % 2 == 0 else Medico.LEVE, "prueba", m.anio, 3)
-		var f := md.ficha(rival)
+		_rival.lesion = 0
+		var sem = _md.lesionar(_rival, Medico.GRAVE if i % 2 == 0 else Medico.LEVE, "prueba", m.anio, 3)
+		var f = _md.ficha(_rival)
 		vistas[String(f["clase"])] = true
 		duraciones[sem] = true
-		for fila: Array in cat:
+		for fila: Array in _cat:
 			if String(fila[0]) == String(f["tipo"]):
 				dentro = dentro and sem >= int(fila[2]) and sem <= int(fila[3])
 	_comprobar(dentro and duraciones.size() >= 5, "las semanas de baja salen del rango de la lesión sorteada y son variadas (%d duraciones) (516)" % duraciones.size())
 	_comprobar(vistas.size() >= 3, "en 120 lesiones salen varias clases: %s (517)" % ", ".join(vistas.keys()))
+
+func _ideas_a_lesiones_02(m: Mundo, c: Club) -> void:
 	## Propenso a lesionarse (520) y fatiga distinta de forma (535).
 	var normal: Jugador = c.plantilla[1]
 	var fragil: Jugador = c.plantilla[2]
@@ -44,60 +63,68 @@ func _ideas_a_lesiones() -> void:
 	fragil.rasgo = "fragil"
 	normal.fisico = 80
 	fragil.fisico = 80
-	_comprobar(md.riesgo_por_fatiga(fragil) > md.riesgo_por_fatiga(normal) * 1.5, "el rasgo frágil sube el riesgo de lesión un 60%% (520): %.4f contra %.4f" % [md.riesgo_por_fatiga(fragil), md.riesgo_por_fatiga(normal)])
-	var r0 := md.riesgo_por_fatiga(normal)
+	_comprobar(_md.riesgo_por_fatiga(fragil) > _md.riesgo_por_fatiga(normal) * 1.5, "el rasgo frágil sube el riesgo de lesión un 60%% (520): %.4f contra %.4f" % [_md.riesgo_por_fatiga(fragil), _md.riesgo_por_fatiga(normal)])
+	var r0 = _md.riesgo_por_fatiga(normal)
 	normal.forma = 30
-	var r_forma := md.riesgo_por_fatiga(normal)
+	var r_forma = _md.riesgo_por_fatiga(normal)
 	normal.forma = 90
 	normal.fisico = 40
-	var r_fis := md.riesgo_por_fatiga(normal)
+	var r_fis = _md.riesgo_por_fatiga(normal)
 	_comprobar(absf(r_forma - r0) < 0.000001 and r_fis > r0, "el riesgo depende del físico (piernas) y no de la forma (momento) (535)")
+
+func _ideas_a_lesiones_03(m: Mundo, c: Club) -> void:
 	## Historial médico y valor de mercado (521).
-	var j: Jugador = (m.ligas[0].clubes[2] as Club).plantilla[4]
-	j.rasgo = ""
-	j.tasar()
-	var v0 := j.valor
+	_j = (m.ligas[0].clubes[2] as Club).plantilla[4]
+	_j.rasgo = ""
+	_j.tasar()
+	var v0 = _j.valor
 	var n := 0
-	while md.lesiones_graves(j) < 2 and n < 80:
-		j.lesion = 0
-		md.lesionar(j, Medico.GRAVE, "prueba", m.anio, 5)
+	while _md.lesiones_graves(_j) < 2 and n < 80:
+		_j.lesion = 0
+		_md.lesionar(_j, Medico.GRAVE, "prueba", m.anio, 5)
 		n += 1
-	_comprobar(md.lesiones_graves(j) >= 2 and is_equal_approx(md.factor_valor(j), 0.85), "dos lesiones largas dejan el factor de valor en 0,85 (521)")
-	_comprobar(float(j.valor) < float(v0) * 0.9 and float(j.valor) > float(v0) * 0.78, "y el valor de mercado baja ~15%% (%d → %d) (521)" % [v0, j.valor])
+	_comprobar(_md.lesiones_graves(_j) >= 2 and is_equal_approx(_md.factor_valor(_j), 0.85), "dos lesiones largas dejan el factor de valor en 0,85 (521)")
+	_comprobar(float(_j.valor) < float(v0) * 0.9 and float(_j.valor) > float(v0) * 0.78, "y el valor de mercado baja ~15%% (%d → %d) (521)" % [v0, _j.valor])
+
+func _ideas_a_lesiones_04(m: Mundo, c: Club) -> void:
 	## Retiro forzado por lesión crónica (532).
 	var viejo: Jugador = c.plantilla[3]
 	viejo.edad = 31
-	var hist: Array = md.historial(viejo)
+	var hist: Array = _md.historial(viejo)
 	hist.clear()
 	var ret := 0
 	for k in 3:
 		hist.append({"n": "Rotura", "sem": 14, "anio": m.anio - k, "semana": 3})
 	for i in 200:
-		if md.retiro_forzado(viejo):
+		if _md.retiro_forzado(viejo):
 			ret += 1
 	_comprobar(ret >= 40 and ret < 200, "con tres lesiones largas el retiro forzado es probable pero no seguro (%d de 200) (532)" % ret)
 	viejo.edad = 22
 	var ret2 := 0
 	for i in 100:
-		if md.retiro_forzado(viejo):
+		if _md.retiro_forzado(viejo):
 			ret2 += 1
 	hist.pop_back()
 	viejo.edad = 31
 	for i in 100:
-		if md.retiro_forzado(viejo):
+		if _md.retiro_forzado(viejo):
 			ret2 += 1
 	_comprobar(ret2 == 0, "pero nunca antes de los 27 ni con menos de tres lesiones largas (532)")
+
+func _ideas_a_lesiones_05(m: Mundo, c: Club) -> void:
 	## Enfermedades no deportivas (539).
 	var enfermo: Jugador = c.plantilla[4]
 	var hubo := false
 	var semanas_enf := 0
 	for i in 300:
 		enfermo.lesion = 0
-		semanas_enf = md.lesionar(enfermo, -1, "prueba", m.anio, 2)
-		if String(md.ficha(enfermo)["clase"]) == "enfermedad":
+		semanas_enf = _md.lesionar(enfermo, -1, "prueba", m.anio, 2)
+		if String(_md.ficha(enfermo)["clase"]) == "enfermedad":
 			hubo = true
 			break
-	_comprobar(hubo and enfermo.lesion == semanas_enf and md.diagnostico(enfermo) != "", "hay enfermedades (%s) que dejan al jugador fuera %d semana(s) (539)" % [md.diagnostico(enfermo), semanas_enf])
+	_comprobar(hubo and enfermo.lesion == semanas_enf and _md.diagnostico(enfermo) != "", "hay enfermedades (%s) que dejan al jugador fuera %d semana(s) (539)" % [_md.diagnostico(enfermo), semanas_enf])
+
+func _ideas_a_lesiones_06(m: Mundo, c: Club) -> void:
 	## Médico del club con nivel propio (525).
 	var sin: int = m.staff.descuento_lesion(10)
 	for i in 3:
@@ -111,62 +138,66 @@ func _ideas_a_lesiones() -> void:
 	for i in 40:
 		Azar.sembrar(3000 + i)
 		propio.lesion = 0
-		suma_con += md.lesionar(propio, Medico.MEDIA, "prueba", m.anio, 2)
-		var staff_viejo: Staff = md.staff
-		md.staff = Staff.new()
+		suma_con += _md.lesionar(propio, Medico.MEDIA, "prueba", m.anio, 2)
+		var staff_viejo: Staff = _md.staff
+		_md.staff = Staff.new()
 		Azar.sembrar(3000 + i)
 		propio.lesion = 0
-		suma_sin += md.lesionar(propio, Medico.MEDIA, "prueba", m.anio, 2)
-		md.staff = staff_viejo
+		suma_sin += _md.lesionar(propio, Medico.MEDIA, "prueba", m.anio, 2)
+		_md.staff = staff_viejo
 	_comprobar(suma_con < suma_sin, "con médico de nivel 3 las mismas lesiones duran menos en tu club (%d contra %d semanas en 40) (525)" % [suma_con, suma_sin])
+
+func _ideas_a_lesiones_07(m: Mundo, c: Club) -> void:
 	## Días perdidos (541) y comparativa con la liga (542).
-	var d0 := md.dias_perdidos
-	var sem2 := md.lesionar(c.plantilla[6], Medico.MEDIA, "prueba", m.anio, 4)
-	_comprobar(md.dias_perdidos == d0 + sem2 * 7 and sem2 >= 1, "las lesiones de tu plantel suman días perdidos (+%d) (541)" % (sem2 * 7))
-	var d1 := md.dias_perdidos
-	md.lesionar(rival, Medico.MEDIA, "prueba", m.anio, 4)
-	_comprobar(md.dias_perdidos == d1, "y las de otros clubes no (541)")
-	var rk := md.ranking_liga(c, m.ligas[0])
+	var d0 = _md.dias_perdidos
+	var sem2 = _md.lesionar(c.plantilla[6], Medico.MEDIA, "prueba", m.anio, 4)
+	_comprobar(_md.dias_perdidos == d0 + sem2 * 7 and sem2 >= 1, "las lesiones de tu plantel suman días perdidos (+%d) (541)" % (sem2 * 7))
+	var d1 = _md.dias_perdidos
+	_md.lesionar(_rival, Medico.MEDIA, "prueba", m.anio, 4)
+	_comprobar(_md.dias_perdidos == d1, "y las de otros clubes no (541)")
+	var rk = _md.ranking_liga(c, m.ligas[0])
 	_comprobar(int(rk["puesto"]) >= 1 and int(rk["puesto"]) <= int(rk["total"]) and int(rk["total"]) == m.ligas[0].clubes.size() and int(rk["media"]) > 0, "tu departamento médico se compara con la liga: puesto %d de %d (542)" % [rk["puesto"], rk["total"]])
-	md.dias_perdidos = 0
-	var mejor := int(md.ranking_liga(c, m.ligas[0])["puesto"])
-	md.dias_perdidos = 7 * 400
-	var peor := int(md.ranking_liga(c, m.ligas[0])["puesto"])
+	_md.dias_perdidos = 0
+	var mejor = int(_md.ranking_liga(c, m.ligas[0])["puesto"])
+	_md.dias_perdidos = 7 * 400
+	var peor = int(_md.ranking_liga(c, m.ligas[0])["puesto"])
 	_comprobar(mejor == 1 and peor == int(rk["total"]), "sin semanas perdidas eres el primero y con 400 semanas el último (puesto %d y %d) (542)" % [mejor, peor])
+
+func _ideas_a_lesiones_08(m: Mundo, c: Club) -> void:
 	## (12-11) Se compara el MISMO periodo: sin nada jugado, la media de la liga es 0 (antes ~21 semanas en la semana 1) y a los tres años es el triple.
-	md.dias_perdidos = 0
-	var inicio: Dictionary = md.ranking_liga(c, m.ligas[0], 0.0)
-	var tres: Dictionary = md.ranking_liga(c, m.ligas[0], 3.0)
+	_md.dias_perdidos = 0
+	var inicio: Dictionary = _md.ranking_liga(c, m.ligas[0], 0.0)
+	var tres: Dictionary = _md.ranking_liga(c, m.ligas[0], 3.0)
 	_comprobar(int(inicio["media"]) == 0 and int(inicio["puesto"]) == 1, "antes del primer partido nadie ha perdido semanas (media %d)" % int(inicio["media"]))
-	var una: Dictionary = md.ranking_liga(c, m.ligas[0], 1.0)
+	var una: Dictionary = _md.ranking_liga(c, m.ligas[0], 1.0)
 	_comprobar(int(tres["media"]) >= int(una["media"]) * 2, "a los tres años la referencia de los rivales ha crecido con el tiempo (%d contra %d)" % [int(tres["media"]), int(una["media"])])
 
 func _ideas_a_emergencia_y_rehab() -> void:
 	var m := _mundo_ideas(2622)
 	var c := m.mi_club()
 	c.mover_saldo(900000000)
-	var md: Medico = m.medico
+	_md = m.medico
 	## Rehabilitación visible semana a semana (543).
-	var j: Jugador = c.plantilla[1]
-	j.lesion = 0
-	md.lesionar(j, Medico.GRAVE, "prueba", m.anio, 3)
-	j.lesion = 10
-	md.ficha(j)["total"] = 10
-	var p0 := md.pct_recuperado(j)
-	_comprobar(md.terapia(j, c) == "" and int(md.ficha(j)["terapia"]) >= 3, "se contrata terapia intensiva (543)")
-	var l0 := j.lesion
-	_comprobar(md.rehabilitacion(j) and j.lesion == l0 - 1 and md.pct_recuperado(j) > p0, "cada semana de rehabilitación descuenta una de baja y sube el porcentaje (%d%% → %d%%) (543)" % [p0, md.pct_recuperado(j)])
+	_j = c.plantilla[1]
+	_j.lesion = 0
+	_md.lesionar(_j, Medico.GRAVE, "prueba", m.anio, 3)
+	_j.lesion = 10
+	_md.ficha(_j)["total"] = 10
+	var p0 = _md.pct_recuperado(_j)
+	_comprobar(_md.terapia(_j, c) == "" and int(_md.ficha(_j)["terapia"]) >= 3, "se contrata terapia intensiva (543)")
+	var l0 = _j.lesion
+	_comprobar(_md.rehabilitacion(_j) and _j.lesion == l0 - 1 and _md.pct_recuperado(_j) > p0, "cada semana de rehabilitación descuenta una de baja y sube el porcentaje (%d%% → %d%%) (543)" % [p0, _md.pct_recuperado(_j)])
 	## Ventana de emergencia por lesión grave (530, 531).
 	var r: Roles = m.roles
 	m.semana = 10
 	_comprobar(not r.ventana_abierta() and not r.puede_fichar(), "con el mercado cerrado no se puede fichar (530)")
-	_comprobar(r.abrir_emergencia(j.id) and r.emergencia_activa() and r.puede_fichar(), "una lesión grave abre la ventana de emergencia y se puede fichar un libre (530)")
-	_comprobar(not r.abrir_emergencia(j.id), "pero solo una vez por temporada (531)")
+	_comprobar(r.abrir_emergencia(_j.id) and r.emergencia_activa() and r.puede_fichar(), "una lesión grave abre la ventana de emergencia y se puede fichar un libre (530)")
+	_comprobar(not r.abrir_emergencia(_j.id), "pero solo una vez por temporada (531)")
 	m.semana = 15
 	_comprobar(not r.emergencia_activa() and not r.puede_fichar(), "dura tres semanas y se cierra sola (531)")
 	r.emergencia = {}
 	m.semana = 12
-	r.abrir_emergencia(j.id)
+	r.abrir_emergencia(_j.id)
 	r.usar_emergencia()
 	_comprobar(not r.emergencia_activa(), "y se gasta al usarla: es una sola bala (531)")
 	## Descanso programado como herramienta preventiva (537).
@@ -192,50 +223,66 @@ func _ideas_a_vestuario() -> void:
 	var m := _mundo_ideas(2623)
 	var c := m.mi_club()
 	c.mover_saldo(900000000)
-	var v: Vestuario = m.vestuario
+	_v = m.vestuario
+	_ideas_a_vestuario_01(m, c)
+	_ideas_a_vestuario_02(m, c)
+	_ideas_a_vestuario_03(m, c)
+	_ideas_a_vestuario_04(m, c)
+	_ideas_a_vestuario_05(m, c)
+	_ideas_a_vestuario_06(m, c)
+
+func _ideas_a_vestuario_01(m: Mundo, c: Club) -> void:
 	## Jerarquía interna (546).
-	v.armar()
+	_v.armar()
 	var con_lider := 0
 	var lider_ok := true
-	for cl: Dictionary in v.camarillas:
+	for cl: Dictionary in _v.camarillas:
 		con_lider += 1
-		lider_ok = lider_ok and (cl["miembros"] as Array).has(cl["lider"]) and v.clan_por_id(String(cl["id"])).has("humor")
+		lider_ok = lider_ok and (cl["miembros"] as Array).has(cl["lider"]) and _v.clan_por_id(String(cl["id"])).has("humor")
 	_comprobar(con_lider >= 1 and lider_ok, "cada grupo del vestuario tiene un líder que es miembro suyo (%d grupos) (546)" % con_lider)
 	var j0: Jugador = c.plantilla[0]
-	var clan := v.clan_de(j0)
+	var clan = _v.clan_de(j0)
 	_comprobar(clan.is_empty() or (clan["miembros"] as Array).has(j0.id), "y el jugador conoce a su grupo (546)")
+
+func _ideas_a_vestuario_02(m: Mundo, c: Club) -> void:
 	## Quejas por minutos (550): el rol prometido no se cumple.
-	var j: Jugador = c.plantilla[3]
-	v.fijar_rol(j, "titular")
+	_j = c.plantilla[3]
+	_v.fijar_rol(_j, "titular")
 	var avisos := []
-	v.rol_incumplido.connect(func(x: Jugador, ratio: float) -> void: avisos.append([x, ratio]))
-	var moral0 := j.moral
+	_v.rol_incumplido.connect(func(x: Jugador, ratio: float) -> void: avisos.append([x, ratio]))
+	var moral0 = _j.moral
 	for i in 10:
-		v._chequeo_roles([])
-	_comprobar(avisos.size() >= 1 and (avisos[0][0] as Jugador) == j and j.moral < moral0, "un titular prometido que no juega protesta y pierde moral (%d → %d) (550)" % [moral0, j.moral])
+		_v._chequeo_roles([])
+	_comprobar(avisos.size() >= 1 and (avisos[0][0] as Jugador) == _j and _j.moral < moral0, "un titular prometido que no juega protesta y pierde moral (%d → %d) (550)" % [moral0, _j.moral])
+
+func _ideas_a_vestuario_03(m: Mundo, c: Club) -> void:
 	## Pide salir (551).
-	v.solicitud = {"pid": j.id, "k": "salida"}
-	var rs := v.resolver_solicitud(true)
-	_comprobar(j.transferible and String(rs.get("clave", "")) == "salida", "concederle la salida lo deja transferible (551)")
-	v.solicitud = {"pid": j.id, "k": "salida"}
-	var m1 := j.moral
-	v.resolver_solicitud(false)
-	_comprobar(j.moral == m1 - 10, "y negársela le cuesta 10 de moral (551)")
+	_v.solicitud = {"pid": _j.id, "k": "salida"}
+	var rs = _v.resolver_solicitud(true)
+	_comprobar(_j.transferible and String(rs.get("clave", "")) == "salida", "concederle la salida lo deja transferible (551)")
+	_v.solicitud = {"pid": _j.id, "k": "salida"}
+	var m1 = _j.moral
+	_v.resolver_solicitud(false)
+	_comprobar(_j.moral == m1 - 10, "y negársela le cuesta 10 de moral (551)")
+
+func _ideas_a_vestuario_04(m: Mundo, c: Club) -> void:
 	## Capitán (556).
-	var voto := v.votar_capitan(c)
+	var voto = _v.votar_capitan(c)
 	var g: Jugador = voto["ganador"]
 	_comprobar(g != null and g.edad >= 21 and int(voto["total"]) == c.plantilla.size(), "el vestuario vota capitán entre los mayores de 21 (556)")
 	var aspirante: Jugador = c.plantilla[7]
 	for x: Jugador in c.plantilla:
 		x.capitan = false
 	c.plantilla[8].capitan = true
-	v.solicitud = {"pid": aspirante.id, "k": "capitan"}
-	v.resolver_solicitud(true)
+	_v.solicitud = {"pid": aspirante.id, "k": "capitan"}
+	_v.resolver_solicitud(true)
 	var caps := 0
 	for x: Jugador in c.plantilla:
 		if x.capitan:
 			caps += 1
 	_comprobar(aspirante.capitan and caps == 1 and not c.plantilla[8].capitan, "dar la cinta a quien la pide deja un solo capitán (556)")
+
+func _ideas_a_vestuario_05(m: Mundo, c: Club) -> void:
 	## Tonos de charla (560, 561).
 	var tonos := {}
 	for t: String in Vestuario.TONOS:
@@ -243,7 +290,7 @@ func _ideas_a_vestuario() -> void:
 		for x: Jugador in lote:
 			x.rasgo = ""
 			x.moral = 70
-		var r := v.charla(lote, t)
+		var r = _v.charla(lote, t)
 		tonos[t] = r["nombre"]
 		var moral_t := 0
 		var en_rango := true
@@ -271,29 +318,31 @@ func _ideas_a_vestuario() -> void:
 			for tono: String in ["exigir", "calma"]:
 				for x: Jugador in g2[0]:
 					x.moral = 60
-				v.charla(g2[0], tono)
+				_v.charla(g2[0], tono)
 				var t_m := 0
 				for x: Jugador in g2[0]:
 					t_m += x.moral - 60
 				suma["%s_%s" % [g2[1], "exig" if tono == "exigir" else "elog"]] += t_m
 	_comprobar(suma["lid_exig"] > suma["lid_elog"] and suma["fra_elog"] > suma["fra_exig"], "los líderes responden mejor a la exigencia (%d contra %d) y los frágiles al elogio (%d contra %d) (561)" % [suma["lid_exig"], suma["lid_elog"], suma["fra_elog"], suma["fra_exig"]])
+
+func _ideas_a_vestuario_06(m: Mundo, c: Club) -> void:
 	## Conflictivo determinante, multas, reglamento y escándalos (563, 564, 565, 566).
 	var pol: Jugador = c.plantilla[9]
 	pol.rasgo = "polemico"
 	var tipos := {}
 	for i in 300:
-		var s := v.suceso_semanal()
+		var s = _v.suceso_semanal()
 		tipos[String(s.get("tipo", ""))] = true
 		if tipos.size() >= 3 and tipos.has("lio"):
 			break
 	_comprobar(tipos.has("lio") and tipos.size() >= 3, "con un polémico en el plantel hay líos nocturnos entre los sucesos semanales: %s (563, 566)" % ", ".join(tipos.keys()))
 	var saldo := c.saldo
 	m.normas["multas"] = false
-	var lio0 := v._suceso_lio(m, c)
+	var lio0 = _v._suceso_lio(m, c)
 	_comprobar(int(lio0["multa"]) == 0 and c.saldo == saldo, "con el reglamento sin multas el lío no se cobra (565)")
 	m.normas["multas"] = true
 	var s1 := c.saldo
-	var lio1 := v._suceso_lio(m, c)
+	var lio1 = _v._suceso_lio(m, c)
 	var esperada := maxi(1, (lio1["jugador"] as Jugador).sueldo * Vestuario.MULTA_SEMANAS)
 	_comprobar(int(lio1["multa"]) == esperada and c.saldo == s1 + esperada, "con la norma «multas» se cobran dos semanas de sueldo (%s) (564, 565)" % str(esperada))
 	_comprobar(Mundo.NORMAS_DEF.size() == 4 and String(Mundo.NORMAS_DEF[0][0]) == "multas", "el reglamento interno tiene cuatro normas configurables (565)")

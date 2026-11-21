@@ -155,17 +155,28 @@ func semana() -> void:
 	revisar_identidad(mio)
 	if m != null:
 		revisar_al_paso(m.anio, m.semana)
+	_semanas_del_documental(mio)
+	_mover_animo_al_reposo(m)
+	if mio == null:
+		return
+	_avisos_de_la_grada(mio)
+
+## El documental: las semanas que quedan, y la moral de los frágiles y los cerebros del plantel.
+func _semanas_del_documental(mio: Club) -> void:
 	if semanas_documental > 0:
 		semanas_documental -= 1
 		if mio != null:
 			for j in mio.plantilla:
 				if j.rasgo == "fragil" or j.rasgo == "cerebro":
 					j.cambiar_moral(-1, "Prensa y declaraciones")
+
+## El ánimo de la prensa vuelve al punto de reposo: el ambiente del estadio y el bono comercial lo mueven.
 	## EL PUNTO DE REPOSO NO ES 55 FIJO: lo mueve el AMBIENTE del estadio -la
 	## forma del recinto, el techo, la pista de atletismo, las banderas- y las
 	## luces y pantallas del estadio premium. `EstadioPropio.ambiente()` llevaba
 	## meses calculado, enseñado en la pantalla del estadio y sin efecto ninguno:
 	## elegir una caldera de 20.000 en vez de un óvalo de 30.000 no cambiaba nada.
+func _mover_animo_al_reposo(m: Mundo) -> void:
 	var reposo := 55.0
 	if m != null:
 		if m.estadio != null:
@@ -173,8 +184,9 @@ func semana() -> void:
 		if m.comercial != null:
 			reposo += float(m.comercial.bono_ambiente())
 	animo = clampi(int(round(float(animo) + (reposo - float(animo)) * 0.03)), 0, 100)
-	if mio == null:
-		return
+
+## Banderazo o lienzos contra el club, según el ánimo de la prensa.
+func _avisos_de_la_grada(mio: Club) -> void:
 	if animo > 82 and Azar.suerte(0.09):
 		for j in mio.plantilla:
 			j.cambiar_moral(2, "Prensa y declaraciones")

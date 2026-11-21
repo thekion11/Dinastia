@@ -92,69 +92,26 @@ static func textura_completa(kit: Dictionary, espalda: bool = false, ancho_px: i
 	var bc3 := _col(bot.get("c3", bm[5]))
 	var pdis := String(pant.get("dis", "liso"))
 	var mdis := String(med.get("dis", "lisas"))
+	var ctx := {"pc1": pc1, "pc2": pc2, "pdis": pdis, "mc1": mc1, "mc2": mc2, "mdis": mdis, "bc1": bc1, "bc2": bc2, "bc3": bc3, "bm": bm}
+	var colfila := PackedColorArray()
+	colfila.resize(w)
+	var luzfila := PackedFloat32Array()
+	luzfila.resize(w)
 	for py in range(int(40.0 * escala), h):
 		var sy := float(py) / escala
+		colfila.fill(Color(0, 0, 0, 0))
+		luzfila.fill(1.0)
+		## Las franjas de pantalón (44-64) y de medias (66-96) no se tocan: cada fila cae en una sola.
+		if sy >= 44.0 and sy < 64.0:
+			_fila_pantalon(colfila, luzfila, sy, escala, ctx)
+		elif sy >= 66.0 and sy < 96.0:
+			_fila_medias(colfila, luzfila, sy, escala, ctx)
+		if sy >= 95.5 and sy < 105.0:
+			_fila_botin(colfila, luzfila, sy, escala, ctx)
 		for px in w:
-			var sx := float(px) / escala
-			var col := Color(0, 0, 0, 0)
-			var luz := 1.0
-			## Pantalón: de 44 a 64, con la entrepierna y bajos acampanados.
-			var abre := (sy - 44.0) * 0.12
-			var entrepierna := sy > 54.0 and absf(sx - 32.0) < (sy - 54.0) * 0.3
-			if sy >= 44.0 and sy < 64.0 and sx > 18.5 - abre and sx < 45.5 + abre and not entrepierna:
-				var lado := sx < 32.0
-				var ex := clampf(absf(sx - 32.0) / (13.5 + abre), 0.0, 1.0)
-				col = pc1
-				match pdis:
-					"lateral": col = pc2 if ex > 0.85 else pc1
-					"doble_lateral": col = pc2 if (ex > 0.78 and ex < 0.84) or ex > 0.9 else pc1
-					"ribete": col = pc2 if sy > 61.5 else pc1
-					"bicolor": col = pc2 if not lado else pc1
-					"degrade": col = pc1.lerp(pc2, clampf((sy - 44.0) / 20.0, 0.0, 1.0))
-				## Volumen de cada pernera, cintura elástica y pliegues.
-				var cpierna := (sx - (25.0 if lado else 39.0)) / 8.0
-				luz = 0.8 + 0.22 * sqrt(maxf(0.0, 1.0 - cpierna * cpierna * 0.8))
-				if sy < 46.0:
-					luz *= 0.88 + 0.06 * float(int(sy * 3.0) % 2)
-				luz -= 0.05 * (_ruido(sx * 0.4, sy * 0.2) - 0.5)
-			## Medias: de 66 a 96, con la pantorrilla más ancha.
-			elif sy >= 66.0 and sy < 96.0:
-				var anchom := 4.2 + 0.9 * sin(clampf((sy - 66.0) / 18.0, 0.0, 1.0) * PI)
-				var ci := 25.0
-				var cd := 39.0
-				if absf(sx - ci) < anchom or absf(sx - cd) < anchom:
-					var t := (sy - 66.0) / 30.0
-					col = mc1
-					match mdis:
-						"aros": col = mc2 if fposmod(t * 8.0, 1.0) < 0.4 else mc1
-						"franja": col = mc2 if t < 0.18 else mc1
-						"dos_franjas": col = mc2 if (t > 0.05 and t < 0.12) or (t > 0.17 and t < 0.24) else mc1
-						"bicolor": col = mc2 if t > 0.55 else mc1
-						"rombos": col = mc2 if absf(fposmod(t * 6.0, 1.0) - 0.5) + absf(fposmod((sx - 21.0) / 8.0, 1.0) - 0.5) < 0.35 else mc1
-					var cm := (sx - (ci if sx < 32.0 else cd)) / anchom
-					luz = 0.78 + 0.25 * sqrt(maxf(0.0, 1.0 - cm * cm))
-					## Canalé de la media y la vuelta de arriba.
-					luz *= 0.96 + 0.04 * float(int(sx * 2.5) % 2)
-					if t < 0.07:
-						luz *= 0.9
-			## Botines: de 96 a 105, con brillo, cordones y tacos.
-			if sy >= 95.5 and sy < 105.0:
-				var izq := sx < 32.0
-				var z := (30.0 - sx) / 14.0 if izq else (sx - 34.0) / 14.0
-				var alto := (104.0 - sy) / 8.5
-				var techo := 0.95 - smoothstep(0.35, 1.0, z) * 0.5
-				if z >= -0.05 and z <= 1.0 and alto >= 0.0 and alto <= techo:
-					col = _color_botin(int(bm[2]), bc1, bc2, z, alto)
-					luz = 0.85 + 0.35 * exp(-pow((alto - 0.62) / 0.15, 2.0)) * smoothstep(0.2, 0.7, z)
-					if alto < 0.14:
-						col = bc3
-						luz = 0.9
-					## Cordones.
-					if z > 0.45 and z < 0.8 and alto > techo - 0.16 and int(z * 20.0) % 2 == 0:
-						col = Color(0.95, 0.95, 0.95)
-				elif z >= 0.0 and z <= 0.95 and alto < 0.0 and alto > -0.1 and fposmod(z * 6.0, 1.0) < 0.35:
-					col = bc3 * 0.8
+			var col: Color = colfila[px]
 			if col.a > 0.0:
+				var luz: float = luzfila[px]
 				out.set_pixel(px, py, Color(clampf(col.r * luz, 0.0, 1.0), clampf(col.g * luz, 0.0, 1.0), clampf(col.b * luz, 0.0, 1.0), 1.0))
 	## La camiseta, encima del pantalón (el bajo cae por delante de la cintura).
 	out.blend_rect(camiseta, Rect2i(0, 0, w, camiseta.get_height()), Vector2i(0, 0))
@@ -172,6 +129,94 @@ static func textura_completa(kit: Dictionary, espalda: bool = false, ancho_px: i
 			out.blend_rect(ei, Rect2i(0, 0, lado, lado), Vector2i(int(38.5 * escala) - lado / 2, int(15.5 * escala) - lado / 2))
 	out.resize(w / ss, h / ss, Image.INTERPOLATE_LANCZOS)
 	return ImageTexture.create_from_image(out)
+
+## FILAS de la equipación (un auxiliar por franja; cada fila se llama una vez, no por píxel). Escriben en cols/luzs
+## solo los píxeles de su prenda; el cálculo de cada píxel es el mismo que tenía el bucle original.
+static func _fila_pantalon(cols: PackedColorArray, luzs: PackedFloat32Array, sy: float, escala: float, ctx: Dictionary) -> void:
+	var pc1: Color = ctx["pc1"]
+	var pc2: Color = ctx["pc2"]
+	var pdis: String = ctx["pdis"]
+	## Pantalón: de 44 a 64, con la entrepierna y bajos acampanados.
+	var abre := (sy - 44.0) * 0.12
+	for px in cols.size():
+		var sx := float(px) / escala
+		var entrepierna := sy > 54.0 and absf(sx - 32.0) < (sy - 54.0) * 0.3
+		if not (sx > 18.5 - abre and sx < 45.5 + abre and not entrepierna):
+			continue
+		var lado := sx < 32.0
+		var ex := clampf(absf(sx - 32.0) / (13.5 + abre), 0.0, 1.0)
+		var col := pc1
+		match pdis:
+			"lateral": col = pc2 if ex > 0.85 else pc1
+			"doble_lateral": col = pc2 if (ex > 0.78 and ex < 0.84) or ex > 0.9 else pc1
+			"ribete": col = pc2 if sy > 61.5 else pc1
+			"bicolor": col = pc2 if not lado else pc1
+			"degrade": col = pc1.lerp(pc2, clampf((sy - 44.0) / 20.0, 0.0, 1.0))
+		## Volumen de cada pernera, cintura elástica y pliegues.
+		var cpierna := (sx - (25.0 if lado else 39.0)) / 8.0
+		var luz := 0.8 + 0.22 * sqrt(maxf(0.0, 1.0 - cpierna * cpierna * 0.8))
+		if sy < 46.0:
+			luz *= 0.88 + 0.06 * float(int(sy * 3.0) % 2)
+		luz -= 0.05 * (_ruido(sx * 0.4, sy * 0.2) - 0.5)
+		cols[px] = col
+		luzs[px] = luz
+
+static func _fila_medias(cols: PackedColorArray, luzs: PackedFloat32Array, sy: float, escala: float, ctx: Dictionary) -> void:
+	var mc1: Color = ctx["mc1"]
+	var mc2: Color = ctx["mc2"]
+	var mdis: String = ctx["mdis"]
+	## Medias: de 66 a 96, con la pantorrilla más ancha.
+	var anchom := 4.2 + 0.9 * sin(clampf((sy - 66.0) / 18.0, 0.0, 1.0) * PI)
+	var ci := 25.0
+	var cd := 39.0
+	var t := (sy - 66.0) / 30.0
+	for px in cols.size():
+		var sx := float(px) / escala
+		if not (absf(sx - ci) < anchom or absf(sx - cd) < anchom):
+			continue
+		var col := mc1
+		match mdis:
+			"aros": col = mc2 if fposmod(t * 8.0, 1.0) < 0.4 else mc1
+			"franja": col = mc2 if t < 0.18 else mc1
+			"dos_franjas": col = mc2 if (t > 0.05 and t < 0.12) or (t > 0.17 and t < 0.24) else mc1
+			"bicolor": col = mc2 if t > 0.55 else mc1
+			"rombos": col = mc2 if absf(fposmod(t * 6.0, 1.0) - 0.5) + absf(fposmod((sx - 21.0) / 8.0, 1.0) - 0.5) < 0.35 else mc1
+		var cm := (sx - (ci if sx < 32.0 else cd)) / anchom
+		var luz := 0.78 + 0.25 * sqrt(maxf(0.0, 1.0 - cm * cm))
+		## Canalé de la media y la vuelta de arriba.
+		luz *= 0.96 + 0.04 * float(int(sx * 2.5) % 2)
+		if t < 0.07:
+			luz *= 0.9
+		cols[px] = col
+		luzs[px] = luz
+
+static func _fila_botin(cols: PackedColorArray, luzs: PackedFloat32Array, sy: float, escala: float, ctx: Dictionary) -> void:
+	var bm: Array = ctx["bm"]
+	var bc1: Color = ctx["bc1"]
+	var bc2: Color = ctx["bc2"]
+	var bc3: Color = ctx["bc3"]
+	## Botines: de 96 a 105, con brillo, cordones y tacos. Pintan encima de lo que ya hubiera en la fila.
+	var alto := (104.0 - sy) / 8.5
+	for px in cols.size():
+		var sx := float(px) / escala
+		var izq := sx < 32.0
+		var z := (30.0 - sx) / 14.0 if izq else (sx - 34.0) / 14.0
+		var techo := 0.95 - smoothstep(0.35, 1.0, z) * 0.5
+		var col: Color = cols[px]
+		var luz: float = luzs[px]
+		if z >= -0.05 and z <= 1.0 and alto >= 0.0 and alto <= techo:
+			col = _color_botin(int(bm[2]), bc1, bc2, z, alto)
+			luz = 0.85 + 0.35 * exp(-pow((alto - 0.62) / 0.15, 2.0)) * smoothstep(0.2, 0.7, z)
+			if alto < 0.14:
+				col = bc3
+				luz = 0.9
+			## Cordones.
+			if z > 0.45 and z < 0.8 and alto > techo - 0.16 and int(z * 20.0) % 2 == 0:
+				col = Color(0.95, 0.95, 0.95)
+		elif z >= 0.0 and z <= 0.95 and alto < 0.0 and alto > -0.1 and fposmod(z * 6.0, 1.0) < 0.35:
+			col = bc3 * 0.8
+		cols[px] = col
+		luzs[px] = luz
 
 ## Una miniatura de botín (galería).
 static func textura_botin(clave: String, c1: Color, c2: Color, c3: Color, ancho_px: int = 72) -> Texture2D:

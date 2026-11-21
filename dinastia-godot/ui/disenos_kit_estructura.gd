@@ -22,6 +22,16 @@ static func de(escala: float, espalda: bool, cuello: int, detalle: bool) -> Dict
 	var tipos := PackedByteArray()
 	var facs := PackedFloat64Array()
 	for py in h:
+		var t_fila: Array = [[], []]
+		t_fila[0].resize(w)
+		t_fila[1].resize(w)
+		t_fila[0].fill(0)
+		t_fila[1].fill(1.0)
+		_fila_tipo_base(t_fila[0], t_fila[1], py, escala, espalda, cuello)
+		_fila_tipo_cuello2(t_fila[0], py, escala, espalda, cuello)
+		_fila_tipo_puno(t_fila[0], t_fila[1], py, escala)
+		_fila_tipo_detalle(t_fila[0], py, escala, espalda, detalle)
+		var l_fila := _fila_luz(py, w, escala)
 		for px in w:
 			var a := m.get_pixel(px, py).a
 			if a <= 0.01:
@@ -31,61 +41,105 @@ static func de(escala: float, espalda: bool, cuello: int, detalle: bool) -> Dict
 			var manga := sx < 18.0 or sx > 46.0
 			var u := clampf((sx - 32.0) / 14.0, -1.0, 1.0) if not manga else signf(sx - 32.0) * 1.05
 			var v := clampf(1.0 - (sy - 6.0) / 40.0, 0.0, 1.0)
-			var tipo := 0
-			var fac := 1.0
-			var pico := cuello == 0 and not espalda
-			var borde_cuello := (7.5 - (sy - 4.0) * 0.9) if pico else (6.0 - pow(maxf(sy - 4.0, 0.0), 1.4) * 0.9)
-			var grosor := 2.4 if cuello == 3 else 1.2
-			var cuello_v := absf(sx - 32.0) < borde_cuello and sy < (12.0 if pico else 7.0) and not manga
-			var ribete_cuello := not manga and sy < (12.5 if pico else 8.0 + (1.2 if cuello == 3 else 0.0)) and absf(absf(sx - 32.0) - borde_cuello) < grosor and sy > 3.5
-			if ribete_cuello:
-				tipo = 1
-				fac = 0.92 + 0.08 * float(int(sx * 2.0) % 2)
-			elif cuello_v and sy < (11.0 if not espalda else 6.5):
-				tipo = 2
-			if cuello == 2 and not espalda and not manga and absf(sx - 32.0) < 1.1 and sy > 5.5 and sy < 13.5:
-				tipo = 3
-				if absf(sx - 32.0) < 0.45 and (absf(sy - 9.0) < 0.45 or absf(sy - 12.0) < 0.45):
-					tipo = 4
-			var dist_puno := minf(absf(sx - 10.0 - (sy - 10.0) * 0.28), absf(sx - 54.0 + (sy - 10.0) * 0.28))
-			if manga and dist_puno < 1.6 and sy > 12.0:
-				tipo = 1
-				fac = 0.9 + 0.1 * float(int(sy * 2.0) % 2)
-			var luz := 1.0
-			if not manga:
-				var cx := (sx - 32.0) / 14.0
-				luz = 0.78 + 0.28 * sqrt(maxf(0.0, 1.0 - cx * cx)) - 0.06 * cx
-				luz += 0.07 * exp(-pow((sy - 16.0) / 6.0, 2.0)) - 0.05 * clampf((sy - 38.0) / 8.0, 0.0, 1.0)
-				luz -= 0.045 * (DisenosKit._ruido(sx * 0.35, sy * 0.12) - 0.5) * (0.6 + clampf((sy - 30.0) / 16.0, 0.0, 1.0))
-				if absf(sx - 32.0) > 11.0 and sy > 12.0 and sy < 22.0:
-					luz -= 0.12 * (absf(sx - 32.0) - 11.0) / 3.0
-			else:
-				luz = 0.82 + 0.08 * (1.0 - clampf(absf(sy - 12.0) / 10.0, 0.0, 1.0))
-			if (absf(sx - 18.0) < 0.35 or absf(sx - 46.0) < 0.35) and sy > 9.0:
-				luz *= 0.8
-			if not manga and sy > 43.0 and (absf(sy - 43.8) < 0.25 or absf(sy - 44.8) < 0.25):
-				luz *= 0.82
-			if detalle and not manga and not espalda:
-				var ex := (sx - 38.5) / 3.2
-				var ey := (sy - 15.5) / 3.8
-				var ancho_e := 1.0 if ey < 0.0 else sqrt(maxf(0.0, 1.0 - ey * ey))
-				if absf(ex) < ancho_e and ey > -1.0 and ey < 1.0:
-					tipo = 5 if absf(ex) < ancho_e - 0.25 and ey > -0.75 else 3
-					if absf(ex) < 0.3 and absf(ey) < 0.35:
-						tipo = 3
-				var mx := (sx - 25.5) / 2.6
-				var my := (sy - 15.8) / 1.6
-				if absf(mx) < 1.0 and absf(my - (mx * mx * 0.6 - 0.25)) < 0.3 - mx * 0.1:
-					tipo = 3
-			luz *= 1.0 + 0.03 * (float((px + py) % 3 == 0) - 0.33)
 			xs.append(px)
 			ys.append(py)
 			al.append(a)
 			uu.append(u)
 			vv.append(v)
-			luzs.append(luz)
-			tipos.append(tipo)
-			facs.append(fac)
+			luzs.append(l_fila[px])
+			tipos.append(t_fila[0][px])
+			facs.append(t_fila[1][px])
 	var r := {"w": w, "h": h, "x": xs, "y": ys, "a": al, "u": uu, "v": vv, "luz": luzs, "tipo": tipos, "fac": facs}
 	_cache[k] = r
 	return r
+
+static func _fila_tipo_base(tipos: Array, facs: Array, py: int, escala: float, espalda: bool, cuello: int) -> void:
+	for px in tipos.size():
+		var sx := float(px) / escala
+		var sy := float(py) / escala
+		var manga := sx < 18.0 or sx > 46.0
+		var tipo: int = tipos[px]
+		var fac: float = facs[px]
+		var pico := cuello == 0 and not espalda
+		var borde_cuello := (7.5 - (sy - 4.0) * 0.9) if pico else (6.0 - pow(maxf(sy - 4.0, 0.0), 1.4) * 0.9)
+		var grosor := 2.4 if cuello == 3 else 1.2
+		var cuello_v := absf(sx - 32.0) < borde_cuello and sy < (12.0 if pico else 7.0) and not manga
+		var ribete_cuello := not manga and sy < (12.5 if pico else 8.0 + (1.2 if cuello == 3 else 0.0)) and absf(absf(sx - 32.0) - borde_cuello) < grosor and sy > 3.5
+		if ribete_cuello:
+			tipo = 1
+			fac = 0.92 + 0.08 * float(int(sx * 2.0) % 2)
+		elif cuello_v and sy < (11.0 if not espalda else 6.5):
+			tipo = 2
+		tipos[px] = tipo
+		facs[px] = fac
+
+static func _fila_tipo_cuello2(tipos: Array, py: int, escala: float, espalda: bool, cuello: int) -> void:
+	for px in tipos.size():
+		var sx := float(px) / escala
+		var sy := float(py) / escala
+		var manga := sx < 18.0 or sx > 46.0
+		var tipo: int = tipos[px]
+		if cuello == 2 and not espalda and not manga and absf(sx - 32.0) < 1.1 and sy > 5.5 and sy < 13.5:
+			tipo = 3
+			if absf(sx - 32.0) < 0.45 and (absf(sy - 9.0) < 0.45 or absf(sy - 12.0) < 0.45):
+				tipo = 4
+		tipos[px] = tipo
+
+static func _fila_tipo_puno(tipos: Array, facs: Array, py: int, escala: float) -> void:
+	for px in tipos.size():
+		var sx := float(px) / escala
+		var sy := float(py) / escala
+		var manga := sx < 18.0 or sx > 46.0
+		var tipo: int = tipos[px]
+		var fac: float = facs[px]
+		var dist_puno := minf(absf(sx - 10.0 - (sy - 10.0) * 0.28), absf(sx - 54.0 + (sy - 10.0) * 0.28))
+		if manga and dist_puno < 1.6 and sy > 12.0:
+			tipo = 1
+			fac = 0.9 + 0.1 * float(int(sy * 2.0) % 2)
+		tipos[px] = tipo
+		facs[px] = fac
+
+static func _fila_tipo_detalle(tipos: Array, py: int, escala: float, espalda: bool, detalle: bool) -> void:
+	for px in tipos.size():
+		var sx := float(px) / escala
+		var sy := float(py) / escala
+		var manga := sx < 18.0 or sx > 46.0
+		var tipo: int = tipos[px]
+		if detalle and not manga and not espalda:
+			var ex := (sx - 38.5) / 3.2
+			var ey := (sy - 15.5) / 3.8
+			var ancho_e := 1.0 if ey < 0.0 else sqrt(maxf(0.0, 1.0 - ey * ey))
+			if absf(ex) < ancho_e and ey > -1.0 and ey < 1.0:
+				tipo = 5 if absf(ex) < ancho_e - 0.25 and ey > -0.75 else 3
+				if absf(ex) < 0.3 and absf(ey) < 0.35:
+					tipo = 3
+			var mx := (sx - 25.5) / 2.6
+			var my := (sy - 15.8) / 1.6
+			if absf(mx) < 1.0 and absf(my - (mx * mx * 0.6 - 0.25)) < 0.3 - mx * 0.1:
+				tipo = 3
+		tipos[px] = tipo
+
+static func _fila_luz(py: int, w: int, escala: float) -> Array:
+	var luzs: Array = []
+	luzs.resize(w)
+	for px in w:
+		var sx := float(px) / escala
+		var sy := float(py) / escala
+		var manga := sx < 18.0 or sx > 46.0
+		var luz := 1.0
+		if not manga:
+			var cx := (sx - 32.0) / 14.0
+			luz = 0.78 + 0.28 * sqrt(maxf(0.0, 1.0 - cx * cx)) - 0.06 * cx
+			luz += 0.07 * exp(-pow((sy - 16.0) / 6.0, 2.0)) - 0.05 * clampf((sy - 38.0) / 8.0, 0.0, 1.0)
+			luz -= 0.045 * (DisenosKit._ruido(sx * 0.35, sy * 0.12) - 0.5) * (0.6 + clampf((sy - 30.0) / 16.0, 0.0, 1.0))
+			if absf(sx - 32.0) > 11.0 and sy > 12.0 and sy < 22.0:
+				luz -= 0.12 * (absf(sx - 32.0) - 11.0) / 3.0
+		else:
+			luz = 0.82 + 0.08 * (1.0 - clampf(absf(sy - 12.0) / 10.0, 0.0, 1.0))
+		if (absf(sx - 18.0) < 0.35 or absf(sx - 46.0) < 0.35) and sy > 9.0:
+			luz *= 0.8
+		if not manga and sy > 43.0 and (absf(sy - 43.8) < 0.25 or absf(sy - 44.8) < 0.25):
+			luz *= 0.82
+		luz *= 1.0 + 0.03 * (float((px + py) % 3 == 0) - 0.33)
+		luzs[px] = luz
+	return luzs

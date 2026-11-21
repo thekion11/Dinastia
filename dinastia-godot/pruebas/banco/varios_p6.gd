@@ -1,4 +1,4 @@
-extends "res://pruebas/banco/varios_p5.gd"
+extends "res://pruebas/banco/varios_p6_h.gd"
 ## [Capa 6/10 de `varios.gd`] _probar_dinastias, _probar_rotulo_y_sala, _probar_mesa_agente, _probar_plantillas_fijas, _probar_aspecto_y_audio, _probar_tutorial … (+1)
 
 ## DINASTÍAS FAMILIARES (fase 5): tu hijo llega a la cantera que diriges.
@@ -194,101 +194,11 @@ func _probar_plantillas_fijas() -> void:
 ## no se ve ni se oye, que es la peor clase de fallo.
 func _probar_aspecto_y_audio() -> void:
 	_titulo("ASPECTO Y AUDIO (fondos, clima, sonidos, musica, idiomas)")
-
-	## LOS FONDOS. Veinticuatro, y todos tienen que rasterizar de verdad.
-	_comprobar(Fondo.NOMBRES.size() == 24, "hay 24 fondos (%d)" % Fondo.NOMBRES.size())
-	var sin_titulo: Array[String] = []
-	var flacos: Array[String] = []
-	for k: String in Fondo.NOMBRES:
-		if not Fondo.TITULOS.has(k):
-			sin_titulo.append(k)
-		## Un SVG que no dibuja nada tambien "funciona": sale un string corto.
-		if Fondo.svg_de(k).length() < 800:
-			flacos.append(k)
-	_comprobar(sin_titulo.is_empty(), "todos los fondos tienen nombre en el menu")
-	_comprobar(flacos.is_empty(), "y todos dibujan algo (%s)" % ("ninguno vacio" if flacos.is_empty() else ", ".join(flacos)))
-	var tex := Fondo.textura("aeropuerto")
-	_comprobar(tex != null and tex.get_width() > 100, "un fondo nuevo rasteriza a imagen de verdad")
-
-	## EL CLIMA. Diez modos, y el que no existe no puede reventar.
-	_comprobar(FondoAnimado.MODOS.size() == 10, "hay 10 climas (%d)" % FondoAnimado.MODOS.size())
-	_comprobar(FondoAnimado.MODOS.has("ninguno"), "y se puede apagar el movimiento")
-
-	## LOS SONIDOS. Que existan no basta: tienen que tener onda.
-	var cat: Array = Sonido.catalogo()
-	_comprobar(cat.size() >= 60, "hay al menos 60 efectos (%d)" % cat.size())
-	var mudos: Array[String] = []
-	var largos: Array[String] = []
-	for n: String in cat:
-		var f: Dictionary = Sonido.ficha(n)
-		if int(f.get("pico", 0)) < 200:
-			mudos.append(n)
-		if float(f.get("segundos", 0.0)) > 6.0:
-			largos.append(n)
-	_comprobar(mudos.is_empty(), "y ninguno sale en silencio (%s)" % ("todos suenan" if mudos.is_empty() else ", ".join(mudos)))
-	_comprobar(largos.is_empty(), "y ninguno se pasa de 6 s (%s)" % ("ninguno" if largos.is_empty() else ", ".join(largos)))
-	for pedido: String in ["clausula", "lesion_grave", "oferta", "contrato_vence",
-			"obra", "venta", "ronda_superada"]:
-		_comprobar(cat.has(pedido), "existe el sonido propio de «%s» que pedia el LEEME" % pedido)
-
-	## Y QUE NO TOQUEN `Azar`. Es la regla que ya se rompio una vez en este
-	## proyecto: un adorno que consume el generador determinista cambia la liga.
-	var m := Mundo.new()
-	m.generar(["CHI"], 4242)
-	var antes := Azar.ent(0, 1000000)
-	for i in 40:
-		Sonido.toca("clic")
-		Sonido.toca("gol")
-	Azar.sembrar(4242)
-	var despues_a := Azar.ent(0, 1000000)
-	Azar.sembrar(4242)
-	var despues_b := Azar.ent(0, 1000000)
-	_comprobar(despues_a == despues_b, "el azar sigue siendo reproducible tras sembrar")
-	_comprobar(antes >= 0, "  (referencia %d)" % antes)
-
-	## LA MÚSICA. Seis piezas, con onda y en bucle.
-	_comprobar(Musica.PIEZAS.size() == 6, "hay 6 piezas de musica (%d)" % Musica.PIEZAS.size())
-	for clave: String in Musica.PIEZAS:
-		var fm: Dictionary = Musica.ficha(clave)
-		_comprobar(int(fm.get("pico", 0)) > 500, "«%s» suena (pico %d)" % [clave, int(fm.get("pico", 0))])
-		_comprobar(bool(fm.get("bucle", false)), "  y esta en bucle")
-		_comprobar(float(fm.get("segundos", 0.0)) > 15.0,
-			"  y dura lo suyo (%.1f s)" % float(fm.get("segundos", 0.0)))
-
-	## LOS IDIOMAS. Lo que se comprueba no es que la traduccion sea buena -eso no
-	## lo sabe un banco- sino que ninguna fila se quede CORTA: una fila con menos
-	## columnas que idiomas deja ese idioma en castellano sin avisar.
-	_comprobar(Idiomas.ORDEN.size() == 8, "hay 8 idiomas ademas del castellano (%d)" % Idiomas.ORDEN.size())
-	var cortas: Array[String] = []
-	for k2: String in Idiomas.TABLA:
-		var fila: Array = Idiomas.TABLA[k2]
-		if fila.size() != Idiomas.COLUMNAS_TABLA:
-			cortas.append(k2)
-	_comprobar(cortas.is_empty(), "y ninguna fila se queda corta (%s)" % ("todas completas" if cortas.is_empty() else ", ".join(cortas)))
-	for idi: String in Idiomas.ORDEN:
-		## Al menos las de la tabla: los de columna, por la tabla; polaco y turco,
-		## porque su diccionario la trae entera.
-		_comprobar(Idiomas.cobertura(idi) >= Idiomas.TABLA.size(),
-			"«%s» tiene al menos las %d frases (%d)" % [idi, Idiomas.TABLA.size(), Idiomas.cobertura(idi)])
-	Idiomas.idioma = "en"
-	_comprobar(Idiomas.t("Guardar") == "Save", "traducir funciona (Guardar -> %s)" % Idiomas.t("Guardar"))
-	_comprobar(Idiomas.t("Una frase que no existe") == "Una frase que no existe",
-		"y lo que no esta traducido se queda en castellano en vez de salir en blanco")
-	## Ordinales y mayúsculas por idioma (MEGAPLAN fase 1).
-	Idiomas.idioma = "fr"
-	var o_fr := Idiomas.t("vas 1º (meta: 3º)")
-	_comprobar(o_fr.contains("1er") and o_fr.contains("3e"), "francés: 1er y 3e (%s)" % o_fr)
-	Idiomas.idioma = "ca"
-	var o_ca := Idiomas.t("vas 2º (meta: 12º)")
-	_comprobar(o_ca.contains("2n") and o_ca.contains("12è"), "catalán: 2n y 12è (%s)" % o_ca)
-	Idiomas.idioma = "tr"
-	_comprobar(Idiomas.mayusculas("lig") == "LİG", "turco: la i con punto en mayúscula (%s)" % Idiomas.mayusculas("lig"))
-	Idiomas.idioma = "es"
-	_comprobar(Idiomas.t("Guardar") == "Guardar", "y volver al castellano no deja nada traducido")
-
-	## LAS FORMAS Y MARCAS DE TARJETA.
-	_comprobar(MarcaPanel.ESTILOS.size() == 7, "hay 7 marcas de tarjeta (%d)" % MarcaPanel.ESTILOS.size())
-	_comprobar(MarcaPanel.ESTILOS.has("ninguno"), "y se pueden quitar")
+	_av_fondos_clima()
+	_av_sonidos_azar()
+	_av_musica()
+	_av_idiomas()
+	_av_tarjetas()
 
 ## EL GUION DEL TUTORIAL (25-9-2026). La interfaz la recorre
 ## `pruebas/captura_tutorial.gd`; aquí solo el guion de cada modo, que no
@@ -296,9 +206,6 @@ func _probar_aspecto_y_audio() -> void:
 ## propio y ningún paso apunta a un control que `Principal` no sepa encontrar.
 func _probar_tutorial() -> void:
 	_titulo("TUTORIAL INMERSIVO")
-	const OBJETIVOS := ["estado", "grupos", "chips", "plantel", "ficha", "dinero", "partido",
-		"tabla", "registro", "avanzar", "guardar"]
-	const SIMPLES := ["grupo", "ficha", "grupo_club", "plantel", "dinero", "partido", "menu"]
 	var modos := ["dt", "dir", "ayudante", "interino", "cantera", "imperio", "jeque", "creador"]
 	## Con una partida de verdad: el mentor tiene que hablar de ELLA.
 	var m := Mundo.new()
@@ -321,32 +228,7 @@ func _probar_tutorial() -> void:
 			malos.append("%s: %d pasos o sin epílogo" % [modo, pasos.size()])
 		var misiones := 0
 		for p: Dictionary in pasos:
-			if p.has("mision"):
-				misiones += 1
-				if not p.has("hecho"):
-					malos.append("%s: misión sin forma de cumplirse (%s)" % [modo, p["mision"]])
-			## (3-11, rediseño del menú central) También «riel» y «menu:<id>» (el botón del riel de ese menú).
-			var obj := String(p.get("objetivo", ""))
-			if obj.begins_with("menu:") and not MenusLaterales.menu_por_id(obj.substr(5)).is_empty():
-				pass
-			elif p.has("objetivo") and obj != "riel" and not OBJETIVOS.has(obj):
-				malos.append("%s: objetivo %s" % [modo, p["objetivo"]])
-			for k in ["hecho", "mostrar"]:
-				if not p.has(k):
-					continue
-				var v := String(p[k])
-				var ok := SIMPLES.has(v)
-				if v.begins_with("tab:"):
-					ok = Tutorial.PESTANAS.has(v.substr(4))
-				elif v.begins_with("chip:"):
-					ok = Tutorial.CHIPS.has(v.substr(5))
-				elif v.begins_with("ficha:"):
-					ok = false
-					for j: Jugador in m.mi_club().plantilla:
-						if j.id == v.substr(6):
-							ok = true
-				if not ok:
-					malos.append("%s: %s %s" % [modo, k, v])
+			misiones += _revisar_paso(modo, p, m, malos)
 		misiones_por_modo[modo] = misiones
 		if misiones < 4:
 			malos.append("%s: solo %d misiones" % [modo, misiones])
@@ -364,6 +246,7 @@ func _probar_tutorial() -> void:
 	_comprobar(m1["nombre"] == Tutorial.mentor_de("dt", ctx)["nombre"] and not Nombres.vetado(String(m1["nombre"])),
 		"el mentor es siempre el mismo para el mismo club, e inventado (%s)" % m1["nombre"])
 	_comprobar(Tutorial.pasos_para("dt", "Lautaro FC").size() >= 8, "sin partida también hay guion")
+
 
 ## LA MONEDA (25-9-2026). Una sola función escribe el dinero en todo el juego,
 ## con la moneda elegida. Se cambia `Eco.moneda` a mano, sin `elegir_moneda()`,

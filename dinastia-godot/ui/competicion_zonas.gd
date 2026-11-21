@@ -75,27 +75,32 @@ static func de_liga(mundo: Mundo, liga: Liga, tabla: Array = []) -> Dictionary:
 	var segunda := liga if liga.division() == 2 else _liga_de(mundo, liga.pais, 2)
 	var hay_promocion: bool = mundo.federacion != null and bool(mundo.federacion.promocion)
 	if primera != null and segunda != null:
-		var t1 := t if liga == primera else primera.tabla()
-		var t2 := t if liga == segunda else segunda.tabla()
-		if t1.size() >= 3 and t2.size() >= 3:
-			## Misma cuenta que el cierre de temporada: lo que diga la Primera,
-			## acotado para que siempre quede alguien en medio.
-			var n := clampi(primera.plazas_descenso, 1, mini(t1.size(), t2.size()) - 2)
-			var promo := hay_promocion and t1.size() >= n + 2 and t2.size() >= n + 2
-			if liga == primera:
-				for i in n:
-					_poner(salida, t[t.size() - 1 - i], DESCENSO)
-				if promo:
-					_poner(salida, t[t.size() - 1 - n], PROMOCION)
-			elif liga == segunda:
-				for i in n:
-					_poner(salida, t[i], ASCENSO)
-				if promo:
-					_poner(salida, t[n], PROMOCION)
+		_marcar_ascenso_descenso(liga, t, primera, segunda, hay_promocion, salida)
 	if liga.division() == 1:
 		_poner(salida, t[0], CAMPEON)
 		_marcar_continentales(mundo, liga, salida)
 	return salida
+
+## Ascenso, descenso y promoción de la liga `liga` frente a su Primera y su Segunda (misma cuenta que el cierre de temporada).
+static func _marcar_ascenso_descenso(liga: Liga, t: Array, primera: Liga, segunda: Liga, hay_promocion: bool, salida: Dictionary) -> void:
+	var t1 := t if liga == primera else primera.tabla()
+	var t2 := t if liga == segunda else segunda.tabla()
+	if t1.size() >= 3 and t2.size() >= 3:
+		## Misma cuenta que el cierre de temporada: lo que diga la Primera,
+		## acotado para que siempre quede alguien en medio.
+		var n := clampi(primera.plazas_descenso, 1, mini(t1.size(), t2.size()) - 2)
+		var promo := hay_promocion and t1.size() >= n + 2 and t2.size() >= n + 2
+		if liga == primera:
+			for i in n:
+				_poner(salida, t[t.size() - 1 - i], DESCENSO)
+			if promo:
+				_poner(salida, t[t.size() - 1 - n], PROMOCION)
+		elif liga == segunda:
+			for i in n:
+				_poner(salida, t[i], ASCENSO)
+			if promo:
+				_poner(salida, t[n], PROMOCION)
+
 
 static func _liga_de(mundo: Mundo, pais: String, division: int) -> Liga:
 	for l: Liga in mundo.ligas:

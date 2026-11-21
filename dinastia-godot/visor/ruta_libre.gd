@@ -75,22 +75,32 @@ static func camino(a: Vector3, b: Vector3, libre: Callable) -> Array[Vector3]:
 			break
 		cerrada[c] = true
 		expandidos += 1
-		for dx in [-1, 0, 1]:
-			for dz in [-1, 0, 1]:
-				if dx == 0 and dz == 0:
-					continue
-				var v := Vector2i(c.x + dx, c.y + dz)
-				if cerrada.has(v) or not celda_libre.call(v):
-					continue
-				if dx != 0 and dz != 0 and not (celda_libre.call(Vector2i(c.x + dx, c.y)) and celda_libre.call(Vector2i(c.x, c.y + dz))):
-					continue   ## sin cortar esquinas
-				var coste: float = float(g[c]) + (1.4142 if dx != 0 and dz != 0 else 1.0)
-				if not g.has(v) or coste < float(g[v]):
-					g[v] = coste
-					de[v] = c
-					_empujar(monton, coste + _h(v, fin), v)
+		_expandir_vecinos(c, fin, celda_libre, g, de, monton, cerrada)
 	if not de.has(fin):
 		return res
+	return _trazar(de, ini, fin, a, b, y, libre)
+
+## Expande los vecinos libres de `c` (A*): los que mejoran su coste entran en el montículo.
+static func _expandir_vecinos(c: Vector2i, fin: Vector2i, celda_libre: Callable, g: Dictionary,
+		de: Dictionary, monton: Array, cerrada: Dictionary) -> void:
+	for dx in [-1, 0, 1]:
+		for dz in [-1, 0, 1]:
+			if dx == 0 and dz == 0:
+				continue
+			var v := Vector2i(c.x + dx, c.y + dz)
+			if cerrada.has(v) or not celda_libre.call(v):
+				continue
+			if dx != 0 and dz != 0 and not (celda_libre.call(Vector2i(c.x + dx, c.y)) and celda_libre.call(Vector2i(c.x, c.y + dz))):
+				continue   ## sin cortar esquinas
+			var coste: float = float(g[c]) + (1.4142 if dx != 0 and dz != 0 else 1.0)
+			if not g.has(v) or coste < float(g[v]):
+				g[v] = coste
+				de[v] = c
+				_empujar(monton, coste + _h(v, fin), v)
+
+## Reconstruye el trayecto de celdas de `ini` a `fin` (siguiendo `de`) y lo rodea con la cuerda.
+static func _trazar(de: Dictionary, ini: Vector2i, fin: Vector2i, a: Vector3, b: Vector3,
+		y: float, libre: Callable) -> Array[Vector3]:
 	var celdas: Array[Vector2i] = [fin]
 	while celdas[-1] != ini:
 		celdas.append(de[celdas[-1]])
