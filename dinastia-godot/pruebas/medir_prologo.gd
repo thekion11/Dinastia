@@ -207,90 +207,13 @@ func _llamadas() -> float:
 
 func _grupos_nombre(ciudad: Node, _base: Vector2) -> void:
 	if OS.get_environment("MMHIST") != "":
-		var nodos := ciudad.find_children("*", "MultiMeshInstance3D", true, false)
-		var por := {}
-		var tam := {}
-		for n in nodos:
-			var mm := (n as MultiMeshInstance3D).multimesh
-			if mm == null or mm.mesh == null:
-				continue
-			var g := n as MultiMeshInstance3D
-			var c := g.global_position
-			var k := "%d|%d|%d,%d|%d|%d" % [mm.mesh.get_instance_id(), g.material_override.get_instance_id() if g.material_override != null else 0, floori(c.x / 160.0), floori(c.z / 160.0), int(g.visibility_range_end), int(mm.use_colors)]
-			por[k] = int(por.get(k, 0)) + 1
-			var b2 := "%d" % mini(mm.instance_count, 64)
-			tam[b2] = int(tam.get(b2, 0)) + 1
-		var mas := 0
-		var ahorro := 0
-		for k in por:
-			if por[k] > 1:
-				mas += 1
-				ahorro += por[k] - 1
-		print("MMHIST nodos=%d grupos=%d grupos_con_varios=%d nodos_que_sobran=%d" % [nodos.size(), por.size(), mas, ahorro])
-		var ks2 := tam.keys()
-		ks2.sort_custom(func(a, b): return int(a) < int(b))
-		var linea := ""
-		for k in ks2.slice(0, 12):
-			linea += "%s:%d " % [k, tam[k]]
-		print("MMHIST instancias->nodos ", linea)
+		_historia_mm(ciudad)
 	if OS.get_environment("ESCENAS") != "":
-		var ce := {}
-		for h in ciudad.get_children():
-			if h.get_class() == "Node3D" and String(h.name).begins_with("@"):
-				var m := ""
-				for g in h.find_children("*", "MeshInstance3D", true, false).slice(0, 1):
-					m = String(g.name) + "/" + String((g as MeshInstance3D).mesh.get_class())
-				var k := "%s | grupos=%s | script=%s | hijos=%d | %s" % [h.scene_file_path.get_file(), str(h.get_groups()), str(h.get_script() != null), h.get_child_count(), m]
-				ce[k] = int(ce.get(k, 0)) + 1
-		var kc := ce.keys()
-		kc.sort_custom(func(a, b): return ce[a] > ce[b])
-		for k in kc.slice(0, 25):
-			print("ESCENAS %4d  %s" % [ce[k], k])
+		_escenas(ciudad)
 	if OS.get_environment("HIJOS") != "":
-		var raiz := ciudad if OS.get_environment("HIJOS") == "." else ciudad.find_child(OS.get_environment("HIJOS"), true, false)
-		if raiz != null:
-			var gr := {}
-			for h in raiz.get_children():
-				if h is Node3D and (h as Node3D).visible and not (h.get_class() == "Node3D" and h.get_child_count() == 0) and (OS.get_environment("NOMBRADOS") == "" or (h.get_class() == "Node3D" and not String(h.name).begins_with("@"))):
-					var kk := "%s:%s" % [h.get_class(), String(h.name).rstrip("0123456789@_").lstrip("@")]
-					if kk == "Node3D:Node3D":
-						kk = "Node3D:%s%s h=%d" % [h.scene_file_path.get_file() if h.scene_file_path != "" else String(h.name), str(h.get_groups()), mini(h.get_child_count(), 1)]
-					if not gr.has(kk):
-						gr[kk] = []
-					gr[kk].append(h)
-			var kg := gr.keys()
-			kg.sort_custom(func(a, b): return gr[a].size() > gr[b].size())
-			for kk in kg.slice(0, 40):
-				var antes: float = await _llamadas()
-				for h in gr[kk]:
-					(h as Node3D).visible = false
-				var m0: float = await _llamadas()
-				print("HIJOS %-44s %5d nodos  -%d llamadas" % [kk, gr[kk].size(), antes - m0])
-				for h in gr[kk]:
-					(h as Node3D).visible = true
-				for i in 2:
-					await get_tree().process_frame
+		_hijos(ciudad)
 	if OS.get_environment("RUTAS") != "":
-		var cam := get_viewport().get_camera_3d()
-		var hist := {}
-		for n in ciudad.find_children(OS.get_environment("RUTAS"), "GeometryInstance3D", true, false):
-			var dd := cam.global_position.distance_to((n as Node3D).global_position)
-			var clave := "d<%d fin=%d" % [int(ceil(dd / 25.0) * 25.0), int((n as GeometryInstance3D).visibility_range_end)]
-			hist[clave] = int(hist.get(clave, 0)) + 1
-		for k in hist:
-			print("RUTAS_DIST %s %d" % [k, hist[k]])
-		var cuenta := {}
-		for n in ciudad.find_children(OS.get_environment("RUTAS"), "GeometryInstance3D", true, false):
-			var r := ""
-			var q: Node = n.get_parent()
-			for i in 5:
-				if q == null or q == ciudad:
-					break
-				r += String(q.name).rstrip("0123456789@_") + "<"
-				q = q.get_parent()
-			cuenta[r] = int(cuenta.get(r, 0)) + 1
-		for k in cuenta:
-			print("RUTAS %s %d" % [k, cuenta[k]])
+		_rutas(ciudad)
 	var por := {}
 	for n in ciudad.find_children("*", "GeometryInstance3D", true, false):
 		if n is Label3D or not (n as Node3D).visible:
@@ -321,6 +244,99 @@ func _grupos_nombre(ciudad: Node, _base: Vector2) -> void:
 				(n as Node3D).visible = true
 		for i in 2:
 			await get_tree().process_frame
+
+## _historia_mm=1: diagnóstico del prólogo (variable de entorno MMHIST).
+func _historia_mm(ciudad: Node) -> void:
+	var nodos := ciudad.find_children("*", "MultiMeshInstance3D", true, false)
+	var por := {}
+	var tam := {}
+	for n in nodos:
+		var mm := (n as MultiMeshInstance3D).multimesh
+		if mm == null or mm.mesh == null:
+			continue
+		var g := n as MultiMeshInstance3D
+		var c := g.global_position
+		var k := "%d|%d|%d,%d|%d|%d" % [mm.mesh.get_instance_id(), g.material_override.get_instance_id() if g.material_override != null else 0, floori(c.x / 160.0), floori(c.z / 160.0), int(g.visibility_range_end), int(mm.use_colors)]
+		por[k] = int(por.get(k, 0)) + 1
+		var b2 := "%d" % mini(mm.instance_count, 64)
+		tam[b2] = int(tam.get(b2, 0)) + 1
+	var mas := 0
+	var ahorro := 0
+	for k in por:
+		if por[k] > 1:
+			mas += 1
+			ahorro += por[k] - 1
+	print("MMHIST nodos=%d grupos=%d grupos_con_varios=%d nodos_que_sobran=%d" % [nodos.size(), por.size(), mas, ahorro])
+	var ks2 := tam.keys()
+	ks2.sort_custom(func(a, b): return int(a) < int(b))
+	var linea := ""
+	for k in ks2.slice(0, 12):
+		linea += "%s:%d " % [k, tam[k]]
+	print("MMHIST instancias->nodos ", linea)
+
+## _escenas=1: diagnóstico del prólogo (variable de entorno ESCENAS).
+func _escenas(ciudad: Node) -> void:
+	var ce := {}
+	for h in ciudad.get_children():
+		if h.get_class() == "Node3D" and String(h.name).begins_with("@"):
+			var m := ""
+			for g in h.find_children("*", "MeshInstance3D", true, false).slice(0, 1):
+				m = String(g.name) + "/" + String((g as MeshInstance3D).mesh.get_class())
+			var k := "%s | grupos=%s | script=%s | hijos=%d | %s" % [h.scene_file_path.get_file(), str(h.get_groups()), str(h.get_script() != null), h.get_child_count(), m]
+			ce[k] = int(ce.get(k, 0)) + 1
+	var kc := ce.keys()
+	kc.sort_custom(func(a, b): return ce[a] > ce[b])
+	for k in kc.slice(0, 25):
+		print("ESCENAS %4d  %s" % [ce[k], k])
+
+## _hijos=1: diagnóstico del prólogo (variable de entorno HIJOS).
+func _hijos(ciudad: Node) -> void:
+	var raiz := ciudad if OS.get_environment("HIJOS") == "." else ciudad.find_child(OS.get_environment("HIJOS"), true, false)
+	if raiz != null:
+		var gr := {}
+		for h in raiz.get_children():
+			if h is Node3D and (h as Node3D).visible and not (h.get_class() == "Node3D" and h.get_child_count() == 0) and (OS.get_environment("NOMBRADOS") == "" or (h.get_class() == "Node3D" and not String(h.name).begins_with("@"))):
+				var kk := "%s:%s" % [h.get_class(), String(h.name).rstrip("0123456789@_").lstrip("@")]
+				if kk == "Node3D:Node3D":
+					kk = "Node3D:%s%s h=%d" % [h.scene_file_path.get_file() if h.scene_file_path != "" else String(h.name), str(h.get_groups()), mini(h.get_child_count(), 1)]
+				if not gr.has(kk):
+					gr[kk] = []
+				gr[kk].append(h)
+		var kg := gr.keys()
+		kg.sort_custom(func(a, b): return gr[a].size() > gr[b].size())
+		for kk in kg.slice(0, 40):
+			var antes: float = await _llamadas()
+			for h in gr[kk]:
+				(h as Node3D).visible = false
+			var m0: float = await _llamadas()
+			print("HIJOS %-44s %5d nodos  -%d llamadas" % [kk, gr[kk].size(), antes - m0])
+			for h in gr[kk]:
+				(h as Node3D).visible = true
+			for i in 2:
+				await get_tree().process_frame
+
+## _rutas=1: diagnóstico del prólogo (variable de entorno RUTAS).
+func _rutas(ciudad: Node) -> void:
+	var cam := get_viewport().get_camera_3d()
+	var hist := {}
+	for n in ciudad.find_children(OS.get_environment("RUTAS"), "GeometryInstance3D", true, false):
+		var dd := cam.global_position.distance_to((n as Node3D).global_position)
+		var clave := "d<%d fin=%d" % [int(ceil(dd / 25.0) * 25.0), int((n as GeometryInstance3D).visibility_range_end)]
+		hist[clave] = int(hist.get(clave, 0)) + 1
+	for k in hist:
+		print("RUTAS_DIST %s %d" % [k, hist[k]])
+	var cuenta := {}
+	for n in ciudad.find_children(OS.get_environment("RUTAS"), "GeometryInstance3D", true, false):
+		var r := ""
+		var q: Node = n.get_parent()
+		for i in 5:
+			if q == null or q == ciudad:
+				break
+			r += String(q.name).rstrip("0123456789@_") + "<"
+			q = q.get_parent()
+		cuenta[r] = int(cuenta.get(r, 0)) + 1
+	for k in cuenta:
+		print("RUTAS %s %d" % [k, cuenta[k]])
 
 ## TEXTURAS=1 (3-11, R4 memoria): las texturas únicas que cuelgan de los materiales de la escena, con tamaño, formato y megas estimados (con mipmaps), de mayor a menor.
 func _texturas() -> void:
