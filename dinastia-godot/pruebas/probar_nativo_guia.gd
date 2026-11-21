@@ -33,11 +33,29 @@ static func probar(nat: Object, raiz: Node3D) -> Dictionary:
 	var rr := RandomNumberGenerator.new()
 	rr.seed = 1611
 	var dt := 1.0 / 30.0
+	motor.t = 0.0
+	var r := _pasos(nat, motor, g, rr, dt)
+	var dis: int = r["dis"]
+	var tg: int = r["tg"]
+	var tc: int = r["tc"]
+	var cuenta: Array = r["cuenta"]
+	if dis > 0:
+		fallos.append("guía de clips: %d jugadores-paso distintos" % dis)
+	if cuenta[0] != cuenta[1]:
+		fallos.append("guía de clips: contadores distintos %s / %s" % [str(cuenta[0]), str(cuenta[1])])
+	if int(cuenta[0][1]) == 0 or int(cuenta[0][0]) == 0:
+		fallos.append("guía de clips: la prueba no ejercita guía y cortes (%s)" % str(cuenta[0]))
+	textos.append("guía de clips: GDScript %.1f µs, C++ %.1f µs por paso (cortes %d, guiados %d)" % [tg / 600.0, tc / 600.0, cuenta[0][0], cuenta[0][1]])
+	motor.free()
+	return {"fallos": fallos, "textos": textos}
+
+
+## Los 600 pasos de la guía: cada paso lo calculan la extensión y GDScript y se comparan.
+static func _pasos(nat: Object, motor: MotorJugable, g: Array, rr: RandomNumberGenerator, dt: float) -> Dictionary:
 	var dis := 0
 	var tg := 0
 	var tc := 0
 	var cuenta := [[0, 0], [0, 0]]
-	motor.t = 0.0
 	for paso in 600:
 		## El «motor» de la prueba: cambia objetivos, velocidades y estados igual en las dos copias.
 		for q in 22:
@@ -91,12 +109,4 @@ static func probar(nat: Object, raiz: Node3D) -> Dictionary:
 			if _sin_nodo(a) != _sin_nodo(b) or (a["node"] as Node3D).position != (b["node"] as Node3D).position:
 				dis += 1
 		motor.t += dt
-	if dis > 0:
-		fallos.append("guía de clips: %d jugadores-paso distintos" % dis)
-	if cuenta[0] != cuenta[1]:
-		fallos.append("guía de clips: contadores distintos %s / %s" % [str(cuenta[0]), str(cuenta[1])])
-	if int(cuenta[0][1]) == 0 or int(cuenta[0][0]) == 0:
-		fallos.append("guía de clips: la prueba no ejercita guía y cortes (%s)" % str(cuenta[0]))
-	textos.append("guía de clips: GDScript %.1f µs, C++ %.1f µs por paso (cortes %d, guiados %d)" % [tg / 600.0, tc / 600.0, cuenta[0][0], cuenta[0][1]])
-	motor.free()
-	return {"fallos": fallos, "textos": textos}
+	return {"dis": dis, "tg": tg, "tc": tc, "cuenta": cuenta}
