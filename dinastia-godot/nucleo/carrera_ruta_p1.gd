@@ -204,6 +204,15 @@ static func retos(c: CarreraJugador, m: Mundo) -> Array:
 static func _cumple(id: String, d: Dictionary) -> bool:
 	var g := int(d.get("goles", 0))
 	var a := int(d.get("asist", 0))
+	var v: Variant = _cumple_a(id, d, g, a)
+	if v == null:
+		v = _cumple_b(id, d, g, a)
+	if v == null:
+		return false
+	return bool(v)
+
+## Retos de la ruta, primera mitad (minutos, notas, goles, asistencias, ceros y paradas). Devuelve null si el id es de la otra mitad.
+static func _cumple_a(id: String, d: Dictionary, g: int, a: int) -> Variant:
 	match id:
 		"minutos": return int(d.get("minutos", 90)) >= 60
 		"nota7": return float(d.get("nota", 0.0)) >= 7.0
@@ -214,13 +223,18 @@ static func _cumple(id: String, d: Dictionary) -> bool:
 		"participa": return g + a >= 1
 		"cero": return d.has("encajados") and int(d["encajados"]) == 0 and int(d.get("minutos", 90)) >= 60
 		"paradas": return int(d.get("paradas", 0)) >= 3
+	return null
+## Retos de la ruta, segunda mitad (nota 6,5, partido completo, gol y asistencia, triplete, encajes y paradas). Devuelve null si el id no es de aquí.
+static func _cumple_b(id: String, d: Dictionary, g: int, a: int) -> Variant:
+	match id:
 		"nota65": return float(d.get("nota", 0.0)) >= 6.5
 		"completo": return int(d.get("minutos", 90)) >= 90
 		"gol_asist": return g >= 1 and a >= 1
 		"triplete": return g >= 3
 		"encaja1": return d.has("encajados") and int(d["encajados"]) <= 1 and int(d.get("minutos", 90)) >= 60
 		"paradas5": return int(d.get("paradas", 0)) >= 5
-	return false
+	return null
+
 
 # ---------------------------------------------------------------- partido
 

@@ -64,6 +64,15 @@ func le_pueden_echar() -> bool:
 ## La frase que explica por qué el botón está apagado. Un botón gris sin motivo
 ## se lee como un fallo del juego.
 func motivo_bloqueo(accion: String) -> String:
+	var v: Variant = _motivo_a(accion)
+	if v == null:
+		v = _motivo_b(accion)
+	if v == null:
+		return ""
+	return String(v)
+
+## Motivo de bloqueo de fichajes, alineaciones, ventas, rescisiones y despacho. Devuelve null si la acción es de la otra mitad o no bloquea nada.
+func _motivo_a(accion: String) -> Variant:
 	match accion:
 		"fichar":
 			if en_interinato():
@@ -90,11 +99,17 @@ func motivo_bloqueo(accion: String) -> String:
 		"staff", "construir":
 			if es_ayudante():
 				return "El despacho no es tuyo: eso lo decide el club."
+	return null
+
+## Motivo de bloqueo del dinero del dueño y de vender el club. Devuelve null si la acción no es de aquí.
+func _motivo_b(accion: String) -> Variant:
+	match accion:
 		"capital":
 			return "Solo el dueño mete dinero de su bolsillo."
 		"vender_club":
 			return "No se vende lo que no es tuyo."
-	return ""
+	return null
+
 
 # ---------------------------------------------------------------------------
 # LA VENTANA DE EMERGENCIA

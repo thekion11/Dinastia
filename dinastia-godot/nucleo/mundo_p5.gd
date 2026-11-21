@@ -59,6 +59,11 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 ## FASE 14 · LOS MÓDULOS SEMANALES DEL CLUB: redes, mercado avanzado, fondo, cantera,
 ## calendario, política, contratos, leyes del país, maestría y vida personal.
 func _semana_modulos_del_club() -> void:
+	_semana_mercado_y_contratos()
+	_semana_leyes_vida_y_citas()
+
+## Mercado de entrenadores, redes, mercado de jugadores, fondo, cantera, calendario, política y contratos.
+func _semana_mercado_y_contratos() -> void:
 	## Los clubes de la IA echan y contratan entrenadores (`MercadoDT`, fila 19 s4).
 	MercadoDT.de(self).semana(self)
 	if redes != null:
@@ -76,6 +81,9 @@ func _semana_modulos_del_club() -> void:
 		politica.semana(mi_club(), anio, semana, prensa)
 	if contratos != null and mi_club() != null:
 		contratos.semana(mi_club(), anio, semana)
+
+## Leyes del país, maestría, vida personal, citas y afinidad.
+func _semana_leyes_vida_y_citas() -> void:
 	LeyesPais.anio_actual = anio
 	LeyesPais.clubes_mundo = clubes
 	LeyesPais.tick += 1
