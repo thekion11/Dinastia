@@ -143,27 +143,7 @@ func _probar_modos_simulacion() -> void:
 			var b: Club = l.clubes[(k + 3) % l.clubes.size()]
 			Azar.sembrar(9000 + k)
 			var p := Partido.new(a, b)
-			match via:
-				0:
-					p.preparar()
-					p.fijar_hinchada(a, 10)
-					while not p.terminado_ya:
-						p.simular_minuto()
-				1:
-					p.preparar()
-					p.fijar_hinchada(a, 10)
-					var capa := Control.new()
-					var r := ResumenPartido.mostrar(capa, p, a, false, true)
-					r.free()
-					capa.free()
-				2:
-					## El partido en vivo sin 3D, saltado al final.
-					p.fijar_hinchada(a, 10)
-					var vivo := PartidoVivo.new()
-					vivo.con_3d = false
-					vivo.abrir(p, a)
-					vivo.call("_hasta_el_final")
-					vivo.free()
+			_jugar_via(via, p, a)
 			huellas.append("%d-%d|%d|%s" % [p.goles_local, p.goles_visita, p.cronica.size(), str(p.invasion_ya)])
 			if via == 0 and p.invasion_ya:
 				invasiones += 1
@@ -207,6 +187,30 @@ func _probar_modos_simulacion() -> void:
 		vueltas += 1
 	_comprobar(ph.terminado_ya, "tras la charla y salir a la segunda parte, el partido llega al final")
 	vh.free()
+
+## Juega el partido de una vía hasta el final: 0 instantáneo, 1 resumen, 2 en vivo sin 3D.
+func _jugar_via(via: int, p: Partido, a: Club) -> void:
+	match via:
+		0:
+			p.preparar()
+			p.fijar_hinchada(a, 10)
+			while not p.terminado_ya:
+				p.simular_minuto()
+		1:
+			p.preparar()
+			p.fijar_hinchada(a, 10)
+			var capa := Control.new()
+			var r := ResumenPartido.mostrar(capa, p, a, false, true)
+			r.free()
+			capa.free()
+		2:
+			## El partido en vivo sin 3D, saltado al final.
+			p.fijar_hinchada(a, 10)
+			var vivo := PartidoVivo.new()
+			vivo.con_3d = false
+			vivo.abrir(p, a)
+			vivo.call("_hasta_el_final")
+			vivo.free()
 
 
 ## LAS EXPORTACIONES SE LEEN (25-9-2026). `export_presets.cfg` llevaba
