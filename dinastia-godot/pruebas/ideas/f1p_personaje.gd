@@ -89,14 +89,7 @@ func _az_aspectos(rng: RandomNumberGenerator) -> void:
 		var ropa := String(a["ropa"])
 		if String(a["cuerpo"]) == "female" and (bool(a["barba"]) or int(a["cara"]) >= 0 or String(a["pelo"]) == "calvo"):
 			choques.append("mujer %d" % s)
-		if bool(a["corbata"]) and not ropa in PersonajeDatos.CON_CORBATA:
-			choques.append("corbata con %s" % ropa)
-		if bool(a["manga_corta"]) and not ropa in PersonajeDatos.CON_MANGA_CORTA:
-			choques.append("manga corta con %s" % ropa)
-		if bool(a["gorra"]) and ropa in ["traje", "abrigo"]:
-			choques.append("gorra con %s" % ropa)
-		if int(a["tatuaje"]) > 0 and not bool(a["manga_corta"]):
-			choques.append("tatuaje tapado")
+		_az_choques_ropa(a, ropa, choques)
 		var gris := String(a["color_pelo"]) in ["9a9a9a", "e8e8e4"]
 		if gris:
 			if edad == 70:
@@ -105,6 +98,17 @@ func _az_aspectos(rng: RandomNumberGenerator) -> void:
 				canas_joven += 1
 	_comprobar(choques.is_empty(), "400 aspectos al azar sin choques %s" % str(choques.slice(0, 4)))
 	_comprobar(canas_joven == 0 and canas_viejo > 60, "canas según la edad (30 años: %d, 70 años: %d de 200)" % [canas_joven, canas_viejo])
+
+## Choques de ropa, corbata, manga, gorra y tatuaje con lo que lleva puesto.
+func _az_choques_ropa(a: Dictionary, ropa: String, choques: Array[String]) -> void:
+	if bool(a["corbata"]) and not ropa in PersonajeDatos.CON_CORBATA:
+		choques.append("corbata con %s" % ropa)
+	if bool(a["manga_corta"]) and not ropa in PersonajeDatos.CON_MANGA_CORTA:
+		choques.append("manga corta con %s" % ropa)
+	if bool(a["gorra"]) and ropa in ["traje", "abrigo"]:
+		choques.append("gorra con %s" % ropa)
+	if int(a["tatuaje"]) > 0 and not bool(a["manga_corta"]):
+		choques.append("tatuaje tapado")
 
 func _az_nombres(rng: RandomNumberGenerator) -> void:
 	var malos: Array[String] = []
