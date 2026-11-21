@@ -26,25 +26,31 @@ func mesa_de_debate() -> Array[Dictionary]:
 		if j.edad <= 21 and j.partidos > 3:
 			jovenes += 1
 	for f2: Array in TERTULIANOS:
-		var frase := ""
-		match String(f2[0]):
-			"exdt":
-				frase = ("Con esos chicos no se gana nada; ya se verá en marzo." if jovenes >= 3
-					else "Ordenado atrás. Eso es lo primero, lo demás viene solo.")
-			"periodista":
-				frase = ("El club está donde tiene que estar. El entrenador es lo de menos." if arriba
-					else "Aquí ha habido épocas peores, y también se salió de ellas.")
-			"exjugador":
-				frase = ("Ese vestuario está vivo. Se nota que corren por alguien." if animo >= 60
-					else "Al vestuario lo veo solo. Y cuando el vestuario está solo, pasa lo que pasa.")
-			"datos":
-				frase = ("Los números lo sostienen: genera más de lo que concede." if arriba
-					else "Los números no engañan, y ahora mismo no dan.")
-			"polemista":
-				frase = ("Que alguien explique qué es esto, porque yo no lo entiendo." if (abajo or funa > 45)
-					else "Ganan, sí. Pero que no se relajen, que aquí se olvida rápido.")
+		var frase := _frase_del_tertuliano(String(f2[0]), jovenes, arriba, abajo)
 		salida.append({"nombre": String(f2[1]), "perfil": String(f2[2]), "frase": frase})
 	return salida
+
+## La frase de un tertuliano según la tabla, el ánimo y la funa del momento.
+func _frase_del_tertuliano(tipo: String, jovenes: int, arriba: bool, abajo: bool) -> String:
+	var frase := ""
+	match tipo:
+		"exdt":
+			frase = ("Con esos chicos no se gana nada; ya se verá en marzo." if jovenes >= 3
+				else "Ordenado atrás. Eso es lo primero, lo demás viene solo.")
+		"periodista":
+			frase = ("El club está donde tiene que estar. El entrenador es lo de menos." if arriba
+				else "Aquí ha habido épocas peores, y también se salió de ellas.")
+		"exjugador":
+			frase = ("Ese vestuario está vivo. Se nota que corren por alguien." if animo >= 60
+				else "Al vestuario lo veo solo. Y cuando el vestuario está solo, pasa lo que pasa.")
+		"datos":
+			frase = ("Los números lo sostienen: genera más de lo que concede." if arriba
+				else "Los números no engañan, y ahora mismo no dan.")
+		"polemista":
+			frase = ("Que alguien explique qué es esto, porque yo no lo entiendo." if (abajo or funa > 45)
+				else "Ganan, sí. Pero que no se relajen, que aquí se olvida rápido.")
+	return frase
+
 
 ## El escalafón de entrenadores del país. La nota premia rendir POR ENCIMA de lo
 ## que el club permite: un séptimo con el decimoquinto presupuesto vale más que

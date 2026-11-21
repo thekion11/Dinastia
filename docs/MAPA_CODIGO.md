@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2614 archivos (.gd, .cpp, .h), 373583 líneas, 1013 clases con nombre.
+Total: 2614 archivos (.gd, .cpp, .h), 373589 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -143,7 +143,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 
 ## Núcleo: mundo, gestión y datos
 
-257 archivos, 53270 líneas. Carpetas: `nucleo`.
+257 archivos, 53276 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -157,7 +157,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 | `Mercado` | `nucleo/mercado.gd` | 64 | 93 | mercado_p1.gd |
 | `Finanzas` | `nucleo/finanzas.gd` | 398 | 91 |  |
 | `Roles` | `nucleo/roles.gd` | 357 | 79 | roles_p4.gd ← roles_p3.gd ← roles_p2.gd ← roles_p1.gd |
-| `Prensa` | `nucleo/prensa.gd` | 393 | 76 | prensa_narra.gd ← prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
+| `Prensa` | `nucleo/prensa.gd` | 399 | 76 | prensa_narra.gd ← prensa_p6.gd ← prensa_p5.gd ← prensa_p4.gd ← prensa_p4_p1.gd ← prensa_p3.gd ← prensa_p2.gd ← prensa_p1.gd |
 | `Calendario` | `nucleo/calendario.gd` | 78 | 70 | calendario_p1.gd |
 | `CargaCiudad` | `nucleo/carga_ciudad.gd` | 14 | 67 |  |
 | `Cantera` | `nucleo/cantera.gd` | 233 | 65 | cantera_p3.gd ← cantera_p2.gd ← cantera_p1.gd |
