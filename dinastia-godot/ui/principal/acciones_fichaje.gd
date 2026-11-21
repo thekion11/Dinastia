@@ -92,24 +92,30 @@ func _motivo_fichaje_bloqueado(j: Jugador) -> String:
 	## que el fair play de arriba -bloquea el mercado de PAGO, no los libres-.
 	if p.mundo.banco != null and p.mundo.banco.en_mora() and j != null and j.club_id != "":
 		return "En mora con el banco (%d semanas en rojo): esta ventana solo puedes fichar agentes libres." % p.mundo.banco.semanas_en_rojo
-	## (13-11) Los AGENTES LIBRES se fichan todo el año (el Mercado lo promete: «Libres y precontratos funcionan todo el año», y la regla de
-	## mora de arriba ya los excluía): la ventana cerrada no los bloquea. Sí el cargo sin firma y el interinato.
+	## (13-11) Los AGENTES LIBRES se fichan todo el año (ver _motivo_ventana_fichaje).
+	var ventana = _motivo_ventana_fichaje(j)
+	if ventana != null:
+		return String(ventana)
+	if p.mundo.tiene_desafio("cantera"):
+		return "Desafío «solo canteranos»: el mercado te queda vetado. Todo refuerzo tiene que salir de tu academia."
+	if p.mundo.tiene_desafio("local") and j != null and j.pais != p.mundo.mi_club().pais:
+		return "Desafío «un solo país»: no puedes fichar extranjeros."
+	return ""
+
+## La ventana de mercado para un fichaje: null = la ventana no bloquea (se sigue con las demás puertas); si no, el motivo (aunque sea "").
+func _motivo_ventana_fichaje(j: Jugador) -> Variant:
 	var libre := j != null and j.club_id == ""
 	if libre:
 		var r := p.mundo.roles
 		if r != null and (not r._permiso("fichar") or r.en_interinato() or r.mercado_bloqueado() != ""):
 			var motivo := String(r.motivo_bloqueo("fichar"))
 			return motivo if motivo != "" and not motivo.begins_with("Mercado cerrado") else "Tu cargo no firma jugadores ahora mismo."
-	else:
-		if not p.mundo.mercado_abierto():
-			return "Mercado cerrado. Vuelve a abrir en %d semanas: hasta entonces, la plantilla es la que hay." % p.mundo.semanas_hasta_mercado()
-		if p.mundo.roles != null and not p.mundo.roles.puede_fichar():
-			return String(p.mundo.roles.motivo_bloqueo("fichar"))
-	if p.mundo.tiene_desafio("cantera"):
-		return "Desafío «solo canteranos»: el mercado te queda vetado. Todo refuerzo tiene que salir de tu academia."
-	if p.mundo.tiene_desafio("local") and j != null and j.pais != p.mundo.mi_club().pais:
-		return "Desafío «un solo país»: no puedes fichar extranjeros."
-	return ""
+		return null
+	if not p.mundo.mercado_abierto():
+		return "Mercado cerrado. Vuelve a abrir en %d semanas: hasta entonces, la plantilla es la que hay." % p.mundo.semanas_hasta_mercado()
+	if p.mundo.roles != null and not p.mundo.roles.puede_fichar():
+		return String(p.mundo.roles.motivo_bloqueo("fichar"))
+	return null
 ## El intento de fichaje pasa por las tres puertas en orden y cuenta cuál se
 ## cerró. Decir solo "no se pudo" sería inútil: lo que hace que la siguiente
 ## oferta sea mejor es saber si falló el precio, la ficha o las ganas.
