@@ -223,34 +223,10 @@ static func _pintar_publico_gd(img: Image, w: int, h: int, a1: Color, a2: Color,
 	## grada -sin ellas es una alfombra de gente.
 	var escaleras: Array[int] = [int(h * 0.31), int(h * 0.78)]
 	var ancho_escalera: int = maxi(2, alto_persona / 3)
+	var ctx := {"w": w, "h": h, "alto": alto_persona, "piel_n": piel_persona, "paso": paso_fila, "lleno": lleno_c,
+		"escal": escaleras, "ancho_esc": ancho_escalera, "ropa": ropa, "piel": piel}
 	for fila in range(int(w / paso_fila)):
-		var x0 := fila * paso_fila
-		## El escalon entre fila y fila: una linea mas oscura del propio color
-		## del asiento, no un gris inventado.
-		for y in range(h):
-			img.set_pixel(x0, y, img.get_pixel(x0, y).darkened(0.42))
-		var y_asiento := rng.randi_range(0, alto_persona - 1)
-		while y_asiento < h:
-			var en_escalera := false
-			for e in escaleras:
-				if absi(y_asiento - e) < ancho_escalera + alto_persona / 2:
-					en_escalera = true
-					break
-			if not en_escalera and rng.randf() < lleno_c:
-				var col_ropa: Color = ropa[rng.randi_range(0, ropa.size() - 1)]
-				var col_piel: Color = piel[rng.randi_range(0, piel.size() - 1)]
-				## Se deja el ultimo texel de la fila sin cubrir: es el respaldo
-				## de la butaca asomando por detras del hincha, y es lo que
-				## mantiene visible el patron de colores del club incluso con la
-				## grada llena.
-				for dy in range(alto_persona - 1):
-					var yy := y_asiento + dy
-					if yy >= h:
-						break
-					var col: Color = col_piel if dy < piel_persona else col_ropa
-					for dx in range(1, maxi(2, paso_fila - 1)):
-						img.set_pixel(mini(x0 + dx, w - 1), yy, col)
-			y_asiento += alto_persona
+		StadiumPublico._publico_fila(img, fila * paso_fila, ctx, rng)
 	## Las escaleras se pintan al final, encima de todo: hormigon, sin gente.
 	var cemento := Color(0.30, 0.31, 0.33)
 	for e in escaleras:
