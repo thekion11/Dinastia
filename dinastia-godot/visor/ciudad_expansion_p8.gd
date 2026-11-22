@@ -322,8 +322,25 @@ func _mobiliario_urbano() -> void:
 	cuenta["mobiliario"] = tapas.size() + sumideros.size() + papeleras.size() + hidrantes.size() / 3 + bancos_a.size() / 2 \
 		+ contenedores.size() + bolardos.size() + postes.size() + kioscos.size() + bicis.size()
 
+## Una placa de fila o columna en `esquina` (de `_placas_de_calle`); devuelve cuántas puso.
+
 ## Placas de calle en las esquinas: un poste con dos placas azules (una por
 ## calle), como en cualquier ciudad. Solo se dibujan de cerca.
+func _placa_de_fila(cual: int, k: Vector2i, esquina: Vector3, sx: float, placas: Array) -> int:
+	var puestos := 0
+	var texto := nombre_fila(k.y) if cual == 0 else nombre_columna(k.x)
+	## La placa de la fila mira a lo largo de la fila (se lee desde la calle).
+	var giro := 0.0 if cual == 0 else PI * 0.5
+	var alto := 3.3 if cual == 0 else 2.75
+	var centro := esquina + Vector3(0, alto, 0) + (Vector3(-1.2 * sx, 0, 0) if cual == 0 else Vector3(0, 0, -1.2))
+	placas.append(Transform3D(Basis(Vector3.UP, giro) * Basis.from_scale(Vector3(2.4, 0.46, 0.05)), centro))
+	for cara: float in [1.0, -1.0]:
+		RotulosPerezosos.de(b).anadir({"texto": texto, "pos": centro + Basis(Vector3.UP, giro) * Vector3(0, 0, 0.035 * cara),
+				"giro": giro + (0.0 if cara > 0.0 else PI), "rango": 70.0, "font_size": 34, "pixel_size": 0.0055,
+				"outline_size": 0, "modulate": Color.WHITE, "ancho": 420.0})   ## A4-REND-004: solo existen cerca de la cámara
+	puestos += 1
+	return puestos
+
 func _placas_de_calle() -> void:
 	var postes: Array[Transform3D] = []
 	var placas: Array[Transform3D] = []
@@ -350,17 +367,7 @@ func _placas_de_calle() -> void:
 		for cual in 2:
 			if (cual == 0 and not hay_fila) or (cual == 1 and not hay_col):
 				continue
-			var texto := nombre_fila(k.y) if cual == 0 else nombre_columna(k.x)
-			## La placa de la fila mira a lo largo de la fila (se lee desde la calle).
-			var giro := 0.0 if cual == 0 else PI * 0.5
-			var alto := 3.3 if cual == 0 else 2.75
-			var centro := esquina + Vector3(0, alto, 0) + (Vector3(-1.2 * sx, 0, 0) if cual == 0 else Vector3(0, 0, -1.2))
-			placas.append(Transform3D(Basis(Vector3.UP, giro) * Basis.from_scale(Vector3(2.4, 0.46, 0.05)), centro))
-			for cara: float in [1.0, -1.0]:
-				RotulosPerezosos.de(b).anadir({"texto": texto, "pos": centro + Basis(Vector3.UP, giro) * Vector3(0, 0, 0.035 * cara),
-						"giro": giro + (0.0 if cara > 0.0 else PI), "rango": 70.0, "font_size": 34, "pixel_size": 0.0055,
-						"outline_size": 0, "modulate": Color.WHITE, "ancho": 420.0})   ## A4-REND-004: solo existen cerca de la cámara
-				cuantas += 1
+			cuantas += _placa_de_fila(cual, k, esquina, sx, placas)
 	_multimesh(CylinderMesh.new(), b._mat_simple(Color(0.25, 0.27, 0.3), 0.5), postes, Vector3(1, 0.5, 1))
 	var azul := b._mat_simple(Color(0.08, 0.22, 0.55), 0.4)
 	_multimesh(BoxMesh.new(), azul, placas, Vector3.ONE)
