@@ -28,13 +28,7 @@ static func probar(nat: Object) -> Dictionary:
 		t_c += t2 - t1
 		comparados += 1
 		if b == null or a.get_data() != b.get_data() or a.get_format() != b.get_format() or a.get_width() != b.get_width():
-			var cuantos := 0
-			if b != null and a.get_data().size() == b.get_data().size():
-				var da := a.get_data()
-				var db := b.get_data()
-				for i in da.size():
-					if da[i] != db[i]:
-						cuantos += 1
+			var cuantos := _bytes_distintos(a, b)
 			fallos.append("asfalto %d px (semilla %d) distinto (%d bytes)" % [n, semilla, cuantos])
 	comparados += 1
 	var rgb := Image.create(64, 64, false, Image.FORMAT_RGB8)
@@ -46,13 +40,19 @@ static func probar(nat: Object) -> Dictionary:
 		var e_c: Image = nat.enredadera_imagen(caso2[0], caso2[1])
 		comparados += 1
 		if e_c == null or e_gd.get_data() != e_c.get_data():
-			var malos := 0
-			if e_c != null and e_gd.get_data().size() == e_c.get_data().size():
-				var da2 := e_gd.get_data()
-				var db2 := e_c.get_data()
-				for i in da2.size():
-					if da2[i] != db2[i]:
-						malos += 1
+			var malos := _bytes_distintos(e_gd, e_c)
 			fallos.append("enredadera (semilla %d, %d px) distinta (%d bytes)" % [caso2[0], caso2[1], malos])
 	textos.append("asfalto y enredadera: %d imágenes comparadas; GDScript %d ms, C++ %d ms" % [comparados, t_gd / 1000, t_c / 1000])
 	return {"fallos": fallos, "textos": textos}
+
+## Cuántos bytes distintos hay entre dos imágenes del mismo tamaño (0 si no se pueden comparar).
+static func _bytes_distintos(a: Image, b: Image) -> int:
+	if b == null or a.get_data().size() != b.get_data().size():
+		return 0
+	var da := a.get_data()
+	var db := b.get_data()
+	var n := 0
+	for i in da.size():
+		if da[i] != db[i]:
+			n += 1
+	return n
