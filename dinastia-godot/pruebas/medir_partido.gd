@@ -29,12 +29,7 @@ func _por_hijos() -> void:
 		return
 	if _ph_actual == null:
 		if _ph_cola.is_empty():
-			_ph_res.sort_custom(func(a: Array, b: Array) -> bool: return float(a[2]) > float(b[2]))
-			for r: Array in _ph_res.slice(0, 40):
-				print("HIJO %-60s llamadas=%5d tris=%8d" % [r[0], r[1], r[2]])
-			_ph_res.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
-			for r: Array in _ph_res.slice(0, 25):
-				print("LLAMADAS %-56s llamadas=%5d tris=%8d" % [r[0], r[1], r[2]])
+			_ph_informe()
 			_fin = true
 			get_tree().quit()
 			return
@@ -48,6 +43,20 @@ func _por_hijos() -> void:
 	_ph_espera += 1
 	if _ph_espera < 3:
 		return
+	_ph_medir_actual(raiz)
+
+## Imprime los hijos y las llamadas que más pesan, por triángulos y por llamadas.
+func _ph_informe() -> void:
+	_ph_res.sort_custom(func(a: Array, b: Array) -> bool: return float(a[2]) > float(b[2]))
+	for r: Array in _ph_res.slice(0, 40):
+		print("HIJO %-60s llamadas=%5d tris=%8d" % [r[0], r[1], r[2]])
+	_ph_res.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
+	for r: Array in _ph_res.slice(0, 25):
+		print("LLAMADAS %-56s llamadas=%5d tris=%8d" % [r[0], r[1], r[2]])
+
+
+## Mide lo que cuesta el nodo en curso (quitarlo) y baja a sus hijos si pesa.
+func _ph_medir_actual(raiz: Node3D) -> void:
 	var n: Node3D = _ph_actual[0]
 	var nivel: int = _ph_actual[1]
 	var m := _medida()

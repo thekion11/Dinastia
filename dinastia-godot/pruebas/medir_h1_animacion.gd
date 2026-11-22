@@ -63,52 +63,73 @@ func _process(_d: float) -> void:
 	if _n > 120:
 		_t_proc += Performance.get_monitor(Performance.TIME_PROCESS)
 		_medidos += 1
-		var bp := motor.balon.global_position
-		var cam := get_viewport().get_camera_3d()
-		if cam != null:
-			_d_cam += cam.global_position.distance_to(bp)
-		for p: Dictionary in motor.jugadores:
-			var gq := (p["node"] as Node3D).global_position
-			if bp.y < 0.45 and Vector2(gq.x - bp.x, gq.z - bp.z).length() < 1.05:
-				_cerca_balon += 1
-				break
-		for p: Dictionary in motor.jugadores:
-			var nodo: Node3D = p["node"]
-			var k := nodo.get_instance_id()
-			if _yaw.has(k):
-				var dg := absf(rad_to_deg(angle_difference(float(_yaw[k]), nodo.rotation.y)))
-				for i in 4:
-					if dg > [5.0, 10.0, 20.0, 45.0][i]:
-						_giros[i] += 1
-				_muestras += 1
-			_yaw[k] = nodo.rotation.y
-			var esq := FutbolistaQ.esqueleto_de(nodo)
-			var pie: PieBalonIK = esq.get_node_or_null("PieBalonIK") if esq != null else null
-			if pie != null and pie.active and pie.peso > 0.3:
-				if pie.medida.y < 0.0:
-					_pie_fuera += 1
-				else:
-					_pie_n += 1
-					_pie_antes += pie.medida.x
-					_pie_despues += pie.medida.y
-			var v: Vector3 = p.get("vel", Vector3.ZERO)
-			if Vector2(v.x, v.z).length() > 3.0:
-				_desvio += absf(rad_to_deg(angle_difference(nodo.rotation.y, atan2(v.x, v.z))))
-				_con_vel += 1
+		_medir_balon_camara(motor)
+		_medir_jugadores(motor)
 	if _n >= 120 + FOTOGRAMAS:
-		var ac: AnimacionCercana = motor.get_node_or_null("AnimacionCercana")
-		print("H1 ik=%s calidad=%d proceso_ms=%.3f ac_us=%.1f fotogramas=%d" % [
-			OS.get_environment("H1_IK"), Calidad.elegida, _t_proc / maxf(_medidos, 1) * 1000.0,
-			float(ac.us_total) / maxf(ac.llamadas, 1) if ac != null else 0.0, _medidos])
-		print("GIROS por fotograma·jugador (%d): >5° %.2f %%, >10° %.2f %%, >20° %.3f %%, >45° %.3f %%; desvío cuerpo-marcha a >3 m/s: %.1f°" % [
-			_muestras, 100.0 * _giros[0] / maxf(_muestras, 1), 100.0 * _giros[1] / maxf(_muestras, 1), 100.0 * _giros[2] / maxf(_muestras, 1),
-			100.0 * _giros[3] / maxf(_muestras, 1), _desvio / maxf(_con_vel, 1)])
-		print("BALON pegado a alguien en %d de %d fotogramas; cámara a %.1f m del balón de media" % [_cerca_balon, _medidos, _d_cam / maxf(_medidos, 1)])
-		print("PIE activo %d fotogramas (+%d fuera de alcance): tobillo-objetivo %.3f m del clip → %.3f m con el IK" % [
-			_pie_n, _pie_fuera, _pie_antes / maxf(_pie_n, 1), _pie_despues / maxf(_pie_n, 1)])
-		var h := PackedStringArray()
-		for p: Dictionary in motor.jugadores:
-			var q := (p["node"] as Node3D).position
-			h.append("%.3f,%.3f,%.3f" % [q.x, q.z, (p["node"] as Node3D).rotation.y])
-		print("HUELLA ", hash("|".join(h)), " balon ", motor.balon.position, " estado ", motor.estado)
+		_informe_h1(motor)
 		get_tree().quit()
+
+
+## Balón: cuántas veces está pegado a alguien y a cuánto va la cámara.
+func _medir_balon_camara(motor: MotorJugable) -> void:
+	var bp := motor.balon.global_position
+	var cam := get_viewport().get_camera_3d()
+	if cam != null:
+		_d_cam += cam.global_position.distance_to(bp)
+	for p: Dictionary in motor.jugadores:
+		var gq := (p["node"] as Node3D).global_position
+		if bp.y < 0.45 and Vector2(gq.x - bp.x, gq.z - bp.z).length() < 1.05:
+			_cerca_balon += 1
+			break
+
+
+## Giros de cada jugador, pie con IK y desvío cuerpo-marcha.
+func _medir_jugadores(motor: MotorJugable) -> void:
+	for p: Dictionary in motor.jugadores:
+		var nodo: Node3D = p["node"]
+		var k := nodo.get_instance_id()
+		if _yaw.has(k):
+			var dg := absf(rad_to_deg(angle_difference(float(_yaw[k]), nodo.rotation.y)))
+			for i in 4:
+				if dg > [5.0, 10.0, 20.0, 45.0][i]:
+					_giros[i] += 1
+			_muestras += 1
+		_yaw[k] = nodo.rotation.y
+		_medir_pie(nodo)
+		var v: Vector3 = p.get("vel", Vector3.ZERO)
+		if Vector2(v.x, v.z).length() > 3.0:
+			_desvio += absf(rad_to_deg(angle_difference(nodo.rotation.y, atan2(v.x, v.z))))
+			_con_vel += 1
+
+
+## El pie con IK activo: cuánto se corrige el tobillo respecto al clip (o si queda fuera de alcance).
+func _medir_pie(nodo: Node3D) -> void:
+	var esq := FutbolistaQ.esqueleto_de(nodo)
+	var pie: PieBalonIK = esq.get_node_or_null("PieBalonIK") if esq != null else null
+	if pie != null and pie.active and pie.peso > 0.3:
+		if pie.medida.y < 0.0:
+			_pie_fuera += 1
+		else:
+			_pie_n += 1
+			_pie_antes += pie.medida.x
+			_pie_despues += pie.medida.y
+
+
+## El informe final: rendimiento, giros, balón, pie y la huella de posiciones (para comparar versiones).
+func _informe_h1(motor: MotorJugable) -> void:
+	var ac: AnimacionCercana = motor.get_node_or_null("AnimacionCercana")
+	print("H1 ik=%s calidad=%d proceso_ms=%.3f ac_us=%.1f fotogramas=%d" % [
+		OS.get_environment("H1_IK"), Calidad.elegida, _t_proc / maxf(_medidos, 1) * 1000.0,
+		float(ac.us_total) / maxf(ac.llamadas, 1) if ac != null else 0.0, _medidos])
+	print("GIROS por fotograma·jugador (%d): >5° %.2f %%, >10° %.2f %%, >20° %.3f %%, >45° %.3f %%; desvío cuerpo-marcha a >3 m/s: %.1f°" % [
+		_muestras, 100.0 * _giros[0] / maxf(_muestras, 1), 100.0 * _giros[1] / maxf(_muestras, 1), 100.0 * _giros[2] / maxf(_muestras, 1),
+		100.0 * _giros[3] / maxf(_muestras, 1), _desvio / maxf(_con_vel, 1)])
+	print("BALON pegado a alguien en %d de %d fotogramas; cámara a %.1f m del balón de media" % [_cerca_balon, _medidos, _d_cam / maxf(_medidos, 1)])
+	print("PIE activo %d fotogramas (+%d fuera de alcance): tobillo-objetivo %.3f m del clip → %.3f m con el IK" % [
+		_pie_n, _pie_fuera, _pie_antes / maxf(_pie_n, 1), _pie_despues / maxf(_pie_n, 1)])
+	var h := PackedStringArray()
+	for p: Dictionary in motor.jugadores:
+		var q := (p["node"] as Node3D).position
+		h.append("%.3f,%.3f,%.3f" % [q.x, q.z, (p["node"] as Node3D).rotation.y])
+	print("HUELLA ", hash("|".join(h)), " balon ", motor.balon.position, " estado ", motor.estado)
+
