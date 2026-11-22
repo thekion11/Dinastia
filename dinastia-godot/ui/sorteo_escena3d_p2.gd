@@ -141,6 +141,12 @@ func _montar_bolas() -> void:
 ##   · polvo suspendido que cruza el haz (aire)
 ##   · un aro de suelo que recoge el reflejo (base)
 func _montar_capas(fondo: Color) -> void:
+	_montar_columnas(fondo)
+	_montar_tarima_bombo(fondo)
+	_montar_polvo()
+
+## Columnas: los pilares del decorado, en el plano de atrás.
+func _montar_columnas(fondo: Color) -> void:
 	## Columnas: los pilares del decorado. Emiten poco, pero al estar en el
 	## plano de atrás dan escala y separan el bombo de la pared.
 	for lado in [-1.0, 1.0]:
@@ -157,6 +163,8 @@ func _montar_capas(fondo: Color) -> void:
 		col.position = Vector3(lado * 2.5, 2.7, -4.6)
 		add_child(col)
 
+## La tarima (y su aro luminoso).
+func _montar_tarima_bombo(fondo: Color) -> void:
 	## La tarima: el bombo tiene que apoyarse en ALGO. Sin ella flota sobre un
 	## suelo infinito y se nota que es una escena montada, no un plató.
 	## El disco decorativo se quitó: desde que hay tarima de verdad, su borde
@@ -193,6 +201,8 @@ func _montar_capas(fondo: Color) -> void:
 	aro.visible = false
 	add_child(aro)
 
+## El polvo en suspensión (motas cruzando el haz de los focos).
+func _montar_polvo() -> void:
 	## Polvo en suspensión. Es la capa que más barato sale y más aporta: motas
 	## cruzando el haz de los focos, que es lo que hace que el aire "exista".
 	##

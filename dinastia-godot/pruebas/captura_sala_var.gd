@@ -49,7 +49,7 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	_n += 1
 	if _n == 5:
-		var sv := SalaVAR.abrir(self, _mundo.get_world_3d(), Vector3(0, 0, 31), 67, "Revisión del gol: posible fuera de juego", OS.get_environment("ANULA") == "1")
+		var sv := SalaVAR.abrir(self, _mundo.get_world_3d(), Vector3(0, 0, 31), 67, "Revisión del gol: posible fuera de juego", {"anular": OS.get_environment("ANULA") == "1"})
 		set_meta("sv", sv)
 	if _n > 5 and has_meta("sv"):
 		var sv2: Variant = get_meta("sv")

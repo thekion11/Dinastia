@@ -206,7 +206,12 @@ func _montar_sala(fondo: Color) -> void:
 	var oscuro := StandardMaterial3D.new()
 	oscuro.albedo_color = fondo.darkened(0.72)
 	oscuro.roughness = 0.75
+	_montar_tarima(fondo)
+	_montar_paredes(oscuro)
+	_montar_techo(oscuro)
 
+## La tarima del sorteo y su canto luminoso.
+func _montar_tarima(fondo: Color) -> void:
 	## LA TARIMA. Elevada 42 cm sobre el patio de butacas, que es lo que hace que
 	## se lea como escenario y no como suelo. El bombo se apoya encima.
 	var deck := MeshInstance3D.new()
@@ -235,6 +240,8 @@ func _montar_sala(fondo: Color) -> void:
 	canto.position = Vector3(0, 0.40, 1.9)
 	add_child(canto)
 
+## Las paredes laterales, giradas hacia dentro.
+func _montar_paredes(oscuro: StandardMaterial3D) -> void:
 	## LAS PAREDES LATERALES, giradas hacia dentro. Cierran el encuadre por los
 	## lados: sin ellas la vista se escapa a negro y la sala no tiene tamaño.
 	for lado in [-1.0, 1.0]:
@@ -247,6 +254,8 @@ func _montar_sala(fondo: Color) -> void:
 		m.rotation.y = deg_to_rad(-lado * 9.0)
 		add_child(m)
 
+## El techo y el truss con los focos.
+func _montar_techo(oscuro: StandardMaterial3D) -> void:
 	## EL TECHO Y EL TRUSS. Las barras negras cruzadas de las que cuelgan los
 	## focos. Es el detalle que más dice "esto es un recinto" con menos gasto.
 	var techo := MeshInstance3D.new()

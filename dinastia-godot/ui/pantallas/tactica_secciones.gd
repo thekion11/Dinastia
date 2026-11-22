@@ -174,6 +174,12 @@ static func _once(p: Principal, c: Club) -> void:
 	## ALINEACIÓN INDEBIDA A LA VISTA (M-246, 20-10): si el once elegido se salta
 	## la ley de cupos del país, se avisa aquí, en la pizarra, antes del partido
 	## (y no solo con la multa de la federación después).
+	_once_aviso(p, c)
+	_once_botones(p, c)
+	_once_filas(p, c)
+
+## Aviso de alineación indebida (ley de cupos del país), si el once elegido la incumple.
+static func _once_aviso(p: Principal, c: Club) -> void:
 	var manual: Array[Jugador] = c._once_manual()
 	var infr: Array = LeyesPais.infracciones_once(c, manual) if manual.size() == 11 else []
 	if not infr.is_empty():
@@ -186,6 +192,9 @@ static func _once(p: Principal, c: Club) -> void:
 			else "→ saldrá así y la federación multará (decidiste incumplir)")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_tactica.add_child(av)
+
+## Los botones de «que lo arme el ayudante» y «vaciar».
+static func _once_botones(p: Principal, c: Club) -> void:
 	var fila_b := HBoxContainer.new()
 	fila_b.add_theme_constant_override("separation", 6)
 	p._lista_tactica.add_child(fila_b)
@@ -198,6 +207,8 @@ static func _once(p: Principal, c: Club) -> void:
 		c.once_elegido.clear()
 		p._refrescar(), fila_b)
 
+## La rejilla de jugadores: marcar, nombre, posición, media, forma y estado.
+static func _once_filas(p: Principal, c: Club) -> void:
 	var g := GridContainer.new()
 	CebraRejilla.poner(g)
 	g.columns = 7
