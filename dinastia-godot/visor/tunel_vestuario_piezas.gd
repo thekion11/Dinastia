@@ -108,24 +108,27 @@ static func materiales(c1: Color, c2: Color) -> Dictionary:
 		"cam1": PiezasObra._mat(c1, 0.85), "cam2": PiezasObra._mat(c2, 0.85), "c1": c1, "c2": c2}
 
 ## Una caja de la taquilla en coordenadas locales (girada `gz` en Z, `gy` en Y).
-static func _pon(lote: Lote, xf: Transform3D, p: Vector3, tam: Vector3, mat: Material, gz := 0.0, gy := 0.0) -> void:
-	lote.caja(mat, xf * Transform3D(Basis.from_euler(Vector3(0, gy, gz)), p), tam)
+## `giro` = Vector2(gz, gy): el giro de la pieza (en torno a Z y a Y).
+static func _pon(lote: Lote, xf: Transform3D, p: Vector3, tam: Vector3, mat: Material, giro := Vector2.ZERO) -> void:
+	lote.caja(mat, xf * Transform3D(Basis.from_euler(Vector3(0, giro.y, giro.x)), p), tam)
 
 ## Una camiseta colgada, de espaldas, con el centro del pecho en `xf` (mira a
 ## +Z local). `m1` el color principal y `m2` cuello, puños y bajo.
 static func camiseta(lote: Lote, xf: Transform3D, m1: Material, m2: Material) -> void:
 	_pon(lote, xf, Vector3.ZERO, Vector3(0.5, 0.66, 0.035), m1)
 	for s: float in [-1.0, 1.0]:
-		_pon(lote, xf, Vector3(s * 0.3, 0.22, 0), Vector3(0.2, 0.2, 0.034), m1, s * 0.55)
-		_pon(lote, xf, Vector3(s * 0.36, 0.14, 0.001), Vector3(0.2, 0.04, 0.034), m2, s * 0.55)
+		_pon(lote, xf, Vector3(s * 0.3, 0.22, 0), Vector3(0.2, 0.2, 0.034), m1, Vector2(s * 0.55, 0.0))
+		_pon(lote, xf, Vector3(s * 0.36, 0.14, 0.001), Vector3(0.2, 0.04, 0.034), m2, Vector2(s * 0.55, 0.0))
 	_pon(lote, xf, Vector3(0, 0.33, 0.002), Vector3(0.16, 0.04, 0.034), m2)
 	_pon(lote, xf, Vector3(0, -0.32, 0.001), Vector3(0.5, 0.03, 0.036), m2)
 
 ## Una taquilla con su camiseta. `xf`: dónde está su base (centro del suelo)
 ## mirando a +Z local hacia el centro del vestuario. `dorsal` y `nombre`
 ## (nombre vacío = sin plantilla: solo el número). `rng` varía bolsa, botas y toalla.
-static func taquilla(lote: Lote, padre: Node3D, xf: Transform3D, m: Dictionary, dorsal: int, nombre: String,
-		rng: RandomNumberGenerator) -> void:
+## `ficha` = {"dorsal": int, "nombre": String}: el número y el nombre de la plantilla.
+static func taquilla(lote: Lote, padre: Node3D, xf: Transform3D, m: Dictionary, ficha: Dictionary, rng: RandomNumberGenerator) -> void:
+	var dorsal: int = ficha["dorsal"]
+	var nombre: String = ficha["nombre"]
 	var w := ANCHO - 0.04
 	## El mueble: fondo, laterales, techo, balda y el asiento-cajón.
 	_pon(lote, xf, Vector3(0, ALTO / 2.0, -FONDO / 2.0 + 0.01), Vector3(w, ALTO, 0.02), m["fondo"])
@@ -148,8 +151,8 @@ static func taquilla(lote: Lote, padre: Node3D, xf: Transform3D, m: Dictionary, 
 	var gb := rng.randf_range(-0.35, 0.35)
 	for s: float in [-1.0, 1.0]:
 		var px := s * 0.1 + rng.randf_range(-0.02, 0.02)
-		_pon(lote, xf, Vector3(px, 0.495, 0.1), Vector3(0.1, 0.09, 0.27), m["bota"], 0.0, gb if s > 0 else 0.0)
-		_pon(lote, xf, Vector3(px, 0.455, 0.1), Vector3(0.105, 0.015, 0.28), m["suela"], 0.0, gb if s > 0 else 0.0)
+		_pon(lote, xf, Vector3(px, 0.495, 0.1), Vector3(0.1, 0.09, 0.27), m["bota"], Vector2(0.0, gb if s > 0 else 0.0))
+		_pon(lote, xf, Vector3(px, 0.455, 0.1), Vector3(0.105, 0.015, 0.28), m["suela"], Vector2(0.0, gb if s > 0 else 0.0))
 	var bx := rng.randf_range(-0.18, 0.18)
 	_pon(lote, xf, Vector3(bx, 2.11, -0.04), Vector3(0.48, 0.22, 0.3), m["bolsa"])
 	_pon(lote, xf, Vector3(bx, 2.23, -0.04), Vector3(0.3, 0.02, 0.04), m["suela"])

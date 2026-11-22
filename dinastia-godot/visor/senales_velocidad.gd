@@ -37,15 +37,19 @@ static func textura(v: int) -> ImageTexture:
 	var x0 := 32 - int(ancho * celda / 2.0)
 	var y0 := 32 - int(5.0 * celda / 2.0)
 	for k in txt.length():
-		var patron: String = CIFRAS[txt[k]]
-		for i in 15:
-			if patron[i] == "1":
-				for dy in celda:
-					for dx in celda:
-						img.set_pixel(x0 + (k * 4 + i % 3) * celda + dx, y0 + (i / 3) * celda + dy, Color(0.05, 0.05, 0.06))
+		_cifra_en(img, CIFRAS[txt[k]], k, x0, y0, celda)
 	var t := ImageTexture.create_from_image(img)
 	_cache[v] = t
 	return t
+
+## Dibuja una cifra (su patrón de 3 × 5) en la posición k de la fila, con celdas de `celda` píxeles.
+static func _cifra_en(img: Image, patron: String, k: int, x0: int, y0: int, celda: int) -> void:
+	for i in 15:
+		if patron[i] == "1":
+			for dy in celda:
+				for dx in celda:
+					img.set_pixel(x0 + (k * 4 + i % 3) * celda + dx, y0 + (i / 3) * celda + dy, Color(0.05, 0.05, 0.06))
+
 
 ## Pone las señales en los cruces de `ex` y devuelve cuántas.
 static func montar(ex) -> int:
