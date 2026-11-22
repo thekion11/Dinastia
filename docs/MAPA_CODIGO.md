@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2625 archivos (.gd, .cpp, .h), 375949 líneas, 1013 clases con nombre.
+Total: 2625 archivos (.gd, .cpp, .h), 375961 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -79,7 +79,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Club` | `nucleo/club.gd` | 420 | 848 |  |
+| `Club` | `nucleo/club.gd` | 420 | 849 |  |
 | `StadiumBuilder` | `visor/stadium_builder.gd` | 13 | 136 | stadium_builder_p10.gd ← stadium_builder_p10_p1.gd ← estadio_partes_tribuna.gd ← stadium_builder_p9.gd ← stadium_builder_p8.gd ← stadium_builder_p7.gd ← stadium_builder_p6.gd ← stadium_builder_p5.gd ← stadium_builder_p4.gd ← stadium_builder_p4_p1.gd ← stadium_builder_p3.gd |
 | `EstadioExtras` | `visor/estadio_extras.gd` | 310 | 9 |  |
 | `ClubDentro` | `nucleo/club_dentro.gd` | 285 | 8 |  |
@@ -93,13 +93,13 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-477 archivos, 94302 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+477 archivos, 94298 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Principal` | `ui/principal.gd` | 58 | 262 | principal_p17.gd ← principal_p16.gd ← principal_p15.gd ← principal_p14.gd ← principal_p13.gd ← principal_p12.gd ← principal_p10.gd ← principal_p9.gd ← principal_p8.gd ← principal_p7.gd ← principal_p6.gd |
 | `Tema` | `ui/tema.gd` | 153 | 250 |  |
-| `VistaEstadio` | `ui/estadio.gd` | 437 | 188 | estadio_fin.gd ← estadio_p5.gd ← estadio_p5_p1.gd ← estadio_p4.gd ← estadio_p3.gd ← estadio_p2.gd ← estadio_p1.gd |
+| `VistaEstadio` | `ui/estadio.gd` | 433 | 188 | estadio_fin.gd ← estadio_p5.gd ← estadio_p5_p1.gd ← estadio_p4.gd ← estadio_p3.gd ← estadio_p2.gd ← estadio_p1.gd |
 | `VistaCiudad` | `ui/ciudad_vista.gd` | 218 | 104 | ciudad_vista_p1.gd ← ciudad_vista_p1_p1.gd |
 | `Escudo` | `ui/escudo.gd` | 71 | 101 | escudo_p1.gd ← escudo_p1_p1.gd |
 | `Cara` | `ui/cara.gd` | 377 | 77 | cara_p1.gd |
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1281 archivos, 124633 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1281 archivos, 124649 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
