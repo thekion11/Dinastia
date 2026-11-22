@@ -336,7 +336,7 @@ static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMe
 	var sentido: float = g["sentido"]
 	var rake: float = g["rake"]
 	var bandeja: int = g["bandeja"]
-	_montar_pasillos(deck, gt.escalones, gt.pasillos, lateral, fondo, largo, sentido, rake)
+	_montar_pasillos(deck, gt.escalones, gt.pasillos, lateral, fondo, [largo, sentido, rake])
 	if bandeja == 0:
 		_escaleras_de_acceso(deck, gt.escalones, gt.pasillos, lateral)
 
@@ -373,7 +373,7 @@ static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMe
 		## cerca son triángulos con púas. Las filas altas la usan para todo, así que quien pasea por una bandeja alta (la visita al estadio)
 		## las veía así. Ahora, a menos de `LIMITE_ALTAS` m del trozo (8 trozos por bandeja) se cambia a la malla «medio».
 		if not reales_medio.is_empty():
-			_montar_publico_lod(deck, "PersonasLejos", reales_medio, gt.hinchas_xf, gt.hinchas_col, LIMITE_ALTAS, TRAMOS_ALTAS)
+			_montar_publico_lod(deck, "PersonasLejos", reales_medio, gt.hinchas_xf, gt.hinchas_col, [LIMITE_ALTAS, TRAMOS_ALTAS])
 		else:
 			_montar_horneados(deck, "PersonasLejos", reales_lejos, gt.hinchas_xf, gt.hinchas_col)
 		return
