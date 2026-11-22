@@ -112,13 +112,7 @@ static func tick(vehiculos: Array, lluvia: bool, puertas: Array, cuenta: int) ->
 			PeatonVida.gesto(nodo, "parado")   ## (antes `Mini3D.anim(v, …)`: el registro del tráfico no trae «anim» y daba un error de script cada repaso con lluvia)
 		var quiere := lluvia and not parado
 		## Un solo `find_child` por peatón y repaso (antes 3); solo se vuelve a mirar si se abrió o cerró uno.
-		var tiene := nodo.find_child(NOMBRE, true, false) != null
-		if quiere and not tiene:
-			abrir(nodo, posmod(hash([i, 3]), COLORES.size()))
-			tiene = nodo.find_child(NOMBRE, true, false) != null
-		elif not quiere and tiene:
-			cerrar(nodo)
-			tiene = nodo.find_child(NOMBRE, true, false) != null
+		var tiene := _ajustar_paraguas(nodo, quiere, i)
 		if tiene:
 			abiertos += 1
 			_pose(nodo, true)   ## tras una parada el tráfico vuelve a «caminar»: se repone la pose del brazo
@@ -257,3 +251,14 @@ class Sigue:
 		var x := Vector3.UP.cross(arriba)
 		x = x.normalized() if x.length() > 0.001 else Vector3.RIGHT
 		global_transform = Transform3D(Basis(x, arriba, x.cross(arriba).normalized()), p)
+
+## Abre o cierra el paraguas del peatón según `quiere`; devuelve si lo lleva al final.
+static func _ajustar_paraguas(nodo: Node3D, quiere: bool, i: int) -> bool:
+	var tiene := nodo.find_child(NOMBRE, true, false) != null
+	if quiere and not tiene:
+		abrir(nodo, posmod(hash([i, 3]), COLORES.size()))
+		tiene = nodo.find_child(NOMBRE, true, false) != null
+	elif not quiere and tiene:
+		cerrar(nodo)
+		tiene = nodo.find_child(NOMBRE, true, false) != null
+	return tiene
