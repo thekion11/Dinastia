@@ -142,7 +142,7 @@ func _montar_bolas() -> void:
 ##   · un aro de suelo que recoge el reflejo (base)
 func _montar_capas(fondo: Color) -> void:
 	_montar_columnas(fondo)
-	_montar_tarima(fondo)
+	_montar_tarima_bombo(fondo)
 	_montar_polvo()
 
 ## Columnas: los pilares del decorado, en el plano de atrás.
@@ -164,7 +164,7 @@ func _montar_columnas(fondo: Color) -> void:
 		add_child(col)
 
 ## La tarima (y su aro luminoso).
-func _montar_tarima(fondo: Color) -> void:
+func _montar_tarima_bombo(fondo: Color) -> void:
 	## La tarima: el bombo tiene que apoyarse en ALGO. Sin ella flota sobre un
 	## suelo infinito y se nota que es una escena montada, no un plató.
 	## El disco decorativo se quitó: desde que hay tarima de verdad, su borde
