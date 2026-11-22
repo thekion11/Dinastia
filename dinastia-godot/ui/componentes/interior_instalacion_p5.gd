@@ -14,10 +14,19 @@ func _gimnasio() -> void:
 	_tonos_sala = _MADERA_CLARA
 	var goma := Color(0.17, 0.17, 0.19)
 	_sala(Vector3(16, 4.2, 12), goma, Color(0.88, 0.88, 0.9), "moqueta", _c1.darkened(0.55))
-	var dep := [_c1, _c2]
-	var hierro := Color(0.12, 0.12, 0.13)
-	var cromo := Color(0.78, 0.79, 0.82)
-	var acero := Color(0.42, 0.44, 0.47)
+	_gimnasio_suelo()
+	_gimnasio_paredes()
+	_gimnasio_cardio()
+	_gimnasio_fuerza()
+	_gimnasio_pista()
+	_gimnasio_funcional()
+	_gimnasio_estiramientos()
+	_gimnasio_recuperacion()
+	_gimnasio_delante()
+
+
+## Sección del gimnasio: suelo (mismo orden de llamadas que antes, dentro de _gimnasio).
+func _gimnasio_suelo() -> void:
 	var blanco := Color(0.94, 0.94, 0.95)
 	## --- Suelo por zonas: losetas de cardio, pista de césped, damero de
 	## fuerza y la zona funcional con su borde del color del club.
@@ -38,6 +47,12 @@ func _gimnasio() -> void:
 	for s: float in [-1.0, 1.0]:
 		_prim("caja", Vector3(0.7, 0.014, 1.05 + s * 1.82), Vector3(5.2, 0.006, 0.06), _c1)
 		_prim("caja", Vector3(0.7 + s * 2.57, 0.014, 1.05), Vector3(0.06, 0.006, 3.7), _c1)
+
+
+## Sección del gimnasio: paredes (mismo orden de llamadas que antes, dentro de _gimnasio).
+func _gimnasio_paredes() -> void:
+	var hierro := Color(0.12, 0.12, 0.13)
+	var cromo := Color(0.78, 0.79, 0.82)
 	## --- Paredes: franja del club, espejo largo, teles y altavoces.
 	for z: float in [-5.99]:
 		_prim("caja", Vector3(0, 2.75, z), Vector3(16, 0.18, 0.02), _c1)
@@ -56,6 +71,14 @@ func _gimnasio() -> void:
 		_poner("speakerSmall", p, atan2(-p.x, -p.z))
 	_cartel("💪 " + _sala_nombre().to_upper(), Vector3(4.6, 3.55, -5.95), 34)
 	_cartel("ESFUERZO · EQUIPO · VICTORIA", Vector3(-7.96, 3.2, 1.2), 30, _c1.lightened(0.25), PI * 0.5)
+
+
+## Sección del gimnasio: cardio (mismo orden de llamadas que antes, dentro de _gimnasio).
+func _gimnasio_cardio() -> void:
+	var hierro := Color(0.12, 0.12, 0.13)
+	var acero := Color(0.42, 0.44, 0.47)
+	var blanco := Color(0.94, 0.94, 0.95)
+	var dep := [_c1, _c2]
 	## --- Cardio: cuatro cintas (tres en marcha) y tres bicis.
 	for k in 4:
 		var t := Transform3D(Basis.IDENTITY, Vector3(-7.0 + float(k) * 1.4, 0, -4.6))
@@ -72,6 +95,15 @@ func _gimnasio() -> void:
 		var sillin := _bici(t, hierro, acero)
 		if k != 1:
 			_trabajador(Vector3(sillin.x, 0, sillin.z - 0.05), PI, true, [], dep, sillin.y)
+
+
+## Sección del gimnasio: fuerza (mismo orden de llamadas que antes, dentro de _gimnasio).
+func _gimnasio_fuerza() -> void:
+	var hierro := Color(0.12, 0.12, 0.13)
+	var cromo := Color(0.78, 0.79, 0.82)
+	var acero := Color(0.42, 0.44, 0.47)
+	var dep := [_c1, _c2]
+	var goma := Color(0.17, 0.17, 0.19)
 	## --- Fuerza: poleas al fondo a la derecha con alguien haciendo press.
 	_poleas(Transform3D(Basis.IDENTITY, Vector3(6.0, 0, -5.45)), hierro, acero, cromo)
 	_trabajador(Vector3(6.0, 0, -4.55), 0.0, false, ["empujar", "empujar", "cansado"], dep)
@@ -93,6 +125,12 @@ func _gimnasio() -> void:
 		for s: float in [-1.0, 1.0]:
 			_prim("caja", p + Vector3(0, r * 0.9, s * r * 0.36), Vector3(0.03, 0.12, 0.03), hierro)
 	_trabajador(Vector3(6.75, 0, 1.3), PI * 0.5, false, ["recoger_balon", "parado", "cansado"], dep)
+
+
+## Sección del gimnasio: pista (mismo orden de llamadas que antes, dentro de _gimnasio).
+func _gimnasio_pista() -> void:
+	var dep := [_c1, _c2]
+	var goma := Color(0.17, 0.17, 0.19)
 	## --- Pista de césped: escalera de agilidad, conos y alguien que esprinta.
 	for i in 12:
 		_prim("caja", Vector3(-6.6 + float(i) * 0.42, 0.02, -2.15), Vector3(0.04, 0.012, 0.5), Color(0.98, 0.85, 0.1))
@@ -107,6 +145,13 @@ func _gimnasio() -> void:
 		## Por el centro de la pista, sin el desvío al azar: entre los conos.
 		_caminantes[-1]["puntos"] = [Vector3(-7.2, 0, -2.15), Vector3(2.8, 0, -2.15)]
 		(_caminantes[-1]["d"]["nodo"] as Node3D).position.z = -2.15
+
+
+## Sección del gimnasio: funcional (mismo orden de llamadas que antes, dentro de _gimnasio).
+func _gimnasio_funcional() -> void:
+	var hierro := Color(0.12, 0.12, 0.13)
+	var dep := [_c1, _c2]
+	var goma := Color(0.17, 0.17, 0.19)
 	## --- Zona funcional: cajones pliométricos, balones medicinales y fitballs.
 	var altos := [0.3, 0.5, 0.75]
 	for k in 3:
@@ -124,6 +169,12 @@ func _gimnasio() -> void:
 		var dm := 0.65 if k != 3 else 0.55
 		_prim("esf", (sitios_fit[k] as Vector3) + Vector3(0, dm * 0.5, 0), Vector3.ONE * dm, fit[k], "goma")
 	_trabajador(Vector3(1.35, 0, 2.6), 0.0, true, [], dep, 0.6)
+
+
+## Sección del gimnasio: estiramientos (mismo orden de llamadas que antes, dentro de _gimnasio).
+func _gimnasio_estiramientos() -> void:
+	var dep := [_c1, _c2]
+	var goma := Color(0.17, 0.17, 0.19)
 	## --- Estiramientos (izquierda): colchonetas, rulos y gomas.
 	var mats := [Vector3(-5.3, 0, 0.4), Vector3(-3.4, 0, 0.4), Vector3(-5.3, 0, 2.0), Vector3(-3.4, 0, 2.0)]
 	for k in 4:
@@ -136,6 +187,15 @@ func _gimnasio() -> void:
 	_trabajador(Vector3(-3.3, 0.04, 0.35), PI * 0.3, false, ["atarse_botin"], dep)
 	_tumbado(Vector3(-5.3, 0.04, 2.0), PI * 0.5, dep)
 	_trabajador(Vector3(-3.6, 0.04, 2.0), PI * 0.15, false, ["brazos_al_frente", "cansado", "charla", "aplaudir"], dep)
+
+
+## Sección del gimnasio: recuperacion (mismo orden de llamadas que antes, dentro de _gimnasio).
+func _gimnasio_recuperacion() -> void:
+	var cromo := Color(0.78, 0.79, 0.82)
+	var acero := Color(0.42, 0.44, 0.47)
+	var blanco := Color(0.94, 0.94, 0.95)
+	var dep := [_c1, _c2]
+	var goma := Color(0.17, 0.17, 0.19)
 	## --- Recuperación: fuente de agua, toallero, la camilla con el fisio.
 	_fuente_agua(Vector3(-7.72, 0, -0.55), acero, cromo)
 	_toallero(Vector3(-7.62, 0, 1.15))
@@ -150,6 +210,13 @@ func _gimnasio() -> void:
 	_prim("caja", Vector3(-7.6, 0.4, 5.1), Vector3(0.5, 0.8, 0.45), blanco)
 	_prim("caja", Vector3(-7.36, 0.6, 5.1), Vector3(0.02, 0.08, 0.08), Color(0.85, 0.15, 0.15))
 	_planta(Vector3(-7.3, 0, 5.6))
+
+
+## Sección del gimnasio: delante (mismo orden de llamadas que antes, dentro de _gimnasio).
+func _gimnasio_delante() -> void:
+	var blanco := Color(0.94, 0.94, 0.95)
+	var dep := [_c1, _c2]
+	var goma := Color(0.17, 0.17, 0.19)
 	## --- Delante a la derecha: banco de vestuario, mochilas, la mesa del
 	## preparador con su portátil y la pantalla de GPS.
 	_asiento("benchCushionLow", Vector3(3.8, 0, 5.35), PI, [0.4], dep, Vector3(4.8, 2.2, 2.2), {"carpet": _c1.darkened(0.35), "wood": Color(0.62, 0.48, 0.32)})
@@ -176,6 +243,7 @@ func _gimnasio() -> void:
 
 ## Sala de vídeo / e-sports (14 × 10 m): ocho puestos mirando a la pantalla
 ## grande; en la de e-sports, además, máquinas recreativas y un sofá.
+
 func _analisis() -> void:
 	var esports := clave == "esports"
 	_sala(Vector3(14, 3.4, 10), Color(0.2, 0.2, 0.24), Color(0.3, 0.32, 0.38), "moqueta", Color(0.16, 0.17, 0.2))

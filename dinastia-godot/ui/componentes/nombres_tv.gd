@@ -149,14 +149,9 @@ func _process(_d: float) -> void:
 			continue
 		var col := MarcadorTV.color_vivo(_club(bool(q.get("es_local", true))))
 		var yo := i == 0 and manejas
-		var aro := PackedVector2Array()
-		var al_cam := cam.global_position - pie
-		var atras: Array[bool] = []
-		for k in LADOS_ARO + 1:
-			var ang := TAU * k / LADOS_ARO
-			var off := Vector3(cos(ang), 0.0, sin(ang)) * (RADIO_ARO * (1.15 if yo else 1.0))
-			aro.append(_a_pantalla(cam, pie + off + Vector3(0, 0.03, 0)))
-			atras.append(off.dot(Vector3(al_cam.x, 0.0, al_cam.z)) < 0.0)
+		var ar := _aro_jugador(cam, pie, yo)
+		var aro: PackedVector2Array = ar[0]
+		var atras: Array[bool] = ar[1]
 		var jd: Dictionary = q.get("jugador", {})
 		var nom := "" if con_rotulos and not yo else _apellido(String(jd.get("nombre", q.get("nombre", ""))))
 		var pp := _a_pantalla(cam, pie)
@@ -167,6 +162,18 @@ func _process(_d: float) -> void:
 		_firma = firma
 		_marcas = marcas
 		queue_redraw()
+
+## El aro del suelo bajo un jugador (en pantalla) y, por cada punto, si queda detrás de él.
+func _aro_jugador(cam: Camera3D, pie: Vector3, yo: bool) -> Array:
+	var aro := PackedVector2Array()
+	var al_cam := cam.global_position - pie
+	var atras: Array[bool] = []
+	for k in LADOS_ARO + 1:
+		var ang := TAU * k / LADOS_ARO
+		var off := Vector3(cos(ang), 0.0, sin(ang)) * (RADIO_ARO * (1.15 if yo else 1.0))
+		aro.append(_a_pantalla(cam, pie + off + Vector3(0, 0.03, 0)))
+		atras.append(off.dot(Vector3(al_cam.x, 0.0, al_cam.z)) < 0.0)
+	return [aro, atras]
 
 ## El compañero de campo (no el portero) al que iría el pase hacia `dir`: el mejor alineado y no muy lejos (3-45 m). Copia la nota del
 ## pase asistido del motor sin la línea tapada; solo para el HUD (el motor decide su pase aparte).

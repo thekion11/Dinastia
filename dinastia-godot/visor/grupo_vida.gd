@@ -79,6 +79,53 @@ func iniciar(i: int) -> void:
 		return
 	_grupos.append({"i": i, "figs": figs, "marcas": marcas, "centro": centro, "fase": 0, "t": 0.0, "dur": 7.0 / VEL + 1.0, "charla": 14.0 + float(absi(hash([i, 5])) % 9), "habla": 0})
 
+## Cada figura de la charla gira hacia el centro y mira al que habla (sacado de `_mover`, fase 1).
+func _charla_girar(g: Dictionary, figs: Array, habla: int, delta: float) -> void:
+	for k in figs.size():
+		var nodo: Node3D = ((figs[k] as Dictionary)["fig"] as Dictionary)["nodo"]
+		if not is_instance_valid(nodo):
+			continue
+		var c: Vector3 = g["centro"]
+		nodo.rotation.y = MovimientoNatural.girar(nodo.rotation.y, EscaparateVida.rumbo(nodo.position, c), delta)
+		var otro: int = (k + 1) % figs.size() if habla == k else habla
+		var no: Node3D = ((figs[otro] as Dictionary)["fig"] as Dictionary)["nodo"]
+		if is_instance_valid(no):
+			((g["marcas"] as Array)[k] as Node3D).position = no.position + Vector3(0, 1.55, 0)
+
+## Cada figura empieza su gesto de charla, escalonado 0,7 s (sacado de `_mover`, fase 0).
+func _charla_inicio(figs: Array) -> void:
+	for k in figs.size():
+		var fig: Dictionary = (figs[k] as Dictionary)["fig"]
+		PeatonVida.gesto(fig["nodo"], "charla")
+		(fig["anim"] as AnimationPlayer).seek(float(k) * 0.7, true)
+
+
+## Cada figura pasa a caminar por su salida (sacado de `_mover`, paso de la charla a la marcha).
+func _arrancar_caminar(figs: Array) -> void:
+	for f: Dictionary in figs:
+		f["a"] = f["b"]
+		var fig2: Dictionary = f["fig"]
+		Mini3D.anim(fig2, "caminar", "")
+		(fig2["anim"] as AnimationPlayer).speed_scale = VEL / MovimientoNatural.NATURAL
+
+
+## Cada figura se acerca al corro (sacado de `_mover`, fase 0).
+func _llegar_al_corro(figs: Array, u: float) -> void:
+	for f: Dictionary in figs:
+		var nodo: Node3D = (f["fig"] as Dictionary)["nodo"]
+		if is_instance_valid(nodo):
+			nodo.position = (f["a"] as Vector3).lerp(f["b"], u)
+
+
+## Cada figura se va por su lado hacia su salida (sacado de `_mover`, fase final).
+func _salir_del_corro(figs: Array, u2: float, delta: float) -> void:
+	for f: Dictionary in figs:
+		var nodo: Node3D = (f["fig"] as Dictionary)["nodo"]
+		if is_instance_valid(nodo):
+			nodo.position = (f["a"] as Vector3).lerp(f["salida"], u2)
+			nodo.rotation.y = MovimientoNatural.girar(nodo.rotation.y, EscaparateVida.rumbo(f["a"], f["salida"]), delta)
+
+
 func _mover(delta: float) -> void:
 	for g_i in range(_grupos.size() - 1, -1, -1):
 		var g: Dictionary = _grupos[g_i]
@@ -87,45 +134,22 @@ func _mover(delta: float) -> void:
 		match int(g["fase"]):
 			0:   ## llegan al corro
 				var u := clampf(float(g["t"]) / float(g["dur"]), 0.0, 1.0)
-				for f: Dictionary in figs:
-					var nodo: Node3D = (f["fig"] as Dictionary)["nodo"]
-					if is_instance_valid(nodo):
-						nodo.position = (f["a"] as Vector3).lerp(f["b"], u)
+				_llegar_al_corro(figs, u)
 				if u >= 1.0:
 					g["fase"] = 1
 					g["t"] = 0.0
-					for k in figs.size():
-						var fig: Dictionary = (figs[k] as Dictionary)["fig"]
-						PeatonVida.gesto(fig["nodo"], "charla")
-						(fig["anim"] as AnimationPlayer).seek(float(k) * 0.7, true)
+					_charla_inicio(figs)
 			1:   ## charlan: giran hacia el centro y la mirada va al que habla
 				var habla := int(float(g["t"]) / 3.0) % figs.size()
-				for k in figs.size():
-					var nodo: Node3D = ((figs[k] as Dictionary)["fig"] as Dictionary)["nodo"]
-					if not is_instance_valid(nodo):
-						continue
-					var c: Vector3 = g["centro"]
-					nodo.rotation.y = MovimientoNatural.girar(nodo.rotation.y, EscaparateVida.rumbo(nodo.position, c), delta)
-					var otro: int = (k + 1) % figs.size() if habla == k else habla
-					var no: Node3D = ((figs[otro] as Dictionary)["fig"] as Dictionary)["nodo"]
-					if is_instance_valid(no):
-						((g["marcas"] as Array)[k] as Node3D).position = no.position + Vector3(0, 1.55, 0)
+				_charla_girar(g, figs, habla, delta)
 				if float(g["t"]) >= float(g["charla"]):
 					g["fase"] = 2
 					g["t"] = 0.0
 					g["dur"] = 10.0 / VEL + 1.0
-					for f: Dictionary in figs:
-						f["a"] = f["b"]
-						var fig2: Dictionary = f["fig"]
-						Mini3D.anim(fig2, "caminar", "")
-						(fig2["anim"] as AnimationPlayer).speed_scale = VEL / MovimientoNatural.NATURAL
+					_arrancar_caminar(figs)
 			_:   ## se van cada uno por su lado
 				var u2 := clampf(float(g["t"]) / float(g["dur"]), 0.0, 1.0)
-				for f: Dictionary in figs:
-					var nodo: Node3D = (f["fig"] as Dictionary)["nodo"]
-					if is_instance_valid(nodo):
-						nodo.position = (f["a"] as Vector3).lerp(f["salida"], u2)
-						nodo.rotation.y = MovimientoNatural.girar(nodo.rotation.y, EscaparateVida.rumbo(f["a"], f["salida"]), delta)
+				_salir_del_corro(figs, u2, delta)
 				if u2 >= 1.0:
 					_liberar(g)
 					_grupos.remove_at(g_i)
