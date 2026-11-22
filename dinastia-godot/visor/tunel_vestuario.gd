@@ -284,7 +284,7 @@ static func _vestuario(nodo: Node3D, x0: float, z_out: float, z_fin: float, c1: 
 				num = int(fila[0])
 				quien = String(fila[1])
 			var xf := Transform3D(Basis(Vector3.UP, -lado * PI / 2.0), Vector3(x_t, 0.0, z_t))
-			PiezasVestuario.taquilla(lote, nodo, xf, mats, num, quien, rng)
+			PiezasVestuario.taquilla(lote, nodo, xf, mats, {"dorsal": num, "nombre": quien}, rng)
 			dorsal += 1
 			z_t += 1.05
 		## Una sola caja de choque por fila de taquillas.
