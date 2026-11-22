@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2624 archivos (.gd, .cpp, .h), 375788 líneas, 1013 clases con nombre.
+Total: 2624 archivos (.gd, .cpp, .h), 375791 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -116,13 +116,13 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Minijuegos
 
-48 archivos, 1490 líneas. Carpetas: `minijuegos/retro5v5`, `minijuegos/retro5v5/resources`, `minijuegos/retro5v5/scenes`, `minijuegos/retro5v5/scenes/ball`, `minijuegos/retro5v5/scenes/ball/ball_states`, `minijuegos/retro5v5/scenes/characters` ….
+48 archivos, 1493 líneas. Carpetas: `minijuegos/retro5v5`, `minijuegos/retro5v5/resources`, `minijuegos/retro5v5/scenes`, `minijuegos/retro5v5/scenes/ball`, `minijuegos/retro5v5/scenes/ball/ball_states`, `minijuegos/retro5v5/scenes/characters` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Player` | `minijuegos/retro5v5/scenes/characters/player.gd` | 192 | 31 |  |
+| `Player` | `minijuegos/retro5v5/scenes/characters/player.gd` | 193 | 31 |  |
 | `Ball` | `minijuegos/retro5v5/scenes/ball/ball.gd` | 89 | 19 |  |
-| `PlayerState` | `minijuegos/retro5v5/scenes/characters/character_states/player_state.gd` | 43 | 17 |  |
+| `PlayerState` | `minijuegos/retro5v5/scenes/characters/character_states/player_state.gd` | 45 | 17 |  |
 | `GameState` | `minijuegos/retro5v5/scenes/game_manager/game_states/game_state.gd` | 14 | 8 |  |
 | `PlayerStateData` | `minijuegos/retro5v5/scenes/characters/character_states/player_state_data.gd` | 30 | 6 |  |
 | `BallState` | `minijuegos/retro5v5/scenes/ball/ball_states/ball_state.gd` | 54 | 5 |  |
