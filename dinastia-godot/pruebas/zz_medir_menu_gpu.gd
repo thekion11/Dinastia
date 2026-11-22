@@ -79,13 +79,18 @@ func _fase_pantalla() -> void:
 ## Prueba de las cajas sin sombra (SIN_SOMBRA_CAJAS), en el fotograma 110.
 func _fase_sombra() -> void:
 	if _n == 110 and OS.get_environment("SIN_SOMBRA_CAJAS") != "":   ## (15-11) prueba: las cajas sin sombra, ¿cuántas llamadas ahorra?
-		for c in get_tree().root.find_children("*", "Control", true, false):
-			for nombre: String in ["panel", "normal", "hover", "pressed", "focus"]:
-				if (c as Control).has_theme_stylebox(nombre):
-					var sb := (c as Control).get_theme_stylebox(nombre)
-					if sb is StyleBoxFlat:
-						(sb as StyleBoxFlat).shadow_size = 0
-			(c as Control).queue_redraw()
+		_quitar_sombra_cajas()
+
+
+## Quita la sombra de todas las cajas planas del menú y las vuelve a dibujar.
+func _quitar_sombra_cajas() -> void:
+	for c in get_tree().root.find_children("*", "Control", true, false):
+		for nombre: String in ["panel", "normal", "hover", "pressed", "focus"]:
+			if (c as Control).has_theme_stylebox(nombre):
+				var sb := (c as Control).get_theme_stylebox(nombre)
+				if sb is StyleBoxFlat:
+					(sb as StyleBoxFlat).shadow_size = 0
+		(c as Control).queue_redraw()
 
 
 ## La medición del fotograma 120: llamadas, objetos, 3D vivo, lo que procesa y el censo (si se pide).
@@ -158,18 +163,33 @@ func _medir_censo() -> void:
 		por_clase[c.get_class()] = int(por_clase.get(c.get_class(), 0)) + 1
 		if c is Label:
 			lab += 1
-			if (c as Label).get_theme_color("font_shadow_color").a > 0.01 or ((c as Label).label_settings != null and (c as Label).label_settings.shadow_color.a > 0.01 and (c as Label).label_settings.shadow_size > 0):
+			if _censo_sombra_etiqueta(c as Label):
 				lab_sombra += 1
-		for nombre: String in ["panel", "normal"]:
-			if (c as Control).has_theme_stylebox(nombre):
-				var sb := (c as Control).get_theme_stylebox(nombre)
-				if sb is StyleBoxFlat:
-					cajas += 1
-					if (sb as StyleBoxFlat).shadow_size > 0:
-						cajas_sombra += 1
+		var cc := _censo_caja(c as Control)
+		cajas += cc.x
+		cajas_sombra += cc.y
 		if c is TextureRect and (c as TextureRect).texture != null:
 			texs[(c as TextureRect).texture.get_rid()] = true
 	print("MENU censo: etiquetas %d (con sombra %d) · cajas planas %d (con sombra %d) · texturas distintas %d · por clase %s" % [lab, lab_sombra, cajas, cajas_sombra, texs.size(), str(por_clase)])
+
+
+## ¿Tiene sombra la etiqueta (la del tema o la de sus ajustes de etiqueta)?
+func _censo_sombra_etiqueta(l: Label) -> bool:
+	return l.get_theme_color("font_shadow_color").a > 0.01 or (l.label_settings != null and l.label_settings.shadow_color.a > 0.01 and l.label_settings.shadow_size > 0)
+
+
+## Las cajas planas del control: [cuántas, cuántas con sombra].
+func _censo_caja(c: Control) -> Vector2i:
+	var n := 0
+	var con := 0
+	for nombre: String in ["panel", "normal"]:
+		if c.has_theme_stylebox(nombre):
+			var sb := c.get_theme_stylebox(nombre)
+			if sb is StyleBoxFlat:
+				n += 1
+				if (sb as StyleBoxFlat).shadow_size > 0:
+					con += 1
+	return Vector2i(n, con)
 
 
 ## Al cabo de 3 s desde la medición: anota los fotogramas dibujados, guarda la foto si se pide y sale.
