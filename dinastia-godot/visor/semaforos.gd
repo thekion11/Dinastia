@@ -27,6 +27,13 @@ var _ult_aplicado := ""   ## (28-10) estado ya escrito en los materiales: solo s
 
 func montar(lista: Array, _exp) -> void:
 	cruces = lista
+	var g := _semaforos_geometria()
+	_semaforos_pintar(g)
+	_aplicar()
+
+
+## Las piezas de cada cruce: postes, cabezas (luces, peatonal) y botones, en transformaciones.
+func _semaforos_geometria() -> Dictionary:
 	var postes: Array[Transform3D] = []
 	var cabezas: Array[Transform3D] = []
 	var luces := {}
@@ -66,6 +73,17 @@ func montar(lista: Array, _exp) -> void:
 			var pb: Vector3 = base + Vector3(-esquina.x * 0.16, 1.1, -esquina.y * 0.16)
 			botones.append(pb)
 			botones_t.append(Transform3D(Basis.from_scale(Vector3(0.14, 0.22, 0.1)), pb))
+	return {"postes": postes, "cabezas": cabezas, "cab_p": cab_p, "brazos": brazos, "botones_t": botones_t, "luces": luces}
+
+
+## Los materiales y las mallas de esas piezas (las luces, emisivas, y el pictograma peatonal).
+func _semaforos_pintar(g: Dictionary) -> void:
+	var postes: Array[Transform3D] = g["postes"]
+	var cabezas: Array[Transform3D] = g["cabezas"]
+	var cab_p: Array[Transform3D] = g["cab_p"]
+	var brazos: Array[Transform3D] = g["brazos"]
+	var botones_t: Array[Transform3D] = g["botones_t"]
+	var luces: Dictionary = g["luces"]
 	var gris := StandardMaterial3D.new()
 	gris.albedo_color = Color(0.22, 0.23, 0.24)
 	gris.roughness = 0.5
@@ -104,7 +122,6 @@ func montar(lista: Array, _exp) -> void:
 		var lista2: Array[Transform3D] = []
 		lista2.assign(luces[clave])
 		_mm(QuadMesh.new() if peatonal_l else esf, m, lista2)
-	_aplicar()
 
 ## El pictograma peatonal de 64 × 64: la figura sobre transparente (el color lo pone el material). `anda` = piernas abiertas y brazos en balanceo.
 static func pictograma(anda: bool) -> ImageTexture:
