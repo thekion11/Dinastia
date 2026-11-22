@@ -67,14 +67,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 			[Idiomas.t("Gana %s") % rival.nombre, "%.2f" % float(cuo["cuota_pierdo"]), Principal.COL_TEXTO],
 			[Idiomas.t("Tu ataque vs su defensa"), "%d / %d" % [int(round(f_mia["ata"])), int(round(f_suya["def"]))], Principal.COL_ORO]], Principal.COL_SUAVE))
 	if todo or secc == "previa":
-		pantalla._pintar_juegos_mentales(rival)
-
-		var arb := Previa.arbitro_de(rival.id, p.mundo.semana)
-		var con_el := p.mundo.federacion.texto_arbitro(String(arb["nombre"])) if p.mundo.federacion != null else ""
-		p._dato("👨‍⚖️ Árbitro", "%s — %s%s" % [String(arb["nombre"]), String(arb["descripcion"]), ("  ·  " + con_el) if con_el != "" else ""], Principal.COL_SUAVE, p._lista_partido)
-		var dtr := Previa.dt_de(rival)
-		p._dato("🎩 DT rival", "%s — %s" % [String(dtr["nombre"]), String(dtr["descripcion"])], Principal.COL_SUAVE, p._lista_partido)
-		p._lista_partido.add_child(HSeparator.new())
+		_pintar_previa_rival(p, pantalla, rival)
 
 	if todo or secc == "informe":
 		var ti := p._texto(11, Principal.COL_SUAVE)
@@ -181,3 +174,14 @@ static func _frase_pared(p: Principal, c: Club) -> void:
 		fr2.text = Idiomas.t("En la pared del túnel")
 		fr2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		p._lista_partido.add_child(fr2)
+
+## La previa del rival: sus juegos mentales, el árbitro y el DT.
+static func _pintar_previa_rival(p: Principal, pantalla: Object, rival: Club) -> void:
+	pantalla._pintar_juegos_mentales(rival)
+
+	var arb := Previa.arbitro_de(rival.id, p.mundo.semana)
+	var con_el := p.mundo.federacion.texto_arbitro(String(arb["nombre"])) if p.mundo.federacion != null else ""
+	p._dato("👨‍⚖️ Árbitro", "%s — %s%s" % [String(arb["nombre"]), String(arb["descripcion"]), ("  ·  " + con_el) if con_el != "" else ""], Principal.COL_SUAVE, p._lista_partido)
+	var dtr := Previa.dt_de(rival)
+	p._dato("🎩 DT rival", "%s — %s" % [String(dtr["nombre"]), String(dtr["descripcion"])], Principal.COL_SUAVE, p._lista_partido)
+	p._lista_partido.add_child(HSeparator.new())
