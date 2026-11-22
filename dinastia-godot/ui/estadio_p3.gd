@@ -221,7 +221,7 @@ func _a_la_revision_var(minuto: int, motivo: String, anular := false, al_anular 
 	if _juego != null:
 		_juego.vel_idx = 0
 	var foco := _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO
-	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo, anular, lineas)
+	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo, {"anular": anular, "lineas": lineas})
 	_sala_var.terminada.connect(func() -> void:
 		_sala_var = null
 		if anular and al_anular.is_valid():
