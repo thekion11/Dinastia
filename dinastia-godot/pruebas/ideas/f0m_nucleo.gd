@@ -168,6 +168,14 @@ func _probar_eventos_cantera(m: Mundo) -> void:
 	var movs: Array = []
 	ev.noticia.connect(func(t: String, cu: String) -> void: noticias.append([t, cu]))
 	ev.movimiento.connect(func(con: String, monto: int) -> void: movs.append([con, monto]))
+	_ec_semanas(ev, a, c, noticias)
+	_ec_asunto_abierto(ev, a, c)
+	_ec_torneo(ev, a, c, movs)
+	_ec_abandono(ev, a, c)
+	_ec_visita(ev, a)
+	_ec_guardado(ev)
+
+func _ec_semanas(ev: EventosCantera, a: Academia, c: Club, noticias: Array) -> void:
 	## Por hash: la misma semana da siempre lo mismo, y no consume `Azar`.
 	var tipos := {}
 	var menores_padres := 0
@@ -190,11 +198,15 @@ func _probar_eventos_cantera(m: Mundo) -> void:
 	_comprobar(tipos.size() >= 3, "y de varios tipos %s" % str(tipos.keys()))
 	if menores_padres > 0:
 		_linea("  (aviso) %d veces los padres exigen subir a un chico de menos de %d años: la opción A no puede cumplirse" % [menores_padres, Academia.EDAD_ENTREGA_ANTICIPADA])
+
+func _ec_asunto_abierto(ev: EventosCantera, a: Academia, c: Club) -> void:
 	## Con un asunto abierto no se abre otro.
 	ev.pendiente = {"tipo": "torneo", "id": String(a.chicos[0]["id"]), "nombre": "X", "a": "Ir", "b": "No"}
 	var copia := ev.pendiente.duplicate()
 	ev.semana(a, c, 2026, 10)
 	_comprobar(ev.pendiente == copia, "con un asunto abierto no se pisa con otro")
+
+func _ec_torneo(ev: EventosCantera, a: Academia, c: Club, movs: Array) -> void:
 	## Torneo, sí: cuesta lo que dice `Eco.escalar` y todos suben 1,5.
 	var niveles: Array[float] = []
 	for x: Dictionary in a.chicos:
@@ -208,12 +220,16 @@ func _probar_eventos_cantera(m: Mundo) -> void:
 	_comprobar(c.saldo == saldo0 - coste and movs.size() == 1 and int(movs[0][1]) == -coste, "torneo: se paga %s y se anota el movimiento" % _dinero(coste))
 	_comprobar(suben and ev.pendiente.is_empty() and String(r.get("titulo", "")).contains("Ir"), "y todos los chicos suben 1,5 (el asunto queda cerrado)")
 	_comprobar(ev.resolver("a", a, c).is_empty(), "sin asunto abierto, resolver no hace nada")
+
+func _ec_abandono(ev: EventosCantera, a: Academia, c: Club) -> void:
 	## Abandono, respetado: el chico se va.
 	var n_antes := a.chicos.size()
 	var id_x := String(a.chicos[n_antes - 1]["id"])
 	ev.pendiente = {"tipo": "abandono", "id": id_x, "nombre": "Y", "a": "Hablar", "b": "Respetar"}
 	ev.resolver("b", a, c)
 	_comprobar(a.chicos.size() == n_antes - 1 and a.chico(id_x).is_empty(), "abandono respetado: deja la academia")
+
+func _ec_visita(ev: EventosCantera, a: Academia) -> void:
 	## Visita: una por semana.
 	var nv := float(a.chicos[0]["nivel"])
 	var v1 := ev.visitar(a, 2026, 5)
@@ -221,6 +237,8 @@ func _probar_eventos_cantera(m: Mundo) -> void:
 	_comprobar(v1 == "" and v2 != "" and is_equal_approx(float(a.chicos[0]["nivel"]), nv + 0.5), "visitar: +0,5 a todos, una vez por semana")
 	_comprobar(ev.visitar(a, 2026, 6) == "", "y la semana siguiente se puede volver")
 	_comprobar(ev.visitar(null, 2026, 7) != "", "sin academia, un aviso en vez de un error")
+
+func _ec_guardado(ev: EventosCantera) -> void:
 	## Guardado.
 	ev.pendiente = {"tipo": "padres", "id": "z", "nombre": "Z", "a": "A", "b": "B"}
 	var d := ev.a_dic()
@@ -228,6 +246,7 @@ func _probar_eventos_cantera(m: Mundo) -> void:
 	ev2.desde_dic(d)
 	ev.pendiente["nombre"] = "cambiado"
 	_comprobar(ev2.ultima_visita == ev.ultima_visita and String(ev2.pendiente.get("nombre", "")) == "Z", "a_dic/desde_dic: vuelve igual (y es una copia)")
+
 
 # ------------------------------------------------------------------- Mercado
 

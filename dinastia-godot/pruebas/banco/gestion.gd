@@ -123,10 +123,7 @@ func _probar_negociacion_05() -> void:
 			var tipo3 := String(res3.get("tipo", ""))
 			if tipo3 == "cerrado":
 				cerrado3 = true
-				var hay_cuota := false
-				for cu: Dictionary in _m.cesiones.cuotas:
-					if String(cu.get("jugador", "")) == obj3.nombre:
-						hay_cuota = true
+				var hay_cuota := _n5_hay_cuota(obj3)
 				_comprobar(hay_cuota, "las cuotas pactadas quedan registradas en Cesiones")
 				_comprobar(_m.cesiones.bonos.has(obj3.id), "el bono pactado queda registrado en Cesiones")
 				_comprobar(_m.cesiones.clausula_de(obj3) > 0, "la clausula pactada queda registrada en Cesiones")
@@ -141,6 +138,13 @@ func _probar_negociacion_05() -> void:
 				break
 		if not cerrado3:
 			_linea("  (esta mesa en particular no cerro por azar -rival o jugador-, no se prueban cuotas/bonos/pct/clausula esta vez)")
+
+## Si Cesiones tiene alguna cuota del jugador (las que se pactaron en la mesa).
+func _n5_hay_cuota(obj3: Jugador) -> bool:
+	for cu: Dictionary in _m.cesiones.cuotas:
+		if String(cu.get("jugador", "")) == obj3.nombre:
+			return true
+	return false
 
 func _probar_economia() -> void:
 	_titulo("ECONOMIA (las curvas del HTML, sin retocar)")

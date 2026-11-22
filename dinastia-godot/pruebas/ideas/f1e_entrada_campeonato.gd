@@ -33,6 +33,18 @@ func _probar_reemplazar(animo_serie: int) -> void:
 		if x.pais == "CHI" and x.division() == 1:
 			l = x
 	var r: Club = l.clubes[5]
+	var o := _r1e_original(l, r)
+	_r1e_previsualiza(m, r, o)
+	var c := EntradaCampeonato.aplicar(m, {"modo": "reemplazar", "pais": "CHI", "club_reemplazado": o["id"]}, DATOS)
+	_comprobar(c != null and c == r and c.id == String(o["id"]), "A: el club nuevo ocupa el MISMO objeto/id (nada queda colgando)")
+	if c == null:
+		return
+	_r1e_aplicado(m, l, c, o, animo_serie)
+	var libres_ids := _r1e_bolsa(m, c, o)
+	_r1e_plantilla_y_socios(m, l, c, o)
+	_r1e_fichar_y_guardar(m, c, o, libres_ids)
+
+func _r1e_original(l: Liga, r: Club) -> Dictionary:
 	var id := r.id
 	var rep0 := r.rep
 	var nombre0 := r.nombre
@@ -46,7 +58,14 @@ func _probar_reemplazar(animo_serie: int) -> void:
 	for k: Club in l.clubes:
 		if k != r:
 			socios_otros += k.socios
+	return {"id": id, "rep0": rep0, "nombre0": nombre0, "socios0": socios0, "n_liga": n_liga, "b": b, "ids_viejos": ids_viejos, "socios_otros": socios_otros}
 
+func _r1e_previsualiza(m: Mundo, r: Club, o: Dictionary) -> void:
+	var id = o["id"]
+	var rep0 = o["rep0"]
+	var nombre0 = o["nombre0"]
+	var b = o["b"]
+	var ids_viejos = o["ids_viejos"]
 	var p := EntradaCampeonato.previsualizar(m, "reemplazar", "CHI", id)
 	_comprobar(not p.has("error"), "la previsualización de A no da error")
 	_comprobar(int(p["cuota"]) == 0, "A: coste ninguno (%d)" % int(p["cuota"]))
@@ -55,16 +74,20 @@ func _probar_reemplazar(animo_serie: int) -> void:
 	_comprobar(int(p["confianza"]) == 60 and int(p["animo_delta"]) == 0, "A: confianza 60 y ánimo normal en la previsualización")
 	_comprobar(r.nombre == nombre0 and r.rep == rep0 and r.plantilla.size() == ids_viejos.size(), "previsualizar no toca el mundo")
 
-	var c := EntradaCampeonato.aplicar(m, {"modo": "reemplazar", "pais": "CHI", "club_reemplazado": id}, DATOS)
-	_comprobar(c != null and c == r and c.id == id, "A: el club nuevo ocupa el MISMO objeto/id (nada queda colgando)")
-	if c == null:
-		return
+func _r1e_aplicado(m: Mundo, l: Liga, c: Club, o: Dictionary, animo_serie: int) -> void:
+	var id = o["id"]
+	var rep0 = o["rep0"]
+	var b = o["b"]
+	var n_liga = o["n_liga"]
 	_comprobar(c.nombre == "Atlético Fénix" and c.color1 == "#112233" and c.estadio_nombre == "La Forja", "A: nombre, colores y estadio elegidos")
 	_comprobar(c.rep == rep0 - 10, "A: reputación aplicada %d (= %d − 10)" % [c.rep, rep0])
 	_comprobar(c.saldo == b, "A: caja aplicada = B (%s)" % _dinero(c.saldo))
 	_comprobar(c.division == 1 and l.clubes.has(c) and l.clubes.size() == n_liga, "A: misma división y la liga sigue con %d clubes" % n_liga)
 	_comprobar(m.mi_club_id == id and m.directiva != null and m.directiva.confianza == 60, "A: al mando y confianza de la directiva 60 (%d)" % (m.directiva.confianza if m.directiva != null else -1))
 	_comprobar(m.prensa.animo == animo_serie, "A: ánimo de la afición normal (%d, el de serie %d)" % [m.prensa.animo, animo_serie])
+
+func _r1e_bolsa(m: Mundo, c: Club, o: Dictionary) -> Dictionary:
+	var ids_viejos = o["ids_viejos"]
 	var libres_ids: Dictionary = {}
 	for j: Jugador in m.libres:
 		libres_ids[j.id] = j
@@ -74,6 +97,13 @@ func _probar_reemplazar(animo_serie: int) -> void:
 		if j == null or j.club_id != "" or j.motivo_libre != EntradaCampeonato.MOTIVO_LIBRE:
 			todos = false
 	_comprobar(todos, "A: los %d futbolistas del club desaparecido están en la bolsa de libres, sin club" % ids_viejos.size())
+	return libres_ids
+
+func _r1e_plantilla_y_socios(m: Mundo, l: Liga, c: Club, o: Dictionary) -> void:
+	var ids_viejos = o["ids_viejos"]
+	var socios0 = o["socios0"]
+	var socios_otros = o["socios_otros"]
+	var nombre0 = o["nombre0"]
 	var ninguno_viejo := true
 	for j: Jugador in c.plantilla:
 		if ids_viejos.has(j.id) or j.club_id != c.id:
@@ -87,6 +117,11 @@ func _probar_reemplazar(animo_serie: int) -> void:
 	_comprobar(otros_ahora - socios_otros == socios0 - socios0 / 3, "A: los otros dos tercios se reparten entre la liga (+%d)" % (otros_ahora - socios_otros))
 	_comprobar(not m.prensa.portadas.is_empty() and String(m.prensa.portadas[0]["t"]).contains(nombre0), "A: portada «Nace un club sobre las cenizas de %s»" % nombre0)
 	_comprobar(c.esc_especial == "" and c.kit_color1 == "", "A: sin escudo ni camiseta del club anterior")
+
+func _r1e_fichar_y_guardar(m: Mundo, c: Club, o: Dictionary, libres_ids: Dictionary) -> void:
+	var ids_viejos = o["ids_viejos"]
+	var id = o["id"]
+	var rep0 = o["rep0"]
 	## Un libre del club desaparecido se puede fichar como cualquier otro (puede decir que no, no dar error).
 	var idx := m.libres.find(libres_ids.get(ids_viejos[0]))
 	var res := m.fichar_libre(idx, c)
@@ -100,6 +135,7 @@ func _probar_reemplazar(animo_serie: int) -> void:
 	_comprobar(c2 != null and c2.nombre == "Atlético Fénix" and c2.rep == rep0 - 10 and m2.directiva.confianza == 60,
 		"A: al cargar vuelven nombre, reputación y confianza")
 	Partida.borrar("_prueba_f1e")
+
 
 func _probar_confederacion(animo_serie: int) -> void:
 	_titulo("ENTRADA B · PAGAR A LA CONFEDERACIÓN")

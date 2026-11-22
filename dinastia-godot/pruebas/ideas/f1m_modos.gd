@@ -45,7 +45,9 @@ func _modos_02_contrato_y_lista() -> void:
 		"al abrir, el primer fondo sale de golpe (no hay nada de lo que fundir)")
 	_comprobar(_p.fondo().estilo_visible() == int(MenuModosFondo.AMBIENTES["cantera"]["estilo"]),
 		"el fondo de cantera usa su estilo de fondo_menu.gdshader")
+	_m2_ambientes()
 
+func _m2_ambientes() -> void:
 	var sin_ambiente: Array = []
 	var sin_rasgos: Array = []
 	for m: Dictionary in _tabla:
