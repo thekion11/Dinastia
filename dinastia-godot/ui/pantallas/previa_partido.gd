@@ -18,15 +18,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	if not es_copa:
 		par = p.mundo.proximo_partido()
 	if par.is_empty():
-		## (13-11) Semana sin partido: antes era una línea suelta y la pantalla en negro; ahora se dice contra quién se vuelve.
-		var liga := p.mundo.liga_de(c)
-		var sig: Array = liga.siguiente_de(c) if liga != null else []
-		var pista := Idiomas.t("No quedan partidos de liga esta temporada.")
-		if sig.size() == 3:
-			var rival: Club = sig[1] if sig[0] == c else sig[0]
-			pista = (Idiomas.t("Vuelves en la jornada %d, en casa, contra %s.") if sig[0] == c else Idiomas.t("Vuelves en la jornada %d, fuera, contra %s.")) % [int(sig[2]), rival.nombre]
-		p._lista_partido.add_child(EstadoVacio.crear("⚽", Idiomas.t("Tu club descansa esta jornada."), pista,
-			p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 300.0))
+		_pintar_sin_partido(p, c)
 		return
 
 	var local: Club = par[0]
@@ -52,16 +44,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	## LA FRASE DE LA PARED, justo antes de salir. Es lo que el HTML prometia
 	## en la pantalla del club por dentro -"se lee en el tunel antes de cada
 	## partido"- y no cumplia en ninguna parte.
-	if p.mundo.club_dentro != null and p.mundo.club_dentro.frase != "":
-		var fr := p._texto(13, Color(p.mundo.club_dentro.color_ct2(c)))
-		fr.text = "«%s»" % p.mundo.club_dentro.frase
-		fr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		fr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		p._lista_partido.add_child(fr)
-		var fr2 := p._texto(10, Principal.COL_SUAVE)
-		fr2.text = Idiomas.t("En la pared del túnel")
-		fr2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		p._lista_partido.add_child(fr2)
+	_frase_pared(p, c)
 	p._lista_partido.add_child(HSeparator.new())
 
 	var secc := String(p._secc_extra.get("Partido", "previa"))
@@ -172,3 +155,29 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	p._lista_partido.add_child(HSeparator.new())
 	p._selector_modo_partido(p._lista_partido)
 	p._boton("▶ Jugar el partido", p._dirigir, p._lista_partido)
+
+## Semana sin partido: se dice cuándo vuelves a jugar, o que no quedan partidos.
+static func _pintar_sin_partido(p: Principal, c: Club) -> void:
+	## (13-11) Semana sin partido: antes era una línea suelta y la pantalla en negro; ahora se dice contra quién se vuelve.
+	var liga := p.mundo.liga_de(c)
+	var sig: Array = liga.siguiente_de(c) if liga != null else []
+	var pista := Idiomas.t("No quedan partidos de liga esta temporada.")
+	if sig.size() == 3:
+		var rival: Club = sig[1] if sig[0] == c else sig[0]
+		pista = (Idiomas.t("Vuelves en la jornada %d, en casa, contra %s.") if sig[0] == c else Idiomas.t("Vuelves en la jornada %d, fuera, contra %s.")) % [int(sig[2]), rival.nombre]
+	p._lista_partido.add_child(EstadoVacio.crear("⚽", Idiomas.t("Tu club descansa esta jornada."), pista,
+		p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 300.0))
+	return
+
+## La frase de la pared del túnel, justo antes de salir.
+static func _frase_pared(p: Principal, c: Club) -> void:
+	if p.mundo.club_dentro != null and p.mundo.club_dentro.frase != "":
+		var fr := p._texto(13, Color(p.mundo.club_dentro.color_ct2(c)))
+		fr.text = "«%s»" % p.mundo.club_dentro.frase
+		fr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		fr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		p._lista_partido.add_child(fr)
+		var fr2 := p._texto(10, Principal.COL_SUAVE)
+		fr2.text = Idiomas.t("En la pared del túnel")
+		fr2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		p._lista_partido.add_child(fr2)
