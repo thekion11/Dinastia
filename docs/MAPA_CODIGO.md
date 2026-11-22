@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2624 archivos (.gd, .cpp, .h), 375812 líneas, 1013 clases con nombre.
+Total: 2625 archivos (.gd, .cpp, .h), 375945 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -75,7 +75,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 ## Club e instalaciones
 
-22 archivos, 6321 líneas. Carpetas: `nucleo`, `visor`.
+22 archivos, 6322 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -89,17 +89,17 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 | `CasaPlano` | `visor/casa_plano.gd` | 210 | 4 |  |
 | `CasaConstruccion` | `visor/casa_construccion.gd` | 133 | 2 |  |
 
-Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builder_p8.gd` (438), `stadium_builder_p4_p1.gd` (436), `stadium_builder_p7.gd` (434), `stadium_builder_p3.gd` (431), `stadium_builder_p1.gd` (426), `stadium_builder_p2.gd` (424), `club.gd` (420), `stadium_builder_p5.gd` (413).
+Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builder_p8.gd` (438), `stadium_builder_p4_p1.gd` (436), `stadium_builder_p7.gd` (434), `stadium_builder_p3.gd` (431), `stadium_builder_p1.gd` (427), `stadium_builder_p2.gd` (424), `club.gd` (420), `stadium_builder_p5.gd` (413).
 
 ## Menús e interfaz
 
-476 archivos, 94266 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+477 archivos, 94298 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Principal` | `ui/principal.gd` | 58 | 262 | principal_p17.gd ← principal_p16.gd ← principal_p15.gd ← principal_p14.gd ← principal_p13.gd ← principal_p12.gd ← principal_p10.gd ← principal_p9.gd ← principal_p8.gd ← principal_p7.gd ← principal_p6.gd |
 | `Tema` | `ui/tema.gd` | 153 | 250 |  |
-| `VistaEstadio` | `ui/estadio.gd` | 446 | 188 | estadio_p5.gd ← estadio_p5_p1.gd ← estadio_p4.gd ← estadio_p3.gd ← estadio_p2.gd ← estadio_p1.gd |
+| `VistaEstadio` | `ui/estadio.gd` | 433 | 188 | estadio_fin.gd ← estadio_p5.gd ← estadio_p5_p1.gd ← estadio_p4.gd ← estadio_p3.gd ← estadio_p2.gd ← estadio_p1.gd |
 | `VistaCiudad` | `ui/ciudad_vista.gd` | 218 | 104 | ciudad_vista_p1.gd ← ciudad_vista_p1_p1.gd |
 | `Escudo` | `ui/escudo.gd` | 71 | 101 | escudo_p1.gd ← escudo_p1_p1.gd |
 | `Cara` | `ui/cara.gd` | 377 | 77 | cara_p1.gd |
@@ -137,20 +137,20 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1281 archivos, 124586 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1281 archivos, 124633 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
 ## Núcleo: mundo, gestión y datos
 
-258 archivos, 53293 líneas. Carpetas: `nucleo`.
+258 archivos, 53301 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
 | `Mundo` | `nucleo/mundo.gd` | 158 | 946 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
 | `Jugador` | `nucleo/jugador.gd` | 32 | 495 | jugador_p1.gd |
 | `Liga` | `nucleo/liga.gd` | 235 | 206 |  |
-| `Nombres` | `nucleo/nombres.gd` | 183 | 172 |  |
+| `Nombres` | `nucleo/nombres.gd` | 183 | 173 |  |
 | `Nativo` | `nucleo/nativo.gd` | 29 | 124 |  |
 | `Partida` | `nucleo/partida.gd` | 261 | 121 | partida_p2.gd ← partida_p1.gd |
 | `Copa` | `nucleo/copa.gd` | 360 | 96 |  |
@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `roles_p4.gd` (450), `leyes_pais.gd` (449), `m
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62932 líneas. Carpetas: `visor`.
+340 archivos, 62977 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
