@@ -142,10 +142,20 @@ static func _cinta_led(root: Node3D, pos: Vector3, cara: Vector3, largo: float, 
 ## que las de las tribunas vecinas. Cada rampa es un `QuadMesh` -que sí mapea
 ## la textura entera- y detrás va un bloque oscuro que le da masa y tapa el
 ## exterior.
-static func _esquina_grada(root: Node3D, sx: float, sz: float, dx: float, dz: float,
-		alto: float, niveles: int, grada_mat: Material, muro_mat: Material,
-		ang: float, est: Dictionary, ocupacion: float, _seed_val: int,
-		techo: bool = false) -> void:
+## `c`: el contexto de la esquina (sx, sz, dx, dz, alto, niveles, grada_mat, muro_mat, ang, est, ocupacion, techo).
+static func _esquina_grada(root: Node3D, c: Dictionary) -> void:
+	var sx: float = c["sx"]
+	var sz: float = c["sz"]
+	var dx: float = c["dx"]
+	var dz: float = c["dz"]
+	var alto: float = c["alto"]
+	var niveles: int = c["niveles"]
+	var grada_mat: Material = c["grada_mat"]
+	var muro_mat: Material = c["muro_mat"]
+	var ang: float = c["ang"]
+	var est: Dictionary = c["est"]
+	var ocupacion: float = c["ocupacion"]
+	var techo: bool = c["techo"]
 	var dir := Vector3(sx, 0.0, sz).normalized()
 	## Donde se cortarían las dos caras interiores de las tribunas vecinas: es
 	## el vértice del que arranca el chaflán.

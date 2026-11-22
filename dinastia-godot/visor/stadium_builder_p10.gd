@@ -144,8 +144,9 @@ static func _esquinas(obra: EstadioObra) -> void:
 				## esquina solo se quita si da al fondo que no existe.
 				if (0 in obra.abiertas and sz > 0.0) or (1 in obra.abiertas and sz < 0.0) or esquina_abierta(est, sx, sz):
 					continue
-				_esquina_grada(root, sx, sz, dx, dz, alto, niveles,
-					esquina_mat, obra.stand_mat, obra.ang, est, obra.ocupacion, obra.seed_val, con_techo)
+				_esquina_grada(root, {"sx": sx, "sz": sz, "dx": dx, "dz": dz, "alto": alto, "niveles": niveles,
+					"grada_mat": esquina_mat, "muro_mat": obra.stand_mat, "ang": obra.ang, "est": est,
+					"ocupacion": obra.ocupacion, "techo": con_techo})
 				obra.caras_fachada.append_array(_caras_esquina([sx, sz], dx, dz, alto, niveles, con_techo))
 	elif obra.abiertas.is_empty():
 		## ESQUINAS CERRADAS EN LAS FORMAS SIN GRADA DE ESQUINA (21-10-2026, «el
