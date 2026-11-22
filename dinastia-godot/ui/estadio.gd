@@ -264,6 +264,24 @@ func _ambiente_y_radar(delta: float) -> void:
 			pos_ctrl = (_motor.usuario["node"] as Node3D).global_position
 		_radar.actualizar_datos(_en_campo, _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO, pos_ctrl)
 
+## Lo que se actualiza tras el reloj del partido: marcador, barras, ambiente y radar.
+func _process_tras_minutos() -> void:
+	if partido.minuto != _minuto_barras:
+		_minuto_barras = partido.minuto
+		_actualizar_barras()
+	_refrescar_marcador()
+
+	if _juego.elapsed >= _prox_ambiente:
+		_tocar_ambiente()
+		_prox_ambiente = _juego.elapsed + _rng_ambiente.randf_range(10.0, 18.0)
+
+	# Actualizar radar táctico
+	if _radar != null:
+		var pos_ctrl := Vector3.ZERO
+		if _control != null and not _control.jugador_activo.is_empty() and is_instance_valid(_control.jugador_activo.get("node")):
+			pos_ctrl = _control.jugador_activo["node"].global_position
+		_radar.actualizar_datos(_en_campo, _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO, pos_ctrl)
+
 func _process(delta: float) -> void:
 	StadiumBuilder.ocultar_techo_ante(get_viewport().get_camera_3d())
 	## La grada sigue el balón con la cabeza (M-049), cada pocos fotogramas.
@@ -300,21 +318,7 @@ func _process(delta: float) -> void:
 			_descanso_hecho = true
 			cerrado.emit()
 			return
-	if partido.minuto != _minuto_barras:
-		_minuto_barras = partido.minuto
-		_actualizar_barras()
-	_refrescar_marcador()
-
-	if _juego.elapsed >= _prox_ambiente:
-		_tocar_ambiente()
-		_prox_ambiente = _juego.elapsed + _rng_ambiente.randf_range(10.0, 18.0)
-
-	# Actualizar radar táctico
-	if _radar != null:
-		var pos_ctrl := Vector3.ZERO
-		if _control != null and not _control.jugador_activo.is_empty() and is_instance_valid(_control.jugador_activo.get("node")):
-			pos_ctrl = _control.jugador_activo["node"].global_position
-		_radar.actualizar_datos(_en_campo, _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO, pos_ctrl)
+	_process_tras_minutos()
 
 func _unhandled_input(e: InputEvent) -> void:
 	## SALTAR LA REPETICIÓN: su misma tecla, Esc o un clic (el partido está congelado).
