@@ -109,23 +109,8 @@ func _ver_ciudad_con_carga() -> void:
 ## plantillas que ya existen.
 const SECC_CLUBES := ["tablas", "goleadores", "rivales"]
 const _RUTA_ESTADIO := "res://ui/estadio.gd"
-func _pintar_clubes() -> void:
-	p._limpiar(p._lista_clubes)
-	if _clubes_pais == "":
-		_clubes_pais = p.mundo.mi_club().pais
-	## (12-11, menús a pantalla completa) Tres pantallas (`p._secc_extra["Clubes"]`): tablas (con la ficha del club que se pulse), goleadores y
-	## rivales (los clásicos). Otra sección = la página entera de antes.
-	var secc := String(p._secc_extra.get("Clubes", "tablas"))
-	var todo := not SECC_CLUBES.has(secc)
-	if todo or secc == "rivales":
-		p._ui_plantel._pintar_rivalidades()
-	if secc == "rivales":
-		if p._lista_clubes.get_child_count() == 0:   ## partida nueva: aún no hay rivalidades; se dice por qué
-			p._lista_clubes.add_child(EstadoVacio.crear("⚔️", Idiomas.t("Todavía no tienes rivales"),
-				Idiomas.t("La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota."),
-				p._color_de_paleta(p.COL_TEXTO), p._color_de_paleta(p.COL_SUAVE), 360.0))
-		return
-
+## El selector de países (las ligas del mundo, en filas de ocho): el país elegido se pinta debajo.
+func _selector_paises() -> void:
 	var paises: Array[String] = []
 	for l in p.mundo.ligas:
 		if not paises.has(l.pais):
@@ -153,6 +138,25 @@ func _pintar_clubes() -> void:
 			_pintar_clubes())
 		fila_pais.add_child(bp)
 	p._lista_clubes.add_child(HSeparator.new())
+
+func _pintar_clubes() -> void:
+	p._limpiar(p._lista_clubes)
+	if _clubes_pais == "":
+		_clubes_pais = p.mundo.mi_club().pais
+	## (12-11, menús a pantalla completa) Tres pantallas (`p._secc_extra["Clubes"]`): tablas (con la ficha del club que se pulse), goleadores y
+	## rivales (los clásicos). Otra sección = la página entera de antes.
+	var secc := String(p._secc_extra.get("Clubes", "tablas"))
+	var todo := not SECC_CLUBES.has(secc)
+	if todo or secc == "rivales":
+		p._ui_plantel._pintar_rivalidades()
+	if secc == "rivales":
+		if p._lista_clubes.get_child_count() == 0:   ## partida nueva: aún no hay rivalidades; se dice por qué
+			p._lista_clubes.add_child(EstadoVacio.crear("⚔️", Idiomas.t("Todavía no tienes rivales"),
+				Idiomas.t("La rivalidad no se declara: se construye con cada cruce y, sobre todo, con cada derrota."),
+				p._color_de_paleta(p.COL_TEXTO), p._color_de_paleta(p.COL_SUAVE), 360.0))
+		return
+
+	_selector_paises()
 
 	for l in (p.mundo.ligas if todo or secc == "tablas" else []):
 		if l.pais != _clubes_pais:

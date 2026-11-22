@@ -17,8 +17,13 @@ static func tipo_de(semilla: int, pisos: int) -> int:
 		t = DEPOSITO
 	return t
 
-## `centro`: centro del bloque a ras de suelo; `alto`: altura del último forjado; `ancho`/`fondo`: planta; devuelve el tipo montado.
-static func montar(ex: CiudadExpansion, centro: Vector3, rot: Basis, ancho: float, fondo: float, alto: float, pisos: int, semilla: int) -> int:
+## `alto`: altura del último forjado; devuelve el tipo montado.
+## `xf`: centro del bloque a ras de suelo (origen) y su giro (base); `planta` = Vector2(ancho, fondo).
+static func montar(ex: CiudadExpansion, xf: Transform3D, planta: Vector2, alto: float, pisos: int, semilla: int) -> int:
+	var centro := xf.origin
+	var rot := xf.basis
+	var ancho := planta.x
+	var fondo := planta.y
 	var t := tipo_de(semilla, pisos)
 	var r := RandomNumberGenerator.new()
 	r.seed = semilla + 11

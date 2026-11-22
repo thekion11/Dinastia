@@ -53,7 +53,7 @@ func spawns_players(club: String, own_goal: Goal) -> Array[Player]:
 
 func spawn_player(player_position: Vector2, kickoff_position: Vector2, own_goal: Goal, target_goal: Goal, player_data: PlayerResource, club: String) -> Player:
 	var player : Player = PLAYER_PREFAB.instantiate()
-	player.initialize(player_position, kickoff_position, ball, own_goal, target_goal, player_data, club)
+	player.initialize(player_position, kickoff_position, ball, {"own_goal": own_goal, "target_goal": target_goal}, player_data, club)
 	player.swap_requested.connect(on_player_swap_request.bind())
 	return player
 
