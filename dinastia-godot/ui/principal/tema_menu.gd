@@ -201,6 +201,16 @@ func _goleadores_de(clubes: Array) -> Array:
 ## `comp` (26-9-2026): "liga", "copa" o "conti". Antes la pantalla enseñaba
 ## SIEMPRE la liga del local, también en un partido de copa o de la copa
 ## continental; ahora enseña la competición que se está jugando.
+## La tabla del grupo continental en el que está el club (la primera que lo tenga; `d` se rellena in situ).
+func _tabla_del_grupo_conti(d: Dictionary, conti, local: Club, mio: Club) -> void:
+	for gi in conti.grupos.size():
+		if (conti.grupos[gi] as Array).has(local) or (conti.grupos[gi] as Array).has(mio):
+			d["titulo_tabla"] = conti.nombre_de_grupo(gi).to_upper()
+			for f: Dictionary in conti.filas_con_puesto(gi, local, 10):
+				var cg: Club = f["club"]
+				d["tabla"].append({"id": cg.id, "nombre": cg.nombre, "pts": int(f["pts"]), "pj": int(f["pj"]), "dif": int(f["dif"])})
+			break
+
 func _datos_pantalla_estadio(local: Club, comp: String = "liga") -> Dictionary:
 	var d: Dictionary = {
 		"tabla": [], "goleadores": [], "liga": "", "jornada": 0, "recinto": "", "cruces": [],
@@ -226,13 +236,7 @@ func _datos_pantalla_estadio(local: Club, comp: String = "liga") -> Dictionary:
 	if comp == "conti" and conti != null:
 		d["liga"] = "%s · %s" % [Continental.nombre_conti(conti.clave), conti.nombre_de_ronda()]
 		if conti.en_fase_de_grupos():
-			for gi in conti.grupos.size():
-				if (conti.grupos[gi] as Array).has(local) or (conti.grupos[gi] as Array).has(p.mundo.mi_club()):
-					d["titulo_tabla"] = conti.nombre_de_grupo(gi).to_upper()
-					for f: Dictionary in conti.filas_con_puesto(gi, local, 10):
-						var cg: Club = f["club"]
-						d["tabla"].append({"id": cg.id, "nombre": cg.nombre, "pts": int(f["pts"]), "pj": int(f["pj"]), "dif": int(f["dif"])})
-					break
+			_tabla_del_grupo_conti(d, conti, local, p.mundo.mi_club())
 		else:
 			for par2: Array in conti.cruces():
 				d["cruces"].append([Nombres.visible((par2[0] as Club).nombre), Nombres.visible((par2[1] as Club).nombre)])

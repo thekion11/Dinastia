@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2624 archivos (.gd, .cpp, .h), 375389 líneas, 1013 clases con nombre.
+Total: 2624 archivos (.gd, .cpp, .h), 375812 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -75,7 +75,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 ## Club e instalaciones
 
-22 archivos, 6322 líneas. Carpetas: `nucleo`, `visor`.
+22 archivos, 6321 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -89,11 +89,11 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 | `CasaPlano` | `visor/casa_plano.gd` | 210 | 4 |  |
 | `CasaConstruccion` | `visor/casa_construccion.gd` | 133 | 2 |  |
 
-Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builder_p8.gd` (438), `stadium_builder_p4_p1.gd` (436), `stadium_builder_p7.gd` (434), `stadium_builder_p3.gd` (431), `stadium_builder_p1.gd` (427), `stadium_builder_p2.gd` (424), `club.gd` (420), `stadium_builder_p5.gd` (413).
+Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builder_p8.gd` (438), `stadium_builder_p4_p1.gd` (436), `stadium_builder_p7.gd` (434), `stadium_builder_p3.gd` (431), `stadium_builder_p1.gd` (426), `stadium_builder_p2.gd` (424), `club.gd` (420), `stadium_builder_p5.gd` (413).
 
 ## Menús e interfaz
 
-476 archivos, 94213 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+476 archivos, 94266 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -116,13 +116,13 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Minijuegos
 
-48 archivos, 1490 líneas. Carpetas: `minijuegos/retro5v5`, `minijuegos/retro5v5/resources`, `minijuegos/retro5v5/scenes`, `minijuegos/retro5v5/scenes/ball`, `minijuegos/retro5v5/scenes/ball/ball_states`, `minijuegos/retro5v5/scenes/characters` ….
+48 archivos, 1493 líneas. Carpetas: `minijuegos/retro5v5`, `minijuegos/retro5v5/resources`, `minijuegos/retro5v5/scenes`, `minijuegos/retro5v5/scenes/ball`, `minijuegos/retro5v5/scenes/ball/ball_states`, `minijuegos/retro5v5/scenes/characters` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Player` | `minijuegos/retro5v5/scenes/characters/player.gd` | 192 | 31 |  |
+| `Player` | `minijuegos/retro5v5/scenes/characters/player.gd` | 193 | 31 |  |
 | `Ball` | `minijuegos/retro5v5/scenes/ball/ball.gd` | 89 | 19 |  |
-| `PlayerState` | `minijuegos/retro5v5/scenes/characters/character_states/player_state.gd` | 43 | 17 |  |
+| `PlayerState` | `minijuegos/retro5v5/scenes/characters/character_states/player_state.gd` | 45 | 17 |  |
 | `GameState` | `minijuegos/retro5v5/scenes/game_manager/game_states/game_state.gd` | 14 | 8 |  |
 | `PlayerStateData` | `minijuegos/retro5v5/scenes/characters/character_states/player_state_data.gd` | 30 | 6 |  |
 | `BallState` | `minijuegos/retro5v5/scenes/ball/ball_states/ball_state.gd` | 54 | 5 |  |
@@ -137,7 +137,7 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1281 archivos, 124201 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1281 archivos, 124586 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
@@ -147,7 +147,7 @@ Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tsc
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Mundo` | `nucleo/mundo.gd` | 158 | 943 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
+| `Mundo` | `nucleo/mundo.gd` | 158 | 946 | mundo_p7.gd ← mundo_p7_p1.gd ← mundo_p6.gd ← mundo_p5.gd ← mundo_p5_p2.gd ← mundo_p5_p1.gd ← mundo_p4.gd ← mundo_p3.gd ← mundo_p3_p1.gd ← mundo_p2.gd ← mundo_p1.gd |
 | `Jugador` | `nucleo/jugador.gd` | 32 | 495 | jugador_p1.gd |
 | `Liga` | `nucleo/liga.gd` | 235 | 206 |  |
 | `Nombres` | `nucleo/nombres.gd` | 183 | 172 |  |
@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `roles_p4.gd` (450), `leyes_pais.gd` (449), `m
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62949 líneas. Carpetas: `visor`.
+340 archivos, 62932 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
