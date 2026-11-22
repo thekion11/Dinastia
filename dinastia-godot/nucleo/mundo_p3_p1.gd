@@ -409,16 +409,7 @@ func aplicar_rotacion() -> int:
 		## El recambio: alguien del mismo puesto, disponible y más fresco. Si no
 		## lo hay, se queda el cansado —rotar por rotar y sacar a un titular por
 		## un juvenil de 40 sería peor que no rotar.
-		var mejor: Jugador = null
-		for s: Jugador in mio.plantilla:
-			if once.has(s) or not s.disponible():
-				continue
-			if s.pos_e != j.pos_e and not s.pos_sec.has(j.pos_e):
-				continue
-			if s.fisico < FISICO_PARA_TITULAR:
-				continue
-			if mejor == null or s.media_en(j.pos_e) > mejor.media_en(j.pos_e):
-				mejor = s
+		var mejor := _recambio_de(mio, once, j)
 		if mejor == null:
 			continue
 		## El once elegido a mano vive en `Club.once_elegido` -una lista de ids-.
@@ -434,3 +425,17 @@ func aplicar_rotacion() -> int:
 		mio.once_elegido[pos] = mejor.id
 		cambiados += 1
 	return cambiados
+
+## El recambio de un titular cansado: el mejor del mismo puesto, disponible y fresco (o null si no hay ninguno).
+func _recambio_de(mio: Club, once: Array, j: Jugador) -> Jugador:
+	var mejor: Jugador = null
+	for s: Jugador in mio.plantilla:
+		if once.has(s) or not s.disponible():
+			continue
+		if s.pos_e != j.pos_e and not s.pos_sec.has(j.pos_e):
+			continue
+		if s.fisico < FISICO_PARA_TITULAR:
+			continue
+		if mejor == null or s.media_en(j.pos_e) > mejor.media_en(j.pos_e):
+			mejor = s
+	return mejor
