@@ -29,14 +29,19 @@ static func _publico_fila(img: Image, x0: int, ctx: Dictionary, rng: RandomNumbe
 		if not en_escalera and rng.randf() < lleno_c:
 			var col_ropa: Color = ropa[rng.randi_range(0, ropa.size() - 1)]
 			var col_piel: Color = piel[rng.randi_range(0, piel.size() - 1)]
-			_publico_persona(img, x0, y_asiento, col_piel, col_ropa, piel_persona, alto_persona, paso_fila, w, h)
+			_publico_persona(img, x0, y_asiento, col_piel, col_ropa, ctx)
 		y_asiento += alto_persona
 
 
 ## Dibuja un hincha (piel y ropa) en el hueco `y_asiento`. Deja el ultimo texel sin cubrir: es el respaldo
 ## de la butaca, y es lo que mantiene visible el patron de colores del club incluso con la grada llena.
 static func _publico_persona(img: Image, x0: int, y_asiento: int, col_piel: Color, col_ropa: Color,
-		piel_persona: int, alto_persona: int, paso_fila: int, w: int, h: int) -> void:
+		ctx: Dictionary) -> void:
+	var w: int = ctx["w"]
+	var h: int = ctx["h"]
+	var alto_persona: int = ctx["alto"]
+	var piel_persona: int = ctx["piel_n"]
+	var paso_fila: int = ctx["paso"]
 	for dy in range(alto_persona - 1):
 		var yy := y_asiento + dy
 		if yy >= h:
