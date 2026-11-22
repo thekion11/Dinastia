@@ -311,23 +311,6 @@ static func _hinchas_del_asiento(g: Dictionary, gt: _Gente, rng: RandomNumberGen
 
 ## Un MultiMesh de butacas colgado del deck, con su plástico barnizado. SIN SOMBRA PROPIA (25-9-2026, `pruebas/medir_partido.gd`): miles de butacas
 ## proyectando sombra se dibujaban otra vez en CADA cascada del sol; bajo el techo no se ve y la de la grada entera (el `deck`) sigue estando.
-static func _nodo_butacas(deck: MeshInstance3D, mm: MultiMesh, nombre: String, rugosidad: float, metal: float, barniz: float, barniz_rug: float) -> void:
-	var mat := StandardMaterial3D.new()
-	mat.vertex_color_use_as_albedo = true
-	mat.albedo_color = Color(0.9, 0.9, 0.9)
-	mat.roughness = rugosidad
-	if metal > 0.0:
-		mat.metallic = metal
-	mat.clearcoat_enabled = true
-	mat.clearcoat = barniz
-	mat.clearcoat_roughness = barniz_rug
-	var mi := MultiMeshInstance3D.new()
-	mi.multimesh = mm
-	mi.material_override = mat
-	mi.name = nombre
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	deck.add_child(mi)
-
 ## Los nodos de la grada: pasillos y escaleras, las butacas lejanas y cercanas y las personas (con su nivel de detalle).
 static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMesh, gt: _Gente, g: Dictionary) -> void:
 	var lateral: bool = g["lateral"]
@@ -344,10 +327,10 @@ static func _montar_grada(deck: MeshInstance3D, mm: MultiMesh, mm_lejos: MultiMe
 	## falta y entre fila y fila se veía como manchas estiradas.
 	deck.material_override = _mat_escalones()
 	if mm_lejos.instance_count > 0:
-		_nodo_butacas(deck, mm_lejos, "ButacasLejos", 0.5, 0.0, 0.25, 0.4)
+		_nodo_butacas(deck, mm_lejos, "ButacasLejos", [0.5, 0.0, 0.25, 0.4])
 	## Plástico de butaca con brillo suave de barniz (calidad de material, 27-10-2026): el respaldo y el asiento recogen la luz del sol bajo.
 	if mm.instance_count > 0:
-		_nodo_butacas(deck, mm, "ButacasCerca", 0.45, 0.05, 0.3, 0.35)
+		_nodo_butacas(deck, mm, "ButacasCerca", [0.45, 0.05, 0.3, 0.35])
 
 	## Personas reales (mallas horneadas) en la bandeja baja; el maniquí queda para
 	## el resto y como respaldo si faltan los recursos.
@@ -434,8 +417,12 @@ static func _vomitorios(deck: MeshInstance3D, largo: float, fondo: float,
 
 ## Un bastidor de focos en `centro`, apuntando a `mira`, con `cols` × `filas`
 ## proyectores (sus transformaciones se suman a `proyectores`).
-static func _cabeza_foco(root: Node3D, centro: Vector3, mira: Vector3, tam: Vector2, cols: int, filas: int,
+## `dims` = Vector4(ancho, alto, columnas, filas) de la cabeza de focos.
+static func _cabeza_foco(root: Node3D, centro: Vector3, mira: Vector3, dims: Vector4,
 		marco: Material, proyectores: Array[Transform3D]) -> void:
+	var tam := Vector2(dims.x, dims.y)
+	var cols := int(dims.z)
+	var filas := int(dims.w)
 	var b := Basis.looking_at(mira - centro, Vector3.UP)
 	var bastidor := _box(root, centro, Vector3(tam.x, tam.y, 0.35), marco)
 	bastidor.basis = b

@@ -143,6 +143,29 @@ static func es_pasillo(c: int, cuantas_fila: int) -> bool:
 ## abajo de cada bandeja -el que da al campo o al peto de la de abajo- su
 ## barandilla corrida de dos tubos. Todo son instancias de UNA caja unidad
 ## escalada: mismas llamadas de dibujo que antes (una por bandeja).
+## `mats` = [rugosidad, metal, barniz, barniz_rug]: el acabado del plástico de la butaca.
+static func _nodo_butacas(deck: MeshInstance3D, mm: MultiMesh, nombre: String, mats: Array) -> void:
+	var rugosidad: float = mats[0]
+	var metal: float = mats[1]
+	var barniz: float = mats[2]
+	var barniz_rug: float = mats[3]
+	var mat := StandardMaterial3D.new()
+	mat.vertex_color_use_as_albedo = true
+	mat.albedo_color = Color(0.9, 0.9, 0.9)
+	mat.roughness = rugosidad
+	if metal > 0.0:
+		mat.metallic = metal
+	mat.clearcoat_enabled = true
+	mat.clearcoat = barniz
+	mat.clearcoat_roughness = barniz_rug
+	var mi := MultiMeshInstance3D.new()
+	mi.multimesh = mm
+	mi.material_override = mat
+	mi.name = nombre
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	deck.add_child(mi)
+
+
 ## `giro` = [largo, sentido, rake] (la pendiente de la rampa y su sentido).
 static func _montar_pasillos(deck: MeshInstance3D, escalones: Array[Transform3D], pasillos_l: Array[float],
 		lateral: bool, fondo: float, giro := [0.0, 1.0, 0.0]) -> void:
