@@ -301,6 +301,13 @@ func _construir() -> void:
 	fondo.color = Color(String(p["fondo"]))
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(fondo)
+	_sorteo_plato(p)
+	_sorteo_luz(p)
+	_sorteo_capa()
+	_sorteo_saltar()
+
+## El plató en 3D dentro de su SubViewport propio, con sus banderas.
+func _sorteo_plato(p: Dictionary) -> void:
 	## EL PLATÓ EN 3D. Va dentro de un `SubViewport` con su propio mundo: si
 	## compartiera el del juego, el estadio 3D y el sorteo se verían el uno al
 	## otro. El resto de la cinemática -rótulos, botón de saltar, cuadro final-
@@ -331,6 +338,8 @@ func _construir() -> void:
 	_escena.rotular(String(p["nombre"]), Idiomas.t(_titulo_ronda))
 	_escena.poner_banderas(_paises_del_sorteo())
 
+## El degradado de sala por encima del 3D (hunde los bordes).
+func _sorteo_luz(p: Dictionary) -> void:
 	## El degradado de sala por encima del 3D: hunde los bordes y deja el centro
 	## limpio, para que los rótulos se lean sobre cualquier fotograma.
 	var luz := TextureRect.new()
@@ -342,6 +351,8 @@ func _construir() -> void:
 	luz.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(luz)
 
+## La capa de interfaz 2D: rótulo de la ronda, pie y ESC.
+func _sorteo_capa() -> void:
 	_capa = Control.new()
 	_capa.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_capa.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -377,6 +388,8 @@ func _construir() -> void:
 	_pie.offset_left = -400; _pie.offset_right = 400; _pie.offset_top = -48
 	_capa.add_child(_pie)
 
+## El botón «Saltar».
+func _sorteo_saltar() -> void:
 	var saltar := Button.new()
 	saltar.text = Idiomas.t("Saltar  ▸")
 	saltar.custom_minimum_size = Vector2(130, 34)

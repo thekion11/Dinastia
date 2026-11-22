@@ -120,19 +120,8 @@ static func contexto(mundo: Mundo, club_por_defecto: String = "tu club") -> Dict
 	ctx["caja"] = Eco.dinero(c.saldo)
 	ctx["anio"] = mundo.anio
 	ctx["socios"] = c.socios if c.socios > 0 else c.estadio_aforo
-	if mundo.junta != null and not mundo.junta.presidente.is_empty():
-		ctx["presidente"] = String(mundo.junta.presidente.get("nombre", ""))
-	if mundo.directiva != null:
-		ctx["objetivo"] = mundo.directiva.objetivo
-		ctx["confianza"] = mundo.directiva.confianza
-	for l in mundo.ligas:
-		if l.clubes.has(c):
-			ctx["liga"] = l.nombre
-	var par := mundo.proximo_partido()
-	if par.size() == 2:
-		var rival: Club = par[1] if par[0] == c else par[0]
-		ctx["rival"] = rival.nombre
-		ctx["local"] = par[0] == c
+	_ctx_junta_directiva(ctx, mundo)
+	_ctx_liga_y_rival(ctx, mundo, c)
 	var fig := _figuras(c)
 	var estrella: Jugador = fig[0]
 	var joven: Jugador = fig[1]
@@ -147,6 +136,25 @@ static func contexto(mundo: Mundo, club_por_defecto: String = "tu club") -> Dict
 		ctx["joven"] = {"id": joven.id, "nombre": joven.nombre, "edad": joven.edad, "pot": joven.pot}
 	_ctx_dt_cantera(ctx, mundo)
 	return ctx
+## Presidente, objetivo y confianza de la directiva (si los hay).
+static func _ctx_junta_directiva(ctx: Dictionary, mundo: Mundo) -> void:
+	if mundo.junta != null and not mundo.junta.presidente.is_empty():
+		ctx["presidente"] = String(mundo.junta.presidente.get("nombre", ""))
+	if mundo.directiva != null:
+		ctx["objetivo"] = mundo.directiva.objetivo
+		ctx["confianza"] = mundo.directiva.confianza
+
+## La liga del club y el rival del próximo partido (si lo hay).
+static func _ctx_liga_y_rival(ctx: Dictionary, mundo: Mundo, c: Club) -> void:
+	for l in mundo.ligas:
+		if l.clubes.has(c):
+			ctx["liga"] = l.nombre
+	var par := mundo.proximo_partido()
+	if par.size() == 2:
+		var rival: Club = par[1] if par[0] == c else par[0]
+		ctx["rival"] = rival.nombre
+		ctx["local"] = par[0] == c
+
 ## La estrella del plantel (la de más media) y el joven más prometedor (≤ 21 años).
 static func _figuras(c: Club) -> Array:
 	var estrella: Jugador = null
