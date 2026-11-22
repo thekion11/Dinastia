@@ -51,12 +51,7 @@ func _process(_d: float) -> void:
 	Engine.max_fps = 0
 	_n += 1
 	if _n == 5:
-		_t0 = Time.get_ticks_msec()
-		_p.call("_ver_ciudad_propia")
-		for h in _p.get_children():
-			if h is VistaCiudad:
-				_v = h
-		_res["construir_ms"] = Time.get_ticks_msec() - _t0
+		_construir_vista()
 	if _n > 40 and _n <= 70:
 		_m.append(_muestra())
 		if OS.get_environment("CUADROS") != "":
@@ -88,26 +83,43 @@ func _process(_d: float) -> void:
 		print("MEDIDA_CIUDAD ", JSON.stringify(_res))
 		get_tree().quit()
 
+## La construcción de la ciudad: la vista propia del partido, que se guarda para medirla.
+func _construir_vista() -> void:
+	_t0 = Time.get_ticks_msec()
+	_p.call("_ver_ciudad_propia")
+	for h in _p.get_children():
+		if h is VistaCiudad:
+			_v = h
+	_res["construir_ms"] = Time.get_ticks_msec() - _t0
+
+
+## Los cuerpos de jugador visibles, agrupados por su cadena de padres y su alcance de dibujo.
+func _imprimir_cuerpos() -> void:
+	var por_dueno := {}
+	for g in _v.find_children("*", "MeshInstance3D", true, false):
+		if g.get_parent() is Skeleton3D and g.is_visible_in_tree():
+			var a: Node = g
+			var cadena := ""
+			for k in 6:
+				a = a.get_parent()
+				if a == null or a == _v:
+					break
+				cadena += String(a.name).left(14) + "<"
+			var kk := "%s rango=%.0f" % [cadena, (g as GeometryInstance3D).visibility_range_end]
+			por_dueno[kk] = int(por_dueno.get(kk, 0)) + 1
+	for kk in por_dueno:
+		print("CUERPO ", por_dueno[kk], " ", kk)
+
+
 ## Con DETALLE=1, en la vista aérea: lo dibujado, los dueños de los cuerpos y las piezas más pesadas.
 func _detalle_aerea() -> void:
-		_detalle_a_pie("AEREA")   ## (7-11) lo dibujado de verdad desde la vista aérea
-		_detalle()
-		var por_dueno := {}
-		for g in _v.find_children("*", "MeshInstance3D", true, false):
-			if g.get_parent() is Skeleton3D and g.is_visible_in_tree():
-				var a: Node = g
-				var cadena := ""
-				for k in 6:
-					a = a.get_parent()
-					if a == null or a == _v:
-						break
-					cadena += String(a.name).left(14) + "<"
-				var kk := "%s rango=%.0f" % [cadena, (g as GeometryInstance3D).visibility_range_end]
-				por_dueno[kk] = int(por_dueno.get(kk, 0)) + 1
-		for kk in por_dueno:
-			print("CUERPO ", por_dueno[kk], " ", kk)
-		for f: Dictionary in Optimizar.informe(_v, 22):
-			print("TRIS %9d  piezas=%d corte=%.0f  %s" % [f["tris"], f["piezas"], f["corte"], f["clave"]])
+	_detalle_a_pie("AEREA")   ## (7-11) lo dibujado de verdad desde la vista aérea
+	_detalle()
+	_imprimir_cuerpos()
+	for f: Dictionary in Optimizar.informe(_v, 22):
+		print("TRIS %9d  piezas=%d corte=%.0f  %s" % [f["tris"], f["piezas"], f["corte"], f["clave"]])
+
+
 ## Cuántas fachadas y círculos de peatón quedan bien (ocupados y libres).
 func _fachadas_y_circulos() -> void:
 	var ex: ExploradorCiudad = _v.get("_explorador")
