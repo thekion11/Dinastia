@@ -76,11 +76,12 @@ func set_shader_properties() -> void:
 	club_color = clampi(club_color, 0, CLUB.size() - 1)
 	player_sprite.material.set_shader_parameter("team_color", club_color )
 
-func initialize(context_position: Vector2, context_kickoff_position: Vector2, context_ball: Ball, context_own_goal: Goal, context_target_goal: Goal, context_player_data: PlayerResource, context_club: String) -> void:
+## `context_goals`: {"own_goal": Goal, "target_goal": Goal} (se agrupan para no pasar 7 argumentos).
+func initialize(context_position: Vector2, context_kickoff_position: Vector2, context_ball: Ball, context_goals: Dictionary, context_player_data: PlayerResource, context_club: String) -> void:
 	position = context_position
 	ball = context_ball
-	own_goal = context_own_goal
-	target_goal = context_target_goal
+	own_goal = context_goals["own_goal"]
+	target_goal = context_goals["target_goal"]
 	speed = context_player_data.speed
 	power = context_player_data.power
 	role = context_player_data.role
@@ -101,7 +102,7 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 	if current_state != null:
 		current_state.queue_free()
 	current_state = state_factory.get_fresh_state(state)
-	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal, tackle_damage_emitter_area, current_ai_behavior)
+	current_state.setup(self, state_data, animation_player, ball, {"teammate_detection_area": teammate_detection_area, "ball_detection_area": ball_detection_area, "own_goal": own_goal, "target_goal": target_goal, "tackle_damage_emitter_area": tackle_damage_emitter_area, "ai_behavior": current_ai_behavior})
 	current_state.state_transition_requested.connect(switch_state.bind())
 	current_state.name = "PlayerStateMachine: " + str(state)
 	call_deferred("add_child", current_state)

@@ -188,7 +188,7 @@ class CampoDibujado:
 		var campo := Rect2(m, m, size.x - m * 2, size.y - m * 2)
 		TrazoSuave.rect(self, campo, linea, 2.0)
 		TrazoSuave.linea(self, PackedVector2Array([Vector2(m, size.y * 0.5), Vector2(size.x - m, size.y * 0.5)]), linea, 2.0)
-		TrazoSuave.arco(self, size * 0.5, size.y * 0.1, linea, 2.0, 48)
+		TrazoSuave.arco(self, size * 0.5, size.y * 0.1, linea, 2.0, {"lados": 48})
 		var ancho_area := campo.size.x * 0.56
 		var alto_area := campo.size.y * 0.15
 		for arriba: bool in [true, false]:
