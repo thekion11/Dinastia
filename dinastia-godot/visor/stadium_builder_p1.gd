@@ -293,11 +293,12 @@ static func _box(root: Node3D, center: Vector3, size: Vector3, mat: Material) ->
 	root.add_child(mi)
 	return mi
 
-static func _rect_outline(root: Node3D, center: Vector3, w: float, d: float, line_w: float, y: float, mat: Material) -> void:
-	_box(root, center + Vector3(0, y, d / 2.0), Vector3(w, 0.03, line_w), mat)
-	_box(root, center + Vector3(0, y, -d / 2.0), Vector3(w, 0.03, line_w), mat)
-	_box(root, center + Vector3(w / 2.0, y, 0), Vector3(line_w, 0.03, d), mat)
-	_box(root, center + Vector3(-w / 2.0, y, 0), Vector3(line_w, 0.03, d), mat)
+## `center` ya trae la altura (y) del contorno.
+static func _rect_outline(root: Node3D, center: Vector3, w: float, d: float, line_w: float, mat: Material) -> void:
+	_box(root, center + Vector3(0, 0, d / 2.0), Vector3(w, 0.03, line_w), mat)
+	_box(root, center + Vector3(0, 0, -d / 2.0), Vector3(w, 0.03, line_w), mat)
+	_box(root, center + Vector3(w / 2.0, 0, 0), Vector3(line_w, 0.03, d), mat)
+	_box(root, center + Vector3(-w / 2.0, 0, 0), Vector3(line_w, 0.03, d), mat)
 
 # ------------------------------------------------------------------- cancha
 

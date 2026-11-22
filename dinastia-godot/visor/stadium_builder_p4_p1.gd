@@ -102,14 +102,14 @@ static func build_pitch(root: Node3D, est: Dictionary, mi: Club = null) -> void:
 	## en vez de a 11; y las dos areas descolgadas, con sus lineas de fondo
 	## asomando por FUERA de la linea de gol -tres rayas blancas paralelas
 	## detras del arco-.
-	_rect_outline(root, Vector3.ZERO, PITCH_WID, PITCH_LEN, 0.25, 0.02, line_mat)
+	_rect_outline(root, Vector3(0, 0.02, 0), PITCH_WID, PITCH_LEN, 0.25, line_mat)
 	_box(root, Vector3(0, 0.02, 0), Vector3(PITCH_WID, 0.03, 0.25), line_mat)
 	# areas grandes y chicas, a escala real y ancladas a la linea de gol
 	for sgn in [1.0, -1.0]:
 		## Area grande: 16,5 m desde la linea de gol, asi que su centro cae a
 		## 52,5 - 8,25. Area chica: 5,5 m, centro a 52,5 - 2,75.
-		_rect_outline(root, Vector3(0, 0, sgn * (PITCH_LEN / 2.0 - 8.25)), 40.3, 16.5, 0.2, 0.02, line_mat)
-		_rect_outline(root, Vector3(0, 0, sgn * (PITCH_LEN / 2.0 - 2.75)), 18.3, 5.5, 0.2, 0.02, line_mat)
+		_rect_outline(root, Vector3(0, 0.02, sgn * (PITCH_LEN / 2.0 - 8.25)), 40.3, 16.5, 0.2, line_mat)
+		_rect_outline(root, Vector3(0, 0.02, sgn * (PITCH_LEN / 2.0 - 2.75)), 18.3, 5.5, 0.2, line_mat)
 		## El penal, a 11 m de la linea de gol como manda el reglamento.
 		## Un disco de 22 cm, como el reglamentario (17-10: antes era un
 		## cuadrado de 35 cm que de cerca, en la tanda, parecía una losa).
