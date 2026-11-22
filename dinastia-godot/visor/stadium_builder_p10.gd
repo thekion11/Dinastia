@@ -42,7 +42,7 @@ static func build(root: Node3D, est: Dictionary, cap_efectiva: int, ocupacion: f
 	await TunelVestuario.montar(root, est, niveles, mi)
 	_tm("tunel")
 	await _ceder_paso()
-	_banderas(root, est, dx, dz, alto, niveles, mi)
+	_banderas(root, est, dx, dz, alto, mi)
 	## LOS GUIÑOS DEL ESTADIO REAL (MEGAPLAN fase 4, E9): lo que dice su rasgo.
 	_tm("banderas")
 	await _ceder_paso()
@@ -146,7 +146,7 @@ static func _esquinas(obra: EstadioObra) -> void:
 					continue
 				_esquina_grada(root, sx, sz, dx, dz, alto, niveles,
 					esquina_mat, obra.stand_mat, obra.ang, est, obra.ocupacion, obra.seed_val, con_techo)
-				obra.caras_fachada.append_array(_caras_esquina(sx, sz, dx, dz, alto, niveles, con_techo))
+				obra.caras_fachada.append_array(_caras_esquina([sx, sz], dx, dz, alto, niveles, con_techo))
 	elif obra.abiertas.is_empty():
 		## ESQUINAS CERRADAS EN LAS FORMAS SIN GRADA DE ESQUINA (21-10-2026, «el
 		## estadio por fuera»): en «rect» y «principal» quedaban cuatro huecos por
@@ -219,5 +219,5 @@ static func _fachada_y_escudo(obra: EstadioObra) -> void:
 	var fachada := FachadaEstadio.montar(obra.root, est, caras_fachada, obra.seed_val, obra.niveles, tex_escudo)
 	_tm("fachada")
 	if mi != null:
-		_escudo_tribuna(obra.root, mi, donde_escudo, obra.dx, obra.dz, obra.alto,
+		_escudo_tribuna(obra.root, mi, donde_escudo, obra.dz, obra.alto,
 			fachada.find_child("EscudoFachada", false, false) != null)

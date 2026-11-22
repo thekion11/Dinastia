@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2625 archivos (.gd, .cpp, .h), 375437 líneas, 1014 clases con nombre.
+Total: 2625 archivos (.gd, .cpp, .h), 375440 líneas, 1014 clases con nombre.
 
 ## Extensión C++
 
@@ -75,7 +75,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 
 ## Club e instalaciones
 
-23 archivos, 6369 líneas. Carpetas: `nucleo`, `visor`.
+23 archivos, 6372 líneas. Carpetas: `nucleo`, `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -90,7 +90,7 @@ Cerca del tope (≥ 400 líneas): `partido_p1.gd` (450), `league_nucleo.gd` (450
 | `CasaConstruccion` | `visor/casa_construccion.gd` | 133 | 2 |  |
 | `StadiumPublico` | `visor/stadium_publico.gd` | 51 | 1 |  |
 
-Cerca del tope (≥ 400 líneas): `stadium_builder_p5.gd` (446), `stadium_builder_p8.gd` (438), `stadium_builder_p6.gd` (437), `stadium_builder_p7.gd` (434), `stadium_builder_p3.gd` (431), `stadium_builder_p1.gd` (427), `stadium_builder_p2.gd` (424), `club.gd` (420), `stadium_builder_p4_p1.gd` (412).
+Cerca del tope (≥ 400 líneas): `stadium_builder_p5.gd` (446), `stadium_builder_p8.gd` (438), `stadium_builder_p6.gd` (437), `stadium_builder_p7.gd` (437), `stadium_builder_p3.gd` (431), `stadium_builder_p1.gd` (427), `stadium_builder_p2.gd` (424), `club.gd` (420), `stadium_builder_p4_p1.gd` (412).
 
 ## Menús e interfaz
 

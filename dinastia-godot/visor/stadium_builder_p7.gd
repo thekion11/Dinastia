@@ -231,8 +231,11 @@ static func _esquina_grada(root: Node3D, sx: float, sz: float, dx: float, dz: fl
 ## grada en diagonal, ver `_esquina_grada`): la cara del fondo y los dos
 ## costados, sin el tramo de dentro de los costados (ahí se junta con las
 ## tribunas). Mismas cuentas que `_esquina_grada`.
-static func _caras_esquina(sx: float, sz: float, dx: float, dz: float, alto: float,
+## `sxz` = [sx, sz]: la dirección de la esquina (Array y no Vector2: los floats se usan sin redondear).
+static func _caras_esquina(sxz: Array, dx: float, dz: float, alto: float,
 		niveles: int, techo: bool) -> Array:
+	var sx: float = sxz[0]
+	var sz: float = sxz[1]
 	var dir := Vector3(sx, 0.0, sz).normalized()
 	var p0 := Vector3(sx * (dx - FRENTE_TRIBUNA), 0.0, sz * (dz - FRENTE_TRIBUNA))
 	var masa := fondo_tribuna(niveles)
@@ -334,7 +337,7 @@ static func _bandera_ondeante(root: Node3D, pos: Vector3, tam: Vector2, color: C
 ## referencia**. El jugador elegía "Tifo gigante en la popular" y no aparecía
 ## ningún tifo.
 static func _banderas(root: Node3D, est: Dictionary, dx: float, dz: float,
-		alto: float, _niveles: int, mi: Club) -> void:
+		alto: float, mi: Club) -> void:
 	var tipo := String(est.get("banderas", "club"))
 	if tipo == "sin":
 		return

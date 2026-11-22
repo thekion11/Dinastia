@@ -372,7 +372,7 @@ static func _escudo_en_grada(root: Node3D, mat: Material, dz: float, _alto: floa
 ## `build_pitch()` (ver `_escudo_cancha()` para "cancha"/"todo"). Uno solo por
 ## posicion, en la tribuna principal (la que da a la camara "Principal (TV)"),
 ## que es donde de verdad se ve -repetirlo en las 4 tribunas seria ruido.
-static func _escudo_tribuna(root: Node3D, mi: Club, donde: String, _dx: float, dz: float, alto: float,
+static func _escudo_tribuna(root: Node3D, mi: Club, donde: String, dz: float, alto: float,
 		fachada_puesta := false) -> void:
 	if donde not in ["grada", "fachada", "techo", "todo"]:
 		return
