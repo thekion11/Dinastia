@@ -165,39 +165,44 @@ static func poner(d: Dictionary, corte: String, color: Color, barba: bool, drive
 	if String(d.get("cuerpo", "male")) != "female":
 		piezas.append(["Eyebrows_Regular", 1.0])
 	for p: Array in piezas:
-		var malla := _malla(String(p[0]))
-		if malla == null:
-			continue
-		var mi := MeshInstance3D.new()
-		mi.name = String(p[0])
-		mi.mesh = malla
-		mi.material_override = _material(color_cejas(color) if String(p[0]).begins_with("Eyebrows") else color, 2 if String(p[0]) in TEXTURA_2 else 1)
-		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		if String(p[0]).begins_with("Eyebrows"):
-			sin_lejos(mi)
-		var t := desde_cabeza
-		if String(p[0]) in DE_CUERPO_FEMENINO:
-			var rf: Variant = _reposo_cabeza_femenina()
-			if rf is Transform3D:
-				t = (rf as Transform3D).affine_inverse()
-		var k: float = p[1]
-		## (10-11, el pelo «roto» de los periodistas sentados) El pelo es rígido sobre el hueso de la cabeza y la cabeza es piel que se
-		## deforma con el cuello: en poses como «sentado» la nuca y la coronilla asomaban por el pelo (manchas de piel). Un 3 % más de
-		## volumen en el pelo del cuero cabelludo (no cejas ni barba) la cubre sin que se note de cerca.
-		if not String(p[0]).begins_with("Eyebrows") and String(p[0]) != "Hair_Beard":
-			k *= 1.03
-		if not is_equal_approx(k, 1.0):
-			## Un poco más de volumen alrededor del centro de la cabeza. La
-			## escala va en el espacio del MODELO (donde vive la malla), antes
-			## de pasarla al del hueso: al revés, el afro salía volando de lado.
-			var centro := esq.get_bone_global_rest(hueso).origin + Vector3(0, 0.1, 0)
-			t = t * Transform3D(Basis().scaled(Vector3.ONE * k), centro - centro * k)
-		## Orden: malla -> (su nodo del glTF) -> espacio del modelo -> volumen
-		## extra -> espacio de la cabeza.
-		t = t * Transform3D(_nodos.get(String(p[0]), Transform3D.IDENTITY))
-		mi.transform = t
-		anc.add_child(mi)
+		_pieza_pelo(p, color, desde_cabeza, esq, hueso, anc)
 	## Peinado del Drive del dueño (`PeloDrive`) en lugar del corte del pack.
 	if drive_id >= 0:
 		PeloDrive.poner(esq, anc, drive_id, color, String(d.get("cuerpo", "male")) == "female")
 	return anc
+
+## Monta una pieza del pelo (cejas, barba o capas del corte) sobre el hueso de la cabeza.
+static func _pieza_pelo(p: Array, color: Color, desde_cabeza: Transform3D,
+		esq: Skeleton3D, hueso: int, anc: BoneAttachment3D) -> void:
+	var malla := _malla(String(p[0]))
+	if malla == null:
+		return
+	var mi := MeshInstance3D.new()
+	mi.name = String(p[0])
+	mi.mesh = malla
+	mi.material_override = _material(color_cejas(color) if String(p[0]).begins_with("Eyebrows") else color, 2 if String(p[0]) in TEXTURA_2 else 1)
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	if String(p[0]).begins_with("Eyebrows"):
+		sin_lejos(mi)
+	var t := desde_cabeza
+	if String(p[0]) in DE_CUERPO_FEMENINO:
+		var rf: Variant = _reposo_cabeza_femenina()
+		if rf is Transform3D:
+			t = (rf as Transform3D).affine_inverse()
+	var k: float = p[1]
+	## (10-11, el pelo «roto» de los periodistas sentados) El pelo es rígido sobre el hueso de la cabeza y la cabeza es piel que se
+	## deforma con el cuello: en poses como «sentado» la nuca y la coronilla asomaban por el pelo (manchas de piel). Un 3 % más de
+	## volumen en el pelo del cuero cabelludo (no cejas ni barba) la cubre sin que se note de cerca.
+	if not String(p[0]).begins_with("Eyebrows") and String(p[0]) != "Hair_Beard":
+		k *= 1.03
+	if not is_equal_approx(k, 1.0):
+		## Un poco más de volumen alrededor del centro de la cabeza. La
+		## escala va en el espacio del MODELO (donde vive la malla), antes
+		## de pasarla al del hueso: al revés, el afro salía volando de lado.
+		var centro := esq.get_bone_global_rest(hueso).origin + Vector3(0, 0.1, 0)
+		t = t * Transform3D(Basis().scaled(Vector3.ONE * k), centro - centro * k)
+	## Orden: malla -> (su nodo del glTF) -> espacio del modelo -> volumen
+	## extra -> espacio de la cabeza.
+	t = t * Transform3D(_nodos.get(String(p[0]), Transform3D.IDENTITY))
+	mi.transform = t
+	anc.add_child(mi)
