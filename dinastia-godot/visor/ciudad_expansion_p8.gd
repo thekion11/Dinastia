@@ -322,10 +322,7 @@ func _mobiliario_urbano() -> void:
 	cuenta["mobiliario"] = tapas.size() + sumideros.size() + papeleras.size() + hidrantes.size() / 3 + bancos_a.size() / 2 \
 		+ contenedores.size() + bolardos.size() + postes.size() + kioscos.size() + bicis.size()
 
-## Una placa de fila o columna en `esquina` (de `_placas_de_calle`); devuelve cuántas puso.
-
-## Placas de calle en las esquinas: un poste con dos placas azules (una por
-## calle), como en cualquier ciudad. Solo se dibujan de cerca.
+## Una placa de fila o columna en `esquina` (de `_placas_de_calle`); devuelve cuántos rótulos puso (uno por cada cara: dos).
 func _placa_de_fila(cual: int, k: Vector2i, esquina: Vector3, sx: float, placas: Array) -> int:
 	var puestos := 0
 	var texto := nombre_fila(k.y) if cual == 0 else nombre_columna(k.x)
@@ -338,9 +335,11 @@ func _placa_de_fila(cual: int, k: Vector2i, esquina: Vector3, sx: float, placas:
 		RotulosPerezosos.de(b).anadir({"texto": texto, "pos": centro + Basis(Vector3.UP, giro) * Vector3(0, 0, 0.035 * cara),
 				"giro": giro + (0.0 if cara > 0.0 else PI), "rango": 70.0, "font_size": 34, "pixel_size": 0.0055,
 				"outline_size": 0, "modulate": Color.WHITE, "ancho": 420.0})   ## A4-REND-004: solo existen cerca de la cámara
-	puestos += 1
+		puestos += 1
 	return puestos
 
+## Placas de calle en las esquinas: un poste con dos placas azules (una por
+## calle), como en cualquier ciudad. Solo se dibujan de cerca.
 func _placas_de_calle() -> void:
 	var postes: Array[Transform3D] = []
 	var placas: Array[Transform3D] = []
