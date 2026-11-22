@@ -121,19 +121,24 @@ static func montar(padre: Node3D, est: Dictionary, c1: Color, c2: Color, nombre_
 	var lado_giro := s if not is_zero_approx(s) else 1.0
 	for lado in [-1.0, 1.0]:
 		var z_hasta := zc - MEDIO if (not is_zero_approx(s) and lado == lado_giro) else zc + MEDIO
-		_muro_z(nodo, xa + lado * (MEDIO + 0.15), z0, z_hasta, y, horm, pared, franja, franja2, -lado)
+		_muro_z(nodo, xa + lado * (MEDIO + 0.15),
+				Vector2(z0, z_hasta), y, [horm, pared, franja, franja2], -lado)
 	if not is_zero_approx(s):
 		## El tramo corto: pared del cruce (lado de los campos) y la de enfrente,
 		## con el hueco de la escalera; el fondo cierra al otro lado.
-		_muro_x(nodo, zc - MEDIO - 0.15, xa + s * MEDIO, xb + s * MEDIO, y, horm, pared, franja, franja2, 1.0)
+		_muro_x(nodo, zc - MEDIO - 0.15,
+				Vector2(xa + s * MEDIO, xb + s * MEDIO), y, [horm, pared, franja, franja2], 1.0)
 		var a := xa - s * MEDIO
 		var b := xb - s * 1.2
-		_muro_x(nodo, zc + MEDIO + 0.15, a, b, y, horm, pared, franja, franja2, -1.0)
-		_muro_x(nodo, zc + MEDIO + 0.15, xb + s * 1.2, xb + s * (MEDIO + 0.3), y, horm, pared, franja, franja2, -1.0)
-		_muro_z(nodo, xb + s * (MEDIO + 0.15), zc - MEDIO - 0.3, zc + MEDIO + 0.3, y, horm, pared, franja, franja2, -s)
+		_muro_x(nodo, zc + MEDIO + 0.15, Vector2(a, b), y, [horm, pared, franja, franja2], -1.0)
+		_muro_x(nodo, zc + MEDIO + 0.15,
+				Vector2(xb + s * 1.2, xb + s * (MEDIO + 0.3)), y, [horm, pared, franja, franja2], -1.0)
+		_muro_z(nodo, xb + s * (MEDIO + 0.15),
+				Vector2(zc - MEDIO - 0.3, zc + MEDIO + 0.3), y, [horm, pared, franja, franja2], -s)
 	else:
 		for lado2 in [-1.0, 1.0]:
-			_muro_x(nodo, zc + MEDIO + 0.15, xa + lado2 * 1.2, xa + lado2 * (MEDIO + 0.3), y, horm, pared, franja, franja2, -1.0)
+			_muro_x(nodo, zc + MEDIO + 0.15,
+					Vector2(xa + lado2 * 1.2, xa + lado2 * (MEDIO + 0.3)), y, [horm, pared, franja, franja2], -1.0)
 	## La cinta rodante por el centro del tramo largo, con bordes amarillos.
 	var cinta := PiezasObra._mat(Color(0.16, 0.16, 0.18), 0.4)
 	var borde := PiezasObra._mat(Color(0.95, 0.8, 0.15), 0.5)
@@ -201,8 +206,13 @@ static func _tramo(nodo: Node3D, centro: Vector3, tam: Vector2, horm: Material, 
 	PiezasObra._caja(nodo, centro + Vector3(0, ALTO - 0.01, 0), Vector3(tam.x, 0.02, tam.y), techo, false)
 
 ## Pared a lo largo de Z (en `x`), con su cara interior hacia `hacia` (±1 en X).
-static func _muro_z(nodo: Node3D, x: float, z_a: float, z_b: float, y: float, horm: Material, pared: Material,
-		franja: Material, franja2: Material, hacia: float) -> void:
+static func _muro_z(nodo: Node3D, x: float, ext: Vector2, y: float, mats: Array, hacia: float) -> void:
+	var z_a := ext.x
+	var z_b := ext.y
+	var horm: Material = mats[0]
+	var pared: Material = mats[1]
+	var franja: Material = mats[2]
+	var franja2: Material = mats[3]
 	var largo := absf(z_b - z_a)
 	if largo < 0.05:
 		return
@@ -215,8 +225,13 @@ static func _muro_z(nodo: Node3D, x: float, z_a: float, z_b: float, y: float, ho
 	PiezasObra._caja(nodo, Vector3(xi + hacia * 0.01, y + 0.08, zm), Vector3(0.02, 0.16, largo), horm, false)
 
 ## Pared a lo largo de X (en `z`), con su cara interior hacia `hacia` (±1 en Z).
-static func _muro_x(nodo: Node3D, z: float, x_a: float, x_b: float, y: float, horm: Material, pared: Material,
-		franja: Material, franja2: Material, hacia: float) -> void:
+static func _muro_x(nodo: Node3D, z: float, ext: Vector2, y: float, mats: Array, hacia: float) -> void:
+	var x_a := ext.x
+	var x_b := ext.y
+	var horm: Material = mats[0]
+	var pared: Material = mats[1]
+	var franja: Material = mats[2]
+	var franja2: Material = mats[3]
 	var largo := absf(x_b - x_a)
 	if largo < 0.05:
 		return
