@@ -56,7 +56,7 @@ static func _tema_pestanas(t: Theme, p, m: Dictionary) -> void:
 	var radio: int = m["radio"]
 	## Las pestañas. El fondo de la hoja es EL panel, sin borde: encima van las
 	## tarjetas, y dos bordes pegados uno dentro de otro se ven como un error.
-	var hoja := p._caja(panel, borde, radio, 0)
+	var hoja: StyleBoxFlat = p._caja(panel, borde, radio, 0)
 	hoja.content_margin_left = 6
 	hoja.content_margin_right = 6
 	hoja.content_margin_top = 6
@@ -94,7 +94,7 @@ static func _tema_campos(t: Theme, p, m: Dictionary) -> void:
 	var radio: int = m["radio"]
 	## Los campos de texto. El fondo va al REVÉS que el botón -hacia el fondo, no
 	## hacia el texto- porque un cuadro donde se escribe tiene que verse hundido.
-	var hueco := p._caja(p._mezcla(panel, p._pal_fondo(), 0.55), borde, radio, 1)
+	var hueco: StyleBoxFlat = p._caja(p._mezcla(panel, p._pal_fondo(), 0.55), borde, radio, 1)
 	for clase2: String in ["LineEdit", "TextEdit", "SpinBox"]:
 		t.set_stylebox("normal", clase2, hueco)
 		t.set_color("font_color", clase2, texto)
