@@ -4,7 +4,7 @@ Generado por `dinastia-godot/herramientas/mapa_codigo.py` (no se edita a mano; e
 
 Qué es cada columna: **Usos** = archivos que nombran la clase; **Líneas** = tamaño (tope 450); **Capas** = cadena de herencia de `partir_gd.py` (la última conserva la ruta y el `class_name`).
 
-Total: 2625 archivos (.gd, .cpp, .h), 375909 líneas, 1013 clases con nombre.
+Total: 2625 archivos (.gd, .cpp, .h), 375807 líneas, 1013 clases con nombre.
 
 ## Extensión C++
 
@@ -93,7 +93,7 @@ Cerca del tope (≥ 400 líneas): `stadium_builder_p6.gd` (450), `stadium_builde
 
 ## Menús e interfaz
 
-477 archivos, 94263 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
+477 archivos, 94264 líneas. Carpetas: `ui`, `ui/avanzar`, `ui/competiciones`, `ui/componentes`, `ui/entrada`, `ui/menu` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -116,13 +116,13 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Minijuegos
 
-48 archivos, 1493 líneas. Carpetas: `minijuegos/retro5v5`, `minijuegos/retro5v5/resources`, `minijuegos/retro5v5/scenes`, `minijuegos/retro5v5/scenes/ball`, `minijuegos/retro5v5/scenes/ball/ball_states`, `minijuegos/retro5v5/scenes/characters` ….
+48 archivos, 1490 líneas. Carpetas: `minijuegos/retro5v5`, `minijuegos/retro5v5/resources`, `minijuegos/retro5v5/scenes`, `minijuegos/retro5v5/scenes/ball`, `minijuegos/retro5v5/scenes/ball/ball_states`, `minijuegos/retro5v5/scenes/characters` ….
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
-| `Player` | `minijuegos/retro5v5/scenes/characters/player.gd` | 193 | 31 |  |
+| `Player` | `minijuegos/retro5v5/scenes/characters/player.gd` | 192 | 31 |  |
 | `Ball` | `minijuegos/retro5v5/scenes/ball/ball.gd` | 89 | 19 |  |
-| `PlayerState` | `minijuegos/retro5v5/scenes/characters/character_states/player_state.gd` | 45 | 17 |  |
+| `PlayerState` | `minijuegos/retro5v5/scenes/characters/character_states/player_state.gd` | 43 | 17 |  |
 | `GameState` | `minijuegos/retro5v5/scenes/game_manager/game_states/game_state.gd` | 14 | 8 |  |
 | `PlayerStateData` | `minijuegos/retro5v5/scenes/characters/character_states/player_state_data.gd` | 30 | 6 |  |
 | `BallState` | `minijuegos/retro5v5/scenes/ball/ball_states/ball_state.gd` | 54 | 5 |  |
@@ -137,13 +137,13 @@ Cerca del tope (≥ 400 líneas): `interior_instalacion_p6.gd` (450), `plantilla
 
 ## Pruebas y banco
 
-1281 archivos, 124633 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
+1281 archivos, 124586 líneas. Carpetas: `pruebas`, `pruebas/_sonda`, `pruebas/arena`, `pruebas/banco`, `pruebas/bancos`, `pruebas/ideas` ….
 
 Entradas: `pruebas/banco.gd` (secciones en `pruebas/banco/*.gd`), escenas `*.tscn` lanzadas por `herramientas/banco.sh` y `especiales.sh`.
 
 ## Núcleo: mundo, gestión y datos
 
-258 archivos, 53301 líneas. Carpetas: `nucleo`.
+258 archivos, 53293 líneas. Carpetas: `nucleo`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
@@ -166,7 +166,7 @@ Cerca del tope (≥ 400 líneas): `roles_p4.gd` (450), `leyes_pais.gd` (449), `m
 
 ## Visor: 3D, cámaras y efectos
 
-340 archivos, 62977 líneas. Carpetas: `visor`.
+340 archivos, 62932 líneas. Carpetas: `visor`.
 
 | Clase | Archivo | Líneas | Usos | Capas |
 |---|---|---|---|---|
