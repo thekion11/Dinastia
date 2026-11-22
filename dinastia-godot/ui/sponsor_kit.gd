@@ -157,7 +157,13 @@ static func imagen(marca: String, marca_hex: String, letras: Color, solo_logo: b
 		li.resize(lado, lado, Image.INTERPOLATE_LANCZOS)
 		img.blend_rect(li, Rect2i(0, 0, lado, lado), Vector2i(4, (h - lado) / 2))
 	var x0 := 4 + lado + (c * 2 if logo_tex != null else 0)
-	var y := float(h - bloque_h) * 0.5
+	_pintar_lineas(img, lineas, x0, bloque_w, float(h - bloque_h) * 0.5, letras)
+	_cache[k] = img
+	return img
+
+## Dibuja las líneas de letras (centradas en su bloque), empezando en la coordenada `y`.
+static func _pintar_lineas(img: Image, lineas: Array, x0: int, bloque_w: int, y: float, letras: Color) -> void:
+	var c := CELDA
 	for l: String in lineas:
 		## Cada línea centrada en el bloque.
 		var x := float(x0 + (bloque_w - columnas(l) * c) / 2)
@@ -175,8 +181,6 @@ static func imagen(marca: String, marca_hex: String, letras: Color, solo_logo: b
 						_punto(img, x + float(fx * c), y + float(fy * c), float(c), letras)
 			x += float(c) * 6.0
 		y += float(c) * 9.0
-	_cache[k] = img
-	return img
 
 ## Tamaño de la celda de la tipografía en la imagen (px).
 const CELDA := 12
