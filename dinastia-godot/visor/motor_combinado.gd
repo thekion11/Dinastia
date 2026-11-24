@@ -69,6 +69,8 @@ func _ia_portador(p: Dictionary) -> void:
 	if not _nuestra("decide_con_balon"):
 		super(p)
 		return
+	if _mejoras_c4 and MejorasC4Despeje.despejar(self, p, _rng):
+		return   ## (17-11) C4_DESPEJE_RECHACE
 	if _mejoras_c4 and MejorasC4Pared.vuelta(self, p):
 		return   ## (12-11) la vuelta de la pared, de primera
 	if _mejoras_c4 and t >= _decision_en and (MejorasC4Avance.pase_atras(self, p, _rng) or MejorasC4.centro(self, p, _rng) or MejorasC4Pared.ida(self, p, _rng) or MejorasC4.pase_al_mejor(self, p, _rng) or MejorasC4.balon_largo(self, p, _rng)):
@@ -127,7 +129,7 @@ func _gol(en_arco_visita: bool) -> void:
 
 ## (12-11, sesión 13) pase tenso cuando la línea está limpia, solo en C4 (`MejorasC4Pared.tenso`).
 func _pasar_a(p: Dictionary, q: Dictionary, largo := false, al_hueco := false, tenso := false) -> void:
-	if _mejoras_c4 and not largo and MejorasC4Adelanto.OTRO and p != usuario:
+	if _mejoras_c4 and not largo and MejorasC4Adelanto.otro and p != usuario:
 		q = MejorasC4Adelanto.otro_receptor(self, p, q, al_hueco)   ## (12-11, sesión 15) C4_ADELANTO=4
 	if _mejoras_c4 and not tenso and not largo and MejorasC4Pared.tenso(self, p, q):
 		tenso = true
@@ -152,7 +154,7 @@ func _radio_entrada(p: Dictionary, victima: Dictionary, base: float) -> float:
 
 ## (16-11, frente 3) el pase por dirección del mando estilo PES (`MejorasC4Mando`, `C4_PASE_DIR=1`, apagado: cambia la sensación).
 func _companero_en_direccion(p: Dictionary, dir: Vector3, para_cambio := false) -> Dictionary:
-	if _mejoras_c4 and MejorasC4Mando.PASE_DIR and not para_cambio:
+	if _mejoras_c4 and MejorasC4Mando.pase_dir and not para_cambio:
 		var q := MejorasC4Mando.companero(self, p, dir)
 		if not q.is_empty():
 			return q
@@ -165,7 +167,7 @@ func _control_usuario(delta: float) -> void:
 		MejorasC4Mando.carrera(self, usuario, delta)
 
 func _radio_cabezazo(p: Dictionary) -> float:
-	return MejorasC4.RADIO_CABEZA if _mejoras_c4 else super(p)
+	return MejorasC4.radio_cabeza if _mejoras_c4 else super(p)
 
 ## (12-11, sesión 13) paciencia ante el tiro lejano, solo en C4.
 func _ganas_tiro_extra(p: Dictionary, dist_arco: float, ganas: float, presion: float) -> float:
@@ -240,23 +242,23 @@ func _ctx_forma() -> Array:
 ## HÍBRIDO (11-11, sesión 9, orden 39): las ablaciones de C4 mostraron que NUESTRA colocación sin balón es lo que baja el acierto de pase (84 → 67 %) y
 ## las cadenas de 5+ (2,3 → 0,5), pero también lo que da el roce (duelos 7,7 → 29, regates 9,7 → 18). Con `C_ATAQUE_LEAGUE=1` el equipo que tiene el balón se
 ## apoya con el campo de fuerzas de League (triángulos de pase) y el que defiende sigue con la colocación nuestra (marcaje, presión, duelos).
-static var ATAQUE_LEAGUE := OS.get_environment("C_ATAQUE_LEAGUE") == "1"
+static var ataque_league := OS.get_environment("C_ATAQUE_LEAGUE") == "1"
 
 ## El apoyo de League se usa hasta el ÚLTIMO TERCIO (fracción del campo, `C_TERCIO`; SIN MEDIR: 0 por defecto = la versión medida): allí vuelve nuestra colocación de ataque (desmarques al área, más
 ## remates y ocasiones claras). `C_TERCIO=0` = apoyo de League en todo el campo (la primera versión del híbrido).
-static var TERCIO := float(OS.get_environment("C_TERCIO")) if OS.get_environment("C_TERCIO") != "" else 0.0
+static var tercio := float(OS.get_environment("C_TERCIO")) if OS.get_environment("C_TERCIO") != "" else 0.0
 ## El estado de League (balón previsto, marcajes, presión) se recalcula cada `CADENCIA_ESTADO` s en el híbrido (SIN MEDIR: 0 por defecto = cada paso, la versión medida; 0,1 es lo que hace League).
-static var CADENCIA_ESTADO := float(OS.get_environment("C_CADENCIA_ESTADO")) if OS.get_environment("C_CADENCIA_ESTADO") != "" else 0.0
+static var cadencia_estado := float(OS.get_environment("C_CADENCIA_ESTADO")) if OS.get_environment("C_CADENCIA_ESTADO") != "" else 0.0
 var _t_estado_liga := 0.0
 
 func _en_ultimo_tercio(p: Dictionary) -> bool:
 	var c: Dictionary = poseedor
-	if TERCIO <= 0.0 or c.is_empty() or bool(c["es_local"]) != bool(p["es_local"]):
+	if tercio <= 0.0 or c.is_empty() or bool(c["es_local"]) != bool(p["es_local"]):
 		return false
-	return dir_ataque(bool(p["es_local"])) * pos(c).z > LARGO * (1.0 - 2.0 * TERCIO)
+	return dir_ataque(bool(p["es_local"])) * pos(c).z > LARGO * (1.0 - 2.0 * tercio)
 
 func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
-	if ATAQUE_LEAGUE and _nuestra("coloca_sin_balon") and not _en_ultimo_tercio(p):
+	if ataque_league and _nuestra("coloca_sin_balon") and not _en_ultimo_tercio(p):
 		return super._ia_ataque_sin_balon(p)
 	var r := _sin_flag3(p, true)
 	if _mejoras_c4:
@@ -279,12 +281,16 @@ func _ia_ataque_sin_balon(p: Dictionary) -> Vector3:
 		r = MejorasC4Pared.ancho(self, p, r)
 		var sigue := MejorasC4.seguir_tiro(self, p)
 		if sigue != Vector3.INF:
-			p["correr"] = MejorasC4.SEGUIR_SPRINT or pos(p).distance_to(sigue) > 6.0   ## v2: sin esprintar si ya está cerca
+			p["correr"] = MejorasC4.seguir_sprint or pos(p).distance_to(sigue) > 6.0   ## v2: sin esprintar si ya está cerca
 			return sigue
 		MejorasC4.sprint(self, p, r)
 	return r
 
 func _ia_defensa(p: Dictionary) -> Vector3:
+	if _mejoras_c4:
+		var marca := MejorasC4Marca.objetivo(self, p)   ## (17-11) marcaje en el área (`C4_MARCA_AREA`), antes que la caché de colocación
+		if marca != Vector3.INF:
+			return marca
 	var r := _sin_flag3(p, false)
 	if _mejoras_c4:
 		var cierre := MejorasC4Area.objetivo(self, p)   ## (16-11, H1) cerrar al rematador dentro del área (`C4_CIERRE_AREA`)
@@ -300,8 +306,8 @@ func _ia_defensa(p: Dictionary) -> Vector3:
 ## en CADA paso (~750 µs/paso de los 1 350 del motor). League lo recalcula cada 0,1 s por jugador (`CADENCIA`); aquí igual: el destino de cada jugador se guarda
 ## `cadencia_coloca` s (escalonado por jugador, para no concentrar el coste en un solo paso) y se recalcula antes si cambia de «ataca/defiende».
 ## `C_CADENCIA_COLOCA=0` lo apaga (el cálculo de siempre en cada paso). Solo vale para el combinado: el motor de siempre no se toca.
-static var CADENCIA_COLOCA := float(OS.get_environment("C_CADENCIA_COLOCA")) if OS.get_environment("C_CADENCIA_COLOCA") != "" else 0.1
-var cadencia_coloca := CADENCIA_COLOCA
+static var cadencia_coloca_v := float(OS.get_environment("C_CADENCIA_COLOCA")) if OS.get_environment("C_CADENCIA_COLOCA") != "" else 0.1
+var cadencia_coloca := cadencia_coloca_v
 var _cache_col: Dictionary = {}   ## id del jugador → {t: caduca, ataque, obj, correr}
 
 func _sin_flag3(p: Dictionary, ataque: bool) -> Vector3:
@@ -325,17 +331,17 @@ func _sin_flag3(p: Dictionary, ataque: bool) -> Vector3:
 ## La predicción y los marcajes de League solo hacen falta si juega alguna pieza de League que los usa.
 func _estado_sin_balon(delta: float) -> void:
 	if _nuestra("coloca_sin_balon") and _nuestra("locomocion"):
-		if not ATAQUE_LEAGUE:
+		if not ataque_league:
 			return
-		if CADENCIA_ESTADO > 0.0:
+		if cadencia_estado > 0.0:
 			if t < _t_estado_liga:
 				return
-			_t_estado_liga = t + CADENCIA_ESTADO
+			_t_estado_liga = t + cadencia_estado
 	super(delta)
 
 func _estado_league(delta: float) -> void:
 	var f3 := MotorLeague.fase3
-	if _nuestra("locomocion") and _nuestra("coloca_sin_balon") and not ATAQUE_LEAGUE:
+	if _nuestra("locomocion") and _nuestra("coloca_sin_balon") and not ataque_league:
 		MotorLeague.fase3 = false   ## sin robos por alcance ni estrategias
 	super(delta)
 	MotorLeague.fase3 = f3
@@ -377,8 +383,8 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 ## (12-11, sesión 15) más 1 contra 1 en la frontal (`MejorasC4Avance.REGATE_AREA`): sube las ganas de encarar solo dentro de este intento.
 var _k_regate := 1.0
 func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> bool:
-	if _mejoras_c4 and MejorasC4Avance.REGATE_AREA > 0.0 and dist_arco < 32.0:
-		_k_regate = MejorasC4Avance.REGATE_AREA
+	if _mejoras_c4 and MejorasC4Avance.regate_area > 0.0 and dist_arco < 32.0:
+		_k_regate = MejorasC4Avance.regate_area
 	var r := super(p, rival, dist_arco)
 	_k_regate = 1.0
 	return r
@@ -400,12 +406,26 @@ func _prob_parada_extra(gk: Dictionary, desde: Vector3, prob: float) -> float:
 
 ## (17-11, alarma de goles de C4) el portero para lo que le llega al cuerpo, solo en C4 (`MejorasC4Avance.parada_cuerpo`, `C4_PARADA_CUERPO=f`).
 func _agarra(p: Dictionary, estirada: bool, fuerza: float) -> bool:
-	if not (_mejoras_c4 and MejorasC4Avance.PARADA_REAL):
+	if not (_mejoras_c4 and MejorasC4Avance.parada_real_v):
 		return super(p, estirada, fuerza)
 	return MejorasC4Avance.agarra(self, p, estirada, fuerza, _rng)
 
 func _prob_rechace_fuera() -> float:
-	return MejorasC4Avance.PR_FUERA if _mejoras_c4 and MejorasC4Avance.PARADA_REAL else 0.5
+	return MejorasC4Avance.pr_fuera if _mejoras_c4 and MejorasC4Avance.parada_real_v else 0.5
+
+## (17-11) C4_BLOQUEO_REMATE: el que marca al rematador tapa la línea y el cuerpo puede bloquear el tiro.
+func _ia_equipos(delta: float) -> void:
+	super(delta)
+	if _mejoras_c4:
+		MejorasC4Bloqueo.tapar_linea(self)
+
+func _tirar(p: Dictionary, apunte: Vector2, fuerza: float) -> void:
+	super(p, apunte, fuerza)
+	if _mejoras_c4:
+		MejorasC4Bloqueo.bloqueo_cuerpo(self, p, _rng)
+
+func _portero_a_por_el(p: Dictionary, b: Vector3) -> bool:
+	return _mejoras_c4 and MejorasC4Despeje.portero_a_por_el(self, p, b)
 
 func _prob_parada_cuerpo(lat: float, alcance: float, prob: float) -> float:
 	return MejorasC4Avance.parada_cuerpo(self, lat, alcance, prob) if _mejoras_c4 else prob
@@ -420,4 +440,4 @@ func _puede_tomar_tiro(p: Dictionary) -> bool:
 	return MejorasC4Area.puede_tomar_tiro(self, p) if _mejoras_c4 else true
 
 func _gancho_tiro() -> bool:
-	return _mejoras_c4 and MejorasC4Area.TIRO_COMPANERO
+	return _mejoras_c4 and MejorasC4Area.tiro_companero

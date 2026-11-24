@@ -13,6 +13,8 @@ extends RefCounted
 const CESPED := {"rayas": "A rayas", "rayasH": "A rayas transversales", "damero": "Damero", "damGrande": "Damero grande", "circulos": "En círculos",
 	"circular": "En círculos", "diagonal": "En diagonal", "rombos": "En rombos", "liso": "Liso", "espiga": "En espiga", "abanico": "En abanico"}
 const UMBRAL_CHOQUE := 0.32   ## distancia de color (RGB, 0-1,7) por debajo de la cual dos camisetas se confunden desde la cámara de la tele
+const _RUTA_FOTOS_ESTADIO_MENU := "res://ui/partido_menu/fotos_estadio_menu.gd"
+const _RUTA_RETRATO_JUGADOR3D := "res://ui/partido_menu/retrato_jugador3d.gd"
 
 ## El perfil del estadio del club local (el diseñado por ti si es el tuyo; si no, el suyo de siempre).
 static func perfil(m: MenuPartido) -> Dictionary:
@@ -49,7 +51,7 @@ static func uniforme(m: MenuPartido, v: VBoxContainer) -> void:
 	var actual := String(OpcionesPartido.leer("uniforme_partido", "titular"))
 	var aviso := EstiloAvanzar.etiqueta("", 17, Color("ffd36b"))
 	aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	var mio3d: Control = load("res://ui/partido_menu/retrato_jugador3d.gd").crear(m.mio, m.estrella(m.mio), [] if actual == "titular" else PanelesMenuPartido.colores_uniforme(m.mio, actual), 0.3)
+	var mio3d: Control = load(_RUTA_RETRATO_JUGADOR3D).crear(m.mio, m.estrella(m.mio), [] if actual == "titular" else PanelesMenuPartido.colores_uniforme(m.mio, actual), 0.3)
 	var botones: Dictionary = {}
 	for par: Array in PanelesMenuPartido.UNIFORMES:
 		var clave := String(par[0])
@@ -73,7 +75,7 @@ static func uniforme(m: MenuPartido, v: VBoxContainer) -> void:
 		var col := VBoxContainer.new()
 		col.add_theme_constant_override("separation", 4)
 		fila.add_child(col)
-		var r3d: Control = mio3d if lado == 0 else load("res://ui/partido_menu/retrato_jugador3d.gd").crear(rv, m.estrella(rv), [], -0.3)
+		var r3d: Control = mio3d if lado == 0 else load(_RUTA_RETRATO_JUGADOR3D).crear(rv, m.estrella(rv), [], -0.3)
 		if r3d != null:
 			r3d.custom_minimum_size = Vector2(170, 240) if m.movil else Vector2(Tema.letra(300), Tema.letra(430))
 			col.add_child(r3d)
@@ -116,7 +118,7 @@ static func _muestra(c1: Color, c2: Color) -> Texture2D:
 	return ImageTexture.create_from_image(img)
 
 ## Si el uniforme elegido se confunde con el titular del rival, lo dice y propone el primero que no choca.
-static func _avisar_choque(m: MenuPartido, rv: Club, clave: String, aviso: Label, botones: Dictionary) -> void:
+static func _avisar_choque(m: MenuPartido, rv: Club, clave: String, aviso: Label, _botones: Dictionary) -> void:
 	var suyo := PanelesMenuPartido.colores_uniforme(rv, "titular")
 	if not choca(PanelesMenuPartido.colores_uniforme(m.mio, clave)[0], suyo[0]):
 		aviso.text = Idiomas.t("No se confunde con el rival.")
@@ -185,4 +187,4 @@ static func camara(m: MenuPartido, v: VBoxContainer) -> void:
 				(minis[k] as MiniaturaMenu).foto = f.get(k))
 
 static func _pedir_fotos(m: MenuPartido, al_terminar: Callable) -> void:
-	load("res://ui/partido_menu/fotos_estadio_menu.gd").pedir(m, m.partido.local, perfil(m), load("res://ui/partido_menu/fotos_estadio_menu.gd").luz_de(m.clima), al_terminar, m.estrella(m.partido.local))
+	load(_RUTA_FOTOS_ESTADIO_MENU).pedir(m, m.partido.local, perfil(m), load(_RUTA_FOTOS_ESTADIO_MENU).luz_de(m.clima), al_terminar, m.estrella(m.partido.local))

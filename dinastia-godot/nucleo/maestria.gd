@@ -115,6 +115,12 @@ func semana(c: Club, prensa: Prensa, academia: Academia, sem: int, resultado: in
 	var car := int(efectivo("cargas") / 9.0)
 	var suelo := 20 + int(efectivo("psicologia"))
 	var ada := int(efectivo("idiomas") / 5.0)
+	_mejorar_plantilla(c, fis, car, suelo, ada)
+	_liderazgo_y_formacion(c, academia, sem)
+	_prensa_finanzas_negociacion(c, prensa, sem)
+
+## Mejora de la plantilla en la pretemporada (forma, fisico, moral y adaptación).
+func _mejorar_plantilla(c: Club, fis: int, car: int, suelo: int, ada: int) -> void:
 	for j: Jugador in c.plantilla:
 		if fis > 0:
 			j.fisico = mini(100, j.fisico + fis)
@@ -124,6 +130,9 @@ func semana(c: Club, prensa: Prensa, academia: Academia, sem: int, resultado: in
 			j.moral = mini(99, j.moral + 1)
 		if ada > 0 and j.pais != c.pais:
 			j.adapt = mini(100, j.adapt + ada)
+
+## Liderazgo y la formación de la cantera (los chicos de la academia).
+func _liderazgo_y_formacion(c: Club, academia: Academia, sem: int) -> void:
 	if sem % 4 == 0 and nivel("liderazgo") > 0:
 		var sube := 1 + int(efectivo("liderazgo") / 20.0)
 		for j: Jugador in c.plantilla:
@@ -131,6 +140,9 @@ func semana(c: Club, prensa: Prensa, academia: Academia, sem: int, resultado: in
 	if academia != null and nivel("formacion") > 0:
 		for ch: Dictionary in academia.chicos:
 			ch["nivel"] = float(ch["nivel"]) + efectivo("formacion") * 0.02
+
+## Prensa, finanzas y negociación: el ánimo, el saldo y el ahorro en sueldos.
+func _prensa_finanzas_negociacion(c: Club, prensa: Prensa, sem: int) -> void:
 	if prensa != null and nivel("prensa") > 0:
 		var cada := maxi(2, 12 - int(efectivo("prensa") / 4.0))
 		if sem % cada == 0:
@@ -145,8 +157,18 @@ func semana(c: Club, prensa: Prensa, academia: Academia, sem: int, resultado: in
 			c.mover_saldo(ahorro)
 			movimiento.emit("Ahorro en sueldos por negociación", ahorro)
 
+
 ## El efecto actual de una categoría, en palabras, para la ficha.
 func efecto_actual(clave: String) -> String:
+	var r_efecto_actual_1: Variant = _efecto_actual_1(clave)
+	if r_efecto_actual_1 != null:
+		return r_efecto_actual_1
+	var r_efecto_actual_2: Variant = _efecto_actual_2(clave)
+	if r_efecto_actual_2 != null:
+		return r_efecto_actual_2
+	return ""
+
+func _efecto_actual_1(clave: String) -> Variant:
 	var e := efectivo(clave) * _norma()
 	match clave:
 		"ataque": return "+%.1f %% de ataque" % (e * 0.2)
@@ -157,6 +179,11 @@ func efecto_actual(clave: String) -> String:
 		"fisica": return "+%d de físico por semana" % int(efectivo(clave) / 9.0)
 		"cargas": return "+%d de forma por semana a los cansados" % int(efectivo(clave) / 9.0)
 		"liderazgo": return "+%d de moral cada cuatro semanas" % (1 + int(efectivo(clave) / 20.0)) if nivel(clave) > 0 else "sin efecto aún"
+	return null
+
+func _efecto_actual_2(clave: String) -> Variant:
+	var e := efectivo(clave) * _norma()
+	match clave:
 		"psicologia": return "suelo de moral en %d" % (20 + int(efectivo(clave))) if nivel(clave) > 0 else "sin efecto aún"
 		"idiomas": return "+%d de adaptación por semana" % int(efectivo(clave) / 5.0)
 		"formacion": return "+%.2f de nivel semanal a cada chico" % (efectivo(clave) * 0.02)
@@ -164,7 +191,8 @@ func efecto_actual(clave: String) -> String:
 		"aficion": return "+%.1f %% de público" % (e * 0.3)
 		"finanzas": return "ingreso semanal extra (%d)" % int(250.0 * e) if nivel(clave) > 0 else "sin efecto aún"
 		"negociacion": return "recuperas %.1f %% de los sueldos" % (e * 0.3)
-	return ""
+	return null
+
 
 func a_dic() -> Dictionary:
 	return {"niv": niveles, "pts": puntos, "gan": ganados}

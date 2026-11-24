@@ -145,7 +145,7 @@ func _mover_fisica(delta: float, bpos: Vector3) -> PackedFloat64Array:
 		var cl := _coste_aguante(true)
 		var cv := _coste_aguante(false)
 		return nat.mover_jugadores_fisica(jugadores, bpos, delta, t, not poseedor.is_empty(), poseedor.get("id", ""), bool(poseedor.get("es_local", false)),
-			A_MAX, ANCHO, LARGO, GIRO_RAPIDO, PackedFloat64Array([cl, cv]))
+			a_max_v, ANCHO, LARGO, GIRO_RAPIDO, PackedFloat64Array([cl, cv]))
 	return _mover_fisica_gd(delta, bpos)
 
 func _coste_aguante(local: bool) -> float:
@@ -207,7 +207,7 @@ func _mover_fisica_gd(delta: float, bpos: Vector3) -> PackedFloat64Array:
 		## vez no pasa de A_MAX m/s² (más con giro firme), lo que aguanta un
 		## cuerpo en un recorte. Antes la suma llegaba a 25-30 (tirones en la
 		## sonda). Con 14 el juego se quedaba sin chispa (la mitad de goles).
-		var a_max := (A_MAX * 1.35 if bool(p.get("giro_firme", false)) else A_MAX) * delta
+		var a_max := (a_max_v * 1.35 if bool(p.get("giro_firme", false)) else a_max_v) * delta
 		var dv: Vector3 = vel - (p["vel"] as Vector3)
 		if dv.length() > a_max:
 			vel = (p["vel"] as Vector3) + dv.normalized() * a_max
@@ -278,7 +278,7 @@ func _mover_jugadores(delta: float) -> void:
 ## La animación de un jugador según su movimiento (el cuerpo del bucle de `_mover_jugadores`; `res` = [válido, velocidad, va_atrás, distancia_al_balón] por jugador).
 func _animar_uno(idx: int, res: PackedFloat64Array) -> void:
 	var p: Dictionary = jugadores[idx]
-	if res[idx * 4] == 0.0:
+	if is_zero_approx(res[idx * 4]):
 		return
 	var n: Node3D = p["node"]
 	var sp := res[idx * 4 + 1]
@@ -388,6 +388,7 @@ func _tomar(p: Dictionary) -> void:
 		## Un tiro fuerte que se topa con un defensor no se controla: se
 		## desvía (muchas veces a córner), como un bloqueo de verdad.
 		var tirador: Dictionary = _tiro_vivo["p"]
+		_contar("tiro_bloqueado")   ## (17-11) para la sonda de goles; no toca el azar
 		_cerrar_tiro("fallo")
 		if bool(tirador["es_local"]) != bool(p["es_local"]) and not bool(p["por"]) and vel_balon.length() > 14.0:
 			_anim(p, LeagueAnim.bloqueo(balon.position.y), true, 0.9)   ## el cuerpo que bloquea (01-11, League-Soccer)

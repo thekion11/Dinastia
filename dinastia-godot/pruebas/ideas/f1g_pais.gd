@@ -134,6 +134,14 @@ func _pantalla_normal() -> void:
 	await get_tree().process_frame
 	s.sin_animaciones()
 	var f := s.fondo()
+	var rot := _pn_inicio(s, f)
+	_pn_monumentos(s, f)
+	_pn_fichas(s)
+	_pn_cambio_de_pais(s, f, rot)
+	_pn_teclado_y_confirmar(s)
+	s.get_parent().queue_free()
+
+func _pn_inicio(s: PantallaPais, f) -> Label3D:
 	var vp := get_viewport().get_visible_rect().size
 	_comprobar(s.size == vp and f.size == vp, "la pantalla y su fondo ocupan la ventana entera (%s / %s)" % [s.size, vp])
 	_comprobar(s.globo().size.x > 300 and s.globo().size.y > 300 and s.ficha().size.y > 300,
@@ -146,6 +154,9 @@ func _pantalla_normal() -> void:
 	_comprobar(f.pais == "CHI" and f.indice == 0 and String(f.monumento_actual()[0]) == "Moáis de Rapa Nui",
 		"de fondo la bandera de Chile y su primer monumento")
 	_comprobar(s.get("_rotulo_mon").text == "Moáis de Rapa Nui", "el rótulo del monumento a la vista")
+	return rot
+
+func _pn_monumentos(s: PantallaPais, f) -> void:
 	## El reloj de 30 s (con animar apagado no corre solo: se enciende para medirlo).
 	f.animar = true
 	f._process(29.0)
@@ -156,6 +167,8 @@ func _pantalla_normal() -> void:
 		f._process(30.0)
 	_comprobar(f.indice == 0, "tras los 5, vuelve al primero")
 	f.animar = false
+
+func _pn_fichas(s: PantallaPais) -> void:
 	var segunda_chi: int = (Datos.tabla("DATA_P2") as Array).size()
 	_comprobar(s.ficha().clubes_listados.size() == 16 + segunda_chi and segunda_chi > 0,
 		"modo normal: se ven los 16 clubes de primera y los %d de segunda (%d)" % [segunda_chi, s.ficha().clubes_listados.size()])
@@ -169,6 +182,8 @@ func _pantalla_normal() -> void:
 	fichas.ver_division(1)
 	_comprobar(visibles.call() == segunda_chi and fichas.club_marcado().nombre == fichas.clubes_listados[0], "la pestaña de segunda enseña sus %d clubes y el marcado sigue siendo el de primera" % segunda_chi)
 	fichas.ver_division(0)
+
+func _pn_cambio_de_pais(s: PantallaPais, f, rot: Label3D) -> void:
 	## Cambiar de país desde la lista.
 	(s.get("_lista") as PaisLista).elegido.emit("JPN")
 	_comprobar(s.pais == "JPN" and s.get("_nombre").text == "Japón" and f.pais == "JPN" and f.indice == 0,
@@ -176,6 +191,8 @@ func _pantalla_normal() -> void:
 	_comprobar(rot.text == "CHI" and (s.globo().get("_rotulos")["JPN"] as Label3D).text == "Japón",
 		"el rótulo de Chile vuelve a su código y el de Japón se nombra")
 	_comprobar(s.globo().pais_actual == "JPN", "el globo viaja a Japón")
+
+func _pn_teclado_y_confirmar(s: PantallaPais) -> void:
 	## Teclado: abajo pasa al siguiente de la lista (Japón → Corea del Sur).
 	var ev := InputEventAction.new()
 	ev.action = "ui_down"
@@ -208,7 +225,6 @@ func _pantalla_normal() -> void:
 	esc.pressed = true
 	s._unhandled_input(esc)
 	_comprobar(volvio[0], "Esc emite volver()")
-	s.get_parent().queue_free()
 
 func _pantalla_crear() -> void:
 	var s := _nueva({"modo": "creador", "pais": "ARG"})

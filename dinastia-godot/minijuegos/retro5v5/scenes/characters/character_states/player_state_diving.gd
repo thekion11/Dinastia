@@ -14,7 +14,7 @@ func _enter_tree() -> void:
 		animation_player.play("dive_up")
 	player.velocity = direction * player.speed
 	time_start_dive = Time.get_ticks_msec()
-	
+
 func _process(_delta: float) -> void:
 	if Time.get_ticks_msec() - time_start_dive > DURATION_DIVE:
 		transition_state(Player.State.RECOVERING)

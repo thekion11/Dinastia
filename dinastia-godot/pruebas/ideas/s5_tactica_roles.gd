@@ -16,7 +16,6 @@ func _probar() -> void:
 	_comprobar(RolTactico.multiplicadores(yo.tactica, once) == [1.0, 1.0] and is_equal_approx(RolTactico.peso(yo.tactica, once[0], "gol"), 1.0), "sin roles, ni la fuerza ni el reparto de goles cambian")
 	_comprobar(t.perillas_con_balon().size() == 5 and t.perillas_sin_balon().size() == 5, "la pizarra tendrá sus dos fases: 5 perillas con balón y 5 sin balón")
 	var del := _de_linea(once, "DEL")
-	var defe := _de_linea(once, "DEF")
 	_comprobar(yo.tactica.poner_rol(del, "pivote") != "" and yo.tactica.poner_rol(del, "nueve_area") == "", "un rol solo se puede dar a quien juega en su línea")
 	yo.tactica.roles.clear()
 	_comprobar(RolTactico.de_grupo("DEF").size() == 4 and RolTactico.de_grupo("POR").size() == 2, "hay roles para cada línea")

@@ -39,7 +39,7 @@ func _probar() -> void:
 	var proxies := 0
 	for n in raiz.find_children("EdificiosLejos*", "MultiMeshInstance3D", true, false):
 		proxies += (n as MultiMeshInstance3D).multimesh.instance_count
-	_comprobar(sombra.visibility_range_end == 0.0, "la malla de solo sombra no se corta por distancia")
-	_comprobar(grada.visibility_range_end == 0.0, "lo que cuelga de «sin_corte» (el estadio) tampoco")
+	_comprobar(is_zero_approx(sombra.visibility_range_end), "la malla de solo sombra no se corta por distancia")
+	_comprobar(is_zero_approx(grada.visibility_range_end), "lo que cuelga de «sin_corte» (el estadio) tampoco")
 	_comprobar(edificio.visibility_range_end > 0.0 and proxies == 1, "un edificio pesado normal sigue con su caja lejana (%d caja)" % proxies)
 	raiz.queue_free()

@@ -1,4 +1,4 @@
-extends "res://ui/componentes/interior_instalacion_p3.gd"
+extends "res://ui/componentes/interior_instalacion_estacion.gd"
 ## [Capa 4/7 de `interior_instalacion.gd`] _caja_cobro, _supermercado, _puesto_mercado, _mercado, _cine, _camiseta … (+15)
 
 ## Una caja de cobro del mini mercado (registradora en un extremo, cinta en el
@@ -297,7 +297,7 @@ func _rack_mancuernas(t: Transform3D, hierro: Color, cromo: Color) -> void:
 	_prim("caja", Vector3(0, 0.95, -0.25), Vector3(largo, 0.1, 0.03), _c1, "mate", Vector3.ZERO, t)
 
 ## Banco plano de pesas, a lo largo de Z local.
-func _banco_pesas(t: Transform3D, hierro: Color, acero: Color) -> void:
+func _banco_pesas(t: Transform3D, _hierro: Color, acero: Color) -> void:
 	_prim("caja", Vector3(0, 0.42, 0), Vector3(0.3, 0.08, 1.15), Color(0.1, 0.1, 0.12), "goma", Vector3.ZERO, t)
 	for z: float in [-0.45, 0.45]:
 		_prim("caja", Vector3(0, 0.19, z), Vector3(0.08, 0.38, 0.08), acero, "metal", Vector3.ZERO, t)

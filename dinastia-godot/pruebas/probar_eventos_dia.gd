@@ -8,8 +8,7 @@ func _ok(cond: bool, msg: String) -> void:
 		fallos += 1
 		print("FALLO ", msg)
 
-func correr(padre: Node = null) -> int:
-	var _p := padre
+func correr(_padre: Node = null) -> int:
 	var mundos := [[["CHI"], 11], [["ARG", "BRA"], 22], [["ESP", "ENG"], 33], [["GER", "ITA", "FRA"], 44]]
 	var vistos := {"partido": 0, "pantalla": 0, "aviso": 0}
 	for cfg: Array in mundos:
@@ -22,25 +21,7 @@ func correr(padre: Node = null) -> int:
 		var etiqueta := "%s/%d" % [",".join(cfg[0]), cfg[1]]
 		var semanas := EventosFecha.semanas(m, 8)
 		_ok(not semanas.is_empty(), "%s: hay semanas por delante" % etiqueta)
-		for s: Dictionary in semanas:
-			var total := (s["eventos"] as Array).size()
-			for d in 7:
-				total += EventosDia.del_calendario(m, int(s["k"]), d).size()
-			var contados := 0
-			for d in 7:
-				var dia := EventosDia.del_dia(m, int(s["k"]), d)
-				contados += dia.size()
-				for e: Dictionary in dia:
-					var clase := String(e["clase"])
-					vistos[clase] = int(vistos[clase]) + 1
-					_ok(clase in [EventosDia.PARTIDO, EventosDia.PANTALLA, EventosDia.AVISO], "%s: clase válida (%s)" % [etiqueta, clase])
-					if clase == EventosDia.AVISO:
-						_ok(EventosDia.ZONAS.has(String(e["zona"])), "%s: el aviso tiene zona del menú (%s)" % [etiqueta, e["zona"]])
-					else:
-						_ok(String(e["zona"]) == "", "%s: solo los avisos tienen zona" % etiqueta)
-					if EventosFecha.es_partido(e):
-						_ok(clase == EventosDia.PARTIDO, "%s: un partido es PARTIDO" % etiqueta)
-			_ok(contados == total, "%s: semana %d: los eventos por día (competición + calendario nacional) suman los de la semana (%d/%d)" % [etiqueta, int(s["k"]), contados, total])
+		_revisar_semanas(m, semanas, etiqueta, vistos)
 		var p := EventosDia.proxima_parada(m)
 		_ok(not p.is_empty(), "%s: hay una próxima parada" % etiqueta)
 		if not p.is_empty():
@@ -91,6 +72,29 @@ func correr(padre: Node = null) -> int:
 	_ok(int(vistos["partido"]) > 0, "en estos mundos se vieron partidos")
 	print("clases vistas: ", vistos)
 	return fallos
+
+## Las semanas de un mundo: cada evento sale en su día y los días suman lo de la semana.
+func _revisar_semanas(m: Mundo, semanas: Array, etiqueta: String, vistos: Dictionary) -> void:
+	for s: Dictionary in semanas:
+		var total := (s["eventos"] as Array).size()
+		for d in 7:
+			total += EventosDia.del_calendario(m, int(s["k"]), d).size()
+		var contados := 0
+		for d in 7:
+			var dia := EventosDia.del_dia(m, int(s["k"]), d)
+			contados += dia.size()
+			for e: Dictionary in dia:
+				var clase := String(e["clase"])
+				vistos[clase] = int(vistos[clase]) + 1
+				_ok(clase in [EventosDia.PARTIDO, EventosDia.PANTALLA, EventosDia.AVISO], "%s: clase válida (%s)" % [etiqueta, clase])
+				if clase == EventosDia.AVISO:
+					_ok(EventosDia.ZONAS.has(String(e["zona"])), "%s: el aviso tiene zona del menú (%s)" % [etiqueta, e["zona"]])
+				else:
+					_ok(String(e["zona"]) == "", "%s: solo los avisos tienen zona" % etiqueta)
+				if EventosFecha.es_partido(e):
+					_ok(clase == EventosDia.PARTIDO, "%s: un partido es PARTIDO" % etiqueta)
+		_ok(contados == total, "%s: semana %d: los eventos por día (competición + calendario nacional) suman los de la semana (%d/%d)" % [etiqueta, int(s["k"]), contados, total])
+
 
 func _ready() -> void:
 	correr(self)

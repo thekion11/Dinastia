@@ -173,7 +173,7 @@ func _ideas_b_modos() -> void:
 	var p0 := m.puntaje_carrera()
 	m.desafios = ["invicto", "cantera"]
 	var p1 := m.puntaje_carrera()
-	_comprobar(m.tiene_desafio("invicto") and is_equal_approx(float(p1["multiplicador"]), 3.0 * 1.9) and int(p1["total"]) == int(round(float(p1["base"]) * 5.7)) and float(p0["multiplicador"]) == 1.0,
+	_comprobar(m.tiene_desafio("invicto") and is_equal_approx(float(p1["multiplicador"]), 3.0 * 1.9) and int(p1["total"]) == int(round(float(p1["base"]) * 5.7)) and is_equal_approx(float(p0["multiplicador"]), 1.0),
 		"los desafíos activados multiplican el puntaje: ×%.1f (973, 974)" % float(p1["multiplicador"]))
 	m.desafios = []
 	## Roles: director deportivo, dueño y caja de arena (959, 961, 970).

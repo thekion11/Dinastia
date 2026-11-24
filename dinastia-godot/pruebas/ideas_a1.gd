@@ -16,7 +16,7 @@ func _ideas_a_partido() -> void:
 	pb.mas_rapido()
 	_comprobar(MatchPlayback.VELOCIDADES.size() >= 3 and pb.velocidad() > v0 and pb.etiqueta_velocidad().begins_with("x"), "la velocidad de simulación sube de escalón y se rotula (x1, x2, x4) (352)")
 	pb.vel_idx = 0
-	_comprobar(pb.etiqueta_velocidad() == "PAUSA" and pb.velocidad() == 0.0, "y la pausa congela el reloj (352)")
+	_comprobar(pb.etiqueta_velocidad() == "PAUSA" and is_zero_approx(pb.velocidad()), "y la pausa congela el reloj (352)")
 	## Saltar al próximo gol (353): simular minutos hasta que cambia el marcador.
 	var saltos := 0
 	## Momentum, xG, palos, atajadas y fallos (355, 357, 358, 376) sobre 20 partidos.
@@ -179,7 +179,7 @@ func _ideas_a_pizarra() -> void:
 		despues += Tactica.efectividad(once, Tactica.def_corner(k)[3], en)
 	_comprobar(despues > antes and en.tiene_habilidad(once[0], "cabezazo"), "entrenar cabeceo, córner y tiro libre sube la efectividad de las ensayadas (421): %.2f → %.2f" % [antes, despues])
 	_comprobar(Tactica.efectividad(once, Tactica.def_libre("ensayada")[3], en) >= 1.3 and Tactica.efectividad(once, Tactica.def_libre("bloqueo")[3], en) <= 1.35, "con todos entrenados el tiro libre ensayado rinde al máximo (394)")
-	_comprobar(Tactica.efectividad(once, ["cabezazo"], null) == 1.0, "y sin entrenamiento se queda en 1,0")
+	_comprobar(is_equal_approx(Tactica.efectividad(once, ["cabezazo"], null), 1.0), "y sin entrenamiento se queda en 1,0")
 
 func _ideas_a_roles_y_eras() -> void:
 	var m := _mundo_ideas(2604)
@@ -215,12 +215,12 @@ func _ideas_a_roles_y_eras() -> void:
 	var res := m.analizar_rival()
 	_comprobar(res == "" and m.bono_analisis > 1.0 and m.bono_analisis <= 1.09, "el videoanálisis del rival da un bono al once (+%d%%) (400, 441)" % int(round((m.bono_analisis - 1.0) * 100.0)))
 	_comprobar(m.analizar_rival() != "" and not m.puede_analizar(), "y no se repite la misma semana (441)")
-	_comprobar(m.consumir_analisis() > 1.0 and m.bono_analisis == 1.0, "el bono vale para un solo partido (441)")
+	_comprobar(m.consumir_analisis() > 1.0 and is_equal_approx(m.bono_analisis, 1.0), "el bono vale para un solo partido (441)")
 	## Eras tácticas (411) y estadística de eficacia por formación (412).
 	var e := m.era_actual()
 	var buena: String = (e[2] as Array)[0]
 	var mala: String = (e[3] as Array)[0]
-	_comprobar(m.factor_moda(buena) > 1.0 and m.factor_moda(mala) < 1.0 and m.factor_moda("3-4-3") == 1.0, "la moda de la era premia (%s) y castiga (%s) formaciones (411)" % [buena, mala])
+	_comprobar(m.factor_moda(buena) > 1.0 and m.factor_moda(mala) < 1.0 and is_equal_approx(m.factor_moda("3-4-3"), 1.0), "la moda de la era premia (%s) y castiga (%s) formaciones (411)" % [buena, mala])
 	var e0: String = String(e[0])
 	m.era_tactica += 1
 	_comprobar(String(m.era_actual()[0]) != e0, "y la era cambia con los años (411)")

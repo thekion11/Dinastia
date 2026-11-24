@@ -35,7 +35,7 @@ func _ready() -> void:
 	Precarga.empezar(get_tree())
 	RuidosFondo.empezar()   ## las texturas de ruido, en hilos mientras se usan los menús
 	if Medicion.pedida():   ## el recorrido de medición (nucleo/medicion.gd)
-		_con_pesado(func() -> void: _P().medir(get_tree()))   ## cuando llegue lo pesado
+		_con_pesado(func() -> void: _cargar_pesado().medir(get_tree()))   ## cuando llegue lo pesado
 	_clave = _leer_ajuste()
 	_construir()
 	add_child(AhorroMenu.new())   ## (3-11) en MÍNIMA, sin 3D a la vista: bajo consumo y motas en pausa
@@ -67,7 +67,7 @@ func _ready() -> void:
 			_bokeh_banner.ajustar_area(_banner.size))
 	Engine.set_meta("menu_ms", Time.get_ticks_msec())   ## menú montado: para `Medicion`
 	if OS.has_feature("web") or OS.has_feature("android"):
-		print("DINASTIA_MENU_LISTO")   ## señal de las pruebas de humo (Web: consola del navegador; Android: logcat). Solo en esas dos plataformas.
+		print("DINASTIA_MENU_LISTO")   ## LOG:  señal de las pruebas de humo (Web: consola del navegador; Android: logcat). Solo en esas dos plataformas.
 
 ## El botón grande de «Nuevo juego», justo debajo de la partida en curso.
 func _construir_nuevo_juego() -> void:
@@ -101,7 +101,7 @@ func _nuevo_juego() -> void:
 	var estado := {"dificultad": _dificultad}
 	if nombre != "" and nombre != Idiomas.t("Míster"):
 		estado["nombre"] = nombre
-	_P().estado_entrada(estado)
+	_cargar_pesado().estado_entrada(estado)
 	## Si la carga en hilo ya acabó (o acaba ahora), se cambia sin volver a leer el disco.
 	var hecha: Variant = null
 	if ResourceLoader.load_threaded_get_status(ESCENA_ENTRADA) != ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:

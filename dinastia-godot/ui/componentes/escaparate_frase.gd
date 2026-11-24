@@ -8,7 +8,7 @@ const _ESTILOS := {
 	"motivador": "garra y carácter", "pizarron": "juego táctico y paciente",
 }
 
-static func _meta(p: Principal, c: Club) -> String:
+static func _meta(p: Principal, _c: Club) -> String:
 	var puesto := 8
 	if p.mundo != null and p.mundo.directiva != null:
 		puesto = p.mundo.directiva.meta_puesto

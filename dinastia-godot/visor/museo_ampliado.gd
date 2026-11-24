@@ -17,6 +17,7 @@ const POR_LADO := 5
 const FILAS := 3        ## filas de vitrinas por lado (la 1.ª pegada a la pared; las demás hacia el centro, a `SEPARACION_FILA` m una de otra): 5 × 2 × 3 = 30 vitrinas
 const SEPARACION_FILA := 1.85
 const UMBRAL_TITULOS := 7   ## = SalasClub.MAX_SALA + 1: el séptimo título ya no cabe en la planta 2 y abre la 3
+const _RUTA_TUNEL_VESTUARIO_PIEZAS := "res://visor/tunel_vestuario_piezas.gd"
 
 ## Dónde está cada vitrina de la planta 3 ({p, k}: k = su lugar en la lista de hitos, empieza en `SalasClub.MAX_SALA`); `MuseoVitrinas` las busca.
 static var vitrinas: Array[Dictionary] = []
@@ -101,8 +102,8 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 	if en_obra(ctx):
 		_obra(nodo, caja, y0, ctx)
 		return
-	var lote = load("res://visor/tunel_vestuario_piezas.gd").Lote.new()
-	var m = load("res://visor/tunel_vestuario_piezas.gd").materiales(c1, c2)
+	var lote = load(_RUTA_TUNEL_VESTUARIO_PIEZAS).Lote.new()
+	var m = load(_RUTA_TUNEL_VESTUARIO_PIEZAS).materiales(c1, c2)
 	var base := PiezasObra._mat_unico(Color(0.1, 0.1, 0.12), 0.4)
 	var vidrio := SalasClub.vidrio_vitrina()
 	var cx := caja.get_center().x
@@ -154,7 +155,7 @@ static func montar(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, c
 		lote.caja(base, SalasClub._en(Vector3(px, y0 + 1.55, pz)), Vector3(0.95, 1.15, 0.05))
 		lote.caja(m["toalla"], SalasClub._en(Vector3(px, y0 + 1.55, pz + 0.03)), Vector3(0.85, 1.05, 0.01))
 		var alterna := k % 2 == 1
-		load("res://visor/tunel_vestuario_piezas.gd").camiseta(lote, SalasClub._en(Vector3(px, y0 + 1.6, pz + 0.06)), m["cam2"] if alterna else m["cam1"], m["cam1"] if alterna else m["cam2"])
+		load(_RUTA_TUNEL_VESTUARIO_PIEZAS).camiseta(lote, SalasClub._en(Vector3(px, y0 + 1.6, pz + 0.06)), m["cam2"] if alterna else m["cam1"], m["cam1"] if alterna else m["cam2"])
 		if k < decadas.size():
 			PiezasObra._rotulo(nodo, "%ds" % int(decadas[k]), Vector3(px, y0 + 1.07, pz + 0.07), 0.0, 22, Color(0.12, 0.12, 0.14))
 	## El panel de hitos y el balón de la primera copa, en el cuarto hueco de la pared del fondo.

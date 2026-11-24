@@ -22,7 +22,15 @@ func _cumple(clave: String) -> bool:
 	var trofeos: Array = []
 	if mundo.directiva != null:
 		trofeos = mundo.directiva.trofeos
+	var v: Variant = _cumple_a(clave, c, trofeos)
+	if v == null:
+		v = _cumple_b(clave)
+	if v == null:
+		return false
+	return bool(v)
 
+## Logros de trofeos, marcas y del club (primer título, diez, la copa, el mundial de clubes, el estadio…). Devuelve null si la clave es de la otra mitad.
+func _cumple_a(clave: String, c: Club, trofeos: Array) -> Variant:
 	match clave:
 		"primer": return trofeos.size() >= 1
 		"diez": return trofeos.size() >= 10
@@ -36,17 +44,32 @@ func _cumple(clave: String) -> bool:
 		"estadio": return c.estadio_aforo >= 60000
 		"querido": return c.confianza >= 95
 		"millon": return float(c.saldo) * Eco.ECO >= 100000000.0
+	return null
+
+## Logros de la carrera del club: la honradez de diez temporadas.
+func _cumple_b(clave: String) -> Variant:
+	match clave:
 		## "Manos limpias" pide diez temporadas sin un solo pago turbio. Los
 		## sobornos todavía no están portados, así que no hay forma de
 		## ensuciarse: aguantar diez años basta. El día que entren, la condición
 		## solo tiene que sumar el "y sin pagos turbios" que le falta.
 		"limpio": return mundo.anio - anio_inicio >= 10
-	return false
+	return null
+
 
 func _cumple_oculto(clave: String) -> bool:
 	var c := mundo.mi_club()
 	if c == null:
 		return false
+	var v: Variant = _cumple_oculto_a(clave)
+	if v == null:
+		v = _cumple_oculto_b(clave, c)
+	if v != null:
+		return bool(v)
+	return false
+
+## Logros ocultos de carrera de club (centenario, mecenas, imperio, sabio). Devuelve null si la clave no es de este grupo.
+func _cumple_oculto_a(clave: String) -> Variant:
 	match clave:
 		"centenario":
 			return mundo.roles != null and mundo.roles.trofeos.size() >= 100
@@ -59,6 +82,11 @@ func _cumple_oculto(clave: String) -> bool:
 			return mundo.obras != null and mundo.obras.todo_al_maximo()
 		"sabio":
 			return mundo.entrenamiento != null and mundo.entrenamiento.mentorias.size() >= 4
+	return null
+
+## Logros ocultos del once y las rachas (cantera, ídolos, invicto, remontada). Devuelve null si la clave no es de este grupo.
+func _cumple_oculto_b(clave: String, c: Club) -> Variant:
+	match clave:
 		"cantera11":
 			## Once canteranos a la vez. Se mira el once REAL, no la plantilla:
 			## tener once de la casa en la lista no es alinearlos.
@@ -82,7 +110,7 @@ func _cumple_oculto(clave: String) -> bool:
 			return l != null and not l.quedan_jornadas() and int(rachas.get("invicto", 0)) >= l.jornadas()
 		"remontada":
 			return bool(marcas.get("remontada", false))
-	return false
+	return null
 
 func revisar_ocultos() -> Array[String]:
 	var nuevos: Array[String] = []

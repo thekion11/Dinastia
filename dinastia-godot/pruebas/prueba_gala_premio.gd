@@ -14,7 +14,6 @@ func _ready() -> void:
 	var salida := OS.get_environment("SALIDA")
 	var m := Mundo.new()
 	m.generar(["ESP", "ARG", "GER", "BRA", "ITA", "FRA", "ENG", "CHI"], 20261113)
-	var puestos := ["DC", "MC", "POR", "DFC", "ED", "MCO", "LI", "MCD"]
 	var k := 0
 	var ids: Array = CarreraPremios.PREMIOS.keys()
 	var sin_guion: Array = ids.filter(func(x: String) -> bool: return not GalaGuiones.GUIONES.has(x))

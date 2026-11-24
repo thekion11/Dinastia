@@ -28,14 +28,11 @@ static func _siguiente() -> void:
 		_mostrando = false
 		return
 	var d: Dictionary = _cola.pop_front()
-	var padre_v: Variant = d["padre"]   ## (17-11) un nodo ya liberado no cabe en una variable tipada: se mira antes
-	if padre_v == null or not is_instance_valid(padre_v):
+	var pv: Variant = d["padre"]   ## Variant: si la pantalla ya se liberó, asignarla a un Control tipado daba error
+	if pv == null or not is_instance_valid(pv) or not (pv as Control).is_inside_tree():
 		_siguiente()
 		return
-	var padre: Control = padre_v
-	if not padre.is_inside_tree():
-		_siguiente()
-		return
+	var padre: Control = pv
 	_mostrando = true
 	## No por encima de una pantalla que pide atención (21-10-2026, vídeo de
 	## gameplay: el consejo del presidente tapaba las respuestas de la rueda de
@@ -89,8 +86,17 @@ func _montar(mundo: Mundo, titulo: String, texto: String) -> void:
 	Animar.aparecer(self)
 	Sonido.toca("notificacion" if Sonido.NOMBRES.has("notificacion") else "cambio", Sonido.Bus.INTERFAZ)
 	get_tree().create_timer(DURA).timeout.connect(_cerrar)
+	tree_exiting.connect(_al_salir)
 
 var _cerrado := false
+
+## (19-11) Si la pantalla se cierra con el mentor a la vista, `_cerrar` ya no corre (fuera del árbol) y `_mostrando` quedaba en true PARA SIEMPRE:
+## el mentor no volvía a hablar en toda la sesión. Al salir del árbol se da paso al siguiente (en el próximo fotograma, ya fuera de la pantalla vieja).
+func _al_salir() -> void:
+	if _cerrado:
+		return
+	_cerrado = true
+	get_tree().process_frame.connect(MentorVoz._siguiente, CONNECT_ONE_SHOT)
 
 func _cerrar() -> void:
 	if _cerrado or not is_inside_tree():

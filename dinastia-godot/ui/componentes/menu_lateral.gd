@@ -75,6 +75,12 @@ static func ejecutar(p: Principal, accion: String) -> void:
 			load("res://ui/componentes/creador_personaje.gd").abrir(p, p.mundo)
 		"album":
 			PanelMeta.abrir(p, p.mundo)
+		_:
+			_ejecutar_mas(p, accion)
+
+## Las acciones de la segunda mitad (mismo orden de antes).
+static func _ejecutar_mas(p: Principal, accion: String) -> void:
+	match accion:
 		"elegir_club":
 			## El menú de Competiciones se cierra: «Elegir club» es una ventana propia y debajo quedaba su fondo marrón.
 			var ml: Variant = p.get("_menu_lateral")
@@ -284,7 +290,7 @@ func _boton_riel(texto: String, tip: String) -> Button:
 	b.add_theme_stylebox_override("pressed", marcado)
 	b.add_theme_stylebox_override("hover_pressed", marcado)
 	b.custom_minimum_size = Vector2(ALTO_BARRA, ALTO_BARRA - 6.0) if abajo() else Vector2(ANCHO_RIEL, 40)
-	b.add_theme_font_size_override("font_size", 24)
+	b.add_theme_font_size_override("font_size", Tema.letra(24))
 	return b
 
 func _al_arrastrar(e: InputEvent) -> void:
@@ -296,7 +302,7 @@ func _al_arrastrar(e: InputEvent) -> void:
 	elif e is InputEventMouseButton and not (e as InputEventMouseButton).pressed:
 		_arrastre = 0.0
 		return
-	if dx == 0.0:
+	if is_zero_approx(dx):
 		return
 	_arrastre += dx
 	if _arrastre > 40.0 and not _abierto:

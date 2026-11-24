@@ -77,7 +77,7 @@ func _probar() -> void:
 			cam.position = Vector3(30, 20, 30)
 			mundo3d.add_child(cam)
 			cam.look_at(Vector3(0, 0, 30), Vector3.UP)
-			var sala := SalaVAR.abrir(_p, mundo3d.get_world_3d(), Vector3(0, 0, 31), 67, Idiomas.t("Revisión del gol: posible fuera de juego"), false)
+			var sala := SalaVAR.abrir(_p, mundo3d.get_world_3d(), Vector3(0, 0, 31), 67, Idiomas.t("Revisión del gol: posible fuera de juego"), {})
 			var peor: Array[String] = []
 			for k in 8:
 				await get_tree().create_timer(0.8).timeout

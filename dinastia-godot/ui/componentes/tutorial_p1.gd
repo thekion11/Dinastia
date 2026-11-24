@@ -93,6 +93,7 @@ const _APELLIDOS := ["Valdivia", "Arancibia", "Montalvo", "Echenique", "Sotomayo
 ## mismo para el mismo club) y encima va lo que el jugador haya elegido con ✎,
 ## guardado por modo en `user://ajustes.cfg`.
 const SECCION_ASPECTO := "mentor_aspecto"
+const _RUTA_PERSONA_REALISTA := "res://visor/persona_realista.gd"
 
 ## Negrita de verdad (la sintética del texto enriquecido montaba letras).
 static func _negrita() -> Font:
@@ -119,21 +120,11 @@ static func contexto(mundo: Mundo, club_por_defecto: String = "tu club") -> Dict
 	ctx["caja"] = Eco.dinero(c.saldo)
 	ctx["anio"] = mundo.anio
 	ctx["socios"] = c.socios if c.socios > 0 else c.estadio_aforo
-	if mundo.junta != null and not mundo.junta.presidente.is_empty():
-		ctx["presidente"] = String(mundo.junta.presidente.get("nombre", ""))
-	if mundo.directiva != null:
-		ctx["objetivo"] = mundo.directiva.objetivo
-		ctx["confianza"] = mundo.directiva.confianza
-	for l in mundo.ligas:
-		if l.clubes.has(c):
-			ctx["liga"] = l.nombre
-	var par := mundo.proximo_partido()
-	if par.size() == 2:
-		var rival: Club = par[1] if par[0] == c else par[0]
-		ctx["rival"] = rival.nombre
-		ctx["local"] = par[0] == c
-	var estrella: Jugador = null
-	var joven: Jugador = null
+	_ctx_junta_directiva(ctx, mundo)
+	_ctx_liga_y_rival(ctx, mundo, c)
+	var fig := _figuras(c)
+	var estrella: Jugador = fig[0]
+	var joven: Jugador = fig[1]
 	for j: Jugador in c.plantilla:
 		if estrella == null or j.ovr > estrella.ovr:
 			estrella = j
@@ -143,6 +134,40 @@ static func contexto(mundo: Mundo, club_por_defecto: String = "tu club") -> Dict
 		ctx["estrella"] = {"id": estrella.id, "nombre": estrella.nombre, "ovr": estrella.ovr, "pos": estrella.pos_e}
 	if joven != null and joven != estrella:
 		ctx["joven"] = {"id": joven.id, "nombre": joven.nombre, "edad": joven.edad, "pot": joven.pot}
+	_ctx_dt_cantera(ctx, mundo)
+	return ctx
+## Presidente, objetivo y confianza de la directiva (si los hay).
+static func _ctx_junta_directiva(ctx: Dictionary, mundo: Mundo) -> void:
+	if mundo.junta != null and not mundo.junta.presidente.is_empty():
+		ctx["presidente"] = String(mundo.junta.presidente.get("nombre", ""))
+	if mundo.directiva != null:
+		ctx["objetivo"] = mundo.directiva.objetivo
+		ctx["confianza"] = mundo.directiva.confianza
+
+## La liga del club y el rival del próximo partido (si lo hay).
+static func _ctx_liga_y_rival(ctx: Dictionary, mundo: Mundo, c: Club) -> void:
+	for l in mundo.ligas:
+		if l.clubes.has(c):
+			ctx["liga"] = l.nombre
+	var par := mundo.proximo_partido()
+	if par.size() == 2:
+		var rival: Club = par[1] if par[0] == c else par[0]
+		ctx["rival"] = rival.nombre
+		ctx["local"] = par[0] == c
+
+## La estrella del plantel (la de más media) y el joven más prometedor (≤ 21 años).
+static func _figuras(c: Club) -> Array:
+	var estrella: Jugador = null
+	var joven: Jugador = null
+	for j: Jugador in c.plantilla:
+		if estrella == null or j.ovr > estrella.ovr:
+			estrella = j
+		if j.edad <= 21 and (joven == null or j.pot > joven.pot):
+			joven = j
+	return [estrella, joven]
+
+## El DT, la meta de la cantera y el mejor chico de la academia.
+static func _ctx_dt_cantera(ctx: Dictionary, mundo: Mundo) -> void:
 	if mundo.roles != null:
 		var dt := mundo.roles.dt_nombre()
 		ctx["dt"] = dt if dt != "—" else ""
@@ -153,7 +178,6 @@ static func contexto(mundo: Mundo, club_por_defecto: String = "tu club") -> Dict
 			if mejor.is_empty() or mundo.academia.proyeccion(ch).y > mundo.academia.proyeccion(mejor).y:
 				mejor = ch
 		ctx["chico"] = {"nombre": String(mejor["nombre"]), "edad": int(mejor["edad"])}
-	return ctx
 
 static func _nombre_mentor(semilla: String) -> String:
 	var h := absi(semilla.hash())
@@ -384,7 +408,7 @@ static func aspecto_mentor(modo: String, m: Dictionary) -> Dictionary:
 		if guardado is Dictionary:
 			for k: String in guardado:
 				pedido[k] = guardado[k]
-	return load("res://visor/persona_realista.gd").aspecto(String(m.get("semilla", modo)), pedido)
+	return load(_RUTA_PERSONA_REALISTA).aspecto(String(m.get("semilla", modo)), pedido)
 
 static func _cara_mentor(m: Dictionary, ctx: Dictionary) -> Texture2D:
 	var j := Jugador.new()
@@ -398,8 +422,8 @@ static func _cara_mentor(m: Dictionary, ctx: Dictionary) -> Texture2D:
 func _pintar_retrato(ctx: Dictionary) -> void:
 	for h in _marco_cara.get_children():
 		h.queue_free()
-	if load("res://visor/persona_realista.gd").disponible():
-		_marco_cara.add_child(load("res://visor/persona_realista.gd").retrato(_aspecto, Vector2i(100, 120), _fondo_retrato, "cara"))
+	if load(_RUTA_PERSONA_REALISTA).disponible():
+		_marco_cara.add_child(load(_RUTA_PERSONA_REALISTA).retrato(_aspecto, Vector2i(100, 120), _fondo_retrato, "cara"))
 	else:
 		var r := TextureRect.new()
 		r.custom_minimum_size = Vector2(84, 84)

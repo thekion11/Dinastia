@@ -172,16 +172,8 @@ func _mover(delta: float) -> void:
 		var u := clampf(float(f["t"]) / float(f["dur"]), 0.0, 1.0)
 		var ruta: Array = f["ruta"]
 		var resto := u * float(f["largo"])
-		for i in ruta.size() - 1:
-			var seg: float = (ruta[i] as Vector3).distance_to(ruta[i + 1])
-			if resto <= seg or i == ruta.size() - 2:
-				var q := clampf(resto / maxf(seg, 0.001), 0.0, 1.0)
-				n.position = (ruta[i] as Vector3).lerp(ruta[i + 1], q)
-				if seg > 0.05:
-					var dir: Vector3 = (ruta[i + 1] as Vector3) - (ruta[i] as Vector3)
-					n.rotation.y = lerp_angle(n.rotation.y, atan2(dir.x, dir.z), 0.25)
-				break
-			resto -= seg
+		_posar_sobre_ruta(n, ruta, resto)
+
 		if u >= 1.0:
 			if bool(f["sube"]) and bus_ok:
 				var abordo: Array = (bus as Node3D).get_meta("pasajeros", [])
@@ -231,3 +223,16 @@ func _exit_tree() -> void:
 	for i in _esperando:
 		for fig: Dictionary in _esperando[i]:
 			_liberar(fig)
+
+## Pone la figura en el punto de `ruta` que corresponde a `resto` y la gira hacia donde camina.
+func _posar_sobre_ruta(n: Node3D, ruta: Array, resto: float) -> void:
+	for i in ruta.size() - 1:
+		var seg: float = (ruta[i] as Vector3).distance_to(ruta[i + 1])
+		if resto <= seg or i == ruta.size() - 2:
+			var q := clampf(resto / maxf(seg, 0.001), 0.0, 1.0)
+			n.position = (ruta[i] as Vector3).lerp(ruta[i + 1], q)
+			if seg > 0.05:
+				var dir: Vector3 = (ruta[i + 1] as Vector3) - (ruta[i] as Vector3)
+				n.rotation.y = lerp_angle(n.rotation.y, atan2(dir.x, dir.z), 0.25)
+			break
+		resto -= seg

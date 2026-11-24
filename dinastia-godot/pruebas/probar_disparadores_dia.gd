@@ -17,8 +17,7 @@ func _mundo(paises: Array, semilla: int) -> Mundo:
 	m.tomar_el_mando(m.ligas[0].clubes[1 + semilla % 3].id)
 	return m
 
-func correr(padre: Node = null) -> int:
-	var _p := padre
+func correr(_padre: Node = null) -> int:
 	for cfg: Array in [[["CHI"], 11], [["ARG", "BRA"], 22], [["ESP", "ENG"], 33]]:
 		var m := _mundo(cfg[0], int(cfg[1]))
 		var e := "%s/%d" % [",".join(cfg[0]), cfg[1]]
@@ -135,9 +134,19 @@ func _segunda(m: Mundo, e: String) -> void:
 	var f := DisparadoresDia.de_seleccion(m, est)
 	_ok(f.size() == 1 and String(f[0]["clase"]) == EventosDia.PANTALLA and DisparadoresDia.de_seleccion(m, est).is_empty(), "%s: llamada de selección = PANTALLA, una vez" % e)
 	m.selecciones.cargo.oferta = {}
+	DisparadoresDia.de_seleccion(m, est)   ## dices que no: la oferta se cierra
+	m.selecciones.cargo.oferta = {"nombre": "Selección Z", "fuerza": 70, "sueldo": 1000}   ## la MISMA selección vuelve a llamar
+	_ok(DisparadoresDia.de_seleccion(m, est).size() == 1, "%s: la misma selección vuelve a llamar y se avisa otra vez" % e)
+	m.selecciones.cargo.oferta = {}
 	m.federacion.dt_suspension = 2
 	var g := DisparadoresDia.de_sancion_dt(m, est)
 	_ok(g.size() == 1 and String(g[0]["zona"]) == "prensa" and DisparadoresDia.de_sancion_dt(m, est).is_empty(), "%s: sanción al DT = AVISO de prensa, una vez" % e)
+	m.federacion.dt_suspension = 1   ## se cumple una fecha: el aviso NO se repite (antes salía otra vez con «1 partido»)
+	_ok(DisparadoresDia.de_sancion_dt(m, est).is_empty(), "%s: la sanción que se cumple no repite el aviso" % e)
+	m.federacion.dt_suspension = 0
+	DisparadoresDia.de_sancion_dt(m, est)
+	m.federacion.dt_suspension = 1   ## sanción NUEVA más tarde, aunque sea de pocas fechas: sí avisa
+	_ok(DisparadoresDia.de_sancion_dt(m, est).size() == 1, "%s: una sanción nueva vuelve a avisar" % e)
 	m.federacion.dt_suspension = 0
 	## tercera tanda
 	var mio := m.mi_club()

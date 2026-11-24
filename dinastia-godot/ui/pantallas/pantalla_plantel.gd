@@ -58,7 +58,7 @@ func _pintar_copa(mio: Club) -> void:
 		p._lista_copa.add_child(g)
 		for r: Dictionary in ronda["resultados"]:
 			var mio_juega: bool = r["local"] == mio or r["visita"] == mio
-			var col := p.COL_ACENTO if mio_juega else Principal.COL_TEXTO
+			var col := p.col_acento if mio_juega else Principal.COL_TEXTO
 			p._celda(g, String(r["local"].nombre), col if r["pasa"] == r["local"] else Principal.COL_SUAVE)
 			var marcador := "%d-%d" % [r["gl"], r["gv"]]
 			if not r["penales"].is_empty():

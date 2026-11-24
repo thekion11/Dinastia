@@ -99,7 +99,6 @@ func _recorrer(cb: CityBuilder, obst: Array[Rect2], rej: Dictionary, modo: Strin
 	_comprobar(nan == 0, "%s: el terreno tiene altura definida en todo el mapa (%d celdas sin)" % [modo, nan])
 	_comprobar(float(vistos.size()) >= 0.9 * float(libres.size()), "%s: al menos el 90 %% de lo pisable es alcanzable desde la puerta del club (%.0f %%)" % [modo, 100.0 * float(vistos.size()) / maxf(1.0, float(libres.size()))])
 	_comprobar(peor_pend <= 0.7, "%s: ningún paso entre celdas contiguas pisables pasa del 70 %% de pendiente (%d pasos por encima del 60 %%, peor %.2f)" % [modo, empinados, peor_pend])
-	var cubierto := 0
 	var suelos := 0
 	var caja := AABB()
 	var primero := true

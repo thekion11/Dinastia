@@ -1,5 +1,5 @@
 extends Node
-## LOS SEIS ESCALONES DE `RendimientoAdaptativo` (25-9-2026).
+## LOS SIETE ESCALONES DE `RendimientoAdaptativo` (25-9-2026).
 ##
 ##   godot --headless --path . res://pruebas/probar_rendimiento_adaptativo.tscn
 ##
@@ -56,7 +56,14 @@ func _ready() -> void:
 	ra.bajar()
 	_comprobar(not sol.shadow_enabled and avisos[-1] == "sin sombra del sol", "escalón 6: sin sombra del sol (último recurso)")
 	ra.bajar()
-	_comprobar(ra.escalon == 6 and avisos.size() == 6, "no hay séptimo escalón, y avisó de los seis")
+	_comprobar(not env.adjustment_enabled and raiz.get_node_or_null("PartidoLigero") != null and avisos.size() == 7 and not Calidad.partido_ligero, "escalón 7: partido ligero (sin ajuste de color, rótulos ni focos) sin tocar la opción guardada")
+	var rotulos_ocultos := true
+	await get_tree().process_frame
+	for r in raiz.find_children("*", "Label3D", true, false):
+		rotulos_ocultos = rotulos_ocultos and not (r as Label3D).visible
+	_comprobar(rotulos_ocultos, "escalón 7: los rótulos 3D quedan ocultos")
+	ra.bajar()
+	_comprobar(ra.escalon == 7 and avisos.size() == 7, "no hay octavo escalón, y avisó de los siete")
 	vista.queue_free()
 	await get_tree().process_frame
 	await get_tree().process_frame

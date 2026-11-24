@@ -27,7 +27,7 @@ func _ready() -> void:
 			var linea := "%s %s:" % [cual, clima if clima != "" else "sol"]
 			for n: float in [8.0, 12.0, 16.0, 20.0, 25.0, 30.0]:
 				var vu := clampf(_vel(mo, n, 4.0), 7.0, 24.0)
-				var vi := clampf(_vel(mo, n, 4.0 + n * 1.5) * MotorPaseMejora.VEL_K, 7.0, 26.0 * MotorPaseMejora.VEL_K)
+				var vi := clampf(_vel(mo, n, 4.0 + n * 1.5) * MotorPaseMejora.vel_k, 7.0, 26.0 * MotorPaseMejora.vel_k)
 				linea += "\n   %dm: usuario %.1f m/s -> %.1f m | IA %.1f m/s -> %.1f m" % [int(n), vu, _rueda(mo, bola, vu), vi, _rueda(mo, bola, vi)]
 			print(linea)
 			var bote := "%s %s, a media altura (`_pasar_a` largo):" % [cual, clima if clima != "" else "sol"]

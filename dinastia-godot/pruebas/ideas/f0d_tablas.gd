@@ -155,7 +155,7 @@ func _permanente(h: Dictionary) -> void:
 	_comprobar(sk == HUELLA_KIT, "los colores de las camisetas son los sellados (%d)" % sk)
 	_comprobar(sj == HUELLA_JUG, "las fases de las jugadas son las selladas (%d)" % sj)
 	## Toda familia de DISENOS tiene su fórmula (si no, caería en silencio al color de fondo).
-	var formulas: Dictionary = DisenosKit.FORMULAS
+	var formulas: Dictionary = DisenosKit.formulas
 	var sin_formula: Array[String] = []
 	for d: Array in DisenosKit.DISENOS:
 		var f := int(d[2])

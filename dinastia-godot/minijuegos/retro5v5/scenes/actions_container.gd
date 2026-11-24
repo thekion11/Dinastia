@@ -50,10 +50,10 @@ func spawns_players(club: String, own_goal: Goal) -> Array[Player]:
 		player_nodes.append(player)
 		add_child(player)
 	return player_nodes
-	
+
 func spawn_player(player_position: Vector2, kickoff_position: Vector2, own_goal: Goal, target_goal: Goal, player_data: PlayerResource, club: String) -> Player:
 	var player : Player = PLAYER_PREFAB.instantiate()
-	player.initialize(player_position, kickoff_position, ball, own_goal, target_goal, player_data, club)
+	player.initialize(player_position, kickoff_position, ball, {"own_goal": own_goal, "target_goal": target_goal}, player_data, club)
 	player.swap_requested.connect(on_player_swap_request.bind())
 	return player
 
@@ -64,7 +64,7 @@ func set_on_duty_weights() -> void:
 		)
 		cpu_players.sort_custom(func(p1: Player, p2: Player):
 			return p1.spawn_position.distance_squared_to(ball.position) < p2.spawn_position.distance_squared_to(ball.position))
-			
+
 		for i in range(cpu_players.size()):
 			cpu_players[i].weight_on_duty_steering = 1 - ease(float(i)/10.0, 0.1)
 

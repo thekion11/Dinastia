@@ -207,9 +207,9 @@ static func cinta_camino(t: Node3D, b: CityBuilder, puntos: Array[Vector3], anch
 	var der: Array[Vector3] = []
 	for i in muestras.size():
 		var lado := Vector3(-dirs[i].z, 0, dirs[i].x) * ancho * 0.5
-		var pi_ := muestras[i] + lado
+		var pi := muestras[i] + lado
 		var pd := muestras[i] - lado
-		izq.append(Vector3(pi_.x, altura_malla(b, pi_.x, pi_.z) + 0.15, pi_.z))
+		izq.append(Vector3(pi.x, altura_malla(b, pi.x, pi.z) + 0.15, pi.z))
 		der.append(Vector3(pd.x, altura_malla(b, pd.x, pd.z) + 0.15, pd.z))
 	for i in muestras.size() - 1:
 		for p: Vector3 in [izq[i], der[i], izq[i + 1], der[i], der[i + 1], izq[i + 1]]:

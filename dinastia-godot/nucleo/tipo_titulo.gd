@@ -63,6 +63,13 @@ static func rotulo(tipo: String) -> String:
 
 ## El nombre de cada escena en los botones.
 static func nombre_escena(e: String) -> String:
+	var nat := Nativo.de("nuc_nombre_escena")
+	if nat != null:
+		return nat.nuc_nombre_escena(e)
+	return nombre_escena_gd(e)
+
+## Gemela GDScript de `nuc_nombre_escena` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nombre_escena_gd(e: String) -> String:
 	match e:
 		"escenario": return "🏆 Levantar la copa"
 		"palco": return "🎖️ Palco y medallas"

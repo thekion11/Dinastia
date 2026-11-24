@@ -120,18 +120,10 @@ func _gente_cerca(delta: float) -> void:
 		_crear_persona(_cola_gente.pop_front())
 	if not _cola_pas.is_empty() and _pas_nodo != null and is_instance_valid(_pas_nodo):
 		_crear_pasajero(_cola_pas.pop_front())
-	for f: Dictionary in _fijos_gente:
-		if not bool(f["charla"]):
-			continue
-		f["t"] = float(f["t"]) - delta
-		if float(f["t"]) <= 0.0:
-			f["t"] = _rng_gente.randf_range(4.0, 9.0)
-			Mini3D.anim(f["d"], "charla" if _rng_gente.randf() < 0.7 else "parado", "")
+	_animar_charlas(delta)
 	## En pasos cortos: con fotogramas lentos, un paso de un metro de golpe hacía
 	## que el esquive rebotara y la gente se quedara clavada.
-	var pasos := mini(20, ceili(delta / 0.05))
-	for _i in pasos:
-		_mover_caminantes(delta / float(pasos))
+	_pasos_de_caminantes(delta)
 	_llegadas(delta)
 	_t_gente -= delta
 	if _t_gente > 0.0:
@@ -395,3 +387,19 @@ func posiciones_gente() -> Array:
 	for n: Node3D in _cuerpos_gente():
 		r.append(n.position)
 	return r
+
+## Las charlas de la gente fija: cada cierto tiempo se cambia entre hablar y estar parado.
+func _animar_charlas(delta: float) -> void:
+	for f: Dictionary in _fijos_gente:
+		if not bool(f["charla"]):
+			continue
+		f["t"] = float(f["t"]) - delta
+		if float(f["t"]) <= 0.0:
+			f["t"] = _rng_gente.randf_range(4.0, 9.0)
+			Mini3D.anim(f["d"], "charla" if _rng_gente.randf() < 0.7 else "parado", "")
+
+## Los caminantes avanzan en pasos cortos (un paso largo de golpe los dejaba clavados).
+func _pasos_de_caminantes(delta: float) -> void:
+	var pasos := mini(20, ceili(delta / 0.05))
+	for _i in pasos:
+		_mover_caminantes(delta / float(pasos))

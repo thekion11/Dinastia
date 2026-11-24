@@ -112,7 +112,7 @@ func _q(arr: Array, k: int, espejo: bool, nom: String) -> Quaternion:
 
 func _convertir(clip: Dictionary, espejo: bool) -> Animation:
 	var n := int(clip["cuadros"])
-	var J := nombres.size()
+	var j := nombres.size()
 	var q: Array = clip["q"]
 	var q0: Array = clip["q0"]
 	var offs: Array = clip["offsets"]
@@ -132,7 +132,7 @@ func _convertir(clip: Dictionary, espejo: bool) -> Animation:
 	## Pose en T del origen: giros globales y posiciones (con los desplazamientos de la articulación gemela si es el espejo).
 	var g0 := {}
 	var p0 := {}
-	for i in J:
+	for i in j:
 		var nom: String = nombres[i]
 		var ql := _q(q0, 0, espejo, nom)
 		var fuente := _espejo_nombre(nom) if espejo else nom
@@ -161,7 +161,7 @@ func _convertir(clip: Dictionary, espejo: bool) -> Animation:
 		var f := k % n
 		var t := float(k) / fps
 		var g := {}
-		for i in J:
+		for i in j:
 			var nom: String = nombres[i]
 			var ql := _q(q, f, espejo, nom)
 			var p: int = padres[i]

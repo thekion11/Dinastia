@@ -9,8 +9,9 @@ extends Node
 var _raiz: Node
 
 ## Lo monta el estadio 3D al construirse (`estadio_p3.gd`); sin la opción no hace nada.
-static func montar(raiz: Node) -> void:
-	if not Calidad.partido_ligero or raiz == null or raiz.get_node_or_null("PartidoLigero") != null:
+## `forzar` (20-11): lo usa el último escalón de `RendimientoAdaptativo` (equipo que sigue bajo 40 FPS) SIN cambiar la opción guardada de Ajustes.
+static func montar(raiz: Node, forzar: bool = false) -> void:
+	if not (Calidad.partido_ligero or forzar) or raiz == null or raiz.get_node_or_null("PartidoLigero") != null:
 		return
 	var o := PartidoLigero.new()
 	o.name = "PartidoLigero"

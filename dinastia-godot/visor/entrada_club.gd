@@ -29,7 +29,7 @@ static func rect_garita(x0: float, z_fin: float) -> Rect2:
 	return Rect2(centro(x0) + HOJA + 1.5, z_fin + 0.35, 1.8, 1.8)
 
 static func montar(nodo: Node3D, x0: float, z_fin: float, c1: Color, c2: Color,
-		horm: StandardMaterial3D, nombre: String, mi: Club) -> void:
+		_horm: StandardMaterial3D, nombre: String, mi: Club) -> void:
 	var px := centro(x0)
 	var zf := z_fin + 0.3
 	var e := Node3D.new()

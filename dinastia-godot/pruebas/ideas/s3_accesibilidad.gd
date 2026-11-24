@@ -25,7 +25,7 @@ func _contraste() -> void:
 	_p._refrescar()
 	_comprobar(Tema.contraste, "la paleta «contraste» enciende también `Tema.contraste` (teléfono, avisos, competición)")
 	var panel := _p._pal_panel()
-	_comprobar(panel.a == 1.0 and panel.get_luminance() < 0.02, "panel negro y opaco (luminosidad %.2f, alfa %.2f)" % [panel.get_luminance(), panel.a])
+	_comprobar(is_equal_approx(panel.a, 1.0) and panel.get_luminance() < 0.02, "panel negro y opaco (luminosidad %.2f, alfa %.2f)" % [panel.get_luminance(), panel.a])
 	_comprobar(_p._pal_suave().get_luminance() > 0.7 and Tema.accesible(Tema.SUAVE).get_luminance() > 0.7,
 		"el texto suave pasa a casi blanco (%.2f)" % Tema.accesible(Tema.SUAVE).get_luminance())
 	var acento := _p._con_contraste(Color("3fa06a"))

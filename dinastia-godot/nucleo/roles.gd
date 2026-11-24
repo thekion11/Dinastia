@@ -282,7 +282,7 @@ func semana_desgaste(gano_algo: bool, funa: int) -> void:
 ## Se cierra el capítulo de un club y se abre otro. Lo llama `tomar_el_mando()`
 ## cuando ya había un club antes: es lo que convierte una partida larga en una
 ## CARRERA y no en una sucesión de clubes sin memoria.
-func cerrar_capitulo(club_id: String, nombre_club: String, anio: int, motivo: String) -> void:
+func cerrar_capitulo(club_id: String, _nombre_club: String, anio: int, motivo: String) -> void:
 	if club_id == "":
 		return
 	for c: Dictionary in curriculum:

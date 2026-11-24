@@ -53,7 +53,7 @@ func _pintar_palmares_mundial(s: Selecciones) -> void:
 		for f: Dictionary in s.campeones_continentales:
 			var propio := String(f.get("club_id", "")) == mi_id
 			p._dato("%s %d" % [CompeticionInfo.nombre_visible(String(f.get("torneo", ""))), int(f.get("anio", 0))],
-				String(f.get("campeon", "")), p.COL_ACENTO if propio else Principal.COL_TEXTO, p._lista_seleccion)
+				String(f.get("campeon", "")), p.col_acento if propio else Principal.COL_TEXTO, p._lista_seleccion)
 
 func _nacionalizar(j: Jugador) -> void:
 	var problema := p.mundo.selecciones.nacionalizar(j)
@@ -138,7 +138,7 @@ func _pintar_seleccion(c: Club) -> void:
 			fila.add_child(n)
 			var b := Button.new()
 			b.text = Idiomas.t("Pedido") if pedido else Idiomas.t("Pedir descanso")
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.disabled = pedido
 			b.custom_minimum_size = Vector2(120, 0)
 			b.pressed.connect(func() -> void:
@@ -179,7 +179,7 @@ func _pintar_seleccion(c: Club) -> void:
 			var costo := s.costo_nacionalizacion(j)
 			var b := Button.new()
 			b.text = Idiomas.t("Nacionalizar  %s") % p._dinero(costo)
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.disabled = costo > c.saldo
 			b.pressed.connect(func() -> void: _nacionalizar(j))
 			fila_h.add_child(b)
@@ -190,7 +190,7 @@ func _pintar_seleccion(c: Club) -> void:
 	p._lista_seleccion.add_child(tm)
 	for fila2: Dictionary in s.mas_convocados(8):
 		var j2: Jugador = fila2["jugador"]
-		var col := p.COL_ACENTO if j2.club_id == c.id else Principal.COL_TEXTO
+		var col := p.col_acento if j2.club_id == c.id else Principal.COL_TEXTO
 		var lm := p._texto(12, col)
 		lm.text = Idiomas.t("%s  ·  %d caps") % [j2.nombre, int(fila2["caps"])]
 		p._lista_seleccion.add_child(lm)
@@ -201,7 +201,7 @@ func _pintar_seleccion(c: Club) -> void:
 	p._lista_seleccion.add_child(te)
 	for fila3: Dictionary in s.ranking(14):
 		var propia := String(fila3["nombre"]) == s.nombre_seleccion()
-		var le := p._texto(12, p.COL_ACENTO if propia else Principal.COL_SUAVE)
+		var le := p._texto(12, p.col_acento if propia else Principal.COL_SUAVE)
 		le.text = "%s%s  ·  %d" % ["> " if propia else "   ", String(fila3["nombre"]), int(fila3["fuerza"])]
 		p._lista_seleccion.add_child(le)
 
@@ -274,7 +274,7 @@ func _pintar_fondos(c: Club) -> void:
 			var clave := String(f[0])
 			var b := Button.new()
 			b.text = "%s  %s" % [String(f[1]).split(" ")[0], p._dinero(ce.oferta_de_fondo(j2, clave, 25))]
-			b.add_theme_font_size_override("font_size", 10)
+			b.add_theme_font_size_override("font_size", Tema.letra(10))
 			b.clip_text = true
 			b.tooltip_text = Idiomas.t("%s  ·  vende el 25%% del próximo traspaso de %s") % [String(f[3]), j2.nombre]
 			b.custom_minimum_size = Vector2(140 if de_pie else 120, 0)   ## de pie cabe el importe entero («390k EUR»)
@@ -362,7 +362,7 @@ func _pintar_linaje(c: Club) -> void:   ## (12-11) los fondos y el mapa del tale
 			b.text = j.nombre
 			b.flat = true
 			b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-			b.add_theme_font_size_override("font_size", 12)
+			b.add_theme_font_size_override("font_size", Tema.letra(12))
 			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			b.pressed.connect(func() -> void: p._ver_ficha(j))
 			fila.add_child(b)

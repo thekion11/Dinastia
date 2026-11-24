@@ -10,6 +10,7 @@ const TINTA := Color("e8eeff")
 const SUAVE := Color("9aa6c4")
 const ROJO := Color("c8102e")
 const AZUL := Color("2d4a8a")
+const _RUTA_BARLOWCONDENSED_REGULAR := "res://assets/fuentes/BarlowCondensed-Regular.ttf"
 ## Colores de cada TIPO de evento (las variables --t-* de la maqueta).
 const COLOR := {"partido": Color("c8102e"), "premio": Color("e2b84a"), "fichaje": Color("27a9b8"), "noticia": Color("4f8ff7"), "decision": Color("f08a3c"),
 	"lesion": Color("e5484d"), "dinero": Color("3fb27f"), "cantera": Color("9acd32"), "mercado": Color("8b95a8"), "hito": Color("9b7bf0"), "memoria": Color("5a6275")}
@@ -58,7 +59,7 @@ static var _titulo: FontVariation
 static func fuente_titulo() -> Font:
 	if _titulo == null:
 		_titulo = FontVariation.new()
-		_titulo.base_font = load("res://assets/fuentes/BarlowCondensed-Regular.ttf")
+		_titulo.base_font = load(_RUTA_BARLOWCONDENSED_REGULAR)
 		_titulo.variation_embolden = 0.8
 	return _titulo
 
@@ -73,7 +74,7 @@ static var _espaciada: FontVariation
 static func fuente_rotulo() -> Font:
 	if _espaciada == null:
 		_espaciada = FontVariation.new()
-		_espaciada.base_font = load("res://assets/fuentes/BarlowCondensed-Regular.ttf")
+		_espaciada.base_font = load(_RUTA_BARLOWCONDENSED_REGULAR)
 		_espaciada.spacing_glyph = 4
 	return _espaciada
 

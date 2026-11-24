@@ -94,6 +94,7 @@ static func _accion(texto: String, al_pulsar: Callable, alerta := false) -> Butt
 ## (17-11, diseño del dueño) La barra lateral izquierda vuelve a estar siempre visible: aquí no se repite ningún menú del club.
 static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: Club) -> void:
 	hb.set_meta("tabs", tabs)
+	p._guia.nodos["escaparate_barra"] = hb   ## el tutorial señala la barra cuando lo que busca (estado, registro, tabla) queda tapado por el escaparate
 	var n_desp: int = p._ui_despacho.asuntos_pendientes().size() if p._ui_despacho != null else 0
 	var d := _accion(Idiomas.t("Despacho") + (" · %d" % n_desp if n_desp > 0 else ""), func() -> void: EscaparatePantalla.de(p).abrir_despacho(p), n_desp > 0)
 	d.name = "BotonDespacho"

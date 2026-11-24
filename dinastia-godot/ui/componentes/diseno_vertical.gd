@@ -11,9 +11,7 @@ static func activo() -> bool:
 ## Una fila ancha (días, próximos partidos, botones de acción) pasa a deslizarse de lado en vez de empujar la pantalla. Devuelve el
 ## contenedor que cuelga del padre (la fila misma si no es de pie). La fila se añade aquí: no hay que añadirla antes.
 static func fila_deslizable(padre: Control, fila: BoxContainer) -> Control:
-	if not activo():
-		padre.add_child(fila)
-		return fila
+	## (18-11) También tumbado: con la letra al 130-160 % la fila de botones es más ancha que la pantalla y empujaba toda la interfaz fuera de ella; dentro de un desplazamiento se queda en su sitio.
 	var d := ScrollContainer.new()
 	d.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	d.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED

@@ -19,7 +19,8 @@ extends Node
 ##      cuesta vértices, que es lo que el reescalado no alivia),
 ##   4. render 3D al 80% con reescalado FSR,
 ##   5. render 3D al 67%,
-##   6. sin sombra del sol (último recurso; el pie del partido lo avisa).
+##   6. sin sombra del sol (último recurso; el pie del partido lo avisa),
+##   7. «partido ligero» (20-11): sin ajuste de color, sin rótulos 3D y sin luces de foco (`PartidoLigero`), solo en ESTE partido y sin tocar lo guardado en Ajustes.
 ## Nunca vuelve a subir en el mismo partido (subir y bajar se nota más que
 ## quedarse), y al cerrar el estadio devuelve la escala de render a 1.
 
@@ -35,6 +36,7 @@ const ESCALONES := [
 	"render 3D al 80% (FSR)",
 	"render 3D al 67% (FSR)",
 	"sin sombra del sol",
+	"partido ligero (sin ajuste de color, rótulos 3D ni focos)",
 ]
 
 var raiz3d: Node3D
@@ -104,6 +106,9 @@ func bajar() -> void:
 			## Último recurso (2-11-2026): la pasada de sombras del sol son ~205 llamadas de ~790 del partido. Se avisa en el pie del partido.
 			for l in _todos(raiz3d, "DirectionalLight3D"):
 				(l as DirectionalLight3D).shadow_enabled = false
+		7:
+			## (20-11) El mismo recorte que «Partido ligero» de Ajustes (−12 a −18 % de dibujo en MÍNIMA cada pieza, medido en llvmpipe), solo si el equipo sigue bajo 40 FPS.
+			PartidoLigero.montar(raiz3d, true)
 	escalon_aplicado.emit(escalon, String(ESCALONES[escalon - 1]))
 
 func _escala(e: float) -> void:

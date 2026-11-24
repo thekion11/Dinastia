@@ -98,6 +98,18 @@ static var _cache: Dictionary = {}
 ## Volumen: 0.86/1/1.16, y la vertical se estira un 35% más que la horizontal
 ## -si escalara igual en las dos direcciones el pelo parece un casco-.
 static func _pelo_svg(pelo: String, pc: String) -> String:
+	var r_pelo_svg_1: Variant = _pelo_svg_1(pc, pelo)
+	if r_pelo_svg_1 != null:
+		return r_pelo_svg_1
+	var r_pelo_svg_2: Variant = _pelo_svg_2(pc, pelo)
+	if r_pelo_svg_2 != null:
+		return r_pelo_svg_2
+	var r_pelo_svg_3: Variant = _pelo_svg_3(pc, pelo)
+	if r_pelo_svg_3 != null:
+		return r_pelo_svg_3
+	return '<path d="M17 26c0-12 7-17 15-17s15 5 15 17c-3-6-8-8-15-8s-12 2-15 8z" fill="%s"/>' % pc
+
+static func _pelo_svg_1(pc: String, pelo: String) -> Variant:
 	match pelo:
 		"calvo":
 			return '<path d="M19 26c0-9 6-14 13-14s13 5 13 14c-3-5-7-7-13-7s-10 2-13 7z" fill="%s" opacity=".5"/>' % pc
@@ -116,6 +128,10 @@ static func _pelo_svg(pelo: String, pc: String) -> String:
 			return '<path d="M17 26c0-12 7-17 15-17s15 5 15 17c-3-6-8-8-15-8s-12 2-15 8z" fill="%s"/>' % pc
 		"melena":
 			return '<path d="M16 27c0-12 7-18 16-18s16 6 16 18c-3-6-8-8-16-8s-13 2-16 8z" fill="%s"/>' % pc
+	return null
+
+static func _pelo_svg_2(pc: String, pelo: String) -> Variant:
+	match pelo:
 		"pincho":
 			var puntas := ""
 			for i in 5:
@@ -141,6 +157,10 @@ static func _pelo_svg(pelo: String, pc: String) -> String:
 		"undercut":
 			return ('<path d="M20 23c0-11 5-15 12-15s12 4 12 15c-3-5-7-7-12-7s-9 2-12 7z" fill="%s"/>' +
 				'<path d="M17.5 27q2-4 3-4v6q-2 0-3-2zM46.5 27q-2-4-3-4v6q2 0 3-2z" fill="%s" opacity=".4"/>') % [pc, pc]
+	return null
+
+static func _pelo_svg_3(pc: String, pelo: String) -> Variant:
+	match pelo:
 		"mohicano":
 			return ('<path d="M28 24c0-13 2-18 4-18s4 5 4 18q-4-3-8 0z" fill="%s"/>' +
 				'<path d="M18 27q2-4 4-4v6q-2 0-4-2zM46 27q-2-4-4-4v6q2 0 4-2z" fill="%s" opacity=".45"/>') % [pc, pc]
@@ -162,7 +182,8 @@ static func _pelo_svg(pelo: String, pc: String) -> String:
 			return '<path d="M18 26c0-11 6-16 14-16s14 5 14 16c-3-5-7-6-9-4v-8h-10v8c-2-2-6-1-9 4z" fill="%s"/>' % pc
 		"mullet":
 			return '<path d="M17 26c0-12 7-18 15-18s15 6 15 18c-3-6-6-8-8-5-4-4-10-4-14 0-2-3-5-1-8 5z" fill="%s"/>' % pc
-	return '<path d="M17 26c0-12 7-17 15-17s15 5 15 17c-3-6-8-8-15-8s-12 2-15 8z" fill="%s"/>' % pc
+	return null
+
 
 ## Los tres cortes que llevan una segunda pieza DETRÁS del rostro -coleta,
 ## melena y moño necesitan algo que asome por detrás de la cabeza, o se

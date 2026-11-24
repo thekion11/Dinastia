@@ -64,10 +64,24 @@ static func pendiente(inc: Dictionary) -> float:
 
 ## El ritmo de un incendio: 1 con agua en el sector, `FUEGO_BASE / FUEGO_SIN_AGUA` sin ella.
 static func ritmo_fuego(hay_presion: bool) -> float:
+	var nat := Nativo.de("nuc_ritmo_fuego")
+	if nat != null:
+		return nat.nuc_ritmo_fuego(hay_presion)
+	return ritmo_fuego_gd(hay_presion)
+
+## Gemela GDScript de `nuc_ritmo_fuego` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func ritmo_fuego_gd(hay_presion: bool) -> float:
 	return 1.0 if hay_presion else FUEGO_BASE / FUEGO_SIN_AGUA
 
 ## Textos del móvil y del titular (en español; la escena los pasa por `Idiomas.t`).
 static func aviso(tipo: String) -> String:
+	var nat := Nativo.de("nuc_aviso_incidente")
+	if nat != null:
+		return nat.nuc_aviso_incidente(tipo)
+	return aviso_gd(tipo)
+
+## Gemela GDScript de `nuc_aviso_incidente` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func aviso_gd(tipo: String) -> String:
 	match tipo:
 		"incendio":
 			return "🔥 Incendio en una calle del centro: salen los bomberos."
@@ -77,6 +91,13 @@ static func aviso(tipo: String) -> String:
 			return "🚓 Robo en un comercio: la policía va de camino."
 
 static func resuelto(tipo: String) -> String:
+	var nat := Nativo.de("nuc_resuelto_incidente")
+	if nat != null:
+		return nat.nuc_resuelto_incidente(tipo)
+	return resuelto_gd(tipo)
+
+## Gemela GDScript de `nuc_resuelto_incidente` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func resuelto_gd(tipo: String) -> String:
 	match tipo:
 		"incendio":
 			return "🔥 El fuego está apagado. Los bomberos vuelven al parque."

@@ -38,6 +38,19 @@ static func texto_de(c: Control) -> String:
 	if c == null:
 		return ""
 	var partes: Array[String] = []
+	var t := _texto_del_control(c)
+	if t != "":
+		partes.append(t)
+	if c is CheckButton or c is CheckBox:
+		partes.append(Idiomas.t("activado") if (c as BaseButton).button_pressed else Idiomas.t("desactivado"))
+	if c.tooltip_text.strip_edges() != "":
+		partes.append(_limpiar(c.tooltip_text))
+	_etiqueta_de_control(c, partes)
+	_boton_sin_rotulo(c, partes)
+	return ". ".join(partes)
+
+## El texto que lleva el control: su texto, su marcador o su opción elegida (ya limpio).
+static func _texto_del_control(c: Control) -> String:
 	var t := ""
 	if c is LineEdit:
 		t = (c as LineEdit).text if (c as LineEdit).text != "" else (c as LineEdit).placeholder_text
@@ -48,18 +61,17 @@ static func texto_de(c: Control) -> String:
 	elif c.get("text") != null:
 		t = String(c.get("text"))
 	t = _limpiar(t)
-	if t != "":
-		partes.append(t)
-	if c is CheckButton or c is CheckBox:
-		partes.append(Idiomas.t("activado") if (c as BaseButton).button_pressed else Idiomas.t("desactivado"))
-	if c.tooltip_text.strip_edges() != "":
-		partes.append(_limpiar(c.tooltip_text))
-	## Sin rótulo ni ayuda (selector de color, casilla suelta): lo nombra la etiqueta que va justo antes en su fila («Color 1», «Color del bus del equipo»).
+	return t
+
+## Sin rótulo ni ayuda (selector de color, casilla suelta): lo nombra la etiqueta que va justo antes en su fila.
+static func _etiqueta_de_control(c: Control, partes: Array[String]) -> void:
 	if partes.is_empty() or (partes.size() == 1 and c is ColorPickerButton):
 		var vecina := _etiqueta_previa(c)
 		if vecina != "":
 			partes.push_front(vecina)
-	## Un botón transparente encima de una tarjeta (el tablero del Inicio) lee lo que dice la tarjeta; una miniatura sin ayuda, «Opción 3 de 12».
+
+## Un botón transparente encima de una tarjeta (el tablero del Inicio) lee lo que dice la tarjeta; una miniatura sin ayuda, su posición.
+static func _boton_sin_rotulo(c: Control, partes: Array[String]) -> void:
 	if partes.is_empty() and c is Button:
 		var tarjeta := _texto_de_la_tarjeta(c)
 		if tarjeta != "":
@@ -68,7 +80,7 @@ static func texto_de(c: Control) -> String:
 			partes.append(Idiomas.t("Opción %d de %d") % [c.get_index() + 1, c.get_parent().get_child_count()])
 			if (c as Button).toggle_mode and (c as Button).button_pressed:
 				partes.append(Idiomas.t("elegida"))
-	return ". ".join(partes)
+
 
 ## Los textos de las etiquetas del contenedor hermano (una tarjeta con un botón encima), hasta 4.
 static func _texto_de_la_tarjeta(c: Control) -> String:

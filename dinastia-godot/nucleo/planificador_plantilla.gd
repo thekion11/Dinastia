@@ -53,6 +53,13 @@ static func analizar(c: Club) -> Dictionary:
 			"umbral": umbral(g, int(minimo[g])), "jovenes": 0}
 	if c == null:
 		return {"lineas": lineas, "avisos": []}
+	var sumas := _contar_lineas(c, lineas)
+	var avisos := _avisos_por_linea(c, lineas, once_ids, sumas)
+	_avisos_de_titulares(c, once_ids, avisos)
+	return {"lineas": lineas, "avisos": avisos}
+
+## Cuenta cada línea: plantilla, sanos, vencen, retiro, jóvenes y suma de medias. Devuelve las sumas por línea.
+static func _contar_lineas(c: Club, lineas: Dictionary) -> Dictionary:
 	var sumas := {}
 	for j: Jugador in c.plantilla:
 		if not lineas.has(j.pos):
@@ -68,6 +75,10 @@ static func analizar(c: Club) -> Dictionary:
 			(l["retiro"] as Array).append(j)
 		if j.edad <= EDAD_RELEVO:
 			l["jovenes"] = int(l["jovenes"]) + 1
+	return sumas
+
+## Avisos de carencia, verano y titular sin relevo, por línea.
+static func _avisos_por_linea(c: Club, lineas: Dictionary, once_ids: Dictionary, sumas: Dictionary) -> Array[Dictionary]:
 	var avisos: Array[Dictionary] = []
 	for g: String in LINEAS:
 		var l: Dictionary = lineas[g]
@@ -86,8 +97,11 @@ static func analizar(c: Club) -> Dictionary:
 				titular = j
 		if titular != null and titular.edad >= EDAD_SIN_RELEVO and int(l["jovenes"]) == 0:
 			avisos.append({"tipo": "sin_relevo", "grupo": g, "jugador": titular, "nivel": 1})
+	return avisos
+
+## Los titulares que se van en verano, y el orden de los avisos por gravedad.
+static func _avisos_de_titulares(c: Club, once_ids: Dictionary, avisos: Array[Dictionary]) -> void:
 	for j: Jugador in c.plantilla:
 		if once_ids.has(j.id) and j.anios_contrato <= 1:
 			avisos.append({"tipo": "titular_se_va", "grupo": j.pos, "jugador": j, "nivel": 2})
 	avisos.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["nivel"]) > int(b["nivel"]))
-	return {"lineas": lineas, "avisos": avisos}

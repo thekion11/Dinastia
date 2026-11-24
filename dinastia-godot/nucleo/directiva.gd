@@ -217,7 +217,7 @@ func generar_objetivos(m: Mundo, mantener_proyecto := false) -> void:
 func mover_confianza(delta: int, motivo: String) -> void:
 	if despedido_ya:
 		return
-	if delta < 0 and impaciencia != 1.0:   ## el desafío «directiva impaciente» (DesafiosDificultad)
+	if delta < 0 and not is_equal_approx(impaciencia, 1.0):   ## el desafío «directiva impaciente» (DesafiosDificultad)
 		delta = int(round(float(delta) * impaciencia))
 	var antes := confianza
 	confianza = clampi(confianza + delta, 0, 100)

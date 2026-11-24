@@ -72,6 +72,7 @@ pasa "simular temporada con barra" "godot --headless --path . res://pruebas/idea
 # 3. Colisiones del club (paredes, muebles, gente, barreras invisibles)
 pasa "colisiones del club" "godot --headless --path . res://pruebas/prueba_colisiones_club.tscn" "FIN. 0 fallos"
 pasa "muebles del club (3 países)" "godot --headless --path . res://pruebas/auditoria_muebles_club.tscn" "FIN. 0 fallos"
+pasa "rutas del personal del club (3 países, andando 3 min)" "godot --headless --path . res://pruebas/auditoria_rutas_personal.tscn" "FIN. 0 fallos"
 pasa "caras coplanares del club (parpadeo)" "godot --headless --path . res://pruebas/prueba_coplanares_club.tscn" "FIN. 0 fallos"
 pasa "visor del trofeo (toque y mando)" "godot --headless --path . res://pruebas/prueba_visor_trofeo_mandos.tscn" "FIN. 0 fallos"
 # 4. Partido con el motor real (acta = césped) y control del equipo
@@ -103,6 +104,7 @@ pasa "La Ruta: la entrega en 3D de cada premio 3/6 (con pantalla)" "PARTE=3/6 xv
 pasa "La Ruta: la entrega en 3D de cada premio 4/6 (con pantalla)" "PARTE=4/6 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_gala_premio.tscn" "FIN. 0 fallos"
 pasa "La Ruta: la entrega en 3D de cada premio 5/6 (con pantalla)" "PARTE=5/6 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_gala_premio.tscn" "FIN. 0 fallos"
 pasa "La Ruta: la entrega en 3D de cada premio 6/6 (con pantalla)" "PARTE=6/6 xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_gala_premio.tscn" "FIN. 0 fallos"
+pasa "El PC de la oficina y los planos del prólogo (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 960x540 res://pruebas/prueba_pc_animacion.tscn" "FIN. 0 fallos"
 pasa "La Ruta: todas las pantallas en los 8 idiomas (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/prueba_ruta_idiomas.tscn" "FIN. 0 fallos"
 pasa "partido de despedida (UI, con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_despedida_ui.tscn" "0 fallos"
 pasa "rueda de prensa en cruz y eventos con diálogo (con pantalla)" "xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 res://pruebas/captura_rueda_eventos.tscn" "FIN. 0 fallos"
@@ -132,6 +134,7 @@ pasa "textura del balón" "godot --headless --path . --script res://pruebas/prob
 pasa "avance por días: modelo de eventos del día" "godot --headless --path . res://pruebas/probar_eventos_dia.tscn" "FIN. 0 fallos"
 # 5d. El avance por días, paso 2: los disparadores (directiva, crisis de caja, imprevistos, jugador del mes): solo observan (17-11)
 pasa "avance por días: disparadores (directiva, caja, imprevistos, jugador del mes)" "godot --headless --path . res://pruebas/probar_disparadores_dia.tscn" "FIN. 0 fallos"
+pasa "mentor: el consejo sigue tras cerrar la pantalla y salta pantallas liberadas" "godot --headless --path . res://pruebas/probar_mentor_voz.tscn" "FIN. 0 fallos"
 # 5e. El avance por días, paso 3 (núcleo): se detiene en el primer día con eventos y recorre una temporada entera (17-11)
 pasa "avance por días: núcleo (paradas)" "godot --headless --path . res://pruebas/probar_avance_dias.tscn" "FIN. 0 fallos"
 # 5f. El avance por días, pasos 3, 5 y 6: el botón «Avanzar» nuevo en el menú central, campanas, «Jugar/Saltar partido» y las pantallas (17-11)
@@ -148,6 +151,7 @@ pasa "avance por días: resultado, momentos y popup del partido jugado" "godot -
 pasa "textura del césped" "godot --headless --path . res://pruebas/probar_cesped_textura.tscn" "FIN. 0 fallos"
 pasa "texturas en disco (asfalto)" "godot --headless --path . res://pruebas/probar_imagen_en_disco.tscn" "FIN. 0 fallos"
 pasa "extensión C++ = GDScript" "godot --headless --path . res://pruebas/probar_nativo.tscn" "FIN. 0 fallos"
+pasa "tráfico de la ciudad real: C++ = GDScript" "godot --headless --path . res://pruebas/probar_trafico_real.tscn" "FIN. 0 fallos"
 pasa "caché horneada del build" "godot --headless --path . --script res://pruebas/probar_cache_horneada.gd" "FIN. 0 fallos"
 pasa "estadio y ciudad por partes" "godot --headless --path . res://pruebas/probar_por_partes.tscn" "FIN. 0 fallos"
 # 5a. CAPTURAS DE UI (10-11, sesión 6): las pantallas nuevas no las compila el banco (solo ve el núcleo y los scripts que toca); un error de argumentos en la ficha
@@ -530,6 +534,10 @@ pasa "r2: uite_movil_textos" "godot --headless --path . res://pruebas/ideas/uite
 pasa "r2: uite_traducciones" "godot --headless --path . res://pruebas/ideas/uite_traducciones.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: uitm_lenguaje" "godot --headless --path . res://pruebas/ideas/uitm_lenguaje.tscn" "(^|[^0-9])0 fallos"
 pasa "r2: vat_hinchada" "godot --headless --path . res://pruebas/ideas/vat_hinchada.tscn" "(^|[^0-9])0 fallos"
+# 18-11: las 3 escenas con aserciones que nadie lanzaba y que hoy pasan (sen_conexiones tarda ~2 min)
+pasa "r2: pgra_grada" "godot --headless --path . res://pruebas/ideas/pgra_grada.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: prueba_obras_a_pie" "godot --headless --path . res://pruebas/prueba_obras_a_pie.tscn" "(^|[^0-9])0 fallos"
+pasa "r2: sen_conexiones" "godot --headless --path . res://pruebas/ideas/sen_conexiones.tscn" "(^|[^0-9])0 fallos"
 BLOQUE=""
 if [[ "$1" = "todo" ]]; then
   # Reutilizadas lentas (> 45 s cada una)
@@ -543,6 +551,11 @@ if [[ "$1" = "todo" ]]; then
   pasa "navegación con mando (foco, trampas, alcance, Cuadrado/R2)" "godot --headless --path . res://pruebas/auditoria_foco_mando.tscn" "FIN. 0 fallos"
   pasa "mando en las pantallas del partido (previa, pestañas, plan, pausa, descanso, final, momentos)" "godot --headless --path . res://pruebas/auditoria_foco_partido.tscn" "FIN. 0 fallos"
   pasa "navegación con mando: eventos, temporada y editor de formación" "godot --headless --path . res://pruebas/auditoria_foco_eventos.tscn" "FIN. 0 fallos"
+  # (17-11) La extensión C++ con AddressSanitizer + UBSan: probar_nativo, igualdad_motor y un partido C4 enteros, 0 avisos en nativo/src (~15 min;
+  # necesita godot-cpp descargado por compilar_nativo.sh y la libasan de gcc).
+  if [[ -d nativo/godot-cpp ]] && [[ -f "$(gcc -print-file-name=libasan.so 2>/dev/null)" ]]; then
+    pasa "extensión C++ saneada (ASan + UBSan)" "bash herramientas/sanear_nativo.sh" "SANEADA: 0 líneas de aviso"
+  fi
 # 6a. Presupuesto de triángulos y llamadas de dibujo del partido (M-338): con pantalla virtual; ~5 min
 if command -v xvfb-run >/dev/null; then
 pasa "troceo de la grada sin butacas perdidas" "xvfb-run -a godot --path . --rendering-driver opengl3 res://pruebas/prueba_troceo_grada.tscn" "FIN. 0 fallos"

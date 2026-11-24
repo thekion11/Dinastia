@@ -1,7 +1,6 @@
 extends "res://pruebas/banco/base.gd"
 ## [Capa 1/6 de `partido.gd`] _probar_partidos, _probar_previa, _probar_arbitros, _probar_puente3d, _probar_notas
 
-
 func _probar_partidos() -> void:
 	_titulo("PARTIDOS: LA CURVA DE GOLES")
 	var m := Mundo.new()
@@ -41,7 +40,10 @@ func _probar_partidos() -> void:
 	p2.terminado.connect(func(_a: int, _b: int) -> void: oidos["fin"] += 1)
 	var r2 := p2.simular()
 	## (17-11) El VAR anula goles ya emitidos («gol_anulado» en la crónica) y un partido suspendido (<7 jugadores) tiene marcador de MESA: sin goles jugados ni señales.
-	var esperados: int = 0 if p2.suspendido else int(r2["local"]) + int(r2["visita"]) + p2.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol_anulado").size()
+	## Con marcador de mesa (suspendido) los goles que ya se habían jugado antes de la suspensión sí emitieron su señal: se cuentan en la crónica.
+	var anulados: int = p2.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol_anulado").size()
+	var jugados: int = p2.cronica.filter(func(e: Dictionary) -> bool: return String(e.get("tipo", "")) == "gol").size()
+	var esperados: int = (jugados + anulados) if p2.suspendido else int(r2["local"]) + int(r2["visita"]) + anulados
 	_comprobar(oidos["gol"] == esperados, "la senal de gol se emite una vez por gol")
 	_comprobar(oidos["fin"] == 1, "la senal de fin de partido se emite una vez")
 
@@ -355,7 +357,8 @@ func _probar_puente3d() -> void:
 
 	## El aspecto tiene que ser ESTABLE: el mismo jugador, la misma cara siempre.
 	var j: Jugador = a.once()[3]
-	_comprobar(Puente3D.jugador(j)["look"]["piel"] == Puente3D.jugador(j)["look"]["piel"],
+	var rep1_a = Puente3D.jugador(j)["look"]["piel"]; var rep1_b = Puente3D.jugador(j)["look"]["piel"]
+	_comprobar(rep1_a == rep1_b,
 		"el mismo jugador tiene siempre el mismo aspecto")
 
 	## Y el portero tiene que CONTRASTAR con sus companeros, o desde la camara

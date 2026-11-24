@@ -89,12 +89,10 @@ func _metro(m: Object) -> void:
 		_comprobar(est.size() >= 3 and trenes.size() >= 1, "línea %s: %d estaciones y %d trenes" % [String(l["nombre"]), est.size(), trenes.size()])
 		var copias: Array = []
 		for t0 in trenes:
-			var c: Variant = m.get_script().get_script_constant_map()["Tren"] if false else null
 			copias.append(_copiar_tren(t0))
 		var paso := 1.0 / 60.0   ## el paso real del juego
 		var pasos := int(1500.0 / paso)   ## 25 minutos
 		var min_sep := INF
-		var a_ant := 0.0
 		for i in pasos:
 			for k in copias.size():
 				var tr = copias[k]
@@ -151,7 +149,7 @@ func _teleferico(t: Object) -> void:
 	var espera: float = t.ESPERA
 	var ciclo: float = t.CICLO
 	_comprobar(absf(ciclo - (viaje + espera) * 2.0) < 0.001, "el ciclo es (viaje + espera) × 2 (%.0f s)" % ciclo)
-	_comprobar(t.avance(0.0) == 0.0 and absf(t.avance(viaje) - 1.0) < 1e-6 and t.avance(viaje + espera * 0.5) == 1.0 and t.avance(ciclo - 1.0) < 0.001, "avance: 0 al salir, 1 arriba, 1 en la espera, vuelve a 0")
+	_comprobar(is_zero_approx(t.avance(0.0)) and absf(t.avance(viaje) - 1.0) < 1e-6 and is_equal_approx(t.avance(viaje + espera * 0.5), 1.0) and t.avance(ciclo - 1.0) < 0.001, "avance: 0 al salir, 1 arriba, 1 en la espera, vuelve a 0")
 	var mono_sube := true
 	var mono_baja := true
 	var periodico := true

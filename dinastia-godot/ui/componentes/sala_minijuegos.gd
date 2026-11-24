@@ -35,7 +35,7 @@ func _montar(p: Control, mundo: Mundo) -> void:
 	centro.add_child(v)
 	var t := Label.new()
 	t.text = Idiomas.t("🎮 MINIJUEGOS")
-	t.add_theme_font_size_override("font_size", 30)
+	t.add_theme_font_size_override("font_size", Tema.letra(30))
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(t)
 	var fila := HBoxContainer.new()
@@ -66,17 +66,17 @@ func _montar(p: Control, mundo: Mundo) -> void:
 		caja.add_child(cv)
 		var ic := Label.new()
 		ic.text = String(j[0])
-		ic.add_theme_font_size_override("font_size", 48)
+		ic.add_theme_font_size_override("font_size", Tema.letra(48))
 		ic.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		cv.add_child(ic)
 		var nom := Label.new()
 		nom.text = String(j[1])
-		nom.add_theme_font_size_override("font_size", 20)
+		nom.add_theme_font_size_override("font_size", Tema.letra(20))
 		nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		cv.add_child(nom)
 		var d := Label.new()
 		d.text = String(j[2])
-		d.add_theme_font_size_override("font_size", 13)
+		d.add_theme_font_size_override("font_size", Tema.letra(13))
 		d.add_theme_color_override("font_color", Color(0.75, 0.8, 0.9))
 		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		d.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

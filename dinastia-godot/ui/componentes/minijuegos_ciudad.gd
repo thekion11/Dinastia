@@ -3,29 +3,11 @@ extends "res://ui/componentes/minijuegos_ciudad_p2.gd"
 ## [Capa 3/3 de `minijuegos_ciudad.gd`] _kart, _process, _firmar, _firmar_en, _gui_input, _firmar_mas_cercano … (+1)
 
 func _kart(delta: float) -> void:
-	## Cuenta atrás: 3, 2, 1, ¡YA!
-	if _cuenta > -1.0:
-		_cuenta -= delta
-		_semaforo.text = str(int(ceil(_cuenta))) if _cuenta > 0.5 else ("¡YA!" if _cuenta > -1.0 else "")
-		_semaforo.add_theme_color_override("font_color", Color(1, 0.3, 0.2) if _cuenta > 0.5 else Color(0.3, 1, 0.4))
-	if _cuenta <= -1.0 and _semaforo.text != "":
-		_semaforo.text = ""
+	_cuenta_atras(delta)
 	var arranca := _cuenta <= 0.5
 	## Rivales: siguen la trazada con algo de vaivén.
 	var total := _largo_pista()
-	var delante := 0
-	for r: Dictionary in _rivales:
-		if arranca and not _fin_kart:
-			r["v"] = move_toward(float(r["v"]), float(r["tope"]), 9.0 * delta)
-			r["s"] = float(r["s"]) + float(r["v"]) * delta
-		var c := _centro_pista(float(r["s"]))
-		var dir: Vector3 = c["dir"]
-		var lat := Vector3(-dir.z, 0, dir.x)
-		var rn: Node3D = r["n"]
-		rn.position = (c["p"] as Vector3) + lat * (float(r["lado"]) + sin(float(r["s"]) * 0.05) * 1.2)
-		rn.rotation.y = atan2(dir.x, dir.z)
-		if float(r["s"]) > _mi_total:
-			delante += 1
+	var delante := _mover_rivales(delta, arranca)
 	if _fin_kart:
 		_colocar_kart(delta)
 		return
@@ -34,17 +16,17 @@ func _kart(delta: float) -> void:
 	if not arranca:
 		y = 0.0
 		x = 0.0
-	if y != 0.0:
+	if not is_zero_approx(y):
 		_empezado = true
 	var en_pista := _fuera_de_eje(_kp) < ANCHO_PISTA * 0.5
 	var tope := KART_VEL if en_pista else KART_VEL * 0.35
 	_kv = clampf(_kv + y * 16.0 * delta, -6.0, maxf(tope, _kv))
-	if y == 0.0:
+	if is_zero_approx(y):
 		_kv = move_toward(_kv, 0.0, 6.0 * delta)
 	if _kv > tope:
 		_kv = move_toward(_kv, tope, 22.0 * delta)
 	## Girar a la izquierda con la flecha izquierda (rumbo +x = derecha en pantalla).
-	_kr -= x * 1.9 * delta * clampf(absf(_kv) / 8.0, 0.0, 1.0) * signf(_kv if _kv != 0.0 else 1.0)
+	_kr -= x * 1.9 * delta * clampf(absf(_kv) / 8.0, 0.0, 1.0) * signf(_kv if not is_zero_approx(_kv) else 1.0)
 	var antes := _kp
 	_kp += Vector3(sin(_kr), 0, cos(_kr)) * _kv * delta
 	## Las barreras de neumáticos: no se atraviesan.
@@ -73,14 +55,44 @@ func _kart(delta: float) -> void:
 	_titulo.text = Idiomas.t("🏎️ Karting · vuelta %d de 3 · %.1f s · posición %d.º de 4 · récord: %s") % [mini(_vueltas + 1, 3), _crono, delante + 1,
 		("%.1f s" % records["karting"]) if float(records["karting"]) > 0.0 else "—"]
 	if _vueltas >= 3:
-		_fin_kart = true
-		var mejor := float(records["karting"])
-		var puesto := "¡Ganaste la carrera!" if delante == 0 else "Llegaste %d.º." % (delante + 1)
-		if mejor <= 0.0 or _crono < mejor:
-			records["karting"] = _crono
-			_aviso.text = Idiomas.t("%s ¡Nuevo récord del circuito: %.1f s!") % [puesto, _crono]
-		else:
-			_aviso.text = Idiomas.t("%s Tiempo: %.1f s (récord %.1f s).") % [puesto, _crono, mejor]
+		_cerrar_carrera(delante)
+
+## La cuenta atrás del semáforo: 3, 2, 1, ¡YA!
+func _cuenta_atras(delta: float) -> void:
+	if _cuenta > -1.0:
+		_cuenta -= delta
+		_semaforo.text = str(int(ceil(_cuenta))) if _cuenta > 0.5 else ("¡YA!" if _cuenta > -1.0 else "")
+		_semaforo.add_theme_color_override("font_color", Color(1, 0.3, 0.2) if _cuenta > 0.5 else Color(0.3, 1, 0.4))
+	if _cuenta <= -1.0 and _semaforo.text != "":
+		_semaforo.text = ""
+
+## Los rivales siguen la trazada; devuelve cuántos van por delante de ti.
+func _mover_rivales(delta: float, arranca: bool) -> int:
+	var delante := 0
+	for r: Dictionary in _rivales:
+		if arranca and not _fin_kart:
+			r["v"] = move_toward(float(r["v"]), float(r["tope"]), 9.0 * delta)
+			r["s"] = float(r["s"]) + float(r["v"]) * delta
+		var c := _centro_pista(float(r["s"]))
+		var dir: Vector3 = c["dir"]
+		var lat := Vector3(-dir.z, 0, dir.x)
+		var rn: Node3D = r["n"]
+		rn.position = (c["p"] as Vector3) + lat * (float(r["lado"]) + sin(float(r["s"]) * 0.05) * 1.2)
+		rn.rotation.y = atan2(dir.x, dir.z)
+		if float(r["s"]) > _mi_total:
+			delante += 1
+	return delante
+
+## El fin de la carrera: el récord y el aviso del puesto.
+func _cerrar_carrera(delante: int) -> void:
+	_fin_kart = true
+	var mejor := float(records["karting"])
+	var puesto := "¡Ganaste la carrera!" if delante == 0 else "Llegaste %d.º." % (delante + 1)
+	if mejor <= 0.0 or _crono < mejor:
+		records["karting"] = _crono
+		_aviso.text = Idiomas.t("%s ¡Nuevo récord del circuito: %.1f s!") % [puesto, _crono]
+	else:
+		_aviso.text = Idiomas.t("%s Tiempo: %.1f s (récord %.1f s).") % [puesto, _crono, mejor]
 
 func _process(delta: float) -> void:
 	match juego:

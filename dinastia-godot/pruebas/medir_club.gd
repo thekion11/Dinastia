@@ -68,17 +68,21 @@ func _process(_d: float) -> void:
 	print("CLUB punto «%s» (planta %d): llamadas=%.0f triangulos=%.0f objetos=%.0f fotograma=%.1f ms" % [_puntos[_i][0], _puntos[_i][2], f.x, f.y, f.z, f.w])
 	_i += 1
 	if _i >= _puntos.size():
-		var s := Vector4.ZERO
-		var peor := Vector4.ZERO
-		for t in _todas:
-			s += t
-			peor = Vector4(maxf(peor.x, t.x), maxf(peor.y, t.y), maxf(peor.z, t.z), maxf(peor.w, t.w))
-		s /= float(_todas.size())
-		print("MEDICION_CLUB calidad=%d puntos=%d  MEDIA llamadas=%.0f triangulos=%.0f objetos=%.0f fotograma=%.1f ms | PEOR llamadas=%.0f triangulos=%.0f fotograma=%.1f ms | vram=%.0f MB" % [
-			Calidad.elegida, _todas.size(), s.x, s.y, s.z, s.w, peor.x, peor.y, peor.w, Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0])
-		get_tree().quit()
+		_cerrar_medicion()
 		return
 	_ir(_i)
+
+## Último punto medido: imprime la media y el peor caso de todos los puntos y cierra.
+func _cerrar_medicion() -> void:
+	var s := Vector4.ZERO
+	var peor := Vector4.ZERO
+	for t in _todas:
+		s += t
+		peor = Vector4(maxf(peor.x, t.x), maxf(peor.y, t.y), maxf(peor.z, t.z), maxf(peor.w, t.w))
+	s /= float(_todas.size())
+	print("MEDICION_CLUB calidad=%d puntos=%d  MEDIA llamadas=%.0f triangulos=%.0f objetos=%.0f fotograma=%.1f ms | PEOR llamadas=%.0f triangulos=%.0f fotograma=%.1f ms | vram=%.0f MB" % [
+		Calidad.elegida, _todas.size(), s.x, s.y, s.z, s.w, peor.x, peor.y, peor.w, Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0])
+	get_tree().quit()
 
 func _ir(k: int) -> void:
 	_llam.clear(); _tris.clear(); _obj.clear(); _ms.clear()
@@ -90,53 +94,63 @@ func _ir(k: int) -> void:
 		_ex.rumbo = float(OS.get_environment("RUMBO"))   ## RUMBO=0: mirando a +Z (de espaldas a la boca del túnel); sin él, el de siempre (hacia la boca)
 	_desde = _n
 	if OS.get_environment("TOP") != "" and _i == (int(OS.get_environment("TOP_I")) if OS.get_environment("TOP_I") != "" else 9):
-		## TOP=1: en el punto 9 (sala de prensa), triángulos y piezas visibles agrupados por el hijo de primer nivel del estadio del que cuelgan.
-		var raiz: Node = _vista.get("_raiz3d")
-		var acum := {}
-		for g in raiz.find_children("*", "MeshInstance3D", true, false) + raiz.find_children("*", "MultiMeshInstance3D", true, false):
-			var gi := g as GeometryInstance3D
-			if not gi.is_visible_in_tree():
-				continue
-			var x: Node = g
-			while x.get_parent() != raiz and x.get_parent() != null:
-				x = x.get_parent()
-			var clave := "%s [%s]" % [String(x.name).left(28), x.get_class()]
-			if not acum.has(clave):
-				acum[clave] = Vector2.ZERO
-			var t := 0
-			if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
-				t = Optimizar._tris((g as MeshInstance3D).mesh)
-			elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh != null and (g as MultiMeshInstance3D).multimesh.mesh != null:
-				t = Optimizar._tris((g as MultiMeshInstance3D).multimesh.mesh) * (g as MultiMeshInstance3D).multimesh.visible_instance_count if (g as MultiMeshInstance3D).multimesh.visible_instance_count >= 0 else Optimizar._tris((g as MultiMeshInstance3D).multimesh.mesh) * (g as MultiMeshInstance3D).multimesh.instance_count
-			acum[clave] += Vector2(t, 1)
-		var ks := acum.keys()
-		ks.sort_custom(func(a, b): return acum[a].x > acum[b].x)
-		for kk in ks:
-			print("TOP %-40s tris=%8d piezas=%4d" % [kk, int(acum[kk].x), int(acum[kk].y)])
+		_informe_top()
 	if OS.get_environment("OCULTAR_ESTADIO") != "":
-		## OCULTAR_ESTADIO=1: estimación de cuánto se ahorraría si dentro del edificio (plantas distintas de 0) no se dibujara el estadio de fuera: se ocultan los hijos de primer nivel del estadio
-		## que no son luces, entorno, el edificio (TunelVestuario), la calle (Exterior), la fachada ni el explorador (OCULTAR_ESTADIO=2 oculta también EntornoEstadio).
-		var dentro: bool = int(p[2]) != 0
-		var guardar := ["TunelVestuario", "Exterior", "Fachada"] + ([] if OS.get_environment("OCULTAR_ESTADIO") == "2" else ["EntornoEstadio"])
-		var n_oc := 0
-		var raiz: Node = _vista.get("_raiz3d")
-		for h in raiz.get_children():
-			if not (h is Node3D) or h is Light3D or h == _ex or String(h.name) in guardar or h is Camera3D:
-				continue
-			(h as Node3D).visible = not dentro
-			n_oc += 1 if dentro else 0
-		print("OCULTAR_ESTADIO: planta %d, %d nodos de primer nivel ocultos" % [int(p[2]), n_oc])
+		_ocultar_estadio(p)
 	if OS.get_environment("SOLO_PLANTA") != "":
-		## SOLO_PLANTA=1: estimación de cuánto se ahorraría si solo se dibujara la planta del edificio en la que estás (los hijos de EdificioClub se clasifican por su altura).
-		var ocultos := 0
-		for ed in _vista.find_children("EdificioClub*", "Node3D", true, false):
-			for h in ed.get_children():
-				if h is Node3D and not h is Light3D:
-					var pl := floori(((h as Node3D).position.y + 0.3) / EdificioClub.ALTO_PLANTA)
-					(h as Node3D).visible = pl == int(p[2])
-					if pl != int(p[2]):
-						ocultos += 1
-		print("SOLO_PLANTA: planta %d, %d hijos ocultos" % [int(p[2]), ocultos])
+		_solo_planta(p)
+
+## OCULTAR_ESTADIO=1: estimación de cuánto se ahorraría si dentro del edificio (plantas distintas de 0) no se dibujara el estadio de fuera: se ocultan los hijos de primer nivel del estadio
+## que no son luces, entorno, el edificio (TunelVestuario), la calle (Exterior), la fachada ni el explorador (OCULTAR_ESTADIO=2 oculta también EntornoEstadio).
+func _ocultar_estadio(p: Array) -> void:
+	var dentro: bool = int(p[2]) != 0
+	var guardar := ["TunelVestuario", "Exterior", "Fachada"] + ([] if OS.get_environment("OCULTAR_ESTADIO") == "2" else ["EntornoEstadio"])
+	var n_oc := 0
+	var raiz: Node = _vista.get("_raiz3d")
+	for h in raiz.get_children():
+		if not (h is Node3D) or h is Light3D or h == _ex or String(h.name) in guardar or h is Camera3D:
+			continue
+		(h as Node3D).visible = not dentro
+		n_oc += 1 if dentro else 0
+	print("OCULTAR_ESTADIO: planta %d, %d nodos de primer nivel ocultos" % [int(p[2]), n_oc])
+
+## SOLO_PLANTA=1: estimación de cuánto se ahorraría si solo se dibujara la planta del edificio en la que estás (los hijos de EdificioClub se clasifican por su altura).
+func _solo_planta(p: Array) -> void:
+	var ocultos := 0
+	for ed in _vista.find_children("EdificioClub*", "Node3D", true, false):
+		for h in ed.get_children():
+			if h is Node3D and not h is Light3D:
+				var pl := floori(((h as Node3D).position.y + 0.3) / EdificioClub.ALTO_PLANTA)
+				(h as Node3D).visible = pl == int(p[2])
+				if pl != int(p[2]):
+					ocultos += 1
+	print("SOLO_PLANTA: planta %d, %d hijos ocultos" % [int(p[2]), ocultos])
+
+## TOP=1: en el punto 9 (sala de prensa), triángulos y piezas visibles agrupados por el hijo de
+## primer nivel del estadio del que cuelgan.
+func _informe_top() -> void:
+	var raiz: Node = _vista.get("_raiz3d")
+	var acum := {}
+	for g in raiz.find_children("*", "MeshInstance3D", true, false) + raiz.find_children("*", "MultiMeshInstance3D", true, false):
+		var gi := g as GeometryInstance3D
+		if not gi.is_visible_in_tree():
+			continue
+		var x: Node = g
+		while x.get_parent() != raiz and x.get_parent() != null:
+			x = x.get_parent()
+		var clave := "%s [%s]" % [String(x.name).left(28), x.get_class()]
+		if not acum.has(clave):
+			acum[clave] = Vector2.ZERO
+		var t := 0
+		if g is MeshInstance3D and (g as MeshInstance3D).mesh != null:
+			t = Optimizar._tris((g as MeshInstance3D).mesh)
+		elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh != null and (g as MultiMeshInstance3D).multimesh.mesh != null:
+			t = Optimizar._tris((g as MultiMeshInstance3D).multimesh.mesh) * (g as MultiMeshInstance3D).multimesh.visible_instance_count if (g as MultiMeshInstance3D).multimesh.visible_instance_count >= 0 else Optimizar._tris((g as MultiMeshInstance3D).multimesh.mesh) * (g as MultiMeshInstance3D).multimesh.instance_count
+		acum[clave] += Vector2(t, 1)
+	var ks := acum.keys()
+	ks.sort_custom(func(a, b): return acum[a].x > acum[b].x)
+	for kk in ks:
+		print("TOP %-40s tris=%8d piezas=%4d" % [kk, int(acum[kk].x), int(acum[kk].y)])
 
 ## Salida de la planta 0 + el centro de hasta 3 salas grandes de cada planta (sin pasillos, bandas ni ascensores).
 func _armar_puntos() -> void:

@@ -98,46 +98,13 @@ func _mecanicas() -> void:
 		_vista.abrir_estadisticas()
 		_rotulo("Estadísticas a pedido (T): tiros con xG, xA, mapa de tiros y de calor", 5.0)
 	if _hechos.has("stats") and not _hechos.has("stats_fuera"):
-		var ps: Variant = _vista.get("_panel_stats")
-		if ps != null and is_instance_valid(ps):
-			_hechos["stats_t"] = int(_hechos.get("stats_t", 0)) + 1
-			if int(_hechos["stats_t"]) == 70:
-				(ps as PanelEstadisticas).call("_cambiar_calor")
-			if int(_hechos["stats_t"]) > 140:
-				(ps as PanelEstadisticas).cerrar()
-				_hechos["stats_fuera"] = true
+		_stats_en_curso()
 	if _una("pausa", 57):
 		_vista.call("_abrir_panel_dt")
 		_rotulo("Pausa: pizarra en vivo y cambios (el más cansado sale)", 8.0)
 	var pd: Variant = _vista.get("_panel_dt")
 	if _hechos.has("pausa") and not _hechos.has("pausa_fuera") and pd != null and is_instance_valid(pd):
-		var panel: PanelDTPartido = pd
-		_hechos["pausa_t"] = int(_hechos.get("pausa_t", 0)) + 1
-		var t := int(_hechos["pausa_t"])
-		if t == 40:
-			panel.call("_fijar", "mentalidad", 2)
-		if t == 75:
-			## El que menos energía tiene, fuera; entra el primero del banco.
-			var peor: Jugador = null
-			var menos := 9.0
-			for j: Jugador in panel.call("_mi_once"):
-				var e: float = panel.call("_energia", j)
-				if j.pos_e != "POR" and e < menos:
-					menos = e
-					peor = j
-			if peor != null:
-				panel.set("_sale", peor)
-				panel.call("_pintar_cambios")
-		if t == 110:
-			var col: Node = panel.get("_col_banco")
-			for b in col.get_children():
-				if b is Button and not (b as Button).disabled:
-					(b as Button).pressed.emit()
-					break
-		if t > 170:
-			panel.cerrar()
-			_hechos["pausa_fuera"] = true
-			_rotulo("El cambio se hace en la banda: cartel del cuarto árbitro y palmada", 6.0)
+		_pausa_en_curso(pd)
 	if _una("cam_tele", 72) and rig != null:
 		var i := rig.camera_names.find("Tele Dinámica")
 		if i != -1:
@@ -145,3 +112,45 @@ func _mecanicas() -> void:
 			_rotulo("Otra cámara: «Tele dinámica»", 5.0)
 	if _una("cam_tv2", 75) and rig != null:
 		rig.switch_to(0)
+
+## Estadísticas a pedido en el partido grabado: cambio de calor y cierre a su hora.
+func _stats_en_curso() -> void:
+	var ps: Variant = _vista.get("_panel_stats")
+	if ps != null and is_instance_valid(ps):
+		_hechos["stats_t"] = int(_hechos.get("stats_t", 0)) + 1
+		if int(_hechos["stats_t"]) == 70:
+			(ps as PanelEstadisticas).call("_cambiar_calor")
+		if int(_hechos["stats_t"]) > 140:
+			(ps as PanelEstadisticas).cerrar()
+			_hechos["stats_fuera"] = true
+
+## Pausa en el partido grabado: pizarra, cambio del más cansado y cierre del panel.
+func _pausa_en_curso(pd: Variant) -> void:
+	var panel: PanelDTPartido = pd
+	_hechos["pausa_t"] = int(_hechos.get("pausa_t", 0)) + 1
+	var t := int(_hechos["pausa_t"])
+	if t == 40:
+		panel.call("_fijar", "mentalidad", 2)
+	if t == 75:
+		## El que menos energía tiene, fuera; entra el primero del banco.
+		var peor: Jugador = null
+		var menos := 9.0
+		for j: Jugador in panel.call("_mi_once"):
+			var e: float = panel.call("_energia", j)
+			if j.pos_e != "POR" and e < menos:
+				menos = e
+				peor = j
+		if peor != null:
+			panel.set("_sale", peor)
+			panel.call("_pintar_cambios")
+	if t == 110:
+		var col: Node = panel.get("_col_banco")
+		for b in col.get_children():
+			if b is Button and not (b as Button).disabled:
+				(b as Button).pressed.emit()
+				break
+	if t > 170:
+		panel.cerrar()
+		_hechos["pausa_fuera"] = true
+		_rotulo("El cambio se hace en la banda: cartel del cuarto árbitro y palmada", 6.0)
+

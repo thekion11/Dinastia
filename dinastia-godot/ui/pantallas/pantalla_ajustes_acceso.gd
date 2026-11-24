@@ -64,7 +64,7 @@ static func vibracion(p: Principal) -> void:
 		var clave := modo
 		var b := Button.new()
 		b.text = Idiomas.t(String(nombres.get(clave, clave)))
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.toggle_mode = true
 		b.button_pressed = Mando.ayuda("vibracion") == clave
 		b.pressed.connect(func() -> void:
@@ -74,7 +74,7 @@ static func vibracion(p: Principal) -> void:
 		fila.add_child(b)
 	var probar := Button.new()
 	probar.text = Idiomas.t("Probar")
-	probar.add_theme_font_size_override("font_size", 11)
+	probar.add_theme_font_size_override("font_size", Tema.letra(11))
 	probar.disabled = not Mando.hay_mando() or Mando.ayuda("vibracion") == "no"
 	probar.tooltip_text = Idiomas.t("Conecta un mando para notarla.") if not Mando.hay_mando() else ""
 	probar.pressed.connect(func() -> void: Mando.vibrar(0.8, 0.35))

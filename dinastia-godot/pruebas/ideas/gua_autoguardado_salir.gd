@@ -3,6 +3,7 @@ extends BaseIdea
 ## SALIR (cerrar la ventana / «atrás» de Android) la pregunta «¿Guardar antes de salir?» (Guardar y salir / Salir sin guardar / Cancelar). Sin salir de verdad.
 
 const RANURA := "zz_gua_prueba"
+const _RUTA_CICLO_PARTIDA := "res://ui/principal/ciclo_partida.gd"
 
 func _esperar_guardado() -> void:
 	var n := 0
@@ -12,12 +13,31 @@ func _esperar_guardado() -> void:
 
 func _probar() -> void:
 	_titulo("GUARDADO: AUTOGUARDADO EN SEGUNDO PLANO Y PREGUNTA AL SALIR")
-	load("res://ui/principal/ciclo_partida.gd").ranura_prueba = RANURA
+	load(_RUTA_CICLO_PARTIDA).ranura_prueba = RANURA
 	SalidaGuardada.salir_de_verdad = false
 	Partida.borrar(RANURA)
 	AvanceSemana.partido_obliga = false   ## (10-11) la prueba recorre días a mano: sin esto, el sábado con partido abre solo el menú del partido (`VidaApp`) y el «atrás» es suyo
 	var m := _mundo(3102)
 	PedidoPartida.mundo_pregenerado = m
+	var pr: Principal = await _gua_abrir(m)
+	await _gua_guardados(pr, m)
+	await _gua_dialogo(pr)
+	var salida := pr.get_node_or_null("SalidaGuardada") as SalidaGuardada
+	## Guardar y salir: guarda de verdad (en la prueba no sale del proceso).
+	Partida.borrar(RANURA)
+	m.mi_club().mover_saldo(99)
+	salida.guardar_y_salir()
+	var c4 := Partida.cargar(RANURA)
+	_comprobar(c4 != null and c4.mi_club().saldo == m.mi_club().saldo, "«Guardar y salir» deja la partida guardada")
+	await _gua_sin_autoguardado(pr)
+	pr.queue_free()
+	await get_tree().process_frame
+	_comprobar(get_tree().auto_accept_quit, "al salir de Principal el árbol vuelve a aceptar el cierre")
+	Partida.borrar(RANURA)
+	load(_RUTA_CICLO_PARTIDA).ranura_prueba = ""
+	SalidaGuardada.salir_de_verdad = true
+
+func _gua_abrir(m: Mundo) -> Principal:
 	var pr: Principal = (load("res://escenas/principal.tscn") as PackedScene).instantiate()
 	add_child(pr)
 	await get_tree().process_frame
@@ -30,6 +50,9 @@ func _probar() -> void:
 	var salida := pr.get_node_or_null("SalidaGuardada") as SalidaGuardada
 	_comprobar(bool(pr.get("_autoguardado")), "el autoguardado viene activo por defecto")
 	_comprobar(salida != null and not get_tree().auto_accept_quit and not get_tree().quit_on_go_back, "Principal retiene el cierre del juego y el «atrás» (para preguntar)")
+	return pr
+
+func _gua_guardados(pr: Principal, m: Mundo) -> void:
 	## Cada día: guarda sin bloquear. El hilo principal solo hace la instantánea.
 	m.mi_club().mover_saldo(1234)
 	pr.call("_avanzar_dia")
@@ -53,6 +76,8 @@ func _probar() -> void:
 	await _esperar_guardado()
 	var c3 := Partida.cargar(RANURA)
 	_comprobar(c3 != null and c3.mi_club().saldo == m.mi_club().saldo, "y el archivo tiene el estado más nuevo")
+
+func _gua_dialogo(pr: Principal) -> void:
 	## Cerrar la ventana: pregunta, no sale.
 	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
 	await get_tree().process_frame
@@ -72,21 +97,11 @@ func _probar() -> void:
 		await get_tree().process_frame
 		_comprobar(dlg.visible, "y «atrás» sin diálogo lo abre")
 		dlg.hide()
-	## Guardar y salir: guarda de verdad (en la prueba no sale del proceso).
-	Partida.borrar(RANURA)
-	m.mi_club().mover_saldo(99)
-	salida.guardar_y_salir()
-	var c4 := Partida.cargar(RANURA)
-	_comprobar(c4 != null and c4.mi_club().saldo == m.mi_club().saldo, "«Guardar y salir» deja la partida guardada")
+
+func _gua_sin_autoguardado(pr: Principal) -> void:
 	## Si el autoguardado está apagado y no hay desafío, no guarda al pasar un día.
 	Partida.borrar(RANURA)
 	pr.set("_autoguardado", false)
 	pr.call("_avanzar_dia")
 	await _esperar_guardado()
 	_comprobar(not FileAccess.file_exists(Partida.ruta_de(RANURA)), "con el interruptor de Ajustes apagado no autoguarda")
-	pr.queue_free()
-	await get_tree().process_frame
-	_comprobar(get_tree().auto_accept_quit, "al salir de Principal el árbol vuelve a aceptar el cierre")
-	Partida.borrar(RANURA)
-	load("res://ui/principal/ciclo_partida.gd").ranura_prueba = ""
-	SalidaGuardada.salir_de_verdad = true

@@ -206,6 +206,13 @@ static func semanas(id: String, k: String, n_huecos: int) -> Array:
 	return base.slice(0, mini(n_huecos, base.size()))
 
 static func premio_de_ronda(k: String, vivos_antes: int) -> int:
+	var nat := Nativo.de("nuc_premio_de_ronda")
+	if nat != null:
+		return nat.nuc_premio_de_ronda(k, vivos_antes)
+	return premio_de_ronda_gd(k, vivos_antes)
+
+## Gemela GDScript de `nuc_premio_de_ronda` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func premio_de_ronda_gd(k: String, vivos_antes: int) -> int:
 	var t: Dictionary = PREMIO_RONDA_LIB if (k == "lib" or k == "sud") else PREMIO_RONDA
 	## El clásico (y los torneos viejos) pagaban 8 y 4 y nada más: las rondas nuevas (16) no tocan las cuentas de antes.
 	return int(t.get(vivos_antes, 0))

@@ -6,9 +6,24 @@ extends RefCounted
 ##   SIN_SOMBRA_FINOS=1  las piezas diminutas de los personajes (ojos, cejas, pestañas, pelo) no proyectan sombra: ¿cuántas llamadas de la pasada de sombras ahorra?
 
 static func aplicar(vista: Node) -> void:
+	_sin_omni(vista)
+	_sin_entorno_fx(vista)
+	_lods_runtime(vista)
+	_impostor(vista)
+	_mesh_lod(vista)
+	_informe_jugadores(vista)
+	_sin_sombra_finos(vista)
+
+
+## SIN_OMNI: apaga las luces omni del partido.
+static func _sin_omni(vista: Node) -> void:
 	if OS.get_environment("SIN_OMNI") != "":
 		for l in vista.find_children("*", "OmniLight3D", true, false):
 			(l as Light3D).visible = false
+
+
+## SIN_ENTORNO_FX: apaga el brillo, la niebla, el ajuste y el SSAO del entorno.
+static func _sin_entorno_fx(vista: Node) -> void:
 	if OS.get_environment("SIN_ENTORNO_FX") != "":
 		for we in vista.find_children("*", "WorldEnvironment", true, false):
 			var en: Environment = (we as WorldEnvironment).environment
@@ -17,12 +32,15 @@ static func aplicar(vista: Node) -> void:
 				en.fog_enabled = false
 				en.adjustment_enabled = false
 				en.ssao_enabled = false
+
+
+## LODS_RUNTIME=1: a las mallas que se construyen en tiempo de ejecución y NO tienen LODs se les generan LODs.
+static func _lods_runtime(vista: Node) -> void:
 	if OS.get_environment("LODS_RUNTIME") != "":
-		## LODS_RUNTIME=1: a las mallas que se construyen en tiempo de ejecución y NO tienen LODs (pelo por capas `Cuero*`, peinados del pack, cara real) se les generan LODs con `ImporterMesh.generate_lods`
+		## LODS_RUNTIME=1: a las mallas que se construyen en tiempo de ejecución y NO tienen LODs (pelo por capas `Cuero*`, peinados del pack, cara real) se les generan LODs con `ImporterMesh.generate_lods
 		## (el mismo simplificador que el importador) y se sustituyen; el motor elige el LOD por distancia (`mesh_lod_threshold` del viewport).
 		var n_l := 0
 		var antes_t := 0
-		var despues_t := 0
 		var hechas := {}
 		for g in vista.find_children("*", "MeshInstance3D", true, false):
 			var mi := g as MeshInstance3D
@@ -49,9 +67,13 @@ static func aplicar(vista: Node) -> void:
 			mi.mesh = nuevo
 			n_l += 1
 		print("LODS_RUNTIME: %d mallas con LODs nuevos (%d triángulos base)" % [n_l, antes_t])
+
+
+## IMPOSTOR=<metros>: TECHO de lo que ahorraría un impostor de cuerpo (cápsulas a más de esa distancia).
+static func _impostor(vista: Node) -> void:
 	if OS.get_environment("IMPOSTOR") != "":
-		## IMPOSTOR=<metros> (p. ej. 30): TECHO de lo que ahorraría un impostor de cuerpo: los jugadores del campo a más de esa distancia de la cámara pierden todas sus mallas (cuerpo, cara, pelo) y se dibujan como una
-		## cápsula de ~60 triángulos del color de la camiseta (sin animación). No es el impostor final (no conserva la animación ni los detalles): solo mide el máximo ahorro posible de llamadas y triángulos.
+		## IMPOSTOR=<metros> (p. ej. 30): TECHO de lo que ahorraría un impostor de cuerpo: los jugadores del campo a más de esa distancia de la cámara pierden todas sus mallas (cuerpo, cara, pelo) y se d
+		## cápsula de ~60 triángulos del color de la camiseta (sin animación). No es el impostor final (no conserva la animación ni los detalles): solo mide el máximo ahorro posible de llamadas y triá
 		var cam_i := vista.get_viewport().get_camera_3d()
 		var lejos := float(OS.get_environment("IMPOSTOR"))
 		var n_i := 0
@@ -75,10 +97,18 @@ static func aplicar(vista: Node) -> void:
 			nodo_i.add_child(imp)
 			n_i += 1
 		print("IMPOSTOR: %d jugadores a más de %.0f m sustituidos por una cápsula" % [n_i, lejos])
+
+
+## MESH_LOD: el mesh_lod_threshold del viewport (píxeles de error admitidos al elegir el LOD).
+static func _mesh_lod(vista: Node) -> void:
 	if OS.get_environment("MESH_LOD") != "":
 		## MESH_LOD=6 (o 12, 24…): `mesh_lod_threshold` del viewport (píxeles de error admitidos al elegir el LOD de cada malla: más alto = lo lejano baja antes a mallas más simples; el esqueleto y la animación no cambian).
 		vista.get_viewport().mesh_lod_threshold = float(OS.get_environment("MESH_LOD"))
 		print("MESH_LOD: mesh_lod_threshold = %.1f" % vista.get_viewport().mesh_lod_threshold)
+
+
+## INFORME_JUGADORES=1: por cada jugador del campo, las piezas visibles que dibuja y sus triángulos.
+static func _informe_jugadores(vista: Node) -> void:
 	if OS.get_environment("INFORME_JUGADORES") != "":
 		## INFORME_JUGADORES=1: por cada jugador del campo, las piezas visibles que dibuja (nombre, triángulos, rango de visibilidad) y su distancia a la cámara de TV.
 		var cam := vista.get_viewport().get_camera_3d()
@@ -117,6 +147,10 @@ static func aplicar(vista: Node) -> void:
 		ks.sort_custom(func(a, b): return por_nombre[a].y > por_nombre[b].y)
 		for k in ks:
 			print("  PIEZA %-24s x%3d  %7d triángulos" % [k, int(por_nombre[k].x), int(por_nombre[k].y)])
+
+
+## SIN_SOMBRA_FINOS: quita la sombra de los ojos, pestañas y pelo.
+static func _sin_sombra_finos(vista: Node) -> void:
 	if OS.get_environment("SIN_SOMBRA_FINOS") != "":
 		var nf := 0
 		for g in vista.find_children("*", "MeshInstance3D", true, false):
@@ -133,67 +167,98 @@ static func efecto(vista: Node) -> void:
 	var lista := OS.get_environment("EFECTO").split(",", false)
 	var vp: Viewport = vista.get_viewport()
 	if OS.get_environment("DIAG_LUCES") != "":
-		## DIAG_LUCES=1: inventario de luces (tipo, visibles, con sombra) para el desglose de la noche.
-		var inv := {}
-		for l in vista.find_children("*", "Light3D", true, false):
-			var li := l as Light3D
-			var k := "%s%s" % [li.get_class(), " (sombra)" if li.shadow_enabled else ""]
-			var e: Array = inv.get(k, [0, 0])
-			e[0] += 1
-			e[1] += 1 if li.is_visible_in_tree() else 0
-			inv[k] = e
-		print("LUCES (total, visibles): ", inv)
-		for l in vista.find_children("*", "DirectionalLight3D", true, false):
-			var dl := l as DirectionalLight3D
-			print("LUZ_DIR %s energia=%.2f sombra=%s cortes=%d dist=%.0f padre=%s" % [dl.name, dl.light_energy, dl.shadow_enabled, dl.directional_shadow_mode, dl.directional_shadow_max_distance, dl.get_parent().name])
+		_inventario_luces(vista)
 	for we in vista.find_children("*", "WorldEnvironment", true, false):
 		var en: Environment = (we as WorldEnvironment).environment
 		if en == null:
 			continue
 		if OS.get_environment("DIAG_ENTORNO") != "":
-			print("ENTORNO %s: glow=%s niebla=%s ajuste=%s ssao=%s ssr=%s tonemap=%d fondo=%d ambiente=%d | vp msaa=%d fxaa=%d debanding=%s escala=%.2f" % [
-				we.name, en.glow_enabled, en.fog_enabled, en.adjustment_enabled, en.ssao_enabled, en.ssr_enabled, en.tonemap_mode, en.background_mode, en.ambient_light_source,
-				vp.msaa_3d, vp.screen_space_aa, vp.use_debanding, vp.scaling_3d_scale])
+			_diag_entorno(we, en, vp)
 		for e in lista:
-			match e:
-				"glow": en.glow_enabled = false
-				"niebla": en.fog_enabled = false
-				"ajuste": en.adjustment_enabled = false
-				"ssao": en.ssao_enabled = false
-				"ssr": en.ssr_enabled = false
-				"tonemap": en.tonemap_mode = Environment.TONE_MAPPER_LINEAR
-				"cielo": en.background_mode = Environment.BG_COLOR
+			_efecto_entorno(en, e)
 	for e in lista:
-		match e:
-			"omni":
-				for l in vista.find_children("*", "OmniLight3D", true, false):
-					(l as Light3D).visible = false
-			"spot":
-				for l in vista.find_children("*", "SpotLight3D", true, false):
-					(l as Light3D).visible = false
-			"sombras_luces":
-				for l in vista.find_children("*", "Light3D", true, false):
+		_efecto_sobre(vista, vp, e)
+
+## DIAG_LUCES=1: inventario de luces (tipo, visibles, con sombra) para el desglose de la noche.
+static func _inventario_luces(vista: Node) -> void:
+	## DIAG_LUCES=1: inventario de luces (tipo, visibles, con sombra) para el desglose de la noche.
+	var inv := {}
+	for l in vista.find_children("*", "Light3D", true, false):
+		var li := l as Light3D
+		var k := "%s%s" % [li.get_class(), " (sombra)" if li.shadow_enabled else ""]
+		var e: Array = inv.get(k, [0, 0])
+		e[0] += 1
+		e[1] += 1 if li.is_visible_in_tree() else 0
+		inv[k] = e
+	print("LUCES (total, visibles): ", inv)
+	for l in vista.find_children("*", "DirectionalLight3D", true, false):
+		var dl := l as DirectionalLight3D
+		print("LUZ_DIR %s energia=%.2f sombra=%s cortes=%d dist=%.0f padre=%s" % [dl.name, dl.light_energy, dl.shadow_enabled, dl.directional_shadow_mode, dl.directional_shadow_max_distance, dl.get_parent().name])
+
+## DIAG_ENTORNO=1: qué trae el Environment y el viewport.
+static func _diag_entorno(we: Node, en: Environment, vp: Viewport) -> void:
+	print("ENTORNO %s: glow=%s niebla=%s ajuste=%s ssao=%s ssr=%s tonemap=%d fondo=%d ambiente=%d | vp msaa=%d fxaa=%d debanding=%s escala=%.2f" % [
+		we.name, en.glow_enabled, en.fog_enabled, en.adjustment_enabled, en.ssao_enabled, en.ssr_enabled, en.tonemap_mode, en.background_mode, en.ambient_light_source,
+		vp.msaa_3d, vp.screen_space_aa, vp.use_debanding, vp.scaling_3d_scale])
+
+## Apaga, en el Environment, el efecto `e` de la lista EFECTO (si es de los suyos).
+static func _efecto_entorno(en: Environment, e: String) -> void:
+	match e:
+		"glow": en.glow_enabled = false
+		"niebla": en.fog_enabled = false
+		"ajuste": en.adjustment_enabled = false
+		"ssao": en.ssao_enabled = false
+		"ssr": en.ssr_enabled = false
+		"tonemap": en.tonemap_mode = Environment.TONE_MAPPER_LINEAR
+		"cielo": en.background_mode = Environment.BG_COLOR
+
+## Apaga, sobre luces, sombras, césped o viewport, el efecto `e` de la lista EFECTO.
+static func _efecto_sobre(vista: Node, vp: Viewport, e: String) -> void:
+	_efecto_luces(vista, e)
+	_efecto_superficie(vista, vp, e)
+
+
+## Los efectos de luces y sombras (omni, spot y sombras de las luces).
+static func _efecto_luces(vista: Node, e: String) -> void:
+	match e:
+		"omni":
+			for l in vista.find_children("*", "OmniLight3D", true, false):
+				(l as Light3D).visible = false
+		"spot":
+			for l in vista.find_children("*", "SpotLight3D", true, false):
+				(l as Light3D).visible = false
+		"sombras_luces":
+			for l in vista.find_children("*", "Light3D", true, false):
+				(l as Light3D).shadow_enabled = false
+		"sombra_sol_extra":
+			_sombra_segunda_direccional(vista)
+		"sombras_no_sol":
+			for l in vista.find_children("*", "Light3D", true, false):
+				if not l is DirectionalLight3D:
 					(l as Light3D).shadow_enabled = false
-			"sombra_sol_extra":
-				## la segunda luz direccional con sombra (de noche hay dos: la del estadio y la de `Ambience`): se apaga la sombra de la que NO se llama «Key»
-				var k := 0
-				for l in vista.find_children("*", "DirectionalLight3D", true, false):
-					if (l as Light3D).shadow_enabled:
-						k += 1
-						if k == 2:
-							(l as Light3D).shadow_enabled = false
-			"sombras_no_sol":
-				for l in vista.find_children("*", "Light3D", true, false):
-					if not l is DirectionalLight3D:
-						(l as Light3D).shadow_enabled = false
-			"cesped":
-				## EFECTO=cesped: el campo con un material plano sin sombreado (mismo verde): ¿cuánto cuesta el shader de la hierba (franjas, dibujo, ruido)?
-				var campo := vista.find_child("Cesped", true, false) as MeshInstance3D
-				if campo != null:
-					var pl := StandardMaterial3D.new()
-					pl.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-					pl.albedo_color = Color(0.20, 0.55, 0.18)
-					campo.material_override = pl
-					print("EFECTO cesped: material plano en %s" % campo.name)
-			"debanding": vp.use_debanding = false
-			"fxaa": vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
+
+
+## sombra_sol_extra: la segunda luz direccional con sombra (de noche hay dos: la del estadio y la de `Ambience`); se apaga la sombra de la que NO se llama «Key».
+static func _sombra_segunda_direccional(vista: Node) -> void:
+	var k := 0
+	for l in vista.find_children("*", "DirectionalLight3D", true, false):
+		if (l as Light3D).shadow_enabled:
+			k += 1
+			if k == 2:
+				(l as Light3D).shadow_enabled = false
+
+
+## Los efectos de superficie y viewport (césped, debanding y FXAA).
+static func _efecto_superficie(vista: Node, vp: Viewport, e: String) -> void:
+	match e:
+		"cesped":
+			## EFECTO=cesped: el campo con un material plano sin sombreado (mismo verde): ¿cuánto cuesta el shader de la hierba (franjas, dibujo, ruido)?
+			var campo := vista.find_child("Cesped", true, false) as MeshInstance3D
+			if campo != null:
+				var pl := StandardMaterial3D.new()
+				pl.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+				pl.albedo_color = Color(0.20, 0.55, 0.18)
+				campo.material_override = pl
+				print("EFECTO cesped: material plano en %s" % campo.name)
+		"debanding": vp.use_debanding = false
+		"fxaa": vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED

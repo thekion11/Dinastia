@@ -148,7 +148,7 @@ static func recorridos(semilla: int, sector: int = 0) -> Array[String]:
 static func asientos_x() -> Array[float]:
 	return [0.5, 1.2]
 
-static func montar(raiz: Node3D, ancho: float, semilla: int, nombre := "", sector := 0, cod := "") -> void:
+static func montar(raiz: Node3D, _ancho: float, semilla: int, nombre := "", sector := 0, cod := "") -> void:
 	var w := 3.8   ## el paradero real mide ~3,6 m: se ignora un ancho mayor (los de 7,5 m eran de la versión inventada)
 	var donde := raiz.global_position if raiz.is_inside_tree() else raiz.position
 	var sec := sector if sector > 0 else RecorridosRed.sector_de(donde)

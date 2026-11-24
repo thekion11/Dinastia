@@ -298,34 +298,13 @@ static func _plegar(mi: MeshInstance3D, m: Mesh) -> Array:
 	if mat is BaseMaterial3D and (mat as BaseMaterial3D).uv1_triplanar and not (mat as BaseMaterial3D).uv1_world_triplanar:
 		return []
 	if m is BoxMesh:
-		var b := m as BoxMesh
-		if b.subdivide_width + b.subdivide_height + b.subdivide_depth > 0 or b.size.x * b.size.y * b.size.z <= 0.0:
-			return []
-		return [_unidad_de("caja", b.material, func():
-			var u := BoxMesh.new(); u.size = Vector3.ONE; return u), b.size]
+		return _plegar_caja(m as BoxMesh)
 	if m is CylinderMesh:
-		var c := m as CylinderMesh
-		if not is_equal_approx(c.top_radius, c.bottom_radius) or c.top_radius <= 0.0 or not c.cap_top or not c.cap_bottom:
-			return []
-		var clave := "cil%d_%d" % [c.radial_segments, c.rings]
-		return [_unidad_de(clave, c.material, func():
-			var u := CylinderMesh.new(); u.top_radius = 1.0; u.bottom_radius = 1.0; u.height = 1.0
-			u.radial_segments = c.radial_segments; u.rings = c.rings; return u),
-			Vector3(c.top_radius, c.height, c.top_radius)]
+		return _plegar_cilindro(m as CylinderMesh)
 	if m is PlaneMesh:
-		var p := m as PlaneMesh
-		if p.subdivide_width + p.subdivide_depth > 0 or p.orientation != PlaneMesh.FACE_Y or p.center_offset != Vector3.ZERO:
-			return []
-		return [_unidad_de("plano", p.material, func():
-			var u := PlaneMesh.new(); u.size = Vector2.ONE; return u), Vector3(p.size.x, 1.0, p.size.y)]
+		return _plegar_plano(m as PlaneMesh)
 	if m is SphereMesh:
-		var e := m as SphereMesh
-		if not is_equal_approx(e.height, e.radius * 2.0) or e.is_hemisphere or e.radius <= 0.0:
-			return []
-		var clave2 := "esf%d_%d" % [e.radial_segments, e.rings]
-		return [_unidad_de(clave2, e.material, func():
-			var u := SphereMesh.new(); u.radius = 1.0; u.height = 2.0
-			u.radial_segments = e.radial_segments; u.rings = e.rings; return u), Vector3.ONE * e.radius]
+		return _plegar_esfera(m as SphereMesh)
 	return []
 
 ## Las cajas lejanas, un MultiMesh por celda con el color de cada edificio.
@@ -362,3 +341,36 @@ static func _montar_proxies(raiz: Node3D, proxies: Array) -> void:
 		mmi.visibility_range_begin = RANGO_EDIFICIO - 20.0
 		mmi.visibility_range_begin_margin = 20.0
 		raiz.add_child(mmi)
+
+## Pliegue de una malla de tipo BoxMesh (ver `_plegar`).
+static func _plegar_caja(b: BoxMesh) -> Array:
+	if b.subdivide_width + b.subdivide_height + b.subdivide_depth > 0 or b.size.x * b.size.y * b.size.z <= 0.0:
+		return []
+	return [_unidad_de("caja", b.material, func():
+		var u := BoxMesh.new(); u.size = Vector3.ONE; return u), b.size]
+
+## Pliegue de una malla de tipo CylinderMesh (ver `_plegar`).
+static func _plegar_cilindro(c: CylinderMesh) -> Array:
+	if not is_equal_approx(c.top_radius, c.bottom_radius) or c.top_radius <= 0.0 or not c.cap_top or not c.cap_bottom:
+		return []
+	var clave := "cil%d_%d" % [c.radial_segments, c.rings]
+	return [_unidad_de(clave, c.material, func():
+		var u := CylinderMesh.new(); u.top_radius = 1.0; u.bottom_radius = 1.0; u.height = 1.0
+		u.radial_segments = c.radial_segments; u.rings = c.rings; return u),
+		Vector3(c.top_radius, c.height, c.top_radius)]
+
+## Pliegue de una malla de tipo PlaneMesh (ver `_plegar`).
+static func _plegar_plano(p: PlaneMesh) -> Array:
+	if p.subdivide_width + p.subdivide_depth > 0 or p.orientation != PlaneMesh.FACE_Y or p.center_offset != Vector3.ZERO:
+		return []
+	return [_unidad_de("plano", p.material, func():
+		var u := PlaneMesh.new(); u.size = Vector2.ONE; return u), Vector3(p.size.x, 1.0, p.size.y)]
+
+## Pliegue de una malla de tipo SphereMesh (ver `_plegar`).
+static func _plegar_esfera(e: SphereMesh) -> Array:
+	if not is_equal_approx(e.height, e.radius * 2.0) or e.is_hemisphere or e.radius <= 0.0:
+		return []
+	var clave2 := "esf%d_%d" % [e.radial_segments, e.rings]
+	return [_unidad_de(clave2, e.material, func():
+		var u := SphereMesh.new(); u.radius = 1.0; u.height = 2.0
+		u.radial_segments = e.radial_segments; u.rings = e.rings; return u), Vector3.ONE * e.radius]

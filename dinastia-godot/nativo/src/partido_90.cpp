@@ -351,12 +351,15 @@ void DinastiaNativo::simular_90(Object *p, Object *ayuda, const Dictionary &cfg,
 		if (az.randf() < e.pl) {
 			atacar(true);
 		}
-		e.terminado = bool(p->get(k_term)); // el árbitro (tarjetero, penal…) pudo dejar a alguien con menos de 7 dentro de `atacar`
-		if (az.randf() < e.pv && !e.terminado) { // (17-11) una roja que deja a uno con menos de 7 suspende el partido DENTRO del minuto: ya no se juega más
+		// Gemela de `simular_minuto()`: se sortea SIEMPRE el ataque del visitante (como GDScript: `rng.randf() < p_v and not terminado_ya`), pero si el
+		// del local suspendió el partido (menos de siete) no ataca; y entonces el minuto se acaba ahí.
+		const bool sorteo_v = az.randf() < e.pv;
+		e.terminado = bool(p->get(k_term));
+		if (sorteo_v && !e.terminado) {
 			atacar(false);
 		}
-		e.terminado = bool(p->get(k_term));
-		if (e.terminado) {
+		if (bool(p->get(k_term))) {
+			e.terminado = true;
 			break;
 		}
 		// _incidencias

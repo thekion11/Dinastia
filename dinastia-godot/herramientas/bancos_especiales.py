@@ -89,7 +89,54 @@ BANCOS = [
      r"compilan|auditoría técnica|reg_registro|f0m_nucleo|nucleo_sueltos|lanzamiento|presets_exportacion|logo|codigo"),
     ("ideas_documento", "las ideas del documento original (lotes) y ejemplos sueltos",
      r"ideas_|guion|coherencia_c1|cantera_c3|charlas_c6|contratos_c9|calendario_c13|politica_c15|portadas_c20"),
+    ("carrera_jugador", "La Ruta (modo jugador): ciclo de la semana, temporada, premios, traspasos, mando y entregas en 3D",
+     r"^La Ruta: "),
 ]
+
+## (19-11) PRUEBAS NUEVAS ASIGNADAS POR NOMBRE EXACTO: secciones del banco y especiales que ningún patrón de arriba recogía (`--sin_banco` daba 125).
+## Van por nombre exacto (no por patrón) para no cambiar el banco de ninguna prueba ya asignada. Una prueba nueva: mejor un patrón arriba; si no encaja, aquí.
+POR_NOMBRE = {
+    "arranque": ["la entrada genera el mundo por trozos con fundido (7-11)"],
+    "determinismo": ["_probar_semilla_en_ajustes", "mundo por trozos = mismo mundo que de una vez (7-11)"],
+    "datos_mundo": ["_probar_rasgos_conocidos", "_probar_estilos_club", "_probar_uniformes_segundo", "_probar_visita_generada"],
+    "calendario_competiciones": ["_probar_avance_nucleo_y_saque", "_probar_segundas_divisiones", "_probar_segundas_reglas", "_probar_segundas_cinco_grandes",
+        "_probar_segundas_latinoamerica", "_probar_segundas_pbt", "_probar_ligas_activas", "_probar_ligas_activas_todos", "_probar_ligas_activas_pantalla",
+        "_probar_ligas_activas_agregar_pantalla", "_probar_ligas_programadas", "_probar_fases_finales_egipto", "_probar_fases_finales_argentina",
+        "_probar_fases_finales_mls", "_probar_fases_finales_europa", "_probar_fases_finales_grecia", "_probar_fila_proximos", "_probar_final_temporada",
+        "_probar_fecha_seleccion", "_probar_finalissima", "_probar_finalissima_directo", "_probar_olimpicos",
+        "final de temporada: pantalla única de resumen a pantalla completa (con pantalla)", "Ligas activas en vertical con mando (con pantalla)",
+        "avance por días: núcleo (paradas)", "réplica del partido (jugar de nuevo y momentos)", "decisiones con opciones del avance (efecto real)",
+        "avance por días: resultado, momentos y popup del partido jugado", "capturas UI: fase final de la liga (ARG, USA, EGY)"],
+    "partido_reglas": ["_probar_league_acciones", "sorteo del saque inicial en el motor"],
+    "partido_ia": ["_probar_league_nucleo", "_probar_formacion_propia", "_probar_estrategia_rapida", "_probar_motor_ciego", "_probar_mejoras_c4",
+        "_probar_paciencia_c4", "_probar_adelanto_c4", "_probar_cabeza_c4", "_probar_hueco_c4", "_probar_arreglos_motor_c6", "_probar_variante_motor"],
+    "partido_fisica": ["_probar_league_movimiento"],
+    "partido_jugable": ["_probar_mando_c4", "_probar_frontera_mitad", "_probar_entrada_por_pasos", "_probar_perfil_manejo_c4"],
+    "partido_presentacion": ["_probar_resumen_descanso_y_final", "_probar_hud_tv"],
+    "plantel_cantera": ["_probar_media_firma", "_probar_intercambio_once", "_probar_estilo_plantilla", "_probar_gestion_once", "_probar_flecha_forma",
+        "_probar_quimica_linea", "plantilla a la PES"],
+    "mercado_contratos": ["_probar_agentes_confianza"],
+    "club_directiva": ["_probar_dominio_del_club", "_probar_multa_plantel_heredado", "_probar_objetivos_por_club"],
+    "prensa_redes": ["_probar_partido_despedida", "_probar_homenaje_despedida", "_probar_festejos_titulo", "_probar_jugador_del_mes",
+        "partido de despedida (UI, con pantalla)", "festejos por tipo de título, 3 clubes (con pantalla)",
+        "evento de despedida solo en su fecha y a pantalla completa (con pantalla)", "homenaje en 3D en el campo (con pantalla)",
+        "partido de despedida jugado en vivo (modo vivo, con pantalla)"],
+    "carrera_dt": ["_probar_capitulos", "_probar_cargo_seleccionador", "_probar_convocatoria_seleccion", "capturas UI: selección nacional"],
+    "menu_navegacion": ["_probar_informe_abre_su_pantalla", "_probar_casilla_clara", "_probar_estado_vacio", "_probar_cajon_perezoso", "_probar_socios_cabecera",
+        "_probar_pie_mando", "_probar_funciones_puras_ui"],
+    "estadio_3d": ["_probar_puerta_animada", "_probar_puertas_ascensor", "_probar_interior_oculto", "_probar_museo_por_titulos", "_probar_solo_primera_persona",
+        "visor del trofeo (toque y mando)"],
+    "ciudad_vida": ["_probar_casa_plano"],
+    "personajes_3d": ["_probar_avatares_realistas", "_probar_h1_animacion", "_probar_dorsales_anim", "Trote CMU encendido: el partido con pantalla termina"],
+    "audio": ["_probar_musica_libre"],
+    "calidad_grafica": ["_probar_lods_cuero", "_probar_paseo_optimizado", "_probar_rotulos_cercanos", "_probar_celdas_agrupado", "_probar_a_buffer",
+        "_probar_banca_ligera", "_probar_subsistemas_quietos", "_probar_recorte_a_pie", "_probar_conos_de_luz", "_probar_calentamiento_efectos",
+        "_probar_impostores_lejanos"],
+    "codigo_y_auditorias": ["_probar_fun_objetivos_y_textos", "_probar_fun_jugador_y_formacion"],
+    "carrera_jugador": ["_probar_ruta_ida_vuelta_json", "_probar_ruta_semana_interfaz", "_probar_ruta_temporada_completa", "_probar_ruta_premios_rivales",
+        "_probar_ruta_traspasos"],
+}
+BANCOS = [(n, d, p + ("|^(?:%s)$" % "|".join(re.escape(x) for x in POR_NOMBRE[n]) if n in POR_NOMBRE else "")) for n, d, p in BANCOS]
 
 
 CON_PANTALLA = {"estadio_3d"}   ## bancos que corren con xvfb + OpenGL (llvmpipe) en vez de --headless
@@ -100,7 +147,8 @@ def especiales():
     for l in open(os.path.join(RAIZ, "herramientas", "especiales.sh"), encoding="utf-8"):
         m = re.match(r'\s*pasa "((?:[^"\\]|\\.)*)" "((?:[^"\\]|\\.)*)" "((?:[^"\\]|\\.)*)"', l)
         if m and "$" not in m.group(1):
-            out.append((m.group(1), m.group(2).replace('\\"', '"'), m.group(3)))
+            ## En especiales.sh el comando va entre comillas dobles: \" y \$ son escapes de bash que hay que deshacer aquí.
+            out.append((m.group(1), m.group(2).replace('\\"', '"').replace('\\$', '$'), m.group(3)))
     return out
 
 
@@ -139,7 +187,7 @@ def correr_banco(nombre, r):
     for n, cmd, pat in r["especiales"]:
         p = subprocess.run(["bash", "-c", "timeout 600 bash -c '%s'" % cmd.replace("\\$", "$").replace("'", "'\\''")], cwd=RAIZ, capture_output=True, text=True)
         out = p.stdout + p.stderr
-        ok = re.search(pat, out) is not None and "SCRIPT ERROR" not in out
+        ok = re.search(pat, out, re.M) is not None and "SCRIPT ERROR" not in out
         fallos += 0 if ok else 1
         print("  %-5s %s" % ("ok" if ok else "FALLO", n))
         if not ok:

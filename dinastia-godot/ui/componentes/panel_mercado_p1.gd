@@ -12,12 +12,12 @@ extends VBoxContainer
 ## con el color del club activo sin duplicar las constantes de Principal.
 
 # ── PALETA (valores por defecto = los de Principal si no se sobrescriben) ──
-var COL_TEXTO  := Color("e9eeea")
-var COL_SUAVE  := Color("8ea595")
-var COL_ACENTO := Color("3fa06a")
-var COL_VERDE  := Color("4caf6d")
-var COL_ROJO   := Color("e05555")
-var COL_ORO    := Color("c9a227")
+var col_texto  := Color("e9eeea")
+var col_suave  := Color("8ea595")
+var col_acento := Color("3fa06a")
+var col_verde  := Color("4caf6d")
+var col_rojo   := Color("e05555")
+var col_oro    := Color("c9a227")
 
 # ── SEÑALES ────────────────────────────────────────────────────────────────
 ## El usuario pulsó el nombre de un jugador → Principal abre la negociación.
@@ -64,7 +64,7 @@ func _pintar_precontrato(j: Jugador) -> void:
 		return
 	var ya := Precontratos.de(_mundo, j.id)
 	if not ya.is_empty():
-		var t := _lbl(11, COL_VERDE)
+		var t := _lbl(11, col_verde)
 		t.text = Idiomas.t("📝 Precontrato firmado: llegará sin traspaso al acabar su contrato (ficha %s a la semana).") % _dinero(int(ya["sueldo"]))
 		t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		add_child(t)
@@ -74,7 +74,7 @@ func _pintar_precontrato(j: Jugador) -> void:
 	var no := Precontratos.motivo(_mundo, j)
 	var b := Button.new()
 	b.text = Idiomas.t("📝 Precontrato (llega gratis al acabar su contrato)")
-	b.add_theme_font_size_override("font_size", 11)
+	b.add_theme_font_size_override("font_size", Tema.letra(11))
 	b.disabled = no != ""
 	b.tooltip_text = no if no != "" else Idiomas.t("Cierras ya su ficha; en el cambio de temporada llega a tu club sin pagar traspaso.")
 	b.pressed.connect(func() -> void:
@@ -83,7 +83,7 @@ func _pintar_precontrato(j: Jugador) -> void:
 		refrescar_pedido.emit())
 	add_child(b)
 	if no != "":
-		var m := _lbl(10, COL_SUAVE)
+		var m := _lbl(10, col_suave)
 		m.text = no
 		m.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		add_child(m)
@@ -100,9 +100,9 @@ func _pintar_estado_ventana() -> void:
 	var quedan  := _mundo.semanas_de_mercado() if abierta else _mundo.semanas_hasta_mercado()
 	var texto   := (Idiomas.t("MERCADO ABIERTO  ·  quedan %d semana(s)") % quedan) if abierta \
 		else (Idiomas.t("MERCADO CERRADO  ·  reabre en %d semana(s)") % quedan)
-	var col := COL_VERDE if abierta else COL_ROJO
+	var col := col_verde if abierta else col_rojo
 	if abierta and quedan <= 2:
-		col = COL_ORO
+		col = col_oro
 
 	var t := _lbl(13, col)
 	t.text = texto
@@ -110,13 +110,13 @@ func _pintar_estado_ventana() -> void:
 
 	if _mundo.roles != null:
 		if _mundo.roles.emergencia_activa():
-			var e := _lbl(11, COL_ORO)
+			var e := _lbl(11, col_oro)
 			e.text = Idiomas.t("📋 Ventana de emergencia: puedes cerrar UN fichaje aunque el mercado esté cerrado.")
 			e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			add_child(e)
 		var bloqueo := _mundo.roles.mercado_bloqueado()
 		if bloqueo != "":
-			var b := _lbl(11, COL_ROJO)
+			var b := _lbl(11, col_rojo)
 			if bloqueo == "interinato":
 				b.text = Idiomas.t("Estás de interino: no fichas hasta que se resuelva. Te quedan %d fecha(s).") \
 					% _mundo.roles.fechas_interinato_restantes()
@@ -128,14 +128,14 @@ func _pintar_estado_ventana() -> void:
 	## El ciclo del mercado (M-210): burbuja o crisis, con lo que significa para comprar y vender.
 	var ciclo := _mundo.eras.ciclo_mercado(_mundo.anio) if _mundo.eras != null else "normal"
 	if ciclo != "normal":
-		var cm := _lbl(11, COL_ORO if ciclo == "burbuja" else COL_ROJO)
+		var cm := _lbl(11, col_oro if ciclo == "burbuja" else col_rojo)
 		cm.text = (Idiomas.t("🫧 Burbuja: los traspasos valen un %d %% más hasta %d. Buen momento para vender.") if ciclo == "burbuja" \
 			else Idiomas.t("📉 Crisis: los traspasos valen un %d %% menos hasta %d. Buen momento para comprar.")) \
 			% [int(round(absf(_mundo.eras.factor_mercado(_mundo.anio) - 1.0) * 100.0)), int(_mundo.eras.mercado["hasta"])]
 		cm.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		add_child(cm)
 
-	var nota := _lbl(10, COL_SUAVE)
+	var nota := _lbl(10, col_suave)
 	nota.text = Idiomas.t("Ventanas de pases: semanas 1–6 y 18–24. Libres y precontratos funcionan todo el año.")
 	nota.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(nota)
@@ -150,7 +150,7 @@ func _dato(etiqueta: String, valor: String, color: Color) -> void:
 	var f := HBoxContainer.new()
 	f.add_theme_constant_override("separation", 8)
 	add_child(f)
-	var et := _lbl(11, COL_SUAVE)
+	var et := _lbl(11, col_suave)
 	et.text = etiqueta
 	et.custom_minimum_size = Vector2(190, 0)
 	et.clip_text = true
@@ -173,11 +173,11 @@ func _dinero(monto: int) -> String:
 ## con las demás) y los botones. Sin ofertas se dice en una línea: una sección
 ## que desaparece sin más hace pensar que la pantalla ha fallado.
 func _pintar_ofertas_recibidas(_mio: Club) -> void:
-	var t := _lbl(11, COL_SUAVE)
+	var t := _lbl(11, col_suave)
 	t.text = Idiomas.t("OFERTAS RECIBIDAS")
 	add_child(t)
 	if _mundo.mercado.ofertas_recibidas.is_empty():
-		var vac := _lbl(11, COL_SUAVE)
+		var vac := _lbl(11, col_suave)
 		vac.text = Idiomas.t("Nadie ha pujado por tus jugadores esta semana.")
 		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		add_child(vac)
@@ -195,12 +195,12 @@ func _pintar_ofertas_recibidas(_mio: Club) -> void:
 		fila.add_theme_constant_override("separation", 8)
 		add_child(fila)
 
-		var l := _lbl(12, COL_TEXTO)
+		var l := _lbl(12, col_texto)
 		l.text = Idiomas.t("%s — oferta de %s") % [jo.nombre, co.nombre]
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		fila.add_child(l)
-		var lm := _lbl(12, COL_ORO)
+		var lm := _lbl(12, col_oro)
 		lm.text = _dinero(int(o["monto"]))
 		lm.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		lm.custom_minimum_size = Vector2(90, 0)
@@ -214,7 +214,7 @@ func _pintar_ofertas_recibidas(_mio: Club) -> void:
 			DobleToque.conectar(ba, Idiomas.t("¿Vender? Toca otra vez"), func() -> void: oferta_respondida.emit(idx, true))
 			fila.add_child(ba)
 		if es_clausula:
-			var lc := _lbl(10, COL_ORO)
+			var lc := _lbl(10, col_oro)
 			lc.text = Idiomas.t("Pagan la cláusula: no se puede rechazar.")
 			add_child(lc)
 		elif puede_vender:
@@ -223,7 +223,7 @@ func _pintar_ofertas_recibidas(_mio: Club) -> void:
 			br.pressed.connect(func() -> void: oferta_respondida.emit(idx, false))
 			fila.add_child(br)
 		else:
-			var bl := _lbl(11, COL_SUAVE)
+			var bl := _lbl(11, col_suave)
 			bl.text = String(_mundo.roles.motivo_bloqueo("vender_jugadores")) if _mundo.roles != null else ""
 			bl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 			add_child(bl)
@@ -232,7 +232,7 @@ func _pintar_ofertas_recibidas(_mio: Club) -> void:
 		if _mundo.cesiones != null:
 			var neto := _mundo.cesiones.neto_de_venta(jo, int(o["monto"]))
 			if neto < int(o["monto"]):
-				var ln := _lbl(10, COL_ROJO)
+				var ln := _lbl(10, col_rojo)
 				ln.text = Idiomas.t("   de eso, el club se queda %s: hay un fondo con parte de su pase") % _dinero(neto)
 				ln.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 				add_child(ln)
@@ -303,7 +303,7 @@ func _pintar_lista(mio: Club) -> void:
 	add_child(_caja_lista)
 	var filtrados := _objetivos_filtrados(mio)
 	if filtrados.is_empty():
-		var vac := _lbl(12, COL_SUAVE)
+		var vac := _lbl(12, col_suave)
 		vac.text = Idiomas.t("Ningún jugador cumple esos filtros. Prueba con otra línea o borra la búsqueda.")
 		vac.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_caja_lista.add_child(vac)
@@ -327,7 +327,7 @@ func _pintar_lista(mio: Club) -> void:
 	if con_pos:
 		columnas.push_front([Idiomas.t("POS"), 38, false])
 	for col: Array in columnas:
-		var h := _lbl(11, COL_SUAVE)
+		var h := _lbl(11, col_suave)
 		h.text = String(col[0])
 		h.custom_minimum_size = Vector2(float(col[1]), 0)
 		h.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT if bool(col[2]) else HORIZONTAL_ALIGNMENT_LEFT
@@ -337,12 +337,12 @@ func _pintar_lista(mio: Club) -> void:
 		var suyo: Club  = _mundo.clubes.get(j.club_id)
 		var pedido      := _mundo.mercado.valor_pedido(j)
 		var ganas: float = _mundo.mercado.deseo_de_venir(j, mio)["p"]
-		var alcance     := COL_TEXTO if pedido <= mio.saldo else COL_ROJO
-		var col_g       := COL_VERDE if ganas > 0.6 else (COL_ORO if ganas > 0.35 else COL_ROJO)
+		var alcance     := col_texto if pedido <= mio.saldo else col_rojo
+		var col_g       := col_verde if ganas > 0.6 else (col_oro if ganas > 0.35 else col_rojo)
 		var med         := _mundo.ojeadores.ovr_texto(j) if _mundo.ojeadores != null else str(j.ovr)
 
 		if con_pos:
-			var pos_l := _lbl(12, COL_SUAVE)
+			var pos_l := _lbl(12, col_suave)
 			pos_l.text = j.pos_e
 			g.add_child(pos_l)
 		var nom_b := Button.new()
@@ -354,13 +354,13 @@ func _pintar_lista(mio: Club) -> void:
 		nom_b.custom_minimum_size = Vector2(70, 0)
 		nom_b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nom_b.size_flags_stretch_ratio = 1.6
-		nom_b.add_theme_font_size_override("font_size", 12)
+		nom_b.add_theme_font_size_override("font_size", Tema.letra(12))
 		nom_b.add_theme_color_override("font_color", alcance)
 		nom_b.tooltip_text = Idiomas.t("%s · abrir la mesa de negociación") % j.nombre
 		nom_b.pressed.connect(func() -> void: fichar_pedido.emit(j))
 		g.add_child(nom_b)
 
-		var club_l := _lbl(12, COL_SUAVE)
+		var club_l := _lbl(12, col_suave)
 		club_l.text = suyo.nombre if suyo else "?"
 		club_l.clip_text = true
 		club_l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -371,8 +371,8 @@ func _pintar_lista(mio: Club) -> void:
 		g.add_child(club_l)
 
 		for par: Array in [
-				[str(j.edad),                   COL_SUAVE],
-				[med,                            COL_TEXTO],
+				[str(j.edad),                   col_suave],
+				[med,                            col_texto],
 				[_dinero(pedido),                alcance  ],
 				["%d%%" % int(ganas * 100.0),    col_g    ]]:
 			var lbl := _lbl(12, par[1])

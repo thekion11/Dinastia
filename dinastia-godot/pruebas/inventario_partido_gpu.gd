@@ -61,21 +61,46 @@ func _variantes() -> Array:
 	_vp = get_viewport()
 	return [
 		["BASE (como en el juego)", func() -> void: pass],
-		["sin ajuste de color (brillo/contraste/saturación)", func() -> void: if _env: _env.adjustment_enabled = false],
-		["tonemap lineal (sin ACES)", func() -> void: if _env: _env.tonemap_mode = Environment.TONE_MAPPER_LINEAR],
-		["sin niebla", func() -> void: if _env: _env.fog_enabled = false],
-		["cielo → color plano (sin shader de cielo)", func() -> void: if _env: _env.background_mode = Environment.BG_COLOR],
-		["sin reflejo del cielo/ambiente de cielo", func() -> void: if _env: _env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR],
+		["sin ajuste de color (brillo/contraste/saturación)", func() -> void:
+			if _env:
+				_env.adjustment_enabled = false],
+		["tonemap lineal (sin ACES)", func() -> void:
+			if _env:
+				_env.tonemap_mode = Environment.TONE_MAPPER_LINEAR],
+		["sin niebla", func() -> void:
+			if _env:
+				_env.fog_enabled = false],
+		["cielo → color plano (sin shader de cielo)", func() -> void:
+			if _env:
+				_env.background_mode = Environment.BG_COLOR],
+		["sin reflejo del cielo/ambiente de cielo", func() -> void:
+			if _env:
+				_env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR],
 		["sin MSAA", func() -> void: _vp.msaa_3d = Viewport.MSAA_DISABLED],
-		["sin sombras (todas las luces)", func() -> void: for l in _vista.find_children("*", "Light3D", true, false): (l as Light3D).shadow_enabled = false],
+		["sin sombras (todas las luces)", func() -> void:
+			for l in _vista.find_children("*", "Light3D", true, false):
+				(l as Light3D).shadow_enabled = false],
 		["3D al 50 % de resolución", func() -> void: _vp.scaling_3d_scale = 0.5],
 		["3D al 35 % de resolución", func() -> void: _vp.scaling_3d_scale = 0.35],
-		["sin hinchas (público)", func() -> void: for g in _grupo("hinchas"): (g as Node3D).visible = false],
-		["sin butacas", func() -> void: for g in _grupo("butacas"): (g as Node3D).visible = false],
-		["sin jugadores", func() -> void: for g in _grupo("jugadores"): (g as Node3D).visible = false],
-		["sin entorno exterior", func() -> void: for g in _grupo("entorno"): (g as Node3D).visible = false],
-		["sin rótulos 3D (Label3D)", func() -> void: for l in _vista.find_children("*", "Label3D", true, false): (l as Node3D).visible = false],
-		["sin luces de foco (OmniLight/SpotLight)", func() -> void: for l in _vista.find_children("*", "Light3D", true, false): if not l is DirectionalLight3D: (l as Light3D).visible = false],
+		["sin hinchas (público)", func() -> void:
+			for g in _grupo("hinchas"):
+				(g as Node3D).visible = false],
+		["sin butacas", func() -> void:
+			for g in _grupo("butacas"):
+				(g as Node3D).visible = false],
+		["sin jugadores", func() -> void:
+			for g in _grupo("jugadores"):
+				(g as Node3D).visible = false],
+		["sin entorno exterior", func() -> void:
+			for g in _grupo("entorno"):
+				(g as Node3D).visible = false],
+		["sin rótulos 3D (Label3D)", func() -> void:
+			for l in _vista.find_children("*", "Label3D", true, false):
+				(l as Node3D).visible = false],
+		["sin luces de foco (OmniLight/SpotLight)", func() -> void:
+			for l in _vista.find_children("*", "Light3D", true, false):
+				if not l is DirectionalLight3D:
+					(l as Light3D).visible = false],
 	]
 
 var _vars: Array = []

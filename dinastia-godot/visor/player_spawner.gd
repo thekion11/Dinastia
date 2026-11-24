@@ -6,9 +6,7 @@ extends "res://visor/player_spawner_p1.gd"
 ## cartel del añadido), así no cuesta nada el resto del partido. Mismo modelo y
 ## camiseta que el trío.
 func spawn_cuarto_arbitro(root: Node3D, kit: Dictionary = {}) -> Dictionary:
-	var d := _crear_jugador(root, "cuarto_arbitro", "ARB", "", Color(String(kit.get("c1", "#111216"))),
-		Color(String(kit.get("c2", "#e6d91a"))), "liso", 0, Color(0.74, 0.55, 0.42), Color(0.12, 0.1, 0.08), 0,
-		Color(Color(String(kit.get("pantalon", "#121217"))), 1.0))
+	var d := _crear_jugador(root, "cuarto_arbitro", "ARB", Color(String(kit.get("c1", "#111216"))), Color(String(kit.get("c2", "#e6d91a"))), "liso", 0, [Color(0.74, 0.55, 0.42), Color(0.12, 0.1, 0.08), 0], Color(Color(String(kit.get("pantalon", "#121217"))), 1.0))
 	return d
 
 ## LOS SUPLENTES, DE PIE EN LA ZONA TECNICA (22-9-2026, Fase 3 del ROADMAP:
@@ -80,8 +78,7 @@ func spawn_banca(root: Node3D, jugadores: Array, es_local: bool, kit: Dictionary
 			kestilo = str(kit_portero.get("estilo", "liso"))
 			kimg = ""
 		var liso := kc1 if kimg == "" else Color(0, 0, 0, 0)
-		var nodo := _crear_jugador(root, j.id, j.pos_e, kimg, kc1, kc2, kestilo,
-			int(jug.get("dorsal", 0)), piel, pelo, look[2], liso, jug)
+		var nodo := _crear_jugador(root, j.id, j.pos_e, kc1, kc2, kestilo, int(jug.get("dorsal", 0)), [piel, pelo, look[2]], liso, jug)
 		if nodo.is_empty():
 			continue
 		var n: Node3D = nodo["nodo"]
@@ -209,8 +206,7 @@ func spawn_sentados(root: Node3D, jugadores: Array, es_local: bool, kit: Diction
 			kestilo = str(kit_portero.get("estilo", "liso"))
 			kimg = ""
 		var liso := kc1 if kimg == "" else Color(0, 0, 0, 0)
-		var nodo := _crear_jugador(root, j.id, j.pos_e, kimg, kc1, kc2, kestilo,
-			int(jug.get("dorsal", 0)), piel, pelo, look[2], liso, jug)
+		var nodo := _crear_jugador(root, j.id, j.pos_e, kc1, kc2, kestilo, int(jug.get("dorsal", 0)), [piel, pelo, look[2]], liso, jug)
 		if nodo.is_empty():
 			continue
 		var n: Node3D = nodo["nodo"]

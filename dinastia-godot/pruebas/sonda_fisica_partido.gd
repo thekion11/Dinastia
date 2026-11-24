@@ -9,7 +9,7 @@ extends Node
 ## y guarda una tira de fotogramas (fisica_tira.png) para mirarla.
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --fixed-fps 30 --resolution 960x540 res://pruebas/sonda_fisica_partido.tscn
 const DT := 1.0 / 30.0
-var FOTOGRAMAS := int(OS.get_environment("FOTOGRAMAS")) if OS.get_environment("FOTOGRAMAS") != "" else 600
+var fotogramas := int(OS.get_environment("FOTOGRAMAS")) if OS.get_environment("FOTOGRAMAS") != "" else 600
 var _n := 0
 var _vista: VistaEstadio
 var _partido: Partido
@@ -125,7 +125,7 @@ func _process(_d: float) -> void:
 		var img := get_viewport().get_texture().get_image()
 		img.resize(480, 270)
 		_tira.append(img)
-	if _n >= 60 + FOTOGRAMAS:
+	if _n >= 60 + fotogramas:
 		_informe()
 		get_tree().quit()
 

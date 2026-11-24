@@ -15,3 +15,15 @@ static func obj() -> Object:
 		if OS.get_environment("DINASTIA_SIN_NATIVO") != "1" and ClassDB.class_exists("DinastiaNativo"):
 			_obj = ClassDB.instantiate("DinastiaNativo")
 	return _obj
+
+static var _tiene: Dictionary = {}
+
+## La extensión SOLO si trae ese método (20-11): un binario de otra plataforma compilado antes de que existiera esa función
+## devuelve null y el llamador usa su gemela GDScript. El resultado de cada nombre se guarda (un `has_method` por nombre).
+static func de(nombre: String) -> Object:
+	var o := obj()
+	if o == null:
+		return null
+	if not _tiene.has(nombre):
+		_tiene[nombre] = o.has_method(nombre)
+	return o if _tiene[nombre] else null

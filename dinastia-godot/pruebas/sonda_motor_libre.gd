@@ -19,7 +19,6 @@ func _ready() -> void:
 			xgs[e["eq"]] += float(e["xg"])
 		print("   tiros por distancia ", hist, " xG ", xgs)
 	var t0 := Time.get_ticks_msec()
-	var tot := {}
 	for s in 6:
 		var ml := MotorLibre.new(fuerte.once(), debil.once(), 1.0, 1.0, s) if s < 3 else MotorLibre.new(debil.once(), fuerte.once(), 1.0, 1.0, s)
 		var r := ml.simular()

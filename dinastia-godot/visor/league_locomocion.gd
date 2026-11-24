@@ -106,7 +106,7 @@ static func _paso(m: MotorLeague, delta: float, con_portador := true) -> void:
 		var en_curso := float(p.get("ls_trans_hasta", 0.0)) > m.t
 		var off := float(p.get("ls_off", 0.0))
 		var cuerpo := float(p.get("ls_cuerpo", 0.0))
-		if not en_curso and off == 0.0 and cuerpo == 0.0:
+		if not en_curso and is_zero_approx(off) and is_zero_approx(cuerpo):
 			## Lo barato primero: solo los que van con un ciclo normal pueden empezar una transición.
 			if p.get("anim_actual") in CICLOS:
 				_quizas_empezar(m, p)
@@ -122,7 +122,7 @@ static func _comparar(m: MotorLeague, js: Array, antes: Array, lista: PackedInt3
 		var a: Dictionary = antes[i]
 		if en_gd.has(i) or a.has("ls_propio_hasta"):
 			continue
-		if float(a.get("ls_trans_hasta", 0.0)) <= m.t and float(a.get("ls_off", 0.0)) == 0.0 and float(a.get("ls_cuerpo", 0.0)) == 0.0:
+		if float(a.get("ls_trans_hasta", 0.0)) <= m.t and is_zero_approx(float(a.get("ls_off", 0.0))) and is_zero_approx(float(a.get("ls_cuerpo", 0.0))):
 			continue
 		comparados += 1
 		_uno(m, a, delta)
@@ -134,7 +134,7 @@ static func _uno(m: MotorLeague, p: Dictionary, delta: float) -> void:
 	var en_curso := float(p.get("ls_trans_hasta", 0.0)) > m.t
 	var off := float(p.get("ls_off", 0.0))
 	var cuerpo := float(p.get("ls_cuerpo", 0.0))
-	if not en_curso and cuerpo != 0.0 and not bool(p.get("ls_visto", true)):
+	if not en_curso and not is_zero_approx(cuerpo) and not bool(p.get("ls_visto", true)):
 		enderezar(p)   ## fuera de cámara no hace falta el cuerpo girado: al camino barato (la compensación se apaga sola)
 	var n: Node3D = p.get("node")
 	var modelo: Node3D = p.get("ls_modelo")
@@ -153,7 +153,7 @@ static func _uno(m: MotorLeague, p: Dictionary, delta: float) -> void:
 		off = off * exp(-RECOLOCAR * delta) if absf(off) > 0.01 else 0.0   ## (por debajo de ~0,6°, ya está)
 		p["ls_off"] = off
 		_seguir_con_cuerpo(m, p, ap)
-		if float(p.get("ls_trans_hasta", 0.0)) <= m.t and float(p.get("ls_cuerpo", 0.0)) == 0.0 \
+		if float(p.get("ls_trans_hasta", 0.0)) <= m.t and is_zero_approx(float(p.get("ls_cuerpo", 0.0))) \
 				and String(p.get("anim_actual", "")) in CICLOS:
 			_quizas_empezar(m, p)
 	p["ls_off"] = off + float(p.get("ls_off_extra", 0.0))
@@ -172,7 +172,7 @@ static func _al_acabar(p: Dictionary, n: Node3D) -> void:
 	var rel := angle_difference(n.rotation.y, mira)
 	var v: Vector3 = p["vel"]
 	var cuerpo := LeagueMovimiento.cuerpo_posible(LeagueMovimiento.rango(Vector2(v.x, v.z).length()), LeagueMovimiento.cuerpo_permitido(rel))
-	p["ls_cuerpo"] = cuerpo if angled or cuerpo == 0.0 else 0.0
+	p["ls_cuerpo"] = cuerpo if angled or is_zero_approx(cuerpo) else 0.0
 	p["ls_off"] = angle_difference(float(p["ls_cuerpo"]), rel)
 
 ## Con el cuerpo girado y sin clip: el ciclo estable del original (plantilla) o, si su velocidad no lo admite o el motor pide
@@ -181,7 +181,7 @@ static var _nombre_ciclo := {}   ## plantilla → nombre de su ciclo (sin rehace
 
 static func _seguir_con_cuerpo(m: MotorLeague, p: Dictionary, ap: AnimationPlayer) -> void:
 	var cuerpo := float(p.get("ls_cuerpo", 0.0))
-	if cuerpo == 0.0:
+	if is_zero_approx(cuerpo):
 		return
 	if float(p.get("ls_seguir_t", -1.0)) > m.t and p.get("anim_actual") == p.get("ls_ciclo_actual"):
 		ap.speed_scale = float(p.get("ls_escala", 1.0))   ## (el motor la pisa en cada fotograma con la de su ciclo)
@@ -221,7 +221,7 @@ static func enderezar(p: Dictionary) -> void:
 ## Mientras dura un clip del original o se corre con el cuerpo girado, los ciclos normales no lo pisan (se apunta cuál pidió el
 ## motor); un gesto de verdad sí.
 static func bloquea(p: Dictionary, t: float, nombre: String, gesto: bool) -> bool:
-	if float(p.get("ls_trans_hasta", 0.0)) <= t and float(p.get("ls_cuerpo", 0.0)) == 0.0:
+	if float(p.get("ls_trans_hasta", 0.0)) <= t and is_zero_approx(float(p.get("ls_cuerpo", 0.0))):
 		return false
 	if gesto:
 		cortar(p)
@@ -379,7 +379,7 @@ static func portador(m: MotorJugable) -> void:
 	var c: Dictionary = m.poseedor
 	if c.is_empty():
 		return
-	if c.has("ls_cuerpo") and (float(c["ls_cuerpo"]) != 0.0 or float(c.get("ls_trans_hasta", 0.0)) > 0.0):
+	if c.has("ls_cuerpo") and (not is_zero_approx(float(c["ls_cuerpo"])) or float(c.get("ls_trans_hasta", 0.0)) > 0.0):
 		cortar(c)
 	if float(c.get("gesto_hasta", 0.0)) > m.t or not (c.get("anim_actual") in CONDUCIR):
 		return

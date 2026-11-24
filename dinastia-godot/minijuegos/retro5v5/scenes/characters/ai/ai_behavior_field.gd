@@ -57,7 +57,7 @@ func get_ball_proximity_steering_force() -> Vector2:
 	var weight := get_bicircular_weight(player.position, ball.position, 50, 1, 120, 0)
 	var direction := player.position.direction_to(ball.position)
 	return weight * direction
-	
+
 func get_spawn_steering_force() -> Vector2:
 	var weight := get_bicircular_weight(player.position, player.spawn_position, 30, 0 , 100, 1)
 	var direction := player.position.direction_to(player.spawn_position)

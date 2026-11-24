@@ -28,7 +28,7 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 		if _rng.randf() < _prob_rechace_fuera():
 			## A córner: hacia FUERA del palo más cercano (antes, con el tiro entre
 			## el portero y el centro del arco, la manopla lo metía en su red).
-			if PULIDO:
+			if pulido:
 				lado_r = signf(cruce.x + 0.01)
 			vel_balon = Vector3(lado_r * _rng.randf_range(6, 11), _rng.randf_range(1, 4), vel_balon.z * 0.3)
 		else:
@@ -63,11 +63,11 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 				if manual and absf(guia) < 0.3 and tz > 0.55:
 					return false
 				p["_patada_vista"] = _n_patada
-				if PULIDO and String(_tiro_vivo.get("clase", "")) == "penal":
+				if pulido and String(_tiro_vivo.get("clase", "")) == "penal":
 					_penal_en_juego(p, cruce)
 					return true
 				## Alcance: hasta ~3 m con un gran portero, menos con menos tiempo; a la escuadra cuesta más.
-				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, MotorParada.SUELO, 1.0)
+				var alcance: float = (1.1 + float(p["attr"]["div"]) * 2.0 + float(p["attr"]["ref"]) * 0.8) * clampf((tz - 0.1) * 2.4, MotorParada.suelo, 1.0)
 				if cruce.y > 1.8:
 					alcance *= 0.85
 				alcance = _alcance_extra(p, b, alcance, tz)   ## gancho (16-11, H1): aquí no cambia nada
@@ -76,7 +76,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 				var cruce_gk := b + vel_balon * tg
 				cruce_gk.y = b.y + vel_balon.y * tg - 0.5 * G * tg * tg
 				var lat := absf(cruce_gk.x - pos(p).x)
-				var prob := (0.47 + float(p["attr"]["ref"]) * 0.42) * MotorParada.K
+				var prob := (0.47 + float(p["attr"]["ref"]) * 0.42) * MotorParada.k
 				if manual:
 					if absf(guia) < 0.3:
 						## No actuó: reacción automática más floja.
@@ -88,7 +88,7 @@ func _reaccion_portero(p: Dictionary, manual := false, guia := 0.0) -> bool:
 						return true
 					else:
 						alcance *= 1.1  ## Eligió bien: se anticipa un poco.
-				if TIRO_PULIDO: prob *= (1.0 - PARADA_LEJOS * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
+				if tiro_pulido: prob *= (1.0 - parada_lejos * pow(clampf(lat / maxf(alcance, 0.1), 0.0, 1.0), 2.0)) * clampf(1.15 - vel_balon.length() / 90.0, 0.7, 1.0)   ## lejos del cuerpo o muy fuerte cuesta más (27-10)
 				prob = _prob_parada_extra(p, b, prob)   ## gancho (sesión 15): aquí no cambia nada
 				prob = _prob_parada_cuerpo(lat, alcance, prob)   ## gancho (17-11): aquí no cambia nada
 				if lat < alcance and _rng.randf() < prob:
@@ -135,7 +135,7 @@ func _ia_portero(p: Dictionary) -> Vector3:
 		for q: Dictionary in jugadores:
 			if bool(q["es_local"]) != bool(p["es_local"]) and pos(q).distance_to(b) < pos(p).distance_to(b) * 0.8:
 				suyo = false
-		if suyo:
+		if suyo or _portero_a_por_el(p, b):
 			p["correr"] = true
 			return b
 	## Mano a mano: un rival con el balón entra solo por el centro del área y
@@ -235,7 +235,7 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 	## va pegado a la banda).
 	var der := Vector3(fwd.z, 0, -fwd.x)
 	var lado := -signf(der.dot(hacia_r))
-	if lado == 0.0:
+	if is_zero_approx(lado):
 		lado = 1.0 if _rng.randf() < 0.5 else -1.0
 	if absf(yo.x) > ANCHO - 6.0 and (der * lado).x * signf(yo.x) > 0.0 and _rng.randf() < 0.7:
 		lado = -lado
@@ -244,7 +244,7 @@ func _intentar_regate(p: Dictionary, rival: Dictionary, dist_arco: float) -> boo
 
 ## Un tiro al arco rival. `apunte.x` ∈ [-1, 1] mueve el objetivo de palo a
 ## palo; `fuerza` ∈ [0, 1] es la carga. Mucha fuerza sin técnica se va alta.
-func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
+func _tirar(p: Dictionary, apunte_arg: Vector2, fuerza: float) -> void:
 	if MotorReglas.doble_toque(self as Object as MotorJugable, p): return   ## (16-11, M6-20) el lanzador no remata su propio rechace
 	var arco := _arco_rival(p)
 	var tec := GestoTecnico.tiro(p, _mod_tiro)   ## cada tiro pesa sus atributos (27-10)
@@ -259,11 +259,11 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	## los palos (en el fútbol, 1 de cada 3; en FC, la mitad) y el portero los
 	## paraba casi todos (84 %). Ahora hasta el bueno se desvía algo más desde
 	## lejos y con un rival encima; el penal, quieto y a 11 m, no.
-	if TIRO_PULIDO and clase != "penal":
-		error += (0.45 + lejos * PUNTERIA) * (1.15 - tec * 0.5) * (1.3 if _presion(p) < 1.8 else 1.0)
+	if tiro_pulido and clase != "penal":
+		error += (0.45 + lejos * punteria) * (1.15 - tec * 0.5) * (1.3 if _presion(p) < 1.8 else 1.0)
 	error = _error_tiro_extra(p, lejos, error, clase)   ## gancho (sesión 15): aquí no cambia nada
-	var x := clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error)
-	var y := clampf(0.35 + fuerza * 1.2 + apunte_.y * 0.6 + _rng.randf_range(-error, error) * 0.6, 0.15, 3.4)
+	var x := clampf(apunte_arg.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error)
+	var y := clampf(0.35 + fuerza * 1.2 + apunte_arg.y * 0.6 + _rng.randf_range(-error, error) * 0.6, 0.15, 3.4)
 	var destino := Vector3(x, y, arco.z + signf(arco.z) * 0.3)
 	var vh := 16.0 + fuerza * 14.0 + tec * 4.0
 	var loft := 0.0
@@ -271,8 +271,8 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 	match _mod_tiro:
 		"rosca":
 			## RB + B: con el interior, curvado hacia dentro, más colocado y flojo.
-			destino.x = clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.5) + _rng.randf_range(-error, error) * 0.75
-			destino.y = clampf(0.6 + apunte_.y * 0.5 + _rng.randf_range(-error, error) * 0.4, 0.2, 2.3)
+			destino.x = clampf(apunte_arg.x, -1.0, 1.0) * (PALO - 0.5) + _rng.randf_range(-error, error) * 0.75
+			destino.y = clampf(0.6 + apunte_arg.y * 0.5 + _rng.randf_range(-error, error) * 0.4, 0.2, 2.3)
 			vh *= 0.82
 			efecto = -signf(destino.x - pos(p).x + 0.01) * 7.0 * signf(arco.z)
 		"vaselina":
@@ -287,7 +287,7 @@ func _tirar(p: Dictionary, apunte_: Vector2, fuerza: float) -> void:
 		"potente":
 			## LB + RB + B: el cañonazo; apuntado a mano, castiga el mal apunte.
 			vh += 9.0
-			destino.x = clampf(apunte_.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error) * (0.7 if tec > 0.75 else 1.3)
+			destino.x = clampf(apunte_arg.x, -1.0, 1.0) * (PALO - 0.35) + _rng.randf_range(-error, error) * (0.7 if tec > 0.75 else 1.3)
 			aviso.emit("💥 ¡Tiro potente!")
 	if clase != "penal":   ## (4-11) el penal ya tiene su error propio (PENAL_ERROR): sin esto se fallaban 27 de 120 y la sonda daba 61 % marcados
 		destino = MotorTiroLimpio.fallar(self as Object as MotorJugable, p, destino, lejos, _presion(p))   ## tiro fallido / bloqueado (TIRO_REAL, ciclo 7)
@@ -316,7 +316,7 @@ func _ultima_linea(local: bool) -> float:
 	for q: Dictionary in jugadores:
 		if bool(q["es_local"]) != local or bool(q["por"]):
 			continue
-		var z := pos(q).z + (q["vel"] as Vector3).z * MotorPresion.PREVE_LINEA   ## donde ESTARÁ (U3, 01-11)
+		var z := pos(q).z + (q["vel"] as Vector3).z * MotorPresion.preve_linea   ## donde ESTARÁ (U3, 01-11)
 		if not hay or (z - linea) * d < 0.0:
 			linea = z
 			hay = true
@@ -364,6 +364,10 @@ func _agarra(p: Dictionary, estirada: bool, fuerza: float) -> bool:
 
 func _prob_rechace_fuera() -> float:
 	return 0.5
+
+## Gancho (17-11): ¿va a por el balón suelto aunque un rival llegue antes? Aquí no (C4: `C4_DESPEJE_RECHACE`).
+func _portero_a_por_el(_p: Dictionary, _b: Vector3) -> bool:
+	return false
 
 func _prob_parada_cuerpo(_lat: float, _alcance: float, prob: float) -> float:
 	return prob

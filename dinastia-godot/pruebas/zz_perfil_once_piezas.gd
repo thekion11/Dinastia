@@ -10,7 +10,7 @@ func _ready() -> void:
 	for v in 3:
 		for c: Club in clubes:
 			var a := Time.get_ticks_usec()
-			var o := c.once()
+			c.once()
 			var b := Time.get_ticks_usec()
 			var libres := c.disponibles()
 			var d := Time.get_ticks_usec()

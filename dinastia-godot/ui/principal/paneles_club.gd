@@ -79,7 +79,7 @@ func _pintar_equipacion(c: Club) -> void:
 	## "cambiar la camiseta" la encuentre en un solo sitio.
 	var ir := Button.new()
 	ir.text = Idiomas.t("🎨 Editar en Identidad")
-	ir.add_theme_font_size_override("font_size", 11)
+	ir.add_theme_font_size_override("font_size", Tema.letra(11))
 	ir.pressed.connect(func() -> void:
 		p._secc_gente = "identidad"
 		p._ir_a_pestana("Gente"))
@@ -124,7 +124,7 @@ func _pintar_decision(e: Dictionary) -> void:
 		## El primer carácter del texto es el emoji del tema (🎙️, 🕯️, 🚨...).
 		var icono := Label.new()
 		icono.text = txt_evento.substr(0, 2).strip_edges() if txt_evento != "" else "❗"
-		icono.add_theme_font_size_override("font_size", 34)
+		icono.add_theme_font_size_override("font_size", Tema.letra(34))
 		icono.custom_minimum_size = Vector2(56, 56)
 		icono.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		icono.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -143,7 +143,7 @@ func _pintar_decision(e: Dictionary) -> void:
 	for b in fila.get_children():
 		if b is Button:
 			CuadroDialogo.respuesta(b as Button)
-			(b as Button).add_theme_font_size_override("font_size", 16)
+			(b as Button).add_theme_font_size_override("font_size", Tema.letra(16))
 	var clave := "%s|%s" % [String(e.get("id", "")), pid]
 	if clave != _decision_mostrada:
 		_decision_mostrada = clave
@@ -202,7 +202,7 @@ func _fila_jugador(g: GridContainer, j: Jugador, columnas: Array, colores: Array
 	b.clip_text = true   ## (17-11) un nombre largo («Giorgian de Arescaeta») se corta con puntos suspensivos en vez de empujar las columnas
 	b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	b.tooltip_text = columnas[0]
-	b.add_theme_font_size_override("font_size", 12)
+	b.add_theme_font_size_override("font_size", Tema.letra(12))
 	b.add_theme_color_override("font_color", p._color_de_paleta(colores[0]))
 	## Pulsar a un jugador hace DOS cosas: enseña su ficha a la derecha y salta
 	## al plantel en el centro. Antes solo hacía lo primero, así que tocar a

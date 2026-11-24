@@ -12,8 +12,12 @@ func _mover_todos() -> void:
 		eq_bal = agentes[poseedor]["eq"]
 	elif not _vuelo.is_empty():
 		eq_bal = agentes[int(_vuelo["destino"])]["eq"]
-	## Los dos defensores más cerca del balón presionan (o van a por él si
-	## está suelto).
+	var cazadores := _cazadores(eq_bal)
+	for i in agentes.size():
+		_mover_uno(i, cazadores, eq_bal)
+
+## Los dos defensores más cerca del balón presionan (o van a por él si está suelto). Devuelve {índice: 0 presiona, 1 cubre}.
+func _cazadores(eq_bal: int) -> Dictionary:
 	var cazadores := {}
 	for eq in 2:
 		if eq == eq_bal:
@@ -41,61 +45,64 @@ func _mover_todos() -> void:
 			cazadores[i1] = 0
 		if eq_bal >= 0 and i2 >= 0:
 			cazadores[i2] = 1
-	for i in agentes.size():
-		var a: Dictionary = agentes[i]
-		if t < float(a["sentado_hasta"]):
-			continue
-		var eq: int = a["eq"]
-		var p: Vector2 = a["pos"]
-		var vel: float = a["vel_max"]
-		var destino: Vector2
-		if i == controlado and poseedor != i:
+	return cazadores
+
+## Lo que hace un agente en su paso: va a su sitio, al balón o a marcar; luego se mueve con su velocidad.
+func _mover_uno(i: int, cazadores: Dictionary, eq_bal: int) -> void:
+	var a: Dictionary = agentes[i]
+	if t < float(a["sentado_hasta"]):
+		return
+	var eq: int = a["eq"]
+	var p: Vector2 = a["pos"]
+	var vel: float = a["vel_max"]
+	var destino: Vector2
+	if i == controlado and poseedor != i:
+		destino = p + _entrada * vel * dt * 4.0
+	elif i == poseedor:
+		if i == controlado:
 			destino = p + _entrada * vel * dt * 4.0
-		elif i == poseedor:
-			if i == controlado:
-				destino = p + _entrada * vel * dt * 4.0
-				vel *= 0.85
-			else:
-				destino = a["objetivo"]
-				vel *= 0.8
-			## Con un rival delante tapando, se avanza a paso de hombre.
-			var r := _rival_mas_cerca(p, eq)
-			if r >= 0:
-				var dr: Vector2 = agentes[r]["pos"] - p
-				if dr.length() < 2.2 and dr.x * _dir(eq) > 0.0:
-					vel *= 0.35
-		elif cazadores.has(i):
-			## El primero va al balón; el segundo cubre por delante.
-			## Se pone entre el balón y su portería, sin lanzarse (temporiza).
-			var propia := Vector2(-MEDIO_L * _dir(eq), 0.0)
-			destino = balon + (propia - balon).normalized() * (1.2 if cazadores[i] == 0 else 9.0)
-			if poseedor < 0:
-				destino = balon
+			vel *= 0.85
 		else:
-			destino = _sitio(a, eq == eq_bal)
-			## MARCAJE: el que defiende se pega, por el lado de su portería, al
-			## rival que tiene cerca de su zona.
-			if eq != eq_bal and eq_bal >= 0 and not a["por"]:
-				var m := _marca_de(i, destino)
-				if m >= 0:
-					var q: Vector2 = agentes[m]["pos"]
-					var propia := Vector2(-MEDIO_L * _dir(eq), 0.0)
-					destino = q + (propia - q).normalized() * 1.8
-			else:
-				vel *= 0.75
-		var paso_v := destino - p
-		var maxd := vel * dt
-		if paso_v.length() > maxd:
-			paso_v = paso_v.normalized() * maxd
-		p += paso_v
-		p.x = clampf(p.x, -MEDIO_L, MEDIO_L)
-		p.y = clampf(p.y, -MEDIO_A, MEDIO_A)
-		a["pos"] = p
-		if i == poseedor:
-			balon = p
-			## Si llegó a donde iba, que vuelva a pensar ya.
-			if p.distance_to(a["objetivo"]) < 0.6:
-				a["proxima"] = minf(float(a["proxima"]), t)
+			destino = a["objetivo"]
+			vel *= 0.8
+		## Con un rival delante tapando, se avanza a paso de hombre.
+		var r := _rival_mas_cerca(p, eq)
+		if r >= 0:
+			var dr: Vector2 = agentes[r]["pos"] - p
+			if dr.length() < 2.2 and dr.x * _dir(eq) > 0.0:
+				vel *= 0.35
+	elif cazadores.has(i):
+		## El primero va al balón; el segundo cubre por delante.
+		## Se pone entre el balón y su portería, sin lanzarse (temporiza).
+		var propia := Vector2(-MEDIO_L * _dir(eq), 0.0)
+		destino = balon + (propia - balon).normalized() * (1.2 if cazadores[i] == 0 else 9.0)
+		if poseedor < 0:
+			destino = balon
+	else:
+		destino = _sitio(a, eq == eq_bal)
+		## MARCAJE: el que defiende se pega, por el lado de su portería, al
+		## rival que tiene cerca de su zona.
+		if eq != eq_bal and eq_bal >= 0 and not a["por"]:
+			var m := _marca_de(i, destino)
+			if m >= 0:
+				var q: Vector2 = agentes[m]["pos"]
+				var propia := Vector2(-MEDIO_L * _dir(eq), 0.0)
+				destino = q + (propia - q).normalized() * 1.8
+		else:
+			vel *= 0.75
+	var paso_v := destino - p
+	var maxd := vel * dt
+	if paso_v.length() > maxd:
+		paso_v = paso_v.normalized() * maxd
+	p += paso_v
+	p.x = clampf(p.x, -MEDIO_L, MEDIO_L)
+	p.y = clampf(p.y, -MEDIO_A, MEDIO_A)
+	a["pos"] = p
+	if i == poseedor:
+		balon = p
+		## Si llegó a donde iba, que vuelva a pensar ya.
+		if p.distance_to(a["objetivo"]) < 0.6:
+			a["proxima"] = minf(float(a["proxima"]), t)
 
 # ---------------------------------------------------------------------------
 #  EL PASO

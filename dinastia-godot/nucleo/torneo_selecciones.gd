@@ -17,10 +17,10 @@ var en_grupos := true
 var campeon: Club = null
 var resultados: Array = []      ## [{fase, local, visita, gl, gv, penales, pasa}]
 
-static func crear(nombre_: String, anio_: int, sel: Array[Club]) -> TorneoSelecciones:
+static func crear(nombre_arg: String, anio_arg: int, sel: Array[Club]) -> TorneoSelecciones:
 	var t := TorneoSelecciones.new()
-	t.nombre = nombre_
-	t.anio = anio_
+	t.nombre = nombre_arg
+	t.anio = anio_arg
 	t.equipos = sel.duplicate()
 	var orden := sel.duplicate()
 	orden.sort_custom(func(a: Club, b: Club) -> bool: return a.rep > b.rep if a.rep != b.rep else a.id < b.id)
@@ -53,6 +53,13 @@ func nombre_fase() -> String:
 
 ## Los cruces de un grupo en la fecha `f` (método del círculo; con número impar, uno descansa).
 static func _cruces(g: Array, f: int) -> Array:
+	var nat := Nativo.de("nuc_cruces")
+	if nat != null:
+		return nat.nuc_cruces(g, f)
+	return _cruces_gd(g, f)
+
+## Gemela GDScript de `nuc_cruces` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _cruces_gd(g: Array, f: int) -> Array:
 	var lista := g.duplicate()
 	if lista.size() % 2 == 1:
 		lista.append(null)

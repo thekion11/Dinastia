@@ -131,6 +131,13 @@ func socios_por_temporada(c: Club) -> int:
 ## ---------------------------------------------------------------- NIVELES
 
 static func nivel_de(rep: int) -> int:
+	var nat := Nativo.de("nuc_nivel_reputacion")
+	if nat != null:
+		return nat.nuc_nivel_reputacion(rep)
+	return nivel_de_gd(rep)
+
+## Gemela GDScript de `nuc_nivel_reputacion` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nivel_de_gd(rep: int) -> int:
 	var n := 0
 	for i in NIVELES.size():
 		if rep >= int(NIVELES[i][0]):
@@ -138,15 +145,36 @@ static func nivel_de(rep: int) -> int:
 	return n
 
 static func nombre_nivel(rep: int) -> String:
+	var nat := Nativo.de("nuc_nombre_nivel")
+	if nat != null:
+		return nat.nuc_nombre_nivel(rep)
+	return nombre_nivel_gd(rep)
+
+## Gemela GDScript de `nuc_nombre_nivel` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nombre_nivel_gd(rep: int) -> String:
 	var fila: Array = NIVELES[nivel_de(rep)]
 	return "%s %s" % [String(fila[2]), String(fila[1])]
 
 ## Hasta qué nivel se puede construir cualquier instalación.
 static func tope_instalaciones(rep: int) -> int:
+	var nat := Nativo.de("nuc_tope_instalaciones")
+	if nat != null:
+		return nat.nuc_tope_instalaciones(rep)
+	return tope_instalaciones_gd(rep)
+
+## Gemela GDScript de `nuc_tope_instalaciones` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func tope_instalaciones_gd(rep: int) -> int:
 	return int(NIVELES[nivel_de(rep)][3])
 
 ## Multiplicador de los patrocinadores (los premium solo llaman arriba).
 static func mult_patrocinio(rep: int) -> float:
+	var nat := Nativo.de("nuc_mult_patrocinio")
+	if nat != null:
+		return nat.nuc_mult_patrocinio(rep)
+	return mult_patrocinio_gd(rep)
+
+## Gemela GDScript de `nuc_mult_patrocinio` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func mult_patrocinio_gd(rep: int) -> float:
 	return float(NIVELES[nivel_de(rep)][4])
 
 ## Cuánto falta (0-1) para el siguiente nivel.

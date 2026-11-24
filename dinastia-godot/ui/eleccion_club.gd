@@ -237,7 +237,7 @@ func _construir_desafios(raiz: VBoxContainer) -> void:
 			b.text = "%s %s  ×%s" % [String(fila[1]), Idiomas.t(String(fila[2])), str(fila[4])]
 			b.tooltip_text = Idiomas.t(String(fila[3]))
 			b.toggle_mode = true
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.pressed.connect(func() -> void: _alternar_desafio(k))
 			_fila_desafios.add_child(b)
 	_etiqueta_mult = _texto(11, COL_ACENTO)

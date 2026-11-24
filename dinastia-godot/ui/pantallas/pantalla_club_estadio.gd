@@ -37,7 +37,7 @@ func _pintar_estadio(c: Club) -> void:
 	var campo_nombre := LineEdit.new()
 	campo_nombre.placeholder_text = Idiomas.t("Ponle nombre al estadio…")
 	campo_nombre.text = c.estadio_nombre
-	campo_nombre.add_theme_font_size_override("font_size", 11)
+	campo_nombre.add_theme_font_size_override("font_size", Tema.letra(11))
 	campo_nombre.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	campo_nombre.text_submitted.connect(func(v: String) -> void:
 		c.estadio_nombre = v.strip_edges()
@@ -45,7 +45,7 @@ func _pintar_estadio(c: Club) -> void:
 	fila_n.add_child(campo_nombre)
 	var bn := Button.new()
 	bn.text = Idiomas.t("Guardar")
-	bn.add_theme_font_size_override("font_size", 11)
+	bn.add_theme_font_size_override("font_size", Tema.letra(11))
 	bn.pressed.connect(func() -> void:
 		c.estadio_nombre = campo_nombre.text.strip_edges()
 		p._refrescar())
@@ -58,7 +58,7 @@ func _pintar_estadio(c: Club) -> void:
 	## justo esto- así que se engancha aquí también, sin duplicar nada.
 	var ver3d := Button.new()
 	ver3d.text = Idiomas.t("👁️ Ver mi estadio en 3D")
-	ver3d.add_theme_font_size_override("font_size", 11)
+	ver3d.add_theme_font_size_override("font_size", Tema.letra(11))
 	ver3d.pressed.connect(p._ver_estadio_con_carga)
 	fila_n.add_child(ver3d)
 	_pintar_estilos_estadio(c)
@@ -96,7 +96,7 @@ func _pintar_estadio(c: Club) -> void:
 			## diseñador. Elegir "lluvia" como se elige un color era ilógico.
 			["LOS DETALLES", ["banquillo", "banquilloCol", "vallaCol", "ledPaleta", "ledFondo", "ledTinta", "tunel", "sonidoGol"]],
 		]:
-		var tb := p._texto(11, p.COL_ACENTO)
+		var tb := p._texto(11, p.col_acento)
 		tb.text = String(bloque[0])
 		p._lista_estadio.add_child(tb)
 		for campo: String in (bloque[1] as Array):
@@ -108,7 +108,7 @@ func _pintar_estadio(c: Club) -> void:
 	## "quiero decidir esto tribuna por tribuna" y por eso cuesta.
 	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
-	var tt := p._texto(11, p.COL_ACENTO)
+	var tt := p._texto(11, p.col_acento)
 	tt.text = Idiomas.t("LAS TRIBUNAS")
 	p._lista_estadio.add_child(tt)
 	_fila_interruptor_estadio(e.ajustes, "personalizar_bandejas", "Personalizar cada tribuna",
@@ -122,7 +122,7 @@ func _pintar_estadio(c: Club) -> void:
 		l_lado.custom_minimum_size = Vector2(130, 0)
 		fila_lado.add_child(l_lado)
 		var sel_lado := OptionButton.new()
-		sel_lado.add_theme_font_size_override("font_size", 11)
+		sel_lado.add_theme_font_size_override("font_size", Tema.letra(11))
 		sel_lado.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var etiquetas_lado := {"sur": "Sur", "norte": "Norte", "este": "Este", "oeste": "Oeste"}
 		for i in EstadioPropio.LADOS_BANDEJA.size():
@@ -163,7 +163,7 @@ func _pintar_estadio(c: Club) -> void:
 		l_lado_t.custom_minimum_size = Vector2(130, 0)
 		fila_lado_t.add_child(l_lado_t)
 		var sel_lado_t := OptionButton.new()
-		sel_lado_t.add_theme_font_size_override("font_size", 11)
+		sel_lado_t.add_theme_font_size_override("font_size", Tema.letra(11))
 		sel_lado_t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var etiquetas_lado_t := {"sur": "Sur", "norte": "Norte", "este": "Este", "oeste": "Oeste"}
 		for i in EstadioPropio.LADOS_BANDEJA.size():
@@ -186,7 +186,7 @@ func _pintar_estadio(c: Club) -> void:
 	## tocarlos.
 	p._lista_estadio.add_child(_aire())   ## (9-11, estética) aire entre secciones
 	p._lista_estadio.add_child(HSeparator.new())
-	var ti := p._texto(11, p.COL_ACENTO)
+	var ti := p._texto(11, p.col_acento)
 	ti.text = Idiomas.t("EL RECINTO")
 	p._lista_estadio.add_child(ti)
 	_fila_interruptor_estadio(e.ajustes, "pista", "Pista de atletismo",

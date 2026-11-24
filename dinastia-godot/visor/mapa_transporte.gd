@@ -175,24 +175,9 @@ func _rutas_bus() -> Array:
 func _autobuses() -> void:
 	var fuerte := modo == 1
 	var rutas := _rutas_bus()
-	var cuadras := {}   ## punto medio de cada trozo → [índices de recorrido]
-	var trozos: Array = []   ## por recorrido: [[a, c, clave]]
-	for k in rutas.size():
-		var mios: Array = []
-		var pts: PackedVector3Array = rutas[k]["puntos"]
-		for i in pts.size() - 1:
-			var n := maxi(1, roundi(pts[i].distance_to(pts[i + 1]) / 110.0))
-			for q in n:
-				var a := pts[i].lerp(pts[i + 1], float(q) / float(n))
-				var c := pts[i].lerp(pts[i + 1], float(q + 1) / float(n))
-				var m := (a + c) * 0.5
-				var clave := Vector2i(roundi(m.x / 5.0), roundi(m.z / 5.0))
-				if not cuadras.has(clave):
-					cuadras[clave] = []
-				if not (cuadras[clave] as Array).has(k):
-					(cuadras[clave] as Array).append(k)
-				mios.append([a, c, clave])
-		trozos.append(mios)
+	var ccu := _cuadras_de_recorridos(rutas)
+	var cuadras: Dictionary = ccu[0]
+	var trozos: Array = ccu[1]
 	var paso := 3.2 if fuerte else 2.2
 	for k in rutas.size():
 		var col: Color = rutas[k]["color"]
@@ -238,7 +223,7 @@ func _autobuses() -> void:
 			var choca := false
 			for o: Rect2 in _ocupado:
 				choca = choca or o.intersects(caja)
-			if not choca or f == 0.85:
+			if not choca or is_equal_approx(f, 0.85):
 				_insignia(q, String(l["numero"]), l["color"])
 				break
 
@@ -361,3 +346,25 @@ func _leyenda() -> void:
 		y += 36.0
 	_t(Vector2(x, size.y - 60.0), "● estación   ■ paradero (PA + sector + nº)   ┅ subterránea   ━ elevada", 14, GRIS)
 	_t(Vector2(x, size.y - 36.0), "Transbordo en el cruce de las líneas 1 y 2.", 14, GRIS)
+
+## Trozos de cada recorrido y, por cuadra, qué recorridos la cruzan: [cuadras, trozos].
+func _cuadras_de_recorridos(rutas: Array) -> Array:
+	var cuadras := {}   ## punto medio de cada trozo → [índices de recorrido]
+	var trozos: Array = []   ## por recorrido: [[a, c, clave]]
+	for k in rutas.size():
+		var mios: Array = []
+		var pts: PackedVector3Array = rutas[k]["puntos"]
+		for i in pts.size() - 1:
+			var n := maxi(1, roundi(pts[i].distance_to(pts[i + 1]) / 110.0))
+			for q in n:
+				var a := pts[i].lerp(pts[i + 1], float(q) / float(n))
+				var c := pts[i].lerp(pts[i + 1], float(q + 1) / float(n))
+				var m := (a + c) * 0.5
+				var clave := Vector2i(roundi(m.x / 5.0), roundi(m.z / 5.0))
+				if not cuadras.has(clave):
+					cuadras[clave] = []
+				if not (cuadras[clave] as Array).has(k):
+					(cuadras[clave] as Array).append(k)
+				mios.append([a, c, clave])
+		trozos.append(mios)
+	return [cuadras, trozos]

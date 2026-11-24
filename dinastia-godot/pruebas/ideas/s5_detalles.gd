@@ -36,7 +36,9 @@ func _probar() -> void:
 		if TejadoTipo.tipo_de(sem, 6) == TejadoTipo.DOS_AGUAS:
 			alto_ok = false
 	_comprobar(alto_ok, "un bloque de 6 pisos nunca lleva tejado a dos aguas")
-	_comprobar(TejadoTipo.tipo_de(77, 3) == TejadoTipo.tipo_de(77, 3), "el tipo es estable por semilla")
+	var rep1_a = TejadoTipo.tipo_de(77, 3)
+	var rep1_b = TejadoTipo.tipo_de(77, 3)
+	_comprobar(rep1_a == rep1_b, "el tipo es estable por semilla")
 	## Cables entre postes: las calles de barrio llevan líneas con tres hilos combados.
 	var ex2 := CiudadExpansion.new(b)
 	ex2.armar_red()

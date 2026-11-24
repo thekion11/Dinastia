@@ -44,7 +44,7 @@ func _pintar_obras(c: Club) -> void:
 			var precio := p.mundo.obras.coste(clave, c.rep)
 			var b := Button.new()
 			b.text = Idiomas.t("Construir  %s  (%d sem)") % [p._dinero(precio), p.mundo.obras.semanas_de(clave)]
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.disabled = precio > c.saldo or (p.mundo.roles != null and not p.mundo.roles.puede_construir())
 			b.pressed.connect(func() -> void: _empezar_obra(clave))
 			fila.add_child(b)
@@ -97,7 +97,7 @@ func _pintar_pretemporada(c: Club, e: Entrenamiento) -> void:
 			fila_p.add_child(lp)
 			var bp := Button.new()
 			bp.text = Idiomas.t("Elegir") if coste == 0 else Idiomas.t("Elegir  %s") % p._dinero(coste)
-			bp.add_theme_font_size_override("font_size", 11)
+			bp.add_theme_font_size_override("font_size", Tema.letra(11))
 			bp.disabled = coste > c.saldo
 			bp.pressed.connect(func() -> void: _elegir_pretemporada(clave, c))
 			fila_p.add_child(bp)
@@ -117,7 +117,7 @@ func _pintar_pretemporada(c: Club, e: Entrenamiento) -> void:
 	fila_c.add_child(lc)
 	var bc := Button.new()
 	bc.text = "SÍ" if e.concentracion else "NO"
-	bc.add_theme_font_size_override("font_size", 11)
+	bc.add_theme_font_size_override("font_size", Tema.letra(11))
 	bc.pressed.connect(func() -> void:
 		e.concentracion = not e.concentracion
 		p._refrescar())
@@ -237,7 +237,7 @@ func _pintar_entrenamiento_individual(c: Club, e: Entrenamiento) -> void:
 		fila.add_child(sem)
 		var bc := Button.new()
 		bc.text = Idiomas.t("Cancelar")
-		bc.add_theme_font_size_override("font_size", 11)
+		bc.add_theme_font_size_override("font_size", Tema.letra(11))
 		bc.pressed.connect(func() -> void:
 			p.mundo.entrenamiento.asignar_individual(j, String(plan["clave"]))
 			p._refrescar())
@@ -269,7 +269,7 @@ func _pintar_entrenamiento_individual(c: Club, e: Entrenamiento) -> void:
 			var be := Button.new()
 			be.text = String(esp2[1])
 			be.tooltip_text = String(esp2[2]) if esp2.size() > 2 else ""
-			be.add_theme_font_size_override("font_size", 10)
+			be.add_theme_font_size_override("font_size", Tema.letra(10))
 			be.toggle_mode = true
 			be.button_pressed = (String(plan_j.get("clave", "")) == clave2)
 			be.disabled = lleno and plan_j.is_empty()
@@ -307,7 +307,7 @@ func _pintar_ambiente_y_horario() -> void:
 		b.text = "%s  ·  %s" % [String(h[1]), String(h[2])]
 		b.toggle_mode = true
 		b.button_pressed = elegido
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(200, 0)
 		b.pressed.connect(func() -> void:
@@ -380,7 +380,7 @@ func _pintar_amistosos(c: Club) -> void:
 		var b := Button.new()
 		var coste := Eco.escalar(float(a[2]), float(c.rep)) if float(a[2]) > 0.0 else 0
 		b.text = Idiomas.t("gratis") if coste == 0 else p._dinero(coste)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = coste > c.saldo
 		b.custom_minimum_size = Vector2(104, 0)
 		b.pressed.connect(func() -> void:
@@ -406,7 +406,7 @@ func _perilla_texto(padre: VBoxContainer, etiqueta: String, catalogo: Dictionary
 		b.text = String(datos[0])
 		b.toggle_mode = true
 		b.button_pressed = (k == actual)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.pressed.connect(func() -> void: al_cambiar.call(k))
 		h.add_child(b)

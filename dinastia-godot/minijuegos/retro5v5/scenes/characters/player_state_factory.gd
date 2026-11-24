@@ -6,7 +6,7 @@ func _init() -> void:
 	states = {
 		Player.State.MOVING: PlayerStateMoving,
 		Player.State.PREPPING_SHOT: PlayerStatePreppingShot,
-		Player.State.SHOOTING: PlayerStateShooting, 
+		Player.State.SHOOTING: PlayerStateShooting,
 		Player.State.TACKLING: PlayerStateTackling,
 		Player.State.RECOVERING: PlayerStateRecovering,
 		Player.State.PASSING: PlayerStatePassing,
@@ -20,7 +20,7 @@ func _init() -> void:
 		Player.State.MOURNING: PlayerStateMourning,
 		Player.State.RESETING: PlayerStateReseting
 	}
-	
+
 func get_fresh_state(state: Player.State) -> PlayerState:
 	assert(states.has(state), "state doesn't exists")
 	return states.get(state).new()

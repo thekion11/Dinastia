@@ -21,9 +21,25 @@ static func de(p: Principal, etiqueta: String) -> String:
 	var m := p.mundo
 	if m == null or m.mi_club() == null:
 		return ""
+	var clave := etiqueta.to_lower()
+	var r_de_1: Variant = _de_1(p, clave)
+	if r_de_1 != null:
+		return r_de_1
+	var r_de_2: Variant = _de_2(p, clave)
+	if r_de_2 != null:
+		return r_de_2
+	var r_de_3: Variant = _de_3(p, clave)
+	if r_de_3 != null:
+		return r_de_3
+	var r_de_4: Variant = _de_4(p, clave)
+	if r_de_4 != null:
+		return r_de_4
+	return ""
+
+static func _de_1(p: Principal, clave: String) -> Variant:
+	var m := p.mundo
 	var c := m.mi_club()
-	var lg := m.logros
-	match etiqueta.to_lower():
+	match clave:
 		"correo":
 			var n := 0
 			for x: Dictionary in p.get("_bandeja"):
@@ -49,6 +65,13 @@ static func de(p: Principal, etiqueta: String) -> String:
 			return Idiomas.t("%d jugadores · media %d") % [c.plantilla.size(), roundi(c.media())]
 		"táctica", "pizarra y dibujo":
 			return c.tactica.formacion
+	return null
+
+static func _de_2(p: Principal, clave: String) -> Variant:
+	var m := p.mundo
+	var c := m.mi_club()
+	var lg := m.logros
+	match clave:
 		"finanzas", "cuentas del club":
 			return Idiomas.t("%s · sueldos %s/sem") % [p._dinero(c.saldo), p._dinero(c.masa_salarial())]
 		"mercado", "mercado de fichajes":
@@ -75,6 +98,13 @@ static func de(p: Principal, etiqueta: String) -> String:
 			return Idiomas.t("%d conseguidos") % lg.desbloqueados.size() if lg != null else ""
 		"récords":
 			return Idiomas.t("Invicto máximo: %d") % int(lg.rachas.get("invicto_max", 0)) if lg != null else ""
+	return null
+
+static func _de_3(p: Principal, clave: String) -> Variant:
+	var m := p.mundo
+	var c := m.mi_club()
+	var lg := m.logros
+	match clave:
 		"rivales":
 			return Idiomas.t("%d rivales enfrentados") % lg.h2h.size() if lg != null else ""
 		"premios":
@@ -96,6 +126,12 @@ static func de(p: Principal, etiqueta: String) -> String:
 			return Idiomas.t("%d obras hechas") % hechas if hechas > 0 else Idiomas.t("Sin obras todavía")
 		"comercial":
 			return Idiomas.t("%s por semana") % p._dinero(m.comercial.renta_semanal(c)) if m.comercial != null else ""
+	return null
+
+static func _de_4(p: Principal, clave: String) -> Variant:
+	var m := p.mundo
+	var c := m.mi_club()
+	match clave:
 		"patrocinio":
 			var marca := String(m.auspicio.contrato.get("marca", "")) if m.auspicio != null else ""
 			return Idiomas.t("En la camiseta: %s") % marca if marca != "" else Idiomas.t("Camiseta sin marca")
@@ -130,4 +166,5 @@ static func de(p: Principal, etiqueta: String) -> String:
 				if j.goles > 0 and (mejor == null or j.goles > mejor.goles):
 					mejor = j
 			return Idiomas.t("%s · %d goles") % [mejor.nombre, mejor.goles] if mejor != null else ""
-	return ""
+	return null
+

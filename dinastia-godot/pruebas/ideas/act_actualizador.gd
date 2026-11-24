@@ -108,37 +108,7 @@ func _responder(c: Dictionary) -> void:
 	var ruta: String = c["ruta"]
 	match ruta:
 		"/releases":
-			match _modo_lista:
-				"ok":
-					var lista := [_release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/parche.pck"),
-						_release("parche-0.9.0-escritorio", "parche_0.9.0.pck", 10, base + "/parche.pck")]
-					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify(lista).to_utf8_buffer())
-				"json_roto":
-					_enviar(c, "200 OK", "Content-Type: application/json\r\n", "esto no es json{".to_utf8_buffer())
-				"objeto":
-					_enviar(c, "200 OK", "Content-Type: application/json\r\n", '{"message":"nada"}'.to_utf8_buffer())
-				"500":
-					_enviar(c, "500 Internal Server Error", "", "error".to_utf8_buffer())
-				"403":
-					_enviar(c, "403 Forbidden", "", '{"message":"rate limit"}'.to_utf8_buffer())
-				"404":
-					_enviar(c, "404 Not Found", "", "no".to_utf8_buffer())
-				"mudo":
-					pass   ## acepta y no contesta nunca
-				"sin_nuevas":
-					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.0-escritorio", "parche_0.9.0.pck", 10, base + "/parche.pck")]).to_utf8_buffer())
-				"mal_tam":
-					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size() + 5, base + "/parche.pck")]).to_utf8_buffer())
-				"mal_sha":
-					var r := _release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/parche.pck")
-					r["assets"][0]["digest"] = "sha256:" + "0".repeat(64)
-					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([r]).to_utf8_buffer())
-				"con_sha":
-					var r2 := _release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/redirige")
-					r2["assets"][0]["digest"] = "sha256:" + _sha(_cuerpo_pck)
-					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([r2]).to_utf8_buffer())
-				"parada":
-					_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/parada")]).to_utf8_buffer())
+			_responder_lista(c, base)
 		"/parche.pck":
 			_enviar(c, "200 OK", "Content-Type: application/octet-stream\r\n", _cuerpo_pck)
 		"/redirige":
@@ -148,6 +118,52 @@ func _responder(c: Dictionary) -> void:
 			_enviar(c, "200 OK", "Content-Type: application/octet-stream\r\n", _cuerpo_pck.slice(0, 1000), _cuerpo_pck.size())
 		_:
 			_enviar(c, "404 Not Found", "", "no".to_utf8_buffer())
+
+## La lista de Releases según el modo de la prueba: errores, nada (servidor mudo) o datos.
+func _responder_lista(c: Dictionary, base: String) -> void:
+	match _modo_lista:
+		"mudo":
+			pass   ## acepta y no contesta nunca
+		"json_roto", "objeto", "500", "403", "404":
+			_responder_lista_error(c)
+		_:
+			_responder_lista_con_datos(c, base)
+
+## Respuestas de error de la lista (servidor con fallos).
+func _responder_lista_error(c: Dictionary) -> void:
+	match _modo_lista:
+		"json_roto":
+			_enviar(c, "200 OK", "Content-Type: application/json\r\n", "esto no es json{".to_utf8_buffer())
+		"objeto":
+			_enviar(c, "200 OK", "Content-Type: application/json\r\n", '{"message":"nada"}'.to_utf8_buffer())
+		"500":
+			_enviar(c, "500 Internal Server Error", "", "error".to_utf8_buffer())
+		"403":
+			_enviar(c, "403 Forbidden", "", '{"message":"rate limit"}'.to_utf8_buffer())
+		"404":
+			_enviar(c, "404 Not Found", "", "no".to_utf8_buffer())
+
+## Releases correctas: la lista normal, sin novedades, y los casos de tamaño, SHA-256, redirección y descarga parada.
+func _responder_lista_con_datos(c: Dictionary, base: String) -> void:
+	match _modo_lista:
+		"ok":
+			var lista := [_release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/parche.pck"),
+				_release("parche-0.9.0-escritorio", "parche_0.9.0.pck", 10, base + "/parche.pck")]
+			_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify(lista).to_utf8_buffer())
+		"sin_nuevas":
+			_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.0-escritorio", "parche_0.9.0.pck", 10, base + "/parche.pck")]).to_utf8_buffer())
+		"mal_tam":
+			_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size() + 5, base + "/parche.pck")]).to_utf8_buffer())
+		"mal_sha":
+			var r := _release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/parche.pck")
+			r["assets"][0]["digest"] = "sha256:" + "0".repeat(64)
+			_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([r]).to_utf8_buffer())
+		"con_sha":
+			var r2 := _release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/redirige")
+			r2["assets"][0]["digest"] = "sha256:" + _sha(_cuerpo_pck)
+			_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([r2]).to_utf8_buffer())
+		"parada":
+			_enviar(c, "200 OK", "Content-Type: application/json\r\n", JSON.stringify([_release("parche-0.9.3-escritorio", "parche_0.9.3.pck", _cuerpo_pck.size(), base + "/parada")]).to_utf8_buffer())
 
 static func _sha(b: PackedByteArray) -> String:
 	var h := HashingContext.new()
@@ -200,7 +216,7 @@ func _bajar(a: Actualizador, info: Dictionary, seg: float = 10.0) -> Dictionary:
 	a.progreso.disconnect(fp)
 	return resultado
 
-func _red(base: String) -> void:
+func _red(_base: String) -> void:
 	var a := Actualizador.new()
 	add_child(a)
 	var limpiar := func() -> void:
@@ -243,19 +259,7 @@ func _red(base: String) -> void:
 	r = await _consultar(a)
 	d = await _bajar(a, r["info"], 12.0)
 	_comprobar(bool(d["visto"]) and String(d.get("fallo", "")).contains("parada") and float(d["seg"]) < 8.0 and DirAccess.get_files_at(Actualizador.CARPETA).is_empty(), "descarga parada: se corta en %.1f s con mensaje claro (%s)" % [d["seg"], str(d.get("fallo", ""))])
-	## Fallos de la consulta.
-	var casos := {"500": "falló", "403": "limita", "404": "No se encontró", "json_roto": "no se entiende", "objeto": "no se entiende"}
-	for modo: String in casos:
-		_modo_lista = modo
-		r = await _consultar(a)
-		_comprobar(bool(r["visto"]) and String(r["fallo"]).contains(String(casos[modo])), "consulta con «%s»: mensaje claro (%s)" % [modo, str(r.get("fallo", ""))])
-	_modo_lista = "sin_nuevas"
-	r = await _consultar(a)
-	_comprobar(bool(r["visto"]) and not bool(r["hay"]) and String(r["fallo"]) == "" and String(r["mensaje"]).contains("última"), "consulta: sin versiones nuevas dice que ya está al día (%s)" % str(r.get("mensaje", "")))
-	## Nunca se cuelga: servidor que acepta y no contesta, y nada escuchando.
-	_modo_lista = "mudo"
-	r = await _consultar(a, 10.0)
-	_comprobar(bool(r["visto"]) and String(r["fallo"]).contains("tardó") and float(r["seg"]) < 6.0, "servidor mudo: la consulta se rinde en %.1f s (%s)" % [r["seg"], str(r.get("fallo", ""))])
+	await _red_consulta_fallos(a)
 	_srv.stop()
 	r = await _consultar(a, 10.0)
 	_comprobar(bool(r["visto"]) and String(r["fallo"]).contains("conexión") and float(r["seg"]) < 6.0, "sin servidor: «sin conexión» en %.1f s (%s)" % [r["seg"], str(r.get("fallo", ""))])
@@ -270,9 +274,40 @@ func _red(base: String) -> void:
 	a.queue_free()
 	limpiar.call()
 
+## Fallos de la consulta (500, 403, 404, JSON roto), sin novedades, y el servidor mudo (que se rinde a tiempo).
+func _red_consulta_fallos(a: Actualizador) -> void:
+	var r: Dictionary
+	var casos := {"500": "falló", "403": "limita", "404": "No se encontró", "json_roto": "no se entiende", "objeto": "no se entiende"}
+	for modo: String in casos:
+		_modo_lista = modo
+		r = await _consultar(a)
+		_comprobar(bool(r["visto"]) and String(r["fallo"]).contains(String(casos[modo])), "consulta con «%s»: mensaje claro (%s)" % [modo, str(r.get("fallo", ""))])
+	_modo_lista = "sin_nuevas"
+	r = await _consultar(a)
+	_comprobar(bool(r["visto"]) and not bool(r["hay"]) and String(r["fallo"]) == "" and String(r["mensaje"]).contains("última"), "consulta: sin versiones nuevas dice que ya está al día (%s)" % str(r.get("mensaje", "")))
+	## Nunca se cuelga: servidor que acepta y no contesta.
+	_modo_lista = "mudo"
+	r = await _consultar(a, 10.0)
+	_comprobar(bool(r["visto"]) and String(r["fallo"]).contains("tardó") and float(r["seg"]) < 6.0, "servidor mudo: la consulta se rinde en %.1f s (%s)" % [r["seg"], str(r.get("fallo", ""))])
+
 ## La cara en Ajustes → Partida y guardado: está, se ve la versión, y SIN red el botón acaba con un mensaje (no se queda «Buscando…»).
 func _pantalla_de_ajustes() -> void:
 	var ajustes_antes := FileAccess.get_file_as_bytes("user://ajustes.cfg") if FileAccess.file_exists("user://ajustes.cfg") else PackedByteArray()
+	var p: Principal = await _abrir_principal_en_ajustes()
+	var act := p.find_child("Actualizador", true, false) as Actualizador
+	_comprobar(act != null, "Ajustes → Partida y guardado trae el actualizador")
+	if act != null:
+		await _probar_caja_del_actualizador(act.get_parent())
+	_comprobar_texto_de_privacidad(p)
+	p.queue_free()
+	await get_tree().process_frame
+	if ajustes_antes.is_empty():
+		DirAccess.remove_absolute(ProjectSettings.globalize_path("user://ajustes.cfg"))
+	else:
+		FileAccess.open("user://ajustes.cfg", FileAccess.WRITE).store_buffer(ajustes_antes)
+
+## Arranca el juego con un mundo de prueba y abre Ajustes → Partida y guardado. Devuelve la pantalla principal.
+func _abrir_principal_en_ajustes() -> Principal:
 	var m := Mundo.new()
 	m.generar(["CHI"], 20261104)
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
@@ -292,35 +327,32 @@ func _pantalla_de_ajustes() -> void:
 	p._menu_lateral.abrir_menu("ajustes", sub)
 	for i in 8:
 		await get_tree().process_frame
-	var act := p.find_child("Actualizador", true, false) as Actualizador
-	_comprobar(act != null, "Ajustes → Partida y guardado trae el actualizador")
-	if act != null:
-		var caja := act.get_parent()
-		var buscar := caja.find_child("Buscar", true, false) as Button
-		var estado := caja.find_child("Estado", true, false) as Label
-		var barra := caja.find_child("Barra", true, false) as ProgressBar
-		var bajar := caja.find_child("Descargar", true, false) as Button
-		var visibles := ""
-		for l in caja.find_children("*", "Label", true, false):
-			visibles += (l as Label).text + "\n"
-		_comprobar(visibles.contains(Actualizador.version_actual()), "enseña la versión instalada (%s)" % Actualizador.version_actual())
-		_comprobar(buscar != null and buscar.is_visible_in_tree() and not bajar.visible and not barra.visible, "al principio solo está el botón «Buscar actualización» (nada se baja solo)")
-		Actualizador.url_api = "http://127.0.0.1:1/releases"
-		Actualizador.espera_consulta = 2.0
-		buscar.pressed.emit()
-		_comprobar(estado.text.contains("Buscando") and buscar.disabled, "al pulsar: «Buscando…» y el botón se desactiva")
-		var t0 := Time.get_ticks_msec()
-		while estado.text.contains("Buscando") and (Time.get_ticks_msec() - t0) < 9000:
-			await get_tree().process_frame
-		_comprobar(estado.text.begins_with("⚠") and not buscar.disabled, "sin red acaba con un mensaje y se puede volver a intentar (%s)" % estado.text)
-		Actualizador.espera_consulta = Actualizador.ESPERA_CONSULTA
+	return p
+
+## La caja del actualizador: enseña la versión, el botón «Buscar» es el único visible y, sin red, acaba con un mensaje.
+func _probar_caja_del_actualizador(caja: Node) -> void:
+	var buscar := caja.find_child("Buscar", true, false) as Button
+	var estado := caja.find_child("Estado", true, false) as Label
+	var barra := caja.find_child("Barra", true, false) as ProgressBar
+	var bajar := caja.find_child("Descargar", true, false) as Button
+	var visibles := ""
+	for l in caja.find_children("*", "Label", true, false):
+		visibles += (l as Label).text + "\n"
+	_comprobar(visibles.contains(Actualizador.version_actual()), "enseña la versión instalada (%s)" % Actualizador.version_actual())
+	_comprobar(buscar != null and buscar.is_visible_in_tree() and not bajar.visible and not barra.visible, "al principio solo está el botón «Buscar actualización» (nada se baja solo)")
+	Actualizador.url_api = "http://127.0.0.1:1/releases"
+	Actualizador.espera_consulta = 2.0
+	buscar.pressed.emit()
+	_comprobar(estado.text.contains("Buscando") and buscar.disabled, "al pulsar: «Buscando…» y el botón se desactiva")
+	var t0 := Time.get_ticks_msec()
+	while estado.text.contains("Buscando") and (Time.get_ticks_msec() - t0) < 9000:
+		await get_tree().process_frame
+	_comprobar(estado.text.begins_with("⚠") and not buscar.disabled, "sin red acaba con un mensaje y se puede volver a intentar (%s)" % estado.text)
+	Actualizador.espera_consulta = Actualizador.ESPERA_CONSULTA
+
+## El texto de privacidad dice cuándo se conecta a internet.
+func _comprobar_texto_de_privacidad(p: Principal) -> void:
 	var pv := ""
 	for l in p.find_children("*", "Label", true, false):
 		pv += (l as Label).text + "\n"
 	_comprobar(pv.contains("solo se conecta a internet cuando tú pulsas") and not pv.contains("no se conecta a internet:"), "el texto de privacidad dice cuándo se conecta")
-	p.queue_free()
-	await get_tree().process_frame
-	if ajustes_antes.is_empty():
-		DirAccess.remove_absolute(ProjectSettings.globalize_path("user://ajustes.cfg"))
-	else:
-		FileAccess.open("user://ajustes.cfg", FileAccess.WRITE).store_buffer(ajustes_antes)

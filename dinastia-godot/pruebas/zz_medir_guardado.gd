@@ -30,7 +30,6 @@ func _ready() -> void:
 	## En segundo plano (el autoguardado de verdad): lo que bloquea el hilo principal y lo que tarda en total.
 	for rep in 3:
 		GuardadoSegundoPlano.iniciar(m, "zz_medir")
-		var t_ini := Time.get_ticks_msec()
 		var fotogramas := 0
 		while GuardadoSegundoPlano.en_curso():
 			await get_tree().process_frame

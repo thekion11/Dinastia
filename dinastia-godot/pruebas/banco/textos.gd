@@ -203,26 +203,32 @@ func _probar_tema_y_ortografia() -> void:
 		for f: String in dir.get_files():
 			if not f.ends_with(".gd") or f == "tema.gd" or f == "idiomas.gd" or f == "pantalla_estadio.gd":
 				continue
-			var texto := FileAccess.get_file_as_string(carpeta + "/" + f)
-			for linea: String in texto.split("\n"):
-				var t := linea.strip_edges()
-				if t.begins_with("#"):
-					continue
-				if t.begins_with("const COL_"):
-					for c: String in canonicos:
-						if t.contains('Color("%s")' % c):
-							copias.append(f)
-				for m in rx.search_all(linea):
-					var v := m.get_string(1)
-					if not v.contains(" "):
-						continue
-					for w: String in vetadas:
-						var r2 := RegEx.new()
-						r2.compile("\\b" + w + "\\b")
-						if r2.search(v) != null:
-							sin_tilde.append("%s: %s" % [f, w])
+			_escanear_textos(carpeta, f, canonicos, vetadas, rx, copias, sin_tilde)
 	_comprobar(copias.is_empty(), "ninguna pantalla copia la paleta a mano: todas apuntan a Tema %s" % str(copias))
 	_comprobar(sin_tilde.is_empty(), "sin palabras corregidas que vuelvan sin tilde %s" % str(sin_tilde))
+
+## Un .gd de la interfaz: copias de la paleta y palabras sin tilde (a `copias`, `sin_tilde`).
+func _escanear_textos(carpeta: String, f: String, canonicos: Array, vetadas: Array,
+		rx: RegEx, copias: Array[String], sin_tilde: Array[String]) -> void:
+	var texto := FileAccess.get_file_as_string(carpeta + "/" + f)
+	for linea: String in texto.split("\n"):
+		var t := linea.strip_edges()
+		if t.begins_with("#"):
+			continue
+		if t.begins_with("const COL_"):
+			for c: String in canonicos:
+				if t.contains('Color("%s")' % c):
+					copias.append(f)
+		for m in rx.search_all(linea):
+			var v := m.get_string(1)
+			if not v.contains(" "):
+				continue
+			for w: String in vetadas:
+				var r2 := RegEx.new()
+				r2.compile("\\b" + w + "\\b")
+				if r2.search(v) != null:
+					sin_tilde.append("%s: %s" % [f, w])
+
 
 func _probar_glifos_idiomas() -> void:
 	_titulo("M-335: GLIFOS DE LOS 9 IDIOMAS")

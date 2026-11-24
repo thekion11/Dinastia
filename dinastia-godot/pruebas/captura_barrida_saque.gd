@@ -35,7 +35,7 @@ func _ready() -> void:
 	var tiempos := [[0.15, 0.5, 0.85, 1.15, 1.5, 1.75], [0.1, 0.35, 0.6, 0.85, 1.05, 1.3], [0.6, 9.0, 0.05, 0.5, 0.95, 1.4]]
 	for fila in 3:
 		for k in 6:
-			var nodo := sp._crear_jugador(self, j.id, "DEL", "", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+			var nodo := sp._crear_jugador(self, j.id, "DEL", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look, Color(0, 0, 0, 0), datos)
 			var n3 := nodo["nodo"] as Node3D
 			n3.position = Vector3(-5.0 + k * 2.0, 2.6 - fila * 2.3, 0)
 			n3.rotation_degrees.y = 90.0

@@ -38,7 +38,7 @@ static func movimiento(lib: AnimationLibrary, prefijo: String, desde := 0, cuant
 		if lib.has_animation(String(tarea[0])):
 			continue
 		var a: Animation = (LeagueCatalogo.clip(String(tarea[1]), prefijo) if not LeagueCatalogo.fuente(String(tarea[1])).is_empty() \
-			else load("res://visor/anim_quaternius.gd").cargar_real(String(tarea[1]), prefijo)) if tarea.size() == 2 \
+			else load(_RUTA_ANIM_QUATERNIUS).cargar_real(String(tarea[1]), prefijo)) if tarea.size() == 2 \
 			else ciclo_de(String(tarea[1]), prefijo, String(tarea[2]))
 		if a != null:
 			if tarea.size() == 2:
@@ -67,8 +67,8 @@ static func tareas_movimiento() -> Array:
 ## `segundo`: el otro paso, si no es el espejo del primero (las plantillas con el cuerpo girado: el pie izquierdo es el espejo de
 ## la plantilla girada al otro lado).
 static func ciclo_de(nombre_real: String, prefijo: String, segundo := "") -> Animation:
-	var a: Animation = load("res://visor/anim_quaternius.gd").cargar_real(nombre_real, prefijo)
-	var b: Animation = load("res://visor/anim_quaternius.gd").cargar_real(segundo if segundo != "" else nombre_real + "_espejo", prefijo)
+	var a: Animation = load(_RUTA_ANIM_QUATERNIUS).cargar_real(nombre_real, prefijo)
+	var b: Animation = load(_RUTA_ANIM_QUATERNIUS).cargar_real(segundo if segundo != "" else nombre_real + "_espejo", prefijo)
 	if a == null or b == null:
 		return null
 	var sal := a.duplicate(true) as Animation
@@ -106,6 +106,7 @@ const GOLPEOS := {"tiro_carrera": ["ls_shot__sprint__030", 0.17, true], "pase_ca
 static func bloqueo(altura: float) -> String:
 	return "bloqueo_rodilla" if altura < 0.95 else "bloqueo_tronco"
 const ANTES_CONTACTO := 0.04
+const _RUTA_ANIM_QUATERNIUS := "res://visor/anim_quaternius.gd"
 
 static func golpeos(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) -> void:
 	if OS.get_environment("SIN_LEAGUE") != "":
@@ -115,10 +116,10 @@ static func golpeos(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) -> 
 	for clave: String in GOLPEOS:
 		var g: Array = GOLPEOS[clave]
 		for lado in ["", "_espejo"]:
-			var base: Animation = load("res://visor/anim_quaternius.gd").cargar_real(String(g[0]) + lado, prefijo)
+			var base: Animation = load(_RUTA_ANIM_QUATERNIUS).cargar_real(String(g[0]) + lado, prefijo)
 			if base == null:
 				continue
-			var a = load("res://visor/anim_quaternius.gd").recortar(base, maxf(float(g[1]) - ANTES_CONTACTO, 0.0) / base.length, 1.0, false, true, rp)
+			var a = load(_RUTA_ANIM_QUATERNIUS).recortar(base, maxf(float(g[1]) - ANTES_CONTACTO, 0.0) / base.length, 1.0, false, true, rp)
 			var nombre: String = clave + lado
 			if lib.has_animation(nombre):
 				if bool(g[2]) and not lib.has_animation(clave + "_mano" + lado):

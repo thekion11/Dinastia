@@ -107,14 +107,19 @@ func _vecinos() -> void:
 			var destino: Button = por_hueco.get(d, null)
 			if b != _centro and _centro != null and destino != b:
 				## desde un brazo, hacia el lado opuesto se pasa por el centro
-				var mi_hueco := -1
-				for k: int in por_hueco:
-					if por_hueco[k] == b:
-						mi_hueco = k
+				var mi_hueco := _hueco_de(por_hueco, b)
 				if mi_hueco >= 0 and posmod(mi_hueco + 2, 4) == d:
 					destino = _centro
 			if destino != null and destino != b:
 				b.set("focus_neighbor_" + ["top", "right", "bottom", "left"][d], b.get_path_to(destino))
+
+## El hueco en el que está el brazo `b` (el último que coincida; -1 si no tiene).
+func _hueco_de(por_hueco: Dictionary, b: Button) -> int:
+	var mi_hueco := -1
+	for k: int in por_hueco:
+		if por_hueco[k] == b:
+			mi_hueco = k
+	return mi_hueco
 
 func _get_minimum_size() -> Vector2:
 	var alto := 0.0

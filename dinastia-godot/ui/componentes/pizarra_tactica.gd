@@ -138,14 +138,14 @@ static func _ficha_jugador(j: Jugador, puesto: String, natural: bool, c: Club, f
 	caja.add_child(pastilla)
 	var lp := Label.new()
 	lp.text = puesto
-	lp.add_theme_font_size_override("font_size", 10)
+	lp.add_theme_font_size_override("font_size", Tema.letra(10))
 	lp.add_theme_color_override("font_color", Color.WHITE)
 	pastilla.add_child(lp)
 	var partes := j.nombre.split(" ")
 	var nom := Label.new()
 	nom.text = String(partes[partes.size() - 1])
 	nom.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	nom.add_theme_font_size_override("font_size", 11)
+	nom.add_theme_font_size_override("font_size", Tema.letra(11))
 	nom.add_theme_color_override("font_color", Color("f2f5f3"))
 	nom.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
 	nom.add_theme_constant_override("outline_size", 3)
@@ -188,7 +188,7 @@ class CampoDibujado:
 		var campo := Rect2(m, m, size.x - m * 2, size.y - m * 2)
 		TrazoSuave.rect(self, campo, linea, 2.0)
 		TrazoSuave.linea(self, PackedVector2Array([Vector2(m, size.y * 0.5), Vector2(size.x - m, size.y * 0.5)]), linea, 2.0)
-		TrazoSuave.arco(self, size * 0.5, size.y * 0.1, linea, 2.0, 48)
+		TrazoSuave.arco(self, size * 0.5, size.y * 0.1, linea, 2.0, {"lados": 48})
 		var ancho_area := campo.size.x * 0.56
 		var alto_area := campo.size.y * 0.15
 		for arriba: bool in [true, false]:

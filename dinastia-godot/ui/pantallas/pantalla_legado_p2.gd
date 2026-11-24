@@ -40,7 +40,7 @@ func _pintar_sucesion(r: Roles) -> void:
 		fila.add_child(l)
 		var b := Button.new()
 		b.text = Idiomas.t("Elegir")
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.custom_minimum_size = Vector2(80, 0)
 		b.pressed.connect(func() -> void:
 			r.elegir_sucesor(idx)
@@ -111,7 +111,7 @@ func _pintar_epilogo(r: Roles) -> void:
 		va.text = String(par[1])
 		col.add_child(va)
 	var v: Dictionary = r.veredicto_carrera()
-	var tonos := {"oro": Principal.COL_ORO, "verde": Principal.COL_VERDE, "ambar": p.COL_ACENTO, "suave": Principal.COL_SUAVE}
+	var tonos := {"oro": Principal.COL_ORO, "verde": Principal.COL_VERDE, "ambar": p.col_acento, "suave": Principal.COL_SUAVE}
 	var frase := p._texto(13, tonos.get(String(v["tono"]), Principal.COL_SUAVE))
 	frase.text = Idiomas.t(String(v["texto"]))
 	frase.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -128,13 +128,15 @@ func _pintar_epilogo(r: Roles) -> void:
 		vit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(vit)
 		## La vitrina 3D con la forma de cada trofeo (26-10).
-		var v3: Control = load("res://ui/competiciones/vitrina_trofeos.gd").crear(ult)   ## (A4 memoria) por ruta
+		var v3: Control = load(_RUTA_VITRINA_TROFEOS).crear(ult)   ## (A4 memoria) por ruta
 		if v3 != null:
 			p._lista_legado.add_child(v3)
 
 ## (12-11, menús a pantalla completa) Tres pantallas (`p._secc_extra["Legado"]`): el CLUB (su historia, tu legado y el palmarés), tu CARRERA
 ## (cargo, licencia, ofertas, desgaste, patrimonio, filiales) y el RETIRO (homenajes, sucesión, fin de carrera). Otra sección = todo seguido.
 const SECC_LEGADO := ["club", "carrera", "retiro"]
+const _RUTA_VITRINA_TROFEOS := "res://ui/competiciones/vitrina_trofeos.gd"
+const _RUTA_ARBOL_HABILIDADES := "res://ui/componentes/arbol_habilidades.gd"
 
 func _pintar_legado() -> void:
 	p._limpiar(p._lista_legado)
@@ -180,7 +182,7 @@ func _legado_club(r: Roles) -> void:
 	p._lista_legado.add_child(CifrasClave.banda([[Idiomas.t("Temporadas"), str(maxi(1, p.mundo.anio - inicio + 1)), txt], [Idiomas.t("Títulos"), str(r.trofeos.size()), oro],
 		[Idiomas.t("Prestigio"), str(r.prestigio), txt], [Idiomas.t("Puntaje"), p._miles(int(p_local["total"])), oro]], p._color_de_paleta(Principal.COL_SUAVE)))
 	## Tu vitrina en 3D (26-10): los últimos títulos con su trofeo.
-	var vit3: Control = load("res://ui/competiciones/vitrina_trofeos.gd").crear(r.trofeos)
+	var vit3: Control = load(_RUTA_VITRINA_TROFEOS).crear(r.trofeos)
 	if vit3 != null:
 		p._lista_legado.add_child(vit3)
 	var camisetas := CamisetasRetiradas.crear(p.mundo)   ## (9-11) los dorsales retirados en el partido de despedida
@@ -192,7 +194,7 @@ func _legado_club(r: Roles) -> void:
 		p._dato("Multiplicador de desafíos", Idiomas.t("×%.2f sobre %s de base") % [float(p_local["multiplicador"]), p._miles(int(p_local["base"]))],
 			Principal.COL_VERDE, p._lista_legado)
 	if not r.filosofia.is_empty():
-		var fi := p._texto(12, p.COL_ACENTO)
+		var fi := p._texto(12, p.col_acento)
 		fi.text = Idiomas.t("📚 Tu escuela táctica: %s  (%s)") % [String(r.filosofia["nombre"]), String(r.filosofia.get("formacion", ""))]
 		fi.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_legado.add_child(fi)
@@ -272,7 +274,7 @@ func _legado_carrera(r: Roles) -> void:
 			var si_o: bool = par_o[0]
 			var bo := Button.new()
 			bo.text = String(par_o[1])
-			bo.add_theme_font_size_override("font_size", 11)
+			bo.add_theme_font_size_override("font_size", Tema.letra(11))
 			bo.clip_text = true
 			bo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			bo.pressed.connect(func() -> void:
@@ -331,9 +333,9 @@ func _pintar_habilidades() -> void:
 		(func() -> void: Animar.pulso(pts, 1.15)).call_deferred()
 	var grande := Button.new()
 	grande.text = Idiomas.t("⛶ En grande")
-	grande.pressed.connect(func() -> void: load("res://ui/componentes/arbol_habilidades.gd").abrir_en_grande(p, e, p._refrescar))
+	grande.pressed.connect(func() -> void: load(_RUTA_ARBOL_HABILIDADES).abrir_en_grande(p, e, p._refrescar))
 	cab.add_child(grande)
-	var arbol: Control = load("res://ui/componentes/arbol_habilidades.gd").crear(e)
+	var arbol: Control = load(_RUTA_ARBOL_HABILIDADES).crear(e)
 	p._lista_habilidades.add_child(arbol)
 	p._lista_habilidades.add_child(arbol.ficha())
 	## Las 15 maestrías de 30 niveles, debajo del árbol.

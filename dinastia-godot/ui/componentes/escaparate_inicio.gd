@@ -35,7 +35,7 @@ static func sincronizar(p: Principal) -> void:
 	if pc != null:
 		pc.boton_flotante_visible(not en_inicio)   ## en el Inicio, «Levantarse del PC» está en el pie
 	if p._menu_lateral != null:
-		p._menu_lateral.esconder_riel(false)   ## la tira de iconos se ve también en el Inicio (idéntica a la de antes)
+		p._menu_lateral.esconder_riel(false)   ## (18-11, orden del dueño del 17-11) la barra lateral SIEMPRE visible, también en el escaparate del Inicio
 	for po in p.find_children("*", "PanelObjetivos", true, false):   ## su chapa plegada pasa al pie mientras se ve el escaparate
 		(po as Control).visible = not (en_inicio and bool(po.get("_plegado")))
 

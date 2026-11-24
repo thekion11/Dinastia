@@ -76,11 +76,11 @@ static func lista_de(p: Partido, club: Club) -> Array:
 			break
 	return out
 
-static func mostrar(pr: Node, p: Partido, club: Club, filtro_: String = "todas") -> MomentosPartido:
+static func mostrar(pr: Node, p: Partido, club: Club, filtro_arg: String = "todas") -> MomentosPartido:
 	var s := MomentosPartido.new()
 	s.partido = p
 	s.mi_club = club
-	s.filtro = filtro_
+	s.filtro = filtro_arg
 	s._armar(pr)
 	MandoMenuPartido.escuchar(s, func() -> void: s.elegido.emit("volver"))
 	return s

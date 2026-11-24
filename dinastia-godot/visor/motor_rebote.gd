@@ -3,12 +3,12 @@ extends RefCounted
 ## LLEGADA AL REBOTE Y AL SEGUNDO PALO (03-11-2026, ciclo 28 de la sesión líder). Con un centro, un tiro o un rechace del portero en el aire (el balón no tiene dueño y el último toque fue del equipo que
 ## ataca), solo el más cercano al balón lo perseguía: los demás se quedaban en su forma, y el 85 % de los tiros se hacía sin NINGÚN compañero a < 18 m del arco. Con `REBOTE_LLEGADA=1` los dos atacantes más cercanos al
 ## balón después del que lo persigue se meten al área: uno al segundo palo (lado contrario al balón) y otro al punto de penal. `REBOTE_LLEGADA=0` (por defecto) = como antes. No sortea números aleatorios.
-static var ON := OS.get_environment("REBOTE_LLEGADA") == "1"
+static var on := OS.get_environment("REBOTE_LLEGADA") == "1"
 const ALCANCE := 30.0     ## el balón a menos de esto del arco rival
 
 ## Dónde va `p` a atacar el rebote (Vector3.INF = nada).
 static func objetivo(m: MotorJugable, p: Dictionary) -> Vector3:
-	if not ON or not m.poseedor.is_empty() or m.ultimo_toque.is_empty() or bool(p["por"]):
+	if not on or not m.poseedor.is_empty() or m.ultimo_toque.is_empty() or bool(p["por"]):
 		return Vector3.INF
 	if bool(m.ultimo_toque["es_local"]) != bool(p["es_local"]):
 		return Vector3.INF

@@ -18,7 +18,7 @@ const ESTADIOS := [
 	["barrio", -1, "dia", 1, 9000, {"forma": "ingles", "techo": "parcial", "fachada": "hormigon"}],
 	["chapa", 5, "noche", 3, 66000, {}],
 ]
-var PLANOS := ["aereo", "calle", "tv", "dron"]
+var planos := ["aereo", "calle", "tv", "dron"]
 
 var _mundo: Mundo
 var _cam: Camera3D
@@ -34,7 +34,7 @@ func _ready() -> void:
 	if OS.get_environment("SALIDA") != "":
 		_salida = OS.get_environment("SALIDA")
 	if OS.get_environment("PLANOS") != "":
-		PLANOS = Array(OS.get_environment("PLANOS").split(","))
+		planos = Array(OS.get_environment("PLANOS").split(","))
 	if OS.get_environment("SOLO") != "":
 		for s in OS.get_environment("SOLO").split(","):
 			_solo.append(int(s))
@@ -97,7 +97,7 @@ func _encuadre() -> void:
 	var fx: float = _geo["fx"]
 	var fz: float = _geo["fz"]
 	var alto: float = _geo["alto"]
-	match PLANOS[_plano]:
+	match planos[_plano]:
 		"aereo":
 			_cam.fov = 55.0
 			_cam.position = Vector3(fx + 70.0, alto + 42.0, fz + 85.0)
@@ -122,12 +122,12 @@ func _process(_d: float) -> void:
 	_frame += 1
 	if _frame < 6:
 		return
-	var nombre := "res://pruebas/capturas/fachada_%s_%d_%s_%s.png" % [_salida, _i + 1, ESTADIOS[_i][0], PLANOS[_plano]]
+	var nombre := "res://pruebas/capturas/fachada_%s_%d_%s_%s.png" % [_salida, _i + 1, ESTADIOS[_i][0], planos[_plano]]
 	get_viewport().get_texture().get_image().save_png(nombre)
 	print("captura: ", nombre)
 	_frame = 0
 	_plano += 1
-	if _plano >= PLANOS.size():
+	if _plano >= planos.size():
 		_siguiente_estadio()
 	else:
 		_encuadre()

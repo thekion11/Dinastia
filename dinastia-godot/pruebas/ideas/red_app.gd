@@ -52,8 +52,8 @@ func _mapa() -> void:
 		and RecorridosRed.RIO_X == CityBuilder.RIO_X and RecorridosRed.RIO_MEDIO == CiudadExpansion.RIO_MEDIO
 		and CallesCiudad.NUC_X0 == CiudadExpansion.NUC_X0 and CallesCiudad.FINCA == CiudadExpansion.FINCA_GRANDE and CallesCiudad.K == CiudadExpansion.K,
 		"las medidas de las zonas y de la rejilla son las de la ciudad")
-	_comprobar(CityBuilder.RING_X == 205.0 and CityBuilder.RING_Z_NORTE == -320.0 and CityBuilder.RING_Z_SUR == 350.0 and CityBuilder.EX_N == -282.0
-		and CityBuilder.EX_S == 262.0 and CityBuilder.BARRIO_EN.x == -60.0, "las calles del club (`CallesCiudad.NUCLEO`) siguen donde las pone `CityBuilder`")
+	_comprobar(is_equal_approx(CityBuilder.RING_X, 205.0) and is_equal_approx(CityBuilder.RING_Z_NORTE, -320.0) and is_equal_approx(CityBuilder.RING_Z_SUR, 350.0) and is_equal_approx(CityBuilder.EX_N, -282.0)
+		and is_equal_approx(CityBuilder.EX_S, 262.0) and is_equal_approx(CityBuilder.BARRIO_EN.x, -60.0), "las calles del club (`CallesCiudad.NUCLEO`) siguen donde las pone `CityBuilder`")
 	## Los nombres: uno por fila y por columna, todos distintos, chilenos (sin «Calle de…» ni «Avenida»).
 	var nombres := {}
 	for n: String in CallesCiudad.FILAS + CallesCiudad.COLUMNAS:

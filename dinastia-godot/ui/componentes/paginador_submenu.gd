@@ -20,7 +20,7 @@ static func crear(pm: Node, corto: bool) -> PaginadorSubmenu:
 	pg._ant.pressed.connect(func() -> void: pm.submenu_vecino(-1))
 	pg.add_child(pg._ant)
 	pg._pos = Label.new()
-	pg._pos.add_theme_font_size_override("font_size", 13)
+	pg._pos.add_theme_font_size_override("font_size", Tema.letra(13))
 	pg._pos.add_theme_color_override("font_color", Color(1, 1, 1, 0.6))
 	pg._pos.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	pg.add_child(pg._pos)

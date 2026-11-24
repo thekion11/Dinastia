@@ -16,7 +16,7 @@ var _orden_plantel_desc: bool = true
 var _libres_filtro := "todos"
 
 func _pintar_plantel(c: Club) -> void:
-	PanelPlantel.pintar(p._lista_plantel, c, p.mundo, _orden_plantel, _orden_plantel_desc, p.COL_ACENTO,
+	PanelPlantel.pintar(p._lista_plantel, c, p.mundo, _orden_plantel, _orden_plantel_desc, p.col_acento,
 		func(color: Color) -> Color: return p._color_de_paleta(color),
 		func(g: GridContainer, j: Jugador, columnas: Array, colores: Array) -> void:
 			p._fila_jugador(g, j, columnas, colores),
@@ -197,7 +197,7 @@ func _pintar_balon_parado(c: Club) -> void:
 
 	for bloque in [["Córners", Tactica.CORNERS, c.tactica.corner, "corner"],
 			["Tiros libres", Tactica.LIBRES, c.tactica.libre, "libre"]]:
-		var tb := p._texto(11, p.COL_ACENTO)
+		var tb := p._texto(11, p.col_acento)
 		tb.text = String(bloque[0]).to_upper()
 		p._lista_tactica.add_child(tb)
 		var lista: Array = bloque[1]
@@ -213,7 +213,7 @@ func _pintar_balon_parado(c: Club) -> void:
 			b.text = String(f[1])
 			b.toggle_mode = true
 			b.button_pressed = clave == actual
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			b.clip_text = true
 			b.custom_minimum_size = Vector2(160, 0)
 			b.tooltip_text = String(f[2])
@@ -234,7 +234,7 @@ func _pintar_balon_parado(c: Club) -> void:
 	## LOS PLANES. Se aplican solos en el minuto 60 según cómo vaya el marcador.
 	## En el 60 y no antes: cambiar el plan en el 20 no es un plan, es
 	## nerviosismo.
-	var tp := p._texto(11, p.COL_ACENTO)
+	var tp := p._texto(11, p.col_acento)
 	tp.text = Idiomas.t("PLANES SEGÚN EL MARCADOR")
 	p._lista_tactica.add_child(tp)
 	if not p._modo_experto:
@@ -257,7 +257,7 @@ func _pintar_balon_parado(c: Club) -> void:
 			b2.text = String(f2[1])
 			b2.toggle_mode = true
 			b2.button_pressed = String(c.tactica.get(prop2)) == clave2
-			b2.add_theme_font_size_override("font_size", 11)
+			b2.add_theme_font_size_override("font_size", Tema.letra(11))
 			b2.clip_text = true
 			b2.tooltip_text = String(f2[2])
 			b2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -291,7 +291,7 @@ func _pintar_roles_tacticos(c: Club) -> void:
 		## Solo los roles de SU línea: ofrecer "pivote" a un portero no es una
 		## opción, es ruido que alarga el desplegable a dieciséis entradas.
 		var op := OptionButton.new()
-		op.add_theme_font_size_override("font_size", 11)
+		op.add_theme_font_size_override("font_size", Tema.letra(11))
 		op.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		op.fit_to_longest_item = false   ## (12-11) en el teléfono de pie el rol más largo ensanchaba la página y cortaba los SÍ/NO de arriba
 		op.clip_text = true

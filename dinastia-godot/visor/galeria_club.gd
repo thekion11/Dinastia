@@ -113,27 +113,32 @@ static func montar(padre: Node3D, est: Dictionary, c1: Color, c2: Color, nombre_
 	## Los dos tramos: suelo, techo y paredes con la franja del club.
 	var largo_a := zc + MEDIO - z0
 	_tramo(nodo, Vector3(xa, y, z0 + largo_a / 2.0), Vector2(MEDIO * 2.0, largo_a), horm, suelo, techo)
-	if s != 0.0:
+	if not is_zero_approx(s):
 		var largo_b := absf(xb - xa) + MEDIO * 2.0
 		_tramo(nodo, Vector3((xa + xb) / 2.0, y, zc), Vector2(largo_b, MEDIO * 2.0), horm, suelo, techo)
 	## Paredes del tramo largo. La del lado del giro se corta donde empieza el
 	## corto; la del otro lado llega hasta el fondo.
-	var lado_giro := s if s != 0.0 else 1.0
+	var lado_giro := s if not is_zero_approx(s) else 1.0
 	for lado in [-1.0, 1.0]:
-		var z_hasta := zc - MEDIO if (s != 0.0 and lado == lado_giro) else zc + MEDIO
-		_muro_z(nodo, xa + lado * (MEDIO + 0.15), z0, z_hasta, y, horm, pared, franja, franja2, -lado)
-	if s != 0.0:
+		var z_hasta := zc - MEDIO if (not is_zero_approx(s) and lado == lado_giro) else zc + MEDIO
+		_muro_z(nodo, xa + lado * (MEDIO + 0.15),
+				Vector2(z0, z_hasta), y, [horm, pared, franja, franja2], -lado)
+	if not is_zero_approx(s):
 		## El tramo corto: pared del cruce (lado de los campos) y la de enfrente,
 		## con el hueco de la escalera; el fondo cierra al otro lado.
-		_muro_x(nodo, zc - MEDIO - 0.15, xa + s * MEDIO, xb + s * MEDIO, y, horm, pared, franja, franja2, 1.0)
+		_muro_x(nodo, zc - MEDIO - 0.15,
+				Vector2(xa + s * MEDIO, xb + s * MEDIO), y, [horm, pared, franja, franja2], 1.0)
 		var a := xa - s * MEDIO
 		var b := xb - s * 1.2
-		_muro_x(nodo, zc + MEDIO + 0.15, a, b, y, horm, pared, franja, franja2, -1.0)
-		_muro_x(nodo, zc + MEDIO + 0.15, xb + s * 1.2, xb + s * (MEDIO + 0.3), y, horm, pared, franja, franja2, -1.0)
-		_muro_z(nodo, xb + s * (MEDIO + 0.15), zc - MEDIO - 0.3, zc + MEDIO + 0.3, y, horm, pared, franja, franja2, -s)
+		_muro_x(nodo, zc + MEDIO + 0.15, Vector2(a, b), y, [horm, pared, franja, franja2], -1.0)
+		_muro_x(nodo, zc + MEDIO + 0.15,
+				Vector2(xb + s * 1.2, xb + s * (MEDIO + 0.3)), y, [horm, pared, franja, franja2], -1.0)
+		_muro_z(nodo, xb + s * (MEDIO + 0.15),
+				Vector2(zc - MEDIO - 0.3, zc + MEDIO + 0.3), y, [horm, pared, franja, franja2], -s)
 	else:
 		for lado2 in [-1.0, 1.0]:
-			_muro_x(nodo, zc + MEDIO + 0.15, xa + lado2 * 1.2, xa + lado2 * (MEDIO + 0.3), y, horm, pared, franja, franja2, -1.0)
+			_muro_x(nodo, zc + MEDIO + 0.15,
+					Vector2(xa + lado2 * 1.2, xa + lado2 * (MEDIO + 0.3)), y, [horm, pared, franja, franja2], -1.0)
 	## La cinta rodante por el centro del tramo largo, con bordes amarillos.
 	var cinta := PiezasObra._mat(Color(0.16, 0.16, 0.18), 0.4)
 	var borde := PiezasObra._mat(Color(0.95, 0.8, 0.15), 0.5)
@@ -154,7 +159,7 @@ static func montar(padre: Node3D, est: Dictionary, c1: Color, c2: Color, nombre_
 			_lampara(nodo, Vector3(xa, y + ALTO - 0.4, zl))
 		k += 1
 		zl += 8.0
-	if s != 0.0:
+	if not is_zero_approx(s):
 		var xl := xa + s * 6.0
 		while (xb - xl) * s > -1.0:
 			PiezasObra._caja(nodo, Vector3(xl, y + ALTO - 0.04, zc), Vector3(0.3, 0.04, 1.2), luz, false)
@@ -201,8 +206,13 @@ static func _tramo(nodo: Node3D, centro: Vector3, tam: Vector2, horm: Material, 
 	PiezasObra._caja(nodo, centro + Vector3(0, ALTO - 0.01, 0), Vector3(tam.x, 0.02, tam.y), techo, false)
 
 ## Pared a lo largo de Z (en `x`), con su cara interior hacia `hacia` (±1 en X).
-static func _muro_z(nodo: Node3D, x: float, z_a: float, z_b: float, y: float, horm: Material, pared: Material,
-		franja: Material, franja2: Material, hacia: float) -> void:
+static func _muro_z(nodo: Node3D, x: float, ext: Vector2, y: float, mats: Array, hacia: float) -> void:
+	var z_a := ext.x
+	var z_b := ext.y
+	var horm: Material = mats[0]
+	var pared: Material = mats[1]
+	var franja: Material = mats[2]
+	var franja2: Material = mats[3]
 	var largo := absf(z_b - z_a)
 	if largo < 0.05:
 		return
@@ -215,8 +225,13 @@ static func _muro_z(nodo: Node3D, x: float, z_a: float, z_b: float, y: float, ho
 	PiezasObra._caja(nodo, Vector3(xi + hacia * 0.01, y + 0.08, zm), Vector3(0.02, 0.16, largo), horm, false)
 
 ## Pared a lo largo de X (en `z`), con su cara interior hacia `hacia` (±1 en Z).
-static func _muro_x(nodo: Node3D, z: float, x_a: float, x_b: float, y: float, horm: Material, pared: Material,
-		franja: Material, franja2: Material, hacia: float) -> void:
+static func _muro_x(nodo: Node3D, z: float, ext: Vector2, y: float, mats: Array, hacia: float) -> void:
+	var x_a := ext.x
+	var x_b := ext.y
+	var horm: Material = mats[0]
+	var pared: Material = mats[1]
+	var franja: Material = mats[2]
+	var franja2: Material = mats[3]
 	var largo := absf(x_b - x_a)
 	if largo < 0.05:
 		return
@@ -319,7 +334,7 @@ static func montar_caseta(padre: Node3D, est: Dictionary, c1: Color) -> void:
 	PiezasObra._caja(nodo, totem + Vector3(0, 3.75, 0), Vector3(0.7, 0.3, 0.45), acero, false)
 	for giro in [0.0, PI]:
 		PiezasObra._rotulo(nodo, "⇣\n%s\n%s" % [Idiomas.t("GALERÍA"), Idiomas.t("ESTADIO")],
-			totem + Vector3(0, 2.6, 0.19 if giro == 0.0 else -0.19), giro, 30, Color.WHITE if techo.albedo_color.get_luminance() < 0.6 else Color(0.08, 0.08, 0.1))
+			totem + Vector3(0, 2.6, 0.19 if is_zero_approx(giro) else -0.19), giro, 30, Color.WHITE if techo.albedo_color.get_luminance() < 0.6 else Color(0.08, 0.08, 0.1))
 	var o := OmniLight3D.new()
 	o.position = b + Vector3(0, 2.6, -1.5)
 	o.omni_range = 7.0

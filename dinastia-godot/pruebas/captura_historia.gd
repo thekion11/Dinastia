@@ -11,9 +11,7 @@ func _ready() -> void:
 
 func _process(_d: float) -> void:
 	_n += 1
-	var m: Mundo = _p.get("mundo") if _n >= 10 else null
 	if _n == 10:
-		pass
 		_p.call("_ir_a_chip", {"tab": "Legado", "label": "Historia"})
 		_p.call("_refrescar")
 	if _n == 22:

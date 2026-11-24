@@ -94,12 +94,26 @@ static func _club(l: Liga, id: String) -> Club:
 	return null
 
 static func _unir(x: Array, y: Array) -> Array:
+	var nat := Nativo.de("nuc_unir_arrays")
+	if nat != null:
+		return nat.nuc_unir_arrays(x, y)
+	return _unir_gd(x, y)
+
+## Gemela GDScript de `nuc_unir_arrays` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _unir_gd(x: Array, y: Array) -> Array:
 	var sal: Array = []
 	for i in maxi(x.size(), y.size()):
 		sal.append((x[i] if i < x.size() else []) + (y[i] if i < y.size() else []))
 	return sal
 
 static func _vuelta(r: Array) -> Array:
+	var nat := Nativo.de("nuc_vuelta_pares")
+	if nat != null:
+		return nat.nuc_vuelta_pares(r)
+	return _vuelta_gd(r)
+
+## Gemela GDScript de `nuc_vuelta_pares` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _vuelta_gd(r: Array) -> Array:
 	var sal: Array = []
 	for j: Array in r:
 		var v: Array = []
@@ -167,6 +181,13 @@ static func _repetir(r: Array, veces: int) -> Array:
 	return sal
 
 static func _rr(n: int) -> int:
+	var nat := Nativo.de("nuc_rr")
+	if nat != null:
+		return nat.nuc_rr(n)
+	return _rr_gd(n)
+
+## Gemela GDScript de `nuc_rr` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _rr_gd(n: int) -> int:
 	return n if n % 2 == 1 else n - 1
 
 

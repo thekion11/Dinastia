@@ -23,6 +23,46 @@ func _huella(motor: MotorJugable, ball: Node3D) -> String:
 	s.append(str(motor.stats))
 	return str(hash("|".join(s)))
 
+func _pulsar_entradas(motor: MotorJugable, ball: Node3D, rng: RandomNumberGenerator, pulsadas: Array[String]) -> void:
+	for acc in pulsadas:
+		Input.action_release(acc)
+	pulsadas.clear()
+	var yo := motor.usuario
+	if not yo.is_empty():
+		var d := MotorJugable.dir_ataque(bool(yo["es_local"]))
+		var hacia := ball.position - motor.pos(yo)
+		hacia.y = 0.0
+		var cerca := hacia.length() < 4.0
+		if poseedor_es(motor, yo):
+			hacia = Vector3(rng.randf_range(-1.0, 1.0), 0, 1.0 * d)   ## con balón: hacia el arco rival con ruido
+		var w := hacia.normalized() if hacia.length() > 0.05 else Vector3.ZERO
+		w = (w + Vector3(rng.randf_range(-0.35, 0.35), 0, rng.randf_range(-0.35, 0.35))).normalized()
+		var sx := -w.x / d
+		var sy := -w.z / d
+		if sx < -0.2:
+			Input.action_press("jugar_izquierda", minf(1.0, -sx))
+			pulsadas.append("jugar_izquierda")
+		elif sx > 0.2:
+			Input.action_press("jugar_derecha", minf(1.0, sx))
+			pulsadas.append("jugar_derecha")
+		if sy < -0.2:
+			Input.action_press("jugar_arriba", minf(1.0, -sy))
+			pulsadas.append("jugar_arriba")
+		elif sy > 0.2:
+			Input.action_press("jugar_abajo", minf(1.0, sy))
+			pulsadas.append("jugar_abajo")
+		if rng.randf() < 0.5:
+			Input.action_press("jugar_sprint")
+			pulsadas.append("jugar_sprint")
+		if (cerca or poseedor_es(motor, yo)) and rng.randf() < 0.6:
+			var acc: String = ACCIONES[rng.randi() % ACCIONES.size()]
+			Input.action_press(acc)
+			pulsadas.append(acc)
+		elif rng.randf() < 0.12:
+			var acc2: String = ACCIONES[rng.randi() % ACCIONES.size()]
+			Input.action_press(acc2)
+			pulsadas.append(acc2)
+
 func _escenario(indice: int, semilla: int) -> String:
 	var m := Mundo.new()
 	m.generar(["CHI"], 777)
@@ -50,45 +90,8 @@ func _escenario(indice: int, semilla: int) -> String:
 	var dt := 1.0 / 30.0
 	var pasos := 0
 	while motor.estado != "fin" and pasos < PASOS:
-		if pasos % 6 == 0:   ## una entrada nueva cada 0,2 s: se mueve hacia el balón (con ruido) y, cerca o con él, usa los botones
-			for acc in pulsadas:
-				Input.action_release(acc)
-			pulsadas.clear()
-			var yo := motor.usuario
-			if not yo.is_empty():
-				var d := MotorJugable.dir_ataque(bool(yo["es_local"]))
-				var hacia := ball.position - motor.pos(yo)
-				hacia.y = 0.0
-				var cerca := hacia.length() < 4.0
-				if poseedor_es(motor, yo):
-					hacia = Vector3(rng.randf_range(-1.0, 1.0), 0, 1.0 * d)   ## con balón: hacia el arco rival con ruido
-				var w := hacia.normalized() if hacia.length() > 0.05 else Vector3.ZERO
-				w = (w + Vector3(rng.randf_range(-0.35, 0.35), 0, rng.randf_range(-0.35, 0.35))).normalized()
-				var sx := -w.x / d
-				var sy := -w.z / d
-				if sx < -0.2:
-					Input.action_press("jugar_izquierda", minf(1.0, -sx))
-					pulsadas.append("jugar_izquierda")
-				elif sx > 0.2:
-					Input.action_press("jugar_derecha", minf(1.0, sx))
-					pulsadas.append("jugar_derecha")
-				if sy < -0.2:
-					Input.action_press("jugar_arriba", minf(1.0, -sy))
-					pulsadas.append("jugar_arriba")
-				elif sy > 0.2:
-					Input.action_press("jugar_abajo", minf(1.0, sy))
-					pulsadas.append("jugar_abajo")
-				if rng.randf() < 0.5:
-					Input.action_press("jugar_sprint")
-					pulsadas.append("jugar_sprint")
-				if (cerca or poseedor_es(motor, yo)) and rng.randf() < 0.6:
-					var acc: String = ACCIONES[rng.randi() % ACCIONES.size()]
-					Input.action_press(acc)
-					pulsadas.append(acc)
-				elif rng.randf() < 0.12:
-					var acc2: String = ACCIONES[rng.randi() % ACCIONES.size()]
-					Input.action_press(acc2)
-					pulsadas.append(acc2)
+		if pasos % 6 == 0:
+			_pulsar_entradas(motor, ball, rng, pulsadas)
 		if pasos % 150 == 75 and not motor.usuario.is_empty():   ## cada 5 s se le pone junto al balón: así hay muchos toques, entradas y tiros suyos
 			(motor.usuario["node"] as Node3D).position = ball.position + Vector3(0.9, 0, 0.9 * MotorJugable.dir_ataque(bool(motor.usuario["es_local"])))
 		motor.paso(dt)

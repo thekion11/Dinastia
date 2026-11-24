@@ -126,7 +126,7 @@ func _process(_d: float) -> void:
 			print("===== FIN. %d fallos =====" % _fallos)
 			get_tree().quit()
 
-func _hijos_menu(ml: MenuLateral) -> int:
+func _hijos_menu(_ml: MenuLateral) -> int:
 	var k := 0
 	for h in _p.get_children():
 		if h is PantallaMenu and not h.is_queued_for_deletion():

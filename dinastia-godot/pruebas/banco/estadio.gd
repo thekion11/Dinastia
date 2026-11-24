@@ -174,7 +174,7 @@ func _probar_rendimiento_adaptativo() -> void:
 	ra.escalon_aplicado.connect(func(e: int, _q: String) -> void: avisos.append(e))
 	for i in 10 * m:
 		ra.avanzar(1.0, 5.0)
-	_comprobar(ra.escalon == RendimientoAdaptativo.ESCALONES.size() and avisos == [3, 4, 5, 6],
+	_comprobar(ra.escalon == RendimientoAdaptativo.ESCALONES.size() and avisos == [3, 4, 5, 6, 7],
 		"con FPS malos sostenidos llega al último escalón (%d) y avisa de cada uno, sin pasarse" % ra.escalon)
 	ra.free()
 	raiz.free()
@@ -262,7 +262,7 @@ func _probar_fundir_piezas() -> void:
 	_comprobar(mallas.size() == 1 and (mallas[0] as MeshInstance3D).mesh.get_surface_count() == 2, "una malla con una superficie por material")
 	var m: MeshInstance3D = mallas[0]
 	_comprobar(m.mesh.surface_get_material(0) == rojo and m.mesh.surface_get_material(1) == azul, "las superficies llevan los MISMOS materiales")
-	_comprobar(m.visibility_range_end == 300.0, "lleva la distancia de corte pedida")
+	_comprobar(is_equal_approx(m.visibility_range_end, 300.0), "lleva la distancia de corte pedida")
 	_comprobar(is_instance_valid(puerta) and puerta.get_parent() == raiz and is_instance_valid(rotulo), "la excluida y el rótulo se quedan")
 	var vert := 0
 	for k in m.mesh.get_surface_count():
@@ -331,7 +331,7 @@ func _probar_visor_pequenos() -> void:
 	CeremoniaFoto.destellar(l, 0.75)   ## (0,75 + 0,2) mod 0,45 = 0,05 s: en pleno destello
 	var encendido := l.light_energy
 	CeremoniaFoto.destellar(l, 0.88)   ## fase 0,18 s: apagado
-	_comprobar(encendido > 0.0 and l.light_energy == 0.0, "el flash destella a ratos y se apaga entre medias")
+	_comprobar(encendido > 0.0 and is_zero_approx(l.light_energy), "el flash destella a ratos y se apaga entre medias")
 	for nd2: Node3D in nodos:
 		nd2.queue_free()
 	raiz_luz.queue_free()
@@ -419,3 +419,27 @@ func _probar_vomitorios() -> void:
 		deck.queue_free()
 	_comprobar(contados.size() == 3 and contados[2] >= contados[0], "una grada más larga no tiene menos accesos %s" % str(contados))
 	_comprobar(EstadioObra.new() != null, "EstadioObra se crea (solo datos)")
+
+## (20-11, «no atravesar objetos») `RutaLibre` con una pared falsa: la puerta en vez de la pared, el puesto encerrado se recoloca, y sin camino no se inventa nada.
+func _probar_rutas_libres() -> void:
+	_titulo("RUTAS LIBRES: PUERTA EN VEZ DE PARED, PUESTO ENCERRADO, SIN CAMINO NO SE INVENTA")
+	var r := 0.28
+	## Pared en z 2,0-2,4 a lo largo de todo x con una puerta de 1 m en x 2-3 (el cuerpo de radio r necesita r de holgura).
+	var pared := func(p: Vector3) -> bool:
+		return not (p.z > 2.0 - r and p.z < 2.4 + r and not (p.x >= 2.0 + r and p.x <= 3.0 - r))
+	var a := Vector3(0, 0, 0)
+	var b := Vector3(0, 0, 4)
+	_comprobar(not RutaLibre.tramo_libre(a, b, pared), "la línea recta atraviesa la pared")
+	var cam := RutaLibre.camino(a, b, pared)
+	var sin_choque := range(cam.size() - 1).all(func(k: int) -> bool: return RutaLibre.tramo_libre(cam[k], cam[k + 1], pared))
+	_comprobar(cam.size() >= 3 and sin_choque and cam.any(func(q: Vector3) -> bool: return q.x >= 2.0 and q.x <= 3.0), "el camino rodea la pared por la puerta (%d puntos, ningún tramo choca)" % cam.size())
+	_comprobar(cam[0].is_equal_approx(a) and cam[-1].is_equal_approx(b), "y empieza y acaba donde se pidió")
+	var res := RutaLibre.sanear([Vector3(0, 0, 2.2), Vector3(0, 0, 4)], pared)
+	_comprobar(pared.call(res["ruta"][0]) and int(res["cambios"]) > 0, "un punto de la ruta dentro de la pared se saca a un sitio libre")
+	## Habitación cerrada (sin puerta) con el puesto dentro: se recoloca fuera, junto al resto de la ruta.
+	var cerrada := func(p: Vector3) -> bool:
+		return not (p.z > 1.0 - r and p.z < 1.5 + r)
+	var res2 := RutaLibre.sanear([Vector3(0, 0, 0), Vector3(0, 0, 3)], cerrada)
+	_comprobar(float(res2["ruta"][0].z) > 1.5 and int(res2["sin_camino"]) == 0, "un puesto encerrado se recoloca en un hueco con salida (z=%.2f)" % float(res2["ruta"][0].z))
+	var res3 := RutaLibre.camino(a, b, func(_p: Vector3) -> bool: return false)
+	_comprobar(res3.size() == 2 and res3[0].is_equal_approx(a) and res3[1].is_equal_approx(b), "sin camino posible devuelve la recta (no se inventa un rodeo)")
