@@ -187,6 +187,23 @@ Sin esto, las filas que dependen de ello no avanzan. El detalle está en la secc
 - QUÉ DEBE PROBAR EL DUEÑO CON EL MANDO (variables de entorno al lanzar, o que la líder las encienda por defecto en `MejorasC4Mando`): (1) `C4_PUNTA` (ya viene encendida; comparar con `C4_PUNTA=0`): ¿se nota la diferencia entre un extremo rápido y un central lento?; (2) `C4_PASE_DIR=1`: ¿el pase va a quien apuntas? ¿se cortan más pases?; (3) `C4_GIRO_SECO=1`: ¿la media vuelta se siente con peso o torpe?; (4) `C4_INERCIA=1`: ¿el arranque se siente PES o lento? Nota 1-100 de cada una.
 - FALTA: animación de apoyo y giro ligada a `C4_GIRO_SECO` (hoy solo cambia la trayectoria); el portero (paradas ~50 %) con más tiros a puerta a la vez (ver la bitácora: subir solo las paradas hunde los goles); bloque compacto sin perder ocasiones (subir la línea de defensas hacia los medios en vez de retrasar a los de delante); repetir la sonda con más partidos (N=8) antes de encender nada.
 
+## MENÚ DEL PARTIDO, PAUSA, DESCANSO Y FINAL (sesión «Menú del partido y pausa», 17-11; rama `avance-por-dias-menu`, obedece a Auditoría)
+Hecho el 17-11 (todo con prueba; se borra de aquí cuando el dueño lo dé por bueno jugando):
+- Previa estilo PES 2020 (`ui/partido_menu/`): futbolistas 3D reales, 6 pestañas a pantalla completa (uniforme, estadio con fotos 3D en caché, saque, plan = Táctica del juego, opciones, cámara Pro con ajuste fino).
+- Pausa corta (`MenuPausaPartido`): Reanudar, Táctica y cambios, Estadísticas, Controles, Simular el resto, Salir.
+- Descanso y final con un componente común (`ResumenPartidoCine`): marcador, goleadores, tarjetas, estadísticas reales, figura 3D; final con Repetición de los goles, Jugar momentos y Crónica.
+- Tarjetas por equipo y en la crónica (`Partido._tarjeta_sacada`, 3D y simulado).
+- Mando en todas las pantallas del partido (`MandoMenuPartido`: R2 confirma, Cuadrado vuelve, LB/RB por `_input`); prueba `auditoria_foco_partido` (especiales) y banco `_probar_mando_pantallas_partido`.
+- Teléfono (2400×1080): toques ≥ 9 mm, zona segura de la muesca y diseño compacto (`TactilPartido`); prueba `auditoria_tactil_partido`.
+- Barridos de color entre pantallas (`BarridoPartido`, 230 ms); prueba `prueba_barridos_partido`.
+- «Simular el resto» con el simulador calibrado (`SimularResto`; C4 en piloto automático solo con SIMULAR_CON_C4=1); en la 1.ª parte para en el descanso (Continuar simulando / Volver a jugar / Cambios); banco `_probar_simular_resto_calibrado`.
+- Prueba de extremo a extremo del día de partido (`pruebas/e2e_dia_partido.tscn`, especiales, ~45 min, CHI/ARG/BRA × 2). Fallos que encontró y quedaron arreglados: uniforme elegido que no llegaba al 3D (`Puente3D.kit_elegido`), `Partido.ctx_club_id` viejo tras cambiar de club, «Repetición de los goles» vacía, gol tras el final en un partido suspendido por menos de 7 (también en la gemela C++, extensión Linux y Windows recompilada), cachés por jugador sin tope (`LimpiezaPartido`).
+Pendiente (por prioridad):
+1. MEMORIA (Auditoría pide 6.º − 3.º ≤ 5 MB): tras los topes de `LimpiezaPartido` la subida por partido baja a +18, +10, +3 MB (6.º − 3.º = 29 MB; la memoria de texturas pasó de +320 a +174 MB en 5 partidos). Lo que aún crece es contenido NUEVO de cada partido (estadio y rival distintos: retratos, escudos, materiales de piezas). Falta: repetir la prueba con los MISMOS cruces para separar fuga de caché y, si sigue, poner tope a `Retrato3D._cache` más bajo y a `texturas_p1`. La prueba de extremo a extremo marca hoy 1 fallo por esto.
+2. Extensión C++ de Android y Web sin recompilar con el corte del minuto (lo hace el CI o la sesión C++; Linux y Windows ya están).
+3. `pruebas/ideas/p2_triangulo` falla en `main` (no es de esta sesión): el HUD de TV de AAA cambió el triángulo 3D (`MarcadorJugador`) por uno en 2D y la prueba busca el 3D. `tac_hud` falla solo con la máquina cargada.
+4. Sin probar con mando físico ni teléfono real (todo simulado).
+
 ## ORDEN DEL DUEÑO (16-11): «50 % del juego en C++, y que siempre genere ganancias» — opción A elegida
 - META: el 50 % del TIEMPO DE CPU del juego (partido jugable y semana del mundo) corre en C++. NO se cuentan líneas: solo se porta lo que gana tiempo MEDIDO, con gemela GDScript e igualdad de huellas (regla de la extensión). Lo que no gane no se porta.
 - Punto de partida (16-11): GDScript del juego ~225.000 líneas (`ui/` 88k, `visor/` 78k, `nucleo/` 57k); C++ ~3.050. Lo ya portado y lo descartado por medición: `docs/04_auditorias/PASO_CPP_PLAN.md` §2h-2j.

@@ -358,6 +358,7 @@ func _exit_tree() -> void:
 	if partido != null and _motor != null:
 		partido.motor_externo = false
 		PlayerSpawner.mostrar_nombres = _nombres_globales
+	LimpiezaPartido.recortar()   ## (17-11) las cachés por jugador, con tope: si no, cada rival nuevo sumaba sus caras y equipaciones para siempre
 
 ## La práctica: tomas el mando de tu equipo al momento y un aviso explica qué es.
 func _empezar_practica() -> void:

@@ -94,6 +94,8 @@ func _al_final(gl: int, gv: int) -> void:
 	_escribir("[color=%s][b]%s[/b][/color]  %s %d-%d %s" % [
 		color, Idiomas.t("FINAL. %s.") % Idiomas.t(texto), partido.local.nombre, gl, gv, partido.visita.nombre])
 	_escribir_goles()
+	if partido.suspendido:   ## (17-11) el motivo, también en la crónica (antes solo salía en el aviso del árbitro)
+		_escribir("[color=#e05555][b]%s[/b][/color] %s" % [Idiomas.t("🚫 PARTIDO SUSPENDIDO."), Idiomas.t("Un equipo se quedó con menos de siete jugadores: el resultado lo pone la mesa.")])
 	## LOS PENALES. En una eliminatoria un empate no se queda así -`Copa.
 	## jugar_ronda()` los va a pedir de todos modos al avanzar la semana, para
 	## saber quién sigue vivo-, así que se juegan aquí mismo y se cuentan: sin

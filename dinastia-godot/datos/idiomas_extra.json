@@ -9130,7 +9130,14 @@
   "Continuar simulando": "Keep simulating",
   "Volver a jugar": "Play again",
   "Crónica": "Match report",
-  "Crónica del partido": "Match report"
+  "Crónica del partido": "Match report",
+  "Suspendido": "Abandoned",
+  "El partido se suspendió en el %d': un equipo se quedó con menos de siete jugadores y el resultado lo pone la mesa.": "The match was abandoned in the %d': a team was left with fewer than seven players and the result is decided by the board.",
+  "🚫 PARTIDO SUSPENDIDO.": "🚫 MATCH ABANDONED.",
+  "Un equipo se quedó con menos de siete jugadores: el resultado lo pone la mesa.": "A team was left with fewer than seven players: the result is decided by the board.",
+  "Partido suspendido": "Match abandoned",
+  "un equipo se quedó con menos de siete jugadores": "a team was left with fewer than seven players",
+  "Sobre el papel, dos onces parejos (media %d frente a %d).": "On paper, two evenly matched line-ups (average %d against %d)."
  },
  "pt": {
   "Historia": "História",
@@ -18263,7 +18270,14 @@
   "Continuar simulando": "Continuar simulando",
   "Volver a jugar": "Voltar a jogar",
   "Crónica": "Crónica",
-  "Crónica del partido": "Crónica da partida"
+  "Crónica del partido": "Crónica da partida",
+  "Suspendido": "Suspenso",
+  "El partido se suspendió en el %d': un equipo se quedó con menos de siete jugadores y el resultado lo pone la mesa.": "A partida foi suspensa aos %d': uma equipe ficou com menos de sete jogadores e o resultado é decidido pela mesa.",
+  "🚫 PARTIDO SUSPENDIDO.": "🚫 PARTIDA SUSPENSA.",
+  "Un equipo se quedó con menos de siete jugadores: el resultado lo pone la mesa.": "Uma equipe ficou com menos de sete jogadores: o resultado é decidido pela mesa.",
+  "Partido suspendido": "Partida suspensa",
+  "un equipo se quedó con menos de siete jugadores": "uma equipe ficou com menos de sete jogadores",
+  "Sobre el papel, dos onces parejos (media %d frente a %d).": "No papel, dois onzes equilibrados (média %d contra %d)."
  },
  "patrones": [
   [
@@ -33668,7 +33682,14 @@
   "Continuar simulando": "Continuer la simulation",
   "Volver a jugar": "Rejouer",
   "Crónica": "Chronique",
-  "Crónica del partido": "Chronique du match"
+  "Crónica del partido": "Chronique du match",
+  "Suspendido": "Arrêté",
+  "El partido se suspendió en el %d': un equipo se quedó con menos de siete jugadores y el resultado lo pone la mesa.": "Le match a été arrêté à la %d' : une équipe s'est retrouvée à moins de sept joueurs et le résultat est décidé sur tapis vert.",
+  "🚫 PARTIDO SUSPENDIDO.": "🚫 MATCH ARRÊTÉ.",
+  "Un equipo se quedó con menos de siete jugadores: el resultado lo pone la mesa.": "Une équipe s'est retrouvée à moins de sept joueurs : le résultat est décidé sur tapis vert.",
+  "Partido suspendido": "Match arrêté",
+  "un equipo se quedó con menos de siete jugadores": "une équipe s'est retrouvée à moins de sept joueurs",
+  "Sobre el papel, dos onces parejos (media %d frente a %d).": "Sur le papier, deux onze équilibrés (moyenne %d contre %d)."
  },
  "it": {
   "Historia": "Storia",
@@ -42801,7 +42822,14 @@
   "Continuar simulando": "Continua a simulare",
   "Volver a jugar": "Torna a giocare",
   "Crónica": "Cronaca",
-  "Crónica del partido": "Cronaca della partita"
+  "Crónica del partido": "Cronaca della partita",
+  "Suspendido": "Sospeso",
+  "El partido se suspendió en el %d': un equipo se quedó con menos de siete jugadores y el resultado lo pone la mesa.": "La partita è stata sospesa al %d': una squadra è rimasta con meno di sette giocatori e il risultato lo decide il giudice sportivo.",
+  "🚫 PARTIDO SUSPENDIDO.": "🚫 PARTITA SOSPESA.",
+  "Un equipo se quedó con menos de siete jugadores: el resultado lo pone la mesa.": "Una squadra è rimasta con meno di sette giocatori: il risultato lo decide il giudice sportivo.",
+  "Partido suspendido": "Partita sospesa",
+  "un equipo se quedó con menos de siete jugadores": "una squadra è rimasta con meno di sette giocatori",
+  "Sobre el papel, dos onces parejos (media %d frente a %d).": "Sulla carta, due undici alla pari (media %d contro %d)."
  },
  "de": {
   "Historia": "Geschichte",
@@ -51934,7 +51962,14 @@
   "Continuar simulando": "Weiter simulieren",
   "Volver a jugar": "Wieder spielen",
   "Crónica": "Spielbericht",
-  "Crónica del partido": "Spielbericht"
+  "Crónica del partido": "Spielbericht",
+  "Suspendido": "Abgebrochen",
+  "El partido se suspendió en el %d': un equipo se quedó con menos de siete jugadores y el resultado lo pone la mesa.": "Das Spiel wurde in der %d' abgebrochen: Ein Team hatte weniger als sieben Spieler, das Ergebnis wird am grünen Tisch entschieden.",
+  "🚫 PARTIDO SUSPENDIDO.": "🚫 SPIEL ABGEBROCHEN.",
+  "Un equipo se quedó con menos de siete jugadores: el resultado lo pone la mesa.": "Ein Team hatte weniger als sieben Spieler: Das Ergebnis wird am grünen Tisch entschieden.",
+  "Partido suspendido": "Spiel abgebrochen",
+  "un equipo se quedó con menos de siete jugadores": "ein Team hatte weniger als sieben Spieler",
+  "Sobre el papel, dos onces parejos (media %d frente a %d).": "Auf dem Papier zwei gleichwertige Aufstellungen (Schnitt %d gegen %d)."
  },
  "ca": {
   "Historia": "Història",
@@ -61067,7 +61102,14 @@
   "Continuar simulando": "Continuar simulant",
   "Volver a jugar": "Tornar a jugar",
   "Crónica": "Crònica",
-  "Crónica del partido": "Crònica del partit"
+  "Crónica del partido": "Crònica del partit",
+  "Suspendido": "Suspès",
+  "El partido se suspendió en el %d': un equipo se quedó con menos de siete jugadores y el resultado lo pone la mesa.": "El partit es va suspendre al %d': un equip es va quedar amb menys de set jugadors i el resultat el posa la taula.",
+  "🚫 PARTIDO SUSPENDIDO.": "🚫 PARTIT SUSPÈS.",
+  "Un equipo se quedó con menos de siete jugadores: el resultado lo pone la mesa.": "Un equip es va quedar amb menys de set jugadors: el resultat el posa la taula.",
+  "Partido suspendido": "Partit suspès",
+  "un equipo se quedó con menos de siete jugadores": "un equip es va quedar amb menys de set jugadors",
+  "Sobre el papel, dos onces parejos (media %d frente a %d).": "Sobre el paper, dos onzes igualats (mitjana %d contra %d)."
  },
  "pl": {
   "Club": "Klub",
@@ -70200,7 +70242,14 @@
   "Continuar simulando": "Symuluj dalej",
   "Volver a jugar": "Wróć do gry",
   "Crónica": "Relacja",
-  "Crónica del partido": "Relacja z meczu"
+  "Crónica del partido": "Relacja z meczu",
+  "Suspendido": "Przerwany",
+  "El partido se suspendió en el %d': un equipo se quedó con menos de siete jugadores y el resultado lo pone la mesa.": "Mecz przerwano w %d': jedna drużyna miała mniej niż siedmiu zawodników, wynik ustala komisja.",
+  "🚫 PARTIDO SUSPENDIDO.": "🚫 MECZ PRZERWANY.",
+  "Un equipo se quedó con menos de siete jugadores: el resultado lo pone la mesa.": "Jedna drużyna miała mniej niż siedmiu zawodników: wynik ustala komisja.",
+  "Partido suspendido": "Mecz przerwany",
+  "un equipo se quedó con menos de siete jugadores": "drużyna miała mniej niż siedmiu zawodników",
+  "Sobre el papel, dos onces parejos (media %d frente a %d).": "Na papierze dwie wyrównane jedenastki (średnia %d wobec %d)."
  },
  "tr": {
   "Club": "Kulüp",
@@ -79333,6 +79382,13 @@
   "Continuar simulando": "Simülasyona devam et",
   "Volver a jugar": "Tekrar oyna",
   "Crónica": "Maç raporu",
-  "Crónica del partido": "Maç raporu"
+  "Crónica del partido": "Maç raporu",
+  "Suspendido": "Tatil edildi",
+  "El partido se suspendió en el %d': un equipo se quedó con menos de siete jugadores y el resultado lo pone la mesa.": "Maç %d' içinde tatil edildi: bir takım yediden az oyuncuyla kaldı, sonucu masa belirliyor.",
+  "🚫 PARTIDO SUSPENDIDO.": "🚫 MAÇ TATİL EDİLDİ.",
+  "Un equipo se quedó con menos de siete jugadores: el resultado lo pone la mesa.": "Bir takım yediden az oyuncuyla kaldı: sonucu masa belirliyor.",
+  "Partido suspendido": "Maç tatil edildi",
+  "un equipo se quedó con menos de siete jugadores": "bir takım yediden az oyuncuyla kaldı",
+  "Sobre el papel, dos onces parejos (media %d frente a %d).": "Kağıt üzerinde iki denk ilk on bir (ortalama %d'ye karşı %d)."
  }
 }

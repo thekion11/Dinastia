@@ -111,6 +111,10 @@ static func montar(raiz: Control, p: Partido, mi_club: Club, descanso: bool) -> 
 	var titulo := EstiloAvanzar.etiqueta(Idiomas.t(clave), 22, col, true, true)
 	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	poner(raiz, titulo, "titulo")
+	if p.suspendido and not descanso:   ## (17-11) el resumen dice por qué terminó antes
+		var sus := EstiloAvanzar.etiqueta("%s · %d' · %s" % [Idiomas.t("Partido suspendido"), p.minuto, Idiomas.t("un equipo se quedó con menos de siete jugadores")], 16, ROJO, true)
+		sus.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		poner(raiz, sus, "minuto")
 	if descanso:
 		var minuto := EstiloAvanzar.etiqueta("45'", 18, AMARILLO, true)
 		minuto.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
