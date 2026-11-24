@@ -3,7 +3,37 @@ extends "res://pruebas/banco/guardado_p2.gd"
 
 
 ## Tramo 2 de 2 de `_probar_guardado` (la norma de 450 líneas la troceó).
+
 func _probar_guardado_2(m: Mundo, v_rp) -> Array:
+	_g2_rol(m, v_rp)
+	_g2_arbol_dt(m)
+	_g2_salon_fama(m)
+	var cand := _g2_preparar(m)
+	var jp := _g2_campos_extra(m)
+	var antes_caja := m.mi_club().saldo
+	var antes_jug := m.cuantos_jugadores()
+	var antes_tabla := m.ligas[0].tabla()
+	var antes_jornada := m.ligas[0].jornada_actual
+	var estado_azar: int = _g2_guardar(m, antes_jug)
+	var carga := _g2_cargar(m)
+	var m2: Mundo = carga[0]
+	if m2 == null:
+		return [true, null]
+	var azar_cargado: int = carga[1]
+	_g2_vuelve_mundo(m, m2, antes_caja, antes_jug, antes_jornada, cand)
+	_g2_tabla_y_once(m, m2, antes_tabla)
+	_comprobar_estado_cargado(m, m2)
+	_g2_jugador_identico(m, m2)
+	_comprobar(azar_cargado == estado_azar, "vuelve el ESTADO del azar: cargar y seguir es lo mismo que seguir")
+	_g2_posiciones_y_libro(m, m2, jp)
+	_g2_id_nuevo(m2)
+	_g2_seguir(m2, antes_jornada)
+	var lista := Partida.listar()
+	_comprobar(lista.size() >= 1, "el guardado aparece en la lista (%d)" % lista.size())
+	Partida.borrar("prueba_banco")
+	return [false]
+
+func _g2_rol(m: Mundo, v_rp) -> void:
 	if v_rp != null:
 		var plantel_rp := m.mi_club().plantilla.duplicate()
 		plantel_rp.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
@@ -24,6 +54,7 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 			"rebajarle el papel a un crack le cuesta moral")
 		_comprobar(v_rp.rol_plantel(crack) == "titular", "y el papel nuevo queda escrito")
 
+func _g2_arbol_dt(m: Mundo) -> void:
 	## EL ARBOL DEL ENTRENADOR: igual que los roles, estaba escrito y sin
 	## pantalla. Lo que hay que demostrar es la CADENA -requisito, coste, y que
 	## el nodo abierto llega al equipo-, no que la tabla exista.
@@ -64,6 +95,7 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 		e_dt.dt_nodos = nodos_antes
 		e_dt.dt_puntos = pts_antes
 
+func _g2_salon_fama(m: Mundo) -> void:
 	## EL SALON DE LA FAMA (`vMemoria()`): no es una lista guardada, se deduce de
 	## los records. Lo que se comprueba es el ORDEN -que estar en el once de un
 	## titulo pese mas que una temporada goleadora-, porque es la unica decision
@@ -89,6 +121,7 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	lg_f.rec["pj"] = pj_antes
 	lg_f.muro = muro_antes
 
+func _g2_preparar(m: Mundo) -> Array:
 	m.directiva.mover_confianza(-13, "prueba")
 	m.mi_club().mover_saldo(2000000)
 	m.directiva.alternar_consejero("dep")
@@ -105,6 +138,9 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	## prueba nada, porque todo está a cero y a cero se parece cualquier cosa.
 	for s in 10:
 		m.avanzar_semana()
+	return cand
+
+func _g2_campos_extra(m: Mundo) -> Jugador:
 	## 28-10 (auditoría): campos que no se guardaban y el estado del azar.
 	var jp: Jugador = m.mi_club().plantilla[0]
 	jp.pos_sec.assign(["MC"])
@@ -117,11 +153,9 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	m.rotacion_activa = true
 	m.bono_analisis = 1.04
 	m.fin_partida = {"motivo": "invicto", "anio": m.anio, "semana": m.semana}
-	var antes_caja := m.mi_club().saldo
-	var antes_jug := m.cuantos_jugadores()
-	var antes_tabla := m.ligas[0].tabla()
-	var antes_jornada := m.ligas[0].jornada_actual
+	return jp
 
+func _g2_guardar(m: Mundo, antes_jug: int) -> int:
 	var t0 := Time.get_ticks_msec()
 	_comprobar(Partida.guardar(m, "prueba_banco"), "la partida se guarda")
 	var ms_guardar := Time.get_ticks_msec() - t0
@@ -132,14 +166,17 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 		f.close()
 	_linea("  %d jugadores -> %d KB comprimidos, %d ms" % [antes_jug, bytes / 1024, ms_guardar])
 	_comprobar(bytes > 0 and bytes < 4 * 1024 * 1024, "el fichero es manejable (%d KB)" % (bytes / 1024))
+	return estado_azar
 
-	t0 = Time.get_ticks_msec()
+func _g2_cargar(m: Mundo) -> Array:
+	var t0 := Time.get_ticks_msec()
 	var m2 := Partida.cargar("prueba_banco")
 	var azar_cargado: int = Azar._rng.state   ## nada más cargar: las comprobaciones de abajo pueden gastar azar
 	_linea("  cargado en %d ms" % (Time.get_ticks_msec() - t0))
 	_comprobar(m2 != null, "la partida se carga")
-	if m2 == null:
-		return [true, null]
+	return [m2, azar_cargado]
+
+func _g2_vuelve_mundo(m: Mundo, m2: Mundo, antes_caja: int, antes_jug: int, antes_jornada: int, cand: Array) -> void:
 	_comprobar(m2.anio == m.anio and m2.semana == m.semana, "vuelve el almanaque (%d, semana %d)" % [m2.anio, m2.semana])
 	_comprobar(m2.mi_club_id == m.mi_club_id, "vuelve tu club")
 	_comprobar(m2.cuantos_jugadores() == antes_jug, "vuelven los %d jugadores" % antes_jug)
@@ -150,6 +187,7 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	_comprobar(not cand.is_empty() and not m2.directiva.embajador.is_empty() and m2.directiva.embajador["nombre"] == cand[0]["nombre"], "vuelve el embajador contratado")
 	_comprobar(m2.ojeadores != null and m2.ojeadores.modo_ciego, "vuelve el modo ciego activado")
 
+func _g2_tabla_y_once(m: Mundo, m2: Mundo, antes_tabla: Array) -> void:
 	## La tabla tiene que volver ENTERA y en el mismo orden. Es lo que se pierde
 	## si el calendario se rearma sin volver a poner los puntos encima.
 	var tabla2 := m2.ligas[0].tabla()
@@ -173,12 +211,7 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	_comprobar(mismo_once, "y son exactamente los mismos once, en el mismo orden")
 	_comprobar(bool(m2.tienda.get("buf", false)), "vuelve la linea de tienda lanzada")
 
-	## OJO CON EL ORDEN DE ESTAS PRUEBAS: todo lo que compare el mundo cargado
-	## con el original tiene que ir ANTES de seguir jugando con el cargado. Al
-	## reves, la copa de `m2` ya habia avanzado tres rondas mas que la de `m` y
-	## la comparacion fallaba sin que hubiera nada roto.
-	_comprobar_estado_cargado(m, m2)
-
+func _g2_jugador_identico(m: Mundo, m2: Mundo) -> void:
 	## Los detalles de un jugador concreto, que es donde se ve si el mapeo de
 	## claves cortas esta bien hecho. Va ANTES de "seguir jugando" y no despues
 	## -misma regla que el resto de esta prueba-: con Cantera enganchada, cinco
@@ -197,7 +230,7 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 	else:
 		_comprobar(false, "el jugador de prueba no aparece tras cargar")
 
-	_comprobar(azar_cargado == estado_azar, "vuelve el ESTADO del azar: cargar y seguir es lo mismo que seguir")
+func _g2_posiciones_y_libro(m: Mundo, m2: Mundo, jp: Jugador) -> void:
 	var jx: Jugador = null
 	for j in m2.mi_club().plantilla:
 		if j.id == jp.id:
@@ -216,6 +249,8 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 		and String(m2.fin_partida.get("motivo", "")) == "invicto" and int(m2.fin_partida.get("anio", 0)) == m.anio,
 		"vuelven años en el club, rotación, bono de análisis y fin de partida (%d %s %.2f %s)" % [m2.anios_en_club, str(m2.rotacion_activa), m2.bono_analisis, str(m2.fin_partida)])
 	Partido.ex_de_mi_club.erase("j_prueba_ex")
+
+func _g2_id_nuevo(m2: Mundo) -> void:
 	var nuevo := m2.crear_jugador(m2.mi_club(), "MED", "MC")
 	var repetido := 0
 	for c: Club in m2.clubes.values():
@@ -224,20 +259,16 @@ func _probar_guardado_2(m: Mundo, v_rp) -> Array:
 				repetido += 1
 	_comprobar(repetido == 0, "un jugador creado tras cargar estrena id (%s), no pisa a otro" % nuevo.id)
 
+func _g2_seguir(m2: Mundo, antes_jornada: int) -> void:
 	## Y lo mas facil de romper: que se pueda SEGUIR jugando desde donde estaba.
 	for s in 5:
 		m2.avanzar_semana()
 	_comprobar(m2.ligas[0].jornada_actual == antes_jornada + 5, "se puede seguir jugando tras cargar")
 
-	var lista := Partida.listar()
-	_comprobar(lista.size() >= 1, "el guardado aparece en la lista (%d)" % lista.size())
-	Partida.borrar("prueba_banco")
-	return [false]
-
 func _probar_guardado() -> void:
-	var _r1 = _probar_guardado_1()
-	var m: Mundo = _r1[0]
-	var v_rp = _r1[1]
-	var _r2 = _probar_guardado_2(m, v_rp)
-	if _r2[0]:
+	var r1 = _probar_guardado_1()
+	var m: Mundo = r1[0]
+	var v_rp = r1[1]
+	var r2 = _probar_guardado_2(m, v_rp)
+	if r2[0]:
 		return

@@ -1,104 +1,5 @@
-extends RefCounted
-## [Capa 1/2 de `recorrido_club.gd`] aviso_de, y_de, menu_ascensor, respuesta_oficio, dialogo, dialogo_portero … (+6)
-
-## Cómo te recibe cada uno (lo primero que dice al acercarte).
-const SALUDOS := {
-	"conserje": "Buenas, míster. Hoy entra usted temprano, ¿eh? Yo abro a las siete.",
-	"jardinero": "Cuidado con pisar el área chica, que la acabo de resembrar.",
-	"hincha": "¡Míster! Treinta años en esta puerta. Ganemos el domingo, por favor.",
-	"utilero": "Las camisetas ya están lavadas y colgadas. Cada uno en su sitio.",
-	"medico": "Pase, pase. Le cuento cómo están los tocados.",
-	"chofer": "El bus está listo cuando usted diga. Yo no escucho nada… casi nada.",
-	"secretaria": "Tiene tres llamadas del presidente y un contrato para firmar.",
-	"ojeador": "Estoy viendo a un chico del barrio. Tiene algo, se lo digo yo.",
-	"presidente": "Siéntese. Hablemos de cómo va esto.",
-	"prensa": "La sala está lista. Intente no encender ningún fuego hoy.",
-	"cocinera": "Hoy hay legumbres. Y nadie se levanta sin terminar el plato.",
-	"portero": "Aquí estoy, míster. Nadie entra sin que yo lo vea.",
-}
-
-const PREGUNTA_OFICIO := {
-	"medico": "¿Cómo está la enfermería?",
-	"cocinera": "¿Cómo ves al grupo?",
-	"jardinero": "¿Cómo está el césped?",
-	"secretaria": "¿Cómo va la caja?",
-	"utilero": "¿Quién está más fino esta semana?",
-	"ojeador": "¿Algún chico de la cantera que valga?",
-}
-
-## ¿La última respuesta fue mala noticia? (para la cara de quien la dice)
-static var _ultima_mala := false
-
-## Lo que cuenta el portero si le preguntas (gente ficticia del club).
-const NOVEDADES_PORTERO := [
-	"Esta mañana vino un periodista preguntando por usted. Le dije que no estaba.",
-	"El jefe de cancha lleva dos horas regando la misma esquina. Algo le pasa con esa esquina.",
-	"Han llegado las camisetas nuevas; el utilero no deja ni mirarlas.",
-	"Anoche se quedó encendida la luz de la sala de vídeo. Ya la apagué yo.",
-	"Un chico del barrio dejó una carta para el capitán. La tengo guardada aquí.",
-	"El de la puerta 7 ya está ahí fuera. Dice que hoy no se mueve hasta el domingo.",
-	"El bus salió a lavar y volvió más sucio. No pregunte.",
-]
-## Lo común a recorrer el estadio a pie, desde la ciudad (`ExploradorCiudad`)
-## o desde la vista del estadio (`ExploradorEstadio`): el texto de cada zona y
-## el panel del ascensor del edificio del club (estadio interactivo 2.0).
-
-## El aviso de abajo al entrar en una zona.
-static func aviso_de(nombre: String, club: String = "") -> String:
-	match nombre:
-		"Vestuario":
-			return Idiomas.t("El vestuario. Por el túnel se sale al campo.")
-		"Túnel":
-			return Idiomas.t("El túnel. Al fondo se oye la grada.")
-		"Banda":
-			return Idiomas.t("¡A la cancha!")
-		"Acceso":
-			return Idiomas.t("E: salir a la calle")
-		"Ascensor":
-			return Idiomas.t("E: llamar al ascensor")
-		"Pasillo", "Campo", "":
-			return ""
-	return Idiomas.t(nombre)
-
-## La altura del suelo de una planta.
-static func y_de(planta: int) -> float:
-	return float(planta) * EdificioClub.ALTO_PLANTA + 0.02
-
-## El panel del ascensor: un botón por planta. `al_elegir(planta)`.
-static func menu_ascensor(capa: CanvasLayer, actual: int, al_elegir: Callable) -> PanelContainer:
-	var panel := PanelContainer.new()
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left = -190
-	panel.offset_right = 190
-	panel.offset_top = -170
-	panel.offset_bottom = 170
-	panel.add_theme_stylebox_override("panel", CuadroDialogo.estilo_panel())
-	var caja := VBoxContainer.new()
-	caja.add_theme_constant_override("separation", 6)
-	panel.add_child(caja)
-	var t := Label.new()
-	t.text = "🛗 " + Idiomas.t("Ascensor")
-	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	t.add_theme_font_size_override("font_size", 20)
-	caja.add_child(t)
-	var plantas := EdificioClub.plantas()
-	plantas.reverse()
-	for p: int in plantas:
-		var b := Button.new()
-		b.text = "%s %d · %s" % ["▶" if p == actual else "  ", p, Idiomas.t(EdificioClub.nombre_planta(p))]
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.disabled = p == actual
-		b.focus_mode = Control.FOCUS_ALL
-		b.pressed.connect(func() -> void:
-			panel.queue_free()
-			al_elegir.call(p))
-		caja.add_child(b)
-	var cerrar := Button.new()
-	cerrar.text = Idiomas.t("Cerrar")
-	cerrar.pressed.connect(func() -> void: panel.queue_free())
-	caja.add_child(cerrar)
-	capa.add_child(panel)
-	return panel
+extends "res://visor/recorrido_club_p0.gd"
+## [Capa 2/3 de `recorrido_club.gd`] respuesta_oficio (y sus auxiliares), dialogo, butacas y hinchas
 
 ## Lo que contesta, sacado de la partida.
 static func respuesta_oficio(clave: String, m: Mundo) -> String:
@@ -106,6 +7,20 @@ static func respuesta_oficio(clave: String, m: Mundo) -> String:
 	var c := m.mi_club()
 	if c == null:
 		return Idiomas.t("Hoy no sé qué decirle, míster.")
+	var r_respuesta_oficio_1: Variant = _respuesta_oficio_1(m, clave)
+	if r_respuesta_oficio_1 != null:
+		return r_respuesta_oficio_1
+	var r_respuesta_oficio_2: Variant = _respuesta_oficio_2(m, clave)
+	if r_respuesta_oficio_2 != null:
+		return r_respuesta_oficio_2
+	var extra := RecorridoCharla.respuesta(clave, m, c)
+	if String(extra[0]) != "":
+		_ultima_mala = bool(extra[1])
+		return String(extra[0])
+	return Idiomas.t("Hoy no sé qué decirle, míster.")
+
+static func _respuesta_oficio_1(m: Mundo, clave: String) -> Variant:
+	var c := m.mi_club()
 	match clave:
 		"medico":
 			var fuera: Array = []
@@ -135,6 +50,11 @@ static func respuesta_oficio(clave: String, m: Mundo) -> String:
 				return Idiomas.t("Aguanta, pero hay calvas en las áreas. Riego cada noche.")
 			_ultima_mala = true
 			return Idiomas.t("Sufre, míster. Necesita descanso o una inversión.")
+	return null
+
+static func _respuesta_oficio_2(m: Mundo, clave: String) -> Variant:
+	var c := m.mi_club()
+	match clave:
 		"secretaria":
 			var sem := int(c.saldo / maxi(1, c.masa_salarial())) if c.saldo > 0 else 0
 			_ultima_mala = sem < 8
@@ -155,11 +75,8 @@ static func respuesta_oficio(clave: String, m: Mundo) -> String:
 			if joven == null:
 				return Idiomas.t("En el primer equipo no hay chicos. Mire la academia.")
 			return Idiomas.t("%s, %d años. Tiene techo de %d. No lo queme.") % [Nombres.visible(joven.nombre), joven.edad, joven.pot]
-	var extra := RecorridoCharla.respuesta(clave, m, c)
-	if String(extra[0]) != "":
-		_ultima_mala = bool(extra[1])
-		return String(extra[0])
-	return Idiomas.t("Hoy no sé qué decirle, míster.")
+	return null
+
 
 ## La conversación en persona con alguien del club. `g` es de
 ## `PersonalEstadio.gente`. Usa la partida si está a mano (`Gente.charlar`,
@@ -191,7 +108,7 @@ static func dialogo(capa: CanvasLayer, personal, g: Dictionary, desde: Vector3) 
 	## El saludo varía con la hora y la semana (`RecorridoCharla`).
 	var pasillo := RecorridoCharla.pasillo(m, g)   ## bloque 7: por tu nombre, según la afinidad
 	CuadroDialogo.escribir(dice, "«%s%s»" % [pasillo + " " if pasillo != "" else "", RecorridoCharla.saludo(String(g["clave"]),
-		String(SALUDOS.get(String(g["clave"]), "Buenas, míster.")), m.semana if m != null else -1, load("res://visor/personal_estadio.gd").hora)])
+		String(SALUDOS.get(String(g["clave"]), "Buenas, míster.")), m.semana if m != null else -1, load(_RUTA_PERSONAL_ESTADIO).hora)])
 	var clave := String(g["clave"])
 	var cerrar := func() -> void:
 		personal.atender(g, desde, false)
@@ -266,7 +183,7 @@ static func dialogo_portero(capa: CanvasLayer, personal, g: Dictionary, desde: V
 	dice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dice.custom_minimum_size = Vector2(610, 0)
 	dice.add_theme_font_size_override("font_size", 19)
-	var h = load("res://visor/personal_estadio.gd").hora
+	var h = load(_RUTA_PERSONAL_ESTADIO).hora
 	var saludo := "Buenas, míster."
 	if h >= 0.0:
 		saludo = "Buenos días, míster." if h < 13.0 else ("Buenas tardes, míster." if h < 20.5 else "Buenas noches, míster. Aquí sigo de guardia.")
@@ -343,13 +260,13 @@ static func _butaca_real(raiz: Node, cerca_de_local: Vector3, signo_x: float) ->
 ## `z`, en la fila `fila` (cada 0,8 m de fondo). Devuelve {pos, rumbo} con el
 ## rumbo mirando al campo.
 static func butaca(est: Dictionary, signo_x: float, z: float, fila: int = 3, raiz: Node = null) -> Dictionary:
-	var g = load("res://visor/stadium_builder.gd").geom_de_forma(String(est.get("forma", "cuenco")))
+	var g = load(_RUTA_STADIUM_BUILDER).geom_de_forma(String(est.get("forma", "cuenco")))
 	var dx: float = g["dx"]
 	var dz: float = g["dz"]
 	var d := 0.6 + float(fila) * 0.8
-	var ang = deg_to_rad(load("res://visor/stadium_builder.gd").RAKE_GRADOS)
-	var x = signo_x * (dx - load("res://visor/stadium_builder.gd").FRENTE_TRIBUNA + d)
-	var y = load("res://visor/stadium_builder.gd").ALTURA_PIE + d * tan(ang) + 0.2
+	var ang = deg_to_rad(load(_RUTA_STADIUM_BUILDER).RAKE_GRADOS)
+	var x = signo_x * (dx - load(_RUTA_STADIUM_BUILDER).FRENTE_TRIBUNA + d)
+	var y = load(_RUTA_STADIUM_BUILDER).ALTURA_PIE + d * tan(ang) + 0.2
 	var zz := clampf(z, -(dz - 12.0), dz - 12.0)
 	var aprox := Vector3(x, y, zz)
 	## 21-10-2026: con el estadio en la escena, la butaca DE VERDAD más cercana
@@ -396,8 +313,8 @@ static func camino_a_butaca(raiz: Node, butaca_local: Vector3) -> Array[Vector3]
 	## La escalera de acceso: desde el suelo, hacia el campo, sube peldaño a
 	## peldaño hasta el pie del pasillo (`StadiumBuilder._escaleras_de_acceso`).
 	var hacia_campo := Vector3(-signf(pie.x), 0, 0)
-	var n = int(ceil((pie.y - 0.05) / load("res://visor/stadium_builder.gd").PELDANO_ALTO))
-	var suelo = r3.to_local(pie + hacia_campo * (0.45 + float(n) * load("res://visor/stadium_builder.gd").PELDANO_FONDO + 0.4))
+	var n = int(ceil((pie.y - 0.05) / load(_RUTA_STADIUM_BUILDER).PELDANO_ALTO))
+	var suelo = r3.to_local(pie + hacia_campo * (0.45 + float(n) * load(_RUTA_STADIUM_BUILDER).PELDANO_FONDO + 0.4))
 	suelo.y = 0.0
 	camino.append(suelo)
 	camino.append(r3.to_local(pie + hacia_campo * 0.45) + Vector3(0, 0.25, 0))

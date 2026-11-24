@@ -34,13 +34,13 @@ static func leer(e: Node, respaldo: Vector2) -> Vector2:
 	return respaldo
 
 ## El botón de la cámara (primera / tercera persona; en coche cambia de vista): manda la tecla V.
-static func boton_camara(tam: float, visible_: bool) -> Button:
+static func boton_camara(tam: float, visible_arg: bool) -> Button:
 	var bc := Button.new()
 	bc.text = "◉"
 	bc.custom_minimum_size = Vector2(tam, tam)
-	bc.add_theme_font_size_override("font_size", 28)
+	bc.add_theme_font_size_override("font_size", Tema.letra(28))
 	bc.modulate = Color(1, 1, 1, 0.75)
-	bc.visible = visible_
+	bc.visible = visible_arg
 	bc.pressed.connect(func() -> void:
 		var ev := InputEventKey.new()
 		ev.keycode = KEY_V

@@ -62,6 +62,13 @@ static func puntuacion(j: Jugador, fila: Array) -> float:
 	return s
 
 static func estrellas_de(puntos: float) -> int:
+	var nat := Nativo.de("nuc_estrellas_de")
+	if nat != null:
+		return nat.nuc_estrellas_de(puntos)
+	return estrellas_de_gd(puntos)
+
+## Gemela GDScript de `nuc_estrellas_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func estrellas_de_gd(puntos: float) -> int:
 	var n := 0
 	for u: float in UMBRALES:
 		if puntos >= u:

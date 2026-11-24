@@ -59,7 +59,7 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 			if not tocar_pelo:
 				pass
 			elif pelo_foto.a > 0.0:
-				_teñir_pelo(d.get("nodo", modelo), pelo_foto)
+				_tenir_pelo(d.get("nodo", modelo), pelo_foto)
 			## Pelo, barba, cejas y pestañas por capas, medidos en la foto.
 			var geo := CaraMalla.geometria(nombre_foto)
 			if not tocar_pelo:
@@ -126,7 +126,8 @@ static func poner_cara(d: Dictionary, datos: Dictionary, piel: Color) -> bool:
 						var cp := compensar_piel(gris)
 						v = Vector3(pow(v.x / gg, 1.0 / cp), pow(v.y / gg, 1.0 / cp),
 							pow(v.z / gg, 1.0 / cp)) * gg
-						mc.set_shader_parameter("piel_foto", v * e)
+						mc.set_shader_parameter("piel_foto", v * e * albedo_piel(gris * e))
+						mc.set_shader_parameter("relleno_piel", relleno_piel(gris))
 					elif foto != null:
 						mc.set_shader_parameter("hay_foto", true)
 						mc.set_shader_parameter("foto_tex", foto)

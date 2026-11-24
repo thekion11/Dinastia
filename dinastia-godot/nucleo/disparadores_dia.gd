@@ -16,7 +16,7 @@ const ULTIMATUM_HASTA := 24          ## «Tu puesto está en el aire» (`Directi
 const ENFRIAMIENTO_ULTIMATUM := 8    ## semanas mínimas entre dos ultimátums
 
 static func nuevo_estado() -> Dictionary:
-	return {"vistos": {}, "ultimatum": -999, "imp_ult": ""}
+	return {"vistos": {}, "ultimatum": -999, "imp_ult": "", "sancion_ult": 0, "abiertos": {}}
 
 static func _abs(m: Mundo) -> int:
 	return m.anio * 60 + m.semana
@@ -143,6 +143,19 @@ static func de_segunda_tanda(m: Mundo, est: Dictionary) -> Array:
 	out.append_array(de_sancion_dt(m, est))
 	return out
 
+## (19-11) Un asunto ABIERTO (oferta, exigencia, decisión pendiente): true solo cuando se abre uno distinto del que ya se mostró; cuando se cierra
+## (`actual` = "") se olvida, así que si el MISMO vuelve más tarde (otra oferta de la misma selección) se avisa de nuevo. Antes se marcaba para siempre.
+static func _abierto(est: Dictionary, clave: String, actual: String) -> bool:
+	var abiertos: Dictionary = est.get("abiertos", {})
+	est["abiertos"] = abiertos
+	if actual == "":
+		abiertos.erase(clave)
+		return false
+	if String(abiertos.get(clave, "")) == actual:
+		return false
+	abiertos[clave] = actual
+	return true
+
 ## Un hecho que sale una sola vez: devuelve true la primera vez que se pide `id`.
 static func _nuevo(est: Dictionary, id: String) -> bool:
 	if (est["vistos"] as Dictionary).has(id):
@@ -153,12 +166,10 @@ static func _nuevo(est: Dictionary, id: String) -> bool:
 ## La guerra de agentes abierta (`Cantera.exigencia`): el representante exige algo; el texto lo trae el propio sistema.
 static func de_guerra_agentes(m: Mundo, est: Dictionary) -> Array:
 	var out: Array = []
-	if m.cantera == null or m.cantera.exigencia.is_empty():
+	if m.cantera == null or not _abierto(est, "agentes", "" if m.cantera.exigencia.is_empty() else "%s:%s" % [String(m.cantera.exigencia.get("agente", "")), String(m.cantera.exigencia.get("tipo", ""))]):
 		return out
 	var e: Dictionary = m.cantera.exigencia
 	var id := "agentes:%s:%s:%d" % [String(e.get("agente", "")), String(e.get("tipo", "")), _abs(m)]
-	if not _nuevo(est, "agentes:%s:%s" % [String(e.get("agente", "")), String(e.get("tipo", ""))]):
-		return out
 	var ev := _ev(id, "guerra_agentes", EventosDia.PANTALLA, "", "guerra_agentes", {"tipo": String(e.get("tipo", "")), "perfil": String(e.get("perfil", "")), "agente": String(e.get("agente", ""))})
 	ev["texto"] = Idiomas.t(String(e.get("txt", "")))
 	out.append(ev)
@@ -167,12 +178,10 @@ static func de_guerra_agentes(m: Mundo, est: Dictionary) -> Array:
 ## El asunto abierto de la cantera (`EventosCantera.pendiente`): torneo, abandono o padres. Es una DECISIÓN con opciones (`DecisionesDia`): pantalla completa.
 static func de_cantera(m: Mundo, est: Dictionary) -> Array:
 	var out: Array = []
-	if m.eventos_cantera == null or m.eventos_cantera.pendiente.is_empty():
+	if m.eventos_cantera == null or not _abierto(est, "cantera", "" if m.eventos_cantera.pendiente.is_empty() else "%s:%s" % [String(m.eventos_cantera.pendiente.get("tipo", "")), String(m.eventos_cantera.pendiente.get("id", ""))]):
 		return out
 	var p: Dictionary = m.eventos_cantera.pendiente
 	var id := "cantera:%s:%s:%d" % [String(p.get("tipo", "")), String(p.get("id", "")), _abs(m)]
-	if not _nuevo(est, "cantera:%s:%s" % [String(p.get("tipo", "")), String(p.get("id", ""))]):
-		return out
 	var ev := _ev(id, "evento_cantera", EventosDia.PANTALLA, "", "evento_cantera", {"tipo": String(p.get("tipo", "")), "chico": String(p.get("id", ""))})
 	ev["texto"] = Idiomas.t(String(p.get("tema", "")))
 	out.append(ev)
@@ -229,22 +238,24 @@ static func de_cambio_dt(m: Mundo, est: Dictionary) -> Array:
 ## Una selección te llama (`CargoSeleccion.oferta`): PANTALLA, es una decisión de carrera.
 static func de_seleccion(m: Mundo, est: Dictionary) -> Array:
 	var out: Array = []
-	if m.selecciones == null or m.selecciones.cargo.oferta.is_empty():
+	if m.selecciones == null or not _abierto(est, "seleccion", String(m.selecciones.cargo.oferta.get("nombre", ""))):
 		return out
 	var o: Dictionary = m.selecciones.cargo.oferta
 	var id := "seleccion:%s:%d" % [String(o.get("nombre", "")), _abs(m)]
-	if not _nuevo(est, "seleccion:%s" % String(o.get("nombre", ""))):
-		return out
 	out.append(_ev(id, "oferta_seleccion", EventosDia.PANTALLA, "", "oferta_seleccion", {"seleccion": String(o.get("nombre", "")), "fuerza": int(o.get("fuerza", 0)), "sueldo": int(o.get("sueldo", 0))}))
 	return out
 
 ## El tribunal sanciona al DT (`Federacion.dt_suspension`): aviso en «prensa» con las fechas.
 static func de_sancion_dt(m: Mundo, est: Dictionary) -> Array:
 	var out: Array = []
-	if m.federacion == null or m.federacion.dt_suspension <= 0:
+	if m.federacion == null:
+		return out
+	## (19-11) Solo cuando las fechas SUBEN (sanción nueva o ampliada): al cumplirse partido a partido (3 → 2 → 1) no se repite el aviso.
+	var quedan := m.federacion.dt_suspension
+	var antes := int(est.get("sancion_ult", 0))
+	est["sancion_ult"] = quedan
+	if quedan <= 0 or quedan <= antes:
 		return out
 	var id := "sancion:%d" % _abs(m)
-	if not _nuevo(est, "sancion:%d" % m.federacion.dt_suspension):
-		return out
 	out.append(_ev(id, "sancion_dt", EventosDia.AVISO, "prensa", "sancion_dt", {"fechas": m.federacion.dt_suspension}))
 	return out

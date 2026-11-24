@@ -113,7 +113,7 @@ static func _degradado_radial(centro: Color, borde: Color, desde := 0.0) -> Grad
 	t.gradient = g
 	t.fill = GradientTexture2D.FILL_RADIAL
 	t.fill_from = Vector2(0.5, 0.5)
-	t.fill_to = Vector2(1.0, 0.5) if desde == 0.0 else Vector2(1.08, 1.08)
+	t.fill_to = Vector2(1.0, 0.5) if is_zero_approx(desde) else Vector2(1.08, 1.08)
 	t.width = 128
 	t.height = 128
 	return t

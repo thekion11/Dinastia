@@ -7,6 +7,13 @@ const SNACK := {"id": "snack", "nombre": "Bocadillo envasado", "precio": 2, "ene
 const AGUA := {"id": "agua", "nombre": "Botella de agua", "precio": 1, "energia": 1, "hambre": 0}
 
 static func elegir(energia: int, hambre: int) -> Dictionary:
+	var nat := Nativo.de("nuc_elegir_expendedora")
+	if nat != null:
+		return nat.nuc_elegir_expendedora(energia, hambre)
+	return elegir_gd(energia, hambre)
+
+## Gemela GDScript de `nuc_elegir_expendedora` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func elegir_gd(energia: int, hambre: int) -> Dictionary:
 	if energia < 60:
 		return BEBIDA
 	if hambre >= 40:

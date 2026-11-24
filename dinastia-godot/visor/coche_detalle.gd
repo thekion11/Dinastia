@@ -40,12 +40,15 @@ static func _dibujar(img: Image, texto: String, x0: int, y0: int, esc: int, col:
 	var x := x0
 	for ch in texto:
 		if FUENTE.has(ch):
-			var filas: Array = FUENTE[ch]
-			for fy in 7:
-				for fx in 5:
-					if (int(filas[fy]) >> (4 - fx)) & 1:
-						img.fill_rect(Rect2i(x + fx * esc, y0 + fy * esc, esc, esc), col)
+			_dibujar_glifo(img, FUENTE[ch], x, y0, esc, col)
 		x += 6 * esc if ch != " " else 3 * esc
+
+## Pinta un carácter de 5x7 (filas de bits) en la imagen (sacado de `_dibujar`).
+static func _dibujar_glifo(img: Image, glifo: Array, x: int, y0: int, esc: int, col: Color) -> void:
+	for fy in 7:
+		for fx in 5:
+			if (int(glifo[fy]) >> (4 - fx)) & 1:
+				img.fill_rect(Rect2i(x + fx * esc, y0 + fy * esc, esc, esc), col)
 
 static func placa(i: int) -> StandardMaterial3D:
 	if _placas.is_empty():

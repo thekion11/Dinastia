@@ -14,6 +14,13 @@ static func dibujar(tipo: String, v: String) -> bool:
 		"estatua": _estatua(v)
 		"moai": _moai()
 		"torre_inclinada": _pisa()
+		_:
+			return _dibujar_mas(tipo, v)
+	return true
+
+## El resto de los monumentos (mismo orden de antes).
+static func _dibujar_mas(tipo: String, v: String) -> bool:
+	match tipo:
 		"rascacielos": _rascacielos(v)
 		"torre_tv": _torre_tv(v)
 		"faro": _faro()

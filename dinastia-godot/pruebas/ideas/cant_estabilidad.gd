@@ -75,10 +75,10 @@ func _foto(m: Mundo) -> Dictionary:
 			np += 1
 	var k := maxf(1.0, float(n))
 	ovrs.sort()
-	var var_ := 0.0
+	var var_loc := 0.0
 	for o in ovrs:
-		var_ += pow(float(o) - ovr / k, 2.0)
-	return {"n": n, "p95": ovrs[int(ovrs.size() * 0.95)], "p10": ovrs[int(ovrs.size() * 0.10)], "sd": sqrt(var_ / k), "ovr": ovr / k, "edad": edad / k, "valor": valor / k, "sin_mio": (valor - mio) / maxf(1.0, k - nmio), "nmio": nmio, "tasado": tasado / k, "precoces": precoces, "jovenes_80": jov80,
+		var_loc += pow(float(o) - ovr / k, 2.0)
+	return {"n": n, "p95": ovrs[int(ovrs.size() * 0.95)], "p10": ovrs[int(ovrs.size() * 0.10)], "sd": sqrt(var_loc / k), "ovr": ovr / k, "edad": edad / k, "valor": valor / k, "sin_mio": (valor - mio) / maxf(1.0, k - nmio), "nmio": nmio, "tasado": tasado / k, "precoces": precoces, "jovenes_80": jov80,
 		"m_jov": sj / maxf(1.0, float(nj)), "m_pico": sp / maxf(1.0, float(np))}
 
 func _texto(f: Dictionary) -> String:

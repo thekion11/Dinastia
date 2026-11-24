@@ -64,6 +64,12 @@ static func _montana(v: String) -> void:
 				-0.1, 0.94, 0.0, 1.0, 0.1, 0.92, 0.2, 0.64, 0.32, 0.66, 0.42, 0.86, 0.5, 0.74, 0.58, 0.44,
 				0.9, 0.3, 1.2, 0.0])
 			PaisTrazo.pol([-0.1, 0.94, 0.0, 1.0, 0.1, 0.92, 0.06, 0.86, -0.06, 0.88], true)
+		_:
+			_montana_mas(v)
+
+## Las montañas de la segunda mitad de la lista (mismo orden de antes).
+static func _montana_mas(v: String) -> void:
+	match v:
 		"pan":
 			## El Pan de Azúcar (y el Peñol): la mole redondeada que sale de golpe.
 			var p: Array = [-0.5, 0.0]
@@ -81,6 +87,12 @@ static func _montana(v: String) -> void:
 			for i in 14:
 				var x := -1.0 + i * 0.15
 				PaisTrazo.linea(x, 0.4, x + 0.02, 0.08, 0.004, true)
+		_:
+			_montana_mas2(v)
+
+## Las montañas de la tercera parte de la lista (mismo orden de antes).
+static func _montana_mas2(v: String) -> void:
+	match v:
 		"terrazas":
 			## Machu Picchu: el Huayna Picchu detrás y la ciudadela en terrazas.
 			PaisTrazo.cresta([-1.2, 0.0, -0.9, 0.26, -0.4, 0.34, 0.1, 0.4, 0.28, 0.7, 0.42, 0.95, 0.52, 1.0,
@@ -92,6 +104,12 @@ static func _montana(v: String) -> void:
 				PaisTrazo.rect(float(c[0]), float(c[1]), float(c[0]) + 0.1, float(c[1]) + 0.05)
 				PaisTrazo.pol([float(c[0]) - 0.01, float(c[1]) + 0.05, float(c[0]) + 0.11, float(c[1]) + 0.05,
 					float(c[0]) + 0.05, float(c[1]) + 0.09])
+		_:
+			_montana_mas3(v)
+
+## Las montañas del final de la lista (mismo orden de antes).
+static func _montana_mas3(v: String) -> void:
+	match v:
 		"glaciar":
 			PaisTrazo.cresta([-1.2, 0.0, -0.9, 0.7, -0.6, 0.86, -0.3, 0.68, 0.1, 0.9, 0.5, 0.74, 0.9, 0.62, 1.2, 0.0])
 			PaisTrazo.pol([-1.2, 0.0, 1.2, 0.0, 1.2, 0.3, 0.9, 0.36, 0.7, 0.32, 0.5, 0.4, 0.3, 0.35, 0.1, 0.42,
@@ -140,6 +158,7 @@ static func _montana(v: String) -> void:
 			PaisTrazo.pol([-1.2, 0.3, 1.2, 0.32, 1.2, 0.2, 1.0, 0.25, 0.7, 0.16, 0.3, 0.22, -0.1, 0.08, -0.5, 0.2,
 				-0.7, 0.14, -1.0, 0.18, -1.2, 0.26], true)
 			PaisTrazo.rect(-1.2, 0.0, 1.2, 0.02)
+
 
 ## Cataratas: «ancha» (Iguazú, Monday) en varios saltos con la selva encima; «alta»
 ## (Salto Ángel) es el hilo larguísimo que cae del tepuy.

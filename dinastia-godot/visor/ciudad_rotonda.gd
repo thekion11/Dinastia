@@ -79,7 +79,7 @@ static func carril() -> PackedVector3Array:
 		pts.append(CENTRO + Vector3(cos(a) * R_CARRIL, 0.25, sin(a) * R_CARRIL))
 	return pts
 
-static func trafico(ex: CiudadExpansion, t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> int:
+static func trafico(_ex: CiudadExpansion, t: TraficoCiudad, coches: Array, rng: RandomNumberGenerator) -> int:
 	if OS.get_environment("SIN_ROTONDA") != "" or coches.is_empty():
 		return 0
 	var id := t.agregar_ruta(carril())

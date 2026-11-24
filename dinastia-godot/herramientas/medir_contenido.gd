@@ -12,6 +12,16 @@ func _ready() -> void:
 	var m := Mundo.new()
 	m.generar([] as Array[String], 7)
 	var r := {}
+	_medir_ligas_y_clubes(m, r)
+	_medir_jugadores(m, r)
+	_medir_aspecto(r)
+	_medir_estadios_y_aforo(m, r)
+	_medir_estadio_efectivo(m, r)
+	_medir_selecciones_y_torneos(m, r)
+	_escribir(r, salida)
+	get_tree().quit(0)
+
+func _medir_ligas_y_clubes(m: Mundo, r: Dictionary) -> void:
 	var paises := {}
 	var ligas_por_div := {}
 	var clubes_por_div := {}
@@ -33,7 +43,9 @@ func _ready() -> void:
 	r["clubes_por_division"] = clubes_por_div
 	r["clubes_por_pais"] = clubes_por_pais
 	r["ligas_detalle"] = ligas_info
-	## Jugadores
+
+## Jugadores
+func _medir_jugadores(m: Mundo, r: Dictionary) -> void:
 	var jug := 0
 	var libres := 0
 	var por_pos := {}
@@ -50,34 +62,16 @@ func _ready() -> void:
 	r["nacionalidades_de_jugadores"] = nac.size()
 	r["ovr_medio"] = snappedf(float(ovr_suma) / maxf(1.0, float(jug)), 0.1)
 	r["libres_en_mercado"] = m.mercado.libres.size() if "libres" in m.mercado else -1
-	## Aspecto, estadio, historia (por club generado)
-	var con_estadio_row := 0
-	var con_historia := 0
+
+## Escudos y uniformes de la tabla de aspecto (`ASPECTO_CLUB`). Escribe sus claves en el orden del informe.
+func _medir_aspecto(r: Dictionary) -> void:
 	var con_asientos := 0
 	var con_visita := 0
-	var estadio_firmas := {}
-	var aforo_suma := 0
-	var aforo_max := 0
-	var aforo_max_club := ""
-	var asp: Dictionary = Datos.tabla("ASPECTO_CLUB") as Dictionary
-	var est: Dictionary = Datos.tabla("ESTADIO_CLUB") as Dictionary
-	var his: Dictionary = Datos.tabla("HISTORIA_CLUBES") as Dictionary
-	var firmas_nombre := {}
-	for c: Club in m.clubes.values():
-		aforo_suma += c.estadio_aforo
-		if c.estadio_aforo > aforo_max:
-			aforo_max = c.estadio_aforo
-			aforo_max_club = c.nombre
-		var clave := c.nombre
-		firmas_nombre[clave] = true
-	for nombre: String in est:
-		con_estadio_row += 1
-		var f: Dictionary = est[nombre]
-		estadio_firmas["%s|%s|%s|%s|%s" % [f.get("forma", ""), f.get("niveles", ""), f.get("techo", ""), f.get("focos", ""), f.get("fachada", "")]] = true
 	var esc_fig := 0
 	var kit_prop := 0
 	var kit_firma := {}
 	var esc_todo := {}
+	var asp: Dictionary = Datos.tabla("ASPECTO_CLUB") as Dictionary
 	for nombre: String in asp:
 		var a: Dictionary = asp[nombre]
 		if a.has("asientos"):
@@ -98,18 +92,40 @@ func _ready() -> void:
 	r["escudos_firmas_distintas_en_aspecto"] = esc_todo.size()
 	r["uniformes_con_kit_propio"] = kit_prop
 	r["uniformes_firmas_distintas_en_aspecto"] = kit_firma.size()
-	for nombre: String in his:
-		con_historia += 1
 	r["filas_ASPECTO_CLUB"] = asp.size()
 	r["filas_con_asientos"] = con_asientos
 	r["filas_con_uniforme_visitante"] = con_visita
+
+## Estadio, historia y aforo por club generado.
+func _medir_estadios_y_aforo(m: Mundo, r: Dictionary) -> void:
+	var con_estadio_row := 0
+	var con_historia := 0
+	var estadio_firmas := {}
+	var aforo_suma := 0
+	var aforo_max := 0
+	var aforo_max_club := ""
+	var est: Dictionary = Datos.tabla("ESTADIO_CLUB") as Dictionary
+	var his: Dictionary = Datos.tabla("HISTORIA_CLUBES") as Dictionary
+	for c: Club in m.clubes.values():
+		aforo_suma += c.estadio_aforo
+		if c.estadio_aforo > aforo_max:
+			aforo_max = c.estadio_aforo
+			aforo_max_club = c.nombre
+	for nombre: String in est:
+		con_estadio_row += 1
+		var f: Dictionary = est[nombre]
+		estadio_firmas["%s|%s|%s|%s|%s" % [f.get("forma", ""), f.get("niveles", ""), f.get("techo", ""), f.get("focos", ""), f.get("fachada", "")]] = true
+	for nombre: String in his:
+		con_historia += 1
 	r["filas_ESTADIO_CLUB"] = con_estadio_row
 	r["perfiles_de_estadio_distintos"] = estadio_firmas.size()
 	r["filas_HISTORIA_CLUBES"] = con_historia
 	r["aforo_total"] = aforo_suma
 	r["aforo_medio"] = int(float(aforo_suma) / maxf(1.0, float(m.clubes.size())))
 	r["aforo_maximo"] = [aforo_max_club, aforo_max]
-	## Estadio EFECTIVO de cada club (`Club.perfil_estadio`: lo generado por club + la fila real encima): cuántas firmas visuales distintas hay y cuántos clubes de la misma liga comparten una.
+
+## Estadio EFECTIVO de cada club (`Club.perfil_estadio`: lo generado por club + la fila real encima): cuántas firmas visuales distintas hay y cuántos clubes de la misma liga comparten una.
+func _medir_estadio_efectivo(m: Mundo, r: Dictionary) -> void:
 	var firmas_efectivas := {}
 	var firmas_nucleo := {}
 	var firmas_liga := {}
@@ -130,7 +146,9 @@ func _ready() -> void:
 	r["estadio_efectivo_nucleo_distinto"] = firmas_nucleo.size()
 	r["estadio_efectivo_repetidos_en_liga"] = repetidos_liga
 	r["estadio_efectivo_por_forma"] = forma_cuenta
-	## Selecciones y torneos
+
+## Selecciones, torneos, idiomas y el estado de las caras reales.
+func _medir_selecciones_y_torneos(m: Mundo, r: Dictionary) -> void:
 	var sel: Array = Datos.tabla("SELECCIONES") as Array
 	r["selecciones"] = sel.size()
 	var por_conf := {}
@@ -161,6 +179,9 @@ func _ready() -> void:
 	r["caras_en_biblioteca"] = (bib as Dictionary).size() if bib is Dictionary else -1
 	r["caras_reales_pck_presente"] = FileAccess.file_exists("res://caras_reales.pck") or FileAccess.file_exists(OS.get_executable_path().get_base_dir().path_join("caras_reales.pck"))
 	r["idiomas"] = Idiomas.IDIOMAS.size() if "IDIOMAS" in Idiomas else -1
+
+## Imprime el JSON, o lo escribe en `salida` si se dio `--salida=`.
+func _escribir(r: Dictionary, salida: String) -> void:
 	var txt := JSON.stringify(r, "  ")
 	if salida != "":
 		var f := FileAccess.open(salida, FileAccess.WRITE)
@@ -169,4 +190,3 @@ func _ready() -> void:
 		print("MEDIDO: ", salida)
 	else:
 		print(txt)
-	get_tree().quit(0)

@@ -35,7 +35,7 @@ func _pintar_redes() -> void:
 		var clave := String(par2[0])
 		var b := Button.new()
 		b.text = String(par2[1])
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(110, 0)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -116,7 +116,7 @@ func _pintar_correo() -> void:
 			bt.text = Idiomas.t("Todos los temas") if clave == "" else "%s (%d)" % [Idiomas.t(CategoriaAviso.nombre(clave)), int(cuenta[clave])]
 			bt.toggle_mode = true
 			bt.button_pressed = _correo_tema == clave
-			bt.add_theme_font_size_override("font_size", 11)
+			bt.add_theme_font_size_override("font_size", Tema.letra(11))
 			bt.pressed.connect(func() -> void: _correo_tema = clave; _pintar_correo())
 			temas.add_child(bt)
 	p._lista_correo.add_child(HSeparator.new())
@@ -143,7 +143,7 @@ func _pintar_correo() -> void:
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.clip_text = false
 		b.text = "%s%s   ·   S%d/%d" % ["" if leida else "🔵 ", Idiomas.t(String(it3["titulo"])), int(it3["semana"]), int(it3["anio"])]   ## (10-11) el título traducido antes de componer
-		b.add_theme_font_size_override("font_size", 13)
+		b.add_theme_font_size_override("font_size", Tema.letra(13))
 		b.add_theme_color_override("font_color", p._color_de_paleta(Principal.COL_SUAVE if leida else Principal.COL_TEXTO))
 		b.pressed.connect(func() -> void: it3["leida"] = true; _pintar_correo())
 		p._lista_correo.add_child(b)

@@ -253,36 +253,7 @@ func _autografos(delta: float) -> void:
 	if ch != null:
 		ch.scale.y = 1.0 + sin(Time.get_ticks_msec() * 0.008) * 0.12
 	for h: Dictionary in _hinchas:
-		var n: Node3D = h["d"]["nodo"]
-		match String(h["estado"]):
-			"llega":
-				if _caminar_hacia(n, h["objetivo"], 3.4, delta):
-					h["estado"] = "espera"
-					## Paciencia: menos cuanto más avanzado el reloj.
-					h["t"] = _rng.randf_range(1.6, 2.6) * lerpf(0.8, 1.0, _t / 30.0)
-					var mira := -n.position
-					n.rotation.y = atan2(mira.x, mira.z)
-					Mini3D.anim(h["d"], "saludar_publico", "")
-					(h["firma"] as Label3D).visible = true
-			"espera":
-				h["t"] = float(h["t"]) - delta
-				var f: Label3D = h["firma"]
-				f.position.y = 2.25 + absf(sin(Time.get_ticks_msec() * 0.01)) * 0.18
-				f.modulate = Color.WHITE if float(h["t"]) > 0.6 else Color(1, 0.5, 0.4)
-				if float(h["t"]) <= 0.0:
-					h["estado"] = "triste"
-					h["t"] = 1.0
-					f.visible = false
-					Mini3D.anim(h["d"], "manos_cabeza", "")
-			"firmado", "triste":
-				h["t"] = float(h["t"]) - delta
-				if float(h["t"]) <= 0.0:
-					h["estado"] = "se_va"
-					Mini3D.anim(h["d"], "caminar", "")
-			"se_va":
-				if _caminar_hacia(n, h["salida"], 2.2, delta):
-					h["estado"] = "fuera"
-					n.position.y = -50.0
+		_autografo_hincha(h, delta)
 	if not _activo:
 		return
 	_t -= delta
@@ -325,6 +296,39 @@ func _autografos(delta: float) -> void:
 			h["estado"] = "llega"
 			Mini3D.anim(h["d"], "caminar", "")
 			break
+
+## Lo que hace cada hincha en cada estado (llega, espera, firma, se va).
+func _autografo_hincha(h: Dictionary, delta: float) -> void:
+	var n: Node3D = h["d"]["nodo"]
+	match String(h["estado"]):
+		"llega":
+			if _caminar_hacia(n, h["objetivo"], 3.4, delta):
+				h["estado"] = "espera"
+				## Paciencia: menos cuanto más avanzado el reloj.
+				h["t"] = _rng.randf_range(1.6, 2.6) * lerpf(0.8, 1.0, _t / 30.0)
+				var mira := -n.position
+				n.rotation.y = atan2(mira.x, mira.z)
+				Mini3D.anim(h["d"], "saludar_publico", "")
+				(h["firma"] as Label3D).visible = true
+		"espera":
+			h["t"] = float(h["t"]) - delta
+			var f: Label3D = h["firma"]
+			f.position.y = 2.25 + absf(sin(Time.get_ticks_msec() * 0.01)) * 0.18
+			f.modulate = Color.WHITE if float(h["t"]) > 0.6 else Color(1, 0.5, 0.4)
+			if float(h["t"]) <= 0.0:
+				h["estado"] = "triste"
+				h["t"] = 1.0
+				f.visible = false
+				Mini3D.anim(h["d"], "manos_cabeza", "")
+		"firmado", "triste":
+			h["t"] = float(h["t"]) - delta
+			if float(h["t"]) <= 0.0:
+				h["estado"] = "se_va"
+				Mini3D.anim(h["d"], "caminar", "")
+		"se_va":
+			if _caminar_hacia(n, h["salida"], 2.2, delta):
+				h["estado"] = "fuera"
+				n.position.y = -50.0
 
 func _dibujar_sedal() -> void:
 	_sedal_mesh.clear_surfaces()

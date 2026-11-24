@@ -68,8 +68,8 @@ var _origen := Vector3.ZERO
 # ============================================================================ MONTAR
 
 ## Construye la casa colgada de `raiz3d`, con la puerta en `origen + (0, 0, fondo/2)`.
-func montar(raiz3d: Node3D, mundo_: Mundo, origen: Vector3) -> void:
-	mundo = mundo_
+func montar(raiz3d: Node3D, mundo_arg: Mundo, origen: Vector3) -> void:
+	mundo = mundo_arg
 	_origen = origen
 	name = "CasaDT"
 	position = origen
@@ -283,6 +283,15 @@ func usar(clave: String, nombre := "") -> Dictionary:
 
 ## Una frase de la familia según `VidaDT.familia`; la primera charla de cada día
 ## suma 1 a la familia (tope 100).
+## Gesticula el cuerpo `c` durante la charla y vuelve a «parado» a los 4 s (sacado de `_charla`).
+func _animar_charla(c: Dictionary) -> void:
+	var ap: AnimationPlayer = c["anim"]
+	if load("res://visor/anim_extra.gd").asegurar(ap, FutbolistaQ.esqueleto_de(c["nodo"]), "charla"):
+		ap.play("charla", 0.3)
+		get_tree().create_timer(4.0).timeout.connect(func() -> void:
+			if is_instance_valid(ap) and ap.current_animation == "charla" and ap.has_animation("parado"):
+				ap.play("parado", 0.4))
+
 func _charla(clave: String, nombre: String) -> Dictionary:
 	var v: VidaDT = mundo.vida
 	if v == null:
@@ -295,12 +304,7 @@ func _charla(clave: String, nombre: String) -> Dictionary:
 	## Quien habla gesticula unos segundos (clip de charla de la UAL) y vuelve a lo suyo.
 	for c: Dictionary in cuerpos:
 		if String(c["nombre"]) == nombre and c.get("anim") != null and is_instance_valid(c["anim"]):
-			var ap: AnimationPlayer = c["anim"]
-			if load("res://visor/anim_extra.gd").asegurar(ap, FutbolistaQ.esqueleto_de(c["nodo"]), "charla"):
-				ap.play("charla", 0.3)
-				get_tree().create_timer(4.0).timeout.connect(func() -> void:
-					if is_instance_valid(ap) and ap.current_animation == "charla" and ap.has_animation("parado"):
-						ap.play("parado", 0.4))
+			_animar_charla(c)
 	var tramo := "contenta" if v.familia >= 70 else ("normal" if v.familia >= 40 else "dolida")
 	var lista: Array = FRASES[tramo]
 	var hoy := "%d|%d|%d" % [mundo.reloj.anio, mundo.reloj.semana, mundo.reloj.dia]

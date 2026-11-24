@@ -104,7 +104,7 @@ func _cabezazo(p: Dictionary) -> void:
 		## EL CABEZAZO NO ES UN DISPARO TELEDIRIGIDO (25-10-2026): iba siempre entre
 		## los palos y entraba más de la mitad (en el fútbol, ~1 de cada 8). Ahora
 		## se busca un palo, abajo, y se desvía según el remate y la distancia.
-		if TIRO_PULIDO:
+		if tiro_pulido:
 			var err := (0.5 + (1.0 - GestoTecnico.tiro(p, "cabeza")) * 1.4) * (0.4 + absf(pos(p).z - arco.z) / 11.0) * GestoTecnico.factor(self, p, true)
 			destino = Vector3((1.0 if _rng.randf() < 0.5 else -1.0) * _rng.randf_range(0.8, PALO - 0.3) + _rng.randf_range(-err, err),
 				clampf(_rng.randf_range(0.3, 1.4) + _rng.randf_range(-err, err) * 0.6, 0.15, 3.5), arco.z)
@@ -128,14 +128,14 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 	if poseedor.is_empty():
 		return
 	var victima := poseedor
-	p["enfriar"] = (1.0 if not barrida else 1.6) * MotorDuelo.ENF   ## ciclo 10: menos intentos de entrada (1,0 = como antes)
-	var def_ := float(p["attr"]["def"])
+	p["enfriar"] = (1.0 if not barrida else 1.6) * MotorDuelo.enf   ## ciclo 10: menos intentos de entrada (1,0 = como antes)
+	var def_loc := float(p["attr"]["def"])
 	var reg := float(victima["attr"]["reg"])
 	if t < float(victima["regate_hasta"]):
 		reg += 0.35
 	## Defensa contra regate al cuadrado: el buen defensor roba bastante más
 	## que el malo (antes la proporción lineal igualaba a todos).
-	var exito := def_ * def_ / (def_ * def_ + reg * reg) * (0.55 if barrida else 0.32) * MotorDuelo.K
+	var exito := def_loc * def_loc / (def_loc * def_loc + reg * reg) * (0.55 if barrida else 0.32) * MotorDuelo.k
 	## La entrada de pie también es cuerpo: el fuerte se impone al débil (y
 	## el que tiene equilibrio aguanta). De media no cambia nada.
 	if not barrida:
@@ -170,7 +170,7 @@ func _entrada(p: Dictionary, barrida: bool) -> void:
 		victima["enfriar"] = 0.6
 		## ROBO LIMPIO (semana 3, 27-10-2026: «menos rebotes al defender»): de pie, el buen defensor se
 		## queda el balón; antes siempre quedaba suelto rebotando, y el rechace lo recogía cualquiera.
-		if not barrida and _rng.randf() < 0.25 + def_ * 0.45:
+		if not barrida and _rng.randf() < 0.25 + def_loc * 0.45:
 			_tomar(p)
 		else:
 			vel_balon = (pos(p) - pos(victima)).normalized() * 3.0 + Vector3(_rng.randf_range(-2, 2), 0, 0)
@@ -365,9 +365,9 @@ func _guiar_jugada(delta: float) -> void:
 			return
 		_aplicar_fase()
 func prisa() -> float:
-	if PRISA_REF <= 0.0 or duracion_mitad <= 0.0:
+	if prisa_ref <= 0.0 or duracion_mitad <= 0.0:
 		return 1.0
-	return clampf(PRISA_REF / duracion_mitad, 1.0, 2.0)
+	return clampf(prisa_ref / duracion_mitad, 1.0, 2.0)
 
 ## ¿`q` está ahora en posición adelantada respecto de un pase de `p`?
 func _adelantado(q: Dictionary, p: Dictionary) -> bool:
@@ -402,9 +402,9 @@ func _mejor_pase(p: Dictionary) -> Dictionary:
 		var lr := MotorPaseMejora.libre_y_riesgo(self as Object as MotorJugable, p, q, yo, qp)   ## (R2, 01-11: con PMOT_PASE=1, previsto)
 		var libre: float = lr[0]
 		var riesgo: float = lr[1]
-		var nota := progreso * (CHISPA_AVANCE * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
+		var nota := progreso * (chispa_avance * pow(prisa(), 0.7) + 0.025 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + 0.015 * float(_tac(bool(p["es_local"]), "ritmo") - 1) \
 				+ 0.03 * float(_tac(bool(p["es_local"]), "verticalidad") - 1)) \
-			+ minf(libre, 10.0) * 0.18 - riesgo * MotorPaseMejora.RIESGO_K - dist * MotorPaseMejora.DIST_K + MotorPaseMejora.bono_tercio(self as Object as MotorJugable, p, qp)
+			+ minf(libre, 10.0) * 0.18 - riesgo * MotorPaseMejora.riesgo_k - dist * MotorPaseMejora.dist_k + MotorPaseMejora.bono_tercio(self as Object as MotorJugable, p, qp)
 		## Un buen pasador ve el fuera de juego: con más visión (pase) casi
 		## nunca se la da a un compañero adelantado.
 		if _adelantado(q, p) and _rng.randf() < 0.55 + float(p["attr"]["pas"]) * 0.4:

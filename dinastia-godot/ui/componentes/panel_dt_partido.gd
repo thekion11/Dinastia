@@ -81,7 +81,7 @@ func _montar() -> void:
 			var b := Button.new()
 			b.text = Idiomas.t(String(OPCIONES[k][i]))
 			b.toggle_mode = true
-			b.add_theme_font_size_override("font_size", 13)
+			b.add_theme_font_size_override("font_size", Tema.letra(13))
 			b.custom_minimum_size = Vector2(134, 30)
 			b.pressed.connect(_fijar.bind(k, i))
 			fila.add_child(b)
@@ -117,14 +117,14 @@ func _montar() -> void:
 		var stats := Button.new()
 		stats.text = Idiomas.t("📊 Estadísticas") + "  (" + Mando.corto_de("jugar_estadisticas") + ")"
 		stats.custom_minimum_size = Vector2(240, 36)
-		stats.add_theme_font_size_override("font_size", 15)
+		stats.add_theme_font_size_override("font_size", Tema.letra(15))
 		stats.pressed.connect(_abrir_estadisticas)
 		botones.add_child(stats)
 	if ver_repeticion.is_valid():
 		var rep := Button.new()
 		rep.text = Idiomas.t("⟲ Repetición") + "  (" + Mando.corto_de("jugar_repeticion") + ")"
 		rep.custom_minimum_size = Vector2(200, 36)
-		rep.add_theme_font_size_override("font_size", 15)
+		rep.add_theme_font_size_override("font_size", Tema.letra(15))
 		rep.pressed.connect(func() -> void:
 			cerrar()
 			ver_repeticion.call())
@@ -133,7 +133,7 @@ func _montar() -> void:
 	seguir.text = Idiomas.t("▶  Seguir jugando")
 	seguir.custom_minimum_size = Vector2(0, 36)
 	seguir.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	seguir.add_theme_font_size_override("font_size", 17)
+	seguir.add_theme_font_size_override("font_size", Tema.letra(17))
 	seguir.pressed.connect(cerrar)
 	botones.add_child(seguir)
 	_seguir = seguir
@@ -210,7 +210,7 @@ func _pintar_cambios(foco := "") -> void:
 		## «▼» marca al cansado sin depender del color (rojo/dorado no lo ve todo el mundo).
 		b.text = "%s  %s   %d%%%s" % [j.pos_e, Nombres.visible(j.nombre), int(round(e * 100.0)), "  ▼" if e < 0.7 else ""]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.add_theme_font_size_override("font_size", 13)
+		b.add_theme_font_size_override("font_size", Tema.letra(13))
 		b.custom_minimum_size = Vector2(0, 27)
 		b.toggle_mode = true
 		b.button_pressed = _sale == j
@@ -229,7 +229,7 @@ func _pintar_cambios(foco := "") -> void:
 		var b := Button.new()
 		b.text = "%s  %s   %d" % [j.pos_e, Nombres.visible(j.nombre), j.ovr]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.add_theme_font_size_override("font_size", 13)
+		b.add_theme_font_size_override("font_size", Tema.letra(13))
 		b.custom_minimum_size = Vector2(0, 27)
 		b.disabled = _sale == null or hechos >= Partido.MAX_CAMBIOS
 		b.pressed.connect(func() -> void:

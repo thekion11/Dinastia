@@ -127,12 +127,12 @@ func _construir_vias() -> void:
 			caja.call(fin + hacia * BORDILLO * 0.5, cl, BORDILLO, ancho, 0.22, 0.11, _mat_bordillo)
 			caja.call(fin + hacia * (BORDILLO + ACERA * 0.5), cl, ACERA, total, 0.18, 0.09, baldosa)
 
-func _color_club(cual: String, porDefecto: Color) -> Color:
+func _color_club(cual: String, por_defecto: Color) -> Color:
 	var club: Dictionary = datos.get("club", {})
 	var s := str(club.get(cual, ""))
 	if s.begins_with("#") and s.length() >= 7:
 		return Color(s)
-	return porDefecto
+	return por_defecto
 
 ## Una farola: pie, mástil negro que se estrecha, brazo curvo y la luminaria.
 ## `hacia` es el ángulo al que apunta el brazo, para que el brazo caiga sobre

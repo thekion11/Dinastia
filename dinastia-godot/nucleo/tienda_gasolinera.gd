@@ -13,6 +13,13 @@ const SURTIDO := [
 
 ## Qué compra un DT con ese hambre (0-100): bocadillo si tiene hambre, bollería si algo, y si no un café.
 static func elegir(hambre: int) -> Dictionary:
+	var nat := Nativo.de("nuc_elegir_gasolinera")
+	if nat != null:
+		return nat.nuc_elegir_gasolinera(hambre)
+	return elegir_gd(hambre)
+
+## Gemela GDScript de `nuc_elegir_gasolinera` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func elegir_gd(hambre: int) -> Dictionary:
 	if hambre >= 40:
 		return SURTIDO[0]
 	if hambre >= 15:

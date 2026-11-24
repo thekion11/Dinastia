@@ -80,6 +80,13 @@ const SUBVENCION_BASE := 60000.0
 ## color si solo quiere algo que quede bien. El último es "los del club", que se
 ## resuelve al pintar porque depende del escudo.
 static func paletas_luces() -> Array:
+	var nat := Nativo.de("nuc_paletas_luces")
+	if nat != null:
+		return nat.nuc_paletas_luces()
+	return paletas_luces_gd()
+
+## Gemela GDScript de `nuc_paletas_luces` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func paletas_luces_gd() -> Array:
 	return [
 		["#ffb75e", "Ámbar de sodio"],
 		["#fff4dc", "Blanco cálido"],

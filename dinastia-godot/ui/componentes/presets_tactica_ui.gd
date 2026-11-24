@@ -20,7 +20,7 @@ static func pintar(p: Principal, c: Club) -> void:
 	var guardar := Button.new()
 	guardar.text = Idiomas.t("Guardar pizarra")
 	guardar.clip_text = true
-	guardar.add_theme_font_size_override("font_size", 11)
+	guardar.add_theme_font_size_override("font_size", Tema.letra(11))
 	guardar.name = "GuardarPreset"
 	guardar.pressed.connect(func() -> void:
 		var r := presets.guardar(campo.text, c.tactica)
@@ -52,7 +52,7 @@ static func pintar(p: Principal, c: Club) -> void:
 		b.custom_minimum_size = Vector2(60, 0)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.tooltip_text = Idiomas.t("Cargar este preset: %s") % String((presets.datos[n] as Dictionary).get("formacion", ""))
-		b.add_theme_font_size_override("font_size", 12)
+		b.add_theme_font_size_override("font_size", Tema.letra(12))
 		b.pressed.connect(func() -> void:
 			var r := presets.cargar(n, c)
 			p._escribir(("[color=#4caf6d]%s[/color]" % (Idiomas.t("Pizarra «%s» cargada.") % n)) if r == "" else ("[color=#e05555]%s[/color]" % r))

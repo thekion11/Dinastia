@@ -20,18 +20,9 @@ static func motivo(m: Mundo, j: Jugador) -> String:
 	var mio := m.mi_club()
 	if mio == null or j == null or m.mercado == null:
 		return Idiomas.t("ese jugador no existe")
-	if j.club_id == mio.id:
-		return Idiomas.t("ese jugador ya es tuyo")
-	if j.club_id == "":
-		return Idiomas.t("ya está libre: ficha como libre, sin precontrato")
-	if m.roles != null and not m.roles.puede_fichar():
-		return Idiomas.t(String(m.roles.motivo_bloqueo("fichar")))
-	if m.tiene_desafio("cantera"):
-		return Idiomas.t("Desafío «solo canteranos»: el mercado te queda vetado.")
-	if m.tiene_desafio("local") and j.pais != mio.pais:
-		return Idiomas.t("Desafío «un solo país»: no puedes fichar extranjeros.")
-	if j.anios_contrato > 1:
-		return Idiomas.t("Aún le quedan %d años de contrato: el precontrato solo vale en su último año.") % j.anios_contrato
+	var v: Variant = _motivo_de_plantilla(m, j, mio)
+	if v != null:
+		return String(v)
 	if m.semana < SEMANA_DESDE:
 		return Idiomas.t("Los precontratos se firman en el último semestre de su contrato (desde la semana %d).") % SEMANA_DESDE
 	if not de(m, j.id).is_empty():
@@ -44,6 +35,23 @@ static func motivo(m: Mundo, j: Jugador) -> String:
 		if ext != "":
 			return Idiomas.t(ext)
 	return ""
+
+## Lo que impide un precontrato: si el jugador ya es tuyo, libre, un desafío o le quedan años de contrato. Devuelve null si nada lo impide.
+static func _motivo_de_plantilla(m: Mundo, j: Jugador, mio: Club) -> Variant:
+	if j.club_id == mio.id:
+		return Idiomas.t("ese jugador ya es tuyo")
+	if j.club_id == "":
+		return Idiomas.t("ya está libre: ficha como libre, sin precontrato")
+	if m.roles != null and not m.roles.puede_fichar():
+		return Idiomas.t(String(m.roles.motivo_bloqueo("fichar")))
+	if m.tiene_desafio("cantera"):
+		return Idiomas.t("Desafío «solo canteranos»: el mercado te queda vetado.")
+	if m.tiene_desafio("local") and j.pais != mio.pais:
+		return Idiomas.t("Desafío «un solo país»: no puedes fichar extranjeros.")
+	if j.anios_contrato > 1:
+		return Idiomas.t("Aún le quedan %d años de contrato: el precontrato solo vale en su último año.") % j.anios_contrato
+	return null
+
 
 ## Intenta cerrar el precontrato con la ficha que el jugador pide. Devuelve "" si lo firma, o el motivo por el que no.
 static func firmar(m: Mundo, j: Jugador) -> String:

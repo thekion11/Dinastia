@@ -80,12 +80,26 @@ static func servicios() -> Array[String]:
 	return out
 
 static func antes(a: String, c: String) -> bool:
+	var nat := Nativo.de("nuc_antes_recorrido")
+	if nat != null:
+		return nat.nuc_antes_recorrido(a, c)
+	return antes_gd(a, c)
+
+## Gemela GDScript de `nuc_antes_recorrido` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func antes_gd(a: String, c: String) -> bool:
 	var la := a.begins_with("C")
 	var lc := c.begins_with("C")
 	return a < c if la == lc else lc
 
 ## La vuelta de un servicio de ida («122» → «122c»; el «301e» vuelve como «301c»).
 static func vuelta_de(num: String) -> String:
+	var nat := Nativo.de("nuc_vuelta_recorrido")
+	if nat != null:
+		return nat.nuc_vuelta_recorrido(num)
+	return vuelta_de_gd(num)
+
+## Gemela GDScript de `nuc_vuelta_recorrido` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func vuelta_de_gd(num: String) -> String:
 	return num.trim_suffix("e") + "c" if not num.ends_with("c") else num.trim_suffix("c")
 
 ## El paradero más cercano a `pos` (en el plano), o "" si no hay ninguno a menos de `radio` metros.

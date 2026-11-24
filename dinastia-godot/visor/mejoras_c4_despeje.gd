@@ -5,7 +5,7 @@ extends RefCounted
 ## (`_t_rechace`) o a un tiro (`_tiro_vivo`):
 ##  - el defensor que se hace con el balón dentro de su área NO lo controla: lo despeja lejos y a la banda (contador `c4_despeje`);
 ##  - el portero va a por el balón suelto que le queda a menos de `PORTERO_R` m, aunque haya un rival cerca (contador `c4_portero_suelto`).
-static var ACTIVO := OS.get_environment("C4_DESPEJE_RECHACE") == "1"
+static var activo := OS.get_environment("C4_DESPEJE_RECHACE") == "1"
 const VENTANA := 3.0
 const PORTERO_R := 3.0
 
@@ -19,7 +19,7 @@ static func _en_ventana(m: Object) -> bool:
 
 ## El defensor con el balón en su área, justo tras el rechace: lo revienta. true = ya pateó.
 static func despejar(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bool:
-	if not ACTIVO or bool(p["por"]):
+	if not activo or bool(p["por"]):
 		return false
 	var yo: Vector3 = m.pos(p)
 	if not m._en_su_area(p, yo) or not _en_ventana(m):
@@ -33,7 +33,7 @@ static func despejar(m: Object, p: Dictionary, rng: RandomNumberGenerator) -> bo
 
 ## El portero con el balón suelto a su alcance tras el rechace: va a por él.
 static func portero_a_por_el(m: Object, gk: Dictionary, b: Vector3) -> bool:
-	if not ACTIVO or b.y > 2.0 or not _en_ventana(m):
+	if not activo or b.y > 2.0 or not _en_ventana(m):
 		return false
 	var yo: Vector3 = m.pos(gk)
 	if Vector2(b.x - yo.x, b.z - yo.z).length() >= PORTERO_R:

@@ -31,7 +31,7 @@ func _pintar_comercial(c: Club) -> void:
 ## LAS TRES CAMISETAS. La de arquero existe por una razón que no es estética: en
 ## el campo tiene que distinguirse de las otras veintiuna.
 func _pintar_kits(co: Comercial, c: Club) -> void:
-	var tk := p._texto(11, p.COL_ACENTO)
+	var tk := p._texto(11, p.col_acento)
 	tk.text = Idiomas.t("👕 LAS TRES CAMISETAS")
 	p._lista_gente.add_child(tk)
 	var nombres := {"titular": "Titular", "alt": "Alternativa", "por": "De arquero"}
@@ -125,7 +125,7 @@ func _pintar_kits(co: Comercial, c: Club) -> void:
 		var clave := String(f[0])
 		var b2 := Button.new()
 		b2.text = String(f[1])
-		b2.add_theme_font_size_override("font_size", 10)
+		b2.add_theme_font_size_override("font_size", Tema.letra(10))
 		b2.toggle_mode = true
 		b2.button_pressed = co.tipografia == clave
 		b2.custom_minimum_size = Vector2(72, 22)
@@ -142,7 +142,7 @@ func _pintar_identidad(c: Club) -> void:
 	var bd := Button.new()
 	bd.text = Idiomas.t("🎽  Abrir el diseñador de equipación")
 	bd.custom_minimum_size = Vector2(0, 44)
-	bd.add_theme_font_size_override("font_size", 16)
+	bd.add_theme_font_size_override("font_size", Tema.letra(16))
 	bd.pressed.connect(func() -> void:
 		var dz := DisenadorKit.abrir(p, p.mundo)
 		dz.cerrado.connect(p._refrescar))
@@ -194,7 +194,7 @@ func _pintar_identidad(c: Club) -> void:
 	_fila_color_identidad(c, "1 · Color principal del club", "color1")
 	_fila_color_identidad(c, "1 · Color secundario del club", "color2")
 
-	var tk := p._texto(11, p.COL_ACENTO)
+	var tk := p._texto(11, p.col_acento)
 	tk.text = Idiomas.t("2 · UNIFORME%s") % ("" if c.kit_color1 == "" and c.kit_color2 == "" else Idiomas.t("  ·  propio"))
 	p._lista_gente.add_child(tk)
 	_fila_color_identidad(c, "Color 1 de la camiseta", "kit_color1")
@@ -202,7 +202,7 @@ func _pintar_identidad(c: Club) -> void:
 	_rejilla_identidad(c, "kit_estilo", Jersey.KITS, "Diseño")
 	_boton_heredar(c, ["kit_color1", "kit_color2"], "Volver a los colores del club")
 
-	var te := p._texto(11, p.COL_ACENTO)
+	var te := p._texto(11, p.col_acento)
 	te.text = Idiomas.t("3 · ESCUDO%s") % ("" if c.esc_color1 == "" and c.esc_color2 == "" else Idiomas.t("  ·  propio"))
 	p._lista_gente.add_child(te)
 	_fila_color_identidad(c, "Fondo del escudo", "esc_color1")
@@ -225,7 +225,7 @@ func _pintar_identidad(c: Club) -> void:
 	_boton_heredar(c, ["esc_color1", "esc_color2"], "Volver a los colores del club")
 	_rejilla_especiales(c)
 
-	var tu := p._texto(11, p.COL_ACENTO)
+	var tu := p._texto(11, p.col_acento)
 	tu.text = Idiomas.t("4 · INTERFAZ%s") % ("" if c.ui_acento == "" else Idiomas.t("  ·  propia"))
 	p._lista_gente.add_child(tu)
 	_fila_color_identidad(c, "Color de acento (botones y menú)", "ui_acento")
@@ -233,7 +233,7 @@ func _pintar_identidad(c: Club) -> void:
 
 	var b_todo := Button.new()
 	b_todo.text = Idiomas.t("🎨 Igualar todo a los colores del club")
-	b_todo.add_theme_font_size_override("font_size", 11)
+	b_todo.add_theme_font_size_override("font_size", Tema.letra(11))
 	b_todo.pressed.connect(func() -> void:
 		c.igualar_identidad()
 		Escudo.limpiar_cache()

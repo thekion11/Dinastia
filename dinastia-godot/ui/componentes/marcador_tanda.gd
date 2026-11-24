@@ -43,7 +43,7 @@ func _ready() -> void:
 	_titulo = Label.new()
 	_titulo.text = "🥅 " + Idiomas.t("TANDA DE PENALES")
 	_titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_titulo.add_theme_font_size_override("font_size", 14)
+	_titulo.add_theme_font_size_override("font_size", Tema.letra(14))
 	_titulo.add_theme_color_override("font_color", Color("c9a227"))
 	caja.add_child(_titulo)
 	for i in 2:

@@ -30,13 +30,13 @@ func _ia_portador(p: Dictionary) -> void:
 	## Con espacio se conduce más (1 a 1,6 s): en un partido de verdad el balón
 	## pasa más tiempo en los pies que viajando.
 	var holgura := 1.7 if presion > 6.0 else (1.0 if presion > 3.5 else MotorDescarga.holgura(0.5))
-	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * CHISPA_PAUSA * _pausa_dificultad(p) / pow(prisa(), 0.8)
+	_decision_en = t + (0.45 + _rng.randf() * 0.45) * (1.0 - 0.15 * float(_tac(bool(p["es_local"]), "ritmo") - 1)) * (1.0 + holgura) * chispa_pausa * _pausa_dificultad(p) / pow(prisa(), 0.8)
 	if OS.get_environment("DEPURAR_PORTADOR") != "" and dist_arco < 40.0:
 		Registro.depurar("PORTADOR", "%s(%s) a %.0f m del arco, x %.0f, presión %.1f" % [String(p.get("slot_code", "")), "L" if bool(p["es_local"]) else "V", dist_arco, yo.x, presion])
 	## En su propio campo y apretado: despeje, lejos y hacia fuera si hace falta.
 	var en_su_tercio := (arco.z - yo.z) * d > 70.0
 	if en_su_tercio and presion < 2.2 and _rng.randf() < 0.55:
-		var lado := signf(yo.x) if yo.x != 0.0 else 1.0
+		var lado := signf(yo.x) if not is_zero_approx(yo.x) else 1.0
 		var despeje := Vector3(lado * _rng.randf_range(18, 36), 0, yo.z + d * _rng.randf_range(20, 40))
 		_ctx_golpeo = "despeje"
 		_patear(p, despeje, 18.0, 4.0, 0.0, "patear")
@@ -56,11 +56,11 @@ func _ia_portador(p: Dictionary) -> void:
 	ganas_tiro = _ganas_tiro_extra(p, dist_arco, ganas_tiro, presion)   ## gancho (12-11): C4 lo usa para la paciencia; aquí no cambia nada
 	## MÁS CHISPA (20-10-2026): el sorteo era muy conservador y el partido se quedaba en ~0,8 tiros por minuto
 	## y equipo (FC ronda 1,5). Ahora se anima más desde la frontal; la calidad del tiro no cambia.
-	if dist_arco < MotorTiroLimpio.alcance(34.0 if lejano else 30.0) and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * CHISPA_TIRO / pow(prisa(), 1.3):
+	if dist_arco < MotorTiroLimpio.alcance(34.0 if lejano else 30.0) and ganas_tiro > 0.05 - 0.05 * float(_tac(bool(p["es_local"]), "mentalidad") - 1) + _rng.randf() * chispa_tiro / pow(prisa(), 1.3):
 		## A un palo, abajo o arriba (antes se apuntaba al azar por el centro
 		## y el portero lo paraba casi todo: 27 de 29 en la sonda).
 		## (Pulido: más pegado al palo, lejos del portero, a riesgo de irse fuera.)
-		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * (_rng.randf_range(PALO_TIRO, 1.0) if TIRO_PULIDO else _rng.randf_range(0.55, 0.95))
+		var palo := (1.0 if _rng.randf() < 0.5 else -1.0) * (_rng.randf_range(palo_tiro, 1.0) if tiro_pulido else _rng.randf_range(0.55, 0.95))
 		if float(linea_limpia[1]) >= 0.0:
 			palo = clampf(float(linea_limpia[0]) + _rng.randf_range(-0.08, 0.08), -1.0, 1.0)   ## al punto más limpio (F6)
 		var alto := -0.45 if _rng.randf() < 0.6 else 0.55
@@ -84,7 +84,7 @@ func _ia_portador(p: Dictionary) -> void:
 		var n_f: Node3D = p["node"]
 		var fwd_f := Vector3(sin(n_f.rotation.y), 0, cos(n_f.rotation.y))
 		var lado_f := -signf(Vector3(fwd_f.z, 0, -fwd_f.x).dot(pos(rival) - yo)) if not rival.is_empty() else 1.0
-		if lado_f == 0.0:
+		if is_zero_approx(lado_f):
 			lado_f = 1.0
 		_finta_ia(p, rival, fwd_f, lado_f, maxf((p["vel"] as Vector3).length(), 2.0))
 		return

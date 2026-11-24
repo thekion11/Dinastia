@@ -6,11 +6,13 @@
 #pragma once
 
 #include <godot_cpp/classes/animation.hpp>
+#include <godot_cpp/classes/skeleton3d.hpp>
 #include <godot_cpp/classes/fast_noise_lite.hpp>
 #include <godot_cpp/classes/image.hpp>
 #include <godot_cpp/classes/random_number_generator.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/aabb.hpp>
+#include <godot_cpp/variant/rect2i.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/transform3d.hpp>
@@ -19,6 +21,7 @@
 #include <godot_cpp/variant/quaternion.hpp>
 #include <godot_cpp/variant/packed_float32_array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
+#include <godot_cpp/variant/packed_string_array.hpp>
 #include <godot_cpp/variant/packed_vector2_array.hpp>
 #include <godot_cpp/variant/packed_vector3_array.hpp>
 
@@ -54,6 +57,10 @@ public:
 	// `MotorJugable._cuerpos` (visor/motor_jugable_p11.gd, M-391): separa de dos en dos a los jugadores que se pisan (reparto por masa) y frena la velocidad con que se acercan. `jugadores` = los
 	// diccionarios del motor ({node, vel, fuerza, aguante, ...}); mueve `node.position` y reescribe `vel`, igual que el GDScript. `minimo` = 2 × radio del cuerpo.
 	void cuerpos_motor(const Array &jugadores, double minimo) const;
+	// `TraficoCiudad._process` entero (18-11, nativo/src/trafico_nativo.cpp): el paso del tráfico y los peatones de la ciudad. `tr` = el TraficoCiudad; lo que sigue en GDScript (animación, gestos, mirada) se llama de vuelta (`_cb_*`).
+	// Escribe en los diccionarios el estado propio del tráfico que vive en C++ (`lod`, `dt`): pruebas y vuelta a la versión GDScript.
+	void trafico_volcar(Object *tr) const;
+	void trafico_paso(Object *tr, double delta_real, bool hay_cam, const Vector3 &ojo, const Vector3 &adelante, bool hay_jugador, const Vector3 &pj, const Array &sirenas) const;
 	// `MotorJugable._mover_fisica_gd` (visor/motor_jugable_p5.gd, 15-11): el movimiento de los 22 (velocidad, giro, empujón, posición, rumbo, inclinación y aguante). Devuelve 4 valores por jugador
 	// [válido, velocidad, va_atrás, distancia_al_balón] para el bucle de animación, que sigue en GDScript. `coste_aguante` = [local, visitante] (el coste táctico del sprint).
 	// `LeagueGuia._paso_gd`, en dos pasadas: índices de los que deciden clip este paso, y luego guía o marcha de todos ([cortes, guiados]).
@@ -125,6 +132,62 @@ public:
 	void cerrar_notas(Object *p, const Ref<RandomNumberGenerator> &rng) const;
 	// ¿El generador de azar del motor es el PCG32 que reproduce `simular_90`? (autocomprobación; si no, `simular_90` usa el del motor)
 	bool pcg_coincide() const;
+	// La síntesis del sonido (`nucleo/sonido_p1.gd`, nativo/src/sonido_nativo.cpp): `_tono`, `_ruido`, `_mezclar` y el paso a 16 bits de `_a_wav`.
+	// (19-11) `nucleo/cantera_progreso.gd`, `carrera_habilidad.gd` y `premio_mensual.gd` (nativo/src/carrera_nativo.cpp): cuentas puras con su gemela GDScript.
+	double prog_por_edad(int64_t edad) const;
+	double prog_freno(int64_t edad, int64_t ovr, int64_t pot) const;
+	double prog_prob_semanal(int64_t edad, int64_t ovr, int64_t pot, bool motor) const;
+	double hab_factor_nivel(int64_t nivel) const;
+	double hab_factor_puesto(const PackedFloat64Array &pesos) const;
+	double hab_precio_zona(int64_t valor, int64_t clase, double factor_nivel, double factor_puesto) const;
+	int64_t hab_coste(int64_t suma, int64_t n, double z) const;
+	int64_t hab_promedio(const PackedInt32Array &valores) const;
+	int64_t hab_coste_puesto(bool misma_linea, bool conocido, double factor_nivel) const;
+	PackedInt32Array hab_reparto(const String &id_jugador, const PackedStringArray &ids, int64_t meta) const;
+	Variant premio_mejor(const Array &clubes, int64_t minimo_notas) const;
+	// (19-11) `visor/ropa_separada.gd` (nativo/src/ropa_nativo.cpp): la ropa aparte de los futbolistas; gemelas `_prenda_gd` y `_subconjunto_gd`.
+	Array ropa_prenda(const PackedVector3Array &pos, const PackedVector3Array &nor, const PackedInt32Array &idx, int64_t cual) const;
+	Variant ropa_subconjunto(const Variant &src, const PackedInt32Array &orden, int64_t ancho) const;
+	// (19-11) `visor/cara_malla.gd` (nativo/src/cara_nativo.cpp): el borde de la cara pegado al cráneo; gemelas `_pegar_borde_gd` y `_rejilla_piel_gd`.
+	Array cara_pegar_borde(const PackedVector3Array &pos, const PackedFloat32Array &alfa, const Dictionary &rejilla) const;
+	PackedVector3Array cara_normales(const PackedVector3Array &pos, const PackedInt32Array &tri, int64_t n) const;
+	Dictionary cara_rejilla_piel(const PackedVector3Array &cv, const PackedVector3Array &nn) const;
+	// (19-11) `visor/pelo_capas_p1.gd` y `pelo_capas.gd` (nativo/src/pelo_nativo.cpp): cuentas del pelo por capas; gemelas `_normales_gd`, `_densidades_gd`, `_max_gd`, `_suavizar_gd`.
+	PackedVector3Array pelo_normales(const PackedVector3Array &pos, const PackedInt32Array &tri) const;
+	PackedFloat32Array pelo_densidades(const PackedByteArray &bytes, int64_t n) const;
+	double pelo_max(const PackedFloat32Array &a) const;
+	PackedInt32Array pelo_solo_con(const PackedInt32Array &tri, const PackedFloat32Array &dens, int64_t minimo) const;
+	Dictionary pelo_anillo(const PackedInt32Array &base, const PackedInt32Array &tri, int64_t anillos) const;
+	Array pelo_candidatos(const PackedVector3Array &v, const PackedInt32Array &ind) const;
+	PackedFloat32Array pelo_suavizar(const PackedFloat32Array &a, const PackedInt32Array &tri, double f) const;
+	// (19-11) `AnimExtra.espejar` (visor/anim_extra_p1.gd, nativo/src/espejo_nativo.cpp): el clip reflejado izquierda <-> derecha (null si no tiene rotaciones); gemela `_espejar_gd`.
+	Ref<Animation> anim_espejar(const Ref<Animation> &original, Skeleton3D *esq, const String &prefijo) const;
+	// (19-11) `Texturas._imagen_asfalto` (visor/texturas_p1.gd, nativo/src/asfalto_nativo.cpp): la imagen RGB8 del asfalto (null si los ruidos no son L8 de n×n); gemela `_imagen_asfalto_gd`.
+	Ref<Image> asfalto_imagen(const Ref<Image> &grande, const Ref<Image> &medio, const Ref<Image> &grieta, const Color &tinte, int64_t semilla, int64_t n) const;
+	// (19-11) `Texturas.enredadera` (visor/texturas_p1.gd, nativo/src/enredadera_nativo.cpp): la imagen RGB8 de n×n; gemela `_imagen_enredadera_gd`.
+	Ref<Image> enredadera_imagen(int64_t semilla, int64_t n) const;
+	// (19-11) texturas procedimentales (nativo/src/texturas_nativo.cpp): `TelonesPintados._imagen`, `VestuarioRealista.azulejo` (sus dos imágenes) y `CespedTextura.nueva`; gemelas `_imagen_gd`, `_azulejo_gd`, `nueva_gd`.
+	Ref<Image> telon_imagen(const Color &c1, const Color &c2, int64_t p, bool girado) const;
+	Array azulejo_imagenes(int64_t n) const;
+	Ref<Image> cesped_imagen(const String &patron, const Color &claro, const Color &oscuro) const;
+	// (19-11) `KitTextureFactory` (visor/kit_texture_factory.gd, nativo/src/kit_nativo.cpp): `_caja_util`, `_color_dominante`, `_retenir`, `_paint_barba`; gemelas `*_gd`.
+	Rect2i kit_caja_util(const Ref<Image> &img) const;
+	Color kit_color_dominante(const Ref<Image> &img, const Rect2i &r) const;
+	PackedByteArray kit_retener(const PackedByteArray &datos, int64_t w, int64_t h, const Color &piel, const Color &pelo, double lum_piel, double lum_pelo, const Rect2i &cabeza, const Rect2i &manos) const;
+	Ref<Image> kit_barba(const Ref<Image> &img, const Color &pelo, int64_t barba, const Rect2i &rect) const;
+	// (19-11) `StadiumBuilder._pintar_publico` (visor/stadium_builder_p4.gd, nativo/src/publico_nativo.cpp): el público de la textura de grada (null si la imagen no es RGB8 de w×h); gemela `_pintar_publico_gd`. Avanza el estado de `rng`.
+	Ref<Image> publico_pintar(const Ref<Image> &img, int64_t w, int64_t h, const Color &a1, const Color &a2, double lleno, const Ref<RandomNumberGenerator> &rng) const;
+	// (19-11) texturas de grada (nativo/src/grada_nativo.cpp): `StadiumBuilder._make_stand_texture_calc` y `_make_stand_texture_tramos` (la imagen RGB8 de 96×320, sin mipmaps); gemelas `*_gd`.
+	Ref<Image> grada_imagen(const String &patron, const Color &a1, const Color &a2, const Color &a3, int64_t semilla, double lleno) const;
+	Ref<Image> grada_tramos(const Array &patrones, const Array &colores, int64_t semilla, double lleno) const;
+	// (19-11) `PersonajeDtVida._mapa` (visor/personaje_dt_vida.gd, nativo/src/dtmapa_nativo.cpp): el mapa UV de la cabeza del DT (imagen RGBAF 256×256, null si no hay triángulos); gemela `_mapa_gd`.
+	Ref<Image> dt_mapa(const Array &superficies) const;
+	// (19-11) `TrofeoModelo._textura` (visor/trofeo_modelo.gd, nativo/src/kit_nativo.cpp): la paleta del trofeo recoloreada (null si la imagen no es RGBA8/RGB8); gemela `_textura_img_gd`.
+	Ref<Image> trofeo_textura(const Ref<Image> &src, const Color &metal, const Color &piedra) const;
+	PackedFloat32Array son_tono(double hz, double dur, double vol, int64_t forma, int64_t frecuencia) const;
+	PackedFloat32Array son_ruido(double dur, double f0, double f1, double vol, int64_t frecuencia) const;
+	PackedFloat32Array son_mezclar(const PackedFloat32Array &destino, const PackedFloat32Array &fuente, double retraso, int64_t frecuencia) const;
+	PackedByteArray son_a_16(const PackedFloat32Array &m) const;
 	// `Partido._media_linea` x 4 líneas ([POR, DEF, MED, DEL]) de un once (nucleo/partido_p1.gd, `fuerza`).
 	PackedFloat64Array medias_linea(const Array &once, const Dictionary &grupo_de, const Dictionary &lateral_de, const Dictionary &banda_de, const Dictionary &impulsos, int64_t minuto, double arenga_mult,
 			double ley_ex, const Dictionary &ex_de_mi_club, const String &ex_id) const;
@@ -144,6 +207,7 @@ public:
 			double zona_tiro) const;
 	// --- fin portador (agente B) ---
 	int64_t elegir_ponderado(const Array &once, const Dictionary &grupo_de, const Dictionary &bases, double base_def, const String &atr, const PackedFloat64Array &pesos_rol, double r_unit, Object *excluir) const;
+	#include "puras_nucleo.inc"
 };
 
 } // namespace godot

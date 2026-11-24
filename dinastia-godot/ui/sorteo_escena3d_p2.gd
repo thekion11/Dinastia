@@ -1,4 +1,9 @@
 extends "res://ui/sorteo_escena3d_p1.gd"
+
+const _RUTA_FUTBOLISTA_Q := "res://visor/futbolista_q.gd"
+const _RUTA_PERSONA_REALISTA := "res://visor/persona_realista.gd"
+const _RUTA_VESTIDOR_Q := "res://visor/vestidor_q.gd"
+
 ## [Capa 2/3 de `sorteo_escena3d.gd`] _montar_bombo, _montar_bolas, _montar_capas, _montar_publico, _montar_pantalla_gigante, _montar_presentador_realista … (+3)
 
 # --- el bombo ----------------------------------------------------------------
@@ -136,6 +141,12 @@ func _montar_bolas() -> void:
 ##   · polvo suspendido que cruza el haz (aire)
 ##   · un aro de suelo que recoge el reflejo (base)
 func _montar_capas(fondo: Color) -> void:
+	_montar_columnas(fondo)
+	_montar_tarima_bombo(fondo)
+	_montar_polvo()
+
+## Columnas: los pilares del decorado, en el plano de atrás.
+func _montar_columnas(fondo: Color) -> void:
 	## Columnas: los pilares del decorado. Emiten poco, pero al estar en el
 	## plano de atrás dan escala y separan el bombo de la pared.
 	for lado in [-1.0, 1.0]:
@@ -152,6 +163,8 @@ func _montar_capas(fondo: Color) -> void:
 		col.position = Vector3(lado * 2.5, 2.7, -4.6)
 		add_child(col)
 
+## La tarima (y su aro luminoso).
+func _montar_tarima_bombo(fondo: Color) -> void:
 	## La tarima: el bombo tiene que apoyarse en ALGO. Sin ella flota sobre un
 	## suelo infinito y se nota que es una escena montada, no un plató.
 	## El disco decorativo se quitó: desde que hay tarima de verdad, su borde
@@ -188,6 +201,8 @@ func _montar_capas(fondo: Color) -> void:
 	aro.visible = false
 	add_child(aro)
 
+## El polvo en suspensión (motas cruzando el haz de los focos).
+func _montar_polvo() -> void:
 	## Polvo en suspensión. Es la capa que más barato sale y más aporta: motas
 	## cruzando el haz de los focos, que es lo que hace que el aire "exista".
 	##
@@ -287,7 +302,7 @@ func _montar_pantalla_gigante(fondo: Color) -> void:
 
 	_pantalla_grupo = Label.new()
 	_pantalla_grupo.text = ""
-	_pantalla_grupo.add_theme_font_size_override("font_size", 46)
+	_pantalla_grupo.add_theme_font_size_override("font_size", Tema.letra(46))
 	_pantalla_grupo.add_theme_color_override("font_color", _acento)
 	_pantalla_grupo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caja.add_child(_pantalla_grupo)
@@ -301,7 +316,7 @@ func _montar_pantalla_gigante(fondo: Color) -> void:
 
 	_pantalla_nombre = Label.new()
 	_pantalla_nombre.text = ""
-	_pantalla_nombre.add_theme_font_size_override("font_size", 62)
+	_pantalla_nombre.add_theme_font_size_override("font_size", Tema.letra(62))
 	_pantalla_nombre.add_theme_color_override("font_color", Color("f2f6f3"))
 	_pantalla_nombre.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caja.add_child(_pantalla_nombre)
@@ -323,9 +338,9 @@ func _montar_pantalla_gigante(fondo: Color) -> void:
 	add_child(m)
 
 func _montar_presentador_realista() -> bool:
-	if not load("res://visor/persona_realista.gd").disponible():
+	if not load(_RUTA_PERSONA_REALISTA).disponible():
 		return false
-	var p = load("res://visor/persona_realista.gd").crear(load("res://visor/persona_realista.gd").aspecto("presentador_sorteo",
+	var p = load(_RUTA_PERSONA_REALISTA).crear(load(_RUTA_PERSONA_REALISTA).aspecto("presentador_sorteo",
 		{"ropa": "negro", "pantalon": "gris", "pelo": "negro", "piel": "media", "alto": 1.82, "ancho": 1.0}))
 	if p == null:
 		return false
@@ -339,20 +354,20 @@ func _montar_presentador_realista() -> bool:
 ## El presentador es el mismo cuerpo que usan los 22 del campo, con "parado"
 ## y "mostrar_tarjeta" en su catálogo.
 func _montar_presentador_quaternius() -> bool:
-	var d = load("res://visor/futbolista_q.gd").crear(1.78, "male")
+	var d = load(_RUTA_FUTBOLISTA_Q).crear(1.78, "male")
 	if d.is_empty():
 		return false
 	var raiz: Node3D = d["nodo"]
 	raiz.position = Vector3(1.15, 0.42, -0.35)
 	raiz.rotation.y = deg_to_rad(-32.0)
 	add_child(raiz)
-	load("res://visor/futbolista_q.gd").terminar(d, true)
+	load(_RUTA_FUTBOLISTA_Q).terminar(d, true)
 	## Traje azul marino oscuro, de manga y pantalón largos: mismo tono que la
 	## silueta de respaldo. Solapa un poco más clara que el traje.
 	var traje := Color(0.12, 0.13, 0.19)
-	if not load("res://visor/vestidor_q.gd").vestir_equipacion(d, traje, Color(0.2, 0.22, 0.3), "liso",
+	if not load(_RUTA_VESTIDOR_Q).vestir_equipacion(d, traje, Color(0.2, 0.22, 0.3), "liso",
 			Color(0.82, 0.63, 0.5), Color(0.14, 0.11, 0.09), traje, Color(0.05, 0.05, 0.06), true):
-		load("res://visor/vestidor_q.gd").vestir(d, traje)
+		load(_RUTA_VESTIDOR_Q).vestir(d, traje)
 	_anim_presentador = d["anim"]
 	if _anim_presentador != null and _anim_presentador.has_animation("parado"):
 		_anim_presentador.play("parado")

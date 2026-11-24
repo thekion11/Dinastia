@@ -252,11 +252,12 @@ func _probar_dificultad_cpu() -> void:
 	var cpu: Dictionary = {}
 	var mio: Dictionary = {}
 	for p: Dictionary in motor.jugadores:
-		if not bool(p["por"]):
-			if bool(p["es_local"]) and mio.is_empty():
-				mio = p
-			elif not bool(p["es_local"]) and cpu.is_empty():
-				cpu = p
+		if bool(p["por"]):
+			continue
+		if bool(p["es_local"]):
+			if mio.is_empty(): mio = p
+		elif cpu.is_empty():
+			cpu = p
 	var puro := float(cpu["attr_puro"]["pas"])
 	_comprobar(motor.equipo_cpu() == -1 and is_equal_approx(float(cpu["attr"]["pas"]), puro), "sin nadie al mando no hay CPU que ajustar")
 	motor.control_equipo = 0
@@ -445,5 +446,5 @@ func _probar_paciencia_c4() -> void:
 	_comprobar(MejorasC4.seguir_tiro(motor, comp) == Vector3.INF, "sin un tiro en curso nadie sigue el rechace")
 	(comp["node"] as Node3D).position = Vector3(2.0, 0, arco.z - d * 10.0)
 	motor._tiro_vivo = {"p": yo, "t": motor.t, "clase": "pie"}
-	_comprobar(MejorasC4.seguir_tiro(motor, comp) != Vector3.INF or not MejorasC4.SEGUIR, "tras el tiro, un compañero cercano corre al rechace")
+	_comprobar(MejorasC4.seguir_tiro(motor, comp) != Vector3.INF or not MejorasC4.seguir, "tras el tiro, un compañero cercano corre al rechace")
 	(r[1] as Node3D).queue_free()

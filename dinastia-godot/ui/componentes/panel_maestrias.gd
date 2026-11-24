@@ -67,7 +67,7 @@ static func _tarjeta(k: String, m: Maestria, mundo: Mundo, p: Control) -> PanelC
 	ef.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vb.add_child(ef)
 	var b := Button.new()
-	b.add_theme_font_size_override("font_size", 12)
+	b.add_theme_font_size_override("font_size", Tema.letra(12))
 	if n >= Maestria.NIVEL_MAX:
 		b.text = Idiomas.t("✔ Maestría completa")
 		b.disabled = true

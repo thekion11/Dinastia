@@ -276,6 +276,13 @@ static func ajustar_once(c: Club, once: Array[Jugador], clubes: Dictionary = {})
 		if not res.has(j):
 			banca.append(j)
 	var tope := int(r.get("cancha", 0))
+	_ajustar_tope(c, res, banca, clubes, tope)
+	for edad: int in r.get("juveniles", []):
+		_juvenil_para_edad(c, res, banca, clubes, edad)
+	return res
+
+## Ajusta el tope de cancha: salen los de fuera por el mejor disponible del cupo.
+static func _ajustar_tope(c: Club, res: Array[Jugador], banca: Array[Jugador], clubes: Dictionary, tope: int) -> void:
 	if tope > 0:
 		var de_fuera: Array[Jugador] = res.filter(func(j: Jugador) -> bool: return ocupa_cupo(j, c.pais, clubes))
 		de_fuera.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr < b.ovr)
@@ -290,49 +297,57 @@ static func ajustar_once(c: Club, once: Array[Jugador], clubes: Dictionary = {})
 				res[res.find(sale)] = entra
 				banca.erase(entra)
 				sobran -= 1
-	for edad: int in r.get("juveniles", []):
-		var hay := false
+
+## Un juvenil por esta edad: primero de SU línea, si no, el peor de campo que no sea portero ni juvenil.
+static func _juvenil_para_edad(c: Club, res: Array[Jugador], banca: Array[Jugador], clubes: Dictionary, edad: int) -> void:
+	var hay := false
+	for j: Jugador in res:
+		if j.edad <= edad:
+			hay = true
+	if hay:
+		return
+	## 17-10: primero se busca un juvenil que entre por alguien de SU línea
+	## (antes un delantero joven acababa de lateral izquierdo).
+	if _juvenil_de_su_linea(c, res, banca, clubes, edad):
+		return
+	_sale_el_peor(c, res, banca, clubes, edad)
+
+## Un juvenil que entre por alguien de SU línea (lo primero que se busca). Devuelve si cambió algo.
+static func _juvenil_de_su_linea(c: Club, res: Array[Jugador], banca: Array[Jugador], clubes: Dictionary, edad: int) -> bool:
+	var cambiado := false
+	var jovenes: Array[Jugador] = banca.filter(func(j: Jugador) -> bool: return j.edad <= edad and not j.es_portero())
+	jovenes.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
+	for jv: Jugador in jovenes:
+		var sale_l: Jugador = null
 		for j: Jugador in res:
-			if j.edad <= edad:
-				hay = true
-		if hay:
-			continue
-		## 17-10: primero se busca un juvenil que entre por alguien de SU línea
-		## (antes un delantero joven acababa de lateral izquierdo).
-		var cambiado := false
-		var jovenes: Array[Jugador] = banca.filter(func(j: Jugador) -> bool: return j.edad <= edad and not j.es_portero())
-		jovenes.sort_custom(func(a: Jugador, b: Jugador) -> bool: return a.ovr > b.ovr)
-		for jv: Jugador in jovenes:
-			var sale_l: Jugador = null
-			for j: Jugador in res:
-				if j.es_portero() or j.edad <= edad or j.pos != jv.pos:
-					continue
-				if ocupa_cupo(jv, c.pais, clubes) and not ocupa_cupo(j, c.pais, clubes):
-					continue
-				if sale_l == null or j.ovr < sale_l.ovr:
-					sale_l = j
-			if sale_l != null:
-				res[res.find(sale_l)] = jv
-				banca.erase(jv)
-				cambiado = true
-				break
-		if cambiado:
-			continue
-		## Sale el peor de campo que no sea portero ni juvenil.
-		var peor: Jugador = null
-		for j: Jugador in res:
-			if j.es_portero() or j.edad <= edad:
+			if j.es_portero() or j.edad <= edad or j.pos != jv.pos:
 				continue
-			if peor == null or j.ovr < peor.ovr:
-				peor = j
-		if peor == null:
+			if ocupa_cupo(jv, c.pais, clubes) and not ocupa_cupo(j, c.pais, clubes):
+				continue
+			if sale_l == null or j.ovr < sale_l.ovr:
+				sale_l = j
+		if sale_l != null:
+			res[res.find(sale_l)] = jv
+			banca.erase(jv)
+			cambiado = true
+			break
+	return cambiado
+
+static func _sale_el_peor(c: Club, res: Array[Jugador], banca: Array[Jugador], clubes: Dictionary, edad: int) -> void:
+	## Sale el peor de campo que no sea portero ni juvenil.
+	var peor: Jugador = null
+	for j: Jugador in res:
+		if j.es_portero() or j.edad <= edad:
 			continue
-		var joven := _mejor_reemplazo(peor, banca, func(j: Jugador) -> bool: return j.edad <= edad and not j.es_portero() \
-			and (not ocupa_cupo(j, c.pais, clubes) or not ocupa_cupo(peor, c.pais, clubes)))
-		if joven != null:
-			res[res.find(peor)] = joven
-			banca.erase(joven)
-	return res
+		if peor == null or j.ovr < peor.ovr:
+			peor = j
+	if peor == null:
+		return
+	var joven := _mejor_reemplazo(peor, banca, func(j: Jugador) -> bool: return j.edad <= edad and not j.es_portero() \
+		and (not ocupa_cupo(j, c.pais, clubes) or not ocupa_cupo(peor, c.pais, clubes)))
+	if joven != null:
+		res[res.find(peor)] = joven
+		banca.erase(joven)
 
 static func _mejor_reemplazo(sale: Jugador, banca: Array[Jugador], vale: Callable) -> Jugador:
 	var mejor: Jugador = null

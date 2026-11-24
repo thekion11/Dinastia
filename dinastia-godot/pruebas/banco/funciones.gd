@@ -2,56 +2,80 @@ extends "res://pruebas/banco/base.gd"
 ## [Banco · grupo «funciones»] (13-11-2026, sesión 15) Pruebas DIRECTAS de funciones puras de `nucleo/` que ninguna prueba nombraba: entradas y salidas conocidas, con los casos límite
 ## (vacío, 0, negativos, fuera de rango, empates) y países y clubes distintos en los ejemplos (regla 34). Cada expectativa sale de leer la función, no de ejecutarla.
 
-## ECONOMÍA, REPUTACIÓN Y CLIMA: mes del año, clima extremo, multiplicador de patrocinio por nivel, rareza de la carta, meses de ingreso y delegación de viaje.
+## ECONOMÍA, REPUTACIÓN Y CLIMA: mes del año, clima extremo, multiplicador de patrocinio por nivel, rareza de la carta, _meses de ingreso y delegación de viaje.
+var _meses
+var _sube
+var _tabla
+
 func _probar_fun_economia() -> void:
 	_titulo("FUNCIONES PURAS: ECONOMÍA, REPUTACIÓN Y CLIMA")
+	_probar_fun_economia_01()
+	_probar_fun_economia_02()
+	_probar_fun_economia_03()
+	_probar_fun_economia_04()
+	_probar_fun_economia_05()
+	_probar_fun_economia_06()
+func _probar_fun_economia_01() -> void:
 	## Clima.mes_de: la semana 1 es el mes 1, 2 → 2, 13 → 4, 26 → 7, 40 → 10, y nunca pasa de 12 (ni baja de 1 con semanas 0 o negativas).
-	var meses := {-3: 1, 0: 1, 1: 1, 2: 2, 5: 2, 13: 4, 26: 7, 40: 10, 52: 12, 53: 12, 200: 12}
+	_meses = {-3: 1, 0: 1, 1: 1, 2: 2, 5: 2, 13: 4, 26: 7, 40: 10, 52: 12, 53: 12, 200: 12}
 	var mal_mes := []
-	for s: int in meses:
-		if Clima.mes_de(s) != int(meses[s]):
+	for s: int in _meses:
+		if Clima.mes_de(s) != int(_meses[s]):
 			mal_mes.append("%d→%d" % [s, Clima.mes_de(s)])
 	_comprobar(mal_mes.is_empty(), "Clima.mes_de: semana → mes (%s)" % str(mal_mes))
 	_comprobar(Clima.es_extremo({"clave": "lluvia"}) and Clima.es_extremo({"clave": "nieve"}) and Clima.es_extremo({"clave": "tormenta"}) and Clima.es_extremo({"clave": "niebla"}), "Clima.es_extremo: lluvia, nieve, tormenta y niebla lo son")
 	_comprobar(not Clima.es_extremo({}) and not Clima.es_extremo({"clave": "sol"}) and not Clima.es_extremo({"clave": "sol", "calor": false, "altura": false}), "Clima.es_extremo: vacío y sol, no")
 	_comprobar(Clima.es_extremo({"clave": "sol", "calor": true}) and Clima.es_extremo({"altura": true}), "Clima.es_extremo: el calor o la altura bastan solos")
-	## Reputacion.mult_patrocinio: el multiplicador de la tabla en el nivel que toca (los cortes están en 35, 52, 68, 80 y 90).
+func _probar_fun_economia_02() -> void:
+	## Reputacion.mult_patrocinio: el multiplicador de la _tabla en el nivel que toca (los cortes están en 35, 52, 68, 80 y 90).
 	var esperado := {-5: 1.00, 0: 1.00, 34: 1.00, 35: 1.05, 51: 1.05, 52: 1.12, 67: 1.12, 68: 1.22, 79: 1.22, 80: 1.35, 89: 1.35, 90: 1.50, 100: 1.50, 500: 1.50}
 	var mal_rep := []
 	for r: int in esperado:
 		if not is_equal_approx(Reputacion.mult_patrocinio(r), float(esperado[r])):
 			mal_rep.append("%d→%.2f" % [r, Reputacion.mult_patrocinio(r)])
 	_comprobar(mal_rep.is_empty(), "Reputacion.mult_patrocinio por nivel (%s)" % str(mal_rep))
-	var sube := true
+	_sube = true
 	for r in range(0, 101):
-		sube = sube and Reputacion.mult_patrocinio(r) >= Reputacion.mult_patrocinio(maxi(r - 1, 0))
-	_comprobar(sube, "Reputacion.mult_patrocinio nunca baja al subir la reputación")
+		_sube = _sube and Reputacion.mult_patrocinio(r) >= Reputacion.mult_patrocinio(maxi(r - 1, 0))
+	_comprobar(_sube, "Reputacion.mult_patrocinio nunca baja al subir la reputación")
+func _probar_fun_economia_03() -> void:
 	## Meta.rareza_de: la leyenda manda sobre el ovr; si no, oro desde 80, plata desde 70 y bronce el resto.
 	_comprobar(Meta.rareza_de(10, true) == "leyenda" and Meta.rareza_de(99, true) == "leyenda", "Meta.rareza_de: la leyenda lo es con cualquier ovr")
 	_comprobar(Meta.rareza_de(80, false) == "oro" and Meta.rareza_de(99, false) == "oro" and Meta.rareza_de(79, false) == "plata", "Meta.rareza_de: oro desde 80")
 	_comprobar(Meta.rareza_de(70, false) == "plata" and Meta.rareza_de(69, false) == "bronce" and Meta.rareza_de(0, false) == "bronce" and Meta.rareza_de(-4, false) == "bronce", "Meta.rareza_de: plata desde 70, bronce debajo (también 0 y negativos)")
+func _probar_fun_economia_04() -> void:
 	## Finanzas.meses_de: sin partidos en casa, la temporada entera; si no, 2 por partido entre las semanas del mes, con un mínimo de 1.
 	_comprobar(Finanzas.meses_de(0) == Finanzas.MESES_TEMPORADA and Finanzas.meses_de(-3) == Finanzas.MESES_TEMPORADA, "Finanzas.meses_de: 0 o negativo → la temporada entera (%d)" % Finanzas.MESES_TEMPORADA)
 	var k := Finanzas.SEMANAS_DEL_MES
 	_comprobar(Finanzas.meses_de(1) == 1 and Finanzas.meses_de(2) == maxi(1, 4 / k), "Finanzas.meses_de: pocos partidos → mínimo 1 mes")
 	_comprobar(Finanzas.meses_de(19) == 19 * 2 / k and Finanzas.meses_de(38) == 38 * 2 / k, "Finanzas.meses_de: liga de 20 (19 en casa) y de 39 → %d y %d" % [19 * 2 / k, 38 * 2 / k])
-	## (16-11, informe G-06/G-07) La taquilla con el horario de más público no cobra más entradas que asientos; la proyección usa los meses reales si se dan.
+func _probar_fun_economia_05() -> void:
+	## (16-11, informe G-06/G-07) La taquilla con el horario de más público no cobra más entradas que asientos; la proyección usa los _meses reales si se dan.
 	var cf := Club.new()
 	cf.estadio_aforo = 10000; cf.rep = 99; cf.confianza = 99; cf.precio_entrada = 1.0; cf.socios = 90000
 	_comprobar(Finanzas.new(cf, 0.5, 0, 0.0).taquilla(true, 1.08) == int(round(10000.0 * Finanzas.ingreso_por_espectador(1.0))), "Finanzas.taquilla: estadio lleno con la noche de sábado (×1,08) → como mucho el aforo")
 	_comprobar(Finanzas.new(cf, 0.0, 0, 0.0).proyeccion_anual(15, 0, 9)["ingresos"]["Patrocinio"] == Finanzas.new(cf, 0.0, 0, 0.0).patrocinio_base() * 9, "Finanzas.proyeccion_anual: con 9 cierres reales cobra 9 meses")
-	## Viajes.delegacion: 38 personas con reputación 70, sube 0,45 por punto y se queda entre 32 y 52.
+func _probar_fun_economia_06() -> void:
+	## Viajes.delegacion: 38 personas con reputación 70, _sube 0,45 por punto y se queda entre 32 y 52.
 	_comprobar(Viajes.delegacion(70) == 38 and Viajes.delegacion(60) == 34 and Viajes.delegacion(100) == 52, "Viajes.delegacion: 70 → 38, 60 → 34, 100 → 52")
 	_comprobar(Viajes.delegacion(0) == 32 and Viajes.delegacion(-50) == 32 and Viajes.delegacion(500) == 52, "Viajes.delegacion: tope inferior 32 y superior 52")
 
 ## JUGADOR Y FORMACIÓN: techo de crecimiento, estrellas de habilidad, agenda, foco del portero, nombres de formación propia y orden del once.
 func _probar_fun_jugador_y_formacion() -> void:
 	_titulo("FUNCIONES PURAS: JUGADOR Y FORMACIÓN")
+	_probar_fun_jugador_y_formacion_01()
+	_probar_fun_jugador_y_formacion_02()
+	_probar_fun_jugador_y_formacion_03()
+	_probar_fun_jugador_y_formacion_04()
+	_probar_fun_jugador_y_formacion_05()
+	_probar_fun_jugador_y_formacion_06()
+func _probar_fun_jugador_y_formacion_01() -> void:
 	## Jugador.techo_tope: por encima de 90 el techo cuenta la mitad, nunca por debajo del ovr actual y nunca más de 97.
 	_comprobar(Jugador.techo_tope(85, 60) == 85 and Jugador.techo_tope(90, 60) == 90, "Jugador.techo_tope: hasta 90 se queda igual")
 	_comprobar(Jugador.techo_tope(95, 60) == 93 and Jugador.techo_tope(99, 60) == 95 and Jugador.techo_tope(100, 60) == 95, "Jugador.techo_tope: sobre 90 cuenta la mitad (95 → 93, 99 → 95)")
 	_comprobar(Jugador.techo_tope(70, 82) == 82 and Jugador.techo_tope(40, 97) == 97, "Jugador.techo_tope: nunca por debajo de su ovr actual")
 	_comprobar(Jugador.techo_tope(200, 50) <= 97 and Jugador.techo_tope(97, 97) == 97, "Jugador.techo_tope: tope de 97")
+func _probar_fun_jugador_y_formacion_02() -> void:
 	## HabilidadesJugador.estrellas_de: 1, 2 y 3 estrellas desde 74, 81 y 88 puntos.
 	var casos := {-5.0: 0, 0.0: 0, 73.9: 0, 74.0: 1, 80.9: 1, 81.0: 2, 87.9: 2, 88.0: 3, 100.0: 3, 1000.0: 3}
 	var mal := []
@@ -59,9 +83,11 @@ func _probar_fun_jugador_y_formacion() -> void:
 		if HabilidadesJugador.estrellas_de(p) != int(casos[p]):
 			mal.append("%.1f→%d" % [p, HabilidadesJugador.estrellas_de(p)])
 	_comprobar(mal.is_empty(), "HabilidadesJugador.estrellas_de en los cortes (%s)" % str(mal))
+func _probar_fun_jugador_y_formacion_03() -> void:
 	## CarreraAgenda y CarreraPortero: valores fijos.
 	_comprobar(is_equal_approx(CarreraAgenda.extra_entreno("extra"), 0.12) and is_zero_approx(CarreraAgenda.extra_entreno("descanso")) and is_zero_approx(CarreraAgenda.extra_entreno("")), "CarreraAgenda.extra_entreno: solo la agenda «extra» suma 0,12")
 	_comprobar(CarreraPortero.foco_inicial("POR") == "estirada" and CarreraPortero.foco_inicial("DC") == "tiro" and CarreraPortero.foco_inicial("") == "tiro", "CarreraPortero.foco_inicial: el portero entrena la estirada; el resto, el tiro")
+func _probar_fun_jugador_y_formacion_04() -> void:
 	## FormacionPropia: el nombre siempre lleva el prefijo ★, sin repetirlo, recortado a 24 y con un nombre por defecto.
 	var p := FormacionPropia.PREFIJO
 	_comprobar(FormacionPropia.nombre_valido("  Ataque total  ") == p + "Ataque total", "FormacionPropia.nombre_valido: recorta los espacios")
@@ -70,7 +96,8 @@ func _probar_fun_jugador_y_formacion() -> void:
 	var largo := "0123456789012345678901234567890"
 	_comprobar(FormacionPropia.nombre_valido(largo) == p + largo.left(24) and FormacionPropia.nombre_valido(largo).length() == p.length() + 24, "FormacionPropia.nombre_valido: máximo 24 caracteres")
 	_comprobar(FormacionPropia.es_propia(p + "X") and not FormacionPropia.es_propia("4-3-3") and not FormacionPropia.es_propia(""), "FormacionPropia.es_propia: solo con el prefijo")
-	## OnceAuto.orden_de: con tres formaciones de la tabla, el portero va primero y salen todas las ranuras una sola vez.
+func _probar_fun_jugador_y_formacion_05() -> void:
+	## OnceAuto.orden_de: con tres formaciones de la _tabla, el portero va primero y salen todas las ranuras una sola vez.
 	var forms: Dictionary = Datos.tabla("FORMS")
 	var mal_orden := []
 	for f: String in ["4-4-2", "3-5-2", "4-3-3", "4-2-3-1"]:
@@ -85,6 +112,7 @@ func _probar_fun_jugador_y_formacion() -> void:
 		if orden.size() != ranuras.size() or visto.size() != ranuras.size() or not primero_portero:
 			mal_orden.append(f)
 	_comprobar(mal_orden.is_empty() and not forms.is_empty(), "OnceAuto.orden_de: portero primero y todas las ranuras (%s)" % str(mal_orden))
+func _probar_fun_jugador_y_formacion_06() -> void:
 	## Trabajadores.es_mujer: por el primer nombre de la lista femenina; el resto y el vacío, no.
 	_comprobar(Trabajadores.es_mujer({"nombre": "Marta Rojas"}) and Trabajadores.es_mujer({"nombre": "Camila"}) and Trabajadores.es_mujer({"nombre": "Rocío Pérez Soto"}), "Trabajadores.es_mujer: nombres de la lista")
 	_comprobar(not Trabajadores.es_mujer({"nombre": "Pedro Marta"}) and not Trabajadores.es_mujer({}) and not Trabajadores.es_mujer({"nombre": ""}), "Trabajadores.es_mujer: solo cuenta el primer nombre; sin nombre, no")
@@ -92,12 +120,19 @@ func _probar_fun_jugador_y_formacion() -> void:
 ## CALENDARIO, RELOJ, TÁCTICA Y PLANOS: cuándo toca cada continental de selecciones, la rutina del día, los cambios tácticos rápidos, el plano de las ocasiones y los límites del núcleo.
 func _probar_fun_calendario_y_planos() -> void:
 	_titulo("FUNCIONES PURAS: CALENDARIO, RELOJ, TÁCTICA Y PLANOS")
+	_probar_fun_calendario_y_planos_01()
+	_probar_fun_calendario_y_planos_02()
+	_probar_fun_calendario_y_planos_03()
+	_probar_fun_calendario_y_planos_04()
+	_probar_fun_calendario_y_planos_05()
+func _probar_fun_calendario_y_planos_01() -> void:
 	## Calendario.toca_continental_selecciones: cada confederación en su ciclo de años.
 	_comprobar(Calendario.toca_continental_selecciones("ucl", 2028) and Calendario.toca_continental_selecciones("lib", 2032) and Calendario.toca_continental_selecciones("oce", 2024), "Calendario.toca_continental_selecciones: ucl, lib y oce cada 4 años desde 2028 (también hacia atrás)")
 	_comprobar(not Calendario.toca_continental_selecciones("ucl", 2029) and not Calendario.toca_continental_selecciones("lib", 2030) and not Calendario.toca_continental_selecciones("oce", 2031), "Calendario.toca_continental_selecciones: los demás años, no")
 	_comprobar(Calendario.toca_continental_selecciones("conc", 2027) and Calendario.toca_continental_selecciones("afr", 2029) and not Calendario.toca_continental_selecciones("conc", 2028) and not Calendario.toca_continental_selecciones("afr", 2030), "Calendario.toca_continental_selecciones: conc y afr en años impares")
 	_comprobar(Calendario.toca_continental_selecciones("asia", 2027) and Calendario.toca_continental_selecciones("asia", 2031) and not Calendario.toca_continental_selecciones("asia", 2029) and not Calendario.toca_continental_selecciones("zzz", 2028) and not Calendario.toca_continental_selecciones("", 2028), "Calendario.toca_continental_selecciones: asia cada 4 años desde 2027; clave desconocida o vacía, nunca")
-	## Reloj.actividad_de_rutina: en cada inicio de tramo la actividad de la tabla; entre medias, la del último que empezó; a medianoche, dormir.
+func _probar_fun_calendario_y_planos_02() -> void:
+	## Reloj.actividad_de_rutina: en cada inicio de tramo la actividad de la _tabla; entre medias, la del último que empezó; a medianoche, dormir.
 	var mal_rutina := []
 	for tramo: Array in Reloj.RUTINA:
 		var ini := int(tramo[0])
@@ -106,18 +141,21 @@ func _probar_fun_calendario_y_planos() -> void:
 	_comprobar(mal_rutina.is_empty(), "Reloj.actividad_de_rutina: cada tramo empieza con su actividad (%s)" % str(mal_rutina))
 	_comprobar(Reloj.actividad_de_rutina(0) == "dormir" and Reloj.actividad_de_rutina(419) == "dormir" and Reloj.actividad_de_rutina(420) == "comer" and Reloj.actividad_de_rutina(600) == "trabajo" and Reloj.actividad_de_rutina(1439) == "dormir", "Reloj.actividad_de_rutina: dormir de noche, comer a las 7:00, trabajo a media mañana")
 	_comprobar(Reloj.actividad_de_rutina(-30) == "dormir" and Reloj.actividad_de_rutina(5000) == "dormir", "Reloj.actividad_de_rutina: fuera del día (negativo o pasado) no rompe")
+func _probar_fun_calendario_y_planos_03() -> void:
 	## Tactica.cambio_de: dos cambios rápidos con su mentalidad y su línea; cualquier otro nombre, vacío.
 	var of := Tactica.cambio_de("ofensivo")
 	var ce := Tactica.cambio_de("cerrojo")
 	_comprobar(int(of["mentalidad"]) == Tactica.Mentalidad.OFENSIVA and int(of["linea"]) == Tactica.Nivel.ALTO, "Tactica.cambio_de(ofensivo): mentalidad ofensiva y línea alta")
 	_comprobar(int(ce["mentalidad"]) == Tactica.Mentalidad.DEFENSIVA and int(ce["linea"]) == Tactica.Nivel.BAJO, "Tactica.cambio_de(cerrojo): defensiva y línea baja")
 	_comprobar(Tactica.cambio_de("").is_empty() and Tactica.cambio_de("Ofensivo").is_empty() and Tactica.cambio_de("otro").is_empty(), "Tactica.cambio_de: nombre vacío, con otras mayúsculas o desconocido → {}")
+func _probar_fun_calendario_y_planos_04() -> void:
 	## OcasionesDT.a_plano: el eje largo del campo pasa a X del plano y se invierte para el visitante; la altura no cuenta.
 	var pl := OcasionesDT.a_plano(Vector3(10.0, 5.0, 30.0), true)
 	var pv := OcasionesDT.a_plano(Vector3(10.0, 5.0, 30.0), false)
 	_comprobar(is_equal_approx(pl.x, 30.0) and is_equal_approx(pl.y, 10.0), "OcasionesDT.a_plano (local): (x, y, z) → (z, x)")
 	_comprobar(is_equal_approx(pv.x, -30.0) and is_equal_approx(pv.y, -10.0), "OcasionesDT.a_plano (visitante): se invierte")
 	_comprobar(OcasionesDT.a_plano(Vector3.ZERO, true).is_equal_approx(Vector2.ZERO) and OcasionesDT.a_plano(Vector3(-4.0, 9.0, -7.0), true).is_equal_approx(Vector2(-7.0, -4.0)), "OcasionesDT.a_plano: el origen y los negativos")
+func _probar_fun_calendario_y_planos_05() -> void:
 	## CallesCiudad.dentro_nucleo: caja del núcleo con límites estrictos y margen hacia dentro.
 	var cx := (CallesCiudad.NUC_X0 + CallesCiudad.NUC_X1) * 0.5
 	var cz := (CallesCiudad.NUC_Z0 + CallesCiudad.NUC_Z1) * 0.5
@@ -165,10 +203,10 @@ func _probar_fun_club_y_redes() -> void:
 	j.rasgo = ""
 	j.edad = 21
 	j.pot = 64
-	_comprobar(is_equal_approx(ProgresoJugador.prob_semanal(j), 0.025), "prob_semanal: 21 años y 4 de margen = 0,025")
+	_comprobar(is_equal_approx(ProgresoJugador.prob_semanal(j), 0.02), "prob_semanal: 21 años y 4 de margen = 0,02")
 	j.edad = 23
 	j.pot = 61
-	_comprobar(is_equal_approx(ProgresoJugador.prob_semanal(j), 0.0105), "prob_semanal: con 1 punto de margen el freno mínimo es 0,35 (23 años: 0,0105)")
+	_comprobar(is_equal_approx(ProgresoJugador.prob_semanal(j), 0.00875), "prob_semanal: con 1 punto de margen el freno mínimo es 0,35 (23 años: 0,00875)")
 	j.pot = 60
 	_comprobar(is_equal_approx(ProgresoJugador.prob_semanal(j), 0.0), "prob_semanal: en su techo, 0")
 	j.edad = 24
@@ -183,7 +221,7 @@ func _probar_fun_club_y_redes() -> void:
 	j.ovr = 99
 	_comprobar(Mundo.marca_personal(j, 100, 5) == 100, "marca_personal: nunca pasa de 100")
 	_comprobar(Mundo.marca_personal(j, 0, 0) == 86, "marca_personal: 99 de media sin ídolo ni habilidades = 86")
-	## Vestuario.motivo_satisfaccion: el factor más bajo (baja) o más alto (sube); en empate gana el primero de «min, rend, tact, inst».
+	## Vestuario.motivo_satisfaccion: el factor más bajo (baja) o más alto (_sube); en empate gana el primero de «min, rend, tact, inst».
 	var sat := {"min": 50, "rend": 30, "tact": 70, "inst": 60}
 	_comprobar(Vestuario.motivo_satisfaccion(sat, true) == "Su mal rendimiento", "motivo_satisfaccion: el peor factor es el rendimiento")
 	_comprobar(Vestuario.motivo_satisfaccion(sat, false) == "Cómodo en su puesto", "motivo_satisfaccion: el mejor factor es la táctica")
@@ -209,6 +247,14 @@ func _probar_fun_club_y_redes() -> void:
 ## OBJETIVOS, HISTORIA, MUNDIAL, PARTIDAS, ROPERO Y TROFEOS: copa grande por país, rondas hasta el cupo, textos de historia, plazas, nombre libre, artículo del ropero y receta del trofeo.
 func _probar_fun_objetivos_y_textos() -> void:
 	_titulo("FUNCIONES PURAS: OBJETIVOS, HISTORIA, MUNDIAL, PARTIDAS, ROPERO Y TROFEOS")
+	_probar_fun_objetivos_y_textos_01()
+	_probar_fun_objetivos_y_textos_02()
+	_probar_fun_objetivos_y_textos_03()
+	_probar_fun_objetivos_y_textos_04()
+	_probar_fun_objetivos_y_textos_05()
+	_probar_fun_objetivos_y_textos_06()
+	_probar_fun_objetivos_y_textos_07()
+func _probar_fun_objetivos_y_textos_01() -> void:
 	## ObjetivosClub.copa_grande: «ucl» si el país tiene cupo en la Champions, «lib» si es el anfitrión o tiene cupo en la Libertadores, "" si no.
 	var cupos_ucl: Array = FormatosConti.cupos("ucl")
 	var cupos_lib: Array = FormatosConti.cupos("lib")
@@ -226,18 +272,20 @@ func _probar_fun_objetivos_y_textos() -> void:
 	_comprobar(not cupos_ucl.is_empty() and not cupos_lib.is_empty() and mal_copa.is_empty(), "copa_grande: cada país de un cupo tiene su copa (%s)" % str(mal_copa))
 	_comprobar(ObjetivosClub.copa_grande("") == "" and ObjetivosClub.copa_grande("Narnia") == "", "copa_grande: país vacío o inexistente = sin copa grande")
 	_comprobar(ObjetivosClub.copa_grande(Continental.PAIS_ANFITRION) in ["ucl", "lib"], "copa_grande: el anfitrión continental juega una de las dos")
+func _probar_fun_objetivos_y_textos_02() -> void:
 	## ObjetivosClub.rondas_para: rondas de la copa (log2 de los participantes) menos las que quedan desde el cupo.
 	var copa := Copa.new("Copa de prueba")
-	var tabla := {[16, 4]: 2, [16, 1]: 4, [16, 0]: 4, [16, 16]: 0, [16, 64]: 0, [32, 2]: 4, [64, 8]: 3, [20, 2]: 3, [2, 1]: 1, [1, 1]: 0, [0, 4]: 0}
+	_tabla = {[16, 4]: 2, [16, 1]: 4, [16, 0]: 4, [16, 16]: 0, [16, 64]: 0, [32, 2]: 4, [64, 8]: 3, [20, 2]: 3, [2, 1]: 1, [1, 1]: 0, [0, 4]: 0}
 	var mal_rondas := []
-	for k: Array in tabla:
+	for k: Array in _tabla:
 		var clubes: Array[Club] = []
 		for i in int(k[0]):
 			clubes.append(Club.new("c%d" % i, "Club %d" % i))
 		copa.participantes = clubes
-		if ObjetivosClub.rondas_para(copa, int(k[1])) != int(tabla[k]):
+		if ObjetivosClub.rondas_para(copa, int(k[1])) != int(_tabla[k]):
 			mal_rondas.append("%s→%d" % [str(k), ObjetivosClub.rondas_para(copa, int(k[1]))])
 	_comprobar(mal_rondas.is_empty(), "rondas_para: (participantes, cupo) → rondas (%s)" % str(mal_rondas))
+func _probar_fun_objetivos_y_textos_03() -> void:
 	## HistoriaClub.texto_clasicos / texto_historia.
 	_comprobar(HistoriaClub.texto_clasicos({}) == "" and HistoriaClub.texto_clasicos({"rival": ""}) == "", "texto_clasicos: sin rival ni clásicos, vacío")
 	_comprobar(HistoriaClub.texto_clasicos({"rival": "Estudiantes del Plata"}) == "Rival de siempre: %s." % Nombres.visible("Estudiantes del Plata"), "texto_clasicos: sin clásicos, el rival de siempre")
@@ -246,7 +294,8 @@ func _probar_fun_objetivos_y_textos() -> void:
 	_comprobar(txt.begins_with("⚔️ El Superclásico contra %s · Derbi del Norte contra %s" % [Nombres.visible("Boca Unidos"), Nombres.visible("Sporting Vasco")]) and not txt.contains("Otro"), "texto_clasicos: los clásicos van unidos con « · » y mandan sobre el rival (%s)" % txt)
 	_comprobar(HistoriaClub.texto_historia({"guino": "Fundado por tranviarios", "origen": "Barrio del puerto"}) == "Fundado por tranviarios", "texto_historia: el guiño manda")
 	_comprobar(HistoriaClub.texto_historia({"guino": "", "origen": "Barrio del puerto"}) == "Barrio del puerto" and HistoriaClub.texto_historia({}) == "", "texto_historia: sin guiño, el origen; sin nada, vacío")
-	## SeleccionesTorneos.plazas_mundial: 32 hasta 2025; desde 2026 son 48 si la tabla de selecciones los alcanza.
+func _probar_fun_objetivos_y_textos_04() -> void:
+	## SeleccionesTorneos.plazas_mundial: 32 hasta 2025; desde 2026 son 48 si la _tabla de selecciones los alcanza.
 	var hay48 := Selecciones._tabla_selecciones().size() >= SeleccionesTorneos.PLAZAS_MUNDIAL_48
 	var mal_plazas := []
 	for a: int in [1930, 1998, 2022, 2025, 2026, 2030, 2100]:
@@ -254,15 +303,18 @@ func _probar_fun_objetivos_y_textos() -> void:
 		if SeleccionesTorneos.plazas_mundial(null, a) != esp:
 			mal_plazas.append("%d→%d" % [a, SeleccionesTorneos.plazas_mundial(null, a)])
 	_comprobar(mal_plazas.is_empty() and SeleccionesTorneos.plazas_mundial(null, 2025) == 32, "plazas_mundial: 32 antes de 2026, 48 después (%s)" % str(mal_plazas))
+func _probar_fun_objetivos_y_textos_05() -> void:
 	## PartidaExportar.nombre_libre: nombre válido de archivo, sin bordes con espacios; vacío = «importada»; si ya existe, «(2)», «(3)»…
 	_comprobar(PartidaExportar.nombre_libre("") == "importada" and PartidaExportar.nombre_libre("   ") == "importada", "nombre_libre: vacío = «importada»")
 	var libre := PartidaExportar.nombre_libre("  Liga Austral/Sur:2031  ")
 	_comprobar(not libre.contains("/") and not libre.contains(":") and libre == libre.strip_edges() and libre.begins_with("Liga Austral"), "nombre_libre: quita barras y dos puntos (%s)" % libre)
 	_comprobar(PartidaExportar.nombre_libre("Dinastía Ñuble 2040") == "Dinastía Ñuble 2040", "nombre_libre: un nombre limpio y libre se conserva")
+func _probar_fun_objetivos_y_textos_06() -> void:
 	## RoperoDT.articulo: la ficha del catálogo, o {} si no existe.
 	_comprobar(RoperoDT.articulo("balon")["precio"] == 25 and not bool(RoperoDT.articulo("balon")["una"]), "RoperoDT.articulo: el balón vale 25 y se repite")
 	_comprobar(RoperoDT.articulo("camiseta_club")["precio"] == 40 and bool(RoperoDT.articulo("camiseta_club")["una"]), "RoperoDT.articulo: la camiseta vale 40 y es única")
 	_comprobar(RoperoDT.articulo("").is_empty() and RoperoDT.articulo("Balon").is_empty() and RoperoDT.articulo("nada").is_empty(), "RoperoDT.articulo: vacío, otra mayúscula o desconocido = {}")
+func _probar_fun_objetivos_y_textos_07() -> void:
 	## TrofeosReales.para_titulo = receta(id_de(título, país)); lo no reconocido cae en «generico».
 	_comprobar(TrofeosReales.para_titulo("Mundial de Clubes", "ARG") == TrofeosReales.receta("mundial"), "para_titulo: el Mundial de Clubes, sea del país que sea")
 	_comprobar(TrofeosReales.para_titulo("Liga", "ESP") == TrofeosReales.receta("liga:ESP") and TrofeosReales.para_titulo("Liga", "GER") == TrofeosReales.receta("liga:GER"), "para_titulo: «Liga» a secas depende del país")
@@ -271,7 +323,14 @@ func _probar_fun_objetivos_y_textos() -> void:
 ## CAMPAÑAS, TERRENOS Y NEGOCIOS, EVENTOS, FERIADOS, CALLES Y LIGAS ELEGIDAS: búsquedas por clave, ¿es partido?, feriados de un día, calle de un tramo y elección guardada.
 func _probar_fun_catalogos_y_calles() -> void:
 	_titulo("FUNCIONES PURAS: CATÁLOGOS, EVENTOS, FERIADOS, CALLES Y LIGAS ELEGIDAS")
-	## Finanzas.def_campana: la fila de la tabla por su clave, o [] si no existe.
+	_probar_fun_catalogos_y_calles_01()
+	_probar_fun_catalogos_y_calles_02()
+	_probar_fun_catalogos_y_calles_03()
+	_probar_fun_catalogos_y_calles_04()
+	_probar_fun_catalogos_y_calles_05()
+	_probar_fun_catalogos_y_calles_06()
+func _probar_fun_catalogos_y_calles_01() -> void:
+	## Finanzas.def_campana: la fila de la _tabla por su clave, o [] si no existe.
 	var mal_camp := []
 	for f: Array in Finanzas.CAMPANAS:
 		if Finanzas.def_campana(String(f[0])) != f:
@@ -279,6 +338,7 @@ func _probar_fun_catalogos_y_calles() -> void:
 	_comprobar(mal_camp.is_empty() and Finanzas.CAMPANAS.size() >= 2, "def_campana: cada clave devuelve su fila (%s)" % str(mal_camp))
 	_comprobar(Finanzas.def_campana("abonos")[1] == "Campaña de abonos" and int(Finanzas.def_campana("abonos")[3]) == 120000, "def_campana: «abonos» cuesta 120.000")
 	_comprobar(Finanzas.def_campana("").is_empty() and Finanzas.def_campana("Abonos").is_empty() and Finanzas.def_campana("nada").is_empty(), "def_campana: vacía, otra mayúscula o desconocida = []")
+func _probar_fun_catalogos_y_calles_02() -> void:
 	## Ciudad.def_terreno / def_negocio: igual, sobre las tablas de datos.
 	var mal_ciu := []
 	for f2: Array in Ciudad.lista_terrenos():
@@ -289,6 +349,7 @@ func _probar_fun_catalogos_y_calles() -> void:
 			mal_ciu.append("negocio " + String(f3[0]))
 	_comprobar(mal_ciu.is_empty() and not Ciudad.lista_terrenos().is_empty() and not Ciudad.lista_negocios().is_empty(), "def_terreno / def_negocio: cada clave devuelve su fila (%s)" % str(mal_ciu))
 	_comprobar(Ciudad.def_terreno("").is_empty() and Ciudad.def_terreno("no_existe").is_empty() and Ciudad.def_negocio("").is_empty() and Ciudad.def_negocio("no_existe").is_empty(), "def_terreno / def_negocio: vacío o desconocido = []")
+func _probar_fun_catalogos_y_calles_03() -> void:
 	## EventosFecha.es_partido: liga, copa y continental lo son; el resto de eventos del día, no.
 	var tipos := {"liga": true, "copa": true, "conti": true, "mercado_abre": false, "cumple": false, "": false, "Liga": false}
 	var mal_tipo := []
@@ -296,6 +357,14 @@ func _probar_fun_catalogos_y_calles() -> void:
 		if EventosFecha.es_partido({"tipo": t}) != bool(tipos[t]):
 			mal_tipo.append(t)
 	_comprobar(mal_tipo.is_empty(), "es_partido: por tipo de evento (%s)" % str(mal_tipo))
+## Los feriados de ESP, ARG y USA caen en la fecha del día; si no, se anota el país.
+func _fc4_feriados(fe: Dictionary, sem: int, d: int, mal_dia: Array) -> void:
+	for pais: String in ["ESP", "ARG", "USA"]:
+		for x: Dictionary in Calendario.del_dia(pais, 2031, sem, d):
+			if int(x["mes"]) != int(fe["month"]) or int(x["dia"]) != int(fe["day"]):
+				mal_dia.append("%s %d/%d" % [pais, sem, d])
+
+func _probar_fun_catalogos_y_calles_04() -> void:
 	## Calendario.del_dia: solo los feriados cuyo mes y día coinciden con la fecha de (año, semana, día). El 1 de mayo existe salvo en USA, AUS, JPN y ENG.
 	var mal_dia := []
 	var mayo := {}
@@ -304,10 +373,7 @@ func _probar_fun_catalogos_y_calles() -> void:
 			var fe := Calendario.fecha(2031, sem, d)
 			if int(fe["month"]) == 5 and int(fe["day"]) == 1:
 				mayo = {"sem": sem, "dia": d}
-			for pais: String in ["ESP", "ARG", "USA"]:
-				for x: Dictionary in Calendario.del_dia(pais, 2031, sem, d):
-					if int(x["mes"]) != int(fe["month"]) or int(x["dia"]) != int(fe["day"]):
-						mal_dia.append("%s %d/%d" % [pais, sem, d])
+			_fc4_feriados(fe, sem, d, mal_dia)
 	_comprobar(mal_dia.is_empty() and not mayo.is_empty(), "del_dia: cada feriado cae en su fecha (%s)" % str(mal_dia))
 	if not mayo.is_empty():
 		var hay: Dictionary = {}
@@ -318,11 +384,13 @@ func _probar_fun_catalogos_y_calles() -> void:
 			hay[pais2] = trabajo
 		_comprobar(bool(hay["ESP"]) and bool(hay["ARG"]) and bool(hay["CHI"]) and not bool(hay["ENG"]) and not bool(hay["USA"]) and not bool(hay["JPN"]) and not bool(hay["AUS"]), "del_dia: el 1 de mayo es feriado salvo en ENG, USA, JPN y AUS (%s)" % str(hay))
 	_comprobar(Calendario.del_dia("Narnia", 2031, 1, 0).size() <= 1, "del_dia: un país desconocido solo tiene el feriado común, si lo hay")
+func _probar_fun_catalogos_y_calles_05() -> void:
 	## CallesCiudad.calle_del_eje: dentro del núcleo, el nombre de la avenida sobre la que va el tramo; fuera, el de la columna o la fila.
 	_comprobar(CallesCiudad.calle_del_eje(Vector2(205, -100), Vector2(205, 100)) == "Av. Los Hinchas", "calle_del_eje: un tramo sobre la avenida del núcleo")
 	_comprobar(CallesCiudad.calle_del_eje(Vector2(-100, 350), Vector2(100, 350)) == "Av. La Cantera", "calle_del_eje: la avenida horizontal del núcleo")
 	_comprobar(CallesCiudad.calle_del_eje(Vector2(-880, 0), Vector2(-880, 110)) == CallesCiudad.nombre_columna(-8), "calle_del_eje: fuera del núcleo y vertical = la columna")
 	_comprobar(CallesCiudad.calle_del_eje(Vector2(0, 880), Vector2(110, 880)) == CallesCiudad.nombre_fila(8), "calle_del_eje: fuera del núcleo y horizontal = la fila")
+func _probar_fun_catalogos_y_calles_06() -> void:
 	## LigasActivas.guardar_eleccion: la deja en `elegidas` tal cual y en el archivo; al cargarla se descartan los países que no existen. Se restaura lo que hubiera.
 	var antes: Array[String] = LigasActivas.elegidas.duplicate()
 	var ruta: String = LigasActivas.RUTA_ELECCION

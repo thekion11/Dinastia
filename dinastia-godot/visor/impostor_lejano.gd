@@ -45,7 +45,7 @@ static func aplicar(nodo: Node3D, altura: float, color: Color, nivel: int, ap: A
 	## Más estrecha de frente y de perfil (16-11): un cuerpo mide ~45 × 25 cm, no 54 × 54 (se leía como un barril).
 	mi.scale = Vector3(0.85, altura, 0.6)
 	mi.position.y = altura * 0.5
-	mi.material_override = _material(color) if piel.a == 0.0 else _material_equipado(color, piel, equip)
+	mi.material_override = _material(color) if is_zero_approx(piel.a) else _material_equipado(color, piel, equip)
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.visibility_range_begin = DISTANCIA
 	mi.visibility_range_begin_margin = MARGEN

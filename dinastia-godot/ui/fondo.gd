@@ -309,7 +309,20 @@ static func _cesped() -> String:
 	return _marco(defs, c)
 
 static func svg_de(k: String) -> String:
-	match k:
+	var clave := k
+	var r_svg_de_1: Variant = _svg_de_1(clave)
+	if r_svg_de_1 != null:
+		return r_svg_de_1
+	var r_svg_de_2: Variant = _svg_de_2(clave)
+	if r_svg_de_2 != null:
+		return r_svg_de_2
+	var r_svg_de_3: Variant = _svg_de_3(clave)
+	if r_svg_de_3 != null:
+		return r_svg_de_3
+	return _cesped()
+
+static func _svg_de_1(clave: String) -> Variant:
+	match clave:
 		"nocturna": return _nocturna()
 		"retro": return _retro()
 		"prensa": return _prensa()
@@ -318,6 +331,10 @@ static func svg_de(k: String) -> String:
 		"trofeo": return _trofeo()
 		"pizarra": return _pizarra()
 		"minimal": return _minimal()
+	return null
+
+static func _svg_de_2(clave: String) -> Variant:
+	match clave:
 		"tunel": return _tunel()
 		"lluvia": return _lluvia()
 		"amanecer": return _amanecer()
@@ -326,6 +343,10 @@ static func svg_de(k: String) -> String:
 		"ciudad": return _ciudad()
 		"montana": return _montana()
 		"playa": return _playa()
+	return null
+
+static func _svg_de_3(clave: String) -> Variant:
+	match clave:
 		"nieve": return _nieve()
 		"juntas": return _juntas()
 		"mapa": return _mapa()
@@ -333,7 +354,8 @@ static func svg_de(k: String) -> String:
 		"bufandas": return _bufandas()
 		"diario": return _diario()
 		"aeropuerto": return _aeropuerto()
-	return _cesped()
+	return null
+
 
 ## La textura lista para poner en un `TextureRect`. Se cachea porque rasterizar
 ## un SVG de 1600×900 cuesta, y el fondo se pide en cada repintado de pantalla.

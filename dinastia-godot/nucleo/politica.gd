@@ -196,6 +196,13 @@ var explicado: Dictionary = {}   ## pais -> true
 var campana: Dictionary = {}     ## pais -> [candidatos] durante la campaña
 
 static func _h(t: String) -> int:
+	var nat := Nativo.de("nuc_hash_abs")
+	if nat != null:
+		return nat.nuc_hash_abs(t)
+	return _h_gd(t)
+
+## Gemela GDScript de `nuc_hash_abs` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _h_gd(t: String) -> int:
 	return absi(t.hash())
 
 static func partidos_de(pais: String) -> Array:
@@ -338,6 +345,13 @@ func semana(c: Club, anio: int, sem: int, prensa: Prensa) -> void:
 ## −1 recelo (apoyaste al que perdió), 0 neutral. Mueve un 25 % lo que el gobierno da o cobra.
 const PESO_RELACION := 0.25
 static func relacion(g: Dictionary) -> int:
+	var nat := Nativo.de("nuc_relacion_politica")
+	if nat != null:
+		return nat.nuc_relacion_politica(g)
+	return relacion_gd(g)
+
+## Gemela GDScript de `nuc_relacion_politica` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func relacion_gd(g: Dictionary) -> int:
 	if int(g.get("apoyo_club", -1)) >= int(g.get("desde", 0)):
 		return 1
 	if int(g.get("recelo_club", -1)) >= int(g.get("desde", 0)):

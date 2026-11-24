@@ -71,53 +71,10 @@ func _jugar_eliminatoria(ya_jugado: Partido) -> Array:
 	var pasan: Array[Club] = []
 	var resultados: Array = []
 	var nueva_ida: Array = []
+	var ctx := {"pata": pata, "titulo": titulo, "final": final, "vivos_antes": vivos_antes, "ya_jugado": ya_jugado,
+		"nueva_ida": nueva_ida, "resultados": resultados, "pasan": pasan}
 	for i in range(0, vivos.size() - 1, 2):
-		var a: Club = vivos[i]
-		var b: Club = vivos[i + 1]
-		if pata == 1:
-			var ri := _partido_de(a, b, false, ya_jugado)
-			nueva_ida.append({"local": a, "visita": b, "gl": ri[0], "gv": ri[1]})
-			resultados.append({"local": a, "visita": b, "gl": ri[0], "gv": ri[1], "ronda": titulo})
-			continue
-		var local := a
-		var visita := b
-		var neutral := false
-		var ida := {}
-		if pata == 2:
-			local = b
-			visita = a
-			ida = _ida_de(a, b)
-		elif final:
-			## La final a partido único se juega en cancha neutral, salvo que uno de los dos sea el dueño de la sede fija.
-			var en_casa := sede_final_id != "" and (a.id == sede_final_id or b.id == sede_final_id)
-			if en_casa and b.id == sede_final_id:
-				local = b
-				visita = a
-			neutral = not en_casa
-		var r := _partido_de(local, visita, neutral, ya_jugado)
-		var gl: int = r[0]
-		var gv: int = r[1]
-		var tot_l := gl
-		var tot_v := gv
-		if pata == 2:
-			tot_l = gl + int(ida.get("gv", 0))   ## el local de la vuelta (b) y lo que hizo de visitante en la ida
-			tot_v = gv + int(ida.get("gl", 0))
-		var penales: Array = []
-		if tot_l == tot_v:
-			penales = (r[2] as Partido).penales()
-		var gana: Club = local
-		if tot_v > tot_l:
-			gana = visita
-		elif tot_l == tot_v and not penales.is_empty() and int(penales[1]) > int(penales[0]):
-			gana = visita
-		pasan.append(gana)
-		var fila := {"local": local, "visita": visita, "gl": gl, "gv": gv, "penales": penales, "pasa": gana, "ronda": titulo}
-		if _etiqueta_de(i / 2, vivos_antes) != "":
-			fila["etiqueta"] = _etiqueta_de(i / 2, vivos_antes)
-		if pata == 2:
-			fila["ida"] = [int(ida.get("gv", 0)), int(ida.get("gl", 0))]   ## en el orden de la vuelta: local, visita
-			fila["agregado"] = [tot_l, tot_v]
-		resultados.append(fila)
+		_jugar_cruce(ctx, i)
 	## Un número impar de vivos (un cuadro cargado o armado a mano) no descarta al último club en silencio: pasa con un «bye».
 	if pata != 1 and vivos.size() % 2 == 1:
 		pasan.append(vivos[vivos.size() - 1])
@@ -142,6 +99,63 @@ func _jugar_eliminatoria(ya_jugado: Partido) -> Array:
 		anunciar_sorteo()
 	return resultados
 
+## Un cruce de la ronda: el partido (o ida y vuelta) de los vivos `i` y `i + 1`.
+func _jugar_cruce(ctx: Dictionary, i: int) -> void:
+	var pata: int = ctx["pata"]
+	var titulo: String = ctx["titulo"]
+	var final: bool = ctx["final"]
+	var vivos_antes: int = ctx["vivos_antes"]
+	var ya_jugado: Partido = ctx["ya_jugado"]
+	var nueva_ida: Array = ctx["nueva_ida"]
+	var resultados: Array = ctx["resultados"]
+	var pasan: Array[Club] = ctx["pasan"]
+	var a: Club = vivos[i]
+	var b: Club = vivos[i + 1]
+	if pata == 1:
+		var ri := _partido_de(a, b, false, ya_jugado)
+		nueva_ida.append({"local": a, "visita": b, "gl": ri[0], "gv": ri[1]})
+		resultados.append({"local": a, "visita": b, "gl": ri[0], "gv": ri[1], "ronda": titulo})
+		return
+	var local := a
+	var visita := b
+	var neutral := false
+	var ida := {}
+	if pata == 2:
+		local = b
+		visita = a
+		ida = _ida_de(a, b)
+	elif final:
+		## La final a partido único se juega en cancha neutral, salvo que uno de los dos sea el dueño de la sede fija.
+		var en_casa := sede_final_id != "" and (a.id == sede_final_id or b.id == sede_final_id)
+		if en_casa and b.id == sede_final_id:
+			local = b
+			visita = a
+		neutral = not en_casa
+	var r := _partido_de(local, visita, neutral, ya_jugado)
+	var gl: int = r[0]
+	var gv: int = r[1]
+	var tot_l := gl
+	var tot_v := gv
+	if pata == 2:
+		tot_l = gl + int(ida.get("gv", 0))   ## el local de la vuelta (b) y lo que hizo de visitante en la ida
+		tot_v = gv + int(ida.get("gl", 0))
+	var penales: Array = []
+	if tot_l == tot_v:
+		penales = (r[2] as Partido).penales()
+	var gana: Club = local
+	if tot_v > tot_l:
+		gana = visita
+	elif tot_l == tot_v and not penales.is_empty() and int(penales[1]) > int(penales[0]):
+		gana = visita
+	pasan.append(gana)
+	var fila := {"local": local, "visita": visita, "gl": gl, "gv": gv, "penales": penales, "pasa": gana, "ronda": titulo}
+	if _etiqueta_de(i / 2, vivos_antes) != "":
+		fila["etiqueta"] = _etiqueta_de(i / 2, vivos_antes)
+	if pata == 2:
+		fila["ida"] = [int(ida.get("gv", 0)), int(ida.get("gl", 0))]   ## en el orden de la vuelta: local, visita
+		fila["agregado"] = [tot_l, tot_v]
+	resultados.append(fila)
+
 ## Acabado el playoff, sus ganadores se enfrentan a los ocho primeros de la fase de liga: el 1.º contra el ganador del
 ## cruce más flojo, y los cabezas de serie en mitades distintas del cuadro. Todos los que llegan a octavos cobran la bolsa.
 func _unir_playoff_y_octavos() -> void:
@@ -156,6 +170,13 @@ func _unir_playoff_y_octavos() -> void:
 
 ## El orden de los cabezas de serie dentro del cuadro: [0, 7, 3, 4, 1, 6, 2, 5] con 8.
 static func _orden_de_semillas(n: int) -> Array:
+	var nat := Nativo.de("nuc_orden_de_semillas")
+	if nat != null:
+		return nat.nuc_orden_de_semillas(n)
+	return _orden_de_semillas_gd(n)
+
+## Gemela GDScript de `nuc_orden_de_semillas` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _orden_de_semillas_gd(n: int) -> Array:
 	var orden: Array = [0]
 	var tam := 1
 	while tam < n:

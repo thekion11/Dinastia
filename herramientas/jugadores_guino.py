@@ -108,6 +108,17 @@ def guinar_palabra(palabra, semilla):
     return _capitaliza(palabra, actual)
 
 
+def _contiene_vetado(res, vetados_bajos):
+    """(18-11) ¿El guiño lleva DENTRO el nombre completo de otro jugador real? («Francisco González Metiyi» contiene a
+    «Francisco González», que existe: `revisar_build_publico.py` lo marca). Mira cada tramo de 2 o más palabras seguidas."""
+    pal = sin_tildes(res).lower().split()
+    for i in range(len(pal)):
+        for j in range(i + 2, len(pal) + 1):
+            if (j - i) < len(pal) and " ".join(pal[i:j]) in vetados_bajos:
+                return True
+    return False
+
+
 def guinar(nombre, vetados_bajos=frozenset(), extra=0):
     """El nombre de guiño de un jugador real. Nombre de pila intacto; cambia el
     último apellido (o la única palabra si es un nombre de una sola)."""
@@ -128,7 +139,7 @@ def guinar(nombre, vetados_bajos=frozenset(), extra=0):
             j = 0 if idx != 0 else len(p) - 1
             p[j] = guinar_palabra(partes[j], semilla + 7 * intento)
         res = " ".join(p)
-        if res.lower() != nombre.lower() and sin_tildes(res).lower() not in vetados_bajos:
+        if res.lower() != nombre.lower() and sin_tildes(res).lower() not in vetados_bajos and not _contiene_vetado(res, vetados_bajos):
             return res
         intento += 1
         if intento > 6:

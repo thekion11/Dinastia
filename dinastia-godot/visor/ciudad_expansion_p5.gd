@@ -107,8 +107,11 @@ func _cd(pos: Vector3, tam: Vector3, col: Color) -> void:
 	_det_t.append(Transform3D(Basis.from_scale(tam), pos))
 	_det_c.append(col)
 
-func _detalle_casa(hr: RandomNumberGenerator, arq: int, x: float, z: float, zf: float, ancho: float,
-		fondo: float, alto: float, lado: float, paso_x: float, col: Color, tejado: Color) -> void:
+## `g`: la geometría de la casa {x, z, zf, ancho, fondo, alto, lado, paso_x, col, tejado} (la misma que usa `_casas` al colocarla).
+func _detalle_casa(hr: RandomNumberGenerator, arq: int, g: Dictionary) -> void:
+	var x: float = g["x"]; var z: float = g["z"]; var zf: float = g["zf"]; var ancho: float = g["ancho"]
+	var fondo: float = g["fondo"]; var alto: float = g["alto"]; var lado: float = g["lado"]; var paso_x: float = g["paso_x"]
+	var col: Color = g["col"]; var tejado: Color = g["tejado"]
 	var piedra := Color(0.72, 0.7, 0.66)
 	var blanco := Color(0.96, 0.95, 0.92)
 	var acento := [Color(0.15, 0.35, 0.3), Color(0.45, 0.18, 0.15), Color(0.2, 0.3, 0.5), Color(0.25, 0.25, 0.27), Color(0.55, 0.45, 0.2)][hr.randi() % 5] as Color
@@ -216,7 +219,7 @@ func _casas(r: Rect2) -> void:
 			_buzones_t.append(Transform3D(Basis.from_scale(Vector3(0.45, 1.2, 0.35)), Vector3(x + 1.6, 0.6, zs)))
 			if _rng.randf() < 0.6:
 				_chimeneas_t.append(Transform3D(Basis.from_scale(Vector3(0.8, 2.6, 0.8)), Vector3(x + ancho * 0.28, alto + 2.0, z - lado * fondo * 0.15)))
-			_detalle_casa(hr, arq, x, z, zf, ancho, fondo, alto, lado, paso_x, col, tejado)
+			_detalle_casa(hr, arq, {"x": x, "z": z, "zf": zf, "ancho": ancho, "fondo": fondo, "alto": alto, "lado": lado, "paso_x": paso_x, "col": col, "tejado": tejado})
 			## El modelo del kit suburbano: por un hash propio de la posición, para no
 			## tocar la secuencia de `_rng` ni de `hr` (todo lo demás sigue en su sitio).
 			_kenney_casas.append({"m": absi(hash(Vector2(x, z) + Vector2(1.0, 7.0))) % MODELOS_CASA.size(),

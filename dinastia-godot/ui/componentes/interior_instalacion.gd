@@ -192,42 +192,49 @@ func _recreativos() -> void:
 func _construir_sala() -> void:
 	## Ropa corta de deporte solo donde se hace deporte (13-10-2026).
 	Mini3D.sala_deportiva = tipo in ["gimnasio", "piscina"]
-	match tipo:
-		"oficina": _oficina()
-		"hospital": _hospital()
-		"comisaria": _comisaria()
-		"bomberos": _bomberos()
-		"aula": _aula()
-		"estacion": _estacion()
-		"mercado": _mercado()
-		"cine": _cine()
-		"tienda": _tienda()
-		"gimnasio": _gimnasio()
-		"analisis": _analisis()
-		"comedor": _comedor()
-		"prensa": _prensa()
-		"museo": _museo()
-		"piscina": _piscina()
-		"vivienda": _vivienda()
-		"bar": _bar()
-		"panaderia": _panaderia()
-		"peluqueria": _peluqueria()
-		"libreria": _libreria()
-		"taller": _taller()
-		"recreativos": _recreativos()
-		"farmacia": _farmacia()
-		"banco": _banco()
-		"hotel": _hotel()
-		"ferreteria": _ferreteria()
-		"floristeria": _floristeria()
-		"correos": _correos()
-		"deportes": _deportes()
-		"pizzeria": _pizzeria()
-		"heladeria": _heladeria()
-		"pena": _pena()
+	var constructor = _constructores_sala().get(tipo)
+	if constructor != null:
+		(constructor as Callable).call()
 	_vaciar_lotes()
 	## De vuelta al valor de siempre: los minijuegos y la ciudad lo usan.
 	Mini3D.sala_deportiva = true
+
+## Un constructor por tipo de sala (el mismo reparto que el match de antes; un tipo sin constructor no dibuja nada).
+func _constructores_sala() -> Dictionary:
+	return {
+		"oficina": _oficina,
+		"hospital": _hospital,
+		"comisaria": _comisaria,
+		"bomberos": _bomberos,
+		"aula": _aula,
+		"estacion": _estacion,
+		"mercado": _mercado,
+		"cine": _cine,
+		"tienda": _tienda,
+		"gimnasio": _gimnasio,
+		"analisis": _analisis,
+		"comedor": _comedor,
+		"prensa": _prensa,
+		"museo": _museo,
+		"piscina": _piscina,
+		"vivienda": _vivienda,
+		"bar": _bar,
+		"panaderia": _panaderia,
+		"peluqueria": _peluqueria,
+		"libreria": _libreria,
+		"taller": _taller,
+		"recreativos": _recreativos,
+		"farmacia": _farmacia,
+		"banco": _banco,
+		"hotel": _hotel,
+		"ferreteria": _ferreteria,
+		"floristeria": _floristeria,
+		"correos": _correos,
+		"deportes": _deportes,
+		"pizzeria": _pizzeria,
+		"heladeria": _heladeria,
+		"pena": _pena,
+	}
 
 func _cerrar() -> void:
 	cerrado.emit()
@@ -242,7 +249,7 @@ func _interfaz(nombre: String) -> void:
 	add_child(banda)
 	_titulo = Label.new()
 	_titulo.text = Idiomas.t("🚪 %s  ·  %d personas  ·  arrastra para girar, rueda para acercar, Esc para salir") % [nombre, _raiz.find_children("*", "Skeleton3D", true, false).size()]
-	_titulo.add_theme_font_size_override("font_size", 20)
+	_titulo.add_theme_font_size_override("font_size", Tema.letra(20))
 	_titulo.position = Vector2(20, 14)
 	_titulo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_titulo)

@@ -23,7 +23,7 @@ extends Node
 ## 4-11 (PES 6, reglas al límite, a propósito): un lesionado SALE del campo (cambio de la CPU en el acto, el ayudante del DT a los 3 minutos; sin cambios, el equipo sigue con uno menos) y sin portero la defensa supone un «portero» de 35 (`PartidoLesiones`). Era 689438746. `igualdad_motor` no cambia.
 ## 4-11 (RECALIBRACIÓN DEL SIMULADO, decisión del dueño, a propósito): ~25 remates por partido (antes ~10; `Balance.LLEGADAS_K`), ~8,5 a puerta, ~11 % de conversión, el portero para el ~68 % de lo que va a puerta, y el cociente ataque/defensa se satura (`SATURA_LN`, A4-PAR-L02: 71 contra 48 da ~3,8 goles y como mucho ~8 en vez de 7,7 y hasta 15-0). Los goles siguen en ~2,7. Era 2200717894. `igualdad_motor` no cambia.
 ## 17-11 (a propósito, solo DATOS): +1.086 jugadores reales en 42 clubes (plantillas de hasta 26 equilibradas por línea) (ARG entre ellos, que está en este mundo: CHI y ARG); el balance y el motor no cambian. Era 3725505167.
-const ESPERADO := "3158632033"   ## 13-11 (a propósito, decisiones del dueño ya unidas en main: sueldos por liga en las ligas chicas y planteles dentro del cupo; la sesión 15/16 y la música no lo tocan); antes 2180788566, sellado el 10-11 (a propósito): +130 clubes reales de SWE, NOR, POL, CZE, ROU, SRB, UKR y CHN (tablas, países y cupos UEL/UECL); antes 1113735177 (estilos de club equilibrados), y antes 3463485184
+const ESPERADO := "3917123084"   ## 20-11 (a propósito, unión de ramas): los nombres ficticios de la tabla de clubes cambiaron (nombre real quitado de lo público: `main` 19-11 y los 5 clubes de la rama de tareas fáciles); la anterior, 2180172940 del 18-11, ya no se cumplía en `main`
 
 func _ready() -> void:
 	var m := Mundo.new()

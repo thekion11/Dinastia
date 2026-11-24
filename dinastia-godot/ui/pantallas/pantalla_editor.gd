@@ -9,7 +9,7 @@ var _ed_csv: String = ""
 ## HTML se pueda pegar aquí tal cual.
 func _pintar_editor_csv(ed: Editor) -> void:
 	p._lista_editor.add_child(HSeparator.new())
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("IMPORTAR UNA BASE (CSV)")
 	p._lista_editor.add_child(t)
 	var ex := p._texto(10, Principal.COL_SUAVE)
@@ -36,26 +36,26 @@ func _pintar_editor_csv(ed: Editor) -> void:
 	caja.text = _ed_csv
 	caja.placeholder_text = "Andino FC;Tomás Herrera;MED;28;75\nPuerto Sur;Iván Quiroga;DEL;24;80;URU;80"
 	caja.custom_minimum_size = Vector2(0, 120)
-	caja.add_theme_font_size_override("font_size", 11)
+	caja.add_theme_font_size_override("font_size", Tema.letra(11))
 	caja.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
 	caja.text_changed.connect(func() -> void: _ed_csv = caja.text)
 	p._lista_editor.add_child(caja)
 
 	var bi := Button.new()
 	bi.text = Idiomas.t("📥 Importar")
-	bi.add_theme_font_size_override("font_size", 11)
+	bi.add_theme_font_size_override("font_size", Tema.letra(11))
 	bi.pressed.connect(func() -> void: _importar_csv(ed))
 	p._lista_editor.add_child(bi)
 	var bp := Button.new()
 	bp.text = Idiomas.t("📋 Pegar desde el portapapeles")
-	bp.add_theme_font_size_override("font_size", 11)
+	bp.add_theme_font_size_override("font_size", Tema.letra(11))
 	bp.pressed.connect(func() -> void:
 		_ed_csv = DisplayServer.clipboard_get()
 		p._refrescar())
 	p._lista_editor.add_child(bp)
 
 	p._lista_editor.add_child(HSeparator.new())
-	var te := p._texto(11, p.COL_ACENTO)
+	var te := p._texto(11, p.col_acento)
 	te.text = Idiomas.t("EXPORTAR LA BASE (CSV)")
 	p._lista_editor.add_child(te)
 	var ee := p._texto(10, Principal.COL_SUAVE)
@@ -67,12 +67,12 @@ func _pintar_editor_csv(ed: Editor) -> void:
 	p._lista_editor.add_child(fila_ex)
 	var b_mi := Button.new()
 	b_mi.text = Idiomas.t("Mi liga")
-	b_mi.add_theme_font_size_override("font_size", 11)
+	b_mi.add_theme_font_size_override("font_size", Tema.letra(11))
 	b_mi.pressed.connect(func() -> void: _exportar_csv(ed, true))
 	fila_ex.add_child(b_mi)
 	var b_todo := Button.new()
 	b_todo.text = Idiomas.t("Todo el mundo")
-	b_todo.add_theme_font_size_override("font_size", 11)
+	b_todo.add_theme_font_size_override("font_size", Tema.letra(11))
 	b_todo.pressed.connect(func() -> void: _exportar_csv(ed, false))
 	fila_ex.add_child(b_todo)
 

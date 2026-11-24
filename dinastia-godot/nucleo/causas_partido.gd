@@ -55,6 +55,41 @@ static func candidatas(p: Partido, mio: int) -> Array:
 	var gm := p.goles_local if mio == 0 else p.goles_visita
 	var gs := p.goles_visita if mio == 0 else p.goles_local
 	var lado := 1 if mio == 0 else -1   ## para leer el momentum (positivo = local)
+	_causas_momentum(c, p, r, mio, lado)
+	var fm := int(r.inicio["forma"][mio])
+	var fs := int(r.inicio["forma"][suyo])
+	var om := int(r.inicio["ovr"][mio])
+	var os := int(r.inicio["ovr"][suyo])
+	_causas_forma_y_plantilla(c, fm, fs, om, os)
+	_causas_clima(c, p, r, mio)
+	_causas_tactica(c, p, r, mio, gm, gs)
+	_causas_plan_rival(c, p, mio)
+	var fim := int(r.inicio["fisico"][mio])
+	var fis := int(r.inicio["fisico"][suyo])
+	_causas_cansancio(c, p, mio, fim, fis)
+	_causas_arbitro(c, p, r, mio)
+	_causas_eficacia(c, p, r, mio, gm, gs)
+	_causas_lesiones(c, r, mio)
+	_causas_localia_y_posesion(c, p, r, mio)
+	## RELLENO FINAL: siempre tres causas distintas. Si por los umbrales no salieron (partido en campo neutral, once casi iguales…),
+	## se suman las comparaciones de plantilla, forma y físico aunque la diferencia sea pequeña (peso mínimo: nunca le ganan a una causa real).
+	var claves := {}
+	for x: Dictionary in c:
+		claves[x["clave"]] = true
+	if claves.size() < 3:
+		if not claves.has("plantilla") and om != os:
+			c.append(_c("plantilla", signi(om - os), 0.02,
+				(Idiomas.t("Sobre el papel éramos mejores (media del once %d frente a %d).") if om > os else Idiomas.t("Sobre el papel su once era mejor (media %d frente a %d).")) % [om, os]))
+		if not claves.has("forma") and fm != fs:
+			c.append(_c("forma", signi(fm - fs), 0.015,
+				(Idiomas.t("Llegábamos en mejor forma (media %d frente a %d).") if fm > fs else Idiomas.t("El rival llegaba en mejor forma (media %d frente a %d).")) % [fm, fs]))
+		if not claves.has("cansancio") and fim != fis:
+			c.append(_c("cansancio", signi(fim - fis), 0.01,
+				(Idiomas.t("Llegamos más frescos (físico %d frente a %d).") if fim > fis else Idiomas.t("Llegamos cansados (físico %d frente a %d).")) % [fim, fis]))
+	return c
+
+## Momentum: el cuarto de hora en que uno empujó más, y los goles que cayeron ahí.
+static func _causas_momentum(c: Array, p: Partido, r: RastroPartido, mio: int, lado: int) -> void:
 	## MOMENTUM: el cuarto de hora en que uno empujó más, y los goles que cayeron ahí.
 	var t := r.tramo_dominante(15)
 	var neto := int(t["neto"]) * lado
@@ -76,17 +111,18 @@ static func candidatas(p: Partido, mio: int) -> Array:
 				if goles_tramo > 0 else Idiomas.t("Entre el %d' y el %d' el rival nos encerró (%d llegadas netas) y aguantamos.") % [desde, hasta, -neto]
 		## Un tramo con goles explica más que uno sin ellos.
 		c.append(_c("momentum", (1 if a_favor else -1) if goles_tramo > 0 else 0, absf(neto) / 7.0 + 0.35 * goles_tramo, txt))
-	## FORMA y PLANTILLA: cómo llegaban los dos onces.
-	var fm := int(r.inicio["forma"][mio])
-	var fs := int(r.inicio["forma"][suyo])
+
+## Forma y plantilla: cómo llegaban los dos onces (las huellas las calcula `candidatas`).
+static func _causas_forma_y_plantilla(c: Array, fm: int, fs: int, om: int, os: int) -> void:
 	if absi(fm - fs) >= 5:
 		c.append(_c("forma", signi(fm - fs), absf(fm - fs) / 14.0,
 			(Idiomas.t("Llegábamos en mejor forma (media %d frente a %d).") if fm > fs else Idiomas.t("El rival llegaba en mejor forma (media %d frente a %d).")) % [fm, fs]))
-	var om := int(r.inicio["ovr"][mio])
-	var os := int(r.inicio["ovr"][suyo])
 	if absi(om - os) >= 3:
 		c.append(_c("plantilla", signi(om - os), absf(om - os) / 9.0,
 			(Idiomas.t("Sobre el papel éramos mejores (media del once %d frente a %d).") if om > os else Idiomas.t("Sobre el papel su once era mejor (media %d frente a %d).")) % [om, os]))
+
+## Clima (solo sin el motor del 3D, que no lo modela).
+static func _causas_clima(c: Array, p: Partido, r: RastroPartido, mio: int) -> void:
 	## CLIMA (solo sin el motor del 3D, que no lo modela).
 	if not r.con_motor:
 		if p.clima < 0.97 and not p.clima_info.is_empty():
@@ -96,6 +132,10 @@ static func candidatas(p: Partido, mio: int) -> Array:
 			var sufre_yo := mio == 1
 			c.append(_c("clima", -1 if sufre_yo else 1, (1.0 - p._f_clima_visita) * 5.0,
 				(Idiomas.t("No estamos hechos a este clima: un %d %% menos de llegadas.") if sufre_yo else Idiomas.t("Al rival le pesó un clima al que no está hecho: un %d %% menos de llegadas.")) % int(round((1.0 - p._f_clima_visita) * 100.0))))
+
+## Táctica: la pizarra de salida de cada uno y el plan del minuto 60.
+static func _causas_tactica(c: Array, p: Partido, r: RastroPartido, mio: int, gm: int, gs: int) -> void:
+	var suyo := 1 - mio
 	## TÁCTICA: la pizarra de salida de cada uno y el plan del minuto 60.
 	## La pizarra del rival no «gana» en neto (sus perillas restan atrás lo que suman delante, `Tactica`):
 	## lo que hace es ABRIR o CERRAR el partido. Se mide cuánto cambian las llegadas de cada uno
@@ -111,6 +151,9 @@ static func candidatas(p: Partido, mio: int) -> Array:
 			(Idiomas.t("El rival salió a por todas (%s ofensivo): partido abierto, %+d %% de llegadas suyas y %+d %% de las nuestras.") if abre
 			else Idiomas.t("El rival se encerró (%s defensivo): %+d %% de llegadas suyas y %+d %% de las nuestras.")) % [dibujo,
 			int(round((sus_lleg - 1.0) * 100.0)), int(round((mis_lleg - 1.0) * 100.0))]))
+
+## El plan del rival desde el minuto 60: cerrojo o todo arriba.
+static func _causas_plan_rival(c: Array, p: Partido, mio: int) -> void:
 	var rival_id := p.visita.id if mio == 0 else p.local.id
 	var plan := String(p.plan_activado.get(rival_id, ""))
 	if plan != "":
@@ -124,9 +167,10 @@ static func candidatas(p: Partido, mio: int) -> Array:
 		c.append(_c("tactica", -1 if le_salio else 1, 0.45 + 0.25 * float(tras_60[0] + tras_60[1]),
 			(Idiomas.t("Desde el 60' el rival se encerró atrás y le salió.") if le_salio else Idiomas.t("Desde el 60' el rival se encerró atrás, pero le marcamos igual.")) if cerrojo else
 			(Idiomas.t("Desde el 60' el rival se fue con todo arriba y le salió.") if le_salio else Idiomas.t("Desde el 60' el rival se fue con todo arriba y lo pagó."))))
-	## CANSANCIO: el físico con el que llegaban y lo que pasó al final.
-	var fim := int(r.inicio["fisico"][mio])
-	var fis := int(r.inicio["fisico"][suyo])
+
+## Cansancio: el físico con el que llegaban, y los goles encajados tras el 75' sin cambios.
+static func _causas_cansancio(c: Array, p: Partido, mio: int, fim: int, fis: int) -> void:
+	var rival_id := p.visita.id if mio == 0 else p.local.id
 	if absi(fim - fis) >= 6:
 		c.append(_c("cansancio", signi(fim - fis), absf(fim - fis) / 16.0,
 			(Idiomas.t("Llegamos más frescos (físico %d frente a %d).") if fim > fis else Idiomas.t("Llegamos cansados (físico %d frente a %d).")) % [fim, fis]))
@@ -138,7 +182,9 @@ static func candidatas(p: Partido, mio: int) -> Array:
 	if cambios == 0 and tarde_contra > 0:
 		c.append(_c("cansancio", -1, 0.5 + 0.3 * tarde_contra,
 			Idiomas.t("Sin cambios, el once acabó fundido y encajamos %d después del 75'.") % tarde_contra))
-	## ÁRBITRO: las rojas y lo que decidió por su cuenta.
+
+## Árbitro: las rojas y lo que decidió por su cuenta.
+static func _causas_arbitro(c: Array, p: Partido, r: RastroPartido, mio: int) -> void:
 	for ro: Dictionary in r.rojas:
 		var mia := bool(ro["local"]) == (mio == 0)
 		c.append(_c("arbitro", -1 if mia else 1, 0.75 + clampf(float(90 - int(ro["min"])) / 120.0, 0.0, 0.6),
@@ -155,7 +201,9 @@ static func candidatas(p: Partido, mio: int) -> Array:
 		var balance := absi(contra - favor)
 		c.append(_c("arbitro", 1 if favor > contra else -1, 0.3 * balance,
 			(Idiomas.t("%s decidió por su cuenta contra nosotros (%d a %d en tarjetas y penales).") if contra > favor else Idiomas.t("%s decidió por su cuenta a nuestro favor (%d a %d en tarjetas y penales).")) % [nombre, maxi(contra, favor), mini(contra, favor)]))
-	## EFICACIA: lo que se generó frente a lo que se metió (el xG del motor del 3D es grueso: ahí no).
+
+## Eficacia: lo generado frente a lo metido (no con el motor del 3D).
+static func _causas_eficacia(c: Array, p: Partido, r: RastroPartido, mio: int, gm: int, gs: int) -> void:
 	if not r.con_motor:
 		var xm: float = p.xg_local if mio == 0 else p.xg_visita
 		var xs: float = p.xg_visita if mio == 0 else p.xg_local
@@ -165,19 +213,34 @@ static func candidatas(p: Partido, mio: int) -> Array:
 		if absf(float(gs) - xs) >= 0.9:
 			c.append(_c("eficacia", signi(int(round(xs - float(gs)))), absf(float(gs) - xs) / 1.6,
 				(Idiomas.t("Nos hicieron %d con ocasiones para solo %.1f.") if float(gs) > xs else Idiomas.t("Nuestro portero los paró: tuvieron para %.1f y nos hicieron %d.")) % ([gs, xs] if float(gs) > xs else [xs, gs])))
-	## LESIONES de los nuestros durante el partido.
+
+## Lesiones de los nuestros durante el partido.
+static func _causas_lesiones(c: Array, r: RastroPartido, mio: int) -> void:
 	for le: Dictionary in r.lesiones:
 		if bool(le["local"]) == (mio == 0):
 			c.append(_c("lesion", -1, 0.35, Idiomas.t("Perdimos a %s por lesión en el %d'.") % [String(le["nombre"]), int(le["min"])]))
+
+## Localía y posesión.
+static func _causas_localia_y_posesion(c: Array, p: Partido, r: RastroPartido, mio: int) -> void:
+	var suyo := 1 - mio
+	var fm := int(r.inicio["forma"][mio])
+	var fs := int(r.inicio["forma"][suyo])
+	var om := int(r.inicio["ovr"][mio])
+	var os := int(r.inicio["ovr"][suyo])
 	## Y si no hubo nada más fuerte: la localía (del modelo: +8 % en casa, −6 % fuera) y la posesión.
 	if not r.con_motor and not p.neutral:
 		c.append(_c("localia", 1 if mio == 0 else -1, 0.15,
 			Idiomas.t("Jugar en casa: un 8 % más de llegadas.") if mio == 0 else Idiomas.t("Jugar fuera: un 6 % menos de llegadas.")))
+	## (18-11) Relleno de último recurso para que SIEMPRE haya tres causas distintas (con el motor del 3D no hay clima, eficacia ni localía):
+	## plantillas y forma parecidas. Pesan menos que cualquier cosa que pasó de verdad y solo salen si no hay una causa de esa clave.
+	if absi(om - os) < 3:
+		c.append(_c("plantilla", 0, 0.03, Idiomas.t("Las plantillas estaban igualadas (media del once %d frente a %d).") % [om, os]))
+	if absi(fm - fs) < 5:
+		c.append(_c("forma", 0, 0.02, Idiomas.t("Los dos llegaban con una forma parecida (media %d frente a %d).") % [fm, fs]))
 	var pos := int(round(p.posesion_local)) if mio == 0 else 100 - int(round(p.posesion_local))
 	## La posesión es relleno: nunca le gana a algo que pasó de verdad (una lesión pesa 0,35).
 	c.append(_c("posesion", signi(pos - 50) if absi(pos - 50) >= 8 else 0, 0.05 + absf(pos - 50) / 200.0,
 		Idiomas.t("Tuvimos el balón el %d %% del partido.") % pos))
-	return c
 
 static func _c(clave: String, signo: int, peso: float, texto: String) -> Dictionary:
 	return {"clave": clave, "signo": signo, "peso": peso, "texto": texto}

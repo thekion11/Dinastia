@@ -59,7 +59,7 @@ func comprar(m: Mundo, c: Club, pct: float) -> String:
 	return ""
 
 ## Vende `pct` de lo que tienes de un club. Devuelve "" o el motivo.
-func vender(m: Mundo, c: Club, pct: float) -> String:
+func vender(_m: Mundo, c: Club, pct: float) -> String:
 	if c == null or not cartera.has(c.id):
 		return "no tienes nada de ese club"
 	var tengo := float(cartera[c.id])

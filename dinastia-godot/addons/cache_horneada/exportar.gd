@@ -23,4 +23,4 @@ func _export_begin(_features: PackedStringArray, _is_debug: bool, _path: String,
 		return
 	for f in DirAccess.get_files_at(tmp):
 		add_file(CacheDisco.HORNEADA + f, FileAccess.get_file_as_bytes(tmp.path_join(f)), false)
-	print("Caché horneada: %d archivos al paquete" % DirAccess.get_files_at(tmp).size())
+	print("Caché horneada: %d archivos al paquete" % DirAccess.get_files_at(tmp).size())   ## LOG: salida que leen las pruebas y el diagnóstico

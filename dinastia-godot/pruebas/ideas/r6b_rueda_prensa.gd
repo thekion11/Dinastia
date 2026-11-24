@@ -6,7 +6,7 @@ extends BaseIdea
 ##
 ##   herramientas/ideas.sh r6b_rueda_prensa
 
-const _Rueda := preload("res://ui/principal/rueda_prensa.gd")
+const _RUEDA := preload("res://ui/principal/rueda_prensa.gd")
 
 func _probar() -> void:
 	_titulo("FASE 0 (6b): rueda de prensa en su clase")
@@ -30,7 +30,7 @@ func _abrir_y_responder(pr: Principal) -> void:
 	prensa.abrir_rueda(true, false)
 	_comprobar(prensa.hay_rueda(), "Prensa abre una rueda")
 	pr._abrir_rueda_pantalla_completa(prensa.entrevista)
-	var r := pr._rueda_pop as _Rueda
+	var r := pr._rueda_pop as _RUEDA
 	_comprobar(r != null and r.get_parent() == pr, "Principal la abre: un nodo de la clase nueva, hijo de Principal")
 	_comprobar(r != null and r.is_in_group(MentorVoz.GRUPO_TAPA), "tapa al mentor mientras dura")
 	_comprobar(not is_instance_valid(pr._panel_obj) or not pr._panel_obj.visible, "el panel de objetivos no se ve durante la rueda")
@@ -67,7 +67,7 @@ func _texto_libre(pr: Principal) -> void:
 	var prensa := pr.mundo.prensa
 	prensa.abrir_rueda(false, false)
 	pr._abrir_rueda_pantalla_completa(prensa.entrevista)
-	var r := pr._rueda_pop as _Rueda
+	var r := pr._rueda_pop as _RUEDA
 	var vueltas := 0
 	while r != null and pr._rueda_pop == r and vueltas < 5:
 		r.tras_responder(prensa.responder_texto("Respeto al rival y a seguir trabajando", r.segundos()))

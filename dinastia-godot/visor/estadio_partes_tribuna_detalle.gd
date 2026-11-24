@@ -247,7 +247,7 @@ static func escalones_de(deck: MeshInstance3D, tam: Vector3, lateral: bool, rake
 	var giro: float = (-sentido * PI * 0.5) if lateral else (PI if sentido > 0.0 else 0.0)
 	var eje_rake := Vector3(0, 0, 1) if lateral else Vector3(1, 0, 0)
 	var base := Basis().rotated(Vector3.UP, giro)
-	if rake != 0.0:
+	if not is_zero_approx(rake):
 		base = base.rotated(eje_rake, -rake)
 	var out: Array[Transform3D] = []
 	for f in filas:

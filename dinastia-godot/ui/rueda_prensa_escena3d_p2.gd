@@ -1,4 +1,7 @@
 extends "res://ui/rueda_prensa_escena3d_p1.gd"
+
+const _RUTA_ANIM_EXTRA := "res://visor/anim_extra.gd"
+
 ## [Capa 2/4 de `rueda_prensa_escena3d.gd`] _mallas_de, _montar_podio_generado, _montar_podio_procedural, _montar_ocultador_podio, _montar_podio, _montar_dt_generico … (+8)
 
 var _contexto: Dictionary = {}
@@ -430,12 +433,12 @@ func _gesticular_dt(delta: float) -> void:
 	var ap: AnimationPlayer = _dt_3d.get("anim")
 	var gesto: String = GESTOS_PRENSA[_rng_dt.randi() % GESTOS_PRENSA.size()]
 	var cara: String = ["concentrado", "alegre", "neutral", "enfado"][_rng_dt.randi() % 4]
-	if load("res://visor/anim_extra.gd").asegurar_gesto_tono(ap, _dt_3d.get("esqueleto"), tono_dt) != "":   ## §2.5: el gesto de su tono
-		gesto = load("res://visor/anim_extra.gd").GESTO_TONO[tono_dt]; cara = load("res://visor/anim_extra.gd").CARA_TONO[tono_dt]; tono_dt = ""
+	if load(_RUTA_ANIM_EXTRA).asegurar_gesto_tono(ap, _dt_3d.get("esqueleto"), tono_dt) != "":   ## §2.5: el gesto de su tono
+		gesto = load(_RUTA_ANIM_EXTRA).GESTO_TONO[tono_dt]; cara = load(_RUTA_ANIM_EXTRA).CARA_TONO[tono_dt]; tono_dt = ""
 	if ap != null and not RuedaPrensaMesa.gesto_sentado(self, _dt_3d):   ## sentado (R7/R8): «hablar sentado»; los gestos de pie lo levantarían
 		var lib := ap.get_animation_library("")
 		if lib != null:
-			load("res://visor/anim_extra.gd").asegurar(ap, _dt_3d.get("esqueleto"), gesto)
+			load(_RUTA_ANIM_EXTRA).asegurar(ap, _dt_3d.get("esqueleto"), gesto)
 		if ap.has_animation(gesto):
 			ap.play(gesto, 0.3)
 			ap.queue("parado")

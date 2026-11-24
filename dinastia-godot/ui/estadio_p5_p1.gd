@@ -4,6 +4,17 @@ extends "res://ui/estadio_p4.gd"
 ## [Capa 5/6 de `estadio.gd`] _montar_motor, _crear_banner_gol, _crear_rotulo_jugada, _arrancar_partido, abrir, _escalar_rotulos … (+2)
 
 func _montar_motor() -> void:
+	_montar_motor_arranque()
+	_montar_motor_mi_lado_y_ocasiones()
+	_montar_motor_salida()
+	_montar_motor_eventos_gol_tarjeta()
+	_montar_motor_arbitro_y_tandas()
+	_montar_motor_transmision_y_nombres()
+	_montar_motor_recordar_y_mini()
+
+
+## Parte de _montar_motor: arranque (mismo orden de sentencias que antes).
+func _montar_motor_arranque() -> void:
 	partido.motor_externo = true
 	_motor = MotorFabrica.crear()   ## (11-11) el motor que toque: el de siempre, League o el combinado (selector a ciegas de Ajustes, `MotorEleccion`)
 	add_child(_motor)
@@ -23,6 +34,9 @@ func _montar_motor() -> void:
 	MiradaBalon.poner(_motor.jugadores, _balon, _motor)
 	_motor.empezar_en(partido.minuto, partido.goles_local, partido.goles_visita)
 	_motor.sortear_anadido()
+
+## Parte de _montar_motor: mi lado y ocasiones (mismo orden de sentencias que antes).
+func _montar_motor_mi_lado_y_ocasiones() -> void:
 	_mi_lado = 0 if partido.local.id == Partido.ctx_club_id else (1 if partido.visita.id == Partido.ctx_club_id else -1)
 	if _mi_lado >= 0 and not practica and DisplayServer.get_name() != "headless": BarraEstrategias.poner(self)   ## (10-11) estrategias rápidas
 	## LAS OCASIONES JUGABLES (26-10, fila 14): solo en tu partido, si están encendidas en el panel previo y nunca en la práctica.
@@ -33,10 +47,16 @@ func _montar_motor() -> void:
 	if practica:
 		_motor.empezar_practica()
 		call_deferred("_empezar_practica")
+
+## Parte de _montar_motor: salida (mismo orden de sentencias que antes).
+func _montar_motor_salida() -> void:
 	## La salida de los equipos: papelitos y bengalas de la hinchada (M-050).
 	if partido.minuto == 0 and partido.goles_local + partido.goles_visita == 0:
 		FestejoGrada.lanzar(_raiz3d, Color(partido.local.color1), Color(partido.local.color2), "salida")
 	_stats = EstadisticasVivo.new()
+
+## Parte de _montar_motor: eventos gol tarjeta (mismo orden de sentencias que antes).
+func _montar_motor_eventos_gol_tarjeta() -> void:
 	_motor.gol.connect(func(de_local: bool, autor: String, asist: String) -> void:
 		_stats.cerrar_tiro(de_local, "gol", _balon.position if is_instance_valid(_balon) else Vector3.ZERO)
 		partido.gol_externo(de_local, autor, asist, ceili(_motor.segundos_anadidos() / 60.0 + 0.001))
@@ -97,6 +117,9 @@ func _montar_motor() -> void:
 		if _rig != null:
 			_rig.impacto(0.45 if roja else 0.25, 0.4))
 	_motor.aviso.connect(_al_aviso_motor)
+
+## Parte de _montar_motor: arbitro y tandas (mismo orden de sentencias que antes).
+func _montar_motor_arbitro_y_tandas() -> void:
 	## El silbato del árbitro con su gesto (M-106); el final ya tiene su pitido (resumen).
 	_motor.gesto_arbitro.connect(func(g: String) -> void:
 		EstadioSonidos.gesto(g)
@@ -135,6 +158,9 @@ func _montar_motor() -> void:
 			c.tactica.set(clave, valor)
 			partido.invalidar_fuerza())
 	_actualizar_tacticas()
+
+## Parte de _montar_motor: transmision y nombres (mismo orden de sentencias que antes).
+func _montar_motor_transmision_y_nombres() -> void:
 	## La transmisión, como en el vídeo: cámara alta que sigue el balón y la
 	## pantalla limpia (sin nombres sobre los 22 ni la pantalla gigante en la
 	## esquina; se pueden encender en ⚙).
@@ -156,6 +182,9 @@ func _montar_motor() -> void:
 		_rig.pro_distancia = dist if dist > 0.0 else float(CameraRig.PRO_DISTANCIAS[pro_camara_guardada()])
 		_rig.pro_altura = float(OpcionesPartido.leer("pro_altura", 0.52))
 		_rig.pro_fov = float(OpcionesPartido.leer("pro_fov", 0.0))
+
+## Parte de _montar_motor: recordar y mini (mismo orden de sentencias que antes).
+func _montar_motor_recordar_y_mini() -> void:
 	## Si jugaste tú el último partido, vuelves a jugar (se recuerda).
 	if _pref("control_equipo", false) and _mi_lado >= 0 and not practica:
 		_alternar_control_motor.call_deferred()
@@ -168,6 +197,7 @@ func _montar_motor() -> void:
 ## falta porque el Control raíz ya mide toda la pantalla): `_mostrar_banner_gol()`
 ## lo trae, lo sostiene y lo despide, todo con el mismo Tween para que un
 ## segundo gol a los dos segundos del primero no dispare una animación a medias sobre otra.
+
 func _crear_banner_gol() -> void:
 	_banner_caja = PanelContainer.new()
 	var e := StyleBoxFlat.new()
@@ -190,7 +220,7 @@ func _crear_banner_gol() -> void:
 	_banner_caja.modulate = Color(1, 1, 1, 0)
 	add_child(_banner_caja)
 	_banner = Label.new()
-	_banner.add_theme_font_size_override("font_size", 24)
+	_banner.add_theme_font_size_override("font_size", Tema.letra(24))
 	_banner.add_theme_color_override("font_color", Color.WHITE)
 	_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_banner.text = ""
@@ -214,7 +244,7 @@ func _crear_rotulo_jugada() -> void:
 	_rotulo_jugada.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_rotulo_jugada)
 	_lbl_jugada = Label.new()
-	_lbl_jugada.add_theme_font_size_override("font_size", 14)
+	_lbl_jugada.add_theme_font_size_override("font_size", Tema.letra(14))
 	_lbl_jugada.add_theme_color_override("font_color", Color("e9eeea"))
 	_rotulo_jugada.add_child(_lbl_jugada)
 

@@ -15,7 +15,6 @@ func _process(_d: float) -> void:
 	_n += 1
 	if _n == 12:
 		var mundo: Mundo = _pantalla.get("mundo")
-		var c: Club = mundo.mi_club()
 		print("desbloqueados con el perfil real: %d" % Escudo.especiales_desbloqueados().size())
 		_pantalla.set("_secc_gente", "identidad")
 		_pantalla.call("_ir_a_pestana", "Gente")

@@ -165,10 +165,10 @@ class _BrazoMovil extends SkeletonModifier3D:
 		var f_l := (inv * f_g).normalized()
 		var n_l := (inv * n_g)
 		n_l = (n_l - f_l * n_l.dot(f_l)).normalized()
-		var L := Basis(f_l, n_l, f_l.cross(n_l))
-		var W := Basis(dedos, pn, dedos.cross(pn))
-		var R := (W * L.inverse()).orthonormalized().scaled(mano.basis.get_scale())
-		esq.set_bone_global_pose(im, Transform3D(R, mano.origin))
+		var l_loc := Basis(f_l, n_l, f_l.cross(n_l))
+		var w := Basis(dedos, pn, dedos.cross(pn))
+		var r_loc := (w * l_loc.inverse()).orthonormalized().scaled(mano.basis.get_scale())
+		esq.set_bone_global_pose(im, Transform3D(r_loc, mano.origin))
 		## El centro de la palma medido DESPUÉS de girar la muñeca (entre ella y
 		## el nudillo del medio), y el móvil apoyado delante, hacia la cara.
 		var nudillo := esq.get_bone_global_pose(i_medio).origin

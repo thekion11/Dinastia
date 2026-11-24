@@ -10,6 +10,16 @@ const SIMBOLOS := ["⚽", "⚙", "🏆", "📅", "💰", "🎯", "✔", "▶", "
 
 func _probar() -> void:
 	_titulo("RECURSOS LIBRES: fuentes propias y banderas detalladas (fnt)")
+	_fn_fuentes_propias()
+	_fn_simbolos()
+	_fn_tipografia()
+	_fn_serifs()
+	_fn_banderas_iso()
+	_fn_banderas_nac()
+	_fn_banderas_pais()
+	_fn_bandera_detallada()
+
+func _fn_fuentes_propias() -> void:
 	for n: String in Fuentes.PROPIAS:
 		_comprobar(ResourceLoader.exists(Fuentes.PROPIAS[n]) and Fuentes.propia(n) != null, "la fuente propia «%s» se carga" % n)
 	var inter := Fuentes.propia("Inter")
@@ -24,6 +34,9 @@ func _probar() -> void:
 		if not barlow.has_char(c.unicode_at(0)):
 			falta += c
 	_comprobar(falta == "", "Barlow Condensed tiene todas las letras de los 9 idiomas (faltan: «%s»)" % falta)
+
+func _fn_simbolos() -> void:
+	var falta := ""
 	## Cada símbolo lo tiene alguna fuente PROPIA de la cadena (sin contar el sistema).
 	var propias: Array[Font] = []
 	for f: Font in Fuentes.repuesto():
@@ -37,6 +50,8 @@ func _probar() -> void:
 		if not hay:
 			falta += s
 	_comprobar(falta == "", "los símbolos de la interfaz salen de fuentes propias aunque el sistema no tenga emojis (faltan: «%s»)" % falta)
+
+func _fn_tipografia() -> void:
 	var est := Fuentes.para(PantallaAjustes.TIPOGRAFIAS["estrecha"][1])
 	_comprobar(est is FontFile and (est as FontFile).get_font_name() == "Barlow Condensed" and est.fallbacks.size() >= 4,
 		"«Estrecha» es Barlow Condensed propia con el sistema y la cadena de respaldo detrás")
@@ -54,6 +69,9 @@ func _probar() -> void:
 	for t: int in [10, 13, 16, 22, 36]:
 		_comprobar(is_equal_approx(dj.get_height(t), ThemeDB.fallback_font.get_height(t)),
 			"a %d px la línea mide lo mismo con la cadena de respaldo (%.1f / %.1f)" % [t, dj.get_height(t), ThemeDB.fallback_font.get_height(t)])
+
+func _fn_serifs() -> void:
+	var falta := ""
 	## Serifs: si el sistema no tiene ninguna de la lista, entra la propia.
 	var sr := Fuentes.serif(["Fuente Que No Existe Serif"], "Cinzel", 700)
 	_comprobar(sr is FontVariation and ((sr as FontVariation).base_font as FontFile).get_font_name() == "Cinzel",
@@ -68,6 +86,8 @@ func _probar() -> void:
 			if not fs.has_char(c.unicode_at(0)):
 				falta += c
 		_comprobar(falta == "", "%s tiene las letras de los 9 idiomas (faltan: «%s»)" % [n, falta])
+
+func _fn_banderas_iso() -> void:
 	# --- banderas ---
 	var faltan: Array = []
 	for cod: String in Banderas.ISO:
@@ -75,6 +95,8 @@ func _probar() -> void:
 		if not ResourceLoader.exists(base + ".svg") and not ResourceLoader.exists(base + ".png"):
 			faltan.append(cod)
 	_comprobar(faltan.is_empty(), "hay bandera (SVG o PNG) para los %d países de la tabla (faltan %s)" % [Banderas.ISO.size(), str(faltan)])
+
+func _fn_banderas_nac() -> void:
 	## 27-10-2026: también toda nacionalidad de los jugadores de la base (15 no tenían y salían con el dibujo de respaldo).
 	var nac_sin: Array = []
 	var reales: Dictionary = Datos.tabla("REALES")
@@ -85,6 +107,8 @@ func _probar() -> void:
 				nac_sin.append(pais)
 	_comprobar(nac_sin.is_empty(), "toda nacionalidad de jugador tiene su bandera (sin ella: %s)" % str(nac_sin))
 	_comprobar(Banderas._detallada("RUS") != null and Banderas._detallada("MLT") != null, "las banderas en PNG se cargan (Rusia, Malta)")
+
+func _fn_banderas_pais() -> void:
 	var bandera: Dictionary = Datos.tabla("BANDERA")
 	var sin_iso: Array = []
 	for cod: String in bandera:
@@ -94,6 +118,8 @@ func _probar() -> void:
 		if not Banderas.ISO.has(cod):
 			sin_iso.append(cod)
 	_comprobar(sin_iso.is_empty(), "todo país del juego tiene código ISO para su SVG (sin código: %s)" % str(sin_iso))
+
+func _fn_bandera_detallada() -> void:
 	var det := Banderas.textura("ESP").get_image()
 	Banderas._cache.clear()
 	Banderas.solo_dibujo = true

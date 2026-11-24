@@ -19,7 +19,7 @@ func _pintar_fotogramas() -> void:
 		var valor := v
 		var b := Button.new()
 		b.text = Idiomas.t("sin límite") if valor == 0 else "%d" % valor
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.toggle_mode = true
 		b.button_pressed = p._ui_ajustes.fps_elegido == valor
 		b.custom_minimum_size = Vector2(72, 0)
@@ -33,7 +33,7 @@ func _pintar_fotogramas() -> void:
 	var bb := Button.new()
 	bb.text = Idiomas.t("🔋 Modo batería (30 FPS y calidad Mínima)")
 	bb.tooltip_text = Idiomas.t("Para el móvil o el portátil sin enchufe: menos consumo y menos calor. Cambia los fotogramas a 30 y la calidad gráfica a Mínima.")
-	bb.add_theme_font_size_override("font_size", 11)
+	bb.add_theme_font_size_override("font_size", Tema.letra(11))
 	bb.pressed.connect(func() -> void:
 		p._ui_ajustes.fps_elegido = 30
 		Engine.max_fps = 30
@@ -47,7 +47,7 @@ func _pintar_fotogramas() -> void:
 	bf.text = Idiomas.t("Mostrar contador de FPS")
 	bf.toggle_mode = true
 	bf.button_pressed = ContadorFps.visible_pref
-	bf.add_theme_font_size_override("font_size", 11)
+	bf.add_theme_font_size_override("font_size", Tema.letra(11))
 	bf.toggled.connect(func(on: bool) -> void:
 		ContadorFps.poner(p.get_tree(), on)
 		p._guardar_preferencias())
@@ -89,7 +89,7 @@ func _pintar_clima() -> void:
 		var clave := k
 		var b := Button.new()
 		b.text = String(FondoAnimado.MODOS[k])
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		b.toggle_mode = true
 		b.button_pressed = p._clima_elegido == clave
 		b.clip_text = true
@@ -137,7 +137,7 @@ func _pintar_aspecto() -> void:
 		var datos: Array = Principal.PALETAS[k]
 		var b := Button.new()
 		b.text = String(datos[0])
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		b.toggle_mode = true
 		b.button_pressed = p._paleta == clave
 		b.clip_text = true
@@ -166,7 +166,7 @@ func _pintar_aspecto() -> void:
 		var clave2 := k2
 		var b2 := Button.new()
 		b2.text = String((Principal.FORMAS_TARJETA[k2] as Array)[0])
-		b2.add_theme_font_size_override("font_size", 10)
+		b2.add_theme_font_size_override("font_size", Tema.letra(10))
 		b2.toggle_mode = true
 		b2.button_pressed = p._forma_tarjeta == clave2
 		b2.clip_text = true
@@ -191,7 +191,7 @@ func _pintar_aspecto() -> void:
 		var clave3 := k3
 		var b3 := Button.new()
 		b3.text = String(MarcaPanel.ESTILOS[k3])
-		b3.add_theme_font_size_override("font_size", 10)
+		b3.add_theme_font_size_override("font_size", Tema.letra(10))
 		b3.toggle_mode = true
 		b3.button_pressed = p._marca_tarjeta == clave3
 		b3.clip_text = true
@@ -238,14 +238,14 @@ func _repintar_tarjetas(n: Node) -> void:
 			if h is TextureRect and (h as TextureRect).texture == Principal._brillo_panel:
 				(h as TextureRect).visible = p._brillo_tarjetas
 			elif h is MarcaPanel:
-				(h as MarcaPanel).poner(p._marca_tarjeta, p.COL_ACENTO)
+				(h as MarcaPanel).poner(p._marca_tarjeta, p.col_acento)
 				tiene_marca = true
 		## Una tarjeta creada cuando la marca estaba en «ninguno» no tiene el nodo:
 		## se le cuelga ahora, o encender las escuadras solo valdria para lo que se
 		## pintara despues.
 		if not tiene_marca and p._marca_tarjeta != "ninguno":
 			var mk2 := MarcaPanel.new()
-			mk2.poner(p._marca_tarjeta, p.COL_ACENTO)
+			mk2.poner(p._marca_tarjeta, p.col_acento)
 			p_local.add_child(mk2)
 	for h2 in n.get_children():
 		_repintar_tarjetas(h2)
@@ -266,7 +266,7 @@ func _pintar_accesibilidad() -> void:
 		var esc := e
 		var b := Button.new()
 		b.text = "%d%%" % int(round(esc * 100.0))
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.toggle_mode = true
 		b.button_pressed = is_equal_approx(p._escala_texto, esc)
 		b.custom_minimum_size = Vector2(52, 0)
@@ -387,13 +387,13 @@ func _pintar_traspaso_partida() -> void:
 	p._lista_ajustes.add_child(fila)
 	var be := Button.new()
 	be.text = Idiomas.t("Exportar")
-	be.add_theme_font_size_override("font_size", 11)
+	be.add_theme_font_size_override("font_size", Tema.letra(11))
 	be.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	be.pressed.connect(func() -> void: _exportar_partida())
 	fila.add_child(be)
 	var bi := Button.new()
 	bi.text = Idiomas.t("Importar lo copiado")
-	bi.add_theme_font_size_override("font_size", 11)
+	bi.add_theme_font_size_override("font_size", Tema.letra(11))
 	bi.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bi.pressed.connect(func() -> void: _importar_partida())
 	fila.add_child(bi)

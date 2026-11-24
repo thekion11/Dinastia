@@ -180,7 +180,7 @@ func _process(delta: float) -> void:
 		giro -= 1.0
 	if Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT):
 		giro += 1.0
-	if giro != 0.0:
+	if not is_zero_approx(giro):
 		_auto = false
 		_pivote.rotation.y += giro * delta * 2.2
 	elif _auto and not _arrastrando:

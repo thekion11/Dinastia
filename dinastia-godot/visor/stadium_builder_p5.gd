@@ -143,8 +143,12 @@ static func es_pasillo(c: int, cuantas_fila: int) -> bool:
 ## abajo de cada bandeja -el que da al campo o al peto de la de abajo- su
 ## barandilla corrida de dos tubos. Todo son instancias de UNA caja unidad
 ## escalada: mismas llamadas de dibujo que antes (una por bandeja).
+## `giro` = [largo, sentido, rake] (la pendiente de la rampa y su sentido).
 static func _montar_pasillos(deck: MeshInstance3D, escalones: Array[Transform3D], pasillos_l: Array[float],
-		lateral: bool, fondo: float, largo := 0.0, sentido := 1.0, rake := 0.0) -> void:
+		lateral: bool, fondo: float, giro := [0.0, 1.0, 0.0]) -> void:
+	var largo: float = giro[0]
+	var sentido: float = giro[1]
+	var rake: float = giro[2]
 	if _mat_peldano == null:
 		_mat_peldano = StandardMaterial3D.new()
 		_mat_peldano.albedo_color = Color(0.68, 0.68, 0.66)
@@ -256,7 +260,10 @@ static func _hinchas_horneados(nivel: String) -> Array:
 
 ## Un MultiMesh por pose con su shader de hinchada; `xfs`/`cols` se reparten
 ## entre las poses por un hash estable (la misma grada sale siempre igual).
-static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color], desde := 0.0, hasta := 0.0) -> void:
+## `rango` = [desde, hasta]: el tramo de distancia en el que se ven estas piezas.
+static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color], rango := [0.0, 0.0]) -> void:
+	var desde: float = rango[0]
+	var hasta: float = rango[1]
 	var grupos: Array = []
 	for _p in mallas.size():
 		grupos.append([])
@@ -294,8 +301,11 @@ static func _montar_horneados(deck: Node3D, nombre: String, mallas: Array, xfs: 
 		mmi.visibility_range_end = hasta
 		deck.add_child(mmi)
 
+## `lod` = [limite, tramos]: hasta dónde se ve la gente de cerca y en cuántos tramos se reparte.
 static func _montar_publico_lod(deck: Node3D, nombre: String, mallas: Array, xfs: Array[Transform3D], cols: Array[Color],
-		limite := LOD_PUBLICO, tramos := TRAMOS_PUBLICO) -> void:
+		lod := [LOD_PUBLICO, TRAMOS_PUBLICO]) -> void:
+	var limite: float = lod[0]
+	var tramos: int = lod[1]
 	var lejos := _hinchas_horneados("lejos")
 	## SIN_LOD_PUBLICO=1: el montaje de antes (para medir antes/después).
 	if lejos.is_empty() or xfs.is_empty() or OS.get_environment("SIN_LOD_PUBLICO") != "":
@@ -320,8 +330,8 @@ static func _montar_publico_lod(deck: Node3D, nombre: String, mallas: Array, xfs
 				tc.append(cols[i])
 		if tx.is_empty():
 			continue
-		_montar_horneados(deck, "%s%d" % [nombre, k], mallas, tx, tc, 0.0, limite)
-		_montar_horneados(deck, "%s%d_lejos" % [nombre, k], suplentes, tx, tc, limite, 0.0)
+		_montar_horneados(deck, "%s%d" % [nombre, k], mallas, tx, tc, [0.0, limite])
+		_montar_horneados(deck, "%s%d_lejos" % [nombre, k], suplentes, tx, tc, [limite, 0.0])
 
 static func _malla_hincha_detalle() -> Mesh:
 	if _malla_hincha_det != null:

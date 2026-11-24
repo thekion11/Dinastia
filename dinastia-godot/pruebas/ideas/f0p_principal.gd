@@ -111,7 +111,9 @@ func _partida(pr: Principal) -> void:
 	Partida.borrar(RANURA_PRUEBA)
 
 func _tutorial(pr: Principal) -> void:
-	_comprobar(pr.tutorial_objetivo("estado") == pr._sub, "tutorial_objetivo resuelve los controles con variable propia")
+	## Con el escaparate del Inicio a la vista, `_sub` queda tapado y la guía señala la barra del escaparate (a10b28bdc): también vale.
+	var objetivo_estado := pr.tutorial_objetivo("estado")
+	_comprobar(objetivo_estado == pr._sub or (not pr._sub.is_visible_in_tree() and objetivo_estado != null), "tutorial_objetivo resuelve los controles con variable propia")
 	_comprobar(pr.tutorial_objetivo("guardar") is Button, "tutorial_objetivo encuentra los nodos que registra _construir")
 	_comprobar(pr.tutorial_objetivo("no_existe") == null, "una clave desconocida no señala nada")
 	var titulo := pr._pestanas.get_tab_title(pr._pestanas.current_tab)

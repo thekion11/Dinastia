@@ -80,6 +80,13 @@ static func zona(j: Jugador, tipo: String, forma := 0, favorita := false) -> Arr
 
 ## Lo que deja una jugada con calidad `q` (1 perfecto, 0,6 bien, 0,1 fallo).
 static func desenlace(tipo: String, q: float) -> Dictionary:
+	var nat := Nativo.de("nuc_desenlace_momento")
+	if nat != null:
+		return nat.nuc_desenlace_momento(tipo, q)
+	return desenlace_gd(tipo, q)
+
+## Gemela GDScript de `nuc_desenlace_momento` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func desenlace_gd(tipo: String, q: float) -> Dictionary:
 	var clase := String(TIPOS[tipo][3])
 	var nivel := 0 if q >= 1.0 else (1 if q >= 0.6 else 2)
 	var d := {"texto": String(DESENLACES[clase][nivel]), "gol": 0, "asist": 0, "parada": 0, "encajado": 0,

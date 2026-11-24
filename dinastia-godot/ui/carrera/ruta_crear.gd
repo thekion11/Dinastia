@@ -44,7 +44,7 @@ static func pintar(ui: Variant) -> void:
 	ui._campo_nombre.text = ui.nombre_pedido if ui.nombre_pedido != "" else "Tomás Aravena"
 	ui._campo_nombre.custom_minimum_size = Vector2(0, 44)
 	ui._campo_nombre.max_length = 28
-	ui._campo_nombre.add_theme_font_size_override("font_size", 20)
+	ui._campo_nombre.add_theme_font_size_override("font_size", Tema.letra(20))
 	ui._campo_nombre.add_theme_stylebox_override("normal", E.caja(E.TINTA2, 12, E.BORDE, 12))
 	ui._campo_nombre.add_theme_stylebox_override("focus", E.caja(E.TINTA2, 12, E.ORO, 12))
 	pv.add_child(ui._campo_nombre)

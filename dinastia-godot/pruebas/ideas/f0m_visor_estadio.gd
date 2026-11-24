@@ -27,6 +27,18 @@ func _probar_ambience() -> void:
 	## (16-11, informe F-05) El modo rendimiento viene ENCENDIDO por defecto (15-11) y quita el sol con sombra hasta MEDIA:
 	## lo de MEDIA «de siempre» se mira con el modo apagado, y aparte se comprueba qué hace encendido.
 	var modo_antes := Calidad.modo_rendimiento
+	_am_rendimiento()
+	var dia := _am_dia(modo_antes)
+	var noche := _am_noche()
+	var sin_focos := _am_sin_focos()
+	var raro := _am_raro()
+	_am_tablas()
+	_am_climas()
+	for n: Node in [dia, noche, sin_focos, raro]:
+		n.free()
+	_comprobar(_nodos() == n0, "sin nodos sueltos")
+
+func _am_rendimiento() -> void:
 	Calidad.modo_rendimiento = true
 	var dia_r := Node3D.new()
 	Ambience.apply(dia_r, {"clima": "dia"}, null, Calidad.MEDIO)
@@ -34,6 +46,8 @@ func _probar_ambience() -> void:
 	_comprobar(luces_r.size() == 1 and not (luces_r[0] as DirectionalLight3D).shadow_enabled, "con el modo rendimiento (por defecto), MEDIA sin sombra del sol")
 	dia_r.free()
 	Calidad.modo_rendimiento = false
+
+func _am_dia(modo_antes: bool) -> Node3D:
 	var dia := Node3D.new()
 	Ambience.apply(dia, {"clima": "dia"}, null, Calidad.MEDIO)
 	Calidad.modo_rendimiento = modo_antes
@@ -43,8 +57,11 @@ func _probar_ambience() -> void:
 	if we != null and luces.size() == 1:
 		var sol: DirectionalLight3D = luces[0]
 		_comprobar(not we.environment.fog_enabled and not we.environment.ssao_enabled and we.environment.glow_hdr_threshold > 1.0, "calidad media y despejado: sin niebla ni SSAO; el bloom con umbral")
-		_comprobar(is_equal_approx(sol.light_energy, 1.2) and sol.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS and sol.shadow_enabled,
-			"el sol a pleno (1,2 desde el 16-11: más luz del cielo) y sombras en 2 cascadas (Medio alivia el partido)")
+		_comprobar(is_equal_approx(sol.light_energy, 1.35) and sol.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS and sol.shadow_enabled,
+			"el sol a pleno (1,35 desde la luz suave de d97e0502; 1,2 desde el 16-11) y sombras en 2 cascadas (Medio alivia el partido)")
+	return dia
+
+func _am_noche() -> Node3D:
 	var noche := Node3D.new()
 	Ambience.apply(noche, {"clima": "noche", "focos": "torres", "luzFocos": "calida"}, ["lluvia"], Calidad.ALTO)
 	var we2: WorldEnvironment = _de_tipo(noche, "WorldEnvironment")[0]
@@ -54,17 +71,26 @@ func _probar_ambience() -> void:
 		var luna: DirectionalLight3D = luces2[0]
 		var focos: DirectionalLight3D = luces2[1]
 		_comprobar(is_equal_approx(luna.light_energy, 0.25) and luna.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS, "la luna floja y 4 cascadas en Alto")
-		_comprobar(focos.light_specular == 0.0 and not focos.shadow_enabled and focos.light_color == StadiumBuilder.color_luz({"luzFocos": "calida"}),
+		_comprobar(is_zero_approx(focos.light_specular) and not focos.shadow_enabled and focos.light_color == StadiumBuilder.color_luz({"luzFocos": "calida"}),
 			"el relleno de los focos: sin brillo ni sombra, del color elegido")
 		_comprobar(is_equal_approx(we2.environment.tonemap_exposure, 1.35), "exposición subida de noche (1,35)")
+	return noche
+
+func _am_sin_focos() -> Node3D:
 	var sin_focos := Node3D.new()
 	Ambience.apply(sin_focos, {"clima": "noche", "focos": "sin"}, null, Calidad.ALTO)
 	_comprobar(_de_tipo(sin_focos, "DirectionalLight3D").size() == 1, "un estadio sin focos no tiene la luz de los focos")
+	return sin_focos
+
+func _am_raro() -> Node3D:
 	var raro := Node3D.new()
 	Ambience.apply(raro, {"clima": "marciano"}, ["meteoritos"], Calidad.ALTO)
 	var we3: WorldEnvironment = _de_tipo(raro, "WorldEnvironment")[0]
 	_comprobar((we3.environment.sky.sky_material as ProceduralSkyMaterial).sky_top_color == Color(Ambience.AMBIENTES["dia"]["top"]) and not we3.environment.fog_enabled,
 		"un ambiente o un clima desconocidos caen en «día» y «despejado»")
+	return raro
+
+func _am_tablas() -> void:
 	var claves_ok := true
 	for k: String in Ambience.AMBIENTES:
 		var a: Dictionary = Ambience.AMBIENTES[k]
@@ -72,6 +98,8 @@ func _probar_ambience() -> void:
 	for k: String in Ambience.CLIMA_PARTIDO:
 		claves_ok = claves_ok and float(Ambience.CLIMA_PARTIDO[k]["oscuro"]) <= 1.0 and float(Ambience.CLIMA_PARTIDO[k]["niebla"]) <= 1.0
 	_comprobar(claves_ok, "tablas de ambientes y climas completas y en rango")
+
+func _am_climas() -> void:
 	## Todo clima que puede salir en una partida (`Mundo.clima()`, por estación)
 	## tiene su fila: uno que falte se ve como «despejado» sin avisar.
 	var mw := Mundo.new()
@@ -86,9 +114,7 @@ func _probar_ambience() -> void:
 		if not Ambience.CLIMA_PARTIDO.has(k):
 			sin_fila.append(k)
 	_comprobar(climas.size() >= 6 and sin_fila.is_empty(), "cada clima de Mundo.clima() tiene su fila en Ambience %s de %s" % [str(sin_fila), str(climas.keys())])
-	for n: Node in [dia, noche, sin_focos, raro]:
-		n.free()
-	_comprobar(_nodos() == n0, "sin nodos sueltos")
+
 
 # ------------------------------------------------------------- Precipitacion
 
@@ -123,7 +149,7 @@ func _probar_precipitacion() -> void:
 	_comprobar(a_medio < a_alto and a_alto < a_ultra, "la cantidad sigue a la calidad (%d < %d < %d)" % [a_medio, a_alto, a_ultra])
 	var tormenta := Precipitacion.montar(raiz, "tormenta", 40.0, 60.0)
 	var rel := tormenta.get_node_or_null("Relampagos")
-	_comprobar(rel != null and _de_tipo(rel, "DirectionalLight3D").size() == 1 and (_de_tipo(rel, "DirectionalLight3D")[0] as DirectionalLight3D).light_energy == 0.0,
+	_comprobar(rel != null and _de_tipo(rel, "DirectionalLight3D").size() == 1 and is_zero_approx((_de_tipo(rel, "DirectionalLight3D")[0] as DirectionalLight3D).light_energy),
 		"tormenta: con relámpagos (una luz apagada hasta el destello)")
 	var nieve := Precipitacion.montar(raiz, "nieve", 40.0, 60.0)
 	var pn: GPUParticles3D = _de_tipo(nieve, "GPUParticles3D")[0]
@@ -208,7 +234,7 @@ func _probar_fachada() -> void:
 		por_semilla[FachadaEstadio.estilo_de({}, s, 2)] = true
 	_comprobar(por_semilla.size() >= 4 and FachadaEstadio.estilo_de({}, 33, 2) == FachadaEstadio.estilo_de({}, 33, 2), "con hormigón sin color, la semilla reparte estilos (%d) y siempre igual" % por_semilla.size())
 	var c := FachadaEstadio.cara(Vector3(0, 0, -60), Vector3(0, 0, -1), 100.0, 18.0, "tribuna", true, 25.0, 2)
-	_comprobar(absf((c["u"] as Vector3).dot(c["n"])) < 1e-5 and (c["u"] as Vector3).y == 0.0 and (c["o"] as Vector3).is_equal_approx(Vector3(0, 0, -60) - (c["u"] as Vector3) * 50.0),
+	_comprobar(absf((c["u"] as Vector3).dot(c["n"])) < 1e-5 and is_zero_approx((c["u"] as Vector3).y) and (c["o"] as Vector3).is_equal_approx(Vector3(0, 0, -60) - (c["u"] as Vector3) * 50.0),
 		"cara(): el paño corre perpendicular a su normal, con el pie izquierdo en su sitio")
 	var esquina := FachadaEstadio.cara(Vector3(50, 0, -50), Vector3(0.7071, 0, -0.7071), 12.0, 16.0, "esquina", false, 12.0, 2)
 	var diminuta := FachadaEstadio.cara(Vector3(0, 0, 60), Vector3(0, 0, 1), 1.5, 18.0, "tribuna", true, 25.0, 2)
@@ -271,7 +297,9 @@ func _probar_extras() -> void:
 	for i in 30:
 		var ci := Club.new("club_%d" % i, "C")
 		animales[EstadioExtras.animal_de(ci)] = true
-	_comprobar(EstadioExtras.animal_de(c) == EstadioExtras.animal_de(c) and MascotaQ.ANIMALES.has(EstadioExtras.animal_de(c)) and animales.size() >= 6,
+	var rep1_a = EstadioExtras.animal_de(c)
+	var rep1_b = EstadioExtras.animal_de(c)
+	_comprobar(rep1_a == rep1_b and MascotaQ.ANIMALES.has(EstadioExtras.animal_de(c)) and animales.size() >= 6,
 		"la mascota sale del club: siempre la misma, y variada entre clubes (%d animales)" % animales.size())
 	raiz.free()
 	raiz2.free()

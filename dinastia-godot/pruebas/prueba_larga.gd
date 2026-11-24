@@ -41,6 +41,23 @@ func _una(semilla: int, temporadas: int) -> void:
 	for j in m.jugadores():
 		ids_inicio[j.id] = true
 	var cambios_div := 0
+	cambios_div = _temporadas(m, temporadas, semilla)
+	var siguen := 0
+	var nuevos := 0
+	for j in m.jugadores():
+		if ids_inicio.has(j.id):
+			siguen += 1
+		else:
+			nuevos += 1
+	var retirados := ids_inicio.size() - siguen
+	print("  ascensos/descensos: %d · retirados o fuera: %d · nuevos: %d" % [cambios_div, retirados, nuevos])
+	_comprobar(cambios_div > 0, "semilla %d: ningún ascenso ni descenso en %d temporadas" % [semilla, temporadas])
+	_comprobar(retirados > 0, "semilla %d: nadie se retiró" % semilla)
+	_comprobar(nuevos > 0, "semilla %d: no llegó ningún jugador nuevo" % semilla)
+
+## Las temporadas de una semilla: ascensos y descensos, y cuántos cambian de división.
+func _temporadas(m: Mundo, temporadas: int, semilla: int) -> int:
+	var cambios_div := 0
 	for t in temporadas:
 		var div_antes := {}
 		for c: Club in m.clubes.values():
@@ -104,15 +121,4 @@ func _una(semilla: int, temporadas: int) -> void:
 		print("  %d: %d jugadores, mi club %s (div %d, caja %d M)%s" % [m.anio, m.cuantos_jugadores(),
 			m.mi_club().nombre, m.mi_club().division, m.mi_club().saldo / 1_000_000,
 			("  campeón: " + str(campeon.get("campeon", ""))) if not campeon.is_empty() else ""])
-	var siguen := 0
-	var nuevos := 0
-	for j in m.jugadores():
-		if ids_inicio.has(j.id):
-			siguen += 1
-		else:
-			nuevos += 1
-	var retirados := ids_inicio.size() - siguen
-	print("  ascensos/descensos: %d · retirados o fuera: %d · nuevos: %d" % [cambios_div, retirados, nuevos])
-	_comprobar(cambios_div > 0, "semilla %d: ningún ascenso ni descenso en %d temporadas" % [semilla, temporadas])
-	_comprobar(retirados > 0, "semilla %d: nadie se retiró" % semilla)
-	_comprobar(nuevos > 0, "semilla %d: no llegó ningún jugador nuevo" % semilla)
+	return cambios_div

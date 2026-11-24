@@ -42,8 +42,8 @@ var rumbo := 0.0        ## ángulo en Y (0 = mirando a +Z)
 var vel := 0.0
 var obstaculos: Array[Rect2] = []
 
-## Visión en primera persona (tecla V).
-var primera_persona := false
+## Primera persona. (18-11, orden 45) En el juego SOLO esta vista (el prólogo usa este explorador); la tercera y la V, con `DINASTIA_CAMARAS=1`.
+var primera_persona := VistaJuego.inicial()
 
 var _vel_pie := 0.0   ## velocidad a pie dentro del estadio, sin la cinta rodante
 var _anim: AnimationPlayer

@@ -38,11 +38,25 @@ func _abrir() -> void:
 func _process(_d: float) -> void:
 	if _fin or _pausa:
 		return
+	_registrar_fotograma()
+	if await _reabrir_doble():
+		return
+	if _saltar_intro_ceremonia():
+		return
+	_fase_juego()
+
+
+## Anota el tiempo del fotograma anterior y la fase en la que estaba, y cuenta el fotograma.
+func _registrar_fotograma() -> void:
 	var ahora := Time.get_ticks_usec()
 	_t.append(float(ahora - _t_ant) / 1000.0)
 	_fase.append(_fase_act)
 	_t_ant = ahora
 	_n += 1
+
+
+## DOBLE=1: al fotograma 60 cierra la primera apertura, la anota y vuelve a abrir. Devuelve true si lo hizo.
+func _reabrir_doble() -> bool:
 	if OS.get_environment("DOBLE") != "" and _vuelta == 0 and _n == 60:
 		_vuelta = 1
 		_pausa = true
@@ -53,7 +67,12 @@ func _process(_d: float) -> void:
 			await get_tree().process_frame
 		_pausa = false
 		_abrir()
-		return
+		return true
+	return false
+
+
+## La intro y la ceremonia se saltan (en los fotogramas 40 y 80). Devuelve true si estaban activas.
+func _saltar_intro_ceremonia() -> bool:
 	var intro: Variant = _vista.get("_intro")
 	var cer: Variant = _vista.get("_ceremonia")
 	if intro != null and is_instance_valid(intro) and intro.activa:
@@ -61,13 +80,18 @@ func _process(_d: float) -> void:
 		if _n == 40:
 			_fase_act = "salto_intro"
 			intro.terminar()
-		return
+		return true
 	if cer != null and is_instance_valid(cer) and cer.activa:
 		_fase_act = "ceremonia"
 		if _n == 80:
 			_fase_act = "salto_ceremonia"
 			cer.terminar()
-		return
+		return true
+	return false
+
+
+## El juego: cámara, festejo y el final de la muestra (con su informe de picos).
+func _fase_juego() -> void:
 	if _fase_act == "salto_ceremonia" or _fase_act == "salto_intro" or _fase_act == "montaje":
 		_fase_act = "juego"
 	if _n == 30:

@@ -1,6 +1,6 @@
 class_name Trabajadores
-extends "res://nucleo/trabajadores_p1.gd"
-## [Capa 2/2 de `trabajadores.gd`] texto_equipo, a_dic, desde_dic
+extends "res://nucleo/trabajadores_p2.gd"
+## [Capa 3/3 de `trabajadores.gd`] texto_equipo, a_dic, desde_dic
 
 ## Texto corto del equipo entero (fichas de instalación).
 func texto_equipo(c: Club, obras: Instalaciones, clave: String) -> String:

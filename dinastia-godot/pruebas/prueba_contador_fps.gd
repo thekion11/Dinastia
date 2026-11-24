@@ -1,4 +1,7 @@
 extends Node
+
+const _RUTA_PRINCIPAL := "res://escenas/principal.tscn"
+
 ## M-358: el contador de FPS se enciende, sobrevive a cambiar de pantalla (cuelga
 ## de la raíz), se guarda en las preferencias y «sin límite» (0) no se pierde.
 ##   godot --headless --path . res://pruebas/prueba_contador_fps.tscn
@@ -13,7 +16,7 @@ func _tecla(k: Key) -> InputEventKey:
 	e.keycode = k
 	return e
 func _ready() -> void:
-	_p = load("res://escenas/principal.tscn").instantiate()
+	_p = load(_RUTA_PRINCIPAL).instantiate()
 	add_child(_p)
 func _process(_d: float) -> void:
 	_n += 1
@@ -31,7 +34,7 @@ func _process(_d: float) -> void:
 		cf.load(Principal.PREFS)
 		_ok(bool(cf.get_value("pantalla", "contador_fps", false)), "la preferencia queda guardada")
 		_p.queue_free()
-		_p = load("res://escenas/principal.tscn").instantiate()
+		_p = load(_RUTA_PRINCIPAL).instantiate()
 		add_child(_p)
 	if _n == 22:
 		_ok(int(_p.get("_fps_elegido")) == 0, "«sin límite» sigue siendo sin límite al recargar (%d)" % int(_p.get("_fps_elegido")))

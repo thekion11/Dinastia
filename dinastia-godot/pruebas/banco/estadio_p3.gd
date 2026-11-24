@@ -174,6 +174,38 @@ func _probar_avatares_realistas() -> void:
 		_comprobar(String(PersonajeDT.aspecto({"modelo": quitado})["modelo"]) == "", "una partida vieja con «%s» vuelve al atleta" % quitado)
 	for k: String in FutbolistaQ.todos_ajenos():
 		_comprobar(FutbolistaQ.ajeno_disponible(k), "«%s» (realista) está en el proyecto" % k)
+	## (19-11) Civiles: sin metal ni facetas (`AcabadoAjeno`) y con el tono de piel pedido.
+	var lisas := AcabadoAjeno.suavizar(PackedVector3Array([Vector3.ZERO, Vector3.ZERO, Vector3(1, 0, 0), Vector3(1, 0, 0)]),
+		PackedVector3Array([Vector3(0, 1, 0), Vector3(0.3, 0.954, 0).normalized(), Vector3(0, 1, 0), Vector3(1, 0, 0)]))
+	_comprobar(absf(lisas[0].x - lisas[1].x) < 1e-4 and lisas[2].is_equal_approx(Vector3(0, 1, 0)), "normales: se suavizan las caras casi planas y se respeta la arista de 90°")
+	var padre_c := Node3D.new()
+	add_child(padre_c)
+	var dc := FutbolistaQ.ajeno(padre_c, "mh_casual", 1.8, Color("8a5536"))
+	var metal := 0.0
+	var piel_ok := false
+	if not dc.is_empty():
+		for n in (dc["modelo"] as Node).find_children("*", "MeshInstance3D", true, false):
+			var mi := n as MeshInstance3D
+			for s_i in mi.get_surface_override_material_count():
+				var mt := mi.get_surface_override_material(s_i) as StandardMaterial3D
+				if mt != null:
+					metal = maxf(metal, mt.metallic)
+					piel_ok = piel_ok or (mt.resource_name.to_lower().contains("skin") and mt.albedo_color.r < 0.6)
+	_comprobar(not dc.is_empty() and metal < 0.001, "los civiles salen mates, sin metal (máx %.2f)" % metal)
+	_comprobar(piel_ok, "y su piel toma el tono pedido")
+	## (20-11, orden del dueño) Los civiles son SOLO del personal y los realistas SOLO del jugador: nadie sale dos veces.
+	_comprobar(FutbolistaQ.todos_ajenos().is_empty() and not FutbolistaQ.modelo_valido("mh_casual"), "el jugador ya no puede elegir un civil (una partida vieja con uno vuelve al atleta)")
+	var usados := {}
+	for k: String in PersonalEstadio.MODELO_PERSONAL:
+		for m: String in PersonalEstadio.MODELO_PERSONAL[k]:
+			usados[m] = true
+	var todos_puestos := PersonalEstadio.PUESTOS.keys().all(func(k: String) -> bool: return PersonalEstadio.MODELO_PERSONAL.has(k))
+	_comprobar(todos_puestos, "todo el personal del club lleva un civil (ninguno el cuerpo del atleta del jugador)")
+	_comprobar(not usados.keys().any(func(m: String) -> bool: return FutbolistaQ.modelo_valido(m)), "ningún modelo del personal es elegible por el jugador")
+	var dca := CivilAnimado.crear(padre_c, "mm_formal", 1.7, Color("c68d68"))
+	var rt_c := (dca.get("avatar") as Node).find_child("CivilRetarget", true, false) as AvatarRegaloRetarget if not dca.is_empty() and dca.get("avatar") != null else null
+	_comprobar(rt_c != null and rt_c.pares() >= 40 and (dca["anim"] as AnimationPlayer).is_playing(), "el civil del personal se anima con el cuerpo del juego (%d huesos)" % (rt_c.pares() if rt_c != null else 0))
+	padre_c.queue_free()
 	for carpeta: String in ["kaykit", "vrm", "Skins"]:
 		_comprobar(not DirAccess.dir_exists_absolute("res://assets/characters/" + carpeta), "la carpeta de no realistas «%s» ya no está" % carpeta)
 	## El avatar regalo: excluido de los 6 presets (licencia y cara sin confirmar).
@@ -187,6 +219,9 @@ func _probar_avatares_realistas() -> void:
 		if not d.is_empty():
 			var rt := (d["avatar"] as Node).find_child("AvatarRegaloRetarget", true, false) as AvatarRegaloRetarget
 			_comprobar(rt != null and rt.pares() >= 50, "su retarget cubre cadera, columna, brazos, piernas y dedos (%d huesos)" % (rt.pares() if rt != null else 0))
+			## (19-11) Por `PersonajeDT.crear` volvía sin animación de reposo: se quedaba en T.
+			var ap_r := d.get("anim") as AnimationPlayer
+			_comprobar(ap_r != null and ap_r.is_playing(), "el avatar regalo arranca con su animación de reposo (no en T)")
 		padre.queue_free()
 	## Personal del club: determinista, sin repetirse, reservado.
 	var claves: Array = PersonalEstadio.PUESTOS.keys()
@@ -343,6 +378,28 @@ func _probar_acciones_visuales() -> void:
 	_comprobar(LeagueAcciones.ocupado(p, 10.1, "correr", false, 1.4), "en el aire, un ciclo (correr) no pisa el salto")
 	_comprobar(LeagueAcciones.ocupado(p, 10.3, "cabezazo", true, 1.4) and not p.has("ls_propio_hasta") and is_equal_approx(float(p["gesto_hasta"]), 11.3),
 		"el cabezazo de verdad sigue con el salto que ya va y el motor queda como si lo hubiera puesto él (gesto hasta %.2f)" % float(p.get("gesto_hasta", 0.0)))
+	## (19-11) Cabezazo de MIXAMO: biblioteca pequeña recortada (cabeza arriba a los 0,3 s), con espejo; entra con la ruta del esqueleto
+	## y el motor sigue contando la duración de SU cabezazo (solo cambia lo que se ve).
+	var mxl := load(LeagueAcciones.BIBLIOTECA_MIXAMO) as AnimationLibrary
+	_comprobar(mxl != null and mxl.has_animation("mx_cabezazo") and mxl.has_animation("mx_cabezazo_espejo") \
+		and absf(mxl.get_animation("mx_cabezazo").length - 0.97) < 0.05, "el cabezazo de Mixamo está recortado (≈0,97 s) y con espejo")
+	var corr := Animation.new()
+	corr.length = 0.8
+	corr.track_set_path(corr.add_track(Animation.TYPE_ROTATION_3D), NodePath("Esq:pelvis"))
+	lib.remove_animation("correr")
+	lib.add_animation("correr", corr)
+	var id_mx := ""
+	for k in 300:
+		if (absi(("mx_banco_%d" % k).hash()) / LeagueAcciones.CLIPS_SALTO.size()) % 3 == 0:
+			id_mx = "mx_banco_%d" % k
+			break
+	var q_mx := {"id": id_mx, "anim": ap, "vel": Vector3.ZERO, "es_local": false, "por": false, "anim_actual": "correr"}
+	LeagueAcciones.despegar(20.0, q_mx)
+	var clip_q := String(q_mx.get("ls_propio_clip", ""))
+	_comprobar(clip_q.begins_with("mx_cabezazo") and ap.has_animation(clip_q) and String(ap.get_animation(clip_q).track_get_path(0)).begins_with("Esq:"),
+		"1 de cada 3 jugadores salta con el cabezazo de Mixamo, con las pistas en su esqueleto (%s)" % clip_q)
+	_comprobar(LeagueAcciones.ocupado(q_mx, 20.3, "cabezazo", true, 1.4) and is_equal_approx(float(q_mx["gesto_hasta"]), 21.3),
+		"con el salto de Mixamo el motor sigue contando su cabezazo (gesto hasta %.2f)" % float(q_mx.get("gesto_hasta", 0.0)))
 	## Variante nueva (entrada de pie): el motor ve la duración del clip que pidió, aunque se vea otro.
 	var distintas := {}
 	for i in 8:

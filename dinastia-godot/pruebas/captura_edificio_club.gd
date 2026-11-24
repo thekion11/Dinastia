@@ -11,15 +11,15 @@ var _paso := 0
 ## [planta, sala] en el orden de las fotos.
 const TODAS := [[0, "Vestuario"], [-2, "Estacionamiento"], [-1, "Utilería"], [-1, "Enfermería"],
 	[-1, "Vestuario visitante"], [1, "Oficina del DT"], [1, "Despacho del presidente"], [1, "Sala de vídeo"],
-	[2, "Sala de prensa"], [2, "Museo del club"], [1, "Pasillo"], [0, "Ascensor"], [3, "Museo ampliado"]]
+	[2, "Sala de prensa"], [2, "Museo del club"], [1, "Pasillo"], [0, "Ascensor"], [3, "Museo ampliado"], [2, "Comedor del plantel"]]
 ## PUERTAS=1 con SOLO=11,11: la segunda foto del ascensor con las puertas abiertas. RETIRADAS=1 pone camisetas retiradas en la partida (museo). SOLO=5,6 deja solo esas salas (índices de TODAS) y SIN_AVATAR=1 esconde al jugador (para ver el mobiliario).
-var SALAS: Array = TODAS
+var salas: Array = TODAS
 
 func _ready() -> void:
 	if OS.get_environment("SOLO") != "":
-		SALAS = []
+		salas = []
 		for i in OS.get_environment("SOLO").split(","):
-			SALAS.append(TODAS[int(i)])
+			salas.append(TODAS[int(i)])
 	if OS.get_environment("ANIM") == "1":   ## la expansión del museo (planta 3) como la ve el jugador la primera vez: se olvida que ya se vio
 		CargaCiudad.de("AjustesCiudad").guardar("museo_ampliado_visto", 0)
 	var m := Mundo.new()
@@ -86,7 +86,7 @@ func _colocar(planta: int, sala: String) -> void:
 			_ex.rumbo = PI
 			if sala == "Ascensor":   ## (10-11) de frente a las puertas; con PUERTAS=1 la 2.ª foto de la lista (SOLO=11,11) las lleva abiertas
 				_ex.rumbo = 0.0
-				PuertasAscensor.mover(get_tree(), float(planta) * EdificioClub.ALTO_PLANTA, OS.get_environment("PUERTAS") == "1" and (_paso >= 1 or SALAS.size() == 1), 0.0)
+				PuertasAscensor.mover(get_tree(), float(planta) * EdificioClub.ALTO_PLANTA, OS.get_environment("PUERTAS") == "1" and (_paso >= 1 or salas.size() == 1), 0.0)
 			if OS.get_environment("RUMBO") != "":   ## (12-11) RUMBO=grados DX=m DZ=m: apuntar la cámara a una pieza concreta
 				_ex.rumbo = deg_to_rad(float(OS.get_environment("RUMBO")))
 				_ex.cuerpo.position += Vector3(float(OS.get_environment("DX")), 0.0, float(OS.get_environment("DZ")))
@@ -126,7 +126,7 @@ func _process(_d: float) -> void:
 	if _n >= 10 and (_n - 10) % (14 if OS.get_environment("PUERTAS") == "1" else 6) == 0:
 		if _paso > 0:
 			_foto()
-		if _paso >= SALAS.size():
+		if _paso >= salas.size():
 			var hoja := Image.create(480 * 4, 270 * 3, false, Image.FORMAT_RGBA8)
 			var nombre := OS.get_environment("SALIDA") if OS.get_environment("SALIDA") != "" else "res://pruebas/capturas/edificio_club.png"
 			for k in _imgs.size():
@@ -135,7 +135,7 @@ func _process(_d: float) -> void:
 			print("HOJA OK")
 			get_tree().quit()
 			return
-		_colocar(int(SALAS[_paso][0]), String(SALAS[_paso][1]))
+		_colocar(int(salas[_paso][0]), String(salas[_paso][1]))
 		_paso += 1
 
 func _texturas(n: int) -> void:

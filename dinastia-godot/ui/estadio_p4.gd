@@ -394,8 +394,12 @@ func _llenar_cajon(c: CajonAjustes) -> void:
 	_cajon = c   ## si el cajón se recordó abierto, esto corre dentro de `CajonAjustes.crear`, antes de que `_montar_cajon_de_ajustes` lo asigne
 	_cajon.seccion("Transmisión")
 	_btn_camara = _cajon.boton("📷 Cámara: " + (_rig.current_name() if _rig != null else "TV"), _rotar_camara)
-	_cajon.fila([["🔍 Acercar", func() -> void: if _rig: _rig.ajustar_zoom(-3.0)],
-		["🔍 Alejar", func() -> void: if _rig: _rig.ajustar_zoom(3.0)]])
+	_cajon.fila([["🔍 Acercar", func() -> void:
+			if _rig:
+				_rig.ajustar_zoom(-3.0)],
+		["🔍 Alejar", func() -> void:
+			if _rig:
+				_rig.ajustar_zoom(3.0)]])
 	_cajon.boton("📸 Modo foto", func() -> void: ModoFoto.abrir(self, club, "el estadio"))
 	## RECORRER EL ESTADIO A PIE (7-10-2026): del vestuario, por el túnel, a la
 	## cancha. Solo sin partido en marcha.

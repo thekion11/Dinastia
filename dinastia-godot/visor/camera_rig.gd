@@ -104,14 +104,14 @@ static func fov_para_aspecto(fov: float, aspecto: float) -> float:
 static func lectura_jugada(b: Vector3, vel: Vector3, ataca: float, ocasion: bool, saque: String, estado: String) -> Vector2:
 	if estado in ["gol", "descanso", "fin"]:
 		return Vector2(0.0, 0.35)
-	var dist_arco := (52.5 - b.z * ataca) if ataca != 0.0 else (52.5 - absf(b.z))
+	var dist_arco := (52.5 - b.z * ataca) if not is_zero_approx(ataca) else (52.5 - absf(b.z))
 	## El área y su frontal: a menos de ~30 m de la línea y por dentro.
 	var area := clampf((30.0 - dist_arco) / 13.0, 0.0, 1.0) * clampf((30.0 - absf(b.x)) / 10.0, 0.0, 1.0)
 	var cerca := maxf(area * 0.85, 1.0 if ocasion or saque in ["corner", "penal"] else 0.0)
 	if saque in ["puerta", "centro", "banda"]:
 		cerca = 0.0
 	## Contraataque: el balón avanza rápido hacia la portería rival y aún lejos.
-	var avance := vel.z * ataca if ataca != 0.0 else absf(vel.z)
+	var avance := vel.z * ataca if not is_zero_approx(ataca) else absf(vel.z)
 	var contra := clampf((avance - 6.0) / 5.0, 0.0, 1.0) * clampf((dist_arco - 32.0) / 18.0, 0.0, 1.0)
 	## Transición larga: un balón que viaja muy rápido (pase largo, cambio de banda).
 	var largo := clampf((Vector2(vel.x, vel.z).length() - 15.0) / 8.0, 0.0, 1.0) * 0.75

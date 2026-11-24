@@ -20,6 +20,7 @@ var _n := 0
 ## (4-11, F-008) La prueba mide «hay partida guardada»: con partidas ajenas en `user://partidas` (de otra especial, o de quien abrió el juego) daba falso. Se aparta esa carpeta mientras
 ## corre y se devuelve al salir.
 const RESPALDO := "user://partidas_respaldo_banco_inicio"
+const _RUTA_PRINCIPAL := "res://escenas/principal.tscn"
 var _aislado := false
 
 func _aislar_guardado() -> void:
@@ -146,7 +147,7 @@ func _arrancar_carga_desde_inicio() -> void:
 		_cerrar()
 		return
 	PedidoPartida.mundo_a_cargar = cargado
-	_pantalla = load("res://escenas/principal.tscn").instantiate()
+	_pantalla = load(_RUTA_PRINCIPAL).instantiate()
 	add_child(_pantalla)
 
 ## El modo y la dificultad elegidos en seleccion_modo.gd, aplicados por
@@ -156,7 +157,7 @@ func _arrancar_modo_y_dificultad() -> void:
 	PedidoPartida.modo_elegido = "ayudante"
 	PedidoPartida.dt_nombre_elegido = "Prueba Banco"
 	PedidoPartida.dificultad_elegida = "leyenda"
-	_pantalla = load("res://escenas/principal.tscn").instantiate()
+	_pantalla = load(_RUTA_PRINCIPAL).instantiate()
 	add_child(_pantalla)
 
 ## El tercer canal: `ui/eleccion_club.gd` genera el mundo ENTERO y hace
@@ -176,7 +177,7 @@ func _arrancar_desde_eleccion_club() -> void:
 	PedidoPartida.dificultad_elegida = "normal"
 	PedidoPartida.desafios_elegidos = ["pobreza"]
 	PedidoPartida.mundo_pregenerado = _mundo_elegido
-	_pantalla = load("res://escenas/principal.tscn").instantiate()
+	_pantalla = load(_RUTA_PRINCIPAL).instantiate()
 	add_child(_pantalla)
 
 func _cerrar() -> void:

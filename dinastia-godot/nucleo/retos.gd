@@ -17,6 +17,13 @@ const LISTA := [
 ]
 
 static func datos(id: String) -> Array:
+	var nat := Nativo.de("nuc_datos_reto")
+	if nat != null:
+		return nat.nuc_datos_reto(id)
+	return datos_gd(id)
+
+## Gemela GDScript de `nuc_datos_reto` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func datos_gd(id: String) -> Array:
 	for r: Array in LISTA:
 		if String(r[0]) == id:
 			return r
@@ -75,6 +82,18 @@ static func juzgar(m: Mundo, puesto: int, descendio: bool, ascendio: bool) -> Di
 	var c := m.mi_club()
 	if r.is_empty() or c == null:
 		return {}
+	var ok := _reto_cumplido(id, m, c, puesto, descendio, ascendio)
+	m.reto["juzgado"] = true
+	m.reto["cumplido"] = ok
+	if ok and m.roles != null:
+		m.roles.sumar_trofeo("Reto: %s" % String(r[2]))
+		m.roles.sumar_prestigio(6)
+	return {"cumplido": ok, "titulo": ("%s Reto cumplido: %s" % [String(r[1]), String(r[2])]) if ok else ("❌ Reto fallido: %s" % String(r[2])),
+		"texto": ("Meta: %s. ¡Lo lograste! Queda en tu vitrina." % String(r[4]).to_lower()) if ok else ("Meta: %s. No alcanzó. La carrera sigue igual." % String(r[4]).to_lower())}
+
+
+## ¿Se cumplió el reto? Según su id (el David, el ascenso, la deuda, la cantera o el título).
+static func _reto_cumplido(id: String, m: Mundo, c: Club, puesto: int, descendio: bool, ascendio: bool) -> bool:
 	var ok := false
 	match id:
 		"david":
@@ -92,10 +111,4 @@ static func juzgar(m: Mundo, puesto: int, descendio: bool, ascendio: bool) -> Di
 			ok = n >= 6 and not descendio
 		"titulo":
 			ok = puesto == 1
-	m.reto["juzgado"] = true
-	m.reto["cumplido"] = ok
-	if ok and m.roles != null:
-		m.roles.sumar_trofeo("Reto: %s" % String(r[2]))
-		m.roles.sumar_prestigio(6)
-	return {"cumplido": ok, "titulo": ("%s Reto cumplido: %s" % [String(r[1]), String(r[2])]) if ok else ("❌ Reto fallido: %s" % String(r[2])),
-		"texto": ("Meta: %s. ¡Lo lograste! Queda en tu vitrina." % String(r[4]).to_lower()) if ok else ("Meta: %s. No alcanzó. La carrera sigue igual." % String(r[4]).to_lower())}
+	return ok

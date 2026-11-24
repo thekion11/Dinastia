@@ -96,6 +96,12 @@ func _ms_pared() -> float:
 	return v[v.size() / 2]
 
 func _quitar(que: String) -> void:
+	_quitar_entorno(que)
+	_quitar_escena(que)
+
+
+## Lo que se quita del entorno (WorldEnvironment y el viewport del partido).
+func _quitar_entorno(que: String) -> void:
 	var envs := _pj.find_children("*", "WorldEnvironment", true, false)
 	match que:
 		"ajuste": for e in envs: (e as WorldEnvironment).environment.adjustment_enabled = false
@@ -105,13 +111,18 @@ func _quitar(que: String) -> void:
 			(e as WorldEnvironment).environment.background_mode = Environment.BG_COLOR
 			(e as WorldEnvironment).environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 		"msaa": _pj._vp.msaa_3d = Viewport.MSAA_DISABLED
+		"mundo3d": _pj._vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
+
+
+## Lo que se quita de la escena (HUD, controles, luces y jugadores).
+func _quitar_escena(que: String) -> void:
+	match que:
 		"hud": for h in _pj.get_children():
 			if h is Control and not (h is SubViewportContainer): (h as Control).visible = false
 		"controles": (_pj.get_node("ControlesTactiles") as Control).visible = false
 		"omni": for l in _pj.find_children("*", "OmniLight3D", true, false): (l as Light3D).visible = false
 		"luz": for l in _pj.find_children("*", "DirectionalLight3D", true, false): (l as Light3D).visible = false
 		"jugadores": for n in _pj.motor.jugadores: ((n as Dictionary)["node"] as Node3D).visible = false
-		"mundo3d": _pj._vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 func _llamadas() -> int:
 	for i in 3:
@@ -130,101 +141,26 @@ func _medir() -> void:
 	if await MedirPartidoModos.new(self, _pj).correr():
 		return
 	if OS.get_environment("LUCES") != "":
-		var por := {}
-		for l in _pj.find_children("*", "Light3D", true, false):
-			var k := "%s sombra=%s visible=%s rango=%s" % [(l as Node).get_class(), str((l as Light3D).shadow_enabled), str((l as Light3D).is_visible_in_tree()), str(snappedf(float((l as Light3D).get("omni_range") if (l as Node).get_class() == "OmniLight3D" else ((l as Light3D).get("spot_range") if (l as Node).get_class() == "SpotLight3D" else 0.0)), 1))]
-			por[k] = int(por.get(k, 0)) + 1
-		for k in por:
-			print("LUZ x%-4d %s" % [por[k], k])
-		for l in _pj.find_children("*", "OmniLight3D", true, false):
-			var o := l as OmniLight3D
-			var c := _pj._cam
-			var dist := c.global_position.distance_to(o.global_position)
-			print("OMNI pos=%s energia=%.1f rango=%.0f dist_camara=%.0f en_frustum=%s padre=%s" % [str(o.global_position.snapped(Vector3.ONE)), o.light_energy, o.omni_range, dist, str(_esfera_en_frustum(c, o.global_position, o.omni_range)), String(o.get_parent().name)])
-		var vp: SubViewport = _pj._vp
-		print("VIEWPORT msaa_3d=%d scaling_mode=%d scale=%.2f taa=%s fxaa=%d debanding=%s hdr2d=%s" % [vp.msaa_3d, vp.scaling_3d_mode, vp.scaling_3d_scale, str(vp.use_taa), vp.screen_space_aa, str(vp.use_debanding), str(vp.use_hdr_2d)])
-		get_tree().quit()
+		_modo_luces()
 		return
 	if OS.get_environment("CENSO") != "":
 		_censo()
 		get_tree().quit()
 		return
 	if OS.get_environment("LISTAR") != "":
-		## LISTAR=Clase: cuántos nodos de esa clase hay y bajo qué padre (nombre) cuelgan.
-		var por_padre := {}
-		for n in _pj.find_children("*", OS.get_environment("LISTAR"), true, false):
-			var k := String(n.get_parent().name) + " > " + String((n as Node).name).rstrip("0123456789@")
-			por_padre[k] = int(por_padre.get(k, 0)) + 1
-		var claves := por_padre.keys()
-		claves.sort_custom(func(a, b) -> bool: return por_padre[a] > por_padre[b])
-		for k in claves.slice(0, 25):
-			print("LISTA %4d  %s" % [por_padre[k], k])
-		get_tree().quit()
+		_modo_listar()
 		return
 	if OS.get_environment("POR_HUD") != "":
-		## POR_HUD=1 (12-11): cuántas llamadas pesa cada pieza 2D del partido (hijos Control de PartidoJugable y de los controles táctiles).
-		var base_h: int = await _llamadas()
-		print("HUD base %d llamadas" % base_h)
-		var piezas: Array = []
-		for h in _pj.get_children():
-			if h is Control and not (h is SubViewportContainer) and (h as Control).visible:
-				piezas.append(h)
-		var ct := _pj.get_node_or_null("ControlesTactiles")
-		if ct != null:
-			for h in ct.get_children():
-				if h is CanvasItem and (h as CanvasItem).visible:
-					piezas.append(h)
-		for h: CanvasItem in piezas:
-			h.visible = false
-			var ll: int = await _llamadas()
-			h.visible = true
-			var texto := ""
-			for l in h.find_children("*", "Label", true, false):
-				texto += (l as Label).text.substr(0, 18) + "|"
-			print("HUD -%3d  %s (%s) %s" % [base_h - ll, h.name, h.get_class(), texto])
-		get_tree().quit()
+		await _modo_por_hud()
 		return
 	if OS.get_environment("POR_HIJO") != "":
-		## POR_HIJO=1 (12-11): cuántas llamadas pesa cada hijo de la escena 3D (se oculta uno, se cuenta y se vuelve a mostrar).
-		var base_ll: int = await _llamadas()
-		var base_tr := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
-		var filas: Array = []
-		for h in _pj._raiz.get_children():
-			if not (h is Node3D) or not (h as Node3D).visible:
-				continue
-			(h as Node3D).visible = false
-			var ll: int = await _llamadas()
-			var tr := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
-			(h as Node3D).visible = true
-			var info := ""
-			if h is MeshInstance3D and (h as MeshInstance3D).mesh != null:
-				var m := (h as MeshInstance3D).mesh
-				info = " mesh=%s «%s» sup=%d aabb=%s" % [m.get_class(), m.resource_name, m.get_surface_count(), str(m.get_aabb().size.snapped(Vector3.ONE))]
-			if h.get_child_count() > 0:
-				info += " 1.er hijo=%s/%s" % [h.get_child(0).name, h.get_child(0).get_class()]
-			filas.append([base_ll - ll, "%s (%s, %d hijos)%s" % [h.name, h.get_class(), h.get_child_count(), info], base_tr - tr])
-		filas.sort_custom(func(a: Array, b: Array) -> bool: return a[2] > b[2])   ## (13-11) ordenado por triángulos; se informan los dos
-		for f: Array in filas.slice(0, 25):
-			print("HIJO -%4d llamadas  -%7d triángulos  %s" % [f[0], f[2], f[1]])
-		get_tree().quit()
+		await _modo_por_hijo()
 		return
 	if OS.get_environment("CONTEO") != "":
-		## CONTEO=controles,hud: tras ocultar cada cosa, vuelve a contar (acumulado). Lo que baja son llamadas de DIBUJO 2D (el HUD del partido y los botones).
-		for q in OS.get_environment("CONTEO").split(","):
-			_quitar(q)
-			await _conteos("sin " + q)
-		get_tree().quit()
+		await _modo_conteo()
 		return
 	if OS.get_environment("QUITAR") != "":
-		var base_ms := await _ms_pared()
-		var base2 := await _ms_pared()
-		print("PARED repetida (ruido): %.1f ms" % base2)
-		print("PARED base %.1f ms (viewport 3D %s, MSAA %d, escala %.2f)" % [base_ms, str(_pj._vp.size), _pj._vp.msaa_3d, _pj._vp.scaling_3d_scale])
-		for q in OS.get_environment("QUITAR").split(","):
-			_quitar(q)
-			var ms := await _ms_pared()
-			print("PARED sin %-10s %.1f ms  (-%.1f)" % [q, ms, base_ms - ms])
-		get_tree().quit()
+		await _modo_quitar()
 		return
 	var ocultar := OS.get_environment("OCULTAR")
 	if ocultar != "":
@@ -235,6 +171,116 @@ func _medir() -> void:
 	if OS.get_environment("CPU") == "":
 		get_tree().quit()
 		return
+	await _medir_cpu()
+
+
+## LUCES: las luces del partido por tipo, las omni con su distancia y el viewport.
+func _modo_luces() -> void:
+	var por := {}
+	for l in _pj.find_children("*", "Light3D", true, false):
+		var k := "%s sombra=%s visible=%s rango=%s" % [(l as Node).get_class(), str((l as Light3D).shadow_enabled), str((l as Light3D).is_visible_in_tree()), str(snappedf(float((l as Light3D).get("omni_range") if (l as Node).get_class() == "OmniLight3D" else ((l as Light3D).get("spot_range") if (l as Node).get_class() == "SpotLight3D" else 0.0)), 1))]
+		por[k] = int(por.get(k, 0)) + 1
+	for k in por:
+		print("LUZ x%-4d %s" % [por[k], k])
+	for l in _pj.find_children("*", "OmniLight3D", true, false):
+		var o := l as OmniLight3D
+		var c := _pj._cam
+		var dist := c.global_position.distance_to(o.global_position)
+		print("OMNI pos=%s energia=%.1f rango=%.0f dist_camara=%.0f en_frustum=%s padre=%s" % [str(o.global_position.snapped(Vector3.ONE)), o.light_energy, o.omni_range, dist, str(_esfera_en_frustum(c, o.global_position, o.omni_range)), String(o.get_parent().name)])
+	var vp: SubViewport = _pj._vp
+	print("VIEWPORT msaa_3d=%d scaling_mode=%d scale=%.2f taa=%s fxaa=%d debanding=%s hdr2d=%s" % [vp.msaa_3d, vp.scaling_3d_mode, vp.scaling_3d_scale, str(vp.use_taa), vp.screen_space_aa, str(vp.use_debanding), str(vp.use_hdr_2d)])
+	get_tree().quit()
+
+
+## LISTAR=Clase: cuántos nodos de esa clase hay y bajo qué padre (nombre) cuelgan.
+func _modo_listar() -> void:
+	## LISTAR=Clase: cuántos nodos de esa clase hay y bajo qué padre (nombre) cuelgan.
+	var por_padre := {}
+	for n in _pj.find_children("*", OS.get_environment("LISTAR"), true, false):
+		var k := String(n.get_parent().name) + " > " + String((n as Node).name).rstrip("0123456789@")
+		por_padre[k] = int(por_padre.get(k, 0)) + 1
+	var claves := por_padre.keys()
+	claves.sort_custom(func(a, b) -> bool: return por_padre[a] > por_padre[b])
+	for k in claves.slice(0, 25):
+		print("LISTA %4d  %s" % [por_padre[k], k])
+	get_tree().quit()
+
+
+## POR_HUD=1: cuántas llamadas pesa cada pieza 2D del partido (hijos Control y de los controles táctiles).
+func _modo_por_hud() -> void:
+	## POR_HUD=1 (12-11): cuántas llamadas pesa cada pieza 2D del partido (hijos Control de PartidoJugable y de los controles táctiles).
+	var base_h: int = await _llamadas()
+	print("HUD base %d llamadas" % base_h)
+	var piezas: Array = []
+	for h in _pj.get_children():
+		if h is Control and not (h is SubViewportContainer) and (h as Control).visible:
+			piezas.append(h)
+	var ct := _pj.get_node_or_null("ControlesTactiles")
+	if ct != null:
+		for h in ct.get_children():
+			if h is CanvasItem and (h as CanvasItem).visible:
+				piezas.append(h)
+	for h: CanvasItem in piezas:
+		h.visible = false
+		var ll: int = await _llamadas()
+		h.visible = true
+		var texto := ""
+		for l in h.find_children("*", "Label", true, false):
+			texto += (l as Label).text.substr(0, 18) + "|"
+		print("HUD -%3d  %s (%s) %s" % [base_h - ll, h.name, h.get_class(), texto])
+	get_tree().quit()
+
+
+## POR_HIJO=1: cuántas llamadas pesa cada hijo de la escena 3D (se oculta uno, se cuenta y se vuelve a mostrar).
+func _modo_por_hijo() -> void:
+	## POR_HIJO=1 (12-11): cuántas llamadas pesa cada hijo de la escena 3D (se oculta uno, se cuenta y se vuelve a mostrar).
+	var base_ll: int = await _llamadas()
+	var base_tr := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
+	var filas: Array = []
+	for h in _pj._raiz.get_children():
+		if not (h is Node3D) or not (h as Node3D).visible:
+			continue
+		(h as Node3D).visible = false
+		var ll: int = await _llamadas()
+		var tr := int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME))
+		(h as Node3D).visible = true
+		var info := ""
+		if h is MeshInstance3D and (h as MeshInstance3D).mesh != null:
+			var m := (h as MeshInstance3D).mesh
+			info = " mesh=%s «%s» sup=%d aabb=%s" % [m.get_class(), m.resource_name, m.get_surface_count(), str(m.get_aabb().size.snapped(Vector3.ONE))]
+		if h.get_child_count() > 0:
+			info += " 1.er hijo=%s/%s" % [h.get_child(0).name, h.get_child(0).get_class()]
+		filas.append([base_ll - ll, "%s (%s, %d hijos)%s" % [h.name, h.get_class(), h.get_child_count(), info], base_tr - tr])
+	filas.sort_custom(func(a: Array, b: Array) -> bool: return a[2] > b[2])   ## (13-11) ordenado por triángulos; se informan los dos
+	for f: Array in filas.slice(0, 25):
+		print("HIJO -%4d llamadas  -%7d triángulos  %s" % [f[0], f[2], f[1]])
+	get_tree().quit()
+
+
+## CONTEO=controles,hud: tras ocultar cada cosa, vuelve a contar (acumulado). Lo que baja son llamadas de DIBUJO 2D.
+func _modo_conteo() -> void:
+	## CONTEO=controles,hud: tras ocultar cada cosa, vuelve a contar (acumulado). Lo que baja son llamadas de DIBUJO 2D (el HUD del partido y los botones).
+	for q in OS.get_environment("CONTEO").split(","):
+		_quitar(q)
+		await _conteos("sin " + q)
+	get_tree().quit()
+
+
+## QUITAR=cosas: el tiempo de pared del partido sin cada cosa (ruido medido aparte).
+func _modo_quitar() -> void:
+	var base_ms := await _ms_pared()
+	var base2 := await _ms_pared()
+	print("PARED repetida (ruido): %.1f ms" % base2)
+	print("PARED base %.1f ms (viewport 3D %s, MSAA %d, escala %.2f)" % [base_ms, str(_pj._vp.size), _pj._vp.msaa_3d, _pj._vp.scaling_3d_scale])
+	for q in OS.get_environment("QUITAR").split(","):
+		_quitar(q)
+		var ms := await _ms_pared()
+		print("PARED sin %-10s %.1f ms  (-%.1f)" % [q, ms, base_ms - ms])
+	get_tree().quit()
+
+
+## CPU=1: el coste de CPU de cada clase con proceso (sin cada una, cuánto baja el cuadro).
+func _medir_cpu() -> void:
 	var por_clase := {}
 	for n in _pj.find_children("*", "Node", true, false):
 		if n.get_script() != null and (n.is_processing() or n.is_physics_processing()):

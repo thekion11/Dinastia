@@ -62,6 +62,25 @@ static func ganados(c: CarreraJugador, m: Mundo, gano_duelo: bool) -> Array:
 	var s: Dictionary = c.stats_temp
 	var pj := int(s["pj"])
 	var nota := c.nota_media()
+	var mejor_nota := _premios_de_plantilla(out, c, j, club)
+	if pj >= 20 and nota >= 7.3:
+		out.append("once_ideal")
+	if j.es_portero() and int(s.get("vallas", 0)) >= 10:   ## (16-11, informe R-04) las de ESTA temporada, no las de la carrera
+		out.append("muro")
+	if pj >= 30:
+		out.append("hierro")
+	if gano_duelo:
+		out.append("duelo")
+	if c.ovr_inicio >= 0 and j.ovr - c.ovr_inicio >= 4:
+		out.append("salto")
+	out.append_array(_de_la_liga(c, m, j, club, mejor_nota))
+	return out
+
+## Los premios de plantilla: revelación, goleador, mejor del club (devuelve si fue el mejor de la plantilla).
+static func _premios_de_plantilla(out: Array, c: CarreraJugador, j: Jugador, club: Club) -> bool:
+	var s: Dictionary = c.stats_temp
+	var pj := int(s["pj"])
+	var nota := c.nota_media()
 	if c.temporadas.is_empty() and pj >= 15 and nota >= 6.6:
 		out.append("revelacion")
 	var mas_goles := true
@@ -77,18 +96,7 @@ static func ganados(c: CarreraJugador, m: Mundo, gano_duelo: bool) -> Array:
 		out.append("goleador_club")
 	if mejor_nota:
 		out.append("mejor_club")
-	if pj >= 20 and nota >= 7.3:
-		out.append("once_ideal")
-	if j.es_portero() and int(s.get("vallas", 0)) >= 10:   ## (16-11, informe R-04) las de ESTA temporada, no las de la carrera
-		out.append("muro")
-	if pj >= 30:
-		out.append("hierro")
-	if gano_duelo:
-		out.append("duelo")
-	if c.ovr_inicio >= 0 and j.ovr - c.ovr_inicio >= 4:
-		out.append("salto")
-	out.append_array(_de_la_liga(c, m, j, club, mejor_nota))
-	return out
+	return mejor_nota
 
 ## Los premios que se deciden contra toda tu liga, las copas que ganó tu club y el mundial.
 static func _de_la_liga(c: CarreraJugador, m: Mundo, j: Jugador, club: Club, mejor_del_club: bool) -> Array:
@@ -97,22 +105,7 @@ static func _de_la_liga(c: CarreraJugador, m: Mundo, j: Jugador, club: Club, mej
 	var pj := int(s["pj"])
 	var nota := c.nota_media()
 	var liga := CarreraRuta._liga_de(m, club)
-	if liga != null and pj >= PJ_LIGA:
-		var mas_goles := int(s["goles"]) >= 8
-		var mas_asist := int(s["asist"]) >= 6
-		var mejor_nota := nota >= 7.0
-		var mejor_portero := j.es_portero() and nota >= 6.7
-		for cl: Club in liga.clubes:
-			for o: Jugador in cl.plantilla:
-				if o == j:
-					continue
-				mas_goles = mas_goles and o.goles < int(s["goles"])
-				mas_asist = mas_asist and o.asistencias < int(s["asist"])
-				mejor_nota = mejor_nota and _nota_de(o, PJ_LIGA) < nota
-				mejor_portero = mejor_portero and not (o.es_portero() and _nota_de(o, PJ_LIGA) >= nota)
-		for par: Array in [["goleador_liga", mas_goles], ["asistidor_liga", mas_asist], ["portero_liga", mejor_portero], ["mvp_liga", mejor_nota]]:
-			if bool(par[1]):
-				out.append(String(par[0]))
+	_premios_de_la_liga(out, liga, j, s, pj, nota)
 	var clases := {}
 	for t: Dictionary in trofeos(m, club):
 		clases[String(t["clase"])] = true
@@ -125,6 +118,13 @@ static func _de_la_liga(c: CarreraJugador, m: Mundo, j: Jugador, club: Club, mej
 	return out
 
 static func _puntos_mundial(nota: float, goles: int, asist: int, titulos: int) -> float:
+	var nat := Nativo.de("nuc_puntos_mundial")
+	if nat != null:
+		return nat.nuc_puntos_mundial(nota, goles, asist, titulos)
+	return _puntos_mundial_gd(nota, goles, asist, titulos)
+
+## Gemela GDScript de `nuc_puntos_mundial` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _puntos_mundial_gd(nota: float, goles: int, asist: int, titulos: int) -> float:
 	return nota * 10.0 + float(goles + asist) * 0.3 + float(titulos) * 3.0
 
 static func _mejor_del_mundo(m: Mundo, j: Jugador, mios: float) -> bool:
@@ -248,3 +248,23 @@ static func palmares(c: CarreraJugador) -> Dictionary:
 			if p is Dictionary and PREMIOS.has(String((p as Dictionary).get("id", ""))):
 				out[String(p["id"])] = int(out.get(String(p["id"]), 0)) + 1
 	return out
+
+
+## Los premios de la liga: goleador, asistidor, portero y la mejor nota de tu liga entera.
+static func _premios_de_la_liga(out: Array, liga: Liga, j: Jugador, s: Dictionary, pj: int, nota: float) -> void:
+	if liga != null and pj >= PJ_LIGA:
+		var mas_goles := int(s["goles"]) >= 8
+		var mas_asist := int(s["asist"]) >= 6
+		var mejor_nota := nota >= 7.0
+		var mejor_portero := j.es_portero() and nota >= 6.7
+		for cl: Club in liga.clubes:
+			for o: Jugador in cl.plantilla:
+				if o == j:
+					continue
+				mas_goles = mas_goles and o.goles < int(s["goles"])
+				mas_asist = mas_asist and o.asistencias < int(s["asist"])
+				mejor_nota = mejor_nota and _nota_de(o, PJ_LIGA) < nota
+				mejor_portero = mejor_portero and not (o.es_portero() and _nota_de(o, PJ_LIGA) >= nota)
+		for par: Array in [["goleador_liga", mas_goles], ["asistidor_liga", mas_asist], ["portero_liga", mejor_portero], ["mvp_liga", mejor_nota]]:
+			if bool(par[1]):
+				out.append(String(par[0]))

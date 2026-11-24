@@ -246,7 +246,7 @@ func nivel_de(j: Jugador) -> float:
 	var base := 1.5 if (suyo != null and mio != null and suyo.pais == mio.pais) else 0.0
 	var cobertura := float(red.get(suyo.pais, 0)) * 0.9 if suyo != null else 0.0
 	## El consejero deportivo (`dep`) es "un ojo extra" que afina la niebla en
-	## TODO el mundo, no solo en los países cubiertos -por eso se suma al final
+	## Todo el mundo, no solo en los países cubiertos -por eso se suma al final
 	## y no entra en el maxf() de arriba-.
 	var bono_consejero := 0.4 if (m.directiva != null and m.directiva.tiene_consejero("dep")) else 0.0
 	return maxf(base, cobertura) + bono_consejero

@@ -25,6 +25,38 @@ var _mat: ShaderMaterial
 var _cam: Camera3D
 
 func _ready() -> void:
+	var malla := PublicoVat.malla("cerca")
+	_montar_escena(malla)
+	var durs: Array = malla.get_meta("vat_duraciones")
+	await get_tree().process_frame
+	var cols := CLIPS.size() * CUADROS
+	var albedo := Image.create(cols * W, VARIANTES * H, false, Image.FORMAT_RGBA8)
+	var mascara := Image.create(cols * W, VARIANTES * H, false, Image.FORMAT_RGBA8)
+	for v in VARIANTES:
+		## Un origen distinto = otro «azar» del hincha (piel, pelo, bufanda, gorra, rayas).
+		var origen := Vector3(7.31 * float(v) + 1.7, 0.0, 3.13 * float(v) * float(v) + 0.9)
+		_mm.multimesh.set_instance_transform(0, Transform3D(Basis(), origen))
+		_cam.position = origen + Vector3(0, CENTRO_Y, 3.0)
+		for c in CLIPS.size():
+			for f in CUADROS:
+				var t := float(f) / float(CUADROS) * maxf(float(durs[CLIPS[c]]), 0.1)
+				_mat.set_shader_parameter("clip_fijo", int(CLIPS[c]))
+				_mat.set_shader_parameter("tiempo_fijo", t)
+				var base := await _foto(Color(1, 1, 1, 1), Color(1, 1, 1), Color(1, 1, 1))
+				var sin_ropa := await _foto(Color(0, 0, 0, 1), Color(1, 1, 1), Color(1, 1, 1))
+				var sin_b1 := await _foto(Color(1, 1, 1, 1), Color(0, 0, 0), Color(1, 1, 1))
+				var sin_b2 := await _foto(Color(1, 1, 1, 1), Color(1, 1, 1), Color(0, 0, 0))
+				var ox := (c * CUADROS + f) * W
+				var oy := v * H
+				_componer(albedo, mascara, [base, sin_ropa, sin_b1, sin_b2], ox, oy)
+		print("variante ", v + 1, "/", VARIANTES)
+	albedo.save_png(SALIDA + "publico2d_albedo.png")
+	mascara.save_png(SALIDA + "publico2d_mascara.png")
+	print("HORNEADO PÚBLICO 2D: ", albedo.get_size(), " ", cols, " columnas x ", VARIANTES, " variantes")
+	get_tree().quit()
+
+## Monta la escena de fotografía: viewport propio, cámara ortogonal, luz, entorno y la malla de la hinchada.
+func _montar_escena(malla: Mesh) -> void:
 	_vp = SubViewport.new()
 	_vp.size = Vector2i(W * SS, H * SS)
 	_vp.transparent_bg = true
@@ -50,7 +82,6 @@ func _ready() -> void:
 	var we := WorldEnvironment.new()
 	we.environment = env
 	_vp.add_child(we)
-	var malla := PublicoVat.malla("cerca")
 	_mat = ShaderMaterial.new()
 	_mat.shader = load("res://visor/hinchada.gdshader")
 	_mat.set_shader_parameter("cuello_desde", float(malla.get_meta("cuello_desde", 0.70)))
@@ -59,7 +90,6 @@ func _ready() -> void:
 	_mat.set_shader_parameter("lado_max", 0.14)
 	_mat.set_shader_parameter("amplitud", 0.03)
 	PublicoVat.configurar(_mat, malla, "quieto")
-	var durs: Array = malla.get_meta("vat_duraciones")
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.use_colors = true
@@ -69,39 +99,21 @@ func _ready() -> void:
 	_mm.multimesh = mm
 	_mm.material_override = _mat
 	_vp.add_child(_mm)
-	await get_tree().process_frame
-	var cols := CLIPS.size() * CUADROS
-	var albedo := Image.create(cols * W, VARIANTES * H, false, Image.FORMAT_RGBA8)
-	var mascara := Image.create(cols * W, VARIANTES * H, false, Image.FORMAT_RGBA8)
-	for v in VARIANTES:
-		## Un origen distinto = otro «azar» del hincha (piel, pelo, bufanda, gorra, rayas).
-		var origen := Vector3(7.31 * float(v) + 1.7, 0.0, 3.13 * float(v) * float(v) + 0.9)
-		mm.set_instance_transform(0, Transform3D(Basis(), origen))
-		_cam.position = origen + Vector3(0, CENTRO_Y, 3.0)
-		for c in CLIPS.size():
-			for f in CUADROS:
-				var t := float(f) / float(CUADROS) * maxf(float(durs[CLIPS[c]]), 0.1)
-				_mat.set_shader_parameter("clip_fijo", int(CLIPS[c]))
-				_mat.set_shader_parameter("tiempo_fijo", t)
-				var base := await _foto(Color(1, 1, 1, 1), Color(1, 1, 1), Color(1, 1, 1))
-				var sin_ropa := await _foto(Color(0, 0, 0, 1), Color(1, 1, 1), Color(1, 1, 1))
-				var sin_b1 := await _foto(Color(1, 1, 1, 1), Color(0, 0, 0), Color(1, 1, 1))
-				var sin_b2 := await _foto(Color(1, 1, 1, 1), Color(1, 1, 1), Color(0, 0, 0))
-				var ox := (c * CUADROS + f) * W
-				var oy := v * H
-				for y in H:
-					for x in W:
-						var p := base.get_pixel(x, y)
-						var mr := smoothstep(0.3, 0.75, _dif(p, sin_ropa.get_pixel(x, y)))
-						var m1 := smoothstep(0.3, 0.75, _dif(p, sin_b1.get_pixel(x, y)))
-						var m2 := smoothstep(0.3, 0.75, _dif(p, sin_b2.get_pixel(x, y)))
-						albedo.set_pixel(ox + x, oy + y, p)
-						mascara.set_pixel(ox + x, oy + y, Color(mr, m1, m2, 1.0))
-		print("variante ", v + 1, "/", VARIANTES)
-	albedo.save_png(SALIDA + "publico2d_albedo.png")
-	mascara.save_png(SALIDA + "publico2d_mascara.png")
-	print("HORNEADO PÚBLICO 2D: ", albedo.get_size(), " ", cols, " columnas x ", VARIANTES, " variantes")
-	get_tree().quit()
+
+## Compone un cuadro: `fotos` = [base, sin ropa, sin bufanda 1, sin bufanda 2]. Pone el albedo (base) y la máscara en (ox, oy).
+func _componer(albedo: Image, mascara: Image, fotos: Array, ox: int, oy: int) -> void:
+	var base: Image = fotos[0]
+	var sin_ropa: Image = fotos[1]
+	var sin_b1: Image = fotos[2]
+	var sin_b2: Image = fotos[3]
+	for y in H:
+		for x in W:
+			var p := base.get_pixel(x, y)
+			var mr := smoothstep(0.3, 0.75, _dif(p, sin_ropa.get_pixel(x, y)))
+			var m1 := smoothstep(0.3, 0.75, _dif(p, sin_b1.get_pixel(x, y)))
+			var m2 := smoothstep(0.3, 0.75, _dif(p, sin_b2.get_pixel(x, y)))
+			albedo.set_pixel(ox + x, oy + y, p)
+			mascara.set_pixel(ox + x, oy + y, Color(mr, m1, m2, 1.0))
 
 ## Fuerza al máximo la diferencia (normalizada a 0..1) entre la base y la pasada con una parte en negro.
 func _dif(a: Color, b: Color) -> float:

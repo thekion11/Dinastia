@@ -81,7 +81,7 @@ static func _marcos(s) -> void:
 		var z: float = c[1]
 		var col: Color = c[2]
 		var m: StandardMaterial3D = s._mat(col, 0.5, 0.35)
-		if z == 0.0:
+		if is_zero_approx(z):
 			s._caja(Vector3(x, 3.9, 0), Vector3(0.3, 0.3, 6.0), m)
 			s._caja(Vector3(x, 2.0, -2.9), Vector3(0.3, 4.0, 0.3), m)
 			s._caja(Vector3(x, 2.0, 2.9), Vector3(0.3, 4.0, 0.3), m)

@@ -141,7 +141,7 @@ static func _opciones(lista: VBoxContainer, p: Control, titulo: String, tabla: D
 		else:
 			var b := Button.new()
 			b.text = Idiomas.t("Elegir")
-			b.add_theme_font_size_override("font_size", 12)
+			b.add_theme_font_size_override("font_size", Tema.letra(12))
 			var clave := k
 			b.pressed.connect(func() -> void: al_elegir.call(clave))
 			vb.add_child(b)
@@ -285,7 +285,7 @@ static func _bienestar(lista: VBoxContainer, p: Control, mundo: Mundo) -> void:
 			int(o[2]), (Idiomas.t(" · familia +%d") % int(o[3])) if int(o[3]) > 0 else ""]
 		b.custom_minimum_size = Vector2(168, 52)
 		b.disabled = ya
-		b.add_theme_font_size_override("font_size", 12)
+		b.add_theme_font_size_override("font_size", Tema.letra(12))
 		var clave := k
 		b.pressed.connect(func() -> void:
 			_resultado(p, mundo.vida.hacer_ocio(clave, mundo.roles, mundo.anio, mundo.semana), String(VidaDT.OCIO[clave][0])))

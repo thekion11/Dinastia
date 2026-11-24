@@ -22,6 +22,13 @@ func _probar() -> void:
 		_comprobar(ConfigClubDatos.ANIMALES.has(k), "el animal «%s» tiene nombre e icono" % k)
 	var m := Mundo.new()
 	m.generar(["CHI"], 4141)
+	var fundar := _fc_fundar(m)
+	var d: ConfigClubDatos = fundar["d"]
+	var cfg: Dictionary = fundar["cfg"]
+	var real := _fc_existente(m)
+	_fc_aplicar(m, real, cfg, d)
+
+func _fc_fundar(m: Mundo) -> Dictionary:
 	## Fundar un club: el nombre lo pone el jugador.
 	var d := ConfigClubDatos.new()
 	d.desde_estado({"mundo": m, "modo": "creador"})
@@ -60,7 +67,9 @@ func _probar() -> void:
 	d2.desde_estado({"mundo": m, "modo": "creador", "config": cfg})
 	_comprobar(d2.a_dic() == cfg, "ida y vuelta: volver a la etapa no pierde nada")
 	_comprobar(OrquestadorMundo.crea_club({"config": cfg}), "el orquestador entiende que se funda un club")
+	return {"d": d, "cfg": cfg}
 
+func _fc_existente(m: Mundo) -> Club:
 	## Tomar un club existente: conserva nombre, escudo y mascota de siempre.
 	var real: Club = m.ligas[0].clubes[2]
 	var d3 := ConfigClubDatos.new()
@@ -71,7 +80,9 @@ func _probar() -> void:
 	var cfg3 := d3.a_dic()
 	_comprobar(not cfg3.has("nombre_club") and not OrquestadorMundo.crea_club({"config": cfg3}),
 		"sin fundar no sale «nombre_club»: el orquestador no crea un club")
+	return real
 
+func _fc_aplicar(m: Mundo, real: Club, cfg: Dictionary, d: ConfigClubDatos) -> void:
 	## Aplicar al club y al mundo.
 	_titulo("CONFIGURACIÓN DEL CLUB: APLICAR")
 	m.tomar_el_mando(real.id)
@@ -132,22 +143,7 @@ func _probar_pantalla() -> void:
 	for i in 12:
 		await get_tree().process_frame
 	_comprobar(p._p_kit.texture != antes and p.datos.club.kit_color1 == "#aa1111", "cambiar un color de camiseta rehace la vista previa")
-	for paso in range(8):
-		p.ir_a(paso)
-		await get_tree().process_frame
-		_comprobar(p._contenido.get_child_count() > 0, "el paso %d (%s) se pinta" % [paso + 1, p.PASOS[paso][1]])
-		if paso == 1:
-			for i in 30:
-				await get_tree().process_frame
-			var con := 0
-			for mini: Array in p._minis_escudo:
-				if (mini[0] as TextureRect).texture != null:
-					con += 1
-			_comprobar(con == Escudo.FORMAS.size() + Escudo.PATRONES.size(), "las %d miniaturas del escudo se dibujan (%d)" % [Escudo.FORMAS.size() + Escudo.PATRONES.size(), con])
-		if paso == 3:
-			await get_tree().process_frame
-			var vm: Node = p._vista_mascota
-			_comprobar(vm != null and vm.find_child("Mascota", true, false) != null, "la mascota sale en 3D")
+	await _fc_recorrer_pasos(p)
 	p.ir_a(0)
 	p.atras()
 	_comprobar(volvio.size() == 1, "«Volver» en el primer paso pide la etapa anterior")
@@ -166,3 +162,21 @@ func _probar_pantalla() -> void:
 		_comprobar(String(cfg["club"]["identidad"]["kit_c1"]) == "#aa1111", "incluida la camiseta")
 	p.queue_free()
 	await get_tree().process_frame
+
+func _fc_recorrer_pasos(p: PantallaConfigClub) -> void:
+	for paso in range(8):
+		p.ir_a(paso)
+		await get_tree().process_frame
+		_comprobar(p._contenido.get_child_count() > 0, "el paso %d (%s) se pinta" % [paso + 1, p.PASOS[paso][1]])
+		if paso == 1:
+			for i in 30:
+				await get_tree().process_frame
+			var con := 0
+			for mini: Array in p._minis_escudo:
+				if (mini[0] as TextureRect).texture != null:
+					con += 1
+			_comprobar(con == Escudo.FORMAS.size() + Escudo.PATRONES.size(), "las %d miniaturas del escudo se dibujan (%d)" % [Escudo.FORMAS.size() + Escudo.PATRONES.size(), con])
+		if paso == 3:
+			await get_tree().process_frame
+			var vm: Node = p._vista_mascota
+			_comprobar(vm != null and vm.find_child("Mascota", true, false) != null, "la mascota sale en 3D")

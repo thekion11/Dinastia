@@ -130,7 +130,7 @@ func _fila_club(c: Club) -> HBoxContainer:
 	h.add_child(_escudo(c, 24))
 	var n := Label.new()
 	n.text = c.nombre
-	n.add_theme_font_size_override("font_size", 13)
+	n.add_theme_font_size_override("font_size", Tema.letra(13))
 	n.add_theme_color_override("font_color",
 		Color(String(_paleta()["acento"])) if c == _mio else COL_TEXTO)
 	n.clip_text = true
@@ -160,7 +160,7 @@ func _cuadro_de_grupos(raiz: VBoxContainer) -> void:
 		rej.add_child(col)
 		var et := Label.new()
 		et.text = Idiomas.t("GRUPO %s") % char(65 + i)
-		et.add_theme_font_size_override("font_size", 14)
+		et.add_theme_font_size_override("font_size", Tema.letra(14))
 		et.add_theme_color_override("font_color", Color(String(_paleta()["acento"])))
 		col.add_child(et)
 		for c: Club in _grupos[i]:
@@ -188,7 +188,7 @@ func _fila_cruce(a: Club, b: Club) -> HBoxContainer:
 	h.add_child(_escudo(a, 34))
 	var na := Label.new()
 	na.text = a.nombre
-	na.add_theme_font_size_override("font_size", 15)
+	na.add_theme_font_size_override("font_size", Tema.letra(15))
 	na.add_theme_color_override("font_color", Color(String(_paleta()["acento"])) if propio else COL_TEXTO)
 	na.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	na.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -196,14 +196,14 @@ func _fila_cruce(a: Club, b: Club) -> HBoxContainer:
 	h.add_child(na)
 	var vs := Label.new()
 	vs.text = "vs"
-	vs.add_theme_font_size_override("font_size", 13)
+	vs.add_theme_font_size_override("font_size", Tema.letra(13))
 	vs.add_theme_color_override("font_color", COL_SUAVE)
 	vs.custom_minimum_size = Vector2(34, 0)
 	vs.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	h.add_child(vs)
 	var nb := Label.new()
 	nb.text = b.nombre
-	nb.add_theme_font_size_override("font_size", 15)
+	nb.add_theme_font_size_override("font_size", Tema.letra(15))
 	nb.add_theme_color_override("font_color", Color(String(_paleta()["acento"])) if propio else COL_TEXTO)
 	nb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nb.clip_text = true
@@ -267,7 +267,7 @@ func _mostrar_cuadro() -> void:
 
 	var t := Label.new()
 	t.text = "%s  ·  %s" % [String(p["nombre"]), Idiomas.t(_titulo_ronda)]
-	t.add_theme_font_size_override("font_size", 30)
+	t.add_theme_font_size_override("font_size", Tema.letra(30))
 	t.add_theme_color_override("font_color", Color(String(p["acento"])))
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	raiz.add_child(t)
@@ -301,6 +301,13 @@ func _construir() -> void:
 	fondo.color = Color(String(p["fondo"]))
 	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(fondo)
+	_sorteo_plato(p)
+	_sorteo_luz(p)
+	_sorteo_capa()
+	_sorteo_saltar()
+
+## El plató en 3D dentro de su SubViewport propio, con sus banderas.
+func _sorteo_plato(p: Dictionary) -> void:
 	## EL PLATÓ EN 3D. Va dentro de un `SubViewport` con su propio mundo: si
 	## compartiera el del juego, el estadio 3D y el sorteo se verían el uno al
 	## otro. El resto de la cinemática -rótulos, botón de saltar, cuadro final-
@@ -331,6 +338,8 @@ func _construir() -> void:
 	_escena.rotular(String(p["nombre"]), Idiomas.t(_titulo_ronda))
 	_escena.poner_banderas(_paises_del_sorteo())
 
+## El degradado de sala por encima del 3D (hunde los bordes).
+func _sorteo_luz(p: Dictionary) -> void:
 	## El degradado de sala por encima del 3D: hunde los bordes y deja el centro
 	## limpio, para que los rótulos se lean sobre cualquier fotograma.
 	var luz := TextureRect.new()
@@ -342,6 +351,8 @@ func _construir() -> void:
 	luz.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(luz)
 
+## La capa de interfaz 2D: rótulo de la ronda, pie y ESC.
+func _sorteo_capa() -> void:
 	_capa = Control.new()
 	_capa.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_capa.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -354,7 +365,7 @@ func _construir() -> void:
 	## la ronda; repetirlo aquí encima la tapaba y se leían las dos cosas a la
 	## vez, una sobre otra. Este rótulo queda libre para el club de cada bola.
 	_rotulo.text = ""
-	_rotulo.add_theme_font_size_override("font_size", 34)
+	_rotulo.add_theme_font_size_override("font_size", Tema.letra(34))
 	_rotulo.add_theme_color_override("font_color", COL_TEXTO)
 	## Sombra dura detrás del texto. Encima de una escena 3D que se mueve, un
 	## rótulo sin sombra se pierde en cuanto pasa un foco por detrás: el color
@@ -370,13 +381,15 @@ func _construir() -> void:
 
 	_pie = Label.new()
 	_pie.text = Idiomas.t("ESC o «Saltar» para ir directo al cuadro")
-	_pie.add_theme_font_size_override("font_size", 12)
+	_pie.add_theme_font_size_override("font_size", Tema.letra(12))
 	_pie.add_theme_color_override("font_color", COL_SUAVE)
 	_pie.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_pie.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	_pie.offset_left = -400; _pie.offset_right = 400; _pie.offset_top = -48
 	_capa.add_child(_pie)
 
+## El botón «Saltar».
+func _sorteo_saltar() -> void:
 	var saltar := Button.new()
 	saltar.text = Idiomas.t("Saltar  ▸")
 	saltar.custom_minimum_size = Vector2(130, 34)

@@ -160,7 +160,7 @@ func _vista_previa() -> Control:
 		else:
 			_espalda = tr
 			_dorsal_2d = Label.new()
-			_dorsal_2d.add_theme_font_size_override("font_size", 40)
+			_dorsal_2d.add_theme_font_size_override("font_size", Tema.letra(40))
 			_dorsal_2d.add_theme_constant_override("outline_size", 6)
 			_dorsal_2d.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			_dorsal_2d.position = Vector2(55, 48)

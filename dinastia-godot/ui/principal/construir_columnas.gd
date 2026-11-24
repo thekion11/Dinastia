@@ -19,8 +19,8 @@ static func montar(p: Principal, raiz: VBoxContainer) -> void:
 	var abrir_comp := Button.new()
 	abrir_comp.flat = true
 	abrir_comp.text = Idiomas.t("Ver la competición  ▸")
-	abrir_comp.add_theme_font_size_override("font_size", 11)
-	abrir_comp.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ACENTO))
+	abrir_comp.add_theme_font_size_override("font_size", Tema.letra(11))
+	abrir_comp.add_theme_color_override("font_color", p._color_de_paleta(p.col_acento))
 	abrir_comp.pressed.connect(p._abrir_competicion)
 	p._ultima_caja_columna.add_child(abrir_comp)
 	## Y EL HUB DE COMPETICIONES, estilo FC26: la tabla no lleva solo a SU
@@ -30,7 +30,7 @@ static func montar(p: Principal, raiz: VBoxContainer) -> void:
 	var abrir_hub_comp := Button.new()
 	abrir_hub_comp.flat = true
 	abrir_hub_comp.text = Idiomas.t("🏆 Todas las competiciones  ▸")
-	abrir_hub_comp.add_theme_font_size_override("font_size", 11)
+	abrir_hub_comp.add_theme_font_size_override("font_size", Tema.letra(11))
 	abrir_hub_comp.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ORO))
 	abrir_hub_comp.pressed.connect(func() -> void: p._abrir_hub("competiciones"))
 	p._ultima_caja_columna.add_child(abrir_hub_comp)
@@ -69,11 +69,11 @@ static func montar(p: Principal, raiz: VBoxContainer) -> void:
 	## El componente se instancia aquí y se engancha por señales. Principal no
 	## vuelve a llamar a ninguna función interna del mercado: todo el pintado
 	## lo hace PanelMercado, y lo que afecta al mundo lo recibe Principal.
-	var _hoja_mercado := p._hoja(p._pestanas, "Mercado")
+	var hoja_mercado := p._hoja(p._pestanas, "Mercado")
 	p._panel_mercado = PanelMercado.new()
 	p._panel_mercado.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p._panel_mercado.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_hoja_mercado.add_child(p._panel_mercado)
+	hoja_mercado.add_child(p._panel_mercado)
 	p._panel_mercado.fichar_pedido.connect(func(j: Jugador) -> void: p._ui_plantel._abrir_negociacion(j))   ## (A4 memoria) el plantel se crea al usarlo
 	p._panel_mercado.oferta_respondida.connect(p._responder_oferta_mercado)
 	p._panel_mercado.oferta_enviada.connect(p._enviar_oferta_negociacion)
@@ -161,8 +161,8 @@ static func montar(p: Principal, raiz: VBoxContainer) -> void:
 	## (10-11) táctil: el rótulo corto; con la letra legible del móvil, el largo cortaba el título de la columna («ERSTE LI»)
 	b_plantel.text = ("👔 " + Idiomas.t("Plantel") + "  ▸") if EscalaMovil.es_tactil() else Idiomas.t("👔 Plantel y cuerpo del equipo  ▸")
 	b_plantel.flat = true
-	b_plantel.add_theme_font_size_override("font_size", 11)
-	b_plantel.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ACENTO))
+	b_plantel.add_theme_font_size_override("font_size", Tema.letra(11))
+	b_plantel.add_theme_color_override("font_color", p._color_de_paleta(p.col_acento))
 	b_plantel.pressed.connect(func() -> void: p._abrir_hub("plantel"))
 	## (10-11) En la fila del TÍTULO de su columna (junto a «⤢»), no al pie: en el móvil (2400x1080 = 480 px lógicos de alto) cada botón del pie sube
 	## a 49 px por el margen táctil y este quedaba 30-37 px por debajo de la pantalla (prueba especial `aud4_movil_partido`). La fila ya mide eso.

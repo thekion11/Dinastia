@@ -21,6 +21,10 @@ func _conectar_2() -> void:
 		p.mundo.roles.noticia_carrera.connect(func(titulo: String, texto: String) -> void:
 			p._escribir("[color=#c9a227][b]%s.[/b][/color] %s" % [titulo, texto])
 			p._anotar(titulo, texto))
+	_conectar_3()
+
+## Tramo 3: lo comercial, la ciudad, la junta y el resto de noticias (mismo orden de conexión).
+func _conectar_3() -> void:
 	## LO COMERCIAL: zonas de camiseta, naming del estadio y palcos. Cada firma
 	## y cada contrato que caduca son noticia: si pasaran callados, la pantalla
 	## estaria llena de contratos que aparecen y desaparecen solos.

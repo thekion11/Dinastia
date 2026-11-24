@@ -25,75 +25,13 @@ func resolver_agente(op: String, f: float = 1.0, se_fue: bool = false) -> Dictio
 		_mover_confianza(nombre, -1)
 	match tipo:
 		"canterano":
-			if acepta and mio.plantilla.size() >= TOPE_PLANTEL:
-				## Aceptar sin sitio dejaría al agente contento y al chico en
-				## ninguna parte. Se dice que no cabe y se paga como un no.
-				_mover_confianza(nombre, -1)
-				cuerpo = "Le dijiste que sí, pero el plantel tiene %d fichas y no cabe nadie más. %s se lo tomó como una excusa." % [
-					mio.plantilla.size(), nombre]
-			elif acepta:
-				var grupo := String(Azar.uno(["DEF", "MED", "DEL"]))
-				var jov := m.crear_jugador(mio, grupo, demarcacion_de(grupo),
-					Azar.ent(17, 19), mio.rep - 16 + Azar.ent(0, 8))
-				_ficha(jov.id)["camada"] = m.anio
-				jov.dorsal = _dorsal_libre(mio)
-				mio.plantilla.append(jov)
-				if f < 1.0:
-					jov.sueldo = maxi(1, int(round(float(jov.sueldo) * f)))
-				_mover_confianza(nombre, 2 if f >= 0.8 else 1)
-				cuerpo = "Fichaste a %s (%d años, media %d, proyección %d). %s ahora te debe una." % [
-					jov.nombre, jov.edad, jov.ovr, jov.pot, nombre]
-			else:
-				_mover_confianza(nombre, -2)
-				_castigar_clientes(m, Azar.ent(4, 10))
-				cuerpo = "Le dijiste que no. Sus representados amanecieron con la moral por el piso."
+			cuerpo = _agente_canterano(m, mio, nombre, acepta, f)
 		"mejora":
-			var j := _jugador(mio, String(exigencia.get("pid", "")))
-			if acepta and j != null:
-				j.sueldo = int(round(float(j.sueldo) * (1.0 + 0.3 * f)))
-				j.cambiar_moral(int(round(14.0 * f)), "Cantera")
-				j.anios_contrato = maxi(j.anios_contrato, 3)
-				_mover_confianza(nombre, 1 if f >= 0.6 else 0)
-				## El resto del vestuario mira de reojo la escala salarial: no es
-				## un castigo aleatorio, es lo que pasa cuando uno cobra más y los
-				## de su nivel se enteran.
-				for x in mio.plantilla:
-					if f > 0.6 and x.id != j.id and x.ovr >= j.ovr - 3:
-						x.cambiar_moral(-(Azar.ent(1, 5)), "Cantera")
-				cuerpo = "%s firma la mejora. El resto del vestuario mira de reojo la escala salarial." % j.nombre
-			else:
-				_mover_confianza(nombre, -2)
-				_castigar_clientes(m, Azar.ent(5, 12))
-				cuerpo = "Aguantaste. Sus representados rinden con desgana y la prensa ya habla de la interna."
+			cuerpo = _agente_mejora(m, mio, nombre, acepta, f)
 		"comision":
-			if acepta:
-				var coste := int(round(float(Eco.escalar(float(mio.rep) * 2200.0, float(mio.rep))) * f))
-				mio.mover_saldo(-coste)
-				movimiento.emit("Gastos de intermediación (sin detalle)", -coste)
-				_mover_confianza(nombre, maxi(1, int(round(3.0 * f))))
-				turbio += 1
-				cuerpo = "Pagaste. %s te abre la puerta grande… y ahora sabe algo de ti." % nombre
-				## Tres pagos turbios y la cosa se filtra. No es seguro: es una
-				## moneda al aire cada vez, que es lo que hace que se siga jugando.
-				if turbio >= 3 and Azar.suerte(0.5):
-					if m.directiva != null:
-						m.directiva.mover_confianza(-14, "pagos irregulares a representantes")
-					cuerpo += " Alguien filtró los pagos: se abrió una investigación federativa."
-			else:
-				_mover_confianza(nombre, -3)
-				if m.roles != null:
-					m.roles.sumar_prestigio(3)
-				cuerpo = "Lo denunciaste ante el directorio. Tu reputación limpia sube, pero %s te va a cerrar puertas." % nombre
+			cuerpo = _agente_comision(m, mio, nombre, acepta, f)
 		_:
-			if acepta:
-				_mover_confianza(nombre, maxi(1, int(round(4.0 * f))))
-				exclusiva = nombre
-				cuerpo = "Trato cerrado con %s. Verás primero a sus jugadores en el mercado." % nombre
-			else:
-				_mover_confianza(nombre, -1)
-				if exclusiva == nombre:
-					exclusiva = ""
-				cuerpo = "Prefieres moverte libre. %s se lo tomó con deportividad… por ahora." % nombre
+			cuerpo = _agente_exclusiva(nombre, acepta, f)
 	var titulo := "Representantes: %s" % nombre
 	if acepta and f < 1.0:
 		cuerpo = "Negociado en la mesa al %d %% de lo que pedía. %s" % [int(round(f * 100.0)), cuerpo]
@@ -102,6 +40,92 @@ func resolver_agente(op: String, f: float = 1.0, se_fue: bool = false) -> Dictio
 	exigencia = {}
 	noticia.emit(titulo, cuerpo)
 	return {"titulo": titulo, "cuerpo": cuerpo}
+
+## Agente de canteranos: fichar al chico, o decir que no cabe o que no.
+func _agente_canterano(m: Mundo, mio: Club, nombre: String, acepta: bool, f: float) -> String:
+	var cuerpo := ""
+	if acepta and mio.plantilla.size() >= TOPE_PLANTEL:
+		## Aceptar sin sitio dejaría al agente contento y al chico en
+		## ninguna parte. Se dice que no cabe y se paga como un no.
+		_mover_confianza(nombre, -1)
+		cuerpo = "Le dijiste que sí, pero el plantel tiene %d fichas y no cabe nadie más. %s se lo tomó como una excusa." % [
+			mio.plantilla.size(), nombre]
+	elif acepta:
+		var grupo := String(Azar.uno(["DEF", "MED", "DEL"]))
+		var jov := m.crear_jugador(mio, grupo, demarcacion_de(grupo),
+			Azar.ent(17, 19), mio.rep - 16 + Azar.ent(0, 8))
+		_ficha(jov.id)["camada"] = m.anio
+		jov.dorsal = _dorsal_libre(mio)
+		mio.plantilla.append(jov)
+		if f < 1.0:
+			jov.sueldo = maxi(1, int(round(float(jov.sueldo) * f)))
+		_mover_confianza(nombre, 2 if f >= 0.8 else 1)
+		cuerpo = "Fichaste a %s (%d años, media %d, proyección %d). %s ahora te debe una." % [
+			jov.nombre, jov.edad, jov.ovr, jov.pot, nombre]
+	else:
+		_mover_confianza(nombre, -2)
+		_castigar_clientes(m, Azar.ent(4, 10))
+		cuerpo = "Le dijiste que no. Sus representados amanecieron con la moral por el piso."
+	return cuerpo
+
+## Agente de mejoras: subir el sueldo de su jugador, o rendir con desgana.
+func _agente_mejora(m: Mundo, mio: Club, nombre: String, acepta: bool, f: float) -> String:
+	var cuerpo := ""
+	var j := _jugador(mio, String(exigencia.get("pid", "")))
+	if acepta and j != null:
+		j.sueldo = int(round(float(j.sueldo) * (1.0 + 0.3 * f)))
+		j.cambiar_moral(int(round(14.0 * f)), "Cantera")
+		j.anios_contrato = maxi(j.anios_contrato, 3)
+		_mover_confianza(nombre, 1 if f >= 0.6 else 0)
+		## El resto del vestuario mira de reojo la escala salarial: no es
+		## un castigo aleatorio, es lo que pasa cuando uno cobra más y los
+		## de su nivel se enteran.
+		for x in mio.plantilla:
+			if f > 0.6 and x.id != j.id and x.ovr >= j.ovr - 3:
+				x.cambiar_moral(-(Azar.ent(1, 5)), "Cantera")
+		cuerpo = "%s firma la mejora. El resto del vestuario mira de reojo la escala salarial." % j.nombre
+	else:
+		_mover_confianza(nombre, -2)
+		_castigar_clientes(m, Azar.ent(5, 12))
+		cuerpo = "Aguantaste. Sus representados rinden con desgana y la prensa ya habla de la interna."
+	return cuerpo
+
+## Agente de comisiones: pagar por debajo de la mesa, o denunciarlo.
+func _agente_comision(m: Mundo, mio: Club, nombre: String, acepta: bool, f: float) -> String:
+	var cuerpo := ""
+	if acepta:
+		var coste := int(round(float(Eco.escalar(float(mio.rep) * 2200.0, float(mio.rep))) * f))
+		mio.mover_saldo(-coste)
+		movimiento.emit("Gastos de intermediación (sin detalle)", -coste)
+		_mover_confianza(nombre, maxi(1, int(round(3.0 * f))))
+		turbio += 1
+		cuerpo = "Pagaste. %s te abre la puerta grande… y ahora sabe algo de ti." % nombre
+		## Tres pagos turbios y la cosa se filtra. No es seguro: es una
+		## moneda al aire cada vez, que es lo que hace que se siga jugando.
+		if turbio >= 3 and Azar.suerte(0.5):
+			if m.directiva != null:
+				m.directiva.mover_confianza(-14, "pagos irregulares a representantes")
+			cuerpo += " Alguien filtró los pagos: se abrió una investigación federativa."
+	else:
+		_mover_confianza(nombre, -3)
+		if m.roles != null:
+			m.roles.sumar_prestigio(3)
+		cuerpo = "Lo denunciaste ante el directorio. Tu reputación limpia sube, pero %s te va a cerrar puertas." % nombre
+	return cuerpo
+
+## Agente sin tipo especial: la exclusiva, o moverse libre.
+func _agente_exclusiva(nombre: String, acepta: bool, f: float) -> String:
+	var cuerpo := ""
+	if acepta:
+		_mover_confianza(nombre, maxi(1, int(round(4.0 * f))))
+		exclusiva = nombre
+		cuerpo = "Trato cerrado con %s. Verás primero a sus jugadores en el mercado." % nombre
+	else:
+		_mover_confianza(nombre, -1)
+		if exclusiva == nombre:
+			exclusiva = ""
+		cuerpo = "Prefieres moverte libre. %s se lo tomó con deportividad… por ahora." % nombre
+	return cuerpo
 
 func _ficha_vacia(x: Dictionary) -> bool:
 	return (x.get("linaje", {}) as Dictionary).is_empty() \
@@ -139,15 +163,15 @@ func a_dic() -> Dictionary:
 
 func desde_dic(d: Dictionary) -> void:
 	leyendas.clear()
-	for L: Dictionary in d.get("leyendas", []):
+	for ley: Dictionary in d.get("leyendas", []):
 		leyendas.append({
-			"nombre": String(L.get("nombre", "")),
-			"club_id": String(L.get("club_id", "")),
-			"pos": String(L.get("pos", "MED")),
-			"nivel": int(L.get("nivel", 80)),
-			"anio_hijo": int(L.get("anio_hijo", 0)),
-			"usado": bool(L.get("usado", false)),
-			"propio": bool(L.get("propio", false)),
+			"nombre": String(ley.get("nombre", "")),
+			"club_id": String(ley.get("club_id", "")),
+			"pos": String(ley.get("pos", "MED")),
+			"nivel": int(ley.get("nivel", 80)),
+			"anio_hijo": int(ley.get("anio_hijo", 0)),
+			"usado": bool(ley.get("usado", false)),
+			"propio": bool(ley.get("propio", false)),
 		})
 	_fichas.clear()
 	var f: Dictionary = d.get("fichas", {})

@@ -1,5 +1,7 @@
 class_name EdificioClub
 extends "res://visor/edificio_club_p1.gd"
+
+
 ## [Capa 2/2 de `edificio_club.gd`] _objeto, _marco_foto, _decorar, montar, reconstruir
 
 ## Un objeto del catálogo de `InterioresClub`: un conjunto de piezas si lo hay
@@ -120,7 +122,7 @@ static func _marco_foto(nodo: Node3D, ruta: String, p: Vector3, lado: float) -> 
 
 ## PERSONALIZAR (fase 5): pintura de las paredes, los objetos de los seis
 ## huecos y los cuatro marcos con tus fotos.
-static func _decorar(nodo: Node3D, sala: String, a: float, b: float, z_out: float, z_tab: float, y0: float,
+static func _decorar(nodo: Node3D, _sala: String, a: float, b: float, z_out: float, z_tab: float, y0: float,
 		c1: Color, c2: Color, gusto: Dictionary) -> void:
 	if gusto.is_empty():
 		return
@@ -134,7 +136,7 @@ static func _decorar(nodo: Node3D, sala: String, a: float, b: float, z_out: floa
 		PiezasObra._caja(nodo, Vector3(a + 0.13, y0 + ALTO_LIBRE / 2.0, zc), Vector3(0.02, ALTO_LIBRE - 0.05, fondo - 0.25), pm, false)
 		PiezasObra._caja(nodo, Vector3(b - 0.13, y0 + ALTO_LIBRE / 2.0, zc), Vector3(0.02, ALTO_LIBRE - 0.05, fondo - 0.25), pm, false)
 		var c := (a + b) / 2.0
-		for tr: Vector2 in load("res://visor/stadium_builder.gd")._tramos_sin_hueco(c, b - a - 0.25, c - PUERTA / 2.0, c + PUERTA / 2.0):
+		for tr: Vector2 in load(_RUTA_STADIUM_BUILDER)._tramos_sin_hueco(c, b - a - 0.25, c - PUERTA / 2.0, c + PUERTA / 2.0):
 			PiezasObra._caja(nodo, Vector3(tr.x, y0 + ALTO_LIBRE / 2.0, z_tab - 0.12), Vector3(tr.y, ALTO_LIBRE - 0.05, 0.02), pm, false)
 	## Los seis huecos: las cuatro esquinas y el medio de cada lado.
 	var huecos := [Vector3(a + 0.7, 0, z_out + 0.7), Vector3(b - 0.7, 0, z_out + 0.7), Vector3(a + 0.6, 0, zc),
@@ -227,7 +229,7 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 		for h: Vector2 in huecos:
 			var nuevos: Array = []
 			for t: Vector2 in tramos:
-				for tr: Vector2 in load("res://visor/stadium_builder.gd")._tramos_sin_hueco((t.x + t.y) / 2.0, t.y - t.x, h.x, h.y):
+				for tr: Vector2 in load(_RUTA_STADIUM_BUILDER)._tramos_sin_hueco((t.x + t.y) / 2.0, t.y - t.x, h.x, h.y):
 					nuevos.append(Vector2(tr.x - tr.y / 2.0, tr.x + tr.y / 2.0))
 			tramos = nuevos
 		for t: Vector2 in tramos:
@@ -264,6 +266,9 @@ static func montar(padre: Node3D, x0: float, z_out: float, z_fin: float, c1: Col
 			o.position = Vector3(c, y0 + ALTO_LIBRE - 0.4, (z_out + z_tabique) / 2.0)
 			o.omni_range = maxf(6.0, (b - a) * 0.9)
 			o.light_energy = 0.9
+			if OS.get_environment("SIN_LUZ_FRIA") == "":   ## (18-11) luz de sala más neutra y algo más fuerte: con la blanca de antes y las paredes pardas todo (y la piel) salía rojizo. SIN_LUZ_FRIA=1 = el «antes»
+				o.light_color = Color(0.9, 0.95, 1.0)
+				o.light_energy = 1.25
 			np.add_child(o)
 			PiezasObra._caja(np, Vector3(c, y0 + ALTO_LIBRE - 0.03, (z_out + z_tabique) / 2.0), Vector3(1.8, 0.05, 0.6), luz, false)
 			## Suelo y techo propios de la sala.

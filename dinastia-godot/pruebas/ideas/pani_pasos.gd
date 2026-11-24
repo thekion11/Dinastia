@@ -76,7 +76,6 @@ func _sentido_apoyo(anim: Animation, esq: Skeleton3D) -> float:
 	var pistas := AnimPasos._pistas(anim, esq)
 	var ib := esq.find_bone("ball_l")
 	var s := 0.0
-	var prev := Vector3.INF
 	var ymin := INF
 	var pos: Array[Vector3] = []
 	for k in 121:

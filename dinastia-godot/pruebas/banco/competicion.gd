@@ -1,14 +1,28 @@
 extends "res://pruebas/banco/base.gd"
 ## [Banco · grupo «competicion»] Generado al partir el banco por grupos (26-10).
 
+var _a: Club
+var _aspirantes: Array[Club]
+var _b: Club
+var _copa
+var _goles_en_casa
+var _goles_neutral
+var _m: Mundo
+var _m25: Mundo
+var _n
+var _rem_casa
+var _rem_neutral
+var _remates_casa
+var _remates_neutral
+
 func _probar_calendario() -> void:
 	_titulo("CALENDARIO")
-	var m := Mundo.new()
-	m.generar(["CHI"], 3)
-	var l := m.ligas[0]
-	var n := l.clubes.size()
-	_linea("  %s: %d clubes, %d jornadas" % [l.nombre, n, l.jornadas()])
-	var esperadas := (n - 1) * 2 if n % 2 == 0 else n * 2
+	_m = Mundo.new()
+	_m.generar(["CHI"], 3)
+	var l = _m.ligas[0]
+	_n = l.clubes.size()
+	_linea("  %s: %d clubes, %d jornadas" % [l.nombre, _n, l.jornadas()])
+	var esperadas = (_n - 1) * 2 if _n % 2 == 0 else _n * 2
 	_comprobar(l.jornadas() == esperadas, "jornadas = %d (esperadas %d)" % [l.jornadas(), esperadas])
 	## Nadie puede jugar dos veces en la misma jornada.
 	var repetidos := 0
@@ -34,43 +48,48 @@ func _probar_calendario() -> void:
 
 func _probar_continental() -> void:
 	_titulo("COPAS CONTINENTALES")
-	var m := Mundo.new()
-	m.generar([], 5150)
-	m.tomar_el_mando(m.ligas[0].clubes[0].id)
-	_linea("  torneos sorteados: %s" % [m.continentales.keys()])
-	_comprobar(m.continentales.size() >= 2, "se sortean al menos dos torneos continentales")
+	_m = Mundo.new()
+	_m.generar([], 5150)
+	_m.tomar_el_mando(_m.ligas[0].clubes[0].id)
+	_linea("  torneos sorteados: %s" % [_m.continentales.keys()])
+	_comprobar(_m.continentales.size() >= 2, "se sortean al menos dos torneos continentales")
 
 	var vacios := 0
-	for k: String in m.continentales:
-		var t: Continental = m.continentales[k]
+	for k: String in _m.continentales:
+		var t: Continental = _m.continentales[k]
 		_linea("  %-5s %-28s %2d inscritos, %2d vivos, %s" % [
 			k, Continental.nombre_conti(k), t.participantes.size(), t.vivos.size(),
 			t.nombre_de_ronda()])
 		if t.participantes.is_empty():
 			vacios += 1
 	_comprobar(vacios == 0, "ningun torneo se sortea vacio (%d vacios)" % vacios)
+	_probar_continental_01()
+	_probar_continental_02()
+	_probar_continental_03()
 
-	## Nadie puede estar en dos torneos de la misma confederacion a la vez.
+func _probar_continental_01() -> void:
+	## Nadie puede estar en dos torneos de la misma confederacion _a la vez.
 	var en_dos := 0
 	var visto := {}
-	for k: String in m.continentales:
-		var t: Continental = m.continentales[k]
+	for k: String in _m.continentales:
+		var t: Continental = _m.continentales[k]
 		for c: Club in t.participantes:
 			if visto.has(c.id) and Continental.confed_de(visto[c.id]) == Continental.confed_de(k):
 				en_dos += 1
 			visto[c.id] = k
 	_comprobar(en_dos == 0, "ningun club juega dos copas de su misma confederacion (%d)" % en_dos)
 
-	## Y lo que de verdad importa: que el torneo LLEGUE a tener campeon. Un
+func _probar_continental_02() -> void:
+	## Y lo que de verdad importa: que el torneo LLEGUE _a tener campeon. Un
 	## torneo que se queda sin nadie vivo antes de la final no reparte el premio
 	## y ademas no se nota: no revienta nada, simplemente no pasa.
-	var mio := m.mi_continental()
+	var mio = _m.mi_continental()
 	_comprobar(mio != null, "tu club juega una copa continental")
 	if mio != null:
 		_linea("  la tuya: %s con %d inscritos" % [mio.nombre, mio.participantes.size()])
 	var con_campeon := 0
-	for k: String in m.continentales:
-		var t: Continental = m.continentales[k]
+	for k: String in _m.continentales:
+		var t: Continental = _m.continentales[k]
 		var vueltas := 0
 		while t.en_curso() and vueltas < 20:
 			t.jugar_ronda()
@@ -78,12 +97,13 @@ func _probar_continental() -> void:
 		if t.campeon != null:
 			con_campeon += 1
 			_linea("  campeon de %s: %s" % [Continental.nombre_conti(k), t.campeon.nombre])
-	_comprobar(con_campeon == m.continentales.size(),
-		"todos los torneos llegan a tener campeon (%d de %d)" % [con_campeon, m.continentales.size()])
+	_comprobar(con_campeon == _m.continentales.size(),
+		"todos los torneos llegan a tener campeon (%d de %d)" % [con_campeon, _m.continentales.size()])
 
+func _probar_continental_03() -> void:
 	## Y que ganar TU continental celebre el titulo -confianza, socios, moral al
-	## tope- igual que la liga o la copa. El gancho vive en Mundo.avanzar_semana(),
-	## no en jugar_ronda(): se prueba forzando una final a dos y comprobando que
+	## tope- igual que la liga o la _copa. El gancho vive en Mundo.avanzar_semana(),
+	## no en jugar_ronda(): se prueba forzando una final _a dos y comprobando que
 	## SI mi club sale campeon, cae en la vitrina en la semana exacta.
 	## Una sola final forzada puede perderla hasta el favorito absoluto -es una
 	## eliminatoria de un partido, no una liga-, así que se insiste con semillas
@@ -122,46 +142,60 @@ func _probar_continental() -> void:
 
 func _probar_copa() -> void:
 	_titulo("COPA: ELIMINACION DIRECTA")
-	var m := Mundo.new()
-	m.generar(["CHI"], 909)
-	var aspirantes: Array[Club] = []
-	for c: Club in m.clubes.values():
-		aspirantes.append(c)
+	_m = Mundo.new()
+	_m.generar(["CHI"], 909)
+	_aspirantes = []
+	for c: Club in _m.clubes.values():
+		_aspirantes.append(c)
+	_probar_copa_01()
+	_probar_copa_02()
+	_probar_copa_03()
+	_probar_copa_04()
+	## Y la final se juega en cancha neutral: sin el 1,08 del local.
+	_probar_copa_06()
+	_probar_copa_07()
+	_probar_copa_08()
+
+func _probar_copa_01() -> void:
 	## M-207 / C-05 (2-11-2026): TODOS los clubes arrancan con 25 jugadores (el plan de demarcaciones suma 25).
-	var m25 := Mundo.new()
-	m25.generar(["CHI", "ARG", "ESP", "ENG", "BRA"], 25)
+	_m25 = Mundo.new()
+	_m25.generar(["CHI", "ARG", "ESP", "ENG", "BRA"], 25)
 	var chicos := 0
-	for c25: Club in m25.clubes.values():
+	for c25: Club in _m25.clubes.values():
 		if c25.plantilla.size() < 25:
 			chicos += 1
-	_comprobar(chicos == 0, "los %d clubes de 5 países arrancan con al menos 25 jugadores (%d con menos)" % [m25.clubes.size(), chicos])
+	_comprobar(chicos == 0, "los %d clubes de 5 países arrancan con al menos 25 jugadores (%d con menos)" % [_m25.clubes.size(), chicos])
+
+func _probar_copa_02() -> void:
 	## M-219 (2-11-2026): el club intervenido de Primera baja aunque la tabla lo salvara, y sube en su lugar el mejor sano de Segunda.
-	var t1: Array = m25.ligas[0].tabla()
-	var t2: Array = m25.ligas[1].tabla()
+	var t1: Array = _m25.ligas[0].tabla()
+	var t2: Array = _m25.ligas[1].tabla()
 	var intervenido: Club = (t1[0] as Dictionary)["club"]   ## el líder: ni cerca de bajar
 	var ins := Insolvencia.new()
 	ins.rojo_ia[intervenido.id] = Banco.SEM_VEEDOR
 	var bajan: Array[Club] = []
 	var suben: Array[Club] = []
-	var castigados := ins.descenso_administrativo(m25, t1, t2, bajan, suben)
-	_comprobar(castigados.has(intervenido) and bajan.has(intervenido) and suben.size() == 1 and not ins.intervenido(m25, suben[0]),
+	var castigados = ins.descenso_administrativo(_m25, t1, t2, bajan, suben)
+	_comprobar(castigados.has(intervenido) and bajan.has(intervenido) and suben.size() == 1 and not ins.intervenido(_m25, suben[0]),
 		"descenso administrativo: el intervenido baja y sube en su lugar un club sano (%d bajan, %d suben)" % [bajan.size(), suben.size()])
-	var copa := Copa.new("Copa de prueba")
-	copa.preparar(aspirantes)
+	_copa = Copa.new("Copa de prueba")
+	_copa.preparar(_aspirantes)
 	_linea("  %d clubes inscritos -> %d en el cuadro (%s)" % [
-		aspirantes.size(), copa.participantes.size(), copa.nombre_de_ronda()])
+		_aspirantes.size(), _copa.participantes.size(), _copa.nombre_de_ronda()])
+
+func _probar_copa_03() -> void:
 	## El cuadro tiene que ser potencia de dos: con 32 equipos y byes repartidos
-	## a mano, el sorteo parece amanado y ademas hay que inventar rondas previas.
-	var n := copa.participantes.size()
-	var potencia := n > 0 and (n & (n - 1)) == 0
-	_comprobar(potencia, "el cuadro es una potencia de dos (%d)" % n)
-	_comprobar(n <= aspirantes.size(), "no se inventan participantes")
+	## _a mano, el sorteo parece amanado y ademas hay que inventar rondas previas.
+	_n = _copa.participantes.size()
+	var potencia = _n > 0 and (_n & (_n - 1)) == 0
+	_comprobar(potencia, "el cuadro es una potencia de dos (%d)" % _n)
+	_comprobar(_n <= _aspirantes.size(), "no se inventan participantes")
 
 	var rondas := 0
 	var nombres: Array[String] = []
-	while copa.en_curso():
-		nombres.append(copa.nombre_de_ronda())
-		var res := copa.jugar_ronda()
+	while _copa.en_curso():
+		nombres.append(_copa.nombre_de_ronda())
+		var res = _copa.jugar_ronda()
 		## En cada cruce tiene que pasar uno y solo uno, y el que pasa tiene que
 		## ser uno de los dos que jugaron.
 		for r: Dictionary in res:
@@ -173,44 +207,45 @@ func _probar_copa() -> void:
 		if rondas > 12:
 			break
 	_linea("  rondas: %s" % ", ".join(nombres))
-	_comprobar(copa.campeon != null, "la copa tiene campeon: %s" % (copa.campeon.nombre if copa.campeon else "ninguno"))
-	_comprobar(rondas == int(log(float(n)) / log(2.0)), "se juegan las rondas justas (%d para %d clubes)" % [rondas, n])
+	_comprobar(_copa.campeon != null, "la copa tiene campeon: %s" % (_copa.campeon.nombre if _copa.campeon else "ninguno"))
+	_comprobar(rondas == int(log(float(_n)) / log(2.0)), "se juegan las rondas justas (%d para %d clubes)" % [rondas, _n])
 	_comprobar(nombres.has("Final") and nombres.has("Semifinales"), "las rondas se llaman por su nombre")
-	_comprobar(copa.participantes.has(copa.campeon), "el campeon estaba inscrito")
+	_comprobar(_copa.participantes.has(_copa.campeon), "el campeon estaba inscrito")
 
-	## El premio es fijo y se cobra. Es lo que hace que una copa cambie el ano
+func _probar_copa_04() -> void:
+	## El premio es fijo y se cobra. Es lo que hace que una _copa cambie el ano
 	## de un club chico.
-	var antes := copa.campeon.saldo
 	## 2-11 (auditoría 28-10): con un número impar de vivos el último club pasa con un «bye», no se descarta.
 	var copa_i := Copa.new("Impar")
 	var impares: Array[Club] = []
 	for i in 3:
-		impares.append(aspirantes[i])
+		impares.append(_aspirantes[i])
 	copa_i.vivos = impares.duplicate()
 	copa_i.jugar_ronda()
 	_comprobar(copa_i.vivos.size() == 2 and copa_i.vivos.has(impares[2]), "copa con 3 vivos: el último pasa con bye (%d vivos)" % copa_i.vivos.size())
 	var copa2 := Copa.new("Otra")
-	copa2.preparar(aspirantes)
+	copa2.preparar(_aspirantes)
 	var c2 := copa2.jugar_hasta_el_final()
 	_linea("  premio de copa: %s (fijo, no escalado al tamano del club)" % _dinero(Copa.PREMIO))
 	_comprobar(c2 != null, "jugar_hasta_el_final devuelve campeon")
 
-	## Y la final se juega en cancha neutral: sin el 1,08 del local.
-	##
+func _probar_copa_06() -> void:
 	## SE MIDE POR GOLES, NO POR VICTORIAS. La version anterior contaba
-	## victorias en 300 partidos y comparaba los dos numeros a pelo: con p~0,4 y
-	## n=300 el ruido propio es de +-8 victorias, o sea que comparaba dos cifras
+	## victorias en 300 partidos y comparaba los dos numeros _a pelo: con p~0,4 y
+	## _n=300 el ruido propio es de +-8 victorias, o sea que comparaba dos cifras
 	## cuya diferencia esperada cabe entera dentro del error. Pasaba por suerte,
 	## y el dia que las plantillas cambiaron de fuerza salio 118 contra 126 -al
 	## reves- sin que nada estuviera roto. Los goles son una senal continua: el
 	## bono de local (1,08 contra 0,94) los mueve directamente y se ve con mucha
 	## menos muestra.
-	var a: Club = m.ligas[0].clubes[0]
-	var b: Club = m.ligas[0].clubes[1]
-	var goles_en_casa := 0
-	var goles_neutral := 0
-	var remates_casa := 0
-	var remates_neutral := 0
+	_a = _m.ligas[0].clubes[0]
+	_b = _m.ligas[0].clubes[1]
+	_goles_en_casa = 0
+	_goles_neutral = 0
+	_remates_casa = 0
+	_remates_neutral = 0
+
+func _probar_copa_07() -> void:
 	## MUESTRA SUBIDA DE 300 A 800 (11-9-2026): con el árbitro metido en cada
 	## llegada (`Partido._chequeo_arbitral()`, que gasta `Azar` en CADA ataque,
 	## haya decisión o no) la posición del sorteo compartido se corre un poco
@@ -222,95 +257,97 @@ func _probar_copa() -> void:
 	## semilla el resultado saliera al revés (4.16 contra 4.38) sin que la
 	## ventaja de local se hubiera roto: `neutral=true` sigue sin sumar el
 	## 1,08 de `simular_minuto()`, nadie tocó esa cuenta. Con 800 partidos por
-	## lado el error baja de ~0,12 a ~0,07 remates, con margen de sobra sobre
+	## lado el error baja de ~0,12 _a ~0,07 remates, con margen de sobra sobre
 	## la brecha real.
 	for i in 800:
-		var p1 := Partido.new(a, b, false)
+		var p1 = Partido.new(_a, _b, false)
 		p1.simular()
-		goles_en_casa += p1.goles_local
-		remates_casa += p1.remates_local
-		var p2 := Partido.new(a, b, true)
+		_goles_en_casa += p1.goles_local
+		_remates_casa += p1.remates_local
+		var p2 = Partido.new(_a, _b, true)
 		p2.simular()
-		goles_neutral += p2.goles_local
-		remates_neutral += p2.remates_local
-	var media_casa := float(goles_en_casa) / 800.0
-	var media_neutral := float(goles_neutral) / 800.0
-	var rem_casa := float(remates_casa) / 800.0
-	var rem_neutral := float(remates_neutral) / 800.0
+		_goles_neutral += p2.goles_local
+		_remates_neutral += p2.remates_local
+	var media_casa = float(_goles_en_casa) / 800.0
+	var media_neutral = float(_goles_neutral) / 800.0
+	_rem_casa = float(_remates_casa) / 800.0
+	_rem_neutral = float(_remates_neutral) / 800.0
 	_linea("  el local: %.2f goles y %.2f remates en casa | %.2f goles y %.2f remates en neutral" % [
-		media_casa, rem_casa, media_neutral, rem_neutral])
+		media_casa, _rem_casa, media_neutral, _rem_neutral])
+
+func _probar_copa_08() -> void:
 	## SE MIDE POR REMATES, que es donde pega el bono. El camino hasta aqui:
 	##  1) La version original contaba VICTORIAS en 300 partidos. Ruido propio
 	##     +-8 victorias, diferencia esperada menor que eso: pasaba por suerte.
-	##  2) Se cambio a GOLES, y salio 1.31 en casa contra 1.32 en neutral -o sea
+	##  2) Se cambio _a GOLES, y salio 1.31 en casa contra 1.32 en neutral -o sea
 	##     ninguna diferencia-, lo que parecia un bug gordo: que jugar de local
 	##     no valiera nada. NO lo era: el gol es una moneda al 30% sobre cada
 	##     remate, y ese sorteo se traga una diferencia del 5%.
 	##  3) Medido en REMATES, que es lo que el bono multiplica directamente, la
 	##     ventaja aparece limpia: 4.47 contra 4.24.
 	## La leccion: medir el efecto donde ocurre, no tres sorteos mas abajo.
-	_comprobar(rem_casa > rem_neutral,
-		"en cancha neutral se pierde la ventaja de local (%.2f remates vs %.2f)" % [rem_casa, rem_neutral])
+	_comprobar(_rem_casa > _rem_neutral,
+		"en cancha neutral se pierde la ventaja de local (%.2f remates vs %.2f)" % [_rem_casa, _rem_neutral])
 
 func _probar_selecciones() -> void:
 	_titulo("SELECCIÓN NACIONAL Y MUNDIAL DE CLUBES")
-	var m := Mundo.new()
-	m.generar(["CHI", "ARG", "ESP"], 909)
-	m.tomar_el_mando(m.ligas[0].clubes[0].id)
-	_comprobar(m.selecciones != null, "tomar el mando crea la selección")
-	_comprobar(m.selecciones.pais_seleccion() == m.mi_club().pais,
-		"la selección que sigues es la de tu club, no Chile a fuego (%s)" % m.selecciones.pais_seleccion())
-	_comprobar(m.selecciones.fuerza("Brasil") == 88 and m.selecciones.fuerza("España") == 88,
+	_m = Mundo.new()
+	_m.generar(["CHI", "ARG", "ESP"], 909)
+	_m.tomar_el_mando(_m.ligas[0].clubes[0].id)
+	_comprobar(_m.selecciones != null, "tomar el mando crea la selección")
+	_comprobar(_m.selecciones.pais_seleccion() == _m.mi_club().pais,
+		"la selección que sigues es la de tu club, no Chile a fuego (%s)" % _m.selecciones.pais_seleccion())
+	_comprobar(_m.selecciones.fuerza("Brasil") == 88 and _m.selecciones.fuerza("España") == 88,
 		"las seis grandes valen 88")
-	var antes_conti := m.continentales.size()
+	var antes_conti = _m.continentales.size()
 
 	## Tres temporadas: cae al menos una prenómina, una fecha FIFA, un torneo
 	## continental de selecciones (2027 o 2028 según la confederación) y, al cerrar la primera (2026, año real), la Copa del Mundo.
 	##
 	## Se comprueba el estado directo (`prenomina_ids`, `nomina_ids`) y no las
 	## señales: un lambda de GDScript captura las variables locales POR VALOR, no
-	## por referencia, así que `func(): vio = true` conectado a una señal escribe
+	## por referencia, así que `func(): vio = true` conectado _a una señal escribe
 	## en una copia y la variable de fuera nunca cambia -sin error, sin aviso.
 	var ultimo_resumen := {}
 	for temporada in 3:
-		m.jugar_temporada()
-		ultimo_resumen = m.nueva_temporada()
-	_comprobar(not m.selecciones.prenomina_ids.is_empty(), "se publica al menos una prenómina en tres temporadas")
-	_comprobar(not m.selecciones.nomina_ids.is_empty(), "se cierra al menos una convocatoria en tres temporadas")
-	_comprobar(m.selecciones.nomina_ids.size() <= 18, "la nómina final no pasa de 18 (%d)" % m.selecciones.nomina_ids.size())
-	_comprobar(m.selecciones.resultados.size() > 0, "quedan resultados de la selección anotados")
+		_m.jugar_temporada()
+		ultimo_resumen = _m.nueva_temporada()
+	_comprobar(not _m.selecciones.prenomina_ids.is_empty(), "se publica al menos una prenómina en tres temporadas")
+	_comprobar(not _m.selecciones.nomina_ids.is_empty(), "se cierra al menos una convocatoria en tres temporadas")
+	_comprobar(_m.selecciones.nomina_ids.size() <= 18, "la nómina final no pasa de 18 (%d)" % _m.selecciones.nomina_ids.size())
+	_comprobar(_m.selecciones.resultados.size() > 0, "quedan resultados de la selección anotados")
 	_comprobar(ultimo_resumen.get("selecciones", {}).has("mundial"),
 		"nueva_temporada() devuelve el resumen de selecciones")
 	## 2026 -> 2027 -> 2028: la Copa del Mundo cae al cerrar 2026 (los años reales, como el calendario; 10-11).
-	_comprobar(not m.selecciones.mundial.is_empty(), "la Copa del Mundo se jugó en 2026 (%s)" % m.selecciones.mundial.get("campeon", "?"))
+	_comprobar(not _m.selecciones.mundial.is_empty(), "la Copa del Mundo se jugó en 2026 (%s)" % _m.selecciones.mundial.get("campeon", "?"))
 	## (10-11) Desde la segunda temporada se suman los torneos de la FIFA (Mundial de Clubes e Intercontinental): no cuentan.
-	var de_confederacion := m.continentales.values().filter(func(t: Continental) -> bool: return not t.es_fifa()).size()
+	var de_confederacion = _m.continentales.values().filter(func(t: Continental) -> bool: return not t.es_fifa()).size()
 	_comprobar(de_confederacion == antes_conti,
 		"los continentales se re-sortean cada temporada con el mismo número de torneos (%d)" % de_confederacion)
 
 	## Guardado y carga: la cabeza de la selección (caps, nacionalizados, mundial)
 	## tiene que sobrevivir igual que el resto de sistemas de TU club.
 	Partida.borrar("_prueba_selecciones")
-	_comprobar(Partida.guardar(m, "_prueba_selecciones"), "una partida con selección se guarda")
+	_comprobar(Partida.guardar(_m, "_prueba_selecciones"), "una partida con selección se guarda")
 	var m2 := Partida.cargar("_prueba_selecciones")
 	_comprobar(m2 != null, "esa partida se recarga")
 	if m2 != null:
 		_comprobar(m2.selecciones != null, "la selección vuelve al cargar")
-		_comprobar(m2.selecciones.mundial.get("campeon", "") == m.selecciones.mundial.get("campeon", ""),
+		_comprobar(m2.selecciones.mundial.get("campeon", "") == _m.selecciones.mundial.get("campeon", ""),
 			"vuelve el mismo campeón del mundo (%s)" % m2.selecciones.mundial.get("campeon", "?"))
-		_comprobar(m2.selecciones.resultados.size() == m.selecciones.resultados.size(),
+		_comprobar(m2.selecciones.resultados.size() == _m.selecciones.resultados.size(),
 			"vuelven los mismos resultados anotados (%d)" % m2.selecciones.resultados.size())
 	Partida.borrar("_prueba_selecciones")
 
 func _probar_ascensos() -> void:
 	_titulo("ASCENSOS, DESCENSOS Y PREMIOS")
-	var m := Mundo.new()
-	m.generar(["CHI"], 4040)
-	m.mi_club_id = m.ligas[0].clubes[0].id
-	var primera := m.ligas[0]
-	var segunda := m.ligas[1]
+	_m = Mundo.new()
+	_m.generar(["CHI"], 4040)
+	_m.mi_club_id = _m.ligas[0].clubes[0].id
+	var primera = _m.ligas[0]
+	var segunda = _m.ligas[1]
 	_comprobar(primera.division() == 1 and segunda.division() == 2, "las dos divisiones estan marcadas")
-	m.jugar_temporada()
+	_m.jugar_temporada()
 
 	var t1 := primera.tabla()
 	var t2 := segunda.tabla()
@@ -321,17 +358,17 @@ func _probar_ascensos() -> void:
 	var penultimo: Club = t1[t1.size() - 2]["club"]
 	var primero_b: Club = t2[0]["club"]
 	var segundo_b: Club = t2[1]["club"]
-	var n1 := primera.clubes.size()
-	var n2 := segunda.clubes.size()
+	var n1 = primera.clubes.size()
+	var n2 = segunda.clubes.size()
 
-	var resumen := m.nueva_temporada()
+	_m.nueva_temporada()
 	_linea("  campeon: %s   suben: %s, %s   bajan: %s, %s" % [
 		campeon.nombre, primero_b.nombre, segundo_b.nombre, ultimo.nombre, penultimo.nombre])
 	_comprobar(campeon.saldo > caja_antes, "el campeon cobra el premio")
 	_comprobar(campeon.rep == rep_antes + 1, "ganar la liga sube la reputacion del club")
 
 	## Lo que de verdad hay que comprobar: que los clubes CAMBIAN de lista, no
-	## solo de etiqueta. Mover la etiqueta sin mover la lista deja a un club
+	## solo de etiqueta. Mover la etiqueta sin mover la lista deja _a un club
 	## descendido jugando en primera y cobrando de segunda.
 	_comprobar(segunda.clubes.has(ultimo) and segunda.clubes.has(penultimo), "los dos ultimos estan ahora en segunda")
 	_comprobar(primera.clubes.has(primero_b) and primera.clubes.has(segundo_b), "los dos primeros de segunda estan ahora en primera")
@@ -348,25 +385,25 @@ func _probar_ascensos() -> void:
 	_comprobar(f_abajo.derechos_tv() < f_arriba.derechos_tv() or ultimo.rep > primero_b.rep + 8,
 		"bajar de division cuesta dinero de television")
 
-	## El calendario nuevo tiene que incluir a los recien llegados.
+	## El calendario nuevo tiene que incluir _a los recien llegados.
 	_comprobar(primera.jornadas() > 0 and primera.emparejamiento_de(primero_b).size() == 2,
 		"el ascendido tiene partido en el calendario nuevo")
 
 
 func _probar_temporadas() -> void:
 	_titulo("TEMPORADAS COMPLETAS")
-	var m := Mundo.new()
-	m.generar(["CHI", "ARG", "ESP"], 55)
+	_m = Mundo.new()
+	_m.generar(["CHI", "ARG", "ESP"], 55)
 	var t0 := Time.get_ticks_msec()
 	for temporada in 3:
-		m.jugar_temporada()
-		var tabla := m.ligas[0].tabla()
+		_m.jugar_temporada()
+		var tabla = _m.ligas[0].tabla()
 		var campeon: Dictionary = tabla[0]
 		_linea("  %d: campeon %s con %d puntos (%d-%d-%d), %d jugadores en el mundo" % [
-			m.anio, campeon["club"].nombre, campeon["pts"],
-			campeon["g"], campeon["e"], campeon["p"], m.cuantos_jugadores()])
+			_m.anio, campeon["club"].nombre, campeon["pts"],
+			campeon["g"], campeon["e"], campeon["p"], _m.cuantos_jugadores()])
 		## La tabla tiene que cuadrar: los puntos salen de los resultados y los
-		## goles a favor de todos son los goles en contra de todos.
+		## goles _a favor de todos son los goles en contra de todos.
 		var gf := 0
 		var gc := 0
 		for fila: Dictionary in tabla:
@@ -377,11 +414,11 @@ func _probar_temporadas() -> void:
 			gf += fila["gf"]
 			gc += fila["gc"]
 		_comprobar(gf == gc, "los goles a favor igualan a los goles en contra (%d/%d)" % [gf, gc])
-		m.nueva_temporada()
+		_m.nueva_temporada()
 	_linea("  tres temporadas en %d ms" % (Time.get_ticks_msec() - t0))
 	var viejos := 0
 	var plantillas_cortas := 0
-	for c: Club in m.clubes.values():
+	for c: Club in _m.clubes.values():
 		if c.plantilla.size() < 18:
 			plantillas_cortas += 1
 		for j in c.plantilla:
@@ -395,7 +432,7 @@ func _probar_temporadas() -> void:
 	## los retiros no caen por igual en cada demarcacion.
 	var deformes := 0
 	var max_porteros := 0
-	for c: Club in m.clubes.values():
+	for c: Club in _m.clubes.values():
 		var porteros := 0
 		var lineas := {}
 		for j in c.plantilla:

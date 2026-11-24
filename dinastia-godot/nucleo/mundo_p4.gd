@@ -19,131 +19,146 @@ func _avisar_a_la_directiva(resultados: Array) -> void:
 	if mio == null:
 		return
 	for r: Dictionary in resultados:
-		var soy_local: bool = r["local"] == mio
-		if not soy_local and r["visita"] != mio:
-			continue
-		var gf: int = r["gl"] if soy_local else r["gv"]
-		var gc: int = r["gv"] if soy_local else r["gl"]
-		if directiva != null and not directiva.despedido_ya:
-			directiva.tras_partido(gf, gc, r["visita"] if soy_local else r["local"])
-		## El prestigio del entrenador se mueve con CUALQUIER resultado tuyo, no
-		## solo el que dirigiste: a diferencia de Logros (que necesita el once y
-		## los goleadores del `Partido` completo, y eso solo sobrevive en el
-		## dirigido), a Roles le basta el marcador, y ese SÍ llega siempre por
-		## `resultados`.
-		## EL CUPO JUVENIL, que la asamblea vota y nadie revisaba. `Federacion`
-		## tenia escrita la multa por salir sin ningun sub-21 y la bonificacion por
-		## cada uno que juegue, y no la llamaba nadie: se podia votar el reglamento
-		## y no pasaba absolutamente nada en toda la temporada.
-		if federacion != null and mio != null:
-			federacion.revisar_cupo_juvenil(mio, mio.once())
-			## Las reglas de la liga de tu país: si decidiste incumplirlas, multa.
-			federacion.revisar_leyes_pais(self, mio)
-			## La sanción al DT se cumple partido a partido.
-			federacion.cumplir_sancion_dt()
-		## EL FICHAJE IMPUESTO -por la ocupación hostil del dueño o el trato
-		## comercial del patrocinador-, mismo patrón que el cupo juvenil de
-		## arriba: `Prensa.revisar_impuesto()` ya existía escrito y nadie lo
-		## llamaba desde que se firmaba el pacto en el despacho.
-		if prensa != null and mio != null:
-			prensa.revisar_impuesto(mio, mio.once(), anio)
-		_gano_la_ultima = gf > gc
-		_resultado_semana = 1 if gf > gc else (0 if gf == gc else -1)
-		_marcador_liga_semana = [gf, gc]
-		_rival_liga_semana = r["visita"] if soy_local else r["local"]
-		## "G.clubes[miClub].forma.push(...)" del HTML: solo cuenta para esto lo
-		## que se juega de LIGA -este bloque nace de `_avisar_a_la_directiva`,
-		## que `avanzar_semana()` llama justo después de `l.jugar_jornada()`-.
-		if club_dentro != null:
-			club_dentro.registrar_resultado_liga(gf > gc, gf == gc)
-		## "G.ultArbMal" del HTML: perdiste -no empate, perdiste de verdad- y el
-		## árbitro de ese partido es de los que sesgan -"casero"/"figura"-, así
-		## que el directorio pregunta si reclamas formalmente (`Prensa.
-		## arbitro_dudoso()`, cuya rama de despacho ya estaba completa y sin
-		## nadie que la llamara). Solo liga, igual que el resto de este bloque.
-		## MISMO `Previa.arbitro_de()` que ya usa `vPrevia()` y que acaba de
-		## pitar el partido en `Partido.preparar()`: no una tercera copia del
-		## hash.
-		## El historial por árbitro (reglamento fino, 28-9-2026).
-		if federacion != null:
-			var rival_arb: Club = r["visita"] if soy_local else r["local"]
-			var arb_h := Previa.arbitro_de(rival_arb.id, semana)
-			federacion.anotar_arbitro(String(arb_h["nombre"]), String(arb_h["perfil"]), gf, gc)
-		if prensa != null and gf < gc:
-			var rival_perdido: Club = r["visita"] if soy_local else r["local"]
-			var arb_partido := Previa.arbitro_de(rival_perdido.id, semana)
-			if String(arb_partido["perfil"]) == "casero" or String(arb_partido["perfil"]) == "figura":
-				prensa.arbitro_dudoso(String(arb_partido["nombre"]))
-		## SE APUNTA CON QUE DIBUJO se jugo. Es lo que despues contesta «de verdad
-		## me funciona el 4-3-3», que ninguna otra pantalla puede responder.
-		anotar_eficacia(mio.tactica.formacion if mio.tactica != null else "", gf, gc)
-		if roles != null:
-			roles.tras_partido(gf, gc)
-			## Y si el de enfrente es TU rival, el cruce se cuenta aparte: es la
-			## unica estadistica del juego que no es del club, es tuya.
-			var el_otro: Club = r["visita"] if soy_local else r["local"]
-			roles.registrar_duelo(el_otro.id, gf > gc, gf == gc)
-		## LAS REDES HABLAN DE LO QUE PASA. Sin esto el feed sería un generador
-		## de frases sueltas; enganchado al resultado, es la voz de la gente.
-		if prensa != null:
-			var rival_p: Club = r["visita"] if soy_local else r["local"]
-			if gf > gc:
-				prensa.publicar("%d-%d al %s. Así da gusto." % [gf, gc, rival_p.nombre], "hincha", 1.6)
-			elif gf < gc:
-				prensa.publicar("%d-%d contra el %s. Otra vez lo mismo." % [gf, gc, rival_p.nombre], "troll", 1.8)
-			else:
-				prensa.publicar("Empate sin más contra el %s. Se escapan dos puntos." % rival_p.nombre, "analista", 1.0)
-		## EL INCIDENTE EN EL ESTADIO. Solo de local, porque la seguridad que
-		## pagas es la de TU recinto. Sube con el mal ambiente y la funa, y baja
-		## con lo que hayas invertido: es lo que convierte a la seguridad privada
-		## en un gasto que se entiende en vez de en un numero mas.
-		if ciudad != null and soy_local and ciudad.sancion.is_empty() and prensa != null:
-			if Azar.suerte(ciudad.riesgo_incidente(prensa.animo, prensa.funa)):
-				ciudad.sancionar("cerradas" if Azar.suerte(0.35) else "aforo")
-				ciudad.vecinos = clampi(ciudad.vecinos - Azar.ent(4, 10), 0, 100)
-		## LA RUEDA DE PRENSA Y LA PORTADA DEL LUNES.
-		##
-		## `Prensa.sortear_rueda()` pedía un `Partido` entero y aquí solo llega
-		## el marcador, así que no la llamaba nadie: la sala de prensa completa
-		## -tres barajas de preguntas, cinco lenguajes corporales, trece
-		## decisiones y la promesa que se cobra diez líneas más abajo- no se
-		## abría ni una vez en una partida de verdad. La promesa se cobraba sin
-		## que existiera forma de hacerla.
-		if prensa != null:
-			var otro: Club = r["visita"] if soy_local else r["local"]
-			var gano := gf > gc
-			var empato := gf == gc
-			var semilla := "%d|%d|%s|%d-%d" % [anio, semana, otro.id, gf, gc]
-			var loc0: Club = r["local"]
-			var vis0: Club = r["visita"]
-			prensa.portada_tras_resultado(gano, empato, es_clasico(mio, otro), semilla,
-				"%s %d-%d %s" % [Nombres.visible(loc0.nombre), int(r["gl"]), int(r["gv"]), Nombres.visible(vis0.nombre)],
-				HistoriaClub.nombre_clasico(mio.nombre, otro.nombre))
-			## El tiempo de ese partido, por si la rueda pregunta por él.
-			var loc: Club = r["local"]
-			var vis: Club = r["visita"]
-			prensa.clima_ultimo = Clima.del_partido(loc.pais, semana, anio, loc.id + vis.id)
-			prensa.competicion_rueda = "liga"
-			prensa.clubes_rueda = []
-			prensa.rueda_tras_resultado(gano, empato)
-		## LA PROMESA DE LA RUEDA DE PRENSA se cobra AQUÍ, que es el único sitio
-		## donde se sabe el resultado. `Prensa.presion_prometida` se encendía al
-		## responder al DT rival y `consumir_presion()` no la llamaba nadie: la
-		## bravata salía gratis. Ahora tiene precio -y premio si se cumple-,
-		## que es lo que convierte contestar en una decisión.
-		if prensa != null and prensa.consumir_presion():
-			if gf > gc:
-				prensa.mover_animo(6)
-				prensa.noticia.emit("Dijiste que ganabas y ganaste",
-					"La hinchada celebra el doble: primero el resultado y después la cara del otro.")
-			else:
-				prensa.mover_animo(-8)
-				prensa.noticia.emit("Prometiste y no cumpliste",
-					"La frase de la conferencia se te da vuelta. En la calle no se habla del partido, se habla de ti.")
-		if not desafios.is_empty():
-			var rival: Club = r["visita"] if soy_local else r["local"]
-			_chequear_desafios_tras_partido(gf, gc, rival)
+		_avisar_un_resultado(r, mio)
+
+## Un resultado de la liga: la directiva, el cupo juvenil, el árbitro, las redes, el incidente y la rueda de prensa.
+func _avisar_un_resultado(r: Dictionary, mio: Club) -> void:
+	var soy_local: bool = r["local"] == mio
+	if not soy_local and r["visita"] != mio:
 		return
+	var gf: int = r["gl"] if soy_local else r["gv"]
+	var gc: int = r["gv"] if soy_local else r["gl"]
+	_avisar_directiva_y_federacion(r, mio, soy_local, gf, gc)
+	_avisar_liga_y_resultado(r, mio, soy_local, gf, gc)
+	_avisar_calle_y_rueda(r, mio, soy_local, gf, gc)
+
+## Directiva y federación: el resultado para el consejo, el cupo juvenil, las leyes del país, el fichaje impuesto.
+func _avisar_directiva_y_federacion(r: Dictionary, mio: Club, soy_local: bool, gf: int, gc: int) -> void:
+	if directiva != null and not directiva.despedido_ya:
+		directiva.tras_partido(gf, gc, r["visita"] if soy_local else r["local"])
+	## El prestigio del entrenador se mueve con CUALQUIER resultado tuyo, no
+	## solo el que dirigiste: a diferencia de Logros (que necesita el once y
+	## los goleadores del `Partido` completo, y eso solo sobrevive en el
+	## dirigido), a Roles le basta el marcador, y ese SÍ llega siempre por
+	## `resultados`.
+	## EL CUPO JUVENIL, que la asamblea vota y nadie revisaba. `Federacion`
+	## tenia escrita la multa por salir sin ningun sub-21 y la bonificacion por
+	## cada uno que juegue, y no la llamaba nadie: se podia votar el reglamento
+	## y no pasaba absolutamente nada en toda la temporada.
+	if federacion != null and mio != null:
+		federacion.revisar_cupo_juvenil(mio, mio.once())
+		## Las reglas de la liga de tu país: si decidiste incumplirlas, multa.
+		federacion.revisar_leyes_pais(self, mio)
+		## La sanción al DT se cumple partido a partido.
+		federacion.cumplir_sancion_dt()
+	## EL FICHAJE IMPUESTO -por la ocupación hostil del dueño o el trato
+	## comercial del patrocinador-, mismo patrón que el cupo juvenil de
+	## arriba: `Prensa.revisar_impuesto()` ya existía escrito y nadie lo
+	## llamaba desde que se firmaba el pacto en el despacho.
+	if prensa != null and mio != null:
+		prensa.revisar_impuesto(mio, mio.once(), anio)
+
+## Liga y resultado: la forma, el árbitro, la eficacia, los roles y el club dentro.
+func _avisar_liga_y_resultado(r: Dictionary, mio: Club, soy_local: bool, gf: int, gc: int) -> void:
+	_gano_la_ultima = gf > gc
+	_resultado_semana = 1 if gf > gc else (0 if gf == gc else -1)
+	_marcador_liga_semana = [gf, gc]
+	_rival_liga_semana = r["visita"] if soy_local else r["local"]
+	## "G.clubes[miClub].forma.push(...)" del HTML: solo cuenta para esto lo
+	## que se juega de LIGA -este bloque nace de `_avisar_a_la_directiva`,
+	## que `avanzar_semana()` llama justo después de `l.jugar_jornada()`-.
+	if club_dentro != null:
+		club_dentro.registrar_resultado_liga(gf > gc, gf == gc)
+	## "G.ultArbMal" del HTML: perdiste -no empate, perdiste de verdad- y el
+	## árbitro de ese partido es de los que sesgan -"casero"/"figura"-, así
+	## que el directorio pregunta si reclamas formalmente (`Prensa.
+	## arbitro_dudoso()`, cuya rama de despacho ya estaba completa y sin
+	## nadie que la llamara). Solo liga, igual que el resto de este bloque.
+	## MISMO `Previa.arbitro_de()` que ya usa `vPrevia()` y que acaba de
+	## pitar el partido en `Partido.preparar()`: no una tercera copia del
+	## hash.
+	## El historial por árbitro (reglamento fino, 28-9-2026).
+	if federacion != null:
+		var rival_arb: Club = r["visita"] if soy_local else r["local"]
+		var arb_h := Previa.arbitro_de(rival_arb.id, semana)
+		federacion.anotar_arbitro(String(arb_h["nombre"]), String(arb_h["perfil"]), gf, gc)
+	if prensa != null and gf < gc:
+		var rival_perdido: Club = r["visita"] if soy_local else r["local"]
+		var arb_partido := Previa.arbitro_de(rival_perdido.id, semana)
+		if String(arb_partido["perfil"]) == "casero" or String(arb_partido["perfil"]) == "figura":
+			prensa.arbitro_dudoso(String(arb_partido["nombre"]))
+	## SE APUNTA CON QUE DIBUJO se jugo. Es lo que despues contesta «de verdad
+	## me funciona el 4-3-3», que ninguna otra pantalla puede responder.
+	anotar_eficacia(mio.tactica.formacion if mio.tactica != null else "", gf, gc)
+	if roles != null:
+		roles.tras_partido(gf, gc)
+		## Y si el de enfrente es TU rival, el cruce se cuenta aparte: es la
+		## unica estadistica del juego que no es del club, es tuya.
+		var el_otro: Club = r["visita"] if soy_local else r["local"]
+		roles.registrar_duelo(el_otro.id, gf > gc, gf == gc)
+
+## Calle y prensa: las redes, el incidente del estadio, la rueda de prensa y los desafíos.
+func _avisar_calle_y_rueda(r: Dictionary, mio: Club, soy_local: bool, gf: int, gc: int) -> void:
+	## LAS REDES HABLAN DE LO QUE PASA. Sin esto el feed sería un generador
+	## de frases sueltas; enganchado al resultado, es la voz de la gente.
+	if prensa != null:
+		var rival_p: Club = r["visita"] if soy_local else r["local"]
+		if gf > gc:
+			prensa.publicar("%d-%d al %s. Así da gusto." % [gf, gc, rival_p.nombre], "hincha", 1.6)
+		elif gf < gc:
+			prensa.publicar("%d-%d contra el %s. Otra vez lo mismo." % [gf, gc, rival_p.nombre], "troll", 1.8)
+		else:
+			prensa.publicar("Empate sin más contra el %s. Se escapan dos puntos." % rival_p.nombre, "analista", 1.0)
+	## EL INCIDENTE EN EL ESTADIO. Solo de local, porque la seguridad que
+	## pagas es la de TU recinto. Sube con el mal ambiente y la funa, y baja
+	## con lo que hayas invertido: es lo que convierte a la seguridad privada
+	## en un gasto que se entiende en vez de en un numero mas.
+	if ciudad != null and soy_local and ciudad.sancion.is_empty() and prensa != null:
+		if Azar.suerte(ciudad.riesgo_incidente(prensa.animo, prensa.funa)):
+			ciudad.sancionar("cerradas" if Azar.suerte(0.35) else "aforo")
+			ciudad.vecinos = clampi(ciudad.vecinos - Azar.ent(4, 10), 0, 100)
+	## LA RUEDA DE PRENSA Y LA PORTADA DEL LUNES.
+	##
+	## `Prensa.sortear_rueda()` pedía un `Partido` entero y aquí solo llega
+	## el marcador, así que no la llamaba nadie: la sala de prensa completa
+	## -tres barajas de preguntas, cinco lenguajes corporales, trece
+	## decisiones y la promesa que se cobra diez líneas más abajo- no se
+	## abría ni una vez en una partida de verdad. La promesa se cobraba sin
+	## que existiera forma de hacerla.
+	if prensa != null:
+		var otro: Club = r["visita"] if soy_local else r["local"]
+		var gano := gf > gc
+		var empato := gf == gc
+		var semilla := "%d|%d|%s|%d-%d" % [anio, semana, otro.id, gf, gc]
+		var loc0: Club = r["local"]
+		var vis0: Club = r["visita"]
+		prensa.portada_tras_resultado(gano, empato, es_clasico(mio, otro), semilla,
+			"%s %d-%d %s" % [Nombres.visible(loc0.nombre), int(r["gl"]), int(r["gv"]), Nombres.visible(vis0.nombre)],
+			HistoriaClub.nombre_clasico(mio.nombre, otro.nombre))
+		## El tiempo de ese partido, por si la rueda pregunta por él.
+		var loc: Club = r["local"]
+		var vis: Club = r["visita"]
+		prensa.clima_ultimo = Clima.del_partido(loc.pais, semana, anio, loc.id + vis.id)
+		prensa.competicion_rueda = "liga"
+		prensa.clubes_rueda = []
+		prensa.rueda_tras_resultado(gano, empato)
+	## LA PROMESA DE LA RUEDA DE PRENSA se cobra AQUÍ, que es el único sitio
+	## donde se sabe el resultado. `Prensa.presion_prometida` se encendía al
+	## responder al DT rival y `consumir_presion()` no la llamaba nadie: la
+	## bravata salía gratis. Ahora tiene precio -y premio si se cumple-,
+	## que es lo que convierte contestar en una decisión.
+	if prensa != null and prensa.consumir_presion():
+		if gf > gc:
+			prensa.mover_animo(6)
+			prensa.noticia.emit("Dijiste que ganabas y ganaste",
+				"La hinchada celebra el doble: primero el resultado y después la cara del otro.")
+		else:
+			prensa.mover_animo(-8)
+			prensa.noticia.emit("Prometiste y no cumpliste",
+				"La frase de la conferencia se te da vuelta. En la calle no se habla del partido, se habla de ti.")
+	if not desafios.is_empty():
+		var rival: Club = r["visita"] if soy_local else r["local"]
+		_chequear_desafios_tras_partido(gf, gc, rival)
 
 func horario_actual() -> Array:
 	for h: Array in HORARIOS:

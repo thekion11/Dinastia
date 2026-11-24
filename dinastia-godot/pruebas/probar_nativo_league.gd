@@ -15,6 +15,14 @@ static func probar(nat: Object) -> Dictionary:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 20261110
 	var cuerpos := [0.0, 0.25 * PI, -0.25 * PI, 0.75 * PI, -0.75 * PI]
+	_probar_eleccion(nat, rng, cuerpos, fallos, textos)
+	_probar_legalidad(nat, rng, cuerpos, fallos)
+	_probar_intermedias(nat, rng, fallos, textos)
+	return {"fallos": fallos, "textos": textos}
+
+## 1. La elección: 4.000 consultas al azar (velocidades, giros, cuerpos permitidos, mirada o sin ella, pie).
+static func _probar_eleccion(nat: Object, rng: RandomNumberGenerator, cuerpos: Array,
+		fallos: Array, textos: Array) -> void:
 	var distintas := 0
 	var vacias := 0
 	var t_gd := 0
@@ -43,20 +51,36 @@ static func probar(nat: Object) -> Dictionary:
 	if distintas != 0 or vacias > 3000:
 		fallos.append("elección de clip: C++ ≠ GDScript en %d de 4000 consultas (vacías: %d)" % [distintas, vacias])
 	textos.append("league elegir: GDScript %.1f µs, C++ %.1f µs por consulta (4000, distintas %d)" % [t_gd / 4000.0, t_cpp / 4000.0, distintas])
-	## 2. La legalidad: todas las combinaciones de velocidades y de cuerpos permitidos, en las 9 direcciones y en 200 al azar.
+
+## 2. La legalidad: todas las combinaciones de velocidades y de cuerpos permitidos.
+static func _probar_legalidad(nat: Object, rng: RandomNumberGenerator, cuerpos: Array,
+		fallos: Array) -> void:
 	var dis_legal := 0
 	var n_legal := 0
 	for vi in 4:
 		for vo in 4:
-			for cs: float in cuerpos:
-				for ci: float in cuerpos:
-					for f: float in LeagueAuto.ANGULOS + [rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0)]:
-						n_legal += 1
-						if LeagueAuto.legal_gd(vi, vo, cs, ci, f * PI) != bool(nat.league_legal(vi, vo, cs, ci, f * PI)):
-							dis_legal += 1
+			var par := _legal_velocidades(nat, rng, cuerpos, vi, vo)
+			n_legal += par[0]
+			dis_legal += par[1]
 	if dis_legal != 0:
 		fallos.append("legalidad de las intermedias: C++ ≠ GDScript en %d de %d casos" % [dis_legal, n_legal])
-	## 3. El bucle de huesos de las intermedias: 40 intermedias construidas de las dos maneras, igual clave a clave (bytes).
+
+## Las combinaciones de cuerpos y direcciones para una pareja de velocidades: [casos, distintos].
+static func _legal_velocidades(nat: Object, rng: RandomNumberGenerator, cuerpos: Array,
+		vi: int, vo: int) -> Array:
+	var n_legal := 0
+	var dis_legal := 0
+	for cs: float in cuerpos:
+		for ci: float in cuerpos:
+			for f: float in LeagueAuto.ANGULOS + [rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0)]:
+				n_legal += 1
+				if LeagueAuto.legal_gd(vi, vo, cs, ci, f * PI) != bool(nat.league_legal(vi, vo, cs, ci, f * PI)):
+					dis_legal += 1
+	return [n_legal, dis_legal]
+
+## 3. El bucle de huesos de las intermedias: 40 construidas de las dos maneras, igual clave a clave.
+static func _probar_intermedias(nat: Object, rng: RandomNumberGenerator, fallos: Array,
+		textos: Array) -> void:
 	var dis_mez := 0
 	var hechas := 0
 	var t_mg := 0
@@ -92,7 +116,6 @@ static func probar(nat: Object) -> Dictionary:
 	if hechas < 20 or dis_mez != 0:
 		fallos.append("bucle de huesos de las intermedias: C++ ≠ GDScript en %d de %d" % [dis_mez, hechas])
 	textos.append("league intermedias: GDScript %.0f µs, C++ %.0f µs por intermedia (%d, distintas %d)" % [t_mg / maxf(1.0, hechas), t_mc / maxf(1.0, hechas), hechas, dis_mez])
-	return {"fallos": fallos, "textos": textos}
 
 ## Dos animaciones con las mismas pistas, claves, tiempos y valores (byte a byte).
 static func _iguales(a: Animation, b: Animation) -> bool:

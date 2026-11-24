@@ -176,7 +176,7 @@ static func _seguir_clip(m: MotorJugable, p: Dictionary, v: Vector3, delta: floa
 	return plano.lerp(clip, a) + Vector3(0.0, v.y, 0.0)
 
 ## Marchas: a ritmo de crucero (no frenando ni acelerando, ni llegando al destino) la velocidad se asienta en 3,5 · 5 · la propia.
-static func _marcha(m: MotorJugable, p: Dictionary, n: Node3D, v: Vector3, delta: float) -> Vector3:
+static func _marcha(_m: MotorJugable, p: Dictionary, n: Node3D, v: Vector3, delta: float) -> Vector3:
 	var sp := Vector2(v.x, v.z).length()
 	if sp < LeagueMovimiento.IDLE_DRIBBLE or sp >= LeagueMovimiento.WALK_SPRINT or not p.has("objetivo"):
 		return v   ## parado, en arranque o a toda carrera (su marcha es la suya)

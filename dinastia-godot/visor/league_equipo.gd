@@ -166,21 +166,21 @@ func calcular_trampa(bola0: Vector2, bola07: Vector2, rival: Array, linea_propia
 	trampa_x = peligro
 
 ## L AI_GetOffsideLine para el propio equipo: el penúltimo hacia el arco propio (o el balón, si está más atrás).
-static func linea_penultimo(xs: PackedFloat32Array, lado_: float, balon_x: float) -> float:
+static func linea_penultimo(xs: PackedFloat32Array, lado_arg: float, balon_x: float) -> float:
 	var a := -INF
 	var b := -INF
 	for x in xs:
-		var v := x * lado_
+		var v := x * lado_arg
 		if v > a:
 			b = a
 			a = v
 		elif v > b:
 			b = v
-	var linea := (b if b > -INF else 0.0) * lado_
-	if balon_x * lado_ > linea * lado_:
+	var linea := (b if b > -INF else 0.0) * lado_arg
+	if balon_x * lado_arg > linea * lado_arg:
 		linea = balon_x
-	if linea * lado_ < 0.0:
-		linea = 0.01 * -lado_
+	if linea * lado_arg < 0.0:
+		linea = 0.01 * -lado_arg
 	return clampf(linea, -LeagueNucleo.MEDIO_LARGO, LeagueNucleo.MEDIO_LARGO)
 
 ## Gemela GDScript de `league_destino_forma` (el cálculo de `MotorLeague._destino_forma` antes del retoque de la línea de la pizarra). `e0` = el equipo local (dueño del historial).

@@ -9,9 +9,9 @@ func _complejo() -> void:
 	## la temporada quince y la inversion no se notaria.
 	var inst: Dictionary = datos.get("inst", {})
 	var obras: Array = datos.get("obras", [])
-	var enObra := {}
+	var en_obra := {}
 	for o in obras:
-		enObra[str(o.get("k", ""))] = int(o.get("semanas", 0))
+		en_obra[str(o.get("k", ""))] = int(o.get("semanas", 0))
 
 	## SITIO FIJO POR INSTALACIÓN (B7). Antes se compactaban solo las
 	## construidas y un edificio cambiaba de sitio al levantar otro; ahora cada
@@ -21,7 +21,7 @@ func _complejo() -> void:
 	for e in EDIFICIOS:
 		i += 1
 		var niv := int(inst.get(e["k"], 0))
-		var obra: bool = enObra.has(e["k"])
+		var obra: bool = en_obra.has(e["k"])
 		## Cuatro por fila y no cinco: con cinco la parrilla se salia de la valla por
 		## el lado, y un complejo con edificios fuera del recinto no se lee como un
 		## complejo, se lee como un error de colocacion.
@@ -42,9 +42,9 @@ func _complejo() -> void:
 		_edificio(e, niv, obra, pos)
 		if obra:
 			var total := float(Instalaciones.SEMANAS.get(String(e["k"]), Instalaciones.SEMANAS_POR_DEFECTO))
-			var faltan := float(enObra[e["k"]])
+			var faltan := float(en_obra[e["k"]])
 			_obra_en_curso(pos, float(e["ancho"]), float(e["fondo"]), 6.0 * maxi(1, niv + 1), 1.0 - faltan / maxf(total, 1.0))
-		var texto_r: String = ("%s 🏗 %d %s" % [Idiomas.t(str(e["n"])), int(enObra[e["k"]]), Idiomas.t("sem")]) if obra else ("%s  N%d" % [Idiomas.t(str(e["n"])), niv])
+		var texto_r: String = ("%s 🏗 %d %s" % [Idiomas.t(str(e["n"])), int(en_obra[e["k"]]), Idiomas.t("sem")]) if obra else ("%s  N%d" % [Idiomas.t(str(e["n"])), niv])
 		CartelFachada.con_mapa(self, pos + Vector3(0, 6.0 * maxi(1, niv) + 8.0, 0), texto_r,
 			Color(1.0, 0.85, 0.4) if obra else Color(1, 1, 1))
 		puntos_clic.append({"k": String(e["k"]), "n": str(e["n"]), "pos": pos + Vector3(0, 6.0 * maxi(1, niv) * 0.5, 0),

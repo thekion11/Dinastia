@@ -108,26 +108,7 @@ static func parque(raiz: Node3D, r: Rect2, c: Vector3, evita: Callable, arboles:
 	var pts: Array = []
 	var semilla := int(c.x * 3.0 + c.z * 5.0)
 	var y := 0.1
-	var largo_x := r.size.x - 2.0
-	var largo_z := r.size.y - 2.0
-	for lado in 4:
-		var horizontal := lado < 2
-		var largo := largo_x if horizontal else largo_z
-		var pasos := int(largo / SEPARACION)
-		for i in pasos:
-			for f in 2:   ## dos filas: pegada al borde y otra detrás
-				var a := (float(i) + 0.5) / float(pasos) - 0.5
-				var h := absi(hash([semilla, lado, i, f]))
-				var prof := 1.0 + float(f) * (BORDE * 0.55) + float(h % 60) / 100.0
-				var p: Vector3
-				match lado:
-					0: p = Vector3(c.x + a * largo_x, y, r.position.y + prof)
-					1: p = Vector3(c.x + a * largo_x, y, r.end.y - prof)
-					2: p = Vector3(r.position.x + prof, y, c.z + a * largo_z)
-					_: p = Vector3(r.end.x - prof, y, c.z + a * largo_z)
-				if absf(p.x - c.x) < 3.5 or absf(p.z - c.z) < 3.5 or evita.call(p):
-					continue
-				pts.append(p)
+	_borde_del_parque(pts, r, c, semilla, evita, y)
 	## A lo largo de los paseos en cruz (a 3,2 m del eje) y al pie de cada árbol.
 	for eje in 2:
 		var largo := r.size.x if eje == 0 else r.size.y
@@ -286,3 +267,27 @@ static func flores(raiz: Node3D, puntos: Array, semilla: int) -> int:
 		n += ts.size()
 	flores_sembradas += n
 	return n
+
+## Franja junto a todo el borde del parque (dos filas, con los huecos de la cancha y los paseos).
+static func _borde_del_parque(pts: Array, r: Rect2, c: Vector3, semilla: int,
+		evita: Callable, y: float) -> void:
+	var largo_x := r.size.x - 2.0
+	var largo_z := r.size.y - 2.0
+	for lado in 4:
+		var horizontal := lado < 2
+		var largo := largo_x if horizontal else largo_z
+		var pasos := int(largo / SEPARACION)
+		for i in pasos:
+			for f in 2:   ## dos filas: pegada al borde y otra detrás
+				var a := (float(i) + 0.5) / float(pasos) - 0.5
+				var h := absi(hash([semilla, lado, i, f]))
+				var prof := 1.0 + float(f) * (BORDE * 0.55) + float(h % 60) / 100.0
+				var p: Vector3
+				match lado:
+					0: p = Vector3(c.x + a * largo_x, y, r.position.y + prof)
+					1: p = Vector3(c.x + a * largo_x, y, r.end.y - prof)
+					2: p = Vector3(r.position.x + prof, y, c.z + a * largo_z)
+					_: p = Vector3(r.end.x - prof, y, c.z + a * largo_z)
+				if absf(p.x - c.x) < 3.5 or absf(p.z - c.z) < 3.5 or evita.call(p):
+					continue
+				pts.append(p)

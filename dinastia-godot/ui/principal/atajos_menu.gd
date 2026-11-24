@@ -29,25 +29,50 @@ func _input(evento: InputEvent) -> void:
 	## navegan ESE menú y no el central de detrás: L1/R1 pasan de submenú,
 	## L2/R2 de menú, y el desliz con el dedo no cambia páginas escondidas.
 	if p._menu_lateral != null and p._menu_lateral.ocupado():
-		var pm: PantallaMenu = p._menu_lateral.pantalla_abierta if is_instance_valid(p._menu_lateral.pantalla_abierta) else null
-		if pm != null and evento.is_action_pressed("dinastia_tab_siguiente"):
-			pm.submenu_vecino(1)
-			p.get_viewport().set_input_as_handled()
-		elif pm != null and evento.is_action_pressed("dinastia_tab_anterior"):
-			pm.submenu_vecino(-1)
-			p.get_viewport().set_input_as_handled()
-		elif evento.is_action_pressed("dinastia_bloque_siguiente"):
-			p._menu_lateral.menu_vecino(1)
-			p.get_viewport().set_input_as_handled()
-		elif evento.is_action_pressed("dinastia_bloque_anterior"):
-			p._menu_lateral.menu_vecino(-1)
-			p.get_viewport().set_input_as_handled()
-		_arrastre_x = 0.0
-		_arrastre_y = 0.0
+		_input_panel_lateral(evento)
 		return
 	## Un desliz que empieza sobre el riel es del panel (abrirlo), no del menú.
 	if evento is InputEventScreenDrag and not MenuLateral.abajo() and (evento as InputEventScreenDrag).position.x < MenuLateral.ANCHO_RIEL + 30.0:
 		return
+	_input_central(evento)
+
+func _capa_modal_ajena() -> bool:
+	return _capa_modal_encima(true)
+
+func _capa_modal_encima(sin_lateral := false) -> bool:
+	for h: Node in p.get_children():
+		if p._hijos_base.has(h.get_instance_id()) or not (h is Control):
+			continue
+		if sin_lateral and p._menu_lateral != null and h == p._menu_lateral.pantalla_abierta:
+			continue
+		var c := h as Control
+		if c.visible and not c.is_queued_for_deletion() \
+				and c.mouse_filter == Control.MOUSE_FILTER_STOP \
+				and is_zero_approx(c.anchor_left) and is_zero_approx(c.anchor_top) \
+				and is_equal_approx(c.anchor_right, 1.0) and is_equal_approx(c.anchor_bottom, 1.0):
+			return true
+	return false
+
+## Con el panel lateral encima: sus botones navegan ese menú (ver _input).
+func _input_panel_lateral(evento: InputEvent) -> void:
+	var pm: PantallaMenu = p._menu_lateral.pantalla_abierta if is_instance_valid(p._menu_lateral.pantalla_abierta) else null
+	if pm != null and evento.is_action_pressed("dinastia_tab_siguiente"):
+		pm.submenu_vecino(1)
+		p.get_viewport().set_input_as_handled()
+	elif pm != null and evento.is_action_pressed("dinastia_tab_anterior"):
+		pm.submenu_vecino(-1)
+		p.get_viewport().set_input_as_handled()
+	elif evento.is_action_pressed("dinastia_bloque_siguiente"):
+		p._menu_lateral.menu_vecino(1)
+		p.get_viewport().set_input_as_handled()
+	elif evento.is_action_pressed("dinastia_bloque_anterior"):
+		p._menu_lateral.menu_vecino(-1)
+		p.get_viewport().set_input_as_handled()
+	_arrastre_x = 0.0
+	_arrastre_y = 0.0
+
+## Los gatillos, L2/R2, Ctrl+Q/E, el arrastre con el dedo y el toque (el resto de _input).
+func _input_central(evento: InputEvent) -> void:
 	## Los gatillos cambian de pestaña. Se mira aquí y no en `_unhandled_input`
 	## porque los contenedores de la interfaz se comen los eventos de navegación
 	## antes de que lleguen abajo.
@@ -95,19 +120,3 @@ func _input(evento: InputEvent) -> void:
 ## ¿Hay una capa modal tapando el menú? Con el móvil u otro popup abierto, los
 ## gatillos y Ctrl+Q/E no deben cambiar la pestaña escondida detrás.
 ## Como `_capa_modal_encima`, pero sin contar el menú del panel lateral (que sí deja pasar los atajos).
-func _capa_modal_ajena() -> bool:
-	return _capa_modal_encima(true)
-
-func _capa_modal_encima(sin_lateral := false) -> bool:
-	for h: Node in p.get_children():
-		if p._hijos_base.has(h.get_instance_id()) or not (h is Control):
-			continue
-		if sin_lateral and p._menu_lateral != null and h == p._menu_lateral.pantalla_abierta:
-			continue
-		var c := h as Control
-		if c.visible and not c.is_queued_for_deletion() \
-				and c.mouse_filter == Control.MOUSE_FILTER_STOP \
-				and c.anchor_left == 0.0 and c.anchor_top == 0.0 \
-				and c.anchor_right == 1.0 and c.anchor_bottom == 1.0:
-			return true
-	return false

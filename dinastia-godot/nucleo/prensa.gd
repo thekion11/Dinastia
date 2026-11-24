@@ -1,5 +1,5 @@
 class_name Prensa
-extends "res://nucleo/prensa_p6.gd"
+extends "res://nucleo/prensa_narra.gd"
 ## [Capa 8/8 de `prensa.gd`] mesa_de_debate, ranking_entrenadores, nombrar_vocero, revisar_vocero, negociar_tv, factor_tv … (+13)
 
 ## Qué dice cada uno esta semana. Depende del ESTADO REAL del club -puesto,
@@ -26,25 +26,31 @@ func mesa_de_debate() -> Array[Dictionary]:
 		if j.edad <= 21 and j.partidos > 3:
 			jovenes += 1
 	for f2: Array in TERTULIANOS:
-		var frase := ""
-		match String(f2[0]):
-			"exdt":
-				frase = ("Con esos chicos no se gana nada; ya se verá en marzo." if jovenes >= 3
-					else "Ordenado atrás. Eso es lo primero, lo demás viene solo.")
-			"periodista":
-				frase = ("El club está donde tiene que estar. El entrenador es lo de menos." if arriba
-					else "Aquí ha habido épocas peores, y también se salió de ellas.")
-			"exjugador":
-				frase = ("Ese vestuario está vivo. Se nota que corren por alguien." if animo >= 60
-					else "Al vestuario lo veo solo. Y cuando el vestuario está solo, pasa lo que pasa.")
-			"datos":
-				frase = ("Los números lo sostienen: genera más de lo que concede." if arriba
-					else "Los números no engañan, y ahora mismo no dan.")
-			"polemista":
-				frase = ("Que alguien explique qué es esto, porque yo no lo entiendo." if (abajo or funa > 45)
-					else "Ganan, sí. Pero que no se relajen, que aquí se olvida rápido.")
+		var frase := _frase_del_tertuliano(String(f2[0]), jovenes, arriba, abajo)
 		salida.append({"nombre": String(f2[1]), "perfil": String(f2[2]), "frase": frase})
 	return salida
+
+## La frase de un tertuliano según la tabla, el ánimo y la funa del momento.
+func _frase_del_tertuliano(tipo: String, jovenes: int, arriba: bool, abajo: bool) -> String:
+	var frase := ""
+	match tipo:
+		"exdt":
+			frase = ("Con esos chicos no se gana nada; ya se verá en marzo." if jovenes >= 3
+				else "Ordenado atrás. Eso es lo primero, lo demás viene solo.")
+		"periodista":
+			frase = ("El club está donde tiene que estar. El entrenador es lo de menos." if arriba
+				else "Aquí ha habido épocas peores, y también se salió de ellas.")
+		"exjugador":
+			frase = ("Ese vestuario está vivo. Se nota que corren por alguien." if animo >= 60
+				else "Al vestuario lo veo solo. Y cuando el vestuario está solo, pasa lo que pasa.")
+		"datos":
+			frase = ("Los números lo sostienen: genera más de lo que concede." if arriba
+				else "Los números no engañan, y ahora mismo no dan.")
+		"polemista":
+			frase = ("Que alguien explique qué es esto, porque yo no lo entiendo." if (abajo or funa > 45)
+				else "Ganan, sí. Pero que no se relajen, que aquí se olvida rápido.")
+	return frase
+
 
 ## El escalafón de entrenadores del país. La nota premia rendir POR ENCIMA de lo
 ## que el club permite: un séptimo con el decimoquinto presupuesto vale más que
@@ -163,61 +169,9 @@ func narrador_temporada() -> String:
 	var mio := m.mi_club()
 	var partes: PackedStringArray = []
 
-	var puesto := 0
-	for l: Liga in m.ligas:
-		if not l.clubes.has(mio):
-			continue
-		var n := 0
-		for f: Dictionary in l.tabla():
-			n += 1
-			if f["club"] == mio:
-				puesto = n
-				break
-	if puesto > 0:
-		partes.append("La temporada %d de %s terminó en el puesto %d." % [m.anio, mio.nombre, puesto])
-	else:
-		partes.append("La temporada %d de %s todavía se está jugando." % [m.anio, mio.nombre])
-
-	if m.roles != null:
-		var del_anio: PackedStringArray = []
-		for t: Dictionary in m.roles.trofeos:
-			if int(t.get("anio", 0)) == m.anio:
-				del_anio.append(String(t.get("titulo", "")))
-		if del_anio.size() > 0:
-			partes.append("Se levantaron %d título%s: %s." % [
-				del_anio.size(), "" if del_anio.size() == 1 else "s",
-				", ".join(del_anio)])
-		else:
-			partes.append("Sin títulos esta vez.")
-
-	if m.logros != null:
-		var r: Dictionary = m.logros.rachas
-		if int(r.get("invicto_max", 0)) >= 8:
-			partes.append("Hubo una racha de %d partidos sin perder que hizo soñar a la ciudad." % int(r["invicto_max"]))
-		if int(r.get("sin_ganar_max", 0)) >= 6:
-			partes.append("También hubo un bache de %d partidos sin ganar que puso todo en duda." % int(r["sin_ganar_max"]))
-		var rec: Dictionary = m.logros.rec
-		var mg: Variant = rec.get("mayor_goleada")
-		if mg is Dictionary and int((mg as Dictionary).get("anio", 0)) == m.anio:
-			partes.append("La noche grande fue el %s a %s." % [
-				String((mg as Dictionary).get("marcador", "")), String((mg as Dictionary).get("rival", ""))])
-		var pd: Variant = rec.get("peor_derrota")
-		if pd is Dictionary and int((pd as Dictionary).get("anio", 0)) == m.anio:
-			partes.append("La peor, el %s con %s." % [
-				String((pd as Dictionary).get("marcador", "")), String((pd as Dictionary).get("rival", ""))])
-		## El hombre gol. `rec["goles"]` va por NOMBRE visible con su número de goles (así lo escribe `Logros`). (13-11) Aquí se leía
-		## como si fuera por id con {nombre, n}: reventaba en cuanto había un gol anotado, y no se vio porque simulando la lista estaba vacía.
-		var mejor := ""
-		var mejor_n := 0
-		var goles: Dictionary = rec.get("goles", {})
-		for quien: String in goles:
-			var g: Variant = goles[quien]
-			var n := int((g as Dictionary).get("n", 0)) if g is Dictionary else int(g)
-			if n > mejor_n:
-				mejor_n = n
-				mejor = String((g as Dictionary).get("nombre", "")) if g is Dictionary else quien
-		if mejor != "" and mejor_n > 0:
-			partes.append("%s fue el hombre gol con %d tantos." % [mejor, mejor_n])
+	_narrar_puesto(m, mio, partes)
+	_narrar_trofeos(m, partes)
+	_narrar_rachas(m, partes)
 
 	var media := relacion_media()
 	if media > 60:

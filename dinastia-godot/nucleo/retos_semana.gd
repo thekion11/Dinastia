@@ -47,6 +47,13 @@ func generar(m: Mundo) -> void:
 			return "🎯 %s (%d €)" % [Idiomas.t(String(a["texto"])), int(a["premio"])])))
 
 static func cumple(id: String, gf: int, gc: int) -> bool:
+	var nat := Nativo.de("nuc_cumple_reto")
+	if nat != null:
+		return nat.nuc_cumple_reto(id, gf, gc)
+	return cumple_gd(id, gf, gc)
+
+## Gemela GDScript de `nuc_cumple_reto` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func cumple_gd(id: String, gf: int, gc: int) -> bool:
 	match id:
 		"ganar":
 			return gf > gc

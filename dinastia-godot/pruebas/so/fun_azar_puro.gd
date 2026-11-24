@@ -14,7 +14,9 @@ func _secuencia(semilla: int, n: int) -> Array:
 
 func _probar() -> void:
 	_titulo("FUNCIONES · Azar [%s]" % sistema())
-	_comprobar(_secuencia(42, 50) == _secuencia(42, 50), "misma semilla, misma secuencia")
+	var rep1_a = _secuencia(42, 50)
+	var rep1_b = _secuencia(42, 50)
+	_comprobar(rep1_a == rep1_b, "misma semilla, misma secuencia")
 	_comprobar(_secuencia(42, 50) != _secuencia(43, 50), "otra semilla, otra secuencia")
 	## Referencia fija: PCG32 de Godot con semilla 42 da lo mismo en todos los sistemas.
 	var ref: Array = _secuencia(42, 5)

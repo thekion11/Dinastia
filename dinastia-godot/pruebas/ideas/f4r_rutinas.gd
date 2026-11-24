@@ -6,6 +6,15 @@ extends BaseIdea
 
 func _probar() -> void:
 	_titulo("f4r: afinidad con la gente del club")
+	var a := _r4_charlas_y_semanas()
+	_r4_tramos_y_topes(a)
+	_r4_suelo_y_guardado(a)
+	var m := _r4_mundo()
+	_r4_semanas(m)
+	_r4_pasillo(m)
+	_r4_no_cambia_partido()
+
+func _r4_charlas_y_semanas() -> AfinidadClub:
 	var a := AfinidadClub.new()
 	_comprobar(a.valor("Ema Soto") == 50 and a.tramo("Ema Soto") == "normal", "empieza en 50, tramo normal")
 	_comprobar(a.charlar("Ema Soto", 1, 3, 2) and a.valor("Ema Soto") == 52, "la primera charla del día suma +2")
@@ -20,6 +29,9 @@ func _probar() -> void:
 	_comprobar(a.valor("Ema Soto") == 55, "una semana sin hablar baja 1")
 	a.semana(2, 5)
 	_comprobar(a.valor("Ema Soto") == 54 and a.valor("Leo Vega") == 50, "y otra más; quien nunca habló contigo sigue en 50")
+	return a
+
+func _r4_tramos_y_topes(a: AfinidadClub) -> void:
 	## Tramos y topes.
 	a.valores["Ema Soto"] = 34
 	_comprobar(a.tramo("Ema Soto") == "frio", "34 = frío")
@@ -33,6 +45,8 @@ func _probar() -> void:
 	a.charlar("Ema Soto", 3, 1, 0)
 	a.charlar("Ema Soto", 3, 1, 1)
 	_comprobar(a.valor("Ema Soto") == 100, "el tope es 100")
+
+func _r4_suelo_y_guardado(a: AfinidadClub) -> void:
 	var b := AfinidadClub.new()
 	b.valores["Ana Paz"] = 0
 	b.semana(1, 1)
@@ -44,7 +58,8 @@ func _probar() -> void:
 	var vacia := AfinidadClub.new()
 	vacia.desde_dic({})
 	_comprobar(vacia.valores.is_empty() and vacia.valor("Cualquiera") == 50, "una partida vieja (sin afinidad) carga vacía")
-	## En el mundo: cuelga de `Mundo`, baja cada semana y va en la partida.
+
+func _r4_mundo() -> Mundo:
 	var m := _mundo(41)
 	m.reloj.sincronizar(m.anio, m.semana)
 	m.afinidad.charlar("Ema Soto", m.anio, m.semana, m.reloj.dia)
@@ -53,12 +68,16 @@ func _probar() -> void:
 	_comprobar(inst.has("afinidad"), "va en la instantánea de la partida")
 	var m2 := Partida.desde_instantanea(inst)
 	_comprobar(m2 != null and m2.afinidad.valor("Ema Soto") == 52, "y vuelve al cargar la partida")
+	return m
+
+func _r4_semanas(m: Mundo) -> void:
 	var sem0 := m.semana
 	var anio0 := m.anio
 	m.afinidad._ultima_semana["Ema Soto"] = "%d|%d" % [anio0, sem0 - 1]
 	m.avanzar_semana()
 	_comprobar(m.afinidad.valor("Ema Soto") == 51, "al pasar la semana sin hablar, baja 1 (%d)" % m.afinidad.valor("Ema Soto"))
-	## La frase de pasillo: por tu nombre, según el tramo, y la charla se anota.
+
+func _r4_pasillo(m: Mundo) -> void:
 	var g := {"nombre": "Ema Soto", "clave": "secretaria", "puesto": "Secretaria"}
 	m.afinidad.valores["Ema Soto"] = 20
 	PedidoPartida.dt_nombre_elegido = "Carlos Prueba"
@@ -79,7 +98,8 @@ func _probar() -> void:
 	var cerca := RecorridoCharla.pasillo(m, {"nombre": "Leo Vega", "clave": "jardinero", "puesto": "Jardinero"})
 	_comprobar(cerca in _con_nombre(frases_cercanas, dt), "con afinidad alta sale una frase del tramo cercano")
 	_comprobar(RecorridoCharla.pasillo(null, g) == "", "sin partida no hay frase")
-	## No cambia el partido: la huella del mundo no depende de la afinidad.
+
+func _r4_no_cambia_partido() -> void:
 	var h1 := _huella(_mundo(43))
 	var m3 := _mundo(43)
 	m3.afinidad.valores["Ema Soto"] = 3

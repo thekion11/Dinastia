@@ -289,6 +289,13 @@ func operacion(ingreso_tv: int, ingreso_patrocinio: int) -> int:
 const MESES_TEMPORADA := 10   ## solo si no se sabe cuántos partidos hay en casa
 
 static func meses_de(partidos_en_casa: int) -> int:
+	var nat := Nativo.de("nuc_meses_de")
+	if nat != null:
+		return nat.nuc_meses_de(partidos_en_casa)
+	return meses_de_gd(partidos_en_casa)
+
+## Gemela GDScript de `nuc_meses_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func meses_de_gd(partidos_en_casa: int) -> int:
 	return maxi(1, partidos_en_casa * 2 / SEMANAS_DEL_MES) if partidos_en_casa > 0 else MESES_TEMPORADA
 
 ## `meses_reales` (16-11, informe G-07): los cierres de mes del mundo (`Mundo.meses_de_la_temporada`), si se saben.
@@ -378,6 +385,13 @@ const CAMPANAS := [
 ]
 
 static func def_campana(clave: String) -> Array:
+	var nat := Nativo.de("nuc_def_campana")
+	if nat != null:
+		return nat.nuc_def_campana(clave)
+	return def_campana_gd(clave)
+
+## Gemela GDScript de `nuc_def_campana` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func def_campana_gd(clave: String) -> Array:
 	for f: Array in CAMPANAS:
 		if String(f[0]) == clave:
 			return f

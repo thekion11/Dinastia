@@ -20,6 +20,6 @@ func _process(_delta: float) -> void:
 
 func is_ready_for_kickoff() -> bool:
 	return has_arrived
-	
+
 func on_kickoff_started() -> void:
 	transition_state(Player.State.MOVING)

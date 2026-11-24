@@ -241,6 +241,13 @@ func elegible(j: Jugador, pais_dado: String = "") -> bool:
 ## enteros son de 64: sin el `wrapi` el hash se dispara y las selecciones del
 ## montón dejan de repartirse el 70-79 como deben.
 static func _hash_txt(s: String) -> int:
+	var nat := Nativo.de("nuc_hash_txt")
+	if nat != null:
+		return nat.nuc_hash_txt(s)
+	return _hash_txt_gd(s)
+
+## Gemela GDScript de `nuc_hash_txt` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _hash_txt_gd(s: String) -> int:
 	var h := 0
 	for i in s.length():
 		h = wrapi(h * 31 + s.unicode_at(i), -2147483648, 2147483648)

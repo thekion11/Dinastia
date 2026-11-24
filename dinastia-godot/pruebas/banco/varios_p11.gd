@@ -1,4 +1,4 @@
-extends "res://pruebas/banco/varios_p11_p1.gd"
+extends "res://pruebas/banco/varios_p11_p2.gd"
 ## (Parte 2 de 2 de `varios_p11.gd`.)
 
 ## FORMACIONES PROPIAS (10-11, pedido del dueño, «Editar posición» del PES 2020): el puesto cambia solo según la zona, el portero no
@@ -47,12 +47,12 @@ func _probar_league_movimiento() -> void:
 	## (11-11) Solo los del original: las extras de `datos/anims_extra` (prefijo «ext_») no cuentan aquí.
 	var orig := LeagueMovimiento.clips().filter(func(c): return not String(c["nombre"]).begins_with("ext_"))
 	_comprobar(orig.filter(func(c): return not c.has("auto")).size() == 98 and orig.size() - 98 == (874 if LeagueAuto.activas else 0), "49 clips de movimiento del original con su espejo y 437 intermedias legales con el suyo (%d)" % orig.size())
-	_comprobar(LeagueMovimiento.rango(1.0) == 0.0 and LeagueMovimiento.rango(3.0) == 3.5 and LeagueMovimiento.rango(5.0) == 5.0 and LeagueMovimiento.rango(7.0) == 8.0, "velocidades escalonadas del original (RangeVelocity)")
+	_comprobar(is_zero_approx(LeagueMovimiento.rango(1.0)) and is_equal_approx(LeagueMovimiento.rango(3.0), 3.5) and is_equal_approx(LeagueMovimiento.rango(5.0), 5.0) and is_equal_approx(LeagueMovimiento.rango(7.0), 8.0), "velocidades escalonadas del original (RangeVelocity)")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, 0.0, 5.0).get("nombre", "")) == "ls_movement__idle__000_accel", "parado y quiere ir de frente: arranque recto")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, -PI / 2.0, 5.0).get("nombre", "")) == "ls_movement__idle__090_accel", "parado y quiere ir a la derecha: arranque girando 90° a la derecha")
 	_comprobar(String(LeagueMovimiento.elegir(0.0, PI / 2.0, 5.0).get("nombre", "")) == "ls_movement__idle__090_accel_espejo", "a la izquierda: el mismo clip espejado")
 	var frena := LeagueMovimiento.elegir(7.5, 0.0, 0.0)
-	_comprobar(float(frena.get("entra", -1)) == 8.0 and float(frena.get("sale", -1)) == 0.0, "a toda carrera y quiere pararse: una frenada desde el sprint (%s)" % frena.get("nombre", ""))
+	_comprobar(is_equal_approx(float(frena.get("entra", -1)), 8.0) and is_zero_approx(float(frena.get("sale", -1))), "a toda carrera y quiere pararse: una frenada desde el sprint (%s)" % frena.get("nombre", ""))
 	var vuelta := LeagueMovimiento.elegir(3.0, PI * 0.95, 3.0)
 	_comprobar(absf(float(vuelta.get("ang", 0.0))) > 2.0, "al trote y quiere volver atrás: un giro de 135-180° (%s)" % vuelta.get("nombre", ""))
 	_comprobar(LeagueMovimiento.estable(LeagueMovimiento.elegir(7.5, 0.0, 8.0)), "a toda carrera y de frente: el paso estable (no hay transición)")
@@ -72,7 +72,7 @@ func _probar_league_movimiento() -> void:
 	## Las «angled» (cuerpo girado respecto a la marcha).
 	_comprobar(LeagueMovimiento.plantilla(LeagueMovimiento.DRIBBLE, -0.25 * PI) == ["ls_templates__dribbleD045", "ls_templates__dribbleD045_left_espejo"], "trote con el cuerpo a -45°: la plantilla y, para el otro pie, el espejo de la girada al otro lado")
 	_comprobar(LeagueMovimiento.plantilla(LeagueMovimiento.WALK, 0.75 * PI).is_empty() and LeagueMovimiento.plantilla(LeagueMovimiento.SPRINT, 0.25 * PI).is_empty(), "sin plantilla a 135° al trote rápido ni girado a toda carrera (como el original)")
-	_comprobar(LeagueMovimiento.cuerpo_posible(LeagueMovimiento.SPRINT, 0.25 * PI) == 0.0 and LeagueMovimiento.cuerpo_posible(LeagueMovimiento.WALK, -0.75 * PI) == -0.25 * PI and LeagueMovimiento.cuerpo_posible(LeagueMovimiento.IDLE, 0.75 * PI) == 0.0, "el cuerpo que admite cada velocidad (sprint de frente, trote rápido < 90°, parado de frente)")
+	_comprobar(is_zero_approx(LeagueMovimiento.cuerpo_posible(LeagueMovimiento.SPRINT, 0.25 * PI)) and is_equal_approx(LeagueMovimiento.cuerpo_posible(LeagueMovimiento.WALK, -0.75 * PI), -0.25 * PI) and is_zero_approx(LeagueMovimiento.cuerpo_posible(LeagueMovimiento.IDLE, 0.75 * PI)), "el cuerpo que admite cada velocidad (sprint de frente, trote rápido < 90°, parado de frente)")
 	_comprobar(absf(LeagueMovimiento.mirada(1.0, 0.0, 0.0) - 1.0) < 0.001 and LeagueMovimiento.mirada(1.0, 8.0, 8.0) < 0.85, "la mirada va al balón entera parado y menos a toda carrera")
 	var de_lado := LeagueMovimiento.elegir(3.5, 0.0, 3.5, 0.0, -0.25 * PI)
 	_comprobar(absf(float(de_lado.get("cuerpo_sale", 0.0)) + 0.25 * PI) < 0.2, "al trote, de frente y queriendo mirar 45° a la derecha: un clip que deja el cuerpo a -45° (%s)" % de_lado.get("nombre", ""))

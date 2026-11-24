@@ -21,7 +21,15 @@ func _probar() -> void:
 	_comprobar(t.x > 0 and t.y > 0 and t.z > 0, "la sala tiene tamaño (%s)" % str(t))
 	_comprobar(casa.interior != null and casa.interior._fijos.is_empty() and casa.interior._caminantes.is_empty(), "sin desconocidos: ni cocinero ni paseante de serie")
 	_comprobar(casa.get_node_or_null("Pieza_bedDouble") != null, "hay cama de matrimonio (catálogo Modulos)")
-	## La familia.
+	_f3c_familia(casa)
+	var pts := casa.puntos()
+	_f3c_puntos(casa, origen, pts)
+	_f3c_necesidades(m, casa)
+	_f3c_familia_hablar(m, casa)
+	_f3c_idiomas(casa, pts)
+	casa.queue_free()
+
+func _f3c_familia(casa: CasaDT) -> void:
 	_comprobar(casa.cuerpos.size() == 3, "tantos cuerpos como pareja + hijos (%d)" % casa.cuerpos.size())
 	var alturas_ok := true
 	for c: Dictionary in casa.cuerpos:
@@ -36,8 +44,8 @@ func _probar() -> void:
 			alturas_ok = false
 	_comprobar(alturas_ok, "cada cuerpo lleva su nombre; los hijos son más bajos")
 	_comprobar(casa.get_node_or_null("Mascota") != null, "la mascota tiene cuerpo")
-	## Puntos de uso.
-	var pts := casa.puntos()
+
+func _f3c_puntos(casa: CasaDT, origen: Vector3, pts: Array) -> void:
 	var claves: Array = []
 	for p: Dictionary in pts:
 		claves.append(String(p["clave"]))
@@ -51,7 +59,8 @@ func _probar() -> void:
 	_comprobar(casa.cercano(p_cama["pos"]).get("clave", "") == "cama", "cercano: encima de la cama la encuentra")
 	_comprobar(casa.cercano((p_cama["pos"] as Vector3) + Vector3(0.9, 0, 0.9)).get("clave", "") == "cama", "cercano: a 1,3 m también")
 	_comprobar(casa.cercano((p_cama["pos"] as Vector3) + Vector3(-5, 0, 0)).is_empty(), "cercano: a 5 m (hacia la pared, lejos de todos), nada")
-	## Dormir: hasta las 08:00 y sube la energía.
+
+func _f3c_necesidades(m: Mundo, casa: CasaDT) -> void:
 	m.reloj.avanzar_minutos(600, "trabajo")
 	var e0 := m.necesidades.energia()
 	var h0 := m.necesidades.hambre()
@@ -73,9 +82,10 @@ func _probar() -> void:
 	m.vida.estres = 1
 	casa.usar("sofa")
 	_comprobar(m.vida.estres == 0, "el estrés no baja de 0")
-	## Hablar: +1 de familia solo una vez al día; frase por tramo.
+
+func _f3c_familia_hablar(m: Mundo, casa: CasaDT) -> void:
 	m.vida.familia = 50
-	r = casa.usar("pareja")
+	var r := casa.usar("pareja")
 	_comprobar(m.vida.familia == 51 and String(r.get("texto", "")).begins_with("Carolina: «"), "hablar con la pareja: +1 de familia y frase con su nombre")
 	casa.usar("hijo", "Martina")
 	casa.usar("pareja")
@@ -93,7 +103,8 @@ func _probar() -> void:
 	casa.usar("pareja")
 	_comprobar(m.vida.familia == 100, "familia con tope 100")
 	_comprobar(casa.usar("nada").is_empty(), "clave desconocida: nada")
-	## Traducción de todos los textos.
+
+func _f3c_idiomas(casa: CasaDT, pts: Array) -> void:
 	var es: Array = []
 	for p: Dictionary in pts:
 		es.append(String(p["texto"]))
@@ -111,4 +122,3 @@ func _probar() -> void:
 			_linea("  sin traducir: %s" % es[i])
 	_comprobar(todos and es.size() == en.size(), "todos los textos de puntos() cambian en inglés")
 	_comprobar(String(r_en["titulo"]) == "Eat" and not String(r_en["texto"]).contains("Comes"), "usar() devuelve textos traducidos")
-	casa.queue_free()

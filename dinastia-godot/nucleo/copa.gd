@@ -101,41 +101,9 @@ func jugar_ronda(ya_jugado: Partido = null) -> Array:
 	var final := vivos.size() == 2
 	var pasan: Array[Club] = []
 	var resultados: Array = []
+	var ctx := {"ya_jugado": ya_jugado, "final": final, "titulo": titulo, "pasan": pasan, "resultados": resultados}
 	for i in range(0, vivos.size() - 1, 2):
-		var a: Club = vivos[i]
-		var b: Club = vivos[i + 1]
-		var gl := 0
-		var gv := 0
-		var penales: Array = []
-		if ya_jugado != null and ya_jugado.local == a and ya_jugado.visita == b:
-			gl = ya_jugado.goles_local
-			gv = ya_jugado.goles_visita
-			if gl == gv:
-				penales = ya_jugado.penales()
-		else:
-			## La final se juega en cancha neutral: sin empuje de local, salvo
-			## que uno de los dos sea el dueño de la sede fija.
-			var en_casa := final and sede_final_id != "" and (a.id == sede_final_id or b.id == sede_final_id)
-			if en_casa and b.id == sede_final_id:
-				var tmp := a
-				a = b
-				b = tmp
-			var p := Partido.new(a, b, final and not en_casa)
-			var r := p.simular()
-			gl = r["local"]
-			gv = r["visita"]
-			if gl == gv:
-				penales = p.penales()
-		var gana: Club = a
-		if gv > gl:
-			gana = b
-		elif gl == gv and not penales.is_empty() and int(penales[1]) > int(penales[0]):
-			gana = b
-		pasan.append(gana)
-		resultados.append({
-			"local": a, "visita": b, "gl": gl, "gv": gv,
-			"penales": penales, "pasa": gana, "ronda": titulo,
-		})
+		_jugar_cruce_copa(ctx, i)
 	## Un número impar de vivos (un cuadro cargado o armado a mano) ya no descarta al último club en silencio
 	## (auditoría del 28-10): pasa de ronda con un «bye» (sin fila en los resultados: nadie lo juega).
 	if vivos.size() % 2 == 1:
@@ -155,6 +123,7 @@ func jugar_ronda(ya_jugado: Partido = null) -> Array:
 		## no solo al abrir el cuadro.
 		anunciar_sorteo()
 	return resultados
+
 
 func jugar_hasta_el_final() -> Club:
 	while en_curso():
@@ -346,3 +315,46 @@ static func copas_de(pais: String, nombre_pais: String) -> Array:
 	if COPAS_POR_PAIS.has(pais):
 		return COPAS_POR_PAIS[pais]
 	return [["Copa de %s" % nombre_pais, 1.0]]
+
+
+## Un cruce de la copa: el partido (o el de ya jugado) de los vivos `i` y `i + 1`.
+func _jugar_cruce_copa(ctx: Dictionary, i: int) -> void:
+	var ya_jugado: Partido = ctx["ya_jugado"]
+	var final: bool = ctx["final"]
+	var titulo: String = ctx["titulo"]
+	var pasan: Array[Club] = ctx["pasan"]
+	var resultados: Array = ctx["resultados"]
+	var a: Club = vivos[i]
+	var b: Club = vivos[i + 1]
+	var gl := 0
+	var gv := 0
+	var penales: Array = []
+	if ya_jugado != null and ya_jugado.local == a and ya_jugado.visita == b:
+		gl = ya_jugado.goles_local
+		gv = ya_jugado.goles_visita
+		if gl == gv:
+			penales = ya_jugado.penales()
+	else:
+		## La final se juega en cancha neutral: sin empuje de local, salvo
+		## que uno de los dos sea el dueño de la sede fija.
+		var en_casa := final and sede_final_id != "" and (a.id == sede_final_id or b.id == sede_final_id)
+		if en_casa and b.id == sede_final_id:
+			var tmp := a
+			a = b
+			b = tmp
+		var p := Partido.new(a, b, final and not en_casa)
+		var r := p.simular()
+		gl = r["local"]
+		gv = r["visita"]
+		if gl == gv:
+			penales = p.penales()
+	var gana: Club = a
+	if gv > gl:
+		gana = b
+	elif gl == gv and not penales.is_empty() and int(penales[1]) > int(penales[0]):
+		gana = b
+	pasan.append(gana)
+	resultados.append({
+		"local": a, "visita": b, "gl": gl, "gv": gv,
+		"penales": penales, "pasa": gana, "ronda": titulo,
+	})

@@ -1,4 +1,4 @@
-extends "res://pruebas/banco/varios_p10.gd"
+extends "res://pruebas/banco/varios_p11_p1_h.gd"
 ## (Parte 1 de 2 de `varios_p11.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `varios_p11.gd`, conserva la clase.)
 
 ## [Capa 11 de `varios.gd`, 10-11] _probar_final_temporada, _probar_habilidades_y_calor, _probar_puerta_animada, _probar_flecha_forma, _probar_quimica_linea, _probar_objetivo_directiva, _probar_jugador_del_mes, _probar_estrategia_rapida (secciones del 10-11)
@@ -174,193 +174,15 @@ func _probar_estrategia_rapida() -> void:
 
 ## OBJETIVOS POR CLUB (10-11, encargo del dueño): cada club recibe un paquete propio (liga ajustada a su tamaño y plazas, varios secundarios con peso, proyecto a
 ## 3 temporadas). Se prueba con VARIOS países y clubes (regla 34), el cierre que mueve la confianza y el guardado (también el viejo sin los campos nuevos).
-func _probar_objetivos_por_club() -> void:
-	_titulo("OBJETIVOS POR CLUB: PAQUETE PROPIO, CIERRE Y GUARDADO")
-	var distintos := {}
-	var mal: Array[String] = []
-	var clubes := 0
-	var metas_desc := {}
-	for grupo: Array in [["CHI", "ESP", "ENG"], ["BRA", "JPN", "USA"], ["ARG", "GER", "MEX"]]:
-		Partido.limpiar_contexto()
-		var m := Mundo.new()
-		var g: Array[String] = []
-		g.assign(grupo)
-		m.generar(g, 91 + clubes)
-		for l: Liga in m.ligas:
-			var n := l.clubes.size()
-			var pl := ObjetivosClub.plazas_continentales(l.pais, n)
-			for c: Club in l.clubes:
-				var p := ObjetivosClub.generar(m, c)
-				clubes += 1
-				if p.is_empty():
-					mal.append("%s sin paquete" % c.nombre)
-					continue
-				var pr: Dictionary = p["principal"]
-				var meta := int(pr["meta"])
-				if meta < 1 or meta > n:
-					mal.append("%s (%d clubes): meta %d" % [c.nombre, n, meta])
-				if String(pr["texto"]) == "Evitar el descenso":
-					metas_desc[n] = meta
-					if meta != n - l.plazas_descenso:
-						mal.append("%s: salvarse es el %d.º y la meta es %d" % [c.nombre, n - l.plazas_descenso, meta])
-				if String(pr["texto"]).begins_with("Clasificar") and c.division == 1 and meta > int(pl["elite"]) + int(pl["segunda"]):
-					mal.append("%s: pide %d plazas continentales y la liga da %d" % [c.nombre, meta, int(pl["elite"]) + int(pl["segunda"])])
-				var sec: Array = p["secundarios"]
-				if sec.size() < 3 or sec.size() > 6 or (p["proyecto"] as Dictionary).is_empty():
-					mal.append("%s: %d secundarios o sin proyecto" % [c.nombre, sec.size()])
-				var ids: Array = []
-				for o: Dictionary in sec:
-					ids.append(String(o["id"]))
-					if int(o["peso"]) < 1 or int(o["peso"]) > 10:
-						mal.append("%s: peso %d" % [c.nombre, int(o["peso"])])
-				distintos["%s|%s|%s" % [pr["texto"], str(ids), (p["proyecto"] as Dictionary)["id"]]] = true
-	_comprobar(mal.is_empty(), "%d clubes de 9 países: meta dentro de su liga, salvarse = puesto seguro real, plazas continentales reales, 3-6 secundarios con peso y proyecto (%d fallos%s)" % [clubes, mal.size(), "" if mal.is_empty() else ": " + str(mal.slice(0, 3))])
-	_comprobar(distintos.size() >= 8, "los paquetes se parecen poco entre clubes (%d combinaciones distintas)" % distintos.size())
-	_comprobar(metas_desc.keys().size() < 2 or metas_desc.values().min() != metas_desc.values().max(), "«Evitar el descenso» cambia con el tamaño de la liga (%s)" % str(metas_desc))
-	var esp := ObjetivosClub.plazas_continentales("ESP", 20)
-	var chi := ObjetivosClub.plazas_continentales("CHI", 16)
-	var cupo_esp := 0
-	for f: Array in FormatosConti.cupos("ucl"):
-		if f[0] == "ESP":
-			cupo_esp = int(f[1])
-	_comprobar(int(esp["elite"]) == cupo_esp and cupo_esp == 5 and int(chi["elite"]) == 3, "ESP da las 5 plazas de la Champions de 36 y CHI 3 de Libertadores (%d y %d)" % [int(esp["elite"]), int(chi["elite"])])
-	## El tamaño de la liga manda: el colista de una liga de 12, 20 o 24 con 2, 3 y 4 descensos (las ligas generadas hoy son de 16).
-	var chico := Club.new()
-	chico.pais = "ESP"
-	chico.division = 1
-	var salv: Array[int] = []
-	for caso: Array in [[12, 2], [20, 3], [24, 4]]:
-		var pe := ObjetivosClub.principal(chico, int(caso[0]), int(caso[0]), int(caso[1]), ObjetivosClub.plazas_continentales("ESP", int(caso[0])))
-		salv.append(int(pe["meta"]))
-	_comprobar(salv == [10, 17, 20] and String(ObjetivosClub.principal(chico, 1, 20, 3, {"elite": 4, "segunda": 3})["texto"]) == "Salir campeón", "el colista debe salvarse según su liga: 12→10.º, 20 (3 descensos)→17.º, 24 (4 descensos)→20.º (%s) y el favorito, el título" % str(salv))
-	## EL CIERRE
-	var m2 := Mundo.new()
-	m2.generar(["CHI", "ESP"], 77)
-	m2.tomar_el_mando(m2.ligas[1].clubes[4].id)
-	var d := m2.directiva
-	_comprobar(d.objetivos.size() >= 3 and not d.proyecto.is_empty() and d.meta_puesto >= 1, "el club del jugador trae su paquete (%d secundarios, proyecto «%s»)" % [d.objetivos.size(), String(d.proyecto.get("texto", ""))])
-	var c2 := m2.mi_club()
-	d.objetivos.clear()
-	d.proyecto = {}
-	d.bases = {"saldo": 0, "socios": 100}
-	d.objetivos.append({"id": "eco", "tipo": "economia", "texto": "Salir de los números rojos", "meta": 0, "peso": 8})
-	d.objetivos.append({"id": "cantera", "tipo": "cantera", "texto": "x", "meta": 99, "peso": 5})
-	d.confianza = 50
-	c2.saldo = 5000000
-	var r := ObjetivosCierre.cerrar(m2, d, 5, false)
-	_comprobar(int(r["delta"]) == 8 - 7 and d.confianza == 51, "cumplir la economía (+8) y fallar la cantera (−7: el peso 5 +25 %%) mueve la confianza +1 (%d)" % d.confianza)
-	d.proyecto = {"id": "sanear", "texto": "Sanear", "meta": 0, "temporadas": 3, "cierres": 2, "mejor_puesto": 0, "titulos": 0, "puesto_base": 5, "saldo_base": -1}
-	d.objetivos.clear()
-	var r2 := ObjetivosCierre.cerrar(m2, d, 5, false)
-	_comprobar(bool((r2["proyecto"] as Dictionary).get("cumplido", false)) and int(r2["delta"]) == ObjetivosClub.PESO_PROYECTO_OK, "al cerrar la 3.ª temporada el proyecto saneado suma +%d" % ObjetivosClub.PESO_PROYECTO_OK)
-	## GUARDADO: el paquete sobrevive y una partida vieja (sin los campos) abre con el suyo.
-	d.generar_objetivos(m2)
-	var textos: Array = d.objetivos.map(func(o: Dictionary) -> String: return String(o["texto"]))
-	var inst: Dictionary = JSON.parse_string(JSON.stringify(Partida.instantanea(m2)))
-	var m3 := Partida.desde_instantanea(inst)
-	_comprobar(m3.directiva.objetivos.map(func(o: Dictionary) -> String: return String(o["texto"])) == textos and String(m3.directiva.proyecto.get("id", "")) == String(d.proyecto.get("id", "")), "los objetivos y el proyecto sobreviven a guardar y cargar")
-	for k: String in ["objetivos", "proyecto", "bases"]:
-		(inst["directiva"] as Dictionary).erase(k)
-	var m4 := Partida.desde_instantanea(inst)
-	_comprobar(m4.directiva.objetivos.size() >= 3 and m4.directiva.meta_puesto == d.meta_puesto, "una partida vieja sin los campos nuevos abre y estrena los objetivos de su club")
-	## EN VIVO: una barra por objetivo secundario y por el proyecto, con progreso 0-100 y estado; cambia con lo que pasa (caja en rojo → en riesgo).
-	for grupo2: Array in [["BRA"], ["JPN"], ["GER"]]:
-		Partido.limpiar_contexto()
-		var m5 := Mundo.new()
-		var g5: Array[String] = []
-		g5.assign(grupo2)
-		m5.generar(g5, 33)
-		var lg: Liga = m5.ligas[0]
-		m5.tomar_el_mando(lg.clubes[lg.clubes.size() / 2].id)
-		var vivo := ObjetivosEnVivo.lista(m5, m5.directiva)
-		var rango_ok := true
-		for f: Dictionary in vivo:
-			if int(f["progreso"]) < 0 or int(f["progreso"]) > 100 or not ["cumplido", "bien", "riesgo", "perdido"].has(String(f["estado"])):
-				rango_ok = false
-		_comprobar(vivo.size() >= 2 and rango_ok, "%s: el progreso en vivo trae %d filas con progreso 0-100 y estado válido" % [grupo2[0], vivo.size()])
-		var ui := ObjetivoDirectiva.secundarios(m5)
-		_comprobar(ui != null and ui.find_children("*", "ProgressBar", true, false).size() == vivo.size(), "%s: el menú central pinta una barra por fila" % grupo2[0])
-		if ui != null:
-			ui.free()
-	var eco := {"id": "eco", "tipo": "economia", "texto": "Salir de los números rojos", "meta": 0, "peso": 8}
-	d.objetivos = [eco]
-	d.bases = {"saldo": -4000000, "socios": 0}
-	c2.saldo = -1000000
-	var peor := ObjetivosEnVivo.lista(m2, d)
-	c2.saldo = 500000
-	var mejor := ObjetivosEnVivo.lista(m2, d)
-	_comprobar(String(peor[0]["estado"]) != "cumplido" and int(peor[0]["progreso"]) < 100 and String(mejor[0]["estado"]) == "cumplido", "salir del rojo: de −1 M (%d %%) a +0,5 M (cumplido)" % int(peor[0]["progreso"]))
-	_comprobar(ObjetivosCierre.delta_de(8, true) == 8 and ObjetivosCierre.delta_de(8, false) == -10, "cumplir suma el peso y fallar resta un 25 % más (8 → +8 / −10)")
-
 ## EL NÚCLEO DE LEAGUE-SOCCER (10-11, `docs/04_auditorias/MOTOR_LEAGUE_SOCCER_PLAN.md`): las fórmulas portadas dan lo mismo que el
 ## original en casos que se pueden calcular a mano, y la variante `MotorLeague` juega un rato sin romperse (dos clubes de países distintos).
 func _probar_league_nucleo() -> void:
 	_titulo("PARTIDO: NÚCLEO DE LEAGUE-SOCCER")
-	_comprobar(LeagueNucleo.rango_velocidad(1.0) == 0.0 and LeagueNucleo.rango_velocidad(3.0) == 3.5 and LeagueNucleo.rango_velocidad(5.0) == 5.0 and LeagueNucleo.rango_velocidad(7.0) == 8.0, "velocidades cuantizadas como `velocitystate.hpp` (0 · 3,5 · 5 · 8)")
-	_comprobar(LeagueNucleo.mentalidad("DFC") == 0.0 and LeagueNucleo.mentalidad("LD") == 0.25 and LeagueNucleo.mentalidad("MC") == 0.5 and LeagueNucleo.mentalidad("DC") == 1.0, "mentalidad por puesto (AI_GetMindSet)")
-	var libre := LeagueNucleo.odds_pase(Vector2.ZERO, Vector2(20, 0), LeagueNucleo.CORTO, [])
-	var tapado := LeagueNucleo.odds_pase(Vector2.ZERO, Vector2(20, 0), LeagueNucleo.CORTO, [[Vector2(10, 0.5), Vector2.ZERO, false]])
-	_comprobar(is_equal_approx(libre, 1.0) and tapado < 0.2, "pase sin rivales = 1; con un rival en la línea casi 0 (%.2f)" % tapado)
-	_comprobar(is_equal_approx(LeagueNucleo.odds_pase(Vector2.ZERO, Vector2(20, 0), LeagueNucleo.ALTO, []), 0.6), "el pase alto paga 0,4 de castigo fijo (L: «don't prefer high passing»)")
-	_comprobar(is_equal_approx(LeagueNucleo.espacio_libre(Vector2.ZERO, [], 5.0, 0.5), 1.0) and LeagueNucleo.espacio_libre(Vector2.ZERO, [[Vector2(1, 0), Vector2.ZERO, false], [Vector2(-1, 0), Vector2.ZERO, false], [Vector2(0, 1), Vector2.ZERO, false]], 5.0, 0.5) < 0.1, "espacio libre: 1 sin rivales, ~0 rodeado")
-	_comprobar(LeagueReglas.ventaja(1000.0, 0.0, true) == 1 and LeagueReglas.ventaja(500.0, 0.0, true) == 0 and LeagueReglas.ventaja(4000.0, 0.0, false) == 2, "ventaja: vuelve a la falta tras 0,6 s si se pierde; jugada a los 3,5 s")
-	var cfg := LeagueNucleo.config_balon()
-	var r := LeagueNucleo.fuerzas_balon(Vector3(0, 0.11, 0), Vector3(10, 0, 0), cfg, 0.01)
-	_comprobar((r[1] as Vector3).x < 10.0 and (r[1] as Vector3).x > 9.9 and is_equal_approx((r[0] as Vector3).y, 0.11), "el balón raso frena por el césped sin hundirse (%.4f m/s)" % (r[1] as Vector3).x)
-	var bote := LeagueNucleo.fuerzas_balon(Vector3(0, 0.05, 0), Vector3(0, -5, 0), cfg, 0.01)
-	_comprobar(absf((bote[1] as Vector3).y - ((5.0 + 9.81 * 0.01) * 0.64 - 0.05)) < 0.02, "bota con 0,64 del impacto (con la gravedad del paso) menos 0,05 (%.2f)" % (bote[1] as Vector3).y)
-	var dec := LeagueNucleo.decidir({"pos": Vector2(-40, 0), "mov": Vector2.ZERO, "lado": 1.0, "puesto": "DC", "tec_pase": 0.7, "tec_tiro": 0.8, "posee_ms": 500.0,
-		"sit": LeagueNucleo.situacion(Vector2(-40, 0), Vector2.ZERO, 1.0, [])}, [], [], Vector2.ZERO, 1.0, RandomNumberGenerator.new())
-	_comprobar(String(dec["accion"]) == "tiro", "solo y a 12 m del arco rival, el delantero tira (%s)" % dec["accion"])
-	_comprobar(is_equal_approx(LeagueNucleo.trampa_offside(-49.0, -1.0, -40.0), -40.0) and absf(LeagueNucleo.trampa_offside(-39.0, -1.0, -40.0) - -38.5) < 0.01 and LeagueNucleo.trampa_offside(-20.0, -1.0, -40.0) == -20.0, "la trampa del fuera de juego sube a los de atrás hasta la línea y comprime los 2 m de delante")
-	## Fase 3 (IA sin balón): fórmulas de las estrategias por puesto contra el original.
-	_comprobar(LeagueSinBalon.grupo("DFC") == "def" and LeagueSinBalon.grupo("MC") == "med" and LeagueSinBalon.grupo("DC") == "ata", "estrategia por puesto (defensa, medio, ataque)")
-	_comprobar(LeagueSinBalon.sesgo_estatico("def", 5.0) == 0.0 and LeagueSinBalon.sesgo_estatico("def", 40.0) > 0.95, "con la acción cerca se intercambian puestos; lejos, cada uno a su casilla")
-	_comprobar(LeagueSinBalon.sesgo_ataque("ata", 0.5, 1.0) == 0.0 and LeagueSinBalon.sesgo_ataque("ata", 1.5, 1.0) == 1.0, "el apoyo ofensivo crece con la posesión que se desvanece")
-	var dp := LeagueSinBalon.posicion_defensa(Vector2(-20, 0), Vector2.ZERO, Vector2(-30, 0), -1.0)
-	_comprobar(dp.x < -20.0 and dp.x > -30.0 and absf(dp.y) < 0.01, "el defensor intercepta al rival en su línea hacia el arco (%.1f, %.1f)" % [dp.x, dp.y])
-	_comprobar(LeagueSinBalon.necesita_defender(-1.0, Vector2(-30, 0), Vector2(-30, 5)) and not LeagueSinBalon.necesita_defender(-1.0, Vector2(-30, 0), Vector2(-20, 1)), "solo se mueve si el rival le gana el lado (NeedDefendingMovement)")
-	var mc := LeagueSinBalon.marcajes([["a", Vector2(-40, 0), Vector2.ZERO, false], ["b", Vector2(-10, 20), Vector2.ZERO, false], ["g", Vector2(-50, 0), Vector2.ZERO, true]], [["x", Vector2(-38, 1), Vector2.ZERO, false, false]], -1.0, Vector2.ZERO)
-	_comprobar(mc.get("a", "") == "x" and not mc.has("g"), "marca al hombre el más cercano y bien colocado, nunca el portero")
-	_comprobar(LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 5.0, 0.5, 0.5, 0.0, 0.5) == 8.0 and LeagueSinBalon.velocidad_perezosa(8.0, 1.0, 60.0, 0.5, 0.5, 0.0, 0.5) < 8.0, "pereza: cerca de la acción corre a tope; lejos, afloja")
-	_comprobar(LeagueReglas.empezar_presion_zona(1.0, 0.2, 8.0) and not LeagueReglas.empezar_presion_zona(0.0, 1.0, 1.0), "presión de zona al perder el balón según la palanca")
-	## Fase 4a: el catálogo de toques (de las animaciones originales) y el filtro de alcance.
-	var cat := LeagueToques.catalogo()
-	_comprobar(cat.has("interfere") and cat.has("shot") and (cat["shot"]["sprint"] as Array).size() > 0, "catálogo de toques cargado (%d tipos)" % cat.size())
-	var cerca := PackedVector3Array()
-	var lejos := PackedVector3Array()
-	for k in 71:
-		cerca.append(Vector3(1.0, 0.0, 0.11))
-		lejos.append(Vector3(9.0, 0.0, 0.11))
-	_comprobar(not LeagueToques.alcanza("interfere", Vector2.ZERO, Vector2(1, 0), 0.0, cerca).is_empty() and LeagueToques.alcanza("interfere", Vector2.ZERO, Vector2(1, 0), 0.0, lejos).is_empty(), "interferir alcanza un balón a 1 m delante y no uno a 9 m")
-	_comprobar(LeagueToques.radio("interfere", 24, 0.0) > LeagueToques.radio("sliding", 24, 0.0) and LeagueToques.clase(7.0) == 3, "radio por tipo (interferir > barrida) y clases de velocidad")
-	## La variante juega 20 s de partido con dos clubes de países distintos y la bandera no cambia el motor de siempre.
-	var m := Mundo.new()
-	m.generar(["ARG", "ESP"], 99)
-	var raiz := Node3D.new()
-	add_child(raiz)
-	var sp := PlayerSpawner.new()
-	var lista: Array = []
-	var a: Club = m.ligas[0].clubes[2]
-	var b: Club = m.ligas[m.ligas.size() - 1].clubes[5]
-	var l := Puente3D.once(a.once())
-	var v := Puente3D.once(b.once())
-	lista.append_array(sp.spawn_team(raiz, l["xi"], l["jugadores"], Puente3D.formacion(a.tactica.formacion), true, Puente3D.kit(a), Puente3D.kit_portero(a)))
-	lista.append_array(sp.spawn_team(raiz, v["xi"], v["jugadores"], Puente3D.formacion(b.tactica.formacion), false, Puente3D.kit(b), Puente3D.kit_portero(b)))
-	var ml := MotorLeague.new()
-	raiz.add_child(ml)
-	ml.set_physics_process(false)
-	ml.autopiloto = true
-	ml.preparar(lista, StadiumBuilder.spawn_ball(raiz, Vector3(0, 0.11, 0)), "", 5)
-	for i in 600:
-		ml.paso(1.0 / 30.0)
-	var decisiones := 0
-	for k: String in ml.cuenta:
-		decisiones += int(ml.cuenta[k])
-	_comprobar(ml.estado != "fin" and decisiones > 0 and (ml.equipos[0] as LeagueEquipo).balon_hist.size() == LeagueEquipo.HISTORIA, "MotorLeague juega (%s - %s): %d decisiones de League en 20 s" % [a.pais, b.pais, decisiones])
-	_comprobar(MotorLeague.crear() is MotorLeague == MotorLeague.activo, "la bandera elige el motor (apagada = el de siempre)")
-	raiz.queue_free()
-
+	_lg_nucleo_pases()
+	_lg_balon_decision()
+	_lg_sin_balon()
+	_lg_toques()
+	_lg_motor_juega()
 
 ## UNIFORMES (10-11, encargo del dueño «uniformes y caras»): todo club con aspecto tiene su uniforme base y un SEGUNDO uniforme que contrasta; cuando el primero
 ## choca con el del rival, sale el segundo REAL del club (colores, diseño, pantalón y medias) en vez del deducido. Revisado con varios países.

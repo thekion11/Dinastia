@@ -102,6 +102,15 @@ func _flujo_reemplazar() -> void:
 		"entrada": {"entrada": {"tipo": "reemplazar"}},
 		"personaje": {"personaje": {"nombre": "Ana Prueba", "aspecto": {"cuerpo": "female", "barba": true}}},
 	}
+	var pre := _fr_recorrer(o, respuestas)
+	var m: Mundo = _fr_salida(pre["pasos"])
+	if m == null:
+		return
+	_fr_club(m, pre)
+	_fr_roles(m)
+	o.queue_free()
+
+func _fr_recorrer(o: OrquestadorEntrada, respuestas: Dictionary) -> Dictionary:
 	var pasos := _recorrer(o, respuestas, "entrada")
 	## Antes de entrar: a quién reemplazará (sin elegir, el más flojo de la liga más baja) y sus cifras.
 	var m0: Mundo = o.estado.get("mundo")
@@ -111,6 +120,9 @@ func _flujo_reemplazar() -> void:
 	var prev := EntradaCampeonato.previsualizar(m0, "reemplazar", "ARG", victima.id) if victima else {}
 	var plantel_victima := victima.plantilla.duplicate() if victima else []
 	pasos.append_array(_recorrer(o, respuestas))
+	return {"pasos": pasos, "m0": m0, "victima": victima, "prev": prev, "plantel_victima": plantel_victima, "clubes_antes": clubes_antes}
+
+func _fr_salida(pasos: Array) -> Mundo:
 	_comprobar(pasos == ["intro", "idioma", "estilo", "modo", "ligas", "pais", "config", "entrada", "personaje"],
 		"recorre las 9 etapas en orden (%s)" % ", ".join(pasos))
 	_comprobar(_vistas == pasos, "cada etapa avisa al terminar")
@@ -124,8 +136,13 @@ func _flujo_reemplazar() -> void:
 	_comprobar(String(_resultado.get("escena", "")) == OrquestadorMundo.PRINCIPAL, "termina en Principal")
 	var m: Mundo = _resultado.get("mundo")
 	_comprobar(m != null and PedidoPartida.mundo_pregenerado == m, "la partida pasa a Principal por `mundo_pregenerado`")
-	if m == null:
-		return
+	return m
+
+func _fr_club(m: Mundo, pre: Dictionary) -> void:
+	var victima = pre["victima"]
+	var prev = pre["prev"]
+	var plantel_victima = pre["plantel_victima"]
+	var clubes_antes: int = pre["clubes_antes"]
 	var c := m.mi_club()
 	_comprobar(c != null and c.nombre == "Club Prueba F1O" and c.pais == "ARG", "diriges tu club, en Argentina")
 	_comprobar(c != null and c == victima and clubes_antes > 0 and m.clubes.size() == clubes_antes,
@@ -138,6 +155,8 @@ func _flujo_reemplazar() -> void:
 	_comprobar(not plantel_victima.is_empty() and plantel_victima.all(func(j: Jugador) -> bool: return m.libres.has(j) and j.club_id == ""),
 		"los %d jugadores del club reemplazado quedan libres" % plantel_victima.size())
 	_comprobar(c != null and c.plantilla.size() >= 18, "tu club tiene plantel nuevo (%d)" % (c.plantilla.size() if c else 0))
+
+func _fr_roles(m: Mundo) -> void:
 	_comprobar(m.vida != null and m.vida.vivienda == "casa" and String(m.vida.perfil.get("mascota", "")) == "Firulais",
 		"la casa y la mascota de la configuración")
 	_comprobar(String((m.roles.look.get("p3d", {}) as Dictionary).get("cuerpo", "")) == "female" and int(m.roles.look.get("barba", 1)) == 0,
@@ -149,7 +168,6 @@ func _flujo_reemplazar() -> void:
 	## Lo que haría `Principal._arrancar_con()`: el rol no pisa el aspecto ni el nombre.
 	m.roles.arrancar(PedidoPartida.modo_elegido, PedidoPartida.dt_nombre_elegido)
 	_comprobar(m.roles.nombre == "Ana Prueba" and m.roles.look.has("p3d"), "al arrancar el rol se conservan nombre y aspecto")
-	o.queue_free()
 
 func _volver_y_saltar_intro() -> void:
 	_linea("-- volver atrás y la intro solo la primera vez")

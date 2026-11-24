@@ -28,8 +28,11 @@ static func linea(padre: CanvasItem, puntos: PackedVector2Array, color: Color, a
 	return l
 
 ## Un círculo (o arco) suave como polilínea.
+## `opc`: {"lados": int (48 por defecto), "atras": bool (false)}; agrupados para no pasar 7 argumentos.
 static func arco(padre: CanvasItem, centro: Vector2, radio: float, color: Color, ancho: float,
-		lados: int = 48, atras: bool = false) -> Line2D:
+		opc: Dictionary = {}) -> Line2D:
+	var lados: int = opc.get("lados", 48)
+	var atras: bool = opc.get("atras", false)
 	var pts := PackedVector2Array()
 	for i in lados:
 		pts.append(centro + Vector2.from_angle(TAU * float(i) / float(lados)) * radio)
