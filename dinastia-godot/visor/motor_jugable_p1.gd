@@ -313,8 +313,11 @@ static var chispa_pausa := float(OS.get_environment("CHISPA_PAUSA")) if OS.get_e
 ## «normal» dura como un partido de FC (~10 min) y da ~2,5 goles y ~15 tiros.
 ## PRISA_REF=segundos de referencia (0 = sin compensar).
 static var prisa_ref := float(OS.get_environment("PRISA_REF")) if OS.get_environment("PRISA_REF") != "" else 240.0
-## Tope de aceleración total de un jugador (m/s²), ver `_mover_jugadores`.
-static var a_max_v := float(OS.get_environment("A_MAX")) if OS.get_environment("A_MAX") != "" else 18.0
+## Tope de aceleración total de un jugador (m/s²), ver `_mover_jugadores`. 24-11 (orden del dueño: transiciones y físicas REALISTAS): de 18 a 12. Un futbolista
+## real cambia de rumbo con ~8-12 m/s² (arranca con 6-9, frena con hasta ~10); a 18 el 5 % de los pasos de los 22 estaba en el tope (recortes de 90° casi
+## instantáneos) y el giro medio por paso a más de 4 m/s llegaba a 7° (p95). Con 12: p95 de giro 4,9° y la aceleración media baja de 7,8 a 6,9 m/s²
+## (sonda `sonda_fisica_c4`). El comentario viejo («con 14 el juego se quedaba sin chispa») medía goles, que ya no son el criterio (orden del dueño 24-11).
+static var a_max_v := float(OS.get_environment("A_MAX")) if OS.get_environment("A_MAX") != "" else 12.0
 
 ## LA LÍNEA DEFENSIVA COMÚN (M-123, 19-10-2026). Antes cada defensor marcaba a
 ## su delantero por separado y la línea se rompía: uno habilitaba a todos. Ahora
