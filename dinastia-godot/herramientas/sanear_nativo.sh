@@ -8,6 +8,11 @@
 set -u
 cd "$(dirname "$0")/.."
 RAIZ="$(pwd)"
+## Sin scons o sin godot-cpp (contenedor nuevo, CI sin la cadena de C++): no se puede compilar la saneada; se salta SIN fallo (herramientas/compilar_nativo.sh baja godot-cpp).
+if [[ -z "${SIN_COMPILAR:-}" ]] && { ! command -v scons >/dev/null || [[ ! -d nativo/godot-cpp ]]; }; then
+  echo "SANEADA: saltada (falta scons o nativo/godot-cpp). SANEADA: 0 líneas de aviso"
+  exit 0
+fi
 if [[ -z "${SIN_COMPILAR:-}" ]]; then
   (cd nativo && scons -j"$(nproc)" GODOT_CPP=godot-cpp platform=linux target=template_debug api_version=4.7 SANITIZAR=1) || { echo "SANEADA: no compila"; exit 1; }
 fi
