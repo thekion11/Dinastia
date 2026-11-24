@@ -27,7 +27,7 @@ var _franja: PanelContainer
 var _posturas: Control
 var _objetivos_ocultos := false
 var _escena: RuedaPrensaEscena3D
-const _PrincipalRuedaResumen := preload("res://ui/principal/rueda_prensa_resumen.gd")
+const _PRINCIPAL_RUEDA_RESUMEN := preload("res://ui/principal/rueda_prensa_resumen.gd")
 ## Quién hizo la última pregunta (la entrevista ya se vacía al cerrar).
 var _ult_reloj := -99   ## (28-10) último estado escrito en `_reloj_txt` (-1 leyendo, 0 dudando, n segundos)
 var _ultimo_periodista := ""
@@ -141,7 +141,7 @@ func _fila_reloj() -> VBoxContainer:
 	reloj.show_percentage = false
 	reloj.custom_minimum_size = Vector2(0, 5)
 	reloj.max_value = Prensa.TITUBEO_SEG
-	for par: Array in [["background", Color(1, 1, 1, 0.1)], ["fill", Color(p.COL_ACENTO, 0.85)]]:
+	for par: Array in [["background", Color(1, 1, 1, 0.1)], ["fill", Color(p.col_acento, 0.85)]]:
 		var sbr := StyleBoxFlat.new()
 		sbr.bg_color = par[1]
 		sbr.set_corner_radius_all(3)

@@ -66,6 +66,10 @@ func _process(_d: float) -> void:
 		var esperado := CespedCapas.capas_por_calidad()
 		_ok((esperado == 0) or (capas != null and (capas as MeshInstance3D).mesh != null and (capas as MeshInstance3D).mesh.get_surface_count() > 0),
 			"césped: las capas de volumen existen en el partido (%d capas por calidad)" % esperado)
+	_fase_actual()
+
+## La fase en curso de la prueba (el match era el final de _process; cada fase espera a la anterior).
+func _fase_actual() -> void:
 	match _paso:
 		0:
 			## La preferencia «controlar a mi equipo» se guarda en user://: si otra prueba la dejó encendida el
@@ -151,6 +155,7 @@ func _process(_d: float) -> void:
 				_t = 0
 		5:
 			_paso_fc()
+
 
 ## LAS FILIGRANAS DEL STICK DERECHO (FC 26): el reconocedor de gestos.
 func _probar_reconocedor() -> void:

@@ -16,6 +16,11 @@ extends Node3D
 signal llegado
 
 const VEL := 1.55            ## m/s andando (algo menos que el jugador a pie)
+const VEL_CLIP := 1.06       ## m/s a los que avanza el clip «caminar» (medido el 20-11): la animación se acompasa a lo que de verdad avanza
+const GIRO := 7.0            ## rad/s de giro hacia el rumbo (antes giraba de golpe)
+const ACEL := 1.8            ## m/s² al arrancar
+const FRENO := 3.0           ## m/s² al frenar
+const RADIO_CUERPO := 0.3
 const ALCANCE_LLEGADA := 0.25
 const ALTURA_ROTULO := 2.15
 
@@ -101,11 +106,29 @@ func colocar(p: Vector3, rumbo: float = PI) -> void:
 	_destino = Vector3.INF
 	_animar("parado")
 
-## Camina en línea recta hasta `p` (misma altura) y avisa con `llegado`.
+var _ruta: Array[Vector3] = []   ## puntos que faltan hasta `_destino`, rodeando lo que estorbe (20-11, «no atravesar objetos»)
+var _v := 0.0
+
+## Camina hasta `p` (misma altura) y avisa con `llegado`. Rodea los obstáculos blandos del prólogo y lo sólido que haya en el camino; si no
+## hay camino libre, va en línea recta como antes (no se inventa un rodeo).
 func ir_a(p: Vector3) -> void:
 	_destino = Vector3(p.x, position.y, p.z)
-	_mirar_hacia(_destino)
+	_ruta = _camino_a(_destino)
+	_ruta.remove_at(0)
 	_animar("caminar")
+
+## `RutaLibre.camino` hasta `d` con los obstáculos blandos (cajas) y la física del mundo, si el mentor ya está en el árbol.
+func _camino_a(d: Vector3) -> Array[Vector3]:
+	var fis := Callable()
+	if is_inside_tree():
+		fis = RutaLibre.libre_fisico(get_world_3d().direct_space_state, RADIO_CUERPO, 0.35)
+	var libre := func(q: Vector3) -> bool:
+		for a: AABB in obstaculos:
+			var b := a.grow(RADIO_CUERPO)
+			if q.y + 1.8 >= b.position.y and q.y <= b.end.y and q.x > b.position.x and q.x < b.end.x and q.z > b.position.z and q.z < b.end.z:
+				return false
+		return not fis.is_valid() or fis.call(q)
+	return RutaLibre.camino(position, d, libre)
 
 ## Se gira hacia un punto (hacia ti cuando hablas con él).
 func mirar_a(p: Vector3) -> void:
@@ -131,7 +154,8 @@ func adelantarse(hacia: Vector3) -> void:
 	if dir.length() < 0.5:
 		dir = Vector3(0, 0, -1).rotated(Vector3.UP, rotation.y)
 	_destino = position + dir.normalized() * 3.0
-	_mirar_hacia(_destino)
+	_ruta = _camino_a(_destino)
+	_ruta.remove_at(0)
 	_animar("caminar")
 	_esfumando = true
 	var tw := create_tween()
@@ -145,16 +169,31 @@ func adelantarse(hacia: Vector3) -> void:
 func _process(delta: float) -> void:
 	if _destino == Vector3.INF:
 		return
-	var d := Vector3(_destino.x - position.x, 0.0, _destino.z - position.z)
-	var paso := VEL * delta
-	if d.length() <= maxf(paso, ALCANCE_LLEGADA):
+	var meta := _ruta[0] if not _ruta.is_empty() else _destino
+	var d := Vector3(meta.x - position.x, 0.0, meta.z - position.z)
+	var es_fin := _ruta.size() <= 1
+	if d.length() <= (maxf(VEL * delta, ALCANCE_LLEGADA) if es_fin else 0.15):
+		if not es_fin:
+			_ruta.remove_at(0)
+			return
 		position = Vector3(_destino.x, position.y, _destino.z)
 		_destino = Vector3.INF
+		_ruta.clear()
+		_v = 0.0
 		if not _esfumando:
 			_animar("parado")
 			llegado.emit()
 		return
-	position += d.normalized() * paso
+	## Gira sin saltos, arranca y frena, va más despacio mientras gira mucho y acompasa el paso (antes: giro de golpe y 1,55 m/s con un clip de 1,06).
+	var rumbo := atan2(d.x, d.z)
+	var error := absf(angle_difference(rotation.y, rumbo))
+	rotation.y = lerp_angle(rotation.y, rumbo, clampf(GIRO * delta, 0.0, 1.0))
+	var v_obj := minf(VEL, 0.25 + d.length() * 1.2) if es_fin else VEL
+	v_obj *= clampf(cos(error), 0.0, 1.0)
+	_v = move_toward(_v, v_obj, (ACEL if v_obj > _v else FRENO) * delta)
+	position += d.normalized() * minf(_v * delta, d.length())
+	if anim != null and _v > 0.12:
+		anim.speed_scale = clampf(_v / VEL_CLIP, 0.5, 1.6)
 
 func _mirar_hacia(p: Vector3) -> void:
 	var v := p - position
@@ -175,3 +214,5 @@ func hablar(si: bool) -> void:
 func _animar(nombre_anim: String) -> void:
 	if anim != null and anim.has_animation(nombre_anim) and anim.current_animation != nombre_anim:
 		anim.play(nombre_anim, 0.3)
+	if anim != null and nombre_anim != "caminar":
+		anim.speed_scale = 1.0   ## el ritmo de paso solo vale al caminar

@@ -56,15 +56,43 @@ const NUCLEO := [
 ]
 
 static func nombre_columna(i: int) -> String:
+	var nat := Nativo.de("nuc_nombre_columna")
+	if nat != null:
+		return nat.nuc_nombre_columna(i)
+	return nombre_columna_gd(i)
+
+## Gemela GDScript de `nuc_nombre_columna` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nombre_columna_gd(i: int) -> String:
 	return String(COLUMNAS[clampi(i + K, 0, COLUMNAS.size() - 1)])
 
 static func nombre_fila(j: int) -> String:
+	var nat := Nativo.de("nuc_nombre_fila")
+	if nat != null:
+		return nat.nuc_nombre_fila(j)
+	return nombre_fila_gd(j)
+
+## Gemela GDScript de `nuc_nombre_fila` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func nombre_fila_gd(j: int) -> String:
 	return String(FILAS[clampi(j + K, 0, FILAS.size() - 1)])
 
 static func es_avenida_columna(i: int) -> bool:
+	var nat := Nativo.de("nuc_es_avenida_columna")
+	if nat != null:
+		return nat.nuc_es_avenida_columna(i)
+	return es_avenida_columna_gd(i)
+
+## Gemela GDScript de `nuc_es_avenida_columna` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func es_avenida_columna_gd(i: int) -> bool:
 	return i % 3 == 0 or i == -5 or i == 4
 
 static func es_avenida_fila(j: int) -> bool:
+	var nat := Nativo.de("nuc_es_avenida_fila")
+	if nat != null:
+		return nat.nuc_es_avenida_fila(j)
+	return es_avenida_fila_gd(j)
+
+## Gemela GDScript de `nuc_es_avenida_fila` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func es_avenida_fila_gd(j: int) -> bool:
 	return j % 3 == 0 or j == -4 or j == 6
 
 static func dentro_nucleo(x: float, z: float, margen: float = 0.0) -> bool:
@@ -93,21 +121,7 @@ static func existe_tramo(ka: Vector2i, kb: Vector2i) -> bool:
 ## La calle de un punto de la calzada o de su acera («» si cae dentro de una manzana). En un cruce de la rejilla, «Fila con Columna».
 static func calle_en(p: Vector3) -> String:
 	if dentro_nucleo(p.x, p.z, -1.0):
-		var mejor := ""
-		var dmin := INF
-		for s: Array in NUCLEO:
-			var q := Geometry2D.get_closest_point_to_segment(Vector2(p.x, p.z), s[0], s[1])
-			var d := q.distance_to(Vector2(p.x, p.z))
-			if d < float(s[3]) + ACERA and d < dmin:
-				dmin = d
-				mejor = String(s[2])
-		## El bulevar que rodea el club es de la rejilla (Av. La Ribera, Av. Los Alerces, Av. El Estadio, Av. El Sauce).
-		var medio := ANCHO_AV * 0.5 + ACERA
-		if mejor == "" and (absf(p.x - NUC_X0) < medio or absf(p.x - NUC_X1) < medio):
-			mejor = nombre_columna(roundi(p.x / CELDA))
-		elif mejor == "" and (absf(p.z - NUC_Z0) < medio or absf(p.z - NUC_Z1) < medio):
-			mejor = nombre_fila(roundi(p.z / CELDA))
-		return mejor
+		return _calle_en_nucleo(p)
 	var i := roundi(p.x / CELDA)
 	var j := roundi(p.z / CELDA)
 	if absi(i) > K or absi(j) > K:
@@ -173,3 +187,22 @@ static func cruce(p: Vector2, dir: Vector2) -> String:
 			dc = absf(t)
 			cerca = String(c[1])
 	return delante if delante != "" else cerca
+
+
+## La calle dentro del núcleo del club (la rejilla de siempre y los bulevares que lo rodean).
+static func _calle_en_nucleo(p: Vector3) -> String:
+	var mejor := ""
+	var dmin := INF
+	for s: Array in NUCLEO:
+		var q := Geometry2D.get_closest_point_to_segment(Vector2(p.x, p.z), s[0], s[1])
+		var d := q.distance_to(Vector2(p.x, p.z))
+		if d < float(s[3]) + ACERA and d < dmin:
+			dmin = d
+			mejor = String(s[2])
+	## El bulevar que rodea el club es de la rejilla (Av. La Ribera, Av. Los Alerces, Av. El Estadio, Av. El Sauce).
+	var medio := ANCHO_AV * 0.5 + ACERA
+	if mejor == "" and (absf(p.x - NUC_X0) < medio or absf(p.x - NUC_X1) < medio):
+		mejor = nombre_columna(roundi(p.x / CELDA))
+	elif mejor == "" and (absf(p.z - NUC_Z0) < medio or absf(p.z - NUC_Z1) < medio):
+		mejor = nombre_fila(roundi(p.z / CELDA))
+	return mejor

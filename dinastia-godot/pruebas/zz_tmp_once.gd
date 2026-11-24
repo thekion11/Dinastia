@@ -17,7 +17,6 @@ func _ready() -> void:
 	t0 = Time.get_ticks_usec()
 	for i in n: (cl[i] as Club)._once_manual()
 	var t_man := Time.get_ticks_usec() - t0
-	var ts := {}
 	t0 = Time.get_ticks_usec()
 	for i in n:
 		var c: Club = cl[i]

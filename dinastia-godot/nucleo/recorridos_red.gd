@@ -11,7 +11,7 @@ extends RefCounted
 ## la hora del reloj del juego (más seguido en punta, más espaciado a última hora y el domingo), con servicio de 05:30 a 23:30 (los
 ## locales, de 06:30 a 22:00), y llega a cada paradero tras la DISTANCIA REAL del recorrido hasta él a `VEL_COMERCIAL`. En la
 ## calle, la app usa la posición y la velocidad reales de los buses (`BusesRed.llegadas`).
-## TODO ES DETERMINISTA: no toca `Azar` ni la hora del sistema.
+## Todo ES DETERMINISTA: no toca `Azar` ni la hora del sistema.
 
 ## Las medidas de la ciudad grande que definen las zonas (copiadas de `CiudadExpansion` y `CargaCiudad.de("CityBuilder").RIO_X`; la prueba
 ## `pruebas/ideas/red_app.gd` comprueba que siguen iguales). El núcleo es el club con sus anillos.
@@ -46,6 +46,13 @@ const VEL_COMERCIAL := 330.0     ## m por minuto de reloj (~20 km/h con paradas 
 ## La zona de la ciudad de un punto, como `CargaCiudad.de("CiudadExpansion")._zona`: oeste del río, centro de torres al norte del club,
 ## comercio al este, casas al sur y el núcleo del club; más allá de 1.100 m, la periferia.
 static func sector_de(pos: Vector3) -> int:
+	var nat := Nativo.de("nuc_sector_de")
+	if nat != null:
+		return nat.nuc_sector_de(pos, PERIFERIA, RIO_X, RIO_MEDIO, NUC_Z0, NUC_X1, NUC_Z1)
+	return sector_de_gd(pos)
+
+## Gemela GDScript de `nuc_sector_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func sector_de_gd(pos: Vector3) -> int:
 	if maxf(absf(pos.x), absf(pos.z)) > PERIFERIA:
 		return 600
 	if pos.x < RIO_X - RIO_MEDIO:
@@ -80,6 +87,13 @@ static func paradero_en(pos: Vector3, radio := 3.0) -> String:
 
 ## Lo que escribe el jugador («pa1234», «1234», «PA 1234») a la forma del cartel; "" si no es un código.
 static func normalizar(texto: String) -> String:
+	var nat := Nativo.de("nuc_normalizar_codigo")
+	if nat != null:
+		return nat.nuc_normalizar_codigo(texto)
+	return normalizar_gd(texto)
+
+## Gemela GDScript de `nuc_normalizar_codigo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func normalizar_gd(texto: String) -> String:
 	var t := texto.strip_edges().to_upper().replace(" ", "").replace("-", "")
 	if not t.begins_with("PA"):
 		t = "PA" + t
@@ -90,6 +104,13 @@ static func normalizar(texto: String) -> String:
 
 ## El sector del código: su primera cifra (PA2xxx = centro). Los del mapa siempre tienen cuatro.
 static func sector_del_codigo(cod: String) -> int:
+	var nat := Nativo.de("nuc_sector_del_codigo")
+	if nat != null:
+		return nat.nuc_sector_del_codigo(cod)
+	return sector_del_codigo_gd(cod)
+
+## Gemela GDScript de `nuc_sector_del_codigo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func sector_del_codigo_gd(cod: String) -> int:
 	var cifras := cod.substr(2)
 	if cifras.length() == 4 and int(cifras[0]) >= 1 and int(cifras[0]) <= 6:
 		return int(cifras[0]) * 100
@@ -105,6 +126,13 @@ static func recorridos(cod: String) -> Array[String]:
 	return out
 
 static func base_de(recorrido: String) -> String:
+	var nat := Nativo.de("nuc_base_recorrido")
+	if nat != null:
+		return nat.nuc_base_recorrido(recorrido)
+	return base_de_gd(recorrido)
+
+## Gemela GDScript de `nuc_base_recorrido` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func base_de_gd(recorrido: String) -> String:
 	return recorrido.trim_suffix("c").trim_suffix("e")
 
 static func color(recorrido: String) -> Color:
@@ -157,9 +185,23 @@ static func pasadas(cod: String, recorrido: String, dia: int) -> PackedInt32Arra
 
 ## Los buses de la flota de un recorrido (6-14) y la patente de cada uno: 4 letras y 2 cifras, como «FLXK-52».
 static func flota(recorrido: String) -> int:
+	var nat := Nativo.de("nuc_flota_recorrido")
+	if nat != null:
+		return nat.nuc_flota_recorrido(recorrido)
+	return flota_gd(recorrido)
+
+## Gemela GDScript de `nuc_flota_recorrido` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func flota_gd(recorrido: String) -> int:
 	return 6 + absi(hash([base_de(recorrido), "flota"])) % 9
 
 static func patente(recorrido: String, bus: int) -> String:
+	var nat := Nativo.de("nuc_patente_recorrido")
+	if nat != null:
+		return nat.nuc_patente_recorrido(recorrido, bus)
+	return patente_gd(recorrido, bus)
+
+## Gemela GDScript de `nuc_patente_recorrido` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func patente_gd(recorrido: String, bus: int) -> String:
 	var id := [base_de(recorrido), bus % flota(recorrido)]
 	var h := absi(hash(id + ["patente"]))
 	var s := ""
@@ -170,6 +212,13 @@ static func patente(recorrido: String, bus: int) -> String:
 
 ## 0 con asientos, 1 de pie, 2 lleno (más lleno en punta).
 static func ocupacion(recorrido: String, vuelta: int, minuto_dia: int, dia: int) -> int:
+	var nat := Nativo.de("nuc_ocupacion_recorrido")
+	if nat != null:
+		return nat.nuc_ocupacion_recorrido(recorrido, vuelta, minuto_dia, dia)
+	return ocupacion_gd(recorrido, vuelta, minuto_dia, dia)
+
+## Gemela GDScript de `nuc_ocupacion_recorrido` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func ocupacion_gd(recorrido: String, vuelta: int, minuto_dia: int, dia: int) -> int:
 	var o := absi(hash([recorrido, vuelta, dia, "ocup"])) % 10
 	var h := minuto_dia / 60
 	var punta := dia < 5 and ((h >= 7 and h < 9) or (h >= 18 and h < 20))

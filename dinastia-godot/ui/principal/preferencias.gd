@@ -1,4 +1,7 @@
 extends RefCounted
+
+const _RUTA_VESTIDOR_Q := "res://visor/vestidor_q.gd"
+
 ## LAS PREFERENCIAS DEL JUGADOR (fase 0: sale de `Principal`, capas 10 y 19).
 ##
 ## Una sola responsabilidad: leer y escribir `Principal.PREFS`
@@ -35,6 +38,13 @@ func cargar() -> void:
 	## Cada lectura se valida contra lo que existe HOY. Un archivo de una version
 	## vieja puede nombrar una paleta que ya no esta, y quedarse sin colores por
 	## eso seria peor que ignorar la linea.
+	_cargar_aspecto(cf)
+	_cargar_juego(cf)
+	_cargar_musica(cf)
+	_cargar_pantalla(cf)
+	_cargar_modo_sonido(cf)
+
+func _cargar_aspecto(cf: ConfigFile) -> void:
 	var pal := String(cf.get_value("aspecto", "paleta", p._paleta))
 	if Principal.PALETAS.has(pal):
 		p._paleta = pal
@@ -63,12 +73,16 @@ func cargar() -> void:
 	var tp := String(cf.get_value("aspecto", "tipografia", p._tipografia))
 	if PantallaAjustes.TIPOGRAFIAS.has(tp):
 		p._tipografia = tp
+
+func _cargar_juego(cf: ConfigFile) -> void:
 	var idi := String(cf.get_value("juego", "idioma", Idiomas.idioma))
 	if idi == "es" or Idiomas.NOMBRES.has(idi):
 		if idi != Idiomas.idioma and OS.get_environment("PREF_IDIOMA_DIAG") != "":
-			print("PREF_PISA_IDIOMA ", Idiomas.idioma, " -> ", idi)   ## diagnóstico de pruebas (A4): el guardado manda sobre el idioma puesto antes
+			print("PREF_PISA_IDIOMA ", Idiomas.idioma, " -> ", idi)   ## LOG: diagnóstico de pruebas (A4): el guardado manda sobre el idioma puesto antes
 		Idiomas.idioma = idi
 	p._velocidad_partido = clampi(int(cf.get_value("juego", "velocidad_partido", p._velocidad_partido)), 1, 3)
+
+func _cargar_musica(cf: ConfigFile) -> void:
 	Musica.encendida = bool(cf.get_value("musica", "encendida", Musica.encendida))
 	Musica.volumen = clampf(float(cf.get_value("musica", "volumen", Musica.volumen)), 0.0, 1.0)
 	Musica.libre = bool(cf.get_value("musica", "libre", Musica.libre))
@@ -76,6 +90,8 @@ func cargar() -> void:
 	if mp == "" or Musica.PIEZAS.has(mp):
 		Musica.pieza = mp
 	Musica.automatica = bool(cf.get_value("musica", "automatica", Musica.automatica))
+
+func _cargar_pantalla(cf: ConfigFile) -> void:
 	p._escala_texto = clampf(float(cf.get_value("texto", "escala", p._escala_texto)), 0.7, 1.6)
 	p._daltonico = bool(cf.get_value("texto", "daltonico", p._daltonico))
 	p._zoom_interfaz = clampf(float(cf.get_value("pantalla", "zoom", EscalaMovil.zoom(null))), 0.7, 1.8)
@@ -83,13 +99,15 @@ func cargar() -> void:
 	PantallaMenu.compacta_pref = bool(cf.get_value("pantalla", "cabecera_compacta", true))
 	PantallaMenu.compacta_pc = bool(cf.get_value("pantalla", "cabecera_compacta_pc", false))
 	IconosUI.dibujados = bool(cf.get_value("pantalla", "iconos_dibujados", true))   ## (orden 36) dibujados por defecto
-	load("res://visor/vestidor_q.gd").ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", load("res://visor/vestidor_q.gd").ropa_aparte))
+	load(_RUTA_VESTIDOR_Q).ropa_aparte = bool(cf.get_value("pantalla", "ropa_aparte", load(_RUTA_VESTIDOR_Q).ropa_aparte))
 	Cara.usar_fotos = bool(cf.get_value("pantalla", "caras_foto", Cara.usar_fotos))
 	Cara.modo_streamer = bool(cf.get_value("pantalla", "streamer", false))
 	## 0 = «sin límite» (antes el clampi lo volvía 30 al recargar).
 	var fps_g := int(cf.get_value("pantalla", "fps", p._fps_elegido))
 	p._fps_elegido = 0 if fps_g == 0 else clampi(fps_g, 30, 240)
 	ContadorFps.visible_pref = bool(cf.get_value("pantalla", "contador_fps", false))
+
+func _cargar_modo_sonido(cf: ConfigFile) -> void:
 	p._modo_experto = bool(cf.get_value("juego", "modo_experto", p._modo_experto))
 	Sonido.encendido = bool(cf.get_value("sonido", "encendido", Sonido.encendido))
 
@@ -125,7 +143,7 @@ func guardar() -> void:
 	cf.set_value("pantalla", "cabecera_compacta", PantallaMenu.compacta_pref)
 	cf.set_value("pantalla", "cabecera_compacta_pc", PantallaMenu.compacta_pc)
 	cf.set_value("pantalla", "iconos_dibujados", IconosUI.dibujados)
-	cf.set_value("pantalla", "ropa_aparte", load("res://visor/vestidor_q.gd").ropa_aparte)
+	cf.set_value("pantalla", "ropa_aparte", load(_RUTA_VESTIDOR_Q).ropa_aparte)
 	cf.set_value("pantalla", "caras_foto", Cara.usar_fotos)
 	cf.set_value("pantalla", "streamer", Cara.modo_streamer)
 	cf.set_value("pantalla", "fps", p._fps_elegido)

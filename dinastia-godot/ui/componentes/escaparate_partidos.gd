@@ -32,7 +32,7 @@ static func _insignia(tipo: String, texto: String) -> Control:
 	l.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	return l
 
-static func _columna(local: Club, visita: Club, centro: String, comp_tipo: String, comp: String, estadio: String, fecha: String, siguiente: bool, mio: Club) -> Control:
+static func _columna(local: Club, visita: Club, centro: String, comp_tipo: String, comp: String, estadio: String, fecha: String, siguiente: bool, _mio: Club) -> Control:
 	var col := VBoxContainer.new()
 	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	col.alignment = BoxContainer.ALIGNMENT_CENTER

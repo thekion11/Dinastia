@@ -144,11 +144,11 @@ func _reacciones(raiz: Node3D) -> void:
 		return
 	var m: ShaderMaterial = mats[0]
 	var oc := OlaGrada.lanzar(raiz, "ocasion", Vector3.ZERO, 1)
-	_comprobar(oc != null and oc._dura == OlaGrada.DURA_OCASION and float(m.get_shader_parameter("ocasion_edad")) == 0.0,
+	_comprobar(oc != null and oc._dura == OlaGrada.DURA_OCASION and is_zero_approx(float(m.get_shader_parameter("ocasion_edad"))),
 		"ocasión: la grada se levanta de golpe")
-	_comprobar(float(m.get_shader_parameter("ocasion_bando")) == 1.0, "ocasión: le toca a la hinchada visitante")
+	_comprobar(is_equal_approx(float(m.get_shader_parameter("ocasion_bando")), 1.0), "ocasión: le toca a la hinchada visitante")
 	oc._process(OlaGrada.DURA_OCASION + 0.1)
-	_comprobar(float(m.get_shader_parameter("ocasion_edad")) == -1.0, "ocasión: al terminar se apaga")
+	_comprobar(is_equal_approx(float(m.get_shader_parameter("ocasion_edad")), -1.0), "ocasión: al terminar se apaga")
 	var on := OlaGrada.lanzar(raiz, "onda", Vector3(0, 0, 62))
-	_comprobar(on != null and float(m.get_shader_parameter("onda_bando")) == 0.0, "onda de un gol de casa: solo la hinchada de casa")
+	_comprobar(on != null and is_zero_approx(float(m.get_shader_parameter("onda_bando"))), "onda de un gol de casa: solo la hinchada de casa")
 	_comprobar(OlaGrada.lanzar(raiz, "inventada") == null, "un tipo de reacción que no existe no hace nada")

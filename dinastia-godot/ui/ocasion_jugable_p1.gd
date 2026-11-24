@@ -83,11 +83,11 @@ static func guardar(si: bool) -> void:
 	cfg.set_value(CajonAjustes.SECCION, PREF, si)
 	cfg.save(CajonAjustes.RUTA)
 
-func configurar(m: MotorJugable, p: Partido, lado: int, rig_: CameraRig = null) -> void:
+func configurar(m: MotorJugable, p: Partido, lado: int, rig_arg: CameraRig = null) -> void:
 	motor = m
 	partido = p
 	mi_lado = lado
-	rig = rig_
+	rig = rig_arg
 	var semilla := hash(p.local.id + "|" + p.visita.id + "|ocasiones")
 	_rng.seed = semilla
 	cupo = OcasionesDT.cupo(semilla, p.minuto, p.minutos_fin)
@@ -231,14 +231,21 @@ func _seguir_jugada() -> bool:
 		return false
 	var otra := _pasos < OcasionesDT.PASOS_MAX and _t_total < OcasionesDT.SEGUNDOS_MAX - 3.0
 	if _espera == "pase":
-		if not dueno.is_empty() and dueno != _portador and dt > 0.15:
-			if otra and not bool(dueno["por"]) and _dist_arco(dueno) <= OcasionesDT.DIST_MINIMO:
-				return _abrir(dueno)
-			_cerrar("pase")
-		elif dt > 4.0:
-			_cerrar("perdida")
-		return false
-	## Conducción: al cabo de 1,3 s (si sigue con ella) toca decidir otra vez.
+		return _seguir_pase(dueno, dt, otra)
+	return _seguir_conduccion(dueno, dt, otra)
+
+## Tras un pase: el compañero que recibe (abrir otra jugada si conviene) o se cierra.
+func _seguir_pase(dueno: Dictionary, dt: float, otra: bool) -> bool:
+	if not dueno.is_empty() and dueno != _portador and dt > 0.15:
+		if otra and not bool(dueno["por"]) and _dist_arco(dueno) <= OcasionesDT.DIST_MINIMO:
+			return _abrir(dueno)
+		_cerrar("pase")
+	elif dt > 4.0:
+		_cerrar("perdida")
+	return false
+
+## Conducción: al cabo de 1,3 s (si sigue con ella) toca decidir otra vez.
+func _seguir_conduccion(dueno: Dictionary, dt: float, otra: bool) -> bool:
 	if dueno == _portador and dt >= 1.3:
 		if otra and _dist_arco(dueno) <= OcasionesDT.DIST_MINIMO:
 			return _abrir(dueno)
@@ -281,7 +288,7 @@ func elegir(clave: String, auto := false) -> void:
 			## (sonda del 26-10): las ocasiones habrían sido goles de regalo y el
 			## partido ya no sería el que se simula.
 			var r := motor._rng
-			var palo := (1.0 if r.randf() < 0.5 else -1.0) * (r.randf_range(MotorJugable.PALO_TIRO, 1.0) if MotorJugable.TIRO_PULIDO else r.randf_range(0.55, 0.95))
+			var palo := (1.0 if r.randf() < 0.5 else -1.0) * (r.randf_range(MotorJugable.palo_tiro, 1.0) if MotorJugable.tiro_pulido else r.randf_range(0.55, 0.95))
 			var alto := -0.45 if r.randf() < 0.6 else 0.55
 			motor._tirar(p, Vector2(palo, alto), clampf(0.55 + r.randf() * 0.4, 0.0, 1.0))
 			if rig != null and is_instance_valid(motor.balon):
@@ -364,7 +371,7 @@ func _input(e: InputEvent) -> void:
 
 func _exit_tree() -> void:
 	## Nunca dejar el mundo a cámara lenta si se cierra el estadio a mitad.
-	if _fase != "" or Engine.time_scale != 1.0:
+	if _fase != "" or not is_equal_approx(Engine.time_scale, 1.0):
 		Engine.time_scale = 1.0
 
 # ---------------------------------------------------------------------------

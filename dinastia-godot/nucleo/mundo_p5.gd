@@ -18,6 +18,7 @@ var _entreno_mundo: Entrenamiento = null   ## (16-11, informe G-04) el entrenami
 ## `ya_jugado` es el partido que el entrenador acaba de dirigir en directo: se anota su
 ## resultado en vez de volver a simularlo (liga, continental o copa, el que sea).
 func avanzar_semana(ya_jugado: Partido = null) -> void:
+	Jugador.semana_global = anio * 100 + semana   ## (17-11) la semana de ESTE mundo desde el primer paso (antes quedaba la de otro mundo anterior y el mundo no se repetía igual con la misma semilla)
 	## El partido mirado no pasó por `simular()`: sus notas y la forma se
 	## cierran aquí (antes ese partido no contaba en `Jugador.notas`).
 	if ya_jugado != null:
@@ -58,6 +59,11 @@ func avanzar_semana(ya_jugado: Partido = null) -> void:
 ## FASE 14 · LOS MÓDULOS SEMANALES DEL CLUB: redes, mercado avanzado, fondo, cantera,
 ## calendario, política, contratos, leyes del país, maestría y vida personal.
 func _semana_modulos_del_club() -> void:
+	_semana_mercado_y_contratos()
+	_semana_leyes_vida_y_citas()
+
+## Mercado de entrenadores, redes, mercado de jugadores, fondo, cantera, calendario, política y contratos.
+func _semana_mercado_y_contratos() -> void:
 	## Los clubes de la IA echan y contratan entrenadores (`MercadoDT`, fila 19 s4).
 	MercadoDT.de(self).semana(self)
 	if redes != null:
@@ -75,6 +81,9 @@ func _semana_modulos_del_club() -> void:
 		politica.semana(mi_club(), anio, semana, prensa)
 	if contratos != null and mi_club() != null:
 		contratos.semana(mi_club(), anio, semana)
+
+## Leyes del país, maestría, vida personal, citas y afinidad.
+func _semana_leyes_vida_y_citas() -> void:
 	LeyesPais.anio_actual = anio
 	LeyesPais.clubes_mundo = clubes
 	LeyesPais.tick += 1

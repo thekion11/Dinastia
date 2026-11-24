@@ -25,7 +25,7 @@ func _dq_letras_y_ribete() -> void:
 	var solo := DisenosKit.ribete_numero(Color.WHITE, [Color("0b1f4d")])
 	var blanco := DisenosKit.ribete_numero(Color.WHITE, [Color("f4f4f4")])
 	var rayas := DisenosKit.ribete_numero(Color("c8102e"), [Color.WHITE, Color("c8102e")])
-	_comprobar(solo.a == 0.0 and blanco.a > 0.06 and blanco.get_luminance() < 0.2 and rayas.a > 0.06 and rayas.get_luminance() > 0.8,
+	_comprobar(is_zero_approx(solo.a) and blanco.a > 0.06 and blanco.get_luminance() < 0.2 and rayas.a > 0.06 and rayas.get_luminance() > 0.8,
 		"dorsal: ribete solo cuando hace falta (marino %.3f, blanco sobre blanco %.3f oscuro, rojo sobre rayas rojas %.3f claro)" % [solo.a, blanco.a, rayas.a])
 	var u := DisenosKit.uniforms({"dis": "liso", "cols": ["ffd600", "0b1f4d"], "num": "0b1f4d"}, 9, "Gómez")
 	var u0 := DisenosKit.uniforms({"dis": "liso", "cols": ["ffd600", "0b1f4d"], "num": "0b1f4d"}, 0, "Gómez")
@@ -235,3 +235,35 @@ func _pelvis_se_inclina(esq: Skeleton3D, iner: InerciaCuerpo) -> bool:
 	iner._process_modification()
 	var despues := esq.get_bone_global_pose(ip).basis
 	return antes.get_rotation_quaternion().angle_to(despues.get_rotation_quaternion()) > 0.03
+
+## (19-11) «MENOS DE SIETE» TAMBIÉN EN EL SAQUE: antes solo se revisaba al salir alguien y un equipo que empezaba con 2 disponibles jugaba
+## los 90' (`ideas/s5_auditoria_partidos`). Ahora pierde 3-0 de mesa en el minuto 0, por la ruta de siempre (`simular`) y por la rápida
+## (`PartidoRapido`, que entra en C++ solo si nadie se queda corto).
+func _probar_siete_en_el_saque() -> void:
+	_titulo("PARTIDO: MENOS DE SIETE EN EL SAQUE INICIAL")
+	var m := Mundo.new()
+	m.generar(["CHI"], 33)
+	var cl: Array = m.ligas[0].clubes
+	for ruta: String in ["simular", "rapida"]:
+		var a: Club = cl[1]
+		var b: Club = cl[2]
+		for c: Club in [a, b]:
+			for j: Jugador in c.plantilla:
+				j.suspension = 0
+				j.lesion = 0
+		for k in b.plantilla.size():
+			if k >= 5:
+				b.plantilla[k].suspension = 2   ## solo 5 sin sanción: la red de seguridad del once no llega a 7
+		var p := Partido.new(a, b)
+		if ruta == "rapida":
+			PartidoRapido.simular(p)
+		else:
+			p.simular()
+		_comprobar(p.suspendido and p.minuto == 0 and p.goles_local == 3 and p.goles_visita == 0 and p.once_visita.size() < 7,
+			"%s: el visitante con %d disponibles pierde 3-0 de mesa en el minuto 0 (%d-%d, minuto %d)" % [ruta, p.once_visita.size(), p.goles_local, p.goles_visita, p.minuto])
+		for j: Jugador in b.plantilla:
+			j.suspension = 0
+	## Con los dos onces completos no cambia nada: se juega hasta el final.
+	var p2 := Partido.new(cl[3], cl[4])
+	p2.simular()
+	_comprobar(not p2.suspendido and p2.minuto >= Partido.MINUTOS, "con los onces completos el partido se juega entero (minuto %d)" % p2.minuto)

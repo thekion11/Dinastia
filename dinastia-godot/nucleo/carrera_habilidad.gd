@@ -45,6 +45,13 @@ static func de_zona(zona: String) -> Array:
 
 ## La zona a la que pertenece una habilidad.
 static func zona_de(hab: String) -> String:
+	var nat := Nativo.de("nuc_zona_habilidad")
+	if nat != null:
+		return nat.nuc_zona_habilidad(hab)
+	return zona_de_gd(hab)
+
+## Gemela GDScript de `nuc_zona_habilidad` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func zona_de_gd(hab: String) -> String:
 	for zona: String in DETALLE:
 		for par: Array in DETALLE[zona]:
 			if String(par[0]) == hab:
@@ -63,14 +70,23 @@ static func detalle(c: CarreraJugador, j: Jugador) -> Dictionary:
 		var meta := int(j.atributos[zona])
 		if not d.has(String(lista[0][0])):
 			## Reparto fijo por jugador: cada habilidad se aparta hasta 6 puntos de la zona, y el promedio queda en la zona.
-			var desvios: Array = []
-			var suma := 0
-			for par: Array in lista:
-				var dv := (absi(hash(j.id + String(par[0]))) % 13) - 6 if lista.size() > 1 else 0
-				desvios.append(dv)
-				suma += dv
-			for i in lista.size():
-				d[String(lista[i][0])] = clampi(meta + int(desvios[i]) - int(round(float(suma) / float(lista.size()))), 1, 99)
+			var nat := Nativo.obj()
+			if nat != null and nat.has_method("hab_reparto"):   ## (19-11) el reparto, en C++ (`nativo/src/carrera_nativo.cpp`); gemela: la rama `else`
+				var ids := PackedStringArray()
+				for par0: Array in lista:
+					ids.append(String(par0[0]))
+				var rep_c: PackedInt32Array = nat.hab_reparto(j.id, ids, meta)
+				for i in lista.size():
+					d[ids[i]] = rep_c[i]
+			else:
+				var desvios: Array = []
+				var suma := 0
+				for par: Array in lista:
+					var dv := (absi(hash(j.id + String(par[0]))) % 13) - 6 if lista.size() > 1 else 0
+					desvios.append(dv)
+					suma += dv
+				for i in lista.size():
+					d[String(lista[i][0])] = clampi(meta + int(desvios[i]) - int(round(float(suma) / float(lista.size()))), 1, 99)
 		var falta := meta - _promedio(d, lista)
 		if falta != 0:
 			for par2: Array in lista:
@@ -78,6 +94,15 @@ static func detalle(c: CarreraJugador, j: Jugador) -> Dictionary:
 	return d
 
 static func _promedio(d: Dictionary, lista: Array) -> int:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("hab_promedio"):   ## (19-11) la cuenta, en C++ (`nativo/src/carrera_nativo.cpp`); gemela: `_promedio_gd`
+		var vs := PackedInt32Array()
+		for par: Array in lista:
+			vs.append(int(d.get(String(par[0]), 0)))
+		return nat.hab_promedio(vs)
+	return _promedio_gd(d, lista)
+
+static func _promedio_gd(d: Dictionary, lista: Array) -> int:
 	var suma := 0
 	for par: Array in lista:
 		suma += int(d.get(String(par[0]), 0))
@@ -102,6 +127,12 @@ static func clase(j: Jugador, zona: String) -> String:
 	return "clave" if w >= 0.2 else ("util" if w >= 0.1 else "ajena")
 
 static func _factor_nivel(c: CarreraJugador) -> float:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("hab_factor_nivel"):   ## (19-11) en C++; gemela: `_factor_nivel_gd`
+		return nat.hab_factor_nivel(CarreraRuta.nivel(c))
+	return _factor_nivel_gd(c)
+
+static func _factor_nivel_gd(c: CarreraJugador) -> float:
 	return 1.0 + float(CarreraRuta.nivel(c) - 1) * SUBE_NIVEL
 
 ## (16-11, informe R-08) EL PRECIO ES DE LA ZONA, no de la habilidad: +1 de zona cuesta lo mismo tenga la zona 2
@@ -113,6 +144,13 @@ const PUNTOS_ZONA := 6.0
 const PESO_REF := 0.39
 
 static func _factor_puesto(j: Jugador) -> float:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("hab_factor_puesto"):   ## (19-11) en C++; gemela: `_factor_puesto_gd`
+		var e0 := PesosPuesto.de(j.pos_e)
+		return nat.hab_factor_puesto(e0[1] if not e0.is_empty() else PackedFloat64Array())
+	return _factor_puesto_gd(j)
+
+static func _factor_puesto_gd(j: Jugador) -> float:
 	var e := PesosPuesto.de(j.pos_e)
 	var maximo := 0.0
 	for w: float in (e[1] if not e.is_empty() else PackedFloat64Array()):
@@ -121,6 +159,13 @@ static func _factor_puesto(j: Jugador) -> float:
 
 ## Lo que cuesta +1 de la zona de esa habilidad, hoy (puede tener decimales: se reparte entre sus habilidades).
 static func precio_zona(c: CarreraJugador, j: Jugador, hab: String) -> float:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("hab_precio_zona"):   ## (19-11) la cuenta, en C++; gemela: `_precio_zona_gd`
+		var cl := clase(j, zona_de(hab))
+		return nat.hab_precio_zona(valor(c, j, hab), 0 if cl == "clave" else (1 if cl == "util" else 2), _factor_nivel(c), _factor_puesto(j))
+	return _precio_zona_gd(c, j, hab)
+
+static func _precio_zona_gd(c: CarreraJugador, j: Jugador, hab: String) -> float:
 	var v := valor(c, j, hab)
 	var base := 1.0 if v < 60 else (2.0 if v < 70 else (3.0 if v < 80 else (5.0 if v < 90 else 7.0)))
 	var por_puesto: float = {"clave": 1.0, "util": 1.5, "ajena": 2.0}[clase(j, zona_de(hab))]
@@ -134,6 +179,9 @@ static func coste(c: CarreraJugador, j: Jugador, hab: String) -> int:
 	var suma := 0
 	for par: Array in lista:
 		suma += int(d.get(String(par[0]), 0))
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("hab_coste"):   ## (19-11) la cuenta, en C++; gemela: lo de abajo
+		return nat.hab_coste(suma, lista.size(), precio_zona(c, j, hab))
 	var n := float(lista.size())
 	var k := float(posmod(suma, lista.size()))
 	var z := precio_zona(c, j, hab)
@@ -181,6 +229,12 @@ static func media_en(j: Jugador, pe: String) -> int:
 	return j.ovr if pe == j.pos_e else j.media_en_puesto(pe)
 
 static func coste_puesto(c: CarreraJugador, j: Jugador, pe: String) -> int:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("hab_coste_puesto"):   ## (19-11) la cuenta, en C++; gemela: `_coste_puesto_gd`
+		return nat.hab_coste_puesto(_linea(pe) == _linea(j.pos_e), j.pos_sec.has(pe), _factor_nivel(c))
+	return _coste_puesto_gd(c, j, pe)
+
+static func _coste_puesto_gd(c: CarreraJugador, j: Jugador, pe: String) -> int:
 	var base := PUESTO_MISMA_LINEA if _linea(pe) == _linea(j.pos_e) else PUESTO_OTRA_LINEA
 	if j.pos_sec.has(pe):
 		base = int(base / 2.0)   ## un puesto que ya conoces cuesta la mitad

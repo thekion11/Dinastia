@@ -5,7 +5,7 @@ extends Node3D
 const CLUBES_BASE := ["Riachuelo AC", "Precordillera", "Isar FC", "Castellana CF", "Borsigplatz FC", "Núñez Athletic"]
 ## GUINOS=1: los estadios cuyo rasgo dibuja algo (fase 4, E9).
 const CLUBES_GUINOS := ["Precordillera", "Cobre Atacama", "Ligure Blu", "Punta Carretas", "Köpenick FC", "Navigli FC", "Misti FC", "Yarra FC"]
-var CLUBES: Array = CLUBES_GUINOS if OS.get_environment("GUINOS") == "1" else CLUBES_BASE
+var clubes: Array = CLUBES_GUINOS if OS.get_environment("GUINOS") == "1" else CLUBES_BASE
 var _m: Mundo
 var _i := -1
 var _n := 0
@@ -42,10 +42,10 @@ func _siguiente() -> void:
 	_i += 1
 	if _raiz != null:
 		_raiz.queue_free()
-	if _i >= CLUBES.size():
+	if _i >= clubes.size():
 		get_tree().quit()
 		return
-	var c := _club(CLUBES[_i])
+	var c := _club(clubes[_i])
 	_raiz = Node3D.new()
 	add_child(_raiz)
 	if c != null:

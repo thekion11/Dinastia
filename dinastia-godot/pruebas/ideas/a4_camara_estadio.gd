@@ -29,55 +29,7 @@ func _probar() -> void:
 	}
 	var peor_global := {}
 	for nombre in perfiles:
-		var perfil := base.duplicate(true)
-		for k in perfiles[nombre]:
-			perfil[k] = perfiles[nombre][k]
-		Azar.sembrar(4242)
-		var v := VistaEstadio.new()
-		add_child(v)
-		await v.abrir(club, 0.5, null, null, perfil)
-		for i in 10:
-			await get_tree().process_frame
-		var rig: CameraRig = v.get("_rig")
-		var meshes := _meshes(v)
-		var linea := "  %-26s" % nombre
-		for cn in PROBAR:
-			var idx := -1
-			for i in rig.camera_names.size():
-				if String(rig.camera_names[i]).begins_with(cn.left(6)):
-					idx = i
-					break
-			if idx < 0:
-				continue
-			rig.switch_to(idx)
-			await get_tree().process_frame
-			var cam: Camera3D = rig.cameras[idx]
-			var tapados := 0
-			var quien := {}
-			for ix in 7:
-				for iz in 5:
-					var objetivo := Vector3(-30.0 + 10.0 * float(ix), 0.3, -45.0 + 22.5 * float(iz))
-					var o := cam.global_position
-					var d := objetivo - o
-					var dist := d.length()
-					var golpe := _primer_impacto(meshes, o, d / dist, dist - 0.4)
-					if not golpe.is_empty():
-						var n := String(golpe["nombre"])
-						if _es_campo(n) or float(golpe["alto"]) < 0.6:
-							continue   ## el propio césped, las líneas, la pista: a ras de suelo no tapan nada
-						tapados += 1
-						quien[n] = int(quien.get(n, 0)) + 1
-			var enterrada := cam.global_position.y < 0.3
-			var dentro := not _primer_impacto(meshes, cam.global_position, Vector3.DOWN, 0.2).is_empty() and cam.global_position.y > 1.5
-			linea += " | %s %d/35" % [cn.left(9), tapados]
-			var clave := "%s · %s" % [nombre, cn]
-			if tapados > 0:
-				peor_global[clave] = {"tapados": tapados, "quien": quien}
-			if enterrada:
-				_comprobar(false, "%s: la cámara «%s» está bajo el suelo (y=%.2f)" % [nombre, cn, cam.global_position.y])
-		print(linea)
-		v.free()
-		await get_tree().process_frame
+		await _probar_perfil(club, base, nombre, perfiles[nombre], peor_global)
 	var graves := 0
 	for k in peor_global:
 		var t: int = peor_global[k]["tapados"]
@@ -86,6 +38,69 @@ func _probar() -> void:
 		if t > 3 and not String(k).ends_with("A ras de campo"):
 			graves += 1
 	_comprobar(graves == 0, "ninguna cámara de transmisión pierde de vista más de 3 de 35 puntos del campo con ningún perfil (%d casos graves)" % graves)
+
+## Un perfil del estadio (el base con sus cambios): abre la vista, prueba cada cámara de transmisión y imprime una línea.
+func _probar_perfil(club: Club, base: Dictionary, nombre: String, cambios: Dictionary, peor_global: Dictionary) -> void:
+	var perfil := base.duplicate(true)
+	for k in cambios:
+		perfil[k] = cambios[k]
+	Azar.sembrar(4242)
+	var v := VistaEstadio.new()
+	add_child(v)
+	await v.abrir(club, 0.5, null, null, perfil)
+	for i in 10:
+		await get_tree().process_frame
+	var rig: CameraRig = v.get("_rig")
+	var meshes := _meshes(v)
+	var linea := "  %-26s" % nombre
+	for cn in PROBAR:
+		var fragmento := await _probar_camara(rig, meshes, nombre, cn, peor_global)
+		linea += fragmento
+	print(linea)
+	v.free()
+	await get_tree().process_frame
+
+## Una cámara de transmisión: cuántos de los 35 puntos de la hierba tapa el estadio. Devuelve el trozo de la línea («» si no existe).
+func _probar_camara(rig: CameraRig, meshes: Array, nombre: String, cn: String, peor_global: Dictionary) -> String:
+	var idx := -1
+	for i in rig.camera_names.size():
+		if String(rig.camera_names[i]).begins_with(cn.left(6)):
+			idx = i
+			break
+	if idx < 0:
+		return ""
+	rig.switch_to(idx)
+	await get_tree().process_frame
+	var cam: Camera3D = rig.cameras[idx]
+	var r := _tapados_desde(cam, meshes)
+	var tapados: int = r["tapados"]
+	var quien: Dictionary = r["quien"]
+	var enterrada := cam.global_position.y < 0.3
+	var clave := "%s · %s" % [nombre, cn]
+	if tapados > 0:
+		peor_global[clave] = {"tapados": tapados, "quien": quien}
+	if enterrada:
+		_comprobar(false, "%s: la cámara «%s» está bajo el suelo (y=%.2f)" % [nombre, cn, cam.global_position.y])
+	return " | %s %d/35" % [cn.left(9), tapados]
+
+## Puntos de la hierba (7 × 5) que tapa algo del estadio desde `cam`, sin contar el propio césped ni lo que queda a ras de suelo.
+func _tapados_desde(cam: Camera3D, meshes: Array) -> Dictionary:
+	var tapados := 0
+	var quien := {}
+	for ix in 7:
+		for iz in 5:
+			var objetivo := Vector3(-30.0 + 10.0 * float(ix), 0.3, -45.0 + 22.5 * float(iz))
+			var o := cam.global_position
+			var d := objetivo - o
+			var dist := d.length()
+			var golpe := _primer_impacto(meshes, o, d / dist, dist - 0.4)
+			if not golpe.is_empty():
+				var n := String(golpe["nombre"])
+				if _es_campo(n) or float(golpe["alto"]) < 0.6:
+					continue   ## el propio césped, las líneas, la pista: a ras de suelo no tapan nada
+				tapados += 1
+				quien[n] = int(quien.get(n, 0)) + 1
+	return {"tapados": tapados, "quien": quien}
 
 func _es_campo(n: String) -> bool:
 	for k in ["Cesped", "Linea", "Marca", "Porteria", "Arco", "Red", "Poste", "Larguero", "Cal", "Sombra", "Balon", "Cartel_campo", "Banderin"]:

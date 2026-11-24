@@ -41,18 +41,18 @@ static func crear(pm: PantallaMenu, sub: Dictionary, i: int) -> Button:
 	if sub.has("accion"):
 		var tag := Label.new()
 		tag.text = Idiomas.t("▶ ABRIR")
-		tag.add_theme_font_size_override("font_size", 11)
+		tag.add_theme_font_size_override("font_size", Tema.letra(11))
 		tag.add_theme_color_override("font_color", pm._color(2).lightened(0.3))
 		fila.add_child(tag)
 	var t := Label.new()
 	t.text = String(sub["label"])
-	t.add_theme_font_size_override("font_size", 20)
+	t.add_theme_font_size_override("font_size", Tema.letra(20))
 	t.add_theme_color_override("font_color", Color.WHITE)
 	v.add_child(t)
 	var d := Label.new()
 	d.text = String(sub.get("desc", ""))
 	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	d.add_theme_font_size_override("font_size", 13)
+	d.add_theme_font_size_override("font_size", Tema.letra(13))
 	d.add_theme_color_override("font_color", Color(1, 1, 1, 0.78))
 	d.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(d)
@@ -60,7 +60,7 @@ static func crear(pm: PantallaMenu, sub: Dictionary, i: int) -> Button:
 	if dato != "":
 		var dl := Label.new()
 		dl.text = dato
-		dl.add_theme_font_size_override("font_size", 14)
+		dl.add_theme_font_size_override("font_size", Tema.letra(14))
 		dl.add_theme_color_override("font_color", pm._color(2).lightened(0.25))
 		v.add_child(dl)
 	for n in v.find_children("*", "Control", true, false):

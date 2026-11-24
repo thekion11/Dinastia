@@ -62,7 +62,7 @@ func _probar_farolas() -> void:
 	_comprobar(is_equal_approx(ex._farola_charco.albedo_color.a, 0.62), "de noche el charco llega a 0,62")
 	_comprobar(float(ex._farola_cono.get_shader_parameter("fuerza")) > 0.1, "de noche el haz se ve")
 	ex.encender(0.0)
-	_comprobar(ex._farola_charco.albedo_color.a == 0.0 and float(ex._farola_cono.get_shader_parameter("fuerza")) == 0.0, "de día ni charco ni haz")
+	_comprobar(is_zero_approx(ex._farola_charco.albedo_color.a) and is_zero_approx(float(ex._farola_cono.get_shader_parameter("fuerza"))), "de día ni charco ni haz")
 	ex._kenney_calles()
 	var carteles := 0
 	var grafito := 0

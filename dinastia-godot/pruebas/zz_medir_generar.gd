@@ -104,27 +104,27 @@ func _micro_nombre(n := 20000) -> void:
 	var tabla: Array = Datos.tabla("NOMBRES")
 	for i in n:
 		var t := Time.get_ticks_usec()
-		var _a: Array = Datos.tabla("NOMBRES")
-		var _b: Array = Datos.tabla("APELLIDOS")
-		var _c: Variant = Datos.tabla("POOLS_EU")
+		Datos.tabla("NOMBRES")
+		Datos.tabla("APELLIDOS")
+		Datos.tabla("POOLS_EU")
 		pasos["3 Datos.tabla"] += Time.get_ticks_usec() - t
 		t = Time.get_ticks_usec()
-		var _d := Regiones.bolsas("CHI", "")
+		Regiones.bolsas("CHI", "")
 		pasos["Regiones.bolsas"] += Time.get_ticks_usec() - t
 		t = Time.get_ticks_usec()
-		var _e := m._bolsa_extra("CHI")
+		m._bolsa_extra("CHI")
 		pasos["_bolsa_extra"] += Time.get_ticks_usec() - t
 		t = Time.get_ticks_usec()
-		var _s := "%s %s" % [Azar.uno(tabla), Azar.uno(tabla)]
+		var s := "%s %s" % [Azar.uno(tabla), Azar.uno(tabla)]
 		pasos["Azar.uno x2 + formato"] += Time.get_ticks_usec() - t
 		t = Time.get_ticks_usec()
-		var _v := Nombres.vetado(nom)
+		Nombres.vetado(nom)
 		pasos["Nombres.vetado"] += Time.get_ticks_usec() - t
 		t = Time.get_ticks_usec()
-		var _x := m._sortear_nombre("CHI", "")
+		m._sortear_nombre("CHI", "")
 		pasos["_sortear_nombre entero"] += Time.get_ticks_usec() - t
 		t = Time.get_ticks_usec()
-		var _y := Nombres.sin_vetar(func() -> String: return m._sortear_nombre("CHI", ""))
+		Nombres.sin_vetar(func() -> String: return m._sortear_nombre("CHI", ""))
 		pasos["sin_vetar entero"] += Time.get_ticks_usec() - t
 	for k: String in pasos:
 		print("   nombre: %-24s %6.2f µs" % [k, float(pasos[k]) / n])

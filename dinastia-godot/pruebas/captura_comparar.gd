@@ -45,7 +45,7 @@ func _ready() -> void:
 	var paso := float(OS.get_environment("PASO")) if OS.get_environment("PASO") != "" else 0.12
 	for fila in 2:
 		for k in 6:
-			var nodo := sp._crear_jugador(self, j.id, "DEL", "", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+			var nodo := sp._crear_jugador(self, j.id, "DEL", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look, Color(0, 0, 0, 0), datos)
 			var n3 := nodo["nodo"] as Node3D
 			n3.position = Vector3(-6.25 + k * 2.5, 1.3 - fila * 2.5, 0)
 			n3.rotation.y = PI * 0.5
@@ -54,7 +54,8 @@ func _ready() -> void:
 			var clip := nuestro if fila == 0 else ls
 			if not ap.has_animation(clip):
 				if not AnimExtra.asegurar(ap, esq, clip):
-					AnimExtra.unir(ap, esq, clip, AnimExtra.BARRIDA_REAL) if clip == "barrida_real" else null
+					if clip == "barrida_real":
+						AnimExtra.unir(ap, esq, clip, AnimExtra.BARRIDA_REAL)
 			var t0 := 0.0 if fila == 0 else maxf(contacto - 0.3, 0.0)
 			_cuerpos.append([ap, clip, t0 + paso * k])
 

@@ -111,7 +111,7 @@ func _contraste() -> void:
 	_comprobar(razon(t_alto, Tema.PANEL) >= 15.0, "contraste alto: texto principal %.1f:1 (≥ 15)" % razon(t_alto, Tema.PANEL))
 	_comprobar(razon(s_alto, Tema.PANEL) >= 9.0, "contraste alto: texto suave %.1f:1 (≥ 9)" % razon(s_alto, Tema.PANEL))
 	_comprobar(razon(s_alto, Tema.PANEL) > razon(Tema.SUAVE, Tema.PANEL) + 2.0, "contraste alto: el suave mejora más de 2 puntos")
-	_comprobar(Tema.accesible(Color(Tema.TEXTO, 0.5)).a == 0.5, "contraste alto: el alfa se conserva")
+	_comprobar(is_equal_approx(Tema.accesible(Color(Tema.TEXTO, 0.5)).a, 0.5), "contraste alto: el alfa se conserva")
 	_comprobar(Tema.accesible(Tema.ACENTO) == Tema.ACENTO, "contraste alto: un color sin significado no cambia")
 	Tema.contraste = false
 
@@ -145,10 +145,13 @@ func _escala_de_texto() -> void:
 		_comprobar(Tema.letra(tam) == int(round(tam * 1.6)), "escala 1,6: la letra de %d px sube a %d" % [tam, Tema.letra(tam)])
 		Tema.escala_texto = 2.5
 		_comprobar(Tema.letra(tam) == int(round(tam * 1.6)), "una escala fuera de rango (2,5) se acota a 1,6")
+	Tema.escala_texto = 1.0   ## el bucle de arriba la deja en 2,5 (acotada a 1,6): el escaparate se pintaba con esa letra
 	var cortados: Dictionary = {}
 	var medias: Dictionary = {}
 	for esc: float in [0.85, 1.0, 1.15, 1.3, 1.6]:
 		_p._escala_texto = esc
+		_p._refrescar()   ## como al cambiar la escala en Ajustes: se repintan las pantallas ya construidas (el escaparate y las pestañas), que si no conservan la letra anterior
+		await _frames(4)
 		var n_cort := 0
 		var n_sale := 0
 		var ejemplos: Array[String] = []

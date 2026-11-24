@@ -64,16 +64,20 @@ func le_pueden_echar() -> bool:
 ## La frase que explica por qué el botón está apagado. Un botón gris sin motivo
 ## se lee como un fallo del juego.
 func motivo_bloqueo(accion: String) -> String:
+	var v: Variant = _motivo_a(accion)
+	if v == null:
+		v = _motivo_b(accion)
+	if v == null:
+		return ""
+	return String(v)
+
+## Motivo de bloqueo de fichajes, alineaciones, ventas, rescisiones y despacho. Devuelve null si la acción es de la otra mitad o no bloquea nada.
+func _motivo_a(accion: String) -> Variant:
 	match accion:
 		"fichar":
-			if en_interinato():
-				return "Interinato: la ventana de pases está cerrada. Con estos te toca."
-			if es_ayudante():
-				return "Los fichajes no son cosa del ayudante de campo."
-			if not _permiso("fichar"):
-				return "Tu cargo no firma jugadores."
-			if not ventana_abierta() and not emergencia_activa():
-				return "Mercado cerrado: las ventanas son las semanas 1-6 y 18-24."
+			var mf: Variant = _motivo_fichar()
+			if mf != null:
+				return mf
 		"alinear":
 			if es_ayudante():
 				return "El once lo pone %s. Tú propones." % jefe_nombre()
@@ -90,11 +94,17 @@ func motivo_bloqueo(accion: String) -> String:
 		"staff", "construir":
 			if es_ayudante():
 				return "El despacho no es tuyo: eso lo decide el club."
+	return null
+
+## Motivo de bloqueo del dinero del dueño y de vender el club. Devuelve null si la acción no es de aquí.
+func _motivo_b(accion: String) -> Variant:
+	match accion:
 		"capital":
 			return "Solo el dueño mete dinero de su bolsillo."
 		"vender_club":
 			return "No se vende lo que no es tuyo."
-	return ""
+	return null
+
 
 # ---------------------------------------------------------------------------
 # LA VENTANA DE EMERGENCIA
@@ -416,3 +426,15 @@ func puede_ascender() -> String:
 	if trofeos.size() >= int(puerta["trofeos"]) and prestigio >= int(puerta["prestigio"]):
 		return String(puerta["a"])
 	return ""
+
+## Motivo de bloqueo de fichar: la ventana, el cargo y el mercado. Devuelve null si no bloquea.
+func _motivo_fichar() -> Variant:
+	if en_interinato():
+		return "Interinato: la ventana de pases está cerrada. Con estos te toca."
+	if es_ayudante():
+		return "Los fichajes no son cosa del ayudante de campo."
+	if not _permiso("fichar"):
+		return "Tu cargo no firma jugadores."
+	if not ventana_abierta() and not emergencia_activa():
+		return "Mercado cerrado: las ventanas son las semanas 1-6 y 18-24."
+	return null

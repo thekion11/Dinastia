@@ -8,12 +8,8 @@ func _t(nombre: String, partidos: Array, f: Callable, veces := 200) -> void:
 			f.call(p)
 	var us := float(Time.get_ticks_usec() - t0) / (veces * partidos.size())
 	print("  %-28s %8.2f µs por llamada" % [nombre, us])
-func _ready() -> void:
-	var m := Mundo.new()
-	m.generar([], 777)
-	m.reloj.sincronizar(m.anio, m.semana)
-	Partido.ctx_anio = m.anio
-	Partido.ctx_semana = m.semana
+## Hasta 100 partidos preparados, emparejando clubes de cada liga en orden.
+func _preparar_partidos(m: Mundo) -> Array:
 	var ps: Array = []
 	for l: Liga in m.ligas:
 		for i in range(0, l.clubes.size() - 1, 2):
@@ -24,6 +20,15 @@ func _ready() -> void:
 				break
 		if ps.size() >= 100:
 			break
+	return ps
+
+func _ready() -> void:
+	var m := Mundo.new()
+	m.generar([], 777)
+	m.reloj.sincronizar(m.anio, m.semana)
+	Partido.ctx_anio = m.anio
+	Partido.ctx_semana = m.semana
+	var ps := _preparar_partidos(m)
 	Azar.sembrar(4711)
 	print("COSTE POR FUNCIÓN (%d partidos preparados)" % ps.size())
 	_t("fuerza(once local)", ps, func(p: Partido) -> void: p.fuerza(p.once_local, p.local), 20)

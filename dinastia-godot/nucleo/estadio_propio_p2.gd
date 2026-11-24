@@ -56,10 +56,10 @@ func niveles_visibles(mi: Club, obras: Instalaciones = null) -> int:
 func _bandejas_personalizadas() -> Dictionary:
 	var salida := {}
 	for lado: String in LADOS_BANDEJA:
-		var asientoP := String(hecho().get("bandeja_%s_asientoP" % lado, ""))
+		var asiento_p := String(hecho().get("bandeja_%s_asientoP" % lado, ""))
 		var techo := String(hecho().get("bandeja_%s_techo" % lado, ""))
 		salida[lado] = {
-			"asientoP": asientoP if asientoP != "" else String(hecho().get("asientoP", "franjas")),
+			"asientoP": asiento_p if asiento_p != "" else String(hecho().get("asientoP", "franjas")),
 			"techo": techo if techo != "" else String(hecho().get("techo", "anillo")),
 			## B6: los colores de las butacas de ESTA tribuna ("" = los globales).
 			"col1": String(hecho().get("bandeja_%s_col1" % lado, "")),

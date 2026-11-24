@@ -18,7 +18,7 @@ static func crear(p: Object) -> void:
 		b.text = Idiomas.t("Por defecto") if letra == "" else letra
 		b.toggle_mode = true
 		b.button_pressed = actual == letra
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.custom_minimum_size = Vector2(70, 0)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.tooltip_text = Idiomas.t("Elige A, B o C sin saber cuál es cuál y juega: al terminar cada partido te pedimos una nota de diversión. «Por defecto» es el motor del juego (C4).")
@@ -32,7 +32,7 @@ static func crear(p: Object) -> void:
 	var rev := MotorEleccion.revelado()
 	var br := Button.new()
 	br.text = Idiomas.t("Ocultar qué es cada letra") if rev else Idiomas.t("Revelar qué es cada letra")
-	br.add_theme_font_size_override("font_size", 11)
+	br.add_theme_font_size_override("font_size", Tema.letra(11))
 	br.pressed.connect(func() -> void:
 		if rev:
 			MotorEleccion.ocultar()
@@ -42,7 +42,7 @@ static func crear(p: Object) -> void:
 	fila2.add_child(br)
 	var bb := Button.new()
 	bb.text = Idiomas.t("Barajar las letras de nuevo")
-	bb.add_theme_font_size_override("font_size", 11)
+	bb.add_theme_font_size_override("font_size", Tema.letra(11))
 	bb.pressed.connect(func() -> void:
 		MotorEleccion.barajar()
 		MotorEleccion.ocultar()

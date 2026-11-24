@@ -136,7 +136,7 @@ func _montar() -> void:
 	fila_calor.add_child(h2)
 	_boton_calor = Button.new()
 	_boton_calor.focus_mode = Control.FOCUS_NONE
-	_boton_calor.add_theme_font_size_override("font_size", 12)
+	_boton_calor.add_theme_font_size_override("font_size", Tema.letra(12))
 	_boton_calor.pressed.connect(_cambiar_calor)
 	fila_calor.add_child(_boton_calor)
 	var mc := MapaCampo.new()
@@ -160,7 +160,7 @@ func _montar() -> void:
 	var seguir := Button.new()
 	seguir.text = Idiomas.t("▶  Volver al partido")
 	seguir.custom_minimum_size = Vector2(220, 36)
-	seguir.add_theme_font_size_override("font_size", 16)
+	seguir.add_theme_font_size_override("font_size", Tema.letra(16))
 	seguir.pressed.connect(cerrar)
 	pie.add_child(seguir)
 	## Entrada: sube y aparece.

@@ -7,12 +7,29 @@ extends RefCounted
 ## Lo que mueve la confianza un objetivo de `peso`: cumplirlo suma el peso y fallarlo resta un 25 % más (calibrado el 10-11 con 3 ligas: sin esto, un club de arriba
 ## cumplía casi todo y la confianza no bajaba nunca).
 static func delta_de(peso: int, cumplido: bool) -> int:
+	var nat := Nativo.de("nuc_delta_de")
+	if nat != null:
+		return nat.nuc_delta_de(peso, cumplido)
+	return delta_de_gd(peso, cumplido)
+
+## Gemela GDScript de `nuc_delta_de` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func delta_de_gd(peso: int, cumplido: bool) -> int:
 	return peso if cumplido else -int(ceil(float(peso) * 1.25))
 
 ## Juzga un secundario. Devuelve {cumplido, aplica}. `aplica` = falso si no hubo ocasión de cumplirlo (p. ej. no jugó la copa continental).
 static func juzgar(m: Mundo, c: Club, liga: Liga, o: Dictionary, bases: Dictionary) -> Dictionary:
 	var meta := int(o.get("meta", 0))
-	match String(o.get("tipo", "")):
+	var tipo := String(o.get("tipo", ""))
+	var v: Variant = _juzgar_a(tipo, m, c, meta, bases)
+	if v == null:
+		v = _juzgar_b(tipo, c, liga, meta, bases)
+	if v != null:
+		return v
+	return {"cumplido": false, "aplica": false}
+
+## Juzga los objetivos de copa, continental y economía. Devuelve null si el tipo no es de este grupo.
+static func _juzgar_a(tipo: String, m: Mundo, c: Club, meta: int, bases: Dictionary) -> Variant:
+	match tipo:
 		"copa":
 			var copa: Copa = m.copa
 			if copa == null or not copa.participantes.has(c):
@@ -44,6 +61,11 @@ static func juzgar(m: Mundo, c: Club, liga: Liga, o: Dictionary, bases: Dictiona
 			else:
 				ok = float(c.saldo) >= float(base) * 0.9
 			return {"cumplido": ok, "aplica": true}
+	return null
+
+## Juzga los objetivos de cantera, social y estilo. Devuelve null si el tipo no es de este grupo.
+static func _juzgar_b(tipo: String, c: Club, liga: Liga, meta: int, bases: Dictionary) -> Variant:
+	match tipo:
 		"cantera":
 			var jovenes := 0
 			for j: Jugador in c.plantilla:
@@ -55,7 +77,8 @@ static func juzgar(m: Mundo, c: Club, liga: Liga, o: Dictionary, bases: Dictiona
 			return {"cumplido": b > 0 and float(c.socios) >= float(b) * (1.0 + float(meta) / 100.0), "aplica": b > 0}
 		"estilo":
 			return {"cumplido": _estilo(liga, c, meta), "aplica": liga != null and liga.jornada_actual > 0}
-	return {"cumplido": false, "aplica": false}
+	return null
+
 
 static func _estilo(liga: Liga, c: Club, meta: int) -> bool:
 	if liga == null:

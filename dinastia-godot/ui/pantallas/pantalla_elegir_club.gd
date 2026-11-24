@@ -72,7 +72,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 	for h in col.get_children():
 		h.queue_free()
 
-	var t := p._texto(14, p.COL_ACENTO)
+	var t := p._texto(14, p.col_acento)
 	t.text = Idiomas.t("¿DÓNDE QUIERES EMPEZAR?")
 	col.add_child(t)
 
@@ -90,7 +90,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 		var pais := cod
 		var b := Button.new()
 		b.text = "%s  (%d)" % [Idiomas.t(String(nombres.get(pais, pais))) if nombres != null else pais, int(por_pais[pais])]   ## (10-11) el país en el idioma del juego
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.toggle_mode = true
 		b.button_pressed = _pais_elegido == pais
 		b.clip_text = true
@@ -113,7 +113,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 	var marco := PanelContainer.new()
 	var estilo := StyleBoxFlat.new()
 	estilo.bg_color = p._pal_panel()
-	estilo.border_color = p.COL_ACENTO
+	estilo.border_color = p.col_acento
 	estilo.set_border_width_all(2)
 	estilo.set_corner_radius_all(8)
 	estilo.content_margin_left = 10
@@ -137,7 +137,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 	if pol.size() >= 3:
 		var forma := Polygon2D.new()
 		forma.polygon = pol
-		forma.color = p.COL_ACENTO
+		forma.color = p.col_acento
 		lienzo.add_child(forma)
 		## El contorno por encima, más claro: una silueta plana se lee como una
 		## mancha, y con borde se reconoce el país.
@@ -185,7 +185,7 @@ func _pintar_elegir_club(col: VBoxContainer) -> void:
 		b2.text = "%s%s" % ["★ " if mio else "", club.nombre]
 		b2.flat = true
 		b2.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b2.add_theme_font_size_override("font_size", 13)
+		b2.add_theme_font_size_override("font_size", Tema.letra(13))
 		b2.add_theme_color_override("font_color", p._color_de_paleta(p.COL_ORO if mio else p.COL_TEXTO))
 		b2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b2.clip_text = true

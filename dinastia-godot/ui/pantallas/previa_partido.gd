@@ -18,15 +18,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	if not es_copa:
 		par = p.mundo.proximo_partido()
 	if par.is_empty():
-		## (13-11) Semana sin partido: antes era una línea suelta y la pantalla en negro; ahora se dice contra quién se vuelve.
-		var liga := p.mundo.liga_de(c)
-		var sig: Array = liga.siguiente_de(c) if liga != null else []
-		var pista := Idiomas.t("No quedan partidos de liga esta temporada.")
-		if sig.size() == 3:
-			var rival: Club = sig[1] if sig[0] == c else sig[0]
-			pista = (Idiomas.t("Vuelves en la jornada %d, en casa, contra %s.") if sig[0] == c else Idiomas.t("Vuelves en la jornada %d, fuera, contra %s.")) % [int(sig[2]), rival.nombre]
-		p._lista_partido.add_child(EstadoVacio.crear("⚽", Idiomas.t("Tu club descansa esta jornada."), pista,
-			p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 300.0))
+		_pintar_sin_partido(p, c)
 		return
 
 	var local: Club = par[0]
@@ -52,16 +44,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	## LA FRASE DE LA PARED, justo antes de salir. Es lo que el HTML prometia
 	## en la pantalla del club por dentro -"se lee en el tunel antes de cada
 	## partido"- y no cumplia en ninguna parte.
-	if p.mundo.club_dentro != null and p.mundo.club_dentro.frase != "":
-		var fr := p._texto(13, Color(p.mundo.club_dentro.color_ct2(c)))
-		fr.text = "«%s»" % p.mundo.club_dentro.frase
-		fr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		fr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		p._lista_partido.add_child(fr)
-		var fr2 := p._texto(10, Principal.COL_SUAVE)
-		fr2.text = Idiomas.t("En la pared del túnel")
-		fr2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		p._lista_partido.add_child(fr2)
+	_frase_pared(p, c)
 	p._lista_partido.add_child(HSeparator.new())
 
 	var secc := String(p._secc_extra.get("Partido", "previa"))
@@ -79,19 +62,12 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	if not todo:
 		p._lista_partido.get_child(p._lista_partido.get_child_count() - 1).queue_free()   ## el separador del cartel: la banda ya separa
 		p._lista_partido.add_child(CifrasClave.banda([
-			[Idiomas.t("Ganas tú"), "%.2f" % float(cuo["cuota_gano"]), SelectorDireccional.acento_legible(p.COL_ACENTO)],
+			[Idiomas.t("Ganas tú"), "%.2f" % float(cuo["cuota_gano"]), SelectorDireccional.acento_legible(p.col_acento)],
 			[Idiomas.t("Empate"), "%.2f" % float(cuo["cuota_empate"]), Principal.COL_SUAVE],
 			[Idiomas.t("Gana %s") % rival.nombre, "%.2f" % float(cuo["cuota_pierdo"]), Principal.COL_TEXTO],
 			[Idiomas.t("Tu ataque vs su defensa"), "%d / %d" % [int(round(f_mia["ata"])), int(round(f_suya["def"]))], Principal.COL_ORO]], Principal.COL_SUAVE))
 	if todo or secc == "previa":
-		pantalla._pintar_juegos_mentales(rival)
-
-		var arb := Previa.arbitro_de(rival.id, p.mundo.semana)
-		var con_el := p.mundo.federacion.texto_arbitro(String(arb["nombre"])) if p.mundo.federacion != null else ""
-		p._dato("👨‍⚖️ Árbitro", "%s — %s%s" % [String(arb["nombre"]), String(arb["descripcion"]), ("  ·  " + con_el) if con_el != "" else ""], Principal.COL_SUAVE, p._lista_partido)
-		var dtr := Previa.dt_de(rival)
-		p._dato("🎩 DT rival", "%s — %s" % [String(dtr["nombre"]), String(dtr["descripcion"])], Principal.COL_SUAVE, p._lista_partido)
-		p._lista_partido.add_child(HSeparator.new())
+		_pintar_previa_rival(p, pantalla, rival)
 
 	if todo or secc == "informe":
 		var ti := p._texto(11, Principal.COL_SUAVE)
@@ -150,9 +126,9 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 		g.add_theme_constant_override("h_separation", 12)
 		p._lista_partido.add_child(g)
 		p._celda(g, "", Principal.COL_SUAVE)
-		p._celda(g, "%s  (%s)" % [local.nombre, local.tactica.formacion], p.COL_ACENTO if de_local else Principal.COL_TEXTO, false, 12)
+		p._celda(g, "%s  (%s)" % [local.nombre, local.tactica.formacion], p.col_acento if de_local else Principal.COL_TEXTO, false, 12)
 		p._celda(g, "", Principal.COL_SUAVE)
-		p._celda(g, "%s  (%s)" % [visita.nombre, visita.tactica.formacion], Principal.COL_TEXTO if de_local else p.COL_ACENTO, false, 12)
+		p._celda(g, "%s  (%s)" % [visita.nombre, visita.tactica.formacion], Principal.COL_TEXTO if de_local else p.col_acento, false, 12)
 		for i in maxi(medidor.once_local.size(), medidor.once_visita.size()):
 			if i < medidor.once_local.size():
 				var jl: Jugador = medidor.once_local[i]
@@ -172,3 +148,40 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	p._lista_partido.add_child(HSeparator.new())
 	p._selector_modo_partido(p._lista_partido)
 	p._boton("▶ Jugar el partido", p._dirigir, p._lista_partido)
+
+## Semana sin partido: se dice cuándo vuelves a jugar, o que no quedan partidos.
+static func _pintar_sin_partido(p: Principal, c: Club) -> void:
+	## (13-11) Semana sin partido: antes era una línea suelta y la pantalla en negro; ahora se dice contra quién se vuelve.
+	var liga := p.mundo.liga_de(c)
+	var sig: Array = liga.siguiente_de(c) if liga != null else []
+	var pista := Idiomas.t("No quedan partidos de liga esta temporada.")
+	if sig.size() == 3:
+		var rival: Club = sig[1] if sig[0] == c else sig[0]
+		pista = (Idiomas.t("Vuelves en la jornada %d, en casa, contra %s.") if sig[0] == c else Idiomas.t("Vuelves en la jornada %d, fuera, contra %s.")) % [int(sig[2]), rival.nombre]
+	p._lista_partido.add_child(EstadoVacio.crear("⚽", Idiomas.t("Tu club descansa esta jornada."), pista,
+		p._color_de_paleta(Principal.COL_TEXTO), p._color_de_paleta(Principal.COL_SUAVE), 300.0))
+	return
+
+## La frase de la pared del túnel, justo antes de salir.
+static func _frase_pared(p: Principal, c: Club) -> void:
+	if p.mundo.club_dentro != null and p.mundo.club_dentro.frase != "":
+		var fr := p._texto(13, Color(p.mundo.club_dentro.color_ct2(c)))
+		fr.text = "«%s»" % p.mundo.club_dentro.frase
+		fr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		fr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		p._lista_partido.add_child(fr)
+		var fr2 := p._texto(10, Principal.COL_SUAVE)
+		fr2.text = Idiomas.t("En la pared del túnel")
+		fr2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		p._lista_partido.add_child(fr2)
+
+## La previa del rival: sus juegos mentales, el árbitro y el DT.
+static func _pintar_previa_rival(p: Principal, pantalla: Object, rival: Club) -> void:
+	pantalla._pintar_juegos_mentales(rival)
+
+	var arb := Previa.arbitro_de(rival.id, p.mundo.semana)
+	var con_el := p.mundo.federacion.texto_arbitro(String(arb["nombre"])) if p.mundo.federacion != null else ""
+	p._dato("👨‍⚖️ Árbitro", "%s — %s%s" % [String(arb["nombre"]), String(arb["descripcion"]), ("  ·  " + con_el) if con_el != "" else ""], Principal.COL_SUAVE, p._lista_partido)
+	var dtr := Previa.dt_de(rival)
+	p._dato("🎩 DT rival", "%s — %s" % [String(dtr["nombre"]), String(dtr["descripcion"])], Principal.COL_SUAVE, p._lista_partido)
+	p._lista_partido.add_child(HSeparator.new())

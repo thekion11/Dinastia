@@ -13,7 +13,9 @@ func _probar() -> void:
 				if img.get_pixel(x, y).r < 0.2 and img.get_pixel(x, y).a > 0.5:
 					negro += 1
 		_comprobar(img.get_pixel(2, 2).a < 0.1 and img.get_pixel(32, 5).r > 0.6 and img.get_pixel(32, 5).g < 0.2 and negro > 40, "la señal de %d: esquina transparente, aro rojo y cifra negra (%d px)" % [v, negro])
-	_comprobar(SenalesVelocidad.textura(50) == SenalesVelocidad.textura(50) and SenalesVelocidad.textura(40) != SenalesVelocidad.textura(50), "una textura por valor, en caché")
+	var rep1_a = SenalesVelocidad.textura(50)
+	var rep1_b = SenalesVelocidad.textura(50)
+	_comprobar(rep1_a == rep1_b and SenalesVelocidad.textura(40) != SenalesVelocidad.textura(50), "una textura por valor, en caché")
 	var iguales := 0
 	var a := SenalesVelocidad.textura(30).get_image()
 	var b := SenalesVelocidad.textura(60).get_image()

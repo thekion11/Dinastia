@@ -43,7 +43,7 @@ var _prev_eq := -1
 func _init(motor: MotorJugable) -> void:
 	m = motor
 	m.gol.connect(_al_gol)
-	m.remate.connect(func(_l: bool, _id_: String, tipo: String) -> void:
+	m.remate.connect(func(_l: bool, id_arg: String, tipo: String) -> void:
 		remates[tipo] = int(remates.get(tipo, 0)) + 1)
 
 func observar(dt: float) -> void:

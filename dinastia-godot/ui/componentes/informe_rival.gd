@@ -23,9 +23,9 @@ var mio: Club
 var liga: Liga
 var mundo: Mundo
 
-static func mostrar(padre: Control, p: Partido, mi_club: Club, liga_rival: Liga, mundo_: Mundo = null) -> InformeRival:
+static func mostrar(padre: Control, p: Partido, mi_club: Club, liga_rival: Liga, mundo_arg: Mundo = null) -> InformeRival:
 	var r := InformeRival.new()
-	r.mundo = mundo_
+	r.mundo = mundo_arg
 	r.mio = mi_club
 	r.rival = p.visita if p.local == mi_club else p.local
 	r.liga = liga_rival
@@ -35,42 +35,76 @@ static func mostrar(padre: Control, p: Partido, mi_club: Club, liga_rival: Liga,
 	return r
 
 ## Los datos, separados de la pantalla para poder probarlos sin dibujar.
-static func datos(rival_: Club, mio_: Club, liga_: Liga) -> Dictionary:
+static func datos(rival_arg: Club, mio_arg: Club, liga_arg: Liga) -> Dictionary:
 	var d := {"puesto": 0, "pts": 0, "racha": [], "mejores": [], "goleador": null, "bajas": 0,
 		"media_rival": 0.0, "media_mia": 0.0, "consejos": []}
-	if liga_ != null:
-		var tabla := liga_.tabla()
-		for i in tabla.size():
-			if (tabla[i]["club"] as Club) == rival_:
-				d["puesto"] = i + 1
-				d["pts"] = int(tabla[i]["pts"])
-		## La racha: los últimos cinco partidos del rival en la liga, del más
-		## viejo al más nuevo (V, E, D).
-		var racha: Array = []
-		for jornada: Array in liga_.historial:
-			for r: Dictionary in jornada:
-				var es_l: bool = r["local"] == rival_
-				if not es_l and r["visita"] != rival_:
-					continue
-				var a := int(r["gl"] if es_l else r["gv"])
-				var b := int(r["gv"] if es_l else r["gl"])
-				racha.append("V" if a > b else ("E" if a == b else "D"))
-		d["racha"] = racha.slice(maxi(racha.size() - 5, 0))
-	var once := rival_.once()
+	if liga_arg != null:
+		_puesto_y_racha(d, rival_arg, liga_arg)
+	var once := rival_arg.once()
 	var orden: Array = once.duplicate()
 	orden.sort_custom(func(x: Jugador, y: Jugador) -> bool: return x.ovr > y.ovr)
 	d["mejores"] = orden.slice(0, 3)
 	var gol: Jugador = null
-	for j: Jugador in rival_.plantilla:
+	for j: Jugador in rival_arg.plantilla:
 		if j.lesion > 0:
 			d["bajas"] = int(d["bajas"]) + 1
 		elif j.goles > 0 and (gol == null or j.goles > gol.goles):
 			gol = j
 	d["goleador"] = gol
 	d["media_rival"] = _media(once)
-	d["media_mia"] = _media(mio_.once()) if mio_ != null else 0.0
-	## Los consejos, de la pizarra del rival y de la diferencia de nivel.
-	var t := rival_.tactica
+	d["media_mia"] = _media(mio_arg.once()) if mio_arg != null else 0.0
+	d["consejos"] = _consejos_rival(d, rival_arg, gol)
+	return d
+
+## Puesto y pts del rival en la liga, y su racha (los últimos cinco partidos, del más viejo al más nuevo).
+static func _puesto_y_racha(d: Dictionary, rival_arg: Club, liga_arg: Liga) -> void:
+	var tabla := liga_arg.tabla()
+	for i in tabla.size():
+		if (tabla[i]["club"] as Club) == rival_arg:
+			d["puesto"] = i + 1
+			d["pts"] = int(tabla[i]["pts"])
+	## La racha: los últimos cinco partidos del rival en la liga, del más
+	## viejo al más nuevo (V, E, D).
+	var racha: Array = []
+	for jornada: Array in liga_arg.historial:
+		for r: Dictionary in jornada:
+			var es_l: bool = r["local"] == rival_arg
+			if not es_l and r["visita"] != rival_arg:
+				continue
+			var a := int(r["gl"] if es_l else r["gv"])
+			var b := int(r["gv"] if es_l else r["gl"])
+			racha.append("V" if a > b else ("E" if a == b else "D"))
+	d["racha"] = racha.slice(maxi(racha.size() - 5, 0))
+
+## Los consejos de la pizarra del rival, de la diferencia de nivel y de sus jugadores.
+static func _consejos_rival(d: Dictionary, rival_arg: Club, gol: Jugador) -> Array:
+	## Los consejos, de la pizarra del rival (su táctica) y, después, de la diferencia de nivel.
+	var c: Array = _consejos_tactica(rival_arg.tactica)
+	## Sobre sus jugadores: el mejor y el que más marca, con nombre.
+	var top: Array = d["mejores"]
+	if not top.is_empty():
+		var j0: Jugador = top[0]
+		c.append(Idiomas.t("Vigila a %s (%s, %d): es su mejor jugador.") % [j0.nombre, j0.pos_e, j0.ovr])
+	if gol != null and (top.is_empty() or gol != top[0]) and gol.goles >= 2:
+		c.append(Idiomas.t("%s ya lleva %d goles: no le dejes rematar solo.") % [gol.nombre, gol.goles])
+	if int(d["bajas"]) >= 2:
+		c.append(Idiomas.t("Tienen %d lesionados: su banco está más corto.") % int(d["bajas"]))
+	var racha_loc: Array = d["racha"]
+	if racha_loc.size() >= 3 and racha_loc.slice(-3).count("D") >= 2:
+		c.append("Llegan con malos resultados: un gol temprano los puede hundir.")
+	elif racha_loc.size() >= 3 and racha_loc.slice(-3).count("V") == 3:
+		c.append("Llegan en racha: cuidado con los primeros minutos.")
+	var dif := float(d["media_rival"]) - float(d["media_mia"])
+	if dif > 3.0:
+		c.append("En el papel son mejores: orden atrás y paciencia.")
+	elif dif < -3.0:
+		c.append("En el papel sois mejores: toma la iniciativa desde el inicio.")
+	if c.is_empty():
+		c.append("Partido parejo: los detalles (balón parado, cambios) decidirán.")
+	return c
+
+## Los consejos de la pizarra del rival (presión, línea, mentalidad). Sin táctica, ninguno.
+static func _consejos_tactica(t: Tactica) -> Array:
 	var c: Array = []
 	if t != null:
 		if t.presion == Tactica.Nivel.ALTO:
@@ -81,29 +115,7 @@ static func datos(rival_: Club, mio_: Club, liga_: Liga) -> Dictionary:
 			c.append("Se encierran atrás: abre el campo y busca centros y tiros de fuera.")
 		if t.mentalidad == Tactica.Mentalidad.OFENSIVA:
 			c.append("Atacan con mucha gente: la contra puede hacerles daño.")
-	## Sobre sus jugadores: el mejor y el que más marca, con nombre.
-	var top: Array = d["mejores"]
-	if not top.is_empty():
-		var j0: Jugador = top[0]
-		c.append(Idiomas.t("Vigila a %s (%s, %d): es su mejor jugador.") % [j0.nombre, j0.pos_e, j0.ovr])
-	if gol != null and (top.is_empty() or gol != top[0]) and gol.goles >= 2:
-		c.append(Idiomas.t("%s ya lleva %d goles: no le dejes rematar solo.") % [gol.nombre, gol.goles])
-	if int(d["bajas"]) >= 2:
-		c.append(Idiomas.t("Tienen %d lesionados: su banco está más corto.") % int(d["bajas"]))
-	var racha_: Array = d["racha"]
-	if racha_.size() >= 3 and racha_.slice(-3).count("D") >= 2:
-		c.append("Llegan con malos resultados: un gol temprano los puede hundir.")
-	elif racha_.size() >= 3 and racha_.slice(-3).count("V") == 3:
-		c.append("Llegan en racha: cuidado con los primeros minutos.")
-	var dif := float(d["media_rival"]) - float(d["media_mia"])
-	if dif > 3.0:
-		c.append("En el papel son mejores: orden atrás y paciencia.")
-	elif dif < -3.0:
-		c.append("En el papel sois mejores: toma la iniciativa desde el inicio.")
-	if c.is_empty():
-		c.append("Partido parejo: los detalles (balón parado, cambios) decidirán.")
-	d["consejos"] = c
-	return d
+	return c
 
 static func _media(js: Array) -> float:
 	if js.is_empty():

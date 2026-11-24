@@ -24,7 +24,6 @@ func _ready() -> void:
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)
-	var mejor := 1e9
 	for hijo in get_children():
 		if hijo is MeshInstance3D and (hijo as MeshInstance3D).mesh is CylinderMesh and (hijo as MeshInstance3D).position.y > 10.0:
 			pass

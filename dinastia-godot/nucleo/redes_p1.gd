@@ -299,6 +299,16 @@ func responder(m: Mundo, pub_id: int, idx: int, tono: String) -> String:
 		delta = 0
 	if m.roles != null and delta != 0:
 		m.roles.anotar_reputacion(faceta, delta, "Redes: respondiste %s" % String(r[1]).to_lower())
+	var viral: Variant = _respuesta_viral(m, c, tono, r)
+	if viral != null:
+		return String(viral)
+	c["respuesta_likes"] = _rng.randi_range(5, 80)
+	if tono == "agradecer" and m.prensa != null and String(c.get("tono", "")) == "bien":
+		m.prensa.animo = clampi(m.prensa.animo + 1, 0, 100)
+	return "Respondiste a %s." % String(c["autor"])
+
+## La respuesta picante que se vuelve viral: el golpe a la reputación y la grada. Devuelve el texto, o null si no se hace viral.
+func _respuesta_viral(m: Mundo, c: Dictionary, tono: String, r: Array) -> Variant:
 	if tono == "picante" and _rng.randf() < float(r[5]):
 		if m.roles != null:
 			m.roles.anotar_reputacion("honesto", -1, "Discusión con un hincha en redes")
@@ -306,10 +316,8 @@ func responder(m: Mundo, pub_id: int, idx: int, tono: String) -> String:
 			m.prensa.animo = clampi(m.prensa.animo - 2, 0, 100)
 		c["respuesta_likes"] = _rng.randi_range(200, 900)
 		return "Tu respuesta se hizo viral… y no para bien. La grada se enoja un poco."
-	c["respuesta_likes"] = _rng.randi_range(5, 80)
-	if tono == "agradecer" and m.prensa != null and String(c.get("tono", "")) == "bien":
-		m.prensa.animo = clampi(m.prensa.animo + 1, 0, 100)
-	return "Respondiste a %s." % String(c["autor"])
+	return null
+
 
 ## Me gusta (o lo quitas) en cualquier publicación.
 func me_gusta(pub_id: int) -> bool:

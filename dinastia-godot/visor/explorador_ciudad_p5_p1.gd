@@ -207,7 +207,7 @@ func _conducir(e: Vector2, delta: float) -> void:
 	var giro := 1.9 * (1.6 if freno_mano and absf(vel) > 4.0 else 1.0)
 	## A más velocidad el volante gira menos (no se vuelca a 90 km/h).
 	var cierre := clampf(absf(vel) / 8.0, 0.0, 1.0) * (1.0 - clampf(absf(vel) / VEL_COCHE, 0.0, 1.0) * 0.45)
-	rumbo -= _volante * delta * giro * cierre * signf(vel if vel != 0.0 else 1.0)
+	rumbo -= _volante * delta * giro * cierre * signf(vel if not is_zero_approx(vel) else 1.0)
 	## Mejora B: con el freno de mano a más de 6 m/s las ruedas pierden agarre: la trayectoria tarda en seguir
 	## al morro (el coche cruza), se pierde velocidad según lo cruzado y al soltar se recupera.
 	var agarre := 1.6 if (freno_mano or freno_mano_prueba) and absf(vel) > 6.0 else 20.0

@@ -119,7 +119,7 @@ func _boton(texto: String, principal: bool) -> Button:
 	b.text = texto
 	b.custom_minimum_size = Vector2(190, 46)
 	b.focus_mode = Control.FOCUS_ALL
-	b.add_theme_font_size_override("font_size", 17)
+	b.add_theme_font_size_override("font_size", Tema.letra(17))
 	## El sonido lo pone la pantalla (uno propio al pasar y al elegir).
 	b.set_meta("sin_sonido", true)
 	var fondo := Color(ORO, 0.92) if principal else Color(1, 1, 1, 0.06)

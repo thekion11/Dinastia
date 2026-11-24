@@ -40,6 +40,6 @@ func _probar() -> void:
 	## Mayúsculas: en Linux/Android/Web «A» y «a» son archivos distintos; en Windows/macOS el mismo. La expectativa es de cada sistema.
 	var ruta_may := Partida.ruta_de(RANURA.to_upper())
 	var mismo := FileAccess.file_exists(ruta_may)
-	_comprobar(mismo == not rutas_con_mayusculas(), "en %s el nombre en MAYÚSCULAS %s el mismo archivo" % [sistema(), "es" if mismo else "NO es"])
+	_comprobar(mismo != rutas_con_mayusculas(), "en %s el nombre en MAYÚSCULAS %s el mismo archivo" % [sistema(), "es" if mismo else "NO es"])
 	Partida.borrar(RANURA)
 	_comprobar(not FileAccess.file_exists(Partida.ruta_de(RANURA)), "borrar quita el archivo")

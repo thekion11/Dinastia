@@ -103,16 +103,16 @@ func _perimetro() -> void:
 	## valla en 206 dejaba un edificio fuera del recinto.
 	var filas: int = int(ceil(float(EDIFICIOS.size()) / 4.0))
 	## Justo antes de la calle exterior (z=262, 16 m de ancho).
-	var zFondo: float = FILA_0_Z + (filas - 1) * FILA_PASO + 14.0
+	var z_fondo: float = FILA_0_Z + (filas - 1) * FILA_PASO + 14.0
 	## HASTA -280 Y NO -128 (12-9-2026): desde que el estadio es el de verdad
 	## y no una maqueta, ocupa de z=-260 a z=-120, así que con la valla vieja
 	## el estadio quedaba FUERA de su propio recinto.
-	var zFrente := -250.0
-	var largo: float = zFondo - zFrente
-	var centro: float = (zFondo + zFrente) * 0.5
+	var z_frente_loc := -250.0
+	var largo: float = z_fondo - z_frente_loc
+	var centro: float = (z_fondo + z_frente_loc) * 0.5
 	var lados := [
-		{"p": Vector3(0, 1.5, zFrente), "s": Vector3(292, 3, 0.8)},
-		{"p": Vector3(0, 1.5, zFondo),  "s": Vector3(292, 3, 0.8)},
+		{"p": Vector3(0, 1.5, z_frente_loc), "s": Vector3(292, 3, 0.8)},
+		{"p": Vector3(0, 1.5, z_fondo),  "s": Vector3(292, 3, 0.8)},
 		{"p": Vector3(-146, 1.5, centro), "s": Vector3(0.8, 3, largo)},
 		{"p": Vector3(146, 1.5, centro),  "s": Vector3(0.8, 3, largo)},
 	]

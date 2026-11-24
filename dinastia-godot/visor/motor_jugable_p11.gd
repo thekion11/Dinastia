@@ -187,14 +187,14 @@ func _vuelo_tanda() -> void:
 		_resultado_tanda(false, "¡Fallado!")
 
 ## ¿Ya está decidida? Cinco cada uno con cuentas imposibles, o muerte súbita.
-static func tanda_decidida(tiros_: Array) -> bool:
-	var na: int = (tiros_[0] as Array).size()
-	var nb: int = (tiros_[1] as Array).size()
+static func tanda_decidida(tiros_arg: Array) -> bool:
+	var na: int = (tiros_arg[0] as Array).size()
+	var nb: int = (tiros_arg[1] as Array).size()
 	var ga := 0
 	var gb := 0
-	for b: bool in tiros_[0]:
+	for b: bool in tiros_arg[0]:
 		ga += 1 if b else 0
-	for b: bool in tiros_[1]:
+	for b: bool in tiros_arg[1]:
 		gb += 1 if b else 0
 	if na <= 5 and nb <= 5:
 		if ga + (5 - na) < gb or gb + (5 - nb) < ga:

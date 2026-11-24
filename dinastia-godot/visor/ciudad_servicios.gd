@@ -99,7 +99,7 @@ static func _pieza_edif(ex: CiudadExpansion, nombre: String, pos: Vector3, tam: 
 	mi.transform = Transform3D(Basis(Vector3.UP, giro).scaled(tam), pos)
 	ex.b.add_child(mi)
 
-static func portico(ex: CiudadExpansion, uso: String, c: Vector3, w: float, f: float) -> void:
+static func portico(ex: CiudadExpansion, uso: String, c: Vector3, _w: float, f: float) -> void:
 	if not PORTICO.has(uso):
 		return
 	var d: Array = FACHADAS[uso]

@@ -30,7 +30,7 @@ static func pintar(lista: VBoxContainer, mundo: Mundo, paleta: Dictionary, al_ca
 	if mundo.eventos_cantera != null:
 		var visita := Button.new()
 		visita.text = Idiomas.t("👀 Visitar el entrenamiento de la academia (una vez por semana)")
-		visita.add_theme_font_size_override("font_size", 11)
+		visita.add_theme_font_size_override("font_size", Tema.letra(11))
 		visita.pressed.connect(func() -> void:
 			al_cambiar.call(mundo.eventos_cantera.visitar(a, mundo.anio, mundo.semana)))
 		lista.add_child(visita)
@@ -59,7 +59,7 @@ static func pintar(lista: VBoxContainer, mundo: Mundo, paleta: Dictionary, al_ca
 		fila.add_child(t)
 		var b := Button.new()
 		b.text = Idiomas.t("Captar · %s") % Eco.dinero(a.coste_captacion(ch))
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = a.chicos.size() >= Academia.CUPO
 		var indice := i
 		b.pressed.connect(func() -> void: al_cambiar.call(a.captar(indice)))
@@ -82,7 +82,7 @@ static func _tarjeta_chico(ch: Dictionary, a: Academia, paleta: Dictionary, al_c
 		var e := Button.new()
 		e.text = Idiomas.t("Entregar al DT")
 		e.tooltip_text = Idiomas.t("Sube ya al primer equipo, sin esperar a los %d.") % Academia.EDAD_ENTREGA
-		e.add_theme_font_size_override("font_size", 11)
+		e.add_theme_font_size_override("font_size", Tema.letra(11))
 		var id := String(ch["id"])
 		e.pressed.connect(func() -> void: al_cambiar.call(a.entregar(id)))
 		cab.add_child(e)
@@ -117,7 +117,7 @@ static func _selector(ch: Dictionary, a: Academia, campo: String, etiqueta: Stri
 	l.text = etiqueta
 	h.add_child(l)
 	var op := OptionButton.new()
-	op.add_theme_font_size_override("font_size", 11)
+	op.add_theme_font_size_override("font_size", Tema.letra(11))
 	op.custom_minimum_size = Vector2(150, 26)
 	op.fit_to_longest_item = false
 	var claves: Array = catalogo.keys()

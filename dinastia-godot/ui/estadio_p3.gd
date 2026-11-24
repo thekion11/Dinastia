@@ -114,7 +114,12 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	if partido != null and partido.once_local.is_empty():
 		partido.preparar()
 	if visitante != null:
-		_sacar_los_22(); await _respiro(); _sacar_banca(); await _respiro(); _sacar_personal()   ## (10-11) en tres tiempos: ver `_sacar_banca`
+		## (10-11) en tres tiempos: ver `_sacar_banca`
+		_sacar_los_22()
+		await _respiro()
+		_sacar_banca()
+		await _respiro()
+		_sacar_personal()
 	await _respiro()
 
 	## Las cámaras se calculan CONTRA el estadio recién construido, no se ponen
@@ -138,7 +143,7 @@ func _construir(ocupacion: float, perfil_forzado: Dictionary = {}, colores_balon
 	_montar_cajon_de_ajustes()
 
 	_pie = Label.new()
-	_pie.add_theme_font_size_override("font_size", 13)
+	_pie.add_theme_font_size_override("font_size", Tema.letra(13))
 	_pie.add_theme_color_override("font_color", Color("e9eeea"))
 	_pie.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	_pie.offset_left = 18
@@ -216,7 +221,7 @@ func _a_la_revision_var(minuto: int, motivo: String, anular := false, al_anular 
 	if _juego != null:
 		_juego.vel_idx = 0
 	var foco := _balon.global_position if is_instance_valid(_balon) else Vector3.ZERO
-	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo, anular, lineas)
+	_sala_var = SalaVAR.abrir(self, _raiz3d.get_world_3d(), foco, minuto, motivo, {"anular": anular, "lineas": lineas})
 	_sala_var.terminada.connect(func() -> void:
 		_sala_var = null
 		if anular and al_anular.is_valid():

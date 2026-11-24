@@ -32,7 +32,15 @@ static func probar(nat: Object) -> Dictionary:
 	var textos: Array[String] = []
 	var rr := RandomNumberGenerator.new()
 	rr.seed = 1613
-	## 1. situacion.
+	_situacion(nat, rr, fallos, textos)
+	_regate(nat, rr, fallos, textos)
+	_decidir(nat, rr, fallos, textos)
+	return {"fallos": fallos, "textos": textos}
+
+
+## 1. situación táctica (la extensión contra GDScript).
+static func _situacion(nat: Object, rr: RandomNumberGenerator, fallos: Array[String],
+		textos: Array[String]) -> void:
 	var n := 4000
 	var dis := 0
 	var tg := 0
@@ -54,10 +62,15 @@ static func probar(nat: Object) -> Dictionary:
 	if dis > 0:
 		fallos.append("situacion distinta en %d de %d casos" % [dis, n])
 	textos.append("situación táctica: GDScript %.1f µs, C++ %.1f µs por llamada" % [tg / float(n), tc / float(n)])
-	## 2. regate.
-	dis = 0
-	tg = 0
-	tc = 0
+
+
+## 2. regate (campo de fuerzas).
+static func _regate(nat: Object, rr: RandomNumberGenerator, fallos: Array[String],
+		textos: Array[String]) -> void:
+	var n := 4000
+	var dis := 0
+	var tg := 0
+	var tc := 0
 	for caso in n:
 		var lado := 1.0 if caso % 2 == 0 else -1.0
 		var pos := _v(rr) if caso % 4 != 0 else Vector2(rr.randf_range(-1, 1), rr.randf_range(-1, 1))
@@ -79,11 +92,15 @@ static func probar(nat: Object) -> Dictionary:
 	if dis > 0:
 		fallos.append("regate distinto en %d de %d casos" % [dis, n])
 	textos.append("regate (campo de fuerzas): GDScript %.1f µs, C++ %.1f µs por llamada" % [tg / float(n), tc / float(n)])
-	## 3. decidir (mismo azar sembrado dos veces: debe dar lo mismo y dejar el generador en el mismo estado).
-	dis = 0
+
+
+## 3. decidir: mismo azar sembrado dos veces; debe dar lo mismo y dejar el generador igual.
+static func _decidir(nat: Object, rr: RandomNumberGenerator, fallos: Array[String],
+		textos: Array[String]) -> void:
+	var dis := 0
 	var dis_az := 0
-	tg = 0
-	tc = 0
+	var tg := 0
+	var tc := 0
 	var cuenta := {"pase": 0, "panico": 0, "tiro": 0, "conducir": 0}
 	var m := 4000
 	for caso in m:
@@ -111,10 +128,10 @@ static func probar(nat: Object) -> Dictionary:
 		az1.seed = caso + 77
 		az2.seed = caso + 77
 		var t0 := Time.get_ticks_usec()
-		var prev := LeagueNucleo.ZONA_TIRO
-		LeagueNucleo.ZONA_TIRO = zona
+		var prev := LeagueNucleo.zona_tiro
+		LeagueNucleo.zona_tiro = zona
 		var a := LeagueNucleo.decidir_gd(yo, mates, riv, mov_balon, posesion, az1, muestras)
-		LeagueNucleo.ZONA_TIRO = prev
+		LeagueNucleo.zona_tiro = prev
 		var t1 := Time.get_ticks_usec()
 		var b: Dictionary = nat.league_decidir(yo, mates, riv, mov_balon, posesion, az2, muestras, zona)
 		var t2 := Time.get_ticks_usec()
@@ -132,4 +149,3 @@ static func probar(nat: Object) -> Dictionary:
 	if int(cuenta["pase"]) < 100 or int(cuenta["tiro"]) < 100 or int(cuenta["panico"]) < 50 or int(cuenta["conducir"]) < 50:
 		fallos.append("la prueba de decidir no cubre todas las acciones: %s" % str(cuenta))
 	textos.append("decisión con balón (sin situación): GDScript %.1f µs, C++ %.1f µs por llamada; cobertura %s" % [tg / float(m), tc / float(m), str(cuenta)])
-	return {"fallos": fallos, "textos": textos}

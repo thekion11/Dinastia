@@ -76,43 +76,52 @@ static func al_soltar_toque(id: String, con_balon: bool, gestos: bool, ms_tocado
 ## `mant` se añade a lo mantenido hasta levantar el dedo; vacío = ese gesto no hace nada aquí.
 static func al_deslizar(id: String, con_balon: bool, en_banda: bool, dir: String) -> Dictionary:
 	if con_balon:
-		match id:
-			"SP":
-				match dir:
-					"arriba", "abajo":
-						return {"pulso": ["jugar_fili_arriba"], "dur": 0.12}   ## finta hacia delante / adelantar el balón (con el sprint puesto es el «knock-on»)
-					"derecha":
-						return {"pulso": ["jugar_fili_derecha"], "dur": 0.12}
-					"izquierda":
-						return {"pulso": ["jugar_regate"], "dur": 0.4}   ## parada en seco (proteger el balón y frenar)
-			"PA":
-				if en_banda:
-					match dir:
-						"arriba":
-							return {"pulso": ["jugar_centro"], "dur": 0.08}
-						"derecha":
-							return {"pulso": ["jugar_mod", "jugar_centro"], "dur": 0.08}   ## centro tenso y bajo
-						"izquierda":
-							return {"pulso": ["jugar_cambiar", "jugar_centro"], "dur": 0.08}   ## centro bombeado
-				match dir:
-					"arriba":
-						return {"pulso": ["jugar_pase_largo"], "dur": 0.08}   ## pase elevado
-					"abajo":
-						return {"pulso": ["jugar_cambiar", "jugar_pase"], "dur": 0.08}   ## pase y correr (la pared)
-			"AH":
-				if dir == "arriba":
-					return {"pulso": ["jugar_cambiar", "jugar_filtrado"], "dur": 0.08}   ## al hueco elevado (bombeado)
-			"TI":
-				match dir:
-					"abajo":
-						return {"mant": ["jugar_mod"]}   ## tiro colocado (rosca)
-					"arriba":
-						return {"mant": ["jugar_cambiar"]}   ## vaselina
-					"izquierda":
-						return {"pulso": ["jugar_pase"], "dur": 0.08}   ## amago de tiro (Pase durante la carga la cancela: el Tiro sigue pulsado, no dispara)
-	else:
-		if id == "AH" and dir == "abajo":
-			return {"mant": ["jugar_filtrado"]}   ## sale el portero
+		return _al_deslizar_con_balon(id, en_banda, dir)
+	if id == "AH" and dir == "abajo":
+		return {"mant": ["jugar_filtrado"]}   ## sale el portero
+	return {}
+
+## Lo que hace cada deslizamiento del mando cuando llevas el balón.
+static func _al_deslizar_con_balon(id: String, en_banda: bool, dir: String) -> Dictionary:
+	match id:
+		"SP":
+			match dir:
+				"arriba", "abajo":
+					return {"pulso": ["jugar_fili_arriba"], "dur": 0.12}   ## finta hacia delante / adelantar el balón (con el sprint puesto es el «knock-on»)
+				"derecha":
+					return {"pulso": ["jugar_fili_derecha"], "dur": 0.12}
+				"izquierda":
+					return {"pulso": ["jugar_regate"], "dur": 0.4}   ## parada en seco (proteger el balón y frenar)
+		"PA":
+			return _al_deslizar_pase(en_banda, dir)
+		"AH":
+			if dir == "arriba":
+				return {"pulso": ["jugar_cambiar", "jugar_filtrado"], "dur": 0.08}   ## al hueco elevado (bombeado)
+		"TI":
+			match dir:
+				"abajo":
+					return {"mant": ["jugar_mod"]}   ## tiro colocado (rosca)
+				"arriba":
+					return {"mant": ["jugar_cambiar"]}   ## vaselina
+				"izquierda":
+					return {"pulso": ["jugar_pase"], "dur": 0.08}   ## amago de tiro (Pase durante la carga la cancela: el Tiro sigue pulsado, no dispara)
+	return {}
+
+## El pase y el centro (con el balón en la banda, centros; si no, pases).
+static func _al_deslizar_pase(en_banda: bool, dir: String) -> Dictionary:
+	if en_banda:
+		match dir:
+			"arriba":
+				return {"pulso": ["jugar_centro"], "dur": 0.08}
+			"derecha":
+				return {"pulso": ["jugar_mod", "jugar_centro"], "dur": 0.08}   ## centro tenso y bajo
+			"izquierda":
+				return {"pulso": ["jugar_cambiar", "jugar_centro"], "dur": 0.08}   ## centro bombeado
+	match dir:
+		"arriba":
+			return {"pulso": ["jugar_pase_largo"], "dur": 0.08}   ## pase elevado
+		"abajo":
+			return {"pulso": ["jugar_cambiar", "jugar_pase"], "dur": 0.08}   ## pase y correr (la pared)
 	return {}
 
 ## Las direcciones con función en este momento (para dibujar los triangulitos del aro).

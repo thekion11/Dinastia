@@ -196,7 +196,7 @@ func _trafico() -> void:
 		var x: float = tramo["x"]
 		var z0: float = tramo["z0"]
 		## (6-11, detector) El vestuario del estadio sobresale hacia la avenida: los coches daban la vuelta en z = -85 atravesándolo. Ahora lo hacen 3,5 m antes.
-		if x == 0.0 and _rect_vestuario.size != Vector2.ZERO and _rect_vestuario.position.x < 4.5 and _rect_vestuario.end.x > -4.5:
+		if is_zero_approx(x) and _rect_vestuario.size != Vector2.ZERO and _rect_vestuario.position.x < 4.5 and _rect_vestuario.end.x > -4.5:
 			z0 = maxf(z0, _rect_vestuario.end.y + 3.5)
 		var z1: float = tramo["z1"]
 		var circuito := PackedVector3Array([

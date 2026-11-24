@@ -141,7 +141,7 @@ static func _brazo(lado: String, adelante: float, costado: float) -> Vector3:
 	## "adelante" (aplaudir con una mano delante y otra a la espalda).
 	return Vector3(0, -adelante * s, costado * s)
 
-static func _codo(lado: String, flex: float) -> Vector3:
+static func _codo(_lado: String, flex: float) -> Vector3:
 	## CORREGIDO (26-9-2026, `pruebas/sonda_lados.gd`): la Y del antebrazo solo
 	## lo gira sobre su eje -la mano no se movía un milímetro-; el codo se dobla
 	## con X positivo, igual en los dos lados.
@@ -176,6 +176,16 @@ static func espejar(original: Animation, esq: Skeleton3D, prefijo: String, clave
 	var cc := "%s|%s" % [clave, prefijo]
 	if clave != "" and _cache_espejo.has(cc):
 		return _cache_espejo[cc]
+	var nat := Nativo.obj()
+	var out: Animation
+	if nat != null and nat.has_method("anim_espejar"):   ## (19-11) en C++ (`nativo/src/espejo_nativo.cpp`); gemela: `_espejar_gd`
+		out = nat.anim_espejar(original, esq, prefijo)
+	else:
+		out = _espejar_gd(original, esq, prefijo)
+	if out != null and clave != "":
+		_cache_espejo[cc] = out
+	return out
+static func _espejar_gd(original: Animation, esq: Skeleton3D, prefijo: String) -> Animation:
 	var n := esq.get_bone_count()
 	## Qué pistas hay por hueso.
 	var pista_rot := {}
@@ -192,7 +202,7 @@ static func espejar(original: Animation, esq: Skeleton3D, prefijo: String, clave
 	if pista_rot.is_empty():
 		return null
 	## El reflejo del cuerpo: la x del modelo cambia de signo.
-	var S := Basis(Vector3(-1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1))
+	var s_loc := Basis(Vector3(-1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1))
 	var par_de: Array = []
 	var padres: Array = []
 	var reposo: Array = []
@@ -211,7 +221,7 @@ static func espejar(original: Animation, esq: Skeleton3D, prefijo: String, clave
 	for i in n:
 		## Para el hueso i (destino), su fuente es par_de[i].
 		var src: int = par_de[i]
-		var reflejado: Basis = S * (rg[src] as Transform3D).basis.orthonormalized() * S
+		var reflejado: Basis = s_loc * (rg[src] as Transform3D).basis.orthonormalized() * s_loc
 		corr.append(reflejado.inverse() * (rg[i] as Transform3D).basis.orthonormalized())
 	var out := Animation.new()
 	out.length = original.length
@@ -251,7 +261,7 @@ static func espejar(original: Animation, esq: Skeleton3D, prefijo: String, clave
 		for i in n:
 			var src: int = par_de[i]
 			var gs: Transform3D = g[src]
-			ge[i] = Transform3D(S * gs.basis.orthonormalized() * S * (corr[i] as Basis), S * gs.origin)
+			ge[i] = Transform3D(s_loc * gs.basis.orthonormalized() * s_loc * (corr[i] as Basis), s_loc * gs.origin)
 		for i: int in pistas_out:
 			var pa2: int = padres[i]
 			var local: Transform3D = (ge[i] as Transform3D) if pa2 < 0 else (ge[pa2] as Transform3D).affine_inverse() * (ge[i] as Transform3D)
@@ -261,9 +271,8 @@ static func espejar(original: Animation, esq: Skeleton3D, prefijo: String, clave
 			var local2: Transform3D = (ge[i] as Transform3D) if pa3 < 0 else (ge[pa3] as Transform3D).affine_inverse() * (ge[i] as Transform3D)
 			out.position_track_insert_key(pos_out[i], tiempo, local2.origin)
 		tiempo += paso
-	if clave != "":
-		_cache_espejo[cc] = out
 	return out
+
 
 ## Añade todo a la librería de un jugador. `lib` ya trae los clips de siempre.
 static func extender(lib: AnimationLibrary, esq: Skeleton3D, prefijo: String) -> void:

@@ -68,6 +68,14 @@ func _process(_d: float) -> void:
 	if _espera > 0:
 		_espera -= 1
 		return
+	_paso(motor, rig, repe)
+
+func _salir() -> void:
+	_prefs(true)
+	get_tree().quit()
+
+## Una fase de la captura (cada una espera a la anterior; el match era el final de _process).
+func _paso(motor: MotorJugable, rig: CameraRig, repe: Repeticion) -> void:
 	match _fase:
 		0:
 			_espera = 40
@@ -147,6 +155,3 @@ func _process(_d: float) -> void:
 			_foto("inserto %s" % rig.inserto)
 			_salir()
 
-func _salir() -> void:
-	_prefs(true)
-	get_tree().quit()

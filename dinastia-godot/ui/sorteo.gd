@@ -41,7 +41,7 @@ func _sacar_bola(t: Dictionary) -> void:
 	if t.has("rival"):
 		texto = "%s   vs   %s" % [c.nombre, (t["rival"] as Club).nombre]
 	nom.text = "%s\n%s" % [String(t["texto"]), texto]
-	nom.add_theme_font_size_override("font_size", 30)
+	nom.add_theme_font_size_override("font_size", Tema.letra(30))
 	## Tu club sale con el color de la competición: en un sorteo lo único que de
 	## verdad se busca con la vista es dónde caíste tú.
 	nom.add_theme_color_override("font_color",

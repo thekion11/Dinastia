@@ -45,7 +45,7 @@ func _ready() -> void:
 		sp._kit_x = kit["x"]
 		var datos: Dictionary = elegidos[i][2]
 		var look: Array = PlayerSpawner._look_de(datos)
-		var nodo := sp._crear_jugador(self, (elegidos[i][1] as Jugador).id, "DEL", "", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look[0], look[1], look[2], Color(0, 0, 0, 0), datos)
+		var nodo := sp._crear_jugador(self, (elegidos[i][1] as Jugador).id, "DEL", Color(kit["c1"]), Color(kit["c2"]), String(kit["estilo"]), 10, look, Color(0, 0, 0, 0), datos)
 		var n3 := nodo["nodo"] as Node3D
 		n3.position = Vector3(-0.9 + i * 0.6, 0, 0)
 		n3.rotation_degrees.y = [0.0, 30.0, -30.0, 0.0][i]

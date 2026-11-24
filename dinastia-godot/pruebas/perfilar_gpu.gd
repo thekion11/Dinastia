@@ -12,6 +12,12 @@ extends Node
 
 const CALENTAR := 90
 const MUESTRAS := 150
+## Efectos de `DESACT` que apagan una propiedad del `Environment` (si existe).
+const _DESACT_ENTORNO := {
+	"ssao": "ssao_enabled", "ssil": "ssil_enabled", "ssr": "ssr_enabled", "sdfgi": "sdfgi_enabled",
+	"glow": "glow_enabled", "niebla": "fog_enabled", "volumetrica": "volumetric_fog_enabled",
+	"ajuste": "adjustment_enabled",
+}
 
 var _vista: VistaEstadio
 var _n := 0
@@ -61,34 +67,34 @@ func _aplicar_desact() -> void:
 	var vp := get_viewport()
 	var env := _entorno()
 	for k in lista:
-		match k:
-			"msaa": vp.msaa_3d = Viewport.MSAA_DISABLED
-			"taa": vp.use_taa = false
-			"fxaa": vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
-			"sombra":
-				for l in _vista.find_children("*", "Light3D", true, false):
-					(l as Light3D).shadow_enabled = false
-			"ssao": if env != null: env.ssao_enabled = false
-			"ssil": if env != null: env.ssil_enabled = false
-			"ssr": if env != null: env.ssr_enabled = false
-			"sdfgi": if env != null: env.sdfgi_enabled = false
-			"glow": if env != null: env.glow_enabled = false
-			"niebla": if env != null: env.fog_enabled = false
-			"volumetrica": if env != null: env.volumetric_fog_enabled = false
-			"ajuste": if env != null: env.adjustment_enabled = false
-			"fsr77":
-				vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
-				vp.scaling_3d_scale = 0.77
-			"fsr67":
-				vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
-				vp.scaling_3d_scale = 0.67
-			"fsr1_77":
-				vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR
-				vp.scaling_3d_scale = 0.77
-			"taaon": vp.use_taa = true
-			"msaa2": vp.msaa_3d = Viewport.MSAA_2X
-			"esc75": vp.scaling_3d_scale = 0.75
-			"esc50": vp.scaling_3d_scale = 0.5
+		if k in _DESACT_ENTORNO:
+			if env != null:
+				env.set(_DESACT_ENTORNO[k], false)
+		elif k == "sombra":
+			for l in _vista.find_children("*", "Light3D", true, false):
+				(l as Light3D).shadow_enabled = false
+		else:
+			_desact_viewport(k, vp)
+
+## Efectos de `DESACT` sobre el viewport (antialias, escalado). Claves desconocidas: nada.
+func _desact_viewport(k: String, vp: Viewport) -> void:
+	match k:
+		"msaa": vp.msaa_3d = Viewport.MSAA_DISABLED
+		"taa": vp.use_taa = false
+		"fxaa": vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
+		"fsr77":
+			vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
+			vp.scaling_3d_scale = 0.77
+		"fsr67":
+			vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
+			vp.scaling_3d_scale = 0.67
+		"fsr1_77":
+			vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR
+			vp.scaling_3d_scale = 0.77
+		"taaon": vp.use_taa = true
+		"msaa2": vp.msaa_3d = Viewport.MSAA_2X
+		"esc75": vp.scaling_3d_scale = 0.75
+		"esc50": vp.scaling_3d_scale = 0.5
 
 func _contar(n: Node) -> int:
 	var c := 1
@@ -99,6 +105,25 @@ func _contar(n: Node) -> int:
 ## LISTAR=1: imprime los hijos directos de la vista con su número de nodos y si procesan.
 ## APAGAR=Nombre1,Nombre2: pone process_mode = DISABLED a esos nodos (y sus hijos) SOLO para diagnosticar su coste de CPU.
 func _apagar_procesos() -> void:
+	_ocultar_y_desactivar()
+	if OS.get_environment("LISTAR") != "":
+		_listar_hijos()
+	if OS.get_environment("CONTAR") != "":
+		_contar_procesos_activos()
+	var por_ruta := OS.get_environment("APAGAR_SCRIPT")   ## APAGAR_SCRIPT=anim_transiciones.gd,...: apaga el `_process` de todos los nodos con ese script (solo diagnóstico)
+	if por_ruta != "":
+		_apagar_por_script(por_ruta)
+	for nombre in OS.get_environment("APAGAR").split(",", false):
+		if nombre == "VISTA":
+			_vista.set_process(false)   ## todo el `_process` de VistaEstadio (motor del partido, cine, HUD)
+			print("APAGADO VistaEstadio._process")
+			continue
+		for n in _vista.find_children(nombre, "", true, false):
+			n.process_mode = Node.PROCESS_MODE_DISABLED
+			print("APAGADO ", n.get_path())
+
+## OCULTAR_JUG, OCULTAR_NODO, SUBVP_OFF y ANIM_OFF (diagnóstico): esconden o apagan partes.
+func _ocultar_y_desactivar() -> void:
 	## OCULTAR_JUG=1: esconde a los 22 (sin dibujarlos ni animarlos de vista); ANIM_OFF=1: desactiva TODOS los AnimationPlayer (solo diagnóstico).
 	var motor: Object = _vista.get("_motor")
 	if OS.get_environment("OCULTAR_JUG") != "" and motor != null:
@@ -120,53 +145,50 @@ func _apagar_procesos() -> void:
 	if OS.get_environment("ANIM_OFF") != "":
 		for ap in _vista.find_children("*", "AnimationPlayer", true, false):
 			(ap as AnimationPlayer).active = false
-	if OS.get_environment("LISTAR") != "":
-		for h in _vista.get_children():
-			print("LISTA %s (%s) nodos=%d proc=%s" % [h.name, h.get_class(), _contar(h), str(h.is_processing())])
-		var raiz3d: Node = _vista.get("_raiz3d")
-		if raiz3d != null:
-			for h in raiz3d.get_children():
-				print("LISTA3D %s (%s) nodos=%d proc=%s" % [h.name, h.get_class(), _contar(h), str(h.is_processing())])
-	if OS.get_environment("CONTAR") != "":
-		## CONTAR=1: nodos de todo el árbol con `_process` o `_physics_process` activo, agrupados por script.
-		var por_script := {}
-		var pila: Array[Node] = [get_tree().root]
-		while not pila.is_empty():
-			var n: Node = pila.pop_back()
-			pila.append_array(n.get_children())
-			if n.is_processing() or n.is_physics_processing():
-				var s: Variant = n.get_script()
-				var clave: String = (s as Script).resource_path if s != null else "(nativo) " + n.get_class()
-				if clave == "":
-					clave = "(script sin ruta) %s ej: %s" % [n.get_class(), n.get_path()]
-				por_script[clave] = int(por_script.get(clave, 0)) + 1
-		var claves := por_script.keys()
-		claves.sort_custom(func(a: Variant, b: Variant) -> bool: return por_script[a] > por_script[b])
-		for k in claves:
-			print("PROC %4d  %s" % [por_script[k], k])
-	var por_ruta := OS.get_environment("APAGAR_SCRIPT")   ## APAGAR_SCRIPT=anim_transiciones.gd,...: apaga el `_process` de todos los nodos con ese script (solo diagnóstico)
-	if por_ruta != "":
-		var apagados := 0
-		var pila2: Array[Node] = [get_tree().root]
-		while not pila2.is_empty():
-			var m: Node = pila2.pop_back()
-			pila2.append_array(m.get_children())
-			var sc: Variant = m.get_script()
-			if sc != null:
-				for fin in por_ruta.split(",", false):
-					if (sc as Script).resource_path.ends_with(fin) or (fin == "SINRUTA" and (sc as Script).resource_path == ""):
-						m.set_process(false)
-						m.set_physics_process(false)
-						apagados += 1
-		print("APAGADOS %d nodos por script" % apagados)
-	for nombre in OS.get_environment("APAGAR").split(",", false):
-		if nombre == "VISTA":
-			_vista.set_process(false)   ## todo el `_process` de VistaEstadio (motor del partido, cine, HUD)
-			print("APAGADO VistaEstadio._process")
+
+## LISTAR=1: imprime los hijos directos de la vista y de la raíz 3D con su número de nodos.
+func _listar_hijos() -> void:
+	for h in _vista.get_children():
+		print("LISTA %s (%s) nodos=%d proc=%s" % [h.name, h.get_class(), _contar(h), str(h.is_processing())])
+	var raiz3d: Node = _vista.get("_raiz3d")
+	if raiz3d != null:
+		for h in raiz3d.get_children():
+			print("LISTA3D %s (%s) nodos=%d proc=%s" % [h.name, h.get_class(), _contar(h), str(h.is_processing())])
+
+## CONTAR=1: nodos del árbol con `_process` o `_physics_process` activo, por script.
+func _contar_procesos_activos() -> void:
+	var por_script := {}
+	var pila: Array[Node] = [get_tree().root]
+	while not pila.is_empty():
+		var n: Node = pila.pop_back()
+		pila.append_array(n.get_children())
+		if n.is_processing() or n.is_physics_processing():
+			var s: Variant = n.get_script()
+			var clave: String = (s as Script).resource_path if s != null else "(nativo) " + n.get_class()
+			if clave == "":
+				clave = "(script sin ruta) %s ej: %s" % [n.get_class(), n.get_path()]
+			por_script[clave] = int(por_script.get(clave, 0)) + 1
+	var claves := por_script.keys()
+	claves.sort_custom(func(a: Variant, b: Variant) -> bool: return por_script[a] > por_script[b])
+	for k in claves:
+		print("PROC %4d  %s" % [por_script[k], k])
+
+## APAGAR_SCRIPT: apaga `_process` y `_physics_process` de los nodos cuyo script acaba así.
+func _apagar_por_script(por_ruta: String) -> void:
+	var apagados := 0
+	var pila2: Array[Node] = [get_tree().root]
+	while not pila2.is_empty():
+		var m: Node = pila2.pop_back()
+		pila2.append_array(m.get_children())
+		var sc: Variant = m.get_script()
+		if sc == null:
 			continue
-		for n in _vista.find_children(nombre, "", true, false):
-			n.process_mode = Node.PROCESS_MODE_DISABLED
-			print("APAGADO ", n.get_path())
+		for fin in por_ruta.split(",", false):
+			if (sc as Script).resource_path.ends_with(fin) or (fin == "SINRUTA" and (sc as Script).resource_path == ""):
+				m.set_process(false)
+				m.set_physics_process(false)
+				apagados += 1
+	print("APAGADOS %d nodos por script" % apagados)
 
 func _mediana(a: Array[float]) -> float:
 	if a.is_empty():

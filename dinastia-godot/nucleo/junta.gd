@@ -59,7 +59,7 @@ func _nombre(h: int) -> String:
 	return "%s %s" % [_NOMBRES[h % _NOMBRES.size()], _APELLIDOS[absi(("ap%d" % h).hash()) % _APELLIDOS.size()]]
 
 ## Una vez por semana. Convoca la junta del trimestre.
-func semana(c: Club, anio: int, sem: int) -> void:
+func semana(c: Club, _anio: int, sem: int) -> void:
 	formar(c)
 	if not pendiente.is_empty() or sem % CADA != 0 or accionistas.is_empty():
 		return
@@ -99,44 +99,11 @@ func resolver(op: String, c: Club, directiva: Directiva, prensa: Prensa) -> Dict
 	pendiente = {}
 	var sube := op == "a"
 	var d_humor := 18 if sube else -14
-	var d_conf := 0
-	var cuerpo := ""
-	match String(p["exige"]):
-		"dividendos":
-			if sube:
-				## A4-GESTION-005: no se reparten dividendos con la caja vacía ni en números rojos: se paga lo que haya (como mucho el monto).
-				var pago := mini(int(p["monto"]), maxi(c.saldo, 0))
-				if pago > 0:
-					c.mover_saldo(-pago)
-					movimiento.emit("Dividendos a los accionistas", -pago)
-				d_conf = 2 if pago >= int(p["monto"]) else (1 if pago > 0 else 0)
-				cuerpo = "Los accionistas cobran. La caja lo nota." if pago >= int(p["monto"]) else \
-					("Los accionistas cobran solo una parte: la caja no da para más." if pago > 0 else "No hay caja para dividendos: los accionistas se conforman con la promesa.")
-			else:
-				cuerpo = "Todo se reinvierte. Algunos accionistas se van de la sala sin saludar."
-		"titulos":
-			if sube:
-				d_conf = 3
-				if prensa != null:
-					prensa.presion_prometida = true
-				cuerpo = "La frase sale de la sala y llega a la prensa: ahora hay que cumplirla."
-			else:
-				d_conf = -2
-				cuerpo = "«Paciencia» no es una palabra que guste en una junta."
-		"cantera":
-			if sube:
-				for j: Jugador in c.plantilla:
-					if j.edad <= 21:
-						j.cambiar_moral(5, "Directiva")
-				cuerpo = "Los chicos de casa se enteran y entrenan con otra cara."
-			else:
-				cuerpo = "Los de la academia leen la noticia y no les gusta."
-		_:
-			if sube:
-				d_conf = 2
-				cuerpo = "Aprobada la ampliación: se abre el proyecto de nuevas tribunas (Club → Obras)."
-			else:
-				cuerpo = "La ampliación queda en un cajón."
+	var res: Variant = _junta_a(String(p["exige"]), p, c, prensa, sube)
+	if res == null:
+		res = _junta_b(String(p["exige"]), c, sube)
+	var d_conf: int = res[0]
+	var cuerpo: String = res[1]
 	for a: Dictionary in accionistas:
 		if a["nombre"] == p["quien"]:
 			a["humor"] = clampi(int(a["humor"]) + d_humor, 0, 100)
@@ -167,3 +134,54 @@ func desde_dic(d: Dictionary) -> void:
 	accionistas = (d.get("accionistas", []) as Array).duplicate(true)
 	pendiente = (d.get("pendiente", {}) as Dictionary).duplicate()
 	historial = (d.get("historial", []) as Array).duplicate(true)
+
+## Lo que decide la junta sobre dividendos y títulos. Devuelve null si la exigencia es de otro grupo.
+func _junta_a(exige: String, p: Dictionary, c: Club, prensa: Prensa, sube: bool) -> Variant:
+	var d_conf := 0
+	var cuerpo := ""
+	match exige:
+		"dividendos":
+			if sube:
+				## A4-GESTION-005: no se reparten dividendos con la caja vacía ni en números rojos: se paga lo que haya (como mucho el monto).
+				var pago := mini(int(p["monto"]), maxi(c.saldo, 0))
+				if pago > 0:
+					c.mover_saldo(-pago)
+					movimiento.emit("Dividendos a los accionistas", -pago)
+				d_conf = 2 if pago >= int(p["monto"]) else (1 if pago > 0 else 0)
+				cuerpo = "Los accionistas cobran. La caja lo nota." if pago >= int(p["monto"]) else \
+					("Los accionistas cobran solo una parte: la caja no da para más." if pago > 0 else "No hay caja para dividendos: los accionistas se conforman con la promesa.")
+			else:
+				cuerpo = "Todo se reinvierte. Algunos accionistas se van de la sala sin saludar."
+		"titulos":
+			if sube:
+				d_conf = 3
+				if prensa != null:
+					prensa.presion_prometida = true
+				cuerpo = "La frase sale de la sala y llega a la prensa: ahora hay que cumplirla."
+			else:
+				d_conf = -2
+				cuerpo = "«Paciencia» no es una palabra que guste en una junta."
+		_:
+			return null
+	return [d_conf, cuerpo]
+
+## Lo que decide la junta sobre la cantera y la ampliación (y cualquier otra exigencia).
+func _junta_b(exige: String, c: Club, sube: bool) -> Array:
+	var d_conf := 0
+	var cuerpo := ""
+	match exige:
+		"cantera":
+			if sube:
+				for j: Jugador in c.plantilla:
+					if j.edad <= 21:
+						j.cambiar_moral(5, "Directiva")
+				cuerpo = "Los chicos de casa se enteran y entrenan con otra cara."
+			else:
+				cuerpo = "Los de la academia leen la noticia y no les gusta."
+		_:
+			if sube:
+				d_conf = 2
+				cuerpo = "Aprobada la ampliación: se abre el proyecto de nuevas tribunas (Club → Obras)."
+			else:
+				cuerpo = "La ampliación queda en un cajón."
+	return [d_conf, cuerpo]

@@ -43,7 +43,7 @@ func _ready() -> void:
 		marca.mesh = bm
 		marca.position = Vector3(0, h, 0)
 		var mm := StandardMaterial3D.new()
-		mm.albedo_color = Color(1, 0, 0) if h == 1.85 else Color(1, 1, 0)
+		mm.albedo_color = Color(1, 0, 0) if is_equal_approx(h, 1.85) else Color(1, 1, 0)
 		mm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		marca.material_override = mm
 		env.add_child(marca)

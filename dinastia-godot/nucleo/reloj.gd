@@ -169,6 +169,13 @@ func agotada() -> bool:
 
 ## Lo que toca a esta hora según la rutina (para la agenda y para `avanzar_dias`).
 static func actividad_de_rutina(minuto_del_dia: int) -> String:
+	var nat := Nativo.de("nuc_actividad_rutina")
+	if nat != null:
+		return nat.nuc_actividad_rutina(minuto_del_dia)
+	return actividad_de_rutina_gd(minuto_del_dia)
+
+## Gemela GDScript de `nuc_actividad_rutina` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func actividad_de_rutina_gd(minuto_del_dia: int) -> String:
 	var act := String(RUTINA[0][1])
 	for tramo: Array in RUTINA:
 		if minuto_del_dia >= int(tramo[0]):
@@ -177,6 +184,13 @@ static func actividad_de_rutina(minuto_del_dia: int) -> String:
 
 ## Hasta qué minuto del día dura el tramo de rutina que empieza en `minuto_del_dia`.
 static func _fin_tramo(minuto_del_dia: int) -> int:
+	var nat := Nativo.de("nuc_fin_tramo")
+	if nat != null:
+		return nat.nuc_fin_tramo(minuto_del_dia)
+	return _fin_tramo_gd(minuto_del_dia)
+
+## Gemela GDScript de `nuc_fin_tramo` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func _fin_tramo_gd(minuto_del_dia: int) -> int:
 	for tramo: Array in RUTINA:
 		if int(tramo[0]) > minuto_del_dia:
 			return int(tramo[0])

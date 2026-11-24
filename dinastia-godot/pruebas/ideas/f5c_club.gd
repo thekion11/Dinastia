@@ -8,6 +8,16 @@ func _probar() -> void:
 	var m := _mundo(55)
 	m.reloj.sincronizar(m.anio, m.semana)
 	var c := m.mi_club()
+	var cr := _f5_rama_abierta(m)
+	_f5_extra_y_fuerza(m, c, cr)
+	_f5_titulo_rama(m)
+	_f5_celebracion_trofeo(m)
+	_f5_no_repite(m)
+	_f5_visibilidad(m, c, cr)
+	_f5_celebracion_rama(m, c)
+	_f5_museo()
+
+func _f5_rama_abierta(m: Mundo) -> Dictionary:
 	m.hinchada.ramas["futsal"] = true
 	m.citas.semana(m, Citas.RAMA_SEMANA)
 	var cr := {}
@@ -15,6 +25,9 @@ func _probar() -> void:
 		if x["tipo"] == "rama":
 			cr = x
 	_comprobar(not cr.is_empty() and String(cr["clave"]) == "futsal", "con una rama abierta, su coordinadora cita en la semana 5")
+	return cr
+
+func _f5_extra_y_fuerza(m: Mundo, c: Club, cr: Dictionary) -> void:
 	var saldo0 := c.saldo
 	var r := m.citas.resolver(m, String(cr["id"]), 0)
 	var coste := int(420000 * Citas.RAMA_EXTRA)
@@ -28,6 +41,8 @@ func _probar() -> void:
 	m.hinchada.bono_rama["futsal"] = m.anio
 	var con: Dictionary = m.hinchada.temporada_ramas(c, m.anio)[0]
 	_comprobar(int(con["puesto"]) <= int(sin["puesto"]), "y la rama termina igual o mejor (%d vs %d sin extra)" % [int(con["puesto"]), int(sin["puesto"])])
+
+func _f5_titulo_rama(m: Mundo) -> void:
 	## Un título de rama: una copa más en el museo (lo que cuenta Principal).
 	var copas0 := m.roles.trofeos.size()
 	m.hinchada.palmares_ramas.push_front({"anio": m.anio, "rama": "Futsal", "clave": "futsal", "puesto": 1})
@@ -36,6 +51,8 @@ func _probar() -> void:
 		if int(rr.get("puesto", 9)) == 1:
 			copas += 1
 	_comprobar(copas == copas0 + 1, "el título de la rama suma una copa al museo")
+
+func _f5_celebracion_trofeo(m: Mundo) -> void:
 	## Un trofeo nuevo del primer equipo → cita «celebración» el lunes en el museo.
 	m.citas.semana(m, 7)
 	m.roles.trofeos.append({"anio": m.anio, "titulo": "Liga"})
@@ -49,6 +66,8 @@ func _probar() -> void:
 	var pubs0 := m.redes.publicaciones.size()
 	var rc := m.citas.resolver(m, String(cc["id"]), 0)
 	_comprobar(not rc.is_empty() and m.prensa.animo >= mini(animo0 + 3, 100) and m.redes.publicaciones.size() == pubs0 + 1, "levantar la copa sube el ánimo (+3, y la foto suma lo suyo) y publica la foto")
+
+func _f5_no_repite(m: Mundo) -> void:
 	m.citas.semana(m, 9)
 	var otra := false
 	for x: Dictionary in m.citas.pendientes():
@@ -59,6 +78,8 @@ func _probar() -> void:
 	var c2 := Citas.new()
 	c2.desde_dic(d)
 	_comprobar(c2._trofeos_vistos == m.citas._trofeos_vistos, "lo celebrado sobrevive a guardar y cargar")
+
+func _f5_visibilidad(m: Mundo, c: Club, cr: Dictionary) -> void:
 	## §2.5: la rama también pide VISIBILIDAD (un partido en el estadio) y celebra sus títulos.
 	_comprobar(m.citas.opciones(m, cr).size() == 3, "la coordinadora ofrece tres respuestas: presupuesto, no o visibilidad")
 	var socios0 := c.socios
@@ -70,6 +91,8 @@ func _probar() -> void:
 	var rv := m.citas.resolver(m, "prueba_vis", 2)
 	_comprobar(not rv.is_empty() and c.socios == socios0 + CitasRamas.VISIBILIDAD_SOCIOS and m.ciudad.cesped == maxi(0, cesped0 - CitasRamas.VISIBILIDAD_CESPED)
 		and int(m.hinchada.visib_rama.get("futsal", -1)) == m.anio, "visibilidad: la rama juega en el estadio (+socios, algo de fuerza, el césped se resiente)")
+
+func _f5_celebracion_rama(m: Mundo, c: Club) -> void:
 	var celebradas := m.citas._ramas_vistas
 	m.hinchada.palmares_ramas.push_front({"anio": m.anio, "rama": "Futsal", "clave": "futsal", "puesto": 1})
 	m.citas.semana(m, 10)
@@ -82,6 +105,8 @@ func _probar() -> void:
 	var rr2 := m.citas.resolver(m, String(crr["id"]), 0) if not crr.is_empty() else {}
 	_comprobar(not rr2.is_empty() and c.socios == s1 + CitasRamas.CELEBRACION_SOCIOS, "levantar la copa de la rama suma socios y la foto")
 	_comprobar(Citas.new().a_dic().has("ramas") and m.hinchada.a_dic().has("visib_rama"), "la visibilidad y los títulos celebrados se guardan")
+
+func _f5_museo() -> void:
 	## EL MUSEO QUE CRECE (27-10): capacidad real en la planta 2 y planta 3 «Museo ampliado» por el ascensor.
 	var ctx0 := EdificioClub.ctx
 	var hitos: Array = []

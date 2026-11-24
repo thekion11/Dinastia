@@ -138,7 +138,7 @@ func _cascada(piezas: Array) -> void:
 		tw.tween_property(n, "modulate:a", 1.0, 0.45).set_delay(0.15 + 0.12 * i)
 		n.position.y += 18.0
 
-func _arte(tex: Texture2D, ev: Dictionary, tipo: String) -> void:
+func _arte(tex: Texture2D, _ev: Dictionary, tipo: String) -> void:
 	var cont := Control.new()
 	cont.anchor_left = 0.5; cont.anchor_right = 1.0; cont.anchor_top = 0.08; cont.anchor_bottom = 1.0
 	cont.mouse_filter = Control.MOUSE_FILTER_IGNORE

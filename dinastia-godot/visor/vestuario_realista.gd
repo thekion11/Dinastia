@@ -13,14 +13,14 @@ extends RefCounted
 ## japonés y uno argentino no se vean iguales. «ing»: suelo de tablón oscuro y ladrillo visto (Reino Unido); «jap»: tablón claro de hinoki y paredes lisas (Japón y Asia oriental);
 ## «lat»: baldosa de barro cocido y yeso de arcilla (España, Italia, Portugal y toda América Latina); «ale»: parqué en espiga y pared beige (centroeuropa); «nor»: laminado claro y hormigón visto (nórdico); «ara»: granito y yeso con relieve geométrico (golfo y Oriente Próximo); «afr»: suelo de arcilla y pared de arcilla con motivos (África); el resto, goma deportiva y yeso beige. El azulejo del tercio bajo es el mismo en todos.
 const ESTILOS := {
-	"ing": {"suelo": "dark_wooden_planks", "pared": "brick_wall_005", "madera": "dark_wooden_planks", "m_suelo": 1.2, "m_pared": 1.6},
-	"jap": {"suelo": "hinoki_planks", "pared": "beige_wall_001", "madera": "hinoki_planks", "m_suelo": 1.2, "m_pared": 2.0},
-	"lat": {"suelo": "patterned_terracotta_tiling", "pared": "clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
-	"ale": {"suelo": "herringbone_parquet", "pared": "beige_wall_002", "madera": "dark_wooden_planks", "m_suelo": 1.0, "m_pared": 2.0},
-	"nor": {"suelo": "laminate_floor_02", "pared": "brushed_concrete_03", "madera": "laminate_floor_02", "m_suelo": 1.2, "m_pared": 2.0},
-	"ara": {"suelo": "granite_tile", "pared": "patterned_clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6},
-	"afr": {"suelo": "clay_floor_001", "pared": "patterned_clay_wall", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6},
-	"def": {"suelo": "rubber_tiles", "pared": "beige_wall_001", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0},
+	"ing": {"suelo": "dark_wooden_planks", "pared": "brick_wall_005", "madera": "dark_wooden_planks", "m_suelo": 1.2, "m_pared": 1.6, "t_pared": Vector3(1.2, 1.3, 1.5)},
+	"jap": {"suelo": "hinoki_planks", "pared": "beige_wall_001", "madera": "hinoki_planks", "m_suelo": 1.2, "m_pared": 2.0, "t_pared": Vector3(1.15, 1.15, 1.2)},
+	"lat": {"suelo": "patterned_terracotta_tiling", "pared": "clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0, "t_pared": Vector3(1.25, 1.3, 1.4), "t_suelo": Vector3(0.72, 0.92, 1.25)},
+	"ale": {"suelo": "herringbone_parquet", "pared": "beige_wall_002", "madera": "dark_wooden_planks", "m_suelo": 1.0, "m_pared": 2.0, "t_pared": Vector3(1.35, 1.4, 1.5)},
+	"nor": {"suelo": "laminate_floor_02", "pared": "brushed_concrete_03", "madera": "laminate_floor_02", "m_suelo": 1.2, "m_pared": 2.0, "t_pared": Vector3(1.2, 1.2, 1.25)},
+	"ara": {"suelo": "granite_tile", "pared": "patterned_clay_plaster", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6, "t_pared": Vector3(1.25, 1.3, 1.4)},
+	"afr": {"suelo": "clay_floor_001", "pared": "patterned_clay_wall", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 1.6, "t_pared": Vector3(1.25, 1.3, 1.4), "t_suelo": Vector3(0.72, 0.92, 1.25)},
+	"def": {"suelo": "rubber_tiles", "pared": "beige_wall_001", "madera": "dark_wooden_planks", "m_suelo": 1.5, "m_pared": 2.0, "t_pared": Vector3(1.15, 1.15, 1.2)},
 }
 const GRUPOS := {
 	"ing": ["ENG", "SCO", "WAL", "NIR", "IRL"],
@@ -59,13 +59,19 @@ static func _pbr(ident: String, metros: float, tinte := Color.WHITE) -> Standard
 	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	return m
 
+## (18-11) El tinte de un estilo para paredes («t_pared») o suelos («t_suelo»): aclara y resta rojo a los estilos cálidos sin cambiar la textura del país.
+## SIN_TINTE_PARED=1 los quita todos (el «antes», para comparar).
+static func _tinte(e: Dictionary, clave: String) -> Color:
+	var t: Vector3 = e.get(clave, Vector3.ONE) if OS.get_environment("SIN_TINTE_PARED") == "" else Vector3.ONE
+	return Color(t.x, t.y, t.z)
+
 static func activo() -> bool:
 	return Calidad.elegida >= Calidad.MEDIA and OS.get_environment("SIN_VESTUARIO_REAL") == ""
 
 ## Suelo de resina: gris azulado con un toque del club, semibrillante, con grano fino.
 static func suelo(c1: Color, pais := "") -> StandardMaterial3D:
 	var e: Dictionary = ESTILOS[estilo_de(pais)]
-	var real := _pbr(String(e["suelo"]), float(e["m_suelo"]))
+	var real := _pbr(String(e["suelo"]), float(e["m_suelo"]), _tinte(e, "t_suelo"))
 	if real != null:
 		real.clearcoat_enabled = true
 		real.clearcoat = 0.25
@@ -83,7 +89,7 @@ static func suelo(c1: Color, pais := "") -> StandardMaterial3D:
 ## Yeso pintado.
 static func pared(pais := "") -> StandardMaterial3D:
 	var e: Dictionary = ESTILOS[estilo_de(pais)]
-	var real := _pbr(String(e["pared"]), float(e["m_pared"]))
+	var real := _pbr(String(e["pared"]), float(e["m_pared"]), _tinte(e, "t_pared"))
 	if real != null:
 		return real
 	var m := (Texturas.hormigon(Color(0.9, 0.89, 0.86), 29).duplicate() as StandardMaterial3D)
@@ -94,13 +100,8 @@ static func pared(pais := "") -> StandardMaterial3D:
 	m.normal_scale = 0.05
 	return m
 
-static var _azulejo: StandardMaterial3D = null
-
-## Azulejo blanco de 30 cm con juntas hundidas (albedo con la junta más oscura + normal con la ranura), barnizado.
-static func azulejo() -> StandardMaterial3D:
-	if _azulejo != null:
-		return _azulejo
-	var n := 256
+## La gemela GDScript de `azulejo_imagenes`: [albedo, normal] de n×n (sin mipmaps).
+static func _azulejo_gd(n: int) -> Array:
 	var alb := Image.create(n, n, false, Image.FORMAT_RGB8)
 	var nor := Image.create(n, n, false, Image.FORMAT_RGB8)
 	var rng := RandomNumberGenerator.new()
@@ -123,6 +124,23 @@ static func azulejo() -> StandardMaterial3D:
 			if gy < 3:
 				ny = 0.5 + (0.28 if gy < 1 else -0.0)
 			nor.set_pixel(x, y, Color(nx, ny, 1.0))
+	return [alb, nor]
+
+static var _azulejo: StandardMaterial3D = null
+
+## Azulejo blanco de 30 cm con juntas hundidas (albedo con la junta más oscura + normal con la ranura), barnizado.
+static func azulejo() -> StandardMaterial3D:
+	if _azulejo != null:
+		return _azulejo
+	var n := 256
+	var nat := Nativo.obj()
+	var par: Array
+	if nat != null and nat.has_method("azulejo_imagenes"):   ## (19-11) las dos imágenes, en C++ (`nativo/src/texturas_nativo.cpp`); gemela: `_azulejo_gd`
+		par = nat.azulejo_imagenes(n)
+	else:
+		par = _azulejo_gd(n)
+	var alb: Image = par[0]
+	var nor: Image = par[1]
 	alb.generate_mipmaps()
 	nor.generate_mipmaps()
 	var m := StandardMaterial3D.new()
@@ -159,9 +177,10 @@ static func sala(tipo: String, pais := "") -> StandardMaterial3D:
 		"baldosa":
 			m = _pbr("floor_tiles_06", 1.5)
 		"resina":
-			m = _pbr(String(e["suelo"]), float(e["m_suelo"]))
+			m = _pbr(String(e["suelo"]), float(e["m_suelo"]), _tinte(e, "t_suelo"))
 		"pared":
-			m = _pbr(String(e["pared"]), float(e["m_pared"]))
+			## (18-11) Las paredes pardas y de ladrillo bañaban de rojo la sala (y la piel de quien estuviera en ella): `_tinte`.
+			m = _pbr(String(e["pared"]), float(e["m_pared"]), _tinte(e, "t_pared"))
 	_cache_sala[clave] = m
 	return m
 

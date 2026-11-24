@@ -56,6 +56,7 @@ const TROFEO_ESCALA := 0.75
 const ALTO_VITRINA := 0.5
 ## Y lo que puede ocupar de ancho (el vidrio de la vitrina mide 0,68).
 const ANCHO_VITRINA := 0.46
+const _RUTA_TUNEL_VESTUARIO_PIEZAS := "res://visor/tunel_vestuario_piezas.gd"
 ## La copa del regalo del dueño (27-10), cargada una sola vez: malla y material (metal medio,
 ## sin entorno que reflejar el metal pleno sale negro). Sin archivo, `_trofeo` queda null.
 static var _trofeo: Mesh = null
@@ -141,8 +142,8 @@ static func vidrio_vitrina() -> StandardMaterial3D:
 	return vidrio
 
 static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, titulos: int, nivel_museo: int, hitos: Array = [], pais = "") -> Variant:
-	var lote = load("res://visor/tunel_vestuario_piezas.gd").Lote.new()
-	var m = load("res://visor/tunel_vestuario_piezas.gd").materiales(c1, c2)
+	var lote = load(_RUTA_TUNEL_VESTUARIO_PIEZAS).Lote.new()
+	var m = load(_RUTA_TUNEL_VESTUARIO_PIEZAS).materiales(c1, c2)
 	var oro: StandardMaterial3D = Texturas.metal(Color(0.95, 0.78, 0.3), 0.22)
 	var base := PiezasObra._mat(Color(0.1, 0.1, 0.12), 0.4)
 	var vidrio := vidrio_vitrina()
@@ -189,7 +190,7 @@ static func museo(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color, ti
 		lote.caja(base, _en(Vector3(px, y0 + 1.55, pz)), Vector3(0.95, 1.15, 0.05))
 		lote.caja(m["toalla"], _en(Vector3(px, y0 + 1.55, pz + 0.03)), Vector3(0.85, 1.05, 0.01))
 		var alterna := k % 2 == 1
-		load("res://visor/tunel_vestuario_piezas.gd").camiseta(lote, _en(Vector3(px, y0 + 1.6, pz + 0.06)), m["cam2"] if alterna else m["cam1"], m["cam1"] if alterna else m["cam2"])
+		load(_RUTA_TUNEL_VESTUARIO_PIEZAS).camiseta(lote, _en(Vector3(px, y0 + 1.6, pz + 0.06)), m["cam2"] if alterna else m["cam1"], m["cam1"] if alterna else m["cam2"])
 		PiezasObra._rotulo(nodo, str(anios[k % anios.size()]), Vector3(px, y0 + 1.07, pz + 0.07), 0.0, 22, Color(0.12, 0.12, 0.14))
 	## Una franja con los colores del club bajo el rótulo de los títulos.
 	lote.caja(m["cam1"], _en(Vector3(cx, y0 + 2.62, caja.position.y - 0.14)), Vector3(caja.size.x, 0.36, 0.02))
@@ -215,9 +216,16 @@ static func _luces_museo(nodo: Node3D, caja: Rect2, y0: float, cx: float) -> voi
 		o.light_color = Color(1, 0.9, 0.75)
 		nodo.add_child(o)
 
+## Un par de botas en la balda de abajo; devuelve la z de la siguiente (sacado de `utileria`).
+static func _botas(lote, m, xs: float, yb: float, z: float) -> float:
+	for s: float in [-1.0, 1.0]:
+		lote.caja(m["bota"], _en(Vector3(xs + s * 0.06, yb + 0.06, z), PI / 2.0), Vector3(0.1, 0.09, 0.27))
+	return z + 0.3
+
+
 static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color) -> Variant:
-	var lote = load("res://visor/tunel_vestuario_piezas.gd").Lote.new()
-	var m = load("res://visor/tunel_vestuario_piezas.gd").materiales(c1, c2)
+	var lote = load(_RUTA_TUNEL_VESTUARIO_PIEZAS).Lote.new()
+	var m = load(_RUTA_TUNEL_VESTUARIO_PIEZAS).materiales(c1, c2)
 	var acero: StandardMaterial3D = Texturas.metal(Color(0.55, 0.58, 0.62), 0.4)
 	var cuero := PiezasObra._mat(Color(0.96, 0.96, 0.96), 0.45)
 	var naranja := PiezasObra._mat(Color(1.0, 0.45, 0.1), 0.6)
@@ -238,9 +246,7 @@ static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color)
 			match b:
 				0:
 					## Abajo, los pares de botas.
-					for s: float in [-1.0, 1.0]:
-						lote.caja(m["bota"], _en(Vector3(xs + s * 0.06, yb + 0.06, z), PI / 2.0), Vector3(0.1, 0.09, 0.27))
-					z += 0.3
+					z = _botas(lote, m, xs, yb, z)
 				1:
 					## La ropa doblada en montones del color del club.
 					var alto := rng.randf_range(0.08, 0.22)
@@ -261,7 +267,7 @@ static func utileria(nodo: Node3D, caja: Rect2, y0: float, c1: Color, c2: Color)
 	var n := int(lb / 0.55)
 	for k in n:
 		var z := zb - lb / 2.0 + (float(k) + 0.5) * lb / float(n)
-		load("res://visor/tunel_vestuario_piezas.gd").camiseta(lote, _en(Vector3(xb, y0 + 1.48, z), -PI / 2.0 + rng.randf_range(-0.08, 0.08)), m["cam1"], m["cam2"])
+		load(_RUTA_TUNEL_VESTUARIO_PIEZAS).camiseta(lote, _en(Vector3(xb, y0 + 1.48, z), -PI / 2.0 + rng.randf_range(-0.08, 0.08)), m["cam1"], m["cam2"])
 	_choque(nodo, Vector3(xb, y0 + 1.0, zb), Vector3(0.45, 2.0, lb))
 	## LA JAULA DE BALONES, el cesto de toallas y los conos, en el centro.
 	var cx := caja.get_center().x + 0.2

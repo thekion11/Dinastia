@@ -1,6 +1,21 @@
 extends "res://pruebas/ideas_base.gd"
 ## Ideas del dueño (lote a, a3b): mercado, cesiones, negociación, agentes y reglas de plantilla.
 
+var _rival
+var _j
+var _v
+
+var _cn
+
+var _ag
+
+var _av
+var _c1
+var _fed
+
+var _cliente
+var _cli2
+
 func ejecutar() -> void:
 	_ideas_a_fichajes_y_cesiones()
 	_ideas_a_negociacion()
@@ -11,6 +26,15 @@ func _ideas_a_fichajes_y_cesiones() -> void:
 	var m := _mundo_ideas(2631)
 	var c := m.mi_club()
 	c.mover_saldo(900000000)
+	_ideas_a_fichajes_y_cesiones_01(m, c)
+	_ideas_a_fichajes_y_cesiones_02(m, c)
+	_ideas_a_fichajes_y_cesiones_03(m, c)
+	_ideas_a_fichajes_y_cesiones_04(m, c)
+	_ideas_a_fichajes_y_cesiones_05(m, c)
+	_ideas_a_fichajes_y_cesiones_06(m, c)
+	_ideas_a_fichajes_y_cesiones_07(m, c)
+
+func _ideas_a_fichajes_y_cesiones_01(m: Mundo, c: Club) -> void:
 	## Libres todo el año (583): con el mercado cerrado se ficha igual.
 	m.semana = 10
 	_comprobar(not m.roles.ventana_abierta(), "la semana 10 el mercado está cerrado")
@@ -30,28 +54,32 @@ func _ideas_a_fichajes_y_cesiones() -> void:
 			break
 		_comprobar(res.has("rechazado") or res.has("error"), "o firma o rechaza, nunca queda en el aire")
 	_comprobar(fichado and c.plantilla.size() == antes + 1 and c.plantilla.has(firmado) and firmado.club_id == c.id and not m.libres.has(firmado), "con el mercado cerrado se ficha a un libre y entra al plantel (583)")
+
+func _ideas_a_fichajes_y_cesiones_02(m: Mundo, c: Club) -> void:
 	## Cesiones con opción y con obligación (584, 585).
-	var j: Jugador = c.plantilla[4]
-	j.edad = 25
-	j.ovr = c.rep - 4
-	j.tasar()
-	var cd := m.cesiones.ceder_con_opcion(j, Cesiones.CESION_OBLIGA)
-	_comprobar(not cd.has("error") and m.cesiones.esta_cedido(j.id) and j.club_id == (cd["destino"] as Club).id, "se cede con obligación de compra al club de destino (584)")
-	var ces := m.cesiones.cesion_de(j.id)
-	_comprobar(String(ces["tipo"]) == "obliga" and int(ces["opcion"]) == int(round(float(j.valor) * 0.85)) and float(ces["sueldo_pct"]) == 1.0, "la obligación fija el 85%% del valor y el destino paga todo el sueldo (584, 585)")
-	_comprobar(m.cesiones.ahorro_salarial(c.id) == int(round(float(j.sueldo) * float(ces["sueldo_pct"]))), "el ahorro salarial del club cedente es el sueldo pagado por el destino (%d) (585)" % m.cesiones.ahorro_salarial(c.id))
+	_j = c.plantilla[4]
+	_j.edad = 25
+	_j.ovr = c.rep - 4
+	_j.tasar()
+	var cd = m.cesiones.ceder_con_opcion(_j, Cesiones.CESION_OBLIGA)
+	_comprobar(not cd.has("error") and m.cesiones.esta_cedido(_j.id) and _j.club_id == (cd["destino"] as Club).id, "se cede con obligación de compra al club de destino (584)")
+	var ces = m.cesiones.cesion_de(_j.id)
+	_comprobar(String(ces["tipo"]) == "obliga" and int(ces["opcion"]) == int(round(float(_j.valor) * 0.85)) and is_equal_approx(float(ces["sueldo_pct"]), 1.0), "la obligación fija el 85%% del valor y el destino paga todo el sueldo (584, 585)")
+	_comprobar(m.cesiones.ahorro_salarial(c.id) == int(round(float(_j.sueldo) * float(ces["sueldo_pct"]))), "el ahorro salarial del club cedente es el sueldo pagado por el destino (%d) (585)" % m.cesiones.ahorro_salarial(c.id))
 	var casa_saldo := c.saldo
 	var dest: Club = cd["destino"]
 	var dest_saldo := dest.saldo
 	var out := m.cesiones.resolver(m.anio + 1)
-	_comprobar(out.size() == 1 and bool(out[0]["comprado"]) and dest.plantilla.has(j) and c.saldo == casa_saldo + int(ces["opcion"]) and dest.saldo == dest_saldo - int(ces["opcion"]), "al terminar la cesión con obligación el destino compra y paga %s (584)" % str(ces["opcion"]))
+	_comprobar(out.size() == 1 and bool(out[0]["comprado"]) and dest.plantilla.has(_j) and c.saldo == casa_saldo + int(ces["opcion"]) and dest.saldo == dest_saldo - int(ces["opcion"]), "al terminar la cesión con obligación el destino compra y paga %s (584)" % str(ces["opcion"]))
 	var j2: Jugador = c.plantilla[6]
 	j2.edad = 25
-	var cd2 := m.cesiones.ceder_con_opcion(j2, Cesiones.CESION_OPCION)
+	m.cesiones.ceder_con_opcion(j2, Cesiones.CESION_OPCION)
 	var ces2 := m.cesiones.cesion_de(j2.id)
 	_comprobar(String(ces2["tipo"]) == "opcion" and int(ces2["opcion"]) == int(round(float(j2.valor) * 1.1)) and float(ces2["sueldo_pct"]) < 1.0 and float(ces2["sueldo_pct"]) >= 0.4, "la cesión con opción pide el 110%% del valor y el destino paga solo una parte del sueldo (%.0f%%) (584, 585)" % (float(ces2["sueldo_pct"]) * 100.0))
 	var out2 := m.cesiones.resolver(m.anio + 1)
 	_comprobar(out2.size() == 1 and (j2.club_id == c.id) == (not bool(out2[0]["comprado"])), "y al final el jugador o se compra o vuelve a casa (584)")
+
+func _ideas_a_fichajes_y_cesiones_03(m: Mundo, c: Club) -> void:
 	## Porcentaje de futura venta como moneda (587).
 	var obj: Jugador = (m.ligas[0].clubes[3] as Club).plantilla[2]
 	var cl_vendedor := m.clubes.get(obj.club_id) as Club
@@ -65,9 +93,11 @@ func _ideas_a_fichajes_y_cesiones() -> void:
 	var venta := m.cesiones.vender(obj, comprador, 1000000, 0)
 	_comprobar(int(venta["pagado_a_terceros"]) == 200000 and cl_vendedor.saldo == v0 + 200000 and c.saldo == c0 + 800000, "al vender, el club original cobra su 20%% (%s) y tú el resto (587)" % str(venta["pagado_a_terceros"]))
 	var obj2: Jugador = c.plantilla[8]
-	var c1 := c.saldo
+	_c1 = c.saldo
 	var venta2 := m.cesiones.vender(obj2, comprador, 1000000, 25)
-	_comprobar(int(venta2["neto"]) == 700000 and c.saldo == c1 + 700000 and m.cesiones.plusvalias.size() == 1, "y guardarte un 25% de la próxima venta te hace cobrar 30%% menos hoy y deja una plusvalía pendiente (587)")
+	_comprobar(int(venta2["neto"]) == 700000 and c.saldo == _c1 + 700000 and m.cesiones.plusvalias.size() == 1, "y guardarte un 25% de la próxima venta te hace cobrar 30%% menos hoy y deja una plusvalía pendiente (587)")
+
+func _ideas_a_fichajes_y_cesiones_04(m: Mundo, c: Club) -> void:
 	## Pago en cuotas (590).
 	var obj3: Jugador = (m.ligas[0].clubes[7] as Club).plantilla[1]
 	var vend3 := m.clubes.get(obj3.club_id) as Club
@@ -81,6 +111,8 @@ func _ideas_a_fichajes_y_cesiones() -> void:
 	_comprobar(m.cesiones.pagar_cuotas(1, c).is_empty() and c.saldo == s0, "las cuotas no se pagan fuera de fin de temporada (590)")
 	var pagos := m.cesiones.pagar_cuotas(Cesiones.SEMANAS_ENTRE_CUOTAS, c)
 	_comprobar(pagos.size() == 1 and c.saldo == s0 - cuota and vend3.saldo == e0 + cuota, "cada fin de temporada sale una cuota de tu caja hacia el vendedor (%d) (590)" % cuota)
+
+func _ideas_a_fichajes_y_cesiones_05(m: Mundo, c: Club) -> void:
 	## Terceros propietarios (593).
 	var joven: Jugador = c.plantilla[10]
 	joven.edad = 20
@@ -96,6 +128,8 @@ func _ideas_a_fichajes_y_cesiones() -> void:
 	var mo0 := joven.moral
 	m.cesiones.rechazar_presion(joven)
 	_comprobar(joven.moral < mo0, "y negarse le baja la moral al chico (593)")
+
+func _ideas_a_fichajes_y_cesiones_06(m: Mundo, c: Club) -> void:
 	## Guerra de ofertas (594).
 	var estrella: Jugador = c.plantilla[2]
 	estrella.ovr = 80
@@ -114,6 +148,8 @@ func _ideas_a_fichajes_y_cesiones() -> void:
 			pujas_ok += 1
 			mayor = mayor and int(o["monto"]) > 1000000 and (o["club"] as Club) != rival_inicial
 	_comprobar(total >= 1 and total <= MercadoAvanzado.MAX_PUJAS and pujas_ok == total and mayor, "otros clubes entran en la guerra con pujas cada vez mayores, hasta un tope de %d (%d pujas) (594)" % [MercadoAvanzado.MAX_PUJAS, total])
+
+func _ideas_a_fichajes_y_cesiones_07(m: Mundo, c: Club) -> void:
 	## Jugador que rechaza tu club por falta de proyecto (595).
 	var clubes_pais: Array = []
 	for k: Club in m.clubes.values():
@@ -176,11 +212,11 @@ func _ideas_a_negociacion() -> void:
 				con_rival -= 1000
 	_comprobar(con_rival >= 10 and con_rival < 200, "otro club puja a veces por el mismo objetivo, nunca el tuyo ni el vendedor (%d de 200 mesas) (459)" % con_rival)
 	## Renovación preventiva (611).
-	var j: Jugador = c.plantilla[2]
-	j.anios_contrato = 1
-	var pide := m.cantera.pide_para_renovar(j)
-	var r1 := m.cantera.renovar(j)
-	_comprobar(bool(r1.get("ok", false)) and j.sueldo == pide and j.anios_contrato >= 2, "renovar firma lo que pide (%d) y alarga el contrato a %d años (611)" % [pide, j.anios_contrato])
+	_j = c.plantilla[2]
+	_j.anios_contrato = 1
+	var pide = m.cantera.pide_para_renovar(_j)
+	var r1 = m.cantera.renovar(_j)
+	_comprobar(bool(r1.get("ok", false)) and _j.sueldo == pide and _j.anios_contrato >= 2, "renovar firma lo que pide (%d) y alarga el contrato a %d años (611)" % [pide, _j.anios_contrato])
 	var j3: Jugador = c.plantilla[3]
 	j3.anios_contrato = 1
 	var pide3 := m.cantera.pide_para_renovar(j3)
@@ -203,9 +239,15 @@ func _ideas_a_agentes() -> void:
 	var m := _mundo_ideas(2633)
 	var c := m.mi_club()
 	c.mover_saldo(900000000)
-	var cn: Cantera = m.cantera
+	_cn = m.cantera
+	_ideas_a_agentes_01(m, c)
+	_ideas_a_agentes_02(m, c)
+	_ideas_a_agentes_03(m, c)
+	_ideas_a_agentes_04(m, c)
+
+func _ideas_a_agentes_01(m: Mundo, c: Club) -> void:
 	## Agentes con cartera propia (616).
-	var ags := cn.agencias_del_plantel()
+	var ags = _cn.agencias_del_plantel()
 	var suma := 0
 	var orden_ok := true
 	for i in ags.size():
@@ -214,58 +256,71 @@ func _ideas_a_agentes() -> void:
 			orden_ok = orden_ok and (ags[i - 1]["jugadores"] as Array).size() >= (ags[i]["jugadores"] as Array).size()
 	_comprobar(ags.size() >= 2 and suma == c.plantilla.size() and orden_ok, "tu plantel se reparte entre %d agencias con carteras de clientes ordenadas (616)" % ags.size())
 	var same := true
-	for j: Jugador in ags[0]["jugadores"]:
-		same = same and String(cn.agente_de(j)["nombre"]) == String(ags[0]["agente"]["nombre"])
-	_comprobar(same and cn.agente_de(c.plantilla[0]) == cn.agente_de(c.plantilla[0]), "el mismo jugador siempre tiene el mismo agente (616)")
+	for _j: Jugador in ags[0]["jugadores"]:
+		same = same and String(_cn.agente_de(_j)["nombre"]) == String(ags[0]["agente"]["nombre"])
+	_comprobar(same and _cn.agente_de(c.plantilla[0]) == _cn.agente_de(c.plantilla[0]), "el mismo jugador siempre tiene el mismo agente (616)")
+
+func _ideas_a_agentes_02(m: Mundo, c: Club) -> void:
 	## Presión del agente (598) y confianza (617).
 	var exig := {}
 	for i in 600:
-		exig = cn.sortear_guerra_agentes()
+		exig = _cn.sortear_guerra_agentes()
 		if not exig.is_empty():
 			break
-	_comprobar(not exig.is_empty() and cn.hay_exigencia() and String(exig["txt"]) != "" and String(exig["opcion_a"]) != "" and (exig["ids"] as Array).size() >= 2, "una agencia con varios clientes presiona con una exigencia (%s) (598)" % String(exig.get("tipo", "")))
-	var ag := String(exig["agente"])
-	cn.exigencia = {"tipo": "exclusiva", "agente": ag, "pid": "", "ids": []}
-	var c0 := cn.confianza_de(ag)
-	var r := cn.resolver_agente("a")
-	_comprobar(cn.confianza_de(ag) > c0 and cn.exclusiva == ag and not cn.hay_exigencia() and r.has("titulo"), "aceptar al agente sube su confianza (%d → %d) y le da exclusiva (617)" % [c0, cn.confianza_de(ag)])
-	cn.exigencia = {"tipo": "exclusiva", "agente": ag, "pid": "", "ids": []}
-	var c1 := cn.confianza_de(ag)
-	cn.resolver_agente("b")
-	_comprobar(cn.confianza_de(ag) < c1 and cn.exclusiva == "", "y plantarse la baja y quita la exclusiva (617)")
+	_comprobar(not exig.is_empty() and _cn.hay_exigencia() and String(exig["txt"]) != "" and String(exig["opcion_a"]) != "" and (exig["ids"] as Array).size() >= 2, "una agencia con varios clientes presiona con una exigencia (%s) (598)" % String(exig.get("tipo", "")))
+	_ag = String(exig["agente"])
+	_cn.exigencia = {"tipo": "exclusiva", "agente": _ag, "pid": "", "ids": []}
+	var c0 = _cn.confianza_de(_ag)
+	var r = _cn.resolver_agente("a")
+	_comprobar(_cn.confianza_de(_ag) > c0 and _cn.exclusiva == _ag and not _cn.hay_exigencia() and r.has("titulo"), "aceptar al agente sube su confianza (%d → %d) y le da exclusiva (617)" % [c0, _cn.confianza_de(_ag)])
+	_cn.exigencia = {"tipo": "exclusiva", "agente": _ag, "pid": "", "ids": []}
+	_c1 = _cn.confianza_de(_ag)
+	_cn.resolver_agente("b")
+	_comprobar(_cn.confianza_de(_ag) < _c1 and _cn.exclusiva == "", "y plantarse la baja y quita la exclusiva (617)")
+
+func _ideas_a_agentes_03(m: Mundo, c: Club) -> void:
 	## Comisión bajo la mesa como decisión ética (623).
-	cn.exigencia = {"tipo": "comision", "agente": ag, "pid": "", "ids": []}
+	_cn.exigencia = {"tipo": "comision", "agente": _ag, "pid": "", "ids": []}
 	var caja := c.saldo
-	var turbio0 := cn.turbio
-	cn.resolver_agente("a")
-	_comprobar(c.saldo < caja and cn.turbio == turbio0 + 1 and cn.confianza_de(ag) > c1, "pagar la comisión bajo la mesa cuesta caja, suma un punto de «turbio» y gana confianza (623)")
-	cn.exigencia = {"tipo": "comision", "agente": ag, "pid": "", "ids": []}
+	var turbio0 = _cn.turbio
+	_cn.resolver_agente("a")
+	_comprobar(c.saldo < caja and _cn.turbio == turbio0 + 1 and _cn.confianza_de(_ag) > _c1, "pagar la comisión bajo la mesa cuesta caja, suma un punto de «turbio» y gana confianza (623)")
+	_cn.exigencia = {"tipo": "comision", "agente": _ag, "pid": "", "ids": []}
 	var pres0: int = m.roles.prestigio
-	cn.resolver_agente("b")
+	_cn.resolver_agente("b")
 	_comprobar(m.roles.prestigio == pres0 + 3, "denunciarla da prestigio (623)")
+
+func _ideas_a_agentes_04(m: Mundo, c: Club) -> void:
 	## Superagente (620).
-	var av: MercadoAvanzado = m.mercado_av
-	_comprobar(av._montar(m, "superagente") and av.pendiente["id"] == "superagente" and av.clientes.size() == 3, "aparece un superagente que lleva a tus tres mejores jugadores (620)")
-	var cliente := m.jugador_por_id(String(av.pendiente["jugador"]))
-	var s0 := cliente.sueldo
-	var res := av.resolver(m, "a")
-	_comprobar(cliente.sueldo == int(round(float(s0) * 1.15)) and String(res["titulo"]).begins_with("💰"), "ceder al superagente sube el sueldo de su cliente un 15%% (620)")
-	av._montar(m, "superagente")
-	var cli2 := m.jugador_por_id(String(av.pendiente["jugador"]))
-	var mo := cli2.moral
-	av.resolver(m, "b")
-	_comprobar(cli2.moral == clampi(mo - 10, 0, 100) and av.pendiente.is_empty(), "plantarse le cuesta 10 de moral y a veces lo hace pedir la salida (620)")
+	_av = m.mercado_av
+	_comprobar(_av._montar(m, "superagente") and _av.pendiente["id"] == "superagente" and _av.clientes.size() == 3, "aparece un superagente que lleva a tus tres mejores jugadores (620)")
+	_cliente = m.jugador_por_id(String(_av.pendiente["jugador"]))
+	var s0 = _cliente.sueldo
+	var res = _av.resolver(m, "a")
+	_comprobar(_cliente.sueldo == int(round(float(s0) * 1.15)) and String(res["titulo"]).begins_with("💰"), "ceder al superagente sube el sueldo de su cliente un 15%% (620)")
+	_av._montar(m, "superagente")
+	_cli2 = m.jugador_por_id(String(_av.pendiente["jugador"]))
+	var mo = _cli2.moral
+	_av.resolver(m, "b")
+	_comprobar(_cli2.moral == clampi(mo - 10, 0, 100) and _av.pendiente.is_empty(), "plantarse le cuesta 10 de moral y a veces lo hace pedir la salida (620)")
 
 func _ideas_a_reglas_y_asuntos() -> void:
 	var m := _mundo_ideas(2634)
 	var c := m.mi_club()
 	c.mover_saldo(900000000)
-	var fed: Federacion = m.federacion
+	_fed = m.federacion
+	_ideas_a_reglas_y_asuntos_01(m, c)
+	_ideas_a_reglas_y_asuntos_02(m, c)
+	_ideas_a_reglas_y_asuntos_03(m, c)
+	_ideas_a_reglas_y_asuntos_04(m, c)
+	_ideas_a_reglas_y_asuntos_05(m, c)
+	_ideas_a_reglas_y_asuntos_06(m, c)
+
+func _ideas_a_reglas_y_asuntos_01(m: Mundo, c: Club) -> void:
 	## Cupo de extranjeros por liga (602, 603).
 	var r_chi := LeyesPais.reglas("CHI")
 	var r_esp := LeyesPais.reglas("ESP")
 	_comprobar(int(r_chi["plantel"]) == 6 and int(r_chi["cancha"]) == 5 and String(r_esp["criterio"]) == "no_ue" and int(r_esp["plantel"]) == 3, "cada liga tiene su cupo: Chile 6 extranjeros (5 en cancha), España 3 extracomunitarios (602)")
-	var extra := 0
 	for x: Jugador in c.plantilla:
 		x.pais = c.pais
 	for i in 8:
@@ -278,39 +333,45 @@ func _ideas_a_reglas_y_asuntos() -> void:
 	var propio := Jugador.new()
 	propio.pais = c.pais
 	_comprobar(LeyesPais.motivo_fichaje(c, forastero, m.clubes, 0).begins_with("Cupo lleno") and LeyesPais.motivo_fichaje(c, propio, m.clubes, 0) == "", "con el cupo lleno no se ficha a otro extranjero, pero sí a un nacional (603)")
+
+func _ideas_a_reglas_y_asuntos_02(m: Mundo, c: Club) -> void:
 	## Juveniles obligatorios (603).
-	fed.cupo_juvenil = true
+	_fed.cupo_juvenil = true
 	var sin_jov: Array = []
 	for x: Jugador in c.plantilla:
 		x.edad = 26
 		if sin_jov.size() < 11:
 			sin_jov.append(x)
 	var s0 := c.saldo
-	var multa := fed.revisar_cupo_juvenil(c, sin_jov)
+	var multa = _fed.revisar_cupo_juvenil(c, sin_jov)
 	_comprobar(multa < 0 and c.saldo < s0, "alinear un once sin ningún sub-21 con el cupo juvenil votado cuesta una multa (603)")
 	sin_jov[0].edad = 19
 	var s1 := c.saldo
-	var bono := fed.revisar_cupo_juvenil(c, sin_jov)
+	var bono = _fed.revisar_cupo_juvenil(c, sin_jov)
 	_comprobar(bono > 0 and c.saldo > s1, "y alinear a un sub-21 da una bonificación (603)")
+
+func _ideas_a_reglas_y_asuntos_03(m: Mundo, c: Club) -> void:
 	## Fair play financiero (625).
-	fed.fpf_activo = true
-	_comprobar(fed.revisar_fair_play(c, 90) == "aviso" and fed.puede_pagar_traspaso(), "el primer año por encima del 70%% de masa salarial es un aviso (625)")
+	_fed.fpf_activo = true
+	_comprobar(_fed.revisar_fair_play(c, 90) == "aviso" and _fed.puede_pagar_traspaso(), "el primer año por encima del 70%% de masa salarial es un aviso (625)")
 	var s2 := c.saldo
-	_comprobar(fed.revisar_fair_play(c, 90) == "sancion" and c.saldo < s2 and not fed.puede_pagar_traspaso(), "el segundo año es sanción: multa y no se pagan traspasos (625)")
-	_comprobar(fed.revisar_fair_play(c, 50) == "" and fed.puede_pagar_traspaso(), "y volver a las cuentas en regla levanta el castigo (625)")
+	_comprobar(_fed.revisar_fair_play(c, 90) == "sancion" and c.saldo < s2 and not _fed.puede_pagar_traspaso(), "el segundo año es sanción: multa y no se pagan traspasos (625)")
+	_comprobar(_fed.revisar_fair_play(c, 50) == "" and _fed.puede_pagar_traspaso(), "y volver a las cuentas en regla levanta el castigo (625)")
+
+func _ideas_a_reglas_y_asuntos_04(m: Mundo, c: Club) -> void:
 	## Fichaje impuesto por el dueño (630, 631).
-	var av: MercadoAvanzado = m.mercado_av
+	_av = m.mercado_av
 	m.libres.clear()
 	m.generar_libres()
 	m.libres[0].edad = 33
 	m.libres[0].ovr = 99
 	var directiva: Directiva = m.directiva
-	_comprobar(av._montar(m, "impuesto") and av.pendiente["id"] == "impuesto", "la directiva te impone el fichaje de un veterano libre (630)")
-	var objetivo := m.jugador_por_id(String(av.pendiente["jugador"]))
+	_comprobar(_av._montar(m, "impuesto") and _av.pendiente["id"] == "impuesto", "la directiva te impone el fichaje de un veterano libre (630)")
+	var objetivo = m.jugador_por_id(String(_av.pendiente["jugador"]))
 	if objetivo == null:
 		objetivo = m.libres[0]
 	var conf0 := directiva.confianza
-	var res := av.resolver(m, "b")
+	var res = _av.resolver(m, "b")
 	_comprobar(directiva.confianza == conf0 - 6 and String(res["titulo"]).begins_with("🚫"), "negarte baja 6 puntos la paciencia del directorio (%d → %d) (631)" % [conf0, directiva.confianza])
 	var fichado := false
 	for i in 12:
@@ -318,30 +379,33 @@ func _ideas_a_reglas_y_asuntos() -> void:
 			m.generar_libres()
 		m.libres[0].edad = 33
 		m.libres[0].ovr = 99
-		av._montar(m, "impuesto")
-		var pid := String(av.pendiente["jugador"])
+		_av._montar(m, "impuesto")
 		var antes := c.plantilla.size()
 		var cf := directiva.confianza
-		var rr := av.resolver(m, "a")
+		var rr = _av.resolver(m, "a")
 		if c.plantilla.size() == antes + 1 and directiva.confianza == cf + 4 and String(rr["titulo"]).begins_with("✍️"):
 			fichado = true
 			break
 	_comprobar(fichado, "aceptar ficha al libre y gana 4 puntos de confianza del directorio (630)")
+
+func _ideas_a_reglas_y_asuntos_05(m: Mundo, c: Club) -> void:
 	## Jugador de tu plantel en apuestas (637).
-	av._montar(m, "apuestas")
-	var ap := m.jugador_por_id(String(av.pendiente["jugador"]))
-	var res2 := av.resolver(m, "a")
+	_av._montar(m, "apuestas")
+	var ap = m.jugador_por_id(String(_av.pendiente["jugador"]))
+	var res2 = _av.resolver(m, "a")
 	_comprobar(ap.suspension >= 3 and String(res2["titulo"]).contains("sancionado"), "sancionar al apostador lo deja tres partidos fuera (637)")
 	var cinco := false
 	for i in 80:
-		av._montar(m, "apuestas")
-		var ap2 := m.jugador_por_id(String(av.pendiente["jugador"]))
+		_av._montar(m, "apuestas")
+		var ap2 = m.jugador_por_id(String(_av.pendiente["jugador"]))
 		ap2.suspension = 0
-		av.resolver(m, "b")
+		_av.resolver(m, "b")
 		if ap2.suspension == 5:
 			cinco = true
 			break
 	_comprobar(cinco, "taparlo puede salir a la luz y acabar en cinco partidos de suspensión (637)")
+
+func _ideas_a_reglas_y_asuntos_06(m: Mundo, c: Club) -> void:
 	## Agente libre estrella cada cierto tiempo (613).
 	var estrellas := []
 	m.libre_estrella.connect(func(e: Jugador) -> void: estrellas.append(e))

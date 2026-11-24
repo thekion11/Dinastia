@@ -26,7 +26,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 		var b3 := Button.new()
 		b3.text = Idiomas.t("🧍 Crear y vestir mi personaje 3D")
 		b3.custom_minimum_size = Vector2(0, 40)
-		b3.add_theme_font_size_override("font_size", 13)
+		b3.add_theme_font_size_override("font_size", Tema.letra(13))
 		b3.pressed.connect(func() -> void: abrir_creador.call())
 		lista.add_child(b3)
 
@@ -43,7 +43,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 	previa.add_child(img)
 	var b_azar := Button.new()
 	b_azar.text = Idiomas.t("🎲 Aleatorio")
-	b_azar.add_theme_font_size_override("font_size", 11)
+	b_azar.add_theme_font_size_override("font_size", Tema.letra(11))
 	b_azar.pressed.connect(func() -> void:
 		r.look = CaraDT.look_aleatorio()
 		al_cambiar.call())
@@ -58,7 +58,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 	for corte: String in CaraDT.CORTES:
 		var b := Button.new()
 		b.text = corte
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		b.toggle_mode = true
 		b.button_pressed = String(l.get("pelo", "")) == corte
 		## Sin recortar (s3, auditoría): en una rejilla que fluye cada botón puede
@@ -84,7 +84,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 	for i in CaraDT.VOLS.size():
 		var bv := Button.new()
 		bv.text = String(CaraDT.VOLS[i])
-		bv.add_theme_font_size_override("font_size", 10)
+		bv.add_theme_font_size_override("font_size", Tema.letra(10))
 		bv.toggle_mode = true
 		bv.button_pressed = int(l.get("vol", 1)) == i
 		var iv := i
@@ -102,7 +102,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 	for nombre_raya: Array in [["Ninguna", 0], ["Izquierda", 1], ["Medio", 2], ["Derecha", 3]]:
 		var br := Button.new()
 		br.text = String(nombre_raya[0])
-		br.add_theme_font_size_override("font_size", 10)
+		br.add_theme_font_size_override("font_size", Tema.letra(10))
 		br.toggle_mode = true
 		br.button_pressed = int(l.get("raya", 0)) == int(nombre_raya[1])
 		var vr := int(nombre_raya[1])
@@ -113,7 +113,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 		raya_fila.add_child(br)
 	var lados_b := Button.new()
 	lados_b.text = Idiomas.t("Rapar sienes")
-	lados_b.add_theme_font_size_override("font_size", 10)
+	lados_b.add_theme_font_size_override("font_size", Tema.letra(10))
 	lados_b.toggle_mode = true
 	lados_b.button_pressed = bool(l.get("lados", false))
 	lados_b.pressed.connect(func() -> void:
@@ -131,7 +131,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 	for bd in 8:
 		var bb := Button.new()
 		bb.text = Idiomas.t("Sin barba") if bd == 0 else str(bd)
-		bb.add_theme_font_size_override("font_size", 10)
+		bb.add_theme_font_size_override("font_size", Tema.letra(10))
 		bb.toggle_mode = true
 		bb.button_pressed = int(l.get("barba", 0)) == bd
 		bb.custom_minimum_size = Vector2(40, 22)
@@ -152,7 +152,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 	for fila_t: Array in CaraDT.TRAJES:
 		var bt := Button.new()
 		bt.text = String(fila_t[1])
-		bt.add_theme_font_size_override("font_size", 10)
+		bt.add_theme_font_size_override("font_size", Tema.letra(10))
 		bt.toggle_mode = true
 		bt.button_pressed = String(l.get("traje", "")) == String(fila_t[0])
 		var id_t := String(fila_t[0])
@@ -198,7 +198,7 @@ static func pintar(lista: VBoxContainer, r: Roles, texto: Callable, colores: Dic
 		col_box.add_child(cp)
 	var gafas_b := Button.new()
 	gafas_b.text = Idiomas.t("👓 Gafas")
-	gafas_b.add_theme_font_size_override("font_size", 10)
+	gafas_b.add_theme_font_size_override("font_size", Tema.letra(10))
 	gafas_b.toggle_mode = true
 	gafas_b.button_pressed = bool(l.get("gafas", false))
 	gafas_b.pressed.connect(func() -> void:

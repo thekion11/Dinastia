@@ -28,13 +28,7 @@ func _ready() -> void:
 	var solo := OS.get_environment("SOLO")
 	var base := {}
 	for r in rondas + 1:
-		for nombre in PESTANAS:
-			if solo != "" and not nombre in solo.split(","):
-				continue
-			_p.call("_ir_a_pestana", nombre)
-			for i in 6:
-				await get_tree().process_frame
-			await _cerrar_capas()
+		await _recorrer_pestanas(solo)
 		_p.call("_abrir_competicion")
 		for i in 6:
 			await get_tree().process_frame
@@ -84,6 +78,17 @@ func _ready() -> void:
 		print("FUGAS ronda %d: objetos %d (%+d) · nodos %d (%+d) · huérfanos %d · recursos %d (%+d)" % [r, o, o - int(base["o"]), n, n - int(base["n"]), h, rc, rc - int(base["rc"])])
 	print("===== FIN. 0 fallos =====")
 	get_tree().quit()
+
+## Visita cada pestaña del menú (todas, o las de SOLO) y cierra lo que abre.
+func _recorrer_pestanas(solo: String) -> void:
+	for nombre in PESTANAS:
+		if solo != "" and not nombre in solo.split(","):
+			continue
+		_p.call("_ir_a_pestana", nombre)
+		for i in 6:
+			await get_tree().process_frame
+		await _cerrar_capas()
+
 
 func _cerrar_capas() -> void:
 	for h: Node in _p.get_children():

@@ -48,6 +48,38 @@ func _probar_peatones() -> void:
 	PeatonQ.terminar(suelto)
 	_comprobar(not suelto.is_empty() and (suelto["nodo"] as Node3D).find_children("Pelo", "", true, false).is_empty(), "fuera del árbol, terminar() no hace nada (necesita las medidas)")
 	(suelto["nodo"] as Node).free()
+	var st := _pp_recorrer(raiz)
+	var mujeres: int = st["mujeres"]
+	var barba_mujer: bool = st["barba_mujer"]
+	var cortes_ok: bool = st["cortes_ok"]
+	var vistas_ok: bool = st["vistas_ok"]
+	var caminan: bool = st["caminan"]
+	var cejas_ok: bool = st["cejas_ok"]
+	var hechos: Array = st["hechos"]
+	_comprobar(mujeres >= 2 and mujeres <= 12, "hombres y mujeres por la calle (%d mujeres de 14)" % mujeres)
+	_comprobar(cortes_ok and not barba_mujer, "todos con su peinado, y ninguna mujer con barba")
+	_comprobar(vistas_ok, "lejos de la cámara no se dibujan (alcance ≤ 120 m)")
+	_comprobar(cejas_ok, "y las cejas 3D se apagan antes, a %d m, como en los jugadores" % PeloQ.DIST_CEJAS)
+	_comprobar(caminan, "caminando, cada uno a su paso (0,9-1,1)")
+	var d0: Dictionary = hechos[0]
+	var otro := PeatonQ.crear(_rng(100))
+	raiz.add_child(otro["nodo"])
+	PeatonQ.terminar(otro)
+	_comprobar(String(otro["zapatilla"]) == String(d0["zapatilla"]) and (otro["modelo"] as Node3D).scale.is_equal_approx((d0["modelo"] as Node3D).scale),
+		"la misma semilla da el mismo peatón (zapatillas y complexión)")
+	PeatonQ.calzar(d0)
+	PeatonQ.calzar(d0)
+	var zap := (d0["esqueleto"] as Node).get_children().filter(func(h: Node) -> bool: return String(h.name).begins_with("Zapatilla_"))
+	_comprobar(zap.size() == 2 and bool(d0.get("calzado", false)), "calzar(): una zapatilla por pie, y calzar dos veces no duplica")
+	var malla_z: Mesh = (zap[0] as Node).get_child(0).mesh if zap.size() == 2 else null
+	_comprobar(malla_z != null and malla_z.get_surface_count() == 1 and malla_z.surface_get_format(0) & Mesh.ARRAY_FORMAT_COLOR, "cada zapatilla es UNA malla con su color por vértice")
+	PeatonQ.calzar(otro)
+	var zap2: Array = (otro["esqueleto"] as Node).get_children().filter(func(h: Node) -> bool: return String(h.name) == String(zap[0].name))
+	_comprobar(zap2.size() == 1 and (zap2[0] as Node).get_child(0).mesh == malla_z, "y la malla se comparte entre peatones iguales (caché)")
+	await _soltar(raiz)
+	_comprobar(_nodos() == n0, "sin nodos sueltos al quitar 15 peatones (%d → %d)" % [n0, _nodos()])
+
+func _pp_recorrer(raiz: Node3D) -> Dictionary:
 	var mujeres := 0
 	var barba_mujer := false
 	var cortes_ok := true
@@ -74,28 +106,8 @@ func _probar_peatones() -> void:
 				cejas_ok = cejas_ok and mi.visibility_range_end <= PeloQ.DIST_CEJAS
 		var ap: AnimationPlayer = d["anim"]
 		caminan = caminan and ap.current_animation == "caminar" and ap.speed_scale >= 0.9 and ap.speed_scale <= 1.1
-	_comprobar(mujeres >= 2 and mujeres <= 12, "hombres y mujeres por la calle (%d mujeres de 14)" % mujeres)
-	_comprobar(cortes_ok and not barba_mujer, "todos con su peinado, y ninguna mujer con barba")
-	_comprobar(vistas_ok, "lejos de la cámara no se dibujan (alcance ≤ 120 m)")
-	_comprobar(cejas_ok, "y las cejas 3D se apagan antes, a %d m, como en los jugadores" % PeloQ.DIST_CEJAS)
-	_comprobar(caminan, "caminando, cada uno a su paso (0,9-1,1)")
-	var d0: Dictionary = hechos[0]
-	var otro := PeatonQ.crear(_rng(100))
-	raiz.add_child(otro["nodo"])
-	PeatonQ.terminar(otro)
-	_comprobar(String(otro["zapatilla"]) == String(d0["zapatilla"]) and (otro["modelo"] as Node3D).scale.is_equal_approx((d0["modelo"] as Node3D).scale),
-		"la misma semilla da el mismo peatón (zapatillas y complexión)")
-	PeatonQ.calzar(d0)
-	PeatonQ.calzar(d0)
-	var zap := (d0["esqueleto"] as Node).get_children().filter(func(h: Node) -> bool: return String(h.name).begins_with("Zapatilla_"))
-	_comprobar(zap.size() == 2 and bool(d0.get("calzado", false)), "calzar(): una zapatilla por pie, y calzar dos veces no duplica")
-	var malla_z: Mesh = (zap[0] as Node).get_child(0).mesh if zap.size() == 2 else null
-	_comprobar(malla_z != null and malla_z.get_surface_count() == 1 and malla_z.surface_get_format(0) & Mesh.ARRAY_FORMAT_COLOR, "cada zapatilla es UNA malla con su color por vértice")
-	PeatonQ.calzar(otro)
-	var zap2: Array = (otro["esqueleto"] as Node).get_children().filter(func(h: Node) -> bool: return String(h.name) == String(zap[0].name))
-	_comprobar(zap2.size() == 1 and (zap2[0] as Node).get_child(0).mesh == malla_z, "y la malla se comparte entre peatones iguales (caché)")
-	await _soltar(raiz)
-	_comprobar(_nodos() == n0, "sin nodos sueltos al quitar 15 peatones (%d → %d)" % [n0, _nodos()])
+	return {"mujeres": mujeres, "barba_mujer": barba_mujer, "cortes_ok": cortes_ok, "vistas_ok": vistas_ok, "caminan": caminan, "cejas_ok": cejas_ok, "hechos": hechos}
+
 
 func _rng(s: int) -> RandomNumberGenerator:
 	var r := RandomNumberGenerator.new()
@@ -111,6 +123,20 @@ func _probar_pelo_y_cara() -> void:
 	add_child(raiz)
 	var d := _cuerpo(raiz)
 	var esq: Skeleton3D = d["esqueleto"]
+	_pc_tupe(d)
+	_pc_reposo(d, esq)
+	_pc_calvo_y_mujer(raiz, d)
+	var nombre := "cara_000"
+	var sub := _pc_cara(raiz, d, nombre)
+	var d2: Dictionary = sub["d2"]
+	var foto = sub["foto"]
+	var capas := _pc_capas(d, d2, esq, nombre, foto)
+	_pc_sin_pelo(raiz, nombre, foto, capas["medida"], capas["g"])
+	_pc_ropa(d)
+	await _soltar(raiz)
+	_comprobar(_nodos() == n0, "sin nodos sueltos (%d → %d)" % [n0, _nodos()])
+
+func _pc_tupe(d: Dictionary) -> void:
 	var ancla := PeloQ.poner(d, "tupe", Color(0.3, 0.2, 0.1), true)
 	var piezas: Array[String] = []
 	for h: Node in ancla.get_children():
@@ -118,6 +144,8 @@ func _probar_pelo_y_cara() -> void:
 	_comprobar(ancla != null and ancla.bone_name == "Head" and piezas == ["Hair_SimpleParted", "Hair_Beard", "Eyebrows_Regular"], "tupé con barba: peinado, barba y cejas en el hueso de la cabeza %s" % str(piezas))
 	var cejas := ancla.get_node_or_null("Eyebrows_Regular") as MeshInstance3D
 	_comprobar(cejas != null and is_equal_approx(cejas.visibility_range_end, PeloQ.DIST_CEJAS * Calidad.lod_cabeza()), "las cejas 3D solo de cerca (%d m × el factor de la calidad %.2f)" % [PeloQ.DIST_CEJAS, Calidad.lod_cabeza()])
+
+func _pc_reposo(d: Dictionary, esq: Skeleton3D) -> void:
 	## Puesto en reposo, cada peinado tiene que caer SOBRE la cabeza (el moño venía
 	## en centímetros y girado: salía flotando al costado).
 	var cabeza := esq.get_bone_global_rest(esq.find_bone("Head"))
@@ -130,14 +158,16 @@ func _probar_pelo_y_cara() -> void:
 			lejos.append("%s a %.2f m" % [corte, centro.distance_to(cabeza.origin)])
 		a2.free()
 	_comprobar(lejos.is_empty(), "cada peinado cae sobre la cabeza en reposo %s" % str(lejos))
+
+func _pc_calvo_y_mujer(raiz: Node3D, d: Dictionary) -> void:
 	var calvo := PeloQ.poner(d, "calvo", Color.BLACK, false)
 	_comprobar(calvo.get_child_count() == 1 and calvo.get_child(0).name == "Eyebrows_Regular", "calvo: solo las cejas")
 	_comprobar(PeloQ.poner({}, "tupe", Color.BLACK, false) == null, "sin esqueleto: null")
 	var dm := _cuerpo(raiz, "female")
 	var am := PeloQ.poner(dm, "melena", Color(0.4, 0.25, 0.1), false)
 	_comprobar(am.get_child_count() == 1 and am.get_child(0).name == "Hair_Long", "el cuerpo de mujer trae sus cejas: solo el peinado")
-	## La cara de la biblioteca sobre el cuerpo.
-	var nombre := "cara_000"
+
+func _pc_cara(raiz: Node3D, d: Dictionary, nombre: String) -> Dictionary:
 	var foto := CaraMalla.foto(nombre)
 	var cara := CaraMalla.poner(d, nombre, foto, Color(0.8, 0.6, 0.45))
 	_comprobar(cara != null and cara.mesh != null and cara.mesh.surface_get_array_len(0) == CaraMalla._n, "la malla de la cara (%d vértices) colgada de la cabeza" % CaraMalla._n)
@@ -145,7 +175,9 @@ func _probar_pelo_y_cara() -> void:
 	var cara2 := CaraMalla.poner(d2, nombre, foto, Color(0.8, 0.6, 0.45))
 	_comprobar(cara2 != null and cara2.mesh == cara.mesh, "la malla se arma una vez por cara y cuerpo (caché)")
 	_comprobar(CaraMalla.poner({}, nombre, foto, Color.WHITE) == null and CaraMalla.poner(d, nombre, null, Color.WHITE) == null, "sin esqueleto o sin foto: null")
-	## El pelo por capas, con un corte de la biblioteca.
+	return {"d2": d2, "foto": foto}
+
+func _pc_capas(d: Dictionary, d2: Dictionary, esq: Skeleton3D, nombre: String, foto) -> Dictionary:
 	var corte_n := ""
 	for p: String in BibliotecaCaras.pelos():
 		var hp := BibliotecaCaras.pelo(p, Color(0.2, 0.12, 0.08))
@@ -166,6 +198,9 @@ func _probar_pelo_y_cara() -> void:
 	PeloCapas.poner(d2, medida, foto, g[0], g[1], g[2], g[3])
 	var cuero2 := esq2.get_node_or_null("PeloCapas/Cuero") as MeshInstance3D
 	_comprobar(cuero2 != null and cuero2.mesh == cuero.mesh, "el cuero cabelludo, en caché por cuerpo y medidas")
+	return {"medida": medida, "g": g}
+
+func _pc_sin_pelo(raiz: Node3D, nombre: String, foto, medida: Dictionary, g: Array) -> void:
 	var sin_h := CaraMalla.entrada(nombre).duplicate()
 	sin_h.erase("h")
 	var calva := medida.duplicate()
@@ -175,6 +210,8 @@ func _probar_pelo_y_cara() -> void:
 	_comprobar(not PeloCapas.poner(d3, sin_h, foto, g[0], g[1], g[2], g[3]), "sin pelo medido: no pone cuero (y quien llama deja el peinado)")
 	var d4 := _cuerpo(raiz)
 	_comprobar(PeloCapas.poner(d4, calva, foto, g[0], g[1], g[2], g[3]) and (d4["esqueleto"] as Node).get_node_or_null("PeloCapas/Cuero") == null, "calvo: sin capas, pero esconde el peinado del pack")
+
+func _pc_ropa(d: Dictionary) -> void:
 	## La ropa aparte, sobre la malla de verdad del cuerpo.
 	var cuerpo_mi: MeshInstance3D = null
 	var sup := -1
@@ -194,8 +231,6 @@ func _probar_pelo_y_cara() -> void:
 		tri_prendas += t
 		prendas_ok = prendas_ok and t > 200
 	_comprobar(prendas_ok and tri_prendas < tri_cuerpo, "camiseta, pantalón y medias sacados del cuerpo real (%d de %d triángulos)" % [tri_prendas, tri_cuerpo])
-	await _soltar(raiz)
-	_comprobar(_nodos() == n0, "sin nodos sueltos (%d → %d)" % [n0, _nodos()])
 
 # ------------------------------------------------------------------ MascotaQ
 
@@ -274,7 +309,7 @@ func _probar_mini3d_persona() -> void:
 	_comprobar(pedidos.size() >= 10 and faltan.is_empty(), "los %d clips que piden los minijuegos e interiores existen %s" % [pedidos.size(), str(faltan)])
 	var lejos := true
 	for mi: MeshInstance3D in nodo.find_children("*", "MeshInstance3D", true, false):
-		lejos = lejos and mi.visibility_range_end == 0.0
+		lejos = lejos and is_zero_approx(mi.visibility_range_end)
 	_comprobar(lejos, "de cerca siempre (sin corte por distancia: es una escena chica)")
 	var dep := Mini3D.persona(raiz, _rng(78), Vector3.ZERO, [Color.RED, Color.WHITE])
 	var trab := Mini3D.persona(raiz, _rng(79), Vector3.ZERO, [Color.BLUE, Color.BLACK, true])

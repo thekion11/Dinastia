@@ -1,0 +1,409 @@
+extends RefCounted
+## (Parte 1 de 2 de `cara_malla.gd`: la norma de 450 líneas lo partió en capas, cada una extiende a la anterior; la última, `cara_malla.gd`, conserva la clase.)
+
+## LA CARA DE VERDAD EN 3D (30-9-2026, pedido: «los que tenemos sus caras deben
+## ser igualitos»). Cada jugador real con foto tiene su PROPIA malla de cara:
+## 468 vértices con la forma de su nariz, pómulos, frente y mentón, sacada de
+## su foto por `herramientas/caras_reales_malla.py` (MediaPipe, Apache 2.0), y
+## pintada con los píxeles exactos de la foto (cada vértice sabe dónde cae en
+## ella). Va colgada del hueso de la cabeza, delante de la cara del cuerpo, que
+## se hunde un poco para no asomar (`equipacion_q.gdshader`, `hay_malla`).
+
+const TOPOLOGIA := "res://datos/cara_malla_topologia.json"
+const MALLAS := "res://datos/caras_reales_mallas.json"
+const SHADER := "res://visor/cara_malla.gdshader"
+## Vértices de MediaPipe; la malla trae además un anillo alrededor (`_n`).
+const N := 468
+## Ojos del modelo (centro de los globos, pose de reposo).
+const OJO_X := 0.0338
+const OJO_Y := 1.6986
+## Dónde queda el plano de los rabillos de los ojos (z, m): justo delante
+## de los párpados del cuerpo.
+const OJOS_Z := 0.079
+## Rabillos de cada ojo en la malla canónica de MediaPipe.
+const OJO_IZQ := [33, 133]
+const OJO_DER := [362, 263]
+
+static var _n := N
+static var _tri := PackedInt32Array()
+static var _alfa := PackedFloat32Array()
+static var _mallas: Dictionary = {}
+static var _listo := false
+static var _cache := {}
+
+## El recorte de su cara (384 px) con mipmaps, cacheado. Se lee a mano, como
+## `Cara.foto_de_ruta` (no hace falta reimportar el proyecto por foto nueva).
+static var _texturas := {}
+
+const CONTORNO_OJOS := [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246,
+	263, 249, 390, 373, 374, 380, 381, 382, 362, 398, 384, 385, 386, 387, 388, 466]
+
+const CELDA := 0.012
+## Distancia (m) de cada vértice del borde a la piel antes de pegarlo (lo escribe `_pegar_borde`): el
+## borde que estaba lejos de la piel (bajo la mandíbula, el mentón de una cara más ancha que la cabeza)
+## no tiene dónde apoyarse y se funde del todo (`_armar`); de espaldas se veía como un arco en el aire.
+static var _lejos := PackedFloat32Array()
+static var _rejillas3 := {}
+
+static var _rejillas := {}
+
+static var _cache_mallas := {}
+
+static func _cargar() -> void:
+	if _listo:
+		return
+	_listo = true
+	if not FileAccess.file_exists(TOPOLOGIA):
+		return
+	var jt := JSON.new()
+	if jt.parse(FileAccess.get_file_as_string(TOPOLOGIA)) != OK or not (jt.data is Dictionary):
+		return
+	_n = int(jt.data.get("n", N))
+	for i: Variant in jt.data["tri"]:
+		_tri.append(int(i))
+	for a: Variant in jt.data["alfa"]:
+		_alfa.append(float(a))
+	var jm := JSON.new()
+	if FileAccess.file_exists(MALLAS) and jm.parse(FileAccess.get_file_as_string(MALLAS)) == OK and jm.data is Dictionary:
+		_mallas = jm.data
+		## (7-11, meta de RAM) El texto base64 de cada cara ocupaba 4 bytes por carácter (~40 MB para 10 MB de JSON): se guarda ya decodificado (bytes crudos, ~7,5 MB).
+		for k: String in _mallas:
+			var e: Variant = _mallas[k]
+			if e is Dictionary and (e as Dictionary).get("m") is String:
+				(e as Dictionary)["m"] = Marshalls.base64_to_raw(String((e as Dictionary)["m"]))
+	## Y las caras de la biblioteca modular (mezclas: `BibliotecaCaras`).
+	BibliotecaCaras._cargar()
+	for k: String in BibliotecaCaras._caras:
+		_mallas[k] = BibliotecaCaras._caras[k]
+
+static func tiene(nombre: String) -> bool:
+	_cargar()
+	## (Las fotos "malas" también: la auditoría mostró que la recreación
+	## dibujada queda peor que su malla, aunque la foto sea de mucho costado.)
+	return _mallas.has(nombre)
+
+## [posiciones (espacio del modelo, pose de reposo), uvs] o [] si no hay.
+static func _datos(nombre: String) -> Array:
+	if _cache.has(nombre):
+		return _cache[nombre]
+	_cargar()
+	var e: Variant = _mallas.get(nombre)
+	if not (e is Dictionary):
+		return []
+	var crudo: Variant = (e as Dictionary).get("m", "")
+	var bytes: PackedByteArray = crudo if crudo is PackedByteArray else Marshalls.base64_to_raw(String(crudo))
+	if bytes.size() != _n * 5 * 2:
+		return []
+	var canon := PackedVector3Array()
+	var uv := PackedVector2Array()
+	canon.resize(_n)
+	uv.resize(_n)
+	for i in _n:
+		var o := i * 10
+		canon[i] = Vector3(bytes.decode_s16(o), bytes.decode_s16(o + 2), bytes.decode_s16(o + 4)) / 100.0
+		uv[i] = Vector2(bytes.decode_s16(o + 6), bytes.decode_s16(o + 8)) / 32767.0
+	## De centímetros de la malla canónica al modelo: los ojos de su cara
+	## sobre los globos del modelo (escala por la distancia entre ojos).
+	var oi := (canon[OJO_IZQ[0]] + canon[OJO_IZQ[1]]) * 0.5
+	var od := (canon[OJO_DER[0]] + canon[OJO_DER[1]]) * 0.5
+	var sep := absf(od.x - oi.x)
+	if sep < 0.1:
+		return []
+	var k := OJO_X * 2.0 / sep
+	var medio := (oi + od) * 0.5
+	var pos := PackedVector3Array()
+	pos.resize(_n)
+	for i in _n:
+		var c := canon[i] - medio
+		pos[i] = Vector3(c.x * k, OJO_Y + c.y * k, OJOS_Z + c.z * k)
+		## El anillo de fundido (los últimos 36, alfa 0) quedaba en el aire a
+		## la altura de las sienes: una mancha borrosa al lado de la cabeza
+		## (5-10). Se mete hacia el cráneo: más estrecho y un poco hundido.
+		if i >= 468:
+			pos[i].x *= 0.86
+			pos[i].z -= 0.006
+	## [3] = metros del modelo por cm de la malla canónica.
+	## La textura que pinta el juego: la piel REPLICADA ("a", motor_caras) si
+	## está; si no, la foto recortada.
+	var tex := String((e as Dictionary).get("a", (e as Dictionary).get("f", "")))
+	var d := [pos, uv, "res://" + tex, k]
+	_cache[nombre] = d
+	return d
+
+## El balance de blancos de su foto (por canal, lineal).
+static func balance(nombre: String) -> Vector3:
+	var wb: Variant = entrada(nombre).get("wb")
+	if wb is Array and (wb as Array).size() == 3:
+		return Vector3(float(wb[0]), float(wb[1]), float(wb[2]))
+	return Vector3.ONE
+
+## Todo lo medido en su foto (pelo "h", barba "b", cejas "e", piel "s").
+static func entrada(nombre: String) -> Dictionary:
+	_cargar()
+	var e: Variant = _mallas.get(nombre)
+	return e if e is Dictionary else {}
+
+## Posiciones (espacio del modelo), uvs, triángulos y escala, para `PeloCapas`.
+static func geometria(nombre: String) -> Array:
+	var d := _datos(nombre)
+	return [] if d.is_empty() else [d[0], d[1], _tri, d[3]]
+
+## El color de su pelo sacado de la foto (o alfa 0 si no se vio pelo).
+static func color_pelo(nombre: String) -> Color:
+	_cargar()
+	var e: Variant = _mallas.get(nombre)
+	if e is Dictionary and (e as Dictionary).get("h") is Dictionary:
+		return Color(String(e["h"].get("c", "#2a211b")))
+	if e is Dictionary and String((e as Dictionary).get("p", "")) != "":
+		return Color(String(e["p"]))
+	return Color(0, 0, 0, 0)
+
+static func foto(nombre: String) -> Texture2D:
+	if _texturas.has(nombre):
+		return _texturas[nombre]
+	var d := _datos(nombre)
+	if d.is_empty() or not FileAccess.file_exists(String(d[2])):
+		return null
+	var img := Image.new()
+	if img.load_jpg_from_buffer(FileAccess.get_file_as_bytes(String(d[2]))) != OK:
+		return null
+	img.generate_mipmaps()
+	var t := ImageTexture.create_from_image(img)
+	_texturas[nombre] = t
+	return t
+
+## El tono de su piel en la foto: la media RECORTADA de los 468 puntos de la
+## cara (se ordenan por claridad y se promedia el 60 % del medio: fuera
+## brillos, ojos, cejas y barba). Una media de pocos puntos caía en brillos
+## (cuello más claro y naranja); la mediana por canal perdía el azul (cuello
+## más rojo). Comprobado en Python contra la media de lo que pinta la cara.
+static func tono_piel(nombre: String, tex: Texture2D) -> Color:
+	var d := _datos(nombre)
+	if d.is_empty() or tex == null:
+		return Color(0, 0, 0, 0)
+	var img := tex.get_image()
+	if img == null:
+		return Color(0, 0, 0, 0)
+	if img.is_compressed():
+		img.decompress()
+	var muestras: Array = []
+	var uvs: PackedVector2Array = d[1]
+	for i in N:
+		var px := clampi(int(uvs[i].x * img.get_width()), 0, img.get_width() - 1)
+		var py := clampi(int(uvs[i].y * img.get_height()), 0, img.get_height() - 1)
+		var c := img.get_pixel(px, py).srgb_to_linear()
+		muestras.append([0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b, c])
+	muestras.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+	var suma := Color(0, 0, 0, 0)
+	var desde := int(N * 0.2)
+	var hasta := int(N * 0.8)
+	for k in range(desde, hasta):
+		suma += muestras[k][1]
+	var n := float(hasta - desde)
+	return Color(suma.r / n, suma.g / n, suma.b / n, 1.0).linear_to_srgb()
+
+static func _en_ojo(i: int) -> bool:
+	return i in CONTORNO_OJOS
+
+## El centro de la abertura de cada ojo en SU malla (espacio del modelo, x,y):
+## [ojo de x negativa, ojo de x positiva]. El iris 3D se centra ahí; con el
+## centro fijo del modelo, un iris quedaba corrido en la abertura y el
+## jugador parecía bizco.
+static func centros_ojos(nombre: String) -> Array:
+	var d := _datos(nombre)
+	if d.is_empty():
+		return []
+	var pos: PackedVector3Array = d[0]
+	var out := [Vector2.ZERO, Vector2.ZERO]
+	for grupo: Array in [CONTORNO_OJOS.slice(0, 16), CONTORNO_OJOS.slice(16, 32)]:
+		var c := Vector2.ZERO
+		for i: int in grupo:
+			c += Vector2(pos[i].x, pos[i].y)
+		c /= float(grupo.size())
+		out[0 if c.x < 0.0 else 1] = c
+	return out
+
+## El color de su iris medido en la foto (alfa 0 si no hay).
+static func color_iris(nombre: String) -> Color:
+	var c := String(entrada(nombre).get("iris", ""))
+	return Color(c) if c != "" else Color(0, 0, 0, 0)
+
+## EL BORDE PEGADO AL CRÁNEO (última pasada, 5-10; en 3D desde el 12-11): el contorno de la cara (los
+## vértices que se funden, alfa < 1) se lleva a la superficie de la cabeza del cuerpo; de perfil la cara
+## parecía una máscara despegada, con una línea en la frente. Antes solo se movía en z (hacia delante),
+## y en las sienes y junto a las orejas (donde la piel mira de lado) no encontraba la piel: el borde
+## quedaba a 4-16 mm en el aire (de espaldas se veía un arco junto a cada oreja y de perfil, un escalón
+## en la mejilla). Ahora cada vértice va al plano tangente de la piel más cercana (+1,5 mm hacia fuera),
+## del cráneo y la cara (no de la oreja, que está detrás: z < 0). El anillo va entero; el borde, casi.
+## `CARA_BORDE_Z=1` vuelve al método de antes (para comparar).
+static func _pegar_borde(pos: PackedVector3Array, cuerpo: Dictionary) -> PackedVector3Array:
+	_lejos.resize(0)
+	if cuerpo.is_empty():
+		return pos
+	if OS.get_environment("CARA_BORDE_Z") != "":
+		return _pegar_borde_z(pos, cuerpo)
+	var rejilla := _rejilla_piel(cuerpo)
+	if rejilla.is_empty():
+		return pos
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("cara_pegar_borde"):   ## (19-11) el bucle por vértice, en C++ (`nativo/src/cara_nativo.cpp`); gemela: `_pegar_borde_gd`
+		var res: Array = nat.cara_pegar_borde(pos, _alfa, rejilla)
+		_lejos = res[1]
+		return res[0]
+	return _pegar_borde_gd(pos, rejilla)
+
+static func _pegar_borde_gd(pos: PackedVector3Array, rejilla: Dictionary) -> PackedVector3Array:
+	var salida := pos.duplicate()
+	_lejos.resize(salida.size())
+	_lejos.fill(0.0)
+	for i in mini(salida.size(), _alfa.size()):
+		if _alfa[i] >= 1.0:
+			continue
+		var q := salida[i]
+		var c := Vector3i((q / CELDA).floor())
+		var mejor := Vector3.INF
+		var n_mejor := Vector3.ZERO
+		var d_mejor := 0.022 * 0.022
+		## ±2 celdas (24 mm): con ±1 un borde a 12-22 mm de la piel podía no ver la piel más cercana.
+		for gx in range(c.x - 2, c.x + 3):
+			for gy in range(c.y - 2, c.y + 3):
+				for gz in range(c.z - 2, c.z + 3):
+					var celda: Variant = rejilla.get(Vector3i(gx, gy, gz))
+					if celda == null:
+						continue
+					var pv: PackedVector3Array = celda[0]
+					var nv: PackedVector3Array = celda[1]
+					for k in pv.size():
+						var dd := pv[k].distance_squared_to(q)
+						if dd < d_mejor:
+							d_mejor = dd
+							mejor = pv[k]
+							n_mejor = nv[k]
+		_lejos[i] = sqrt(d_mejor) if mejor != Vector3.INF else 1.0
+		if mejor == Vector3.INF:
+			continue
+		var sobre := q - n_mejor * (n_mejor.dot(q - mejor) - 0.0015)
+		var peso := 1.0 if _alfa[i] <= 0.0 else (0.85 if _alfa[i] < 0.9 else 0.5)
+		salida[i] = q.lerp(sobre, peso)
+	return salida
+
+## La piel de la cabeza (por delante de las orejas) en celdas de 12 mm: [posiciones, normales].
+static func _rejilla_piel(cuerpo: Dictionary) -> Dictionary:
+	var cv: PackedVector3Array = cuerpo["v"]
+	var clave := "%s|%d" % [String(cuerpo.get("id", "")), cv.size()]
+	if _rejillas3.has(clave):
+		return _rejillas3[clave]
+	var cn: Variant = cuerpo.get("n")
+	var r := {}
+	var nat := Nativo.obj()
+	if cn is PackedVector3Array and (cn as PackedVector3Array).size() == cv.size() and nat != null and nat.has_method("cara_rejilla_piel"):
+		r = nat.cara_rejilla_piel(cv, cn)   ## (19-11) en C++ (`nativo/src/cara_nativo.cpp`); gemela: `_rejilla_piel_gd`
+	elif cn is PackedVector3Array and (cn as PackedVector3Array).size() == cv.size():
+		r = _rejilla_piel_gd(cv, cn)
+	_rejillas3[clave] = r
+	return r
+
+static func _rejilla_piel_gd(cv: PackedVector3Array, nn: PackedVector3Array) -> Dictionary:
+	var r := {}
+	for i in cv.size():
+		var p := cv[i]
+		if p.y > 1.52 and p.z > -0.002 and absf(p.x) < 0.11 and nn[i].length_squared() > 0.5:
+			var k := Vector3i((p / CELDA).floor())
+			if not r.has(k):
+				r[k] = [PackedVector3Array(), PackedVector3Array()]
+			## (Los Packed*Array se copian al sacarlos: se vuelven a guardar.)
+			var pv: PackedVector3Array = r[k][0]
+			var nv: PackedVector3Array = r[k][1]
+			pv.append(p)
+			nv.append(nn[i].normalized())
+			r[k] = [pv, nv]
+	return r
+
+## El método de antes (solo en z), de respaldo para comparar.
+static func _pegar_borde_z(pos: PackedVector3Array, cuerpo: Dictionary) -> PackedVector3Array:
+	## Los puntos de la cabeza en una rejilla de 14 mm (30-10-2026, rendimiento): solo se miran
+	## las 9 celdas de alrededor, que contienen todos los que cumplen la condición (r ≤ 14 mm).
+	var rejilla := _rejilla_cabeza(cuerpo)
+	if rejilla.is_empty():
+		return pos
+	var salida := pos.duplicate()
+	for i in mini(salida.size(), _alfa.size()):
+		if _alfa[i] >= 1.0:
+			continue
+		var q := salida[i]
+		var cerca := PackedVector3Array()
+		var cx := floori(q.x / 0.014)
+		var cy := floori(q.y / 0.014)
+		for gx in range(cx - 1, cx + 2):
+			for gy in range(cy - 1, cy + 2):
+				var celda: Variant = rejilla.get(Vector2i(gx, gy))
+				if celda != null:
+					cerca.append_array(celda)
+		## La piel delante en ese (x, y): el vértice más adelantado cerca.
+		var z := -1.0
+		for r: float in [0.004, 0.008, 0.014]:
+			for p in cerca:
+				if absf(p.x - q.x) < r and absf(p.y - q.y) < r and p.z > z:
+					z = p.z
+			if z > -1.0:
+				break
+		if z <= -1.0:
+			continue
+		var peso := 1.0 if _alfa[i] <= 0.0 else (0.6 if _alfa[i] < 0.9 else 0.3)
+		salida[i].z = lerpf(q.z, z + 0.0015, peso)
+	return salida
+
+static func _rejilla_cabeza(cuerpo: Dictionary) -> Dictionary:
+	var cv: PackedVector3Array = cuerpo["v"]
+	var clave := "%s|%d" % [String(cuerpo.get("id", "")), cv.size()]
+	if _rejillas.has(clave):
+		return _rejillas[clave]
+	var r := {}
+	for p in cv:
+		if p.y > 1.55 and p.z > 0.0 and absf(p.x) < 0.11:
+			var k := Vector2i(floori(p.x / 0.014), floori(p.y / 0.014))
+			if not r.has(k):
+				r[k] = PackedVector3Array()
+			var a: PackedVector3Array = r[k]
+			a.append(p)
+			r[k] = a
+	_rejillas[clave] = r
+	return r
+
+## Cuelga la cara del hueso de la cabeza del jugador. null si no hay malla.
+static func poner(d: Dictionary, nombre: String, tex: Texture2D, piel: Color) -> MeshInstance3D:
+	var datos := _datos(nombre)
+	var esq: Skeleton3D = d.get("esqueleto")
+	if datos.is_empty() or tex == null or esq == null or _tri.size() < 3 or not ResourceLoader.exists(SHADER):
+		return null
+	var hueso := esq.find_bone("Head")
+	if hueso < 0:
+		return null
+	var cuerpo := PeloCapas._malla_cuerpo(d.get("modelo"))
+	## Caché por jugador y cuerpo (MEGAPLAN fase 2): la malla no cambia entre
+	## partidos y armarla (pegar el borde al cráneo) costaba en cada apertura.
+	var clave := "%s|%s" % [nombre, String(cuerpo.get("id", ""))]
+	var malla: ArrayMesh = _cache_mallas.get(clave)
+	if malla == null:
+		malla = CaraMalla._armar(nombre, datos, cuerpo)
+		_cache_mallas[clave] = malla
+	return CaraMalla._vestir_cara(d, esq, hueso, nombre, tex, piel, malla)
+
+## Las normales por vértice (suma de las de sus caras, normalizada; hacia atrás si es nula). En C++ (`nativo/src/cara_nativo.cpp`); gemela: `_normales_cara_gd`.
+static func _normales_cara(pos: PackedVector3Array, tri: PackedInt32Array, n: int) -> PackedVector3Array:
+	var nat := Nativo.obj()
+	if nat != null and nat.has_method("cara_normales"):
+		return nat.cara_normales(pos, tri, n)
+	return _normales_cara_gd(pos, tri, n)
+
+static func _normales_cara_gd(pos: PackedVector3Array, tri: PackedInt32Array, n: int) -> PackedVector3Array:
+	var normales := PackedVector3Array()
+	normales.resize(n)
+	for t in range(0, tri.size() - 2, 3):
+		var a := pos[tri[t]]
+		var fn := (pos[tri[t + 1]] - a).cross(pos[tri[t + 2]] - a)
+		for k in 3:
+			normales[tri[t + k]] += fn
+	for i in n:
+		normales[i] = normales[i].normalized() if normales[i].length_squared() > 0.0 else Vector3.BACK
+	return normales

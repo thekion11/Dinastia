@@ -84,7 +84,7 @@ static func teclas(ui: Variant, j: Jugador, pestana: String, en_columna := false
 			ui._pintar_semana(), 62)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.add_theme_font_size_override("font_size", 15)
+		b.add_theme_font_size_override("font_size", Tema.letra(15))
 		if (id == "talentos" and int(CarreraRuta.asegurar(ui.carrera)["puntos"]) > 0) or (id == "juego" and CarreraHabilidad.puntos(ui.carrera) > 0):
 			b.text += "  ●"
 		caja.add_child(b)

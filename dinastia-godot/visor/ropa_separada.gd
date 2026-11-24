@@ -66,53 +66,29 @@ static func mallas(malla: ArrayMesh, sup: int) -> Dictionary:
 	var por_v := 4
 	if huesos != null and n > 0:
 		por_v = (huesos as Array).size() / n if huesos is Array else (huesos.size() / n)
-	var zona := PackedInt32Array()
-	zona.resize(n)
-	for i in n:
-		zona[i] = prenda_en(pos[i])
+	var nat := Nativo.obj()
+	var con_nat := nat != null and nat.has_method("ropa_prenda")   ## (19-11) los bucles por vértice y triángulo, en C++ (`nativo/src/ropa_nativo.cpp`); gemela: `_prenda_gd`
 	var r := {}
 	for pr: Array in PRENDAS:
 		var cual: int = pr[1]
-		var mapa := {}
-		var nuevos := PackedInt32Array()
-		for t in range(0, idx.size(), 3):
-			var a := idx[t]
-			var b := idx[t + 1]
-			var c := idx[t + 2]
-			if zona[a] != cual or zona[b] != cual or zona[c] != cual:
-				continue
-			for v in [a, b, c]:
-				if not mapa.has(v):
-					mapa[v] = mapa.size()
-				nuevos.append(int(mapa[v]))
-		if nuevos.is_empty():
+		var res: Array = nat.ropa_prenda(pos, nor, idx, cual) if con_nat else _prenda_gd(pos, nor, idx, cual)
+		if res.is_empty():
 			continue
-		var orden: Array = []
-		orden.resize(mapa.size())
-		for v: int in mapa:
-			orden[int(mapa[v])] = v
+		var nuevos: PackedInt32Array = res[0]
+		var orden: Variant = res[1]
+		var p2: PackedVector3Array = res[2]
+		var n2: PackedVector3Array = res[3]
 		var out := []
 		out.resize(Mesh.ARRAY_MAX)
-		var p2 := PackedVector3Array()
-		var n2 := PackedVector3Array()
-		for v: int in orden:
-			var p: Vector3 = pos[v]
-			var nn: Vector3 = nor[v]
-			var q := p + nn * holgura_en(cual, p)
-			## El bajo de la camiseta cae un poco.
-			if cual == 1 and p.y < 1.03 and absf(p.x) < 0.215:
-				q.y -= 0.012 * smoothstep(1.03, 0.96, p.y)
-			p2.append(q)
-			n2.append(nn)
 		out[Mesh.ARRAY_VERTEX] = p2
 		out[Mesh.ARRAY_NORMAL] = n2
 		out[Mesh.ARRAY_INDEX] = nuevos
 		for canal in [Mesh.ARRAY_TANGENT, Mesh.ARRAY_TEX_UV, Mesh.ARRAY_TEX_UV2, Mesh.ARRAY_COLOR]:
 			if arr[canal] != null:
-				out[canal] = _subconjunto(arr[canal], orden, _ancho(canal))
+				out[canal] = _subconjunto(arr[canal], orden, _ancho(canal), nat)
 		if huesos != null and pesos != null:
-			out[Mesh.ARRAY_BONES] = _subconjunto(huesos, orden, por_v)
-			out[Mesh.ARRAY_WEIGHTS] = _subconjunto(pesos, orden, por_v)
+			out[Mesh.ARRAY_BONES] = _subconjunto(huesos, orden, por_v, nat)
+			out[Mesh.ARRAY_WEIGHTS] = _subconjunto(pesos, orden, por_v, nat)
 		var am := ArrayMesh.new()
 		var flags := 0
 		if por_v == 8:
@@ -123,11 +99,54 @@ static func mallas(malla: ArrayMesh, sup: int) -> Dictionary:
 	_cache[id] = r
 	return r
 
+## [índices nuevos, orden (el vértice original de cada nuevo), posiciones, normales] de la prenda `cual`, o [] si no hay triángulos (la gemela GDScript de `ropa_prenda`).
+static func _prenda_gd(pos: PackedVector3Array, nor: PackedVector3Array, idx: PackedInt32Array, cual: int) -> Array:
+	var n := pos.size()
+	var zona := PackedInt32Array()
+	zona.resize(n)
+	for i in n:
+		zona[i] = prenda_en(pos[i])
+	var mapa := {}
+	var nuevos := PackedInt32Array()
+	for t in range(0, idx.size(), 3):
+		var a := idx[t]
+		var b := idx[t + 1]
+		var c := idx[t + 2]
+		if zona[a] != cual or zona[b] != cual or zona[c] != cual:
+			continue
+		for v in [a, b, c]:
+			if not mapa.has(v):
+				mapa[v] = mapa.size()
+			nuevos.append(int(mapa[v]))
+	if nuevos.is_empty():
+		return []
+	var orden: Array = []
+	orden.resize(mapa.size())
+	for v: int in mapa:
+		orden[int(mapa[v])] = v
+	var p2 := PackedVector3Array()
+	var n2 := PackedVector3Array()
+	for v: int in orden:
+		var p: Vector3 = pos[v]
+		var nn: Vector3 = nor[v]
+		var q := p + nn * holgura_en(cual, p)
+		## El bajo de la camiseta cae un poco.
+		if cual == 1 and p.y < 1.03 and absf(p.x) < 0.215:
+			q.y -= 0.012 * smoothstep(1.03, 0.96, p.y)
+		p2.append(q)
+		n2.append(nn)
+	return [nuevos, orden, p2, n2]
+
 static func _ancho(canal: int) -> int:
 	return 4 if canal == Mesh.ARRAY_TANGENT else 1
 
 ## Los elementos `orden` de un array empaquetado (`ancho` valores por vértice).
-static func _subconjunto(src: Variant, orden: Array, ancho: int) -> Variant:
+static func _subconjunto(src: Variant, orden: Variant, ancho: int, nat: Object = null) -> Variant:
+	if nat != null and orden is PackedInt32Array and nat.has_method("ropa_subconjunto"):   ## (19-11) en C++; gemela: `_subconjunto_gd`
+		return nat.ropa_subconjunto(src, orden, ancho)
+	return _subconjunto_gd(src, orden, ancho)
+
+static func _subconjunto_gd(src: Variant, orden: Variant, ancho: int) -> Variant:
 	if src is PackedVector2Array:
 		var o := PackedVector2Array()
 		for v: int in orden:

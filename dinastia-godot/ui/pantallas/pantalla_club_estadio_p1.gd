@@ -43,7 +43,7 @@ func _pintar_estilos_estadio(c: Club) -> void:
 		var b := Button.new()
 		b.text = "%s  ·  %s" % [Idiomas.t(Nombres.limpiar(String(p_local["nombre"]))), p._dinero(coste)]   ## (6-11) el nombre se traduce SOLO: unido al precio, «Estadio %s» lo daba vuelta («del desierto · 56.2M EUR Stadium»)
 		b.tooltip_text = Nombres.limpiar(String(p_local["desc"]))
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = coste > c.saldo
 		b.pressed.connect(_aplicar_estilo_estadio.bind(clave))
 		flow.add_child(b)
@@ -52,14 +52,14 @@ func _pintar_estilos_estadio(c: Club) -> void:
 	p._lista_estadio.add_child(fila)
 	var sorpresa := Button.new()
 	sorpresa.text = Idiomas.t("🎲 Sorpréndeme")
-	sorpresa.add_theme_font_size_override("font_size", 11)
+	sorpresa.add_theme_font_size_override("font_size", Tema.letra(11))
 	sorpresa.pressed.connect(func() -> void:
 		_propuesta_estadio = p.mundo.estadio.aleatorio(p.mundo.mi_club(), p.mundo.obras)
 		p._refrescar())
 	fila.add_child(sorpresa)
 	var fabrica := Button.new()
 	fabrica.text = Idiomas.t("↺ Volver al estadio de fábrica")
-	fabrica.add_theme_font_size_override("font_size", 11)
+	fabrica.add_theme_font_size_override("font_size", Tema.letra(11))
 	fabrica.pressed.connect(_estadio_de_fabrica)
 	fila.add_child(fabrica)
 	if not _propuesta_estadio.is_empty():
@@ -140,7 +140,7 @@ func _fila_interruptor_estadio(p_local: Dictionary, campo: String, titulo: Strin
 	if not p_local.has(campo):
 		return
 	var cb := CheckBox.new()
-	cb.add_theme_font_size_override("font_size", 11)
+	cb.add_theme_font_size_override("font_size", Tema.letra(11))
 	cb.text = titulo
 	cb.button_pressed = bool(p_local[campo])
 	cb.tooltip_text = nota
@@ -177,7 +177,7 @@ func _fila_diseno_estadio(e: EstadioPropio, p_local: Dictionary, campo: String) 
 	l.mouse_filter = Control.MOUSE_FILTER_PASS
 	fila.add_child(l)
 	var b := OptionButton.new()
-	b.add_theme_font_size_override("font_size", 11)
+	b.add_theme_font_size_override("font_size", Tema.letra(11))
 	b.clip_text = true
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for i in ops.size():
@@ -199,7 +199,7 @@ func _fila_diseno_estadio(e: EstadioPropio, p_local: Dictionary, campo: String) 
 		var escuchar := MenuButton.new()
 		escuchar.text = Idiomas.t("▶ Escuchar")
 		escuchar.tooltip_text = Idiomas.t("Probar cualquier sonido de gol sin pagar la reforma")
-		escuchar.add_theme_font_size_override("font_size", 11)
+		escuchar.add_theme_font_size_override("font_size", Tema.letra(11))
 		var pop := escuchar.get_popup()
 		for i in ops.size():
 			pop.add_item(String((ops[i] as Dictionary)["nombre"]), i)

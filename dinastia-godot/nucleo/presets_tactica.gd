@@ -19,6 +19,13 @@ func nombres() -> Array:
 	return l
 
 static func limpiar_nombre(n: String) -> String:
+	var nat := Nativo.de("nuc_limpiar_nombre_tactica")
+	if nat != null:
+		return nat.nuc_limpiar_nombre_tactica(n)
+	return limpiar_nombre_gd(n)
+
+## Gemela GDScript de `nuc_limpiar_nombre_tactica` (extensión C++, orden 63): respaldo sin binario y comparación en `pruebas/probar_nativo_puras.gd`.
+static func limpiar_nombre_gd(n: String) -> String:
 	return n.strip_edges().left(LARGO_NOMBRE)
 
 ## "" si se guardó (nuevo o encima de otro del mismo nombre); si no, el motivo (ya traducido).

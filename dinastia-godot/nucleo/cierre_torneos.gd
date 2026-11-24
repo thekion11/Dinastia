@@ -17,28 +17,8 @@ static func cerrar_pendientes(m: Mundo) -> Array:
 	CopasMundo.cerrar(m)   ## (10-11) también las copas de los demás países
 	if m.campeones_liga_otros.is_empty():
 		CopasMundo.anotar_campeones_liga(m)   ## una vez por temporada: los campeones de liga de los demás (para sus supercopas)
-	if m.copa != null and m.copa.en_curso():
-		var guard := 0
-		while m.copa.en_curso() and guard < 20:
-			m.copa.jugar_ronda()
-			guard += 1
-		if m.copa.campeon != null:
-			cerrados.append({"torneo": m.copa.nombre, "campeon": m.copa.campeon, "mio": m.copa.campeon == mio})
-	for t: Continental in m.continentales.values():
-		if not t.en_curso():
-			continue
-		var guard2 := 0
-		while t.en_curso() and guard2 < 40:
-			t.jugar_ronda()
-			guard2 += 1
-		if t.campeon == null:
-			continue
-		var nom := Continental.nombre_conti(t.clave)
-		cerrados.append({"torneo": nom, "campeon": t.campeon, "mio": t.campeon == mio})
-		if t.es_fifa():
-			FifaClubes.coronar(m, t)
-		elif t.campeon == mio and m.logros != null:
-			m.logros.celebrar_titulo(nom)   ## el continental se celebra al coronarse (la copa la celebra el cierre de siempre)
+	_cerrar_copa(m, mio, cerrados)
+	_cerrar_continentales(m, mio, cerrados)
 	if m.prensa != null:
 		for c: Dictionary in cerrados:
 			m.prensa.noticia.emit("🏆 %s: %s" % [String(c["torneo"]), (c["campeon"] as Club).nombre],
@@ -89,3 +69,32 @@ static func foto(m: Mundo) -> Dictionary:
 	if m.auspicio != null and not m.auspicio.contrato.is_empty():   ## el patrocinador del pecho (lo enseña el pie del resumen)
 		f["patrocinador"] = {"marca": String(m.auspicio.contrato.get("marca", "")), "color": String(m.auspicio.contrato.get("color", "#ffffff"))}
 	return f
+
+
+## La copa nacional: se juegan las rondas que faltan y se anota al campeón.
+static func _cerrar_copa(m: Mundo, mio: Club, cerrados: Array) -> void:
+	if m.copa != null and m.copa.en_curso():
+		var guard := 0
+		while m.copa.en_curso() and guard < 20:
+			m.copa.jugar_ronda()
+			guard += 1
+		if m.copa.campeon != null:
+			cerrados.append({"torneo": m.copa.nombre, "campeon": m.copa.campeon, "mio": m.copa.campeon == mio})
+
+## Los torneos continentales que quedan: se juegan y se coronan.
+static func _cerrar_continentales(m: Mundo, mio: Club, cerrados: Array) -> void:
+	for t: Continental in m.continentales.values():
+		if not t.en_curso():
+			continue
+		var guard2 := 0
+		while t.en_curso() and guard2 < 40:
+			t.jugar_ronda()
+			guard2 += 1
+		if t.campeon == null:
+			continue
+		var nom := Continental.nombre_conti(t.clave)
+		cerrados.append({"torneo": nom, "campeon": t.campeon, "mio": t.campeon == mio})
+		if t.es_fifa():
+			FifaClubes.coronar(m, t)
+		elif t.campeon == mio and m.logros != null:
+			m.logros.celebrar_titulo(nom)   ## el continental se celebra al coronarse (la copa la celebra el cierre de siempre)

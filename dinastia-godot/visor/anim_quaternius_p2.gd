@@ -145,6 +145,14 @@ static func _limitar_rodillas(esq: Skeleton3D) -> void:
 ## esta en el arbol y por lo tanto YA NO esta "ocupado"- en vez de la raiz
 ## del SceneTree, que si puede estar ocupada si esto se llama en cadena desde
 ## el `_ready()` de otro nodo que se esta armando.
+## Escribe la pose de `esq_molde` como claves de sus huesos en `tt` (de `_bakear_futbol_global`).
+static func _insertar_pose(resultado: Animation, esq_molde: Skeleton3D, pistas_rot: Dictionary,
+		pistas_pos: Dictionary, tt: float) -> void:
+	for i in esq_molde.get_bone_count():
+		var t_clave := tt - PASO_HORNEADO
+		resultado.rotation_track_insert_key(pistas_rot[i], t_clave, esq_molde.get_bone_pose_rotation(i))
+		resultado.position_track_insert_key(pistas_pos[i], t_clave, esq_molde.get_bone_pose_position(i))
+
 static func _bakear_futbol_global(archivo: String, esq_referencia: Skeleton3D) -> Animation:
 	if _cache_futbol_global.has(archivo):
 		return _cache_futbol_global[archivo]
@@ -191,9 +199,7 @@ static func _bakear_futbol_global(archivo: String, esq_referencia: Skeleton3D) -
 					retarget.aplicar()
 					_huesos_rigidos(esq_molde)
 					_limitar_rodillas(esq_molde)
-					for i in esq_molde.get_bone_count():
-						resultado.rotation_track_insert_key(pistas_rot[i], tt - PASO_HORNEADO, esq_molde.get_bone_pose_rotation(i))
-						resultado.position_track_insert_key(pistas_pos[i], tt - PASO_HORNEADO, esq_molde.get_bone_pose_position(i))
+					_insertar_pose(resultado, esq_molde, pistas_rot, pistas_pos, tt)
 					t += PASO_HORNEADO
 		raiz.free()
 	_cache_futbol_global[archivo] = resultado

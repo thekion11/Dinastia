@@ -35,14 +35,7 @@ static func corregir_clip(a: Animation, esq: Skeleton3D, prefijo: String) -> boo
 			var d := doblez(dir_brazo, q, hm)
 			if d > TOPE:
 				pasa = true
-				var f := TOPE / d
-				for _i in 4:
-					var c := reposo.slerp(q, f)
-					var dc := doblez(dir_brazo, c, hm)
-					if dc <= TOPE + 0.5:
-						break
-					f *= TOPE / dc
-				q = reposo.slerp(q, f)
+				q = _enderezar(reposo, q, dir_brazo, hm, d)
 			muestras.append([tk, q])
 		if not pasa:
 			continue
@@ -53,6 +46,18 @@ static func corregir_clip(a: Animation, esq: Skeleton3D, prefijo: String) -> boo
 			a.rotation_track_insert_key(pista, float(m[0]), m[1])
 		cambio = true
 	return cambio
+
+## Gira el antebrazo hacia `reposo` hasta bajar el doblez del tope (de `corregir_clip`).
+static func _enderezar(reposo: Quaternion, q: Quaternion, dir_brazo: Vector3, hm: Vector3,
+		d: float) -> Quaternion:
+	var f := TOPE / d
+	for _i in 4:
+		var c := reposo.slerp(q, f)
+		var dc := doblez(dir_brazo, c, hm)
+		if dc <= TOPE + 0.5:
+			break
+		f *= TOPE / dc
+	return reposo.slerp(q, f)
 
 ## Ángulo (grados) entre el brazo (`dir_brazo`, en el marco del brazo) y el antebrazo girado `q` hacia la mano (`mano_local`).
 static func doblez(dir_brazo: Vector3, q: Quaternion, mano_local: Vector3) -> float:

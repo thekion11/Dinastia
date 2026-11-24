@@ -81,7 +81,7 @@ func _construir() -> void:
 	cab.add_child(_selector)
 	var pista := Label.new()
 	pista.text = Idiomas.t("L1/R1 o Q/E: cambiar de competición")
-	pista.add_theme_font_size_override("font_size", 11)
+	pista.add_theme_font_size_override("font_size", Tema.letra(11))
 	pista.add_theme_color_override("font_color", COL_SUAVE)
 	pista.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	pista.size_flags_horizontal = Control.SIZE_EXPAND_FILL

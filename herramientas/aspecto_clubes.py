@@ -44,7 +44,15 @@ def disenos() -> set:
 
 
 def listas(src: str, nombre: str) -> set:
-    t = open(os.path.join(GODOT, src), encoding="utf-8").read()
+    """Las claves de la constante `nombre`; el archivo `src` y sus capas (`<src>_p1.gd`, `<src>_p1_p1.gd`…, que deja el refactor de forma) se miran en orden."""
+    base = os.path.join(GODOT, src[:-3])
+    candidatos = [os.path.join(GODOT, src)] + sorted(glob.glob(base + "_p*.gd"))
+    t = ""
+    for c in candidatos:
+        txt = open(c, encoding="utf-8").read()
+        if nombre in txt:
+            t = txt
+            break
     a = t.index(nombre)
     b = t.index("]", t.index("[", a))
     return set(re.findall(r'"(\w+)"', t[a:b + 1]))

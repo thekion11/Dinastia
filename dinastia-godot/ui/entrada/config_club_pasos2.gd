@@ -215,7 +215,7 @@ func _interruptor(texto: String, valor: bool, al_cambiar: Callable) -> CheckButt
 	var cb := CheckButton.new()
 	cb.text = texto
 	cb.button_pressed = valor
-	cb.add_theme_font_size_override("font_size", 14)
+	cb.add_theme_font_size_override("font_size", Tema.letra(14))
 	cb.toggled.connect(func(si: bool) -> void:
 		al_cambiar.call(si)
 		_cambio())

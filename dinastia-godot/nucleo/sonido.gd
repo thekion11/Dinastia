@@ -93,6 +93,9 @@ func _generar_en_fondo() -> void:
 	_generar_lista(NOMBRES)
 
 func _ready() -> void:
+	_nat = Nativo.obj()   ## la síntesis en C++ (capa 1), fijada aquí, en el hilo principal
+	if _nat != null and not _nat.has_method("son_tono"):
+		_nat = null   ## binario anterior a la síntesis en C++ (Windows, Android o Web aún sin recompilar): se usa la gemela GDScript
 	for i in VOCES:
 		var p := AudioStreamPlayer.new()
 		add_child(p)

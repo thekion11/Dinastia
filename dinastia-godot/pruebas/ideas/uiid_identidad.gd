@@ -76,7 +76,7 @@ func _caches(mio: Club) -> void:
 	_comprobar(EscudoMuestras.en_cache() <= EscudoMuestras.TOPE_CACHE, "caché de miniaturas acotada (%d)" % EscudoMuestras.en_cache())
 	_comprobar(Escudo._cache.size() <= Escudo.TOPE_CACHE, "caché de escudos acotada (%d)" % Escudo._cache.size())
 
-func _editor(m: Mundo, mio: Club) -> void:
+func _editor(_m: Mundo, mio: Club) -> void:
 	var j: Jugador = mio.plantilla[0]
 	## Como si la pestaña Editor estuviera a la vista (sin ventana, el repintado
 	## se aplazaría con `_perezoso` y no habría nada que comprobar).
@@ -116,7 +116,7 @@ func _hay_label(raiz: Node, t: String) -> bool:
 			return true
 	return false
 
-func _estadio(m: Mundo, mio: Club) -> void:
+func _estadio(_m: Mundo, mio: Club) -> void:
 	_p.call("_pintar_estadio", mio)
 	var lista: Control = _p.get("_lista_estadio")
 	var con_ayuda := 0

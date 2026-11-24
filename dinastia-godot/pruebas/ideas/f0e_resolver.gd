@@ -63,6 +63,27 @@ func _probar() -> void:
 	var foto := Partida.instantanea(base)
 	_cubre_la_baraja(base)
 
+	var r := _barrer_casos(foto)
+	var todo: Dictionary = r["todo"]
+	var titulos: Dictionary = r["titulos"]
+	var mudos: Array[String] = r["mudos"]
+	var sin_cierre: Array[String] = r["sin_cierre"]
+	_comprobar(todo.size() == int(r["esperados"]), "se resolvieron %d casos" % todo.size())
+	_comprobar(sin_cierre.is_empty(), "sin jugador, sin tema o con un id desconocido se cierra como debe (mal: %s)" % str(sin_cierre))
+	_comprobar(mudos.is_empty(), "toda decisión con su jugador publica un titular (mudas: %s)" % str(mudos))
+	var una_rama: Array[String] = []
+	for t: String in CON_SORTEO:
+		if (titulos[t] as Dictionary).size() < 2:
+			una_rama.append(t)
+	_comprobar(una_rama.is_empty(), "las semillas pasan por las dos ramas de cada sorteo (solo una: %s)" % str(una_rama))
+
+	var texto := JSON.stringify(todo, " ", true)
+	DirAccess.make_dir_recursive_absolute("/tmp/aud")
+	_escribir(ULTIMA, texto)
+	_comparar_referencia(texto)
+
+## Resuelve cada caso con cada opción y cada semilla. Devuelve lo resuelto y las listas de casos raros.
+func _barrer_casos(foto: Dictionary) -> Dictionary:
 	var todo := {}
 	var titulos := {}          ## "id/op" -> {titulo: true}, juntando todas las variantes y semillas
 	var mudos: Array[String] = []        ## con su jugador y sin titular (no debería haber)
@@ -82,33 +103,30 @@ func _probar() -> void:
 					titulos[t] = {}
 				var titular := String((r["salida"] as Dictionary).get("titulo", ""))
 				(titulos[t] as Dictionary)[titular] = true
-				if id == "":
-					## Nada pendiente: no hay nada que firmar ni que avisar.
-					if not (r["salida"] as Dictionary).is_empty() or not (r["resueltos"] as Array).is_empty():
-						sin_cierre.append(clave)
-					continue
-				if id == "inexistente":
-					## Un id sin función en la tabla se cierra sin publicar, como el `match` sin rama.
-					if titular != "" or not (r["pendiente"] as Dictionary).is_empty() or (r["resueltos"] as Array).size() != 1:
-						sin_cierre.append(clave)
-					continue
-				if String(caso[1]) == "" and id in CALLAN_SIN_JUGADOR:
-					if titular != "" or not (r["pendiente"] as Dictionary).is_empty() or (r["resueltos"] as Array).size() != 1:
-						sin_cierre.append(clave)
-				elif titular == "":
-					mudos.append(clave)
-	_comprobar(todo.size() == esperados, "se resolvieron %d casos" % todo.size())
-	_comprobar(sin_cierre.is_empty(), "sin jugador, sin tema o con un id desconocido se cierra como debe (mal: %s)" % str(sin_cierre))
-	_comprobar(mudos.is_empty(), "toda decisión con su jugador publica un titular (mudas: %s)" % str(mudos))
-	var una_rama: Array[String] = []
-	for t: String in CON_SORTEO:
-		if (titulos[t] as Dictionary).size() < 2:
-			una_rama.append(t)
-	_comprobar(una_rama.is_empty(), "las semillas pasan por las dos ramas de cada sorteo (solo una: %s)" % str(una_rama))
+				_clasificar(caso, clave, r, titular, sin_cierre, mudos)
+	return {"todo": todo, "titulos": titulos, "mudos": mudos, "sin_cierre": sin_cierre, "esperados": esperados}
 
-	var texto := JSON.stringify(todo, " ", true)
-	DirAccess.make_dir_recursive_absolute("/tmp/aud")
-	_escribir(ULTIMA, texto)
+## Un caso: sin jugador o sin tema tiene que cerrar sin publicar; con jugador tiene que publicar titular.
+func _clasificar(caso: Array, clave: String, r: Dictionary, titular: String, sin_cierre: Array[String], mudos: Array[String]) -> void:
+	var id := String(caso[0])
+	if id == "":
+		## Nada pendiente: no hay nada que firmar ni que avisar.
+		if not (r["salida"] as Dictionary).is_empty() or not (r["resueltos"] as Array).is_empty():
+			sin_cierre.append(clave)
+		return
+	if id == "inexistente":
+		## Un id sin función en la tabla se cierra sin publicar, como el `match` sin rama.
+		if titular != "" or not (r["pendiente"] as Dictionary).is_empty() or (r["resueltos"] as Array).size() != 1:
+			sin_cierre.append(clave)
+		return
+	if String(caso[1]) == "" and id in CALLAN_SIN_JUGADOR:
+		if titular != "" or not (r["pendiente"] as Dictionary).is_empty() or (r["resueltos"] as Array).size() != 1:
+			sin_cierre.append(clave)
+	elif titular == "":
+		mudos.append(clave)
+
+## Con F0E_GUARDAR=1 fija la referencia; si no, compara la pasada con ella (si existe).
+func _comparar_referencia(texto: String) -> void:
 	if OS.get_environment("F0E_GUARDAR") == "1":
 		_escribir(REFERENCIA, texto)
 		_linea("  referencia guardada en %s (%d bytes)" % [REFERENCIA, texto.length()])
@@ -129,6 +147,7 @@ func _probar() -> void:
 		_linea("  distinto %s\n    antes %s\n    ahora %s" % [k, JSON.stringify(antes.get(k, {}), "", true),
 			JSON.stringify(ahora.get(k, {}), "", true)])
 	_comprobar(distintos.is_empty(), "idéntico a la referencia en los %d casos (distintos: %d)" % [antes.size(), distintos.size()])
+
 
 ## El plantel necesita un menor de 21 y un capitán para que cesión, Sub-20 y capitán tengan a quién.
 func _preparar_plantel(m: Mundo) -> void:

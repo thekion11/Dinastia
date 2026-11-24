@@ -23,20 +23,7 @@ func _kenney_calles() -> void:
 		var ancho: float = t["ancho"]
 		var m := (a + c) * 0.5
 		if bool(t["av"]):
-			## Avenidas: un brazo de farola curva cada ~48 m, alternando lados.
-			## (Desde el 15-10-2026 todas las farolas son la curva de Kenney, en
-			## `_farolas`; esto solo queda si el modelo no carga.)
-			var n := int((largo - ancho) / 48.0) if _malla_kit("res://assets/ciudad/kenney_roads/light-curved.glb").is_empty() else 0
-			for q in n:
-				var f := (float(q) + 0.5) / float(maxi(1, n))
-				var p := a.lerp(c, f)
-				var lado := 1.0 if q % 2 == 0 else -1.0
-				var off := (ancho * 0.5 + ACERA * 0.9) * lado
-				var pos := p + (Vector3(off, 0.24, 0) if vertical else Vector3(0, 0.24, off))
-				## El brazo (+Z local del modelo) apunta hacia la calzada.
-				var giro := (PI * 0.5 if lado > 0.0 else -PI * 0.5) if vertical else (PI if lado > 0.0 else 0.0)
-				if _prop_kenney("light-curved", pos, giro, 9.0) != null:
-					brazos += 1
+			brazos += _brazos_de_avenida(a, c, vertical, ancho, largo)
 		elif r.randf() < 0.22 and largo > 60.0:
 			## Calles de barrio: un poste con cable a un lado.
 			var lado2 := 1.0 if r.randf() < 0.5 else -1.0
@@ -47,18 +34,7 @@ func _kenney_calles() -> void:
 				postes += 1
 				## S5 (27-10-2026): la línea sigue por la calle con dos postes más y el cable combado entre ellos (los tres cables
 				## de cada travesaño, en un solo MultiMesh).
-				var dir_c := Vector3(0, 0, 1) if vertical else Vector3(1, 0, 0)
-				var ant := pos2
-				for paso: float in [-1.0, 1.0]:
-					ant = pos2
-					for k in 2:
-						var sig := ant + dir_c * 38.0 * paso
-						if absf((sig - m).dot(dir_c)) > largo * 0.5 - 14.0:
-							break
-						if _prop_kenney("electricity-pole", sig, giro2, 9.0) != null:
-							postes += 1
-							_cable_entre(ant, sig, cables)
-						ant = sig
+				postes += _linea_postes(pos2, m, vertical, largo, giro2, cables)
 	## Carteles colgantes sobre la calzada en cada cruce con semáforo.
 	for p: Vector3 in cruces_semaforo:
 		var esq := p + Vector3(ANCHO_AV * 0.5 + ACERA * 0.9, 0.24, -ANCHO_AV * 0.5 - ACERA * 0.9)
@@ -66,12 +42,7 @@ func _kenney_calles() -> void:
 		if cartel != null:
 			## 26-10-2026 (pciu): el báculo del cartel, del mismo grafito que las
 			## farolas (el lavanda de Kenney era lo único azul en cada cruce).
-			for mi in cartel.find_children("*", "MeshInstance3D", true, false):
-				var malla := (mi as MeshInstance3D).mesh
-				if malla != null:
-					if _mat_cartel == null:
-						_mat_cartel = _mat_poste_farola(malla)
-					(mi as MeshInstance3D).material_override = _mat_cartel
+			_baculo_cartel(cartel)
 			carteles += 1
 	_multimesh(BoxMesh.new(), b._mat_simple(Color(0.06, 0.06, 0.07), 0.8), cables, Vector3.ONE)
 	cuenta["cables_postes"] = cables.size()
@@ -419,3 +390,51 @@ func _recortar_a_zona() -> void:
 	cuenta["manzanas"] = bloques.size()
 	if CityBuilder._medir_tiempos:
 		Registro.depurar("PROLOGO", "zona recortada: %d bloques, %d tramos, %d semáforos" % [bloques.size(), tramos.size(), cruces_semaforo.size()])
+
+## Los postes y cables que siguen la calle a cada lado de `pos2` (sacado de `_kenney_calles`).
+## Devuelve cuántos postes nuevos puso.
+func _linea_postes(pos2: Vector3, m: Vector3, vertical: bool, largo: float, giro2: float,
+		cables: Array[Transform3D]) -> int:
+	var nuevos := 0
+	var dir_c := Vector3(0, 0, 1) if vertical else Vector3(1, 0, 0)
+	var ant := pos2
+	for paso: float in [-1.0, 1.0]:
+		ant = pos2
+		for k in 2:
+			var sig := ant + dir_c * 38.0 * paso
+			if absf((sig - m).dot(dir_c)) > largo * 0.5 - 14.0:
+				break
+			if _prop_kenney("electricity-pole", sig, giro2, 9.0) != null:
+				nuevos += 1
+				_cable_entre(ant, sig, cables)
+			ant = sig
+	return nuevos
+
+## Brazos de farola de una avenida, cada ~48 m (de `_kenney_calles`). Devuelve cuántos puso.
+func _brazos_de_avenida(a: Vector3, c: Vector3, vertical: bool, ancho: float, largo: float) -> int:
+	var nuevos := 0
+	## Avenidas: un brazo de farola curva cada ~48 m, alternando lados.
+	## (Desde el 15-10-2026 todas las farolas son la curva de Kenney, en
+	## `_farolas`; esto solo queda si el modelo no carga.)
+	var sin_modelo := _malla_kit("res://assets/ciudad/kenney_roads/light-curved.glb").is_empty()
+	var n := int((largo - ancho) / 48.0) if sin_modelo else 0
+	for q in n:
+		var f := (float(q) + 0.5) / float(maxi(1, n))
+		var p := a.lerp(c, f)
+		var lado := 1.0 if q % 2 == 0 else -1.0
+		var off := (ancho * 0.5 + ACERA * 0.9) * lado
+		var pos := p + (Vector3(off, 0.24, 0) if vertical else Vector3(0, 0.24, off))
+		## El brazo (+Z local del modelo) apunta hacia la calzada.
+		var giro := (PI * 0.5 if lado > 0.0 else -PI * 0.5) if vertical else (PI if lado > 0.0 else 0.0)
+		if _prop_kenney("light-curved", pos, giro, 9.0) != null:
+			nuevos += 1
+	return nuevos
+
+## Pinta el báculo de un cartel del mismo grafito que las farolas (sacado de `_kenney_calles`).
+func _baculo_cartel(cartel: Node3D) -> void:
+	for mi in cartel.find_children("*", "MeshInstance3D", true, false):
+		var malla := (mi as MeshInstance3D).mesh
+		if malla != null:
+			if _mat_cartel == null:
+				_mat_cartel = _mat_poste_farola(malla)
+			(mi as MeshInstance3D).material_override = _mat_cartel

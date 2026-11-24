@@ -13,29 +13,7 @@ func _adornar_puente(rx: float, z: float, ancho: float, agua0: float, agua1: flo
 	## Los arcos: dos vanos (entre los tres pilares), con su rosca de dovelas.
 	var pilares := [agua0 + 6.0, rx, agua1 - 6.0]
 	for v in 2:
-		var xa: float = pilares[v] + 1.1
-		var xb: float = pilares[v + 1] - 1.1
-		var cx := (xa + xb) * 0.5
-		var semi := (xb - xa) * 0.5
-		var alto := PUENTE_ALTO - 1.4
-		var n := 18
-		for k in n:
-			var t0 := PI * float(k) / float(n)
-			var t1 := PI * float(k + 1) / float(n)
-			var p0 := Vector3(cx - cos(t0) * semi, 0.3 + sin(t0) * alto, z)
-			var p1 := Vector3(cx - cos(t1) * semi, 0.3 + sin(t1) * alto, z)
-			var m := (p0 + p1) * 0.5
-			var d := p1 - p0
-			var ang := atan2(d.y, d.x)
-			for lado: float in [-1.0, 1.0]:
-				dovelas.append(Transform3D(Basis(Vector3(0, 0, 1), ang) * Basis.from_scale(Vector3(d.length() + 0.15, 0.9, 0.7)),
-					m + Vector3(0, 0, lado * (ancho * 0.5 + 0.2))))
-				## El tímpano: piedra maciza entre la rosca y el tablero.
-				var y_arco := maxf(p0.y, p1.y) + 0.4
-				var alto_t := PUENTE_ALTO - 0.3 - y_arco
-				if alto_t > 0.05:
-					timpanos.append(Transform3D(Basis.from_scale(Vector3(absf(d.x) + 0.05, alto_t, 0.55)),
-						Vector3(m.x, y_arco + alto_t * 0.5, z + lado * (ancho * 0.5 + 0.2))))
+		_vano(Vector2(pilares[v], pilares[v + 1]), z, ancho, dovelas, timpanos)
 	_multimesh(BoxMesh.new(), piedra_osc, dovelas, Vector3.ONE)
 	_multimesh(BoxMesh.new(), piedra, timpanos, Vector3.ONE)
 	## Tajamares: proas de piedra en los pilares, río arriba y río abajo.
@@ -118,6 +96,33 @@ func _adornar_puente(rx: float, z: float, ancho: float, agua0: float, agua1: flo
 
 ## Un puente: tablero sobre pilares, con barandillas, más alto sobre el agua
 ## para que pase el bote, y rampas hasta las orillas.
+
+## Un vano del puente: su rosca de dovelas y los tímpanos (sacado de `_adornar_puente`).
+func _vano(extremos: Vector2, z: float, ancho: float, dovelas: Array, timpanos: Array) -> void:
+	var xa: float = extremos.x + 1.1
+	var xb: float = extremos.y - 1.1
+	var cx := (xa + xb) * 0.5
+	var semi := (xb - xa) * 0.5
+	var alto := PUENTE_ALTO - 1.4
+	var n := 18
+	for k in n:
+		var t0 := PI * float(k) / float(n)
+		var t1 := PI * float(k + 1) / float(n)
+		var p0 := Vector3(cx - cos(t0) * semi, 0.3 + sin(t0) * alto, z)
+		var p1 := Vector3(cx - cos(t1) * semi, 0.3 + sin(t1) * alto, z)
+		var m := (p0 + p1) * 0.5
+		var d := p1 - p0
+		var ang := atan2(d.y, d.x)
+		for lado: float in [-1.0, 1.0]:
+			dovelas.append(Transform3D(Basis(Vector3(0, 0, 1), ang) * Basis.from_scale(Vector3(d.length() + 0.15, 0.9, 0.7)),
+				m + Vector3(0, 0, lado * (ancho * 0.5 + 0.2))))
+			## El tímpano: piedra maciza entre la rosca y el tablero.
+			var y_arco := maxf(p0.y, p1.y) + 0.4
+			var alto_t := PUENTE_ALTO - 0.3 - y_arco
+			if alto_t > 0.05:
+				timpanos.append(Transform3D(Basis.from_scale(Vector3(absf(d.x) + 0.05, alto_t, 0.55)),
+					Vector3(m.x, y_arco + alto_t * 0.5, z + lado * (ancho * 0.5 + 0.2))))
+
 func _puente(a: Vector3, c: Vector3, ancho: float) -> void:
 	var x0 := minf(a.x, c.x) - ancho * 0.5
 	var x1 := maxf(a.x, c.x) + ancho * 0.5
@@ -185,6 +190,15 @@ func _libre_de_marcas(nodo: Vector3, d: Vector3) -> float:
 	return medio + 2.0
 
 ## Calzadas, aceras, marcas viales y puentes.
+## Una raya (o las dos de una avenida) en `p2` (sacado de `_dibujar_calles`).
+func _marcas_raya(marcas: Array, p2: Vector3, esc: Vector3, vertical: bool, av: bool) -> void:
+	if av:
+		for dl: float in [-0.35, 0.35]:
+			var pp := p2 + (Vector3(dl, 0, 0) if vertical else Vector3(0, 0, dl))
+			marcas.append(Transform3D(Basis.from_scale(esc), pp + Vector3(0, 0.14, 0)))
+	else:
+		marcas.append(Transform3D(Basis.from_scale(esc), p2 + Vector3(0, 0.14, 0)))
+
 func _dibujar_calles() -> void:
 	var marcas: Array[Transform3D] = []
 	for t: Dictionary in tramos:
@@ -231,12 +245,7 @@ func _dibujar_calles() -> void:
 				var dist := la + sobra * 0.5 + largo_raya * 0.5 + float(q) * paso
 				var p2 := a + d * dist
 				var esc := Vector3(0.25, 1.0, largo_raya) if vertical else Vector3(largo_raya, 1.0, 0.25)
-				if bool(t["av"]):
-					for dl: float in [-0.35, 0.35]:
-						var pp := p2 + (Vector3(dl, 0, 0) if vertical else Vector3(0, 0, dl))
-						marcas.append(Transform3D(Basis.from_scale(esc), pp + Vector3(0, 0.14, 0)))
-				else:
-					marcas.append(Transform3D(Basis.from_scale(esc), p2 + Vector3(0, 0.14, 0)))
+				_marcas_raya(marcas, p2, esc, vertical, bool(t["av"]))
 	## Pasos de cebra en los cruces con semáforo: solo en los brazos que
 	## existen, a todo el ancho de la calle, justo pasado el borde de la que
 	## cruza, y detrás la línea de detención en los carriles que llegan.

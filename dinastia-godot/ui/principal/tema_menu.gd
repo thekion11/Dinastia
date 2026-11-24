@@ -23,78 +23,13 @@ func _aplicar_tema() -> void:
 	## El botón: un panel un pelo desplazado hacia el texto, para que se despegue
 	## del fondo sin ser otro color. Encima aclara, pulsado se va al acento.
 	var reposo := p._mezcla(panel, texto, 0.14)
-	## (10-11, estética) Con RELIEVE (`ProfundidadUI`): sombra en reposo, más al pasar por encima, y pulsado se hunde.
-	t.set_stylebox("normal", "Button", ProfundidadUI.relieve(p._caja(reposo, borde, radio, 1)))
-	t.set_stylebox("hover", "Button", ProfundidadUI.relieve(p._caja(p._mezcla(panel, texto, 0.24), borde, radio, 1), true))
-	t.set_stylebox("pressed", "Button", ProfundidadUI.hundido(p._caja(p._mezcla(panel, p.COL_ACENTO, 0.45), p.COL_ACENTO, radio, 1)))
-	t.set_stylebox("focus", "Button", p._caja(Color(0, 0, 0, 0), p.COL_ACENTO, radio, 2))
-	t.set_stylebox("disabled", "Button", p._caja(p._mezcla(panel, texto, 0.05), borde, radio, 1))
-	t.set_color("font_color", "Button", texto)
-	t.set_color("font_hover_color", "Button", texto)
-	t.set_color("font_pressed_color", "Button", texto)
-	t.set_color("font_disabled_color", "Button", p._mezcla(suave, panel, 0.5))
-	## (9-11, estética) Letra base de los botones = 13 (con la escala de texto de Ajustes): sin esto usaban los 16 de fábrica y
-	## desentonaban con las etiquetas (14) y los botones con tamaño propio (12-13) de la misma fila.
-	for clase_b: String in ["Button", "OptionButton", "MenuButton", "CheckBox", "CheckButton"]:
-		t.set_font_size("font_size", clase_b, Tema.letra(13))
-
-	## Los desplegables y las casillas heredan del botón: en Godot son clases
-	## distintas y si no se les dice nada se quedan con el tema oscuro de fábrica.
-	for clase: String in ["OptionButton", "MenuButton", "CheckBox", "CheckButton"]:
-		t.set_stylebox("normal", clase, ProfundidadUI.relieve(p._caja(reposo, borde, radio, 1)))
-		t.set_stylebox("hover", clase, ProfundidadUI.relieve(p._caja(p._mezcla(panel, texto, 0.24), borde, radio, 1), true))
-		t.set_stylebox("pressed", clase, ProfundidadUI.hundido(p._caja(p._mezcla(panel, p.COL_ACENTO, 0.45), p.COL_ACENTO, radio, 1)))
-		## (10-11, estética) el mismo FOCO y DESACTIVADO que el botón: los desplegables y casillas usaban los de fábrica (otro color y grosor)
-		t.set_stylebox("focus", clase, p._caja(Color(0, 0, 0, 0), p.COL_ACENTO, radio, 2))
-		t.set_stylebox("disabled", clase, p._caja(p._mezcla(panel, texto, 0.05), borde, radio, 1))
-		t.set_color("font_color", clase, texto)
-		t.set_color("font_hover_color", clase, texto)
-
-	## Las pestañas. El fondo de la hoja es EL panel, sin borde: encima van las
-	## tarjetas, y dos bordes pegados uno dentro de otro se ven como un error.
-	var hoja := p._caja(panel, borde, radio, 0)
-	hoja.content_margin_left = 6
-	hoja.content_margin_right = 6
-	hoja.content_margin_top = 6
-	hoja.content_margin_bottom = 6
-	t.set_stylebox("panel", "TabContainer", hoja)
-	t.set_stylebox("tabbar_background", "TabContainer", p._caja(Color(0, 0, 0, 0), borde, 0, 0))
-	t.set_stylebox("tab_selected", "TabContainer", p._caja(p._mezcla(panel, p.COL_ACENTO, 0.30), p.COL_ACENTO, radio, 1))
-	t.set_stylebox("tab_unselected", "TabContainer", p._caja(p._mezcla(panel, texto, 0.06), borde, radio, 1))
-	t.set_stylebox("tab_hovered", "TabContainer", p._caja(p._mezcla(panel, texto, 0.18), borde, radio, 1))
-	t.set_color("font_selected_color", "TabContainer", texto)
-	t.set_color("font_unselected_color", "TabContainer", suave)
-	t.set_color("font_hovered_color", "TabContainer", texto)
-
-	t.set_stylebox("panel", "Panel", p._caja(panel, borde, radio, 1))
-	t.set_stylebox("panel", "PanelContainer", p._caja(panel, borde, radio, 1))
-	t.set_stylebox("panel", "PopupPanel", p._caja(p._mezcla(panel, texto, 0.05), borde, radio, 1))
-	t.set_stylebox("panel", "PopupMenu", p._caja(p._mezcla(panel, texto, 0.05), borde, radio, 1))
-	t.set_color("font_color", "PopupMenu", texto)
-	t.set_color("font_hover_color", "PopupMenu", texto)
-
-	## Los campos de texto. El fondo va al REVÉS que el botón -hacia el fondo, no
-	## hacia el texto- porque un cuadro donde se escribe tiene que verse hundido.
-	var hueco := p._caja(p._mezcla(panel, p._pal_fondo(), 0.55), borde, radio, 1)
-	for clase2: String in ["LineEdit", "TextEdit", "SpinBox"]:
-		t.set_stylebox("normal", clase2, hueco)
-		t.set_color("font_color", clase2, texto)
-		t.set_color("font_placeholder_color", clase2, suave)
-		t.set_color("caret_color", clase2, p.COL_ACENTO)
-	t.set_stylebox("focus", "LineEdit", p._caja(p._mezcla(panel, p._pal_fondo(), 0.55), p.COL_ACENTO, radio, 2))
-
-	## Barras y deslizadores.
-	TemaSliders.aplicar(t, p.COL_ACENTO, p._mezcla(panel, p._pal_fondo(), 0.5), borde, p.get_tree())   ## deslizadores gruesos (pista 8, tirador 28, área 44)
-	t.set_stylebox("background", "ProgressBar", p._caja(p._mezcla(panel, p._pal_fondo(), 0.5), borde, 3, 0))
-	t.set_stylebox("fill", "ProgressBar", p._caja(p.COL_ACENTO, p.COL_ACENTO, 3, 0))
-
-	t.set_color("default_color", "RichTextLabel", texto)
-	t.set_color("font_color", "Label", texto)
-	t.set_color("font_color", "ItemList", texto)
-	t.set_stylebox("panel", "ItemList", p._caja(p._mezcla(panel, p._pal_fondo(), 0.4), borde, radio, 1))
-	t.set_color("font_color", "Tree", texto)
-	t.set_stylebox("panel", "Tree", p._caja(p._mezcla(panel, p._pal_fondo(), 0.4), borde, radio, 1))
-
+	var m := {"panel": panel, "texto": texto, "suave": suave, "borde": borde, "radio": radio, "reposo": reposo}
+	TemaMenuSecciones._tema_botones(t, p, m)
+	TemaMenuSecciones._tema_desplegables(t, p, m)
+	TemaMenuSecciones._tema_pestanas(t, p, m)
+	TemaMenuSecciones._tema_paneles(t, p, m)
+	TemaMenuSecciones._tema_campos(t, p, m)
+	TemaMenuSecciones._tema_barras(t, p, m)
 	## La separación entre filas la sigue mandando la vista compacta: se vuelve a
 	## poner aquí porque este `Theme` es el mismo objeto y el orden de llamadas
 	## entre las dos funciones no está garantizado.
@@ -201,6 +136,16 @@ func _goleadores_de(clubes: Array) -> Array:
 ## `comp` (26-9-2026): "liga", "copa" o "conti". Antes la pantalla enseñaba
 ## SIEMPRE la liga del local, también en un partido de copa o de la copa
 ## continental; ahora enseña la competición que se está jugando.
+## La tabla del grupo continental en el que está el club (la primera que lo tenga; `d` se rellena in situ).
+func _tabla_del_grupo_conti(d: Dictionary, conti, local: Club, mio: Club) -> void:
+	for gi in conti.grupos.size():
+		if (conti.grupos[gi] as Array).has(local) or (conti.grupos[gi] as Array).has(mio):
+			d["titulo_tabla"] = conti.nombre_de_grupo(gi).to_upper()
+			for f: Dictionary in conti.filas_con_puesto(gi, local, 10):
+				var cg: Club = f["club"]
+				d["tabla"].append({"id": cg.id, "nombre": cg.nombre, "pts": int(f["pts"]), "pj": int(f["pj"]), "dif": int(f["dif"])})
+			break
+
 func _datos_pantalla_estadio(local: Club, comp: String = "liga") -> Dictionary:
 	var d: Dictionary = {
 		"tabla": [], "goleadores": [], "liga": "", "jornada": 0, "recinto": "", "cruces": [],
@@ -226,13 +171,7 @@ func _datos_pantalla_estadio(local: Club, comp: String = "liga") -> Dictionary:
 	if comp == "conti" and conti != null:
 		d["liga"] = "%s · %s" % [Continental.nombre_conti(conti.clave), conti.nombre_de_ronda()]
 		if conti.en_fase_de_grupos():
-			for gi in conti.grupos.size():
-				if (conti.grupos[gi] as Array).has(local) or (conti.grupos[gi] as Array).has(p.mundo.mi_club()):
-					d["titulo_tabla"] = conti.nombre_de_grupo(gi).to_upper()
-					for f: Dictionary in conti.filas_con_puesto(gi, local, 10):
-						var cg: Club = f["club"]
-						d["tabla"].append({"id": cg.id, "nombre": cg.nombre, "pts": int(f["pts"]), "pj": int(f["pj"]), "dif": int(f["dif"])})
-					break
+			_tabla_del_grupo_conti(d, conti, local, p.mundo.mi_club())
 		else:
 			for par2: Array in conti.cruces():
 				d["cruces"].append([Nombres.visible((par2[0] as Club).nombre), Nombres.visible((par2[1] as Club).nombre)])
@@ -278,7 +217,7 @@ func _panel() -> PanelContainer:
 	## StyleBox porque un StyleBox solo sabe pintar un borde entero y uniforme.
 	if p._marca_tarjeta != "ninguno":
 		var mk := MarcaPanel.new()
-		mk.poner(p._marca_tarjeta, p.COL_ACENTO)
+		mk.poner(p._marca_tarjeta, p.col_acento)
 		panel.add_child(mk)
 	if not p._brillo_tarjetas:
 		return panel

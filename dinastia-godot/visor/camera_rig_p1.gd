@@ -269,7 +269,7 @@ func _transmision(cam: Camera3D, b: Vector3, delta: float) -> void:
 	var foco := Vector3(b.x * 0.45 + adelanto.x * 0.4, 0.0, b.z + adelanto.z + espacio)
 	## Con el plano cerrado se mete la portería en el cuadro.
 	if trans_cerca > 0.0:
-		var arco_z := signf(pista_ataca if pista_ataca != 0.0 else b.z) * 50.0
+		var arco_z := signf(pista_ataca if not is_zero_approx(pista_ataca) else b.z) * 50.0
 		foco.z = lerpf(foco.z, (foco.z + arco_z) * 0.5, 0.35 * trans_cerca)
 	## Por la banda de la cámara el foco no pasa de x=4 (si no, plano cenital
 	## encima de los jugadores); con el plano cerrado se deja llegar a x=10

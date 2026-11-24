@@ -39,12 +39,8 @@ static func fase_edad(edad: int) -> String:
 ## Cuánto puede crecer por la edad, de 0 a 1 (la forma de la curva dibujada):
 ## el mismo freno por edad que `ProgresoJugador.freno()` y la caída de los 30.
 static func ritmo_por_edad(edad: int) -> float:
-	if edad <= 20:
-		return 0.8
-	if edad <= 22:
-		return 0.5
-	if edad == 23:
-		return 0.3
+	if edad <= 23:
+		return ProgresoJugador.por_edad(edad)
 	if edad <= 29:
 		return 0.0
 	return -clampf(float(edad - 29) * 0.25, 0.0, 1.0)

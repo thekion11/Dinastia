@@ -109,7 +109,7 @@ func _calles(ex: Object) -> void:
 	_comprobar(sin_nodo == 0, "cada cruce con semáforo está sobre un nodo de la red (%d sueltos)" % sin_nodo)
 
 ## ---- 2. manzanas
-func _manzanas(ex: Object, cb: Node) -> void:
+func _manzanas(ex: Object, _cb: Node) -> void:
 	var bloques: Array = ex.get("bloques")
 	var tramos: Array = ex.get("tramos")
 	_comprobar(bloques.size() >= 30, "hay manzanas (%d)" % bloques.size())
@@ -155,7 +155,7 @@ func _dist_seg_rect(a: Vector2, b: Vector2, r: Rect2) -> float:
 		var dx := maxf(maxf(r.position.x - p.x, 0.0), p.x - r.end.x)
 		var dz := maxf(maxf(r.position.y - p.y, 0.0), p.y - r.end.y)
 		mejor = minf(mejor, sqrt(dx * dx + dz * dz))
-		if mejor == 0.0:
+		if is_zero_approx(mejor):
 			break
 	return mejor
 

@@ -10,7 +10,7 @@ func _frames(n: int = 2) -> void:
 ## Lo que una persona cierra con un clic al acabar la temporada: portadas de prensa, sorteos y cualquier ventana.
 func _cerrar_pantallas_de_temporada() -> void:
 	for c in _p.get_children():
-		if c is Control and not c is Tutorial and c.get_script() != null and (c as Control).mouse_filter == Control.MOUSE_FILTER_STOP and (c as Control).anchor_right == 1.0 and (c as Control).anchor_bottom == 1.0 and (c as Control).visible:
+		if c is Control and not c is Tutorial and c.get_script() != null and (c as Control).mouse_filter == Control.MOUSE_FILTER_STOP and is_equal_approx((c as Control).anchor_right, 1.0) and is_equal_approx((c as Control).anchor_bottom, 1.0) and (c as Control).visible:
 			c.queue_free()
 		elif c is EventoPantallaCompleta:   ## (10-11) los eventos a pantalla completa son capas de lienzo (regla del 9-11): sin esto, el que quedaba
 			c.queue_free()                  ## abierto al medir hacía de pico (≈ +600 nodos) y parecía que los nodos crecían sin fin

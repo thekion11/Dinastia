@@ -84,6 +84,7 @@ static func boton_pestana(texto: String, ancho := 1.35) -> Button:
 ## Después de las tres pestañas: el escudo en medio, los atajos a la derecha y la caja con la fecha.
 static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: Club) -> void:
 	hb.set_meta("tabs", tabs)
+	p._guia.nodos["escaparate_barra"] = hb   ## el tutorial señala la barra cuando lo que busca (estado, registro, tabla) queda tapado por el escaparate
 	var menu := Button.new()   ## ☰ abre el cajón de menús (el riel de iconos ya no se ve en esta vista)
 	menu.flat = true
 	menu.text = "☰"
@@ -91,7 +92,9 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	menu.custom_minimum_size = Vector2(52, ALTO - 8)
 	menu.add_theme_font_size_override("font_size", Tema.letra(28))
 	menu.tooltip_text = Idiomas.t("Todos los menús")
-	menu.pressed.connect(func() -> void: if p._menu_lateral != null: p._menu_lateral.alternar())
+	menu.pressed.connect(func() -> void:
+		if p._menu_lateral != null:
+			p._menu_lateral.alternar())
 	hb.add_child(menu)
 	hb.move_child(menu, 0)
 	var hueco := Control.new()   ## el escudo asoma por encima de la barra: no empuja a nadie
@@ -121,9 +124,7 @@ static func completar(p: Principal, hb: HBoxContainer, tabs: Array[Button], c: C
 	caja.alignment = BoxContainer.ALIGNMENT_CENTER
 	caja.add_theme_constant_override("separation", -4)
 	caja.custom_minimum_size.x = 130
-	var dinero := EstiloAvanzar.etiqueta(p._dinero(c.saldo), 20, Color.WHITE, true)
-	dinero.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	caja.add_child(dinero)
+	## (18-11, veredicto del dueño sobre el boceto 2) el saldo NO va en el menú central: solo en Finanzas. Aquí queda la fecha.
 	var fecha := EstiloAvanzar.etiqueta(p.fecha_larga(), 11, Color(1, 1, 1, 0.8))
 	fecha.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	caja.add_child(fecha)

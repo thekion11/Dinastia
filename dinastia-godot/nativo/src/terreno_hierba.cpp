@@ -2,6 +2,7 @@
 // `TerrenoArreglos.calcular_gd` y `CityBuilder._imagen_hierba_gd`. El ruido y el azar son los
 // del motor (FastNoiseLite, RandomNumberGenerator), así la secuencia es la misma.
 #include "dinastia_nativo.h"
+#include "pcg32_nativo.h"
 
 #include <godot_cpp/classes/fast_noise_lite.hpp>
 #include <godot_cpp/classes/image.hpp>
@@ -106,34 +107,6 @@ Array DinastiaNativo::terreno(const Ref<FastNoiseLite> &ruido, const Ref<FastNoi
 	return salida;
 }
 
-// EL AZAR DEL MOTOR, COPIADO: `RandomNumberGenerator` es RandomPCG (PCG32 de thirdparty/misc/pcg.cpp,
-// incremento por defecto 1442695040888963407) y su `randf` (core/math/random_pcg.h, con CLZ32).
-// Llamar al motor 600.000 veces costaba ~90 ms; copiado da la MISMA secuencia (la prueba lo mira).
-struct Pcg32 {
-	uint64_t state = 0;
-	uint64_t inc = 0;
-	uint32_t rand() {
-		const uint64_t oldstate = state;
-		state = oldstate * 6364136223846793005ULL + (inc | 1);
-		const uint32_t xorshifted = uint32_t(((oldstate >> 18u) ^ oldstate) >> 27u);
-		const uint32_t rot = uint32_t(oldstate >> 59u);
-		return (xorshifted >> rot) | (xorshifted << ((32u - rot) & 31u));
-	}
-	void seed(uint64_t initstate, uint64_t initseq = 1442695040888963407ULL) {
-		state = 0U;
-		inc = (initseq << 1u) | 1u;
-		rand();
-		state += initstate;
-		rand();
-	}
-	float randf() {
-		const uint32_t proto_exp_offset = rand();
-		if (proto_exp_offset == 0) {
-			return 0;
-		}
-		return std::ldexp(float(rand() | 0x80000001), -32 - __builtin_clz(proto_exp_offset));
-	}
-};
 
 // Los píxeles se leen y escriben directo, con la MISMA conversión que `Image::get_pixel` (L8:
 // `ptr / 255.0`) y `set_pixel` (RGB8: `uint8_t(CLAMP(c * 255.0, 0, 255))`) del motor 4.7.2.

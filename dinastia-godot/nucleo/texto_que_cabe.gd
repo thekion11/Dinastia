@@ -54,14 +54,7 @@ static func ajustar(cv: Variant) -> void:
 		c.set_meta("tam_base", c.get_theme_font_size("font_size"))
 	var piso := EscalaMovil.letra_minima(c)   ## en el móvil, nunca por debajo de la letra mínima legible (0 en PC)
 	var base := maxi(int(c.get_meta("tam_base")), piso)
-	var hueco := c.size.x
-	if c is Button:
-		var b := c as Button
-		hueco -= b.get_theme_stylebox("normal").get_minimum_size().x
-		if b is OptionButton:
-			hueco -= float(b.get_theme_icon("arrow").get_width()) + float(b.get_theme_constant("arrow_margin"))
-		if b.icon != null:
-			hueco -= float(b.icon.get_width()) + float(b.get_theme_constant("h_separation"))
+	var hueco := _hueco_util(c)
 	var f := c.get_theme_font("font")
 	var ancho := f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, base).x
 	var tam := base
@@ -74,3 +67,16 @@ static func ajustar(cv: Variant) -> void:
 	if tam != base or c.has_meta("tam_tocado") or tam > c.get_theme_font_size("font_size"):
 		c.set_meta("tam_tocado", true)
 		c.add_theme_font_size_override("font_size", tam)
+
+
+## El ancho que de verdad tiene el rótulo: el de la casilla menos el margen, la flecha y el icono del botón.
+static func _hueco_util(c: Control) -> float:
+	var hueco := c.size.x
+	if c is Button:
+		var b := c as Button
+		hueco -= b.get_theme_stylebox("normal").get_minimum_size().x
+		if b is OptionButton:
+			hueco -= float(b.get_theme_icon("arrow").get_width()) + float(b.get_theme_constant("arrow_margin"))
+		if b.icon != null:
+			hueco -= float(b.icon.get_width()) + float(b.get_theme_constant("h_separation"))
+	return hueco

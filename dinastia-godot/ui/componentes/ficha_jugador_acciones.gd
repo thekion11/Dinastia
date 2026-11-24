@@ -42,7 +42,7 @@ static func pintar_desarrollo(lista: VBoxContainer, j: Jugador, mundo: Mundo,
 ## `🔁 POSICIÓN Y RECONVERSIÓN`: un botón por cada puesto del mismo lado de la
 ## cancha. `al_elegir` recibe el puesto de destino -son varios botones, no uno,
 ## así que hace falta el parámetro-.
-static func pintar_reconversion(lista: VBoxContainer, j: Jugador, mundo: Mundo,
+static func pintar_reconversion(lista: VBoxContainer, j: Jugador, _mundo: Mundo,
 		paleta: Dictionary, al_elegir: Callable) -> void:
 	var posd: Dictionary = Datos.tabla("POSD")
 	if posd.is_empty():
@@ -72,7 +72,7 @@ static func pintar_reconversion(lista: VBoxContainer, j: Jugador, mundo: Mundo,
 		b.tooltip_text = Idiomas.t(String(d.get("n", pe)))
 		b.clip_text = true
 		b.custom_minimum_size = Vector2(64, 0)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		var destino := pe
 		b.pressed.connect(func() -> void: al_elegir.call(destino))
 		flow.add_child(b)
@@ -132,7 +132,7 @@ static func pintar_similares(lista: VBoxContainer, j: Jugador, mio: Club, mundo:
 		b.text = Idiomas.t("%s  ·  %d años  ·  %s  ·  %s") % [
 			s.nombre, s.edad, club_s.nombre if club_s else Idiomas.t("libre"),
 			mundo.ojeadores.ovr_texto(s) if mundo.ojeadores != null else str(s.ovr)]
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		## SIN `clip_text` un Button pide de ancho mínimo lo que mida su texto,
 		## y el panel entero se sale de la ventana -ya se vio en captura una vez.
@@ -234,7 +234,7 @@ static func pintar_charla(lista: VBoxContainer, j: Jugador, mundo: Mundo, paleta
 	for tema: String in Charlas.TEMAS:
 		var b := Button.new()
 		b.text = Idiomas.t(String(Charlas.TEMAS[tema]))
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.pressed.connect(func() -> void:
 			var r := mundo.charlas.hablar(j, tema, mundo.anio, mundo.semana)
 			resp.text = Idiomas.t(String(r.get("respuesta", "")))

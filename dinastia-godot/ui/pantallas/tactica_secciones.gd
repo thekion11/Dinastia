@@ -14,7 +14,7 @@ static func pintar(p: Principal, pantalla: Object, c: Club) -> void:
 	if not todo and secc != "pizarra":   ## en «Pizarra y dibujo» manda el campo: con la banda encima el pizarrón no cabía entero
 		var nivel := [Idiomas.t("Defensiva"), Idiomas.t("Equilibrada"), Idiomas.t("Ofensiva")]
 		p._lista_tactica.add_child(CifrasClave.banda([
-			[Idiomas.t("Formación"), c.tactica.formacion, SelectorDireccional.acento_legible(p.COL_ACENTO)],
+			[Idiomas.t("Formación"), c.tactica.formacion, SelectorDireccional.acento_legible(p.col_acento)],
 			[Idiomas.t("Mentalidad"), String(nivel[clampi(c.tactica.mentalidad, 0, 2)]), Principal.COL_TEXTO],
 			[Idiomas.t("El once"), Idiomas.t("%d de 11") % c.once_elegido.size() if c.once_elegido.size() > 0 else Idiomas.t("automático"), Principal.COL_ORO]],
 			Principal.COL_SUAVE))
@@ -54,7 +54,7 @@ static func _pizarra(p: Principal, pantalla: Object, c: Club) -> void:
 		bf.text = nombre_f
 		bf.toggle_mode = true
 		bf.button_pressed = c.tactica.formacion == nombre_f
-		bf.add_theme_font_size_override("font_size", 11)
+		bf.add_theme_font_size_override("font_size", Tema.letra(11))
 		bf.pressed.connect(func() -> void:
 			DeshacerTactica.apuntar(c)
 			c.tactica.formacion = nombre_f
@@ -97,7 +97,7 @@ static func _ordenes(p: Principal, c: Club) -> void:
 			b.text = String(opciones[n])
 			b.toggle_mode = true
 			b.button_pressed = int(c.tactica.get(prop)) == n
-			b.add_theme_font_size_override("font_size", 11)
+			b.add_theme_font_size_override("font_size", Tema.letra(11))
 			var valor := n
 			b.pressed.connect(func() -> void:
 				DeshacerTactica.apuntar(c)
@@ -121,7 +121,7 @@ static func _ordenes(p: Principal, c: Club) -> void:
 		var prop2 := String(it[1])
 		var b2 := Button.new()
 		b2.text = "SÍ" if bool(c.tactica.get(prop2)) else "NO"
-		b2.add_theme_font_size_override("font_size", 11)
+		b2.add_theme_font_size_override("font_size", Tema.letra(11))
 		b2.pressed.connect(func() -> void:
 			DeshacerTactica.apuntar(c)
 			c.tactica.set(prop2, not bool(c.tactica.get(prop2)))
@@ -149,7 +149,7 @@ static func _normas(p: Principal) -> void:
 		fila_n.add_child(en)
 		var bn := Button.new()
 		bn.text = "SÍ" if activa else "NO"
-		bn.add_theme_font_size_override("font_size", 11)
+		bn.add_theme_font_size_override("font_size", Tema.letra(11))
 		bn.pressed.connect(func() -> void:
 			p.mundo.normas[clave] = not bool(p.mundo.normas.get(clave, false))
 			p._refrescar())
@@ -174,6 +174,12 @@ static func _once(p: Principal, c: Club) -> void:
 	## ALINEACIÓN INDEBIDA A LA VISTA (M-246, 20-10): si el once elegido se salta
 	## la ley de cupos del país, se avisa aquí, en la pizarra, antes del partido
 	## (y no solo con la multa de la federación después).
+	_once_aviso(p, c)
+	_once_botones(p, c)
+	_once_filas(p, c)
+
+## Aviso de alineación indebida (ley de cupos del país), si el once elegido la incumple.
+static func _once_aviso(p: Principal, c: Club) -> void:
 	var manual: Array[Jugador] = c._once_manual()
 	var infr: Array = LeyesPais.infracciones_once(c, manual) if manual.size() == 11 else []
 	if not infr.is_empty():
@@ -186,6 +192,9 @@ static func _once(p: Principal, c: Club) -> void:
 			else "→ saldrá así y la federación multará (decidiste incumplir)")
 		av.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		p._lista_tactica.add_child(av)
+
+## Los botones de «que lo arme el ayudante» y «vaciar».
+static func _once_botones(p: Principal, c: Club) -> void:
 	var fila_b := HBoxContainer.new()
 	fila_b.add_theme_constant_override("separation", 6)
 	p._lista_tactica.add_child(fila_b)
@@ -198,6 +207,8 @@ static func _once(p: Principal, c: Club) -> void:
 		c.once_elegido.clear()
 		p._refrescar(), fila_b)
 
+## La rejilla de jugadores: marcar, nombre, posición, media, forma y estado.
+static func _once_filas(p: Principal, c: Club) -> void:
 	var g := GridContainer.new()
 	CebraRejilla.poner(g)
 	g.columns = 7
@@ -212,7 +223,7 @@ static func _once(p: Principal, c: Club) -> void:
 		var dentro := c.once_elegido.has(j.id)
 		var b := Button.new()
 		b.text = "✔" if dentro else "＋"
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = not j.disponible() and not dentro
 		b.pressed.connect(func() -> void:
 			DeshacerTactica.apuntar(c)
@@ -223,7 +234,7 @@ static func _once(p: Principal, c: Club) -> void:
 			p._refrescar())
 		g.add_child(b)
 		g.add_child(p._retrato(j, Principal.RETRATO_FILA))
-		var col := p.COL_ACENTO if dentro else (Principal.COL_ROJO if not j.disponible() else Principal.COL_TEXTO)
+		var col := p.col_acento if dentro else (Principal.COL_ROJO if not j.disponible() else Principal.COL_TEXTO)
 		## (12-11, idea del PES ya hecha en la plantilla) El nombre con la «C» del capitán, y más abajo la forma con su flecha.
 		var celda_n := HBoxContainer.new()
 		celda_n.add_theme_constant_override("separation", 6)

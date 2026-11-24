@@ -285,7 +285,7 @@ func cambiar_rol(j: Jugador, rol: String) -> Dictionary:
 		d = -(ahora - antes) * 5
 		_mover_moral(j, d)
 		return {"ok": true, "txt": "Se lo tomó mal: %d de moral" % d, "d_moral": d}
-	elif ahora < antes:
+	if ahora < antes:
 		d = (antes - ahora) * 4
 		_mover_moral(j, d)
 		return {"ok": true, "txt": "Le has subido el escalafón", "d_moral": d}
@@ -367,6 +367,24 @@ func sortear_solicitud(obras: Instalaciones = null) -> String:
 	if disponibles.size() < 12:
 		return ""
 	var j: Jugador = Azar.uno(disponibles)
+	var candidatos := _candidatos_de(j, c, obras)
+
+	if candidatos.is_empty():
+		return ""
+	var k := String(Azar.uno(candidatos))
+	solicitud = {"pid": j.id, "k": k}
+	var d := def_solicitud(k)
+	var titular := "%s %s." % [j.nombre, String(d[1]).to_lower()]
+	## Mismo patrón que `Prensa.sortear_evento()`: la señal específica -aquí
+	## solo el estado, `solicitud`- viaja siempre junto a un `noticia` genérico,
+	## que es al que ya está enganchada la interfaz. Sin esto, el asunto
+	## aparecía en el despacho pero no avisaba de que había llegado uno nuevo.
+	noticia.emit("Un jugador quiere hablar contigo", "%s Te espera en el despacho." % titular)
+	return titular
+
+
+## Los motivos de la solicitud de este jugador: solo los que de verdad le pasan.
+func _candidatos_de(j: Jugador, c: Club, obras: Instalaciones) -> Array[String]:
 	var candidatos: Array[String] = []
 	var cta: Dictionary = _rol_cuenta.get(j.id, {"pj": 0, "min": 0})
 	var pj := int(cta.get("pj", 0))
@@ -387,21 +405,15 @@ func sortear_solicitud(obras: Instalaciones = null) -> String:
 				break
 		if solo:
 			candidatos.append("compa")
+	_motivos_de_estado_y_cargo(j, c, obras, candidatos)
+	return candidatos
+
+## Motivos de estado físico, instalaciones y capitanía: el resto de la lista de candidatos.
+func _motivos_de_estado_y_cargo(j: Jugador, c: Club, obras: Instalaciones, candidatos: Array[String]) -> void:
 	if j.fisico < 58:
 		candidatos.append("descanso")
 	if obras != null and obras.nivel("ct") + obras.nivel("med") < 3:
 		candidatos.append("instal")
 	if j.edad >= 28 and j.ovr >= c.rep - 4 and not j.capitan:
 		candidatos.append("capitan")
-	if candidatos.is_empty():
-		return ""
-	var k := String(Azar.uno(candidatos))
-	solicitud = {"pid": j.id, "k": k}
-	var d := def_solicitud(k)
-	var titular := "%s %s." % [j.nombre, String(d[1]).to_lower()]
-	## Mismo patrón que `Prensa.sortear_evento()`: la señal específica -aquí
-	## solo el estado, `solicitud`- viaja siempre junto a un `noticia` genérico,
-	## que es al que ya está enganchada la interfaz. Sin esto, el asunto
-	## aparecía en el despacho pero no avisaba de que había llegado uno nuevo.
-	noticia.emit("Un jugador quiere hablar contigo", "%s Te espera en el despacho." % titular)
-	return titular
+

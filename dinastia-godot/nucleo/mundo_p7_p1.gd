@@ -26,51 +26,80 @@ func nueva_temporada() -> Dictionary:
 	anio += 1
 	semana = 1
 	var libres_del_anio := libres.duplicate()   ## (01-11) los que ya eran libres: los que se van ahora ya cumplen años abajo
+	_envejecer_clubes()
+	_envejecer_libres(libres_del_anio)
+	_preparar_ligas_y_canteras()
+	_finanzas_y_patrocinios(resumen)
+	_pretemporada_y_titulos(resumen)
+	## Y se reabre la pretemporada: hay una por ano.
+	amistoso_hecho = false
+	_montar_copa()
+	## Y los torneos continentales, con las plazas ya puestas al dia por los
+	## ascensos/descensos y reputaciones de la temporada que se acaba de cerrar.
+	## Antes esto solo se hacia una vez, al tomar el mando: pasada la primera
+	## temporada, Champions/Libertadores se quedaban congeladas para siempre con
+	## el mismo cuadro y el mismo campeon.
+	_sortear_continentales()
+	_trotamundos(resumen)
+	return resumen
+
+## Envejecer a los clubes: cada jugador pasa su año y luego se reparte la plantilla.
+func _envejecer_clubes() -> void:
 	for c: Club in clubes.values():
 		var siguen: Array[Jugador] = []
 		for j in c.plantilla:
-			## La foto de la media con la que arranca el ano, para poder decir despues cuanto crecio cada uno. Se toma ANTES de la
-			## curva de progreso de abajo: si se tomara despues, el crecimiento del ano saldria siempre a cero.
-			j.ovr_al_empezar = j.ovr
-			## `anio` ya se incrementó arriba (línea de "anio += 1"): `anio - 1` es la temporada que de verdad se está cerrando.
-			j.registrar_temporada(anio - 1, c.nombre)
-			j.edad += 1
-			j.partidos = 0
-			j.goles = 0
-			j.asistencias = 0   ## (16-11, informe G-02) como los goles: la temporada ya quedó en `registrar_temporada`
-			j.amarillas = 0
-			j.nota_temp = Vector2.ZERO   ## (16-11, informe R-03) la nota de la temporada vuelve a cero
-			## La curva de progreso: los jovenes suben hacia su techo, los
-			## veteranos bajan. Es lo que hace que una plantilla envejezca.
-			## Vive en `ProgresoJugador` (cantera_progreso.gd), con la semanal.
-			ProgresoJugador.anual(j)
-			## (16-11, informe R-01) El futbolista de La Ruta no lo retira ni lo deja libre el mundo: su retiro y su contrato
-			## los lleva `CarreraJugador` (`toca_retirarse`, renovación). Antes podía desaparecer y la partida volvía a «crear jugador».
-			if carrera_jugador != null and j.id == carrera_jugador.jugador_id and not carrera_jugador.retirado and j.edad <= CarreraJugador.EDAD_TOPE:
-				j.anios_contrato = maxi(j.anios_contrato - 1, 1)
-				_sigue_retasado(siguen, j)
-				continue
-			## EL RETIRO POR LESIONES. `Medico.retiro_forzado()` estaba escrita y no la llamaba nadie: tres lesiones graves seguidas no
-			## acababan con la carrera de nadie, que es justo el peor final que puede tener un futbolista y el que hace que cuidar el fisico importe.
-			if c.id == mi_club_id and medico != null and medico.retiro_forzado(j):
-				if cantera != null:
-					cantera.registrar_retiro(j, c)
-				if prensa != null:
-					prensa.noticia.emit("Se retira por lesiones: %s" % j.nombre,
-						"Los médicos no le dan el alta competitiva. %d años y tres lesiones graves en poco tiempo: cuelga las botas antes de tiempo." % j.edad)
-				continue
-			if PartidoDespedida.se_retira(self, j):   ## (9-11) lo decidido antes del partido de despedida, o la regla de siempre (38+, o 35+ con 40 %)
-				if cantera != null: cantera.registrar_retiro(j, c)
-				continue   ## se retira
-			if call(&"_vence_contrato", j, c):
-				continue   ## se va libre
-			_sigue_retasado(siguen, j)
+			_jugador_pasa_el_anio(j, c, siguen)
 		c.plantilla = siguen
 		_subir_de_cantera(c)
 		_repartir_dorsales(c)
+
+## Un jugador pasa el año: edad, progreso, retiro por lesiones, despedida o contrato vencido.
+func _jugador_pasa_el_anio(j: Jugador, c: Club, siguen: Array[Jugador]) -> void:
+	## La foto de la media con la que arranca el ano, para poder decir despues cuanto crecio cada uno. Se toma ANTES de la
+	## curva de progreso de abajo: si se tomara despues, el crecimiento del ano saldria siempre a cero.
+	j.ovr_al_empezar = j.ovr
+	## `anio` ya se incrementó arriba (línea de "anio += 1"): `anio - 1` es la temporada que de verdad se está cerrando.
+	j.registrar_temporada(anio - 1, c.nombre)
+	j.edad += 1
+	j.partidos = 0
+	j.goles = 0
+	j.asistencias = 0   ## (16-11, informe G-02) como los goles: la temporada ya quedó en `registrar_temporada`
+	j.amarillas = 0
+	j.nota_temp = Vector2.ZERO   ## (16-11, informe R-03) la nota de la temporada vuelve a cero
+	## La curva de progreso: los jovenes suben hacia su techo, los
+	## veteranos bajan. Es lo que hace que una plantilla envejezca.
+	## Vive en `ProgresoJugador` (cantera_progreso.gd), con la semanal.
+	ProgresoJugador.anual(j)
+	## (16-11, informe R-01) El futbolista de La Ruta no lo retira ni lo deja libre el mundo: su retiro y su contrato
+	## los lleva `CarreraJugador` (`toca_retirarse`, renovación). Antes podía desaparecer y la partida volvía a «crear jugador».
+	if carrera_jugador != null and j.id == carrera_jugador.jugador_id and not carrera_jugador.retirado and j.edad <= CarreraJugador.EDAD_TOPE:
+		j.anios_contrato = maxi(j.anios_contrato - 1, 1)
+		_sigue_retasado(siguen, j)
+		return
+	## EL RETIRO POR LESIONES. `Medico.retiro_forzado()` estaba escrita y no la llamaba nadie: tres lesiones graves seguidas no
+	## acababan con la carrera de nadie, que es justo el peor final que puede tener un futbolista y el que hace que cuidar el fisico importe.
+	if c.id == mi_club_id and medico != null and medico.retiro_forzado(j):
+		if cantera != null:
+			cantera.registrar_retiro(j, c)
+		if prensa != null:
+			prensa.noticia.emit("Se retira por lesiones: %s" % j.nombre,
+				"Los médicos no le dan el alta competitiva. %d años y tres lesiones graves en poco tiempo: cuelga las botas antes de tiempo." % j.edad)
+		return
+	if PartidoDespedida.se_retira(self, j):   ## (9-11) lo decidido antes del partido de despedida, o la regla de siempre (38+, o 35+ con 40 %)
+		if cantera != null: cantera.registrar_retiro(j, c)
+		return   ## se retira
+	if call(&"_vence_contrato", j, c):
+		return   ## se va libre
+	_sigue_retasado(siguen, j)
+
+## Los libres también cumplen años y progresan.
+func _envejecer_libres(libres_del_anio: Array) -> void:
 	for j: Jugador in libres_del_anio:   ## los libres también cumplen años y progresan (antes solo los de un club; bot 01-11)
 		j.edad += 1
 		ProgresoJugador.anual(j)
+
+## Las ligas se preparan, y la camada nueva, las canteras y las academias del año.
+func _preparar_ligas_y_canteras() -> void:
 	for l in ligas:
 		l.preparar()
 	## La camada nueva: DESPUES de los retiros (para que registren su leyenda
@@ -100,6 +129,9 @@ func nueva_temporada() -> Dictionary:
 		cesiones.cobrar_plusvalias(anio)
 	if vestuario != null:
 		vestuario.nueva_temporada()
+
+## Las finanzas del año (abonos, copa, comercial, ciudad, fair play) y el mercado de auspicios.
+func _finanzas_y_patrocinios(resumen: Dictionary) -> void:
 	## La campaña de abonos: se lanza sola al empezar la temporada, con el plan
 	## que tengas elegido. Es un ingreso grande y de una vez -ocho partidos
 	## cobrados por adelantado- y por eso elegir plan importa.
@@ -131,6 +163,9 @@ func nueva_temporada() -> Dictionary:
 		auspicio.generar_ofertas(mi_club(),
 			directiva != null and directiva.tiene_consejero("mkt"),
 			roles.multiplicador_sponsor() if roles != null else 1.0)
+
+## Pretemporada: entrenamiento, supercopas y la copa nacional del año nuevo.
+func _pretemporada_y_titulos(resumen: Dictionary) -> void:
 	if entrenamiento != null:
 		entrenamiento.reiniciar_pretemporada()
 		entrenamiento.reiniciar_subidas()
@@ -149,15 +184,9 @@ func nueva_temporada() -> Dictionary:
 	var scc := SupercopasConti.jugar(self)
 	if not scc.is_empty():
 		resumen["supercopas_conti"] = scc
-	## Y se reabre la pretemporada: hay una por ano.
-	amistoso_hecho = false
-	_montar_copa()
-	## Y los torneos continentales, con las plazas ya puestas al dia por los
-	## ascensos/descensos y reputaciones de la temporada que se acaba de cerrar.
-	## Antes esto solo se hacia una vez, al tomar el mando: pasada la primera
-	## temporada, Champions/Libertadores se quedaban congeladas para siempre con
-	## el mismo cuadro y el mismo campeon.
-	_sortear_continentales()
+
+## Trotamundos: a las dos temporadas en el mismo club, toca hacer las maletas.
+func _trotamundos(resumen: Dictionary) -> void:
 	## Trotamundos: a las dos temporadas en el mismo club, toca hacer las
 	## maletas. Reutiliza el mismo mecanismo que un despido de verdad
 	## -`despedido_ya`- porque es exactamente el mismo destino: la interfaz ya
@@ -168,7 +197,7 @@ func nueva_temporada() -> Dictionary:
 			anios_en_club = 0
 			directiva.despedido_ya = true
 			resumen["trotamundos"] = true
-	return resumen
+
 
 ## El perfil del estadio que va al visor 3D.
 ##

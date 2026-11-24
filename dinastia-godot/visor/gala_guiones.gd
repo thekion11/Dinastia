@@ -32,7 +32,7 @@ const GUIONES := {
 
 ## (14-11) En las galas te lo entrega una FIGURA de tu liga (el veterano de más media de OTRO club, como hacen los
 ## galardonados de años anteriores); en la gala mundial, el de más media del mundo. Si no hay, el de tu club.
-static func figura_entrega(m: Mundo, club: Club, j: Jugador, mundial: bool) -> Jugador:
+static func figura_entrega(m: Mundo, club: Club, _j: Jugador, mundial: bool) -> Jugador:
 	var mejor: Jugador = null
 	if m == null:
 		return null

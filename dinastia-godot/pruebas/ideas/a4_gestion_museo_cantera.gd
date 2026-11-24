@@ -35,8 +35,8 @@ func _museo() -> void:
 	var ultima := MuseoVitrinas.ficha(h.size() - 1, m)
 	_comprobar(not bool(ultima["vacia"]) and bool(MuseoVitrinas.ficha(h.size(), m)["vacia"]), "la última vitrina tiene ficha y la siguiente está libre")
 	for ctx in [{}, {"inst": {"museo": 99}}, {"inst": {"museo": -5}, "obras": {"museo": 3}}, {"hitos": [{"titulo": "x"}, {"anio": 5}]}, {"inst": {"museo": 2}, "obras": {"museo": 1}}]:
-		var _a := MuseoAmpliado.existe(ctx)
-		var _b := MuseoAmpliado.en_obra(ctx)
+		MuseoAmpliado.existe(ctx)
+		MuseoAmpliado.en_obra(ctx)
 		var hs := MuseoAmpliado.hitos(ctx)
 		_comprobar(hs is Array, "planta 3 con contexto %s: sin error (%d hitos)" % [str(ctx).left(50), hs.size()])
 	## guardar y cargar

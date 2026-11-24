@@ -173,6 +173,13 @@ static func figura_svg(clave: String, cx: float, cy: float, lado: float, color: 
 	return '<g transform="translate(%.2f %.2f) scale(%.3f) translate(-20 -20)">%s</g>' % [cx, cy, s, cuerpo]
 
 ## Las capas del escudo de un club: sombra fina, figura y letras. `fondo` es el color del campo, para elegir el que contrasta.
+static func _placa_de(c: Club, fondo: String, cy: float, rx: float, ry: float) -> String:
+	var aro := "#f4f1e6" if Color(fondo).get_luminance() < 0.55 else "#1a1d22"
+	var seg := AspectoClub.esc(c, 1, "")
+	if seg != "" and absf(Color(seg).get_luminance() - Color(fondo).get_luminance()) > 0.25:
+		aro = seg
+	return '<ellipse cx="32" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" stroke="%s" stroke-width="2.2"/>' % [cy, rx, ry, fondo, aro]
+
 static func capa_de(c: Club, fondo: String) -> String:
 	if not activo:
 		return ""
@@ -211,11 +218,7 @@ static func capa_de(c: Club, fondo: String) -> String:
 		rx = minf(10.0 + float(letras.length()) * 3.5, 19.0)
 		ry = 13.0
 	if Escudo.patron_de(c) != "liso":
-		var aro := "#f4f1e6" if Color(fondo).get_luminance() < 0.55 else "#1a1d22"
-		var seg := AspectoClub.esc(c, 1, "")
-		if seg != "" and absf(Color(seg).get_luminance() - Color(fondo).get_luminance()) > 0.25:
-			aro = seg
-		placa = '<ellipse cx="32" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" stroke="%s" stroke-width="2.2"/>' % [cy, rx, ry, fondo, aro]
+		placa = _placa_de(c, fondo, cy, rx, ry)
 	var ancho_letras := minf(38.0, 2.0 * rx - 6.0) if placa != "" else 38.0
 	if letras.length() >= 3:
 		ancho_letras = minf(ancho_letras, 30.0)   ## tres o cuatro letras no se aprietan contra el borde

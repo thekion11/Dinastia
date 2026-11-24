@@ -27,7 +27,16 @@ func _probar_ideas_del_documento() -> void:
 	m.tomar_el_mando(m.ligas[0].clubes[0].id)
 	var mio := m.mi_club()
 	mio.mover_saldo(80000000)
+	_doc_mercado_y_fpf(m, mio)
+	_doc_desgaste_y_curriculum(m)
+	_doc_cuerpo_tecnico(m)
+	_doc_fondos(m)
+	_doc_ocupacion_y_comercial(m)
+	_doc_crecimiento(m)
+	_doc_copas()
+	_doc_mapa()
 
+func _doc_mercado_y_fpf(m: Mundo, mio: Club) -> void:
 	## LA VENTANA DE MERCADO. Dos por temporada, como en el HTML.
 	m.semana = 1
 	_comprobar(m.mercado_abierto(), "en la semana 1 el mercado esta abierto")
@@ -57,6 +66,7 @@ func _probar_ideas_del_documento() -> void:
 	_comprobar(fed.puede_pagar_traspaso() and fed.fpf_avisos == 0,
 		"cuadrar las cuentas cierra el expediente")
 
+func _doc_desgaste_y_curriculum(m: Mundo) -> void:
 	## EL DESGASTE DEL ENTRENADOR.
 	var r := m.roles
 	_comprobar(r.desgaste == 0, "se empieza entero")
@@ -81,6 +91,7 @@ func _probar_ideas_del_documento() -> void:
 		return "%s %d-%s" % [String(c["nombre"]), int(c["desde"]),
 			"hoy" if int(c["hasta"]) == 0 else str(int(c["hasta"]))])))
 
+func _doc_cuerpo_tecnico(m: Mundo) -> void:
 	## EL CUERPO TECNICO NUEVO. Los seis puestos que pedian las ideas 91-105.
 	var st := m.staff
 	for p: String in ["arqueros", "nutri", "seg", "traductor", "cm", "utilero"]:
@@ -103,6 +114,7 @@ func _probar_ideas_del_documento() -> void:
 	_comprobar(st.sueldo_semanal(m.mi_club().rep) > s0,
 		"y cada puesto nuevo pesa en la nomina (%s -> %s)" % [_dinero(s0), _dinero(st.sueldo_semanal(m.mi_club().rep))])
 
+func _doc_fondos(m: Mundo) -> void:
 	## LOS FONDOS DE INVERSION.
 	var ce := m.cesiones
 	var joven: Jugador = null
@@ -130,6 +142,7 @@ func _probar_ideas_del_documento() -> void:
 			_comprobar(ce.vender_participacion(viejo, "delta", 25, m.mi_club()) != "",
 				"los fondos no compran derechos de veteranos")
 
+func _doc_ocupacion_y_comercial(m: Mundo) -> void:
 	## LA OCUPACIÓN HOSTIL Y EL FICHAJE COMERCIAL. Los dos dejan un "impuesto"
 	## -un jugador que TIENE que salir de titular- y `Prensa.revisar_impuesto()`
 	## es quien lo cobra tras cada partido si no jugó.
@@ -179,12 +192,14 @@ func _probar_ideas_del_documento() -> void:
 	_comprobar(m.directiva.confianza < conf_antes2, "rechazar el trato comercial baja la confianza")
 	_comprobar(m.mi_club().saldo < caja6, "y descuenta el bono comercial en el acto")
 
+func _doc_crecimiento(m: Mundo) -> void:
 	## EL CRECIMIENTO POR TEMPORADA.
 	var quien: Jugador = m.mi_club().plantilla[0]
 	quien.ovr_al_empezar = quien.ovr - 4
 	_comprobar(quien.crecimiento_temporada() == 4,
 		"se puede ver cuanto crecio un jugador esta temporada (+%d)" % quien.crecimiento_temporada())
 
+func _doc_copas() -> void:
 	## LAS COPAS DE CADA PAIS.
 	var eng := Copa.copas_de("ENG", "Inglaterra")
 	var esp := Copa.copas_de("ESP", "España")
@@ -194,6 +209,7 @@ func _probar_ideas_del_documento() -> void:
 	_comprobar(not Copa.copas_de("XXX", "Pais Raro").is_empty(),
 		"un pais sin copa propia juega una generica y no se queda sin copa")
 
+func _doc_mapa() -> void:
 	## EL MAPA DEL PAIS.
 	_comprobar(MapaPais.hay("CHI") and MapaPais.hay("ENG"), "hay silueta para los paises con liga")
 	_comprobar(MapaPais.poligono("CHI", Vector2(100, 200)).size() >= 3,
@@ -237,7 +253,7 @@ func _probar_ideas_instalaciones_y_marca() -> void:
 	_comprobar(co.kits.has("titular") and co.kits.has("alt") and co.kits.has("por"), "hay camiseta titular, alternativa y de arquero (32, 33)")
 	co.fijar_kit("alt", "c1", "#112233")
 	_comprobar(String(co.kits["alt"]["c1"]) == "#112233", "se cambia el color de la alternativa (33)")
-	_comprobar(co.medias == co.medias and co.pantalon == co.pantalon, "medias y pantalón son personalizables (35, 36)")
+	_comprobar(typeof(co.medias) == TYPE_STRING and typeof(co.pantalon) == TYPE_STRING, "medias y pantalón son personalizables (35, 36)")
 	_comprobar(Comercial.tipografias().size() >= 3, "hay varias tipografías para nombres y números (37): %d" % Comercial.tipografias().size())
 	_comprobar(Comercial.proveedores().size() >= 3, "hay proveedores de indumentaria ficticios (38): %d" % Comercial.proveedores().size())
 	_comprobar(Comercial.zonas().size() >= 3, "hay zonas de patrocinio (pecho, manga, espalda, short…) (121-123)")
@@ -281,7 +297,9 @@ func _probar_ideas_personas_y_negocios() -> void:
 	for k: String in ["video", "rehab", "cocina", "med", "park"]:
 		var t := Trabajadores.de(c, k)
 		_comprobar(not t.is_empty() and String(t["nombre"]) != "" and String(t["puesto"]) != "", "la instalación «%s» tiene encargado con nombre y puesto (%s)" % [k, String(t.get("puesto", ""))])
-	_comprobar(Trabajadores.de(c, "video") == Trabajadores.de(c, "video"), "y es siempre la misma persona (determinista)")
+	var rep1_a = Trabajadores.de(c, "video")
+	var rep1_b = Trabajadores.de(c, "video")
+	_comprobar(rep1_a == rep1_b, "y es siempre la misma persona (determinista)")
 	## Negociación (81, 82, 83, 65): oferta con cuotas, bonos, cláusula; el jugador responde.
 	var objetivo: Jugador = null
 	for cl: Club in m.ligas[0].clubes:

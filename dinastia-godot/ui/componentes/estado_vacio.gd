@@ -18,7 +18,7 @@ static func crear(icono: String, titulo: String, pista: String, col_texto: Color
 	var t := Label.new()
 	t.text = titulo
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	t.add_theme_font_size_override("font_size", 16)
+	t.add_theme_font_size_override("font_size", Tema.letra(16))
 	t.add_theme_color_override("font_color", col_texto)
 	v.add_child(t)
 	var p := Label.new()
@@ -26,7 +26,7 @@ static func crear(icono: String, titulo: String, pista: String, col_texto: Color
 	p.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	p.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p.custom_minimum_size = Vector2(240, 0)
-	p.add_theme_font_size_override("font_size", 12)
+	p.add_theme_font_size_override("font_size", Tema.letra(12))
 	p.add_theme_color_override("font_color", col_suave)
 	v.add_child(p)
 	return v

@@ -72,7 +72,7 @@ func _rejilla_identidad(c: Club, prop: String, opciones: Array, titulo: String) 
 		else:
 			b = Button.new()
 			b.text = clave if clave != "" else Idiomas.t("por sorteo")
-			b.add_theme_font_size_override("font_size", 10)
+			b.add_theme_font_size_override("font_size", Tema.letra(10))
 			b.toggle_mode = true
 			b.button_pressed = actual == clave
 			b.clip_text = true
@@ -94,7 +94,7 @@ func _rejilla_identidad(c: Club, prop: String, opciones: Array, titulo: String) 
 func _rejilla_especiales(c: Club) -> void:
 	var desbloqueados: Array = Escudo.especiales_desbloqueados()
 	var total: int = Escudo.ESPECIALES.size()
-	var lt := p._texto(11, p.COL_ACENTO)
+	var lt := p._texto(11, p.col_acento)
 	lt.text = Idiomas.t("Escudo especial (coleccionable)")
 	p._lista_gente.add_child(lt)
 	if not p._modo_experto:
@@ -109,7 +109,7 @@ func _rejilla_especiales(c: Club) -> void:
 
 	var b_ninguno := Button.new()
 	b_ninguno.text = Idiomas.t("Ninguno\n(procedural)")
-	b_ninguno.add_theme_font_size_override("font_size", 9)
+	b_ninguno.add_theme_font_size_override("font_size", Tema.letra(9))
 	b_ninguno.toggle_mode = true
 	b_ninguno.button_pressed = c.esc_especial == ""
 	b_ninguno.custom_minimum_size = Vector2(64, 64)
@@ -145,7 +145,7 @@ const _FIGURAS := {"bull": "Toro", "dragon": "Dragón", "eagle": "Águila", "fal
 func _boton_heredar(c: Club, props: Array, texto: String) -> void:
 	var b := Button.new()
 	b.text = texto
-	b.add_theme_font_size_override("font_size", 10)
+	b.add_theme_font_size_override("font_size", Tema.letra(10))
 	var vacios := true
 	for p_local: String in props:
 		if String(c.get(p_local)) != "":
@@ -161,7 +161,7 @@ func _boton_heredar(c: Club, props: Array, texto: String) -> void:
 ## EL PROVEEDOR. La marca propia no paga nada y se queda el margen entero: es la
 ## opción del club que no quiere deberle nada a nadie.
 func _pintar_proveedor(co: Comercial, c: Club) -> void:
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🏭 PROVEEDOR DE INDUMENTARIA")
 	p._lista_gente.add_child(t)
 	p._dato("Aporta al año", p._dinero(co.renta_proveedor(c)), Principal.COL_VERDE, p._lista_gente)
@@ -171,7 +171,7 @@ func _pintar_proveedor(co: Comercial, c: Club) -> void:
 		var fila := HBoxContainer.new()
 		fila.add_theme_constant_override("separation", 6)
 		p._lista_gente.add_child(fila)
-		var n := p._texto(12, p.COL_ACENTO if elegido else Principal.COL_TEXTO)
+		var n := p._texto(12, p.col_acento if elegido else Principal.COL_TEXTO)
 		n.text = "%s%s" % ["✔  " if elegido else "     ", Nombres.limpiar(String(f[1]))]
 		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		n.clip_text = true
@@ -184,7 +184,7 @@ func _pintar_proveedor(co: Comercial, c: Club) -> void:
 		var b := Button.new()
 		b.text = Idiomas.t("Firmado") if elegido else Idiomas.t("Firmar")
 		b.disabled = elegido
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.custom_minimum_size = Vector2(84, 0)
 		b.pressed.connect(func() -> void:
 			co.proveedor = clave
@@ -193,8 +193,8 @@ func _pintar_proveedor(co: Comercial, c: Club) -> void:
 
 ## LAS CINCO ZONAS. Son contratos INDEPENDIENTES y todos ingresan a la vez, que
 ## es exactamente por qué las camisetas modernas están como están.
-func _pintar_zonas(co: Comercial, c: Club) -> void:
-	var t := p._texto(11, p.COL_ACENTO)
+func _pintar_zonas(co: Comercial, _c: Club) -> void:
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("💸 PATROCINIOS POR ZONA")
 	p._lista_gente.add_child(t)
 	p._dato("Total de las zonas", "%s/semana" % p._dinero(co.renta_zonas()), Principal.COL_VERDE, p._lista_gente)
@@ -218,7 +218,7 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 			fila.add_child(mm)
 			var br := Button.new()
 			br.text = Idiomas.t("Romper")
-			br.add_theme_font_size_override("font_size", 10)
+			br.add_theme_font_size_override("font_size", Tema.letra(10))
 			br.custom_minimum_size = Vector2(72, 0)
 			br.pressed.connect(func() -> void:
 				var p_local := co.romper_zona(clave, p.mundo.mi_club())
@@ -243,7 +243,7 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 			fila2.add_child(n2)
 			var b2 := Button.new()
 			b2.text = Idiomas.t("%s/año") % p._dinero(int(o["monto"]))
-			b2.add_theme_font_size_override("font_size", 10)
+			b2.add_theme_font_size_override("font_size", Tema.letra(10))
 			b2.custom_minimum_size = Vector2(110, 0)
 			b2.pressed.connect(func() -> void:
 				var p_local := co.firmar_zona(clave, idx)
@@ -253,7 +253,7 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 			fila2.add_child(b2)
 	var bb := Button.new()
 	bb.text = Idiomas.t("🔄 Salir a buscar ofertas")
-	bb.add_theme_font_size_override("font_size", 11)
+	bb.add_theme_font_size_override("font_size", Tema.letra(11))
 	bb.pressed.connect(func() -> void:
 		co.generar_ofertas_zona(p.mundo.mi_club(), p.mundo.roles.multiplicador_sponsor() if p.mundo.roles != null else 1.0)
 		p._refrescar())
@@ -261,8 +261,8 @@ func _pintar_zonas(co: Comercial, c: Club) -> void:
 
 ## EL NAMING. Lo más rentable que existe y lo que más duele: la hinchada lo paga
 ## en ánimo el día que se firma.
-func _pintar_naming(co: Comercial, c: Club) -> void:
-	var t := p._texto(11, p.COL_ACENTO)
+func _pintar_naming(co: Comercial, _c: Club) -> void:
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🏟️ NOMBRE DEL ESTADIO")
 	p._lista_gente.add_child(t)
 	if not co.naming.is_empty():
@@ -274,7 +274,7 @@ func _pintar_naming(co: Comercial, c: Club) -> void:
 			Principal.COL_VERDE, p._lista_gente)
 		var br := Button.new()
 		br.text = Idiomas.t("Recuperar el nombre  ·  %s") % p._dinero(int(round(float(int(co.naming["monto"])) * 0.6)))
-		br.add_theme_font_size_override("font_size", 11)
+		br.add_theme_font_size_override("font_size", Tema.letra(11))
 		br.pressed.connect(func() -> void:
 			var p_local := co.romper_naming(p.mundo.mi_club())
 			if p_local != "":
@@ -290,7 +290,7 @@ func _pintar_naming(co: Comercial, c: Club) -> void:
 	if co.ofertas_naming.is_empty():
 		var bb := Button.new()
 		bb.text = Idiomas.t("Escuchar ofertas por el nombre")
-		bb.add_theme_font_size_override("font_size", 11)
+		bb.add_theme_font_size_override("font_size", Tema.letra(11))
 		bb.pressed.connect(func() -> void:
 			co.generar_ofertas_naming(p.mundo.mi_club())
 			p._refrescar())
@@ -309,7 +309,7 @@ func _pintar_naming(co: Comercial, c: Club) -> void:
 		fila.add_child(n2)
 		var b := Button.new()
 		b.text = Idiomas.t("%s/año") % p._dinero(int(o["monto"]))
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		b.custom_minimum_size = Vector2(110, 0)
 		b.pressed.connect(func() -> void:
 			var p_local := co.firmar_naming(idx, p.mundo.mi_club())
@@ -321,7 +321,7 @@ func _pintar_naming(co: Comercial, c: Club) -> void:
 ## EL ESTADIO PREMIUM. No es ladrillo —eso son las Obras— sino ESPECTÁCULO. El
 ## techo salva la taquilla cuando llueve y las luces suben el ambiente de verdad.
 func _pintar_premium(co: Comercial, c: Club) -> void:
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("✨ ESTADIO PREMIUM")
 	p._lista_gente.add_child(t)
 	for f: Array in Comercial.premium():
@@ -341,7 +341,7 @@ func _pintar_premium(co: Comercial, c: Club) -> void:
 		var lleno := niv >= tope
 		var coste := co.coste_premium(clave, c)
 		b.text = Idiomas.t("MÁX") if lleno else p._dinero(coste)
-		b.add_theme_font_size_override("font_size", 11)
+		b.add_theme_font_size_override("font_size", Tema.letra(11))
 		b.disabled = lleno or c.saldo < coste
 		b.custom_minimum_size = Vector2(110, 0)
 		b.pressed.connect(func() -> void:
@@ -369,7 +369,7 @@ func _rejilla_comercial(co: Comercial, prop: String, opciones: Array, titulo: St
 		var clave := String(f[0])
 		var b := Button.new()
 		b.text = String(f[1])
-		b.add_theme_font_size_override("font_size", 10)
+		b.add_theme_font_size_override("font_size", Tema.letra(10))
 		b.toggle_mode = true
 		b.button_pressed = String(co.get(prop)) == clave
 		b.clip_text = true
@@ -382,14 +382,14 @@ func _rejilla_comercial(co: Comercial, prop: String, opciones: Array, titulo: St
 ## LOS DETALLES. Ninguno cambia un resultado salvo el avión, y por eso están
 ## todos juntos al final: son las cosas que hacen que el club sea ESE club.
 func _pintar_detalles(co: Comercial, c: Club) -> void:
-	var t := p._texto(11, p.COL_ACENTO)
+	var t := p._texto(11, p.col_acento)
 	t.text = Idiomas.t("🎺 DETALLES DEL CLUB")
 	p._lista_gente.add_child(t)
 	var campo := LineEdit.new()
 	campo.text = co.lema
 	campo.placeholder_text = Idiomas.t("Lema del club. Ej: «Nunca caminarás solo»")
 	campo.max_length = 60
-	campo.add_theme_font_size_override("font_size", 12)
+	campo.add_theme_font_size_override("font_size", Tema.letra(12))
 	campo.text_submitted.connect(func(x: String) -> void:
 		co.escribir_lema(x)
 		p._refrescar())
@@ -425,7 +425,7 @@ func _pintar_detalles(co: Comercial, c: Club) -> void:
 	fila2.add_child(et2)
 	var b := Button.new()
 	b.text = "SÍ" if co.avion else p._dinero(Eco.escalar(Comercial.COSTE_AVION, float(c.rep)))
-	b.add_theme_font_size_override("font_size", 11)
+	b.add_theme_font_size_override("font_size", Tema.letra(11))
 	b.custom_minimum_size = Vector2(110, 0)
 	b.pressed.connect(func() -> void:
 		var msg := co.comprar_avion(p.mundo.mi_club())

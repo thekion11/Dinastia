@@ -103,75 +103,93 @@ static func _op(txt: String, moral: int, conf: int, socios: int, tono: String) -
 	return {"txt": txt, "moral": moral, "confianza": conf, "socios": socios, "tono": tono}
 
 ## EL PORQUÉ: la causa que más pesó en el partido de esta semana, hecha pregunta.
-static func _del_porque(m: Mundo, gane: bool, empate: bool) -> Dictionary:
+static func _del_porque(m: Mundo, gane: bool, _empate: bool) -> Dictionary:
 	var u: Dictionary = Partido.ultimas_causas
 	if u.is_empty() or int(u.get("anio", -1)) != m.anio or int(u.get("semana", -1)) != m.semana:
 		return {}
 	for c: Dictionary in u.get("causas", []):
 		var clave := String(c["clave"])
 		var s := int(c["signo"])
-		var q := ""
-		var ops: Array = []
-		match clave:
-			"momentum":
-				if s < 0:
-					q = Idiomas.t("Hubo un tramo en que el rival les encerró en su área. ¿Qué falló ahí?")
-					ops = [_op(Idiomas.t("Nos faltó salir con el balón; lo vamos a trabajar"), 1, 1, 0, "calma"),
-						_op(Idiomas.t("Ningún equipo domina noventa minutos"), 0, 0, 0, "evasiva"),
-						_op(Idiomas.t("Encerrados no: les dejamos venir a propósito"), 1, -1, 0, "soberbia")]
-				elif s > 0:
-					q = Idiomas.t("En su mejor tramo pasaron por encima del rival. ¿Fue cosa de la pizarra?")
-					ops = [_op(Idiomas.t("Del trabajo de toda la semana; el mérito es de ellos"), 2, 0, 1, "calma"),
-						_op(Idiomas.t("Cuando apretamos así, no hay quien nos pare"), 1, 1, 0, "soberbia"),
-						_op(Idiomas.t("Prefiero no desvelar lo que hablamos"), 0, 0, 0, "evasiva")]
-			"forma", "cansancio":
-				if s < 0:
-					q = Idiomas.t("Su equipo llegó con menos piernas que el rival. ¿Está fallando la preparación física?")
-					ops = [_op(Idiomas.t("El calendario aprieta; vamos a rotar más"), 1, 0, 0, "calma"),
-						_op(Idiomas.t("Eso es una excusa y aquí no ponemos excusas"), 0, 1, 0, "soberbia"),
-						_op(Idiomas.t("Eso pregúnteselo al preparador físico"), -1, -1, 0, "evasiva")]
-			"plantilla":
-				if s > 0 and not gane:
-					q = Idiomas.t("Sobre el papel eran mejores y no ganaron. ¿Qué pasó?")
-					ops = [_op(Idiomas.t("El papel no juega; hoy no estuvimos a la altura"), 1, 1, 1, "calma"),
-						_op(Idiomas.t("Somos mejores, y se va a ver muy pronto"), 0, -1, 0, "soberbia"),
-						_op(Idiomas.t("No voy a hacer comparaciones"), 0, 0, -1, "evasiva")]
-				elif s < 0 and gane:
-					q = Idiomas.t("Ganaron a un once mejor que el suyo sobre el papel. ¿Es su mejor partido?")
-					ops = [_op(Idiomas.t("Es el partido de un grupo que cree en lo que hace"), 2, 1, 1, "calma"),
-						_op(Idiomas.t("Lo del papel lo dicen ustedes, no yo"), 1, 0, 0, "soberbia"),
-						_op(Idiomas.t("Ya pensamos en el siguiente"), 0, 0, 0, "evasiva")]
-			"arbitro":
-				if s < 0:
-					q = Idiomas.t("El arbitraje les perjudicó. ¿Qué opina del colegiado?")
-					ops = [_op(Idiomas.t("No voy a hablar del árbitro: hablo de lo nuestro"), 0, 1, 1, "calma"),
-						_op(Idiomas.t("Hoy no nos dejaron jugar, y lo saben todos"), 1, 0, 1, "soberbia"),
-						_op(Idiomas.t("Que lo valore el comité"), 0, 0, 0, "evasiva")]
-			"eficacia":
-				if s < 0:
-					q = Idiomas.t("Generaron más que el rival y el marcador no lo dice. ¿Falta un delantero?")
-					ops = [_op(Idiomas.t("Llegamos; el gol va a venir"), 1, 0, 0, "calma"),
-						_op(Idiomas.t("Tengo los delanteros que quiero"), 1, -1, 0, "soberbia"),
-						_op(Idiomas.t("El mercado no es un tema para hoy"), 0, 0, -1, "evasiva")]
-				elif s > 0:
-					q = Idiomas.t("Fueron letales de cara a puerta. ¿Mérito o suerte?")
-					ops = [_op(Idiomas.t("Se entrena: la definición también se trabaja"), 1, 1, 0, "calma"),
-						_op(Idiomas.t("La suerte hay que buscarla"), 1, 0, 0, "soberbia"),
-						_op(Idiomas.t("Lo importante son los tres puntos"), 0, 0, 0, "evasiva")]
-			"tactica":
-				if s < 0:
-					q = Idiomas.t("El planteamiento del rival les cambió el partido. ¿Le ganaron la partida en la pizarra?")
-					ops = [_op(Idiomas.t("Nos costó leerlo; tomamos nota"), 0, 1, 0, "calma"),
-						_op(Idiomas.t("A mí no me gana nadie la pizarra"), 0, -1, 0, "soberbia"),
-						_op(Idiomas.t("No voy a explicar la táctica aquí"), 0, 0, 0, "evasiva")]
-			"lesion":
-				q = Idiomas.t("La lesión les condicionó el partido. ¿Cómo está el jugador?")
-				ops = [_op(Idiomas.t("Esperamos las pruebas; el grupo está con él"), 1, 0, 1, "calma"),
-					_op(Idiomas.t("No vamos a llorar: hay plantel"), 0, 1, 0, "soberbia"),
-					_op(Idiomas.t("El parte médico lo dará el club"), 0, 0, 0, "evasiva")]
+		var qo: Array = _pregunta_causa_a(clave, s, gane)
+		if String(qo[0]) == "":
+			qo = _pregunta_causa_b(clave, s, gane)
+		var q: String = qo[0]
+		var ops: Array = qo[1]
 		if q != "":
 			return {"pregunta": "'%s'" % q, "opciones": ops, "tema": "porque", "causa": clave}
 	return {}
+
+
+## Preguntas de las causas de momentum, forma, plantilla y árbitro. Devuelve [pregunta, opciones]; "" si no hay.
+static func _pregunta_causa_a(clave: String, s: int, gane: bool) -> Array:
+	var q := ""
+	var ops: Array = []
+	match clave:
+		"momentum":
+			if s < 0:
+				q = Idiomas.t("Hubo un tramo en que el rival les encerró en su área. ¿Qué falló ahí?")
+				ops = [_op(Idiomas.t("Nos faltó salir con el balón; lo vamos a trabajar"), 1, 1, 0, "calma"),
+					_op(Idiomas.t("Ningún equipo domina noventa minutos"), 0, 0, 0, "evasiva"),
+					_op(Idiomas.t("Encerrados no: les dejamos venir a propósito"), 1, -1, 0, "soberbia")]
+			elif s > 0:
+				q = Idiomas.t("En su mejor tramo pasaron por encima del rival. ¿Fue cosa de la pizarra?")
+				ops = [_op(Idiomas.t("Del trabajo de toda la semana; el mérito es de ellos"), 2, 0, 1, "calma"),
+					_op(Idiomas.t("Cuando apretamos así, no hay quien nos pare"), 1, 1, 0, "soberbia"),
+					_op(Idiomas.t("Prefiero no desvelar lo que hablamos"), 0, 0, 0, "evasiva")]
+		"forma", "cansancio":
+			if s < 0:
+				q = Idiomas.t("Su equipo llegó con menos piernas que el rival. ¿Está fallando la preparación física?")
+				ops = [_op(Idiomas.t("El calendario aprieta; vamos a rotar más"), 1, 0, 0, "calma"),
+					_op(Idiomas.t("Eso es una excusa y aquí no ponemos excusas"), 0, 1, 0, "soberbia"),
+					_op(Idiomas.t("Eso pregúnteselo al preparador físico"), -1, -1, 0, "evasiva")]
+		"plantilla":
+			if s > 0 and not gane:
+				q = Idiomas.t("Sobre el papel eran mejores y no ganaron. ¿Qué pasó?")
+				ops = [_op(Idiomas.t("El papel no juega; hoy no estuvimos a la altura"), 1, 1, 1, "calma"),
+					_op(Idiomas.t("Somos mejores, y se va a ver muy pronto"), 0, -1, 0, "soberbia"),
+					_op(Idiomas.t("No voy a hacer comparaciones"), 0, 0, -1, "evasiva")]
+			elif s < 0 and gane:
+				q = Idiomas.t("Ganaron a un once mejor que el suyo sobre el papel. ¿Es su mejor partido?")
+				ops = [_op(Idiomas.t("Es el partido de un grupo que cree en lo que hace"), 2, 1, 1, "calma"),
+					_op(Idiomas.t("Lo del papel lo dicen ustedes, no yo"), 1, 0, 0, "soberbia"),
+					_op(Idiomas.t("Ya pensamos en el siguiente"), 0, 0, 0, "evasiva")]
+		"arbitro":
+			if s < 0:
+				q = Idiomas.t("El arbitraje les perjudicó. ¿Qué opina del colegiado?")
+				ops = [_op(Idiomas.t("No voy a hablar del árbitro: hablo de lo nuestro"), 0, 1, 1, "calma"),
+					_op(Idiomas.t("Hoy no nos dejaron jugar, y lo saben todos"), 1, 0, 1, "soberbia"),
+					_op(Idiomas.t("Que lo valore el comité"), 0, 0, 0, "evasiva")]
+	return [q, ops]
+
+## Preguntas de las causas de eficacia, táctica y lesión. Devuelve [pregunta, opciones]; "" si no hay.
+static func _pregunta_causa_b(clave: String, s: int, gane: bool) -> Array:
+	var q := ""
+	var ops: Array = []
+	match clave:
+		"eficacia":
+			if s < 0:
+				q = Idiomas.t("Generaron más que el rival y el marcador no lo dice. ¿Falta un delantero?")
+				ops = [_op(Idiomas.t("Llegamos; el gol va a venir"), 1, 0, 0, "calma"),
+					_op(Idiomas.t("Tengo los delanteros que quiero"), 1, -1, 0, "soberbia"),
+					_op(Idiomas.t("El mercado no es un tema para hoy"), 0, 0, -1, "evasiva")]
+			elif s > 0:
+				q = Idiomas.t("Fueron letales de cara a puerta. ¿Mérito o suerte?")
+				ops = [_op(Idiomas.t("Se entrena: la definición también se trabaja"), 1, 1, 0, "calma"),
+					_op(Idiomas.t("La suerte hay que buscarla"), 1, 0, 0, "soberbia"),
+					_op(Idiomas.t("Lo importante son los tres puntos"), 0, 0, 0, "evasiva")]
+		"tactica":
+			if s < 0:
+				q = Idiomas.t("El planteamiento del rival les cambió el partido. ¿Le ganaron la partida en la pizarra?")
+				ops = [_op(Idiomas.t("Nos costó leerlo; tomamos nota"), 0, 1, 0, "calma"),
+					_op(Idiomas.t("A mí no me gana nadie la pizarra"), 0, -1, 0, "soberbia"),
+					_op(Idiomas.t("No voy a explicar la táctica aquí"), 0, 0, 0, "evasiva")]
+		"lesion":
+			q = Idiomas.t("La lesión les condicionó el partido. ¿Cómo está el jugador?")
+			ops = [_op(Idiomas.t("Esperamos las pruebas; el grupo está con él"), 1, 0, 1, "calma"),
+				_op(Idiomas.t("No vamos a llorar: hay plantel"), 0, 1, 0, "soberbia"),
+				_op(Idiomas.t("El parte médico lo dará el club"), 0, 0, 0, "evasiva")]
+	return [q, ops]
+
 
 static func _de_racha(r: Array) -> Dictionary:
 	var n := racha_larga(r)

@@ -17,6 +17,10 @@ signal terminada
 const DURACION := 11.0
 const PLANO_2 := 4.0
 const PLANO_3 := 8.0
+const _RUTA_FUTBOLISTA_Q := "res://visor/futbolista_q.gd"
+const _RUTA_PLAYER_SPAWNER := "res://visor/player_spawner.gd"
+const _RUTA_STADIUM_BUILDER := "res://visor/stadium_builder.gd"
+const _RUTA_VESTIDOR_Q := "res://visor/vestidor_q.gd"
 
 var _t := 0.0
 var _cam: Camera3D
@@ -60,11 +64,11 @@ func _montar(mundo: Mundo, j: Jugador, de: Club) -> void:
 	## Las presentaciones son de día, con el sol de frente a la cámara.
 	perfil["clima"] = "dia"
 	Ambience.apply(_raiz, perfil, null, Calidad.elegida)
-	load("res://visor/stadium_builder.gd").build_pitch(_raiz, perfil, mio)
+	load(_RUTA_STADIUM_BUILDER).build_pitch(_raiz, perfil, mio)
 	var aforo := int(perfil.get("aforo", 20000))
 	## La grada responde a quién presentas: llena para una estrella, a medias
 	## para uno de rotación (lo mismo que dice la noticia de `aplicar()`).
-	load("res://visor/stadium_builder.gd").build(_raiz, perfil, aforo, 0.92 if estrella else 0.4, mio._hash_id(), mio)
+	load(_RUTA_STADIUM_BUILDER).build(_raiz, perfil, aforo, 0.92 if estrella else 0.4, mio._hash_id(), mio)
 	## El balón de las dominadas es el del club (Club → Detalles del club).
 	if mundo.comercial != null:
 		var cb := Comercial.color_balon(mundo.comercial.balon, mio)
@@ -98,23 +102,23 @@ func _montar(mundo: Mundo, j: Jugador, de: Club) -> void:
 
 func _poner_jugador(j: Jugador, mio: Club) -> void:
 	var jd := Puente3D.jugador(j)
-	var d = load("res://visor/futbolista_q.gd").crear(load("res://visor/player_spawner.gd").altura_de(jd, j.id, j.pos_e), "male")
+	var d = load(_RUTA_FUTBOLISTA_Q).crear(load(_RUTA_PLAYER_SPAWNER).altura_de(jd, j.id, j.pos_e), "male")
 	if d.is_empty():
 		return
 	var nodo: Node3D = d["nodo"]
 	_raiz.add_child(nodo)
-	load("res://visor/futbolista_q.gd").terminar(d, true)
-	var look = load("res://visor/player_spawner.gd")._look_de(jd)
+	load(_RUTA_FUTBOLISTA_Q).terminar(d, true)
+	var look = load(_RUTA_PLAYER_SPAWNER)._look_de(jd)
 	var kit := Puente3D.kit(mio)
 	var kx: Dictionary = {} if j.pos_e == "POR" else kit.get("x", {})
-	if not load("res://visor/vestidor_q.gd").vestir_equipacion(d, Color(String(kit["c1"])), Color(String(kit["c2"])), String(kit["estilo"]),
+	if not load(_RUTA_VESTIDOR_Q).vestir_equipacion(d, Color(String(kit["c1"])), Color(String(kit["c2"])), String(kit["estilo"]),
 			look[0], look[1], Color(0, 0, 0, 0), Color(0, 0, 0, 0), false, kx, maxi(j.dorsal, 1)):
-		load("res://visor/vestidor_q.gd").vestir(d, Color(String(kit["c1"])))
+		load(_RUTA_VESTIDOR_Q).vestir(d, Color(String(kit["c1"])))
 	var lk: Dictionary = jd.get("look", {}) if jd.get("look") is Dictionary else {}
 	PeloQ.poner(d, String(lk.get("pelo", "corto")), look[1], int(look[2]) in [1, 4, 6])
 	## Su cara de la ficha, moldeada sobre la cabeza (plano cercano).
 	if not lk.is_empty():
-		load("res://visor/vestidor_q.gd").poner_cara(d, {"look": lk, "foto": String(jd.get("foto", ""))}, look[0])
+		load(_RUTA_VESTIDOR_Q).poner_cara(d, {"look": lk, "foto": String(jd.get("foto", ""))}, look[0])
 	## De frente a la cámara del plano final (que mira desde +X).
 	nodo.rotation.y = PI * 0.5
 	var ap: AnimationPlayer = d["anim"]
@@ -237,7 +241,7 @@ func plano(t: float) -> int:
 	return 1 if t < PLANO_2 else (2 if t < PLANO_3 else 3)
 
 func _process(delta: float) -> void:
-	load("res://visor/stadium_builder.gd").ocultar_techo_ante(get_viewport().get_camera_3d())
+	load(_RUTA_STADIUM_BUILDER).ocultar_techo_ante(get_viewport().get_camera_3d())
 	if _cerrando:
 		return
 	_t += delta
