@@ -32,7 +32,7 @@ func _ready() -> void:
 		return
 	if FileAccess.file_exists(Principal.PREFS):
 		_prefs_antes = FileAccess.get_file_as_bytes(Principal.PREFS)
-	PantallaMovil.dpi_forzado = DPI
+	PantallaMovil.dpi_forzado = dpi
 	EscalaMovil.forzar = true
 	EscalaMovil.poner(get_tree(), EscalaMovil.ZOOM_MOVIL)
 	EscalaMovil.vigilar(get_tree())
