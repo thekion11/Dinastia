@@ -12,7 +12,8 @@ const CAUSAS := {
 	"despido": ["🚪", "La directiva te despide"], "ultimatum": ["⚠️", "Tu puesto está en el aire"], "golpe_caja": ["💸", "Golpe de caja"],
 	"imprevisto": ["❗", "Imprevisto"], "jugador_del_mes": ["🏅", "Jugador del mes"], "guerra_agentes": ["🕴️", "Guerra de agentes"],
 	"evento_cantera": ["🌱", "Novedad en la cantera"], "hallazgo": ["🔭", "Hallazgo de los ojeadores"], "retos_semana": ["🎯", "Retos de la semana"],
-	"cambio_dt": ["🔄", "Cambio de entrenador"], "oferta_seleccion": ["🌍", "Te llama una selección"], "sancion_dt": ["🟥", "Sanción al entrenador"]}
+	"cambio_dt": ["🔄", "Cambio de entrenador"], "oferta_seleccion": ["🌍", "Te llama una selección"], "sancion_dt": ["🟥", "Sanción al entrenador"],
+	"contratos_vencen": ["📄", "Contratos por vencer"], "precontrato": ["✍️", "Precontrato firmado"], "jugador_sancionado": ["🟥", "Jugador sancionado"], "caja_negativa": ["📉", "Caja en negativo"]}
 
 static func clase_color(clase: String) -> Color:
 	match clase:
@@ -54,6 +55,10 @@ static func texto(ev: Dictionary) -> String:
 		"retos_semana": return Idiomas.t("%d retos nuevos para esta semana.") % int(d.get("n", 0))
 		"cambio_dt": return Idiomas.t("%s deja el banquillo de %s. Llega %s.") % [String(d.get("sale", "")), String(d.get("club", "")), String(d.get("entra", ""))]
 		"oferta_seleccion": return Idiomas.t("La selección de %s quiere que la dirijas.") % String(d.get("seleccion", ""))
+		"contratos_vencen": return Idiomas.t("A %d de tus jugadores les queda un año de contrato.") % int(d.get("n", 0))
+		"precontrato": return Idiomas.t("Cerraste un precontrato con %s: llegará gratis cuando termine su contrato.") % String(ev.get("nombre", ""))
+		"jugador_sancionado": return Idiomas.t("%s queda sancionado: se pierde %d partido(s).") % [String(ev.get("nombre", "")), int(d.get("fechas", 0))]
+		"caja_negativa": return Idiomas.t("La caja del club está en negativo: %d.") % int(d.get("saldo", 0))
 		"sancion_dt": return Idiomas.t("El tribunal te sanciona con %d partido(s).") % int(d.get("fechas", 0))
 	return ""
 

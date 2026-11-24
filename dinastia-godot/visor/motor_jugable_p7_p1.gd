@@ -16,7 +16,7 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 	p["vel"] = Vector3(hacia_x * (3.4 if estirada else 2.0), 0, 0)
 	p["objetivo"] = Vector3(pos(p).x + hacia_x, 0, pos(p).z)
 	var fuerza := vel_balon.length()
-	if not estirada and fuerza < 22.0 and _rng.randf() < float(p["attr"]["par"]) * 0.9 * GestoTecnico.agarre(self):
+	if _agarra(p, estirada, fuerza):
 		_tomar(p)
 		p["en_manos"] = true   ## (saque de mano, 31-10)
 		## El balón va a las manos desde donde estaba (antes saltaba a ellas en un fotograma: «teletransporte» de hasta 2 m, M-114).
@@ -25,7 +25,7 @@ func _parada(p: Dictionary, cruce: Vector3, estirada: bool) -> void:
 		## Rechace: hacia un lado y, la mitad de las veces, por detrás de la
 		## línea (córner), como las manos abiertas de un portero de verdad.
 		var lado_r := signf(cruce.x - pos(p).x + 0.01)
-		if _rng.randf() < 0.5:
+		if _rng.randf() < _prob_rechace_fuera():
 			## A córner: hacia FUERA del palo más cercano (antes, con el tiro entre
 			## el portero y el centro del arco, la manopla lo metía en su red).
 			if PULIDO:
@@ -358,6 +358,13 @@ func _error_tiro_extra(_p: Dictionary, _lejos: float, error: float, _clase: Stri
 ## GANCHO DE LA PROBABILIDAD DE PARADA (13-11-2026, sesión 15, OK del líder): el de siempre la deja igual (sin azar: la huella no
 ## cambia); `MotorCombinado` (C4) la baja ante remates desde dentro del área (`MejorasC4Avance.parada`, `C4_PARADA_AREA`).
 ## GANCHO DE LA PARADA DE LO PARABLE (17-11-2026): el de siempre no la cambia (ni gasta azar: la huella no cambia); C4 lo usa con `C4_PARADA_CUERPO`.
+## Ganchos de la parada (17-11): ¿la atrapa? y probabilidad de que el rechace vaya hacia fuera. Aquí, lo de siempre (C4: `C4_PARADA_REAL`).
+func _agarra(p: Dictionary, estirada: bool, fuerza: float) -> bool:
+	return not estirada and fuerza < 22.0 and _rng.randf() < float(p["attr"]["par"]) * 0.9 * GestoTecnico.agarre(self)
+
+func _prob_rechace_fuera() -> float:
+	return 0.5
+
 func _prob_parada_cuerpo(_lat: float, _alcance: float, prob: float) -> float:
 	return prob
 

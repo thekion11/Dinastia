@@ -155,6 +155,7 @@ func _montar() -> void:
 	## (9-11, «solo club») Con la ciudad apagada, este botón entra al club (el estadio y sus plantas) en vez de al mundo abierto.
 	var salir := _boton_riel("🚶" if InterruptorCiudad.activa else "🏟️", "Salir al mundo abierto" if InterruptorCiudad.activa else "Entrar al club")
 	salir.pressed.connect(func() -> void: ejecutar(_p, "ciudad_pie" if InterruptorCiudad.activa else "ver_estadio"))
+	salir.visible = EscaparateBarra.pc_de(_p) == null   ## (17-11) desde el PC de la oficina no se abre otro estadio ni otra ciudad (guion §3.1): ahí se ve «Levantarse del PC»
 	_riel.add_child(salir)
 	_riel.add_child(VSeparator.new() if abajo() else HSeparator.new())
 	for m: Dictionary in MENUS:

@@ -9,6 +9,7 @@ extends RefCounted
 
 const SEP := 18.0
 const ALTO_CHICA := 118.0
+static var _min_x := 0.0   ## ancho mínimo de cada tarjeta (250 px si la ventana lo permite con la barra lateral siempre visible; 0 en ventanas estrechas)
 
 static func cabe(pm: PantallaMenu, n: int) -> bool:
 	return n >= 5 and not MenuLateral.abajo() and pm.get_viewport_rect().size.y >= 600.0
@@ -27,6 +28,7 @@ static func armar(pm: PantallaMenu, marco: Control, rej: GridContainer, subs: Ar
 		marco.add_child(rej)
 		return tarjetas
 	rej.free()
+	_min_x = 250.0 if pm.get_viewport_rect().size.x - MenuLateral.reserva().x >= 1150.0 else 0.0
 	var caja := VBoxContainer.new()
 	caja.add_theme_constant_override("separation", int(SEP))
 	caja.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -35,7 +37,7 @@ static func armar(pm: PantallaMenu, marco: Control, rej: GridContainer, subs: Ar
 	arriba.add_theme_constant_override("separation", int(SEP))
 	caja.add_child(arriba)
 	var grande := tarjetas[0] as Control
-	grande.custom_minimum_size = Vector2(0, ALTO_CHICA * 2.0 + SEP)
+	grande.custom_minimum_size = Vector2(_min_x, ALTO_CHICA * 2.0 + SEP)
 	grande.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grande.size_flags_stretch_ratio = 2.0
 	_agrandar(grande)
@@ -64,7 +66,7 @@ static func armar(pm: PantallaMenu, marco: Control, rej: GridContainer, subs: Ar
 
 ## Una tarjeta chica: sin la descripción (pasa al texto de ayuda), más baja.
 static func _chica(t: Control) -> Control:
-	t.custom_minimum_size = Vector2(0, ALTO_CHICA)
+	t.custom_minimum_size = Vector2(_min_x, ALTO_CHICA)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for l in t.find_children("*", "Label", true, false):
 		var lb := l as Label

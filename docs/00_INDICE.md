@@ -1,5 +1,7 @@
 # Índice de la documentación (Dinastía)
 
+- **`ESQUEMA_Y_CRONOGRAMA.md`**: jerarquía (dueño → auditoría → sesiones), regla de unión a `main` y orden de trabajo. Empezar por aquí tras `CLAUDE.md`.
+
 Regla: **un tema = un documento. Lo pendiente vive en UN solo sitio: [`PLAN_GENERAL.md`](PLAN_GENERAL.md).** Lo completado se borra (el historial de git lo conserva).
 
 | Ruta | Qué contiene |

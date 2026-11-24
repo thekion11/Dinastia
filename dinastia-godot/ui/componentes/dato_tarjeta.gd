@@ -50,7 +50,7 @@ static func de(p: Principal, etiqueta: String) -> String:
 		"táctica", "pizarra y dibujo":
 			return c.tactica.formacion
 		"finanzas", "cuentas del club":
-			return p._dinero(c.saldo)
+			return Idiomas.t("%s · sueldos %s/sem") % [p._dinero(c.saldo), p._dinero(c.masa_salarial())]
 		"mercado", "mercado de fichajes":
 			var tr := 0
 			for j: Jugador in c.plantilla:
@@ -68,6 +68,8 @@ static func de(p: Principal, etiqueta: String) -> String:
 		"feed de redes":
 			return Idiomas.t("%s seguidores") % p._miles(m.prensa.seguidores) if m.prensa != null else ""
 		"mi carrera":
+			if m.directiva != null and m.directiva.objetivo != "":   ## (17-11) el objetivo y la confianza, que estaban en la línea de estado del Inicio
+				return Idiomas.t("Objetivo: %s · confianza %d") % [Idiomas.t(m.directiva.objetivo), m.directiva.confianza]
 			return Idiomas.t(m.roles.nombre) if m.roles != null else ""
 		"logros":
 			return Idiomas.t("%d conseguidos") % lg.desbloqueados.size() if lg != null else ""
@@ -111,7 +113,11 @@ static func de(p: Principal, etiqueta: String) -> String:
 			return Idiomas.t("%d sin club") % m.libres.size() if not m.libres.is_empty() else ""
 		"ligas y clubes":
 			var liga := m.liga_de(c)
-			return Idiomas.t("%d.º de %d") % [EventosClub.puesto_de(liga, c), liga.clubes.size()] if liga != null else ""
+			if liga == null:
+				return ""
+			if liga.jornada_actual <= 0:   ## (17-11) la jornada, que estaba en la línea de estado del Inicio
+				return Idiomas.t("%d.º de %d · pretemporada") % [EventosClub.puesto_de(liga, c), liga.clubes.size()]
+			return Idiomas.t("%d.º de %d · jornada %d") % [EventosClub.puesto_de(liga, c), liga.clubes.size(), liga.jornada_actual]
 		"próximo partido":
 			var cruce := m.proximo_partido()
 			if cruce.size() < 2:

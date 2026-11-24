@@ -22,16 +22,20 @@ static func pintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 
 ## La capa del escaparate solo se ve en el Inicio (el menú de siempre se esconde entonces; en las demás pestañas, al revés). El riel de iconos también.
 static func sincronizar(p: Principal) -> void:
-	var pant: Variant = p.get_meta("escaparate", null)
+	var pant: Variant = (p.get_meta("escaparate") if p.has_meta("escaparate") else null)
 	if not is_instance_valid(pant) or p._pestanas == null:
 		return
 	var en_inicio := p._pestanas.get_tab_title(p._pestanas.current_tab) == "Inicio" and usa()
 	(pant as Control).visible = en_inicio
+	(pant as Control).offset_left = 0.0 if MenuLateral.abajo() else MenuLateral.ANCHO_RIEL   ## (17-11) la barra lateral SIEMPRE visible: el escaparate le deja su sitio
 	var raiz: Node = p._despacho.get_parent() if p._despacho != null else null
 	if raiz is Control:
 		(raiz as Control).visible = not en_inicio
+	var pc := EscaparateBarra.pc_de(p)
+	if pc != null:
+		pc.boton_flotante_visible(not en_inicio)   ## en el Inicio, «Levantarse del PC» está en el pie
 	if p._menu_lateral != null:
-		p._menu_lateral.esconder_riel(en_inicio)
+		p._menu_lateral.esconder_riel(false)   ## la tira de iconos se ve también en el Inicio (idéntica a la de antes)
 	for po in p.find_children("*", "PanelObjetivos", true, false):   ## su chapa plegada pasa al pie mientras se ve el escaparate
 		(po as Control).visible = not (en_inicio and bool(po.get("_plegado")))
 
@@ -54,8 +58,53 @@ static func avanzar(p: Principal, cuerpo: VBoxContainer, c: Club, liga: Liga, ac
 	abajo.size_flags_stretch_ratio = 1.0
 	abajo.custom_minimum_size.y = 130
 	cuerpo.add_child(abajo)
-	for par: Array in [[EscaparatePartidos.proximos(p, c, liga, acento), 3.2], [EscaparatePartidos.hinchada(p, c, acento), 1.4]]:
+	for par: Array in [[EscaparatePartidos.proximos(p, c, liga, acento), 3.6], [EscaparatePartidos.hinchada(p, c, acento), 1.15], [EscaparateTarjetas.despacho(p, c, acento), 0.85]]:
 		var t: Control = par[0]
 		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		t.size_flags_stretch_ratio = float(par[1])
 		abajo.add_child(t)
+	cuerpo.add_child(_franja(p, c))
+
+## (17-11) La franja de abajo del Inicio, con los accesorios que vuelven: los ACCESOS RÁPIDOS que se marcan en Ajustes (uno por favorito) y la FORMA (últimos 5 partidos). Una sola fila baja, para que las tarjetas conserven el alto.
+static func _ficha(valor: String, rotulo: String, col := Color.WHITE) -> Control:
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", -3)
+	var n := EstiloAvanzar.etiqueta(valor, 20, col, true)
+	n.clip_text = true
+	v.add_child(n)
+	var r := EstiloAvanzar.etiqueta(rotulo.to_upper(), 11, Color(1, 1, 1, 0.65))
+	r.clip_text = true
+	v.add_child(r)
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return v
+
+static func _franja(p: Principal, c: Club) -> Control:
+	var f := HBoxContainer.new()
+	f.add_theme_constant_override("separation", TableroInicio.SEP)
+	f.custom_minimum_size.y = 42
+	var t := EstiloAvanzar.etiqueta(Idiomas.t("Accesos rápidos").to_upper(), 12, Color(1, 1, 1, 0.7), true)   ## el hueco de la izquierda: el rótulo de la franja
+	t.custom_minimum_size.x = 150
+	t.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	f.add_child(t)
+	var accesos: Array = p._favoritos if not p._favoritos.is_empty() else ["Mi plantel", "Táctica", "Partido", "Calendario"]   ## sin favoritos marcados en Ajustes, los cuatro más usados
+	for tab: String in accesos:
+		var b := Button.new()   ## fichas con el lenguaje de las tarjetas (mismo fondo, borde y esquinas) y repartidas a lo ancho, alineadas con ellas
+		b.text = "★  " + Idiomas.t(tab)
+		b.focus_mode = Control.FOCUS_ALL
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.custom_minimum_size = Vector2(80, 40)
+		b.add_theme_font_size_override("font_size", Tema.letra(16))
+		var st := StyleBoxFlat.new()
+		st.bg_color = TableroInicio.fondo_mundo
+		st.border_color = Color(1, 1, 1, 0.12)
+		st.set_border_width_all(1)
+		st.set_corner_radius_all(6)
+		var enc := st.duplicate() as StyleBoxFlat
+		enc.border_color = Color.WHITE
+		enc.set_border_width_all(3)
+		b.add_theme_stylebox_override("normal", st)
+		for k: String in ["hover", "focus", "pressed", "hover_pressed"]:
+			b.add_theme_stylebox_override(k, enc)
+		b.pressed.connect(func() -> void: p._ir_a_pestana(tab))
+		f.add_child(b)
+	return f

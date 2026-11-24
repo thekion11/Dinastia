@@ -140,7 +140,7 @@ static func a_ciegas() -> bool:
 ## Guarda un voto (1-5) con el motor real detrás y datos del partido (para cruzarlo con las cifras de diversión).
 static func votar(puntos: int, motor: String, extra := {}) -> void:
 	var d := cargar()
-	var v := {"motor": motor, "puntos": clampi(puntos, 1, 5), "fecha": Time.get_datetime_string_from_system()}
+	var v := {"motor": motor, "puntos": clampi(puntos, 1, 5), "fecha": str(Jugador.semana_global)}   ## (17-11) la fecha del JUEGO (año*100 + semana), no la del sistema
 	for k: String in extra:
 		v[k] = extra[k]
 	(d["votos"] as Array).append(v)

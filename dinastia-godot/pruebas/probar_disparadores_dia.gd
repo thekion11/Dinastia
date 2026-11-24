@@ -139,3 +139,25 @@ func _segunda(m: Mundo, e: String) -> void:
 	var g := DisparadoresDia.de_sancion_dt(m, est)
 	_ok(g.size() == 1 and String(g[0]["zona"]) == "prensa" and DisparadoresDia.de_sancion_dt(m, est).is_empty(), "%s: sanción al DT = AVISO de prensa, una vez" % e)
 	m.federacion.dt_suspension = 0
+	## tercera tanda
+	var mio := m.mi_club()
+	m.semana = 25
+	var k := DisparadoresDia.de_contratos(m, est)
+	var con_ultimo := mio.plantilla.filter(func(x: Jugador) -> bool: return x.anios_contrato <= 1).size()
+	_ok((k.size() == 1 and int(k[0]["causa"]["datos"]["n"]) == con_ultimo) if con_ultimo > 0 else k.is_empty(), "%s: aviso de contratos por vencer (%d jugadores) una vez por temporada" % [e, con_ultimo])
+	_ok(DisparadoresDia.de_contratos(m, est).is_empty(), "%s: el aviso de contratos sale una vez" % e)
+	var pj: Jugador = mio.plantilla[1]
+	pj.suspension = 1
+	pj.susp_semana = 25
+	var sa := DisparadoresDia.de_sancionados(m, est)
+	_ok(sa.size() == 1 and String(sa[0]["zona"]) == "vestuario" and DisparadoresDia.de_sancionados(m, est).is_empty(), "%s: jugador sancionado = AVISO de vestuario, una vez por sanción" % e)
+	pj.suspension = 0
+	var saldo0 := mio.saldo
+	mio.saldo = -1000
+	var cn := DisparadoresDia.de_caja_negativa(m, est)
+	_ok(cn.size() == 1 and String(cn[0]["zona"]) == "finanzas" and DisparadoresDia.de_caja_negativa(m, est).is_empty(), "%s: caja en negativo = AVISO de finanzas, una vez cada 8 semanas" % e)
+	mio.saldo = saldo0
+	m.mercado.precontratos.append({"id": mio.plantilla[2].id, "sueldo": 1000, "anios": 3})
+	var pc := DisparadoresDia.de_precontratos(m, est)
+	_ok(pc.size() == 1 and String(pc[0]["zona"]) == "mercado" and DisparadoresDia.de_precontratos(m, est).is_empty(), "%s: precontrato firmado = AVISO de mercado, una vez" % e)
+	m.mercado.precontratos.clear()

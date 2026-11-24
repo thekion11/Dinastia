@@ -11,7 +11,6 @@ const MENUS := [
 		"lema": "Tus jugadores: el once, la pizarra y cómo llegan al partido.",
 		"colores": ["#07130c", "#113a22", "#9be7b4"], "subs": [
 		{"tab": "Mi plantel", "label": "Mi plantel", "icono": "👥", "desc": "Fichas, forma, moral y el once."},
-		{"accion": "plantilla_pes", "label": "Plantilla detallada", "icono": "📊", "desc": "Lista por líneas, atributos en barras y comparar dos jugadores."},
 		## (12-11) Táctica era una página larga: ahora cuatro pantallas (`TacticaSecciones`).
 		{"tab": "Táctica", "secc": "pizarra", "label": "Pizarra y dibujo", "icono": "📋", "desc": "El pizarrón, tus presets y la formación."},
 		{"tab": "Táctica", "secc": "ordenes", "label": "Órdenes de juego", "icono": "🎯", "desc": "Mentalidad, presión, ritmo, línea, roles y lo que se lleva en esta era."},
@@ -26,7 +25,8 @@ const MENUS := [
 		{"tab": "Cantera", "secc": "academia", "label": "Academia", "icono": "🌱", "desc": "Los chicos de 10 a 16 años: cómo entrenan, comen y estudian."},
 		{"tab": "Cantera", "secc": "juveniles", "label": "Juveniles", "icono": "🎖️", "desc": "La camada del año, los listos para debutar y cada categoría."},
 		{"tab": "Cantera", "secc": "linaje", "label": "Leyendas y linaje", "icono": "🏛️", "desc": "Las figuras retiradas del club y las dinastías de padres e hijos."},
-		{"tab": "Contratos", "label": "Contratos", "icono": "📝", "desc": "Renovaciones, cláusulas y salidas."}]},
+		{"tab": "Contratos", "label": "Contratos", "icono": "📝", "desc": "Renovaciones, cláusulas y salidas."},
+		{"accion": "plantilla_pes", "label": "Plantilla detallada", "icono": "📊", "desc": "Lista por líneas, atributos en barras y comparar dos jugadores."}]},
 	## 3-11 (rediseño del menú central, pedido del dueño): el ⚽ de la barra de arriba pasa a su propio menú.
 	{"id": "partido", "icono": "⚽", "nombre": "Partido", "estilo": 8,
 		"lema": "El próximo partido, el rival y el calendario.",
@@ -134,15 +134,6 @@ const MENUS := [
 		{"tab": "Federación", "secc": "reglamento", "label": "Reglamento de la liga", "icono": "⚖️", "desc": "Las normas vigentes y si las cumples o pagas las multas."},
 		{"tab": "Federación", "secc": "licencia", "label": "Licencia y tribunal", "icono": "🎖️", "desc": "Los requisitos de la licencia, la disciplina y el antidopaje."},
 		{"tab": "Federación", "secc": "asamblea", "label": "Asamblea y gobierno", "icono": "🏛️", "desc": "Quién manda, el arbitraje y las votaciones de la federación."}]},
-	{"id": "ajustes", "icono": "⚙️", "nombre": "Ajustes", "estilo": 6, "ficha": false,
-		"lema": "Cómo se ve, cómo suena y cómo se juega.",
-		"colores": ["#0c0e12", "#171b22", "#a8b4c8"], "subs": [
-		{"tab": "Ajustes", "secc": "pantalla", "label": "Dispositivo", "icono": "🖥️", "desc": "Pantalla, calidad gráfica, mando y fotogramas."},
-		{"tab": "Ajustes", "secc": "audio", "label": "Sonido", "icono": "🔊", "desc": "Música, efectos y el ruido del estadio."},
-		{"tab": "Ajustes", "secc": "aspecto", "label": "Interfaz", "icono": "🖌️", "desc": "Paletas, fondos y estilo del menú."},
-		{"tab": "Ajustes", "secc": "juego", "label": "Juego", "icono": "🎮", "desc": "Idioma, moneda, velocidad del partido, comodidades y vida del DT."},
-		{"tab": "Ajustes", "secc": "acceso", "label": "Accesibilidad", "icono": "♿", "desc": "Texto, colores, contraste, avisos de sonido y teclas."},
-		{"tab": "Ajustes", "secc": "partida", "label": "Partida y guardado", "icono": "💾", "desc": "Guardar, cargar, otro mundo, ranuras, autoguardado, informe de fallos y créditos."}]},
 	{"id": "ciudad", "icono": "🏙️", "nombre": "Ciudad 3D", "estilo": 7, "ficha": false,
 		"lema": "La ciudad que rodea tu estadio.",
 		"colores": ["#070a16", "#141a33", "#ffd27a"], "subs": [
@@ -154,6 +145,14 @@ const MENUS := [
 		{"tab": "Estadio", "secc": "diseno", "label": "Diseño del estadio", "icono": "📐", "desc": "Estilos completos y colores por sección."},
 		{"tab": "Club", "secc": "infra", "label": "Infraestructura", "icono": "🏗️", "desc": "Obras, ciudad deportiva y academia."},
 		{"accion": "ver_estadio", "label": "Verlo en 3D", "icono": "👁️", "desc": "Tu estadio tal y como se juega."}]},
+	{"id": "ajustes", "icono": "⚙️", "nombre": "Ajustes", "estilo": 6, "ficha": false,
+		"lema": "Cómo se ve, cómo suena y cómo se juega.",
+		"colores": ["#0c0e12", "#171b22", "#a8b4c8"], "subs": [
+		{"tab": "Ajustes", "secc": "pantalla", "label": "Dispositivo", "icono": "🖥️", "desc": "Pantalla, calidad gráfica, mando y fotogramas."},
+		{"tab": "Ajustes", "secc": "audio", "label": "Sonido", "icono": "🔊", "desc": "Música, efectos y el ruido del estadio."},
+		{"tab": "Ajustes", "secc": "aspecto", "label": "Interfaz", "icono": "🖌️", "desc": "Paletas, fondos y estilo del menú."},
+		{"tab": "Ajustes", "secc": "juego", "label": "Juego", "icono": "🎮", "desc": "Idioma, moneda, velocidad del partido, comodidades y vida del DT."},
+		{"tab": "Ajustes", "secc": "acceso", "label": "Accesibilidad", "icono": "♿", "desc": "Texto, colores, contraste, avisos de sonido y teclas."}]},
 ]
 
 ## (9-11, «solo club») Entradas al mundo abierto, fuera del menú mientras `InterruptorCiudad.activa` sea falso.

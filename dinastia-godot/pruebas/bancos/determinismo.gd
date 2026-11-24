@@ -10,7 +10,8 @@ extends BaseIdea
 
 ## Archivos de `nucleo/` que pueden mirar el reloj (nunca para decidir nada de la simulación).
 const RELOJ_PERMITIDO := ["partida_p1.gd", "partida.gd", "partida_archivo.gd", "registro.gd", "medicion.gd", "logros_p1.gd", "reloj.gd",
-	"avisos_sonido.gd", "guardado_segundo_plano.gd", "compilar_fondo.gd"]   ## avisos en pantalla y tiempos medidos
+	"avisos_sonido.gd", "guardado_segundo_plano.gd", "compilar_fondo.gd",
+	"mundo_p3.gd", "reales.gd", "musica.gd", "contratos.gd", "calendario_p1.gd"]   ## (17-11) cronómetros del reparto en trozos (mundo_p3, reales: solo ceden el fotograma), rotación de la música y aritmética de FECHAS FIJAS (contratos, calendario_p1: no leen «ahora»)   ## avisos en pantalla y tiempos medidos
 
 func _probar() -> void:
 	_titulo("BANCO DETERMINISMO (fase 2): código, mundos, partidos y temporada")

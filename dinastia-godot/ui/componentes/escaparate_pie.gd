@@ -16,6 +16,16 @@ static func _boton(texto: String, al_pulsar: Callable) -> Button:
 	b.pressed.connect(al_pulsar)
 	return b
 
+## Los mensajes sin leer de la bandeja más los avisos graves del informe de la semana (lo que dice «Mensajes · N» de la barra).
+static func sin_leer(p: Principal) -> int:
+	var n := 0
+	var bandeja: Variant = p.get("_bandeja")
+	if bandeja is Array:
+		for x: Dictionary in bandeja:
+			if not bool(x.get("leida", false)):
+				n += 1
+	return n + int(InformeSemana.resumen(p)["graves"])
+
 static func crear(p: Principal) -> Control:
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size.y = 52
@@ -29,15 +39,6 @@ static func crear(p: Principal) -> Control:
 	var fila := HBoxContainer.new()
 	fila.add_theme_constant_override("separation", 14)
 	panel.add_child(fila)
-	var ayudas := HBoxContainer.new()
-	ayudas.add_theme_constant_override("separation", 14)
-	if Mando.hay_mando():
-		ayudas.add_child(PieMando._chip("R2 / A", Idiomas.t("Confirmar")))
-		ayudas.add_child(PieMando._chip("Cuadrado / B", Idiomas.t("Atrás")))
-	elif not DisplayServer.is_touchscreen_available():
-		ayudas.add_child(PieMando._chip(Idiomas.t("Intro"), Idiomas.t("Confirmar")))
-		ayudas.add_child(PieMando._chip(Idiomas.t("Esc"), Idiomas.t("Atrás")))
-	fila.add_child(ayudas)
 	var hueco := Control.new()
 	hueco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hueco.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -52,32 +53,42 @@ static func crear(p: Principal) -> Control:
 			p._botones.remove_child(p._buscador)   ## el buscador vive en «Base de datos»
 		fila.add_child(p._botones)
 		_botones_grandes(p)
-	var sin_leer := 0
-	var bandeja: Variant = p.get("_bandeja")
-	if bandeja is Array:
-		for x: Dictionary in bandeja:
-			if not bool(x.get("leida", false)):
-				sin_leer += 1
-	var msg := _boton("✉ " + Idiomas.t("Mensajes") + ("  (%d)" % sin_leer if sin_leer > 0 else ""), func() -> void: TableroInicio.abrir(p, "Correo"))
-	if sin_leer > 0:
-		msg.add_theme_color_override("font_color", Tema.oro())
-	fila.add_child(msg)
+		var av: Variant = p._guia.nodos.get("b_avanzar")   ## (17-11) el botón «Avanzar» del pie desaparece (queda «Avanzar en el tiempo» arriba): sigue existiendo y visible para el avance, pero sin ocupar sitio ni verse
+		if is_instance_valid(av):
+			var ba := av as Button
+			ba.clip_text = true
+			ba.custom_minimum_size = Vector2.ZERO
+			ba.size_flags_horizontal = Control.SIZE_SHRINK_END
+			ba.modulate = Color(1, 1, 1, 0)
+			ba.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			ba.focus_mode = Control.FOCUS_NONE
+			ba.add_theme_font_size_override("font_size", 1)
+			ba.text = ""
 	fila.add_child(_boton("? " + Idiomas.t("Ayuda"), func() -> void: TableroInicio.abrir(p, "Glosario")))
 	for po in p.find_children("*", "PanelObjetivos", true, false):   ## la caja flotante de objetivos pasa a un chip del pie
 		var obj := po as PanelObjetivos
 		var pend := int(obj.get("_pendientes"))
 		if pend > 0:
-			fila.add_child(_boton("🎯 %d" % pend, func() -> void:
+			fila.add_child(_boton("🎯 " + Idiomas.t("Objetivos") + " %d" % pend, func() -> void:
 				obj.visible = true
 				obj._plegado = false
 				obj._aplicar_plegado()
 				p.move_child(obj, p.get_child_count() - 1)))
 		break
-	var h := Time.get_time_dict_from_system()
 	var reloj := Label.new()
-	reloj.text = "%02d:%02d" % [int(h["hour"]), int(h["minute"])]
 	reloj.add_theme_font_size_override("font_size", Tema.letra(13))
 	fila.add_child(reloj)
+	var poner := func() -> void:
+		var h := Time.get_time_dict_from_system()
+		reloj.text = "%02d:%02d" % [int(h["hour"]), int(h["minute"])]
+	poner.call()
+	var reloj_t := Timer.new()   ## el reloj avanza solo, y solo mientras el escaparate se ve (una vez por segundo: casi gratis)
+	reloj_t.wait_time = 1.0
+	reloj_t.timeout.connect(func() -> void:
+		if panel.is_visible_in_tree():
+			poner.call())
+	panel.add_child(reloj_t)
+	reloj_t.start()
 	return panel
 
 ## Avanzar / Jugar / Saltar / Partido jugado como botones de la maqueta (rojo el principal).

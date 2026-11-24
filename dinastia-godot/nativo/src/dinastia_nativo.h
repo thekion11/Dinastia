@@ -66,6 +66,8 @@ public:
 	int64_t disputas_inicio(const Array &jugadores, double delta, bool suelto, const Vector3 &b, double t, const Variant &pase_a_id, const PackedFloat64Array &arco_z, double area_x, double area_z) const;
 	// `MotorColocacion.actualizar`: [más cercano al balón del local, del visitante] (3D, tope 40 m).
 	PackedFloat64Array colocacion_cerca(const Array &jugadores, const Vector3 &b) const;
+	Variant roles_base(Object *m, const Dictionary &p, double t, const Array &jugadores) const;
+	Variant forma_c4(const Array &ctx, const Dictionary &p, bool en_posesion) const;
 	// `MotorJugable._mover_jugadores`: la animación de los 22 ([código, escala] por jugador; con `aplicar`, también la pone).
 	PackedFloat64Array animar_jugadores(const Array &jugadores, const PackedFloat64Array &res, double t, const Variant &poseedor_id, bool cansancio_real, bool league, bool aplicar) const;
 	// `LeagueLocomocion._paso`: camino común de los 22 y, en orden, lo que hace GDScript (índice·2 = `_quizas_empezar`, índice·2+1 = `_uno`).

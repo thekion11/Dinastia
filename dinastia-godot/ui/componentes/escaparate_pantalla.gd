@@ -3,15 +3,17 @@ extends Control
 ## LA PANTALLA ENTERA DEL ESCAPARATE (17-11-2026, segunda ronda de Auditoría): el menú central del Inicio ya no va dentro del marco con esquinas y la barra de desplazamiento de
 ## siempre: es una capa a PANTALLA COMPLETA (encima del menú de siempre, que se esconde mientras está) con la barra del club pegada ARRIBA, el cuerpo que ocupa todo el alto
 ## (las tarjetas se reparten el espacio: nada se corta ni se desplaza) y el pie con las ayudas del aparato activo, los botones de Avanzar / Jugar / Saltar / Partido jugado,
-## Mensajes y Ayuda. Las pestañas «Dirección del equipo» e «Información del club» siguen con sus tarjetas de siempre (con el informe de la semana debajo, deslizable).
+## Mensajes y Ayuda. Las pestañas «Dirección del equipo» e «Información del club» son el mismo mosaico con imagen (`EscaparateSubs`); el informe de la semana es una tarjeta de «Información del club» que abre su pantalla completa (`EscaparateInforme`).
 ## `TableroInicio.pintar` la repinta; `EscaparateInicio.sincronizar` la muestra solo en la pestaña Inicio.
 
 var _cuerpo: VBoxContainer
 var _busqueda: PopupPanel
+var panel_despacho: EscaparatePanel   ## la pantalla completa del despacho, si está abierta
+var informe: EscaparateInforme   ## la pantalla completa del informe de la semana, si está abierta
 
 ## La pantalla de esta partida (se crea la primera vez, justo encima del menú de siempre y debajo de los menús laterales y de todo lo que se abre después).
 static func de(p: Principal) -> EscaparatePantalla:
-	var e: Variant = p.get_meta("escaparate", null)
+	var e: Variant = p.get_meta("escaparate") if p.has_meta("escaparate") else null   ## (get_meta con valor nulo por defecto da error si falta)
 	if is_instance_valid(e):
 		return e as EscaparatePantalla
 	var n := EscaparatePantalla.new()
@@ -34,7 +36,7 @@ func _soltar(p: Principal) -> void:
 func repintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 	_soltar(p)
 	for h in get_children():
-		if h != _busqueda:
+		if h != _busqueda and h != informe and h != panel_despacho:
 			remove_child(h)
 			h.queue_free()
 	var fondo := ColorRect.new()
@@ -63,8 +65,10 @@ func repintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 	_cuerpo.add_theme_constant_override("separation", TableroInicio.SEP)
 	margen.add_child(_cuerpo)
 	var botones: Array[Button] = []
-	for i in TableroInicio.PESTANAS.size():
-		var b := EscaparateBarra.boton_pestana(Idiomas.t(String(TableroInicio.PESTANAS[i])), 1.35)
+	TableroInicio.pestana = 0   ## (17-11, diseño del dueño) una sola pestaña: «Avanzar en el tiempo»; los menús del club viven en la barra lateral
+	var nombres: Array = [TableroInicio.PESTANAS[0]]
+	for i in nombres.size():
+		var b := EscaparateBarra.boton_pestana(Idiomas.t(String(nombres[i])), 1.5)
 		hb.add_child(b)
 		botones.append(b)
 		CampanasMenu.marcar_pestana(b, i)
@@ -73,14 +77,13 @@ func repintar(p: Principal, c: Club, liga: Liga, dias: int) -> void:
 			TableroInicio.pestana = i
 			TableroInicio._marcar(botones)
 			_pintar_cuerpo(p, c, liga, dias, acento)
-			if i == 0 and ya:   ## «Avanzar en el tiempo» pulsada estando ya en ella: el desplegable de Avanzar 1 día / Siguiente
-				var av: Variant = p._guia.nodos.get("b_avanzar")
-				if is_instance_valid(av) and (av as Button).visible:
-					BotonesAvance.desplegar(p))
+			if i == 0 and not p._avance.dias().partido_hoy():   ## «Avanzar en el tiempo» (el botón Avanzar del pie ya no está): desplegable «Avanzar 1 día / Siguiente»; en día de partido, Jugar/Saltar están en el pie
+				BotonesAvance.desplegar(p, b))
 	EscaparateBarra.completar(p, hb, botones, c)
 	TableroInicio._marcar(botones)
 	_pintar_cuerpo(p, c, liga, dias, acento)
 	vb.add_child(EscaparatePie.crear(p))
+	_cablear_luego()
 
 func _pintar_cuerpo(p: Principal, c: Club, liga: Liga, dias: int, acento: Color) -> void:
 	for h in _cuerpo.get_children():
@@ -88,6 +91,9 @@ func _pintar_cuerpo(p: Principal, c: Club, liga: Liga, dias: int, acento: Color)
 		h.queue_free()
 	if TableroInicio.pestana == 0:
 		EscaparateInicio.avanzar(p, _cuerpo, c, liga, acento)
+		return
+	if TableroInicio.pestana >= 3:
+		EscaparateIndice.pintar(p, _cuerpo, c, acento)
 		return
 	EscaparateSubs.pintar(p, _cuerpo, c, TableroInicio.EQUIPO if TableroInicio.pestana == 1 else TableroInicio.CLUB, acento)   ## sin desplazamiento y sin el informe de la semana
 
@@ -116,3 +122,84 @@ func abrir_busqueda(ancla: Control) -> void:
 	var r := ancla.get_global_rect()
 	_busqueda.popup(Rect2i(Vector2i(int(r.position.x), int(r.position.y + r.size.y)), Vector2i(280, 0)))
 	p._buscador.grab_focus.call_deferred()
+
+## La pantalla completa del «Informe de la semana» (la abre su tarjeta de «Información del club»).
+func abrir_informe(p: Principal) -> void:
+	if is_instance_valid(informe):
+		return
+	informe = EscaparateInforme.abrir(p, self)
+	informe.cerrada.connect(func() -> void: repintar_ya(p))
+
+## Repinta con el mismo club y liga (al cerrar el informe, para que el contador del pie y la tarjeta se pongan al día).
+func repintar_ya(p: Principal) -> void:
+	var c: Club = p.mundo.mi_club()
+	repintar(p, c, p._liga_de(c), 5 - int(p._dia_semana))
+
+## La pantalla completa del «Despacho» (los asuntos de decisión): se le presta `p._despacho` (que pinta `PantallaDespacho`) y al cerrar vuelve a su sitio del menú de siempre.
+func abrir_despacho(p: Principal) -> void:
+	if is_instance_valid(panel_despacho) or p._despacho == null:
+		return
+	var pn := EscaparatePanel.abrir(p, self, Idiomas.t("Despacho"))
+	panel_despacho = pn
+	var d: VBoxContainer = p._despacho
+	var padre := d.get_parent()
+	var idx := d.get_index()
+	padre.remove_child(d)
+	d.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pn.contenedor.add_child(d)
+	p._aviso_plegado = false
+	p._ui_despacho._pintar_despacho()
+	if d.get_child_count() == 0:   ## sin asuntos: el próximo hito del calendario y los accesos rápidos (favoritos), para que la pantalla sirva
+		d.add_child(EstiloAvanzar.etiqueta(Idiomas.t("Sin asuntos pendientes"), 24, Color.WHITE, true))
+		d.add_child(EstiloAvanzar.etiqueta("▸ " + String(EventosFecha.hito(p.mundo, p._dia_semana).get("texto", "")), 18, Color(1, 1, 1, 0.85)))
+		for tab: String in p._favoritos:
+			var bf := Button.new()
+			bf.text = "⭐ " + Idiomas.t(tab)
+			bf.custom_minimum_size = Vector2(0, 44)
+			bf.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			bf.pressed.connect(func() -> void:
+				pn.cerrar()
+				p._ir_a_pestana(tab))
+			d.add_child(bf)
+	pn.enfocar()
+	pn.cerrada.connect(func() -> void:
+		if is_instance_valid(d):
+			d.get_parent().remove_child(d)
+			padre.add_child(d)
+			padre.move_child(d, idx)
+		repintar_ya(p))
+
+## Los vecinos de foco del mando, con el diseño ya hecho.
+func _cablear_luego() -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if is_instance_valid(self) and is_inside_tree():
+		var p := get_parent() as Principal
+		var riel: Array = p._menu_lateral.find_children("*", "Button", true, false) if p != null and p._menu_lateral != null else []
+		EscaparateFoco.cablear(self, riel)
+
+## «Sistema» (barra de arriba): lo que NO son ajustes del juego: guardar, cargar, salir al menú inicial o del juego, ayuda y glosario, créditos. (Los ajustes de gráficos, sonido, controles,
+## idioma y juego están en «Ajustes» de la barra lateral.)
+func abrir_sistema(p: Principal) -> void:
+	var pn := EscaparatePanel.abrir(p, self, Idiomas.t("Sistema"))
+	var lista := pn.contenedor
+	var filas: Array = [
+		[Idiomas.t("Guardar y cargar partida"), func() -> void: p._ir_a_chip({"tab": "Ajustes", "secc": "partida"})],
+		[Idiomas.t("Ayuda y glosario"), func() -> void: TableroInicio.abrir(p, "Glosario")],
+		[Idiomas.t("Créditos y novedades"), func() -> void: p._ir_a_chip({"tab": "Ajustes", "secc": "partida"})],
+		[Idiomas.t("Salir al menú inicial"), func() -> void:
+			p._partida.autoguardar_si_toca()
+			p.get_tree().change_scene_to_file("res://escenas/entrada.tscn")],
+		[Idiomas.t("Salir del juego"), func() -> void: p.get_tree().root.propagate_notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)]]
+	for f: Array in filas:
+		var b := Button.new()
+		b.text = String(f[0])
+		b.custom_minimum_size = Vector2(0, 56)
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.add_theme_font_size_override("font_size", Tema.letra(20))
+		var accion: Callable = f[1]
+		b.pressed.connect(func() -> void:
+			pn.cerrar()
+			accion.call())
+		lista.add_child(b)
+	pn.enfocar()

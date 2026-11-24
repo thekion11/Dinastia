@@ -362,21 +362,8 @@ func _pintar_asunto_vida() -> void:
 		b.pressed.connect(_resolver_vida.bind(op))
 		fila.add_child(b)
 
-func _pintar_despacho() -> void:
-	p._limpiar(p._despacho)
-	if p.mundo.roles != null and p.mundo.roles.sin_club:
-		_pintar_sin_banco()
-		return
-	## LA RUEDA DE PRENSA YA NO ES UN "ASUNTO" MÁS DE LA LISTA -el usuario lo
-	## pidió explícitamente: "eso debería tener su propio lugar", comparándolo
-	## con la conferencia de prensa de FC26, que ocupa la pantalla entera-.
-	## Antes vivía encogida dentro de esta tarjeta compartiendo espacio con la
-	## barra superior y la tabla de posiciones; ahora se abre como cinemática
-	## de pantalla completa, mismo patrón que `Sorteo` (`_siguiente_sorteo()`
-	## más arriba): un `Control` de pantalla completa colgado directo de
-	## `self`, por encima de todo, y nada más se dibuja mientras está abierta.
-	if p.mundo.prensa != null and p.mundo.prensa.hay_rueda() and p._rueda_pop == null:
-		p._abrir_rueda_pantalla_completa(p.mundo.prensa.entrevista)
+## (17-11) Los asuntos que esperan una decisión del DT (los que enseña el despacho): también los cuenta el menú central nuevo (tarjeta «Despacho» y pie).
+func asuntos_pendientes() -> Array:
 	var asuntos: Array = []
 	if p.mundo.cantera != null and p.mundo.cantera.hay_exigencia():
 		asuntos.append({"et": Idiomas.t("🦈 Un representante presiona"), "col": Principal.COL_VERDE, "id": "agente"})
@@ -396,6 +383,17 @@ func _pintar_despacho() -> void:
 		asuntos.append({"et": Idiomas.t("💸 Crisis económica"), "col": Principal.COL_ROJO, "id": "insolvencia"})
 	if p.mundo.vida != null and not p.mundo.vida.pendiente.is_empty():
 		asuntos.append({"et": Idiomas.t("🏠 Pasa en casa"), "col": Principal.COL_ORO, "id": "vida"})
+	return asuntos
+
+func _pintar_despacho() -> void:
+	p._limpiar(p._despacho)
+	if p.mundo.roles != null and p.mundo.roles.sin_club:
+		_pintar_sin_banco()
+		return
+	## La rueda de prensa no es un «asunto»: se abre como cinemática de pantalla completa (patrón de `Sorteo`, `_siguiente_sorteo()`), un `Control` colgado de `self` por encima de todo.
+	if p.mundo.prensa != null and p.mundo.prensa.hay_rueda() and p._rueda_pop == null:
+		p._abrir_rueda_pantalla_completa(p.mundo.prensa.entrevista)
+	var asuntos := asuntos_pendientes()
 	if asuntos.is_empty():
 		return
 	p._aviso_abierto = clampi(p._aviso_abierto, 0, asuntos.size() - 1)

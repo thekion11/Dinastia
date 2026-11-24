@@ -126,9 +126,9 @@ func _modo(tam: int, k1: String, env: Environment) -> bool:
 	env.background_mode = Environment.BG_CLEAR_COLOR if escap else Environment.BG_COLOR
 	_rim.light_energy = 1.1 if escap else 0.0
 	## (17-11) luz más baja en el escaparate (igual que la previa del partido): las caras no se queman
-	_sol.light_energy = 0.65 if escap else 1.2
-	_relleno.light_energy = 0.2 if escap else 0.45
-	env.tonemap_exposure = 0.72 if escap else 1.0
+	_sol.light_energy = 0.55 if escap else 1.2
+	_relleno.light_energy = 0.18 if escap else 0.45
+	env.tonemap_exposure = 0.66 if escap else 1.0
 	_rim.light_color = Color(k1).lightened(0.35)
 	return escap
 
@@ -186,7 +186,7 @@ func _servir() -> void:
 	var j: Jugador = job["j"]
 	var tam: int = job["tam"]
 	var tex: ImageTexture = job["tex"]
-	_vp.size = Vector2i(tam, tam)
+	_vp.size = Vector2i(tam, tam) * (2 if tam >= TAM_ESCAPARATE else 1)   ## (17-11) los del escaparate se dibujan al DOBLE y se reducen: bordes limpios, sin dientes de sierra
 	var env: Environment = (_vp.get_child(0) as WorldEnvironment).environment
 	## Fondo: el color del club, nunca negro (las camisetas oscuras se perdían).
 	env.background_color = fondo_de(String(job["k1"]))
@@ -226,6 +226,8 @@ func _servir() -> void:
 		_vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 		if img != null and not img.is_empty():
 			img.convert(Image.FORMAT_RGBA8)
+			if img.get_width() != tam:
+				img.resize(tam, tam, Image.INTERPOLATE_LANCZOS)
 			if Vector2i(img.get_size()) == Vector2i(tex.get_size()):
 				tex.update(img)
 			else:
@@ -237,7 +239,7 @@ func _servir() -> void:
 func _servir_dt(job: Dictionary) -> void:
 	var tam: int = job["tam"]
 	var tex: ImageTexture = job["tex"]
-	_vp.size = Vector2i(tam, tam)
+	_vp.size = Vector2i(tam, tam) * (2 if tam >= TAM_ESCAPARATE else 1)   ## (17-11) los del escaparate se dibujan al DOBLE y se reducen: bordes limpios, sin dientes de sierra
 	var env: Environment = (_vp.get_child(0) as WorldEnvironment).environment
 	env.background_color = fondo_de(String(job["k1"]))
 	var escap := _modo(tam, String(job["k1"]), env)
@@ -260,6 +262,8 @@ func _servir_dt(job: Dictionary) -> void:
 		_vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 		if img != null and not img.is_empty():
 			img.convert(Image.FORMAT_RGBA8)
+			if img.get_width() != tam:
+				img.resize(tam, tam, Image.INTERPOLATE_LANCZOS)
 			if Vector2i(img.get_size()) == Vector2i(tex.get_size()):
 				tex.update(img)
 			else:
