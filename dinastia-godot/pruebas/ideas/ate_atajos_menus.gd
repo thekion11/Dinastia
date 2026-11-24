@@ -109,11 +109,12 @@ func _probar() -> void:
 	await get_tree().process_frame
 	_comprobar(_abierto() == "plantel", "y abre el plantel")
 	## Con una capa encima (un diálogo a pantalla completa) o escribiendo, callan.
+	_p._menu_lateral.abrir_menu("ajustes", -1)
+	await get_tree().create_timer(0.7).timeout   ## (24-11) el plantel se cierra con una animación: al acabar vuelve al Inicio y repinta; la capa se añade DESPUÉS (antes dependía de quién llegaba primero)
 	var capa := ColorRect.new()
 	capa.set_anchors_preset(Control.PRESET_FULL_RECT)
 	capa.mouse_filter = Control.MOUSE_FILTER_STOP
 	_p.add_child(capa)
-	_p._menu_lateral.abrir_menu("ajustes", -1)
 	await get_tree().process_frame
 	_comprobar(_p._atajos._capa_modal_ajena(), "una capa a pantalla completa cuenta como modal ajena")
 	capa.queue_free()
