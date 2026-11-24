@@ -25,7 +25,8 @@ extends Node
 ## 17-11 (a propósito, solo DATOS): +1.086 jugadores reales en 42 clubes (plantillas de hasta 26 equilibradas por línea) (ARG entre ellos, que está en este mundo: CHI y ARG); el balance y el motor no cambian. Era 3725505167.
 ## 17-11 (a propósito, solo DATOS): nacionalidades normalizadas al código del juego (ARGENTINA→ARG, SPA→ESP…) en 455 filas y un guiño distinto (uno contenía el nombre completo de un real). Era 3158632033.
 ## 17-11 (a propósito, solo DATOS; cierre): porteros dentro de 3 de media, tope de media por edad en los juveniles, guiños que no contienen ningún nombre real (12 corregidos). Era 3725059963.
-const ESPERADO := "3917123084"   ## 20-11 (a propósito, unión de ramas): los nombres ficticios de la tabla de clubes cambiaron (nombre real quitado de lo público: `main` 19-11 y los 5 clubes de la rama de tareas fáciles); la anterior, 2180172940 del 18-11, ya no se cumplía en `main`
+## 24-11 (a propósito, solo DATOS; unión con main): plantillas reales completadas (1.099 jugadores en 43 clubes), nacionalidades normalizadas, porteros parejos, guiños sin nombre real. Era 3917123084 de main.
+const ESPERADO := "2115543176"   ## 20-11 (a propósito, unión de ramas): los nombres ficticios de la tabla de clubes cambiaron (nombre real quitado de lo público: `main` 19-11 y los 5 clubes de la rama de tareas fáciles); la anterior, 2180172940 del 18-11, ya no se cumplía en `main`
 
 func _ready() -> void:
 	var m := Mundo.new()
